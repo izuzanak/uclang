@@ -1,0 +1,153 @@
+
+// Language version 0.10
+
+import tutorial;
+
+class Main
+{
+  static public main(argv)
+  {
+    value_0 = "Value_0";
+    value_1 = "Value_1";
+    value_2 = "Value_2";
+    value_3 = "Value_3";
+    value_4 = "Value_4";
+    value_5 = "Value_5";
+
+    // If statement syntax
+    //
+    // <command> -> if ( <condition> ) <command>
+    //
+
+    Tutorial.note("If statement");
+    if (value_0 == value_0)
+    {
+      ("\"%s\" is equal to \"%s\"\n" % [value_0,value_0]).print();
+    }
+
+    // If else statement syntax
+    //
+    // <command> -> if ( <condition> ) <command> else <command>
+    //
+
+    Tutorial.note("If else statement");
+    if (value_0 == value_2)
+    {
+      ("\"%s\" is equal to \"%s\"\n" % [value_0,value_2]).print();
+    }
+    else
+    {
+      ("\"%s\" is not equal to \"%s\"\n" % [value_0,value_2]).print();
+    }
+
+    // Switch statement syntax
+    //
+    // <command> -> switch ( <exp> )
+    // {
+    //   case <exp> : <command>
+    //   case <exp> , <exp> , ... : <command>
+    //   default : <command>
+    // }
+    //
+
+    Tutorial.note("Switch statement");
+
+    switch_exp = value_2;
+    switch (switch_exp)
+    {
+      case value_0:
+      {
+        ("\"%s\" is equal to \"%s\"\n" % [switch_exp,value_0]).print();
+      }
+      case value_1:
+      {
+        ("\"%s\" is equal to \"%s\"\n" % [switch_exp,value_1]).print();
+      }
+      case value_2:
+      {
+        ("\"%s\" is equal to \"%s\"\n" % [switch_exp,value_2]).print();
+      }
+      case value_3:
+      {
+        ("\"%s\" is equal to \"%s\"\n" % [switch_exp,value_3]).print();
+      }
+    }
+
+    Tutorial.note("Switch statement multiple value case");
+
+    switch_exp = value_2;
+    switch (switch_exp)
+    {
+      case value_0,value_1:
+      {
+        ("\"%s\" is equal to \"%s\" or \"%s\"\n" % [switch_exp,value_0,value_1]).print();
+      }
+      case value_1,value_2:
+      {
+        ("\"%s\" is equal to \"%s\" or \"%s\"\n" % [switch_exp,value_1,value_2]).print();
+      }
+      case value_2,value_3:
+      {
+        ("\"%s\" is equal to \"%s\" or \"%s\"\n" % [switch_exp,value_2,value_3]).print();
+      }
+    }
+
+    Tutorial.note("Switch statement default case");
+    switch_exp = value_2;
+    switch (switch_exp)
+    {
+      case "None_0":
+      {
+        ("\"%s\" is equal to \"None_0\"\n" % switch_exp).print();
+      }
+      case "None_1":
+      {
+        ("\"%s\" is equal to \"None_1\"\n" % switch_exp).print();
+      }
+      default:
+      {
+        ("\"%s\" is not equal to any of given values\n" % switch_exp).print();
+      }
+    }
+
+    Tutorial.note("Execute cases which expressions evaluates to one");
+    switch (1)
+    {
+      case 1:
+      {
+        "One equals to one\n".print();
+      }
+      case 10 > 5:
+      {
+        "Ten is bigger than five\n".print();
+      }
+      case 5 > 10:
+      {
+        "Five is bigger than ten\n".print();
+      }
+      case Blank != ("Glass of water".get_idx("water")):
+      {
+        "\"Glass of water\" contains \"water\"\n".print();
+      }
+    }
+    
+    // Conditional expression syntax
+    //
+    // <exp> -> <condition> ? <exp> : <exp>
+    //
+
+    Tutorial.note("Conditional expression");
+    ("One %s to one\n" % (1 == 1 ? "is equal" : "is not equal")).print();
+    ("One %s to two\n" % (1 == 2 ? "is equal" : "is not equal")).print();
+
+    // BE WARNED:
+    // - in conditions containing logical or/and operator, whole expression is
+    // evaluated (unlike in C++)
+    // - in conditional expression only executed part of expression is
+    // evaluated
+    //
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

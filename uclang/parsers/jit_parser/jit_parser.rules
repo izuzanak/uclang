@@ -1,0 +1,1612 @@
+#vim: set syntax=rules:
+
+init_code:
+{
+   int gen_parse_tree = 0;
+   int node_idx = 0;
+   int this_idx;
+   int[] node_stack;
+   string tmp_str;
+
+   string[] tabs;
+
+   if gen_parse_tree
+      out("digraph tree {\n");
+      out("   rankdir = TD\n");
+      out("   ordering = in\n");
+      out("\n");
+      out("   overlap=false\n");
+      out("   graph [fontsize=12]\n   edge [fontsize=12]\n   node [shape=plaintext fontsize=12]\n");
+      out("\n");
+      $out("   ranksep = 0.2; nodesep = .04");
+   fi
+}
+
+terminals:
+   single_char_const {'\''.!'\0'.'\''}
+   octal_char_const {'\''.'\\'.<07>.(<07>+e).(<07>+e).'\''}
+   hex_char_const {'\''.'\\'.'x'.(<09>+<af>+<AF>).(<09>+<af>+<AF>+e).'\''}
+   backslash_char_const {'\''.'\\'.[abfnrtv\\?\'"].'\''}
+
+   oct_i32_const {'0'.<07>*}
+   dec_i32_const {<19>.d*}
+   hex_i32_const {'0'.[xX].(<09>+<af>+<AF>).(<09>+<af>+<AF>)*}
+
+   oct_i64_const {'0'.<07>*.[lL]}
+   dec_i64_const {<19>.d*.[lL]}
+   hex_i64_const {'0'.[xX].(<09>+<af>+<AF>).(<09>+<af>+<AF>)*.[lL]}
+
+   f32_const {((d*.((d.'.')+('.'.d)).d*)+((d*.((d.'.')+('.'.d)+d).d*).[eE].([+-]+e).d.d*)+(d.d*)).[fF]}
+   f64_const {((d*.((d.'.')+('.'.d)).d*)+((d*.((d.'.')+('.'.d)+d).d*).[eE].([+-]+e).d.d*))}
+
+   type {"i8"+"i16"+"i32"+"i64"+"u8"+"u16"+"u32"+"u64"+"f32"+"f64"}
+
+   id {('_'+l).('_'+l+d)*}
+
+   lr_br {'('}
+   rr_br {')'}
+
+   lc_br {'{'}
+   rc_br {'\}'}
+
+   le_br {'['}
+   re_br {']'}
+
+   comma {','}
+   semicolon {';'}
+
+   volatile {"volatile"}
+
+   if {"if"}
+   else {"else"}
+   do {"do"}
+   while {"while"}
+
+   break {"break"}
+   continue {"continue"}
+   return {"return"}
+   goto {"goto"}
+
+   equal {'='}
+   plus_equal {"+="}
+   minus_equal {"-="}
+   asterisk_equal {"*="}
+   slash_equal {"/="}
+   percent_equal {"%="}
+   double_ls_br_equal {"<<="}
+   double_rs_br_equal {">>="}
+   ampersand_equal {"&="}
+   pipe_equal {"|="}
+   circumflex_equal {"^="}
+   double_ampersand {"&&"}
+   double_pipe {"||"}
+   ampersand {'&'}
+   pipe {'|'}
+   circumflex {'^'}
+   double_equal {"=="}
+   exclamation_equal {"!="}
+   rs_br {'>'}
+   ls_br {'<'}
+   rs_br_equal {">="}
+   ls_br_equal {"<="}
+   double_rs_br {">>"}
+   double_ls_br {"<<"}
+   plus {'+'}
+   minus {'-'}
+   dot {'.'}
+   asterisk {'*'}
+   slash {'/'}
+   percent {'%'}
+   double_plus {"++"}
+   double_minus {"--"}
+   exclamation {'!'}
+
+   question {'?'}
+   colon {':'}
+   tilde {'~'}
+
+   _SKIP_ {w.w*}
+   _SKIP__ {'#'.!'\n'*.'\n'}
+   _SKIP___ {"//".!'\n'*.'\n'}
+   _SKIP____ {"/*".(!'*'+('*'.!'/'))*."*/"}
+   _END_ {'\0'}
+
+nonterminals:
+   <start>
+   <end_check>
+
+   <function>
+   <function_name>
+   <function_header>
+   <function_parameters>
+   <function_parameter_list>
+   <function_parameter>
+
+   <type_pointer_list>
+   <pointer>
+
+   <command_list>
+   <command>
+
+   <modifier_list>
+   <modifier>
+   <type>
+   <variable_list>
+   <pointer_list_variable>
+   <variable>
+   <variable_name>
+
+   <command_block>
+   <command_block_begin>
+
+   <if_condition>
+   <if_body>
+   <if_else>
+   <while_begin>
+   <while_condition>
+   <do_while_begin>
+   <do_while_pre_cond>
+
+   <condition>
+   <expression>
+
+   <exp>
+
+   <cond_condition>
+   <cond_true>
+
+   <parameters>
+   <parameters_begin>
+   <parameter_list>
+
+   <H>
+   <G>
+   <F>
+   <E>
+   <D>
+   <C>
+   <B>
+   <A>
+
+rules:
+   <start> -> <end_check> ->> {null}
+
+   <end_check> -> <function> _END_ ->> {null}
+   <end_check> -> _END_ ->> {null}
+
+   $ -- function --
+   <function> -> <function_header> lc_br <command_list> rc_br ->>
+   {
+      if gen_parse_tree
+         this_idx = node_idx++;
+         out("   node_",this_idx," [label = \"<function_header> { <command_list> \}\"]\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         push(node_stack,this_idx);
+
+	 assert(size(node_stack) == 1);
+	 out("\}\n");
+      else
+         pop(tabs);
+      fi
+   }
+
+   <function_header> -> <function_name> lr_br <function_parameters> ->>
+   {
+      if gen_parse_tree
+         this_idx = node_idx++;
+         out("   node_",this_idx," [label = \"<function_name> ( <function_parameters>\"]\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         push(node_stack,this_idx);
+      else
+         pop(tabs);out(tabs,"function\n");
+      fi
+   }
+
+   <function_name> -> <type_pointer_list> id ->>
+   {
+      if gen_parse_tree
+         this_idx = node_idx++;
+         out("   node_",this_idx," [label = \"<type_pointer_list> ",rule_body(1),"\"]\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         push(node_stack,this_idx);
+      else
+         out(tabs,"function name \"",rule_body(1),"\"\n");push(tabs," f  ");push(tabs," p  ");
+      fi
+   }
+
+   $ - function parameters -
+   <function_parameters> -> rr_br ->>
+   {
+      if gen_parse_tree
+         this_idx = node_idx++;
+         out("   node_",this_idx," [label = \")\"]\n");
+         push(node_stack,this_idx);
+      else
+         null
+      fi
+   }
+   <function_parameters> -> <function_parameter_list> rr_br ->>
+   {
+      if gen_parse_tree
+         this_idx = node_idx++;
+         out("   node_",this_idx," [label = \"<function_parameter_list> )\"]\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         push(node_stack,this_idx);
+      else
+         null
+      fi
+   }
+
+   <function_parameter_list> -> <function_parameter_list> comma <function_parameter> ->>
+   {
+      if gen_parse_tree
+         this_idx = node_idx++;
+         out("   node_",this_idx," [label = \"<function_parameter_list> , <function_parameter>\"]\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         push(node_stack,this_idx);
+      else
+         null
+      fi
+   }
+   <function_parameter_list> -> <function_parameter> ->>
+   {
+      if gen_parse_tree
+         this_idx = node_idx++;
+         out("   node_",this_idx," [label = \"<function_parameter>\"]\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         push(node_stack,this_idx);
+      else
+         null
+      fi
+   }
+
+   <function_parameter> -> <type_pointer_list> id ->>
+   {
+      if gen_parse_tree
+         this_idx = node_idx++;
+         out("   node_",this_idx," [label = \"<type_pointer_list> ",rule_body(1),"\"]\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         push(node_stack,this_idx);
+      else
+         out(tabs,"fun parameter \"",rule_body(1),"\"\n");
+      fi
+   }
+
+   $ - type pointer list -
+   <type_pointer_list> -> <type_pointer_list> <pointer> ->>
+   {
+      if gen_parse_tree
+         this_idx = node_idx++;
+         out("   node_",this_idx," [label = \"<type_pointer_list> <pointer>\"]\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         push(node_stack,this_idx);
+      else
+         null
+      fi
+   }
+   <type_pointer_list> -> type ->>
+   {
+      if gen_parse_tree
+         this_idx = node_idx++;
+         out("   node_",this_idx," [label = \"",rule_body(0),"\"]\n");
+         push(node_stack,this_idx);
+      else
+         out(tabs,"type \"",rule_body(0),"\"\n");
+      fi
+   }
+
+   <pointer> -> asterisk ->>
+   {
+      if gen_parse_tree
+         this_idx = node_idx++;
+         out("   node_",this_idx," [label = \"*\"]\n");
+         push(node_stack,this_idx);
+      else
+         out(tabs,"pointer\n");
+      fi
+   }
+
+   $ -- command list --
+   <command_list> -> <command_list> <command> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<command_list> <command>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 null
+      fi
+   }
+   <command_list> -> <command> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<command>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 null
+      fi
+   }
+
+   $ -- declaration --
+   <command> -> <modifier_list> semicolon ->>
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<modifier_list> ;\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+         out(tabs,"declaration end\n");
+      fi
+   }
+
+   <modifier_list> -> <modifier> <modifier_list> ->>
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<modifier> <modifier_list>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+         null
+      fi
+   }
+   <modifier_list> -> <type> <variable_list> ->>
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<type> <variable_list>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+         null
+      fi
+   }
+
+   <modifier> -> volatile ->>
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"volatile\"]\n");
+	 push(node_stack,this_idx);
+      else
+         out(tabs,"modifier volatile\n");
+      fi
+   }
+
+   <type> -> type ->>
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"",rule_body(0),"\"]\n");
+	 push(node_stack,this_idx);
+      else
+         out(tabs,"type \"",rule_body(0),"\"\n");
+      fi
+   }
+
+   <variable_list> -> <pointer_list_variable> comma <variable_list> ->>
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<pointer_list_variable> , <variable_list>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+         null
+      fi
+   }
+   <variable_list> -> <pointer_list_variable> ->>
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<pointer_list_variable>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+         null
+      fi
+   }
+
+   <pointer_list_variable> -> <pointer> <pointer_list_variable> ->>
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<pointer> <pointer_list_variable>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+         null
+      fi
+   }
+   <pointer_list_variable> -> <variable> ->>
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<variable>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+         null
+      fi
+   }
+
+   <variable> -> <variable_name> ->>
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<variable_name>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+         out(tabs,"declare\n");
+      fi
+   }
+   <variable> -> <variable_name> equal <exp> ->>
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<variable_name> = <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+         out(tabs,"declare expression\n");
+      fi
+   }
+   <variable> -> <variable_name> le_br <exp> re_br ->>
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<variable_name> [ <exp> ]\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+         out(tabs,"declare array\n");
+      fi
+   }
+
+   <variable_name> -> id ->>
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"",rule_body(0),"\"]\n");
+	 push(node_stack,this_idx);
+      else
+         out(tabs,"variable \"",rule_body(0),"\"\n");
+      fi
+   }
+
+   $ -- command block --
+   <command> -> <command_block> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<command_block>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 null
+      fi
+   }
+
+   <command_block> -> lc_br rc_br ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"{ \}\"]\n");
+	 push(node_stack,this_idx);
+      else
+	 null
+      fi
+   }
+   <command_block> -> <command_block_begin> <command_list> rc_br ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<command_block_begin> <command_list> \}\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 pop(tabs);
+         out(tabs,"command block done\n");
+      fi
+   }
+   <command_block_begin> -> lc_br ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"{\"]\n");
+	 push(node_stack,this_idx);
+      else
+         out(tabs,"command block begin\n");
+	 push(tabs," b  ");
+      fi
+   }
+
+   $ -- if, if-else statement --
+   <command> -> <if_condition> <if_body> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<if_condition> <if_body>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 null
+      fi
+   }
+   <if_condition> -> if <condition> ->>
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"if <condition>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"if condition\n");
+      fi
+   }
+   <if_body> -> <command> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<command>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"if statement\n");
+      fi
+   }
+   <if_body> -> <if_else> <command> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<if_else> <command>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"if else statement\n");
+      fi
+   }
+   <if_else> -> <command> else ->>
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<command> else\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"if else\n");
+      fi
+   }
+
+   $ -- while statement --
+   <command> -> <while_begin> <while_condition> <command> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<while_begin> <condition> <command>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"while statement\n");
+      fi
+   }
+   <while_begin> -> while ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"while\"]\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"while begin\n");
+      fi
+   }
+   <while_condition> -> <condition> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<condition>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"while condition\n");
+      fi
+   }
+
+   $ -- do-while statement --
+   <command> -> <do_while_begin> <command> <do_while_pre_cond> <condition> semicolon ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<do_while_begin> <command> <do_while_pre_cond> <condition> ;\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"do while statement\n");
+      fi
+   }
+   <do_while_begin> -> do ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"do\"]\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"do while begin\n");
+      fi
+   }
+   <do_while_pre_cond> -> while ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"while\"]\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"do while pre condition\n");
+      fi
+   }
+
+   $ -- break statement --
+   <command> -> break semicolon ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"break ;\"]\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"break\n");
+      fi
+   }
+
+   $ -- continue statement --
+   <command> -> continue semicolon ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"continue ;\"]\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"continue\n");
+      fi
+   }
+
+   $ -- return statement --
+   <command> -> return <exp> semicolon ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"return <exp> ;\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"return\n");
+      fi
+   }
+
+   $ -- command exp --
+   <command> -> <expression> semicolon ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<expression> ;\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 null
+      fi
+   }
+
+   $ -- label --
+   <command> -> id colon ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"",rule_body(0)," :\"]\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"label ",rule_body(0),"\n");
+      fi
+   }
+
+   $ -- goto --
+   <command> -> goto id semicolon ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"goto ",rule_body(1)," ;\"]\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"goto ",rule_body(1),"\n");
+      fi
+   }
+
+   $ -- condition --
+   <condition> -> lr_br <exp> rr_br ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"( <exp> )\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 null
+      fi
+   }
+
+   $ -- expression --
+   <expression> -> <exp> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"expression\n");
+      fi
+   }
+
+   $ -- exp --
+   <exp> -> <H> ->> 
+   {
+      if gen_parse_tree
+	 $this_idx = node_idx++;
+	 $out("   node_",this_idx," [label = \"<exp>\"]\n");
+	 $out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 $push(node_stack,this_idx);
+	 null
+      else
+	 null
+      fi
+   }
+
+   $ -- exp operators --
+   <H> -> <H> equal <H> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> = <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary equal\n");
+      fi
+   }
+   <H> -> <H> plus_equal <H> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> += <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary plus_equal\n");
+      fi
+   }
+   <H> -> <H> minus_equal <H> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> -= <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary minus_equal\n");
+      fi
+   }
+   <H> -> <H> asterisk_equal <H> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> *= <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary asterisk_equal\n");
+      fi
+   }
+   <H> -> <H> slash_equal <H> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> /= <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary slash_equal\n");
+      fi
+   }
+   <H> -> <H> percent_equal <H> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> %= <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary percent_equal\n");
+      fi
+   }
+   <H> -> <H> double_ls_br_equal <H> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> <<= <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary double_ls_br_equal\n");
+      fi
+   }
+   <H> -> <H> double_rs_br_equal <H> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> >>= <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary double_rs_br_equal\n");
+      fi
+   }
+   <H> -> <H> ampersand_equal <H> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> &= <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary ampersand_equal\n");
+      fi
+   }
+   <H> -> <H> pipe_equal <H> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> |= <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary pipe_equal\n");
+      fi
+   }
+   <H> -> <H> circumflex_equal <H> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> ^= <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary circumflex_equal\n");
+      fi
+   }
+   <H> -> <G> ->> 
+   {
+      if gen_parse_tree
+	 $this_idx = node_idx++;
+	 $out("   node_",this_idx," [label = \"<exp>\"]\n");
+	 $out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 $push(node_stack,this_idx);
+	 null
+      else
+	 null
+      fi
+   }
+
+   <G> -> <G> double_ampersand <F> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> && <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary double_ampersand\n");
+      fi
+   }
+   <G> -> <G> double_pipe <F> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> || <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary double_pipe\n");
+      fi
+   }
+   <G> -> <F> ->> 
+   {
+      if gen_parse_tree
+	 $this_idx = node_idx++;
+	 $out("   node_",this_idx," [label = \"<exp>\"]\n");
+	 $out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 $push(node_stack,this_idx);
+	 null
+      else
+	 null
+      fi
+   }
+
+   <F> -> <F> double_equal <E> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> == <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary double_equal\n");
+      fi
+   }
+   <F> -> <F> exclamation_equal <E> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> != <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary exclamation_equal\n");
+      fi
+   }
+   <F> -> <F> rs_br <E> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> > <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary rs_br\n");
+      fi
+   }
+   <F> -> <F> ls_br <E> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> < <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary ls_br\n");
+      fi
+   }
+   <F> -> <F> rs_br_equal <E> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> >= <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary rs_br_equal\n");
+      fi
+   }
+   <F> -> <F> ls_br_equal <E> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> <= <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary ls_br_equal\n");
+      fi
+   }
+   <F> -> <E> ->> 
+   {
+      if gen_parse_tree
+	 $this_idx = node_idx++;
+	 $out("   node_",this_idx," [label = \"<exp>\"]\n");
+	 $out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 $push(node_stack,this_idx);
+	 null
+      else
+	 null
+      fi
+   }
+
+   <E> -> <E> ampersand <D> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> & <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary ampersand\n");
+      fi
+   }
+   <E> -> <E> pipe <D> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> | <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary pipe\n");
+      fi
+   }
+   <E> -> <E> circumflex <D> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> ^ <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary circumflex\n");
+      fi
+   }
+   <E> -> <D> ->> 
+   {
+      if gen_parse_tree
+	 $this_idx = node_idx++;
+	 $out("   node_",this_idx," [label = \"<exp>\"]\n");
+	 $out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 $push(node_stack,this_idx);
+	 null
+      else
+	 null
+      fi
+   }
+
+   <D> -> <D> double_rs_br <C> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> >> <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary double_rs_br\n");
+      fi
+   }
+   <D> -> <D> double_ls_br <C> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> << <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary double_ls_br\n");
+      fi
+   }
+   <D> -> <C> ->> 
+   {
+      if gen_parse_tree
+	 $this_idx = node_idx++;
+	 $out("   node_",this_idx," [label = \"<exp>\"]\n");
+	 $out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 $push(node_stack,this_idx);
+	 null
+      else
+	 null
+      fi
+   }
+
+   <C> -> <C> plus <B> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> + <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary plus\n");
+      fi
+   }
+   <C> -> <C> minus <B> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> - <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary minus\n");
+      fi
+   }
+   <C> -> <B> ->> 
+   {
+      if gen_parse_tree
+	 $this_idx = node_idx++;
+	 $out("   node_",this_idx," [label = \"<exp>\"]\n");
+	 $out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 $push(node_stack,this_idx);
+	 null
+      else
+	 null
+      fi
+   }
+
+   <B> -> <B> asterisk <A> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> * <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary asterisk\n");
+      fi
+   }
+   <B> -> <B> slash <A> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> / <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary slash\n");
+      fi
+   }
+   <B> -> <B> percent <A> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> % <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator binary percent\n");
+      fi
+   }
+
+   <B> -> <A> ->> 
+   {
+      if gen_parse_tree
+	 $this_idx = node_idx++;
+	 $out("   node_",this_idx," [label = \"<exp>\"]\n");
+	 $out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 $push(node_stack,this_idx);
+	 null
+      else
+	 null
+      fi
+   }
+   <A> -> <A> double_plus ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> ++\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator unary post_double_plus\n");
+      fi
+   }
+   <A> -> <A> double_minus ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp> --\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator unary post_double_minus\n");
+      fi
+   }
+   <A> -> double_plus <A> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"++ <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator unary pre_double_plus\n");
+      fi
+   }
+   <A> -> double_minus <A> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"-- <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator unary pre_double_minus\n");
+      fi
+   }
+   <A> -> plus <A> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"+ <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator unary pre_plus\n");
+      fi
+   }
+   <A> -> minus <A> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"- <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator unary pre_minus\n");
+      fi
+   }
+   <A> -> exclamation <A> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"! <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator unary pre_exclamation\n");
+      fi
+   }
+   <A> -> tilde <A> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"~ <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator unary pre_tilde\n");
+      fi
+   }
+   <A> -> asterisk <A> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"* <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator unary pre_asterisk\n");
+      fi
+   }
+   <A> -> ampersand <A> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"& <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"operator unary pre_ampersand\n");
+      fi
+   }
+
+   <A> -> <A> le_br <H> re_br ->> 
+   {
+      if gen_parse_tree
+         this_idx = node_idx++;
+         out("   node_",this_idx," [label = \"<exp> [ <exp> ]\"]\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         push(node_stack,this_idx);
+      else
+         out(tabs,"operator binary le_br_re_br\n");
+      fi
+   }
+
+   $ -- type cast --
+   <A> -> lr_br <type_pointer_list> rr_br <A> ->>
+   {
+      if gen_parse_tree
+         this_idx = node_idx++;
+         out("   node_",this_idx," [label = \"( <type_pointer_list> ) <exp>\"]\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         push(node_stack,this_idx);
+      else
+         out(tabs,"cast\n");
+      fi
+   }
+
+   $ -- exp bracket --
+   <A> -> lr_br <H> rr_br ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"( <exp> )\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 null
+      fi
+   }
+
+   $ -- identifier --
+   <A> -> id ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"",rule_body(0),"\"]\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"identifier \"",rule_body(0),"\"\n");
+      fi
+   }
+
+   $ -- conditional expression --
+   <H> -> <cond_condition> <cond_true> <exp> ->>
+   {
+      if gen_parse_tree
+         this_idx = node_idx++;
+         out("   node_",this_idx," [label = \"<cond_condition> <cond_true> <cond_false>\"]\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         push(node_stack,this_idx);
+      else
+         out(tabs,"conditional expression\n");
+      fi
+   }
+
+   <cond_condition> -> <H> question ->>
+   {
+      if gen_parse_tree
+         this_idx = node_idx++;
+         out("   node_",this_idx," [label = \"<H> question\"]\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         push(node_stack,this_idx);
+      else
+         out(tabs,"conditional condition\n");
+      fi
+   }
+
+   <cond_true> -> <exp> colon ->>
+   {
+      if gen_parse_tree
+         this_idx = node_idx++;
+         out("   node_",this_idx," [label = \"<exp> colon\"]\n");
+         out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+         push(node_stack,this_idx);
+      else
+         out(tabs,"conditional true\n");
+      fi
+   }
+
+   $ -- function call --
+   <A> -> id <parameters> rr_br ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"",rule_body(0)," <parameters> )\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"function call: \"",rule_body(0),"\"\n");
+      fi
+   }
+   
+   <parameters> -> <parameters_begin> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<parameters_begin>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 pop(tabs);
+      fi
+   }
+   <parameters> -> <parameters_begin> <parameter_list> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<parameters_begin> <parameter_list>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 pop(tabs);
+      fi
+   }
+
+   <parameters_begin> -> lr_br ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"(\"]\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"parameters begin\n");push(tabs," p  ");
+      fi
+   }
+
+   <parameter_list> -> <parameter_list> comma <exp> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<parameter_list> , <exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"parameter\n");
+      fi
+   }
+   <parameter_list> -> <exp> ->> 
+   {
+      if gen_parse_tree
+	 this_idx = node_idx++;
+	 out("   node_",this_idx," [label = \"<exp>\"]\n");
+	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+	 push(node_stack,this_idx);
+      else
+	 out(tabs,"parameter\n");
+      fi
+   }
+
+   $ -- constant values --
+   <A> -> single_char_const ->> 
+   {
+      if gen_parse_tree
+	 out("   node_",node_idx," [label = \"",rule_body(0),"\"]\n");
+	 push(node_stack,node_idx++);
+      else
+	 out(tabs,"const char \"",rule_body(0),"\"\n");
+      fi
+   }
+   <A> -> octal_char_const ->> 
+   {
+      if gen_parse_tree
+	 out("   node_",node_idx," [label = \"",rule_body(0),"\"]\n");
+	 push(node_stack,node_idx++);
+      else
+	 out(tabs,"const octal char \"",rule_body(0),"\"\n");
+      fi
+   }
+   <A> -> hex_char_const ->> 
+   {
+      if gen_parse_tree
+	 out("   node_",node_idx," [label = \"",rule_body(0),"\"]\n");
+	 push(node_stack,node_idx++);
+      else
+	 out(tabs,"const hex char \"",rule_body(0),"\"\n");
+      fi
+   }
+   <A> -> backslash_char_const ->> 
+   {
+      if gen_parse_tree
+	 out("   node_",node_idx," [label = \"'\\",substr(rule_body(0),1,size(rule_body(0)) - 1),"\"]\n");
+	 push(node_stack,node_idx++);
+      else
+	 out(tabs,"const backslash char \"",rule_body(0),"\"\n");
+      fi
+   }
+
+   <A> -> oct_i32_const ->> 
+   {
+      if gen_parse_tree
+	 out("   node_",node_idx," [label = \"const: ",rule_body(0),"\"]\n");
+	 push(node_stack,node_idx++);
+      else
+	 out(tabs,"const oct i32 \"",rule_body(0),"\"\n");
+      fi
+   }
+   <A> -> dec_i32_const ->> 
+   {
+      if gen_parse_tree
+	 out("   node_",node_idx," [label = \"const: ",rule_body(0),"\"]\n");
+	 push(node_stack,node_idx++);
+      else
+	 out(tabs,"const dec i32 \"",rule_body(0),"\"\n");
+      fi
+   }
+   <A> -> hex_i32_const ->> 
+   {
+      if gen_parse_tree
+	 out("   node_",node_idx," [label = \"const: ",rule_body(0),"\"]\n");
+	 push(node_stack,node_idx++);
+      else
+	 out(tabs,"const hex i32 \"",rule_body(0),"\"\n");
+      fi
+   }
+
+   <A> -> oct_i64_const ->> 
+   {
+      if gen_parse_tree
+	 out("   node_",node_idx," [label = \"const: ",rule_body(0),"\"]\n");
+	 push(node_stack,node_idx++);
+      else
+	 out(tabs,"const oct i64 \"",rule_body(0),"\"\n");
+      fi
+   }
+   <A> -> dec_i64_const ->> 
+   {
+      if gen_parse_tree
+	 out("   node_",node_idx," [label = \"const: ",rule_body(0),"\"]\n");
+	 push(node_stack,node_idx++);
+      else
+	 out(tabs,"const dec i64 \"",rule_body(0),"\"\n");
+      fi
+   }
+   <A> -> hex_i64_const ->> 
+   {
+      if gen_parse_tree
+	 out("   node_",node_idx," [label = \"const: ",rule_body(0),"\"]\n");
+	 push(node_stack,node_idx++);
+      else
+	 out(tabs,"const hex i64 \"",rule_body(0),"\"\n");
+      fi
+   }
+
+   <A> -> f32_const ->> 
+   {
+      if gen_parse_tree
+	 out("   node_",node_idx," [label = \"const: ",rule_body(0),"\"]\n");
+	 push(node_stack,node_idx++);
+      else
+	 out(tabs,"const f32 \"",rule_body(0),"\"\n");
+      fi
+   }
+   <A> -> f64_const ->> 
+   {
+      if gen_parse_tree
+	 out("   node_",node_idx," [label = \"const: ",rule_body(0),"\"]\n");
+	 push(node_stack,node_idx++);
+      else
+	 out(tabs,"const f64 \"",rule_body(0),"\"\n");
+      fi
+   }
+

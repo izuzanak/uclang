@@ -1,0 +1,6 @@
+ ---------------------------------------- 
+Exception: ERROR: in file: "08_class_exception.ucl" on line: 27
+    try { [1,2,3][3]; } catch (except_1) {}
+
+Index 3 exceeds array range
+ ---------------------------------------- 

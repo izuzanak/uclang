@@ -1,0 +1,124 @@
+01_class_sys.ucl
+02_class_pipe.ucl
+03_class_file.ucl
+04_class_socket
+05_class_regex.ucl
+06_class_signal.ucl
+07_class_poll.ucl
+08_class_timer.ucl
+09_class_clock.ucl
+
+=== Sys method sleep#1 =========================================================
+
+Sys.sleep(1) -> <blank>
+
+=== Sys methods srand#1 and rand#0 =============================================
+
+Sys.srand(13) -> <blank>
+Sys.rand()    -> 1358590890
+Sys.rand()    -> 733184381
+Sys.rand()    -> 1941561279
+
+=== Sys method getpid#0 ========================================================
+
+Sys.getpid() -> Integer
+
+=== Sys method getuid#0 ========================================================
+
+Sys.getuid() -> Integer
+
+=== Sys method getgid#0 ========================================================
+
+Sys.getgid() -> Integer
+
+=== Sys method system#1 ========================================================
+
+Sys.system("ls") -> 0
+
+=== Sys method exit#1 ==========================================================
+
+
+=== Sys method open#2 ==========================================================
+
+Sys.open("01_class_sys.ucl","r") -> File
+
+file.readln(): 
+file.readln(): // Language version 0.10
+file.readln(): 
+file.readln(): import tutorial;
+file.readln(): import sys;
+file.readln(): 
+
+=== Sys method popen#2 =========================================================
+
+Sys.popen("ls","r") -> Pipe
+
+pipe.readln(): 01_class_sys.ucl
+
+=== Sys directories manipulation methods =======================================
+
+Sys.getcwd() -> /home/jirka/folder/work/unicontrols/workspace/uclang/uclang/examples/02_modules/04_module_sys
+
+Sys.mkdir("/tmp/01_class_sys") -> <blank>
+Sys.chdir("/tmp/01_class_sys") -> <blank>
+
+Sys.listdir(".")   -> []
+Sys.mkdir("dir_0") -> <blank>
+Sys.mkdir("dir_1") -> <blank>
+Sys.listdir(".")   -> [dir_1,dir_0]
+Sys.rmdir("dir_1") -> <blank>
+Sys.listdir(".")   -> [dir_0]
+
+=== Sys method mkfifo#1 ========================================================
+
+Sys.mkfifo("fifo") -> <blank>
+Sys.listdir(".")   -> [fifo,dir_0]
+
+=== Sys method rename#2 ========================================================
+
+Sys.rename("fifo","new_fifo") -> <blank>
+Sys.listdir(".")              -> [new_fifo,dir_0]
+
+=== Sys method remove#1 ========================================================
+
+Sys.remove("new_fifo") -> <blank>
+Sys.listdir(".")       -> [dir_0]
+
+=== Sys method setenv#2 ========================================================
+
+Sys.setenv("ENV_VAR","value") -> <blank>
+
+=== Sys method getenv#1 ========================================================
+
+Sys.getenv("PATH")    -> /usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+Sys.getenv("ENV_VAR") -> value
+Sys.getenv("ENV_ERR") -> <blank>
+
+=== Sys methods is_file#1 and is_dir#1 =========================================
+
+Sys.listdir(".")     -> [file,dir_0]
+Sys.is_file("file")  -> 1
+Sys.is_file("dir_0") -> 0
+Sys.is_dir("file")   -> 0
+Sys.is_dir("dir_0")  -> 1
+Sys.listdir(".")     -> [file,dir_0]
+
+=== Sys method size#1 ==========================================================
+
+Sys.size(".")     -> 80
+Sys.size("file")  -> 12
+Sys.size("dir_0") -> 40
+
+=== Sys method time#0 ==========================================================
+
+Sys.time() -> Integer
+Sys.time() -> Integer
+Sys.time() -> Integer
+
+=== Sys built in constants =====================================================
+
+Sys.NAME: Unix
+Sys.SEP:  /
+
+=== Tutorial end ===============================================================
+

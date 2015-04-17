@@ -1,0 +1,35 @@
+
+=== If statement ===============================================================
+
+"Value_0" is equal to "Value_0"
+
+=== If else statement ==========================================================
+
+"Value_0" is not equal to "Value_2"
+
+=== Switch statement ===========================================================
+
+"Value_2" is equal to "Value_2"
+
+=== Switch statement multiple value case =======================================
+
+"Value_2" is equal to "Value_1" or "Value_2"
+"Value_2" is equal to "Value_2" or "Value_3"
+
+=== Switch statement default case ==============================================
+
+"Value_2" is not equal to any of given values
+
+=== Execute cases which expressions evaluates to one ===========================
+
+One equals to one
+Ten is bigger than five
+"Glass of water" contains "water"
+
+=== Conditional expression =====================================================
+
+One is equal to one
+One is not equal to two
+
+=== Tutorial end ===============================================================
+

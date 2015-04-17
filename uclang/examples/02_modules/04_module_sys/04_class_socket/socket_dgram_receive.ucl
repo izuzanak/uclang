@@ -1,0 +1,35 @@
+
+import sys;
+
+public class Main
+{
+  localhost = "127.0.0.1";
+
+  public Main()
+  {
+    // Create socket
+    socket = new Socket(Socket.AF_INET,Socket.SOCK_DGRAM);
+
+    // Bind socket to address
+    socket.bind(new SocketAddr(localhost,5556));
+
+    // Receive five messages
+    idx = 0;
+    do {
+
+      // Receive data from socket
+      data = socket.recvfrom();
+      ("Received: %s, from: %s:%s\n" % [data[0],data[1].name(),(type data[1].port()).to_string()]).print();
+
+    } while(++idx < 5);
+
+    // Close socket
+    socket.close();
+  }
+
+  public static main(args)
+  {
+    new Main();
+  }
+}
+

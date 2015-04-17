@@ -1,0 +1,25 @@
+Client: Data: Data srv -> cli
+Client: Data: Data srv -> cli
+Client: Data: Data srv -> cli
+Client: Data: Data srv -> cli
+Client: Data: Data srv -> cli
+Server: listenning
+Server: connection: 127.0.0.1:Integer
+Server: Data: Data cli -> srv
+Server: connection: 127.0.0.1:Integer
+Server: Data: Data cli -> srv
+Server: connection: 127.0.0.1:Integer
+Server: Data: Data cli -> srv
+Server: connection: 127.0.0.1:Integer
+Server: Data: Data cli -> srv
+Server: connection: 127.0.0.1:Integer
+Server: Data: Data cli -> srv
+
+=== Execute socket stream server ===============================================
+
+
+=== Execute socket stream clients ==============================================
+
+
+=== Tutorial end ===============================================================
+

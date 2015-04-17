@@ -1,0 +1,35 @@
+
+=== Keyword "type" retrieve type of variable ===================================
+
+type obj: Integer
+type obj: String
+type obj: Array
+
+=== Keyword "new" create new object and call its constructor ===================
+
+type obj: Integer, obj: 0
+type obj: String, obj: Hello world
+type obj: Array, obj: []
+
+=== It can create array of objects =============================================
+
+type obj: Array, obj: [0,0,0,0,0,0,0,0,0,0]
+type obj: Array, obj: [,,,,,,,,,]
+type obj: Array, obj: [[],[],[],[],[],[],[],[],[],[]]
+
+=== Keyword "free" release object, and set its value to Blank ==================
+
+type obj: Array, obj: [[],[],[],[],[],[],[],[],[],[]]
+type obj: Blank, obj: <blank>
+
+=== Keyword "this" refers to object of enclosing class =========================
+
+type this: Main, this: Main
+
+=== Operator/keyword "=@" create reference to value ============================
+
+type value: Integer, value: 10
+type value: String, value: Changed value
+
+=== Tutorial end ===============================================================
+

@@ -1,0 +1,76 @@
+#vim: set syntax=rules:
+
+init_code:
+{
+   null
+}
+
+terminals:
+
+  number {<09>.<09>*}
+
+  native {'='}
+  little_endian {'<'}
+  big_endian {'>'}
+
+  char {'c'}
+  signed_byte {'b'}
+  unsigned_byte {'B'}
+  short {'h'}
+  unsigned_short {'H'}
+  int {'i'}
+  unsigned {'I'}
+  long_int {'l'}
+  long_unsigned {'L'}
+  long_long_int {'q'}
+  long_long_unsigned {'Q'}
+  float {'f'}
+  double {'d'}
+  string {'s'}
+
+  end {'\0'}
+
+  $ !!! FIXME comment this terminal before production
+  $_END_ {'\n'}
+
+nonterminals:
+  <start>
+  <end_check>
+  <program>
+  <term_list>
+  <term>
+  
+rules:
+
+  <start> -> <end_check> ->> {null}
+
+  $ !!! FIXME comment these two rules before production
+  $<end_check> -> <program> _END_ ->> {null}
+  $<end_check> -> _END_ ->> {null}
+
+  <program> -> <term_list> ->> {null}
+
+  <term_list> -> <term> <term_list> ->> {null}
+  <term_list> -> <term> ->> {null}
+
+  <term> -> number ->> {out("number(",rule_body(0),")\n");}
+
+  <term> -> native ->> {out("native\n");}
+  <term> -> little_endian ->> {out("little_endian\n");}
+  <term> -> big_endian ->> {out("big_endian\n");}
+
+  <term> -> char ->> {out("char\n");}
+  <term> -> signed_byte ->> {out("signed_byte\n");}
+  <term> -> unsigned_byte ->> {out("unsigned_byte\n");}
+  <term> -> short ->> {out("short\n");}
+  <term> -> unsigned_short ->> {out("unsigned_short\n");}
+  <term> -> int ->> {out("int\n");}
+  <term> -> unsigned ->> {out("unsigned\n");}
+  <term> -> long_int ->> {out("long_int\n");}
+  <term> -> long_unsigned ->> {out("long_unsigned\n");}
+  <term> -> long_long_int ->> {out("long_long_int\n");}
+  <term> -> long_long_unsigned ->> {out("long_long_unsigned\n");}
+  <term> -> float ->> {out("float\n");}
+  <term> -> double ->> {out("double\n");}
+  <term> -> string ->> {out("string\n");}
+

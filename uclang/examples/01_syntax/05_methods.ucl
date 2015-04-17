@@ -1,0 +1,115 @@
+
+// Language version 0.10
+
+import tutorial;
+
+class Demo
+{
+  static static_member = 0;
+  non_static_member = 0;
+
+  // Method declaration syntax
+  //
+  // <modifier_list> <name> ( <parameters> )
+  // {
+  //   <command_list>
+  // }
+  //
+  // <modifier> -> static
+  // <modifier> -> private
+  // <modifier> -> public
+  // <modifier> -> abstract - more in inheritance
+  // <modifier> -> final    - more in inheritance
+  // <modifier> -> parallel - more in threading
+  //
+
+  // Static private method
+  static private static_private()
+  {
+    "Demo.static_private()\n".print();
+  }
+
+  // Static public method
+  static public static_public()
+  {
+    "Demo.static_public()\n".print();
+  }
+
+  // Private method
+  private non_static_private()
+  {
+    "Demo.non_static_private()\n".print();
+  }
+
+  // Public method
+  public non_static_public()
+  {
+    "Demo.non_static_public()\n".print();
+  }
+
+  public static static_member_access()
+  {
+    Tutorial.note("Static methods can access static members");
+
+    ("static_member: %d\n" % static_member).print();
+
+    // Static methods cannot access non-static members
+    // non_static_member = 1;
+  }
+
+  public non_static_member_access()
+  {
+    Tutorial.note("Non-static methods can access all members");
+
+    ("static_member: %d\n" % static_member).print();
+    ("non_static_member: %d\n" % non_static_member).print();
+  }
+
+  // Constructor of class Demo. Constructor must be declared as public
+  public Demo()
+  {
+    Tutorial.note("All methods are accessible from its parent class");
+
+    static_private();
+    static_public();
+    non_static_private();
+    non_static_public();
+  }
+}
+
+class Main
+{
+  static public main(argv)
+  {
+    // Create new object of class Demo
+    demo = new Demo();
+
+    // Call to static private method return compile time error
+    //Demo.static_private();
+
+    Tutorial.note("Call to private method throws an exception");
+    try {
+      demo.non_static_private();
+    }
+    catch (e)
+    {
+      e.error_print();
+    }
+
+    Tutorial.note("Public methods are accessible");
+
+    // Static method call convention <class-name>.<method> unlike :: in C++
+    Demo.static_public();
+
+    // Call methods by object instance
+    demo.static_public();
+    demo.non_static_public();
+
+    // Methods member access demo
+    demo.static_member_access();
+    demo.non_static_member_access();
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

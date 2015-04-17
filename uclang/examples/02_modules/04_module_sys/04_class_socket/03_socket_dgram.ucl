@@ -1,0 +1,30 @@
+
+// Language version 0.10
+
+import tutorial;
+import sys;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Execute socket datagram receiver
+    //
+    Tutorial.note("Execute socket datagram receiver");
+
+    Sys.system("uclang socket_dgram_receive.ucl &"); 
+    Sys.sleep(10);
+
+    // Execute five socket datagram senders
+    //
+    Tutorial.note("Execute socket datagram senders");
+
+    idx = 0;
+    do {
+      Sys.system("uclang socket_dgram_send.ucl"); 
+    } while(++idx < 5);
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

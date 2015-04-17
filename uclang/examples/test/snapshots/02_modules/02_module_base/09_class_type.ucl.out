@@ -1,0 +1,36 @@
+
+=== Type object ================================================================
+
+Type: Blank
+Type: Integer
+Type: String
+Type: Array
+Type: Dummy
+
+=== Type constant syntax =======================================================
+
+Type: Blank
+Type: Integer
+Type: String
+Type: Array
+Type: Dummy
+
+=== Type retrieve syntax =======================================================
+
+Type: Blank
+Type: Integer
+Type: String
+Type: Array
+Type: Dummy
+
+=== Type compare operators =====================================================
+
+type_0 == type_0 -> 1
+type_0 == type_1 -> 0
+type_0 == 10     -> 0
+type_0 != type_0 -> 0
+type_0 != type_1 -> 1
+type_0 != 10     -> 1
+
+=== Tutorial end ===============================================================
+

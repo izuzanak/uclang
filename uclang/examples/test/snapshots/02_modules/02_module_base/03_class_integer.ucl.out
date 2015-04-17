@@ -1,0 +1,171 @@
+
+=== Integer object =============================================================
+
+Integer: 0
+Integer: 65
+Integer: 10
+Integer: 11
+Integer: 16
+Integer: 64
+Integer: 100
+Integer: 256
+
+=== Integer constant syntax ====================================================
+
+Octal integer:    0700 -> 448
+Decimal integer:   448 -> 448
+Hexa integer:    0x1c0 -> 448
+
+=== Integer assign operator ====================================================
+
+integer: 10
+integer: string
+
+=== Integer plus operators =====================================================
+
+int_0          -> 125
+int_1          -> 175
+int_0 + int_1  -> 300
+int_0          -> 125
+int_0 += int_1 -> 300
+int_0          -> 300
++ int_0        -> 300
+int_0          -> 300
+
+=== Integer minus operators ====================================================
+
+int_0          -> 125
+int_1          -> 175
+int_0 - int_1  -> -50
+int_0          -> 125
+int_0 -= int_1 -> -50
+int_0          -> -50
+- int_0        -> 50
+int_0          -> -50
+
+=== Integer asterisk operators =================================================
+
+int_0          -> 125
+int_1          -> 175
+int_0 * int_1  -> 21875
+int_0          -> 125
+int_0 *= int_1 -> 21875
+int_0          -> 21875
+
+=== Integer slash operators ====================================================
+
+int_0          -> 125
+int_1          -> 15
+int_0 / int_1  -> 8
+int_0          -> 125
+int_0 /= int_1 -> 8
+int_0          -> 8
+
+=== Integer percent operators ==================================================
+
+int_0          -> 125
+int_1          -> 15
+int_0 % int_1  -> 5
+int_0          -> 125
+int_0 %= int_1 -> 5
+int_0          -> 5
+
+=== Integer << operators =======================================================
+
+int_0           -> 125
+int_1           -> 15
+int_0 << int_1  -> 4096000
+int_0           -> 125
+int_0 <<= int_1 -> 4096000
+int_0           -> 4096000
+
+=== Integer >> operators =======================================================
+
+int_0           -> 4096000
+int_1           -> 15
+int_0 >> int_1  -> 125
+int_0           -> 4096000
+int_0 >>= int_1 -> 125
+int_0           -> 125
+
+=== Integer ampersand operators ================================================
+
+int_0          -> 125
+int_1          -> 175
+int_0 & int_1  -> 45
+int_0          -> 125
+int_0 &= int_1 -> 45
+int_0          -> 45
+
+=== Integer pipe operators =====================================================
+
+int_0          -> 125
+int_1          -> 175
+int_0 | int_1  -> 255
+int_0          -> 125
+int_0 |= int_1 -> 255
+int_0          -> 255
+
+=== Integer circumflex operators ===============================================
+
+int_0          -> 125
+int_1          -> 175
+int_0 ^ int_1  -> 210
+int_0          -> 125
+int_0 ^= int_1 -> 210
+int_0          -> 210
+
+=== Integer double ampersand operators =========================================
+
+0 && 1 -> 0
+0 && 0 -> 0
+1 && 1 -> 1
+1 && 0 -> 0
+
+=== Integer double pipe operators ==============================================
+
+0 || 1 -> 1
+0 || 0 -> 0
+1 || 1 -> 1
+1 || 0 -> 1
+
+=== Integer compare operators ==================================================
+
+int_0          -> 125
+int_1          -> 175
+int_0 == int_1 -> 0
+int_0 != int_1 -> 1
+int_0 > int_1  -> 0
+int_0 < int_1  -> 1
+int_0 >= int_1 -> 0
+int_0 <= int_1 -> 1
+int_0          -> 125
+
+=== Integer double plus operators ==============================================
+
+int_0    -> 125
+++ int_0 -> 126
+int_0    -> 126
+int_0 ++ -> 126
+int_0    -> 127
+
+=== Integer double minus operators =============================================
+
+int_0    -> 125
+-- int_0 -> 124
+int_0    -> 124
+int_0 -- -> 124
+int_0    -> 123
+
+=== Integer exclamation operators ==============================================
+
+!125 -> 0
+!0   -> 1
+
+=== Integer tilde operators ====================================================
+
+int_0  -> 0x0f0f0f0f0f0f0f0f
+~int_0 -> 0xf0f0f0f0f0f0f0f0
+
+=== Tutorial end ===============================================================
+

@@ -1,0 +1,20 @@
+
+=== Delegate object ============================================================
+
+Delegate: Delegate
+
+=== Delegate assign operator ===================================================
+
+delegate: Delegate
+delegate: 10
+
+=== Delegate method call#1 =====================================================
+
+delegate -> Delegate
+delegate.call([10,5])             -> 15
+delegate.call(["First","Second"]) -> FirstSecond
+delegate.call([[1,2,3],[4,5,6]])  -> [1,2,3,4,5,6]
+delegate -> Delegate
+
+=== Tutorial end ===============================================================
+

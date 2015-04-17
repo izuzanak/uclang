@@ -1,0 +1,119 @@
+
+// Language version 0.10
+
+import tutorial;
+import sys;
+
+class Main
+{
+  static parallel thread_fun()
+  {/*{{{*/
+    return ["Thread","return","value"];
+  }/*}}}*/
+
+  static parallel thread_fun_mutex(mutex)
+  {/*{{{*/
+    mutex.lock();
+    mutex.unlock();
+
+    return ["Thread","return","value"];
+  }/*}}}*/
+
+  static parallel thread_detached()
+  {/*{{{*/
+  }/*}}}*/
+
+  static public main(argv)
+  {
+    // class Thread describes objects used for manipulation with native process
+    // threads
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final join#0
+    // public final try_join#0
+    // public final detach#0
+    // public final static yield#0
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("Thread object");
+
+    // Object of class Thread is created by call of parallel method, call will
+    // return object of class Thread instead of its return value
+    //
+    thread = thread_fun();
+    ("thread: %s\n" % thread.to_string()).print();
+    thread.join();
+
+    // Request to join calling thread to thread identified by object of class
+    // Thread. Blocks until joined thread exits.
+    //
+    // Return value of method join is value returned by thread parallel function
+    //
+    Tutorial.note("Thread method join#0");
+    thread = thread_fun();
+    ("thread        -> %s\n" % thread.to_string()).print();
+    ("thread.join() -> %s\n" % thread.join().to_string()).print();
+    ("thread        -> %s\n" % thread.to_string()).print();
+
+    // Request to join calling thread to thread identified by object of class
+    // Thread. If joined thread does not exists yet, method will return
+    // appropriate error code Thread.ERROR_BUSY.
+    //
+    // Return value of method try_join is either error code, or value returned
+    // by thread parallel function
+    //
+    Tutorial.note("Thread method try_join#0");
+    mutex = new Mutex();
+    mutex.lock();
+    thread = thread_fun_mutex(mutex);
+    ("thread            -> %s\n" % thread.to_string()).print();
+    ("thread.try_join() -> %s\n" % thread.try_join().to_string()).print();
+    mutex.unlock();
+    while((res = thread.try_join()) == Thread.ERROR_BUSY)
+    {
+      Thread.yield();
+    }
+    ("thread.try_join() -> %s\n" % res.to_string()).print();
+    ("thread            -> %s\n" % thread.to_string()).print();
+
+    // Request to detach thread identified by object of class Thread from
+    // calling thread.
+    //
+    Tutorial.note("Thread method detach#0");
+    thread = thread_detached();
+    ("thread          -> %s\n" % thread.to_string()).print();
+    ("thread.detach() -> %s\n" % thread.detach().to_string()).print();
+    ("thread          -> %s\n" % thread.to_string()).print();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("Thread built in constants");
+
+    // Built in constants
+    //
+    // public static static_const ERROR_AGAIN
+    // public static static_const ERROR_SEARCH
+    // public static static_const ERROR_INVALID
+    // public static static_const ERROR_DEADLOCK
+    // public static static_const ERROR_BUSY
+    //
+
+    ("Thread.ERROR_AGAIN:    %s\n" % Thread.ERROR_AGAIN.to_string()).print();
+    ("Thread.ERROR_SEARCH:   %s\n" % Thread.ERROR_SEARCH.to_string()).print();
+    ("Thread.ERROR_INVALID:  %s\n" % Thread.ERROR_INVALID.to_string()).print();
+    ("Thread.ERROR_DEADLOCK: %s\n" % Thread.ERROR_DEADLOCK.to_string()).print();
+    ("Thread.ERROR_BUSY:     %s\n" % Thread.ERROR_BUSY.to_string()).print();
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

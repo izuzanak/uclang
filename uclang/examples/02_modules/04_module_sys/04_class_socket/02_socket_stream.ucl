@@ -1,0 +1,30 @@
+
+// Language version 0.10
+
+import tutorial;
+import sys;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Execute socket stream server
+    //
+    Tutorial.note("Execute socket stream server");
+
+    Sys.system("uclang socket_stream_server.ucl &"); 
+    Sys.sleep(10);
+
+    // Execute five socket stream clients
+    //
+    Tutorial.note("Execute socket stream clients");
+
+    idx = 0;
+    do {
+      Sys.system("uclang socket_stream_client.ucl"); 
+    } while(++idx < 5);
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

@@ -1,0 +1,341 @@
+#vim: set syntax=rules:
+
+init_code:
+{
+   int gen_parse_tree = 0;
+   int node_idx = 0;
+   int this_idx;
+   int[] node_stack;
+   string tmp_str;
+
+   string[] tabs;
+
+   if gen_parse_tree
+      out("digraph tree {\n");
+      out("   rankdir = TD\n");
+      out("   ordering = in\n");
+      out("\n");
+      out("   overlap=false\n");
+      out("   graph [fontsize=12]\n   edge [fontsize=12]\n   node [shape=plaintext fontsize=12]\n");
+      out("\n");
+      $out("   ranksep = 0.2; nodesep = .04");
+   fi
+}
+
+terminals:
+   string {'"'.(|\\\"|+(('\\'.["\\/bfnrt])+('\\'.'u'.(<09>+<af>+<AF>).(<09>+<af>+<AF>).(<09>+<af>+<AF>).(<09>+<af>+<AF>))))*.'"'}
+   integer {('-'+e).('0'+(<19>.d*))}
+   float {('-'+e).('0'+(<19>.d*)).(('.'.d*)+e).(([eE].([+-]+e).d.d*)+e)}
+
+   true {"true"}
+   false {"false"}
+   null {"null"}
+
+   lc_br {'{'}
+   rc_br {'\}'}
+
+   le_br {'['}
+   re_br {']'}
+
+   comma {','}
+   colon {':'}
+
+   _SKIP_ {w.w*}
+   _END_ {'\0'}
+
+nonterminals:
+   <start>
+   <end_check>
+
+   <main_object>
+
+   <object>
+   <pairs>
+   <pairs_begin>
+   <pair_list>
+   <pair>
+
+   <array>
+   <values>
+   <values_begin>
+   <value_list>
+   <value>
+
+   <string>
+
+rules:
+   <start> -> <end_check> ->> {null}
+
+   <end_check> -> <main_object> _END_ ->> {null}
+   <end_check> -> _END_ ->> {null}
+
+   <main_object> -> <object> ->>
+   {
+     if gen_parse_tree
+       assert(size(node_stack) == 1);
+       out("\}\n");
+     else
+       null
+     fi
+   }
+
+   <object> -> <pairs> rc_br ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"<pairs> \}\"]\n");
+       out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+       push(node_stack,this_idx);
+     else
+       pop(tabs);
+     fi
+   }
+
+   <pairs> -> <pairs_begin> ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"<pairs_begin>\"]\n");
+       out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+       push(node_stack,this_idx);
+     else
+       null
+     fi
+   }
+
+   <pairs> -> <pairs_begin> <pair_list> ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"<pairs_begin> <pair_list>\"]\n");
+       out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+       out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+       push(node_stack,this_idx);
+     else
+       null
+     fi
+   }
+
+   <pairs_begin> -> lc_br ->> 
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"{\"]\n");
+       push(node_stack,this_idx);
+     else
+       out(tabs,"object_begin\n");push(tabs,"  o ");
+     fi
+   }
+
+   <pair_list> -> <pair_list> comma <pair> ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"<pair_list> , <pair>\"]\n");
+       out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+       out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+       push(node_stack,this_idx);
+     else
+       null
+     fi
+   }
+
+   <pair_list> -> <pair> ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"<pair>\"]\n");
+       out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+       push(node_stack,this_idx);
+     else
+       null
+     fi
+   }
+
+   <pair> -> <string> colon <value> ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"<string> : <value>\"]\n");
+       out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+       out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+       push(node_stack,this_idx);
+     else
+       out(tabs,"object_pair\n");
+     fi
+   }
+
+   <array> -> <values> re_br ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"<values> ]\"]\n");
+       out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+       push(node_stack,this_idx);
+     else
+       null
+     fi
+   }
+
+   <values> -> <values_begin> ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"<values_begin>\"]\n");
+       out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+       push(node_stack,this_idx);
+     else
+       null
+     fi
+   }
+
+   <values> -> <values_begin> <value_list> ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"<values_begin> <value_list>\"]\n");
+       out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+       out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+       push(node_stack,this_idx);
+     else
+       null
+     fi
+   }
+
+   <values_begin> -> le_br ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"[\"]\n");
+       push(node_stack,this_idx);
+     else
+       out(tabs,"array_begin\n");push(tabs,"  a ");
+     fi
+   }
+
+   <value_list> -> <value_list> comma <value> ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"<value_list> , <value>\"]\n");
+       out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+       out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+       push(node_stack,this_idx);
+     else
+       out(tabs,"array_value\n");
+     fi
+   }
+
+   <value_list> -> <value> ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"<value>\"]\n");
+       out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+       push(node_stack,this_idx);
+     else
+       out(tabs,"array_value\n");
+     fi
+   }
+
+   <value> -> <string> ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"<string>\"]\n");
+       out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+       push(node_stack,this_idx);
+     else
+       out(tabs,"val_string\n");
+     fi
+   }
+
+   <value> -> integer ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"",rule_body(0),"\"]\n");
+       push(node_stack,this_idx);
+     else
+       out(tabs,"val_integer: ",rule_body(0),"\n");
+     fi
+   }
+
+   <value> -> float ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"",rule_body(0),"\"]\n");
+       push(node_stack,this_idx);
+     else
+       out(tabs,"val_float: ",rule_body(0),"\n");
+     fi
+   }
+
+   <value> -> <object> ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"<object>\"]\n");
+       out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+       push(node_stack,this_idx);
+     else
+       out(tabs,"val_object\n");
+     fi
+   }
+
+   <value> -> <array> ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"<array>\"]\n");
+       out("   node_",this_idx," -> node_",pop(node_stack),"\n");
+       push(node_stack,this_idx);
+     else
+       pop(tabs);out(tabs,"val_array\n");
+     fi
+   }
+
+   <value> -> true ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"true\"]\n");
+       push(node_stack,this_idx);
+     else
+       out(tabs,"val_true\n");
+     fi
+   }
+
+   <value> -> false ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"false\"]\n");
+       push(node_stack,this_idx);
+     else
+       out(tabs,"val_false\n");
+     fi
+   }
+   <value> -> null ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = \"null\"]\n");
+       push(node_stack,this_idx);
+     else
+       out(tabs,"val_null\n");
+     fi
+   }
+
+   <string> -> string ->>
+   {
+     if gen_parse_tree
+       this_idx = node_idx++;
+       out("   node_",this_idx," [label = ",rule_body(0),"]\n");
+       push(node_stack,this_idx);
+     else
+       out(tabs,"string: ",rule_body(0),"\n");
+     fi
+   }
+

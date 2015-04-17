@@ -1,0 +1,120 @@
+
+// Language version 0.10
+
+import tutorial;
+import sys;
+import containers;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Slice operator syntax
+    // <iterable>[<start>:<end>:<step>]
+    //
+    // <start> - index of first value
+    // <end>   - index of last value
+    // <step>  - step
+    //
+    // Result of slice is always object of class Array
+    //
+
+    // All iterable objects can be slices.
+    //
+
+    Tutorial.note("Array slice");
+    array = [1,2,3,4,5,6,7,8,9,10];
+    ("array: %s\n" % array.to_string()).print();
+    ("array[::2]: %s\n" % array[::2].to_string()).print();
+    ("array[-1::-2]: %s\n" % array[-1::-2].to_string()).print();
+
+    // String is too iterable
+    //
+
+    Tutorial.note("String slice");
+    ("\"!!ddllrrooww oolllleeHH\"[::-2]: %s\n" % "!!ddllrrooww oolllleeHH"[::-2]).print();
+
+    // User defined iterables can be sliced too
+    //
+
+    Tutorial.note("Iter_0 slice");
+    iter_0 = new Iter_0(10);
+    ("Iter_0[::]: %s\n" % new Iter_0(10)[::].to_string()).print();
+    ("Iter_0[::-1]: %s\n" % new Iter_0(10)[::-1].to_string()).print();
+
+    Tutorial.note("Iter_1 slice");
+    ("Iter_1[::]: %s\n" % new Iter_1(10)[::].to_string()).print();
+    ("Iter_1[::-1]: %s\n" % new Iter_1(10)[::-1].to_string()).print();
+    ("Iter_1[4::]: %s\n" % new Iter_1(10)[4::].to_string()).print();
+    ("Iter_1[-4::-1]: %s\n" % new Iter_1(10)[-4::-1].to_string()).print();
+
+    // File from module sys is Iter_1
+    //
+
+    Tutorial.note("File lines slice");
+    ("Odd lines: %s\n" % new File("10_slice_operator.ucl","r")[::2].to_string()).print();
+
+    Tutorial.note("Tutorial end");
+  }
+}
+
+class Iter_0
+{/*{{{*/
+  max_idx;
+
+  public Iter_0(a_max_idx)
+  {
+    max_idx = a_max_idx;
+  }
+
+  public first_idx()
+  {
+    return 0;
+  }
+
+  public next_idx(a_idx)
+  {
+    new_idx = a_idx + 1;
+    return new_idx < max_idx ? new_idx : new Blank();
+  }
+
+  public item(a_idx)
+  {
+    return "item(%d)" % a_idx;
+  }
+
+  public length()
+  {
+    return max_idx;
+  }
+}/*}}}*/
+
+class Iter_1
+{/*{{{*/
+  idx;
+  max_idx;
+
+  public Iter_1(a_max_idx)
+  {
+    idx = 0;
+    max_idx = a_max_idx;
+  }
+
+  public next_item()
+  {
+    if (idx < max_idx)
+    {
+      return "item(%d)" % idx++;
+    }
+    else
+    {
+      return new Blank();
+    }
+  }
+
+  public length()
+  {
+    return max_idx - idx;
+  }
+}/*}}}*/
+

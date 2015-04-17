@@ -1,0 +1,18 @@
+
+=== Access to private members throws an exception ==============================
+
+
+=== Public members are accessible ==============================================
+
+demo.static_public: 1
+
+=== Static members are shared among all instances of class =====================
+
+demo.static_public: 100
+
+=== Non-static members are unique for each class instance ======================
+
+demo.non_static_public: 1
+
+=== Tutorial end ===============================================================
+

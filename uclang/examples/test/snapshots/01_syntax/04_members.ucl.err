@@ -1,0 +1,6 @@
+ ---------------------------------------- 
+Exception: ERROR: in file: "04_members.ucl" on line: 53
+      ("demo.static_private: %d\n" % demo.static_private).print();
+
+Cannot access private variable Demo.static_private
+ ---------------------------------------- 

@@ -1,0 +1,112 @@
+
+// Language version 0.10
+
+import tutorial;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Class Blank represents empty value
+    // not null - object exists
+    // not undefined - object is defined
+    //
+    
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final static operator_binary_double_equal#1
+    // public final static operator_binary_exclamation_equal#1
+    // public final Blank#0
+    // public final static compare#1
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("Blank object");
+    ("Blank: %s\n" % Blank.to_string()).print();
+    ("Blank: %s\n" % new Blank().to_string()).print();
+
+    // Assign operator replace blank object by operator parameter
+    //
+
+    Tutorial.note("Blank assign operator");
+    blank = new Blank();
+    ("blank: %s\n" % blank.to_string()).print();
+    blank = 10;
+    ("blank: %s\n" % blank.to_string()).print();
+
+    Tutorial.note("Blank equality operators");
+    blank = new Blank();
+    ("blank == 10    -> %d\n" % (blank == 10)).print();
+    ("blank == blank -> %d\n" % (blank == blank)).print();
+    ("Blank == blank -> %d\n" % (Blank == blank)).print();
+    ("blank != 10    -> %d\n" % (blank != 10)).print();
+    ("blank != blank -> %d\n" % (blank != blank)).print();
+    ("Blank != blank -> %d\n" % (Blank != blank)).print();
+
+    // When testing Blank equality, always use blank on left side. Otherwise
+    // second object operator will be called
+    //
+
+    Tutorial.note("Blank equality example");
+    blank = new Blank();
+    simple = new Simple();
+
+    try {
+      ("blank == simple -> %d\n" % (blank == simple)).print();
+      ("simple == blank -> %d\n" % (simple == blank)).print();
+    }
+    catch (e)
+    {
+      e.error_print();
+    }
+
+    // Method compare#1 return values -1/0/1 if object is lesser/equal/greater
+    // than operator parameter
+    //
+    // Classes of both objects are compared first, their values are compared
+    // only if their classes are same
+    //
+    Tutorial.note("Blank methods - compare#1");
+    blank = new Blank();
+    ("blank.compare(blank) -> %d\n" % blank.compare(blank)).print();
+    ("blank.compare(10)    -> %d\n" % blank.compare(10)).print();
+
+    // Method to_string#0 return string describing object. Simple values return
+    // its data, comlex classes return their names
+    //
+    Tutorial.note("Blank methods - to_string#0");
+    blank = new Blank();
+    ("blank.to_string() -> %s\n" % blank.to_string()).print();
+    ("Blank.to_string() -> %s\n" % Blank.to_string()).print();
+
+    // Method print#0 print string describing object to standard output
+    //
+    Tutorial.note("Blank methods - print#0");
+    blank = new Blank();
+    "blank.print: ".print();
+    blank.print();
+    "\n".print();
+
+    Tutorial.note("Tutorial end");
+  }
+}
+
+class Simple
+{/*{{{*/
+  public Simple()
+  {
+  }
+
+  public static to_string()
+  {
+    return "Simple";
+  }
+
+  public static print()
+  {
+    "Simple".print();
+  }
+}/*}}}*/
+

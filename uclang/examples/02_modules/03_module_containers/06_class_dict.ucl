@@ -1,0 +1,150 @@
+
+// Language version 0.10
+
+import tutorial;
+import containers;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Class Dict represent abstract data type Dictionary
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final operator_binary_double_equal#1
+    // public final operator_binary_exclamation_equal#1
+    // public final operator_binary_le_br_re_br#1
+    // public final Dict#0
+    // public final Dict#1
+    // public final clear#0
+    // public final keys#0
+    // public final items#0
+    // public final has_key#1
+    // public final remove_key#1
+    // public final first_key#0
+    // public final next_key#1
+    // public final compare#1
+    // public final item#1
+    // public final first_idx#0
+    // public final next_idx#1
+    // public final length#0
+    // public final to_string#0
+    // public final to_string#1
+    // public final print#0
+    //
+
+    Tutorial.note("Dict object");
+    ("Dict: %s\n" % new Dict().to_string()).print();
+    ("Dict: %s\n" % new Dict(["One",1,"Two",2,"Three",3]).to_string()).print();
+
+    Tutorial.note("Dict assign operator");
+    dict = new Dict();
+    ("dict: %s\n" % dict.to_string()).print();
+    dict = 10;
+    ("dict: %s\n" % dict.to_string()).print();
+
+    Tutorial.note("Dict compare operators");
+    dict_0 = new Dict(["One",1,"Two",2,"Three",3]);
+    dict_1 = new Dict(["One",1,"Two",2,"Three",4]);
+    ("dict_0 == dict_0 -> %d\n" % (dict_0 == dict_0)).print();
+    ("dict_0 == dict_1 -> %d\n" % (dict_0 == dict_1)).print();
+    ("dict_0 == 10     -> %d\n" % (dict_0 == 10)).print();
+    ("dict_0 != dict_0 -> %d\n" % (dict_0 != dict_0)).print();
+    ("dict_0 != dict_1 -> %d\n" % (dict_0 != dict_1)).print();
+    ("dict_0 != 10     -> %d\n" % (dict_0 != 10)).print();
+
+    Tutorial.note("Dict item select operator");
+    dict = new Dict(["One",1,"Two",2,"Three",3,"Four",4]);
+    ("dict          -> %s\n" % dict.to_string()).print();
+    for (key <- dict)
+    {
+      ("dict[\"%5.s\"] -> %s\n" % [key,dict[key].to_string()]).print();
+    }
+
+    // Access to value by select item operator using non-existing key will
+    // create this key and assing Blank value to it
+    //
+    Tutorial.note("Dict item select operator, non existing key");
+    ("dict         -> %s\n" % dict.to_string()).print();
+    ("dict[\"Five\"] -> %s\n" % [dict["Five"].to_string()]).print();
+    ("dict         -> %s\n" % dict.to_string()).print();
+
+    Tutorial.note("Dict method clear#0");
+    dict = new Dict(["One",1,"Two",2,"Three",3]);
+    ("dict         -> %s\n" % dict.to_string()).print();
+    ("dict.clear() -> %s\n" % dict.clear().to_string()).print();
+    ("dict         -> %s\n" % dict.to_string()).print();
+
+    Tutorial.note("Dict method keys#0");
+    dict = new Dict(["One",1,"Two",2,"Three",3]);
+    ("dict -> type: %s, value %s\n" % [(type dict).to_string(),dict.to_string()]).print();
+    keys = dict.keys();
+    ("keys -> type: %s, value %s\n" % [(type keys).to_string(),keys.to_string()]).print();
+    ("dict -> type: %s, value %s\n" % [(type dict).to_string(),dict.to_string()]).print();
+
+    Tutorial.note("Dict method items#0");
+    dict = new Dict(["One",1,"Two",2,"Three",3]);
+    ("dict  -> type: %s, value %s\n" % [(type dict).to_string(),dict.to_string()]).print();
+    items = dict.items();
+    ("items -> type: %s, value %s\n" % [(type items).to_string(),items.to_string()]).print();
+    ("dict  -> type: %s, value %s\n" % [(type dict).to_string(),dict.to_string()]).print();
+
+    Tutorial.note("Dict method has_key#1");
+    dict = new Dict(["One",1,"Two",2,"Three",3]);
+    ("dict                 -> %s\n" % dict.to_string()).print();
+    ("dict.has_key(\"One\")  -> %d\n" % dict.has_key("One")).print();
+    ("dict.has_key(\"Four\") -> %d\n" % dict.has_key("Four")).print();
+    ("dict.has_key(2)      -> %d\n" % dict.has_key(2)).print();
+
+    Tutorial.note("Dict method remove_key#1");
+    dict = new Dict(["One",1,"Two",2,"Three",3,"Four",4]);
+    ("dict                     -> %s\n" % dict.to_string()).print();
+    ("dict.remove_key(\"One\")   -> %s\n" % dict.remove_key("One").to_string()).print();
+    ("dict.remove_key(\"Three\") -> %s\n" % dict.remove_key("Three").to_string()).print();
+    ("dict                     -> %s\n" % dict.to_string()).print();
+
+    Tutorial.note("Dict methods first_key#0 and next_key#1");
+    dict = new Dict(["One",1,"Two",2,"Three",3,"Four",4]);
+    ("dict -> %s\n" % dict.to_string()).print();
+    key = dict.first_key();
+    while (Blank != key)
+    {
+      ("key  -> %s\n" % key.to_string()).print();
+      key = dict.next_key(key);
+    }
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final compare#1
+    // public final item#1
+    // public final first_idx#0
+    // public final next_idx#1
+    // public final length#0
+    // public final to_string#0
+    // public final to_string#1
+    // public final print#0
+    //
+
+    // Method to_string#1 return string created by concatenating string
+    // representations of dictionary pairs separated by string given as method
+    // parameter
+    //
+    Tutorial.note("Difference of to_string#0 and to_string#1");
+    dict = new Dict(["One",1,"Two",2,"Three",3]);
+    ("dict.to_string()        -> %s\n" % dict.to_string()).print();
+    ("dict.to_string(\"-SEP-\") -> %s\n" % dict.to_string("-SEP-")).print();
+
+    // Methods of class Dict throws following exceptions
+    //
+    // c_error_DICT_INDEX_DOES_NOT_REFER_TO_VALID_VALUE
+    // c_error_DICT_INVALID_KEY
+    // c_error_DICT_SOURCE_NOT_DIVISIBLE_BY_TWO
+    // c_error_DICT_SOURCES_NOT_SAME_LENGTH
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

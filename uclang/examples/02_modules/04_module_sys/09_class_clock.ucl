@@ -1,0 +1,68 @@
+
+// Language version 0.10
+
+import tutorial;
+import sys;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Objects of class Clock grants access to system clock time
+    //
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final static getres#1
+    // public final static gettime#1
+    // public final static settime#2
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("Clock method getres#1");
+    ("Clock.getres(Clock.CLOCK_REALTIME)           -> %s\n" % Clock.getres(Clock.CLOCK_REALTIME).to_string()).print();
+    ("Clock.getres(Clock.CLOCK_MONOTONIC)          -> %s\n" % Clock.getres(Clock.CLOCK_MONOTONIC).to_string()).print();
+    ("Clock.getres(Clock.CLOCK_PROCESS_CPUTIME_ID) -> %s\n" % Clock.getres(Clock.CLOCK_PROCESS_CPUTIME_ID).to_string()).print();
+    ("Clock.getres(Clock.CLOCK_THREAD_CPUTIME_ID)  -> %s\n" % Clock.getres(Clock.CLOCK_THREAD_CPUTIME_ID).to_string()).print();
+
+    Tutorial.note("Clock method gettime#1");
+    ("Clock.gettime(Clock.CLOCK_REALTIME)           -> %s\n" % (type Clock.gettime(Clock.CLOCK_REALTIME)).to_string()).print();
+    ("Clock.gettime(Clock.CLOCK_MONOTONIC)          -> %s\n" % (type Clock.gettime(Clock.CLOCK_MONOTONIC)).to_string()).print();
+    ("Clock.gettime(Clock.CLOCK_PROCESS_CPUTIME_ID) -> %s\n" % (type Clock.gettime(Clock.CLOCK_PROCESS_CPUTIME_ID)).to_string()).print();
+    ("Clock.gettime(Clock.CLOCK_THREAD_CPUTIME_ID)  -> %s\n" % (type Clock.gettime(Clock.CLOCK_THREAD_CPUTIME_ID)).to_string()).print();
+
+    Tutorial.note("Clock built in constants");
+
+    // Built in constants
+    //
+    // public static static_const CLOCK_REALTIME
+    // public static static_const CLOCK_MONOTONIC
+    // public static static_const CLOCK_PROCESS_CPUTIME_ID
+    // public static static_const CLOCK_THREAD_CPUTIME_ID
+    //
+
+    ("Clock.CLOCK_REALTIME:           %d\n" % Clock.CLOCK_REALTIME).print();
+    ("Clock.CLOCK_MONOTONIC:          %d\n" % Clock.CLOCK_MONOTONIC).print();
+    ("Clock.CLOCK_PROCESS_CPUTIME_ID: %d\n" % Clock.CLOCK_PROCESS_CPUTIME_ID).print();
+    ("Clock.CLOCK_THREAD_CPUTIME_ID:  %d\n" % Clock.CLOCK_THREAD_CPUTIME_ID).print();
+
+    // Methods of class Clock throws following exceptions
+    //
+    // c_error_CLOCK_CANNOT_GET_RESOLUTION
+    // c_error_CLOCK_CANNOT_GET_TIME
+    // c_error_CLOCK_CANNOT_SET_TIME
+    //
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

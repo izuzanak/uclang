@@ -1,0 +1,98 @@
+
+// Language version 0.10
+
+import tutorial;
+import sys;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Class Pipe enable execution of process, and supply data as its standard
+    // input, or read data from its standard output
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final Pipe#0
+    // public final Pipe#2
+    // public final close#0
+    // public final write#1
+    // public final flush#0
+    // public final read#0
+    // public final readln#0
+    // public final read#1
+    // public final get_fd#0
+    // public final next_item#0
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("Pipe object");
+    ("Pipe: %s\n" % new Pipe().to_string()).print();
+    ("Pipe: %s\n" % (pipe_1 = new Pipe("ls","r")).to_string()).print();
+
+    pipe_1.read();
+    pipe_1.close();
+
+    Tutorial.note("Pipe method close#0");
+    pipe = new Pipe("cat","w");
+    ("pipe         -> %s\n" % pipe.to_string()).print();
+    ("pipe.close() -> %s\n" % pipe.close().to_string()).print();
+
+    Tutorial.note("Pipe methods write#1 and flush#0");
+    pipe = new Pipe("cat","w");
+
+    pipe.write("Hello world!\n");
+    pipe.flush();
+    pipe.close();
+
+    Tutorial.note("Pipe method read#0");
+    pipe = new Pipe("ls","r");
+    ("pipe        -> %s\n" % pipe.to_string()).print();
+    ("pipe.read() -> %s" % pipe.read()).print();
+    pipe.close();
+
+    Tutorial.note("Pipe method readln#0");
+    pipe = new Pipe("ls","r");
+    ("pipe          -> %s\n" % pipe.to_string()).print();
+
+    do {
+      ("pipe.readln() -> %s\n" % (line = pipe.readln()).to_string()).print();
+    } while(Blank != line);
+
+    pipe.close();
+
+    Tutorial.note("Pipe method read#1");
+    pipe = new Pipe("ls","r");
+    ("pipe          -> %s\n" % pipe.to_string()).print();
+    ("pipe.read(10) -> %s\n" % pipe.read(10)).print();
+    ("pipe.read(10) -> %s\n" % pipe.read(10)).print();
+    pipe.close();
+
+    Tutorial.note("Pipe method get_fd#1");
+    pipe = new Pipe("cat","w");
+    ("pipe          -> %s\n" % pipe.to_string()).print();
+    ("pipe.get_fd() -> %d\n" % pipe.get_fd()).print();
+    pipe.close();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final next_item#0
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    // Methods of class Pipe throws following exceptions
+    //
+    // c_error_PIPE_CREATE_ERROR
+    // c_error_PIPE_OPEN_ERROR
+    // c_error_PIPE_CLOSE_ERROR
+    // c_error_PIPE_NOT_OPENED
+    //
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

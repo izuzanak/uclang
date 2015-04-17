@@ -1,0 +1,54 @@
+
+// Language version 0.10
+
+import tutorial;
+import image;
+
+class Main
+{
+  static public main(argv)
+  {
+    image = new Image(100,100,Image.PIX_FMT_RGB24);
+
+    // Class Buffer represents binary data buffer that belongs to some other
+    // object. It is used for binary data handling among third party library
+    // objects and so on.
+    //
+    // For example: image data are transfered from object of class Image to
+    // object of class GlTexture, without copying.
+    //
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final static size#0
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("Buffer object");
+    ("Buffer: %s\n" % image.buffer().to_string()).print();
+
+    Tutorial.note("Buffer assign operator");
+    buffer = image.buffer();
+    ("buffer: %s\n" % buffer.to_string()).print();
+    buffer = 10;
+    ("buffer: %s\n" % buffer.to_string()).print();
+
+    Tutorial.note("Array method size#0");
+    buffer = image.buffer();
+    ("buffer        -> %s\n" % buffer.to_string()).print();
+    ("buffer.size() -> %s\n" % buffer.size().to_string()).print();
+    ("buffer        -> %s\n" % buffer.to_string()).print();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

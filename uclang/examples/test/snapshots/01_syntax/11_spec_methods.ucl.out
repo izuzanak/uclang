@@ -1,0 +1,118 @@
+
+=== Operators example ==========================================================
+
+counter: Counter(0)
+DEBUG: Counter.operator_binary_plus_equal(1)
+counter: Counter(1)
+DEBUG: Counter.operator_binary_plus_equal(2)
+counter: Counter(3)
+DEBUG: Counter.operator_binary_plus_equal(3)
+counter: Counter(6)
+
+=== Method compare#1 ===========================================================
+
+DEBUG: Comparable(86).compare(Comparable(83))
+DEBUG: Comparable(77).compare(Comparable(83))
+DEBUG: Comparable(15).compare(Comparable(83))
+DEBUG: Comparable(15).compare(Comparable(77))
+DEBUG: Comparable(93).compare(Comparable(83))
+DEBUG: Comparable(93).compare(Comparable(86))
+DEBUG: Comparable(35).compare(Comparable(83))
+DEBUG: Comparable(35).compare(Comparable(77))
+DEBUG: Comparable(35).compare(Comparable(15))
+DEBUG: Comparable(86).compare(Comparable(83))
+DEBUG: Comparable(86).compare(Comparable(86))
+DEBUG: Comparable(92).compare(Comparable(83))
+DEBUG: Comparable(92).compare(Comparable(86))
+DEBUG: Comparable(92).compare(Comparable(93))
+DEBUG: Comparable(49).compare(Comparable(83))
+DEBUG: Comparable(49).compare(Comparable(35))
+DEBUG: Comparable(49).compare(Comparable(77))
+DEBUG: Comparable(21).compare(Comparable(83))
+DEBUG: Comparable(21).compare(Comparable(35))
+DEBUG: Comparable(21).compare(Comparable(15))
+
+set: [Comparable(15),Comparable(21),Comparable(35),Comparable(49),Comparable(77),Comparable(83),Comparable(86),Comparable(92),Comparable(93)]
+
+=== Methods item#1, first_idx#0 and next_idx#1 =================================
+
+DEBUG: Iter_0.first_idx()
+DEBUG: Iter_0.item(0)
+DEBUG: Iter_0.next_idx(0)
+DEBUG: Iter_0.item(1)
+DEBUG: Iter_0.next_idx(1)
+DEBUG: Iter_0.item(2)
+DEBUG: Iter_0.next_idx(2)
+DEBUG: Iter_0.item(3)
+DEBUG: Iter_0.next_idx(3)
+DEBUG: Iter_0.item(4)
+DEBUG: Iter_0.next_idx(4)
+DEBUG: Iter_0.item(5)
+DEBUG: Iter_0.next_idx(5)
+DEBUG: Iter_0.item(6)
+DEBUG: Iter_0.next_idx(6)
+
+iter_0: [item(0),item(1),item(2),item(3),item(4),item(5),item(6)]
+
+=== Method next_item#0 =========================================================
+
+DEBUG: Iter_1.next_item()
+DEBUG: Iter_1.next_item()
+DEBUG: Iter_1.next_item()
+DEBUG: Iter_1.next_item()
+DEBUG: Iter_1.next_item()
+DEBUG: Iter_1.next_item()
+DEBUG: Iter_1.next_item()
+DEBUG: Iter_1.next_item()
+
+iter_1: [item(0),item(1),item(2),item(3),item(4),item(5),item(6)]
+
+=== Method length#0 ============================================================
+
+"Hello world".length(): 11
+[1,2,3,4,5,6].length(): 6
+DEBUG: Iter_0.length()
+new Iter_0(9).length(): 9
+
+=== Method length#0 is used by iteration =======================================
+
+DEBUG: Iter_0.length()
+DEBUG: Iter_0.first_idx()
+DEBUG: Iter_0.next_idx(0)
+DEBUG: Iter_0.item(1)
+DEBUG: Iter_0.next_idx(1)
+DEBUG: Iter_0.next_idx(2)
+DEBUG: Iter_0.item(3)
+DEBUG: Iter_0.next_idx(3)
+DEBUG: Iter_0.next_idx(4)
+DEBUG: Iter_0.item(5)
+DEBUG: Iter_0.next_idx(5)
+
+new Iter_0(7)[-2::-2]: [item(5),item(3),item(1)]
+
+=== Method to_string#0 =========================================================
+
+(10).to_string(): 10
+"Hello world".to_string(): Hello world
+
+=== Method to_string#0 called from Array to_string#0 ===========================
+
+DEBUG: Iter_0.to_string()
+DEBUG: Iter_0.to_string()
+DEBUG: Iter_0.to_string()
+DEBUG: Iter_0.to_string()
+DEBUG: Iter_0.to_string()
+
+[iter,iter,iter,iter,iter]: [Iter_0,Iter_0,Iter_0,Iter_0,Iter_0]
+
+=== Method print#0 =============================================================
+
+10
+10.000000
+
+=== Method print#0 called from Array print#0 ===================================
+
+[Iter_0,Iter_0,Iter_0,Iter_0,Iter_0]
+
+=== Tutorial end ===============================================================
+

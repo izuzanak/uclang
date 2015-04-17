@@ -1,0 +1,11 @@
+
+// Language version 0.10
+
+class Main
+{
+  static public main(argv)
+  {
+    "Hello world!\n".print();
+  }
+}
+

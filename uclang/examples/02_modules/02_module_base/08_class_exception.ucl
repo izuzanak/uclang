@@ -1,0 +1,86 @@
+
+// Language version 0.10
+
+import tutorial;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Objects of class Exception represents exceptions thrown at runtime
+
+    // Built in methods
+    //
+    // public final Exception#0
+    // public final Exception#1
+    // public final throw#0
+    // public final get_type#0
+    // public final get_value#0
+    // public final get_file_name#0
+    // public final get_line#0
+    // public final error_print#0
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    try { 10/0; } catch (except_0) {}
+    try { [1,2,3][3]; } catch (except_1) {}
+    try { "abc".add(); } catch (except_2) {}
+
+    Tutorial.note("Exception object");
+    ("Exception: %s\n" % except_0.to_string()).print();
+    ("Exception: %s\n" % except_1.to_string()).print();
+    ("Exception: %s\n" % except_2.to_string()).print();
+
+    // Method throw rethrow catched exception or throw user defined exception
+    //
+    Tutorial.note("Exception method throw#0");
+
+    try
+    {
+      new Exception("My exception").throw();
+    }
+    catch(except_3)
+    {
+      ("Exception: %s\n" % except_3.to_string()).print();
+    }
+
+    Tutorial.note("Exception method get_type#0");
+    ("except_0.get_type() -> %s\n" % except_0.get_type().to_string()).print();
+    ("except_1.get_type() -> %s\n" % except_1.get_type().to_string()).print();
+    ("except_2.get_type() -> %s\n" % except_2.get_type().to_string()).print();
+    ("except_3.get_type() -> %s\n" % except_3.get_type().to_string()).print();
+
+    Tutorial.note("Exception method get_value#0");
+    ("except_0.get_value() -> %s\n" % except_0.get_value().to_string()).print();
+    ("except_1.get_value() -> %s\n" % except_1.get_value().to_string()).print();
+    ("except_2.get_value() -> %s\n" % except_2.get_value().to_string()).print();
+    ("except_3.get_value() -> %s\n" % except_3.get_value().to_string()).print();
+
+    Tutorial.note("Exception method get_file_name#0");
+    ("except_0.get_file_name() -> %s\n" % except_0.get_file_name().to_string()).print();
+    ("except_1.get_file_name() -> %s\n" % except_1.get_file_name().to_string()).print();
+    ("except_2.get_file_name() -> %s\n" % except_2.get_file_name().to_string()).print();
+    ("except_3.get_file_name() -> %s\n" % except_3.get_file_name().to_string()).print();
+
+    Tutorial.note("Exception method get_line#0");
+    ("except_0.get_line() -> %d\n" % except_0.get_line()).print();
+    ("except_1.get_line() -> %d\n" % except_1.get_line()).print();
+    ("except_2.get_line() -> %d\n" % except_2.get_line()).print();
+    ("except_3.get_line() -> %d\n" % except_3.get_line()).print();
+
+    // Method error_print will print exception output to error output
+    Tutorial.note("Exception method error_print#0");
+    except_1.error_print();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

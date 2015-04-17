@@ -1,0 +1,15 @@
+
+=== Instance of class Demo was created by constructor Demo#0 ===================
+
+demo: Demo(0)
+
+=== Instance of class Demo was created by constructor Demo#1 ===================
+
+demo_1: Demo(1)
+
+=== Multiple instances of class Demo were created by constructor Demo#0 ========
+
+demos: [Demo(0),Demo(0),Demo(0),Demo(0),Demo(0)]
+
+=== Tutorial end ===============================================================
+

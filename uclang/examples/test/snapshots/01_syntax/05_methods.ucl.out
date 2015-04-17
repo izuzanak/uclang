@@ -1,0 +1,28 @@
+
+=== All methods are accessible from its parent class ===========================
+
+Demo.static_private()
+Demo.static_public()
+Demo.non_static_private()
+Demo.non_static_public()
+
+=== Call to private method throws an exception =================================
+
+
+=== Public methods are accessible ==============================================
+
+Demo.static_public()
+Demo.static_public()
+Demo.non_static_public()
+
+=== Static methods can access static members ===================================
+
+static_member: 0
+
+=== Non-static methods can access all members ==================================
+
+static_member: 0
+non_static_member: 0
+
+=== Tutorial end ===============================================================
+

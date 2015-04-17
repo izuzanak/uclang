@@ -1,0 +1,38 @@
+
+=== Poll object ================================================================
+
+Poll: Poll
+
+=== Poll assign operator =======================================================
+
+poll: Poll
+poll: 10
+
+=== Poll method ready#1 ========================================================
+
+poll         -> Poll
+poll.ready() -> 0
+poll         -> Poll
+
+=== Poll method poll#1 =========================================================
+
+poll        -> Poll
+poll.poll() -> [0,4,4]
+
+Events 0: 
+Events 1: POLLOUT 
+Events 2: POLLOUT 
+
+poll        -> Poll
+
+=== Poll built in constants ====================================================
+
+Poll.POLLIN:   1
+Poll.POLLPRI:  2
+Poll.POLLOUT:  4
+Poll.POLLERR:  8
+Poll.POLLHUP:  16
+Poll.POLLNVAL: 32
+
+=== Tutorial end ===============================================================
+

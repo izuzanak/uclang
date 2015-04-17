@@ -1,0 +1,166 @@
+
+// Language version 0.10
+
+import tutorial;
+import sys;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Objects of class SocketAddr represents address identifying local or
+    // remote socket end
+    //
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final SocketAddr#2
+    // public final name#0
+    // public final port#0
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("SocketAddr object");
+    ("SocketAddr: %s\n" % (new SocketAddr("127.0.0.1",8888)).to_string()).print();
+    ("SocketAddr: %s\n" % (new SocketAddr("localhost",8888)).to_string()).print();
+    ("SocketAddr: %s\n" % (new SocketAddr("192.168.2.2",8888)).to_string()).print();
+
+    Tutorial.note("SocketAddr assign operator");
+    sockaddr = new SocketAddr("127.0.0.1",8888);
+    ("sockaddr: %s\n" % sockaddr.to_string()).print();
+    sockaddr = 10;
+    ("sockaddr: %s\n" % sockaddr.to_string()).print();
+
+    Tutorial.note("SocketAddr method name#0");
+    sockaddr = new SocketAddr("localhost",8888);
+    ("sockaddr        -> %s\n" % sockaddr.to_string()).print();
+    ("sockaddr.name() -> %s\n" % sockaddr.name()).print();
+
+    Tutorial.note("SocketAddr method port#0");
+    sockaddr = new SocketAddr("localhost",8888);
+    ("sockaddr        -> %s\n" % sockaddr.to_string()).print();
+    ("sockaddr.port() -> %d\n" % sockaddr.port()).print();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    // Methods of class SocketAddr throws following exceptions
+    //
+    // c_error_SOCKET_ADDRESS_RESOLVE_ERROR
+    // c_error_SOCKET_ADDRESS_UNKNOWN_FORMAT
+    //
+
+    // Objects of class Socket represents socket connection by system socket
+    //
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final Socket#0
+    // public final Socket#2
+    // public final listen#2
+    // public final accept#0
+    // public final accept_nonblock#0
+    // public final connect#1
+    // public final bind#1
+    // public final sendto#2
+    // public final recvfrom#0
+    // public final close#0
+    // public final set_timeout#2
+    // public final write#1
+    // public final read#0
+    // public final read_nonblock#0
+    // public final read#1
+    // public final get_fd#0
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("Socket object");
+    ("Socket: %s\n" % (new Socket(Socket.AF_INET,Socket.SOCK_STREAM)).to_string()).print();
+    ("Socket: %s\n" % (new Socket(Socket.AF_INET,Socket.SOCK_DGRAM)).to_string()).print();
+
+    Tutorial.note("Socket assign operator");
+    socket = new Socket(Socket.AF_INET,Socket.SOCK_STREAM);
+    ("socket: %s\n" % socket.to_string()).print();
+    socket = 10;
+    ("socket: %s\n" % socket.to_string()).print();
+
+    // Following methods are used in extended examples
+    //
+    // public final listen#2
+    // public final accept#0
+    // public final accept_nonblock#0
+    // public final connect#1
+    // public final bind#1
+    // public final sendto#2
+    // public final recvfrom#0
+    // public final close#0
+    // public final set_timeout#2
+    // public final write#1
+    // public final read#0
+    // public final read_nonblock#0
+    // public final read#1
+    // public final get_fd#0
+    //
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("File built in constants");
+
+    // Built in constants
+    //
+    // public static static_const AF_UNIX
+    // public static static_const AF_FILE
+    // public static static_const AF_INET
+    // public static static_const SOCK_STREAM
+    // public static static_const SOCK_DGRAM
+    // public static static_const SOCK_RAW
+    // public static static_const SO_RCVTIMEO
+    // public static static_const SO_SNDTIMEO
+    //
+
+    ("Socket.AF_UNIX:     %d\n" % Socket.AF_UNIX).print();
+    ("Socket.AF_FILE:     %d\n" % Socket.AF_FILE).print();
+    ("Socket.AF_INET:     %d\n" % Socket.AF_INET).print();
+    ("Socket.SOCK_STREAM: %d\n" % Socket.SOCK_STREAM).print();
+    ("Socket.SOCK_DGRAM:  %d\n" % Socket.SOCK_DGRAM).print();
+    ("Socket.SOCK_RAW:    %d\n" % Socket.SOCK_RAW).print();
+    ("Socket.SO_RCVTIMEO: %d\n" % Socket.SO_RCVTIMEO).print();
+    ("Socket.SO_SNDTIMEO: %d\n" % Socket.SO_SNDTIMEO).print();
+
+    // Methods of class SocketAddr throws following exceptions
+    //
+    // c_error_SOCKET_ADDRESS_RESOLVE_ERROR
+    // c_error_SOCKET_ADDRESS_UNKNOWN_FORMAT
+
+    // c_error_SOCKET_CREATE_ERROR
+    // c_error_SOCKET_CLOSE_ERROR
+    // c_error_SOCKET_NOT_OPENED
+    // c_error_SOCKET_UNKNOWN_DOMAIN
+    // c_error_SOCKET_BIND_ERROR
+    // c_error_SOCKET_LISTEN_ERROR
+    // c_error_SOCKET_ACCEPT_ERROR
+    // c_error_SOCKET_CONNECT_ERROR
+    // c_error_SOCKET_SENDTO_ERROR
+    // c_error_SOCKET_RECVFROM_ERROR
+    // c_error_SOCKET_UDP_MAX_MSG_SIZE_EXCEEDED
+
+    // c_error_SOCKET_SET_TIMEOUT_ERROR
+    //
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

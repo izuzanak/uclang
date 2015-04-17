@@ -1,0 +1,40 @@
+
+=== Blank object ===============================================================
+
+Blank: <blank>
+Blank: <blank>
+
+=== Blank assign operator ======================================================
+
+blank: <blank>
+blank: 10
+
+=== Blank equality operators ===================================================
+
+blank == 10    -> 0
+blank == blank -> 1
+Blank == blank -> 1
+blank != 10    -> 1
+blank != blank -> 0
+Blank != blank -> 0
+
+=== Blank equality example =====================================================
+
+blank == simple -> 0
+
+=== Blank methods - compare#1 ==================================================
+
+blank.compare(blank) -> 0
+blank.compare(10)    -> -1
+
+=== Blank methods - to_string#0 ================================================
+
+blank.to_string() -> <blank>
+Blank.to_string() -> <blank>
+
+=== Blank methods - print#0 ====================================================
+
+blank.print: <blank>
+
+=== Tutorial end ===============================================================
+

@@ -1,0 +1,263 @@
+
+import tutorial;
+import containers;
+import sys;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Few special methods are defined
+    //
+
+    // Operator methods are called when suitable operator is applied on object.
+    // Method of class of object <a> is called with object <b> as method
+    // parameter.
+    //
+    // <a> = <b>   -> operator_binary_equal#1
+    // <a> += <b>  -> operator_binary_plus_equal#1
+    // <a> -= <b>  -> operator_binary_minus_equal#1
+    // <a> *= <b>  -> operator_binary_asterisk_equal#1
+    // <a> /= <b>  -> operator_binary_slash_equal#1
+    // <a> %= <b>  -> operator_binary_percent_equal#1
+    // <a> <<= <b> -> operator_binary_double_ls_br_equal#1
+    // <a> >>= <b> -> operator_binary_double_rs_br_equal#1
+    // <a> &= <b>  -> operator_binary_ampersand_equal#1
+    // <a> |= <b>  -> operator_binary_pipe_equal#1
+    // <a> ^= <b>  -> operator_binary_circumflex_equal#1
+    // <a> && <b>  -> operator_binary_double_ampersand#1
+    // <a> || <b>  -> operator_binary_double_pipe#1
+    // <a> & <b>   -> operator_binary_ampersand#1
+    // <a> | <b>   -> operator_binary_pipe#1
+    // <a> ^ <b>   -> operator_binary_circumflex#1
+    // <a> == <b>  -> operator_binary_double_equal#1
+    // <a> != <b>  -> operator_binary_exclamation_equal#1
+    // <a> > <b>   -> operator_binary_rs_br#1
+    // <a> < <b>   -> operator_binary_ls_br#1
+    // <a> >= <b>  -> operator_binary_rs_br_equal#1
+    // <a> <= <b>  -> operator_binary_ls_br_equal#1
+    // <a> >> <b>  -> operator_binary_double_rs_br#1
+    // <a> << <b>  -> operator_binary_double_ls_br#1
+    // <a> + <b>   -> operator_binary_plus#1
+    // <a> - <b>   -> operator_binary_minus#1
+    // <a> * <b>   -> operator_binary_asterisk#1
+    // <a> / <b>   -> operator_binary_slash#1
+    // <a> % <b>   -> operator_binary_percent#1
+    // <a> ++      -> operator_unary_post_double_plus#0
+    // <a> --      -> operator_unary_post_double_minus#0
+    // ++ <a>      -> operator_unary_pre_double_plus#0
+    // -- <a>      -> operator_unary_pre_double_minus#0
+    // + <a>       -> operator_unary_pre_plus#0
+    // - <a>       -> operator_unary_pre_minus#0
+    // ! <a>       -> operator_unary_pre_exclamation#0
+    // ~ <a>       -> operator_unary_pre_tilde#0
+    // <a> [ <b> ] -> operator_binary_le_br_re_br#1
+    //
+    Tutorial.note("Operators example");
+    counter = new Counter();
+    ("counter: %s\n" % counter.to_string()).print();
+    ("counter: %s\n" % (counter += 1).to_string()).print();
+    ("counter: %s\n" % (counter += 2).to_string()).print();
+    ("counter: %s\n" % (counter += 3).to_string()).print();
+
+    // Method compare#1 should compare object to parameter and return integer
+    // -1/0/1 if object is lesser/equal/greater than parameter
+    //
+    Tutorial.note("Method compare#1");
+    set = new Set();
+    set.insert(new Comparable(83));
+    set.insert(new Comparable(86));
+    set.insert(new Comparable(77));
+    set.insert(new Comparable(15));
+    set.insert(new Comparable(93));
+    set.insert(new Comparable(35));
+    set.insert(new Comparable(86));
+    set.insert(new Comparable(92));
+    set.insert(new Comparable(49));
+    set.insert(new Comparable(21));
+    ("\nset: %s\n" % set.to_string()).print();
+
+    // Methods used by iterable objects of first type
+    //
+    // item#1
+    // first_idx#0
+    // next_idx#1
+    //
+    // Index is value of class Integer, that is used to identification of
+    // sequence item
+    //
+    Tutorial.note("Methods item#1, first_idx#0 and next_idx#1");
+    iter_0 = new Iter_0(7);
+    ("\niter_0: %s\n" % iter_0[::].to_string()).print();
+
+    // Method used by iterable objects of second type
+    //
+    // next_item#0
+    //
+
+    Tutorial.note("Method next_item#0");
+    iter_1 = new Iter_1(7);
+    ("\niter_1: %s\n" % iter_1[::].to_string()).print();
+
+    // Method length#0 should return count of elements in container/iterable
+    //
+
+    Tutorial.note("Method length#0");
+    ("\"Hello world\".length(): %d\n" % "Hello world".length()).print();
+    ("[1,2,3,4,5,6].length(): %d\n" % [1,2,3,4,5,6].length()).print();
+    ("new Iter_0(9).length(): %d\n" % new Iter_0(9).length()).print();
+
+    Tutorial.note("Method length#0 is used by iteration");
+    ("\nnew Iter_0(7)[-2::-2]: %s\n" % new Iter_0(7)[-2::-2].to_string()).print();
+
+    // Method to_string#0 should return string description of object
+    // Content of simple objects Integers, Strings, ...
+    // Description or name of complex objects
+    //
+    Tutorial.note("Method to_string#0");
+    ("(10).to_string(): %s\n" % (10).to_string()).print();
+    ("\"Hello world\".to_string(): %s\n" % "Hello world".to_string()).print();
+
+    Tutorial.note("Method to_string#0 called from Array to_string#0");
+    iter = new Iter_0(10);
+    ("\n[iter,iter,iter,iter,iter]: %s\n" % [iter,iter,iter,iter,iter].to_string()).print();
+
+    // Method print#0 should print string description of object to standard
+    // output
+    //
+    Tutorial.note("Method print#0");
+    (10).print(); "\n".print();
+    (10.0).print(); "\n".print();
+
+    Tutorial.note("Method print#0 called from Array print#0");
+    [iter,iter,iter,iter,iter].print();
+    "\n".print();
+
+    Tutorial.note("Tutorial end");
+  }
+}
+
+class Counter
+{/*{{{*/
+  private count = 0;
+
+  public Counter() {}
+
+  public operator_binary_plus_equal(a_value)
+  {
+    ("DEBUG: Counter.operator_binary_plus_equal(%d)\n" % a_value).print();
+
+    count += a_value;
+    return this;
+  }
+
+  public get_count()
+  {
+    return count;
+  }
+
+  public to_string()
+  {
+    return "Counter(%d)" % count;
+  }
+}/*}}}*/
+
+class Comparable
+{/*{{{*/
+  private value;
+
+  public Comparable(a_value)
+  {
+    value = a_value;
+  }
+
+  public compare(a_second)
+  {
+    ("DEBUG: %s.compare(%s)\n" % [this.to_string(),a_second.to_string()]).print();
+
+    return value.compare(a_second.value);
+  }
+
+  public to_string()
+  {
+    return "Comparable(%d)" % value;
+  }
+}/*}}}*/
+
+class Iter_0
+{/*{{{*/
+  max_idx;
+
+  public Iter_0(a_max_idx)
+  {
+    max_idx = a_max_idx;
+  }
+
+  public first_idx()
+  {
+    ("DEBUG: Iter_0.first_idx()\n").print();
+
+    return 0;
+  }
+
+  public next_idx(a_idx)
+  {
+    ("DEBUG: Iter_0.next_idx(%d)\n" % a_idx).print();
+
+    new_idx = a_idx + 1;
+    return new_idx < max_idx ? new_idx : new Blank();
+  }
+
+  public item(a_idx)
+  {
+    ("DEBUG: Iter_0.item(%d)\n" % a_idx).print();
+
+    return "item(%d)" % a_idx;
+  }
+
+  public length()
+  {
+    ("DEBUG: Iter_0.length()\n").print();
+
+    return max_idx;
+  }
+
+  public to_string()
+  {
+    ("DEBUG: Iter_0.to_string()\n").print();
+
+    return "Iter_0";
+  }
+
+  public print()
+  {
+    "Iter_0".print();
+  }
+}/*}}}*/
+
+class Iter_1
+{/*{{{*/
+  idx;
+  max_idx;
+
+  public Iter_1(a_max_idx)
+  {
+    idx = 0;
+    max_idx = a_max_idx;
+  }
+
+  public next_item()
+  {
+    ("DEBUG: Iter_1.next_item()\n").print();
+
+    if (idx < max_idx)
+    {
+      return "item(%d)" % idx++;
+    }
+    else
+    {
+      return new Blank();
+    }
+  }
+}/*}}}*/
+

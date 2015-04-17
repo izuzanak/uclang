@@ -1,0 +1,67 @@
+
+// Language version 0.10
+
+import tutorial;
+
+class Main
+{
+  public callback(a_param_0,a_param_1)
+  {
+    return a_param_0 + a_param_1;
+  }
+
+  public Main() {}
+
+  static public main(argv)
+  {
+    main = new Main();
+
+    // class Delegate represents callable reference to method of some object
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final Delegate#3
+    // public final call#1
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("Delegate object");
+    ("Delegate: %s\n" % new Delegate(main,"callback",2).to_string()).print();
+
+    Tutorial.note("Delegate assign operator");
+    delegate = new Delegate(main,"callback",2);
+    ("delegate: %s\n" % delegate.to_string()).print();
+    delegate = 10;
+    ("delegate: %s\n" % delegate.to_string()).print();
+
+    // Call method referred by delegate object
+    //
+    Tutorial.note("Delegate method call#1");
+    delegate = new Delegate(main,"callback",2);
+    ("delegate -> %s\n" % delegate.to_string()).print();
+    ("delegate.call([10,5])             -> %s\n" % delegate.call([10,5]).to_string()).print();
+    ("delegate.call([\"First\",\"Second\"]) -> %s\n" % delegate.call(["First","Second"]).to_string()).print();
+    ("delegate.call([[1,2,3],[4,5,6]])  -> %s\n" % delegate.call([[1,2,3],[4,5,6]]).to_string()).print();
+    ("delegate -> %s\n" % delegate.to_string()).print();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    // Methods of class Delegate throws following exceptions
+    //
+    // c_error_DELEGATE_NEGATIVE_PARAMETER_COUNT
+    // c_error_DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD
+    // c_error_DELEGATE_CALL_WRONG_PARAMETER_COUNT
+    // c_error_DELEGATE_WRONG_RETURN_VALUE_TYPE
+    //
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

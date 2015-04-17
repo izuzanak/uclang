@@ -1,0 +1,12 @@
+
+// Example module imported by file 01_modules.ucl
+//
+
+class Imported
+{
+  public static to_string()
+  {
+    return "Imported";
+  }
+}
+

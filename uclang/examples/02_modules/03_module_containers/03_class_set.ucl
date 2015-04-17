@@ -1,0 +1,217 @@
+
+// Language version 0.10
+
+import tutorial;
+import containers;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Class Set represent abstract data type Set
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final operator_binary_plus_equal#1
+    // public final operator_binary_minus_equal#1
+    // public final operator_binary_ampersand_equal#1
+    // public final operator_binary_pipe_equal#1
+    // public final operator_binary_circumflex_equal#1
+    // public final operator_binary_ampersand#1
+    // public final operator_binary_pipe#1
+    // public final operator_binary_circumflex#1
+    // public final operator_binary_double_equal#1
+    // public final operator_binary_exclamation_equal#1
+    // public final operator_binary_rs_br_equal#1
+    // public final operator_binary_ls_br_equal#1
+    // public final operator_binary_plus#1
+    // public final operator_binary_minus#1
+    // public final operator_binary_le_br_re_br#1
+    // public final Set#0
+    // public final Set#1
+    // public final clear#0
+    // public final items#0
+    // public final insert#1
+    // public final remove#1
+    // public final contain#1
+    // public final compare#1
+    // public final item#1
+    // public final first_idx#0
+    // public final next_idx#1
+    // public final length#0
+    // public final to_string#0
+    // public final to_string#1
+    // public final print#0
+    //
+
+    Tutorial.note("Set object");
+    ("Set: %s\n" % new Set().to_string()).print();
+    ("Set: %s\n" % new Set([1,2,3,4,5]).to_string()).print();
+    ("Set: %s\n" % new Set([1,2,2,4,4]).to_string()).print();
+
+    Tutorial.note("Set assign operator");
+    set = new Set();
+    ("set: %s\n" % set.to_string()).print();
+    set = 10;
+    ("set: %s\n" % set.to_string()).print();
+
+    Tutorial.note("Set compare operators");
+    set_0 = new Set([1,2,3,4]);
+    set_1 = new Set([1,2,3,5]);
+    ("set_0 == set_0 -> %d\n" % (set_0 == set_0)).print();
+    ("set_0 == set_1 -> %d\n" % (set_0 == set_1)).print();
+    ("set_0 == 10    -> %d\n" % (set_0 == 10)).print();
+    ("set_0 != set_0 -> %d\n" % (set_0 != set_0)).print();
+    ("set_0 != set_1 -> %d\n" % (set_0 != set_1)).print();
+    ("set_0 != 10    -> %d\n" % (set_0 != 10)).print();
+
+    // Plus operators insert content of ierable to set
+    //
+    Tutorial.note("Set plus operators");
+    set_0 = new Set([1,2,3]);
+    arr_1 = [5,4,2];
+    ("set_0          -> %s\n" % set_0.to_string()).print();
+    ("arr_1          -> %s\n" % arr_1.to_string()).print();
+    ("set_0 + arr_1  -> %s\n" % (set_0 + arr_1).to_string()).print();
+    ("set_0          -> %s\n" % set_0.to_string()).print();
+    ("set_0 += arr_1 -> %s\n" % (set_0 += arr_1).to_string()).print();
+    ("set_0          -> %s\n" % set_0.to_string()).print();
+
+    Tutorial.note("Set difference operators");
+    set_0 = new Set([1,2,3,4]);
+    set_1 = new Set([3,4,5,6]);
+    ("set_0          -> %s\n" % set_0.to_string()).print();
+    ("set_1          -> %s\n" % set_1.to_string()).print();
+    ("set_0 - set_1  -> %s\n" % (set_0 - set_1).to_string()).print();
+    ("set_1 - set_0  -> %s\n" % (set_1 - set_0).to_string()).print();
+    ("set_0          -> %s\n" % set_0.to_string()).print();
+    ("set_0 -= set_1 -> %s\n" % (set_0 -= set_1).to_string()).print();
+    ("set_0          -> %s\n" % set_0.to_string()).print();
+
+    Tutorial.note("Set intersection operators");
+    set_0 = new Set([1,2,3,4]);
+    set_1 = new Set([3,4,5,6]);
+    ("set_0          -> %s\n" % set_0.to_string()).print();
+    ("set_1          -> %s\n" % set_1.to_string()).print();
+    ("set_0 & set_1  -> %s\n" % (set_0 & set_1).to_string()).print();
+    ("set_0          -> %s\n" % set_0.to_string()).print();
+    ("set_0 &= set_1 -> %s\n" % (set_0 &= set_1).to_string()).print();
+    ("set_0          -> %s\n" % set_0.to_string()).print();
+
+    Tutorial.note("Set union operators");
+    set_0 = new Set([1,2,3,4]);
+    set_1 = new Set([3,4,5,6]);
+    ("set_0          -> %s\n" % set_0.to_string()).print();
+    ("set_1          -> %s\n" % set_1.to_string()).print();
+    ("set_0 | set_1  -> %s\n" % (set_0 | set_1).to_string()).print();
+    ("set_0          -> %s\n" % set_0.to_string()).print();
+    ("set_0 |= set_1 -> %s\n" % (set_0 |= set_1).to_string()).print();
+    ("set_0          -> %s\n" % set_0.to_string()).print();
+
+    Tutorial.note("Set symmetric difference operators");
+    set_0 = new Set([1,2,3,4]);
+    set_1 = new Set([3,4,5,6]);
+    ("set_0          -> %s\n" % set_0.to_string()).print();
+    ("set_1          -> %s\n" % set_1.to_string()).print();
+    ("set_0 ^ set_1  -> %s\n" % (set_0 ^ set_1).to_string()).print();
+    ("set_0          -> %s\n" % set_0.to_string()).print();
+    ("set_0 ^= set_1 -> %s\n" % (set_0 ^= set_1).to_string()).print();
+    ("set_0          -> %s\n" % set_0.to_string()).print();
+
+    Tutorial.note("Set subset test operators");
+    set_0 = new Set([3,4,5]);
+    set_1 = new Set([3,4,5,6]);
+    ("set_0          -> %s\n" % set_0.to_string()).print();
+    ("set_1          -> %s\n" % set_1.to_string()).print();
+    ("set_0 <= set_1 -> %d\n" % (set_0 <= set_1)).print();
+    ("set_1 <= set_0 -> %d\n" % (set_1 <= set_0)).print();
+    ("set_0 >= set_1 -> %d\n" % (set_0 >= set_1)).print();
+    ("set_1 >= set_0 -> %d\n" % (set_1 >= set_0)).print();
+
+    Tutorial.note("Set item select operator");
+    set = new Set(["One","Two","Three","Four"]);
+    idx = set.first_idx();
+    while (Blank != idx)
+    {
+      ("set[%d]: %s\n" % [idx,set[idx]]).print();
+      idx = set.next_idx(idx);
+    }
+
+    Tutorial.note("Set method clear#0");
+    set = new Set([1,2,3,4,5]);
+    ("set         -> %s\n" % set.to_string()).print();
+    ("set.clear() -> %s\n" % set.clear().to_string()).print();
+    ("set         -> %s\n" % set.to_string()).print();
+
+    Tutorial.note("Set method items#0");
+    set = new Set([1,2,3,4,5]);
+    ("set   -> type: %s, value %s\n" % [(type set).to_string(),set.to_string()]).print();
+    items = set.items();
+    ("items -> type: %s, value %s\n" % [(type items).to_string(),items.to_string()]).print();
+    ("set   -> type: %s, value %s\n" % [(type set).to_string(),set.to_string()]).print();
+
+    Tutorial.note("Set method insert#1");
+    set = new Set([1,2,3,4,5]);
+    ("set            -> %s\n" % set.to_string()).print();
+    ("set.insert(10) -> %s\n" % set.insert(10).to_string()).print();
+    ("set.insert(10) -> %s\n" % set.insert(10).to_string()).print();
+    ("set.insert(9)  -> %s\n" % set.insert(9).to_string()).print();
+    ("set            -> %s\n" % set.to_string()).print();
+
+    Tutorial.note("Set method remove#0");
+    set = new Set([1,2,3,4,5]);
+    ("set           -> %s\n" % set.to_string()).print();
+    ("set.remove(2) -> %s\n" % set.remove(2).to_string()).print();
+    ("set.remove(4) -> %s\n" % set.remove(4).to_string()).print();
+    ("set           -> %s\n" % set.to_string()).print();
+
+    try {
+    ("set.remove(6) -> %s\n" % set.remove(6).to_string()).print();
+    }
+    catch (e)
+    {
+      e.error_print();
+    }
+
+    ("set           -> %s\n" % set.to_string()).print();
+
+    Tutorial.note("Set method contain#0");
+    set = new Set([1,2,3,4,5]);
+    ("set            -> %s\n" % set.to_string()).print();
+    ("set.contain(2) -> %d\n" % set.contain(2)).print();
+    ("set.contain(4) -> %d\n" % set.contain(4)).print();
+    ("set.contain(6) -> %d\n" % set.contain(6)).print();
+    ("set            -> %s\n" % set.to_string()).print();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final compare#1
+    // public final item#1
+    // public final first_idx#0
+    // public final next_idx#1
+    // public final length#0
+    // public final to_string#0
+    // public final to_string#1
+    // public final print#0
+    //
+
+    // Method to_string#1 return string created by concatenating string
+    // representations of set items separated by string given as method
+    // parameter
+    //
+    Tutorial.note("Difference of to_string#0 and to_string#1");
+    set = new Set([1,2,3,4,5]);
+    ("set.to_string()        -> %s\n" % set.to_string()).print();
+    ("set.to_string(\"-SEP-\") -> %s\n" % set.to_string("-SEP-")).print();
+
+    // Methods of class Stack throws following exceptions
+    //
+    // c_error_SET_INDEX_DOES_NOT_REFER_TO_VALID_VALUE
+    // c_error_SET_DOES_NOT_CONTAIN_ELEMENT
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

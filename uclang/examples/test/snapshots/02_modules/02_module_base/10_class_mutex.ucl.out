@@ -1,0 +1,44 @@
+
+=== Mutex object ===============================================================
+
+Mutex: Mutex
+
+=== Mutex assign operator ======================================================
+
+mutex: Mutex
+mutex: 10
+
+=== Mutex method lock#0 ========================================================
+
+mutex          -> Mutex
+mutex.lock()   -> <blank>
+mutex.unlock() -> <blank>
+mutex          -> Mutex
+
+=== Mutex method try_lock#0 ====================================================
+
+mutex            -> Mutex
+mutex.try_lock() -> <blank>
+mutex.unlock()   -> <blank>
+mutex            -> Mutex
+
+=== Mutex method unlock#0 ======================================================
+
+mutex          -> Mutex
+mutex.lock()   -> <blank>
+mutex.unlock() -> <blank>
+mutex          -> Mutex
+
+=== Mutex built in constants ===================================================
+
+Mutex.ERROR_INVALID:    error_INVALID
+Mutex.ERROR_DEADLOCK:   error_DEADLOCK
+Mutex.ERROR_BUSY:       error_BUSY
+Mutex.ERROR_PERMISSION: error_PERMISSION
+
+=== Mutex thread locking example ===============================================
+
+Counters: 6/6
+
+=== Tutorial end ===============================================================
+

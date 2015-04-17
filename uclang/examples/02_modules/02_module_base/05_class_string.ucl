@@ -1,0 +1,221 @@
+
+// Language version 0.10
+
+import tutorial;
+
+class Main
+{
+  static public main(argv)
+  {
+    // class String represents string of characters used also as binary data
+    // buffer
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final operator_binary_plus_equal#1
+    // public final operator_binary_asterisk_equal#1
+    // public final operator_binary_double_equal#1
+    // public final operator_binary_exclamation_equal#1
+    // public final operator_binary_plus#1
+    // public final operator_binary_asterisk#1
+    // public final operator_binary_percent#1
+    // public final operator_binary_le_br_re_br#1
+    // public final String#0
+    // public final String#1
+    // public final split#1
+    // public final join#1
+    // public final head#1
+    // public final tail#1
+    // public final range#2
+    // public final get_idx#1
+    // public final get_idxs#1
+    // public final replace#2
+    // public final compare#1
+    // public final item#1
+    // public final first_idx#0
+    // public final next_idx#1
+    // public final length#0
+    // public final to_string#0
+    // public final print#0
+    //
+
+    Tutorial.note("String object");
+    ("String: %s\n" % new String().to_string()).print();
+    ("String: %s\n" % new String('A').to_string()).print();
+    ("String: %s\n" % new String(10).to_string()).print();
+    ("String: %s\n" % new String(11.0).to_string()).print();
+    ("String: %s\n" % new String("Hello world!").to_string()).print();
+
+    Tutorial.note("String constant syntax");
+
+    ("String: \"Hello world\" -> %s\n" % "Hello world").print();
+    ("String: \"Oct: \\101, Hex: \\x41, Spec: \\t.\" -> %s\n" % "Oct: \101, Hex: \x41, Spec: \t.").print();
+
+    ml_string = "This
+is
+multiline
+string";
+
+    ("String: %s\n" % ml_string).print();
+
+    Tutorial.note("String assign operator");
+    string = "Hello world!";
+    ("string: %s\n" % string.to_string()).print();
+    string = 10;
+    ("string: %s\n" % string.to_string()).print();
+
+    Tutorial.note("String plus operators");
+    str_0 = "Hello ";
+    str_1 = "World!";
+    ("str_0          -> %s\n" % str_0).print();
+    ("str_1          -> %s\n" % str_1).print();
+    ("str_0 + str_1  -> %s\n" % (str_0 + str_1)).print();
+    ("str_0          -> %s\n" % str_0).print();
+    ("str_0 += str_1 -> %s\n" % (str_0 += str_1)).print();
+    ("str_0          -> %s\n" % str_0).print();
+
+    Tutorial.note("String asterisk operators");
+    str_0 = "Hello ";
+    int_1 = 5;
+    ("str_0          -> %s\n" % str_0).print();
+    ("int_1          -> %d\n" % int_1).print();
+    ("str_0 * int_1  -> %s\n" % (str_0 * int_1)).print();
+    ("str_0          -> %s\n" % str_0).print();
+    ("str_0 *= int_1 -> %s\n" % (str_0 *= int_1)).print();
+    ("str_0          -> %s\n" % str_0).print();
+
+    Tutorial.note("String percent operator, format types");
+    ("\"String %%c\" %% 'A'       -> %s\n" % ("String %c" % 'A')).print();
+
+    ("\"String %%d\" %% 130240    -> %s\n" % ("String %d" % 130240)).print();
+    ("\"String %%i\" %% 130240    -> %s\n" % ("String %i" % 130240)).print();
+    ("\"String %%o\" %% 130240    -> %s\n" % ("String %o" % 130240)).print();
+    ("\"String %%x\" %% 130240    -> %s\n" % ("String %x" % 130240)).print();
+    ("\"String %%X\" %% 130240    -> %s\n" % ("String %X" % 130240)).print();
+
+    ("\"String %%f\" %% (100/3.0) -> %s\n" % ("String %f" % (100/3.0))).print();
+    ("\"String %%F\" %% (100/3.0) -> %s\n" % ("String %F" % (100/3.0))).print();
+    ("\"String %%e\" %% (100/3.0) -> %s\n" % ("String %e" % (100/3.0))).print();
+    ("\"String %%E\" %% (100/3.0) -> %s\n" % ("String %E" % (100/3.0))).print();
+    ("\"String %%g\" %% (100/3.0) -> %s\n" % ("String %g" % (100/3.0))).print();
+    ("\"String %%G\" %% (100/3.0) -> %s\n" % ("String %G" % (100/3.0))).print();
+
+    ("\"String %%s\" %% \"Hello\"   -> %s\n" % ("String %s" % "Hello")).print();
+
+    Tutorial.note("String percent operator, advanced format");
+    ("\"String \\\"%%10.d\\\"\" %% 12345   -> %s\n" % ("String \"%10.d\"" % 12345)).print();
+    ("\"String \\\"%%.10d\\\"\" %% 12345   -> %s\n" % ("String \"%.10d\"" % 12345)).print();
+    ("\"String \\\"%%15.10d\\\"\" %% 12345 -> %s\n" % ("String \"%15.10d\"" % 12345)).print();
+    ("\"String \\\"%%-10.d\\\"\" %% 12345  -> %s\n" % ("String \"%-10.d\"" % 12345)).print();
+    ("\"String \\\"%%+10.d\\\"\" %% 12345  -> %s\n" % ("String \"%+10.d\"" % 12345)).print();
+    ("\"String \\\"%% 10.d\\\"\" %% 12345  -> %s\n" % ("String \"% 10.d\"" % 12345)).print();
+    ("\"String \\\"%%010.d\\\"\" %% 12345  -> %s\n" % ("String \"%010.d\"" % 12345)).print();
+    ("\"String \\\"%%10.x\\\"\" %% 12345   -> %s\n" % ("String \"%10.x\"" % 12345)).print();
+    ("\"String \\\"%%#10.x\\\"\" %% 12345  -> %s\n" % ("String \"%#10.x\"" % 12345)).print();
+
+    Tutorial.note("String percent operator, parameters");
+    ("\"String \\\"%%d\\\"\" %% [12345]          -> %s\n" % ("String \"%d\"" % [12345])).print();
+    ("\"String \\\"%%*.d\\\"\" %% [10,12345]     -> %s\n" % ("String \"%*.d\"" % [10,12345])).print();
+    ("\"String \\\"%%.*d\\\"\" %% [10,12345]     -> %s\n" % ("String \"%.*d\"" % [10,12345])).print();
+    ("\"String \\\"%%*.*d\\\"\" %% [15,10,12345] -> %s\n" % ("String \"%*.*d\"" % [15,10,12345])).print();
+
+    Tutorial.note("String compare operators");
+    str_0 = "Hello ";
+    str_1 = "World!";
+    ("str_0          -> %s\n" % str_0).print();
+    ("str_1          -> %s\n" % str_1).print();
+    ("str_0 == str_1 -> %d\n" % (str_0 == str_1)).print();
+    ("str_0 != str_1 -> %d\n" % (str_0 != str_1)).print();
+    ("str_0          -> %s\n" % str_0).print();
+
+    Tutorial.note("String item select operator");
+    string = "Hello";
+    idx = 0;
+    do {
+      ("string[%d]: %c\n" % [idx,string[idx]]).print();
+    } while(++idx < string.length());
+
+    Tutorial.note("String method split#1");
+    string = "One Two Three Four";
+    ("string            -> %s\n" % string).print();
+    ("string.split(\" \") -> %s\n" % string.split(" ").to_string()).print();
+
+    Tutorial.note("String method join#1");
+    string = "-";
+    array = [1,2,3,4,5];
+    ("string             -> %s\n" % string).print();
+    ("array              -> %s\n" % array.to_string()).print();
+    ("string.join(array) -> %s\n" % string.join(array)).print();
+
+    Tutorial.note("String method head#1");
+    string = "Hello world!";
+    ("string          -> %s\n" % string).print();
+    ("string.head(5)  -> %s\n" % string.head(5)).print();
+    ("string.head(-1) -> %s\n" % string.head(-1)).print();
+    ("string.head(0)  -> %s\n" % string.head(0)).print();
+
+    Tutorial.note("String method tail#1");
+    string = "Hello world!";
+    ("string          -> %s\n" % string).print();
+    ("string.tail(6)  -> %s\n" % string.tail(6)).print();
+    ("string.tail(-6) -> %s\n" % string.tail(-6)).print();
+    ("string.tail(0)  -> %s\n" % string.tail(0)).print();
+
+    Tutorial.note("String method range#2");
+    string = "xxx Hello world! yyy";
+    ("string              -> %s\n" % string).print();
+    ("string.range(4,-5)  -> %s\n" % string.range(4,-5)).print();
+    ("string.range(0,2)   -> %s\n" % string.range(0,2)).print();
+    ("string.range(-3,-1) -> %s\n" % string.range(-3,-1)).print();
+
+    Tutorial.note("String method get_idx#1");
+    string = "Hello world!";
+    ("string                  -> %s\n" % string).print();
+    ("string.get_idx(\"Hello\") -> %d\n" % string.get_idx("Hello")).print();
+    ("string.get_idx(\"world\") -> %d\n" % string.get_idx("world")).print();
+
+    Tutorial.note("String method get_idxs#1");
+    string = "Well hello brave new world!";
+    ("string                   -> %s\n" % string).print();
+    ("string.get_idxs(\"hello\") -> %s\n" % string.get_idxs("hello").to_string()).print();
+    ("string.get_idxs(\"ll\")    -> %s\n" % string.get_idxs("ll").to_string()).print();
+    ("string.get_idxs(\"e\")     -> %s\n" % string.get_idxs("e").to_string()).print();
+
+    Tutorial.note("String method replace#2");
+    string = "Well hello brave new world!";
+    ("string                      -> %s\n" % string).print();
+    ("string.replace(\"new\",\"old\") -> %s\n" % string.replace("new","old")).print();
+    ("string.replace(\"ll\",\"xx\")   -> %s\n" % string.replace("ll","xx")).print();
+    ("string                      -> %s\n" % string).print();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final compare#1
+    // public final item#1
+    // public final first_idx#0
+    // public final next_idx#1
+    // public final length#0
+    // public final to_string#0
+    // public final print#0
+    //
+
+    // Methods of class String throws following exceptions
+    //
+    // c_error_STRING_FORMAT_NOT_ENOUGH_ARGUMENTS
+    // c_error_STRING_FORMAT_WRONG_ARGUMENT_TYPE
+    // c_error_STRING_FORMAT_ARGUMENT_FORMAT_ERROR
+    // c_error_STRING_FORMAT_WRONG_FORMAT_SPECIFIER
+    // c_error_STRING_FORMAT_NOT_ALL_ARGUMENTS_CONVERTED
+
+    // c_error_STRING_INDEX_EXCEEDS_RANGE
+    // c_error_STRING_WRONG_RANGE_INDEXES
+    // c_error_STRING_CONVERT_FROM_INTEGER
+    // c_error_STRING_CONVERT_FROM_FLOAT
+    //
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

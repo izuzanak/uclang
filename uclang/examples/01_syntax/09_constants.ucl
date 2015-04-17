@@ -1,0 +1,80 @@
+
+// Language version 0.10
+
+import tutorial;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Characters are placed between single quotes
+    // Escape character is backslash
+
+    Tutorial.note("Character constants");
+
+    ("Single character:    'A' -> %c\n" % 'A').print();
+    ("Octal character:  '\\101' -> %c\n" % '\101').print();
+    ("Hexa character:   '\\x41' -> %c\n" % '\x41').print();
+
+    // Special characters meaning
+    // 
+    // \a - audible bell
+    // \b - backspace
+    // \f - form feed - new page
+    // \n - line feed - new line
+    // \r - carriage return
+    // \t - horizontal tab
+    // \v - vertical tab
+    // \\ - backslash
+    // \? - question mark
+    // \' - single quote
+    // \" - double quote
+    //
+
+    Tutorial.note("Special character constants: \\[abfnrtv?'\"]");
+
+    ("Escaped value character: '\\t' -> \"%c\"\n" % '\t').print();
+
+    Tutorial.note("Integer constants");
+
+    ("Octal integer:    0700 -> %d\n" % 0700).print();
+    ("Decimal integer:   448 -> %d\n" % 448).print();
+    ("Hexa integer:    0x1c0 -> %d\n" % 0x1c0).print();
+
+    Tutorial.note("Float constants");
+
+    ("Float: 1000.0 -> %f\n" % 1000.0).print();
+    ("Float: 1000.  -> %f\n" % 1000.).print();
+    ("Float: 1e3    -> %f\n" % 1e3).print();
+    ("Float: 1e+3   -> %f\n" % 1e+3).print();
+    ("Float: .001   -> %f\n" % .001).print();
+    ("Float: 1E-003 -> %f\n" % 1E-003).print();
+
+    // Strings are placed between double quotes
+    // Escape character is backslash
+
+    Tutorial.note("String constants");
+
+    ("String: \"Hello world\" -> %s\n" % "Hello world").print();
+    
+    Tutorial.note("Escape characters in strings");
+
+    ("String: \"Oct: \\101, Hex: \\x41, Spec: \\t.\" -> %s\n" % "Oct: \101, Hex: \x41, Spec: \t.").print();
+
+    Tutorial.note("Multiline string");
+
+    ml_string = "This
+is
+multiline
+string";
+
+    ("String: %s\n" % ml_string).print();
+
+    Tutorial.note("Array construction syntax");
+
+    ("Array: \"[1,2,3,4,5]\" -> %s\n" % [1,2,3,4,5].to_string()).print();
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

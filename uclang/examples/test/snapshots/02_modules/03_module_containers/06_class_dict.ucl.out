@@ -1,0 +1,81 @@
+
+=== Dict object ================================================================
+
+Dict: []
+Dict: [One:1,Two:2,Three:3]
+
+=== Dict assign operator =======================================================
+
+dict: []
+dict: 10
+
+=== Dict compare operators =====================================================
+
+dict_0 == dict_0 -> 1
+dict_0 == dict_1 -> 0
+dict_0 == 10     -> 0
+dict_0 != dict_0 -> 0
+dict_0 != dict_1 -> 1
+dict_0 != 10     -> 1
+
+=== Dict item select operator ==================================================
+
+dict          -> [One:1,Two:2,Four:4,Three:3]
+dict["  One"] -> 1
+dict["  Two"] -> 2
+dict[" Four"] -> 4
+dict["Three"] -> 3
+
+=== Dict item select operator, non existing key ================================
+
+dict         -> [One:1,Two:2,Four:4,Three:3]
+dict["Five"] -> <blank>
+dict         -> [One:1,Two:2,Five:<blank>,Four:4,Three:3]
+
+=== Dict method clear#0 ========================================================
+
+dict         -> [One:1,Two:2,Three:3]
+dict.clear() -> <blank>
+dict         -> []
+
+=== Dict method keys#0 =========================================================
+
+dict -> type: Dict, value [One:1,Two:2,Three:3]
+keys -> type: Array, value [One,Two,Three]
+dict -> type: Dict, value [One:1,Two:2,Three:3]
+
+=== Dict method items#0 ========================================================
+
+dict  -> type: Dict, value [One:1,Two:2,Three:3]
+items -> type: Array, value [1,2,3]
+dict  -> type: Dict, value [One:1,Two:2,Three:3]
+
+=== Dict method has_key#1 ======================================================
+
+dict                 -> [One:1,Two:2,Three:3]
+dict.has_key("One")  -> 1
+dict.has_key("Four") -> 0
+dict.has_key(2)      -> 0
+
+=== Dict method remove_key#1 ===================================================
+
+dict                     -> [One:1,Two:2,Four:4,Three:3]
+dict.remove_key("One")   -> <blank>
+dict.remove_key("Three") -> <blank>
+dict                     -> [Two:2,Four:4]
+
+=== Dict methods first_key#0 and next_key#1 ====================================
+
+dict -> [One:1,Two:2,Four:4,Three:3]
+key  -> One
+key  -> Two
+key  -> Four
+key  -> Three
+
+=== Difference of to_string#0 and to_string#1 ==================================
+
+dict.to_string()        -> [One:1,Two:2,Three:3]
+dict.to_string("-SEP-") -> One:1-SEP-Two:2-SEP-Three:3
+
+=== Tutorial end ===============================================================
+
