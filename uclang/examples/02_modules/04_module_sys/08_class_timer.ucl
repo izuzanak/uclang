@@ -1,0 +1,75 @@
+
+// Language version 0.10
+
+import tutorial;
+import sys;
+
+class Main
+{
+  public timer_callback(value)
+  {
+    ("Timer callback (%s)\n" % value.to_string()).print();
+  }
+
+  public Main()
+  {
+    timer_dlg = new Delegate(this,"timer_callback",1);
+
+    // Objects of class Timer allows scheduling actions executed after
+    // particular amount of time
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final Timer#0
+    // public final schedule#3
+    // public final process#0
+    // public final remain#0
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("Timer object");
+    ("Timer: %s\n" % new Timer().to_string()).print();
+
+    Tutorial.note("Timer assign operator");
+    timer = new Timer();
+    ("timer: %s\n" % timer.to_string()).print();
+    timer = 10;
+    ("timer: %s\n" % timer.to_string()).print();
+
+    Tutorial.note("Timer method schedule#3");
+    timer = new Timer();
+    ("timer  -> %s\n" % timer.to_string()).print();
+
+    ("fourth -> %s\n" % timer.schedule(400,timer_dlg,"Fourth timer").to_string()).print();
+    ("third  -> %s\n" % timer.schedule(300,timer_dlg,"Third timer").to_string()).print();
+    ("second -> %s\n" % timer.schedule(200,timer_dlg,"Second timer").to_string()).print();
+    ("first  -> %s\n" % timer.schedule(100,timer_dlg,"First timer").to_string()).print();
+
+    Tutorial.note("Timer methods process#0 and remain#0");
+    idx = 0;
+    do {
+      timer.process();
+      ("timer.remain() -> %s\n" % (type timer.remain()).to_string()).print();
+      
+      Sys.sleep(50);
+    } while(++idx < 9);
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("Tutorial end");
+  }
+
+  static public main(argv)
+  {
+    new Main();
+  }
+}
+
+

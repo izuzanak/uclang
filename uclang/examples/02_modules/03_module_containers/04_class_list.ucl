@@ -1,0 +1,188 @@
+
+// Language version 0.10
+
+import tutorial;
+import containers;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Class List represent abstract data type List
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final operator_binary_plus_equal#1
+    // public final operator_binary_double_equal#1
+    // public final operator_binary_exclamation_equal#1
+    // public final operator_binary_plus#1
+    // public final operator_binary_le_br_re_br#1
+    // public final List#0
+    // public final List#1
+    // public final clear#0
+    // public final items#0
+    // public final append#1
+    // public final prepend#1
+    // public final insert_before#2
+    // public final insert_after#2
+    // public final remove#1
+    // public final has_idx#1
+    // public final get_idx#1
+    // public final get_idxs#1
+    // public final compare#1
+    // public final item#1
+    // public final first_idx#0
+    // public final last_idx#0
+    // public final next_idx#1
+    // public final prev_idx#1
+    // public final length#0
+    // public final to_string#0
+    // public final to_string#1
+    // public final print#0
+    //
+
+    Tutorial.note("List object");
+    ("List: %s\n" % new List().to_string()).print();
+    ("List: %s\n" % new List([1,2,3,4,5]).to_string()).print();
+
+    Tutorial.note("List assign operator");
+    list = new List();
+    ("list: %s\n" % list.to_string()).print();
+    list = 10;
+    ("list: %s\n" % list.to_string()).print();
+
+    Tutorial.note("List compare operators");
+    list_0 = new List([1,2,3,4]);
+    list_1 = new List([1,2,3,5]);
+    ("list_0 == list_0 -> %d\n" % (list_0 == list_0)).print();
+    ("list_0 == list_1 -> %d\n" % (list_0 == list_1)).print();
+    ("list_0 == 10     -> %d\n" % (list_0 == 10)).print();
+    ("list_0 != list_0 -> %d\n" % (list_0 != list_0)).print();
+    ("list_0 != list_1 -> %d\n" % (list_0 != list_1)).print();
+    ("list_0 != 10     -> %d\n" % (list_0 != 10)).print();
+
+    // Plus operators append content of ierable to list end
+    //
+    Tutorial.note("List plus operators");
+    list_0 = new List([1,2,3]);
+    arr_1 = [4,5,6];
+    ("list_0          -> %s\n" % list_0.to_string()).print();
+    ("list_0 + arr_1  -> %s\n" % (list_0 + arr_1).to_string()).print();
+    ("list_0          -> %s\n" % list_0.to_string()).print();
+    ("list_0 += arr_1 -> %s\n" % (list_0 += arr_1).to_string()).print();
+    ("list_0          -> %s\n" % list_0.to_string()).print();
+
+    Tutorial.note("List item select operator");
+    list = new List(["One","Two","Three","Four"]);
+    idx = list.first_idx();
+    while (Blank != idx)
+    {
+      ("list[%d]: %s\n" % [idx,list[idx]]).print();
+      idx = list.next_idx(idx);
+    }
+
+    Tutorial.note("List method clear#0");
+    list = new List([1,2,3,4,5]);
+    ("list         -> %s\n" % list.to_string()).print();
+    ("list.clear() -> %s\n" % list.clear().to_string()).print();
+    ("list         -> %s\n" % list.to_string()).print();
+
+    Tutorial.note("List method items#0");
+    list = new List([1,2,3,4,5]);
+    ("list  -> type: %s, value %s\n" % [(type list).to_string(),list.to_string()]).print();
+    items = list.items();
+    ("items -> type: %s, value %s\n" % [(type items).to_string(),items.to_string()]).print();
+    ("list  -> type: %s, value %s\n" % [(type list).to_string(),list.to_string()]).print();
+
+    Tutorial.note("List method append#1");
+    list = new List([1,2,3,4,5]);
+    ("list           -> %s\n" % list.to_string()).print();
+    ("list.append(6) -> %d\n" % list.append(6)).print();
+    ("list.append(7) -> %d\n" % list.append(7)).print();
+    ("list.append(8) -> %d\n" % list.append(8)).print();
+    ("list           -> %s\n" % list.to_string()).print();
+
+    Tutorial.note("List method prepend#1");
+    list = new List([1,2,3,4,5]);
+    ("list            -> %s\n" % list.to_string()).print();
+    ("list.prepend(6) -> %d\n" % list.prepend(6)).print();
+    ("list.prepend(7) -> %d\n" % list.prepend(7)).print();
+    ("list.prepend(8) -> %d\n" % list.prepend(8)).print();
+    ("list            -> %s\n" % list.to_string()).print();
+
+    Tutorial.note("List method insert_before#2");
+    list = new List([1,2,3,4,5]);
+    idx = list.get_idx(3);
+    ("list                      -> %s\n" % list.to_string()).print();
+    ("list.insert_before(idx,6) -> %d\n" % list.insert_before(idx,6)).print();
+    ("list.insert_before(idx,7) -> %d\n" % list.insert_before(idx,7)).print();
+    ("list.insert_before(idx,8) -> %d\n" % list.insert_before(idx,8)).print();
+    ("list                      -> %s\n" % list.to_string()).print();
+
+    Tutorial.note("List method insert_after#2");
+    list = new List([1,2,3,4,5]);
+    idx = list.get_idx(3);
+    ("list                     -> %s\n" % list.to_string()).print();
+    ("list.insert_after(idx,6) -> %d\n" % list.insert_after(idx,6)).print();
+    ("list.insert_after(idx,7) -> %d\n" % list.insert_after(idx,7)).print();
+    ("list.insert_after(idx,8) -> %d\n" % list.insert_after(idx,8)).print();
+    ("list                     -> %s\n" % list.to_string()).print();
+
+    Tutorial.note("List method remove#1");
+    list = new List([1,2,3,4,5]);
+    idx = list.get_idx(3);
+    ("list             -> %s\n" % list.to_string()).print();
+    ("list.remove(idx) -> %s\n" % list.remove(idx).to_string()).print();
+    ("list             -> %s\n" % list.to_string()).print();
+
+    Tutorial.note("List method has_idx#1");
+    list = new List([1,2,3,4,5]);
+    ("list            -> %s\n" % list.to_string()).print();
+    ("list.has_idx(2) -> %d\n" % list.has_idx(2)).print();
+    ("list.has_idx(6) -> %d\n" % list.has_idx(6)).print();
+
+    Tutorial.note("List method get_idx#1");
+    list = new List([1,2,3,4,5]);
+    ("list            -> %s\n" % list.to_string()).print();
+    ("list.get_idx(2) -> %d\n" % list.get_idx(2)).print();
+    ("list.get_idx(3) -> %d\n" % list.get_idx(3)).print();
+
+    Tutorial.note("List method get_idxs#1");
+    list = new List([1,2,3,3,2,4]);
+    ("list             -> %s\n" % list.to_string()).print();
+    ("list.get_idxs(2) -> %s\n" % list.get_idxs(2).to_string()).print();
+    ("list.get_idxs(3) -> %s\n" % list.get_idxs(3).to_string()).print();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final compare#1
+    // public final item#1
+    // public final first_idx#0
+    // public final last_idx#0
+    // public final next_idx#1
+    // public final prev_idx#1
+    // public final length#0
+    // public final to_string#0
+    // public final to_string#1
+    // public final print#0
+    //
+
+    // Method to_string#1 return string created by concatenating string
+    // representations of list items separated by string given as method
+    // parameter
+    //
+    Tutorial.note("Difference of to_string#0 and to_string#1");
+    list = new List([1,2,3,4,5]);
+    ("list.to_string()        -> %s\n" % list.to_string()).print();
+    ("list.to_string(\"-SEP-\") -> %s\n" % list.to_string("-SEP-")).print();
+
+    // Methods of class List throws following exceptions
+    //
+    // c_error_LIST_INDEX_DOES_NOT_REFER_TO_VALID_VALUE
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

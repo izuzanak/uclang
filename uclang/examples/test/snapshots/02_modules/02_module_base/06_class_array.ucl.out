@@ -1,0 +1,96 @@
+
+=== Array object ===============================================================
+
+Array: []
+Array: [item(0),item(1),item(2),item(3),item(4)]
+
+=== Array constant syntax ======================================================
+
+Array: [1,2,3]
+
+=== Array assign operator ======================================================
+
+array: []
+array: 10
+
+=== Array compare operators ====================================================
+
+array_0 == array_0 -> 1
+array_0 == array_1 -> 0
+array_0 == 10      -> 0
+array_0 != array_0 -> 0
+array_0 != array_1 -> 1
+array_0 != 10      -> 1
+
+=== Array plus operators =======================================================
+
+arr_0          -> [1,2,3]
+arr_0 + arr_1  -> [1,2,3,4,5,6]
+arr_0          -> [1,2,3]
+arr_0 += arr_1 -> [1,2,3,4,5,6]
+arr_0          -> [1,2,3,4,5,6]
+
+=== Array item select operator =================================================
+
+array[0]: One
+array[1]: Two
+array[2]: Three
+array[3]: Four
+
+=== Array method clear#0 =======================================================
+
+array         -> [1,2,3,4,5]
+array.clear() -> <blank>
+array         -> []
+
+=== Array method resize#1 ======================================================
+
+array            -> [1,2,3,4,5]
+array.resize(10) -> <blank>
+array            -> [1,2,3,4,5,<blank>,<blank>,<blank>,<blank>,<blank>]
+
+=== Array method push#1 ========================================================
+
+array          -> [1,2,3,4,5]
+array.push(10) -> <blank>
+array.push(10) -> <blank>
+array.push(10) -> <blank>
+array          -> [1,2,3,4,5,10,10,10]
+
+=== Array method pop#0 =========================================================
+
+array       -> [1,2,3,4,5]
+array.pop() -> 5
+array.pop() -> 4
+array.pop() -> 3
+array       -> [1,2]
+
+=== Array method last#0 ========================================================
+
+array        -> [1,2,3,4,5]
+array.last() -> 5
+array        -> [1,2,3,4,5]
+
+=== Array method fill#1 ========================================================
+
+array         -> [1,2,3,4,5]
+array.fill(3) -> <blank>
+array         -> [3,3,3,3,3]
+
+=== Array method get_idx#1 =====================================================
+
+array            -> [1,5,5,2,5]
+array.get_idx(5) -> 1
+
+=== Array method get_idxs#1 ====================================================
+
+array             -> [1,5,5,2,5]
+array.get_idxs(5) -> [1,2,4]
+
+=== Difference of to_string#0 and to_string#1 ==================================
+
+array.to_string()        -> [1,2,3,4,5]
+array.to_string("-SEP-") -> 1-SEP-2-SEP-3-SEP-4-SEP-5
+
+=== Tutorial end ===============================================================
+

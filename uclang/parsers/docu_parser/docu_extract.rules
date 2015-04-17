@@ -1,0 +1,21 @@
+#vim: set syntax=rules:
+
+init_code: {null}
+
+terminals:
+  comment {(("#".[!#].!'\n'*.'\n')+("//".[!/].!'\n'*.'\n')+("/*".[!*].(!'*'+('*'.!'/'))*."*/".[ \t]*.('\n'+e))).[ \t]*}
+  _END_ {'\0'}
+
+nonterminals:
+  <start>
+  <comm_list>
+  <comm>
+
+rules:
+  <start> -> <comm_list> _END_ ->> {null}
+
+  <comm_list> -> <comm> ->> {null}
+  <comm_list> -> <comm_list> <comm> ->> {null}
+
+  <comm> -> comment ->> {out("comment\n");}
+

@@ -1,0 +1,23 @@
+
+=== Signal method bind#2 =======================================================
+
+Signal.bind(Signal.SIGINT,dlg)  -> <blank>
+Signal.bind(Signal.SIGTERM,dlg) -> <blank>
+Signal.bind(Signal.SIGHUP,dlg)  -> <blank>
+
+=== Signal method unbind#1 =====================================================
+
+Signal.unbind(Signal.SIGINT)  -> <blank>
+Signal.unbind(Signal.SIGHUP)  -> <blank>
+
+=== Signal built in constants ==================================================
+
+Signal.SIGINT:  2
+Signal.SIGTERM: 15
+Signal.SIGHUP:  1
+
+=== Signal method send#2 =======================================================
+
+
+=== Received signal 15 =========================================================
+

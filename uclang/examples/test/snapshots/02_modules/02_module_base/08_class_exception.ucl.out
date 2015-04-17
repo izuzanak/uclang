@@ -1,0 +1,44 @@
+
+=== Exception object ===========================================================
+
+Exception: Exception
+Exception: Exception
+Exception: Exception
+
+=== Exception method throw#0 ===================================================
+
+Exception: Exception
+
+=== Exception method get_type#0 ================================================
+
+except_0.get_type() -> error_DIVISION_BY_ZERO
+except_1.get_type() -> error_ARRAY_INDEX_EXCEEDS_RANGE
+except_2.get_type() -> error_CLASS_DOES_NOT_CONTAIN_METHOD
+except_3.get_type() -> error_USER_EXCEPTION
+
+=== Exception method get_value#0 ===============================================
+
+except_0.get_value() -> <blank>
+except_1.get_value() -> <blank>
+except_2.get_value() -> <blank>
+except_3.get_value() -> My exception
+
+=== Exception method get_file_name#0 ===========================================
+
+except_0.get_file_name() -> 08_class_exception.ucl
+except_1.get_file_name() -> 08_class_exception.ucl
+except_2.get_file_name() -> 08_class_exception.ucl
+except_3.get_file_name() -> 08_class_exception.ucl
+
+=== Exception method get_line#0 ================================================
+
+except_0.get_line() -> 26
+except_1.get_line() -> 27
+except_2.get_line() -> 28
+except_3.get_line() -> 41
+
+=== Exception method error_print#0 =============================================
+
+
+=== Tutorial end ===============================================================
+

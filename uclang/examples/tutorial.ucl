@@ -1,0 +1,16 @@
+
+class Tutorial
+{/*{{{*/
+  static public note(a_text)
+  {
+    // - ERROR -
+    if (a_text.length() > 75)
+    {
+      new Exception("Note text is too long").throw();
+    }
+
+    // - print tutorial note -
+    ("\n=== %s %s\n\n" % [a_text,"="*(75 - a_text.length())]).print();
+  }
+}/*}}}*/
+

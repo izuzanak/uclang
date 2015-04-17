@@ -1,0 +1,75 @@
+
+// Language version 0.10
+
+import tutorial;
+
+class Demo
+{
+  // Member declaration syntax
+  //
+  // <modifier_list> <name>;
+  // <modifier_list> <name> = <exp>;
+  //
+  // <modifier> -> static
+  // <modifier> -> private
+  // <modifier> -> public
+  //
+
+  // Static private member
+  static private static_private = 0;
+
+  // Static public member
+  static public static_public = 0;
+
+  // Private member
+  private non_static_private = 0;
+
+  // Public member
+  public non_static_public = 0;
+
+  // Constructor of class Demo. Constructor must be declared as public
+  public Demo()
+  {
+    // All members are accessible from its parent class
+    // Static members are shared among all instances of class
+    ++static_private;
+    ++static_public;
+
+    // Non-static members are unique for each class instance
+    ++non_static_private;
+    ++non_static_public;
+  }
+}
+
+class Main
+{
+  static public main(argv)
+  {
+    // Create new object of class Demo
+    demo = new Demo();
+
+    Tutorial.note("Access to private members throws an exception");
+    try {
+      ("demo.static_private: %d\n" % demo.static_private).print();
+    }
+    catch (e)
+    {
+      e.error_print();
+    }
+
+    Tutorial.note("Public members are accessible");
+    ("demo.static_public: %d\n" % demo.static_public).print();
+
+    // Create few more Demo objects
+    demos = new Demo[99];
+
+    Tutorial.note("Static members are shared among all instances of class");
+    ("demo.static_public: %d\n" % demo.static_public).print();
+
+    Tutorial.note("Non-static members are unique for each class instance");
+    ("demo.non_static_public: %d\n" % demo.non_static_public).print();
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

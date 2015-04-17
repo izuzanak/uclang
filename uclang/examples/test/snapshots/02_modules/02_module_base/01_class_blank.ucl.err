@@ -1,0 +1,6 @@
+ ---------------------------------------- 
+Exception: ERROR: in file: "01_class_blank.ucl" on line: 58
+      ("simple == blank -> %d\n" % (simple == blank)).print();
+
+Class Simple does not contain method operator_binary_double_equal#1
+ ---------------------------------------- 

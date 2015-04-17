@@ -1,0 +1,146 @@
+
+=== String object ==============================================================
+
+String: 
+String: A
+String: 10
+String: 11.000000
+String: Hello world!
+
+=== String constant syntax =====================================================
+
+String: "Hello world" -> Hello world
+String: "Oct: \101, Hex: \x41, Spec: \t." -> Oct: A, Hex: A, Spec: 	.
+String: This
+is
+multiline
+string
+
+=== String assign operator =====================================================
+
+string: Hello world!
+string: 10
+
+=== String plus operators ======================================================
+
+str_0          -> Hello 
+str_1          -> World!
+str_0 + str_1  -> Hello World!
+str_0          -> Hello 
+str_0 += str_1 -> Hello World!
+str_0          -> Hello World!
+
+=== String asterisk operators ==================================================
+
+str_0          -> Hello 
+int_1          -> 5
+str_0 * int_1  -> Hello Hello Hello Hello Hello 
+str_0          -> Hello 
+str_0 *= int_1 -> Hello Hello Hello Hello Hello 
+str_0          -> Hello Hello Hello Hello Hello 
+
+=== String percent operator, format types ======================================
+
+"String %c" % 'A'       -> String A
+"String %d" % 130240    -> String 130240
+"String %i" % 130240    -> String 130240
+"String %o" % 130240    -> String 376300
+"String %x" % 130240    -> String 1fcc0
+"String %X" % 130240    -> String 1FCC0
+"String %f" % (100/3.0) -> String 33.333333
+"String %F" % (100/3.0) -> String 33.333333
+"String %e" % (100/3.0) -> String 3.333333e+01
+"String %E" % (100/3.0) -> String 3.333333E+01
+"String %g" % (100/3.0) -> String 33.3333
+"String %G" % (100/3.0) -> String 33.3333
+"String %s" % "Hello"   -> String Hello
+
+=== String percent operator, advanced format ===================================
+
+"String \"%10.d\"" % 12345   -> String "     12345"
+"String \"%.10d\"" % 12345   -> String "0000012345"
+"String \"%15.10d\"" % 12345 -> String "     0000012345"
+"String \"%-10.d\"" % 12345  -> String "12345     "
+"String \"%+10.d\"" % 12345  -> String "    +12345"
+"String \"% 10.d\"" % 12345  -> String "     12345"
+"String \"%010.d\"" % 12345  -> String "0000012345"
+"String \"%10.x\"" % 12345   -> String "      3039"
+"String \"%#10.x\"" % 12345  -> String "    0x3039"
+
+=== String percent operator, parameters ========================================
+
+"String \"%d\"" % [12345]          -> String "12345"
+"String \"%*.d\"" % [10,12345]     -> String "     12345"
+"String \"%.*d\"" % [10,12345]     -> String "0000012345"
+"String \"%*.*d\"" % [15,10,12345] -> String "     0000012345"
+
+=== String compare operators ===================================================
+
+str_0          -> Hello 
+str_1          -> World!
+str_0 == str_1 -> 0
+str_0 != str_1 -> 1
+str_0          -> Hello 
+
+=== String item select operator ================================================
+
+string[0]: H
+string[1]: e
+string[2]: l
+string[3]: l
+string[4]: o
+
+=== String method split#1 ======================================================
+
+string            -> One Two Three Four
+string.split(" ") -> [One,Two,Three,Four]
+
+=== String method join#1 =======================================================
+
+string             -> -
+array              -> [1,2,3,4,5]
+string.join(array) -> 1-2-3-4-5
+
+=== String method head#1 =======================================================
+
+string          -> Hello world!
+string.head(5)  -> Hello
+string.head(-1) -> Hello world
+string.head(0)  -> 
+
+=== String method tail#1 =======================================================
+
+string          -> Hello world!
+string.tail(6)  -> world!
+string.tail(-6) -> world!
+string.tail(0)  -> 
+
+=== String method range#2 ======================================================
+
+string              -> xxx Hello world! yyy
+string.range(4,-5)  -> Hello world!
+string.range(0,2)   -> xxx
+string.range(-3,-1) -> yyy
+
+=== String method get_idx#1 ====================================================
+
+string                  -> Hello world!
+string.get_idx("Hello") -> 0
+string.get_idx("world") -> 6
+
+=== String method get_idxs#1 ===================================================
+
+string                   -> Well hello brave new world!
+string.get_idxs("hello") -> [5]
+string.get_idxs("ll")    -> [2,7]
+string.get_idxs("e")     -> [1,6,15,18]
+
+=== String method replace#2 ====================================================
+
+string                      -> Well hello brave new world!
+string.replace("new","old") -> Well hello brave old world!
+string.replace("ll","xx")   -> Wexx hexxo brave new world!
+string                      -> Well hello brave new world!
+
+=== Tutorial end ===============================================================
+

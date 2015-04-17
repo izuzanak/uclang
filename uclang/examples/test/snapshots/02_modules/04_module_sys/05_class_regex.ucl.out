@@ -1,0 +1,29 @@
+
+=== Regex object ===============================================================
+
+regex_0: Regex
+regex_1: Regex
+regex_2: Regex
+
+=== Regex method match#1 =======================================================
+
+regex_0.match("number: 100") -> [0,3]
+regex_0.match("number: 100") -> <blank>
+regex_1.match("number: 100") -> [8,11]
+regex_2.match("number: 100") -> [0,11]
+
+=== Regex method match#2 =======================================================
+
+regex_0.match("number: 100",3) -> [[0,3]]
+regex_0.match("number: 100",3) -> <blank>
+regex_1.match("number: 100",3) -> [[8,11],[8,11]]
+regex_2.match("number: 100",3) -> [[0,11],[0,6],[8,11]]
+
+=== Regex method match_from#2 ==================================================
+
+regex_1.match_from("100 100 100",0) -> [0,3]
+regex_1.match_from("100 100 100",3) -> [4,7]
+regex_1.match_from("100 100 100",7) -> [8,11]
+
+=== Tutorial end ===============================================================
+

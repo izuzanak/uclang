@@ -1,0 +1,130 @@
+
+// Language version 0.10
+
+import tutorial;
+import containers;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Class Queue represent abstract data type Queue
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final operator_binary_plus_equal#1
+    // public final operator_binary_double_equal#1
+    // public final operator_binary_exclamation_equal#1
+    // public final operator_binary_plus#1
+    // public final Queue#0
+    // public final Queue#1
+    // public final clear#0
+    // public final items#0
+    // public final insert#1
+    // public final next#0
+    // public final compare#1
+    // public final item#1
+    // public final first_idx#0
+    // public final last_idx#0
+    // public final next_idx#1
+    // public final prev_idx#1
+    // public final length#0
+    // public final to_string#0
+    // public final to_string#1
+    // public final print#0
+    //
+
+    Tutorial.note("Queue object");
+    ("Queue: %s\n" % new Queue().to_string()).print();
+    ("Queue: %s\n" % new Queue([1,2,3,4,5]).to_string()).print();
+
+    Tutorial.note("Queue assign operator");
+    queue = new Queue();
+    ("queue: %s\n" % queue.to_string()).print();
+    queue = 10;
+    ("queue: %s\n" % queue.to_string()).print();
+
+    Tutorial.note("Queue compare operators");
+    queue_0 = new Queue([1,2,3,4]);
+    queue_1 = new Queue([1,2,3,5]);
+    ("queue_0 == queue_0 -> %d\n" % (queue_0 == queue_0)).print();
+    ("queue_0 == queue_1 -> %d\n" % (queue_0 == queue_1)).print();
+    ("queue_0 == 10      -> %d\n" % (queue_0 == 10)).print();
+    ("queue_0 != queue_0 -> %d\n" % (queue_0 != queue_0)).print();
+    ("queue_0 != queue_1 -> %d\n" % (queue_0 != queue_1)).print();
+    ("queue_0 != 10      -> %d\n" % (queue_0 != 10)).print();
+
+    // Plus operators insert content of ierable to queue end
+    //
+    Tutorial.note("Queue plus operators");
+    queue_0 = new Queue([1,2,3]);
+    arr_1 = [4,5,6];
+    ("queue_0          -> %s\n" % queue_0.to_string()).print();
+    ("queue_0 + arr_1  -> %s\n" % (queue_0 + arr_1).to_string()).print();
+    ("queue_0          -> %s\n" % queue_0.to_string()).print();
+    ("queue_0 += arr_1 -> %s\n" % (queue_0 += arr_1).to_string()).print();
+    ("queue_0          -> %s\n" % queue_0.to_string()).print();
+
+    Tutorial.note("Queue method clear#0");
+    queue = new Queue([1,2,3,4,5]);
+    ("queue         -> %s\n" % queue.to_string()).print();
+    ("queue.clear() -> %s\n" % queue.clear().to_string()).print();
+    ("queue         -> %s\n" % queue.to_string()).print();
+
+    Tutorial.note("Queue method items#0");
+    queue = new Queue([1,2,3,4,5]);
+    ("queue -> type: %s, value %s\n" % [(type queue).to_string(),queue.to_string()]).print();
+    items = queue.items();
+    ("items -> type: %s, value %s\n" % [(type items).to_string(),items.to_string()]).print();
+    ("queue -> type: %s, value %s\n" % [(type queue).to_string(),queue.to_string()]).print();
+
+    Tutorial.note("Queue method insert#1");
+    queue = new Queue([1,2,3,4,5]);
+    ("queue            -> %s\n" % queue.to_string()).print();
+    ("queue.insert(10) -> %s\n" % queue.insert(10).to_string()).print();
+    ("queue.insert(10) -> %s\n" % queue.insert(10).to_string()).print();
+    ("queue.insert(10) -> %s\n" % queue.insert(10).to_string()).print();
+    ("queue            -> %s\n" % queue.to_string()).print();
+
+    Tutorial.note("Queue method next#0");
+    queue = new Queue([1,2,3,4,5]);
+    ("queue        -> %s\n" % queue.to_string()).print();
+    ("queue.next() -> %s\n" % queue.next().to_string()).print();
+    ("queue.next() -> %s\n" % queue.next().to_string()).print();
+    ("queue.next() -> %s\n" % queue.next().to_string()).print();
+    ("queue        -> %s\n" % queue.to_string()).print();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final compare#1
+    // public final item#1
+    // public final first_idx#0
+    // public final last_idx#0
+    // public final next_idx#1
+    // public final prev_idx#1
+    // public final length#0
+    // public final to_string#0
+    // public final to_string#1
+    // public final print#0
+    //
+
+    // Method to_string#1 return string created by concatenating string
+    // representations of queue items separated by string given as method
+    // parameter
+    //
+    Tutorial.note("Difference of to_string#0 and to_string#1");
+    queue = new Queue([1,2,3,4,5]);
+    ("queue.to_string()        -> %s\n" % queue.to_string()).print();
+    ("queue.to_string(\"-SEP-\") -> %s\n" % queue.to_string("-SEP-")).print();
+
+    // Methods of class Queue throws following exceptions
+    //
+    // c_error_QUEUE_INDEX_EXCEEDS_RANGE
+    // c_error_QUEUE_NO_OTHER_ELEMENTS
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

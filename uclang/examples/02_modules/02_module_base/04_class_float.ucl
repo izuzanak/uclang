@@ -1,0 +1,258 @@
+
+// Language version 0.10
+
+import tutorial;
+
+class Main
+{
+  static public main(argv)
+  {
+    // class Float represents real number, equivalent to double at target
+    // architecture
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final operator_binary_plus_equal#1
+    // public final operator_binary_minus_equal#1
+    // public final operator_binary_asterisk_equal#1
+    // public final operator_binary_slash_equal#1
+    // public final operator_binary_double_ampersand#1
+    // public final operator_binary_double_pipe#1
+    // public final operator_binary_double_equal#1
+    // public final operator_binary_exclamation_equal#1
+    // public final operator_binary_rs_br#1
+    // public final operator_binary_ls_br#1
+    // public final operator_binary_rs_br_equal#1
+    // public final operator_binary_ls_br_equal#1
+    // public final operator_binary_plus#1
+    // public final operator_binary_minus#1
+    // public final operator_binary_asterisk#1
+    // public final operator_binary_slash#1
+    // public final operator_unary_post_double_plus#0
+    // public final operator_unary_post_double_minus#0
+    // public final operator_unary_pre_double_plus#0
+    // public final operator_unary_pre_double_minus#0
+    // public final operator_unary_pre_plus#0
+    // public final operator_unary_pre_minus#0
+    // public final Float#0
+    // public final Float#1
+    // public final sin#0
+    // public final cos#0
+    // public final tan#0
+    // public final asin#0
+    // public final acos#0
+    // public final atan#0
+    // public final exp#0
+    // public final log#0
+    // public final pow#1
+    // public final sqrt#0
+    // public final cbrt#0
+    // public final hypot#1
+    // public final isnan#0
+    // public final compare#1
+    // public final to_string#0
+    // public final print#0
+    //
+
+    Tutorial.note("Float object");
+    ("Float: %s\n" % new Float().to_string()).print();
+    ("Float: %s\n" % new Float('A').to_string()).print();
+    ("Float: %s\n" % new Float(10).to_string()).print();
+    ("Float: %s\n" % new Float(11.0).to_string()).print();
+    ("Float: %s\n" % new Float("0x10").to_string()).print();
+
+    Tutorial.note("Float constant syntax");
+    ("Float: 1000.0 -> %f\n" % 1000.0).print();
+    ("Float: 1000.  -> %f\n" % 1000.).print();
+    ("Float: 1e3    -> %f\n" % 1e3).print();
+    ("Float: 1e+3   -> %f\n" % 1e+3).print();
+    ("Float: .001   -> %f\n" % .001).print();
+    ("Float: 1E-003 -> %f\n" % 1E-003).print();
+
+    Tutorial.note("Float assign operator");
+    float = 10.0;
+    ("float: %s\n" % float.to_string()).print();
+    float = "string";
+    ("float: %s\n" % float.to_string()).print();
+
+    Tutorial.note("Float plus operators");
+    float_0 = 125.25;
+    float_1 = 1000.0/3.0;
+    ("float_0            -> %f\n" % float_0).print();
+    ("float_1            -> %f\n" % float_1).print();
+    ("float_0 + float_1  -> %f\n" % (float_0 + float_1)).print();
+    ("float_0            -> %f\n" % float_0).print();
+    ("float_0 += float_1 -> %f\n" % (float_0 += float_1)).print();
+    ("float_0            -> %f\n" % float_0).print();
+    ("+ float_0          -> %f\n" % + float_0).print();
+    ("float_0            -> %f\n" % float_0).print();
+
+    Tutorial.note("Float minus operators");
+    float_0 = 125.25;
+    float_1 = 1000.0/3.0;
+    ("float_0            -> %f\n" % float_0).print();
+    ("float_1            -> %f\n" % float_1).print();
+    ("float_0 - float_1  -> %f\n" % (float_0 - float_1)).print();
+    ("float_0            -> %f\n" % float_0).print();
+    ("float_0 -= float_1 -> %f\n" % (float_0 -= float_1)).print();
+    ("float_0            -> %f\n" % float_0).print();
+    ("- float_0          -> %f\n" % - float_0).print();
+    ("float_0            -> %f\n" % float_0).print();
+
+    Tutorial.note("Float asterisk operators");
+    float_0 = 125.25;
+    float_1 = 1000.0/3.0;
+    ("float_0            -> %f\n" % float_0).print();
+    ("float_1            -> %f\n" % float_1).print();
+    ("float_0 * float_1  -> %f\n" % (float_0 * float_1)).print();
+    ("float_0            -> %f\n" % float_0).print();
+    ("float_0 *= float_1 -> %f\n" % (float_0 *= float_1)).print();
+    ("float_0            -> %f\n" % float_0).print();
+
+    Tutorial.note("Float slash operators");
+    float_0 = 125.25;
+    float_1 = 1000.0/3.0;
+    ("float_0            -> %f\n" % float_0).print();
+    ("float_1            -> %f\n" % float_1).print();
+    ("float_0 / float_1  -> %f\n" % (float_0 / float_1)).print();
+    ("float_0            -> %f\n" % float_0).print();
+    ("float_0 /= float_1 -> %f\n" % (float_0 /= float_1)).print();
+    ("float_0            -> %f\n" % float_0).print();
+
+    Tutorial.note("Float double ampersand operators");
+    ("0.0 && 1.0 -> %d\n" % (0.0 && 1.0)).print();
+    ("0.0 && 0.0 -> %d\n" % (0.0 && 0.0)).print();
+    ("1.0 && 1.0 -> %d\n" % (1.0 && 1.0)).print();
+    ("1.0 && 0.0 -> %d\n" % (1.0 && 0.0)).print();
+
+    Tutorial.note("Float double pipe operators");
+    ("0.0 || 1.0 -> %d\n" % (0.0 || 1.0)).print();
+    ("0.0 || 0.0 -> %d\n" % (0.0 || 0.0)).print();
+    ("1.0 || 1.0 -> %d\n" % (1.0 || 1.0)).print();
+    ("1.0 || 0.0 -> %d\n" % (1.0 || 0.0)).print();
+
+    Tutorial.note("Float compare operators");
+    float_0 = 125.25;
+    float_1 = 1000.0/3.0;
+    ("float_0            -> %f\n" % float_0).print();
+    ("float_1            -> %f\n" % float_1).print();
+    ("float_0 == float_1 -> %d\n" % (float_0 == float_1)).print();
+    ("float_0 != float_1 -> %d\n" % (float_0 != float_1)).print();
+    ("float_0 > float_1  -> %d\n" % (float_0 > float_1)).print();
+    ("float_0 < float_1  -> %d\n" % (float_0 < float_1)).print();
+    ("float_0 >= float_1 -> %d\n" % (float_0 >= float_1)).print();
+    ("float_0 <= float_1 -> %d\n" % (float_0 <= float_1)).print();
+    ("float_0            -> %f\n" % float_0).print();
+
+    Tutorial.note("Float double plus operators");
+    float_0 = 125.25;
+    ("float_0    -> %f\n" % float_0).print();
+    ("++ float_0 -> %f\n" % ++ float_0).print();
+    ("float_0    -> %f\n" % float_0).print();
+    ("float_0 ++ -> %f\n" % float_0 ++).print();
+    ("float_0    -> %f\n" % float_0).print();
+
+    Tutorial.note("Float double minus operators");
+    float_0 = 125.25;
+    ("float_0    -> %f\n" % float_0).print();
+    ("-- float_0 -> %f\n" % -- float_0).print();
+    ("float_0    -> %f\n" % float_0).print();
+    ("float_0 -- -> %f\n" % float_0 --).print();
+    ("float_0    -> %f\n" % float_0).print();
+
+    Tutorial.note("Float method sin#0");
+    float = 3.14159265358979323844/2.0;
+    ("float       -> %f\n" % float).print();
+    ("float.sin() -> %f\n" % float.sin()).print();
+    ("float       -> %f\n" % float).print();
+
+    Tutorial.note("Float method cos#0");
+    float = 3.14159265358979323844;
+    ("float       -> %f\n" % float).print();
+    ("float.cos() -> %f\n" % float.cos()).print();
+    ("float       -> %f\n" % float).print();
+
+    Tutorial.note("Float method tan#0");
+    float = 3.14159265358979323844/4.0;
+    ("float       -> %f\n" % float).print();
+    ("float.tan() -> %f\n" % float.tan()).print();
+    ("float       -> %f\n" % float).print();
+
+    Tutorial.note("Float method asin#0");
+    float = 1.0;
+    ("float        -> %f\n" % float).print();
+    ("float.asin() -> %f\n" % float.asin()).print();
+    ("float        -> %f\n" % float).print();
+
+    Tutorial.note("Float method acos#0");
+    float = 1.0;
+    ("float        -> %f\n" % float).print();
+    ("float.acos() -> %f\n" % float.acos()).print();
+    ("float        -> %f\n" % float).print();
+
+    Tutorial.note("Float method atan#0");
+    float = 1.0;
+    ("float        -> %f\n" % float).print();
+    ("float.atan() -> %f\n" % float.atan()).print();
+    ("float        -> %f\n" % float).print();
+
+    Tutorial.note("Float method exp#0");
+    float = 1.0;
+    ("float       -> %f\n" % float).print();
+    ("float.exp() -> %f\n" % float.exp()).print();
+    ("float       -> %f\n" % float).print();
+
+    Tutorial.note("Float method log#0");
+    float = 2.718282;
+    ("float       -> %f\n" % float).print();
+    ("float.log() -> %f\n" % float.log()).print();
+    ("float       -> %f\n" % float).print();
+
+    Tutorial.note("Float method pow#0");
+    float = 10.0;
+    ("float        -> %f\n" % float).print();
+    ("float.pow(4) -> %f\n" % float.pow(4)).print();
+    ("float        -> %f\n" % float).print();
+
+    Tutorial.note("Float method sqrt#0");
+    float = 100.0;
+    ("float        -> %f\n" % float).print();
+    ("float.sqrt() -> %f\n" % float.sqrt()).print();
+    ("float        -> %f\n" % float).print();
+
+    Tutorial.note("Float method cbrt#0");
+    float = 1000.0;
+    ("float        -> %f\n" % float).print();
+    ("float.cbrt() -> %f\n" % float.cbrt()).print();
+    ("float        -> %f\n" % float).print();
+
+    Tutorial.note("Float method hypot#0");
+    float = 3.0;
+    ("float          -> %f\n" % float).print();
+    ("float.hypot(4) -> %f\n" % float.hypot(4)).print();
+    ("float          -> %f\n" % float).print();
+
+    Tutorial.note("Float method isnan#0");
+    float = 125.25;
+    ("float         -> %f\n" % float).print();
+    ("float.isnan() -> %d\n" % float.isnan()).print();
+    ("float         -> %f\n" % float).print();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final compare#1
+    // public final to_string#0
+    // public final print#0
+    //
+
+    // Methods of class Float throws following exceptions
+    //
+    // c_error_FLOAT_CONVERT_INVALID_STRING
+    //
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

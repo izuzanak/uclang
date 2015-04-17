@@ -1,0 +1,15 @@
+
+// Language version 0.10
+
+# One line comment as in bash scripts
+class Main
+{
+  // One line comment as in C++
+  static public main(argv)
+  {
+    /*
+     * Multiple line comment as in C++
+     */
+  }
+}
+

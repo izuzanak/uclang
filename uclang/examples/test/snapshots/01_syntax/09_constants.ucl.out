@@ -1,0 +1,47 @@
+
+=== Character constants ========================================================
+
+Single character:    'A' -> A
+Octal character:  '\101' -> A
+Hexa character:   '\x41' -> A
+
+=== Special character constants: \[abfnrtv?'"] =================================
+
+Escaped value character: '\t' -> "	"
+
+=== Integer constants ==========================================================
+
+Octal integer:    0700 -> 448
+Decimal integer:   448 -> 448
+Hexa integer:    0x1c0 -> 448
+
+=== Float constants ============================================================
+
+Float: 1000.0 -> 1000.000000
+Float: 1000.  -> 1000.000000
+Float: 1e3    -> 1000.000000
+Float: 1e+3   -> 1000.000000
+Float: .001   -> 0.001000
+Float: 1E-003 -> 0.001000
+
+=== String constants ===========================================================
+
+String: "Hello world" -> Hello world
+
+=== Escape characters in strings ===============================================
+
+String: "Oct: \101, Hex: \x41, Spec: \t." -> Oct: A, Hex: A, Spec: 	.
+
+=== Multiline string ===========================================================
+
+String: This
+is
+multiline
+string
+
+=== Array construction syntax ==================================================
+
+Array: "[1,2,3,4,5]" -> [1,2,3,4,5]
+
+=== Tutorial end ===============================================================
+

@@ -1,0 +1,34 @@
+
+=== Thread object ==============================================================
+
+thread: Thread
+
+=== Thread method join#0 =======================================================
+
+thread        -> Thread
+thread.join() -> [Thread,return,value]
+thread        -> Thread
+
+=== Thread method try_join#0 ===================================================
+
+thread            -> Thread
+thread.try_join() -> error_BUSY
+thread.try_join() -> [Thread,return,value]
+thread            -> Thread
+
+=== Thread method detach#0 =====================================================
+
+thread          -> Thread
+thread.detach() -> <blank>
+thread          -> Thread
+
+=== Thread built in constants ==================================================
+
+Thread.ERROR_AGAIN:    error_AGAIN
+Thread.ERROR_SEARCH:   error_SEARCH
+Thread.ERROR_INVALID:  error_INVALID
+Thread.ERROR_DEADLOCK: error_DEADLOCK
+Thread.ERROR_BUSY:     error_BUSY
+
+=== Tutorial end ===============================================================
+

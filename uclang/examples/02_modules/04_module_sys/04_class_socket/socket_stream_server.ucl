@@ -1,0 +1,49 @@
+
+import sys;
+
+public class Main
+{
+  localhost = "127.0.0.1";
+
+  public Main()
+  {
+    // Create listen socket
+    listen_sock = new Socket(Socket.AF_INET,Socket.SOCK_STREAM);
+
+    // Listen to incoming connections
+    listen_sock.listen(new SocketAddr(localhost,5555),10);
+
+    "Server: listenning\n".print();
+
+    // Accept five client connections
+    idx = 0;
+    do {
+
+      // Accept client connection
+      acc = listen_sock.accept();
+
+      sockaddr = acc[1];
+      ("Server: connection: %s:%s\n" % [sockaddr.name(),(type sockaddr.port()).to_string()]).print();
+
+      socket = acc[0];
+
+      // Write data to socket
+      socket.write("Data srv -> cli\n");
+
+      // Read data from socket
+      ("Server: Data: %s" % socket.read()).print();
+
+      socket.close();
+
+    } while(++idx < 5);
+
+    // Close listen socket
+    listen_sock.close();
+  }
+
+  public static main(args)
+  {
+    new Main();
+  }
+}
+

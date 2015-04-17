@@ -1,0 +1,56 @@
+Hello world!
+
+=== Pipe object ================================================================
+
+Pipe: [File,File]
+Pipe: Pipe
+
+=== Pipe method close#0 ========================================================
+
+pipe         -> Pipe
+pipe.close() -> <blank>
+
+=== Pipe methods write#1 and flush#0 ===========================================
+
+
+=== Pipe method read#0 =========================================================
+
+pipe        -> Pipe
+pipe.read() -> 01_class_sys.ucl
+02_class_pipe.ucl
+03_class_file.ucl
+04_class_socket
+05_class_regex.ucl
+06_class_signal.ucl
+07_class_poll.ucl
+08_class_timer.ucl
+09_class_clock.ucl
+
+=== Pipe method readln#0 =======================================================
+
+pipe          -> Pipe
+pipe.readln() -> 01_class_sys.ucl
+pipe.readln() -> 02_class_pipe.ucl
+pipe.readln() -> 03_class_file.ucl
+pipe.readln() -> 04_class_socket
+pipe.readln() -> 05_class_regex.ucl
+pipe.readln() -> 06_class_signal.ucl
+pipe.readln() -> 07_class_poll.ucl
+pipe.readln() -> 08_class_timer.ucl
+pipe.readln() -> 09_class_clock.ucl
+pipe.readln() -> <blank>
+
+=== Pipe method read#1 =========================================================
+
+pipe          -> Pipe
+pipe.read(10) -> 01_class_s
+pipe.read(10) -> ys.ucl
+02_
+
+=== Pipe method get_fd#1 =======================================================
+
+pipe          -> Pipe
+pipe.get_fd() -> 4
+
+=== Tutorial end ===============================================================
+

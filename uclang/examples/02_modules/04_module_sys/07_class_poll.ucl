@@ -1,0 +1,114 @@
+
+// Language version 0.10
+
+import tutorial;
+import sys;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Objects of class poll represents tools for waiting on events on a
+    // file descriptors
+    //
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final Poll#1
+    // public final ready#1
+    // public final poll#1
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    // Poll constructor accepts array of file descriptors and events related to
+    // each file descriptor
+    //
+    Tutorial.note("Poll object");
+    ("Poll: %s\n" % new Poll([0,Poll.POLLIN | Poll.POLLPRI]).to_string()).print();
+
+    Tutorial.note("Poll assign operator");
+    poll = new Poll([0,Poll.POLLIN | Poll.POLLPRI]);
+    ("poll: %s\n" % poll.to_string()).print();
+    poll = 10;
+    ("poll: %s\n" % poll.to_string()).print();
+
+    // Method ready#1 tests if required events was fired for one or more file
+    // descriptor/s
+    //
+    Tutorial.note("Poll method ready#1");
+    poll = new Poll([0,Poll.POLLIN | Poll.POLLPRI]);
+    ("poll         -> %s\n" % poll.to_string()).print();
+    ("poll.ready() -> %s\n" % poll.ready(0).to_string()).print();
+    ("poll         -> %s\n" % poll.to_string()).print();
+
+    // Method ready#1 tests if required events was fired for one or more file
+    // descriptor/s
+    //
+    Tutorial.note("Poll method poll#1");
+    poll = new Poll([
+      0,Poll.POLLIN | Poll.POLLPRI,    // stdin
+      1,Poll.POLLOUT | Poll.POLLPRI,   // stdout
+      2,Poll.POLLOUT | Poll.POLLPRI]); // stderr
+
+    ("poll        -> %s\n" % poll.to_string()).print();
+    ("poll.poll() -> %s\n\n" % (res = poll.poll(0)).to_string()).print();
+    
+    fd_idx = 0;
+    for (evt <- res)
+    {
+      ("Events %d: " % fd_idx++).print();
+
+      switch (1)
+      {
+        case Poll.POLLIN   & evt != 0: { "POLLIN "  .print(); }
+        case Poll.POLLPRI  & evt != 0: { "POLLPRI " .print(); }
+        case Poll.POLLOUT  & evt != 0: { "POLLOUT " .print(); }
+        case Poll.POLLERR  & evt != 0: { "POLLERR " .print(); }
+        case Poll.POLLHUP  & evt != 0: { "POLLHUP " .print(); }
+        case Poll.POLLNVAL & evt != 0: { "POLLNVAL ".print(); }
+      }
+
+      "\n".print();
+    }
+
+    ("\npoll        -> %s\n" % poll.to_string()).print();
+
+    Tutorial.note("Poll built in constants");
+
+    // Built in constants
+    //
+    // public static static_const POLLIN
+    // public static static_const POLLPRI
+    // public static static_const POLLOUT
+    // public static static_const POLLERR
+    // public static static_const POLLHUP
+    // public static static_const POLLNVAL
+    //
+
+    ("Poll.POLLIN:   %d\n" % Poll.POLLIN).print();
+    ("Poll.POLLPRI:  %d\n" % Poll.POLLPRI).print();
+    ("Poll.POLLOUT:  %d\n" % Poll.POLLOUT).print();
+    ("Poll.POLLERR:  %d\n" % Poll.POLLERR).print();
+    ("Poll.POLLHUP:  %d\n" % Poll.POLLHUP).print();
+    ("Poll.POLLNVAL: %d\n" % Poll.POLLNVAL).print();
+
+    // Methods of class Poll throws following exceptions
+    //
+    // c_error_POLL_WRONG_FDS_AND_EVENTS_ARRAY_SIZE
+    // c_error_POLL_WRONG_FD_OR_EVENT_VALUE_TYPE
+    // c_error_POLL_POLL_ERROR
+    //
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

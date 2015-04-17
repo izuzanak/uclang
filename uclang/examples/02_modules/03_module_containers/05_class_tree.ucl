@@ -1,0 +1,148 @@
+
+// Language version 0.10
+
+import tutorial;
+import containers;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Class Tree represent abstract data type Tree, can be used as multi set
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final operator_binary_plus_equal#1
+    // public final operator_binary_double_equal#1
+    // public final operator_binary_exclamation_equal#1
+    // public final operator_binary_plus#1
+    // public final operator_binary_le_br_re_br#1
+    // public final Tree#0
+    // public final Tree#1
+    // public final clear#0
+    // public final items#0
+    // public final insert#1
+    // public final remove#1
+    // public final get_idx#1
+    // public final get_idxs#1
+    // public final compare#1
+    // public final item#1
+    // public final first_idx#0
+    // public final next_idx#1
+    // public final length#0
+    // public final to_string#0
+    // public final to_string#1
+    // public final print#0
+    //
+
+    Tutorial.note("Tree object");
+    ("Tree: %s\n" % new Tree().to_string()).print();
+    ("Tree: %s\n" % new Tree([1,2,3,4,5]).to_string()).print();
+
+    Tutorial.note("Tree assign operator");
+    tree = new Tree();
+    ("tree: %s\n" % tree.to_string()).print();
+    tree = 10;
+    ("tree: %s\n" % tree.to_string()).print();
+
+    Tutorial.note("Tree compare operators");
+    tree_0 = new Tree([1,2,3,4]);
+    tree_1 = new Tree([1,2,3,5]);
+    ("tree_0 == tree_0 -> %d\n" % (tree_0 == tree_0)).print();
+    ("tree_0 == tree_1 -> %d\n" % (tree_0 == tree_1)).print();
+    ("tree_0 == 10     -> %d\n" % (tree_0 == 10)).print();
+    ("tree_0 != tree_0 -> %d\n" % (tree_0 != tree_0)).print();
+    ("tree_0 != tree_1 -> %d\n" % (tree_0 != tree_1)).print();
+    ("tree_0 != 10     -> %d\n" % (tree_0 != 10)).print();
+
+    // Plus operators insert content of ierable to tree end
+    //
+    Tutorial.note("Tree plus operators");
+    tree_0 = new Tree([1,2,3]);
+    arr_1 = [5,5,4];
+    ("tree_0          -> %s\n" % tree_0.to_string()).print();
+    ("tree_0 + arr_1  -> %s\n" % (tree_0 + arr_1).to_string()).print();
+    ("tree_0          -> %s\n" % tree_0.to_string()).print();
+    ("tree_0 += arr_1 -> %s\n" % (tree_0 += arr_1).to_string()).print();
+    ("tree_0          -> %s\n" % tree_0.to_string()).print();
+
+    Tutorial.note("Tree item select operator");
+    tree = new Tree(["One","Two","Three","Four"]);
+    idx = tree.first_idx();
+    while (Blank != idx)
+    {
+      ("tree[%d]: %s\n" % [idx,tree[idx]]).print();
+      idx = tree.next_idx(idx);
+    }
+
+    Tutorial.note("Tree method clear#0");
+    tree = new Tree([1,2,3,4,5]);
+    ("tree         -> %s\n" % tree.to_string()).print();
+    ("tree.clear() -> %s\n" % tree.clear().to_string()).print();
+    ("tree         -> %s\n" % tree.to_string()).print();
+
+    Tutorial.note("Tree method items#0");
+    tree = new Tree([1,2,3,4,5]);
+    ("tree  -> type: %s, value %s\n" % [(type tree).to_string(),tree.to_string()]).print();
+    items = tree.items();
+    ("items -> type: %s, value %s\n" % [(type items).to_string(),items.to_string()]).print();
+    ("tree  -> type: %s, value %s\n" % [(type tree).to_string(),tree.to_string()]).print();
+
+    Tutorial.note("Tree method insert#1");
+    tree = new Tree([1,2,3,4,5]);
+    ("tree            -> %s\n" % tree.to_string()).print();
+    ("tree.insert(10) -> %d\n" % tree.insert(10)).print();
+    ("tree.insert(10) -> %d\n" % tree.insert(10)).print();
+    ("tree.insert(10) -> %d\n" % tree.insert(10)).print();
+    ("tree            -> %s\n" % tree.to_string()).print();
+
+    Tutorial.note("Tree method remove#1");
+    tree = new Tree([1,2,3,3,4,5]);
+    idx = tree.get_idx(3);
+    ("tree             -> %s\n" % tree.to_string()).print();
+    ("tree.remove(idx) -> %s\n" % tree.remove(idx).to_string()).print();
+    ("tree             -> %s\n" % tree.to_string()).print();
+
+    Tutorial.note("Tree method get_idx#1");
+    tree = new Tree([1,2,3,4,5]);
+    ("tree            -> %s\n" % tree.to_string()).print();
+    ("tree.get_idx(2) -> %d\n" % tree.get_idx(2)).print();
+    ("tree.get_idx(3) -> %d\n" % tree.get_idx(3)).print();
+
+    Tutorial.note("Tree method get_idxs#1");
+    tree = new Tree([1,2,3,3,2,4]);
+    ("tree             -> %s\n" % tree.to_string()).print();
+    ("tree.get_idxs(2) -> %s\n" % tree.get_idxs(2).to_string()).print();
+    ("tree.get_idxs(3) -> %s\n" % tree.get_idxs(3).to_string()).print();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final compare#1
+    // public final item#1
+    // public final first_idx#0
+    // public final next_idx#1
+    // public final length#0
+    // public final to_string#0
+    // public final to_string#1
+    // public final print#0
+    //
+
+    // Method to_string#1 return string created by concatenating string
+    // representations of tree items separated by string given as method
+    // parameter
+    //
+    Tutorial.note("Difference of to_string#0 and to_string#1");
+    tree = new Tree([1,2,3,4,5]);
+    ("tree.to_string()        -> %s\n" % tree.to_string()).print();
+    ("tree.to_string(\"-SEP-\") -> %s\n" % tree.to_string("-SEP-")).print();
+
+    // Methods of class Tree throws following exceptions
+    //
+    // c_error_TREE_INDEX_DOES_NOT_REFER_TO_VALID_VALUE
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

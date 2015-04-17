@@ -1,0 +1,36 @@
+
+=== Timer object ===============================================================
+
+Timer: Timer
+
+=== Timer assign operator ======================================================
+
+timer: Timer
+timer: 10
+
+=== Timer method schedule#3 ====================================================
+
+timer  -> Timer
+fourth -> <blank>
+third  -> <blank>
+second -> <blank>
+first  -> <blank>
+
+=== Timer methods process#0 and remain#0 =======================================
+
+timer.remain() -> Integer
+timer.remain() -> Integer
+Timer callback (First timer)
+timer.remain() -> Integer
+timer.remain() -> Integer
+Timer callback (Second timer)
+timer.remain() -> Integer
+timer.remain() -> Integer
+Timer callback (Third timer)
+timer.remain() -> Integer
+timer.remain() -> Integer
+Timer callback (Fourth timer)
+timer.remain() -> Blank
+
+=== Tutorial end ===============================================================
+

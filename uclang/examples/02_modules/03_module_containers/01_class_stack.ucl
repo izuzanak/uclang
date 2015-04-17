@@ -1,0 +1,130 @@
+
+// Language version 0.10
+
+import tutorial;
+import containers;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Class Stack represent abstract data type Stack
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final operator_binary_plus_equal#1
+    // public final operator_binary_double_equal#1
+    // public final operator_binary_exclamation_equal#1
+    // public final operator_binary_plus#1
+    // public final Stack#0
+    // public final Stack#1
+    // public final clear#0
+    // public final items#0
+    // public final push#1
+    // public final pop#0
+    // public final compare#1
+    // public final item#1
+    // public final first_idx#0
+    // public final last_idx#0
+    // public final next_idx#1
+    // public final prev_idx#1
+    // public final length#0
+    // public final to_string#0
+    // public final to_string#1
+    // public final print#0
+    //
+
+    Tutorial.note("Stack object");
+    ("Stack: %s\n" % new Stack().to_string()).print();
+    ("Stack: %s\n" % new Stack([1,2,3,4,5]).to_string()).print();
+
+    Tutorial.note("Stack assign operator");
+    stack = new Stack();
+    ("stack: %s\n" % stack.to_string()).print();
+    stack = 10;
+    ("stack: %s\n" % stack.to_string()).print();
+
+    Tutorial.note("Stack compare operators");
+    stack_0 = new Stack([1,2,3,4]);
+    stack_1 = new Stack([1,2,3,5]);
+    ("stack_0 == stack_0 -> %d\n" % (stack_0 == stack_0)).print();
+    ("stack_0 == stack_1 -> %d\n" % (stack_0 == stack_1)).print();
+    ("stack_0 == 10      -> %d\n" % (stack_0 == 10)).print();
+    ("stack_0 != stack_0 -> %d\n" % (stack_0 != stack_0)).print();
+    ("stack_0 != stack_1 -> %d\n" % (stack_0 != stack_1)).print();
+    ("stack_0 != 10      -> %d\n" % (stack_0 != 10)).print();
+
+    // Plus operators push content of ierable to stack end
+    //
+    Tutorial.note("Stack plus operators");
+    stack_0 = new Stack([1,2,3]);
+    arr_1 = [4,5,6];
+    ("stack_0          -> %s\n" % stack_0.to_string()).print();
+    ("stack_0 + arr_1  -> %s\n" % (stack_0 + arr_1).to_string()).print();
+    ("stack_0          -> %s\n" % stack_0.to_string()).print();
+    ("stack_0 += arr_1 -> %s\n" % (stack_0 += arr_1).to_string()).print();
+    ("stack_0          -> %s\n" % stack_0.to_string()).print();
+
+    Tutorial.note("Stack method clear#0");
+    stack = new Stack([1,2,3,4,5]);
+    ("stack         -> %s\n" % stack.to_string()).print();
+    ("stack.clear() -> %s\n" % stack.clear().to_string()).print();
+    ("stack         -> %s\n" % stack.to_string()).print();
+
+    Tutorial.note("Stack method items#0");
+    stack = new Stack([1,2,3,4,5]);
+    ("stack -> type: %s, value %s\n" % [(type stack).to_string(),stack.to_string()]).print();
+    items = stack.items();
+    ("items -> type: %s, value %s\n" % [(type items).to_string(),items.to_string()]).print();
+    ("stack -> type: %s, value %s\n" % [(type stack).to_string(),stack.to_string()]).print();
+
+    Tutorial.note("Stack method push#1");
+    stack = new Stack([1,2,3,4,5]);
+    ("stack          -> %s\n" % stack.to_string()).print();
+    ("stack.push(10) -> %s\n" % stack.push(10).to_string()).print();
+    ("stack.push(10) -> %s\n" % stack.push(10).to_string()).print();
+    ("stack.push(10) -> %s\n" % stack.push(10).to_string()).print();
+    ("stack          -> %s\n" % stack.to_string()).print();
+
+    Tutorial.note("Stack method pop#0");
+    stack = new Stack([1,2,3,4,5]);
+    ("stack       -> %s\n" % stack.to_string()).print();
+    ("stack.pop() -> %s\n" % stack.pop().to_string()).print();
+    ("stack.pop() -> %s\n" % stack.pop().to_string()).print();
+    ("stack.pop() -> %s\n" % stack.pop().to_string()).print();
+    ("stack       -> %s\n" % stack.to_string()).print();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final compare#1
+    // public final item#1
+    // public final first_idx#0
+    // public final last_idx#0
+    // public final next_idx#1
+    // public final prev_idx#1
+    // public final length#0
+    // public final to_string#0
+    // public final to_string#1
+    // public final print#0
+    //
+
+    // Method to_string#1 return string created by concatenating string
+    // representations of stack items separated by string given as method
+    // parameter
+    //
+    Tutorial.note("Difference of to_string#0 and to_string#1");
+    stack = new Stack([1,2,3,4,5]);
+    ("stack.to_string()        -> %s\n" % stack.to_string()).print();
+    ("stack.to_string(\"-SEP-\") -> %s\n" % stack.to_string("-SEP-")).print();
+
+    // Methods of class Stack throws following exceptions
+    //
+    // c_error_STACK_INDEX_EXCEEDS_RANGE
+    // c_error_STACK_NO_OTHER_ELEMENTS
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

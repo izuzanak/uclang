@@ -1,0 +1,45 @@
+
+=== SocketAddr object ==========================================================
+
+SocketAddr: SocketAddr
+SocketAddr: SocketAddr
+SocketAddr: SocketAddr
+
+=== SocketAddr assign operator =================================================
+
+sockaddr: SocketAddr
+sockaddr: 10
+
+=== SocketAddr method name#0 ===================================================
+
+sockaddr        -> SocketAddr
+sockaddr.name() -> 127.0.0.1
+
+=== SocketAddr method port#0 ===================================================
+
+sockaddr        -> SocketAddr
+sockaddr.port() -> 8888
+
+=== Socket object ==============================================================
+
+Socket: Socket
+Socket: Socket
+
+=== Socket assign operator =====================================================
+
+socket: Socket
+socket: 10
+
+=== File built in constants ====================================================
+
+Socket.AF_UNIX:     1
+Socket.AF_FILE:     1
+Socket.AF_INET:     2
+Socket.SOCK_STREAM: 1
+Socket.SOCK_DGRAM:  2
+Socket.SOCK_RAW:    3
+Socket.SO_RCVTIMEO: 20
+Socket.SO_SNDTIMEO: 21
+
+=== Tutorial end ===============================================================
+

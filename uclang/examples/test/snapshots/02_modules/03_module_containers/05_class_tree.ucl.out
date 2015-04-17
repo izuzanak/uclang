@@ -1,0 +1,80 @@
+
+=== Tree object ================================================================
+
+Tree: []
+Tree: [1,2,3,4,5]
+
+=== Tree assign operator =======================================================
+
+tree: []
+tree: 10
+
+=== Tree compare operators =====================================================
+
+tree_0 == tree_0 -> 1
+tree_0 == tree_1 -> 0
+tree_0 == 10     -> 0
+tree_0 != tree_0 -> 0
+tree_0 != tree_1 -> 1
+tree_0 != 10     -> 1
+
+=== Tree plus operators ========================================================
+
+tree_0          -> [1,2,3]
+tree_0 + arr_1  -> [1,2,3,4,5,5]
+tree_0          -> [1,2,3]
+tree_0 += arr_1 -> [1,2,3,4,5,5]
+tree_0          -> [1,2,3,4,5,5]
+
+=== Tree item select operator ==================================================
+
+tree[0]: One
+tree[2]: Two
+tree[4]: Four
+tree[3]: Three
+
+=== Tree method clear#0 ========================================================
+
+tree         -> [1,2,3,4,5]
+tree.clear() -> <blank>
+tree         -> []
+
+=== Tree method items#0 ========================================================
+
+tree  -> type: Tree, value [1,2,3,4,5]
+items -> type: Array, value [1,2,3,4,5]
+tree  -> type: Tree, value [1,2,3,4,5]
+
+=== Tree method insert#1 =======================================================
+
+tree            -> [1,2,3,4,5]
+tree.insert(10) -> 6
+tree.insert(10) -> 7
+tree.insert(10) -> 8
+tree            -> [1,2,3,4,5,10,10,10]
+
+=== Tree method remove#1 =======================================================
+
+tree             -> [1,2,3,3,4,5]
+tree.remove(idx) -> <blank>
+tree             -> [1,2,3,4,5]
+
+=== Tree method get_idx#1 ======================================================
+
+tree            -> [1,2,3,4,5]
+tree.get_idx(2) -> 2
+tree.get_idx(3) -> 3
+
+=== Tree method get_idxs#1 =====================================================
+
+tree             -> [1,2,2,3,3,4]
+tree.get_idxs(2) -> [2,5]
+tree.get_idxs(3) -> [3,4]
+
+=== Difference of to_string#0 and to_string#1 ==================================
+
+tree.to_string()        -> [1,2,3,4,5]
+tree.to_string("-SEP-") -> 1-SEP-2-SEP-3-SEP-4-SEP-5
+
+=== Tutorial end ===============================================================
+

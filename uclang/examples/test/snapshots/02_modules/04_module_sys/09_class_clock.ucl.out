@@ -1,0 +1,24 @@
+
+=== Clock method getres#1 ======================================================
+
+Clock.getres(Clock.CLOCK_REALTIME)           -> 1
+Clock.getres(Clock.CLOCK_MONOTONIC)          -> 1
+Clock.getres(Clock.CLOCK_PROCESS_CPUTIME_ID) -> 1
+Clock.getres(Clock.CLOCK_THREAD_CPUTIME_ID)  -> 1
+
+=== Clock method gettime#1 =====================================================
+
+Clock.gettime(Clock.CLOCK_REALTIME)           -> Integer
+Clock.gettime(Clock.CLOCK_MONOTONIC)          -> Integer
+Clock.gettime(Clock.CLOCK_PROCESS_CPUTIME_ID) -> Integer
+Clock.gettime(Clock.CLOCK_THREAD_CPUTIME_ID)  -> Integer
+
+=== Clock built in constants ===================================================
+
+Clock.CLOCK_REALTIME:           0
+Clock.CLOCK_MONOTONIC:          1
+Clock.CLOCK_PROCESS_CPUTIME_ID: 2
+Clock.CLOCK_THREAD_CPUTIME_ID:  3
+
+=== Tutorial end ===============================================================
+

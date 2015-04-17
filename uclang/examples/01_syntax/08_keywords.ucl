@@ -1,0 +1,88 @@
+
+// Language version 0.10
+
+import tutorial;
+
+class Main
+{
+  public Main()
+  {
+    Tutorial.note("Keyword \"this\" refers to object of enclosing class");
+    ("type this: %s, this: %s\n" % [(type this).to_string(),this.to_string()]).print();
+  }
+
+  public to_string()
+  {
+    return "Main";
+  }
+
+  static public main(argv)
+  {
+    // List of language keywords:
+    // import, class, extends, public, private, static, abstract, final, parallel,
+    // new, free, this, type, if, else, do, while, for, switch, case, default,
+    // break, continue, return, try, catch
+
+    // List of language special keyword/operators
+    // @, =@, <-, ?, :
+
+    // List of language operators
+    // =, +=, -=, *=, /=, %=, <<=, >>=, &=, |=, ^=, &&, ||, &, |, ^, ==, !=, >,
+    // <, >=, <=, >>, <<, +, -, ., *, /, %, ++, --, !, ~
+
+    // Keyword "type" retrieve type of variable
+    Tutorial.note("Keyword \"type\" retrieve type of variable");
+    obj = new Integer(); 
+    ("type obj: %s\n" % (type obj).to_string()).print();
+    obj = new String("Hello world"); 
+    ("type obj: %s\n" % (type obj).to_string()).print();
+    obj = new Array(); 
+    ("type obj: %s\n" % (type obj).to_string()).print();
+
+    // Keyword "new" creates new object instance of given class
+    Tutorial.note("Keyword \"new\" create new object and call its constructor");
+    obj = new Integer(); 
+    ("type obj: %s, obj: %s\n" % [(type obj).to_string(),obj.to_string()]).print();
+    obj = new String("Hello world"); 
+    ("type obj: %s, obj: %s\n" % [(type obj).to_string(),obj.to_string()]).print();
+    obj = new Array(); 
+    ("type obj: %s, obj: %s\n" % [(type obj).to_string(),obj.to_string()]).print();
+
+    Tutorial.note("It can create array of objects");
+    obj = new Integer[10]; 
+    ("type obj: %s, obj: %s\n" % [(type obj).to_string(),obj.to_string()]).print();
+    obj = new String[10]; 
+    ("type obj: %s, obj: %s\n" % [(type obj).to_string(),obj.to_string()]).print();
+    obj = new Array[10]; 
+    ("type obj: %s, obj: %s\n" % [(type obj).to_string(),obj.to_string()]).print();
+
+    // Keyword free release object instance
+    Tutorial.note("Keyword \"free\" release object, and set its value to Blank");
+    obj = new Array[10];
+    ("type obj: %s, obj: %s\n" % [(type obj).to_string(),obj.to_string()]).print();
+    free obj;
+    ("type obj: %s, obj: %s\n" % [(type obj).to_string(),obj.to_string()]).print();
+
+    // Keyword "this" refers to object instance
+    new Main();
+
+    // Operator/keyword "=@" creates reference to right-hand value, and stores
+    // it to left-hand variable
+    Tutorial.note("Operator/keyword \"=@\" create reference to value");
+    value = 10;
+
+    // Create reference to value
+    ref =@ value;
+    ("type value: %s, value: %s\n" % [(type value).to_string(),value.to_string()]).print();
+
+    // Change value through reference
+    ref = "Changed value";
+    ("type value: %s, value: %s\n" % [(type value).to_string(),value.to_string()]).print();
+
+    // BE WARNED:
+    // - keyword "type" is often in conflict with intended name of member or method
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

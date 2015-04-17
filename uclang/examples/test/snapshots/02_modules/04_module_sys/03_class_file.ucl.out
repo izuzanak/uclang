@@ -1,0 +1,46 @@
+
+=== File object ================================================================
+
+File: File
+
+=== File method close#0 ========================================================
+
+file         -> File
+file.close() -> <blank>
+
+=== File methods write#1 and flush#0 ===========================================
+
+
+=== File method read#0 =========================================================
+
+file        -> File
+file.read() -> Hello world!
+Hello again!
+
+=== File method readln#0 =======================================================
+
+file          -> File
+file.readln() -> Hello world!
+file.readln() -> Hello again!
+file.readln() -> <blank>
+
+=== File method read#1 =========================================================
+
+file          -> File
+file.read(10) -> Hello worl
+file.read(10) -> d!
+Hello a
+
+=== File method get_fd#1 =======================================================
+
+file          -> File
+file.get_fd() -> 3
+
+=== File built in constants ====================================================
+
+File.stdin:  File
+File.stdout: File
+File.stderr: File
+
+=== Tutorial end ===============================================================
+

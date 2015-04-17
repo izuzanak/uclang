@@ -1,0 +1,31 @@
+
+import sys;
+
+public class Main
+{
+  localhost = "127.0.0.1";
+
+  public Main()
+  {
+    // Create socket
+    socket = new Socket(Socket.AF_INET,Socket.SOCK_STREAM);
+
+    // Connect client to server
+    socket.connect(new SocketAddr(localhost,5555));
+
+    // Read data from socket
+    ("Client: Data: %s" % socket.read()).print();
+
+    // Write data to socket
+    socket.write("Data cli -> srv\n");
+
+    // Close socket
+    socket.close();
+  }
+
+  public static main(args)
+  {
+    new Main();
+  }
+}
+

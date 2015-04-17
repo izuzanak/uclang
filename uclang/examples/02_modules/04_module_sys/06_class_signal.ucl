@@ -1,0 +1,81 @@
+
+// Language version 0.10
+
+import tutorial;
+import sys;
+
+class Main
+{
+  public signal_handler(signum)
+  {
+    Tutorial.note("Received signal %d" % signum);
+
+    return 1;
+  }
+
+  public Main()
+  {
+    // Objects of class Signal represents interfaces to system signal
+    // communication
+    //
+
+    // Built in methods
+    //
+    // public final static bind#2
+    // public final static unbind#1
+    // public final static send#2
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("Signal method bind#2");
+    dlg = new Delegate(this,"signal_handler",1);
+    ("Signal.bind(Signal.SIGINT,dlg)  -> %s\n" % Signal.bind(Signal.SIGINT,dlg).to_string()).print();
+    ("Signal.bind(Signal.SIGTERM,dlg) -> %s\n" % Signal.bind(Signal.SIGTERM,dlg).to_string()).print();
+    ("Signal.bind(Signal.SIGHUP,dlg)  -> %s\n" % Signal.bind(Signal.SIGHUP,dlg).to_string()).print();
+
+    Tutorial.note("Signal method unbind#1");
+    ("Signal.unbind(Signal.SIGINT)  -> %s\n" % Signal.unbind(Signal.SIGINT).to_string()).print();
+    ("Signal.unbind(Signal.SIGHUP)  -> %s\n" % Signal.unbind(Signal.SIGHUP).to_string()).print();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("Signal built in constants");
+
+    // Built in constants
+    //
+    // public static static_const SIGINT
+    // public static static_const SIGTERM
+    // public static static_const SIGHUP
+    //
+
+    ("Signal.SIGINT:  %d\n" % Signal.SIGINT).print();
+    ("Signal.SIGTERM: %d\n" % Signal.SIGTERM).print();
+    ("Signal.SIGHUP:  %d\n" % Signal.SIGHUP).print();
+
+    // Methods of class Signal throws following exceptions
+    //
+    // c_error_SIGNAL_WRONG_SIGNAL_NUMBER
+    // c_error_SIGNAL_WRONG_DELEGATE_PARAMETER_COUNT
+    // c_error_SIGNAL_CANNOT_BE_EXECUTED_BY_NON_MAIN_THREAD
+    // c_error_SIGNAL_WRONG_PROCESS_IDENTIFIER
+    // c_error_SIGNAL_SEND_ERROR
+    //
+
+    Tutorial.note("Signal method send#2");
+    ("Signal.send(Sys.getpid(),Signal.SIGTERM) -> %s\n" % Signal.send(Sys.getpid(),Signal.SIGTERM).to_string()).print();
+
+    Tutorial.note("Tutorial end");
+  }
+
+  static public main(argv)
+  {
+    new Main();
+  }
+}
+

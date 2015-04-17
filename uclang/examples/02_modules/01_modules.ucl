@@ -1,0 +1,32 @@
+
+// Language version 0.10
+
+// Module import syntax
+//
+// import <name>;
+//
+// Import built in binary module <name>_uclm.{so,dll} or script source
+// <name>.ucl
+//
+// One of script sources should contain class Main with static public method
+// main#1 which is executed as program entry point
+//
+// Modules can be imported multiple times, only first occurence of import
+// executes. No module circle dependencies A -> B, B -> A problem occurs.
+//
+
+import tutorial;
+import imported;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Access to class from imported module
+    Tutorial.note("Class from imported module");
+    ("Imported: %s\n" % Imported.to_string()).print();
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

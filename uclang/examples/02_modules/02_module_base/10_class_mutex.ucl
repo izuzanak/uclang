@@ -1,0 +1,128 @@
+
+// Language version 0.10
+
+import tutorial;
+import sys;
+
+class Main
+{
+  static public main(argv)
+  {
+    // class Mutex represents mutex implementation used by script interpreter
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final Mutex#0
+    // public final lock#0
+    // public final try_lock#0
+    // public final unlock#0
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("Mutex object");
+    ("Mutex: %s\n" % new Mutex().to_string()).print();
+
+    Tutorial.note("Mutex assign operator");
+    mutex = new Mutex();
+    ("mutex: %s\n" % mutex.to_string()).print();
+    mutex = 10;
+    ("mutex: %s\n" % mutex.to_string()).print();
+
+    // Request to lock mutex, blocks until mutex is free to be locked
+    //
+    Tutorial.note("Mutex method lock#0");
+    mutex = new Mutex();
+    ("mutex          -> %s\n" % mutex.to_string()).print();
+    ("mutex.lock()   -> %s\n" % mutex.lock().to_string()).print();
+    ("mutex.unlock() -> %s\n" % mutex.unlock().to_string()).print();
+    ("mutex          -> %s\n" % mutex.to_string()).print();
+
+    // Request to try lock the mutex, if mutex is already locked method will
+    // return appropriate error code Mutex.ERROR_BUSY
+    //
+    Tutorial.note("Mutex method try_lock#0");
+    mutex = new Mutex();
+    ("mutex            -> %s\n" % mutex.to_string()).print();
+    ("mutex.try_lock() -> %s\n" % mutex.try_lock().to_string()).print();
+    ("mutex.unlock()   -> %s\n" % mutex.unlock().to_string()).print();
+    ("mutex            -> %s\n" % mutex.to_string()).print();
+
+    // Unlock previously locked mutex. Mutexes are recursive, so it should be
+    // unlocked for every previously lock called
+    //
+    Tutorial.note("Mutex method unlock#0");
+    mutex = new Mutex();
+    ("mutex          -> %s\n" % mutex.to_string()).print();
+    ("mutex.lock()   -> %s\n" % mutex.lock().to_string()).print();
+    ("mutex.unlock() -> %s\n" % mutex.unlock().to_string()).print();
+    ("mutex          -> %s\n" % mutex.to_string()).print();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("Mutex built in constants");
+
+    // Built in constants
+    //
+    // public static static_const ERROR_INVALID
+    // public static static_const ERROR_DEADLOCK
+    // public static static_const ERROR_BUSY
+    // public static static_const ERROR_PERMISSION
+    //
+
+    ("Mutex.ERROR_INVALID:    %s\n" % Mutex.ERROR_INVALID.to_string()).print();
+    ("Mutex.ERROR_DEADLOCK:   %s\n" % Mutex.ERROR_DEADLOCK.to_string()).print();
+    ("Mutex.ERROR_BUSY:       %s\n" % Mutex.ERROR_BUSY.to_string()).print();
+    ("Mutex.ERROR_PERMISSION: %s\n" % Mutex.ERROR_PERMISSION.to_string()).print();
+
+    // Thread locking example
+    Tutorial.note("Mutex thread locking example");
+
+    mutex = new Mutex();
+    shared = 0;
+    thread = thread_fun(mutex,shared);
+
+    counted = 0;
+    do {
+      mutex.lock();
+      ++counted;
+      if (++shared > 10)
+      {
+        mutex.unlock();
+        break;
+      }
+      mutex.unlock();
+      Sys.sleep(10);
+    } while(1);
+
+    res = thread.join();
+    ("Counters: %d/%d\n" % [counted,res]).print();
+
+    Tutorial.note("Tutorial end");
+  }
+
+  static parallel thread_fun(mutex,@shared)
+  {
+    counted = 0;
+    do {
+      mutex.lock();
+      ++counted;
+      if (++shared > 10)
+      {
+        mutex.unlock();
+        break;
+      }
+      mutex.unlock();
+      Sys.sleep(10);
+    } while(1);
+
+    return counted;
+  }
+}
+

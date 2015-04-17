@@ -1,0 +1,197 @@
+
+// Language version 0.10
+
+import tutorial;
+import sys;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Class Sys grants access to basic system tools and resources
+
+    // Built in methods
+    //
+    // public final static sleep#1
+    // public final static srand#1
+    // public final static rand#0
+    // public final static getpid#0
+    // public final static getuid#0
+    // public final static getgid#0
+    // public final static system#1
+    // public final static exit#1
+    // public final static open#2
+    // public final static popen#2
+    // public final static mkdir#1
+    // public final static rmdir#1
+    // public final static chdir#1
+    // public final static listdir#1
+    // public final static mkfifo#1
+    // public final static remove#1
+    // public final static rename#2
+    // public final static getcwd#0
+    // public final static setenv#2
+    // public final static getenv#1
+    // public final static is_file#1
+    // public final static is_dir#1
+    // public final static size#1
+    // public final static time#0
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("Sys method sleep#1");
+    ("Sys.sleep(1) -> %s\n" % Sys.sleep(1).to_string()).print();
+
+    Tutorial.note("Sys methods srand#1 and rand#0");
+    ("Sys.srand(13) -> %s\n" % Sys.srand(13).to_string()).print();
+    ("Sys.rand()    -> %s\n" % Sys.rand().to_string()).print();
+    ("Sys.rand()    -> %s\n" % Sys.rand().to_string()).print();
+    ("Sys.rand()    -> %s\n" % Sys.rand().to_string()).print();
+
+    // Method getpid retrieve PID of interpreter process
+    Tutorial.note("Sys method getpid#0");
+    ("Sys.getpid() -> %s\n" % (type Sys.getpid()).to_string()).print();
+
+    // Method getuid retrieve user identity of interpreter process
+    Tutorial.note("Sys method getuid#0");
+    ("Sys.getuid() -> %s\n" % (type Sys.getuid()).to_string()).print();
+
+    // Method getgid retrieve group identity of interpreter process
+    Tutorial.note("Sys method getgid#0");
+    ("Sys.getgid() -> %s\n" % (type Sys.getgid()).to_string()).print();
+
+    // Method system executes shell command
+    Tutorial.note("Sys method system#1");
+    ("Sys.system(\"ls\") -> %s\n" % Sys.system("ls").to_string()).print();
+
+    // Method exit cause normal termination of process, return value of process
+    // will be set to given parameter
+    Tutorial.note("Sys method exit#1");
+    //Sys.exit(0);
+
+    Tutorial.note("Sys method open#2");
+    file = Sys.open("01_class_sys.ucl","r");
+    ("Sys.open(\"01_class_sys.ucl\",\"r\") -> %s\n\n" % file.to_string()).print();
+
+    idx = 0;
+    do {
+      ("file.readln(): %s\n" % file.readln()).print();
+    } while(++idx < 6);
+
+    file.close();
+
+    Tutorial.note("Sys method popen#2");
+    pipe = Sys.popen("ls","r");
+    ("Sys.popen(\"ls\",\"r\") -> %s\n\n" % pipe.to_string()).print();
+
+    do {
+      ("pipe.readln(): %s\n" % pipe.readln()).print();
+    } while(Blank != line);
+
+    pipe.close();
+
+    Tutorial.note("Sys directories manipulation methods");
+    tmp_dir = "/tmp/01_class_sys";
+    
+    // Remove temporary directory if it already exists
+    if (Sys.is_dir(tmp_dir))
+    {
+      Sys.system("rm -rf %s" % tmp_dir);
+    }
+
+    ("Sys.getcwd() -> %s\n\n" % (cwd = Sys.getcwd())).print();
+
+    ("Sys.mkdir(\"%s\") -> %s\n" % [tmp_dir,Sys.mkdir(tmp_dir).to_string()]).print();
+    ("Sys.chdir(\"%s\") -> %s\n\n" % [tmp_dir,Sys.chdir(tmp_dir).to_string()]).print();
+
+    ("Sys.listdir(\".\")   -> %s\n" % Sys.listdir(".").to_string()).print();
+    ("Sys.mkdir(\"dir_0\") -> %s\n" % Sys.mkdir("dir_0").to_string()).print();
+    ("Sys.mkdir(\"dir_1\") -> %s\n" % Sys.mkdir("dir_1").to_string()).print();
+    ("Sys.listdir(\".\")   -> %s\n" % Sys.listdir(".").to_string()).print();
+    ("Sys.rmdir(\"dir_1\") -> %s\n" % Sys.rmdir("dir_1").to_string()).print();
+    ("Sys.listdir(\".\")   -> %s\n" % Sys.listdir(".").to_string()).print();
+
+    Tutorial.note("Sys method mkfifo#1");
+    ("Sys.mkfifo(\"fifo\") -> %s\n" % Sys.mkfifo("fifo").to_string()).print();
+    ("Sys.listdir(\".\")   -> %s\n" % Sys.listdir(".").to_string()).print();
+
+    Tutorial.note("Sys method rename#2");
+    ("Sys.rename(\"fifo\",\"new_fifo\") -> %s\n" % Sys.rename("fifo","new_fifo").to_string()).print();
+    ("Sys.listdir(\".\")              -> %s\n" % Sys.listdir(".").to_string()).print();
+
+    Tutorial.note("Sys method remove#1");
+    ("Sys.remove(\"new_fifo\") -> %s\n" % Sys.remove("new_fifo").to_string()).print();
+    ("Sys.listdir(\".\")       -> %s\n" % Sys.listdir(".").to_string()).print();
+
+    Tutorial.note("Sys method setenv#2");
+    ("Sys.setenv(\"ENV_VAR\",\"value\") -> %s\n" % Sys.setenv("ENV_VAR","value").to_string()).print();
+
+    Tutorial.note("Sys method getenv#1");
+    ("Sys.getenv(\"PATH\")    -> %s\n" % Sys.getenv("PATH").to_string()).print();
+    ("Sys.getenv(\"ENV_VAR\") -> %s\n" % Sys.getenv("ENV_VAR").to_string()).print();
+    ("Sys.getenv(\"ENV_ERR\") -> %s\n" % Sys.getenv("ENV_ERR").to_string()).print();
+
+    Tutorial.note("Sys methods is_file#1 and is_dir#1");
+
+    file = Sys.open("file","w");
+    file.write("Hello world!");
+    file.close();
+
+    ("Sys.listdir(\".\")     -> %s\n" % Sys.listdir(".").to_string()).print();
+    ("Sys.is_file(\"file\")  -> %d\n" % Sys.is_file("file")).print();
+    ("Sys.is_file(\"dir_0\") -> %d\n" % Sys.is_file("dir_0")).print();
+    ("Sys.is_dir(\"file\")   -> %d\n" % Sys.is_dir("file")).print();
+    ("Sys.is_dir(\"dir_0\")  -> %d\n" % Sys.is_dir("dir_0")).print();
+    ("Sys.listdir(\".\")     -> %s\n" % Sys.listdir(".").to_string()).print();
+
+    Tutorial.note("Sys method size#1");
+    ("Sys.size(\".\")     -> %d\n" % Sys.size(".")).print();
+    ("Sys.size(\"file\")  -> %d\n" % Sys.size("file")).print();
+    ("Sys.size(\"dir_0\") -> %d\n" % Sys.size("dir_0")).print();
+
+    // Method time of class Sys returns system time in microseconds from year
+    // 1970
+    //
+    Tutorial.note("Sys method time#0");
+    ("Sys.time() -> %s\n" % (type Sys.time()).to_string()).print();
+    ("Sys.time() -> %s\n" % (type Sys.time()).to_string()).print();
+    ("Sys.time() -> %s\n" % (type Sys.time()).to_string()).print();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    Tutorial.note("Sys built in constants");
+
+    // Built in constants
+    //
+    // public static static_const NAME
+    // public static static_const SEP
+    //
+
+    ("Sys.NAME: %s\n" % Sys.NAME).print();
+    ("Sys.SEP:  %s\n" % Sys.SEP).print();
+
+    // Methods of class Sys throws following exceptions
+    //
+    // c_error_SYS_DIR_CREATE_ERROR
+    // c_error_SYS_DIR_REMOVE_ERROR
+    // c_error_SYS_DIR_CHANGE_ERROR
+    // c_error_SYS_DIR_LIST_ERROR
+    //
+    // c_error_SYS_MAKE_FIFO_ERROR
+    // c_error_SYS_FILE_REMOVE_ERROR
+    // c_error_SYS_FILE_RENAME_ERROR
+    // c_error_SYS_FILE_DOES_NOT_EXIST
+    // c_error_SYS_SETENV_ERROR
+    // c_error_SYS_GET_TIME_ERROR
+    //
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

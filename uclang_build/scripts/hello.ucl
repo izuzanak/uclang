@@ -1,0 +1,9 @@
+
+class Main
+{
+  static public main(argv)
+  {
+    "Hello world!!!\n".print();
+  }
+}
+

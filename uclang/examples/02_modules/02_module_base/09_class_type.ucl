@@ -1,0 +1,70 @@
+
+// Language version 0.10
+
+import tutorial;
+
+class Main
+{
+  static public main(argv)
+  {
+    // class Type identifies type/class of variable
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final operator_binary_double_equal#1
+    // public final operator_binary_exclamation_equal#1
+    // public final Type#0
+    // public final compare#1
+    // public final to_string#0
+    // public final print#0
+    //
+
+    Tutorial.note("Type object");
+    ("Type: %s\n" % new Type().to_string()).print();
+    ("Type: %s\n" % new Type(10).to_string()).print();
+    ("Type: %s\n" % new Type("Hello").to_string()).print();
+    ("Type: %s\n" % new Type([1,2,3]).to_string()).print();
+    ("Type: %s\n" % new Type(new Dummy()).to_string()).print();
+
+    Tutorial.note("Type constant syntax");
+    ("Type: %s\n" % (type Blank).to_string()).print();
+    ("Type: %s\n" % (type Integer).to_string()).print();
+    ("Type: %s\n" % (type String).to_string()).print();
+    ("Type: %s\n" % (type Array).to_string()).print();
+    ("Type: %s\n" % (type Dummy).to_string()).print();
+
+    Tutorial.note("Type retrieve syntax");
+    ("Type: %s\n" % (type new Blank()).to_string()).print();
+    ("Type: %s\n" % (type 10).to_string()).print();
+    ("Type: %s\n" % (type "Hello").to_string()).print();
+    ("Type: %s\n" % (type [1,2,3]).to_string()).print();
+    ("Type: %s\n" % (type new Dummy()).to_string()).print();
+
+    Tutorial.note("Type compare operators");
+    type_0 = type Integer;
+    type_1 = type String;
+    ("type_0 == type_0 -> %d\n" % (type_0 == type_0)).print();
+    ("type_0 == type_1 -> %d\n" % (type_0 == type_1)).print();
+    ("type_0 == 10     -> %d\n" % (type_0 == 10)).print();
+    ("type_0 != type_0 -> %d\n" % (type_0 != type_0)).print();
+    ("type_0 != type_1 -> %d\n" % (type_0 != type_1)).print();
+    ("type_0 != 10     -> %d\n" % (type_0 != 10)).print();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final compare#1
+    // public final to_string#0
+    // public final print#0
+    //
+
+    Tutorial.note("Tutorial end");
+  }
+}
+
+class Dummy
+{
+  public Dummy() {}
+}
+

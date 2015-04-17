@@ -1,0 +1,157 @@
+
+import sys;
+import containers;
+
+class Main
+{
+  static EXAMPLE_REGEX = new Regex("^[0-9][0-9]_.*\\.ucl$");
+
+  static private example_list()
+  {/*{{{*/
+    files = new Pipe("cd ..; find . -name \"*.ucl\" -type f | sort","r").read().split("\n");
+    examples = [];
+
+    for (file <- files)
+    {
+      file_spl = file.split(Sys.SEP);
+
+      // - retrieve file name and path -
+      name = file_spl.pop();
+      path = file_spl[1::].to_string(Sys.SEP);
+
+      // - test if file is example file -
+      if (Blank != EXAMPLE_REGEX.match(name))
+      {
+        examples.push([path,name]);
+      }
+    }
+
+    return examples;
+  }/*}}}*/
+
+  static private snapshot_create()
+  {/*{{{*/
+    examples = example_list();
+
+    // - remove old snapshots -
+    Sys.system("rm -rf snapshots");
+    
+    // - create snapshot directories -
+    dir_set = new Set();
+    for (example <- examples)
+    {
+      dir_set.insert("snapshots/" + example[0]);
+    }
+
+    for (dir <- dir_set)
+    {
+      Sys.system("mkdir -p %s" % dir_set.to_string(" "));
+    }
+
+    // - create snapshot outputs -
+    this_dir = Sys.getcwd();
+
+    for (example <- examples)
+    {
+      path = example[0];
+      name = example[1];
+
+      path_name = "%s/%s" % example;
+
+      out_file = "%s/snapshots/%s.out" % [this_dir,path_name];
+      err_file = "%s/snapshots/%s.err" % [this_dir,path_name];
+
+      ("Snapshot create: %s\n" % path_name).print();
+
+      cmd = "cd ../%s;uclang %s > %s 2> %s" % [path,name,out_file,err_file];
+      Sys.system(cmd);
+    }
+  }/*}}}*/
+
+  static private snapshot_test()
+  {/*{{{*/
+    examples = example_list();
+
+    // - remove diff files -
+    Sys.system("rm -rf $(find snapshots -name \"*.diff\")");
+
+    // - test examples -
+    for (example <- examples)
+    {
+      path = example[0];
+      name = example[1];
+
+      path_name = "%s/%s" % example;
+
+      ("Snapshot test: %s\n" % path_name).print();
+
+      // - if snapshot files does not exists -
+      if (!Sys.is_file("snapshots/%s.out" % path_name))
+      {
+        ("Test skipped!\n").print();
+        continue;
+      }
+
+      cmd = "cd ../%s;uclang %s > /tmp/test.out 2> /tmp/test.err" % [path,name];
+      Sys.system(cmd);
+
+      out_diff = new Pipe("diff /tmp/test.out snapshots/%s.out" % path_name,"r").read();
+      err_diff = new Pipe("diff /tmp/test.err snapshots/%s.err" % path_name,"r").read();
+
+      // - if result differ from snapshot -
+      if (Blank != out_diff || Blank != err_diff)
+      {
+        ("Test failed!\n").print();
+
+        // - create diff files -
+        if (Blank != out_diff)
+        {
+          out_f = new File("snapshots/%s.out.diff" % path_name,"w");
+          out_f.write(out_diff);
+          out_f.close();
+        }
+
+        if (Blank != err_diff)
+        {
+          err_f = new File("snapshots/%s.err.diff" % path_name,"w");
+          err_f.write(err_diff);
+          err_f.close();
+        }
+      }
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    if (argv.length() > 1)
+    {
+      for (arg <- argv[1::])
+      {
+        item_idx = 0;
+        items = arg.split(":");
+
+        option = items[item_idx++];
+        switch (option)
+        {
+          case "snapshot":
+            {/*{{{*/
+              while(item_idx < items.length())
+              {
+                option = items[item_idx++];
+                switch (option)
+                {
+                case "create": snapshot_create();
+                case "test": snapshot_test();
+                default:
+                  new Exception("Unknown option: \"%s\"" % option).throw();
+                }
+              }
+            }/*}}}*/
+          default:
+            new Exception("Unknown option: \"%s\"" % option).throw();
+        }
+      }
+    }
+  }/*}}}*/
+}
+

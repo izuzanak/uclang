@@ -1,0 +1,252 @@
+
+// Language version 0.10
+
+import tutorial;
+
+class Main
+{
+  static public main(argv)
+  {
+    // class Integer represents integer number, equivalent to long long int at
+    // target architecture
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final operator_binary_plus_equal#1
+    // public final operator_binary_minus_equal#1
+    // public final operator_binary_asterisk_equal#1
+    // public final operator_binary_slash_equal#1
+    // public final operator_binary_percent_equal#1
+    // public final operator_binary_double_ls_br_equal#1
+    // public final operator_binary_double_rs_br_equal#1
+    // public final operator_binary_ampersand_equal#1
+    // public final operator_binary_pipe_equal#1
+    // public final operator_binary_circumflex_equal#1
+    // public final operator_binary_double_ampersand#1
+    // public final operator_binary_double_pipe#1
+    // public final operator_binary_ampersand#1
+    // public final operator_binary_pipe#1
+    // public final operator_binary_circumflex#1
+    // public final operator_binary_double_equal#1
+    // public final operator_binary_exclamation_equal#1
+    // public final operator_binary_rs_br#1
+    // public final operator_binary_ls_br#1
+    // public final operator_binary_rs_br_equal#1
+    // public final operator_binary_ls_br_equal#1
+    // public final operator_binary_double_rs_br#1
+    // public final operator_binary_double_ls_br#1
+    // public final operator_binary_plus#1
+    // public final operator_binary_minus#1
+    // public final operator_binary_asterisk#1
+    // public final operator_binary_slash#1
+    // public final operator_binary_percent#1
+    // public final operator_unary_post_double_plus#0
+    // public final operator_unary_post_double_minus#0
+    // public final operator_unary_pre_double_plus#0
+    // public final operator_unary_pre_double_minus#0
+    // public final operator_unary_pre_plus#0
+    // public final operator_unary_pre_minus#0
+    // public final operator_unary_pre_exclamation#0
+    // public final operator_unary_pre_tilde#0
+    // public final Integer#0
+    // public final Integer#1
+    // public final Integer#2
+    // public final compare#1
+    // public final to_string#0
+    // public final print#0
+    //
+
+    Tutorial.note("Integer object");
+    ("Integer: %s\n" % new Integer().to_string()).print();
+    ("Integer: %s\n" % new Integer('A').to_string()).print();
+    ("Integer: %s\n" % new Integer(10).to_string()).print();
+    ("Integer: %s\n" % new Integer(11.0).to_string()).print();
+    ("Integer: %s\n" % new Integer("0x10").to_string()).print();
+    ("Integer: %s\n" % new Integer("100",8).to_string()).print();
+    ("Integer: %s\n" % new Integer("100",10).to_string()).print();
+    ("Integer: %s\n" % new Integer("100",16).to_string()).print();
+
+    Tutorial.note("Integer constant syntax");
+    ("Octal integer:    0700 -> %d\n" % 0700).print();
+    ("Decimal integer:   448 -> %d\n" % 448).print();
+    ("Hexa integer:    0x1c0 -> %d\n" % 0x1c0).print();
+
+    Tutorial.note("Integer assign operator");
+    integer = 10;
+    ("integer: %s\n" % integer.to_string()).print();
+    integer = "string";
+    ("integer: %s\n" % integer.to_string()).print();
+
+    Tutorial.note("Integer plus operators");
+    int_0 = 125;
+    int_1 = 175;
+    ("int_0          -> %d\n" % int_0).print();
+    ("int_1          -> %d\n" % int_1).print();
+    ("int_0 + int_1  -> %d\n" % (int_0 + int_1)).print();
+    ("int_0          -> %d\n" % int_0).print();
+    ("int_0 += int_1 -> %d\n" % (int_0 += int_1)).print();
+    ("int_0          -> %d\n" % int_0).print();
+    ("+ int_0        -> %d\n" % + int_0).print();
+    ("int_0          -> %d\n" % int_0).print();
+
+    Tutorial.note("Integer minus operators");
+    int_0 = 125;
+    int_1 = 175;
+    ("int_0          -> %d\n" % int_0).print();
+    ("int_1          -> %d\n" % int_1).print();
+    ("int_0 - int_1  -> %d\n" % (int_0 - int_1)).print();
+    ("int_0          -> %d\n" % int_0).print();
+    ("int_0 -= int_1 -> %d\n" % (int_0 -= int_1)).print();
+    ("int_0          -> %d\n" % int_0).print();
+    ("- int_0        -> %d\n" % - int_0).print();
+    ("int_0          -> %d\n" % int_0).print();
+
+    Tutorial.note("Integer asterisk operators");
+    int_0 = 125;
+    int_1 = 175;
+    ("int_0          -> %d\n" % int_0).print();
+    ("int_1          -> %d\n" % int_1).print();
+    ("int_0 * int_1  -> %d\n" % (int_0 * int_1)).print();
+    ("int_0          -> %d\n" % int_0).print();
+    ("int_0 *= int_1 -> %d\n" % (int_0 *= int_1)).print();
+    ("int_0          -> %d\n" % int_0).print();
+
+    Tutorial.note("Integer slash operators");
+    int_0 = 125;
+    int_1 = 15;
+    ("int_0          -> %d\n" % int_0).print();
+    ("int_1          -> %d\n" % int_1).print();
+    ("int_0 / int_1  -> %d\n" % (int_0 / int_1)).print();
+    ("int_0          -> %d\n" % int_0).print();
+    ("int_0 /= int_1 -> %d\n" % (int_0 /= int_1)).print();
+    ("int_0          -> %d\n" % int_0).print();
+
+    Tutorial.note("Integer percent operators");
+    int_0 = 125;
+    int_1 = 15;
+    ("int_0          -> %d\n" % int_0).print();
+    ("int_1          -> %d\n" % int_1).print();
+    ("int_0 %% int_1  -> %d\n" % (int_0 % int_1)).print();
+    ("int_0          -> %d\n" % int_0).print();
+    ("int_0 %%= int_1 -> %d\n" % (int_0 %= int_1)).print();
+    ("int_0          -> %d\n" % int_0).print();
+
+    Tutorial.note("Integer << operators");
+    int_0 = 125;
+    int_1 = 15;
+    ("int_0           -> %d\n" % int_0).print();
+    ("int_1           -> %d\n" % int_1).print();
+    ("int_0 << int_1  -> %d\n" % (int_0 << int_1)).print();
+    ("int_0           -> %d\n" % int_0).print();
+    ("int_0 <<= int_1 -> %d\n" % (int_0 <<= int_1)).print();
+    ("int_0           -> %d\n" % int_0).print();
+
+    Tutorial.note("Integer >> operators");
+    int_0 = 4096000;
+    int_1 = 15;
+    ("int_0           -> %d\n" % int_0).print();
+    ("int_1           -> %d\n" % int_1).print();
+    ("int_0 >> int_1  -> %d\n" % (int_0 >> int_1)).print();
+    ("int_0           -> %d\n" % int_0).print();
+    ("int_0 >>= int_1 -> %d\n" % (int_0 >>= int_1)).print();
+    ("int_0           -> %d\n" % int_0).print();
+
+    Tutorial.note("Integer ampersand operators");
+    int_0 = 125;
+    int_1 = 175;
+    ("int_0          -> %d\n" % int_0).print();
+    ("int_1          -> %d\n" % int_1).print();
+    ("int_0 & int_1  -> %d\n" % (int_0 & int_1)).print();
+    ("int_0          -> %d\n" % int_0).print();
+    ("int_0 &= int_1 -> %d\n" % (int_0 &= int_1)).print();
+    ("int_0          -> %d\n" % int_0).print();
+
+    Tutorial.note("Integer pipe operators");
+    int_0 = 125;
+    int_1 = 175;
+    ("int_0          -> %d\n" % int_0).print();
+    ("int_1          -> %d\n" % int_1).print();
+    ("int_0 | int_1  -> %d\n" % (int_0 | int_1)).print();
+    ("int_0          -> %d\n" % int_0).print();
+    ("int_0 |= int_1 -> %d\n" % (int_0 |= int_1)).print();
+    ("int_0          -> %d\n" % int_0).print();
+
+    Tutorial.note("Integer circumflex operators");
+    int_0 = 125;
+    int_1 = 175;
+    ("int_0          -> %d\n" % int_0).print();
+    ("int_1          -> %d\n" % int_1).print();
+    ("int_0 ^ int_1  -> %d\n" % (int_0 ^ int_1)).print();
+    ("int_0          -> %d\n" % int_0).print();
+    ("int_0 ^= int_1 -> %d\n" % (int_0 ^= int_1)).print();
+    ("int_0          -> %d\n" % int_0).print();
+
+    Tutorial.note("Integer double ampersand operators");
+    ("0 && 1 -> %d\n" % (0 && 1)).print();
+    ("0 && 0 -> %d\n" % (0 && 0)).print();
+    ("1 && 1 -> %d\n" % (1 && 1)).print();
+    ("1 && 0 -> %d\n" % (1 && 0)).print();
+
+    Tutorial.note("Integer double pipe operators");
+    ("0 || 1 -> %d\n" % (0 || 1)).print();
+    ("0 || 0 -> %d\n" % (0 || 0)).print();
+    ("1 || 1 -> %d\n" % (1 || 1)).print();
+    ("1 || 0 -> %d\n" % (1 || 0)).print();
+
+    Tutorial.note("Integer compare operators");
+    int_0 = 125;
+    int_1 = 175;
+    ("int_0          -> %d\n" % int_0).print();
+    ("int_1          -> %d\n" % int_1).print();
+    ("int_0 == int_1 -> %d\n" % (int_0 == int_1)).print();
+    ("int_0 != int_1 -> %d\n" % (int_0 != int_1)).print();
+    ("int_0 > int_1  -> %d\n" % (int_0 > int_1)).print();
+    ("int_0 < int_1  -> %d\n" % (int_0 < int_1)).print();
+    ("int_0 >= int_1 -> %d\n" % (int_0 >= int_1)).print();
+    ("int_0 <= int_1 -> %d\n" % (int_0 <= int_1)).print();
+    ("int_0          -> %d\n" % int_0).print();
+
+    Tutorial.note("Integer double plus operators");
+    int_0 = 125;
+    ("int_0    -> %d\n" % int_0).print();
+    ("++ int_0 -> %d\n" % ++ int_0).print();
+    ("int_0    -> %d\n" % int_0).print();
+    ("int_0 ++ -> %d\n" % int_0 ++).print();
+    ("int_0    -> %d\n" % int_0).print();
+
+    Tutorial.note("Integer double minus operators");
+    int_0 = 125;
+    ("int_0    -> %d\n" % int_0).print();
+    ("-- int_0 -> %d\n" % -- int_0).print();
+    ("int_0    -> %d\n" % int_0).print();
+    ("int_0 -- -> %d\n" % int_0 --).print();
+    ("int_0    -> %d\n" % int_0).print();
+
+    Tutorial.note("Integer exclamation operators");
+    ("!125 -> %d\n" % !125).print();
+    ("!0   -> %d\n" % !0).print();
+
+    Tutorial.note("Integer tilde operators");
+    int_0 = 0x0f0f0f0f0f0f0f0f;
+    ("int_0  -> 0x%16.16x\n" % int_0).print();
+    ("~int_0 -> 0x%16.16x\n" % ~int_0).print();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final compare#1
+    // public final to_string#0
+    // public final print#0
+    //
+
+    // Methods of class Integer throws following exceptions
+    //
+    // c_error_INTEGER_BASE_OUT_OF_RANGE
+    // c_error_INTEGER_CONVERT_INVALID_STRING
+    //
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

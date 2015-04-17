@@ -1,0 +1,26 @@
+
+=== Error object ===============================================================
+
+Error: error_OK
+Error: error_DIVISION_BY_ZERO
+Error: error_ARRAY_INDEX_EXCEEDS_RANGE
+Error: error_CLASS_DOES_NOT_CONTAIN_METHOD
+
+=== Error assign operator ======================================================
+
+error: error_OK
+error: 10
+
+=== Error compare operators ====================================================
+
+error_0            -> error_OK
+error_1            -> error_DIVISION_BY_ZERO
+error_0 == error_0 -> 1
+error_0 == error_1 -> 0
+error_0 == 10      -> 0
+error_0 != error_0 -> 0
+error_0 != error_1 -> 1
+error_0 != 10      -> 1
+
+=== Tutorial end ===============================================================
+

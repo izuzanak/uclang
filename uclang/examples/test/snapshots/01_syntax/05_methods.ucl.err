@@ -1,0 +1,6 @@
+ ---------------------------------------- 
+Exception: ERROR: in file: "05_methods.ucl" on line: 92
+      demo.non_static_private();
+
+Cannot access private method Demo.non_static_private#0
+ ---------------------------------------- 

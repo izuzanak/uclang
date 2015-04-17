@@ -1,0 +1,80 @@
+
+// Language version 0.10
+
+import tutorial;
+import sys;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Objects of class Regex represents regular expressions
+    //
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final Regex#0
+    // public final Regex#1
+    // public final match#1
+    // public final match#2
+    // public final match_from#2
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    regex_0 = new Regex("^[0-9][0-9]*$");
+    regex_1 = new Regex("\\([0-9][0-9]*\\)");
+    regex_2 = new Regex("\\(number\\): \\([0-9][0-9]*\\)");
+
+    Tutorial.note("Regex object");
+    ("regex_0: %s\n" % regex_0.to_string()).print();
+    ("regex_1: %s\n" % regex_1.to_string()).print();
+    ("regex_2: %s\n" % regex_2.to_string()).print();
+
+    // Method match#1 matches position of first substring matching regular
+    // expression
+    //
+    Tutorial.note("Regex method match#1");
+    ("regex_0.match(\"number: 100\") -> %s\n" % regex_0.match("100").to_string()).print();
+    ("regex_0.match(\"number: 100\") -> %s\n" % regex_0.match("number: 100").to_string()).print();
+    ("regex_1.match(\"number: 100\") -> %s\n" % regex_1.match("number: 100").to_string()).print();
+    ("regex_2.match(\"number: 100\") -> %s\n" % regex_2.match("number: 100").to_string()).print();
+
+    // Method match#2 matches position of first substring matching regular
+    // expression with its subexpressions. Second atgument of method match#2
+    // describe count of requested subexpressions
+    //
+    Tutorial.note("Regex method match#2");
+    ("regex_0.match(\"number: 100\",3) -> %s\n" % regex_0.match("100",3).to_string()).print();
+    ("regex_0.match(\"number: 100\",3) -> %s\n" % regex_0.match("number: 100",3).to_string()).print();
+    ("regex_1.match(\"number: 100\",3) -> %s\n" % regex_1.match("number: 100",3).to_string()).print();
+    ("regex_2.match(\"number: 100\",3) -> %s\n" % regex_2.match("number: 100",3).to_string()).print();
+
+    // Method match_from#2 matches position of first substring matching regular
+    // expression from character at position described by second argument
+    //
+    Tutorial.note("Regex method match_from#2");
+    ("regex_1.match_from(\"100 100 100\",0) -> %s\n" % regex_1.match_from("100 100 100",0).to_string()).print();
+    ("regex_1.match_from(\"100 100 100\",3) -> %s\n" % regex_1.match_from("100 100 100",3).to_string()).print();
+    ("regex_1.match_from(\"100 100 100\",7) -> %s\n" % regex_1.match_from("100 100 100",7).to_string()).print();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final static to_string#0
+    // public final static print#0
+    //
+
+    // Methods of class file throws following exceptions
+    //
+    // c_error_REGEX_COMPILE_ERROR
+    // c_error_REGEX_NOT_COMPILED
+    // c_error_REGEX_WRONG_MATCH_COUNT
+    // c_error_REGEX_WRONG_MATCH_OFFSET
+    //
+
+    Tutorial.note("Tutorial end");
+  }
+}
+
