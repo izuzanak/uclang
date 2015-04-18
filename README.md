@@ -20,12 +20,14 @@ Container generator [`cont`](https://github.com/izuzanak/cont) is needed for
 uclang compilation. Compile it and place binary `process` to your `PATH`
 directory.
 
+<!--
 Edit file
 [`uclang_build/mf_cfg.py`](https://github.com/izuzanak/uclang/blob/master/uclang_build/mf_cfg.py)
 containing configuration of language modules to be build. Development packages
 related to particular module should be present in system, otherwise compilation
 will fail. In future versions modules should be auto configured according to
 system properties.
+-->
 
 Enter build directory [`uclang_build`](https://github.com/izuzanak/uclang/tree/master/uclang_build)
 ```
