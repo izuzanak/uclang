@@ -1,6 +1,6 @@
 c_enabled = [
     True,  # LIB_BASE
-    True,  # LIB_FTGL
+    False, # LIB_FTGL
     True,  # LIB_NODE
     True,  # UCLANG
     True,  # NODE
@@ -12,51 +12,51 @@ c_enabled = [
     True,  # MOD_PACK
     True,  # MOD_CIPHER
     True,  # MOD_PARSER
-    True,  # MOD_MATH
-    True,  # MOD_PSQL
-    True,  # MOD_SQLITE
-    True,  # MOD_HTTP
-    True,  # MOD_WEBSOCKET
-    True,  # MOD_CURL
-    True,  # MOD_UCF
-    True,  # MOD_UCTCN
-    True,  # MOD_ADAPTRAIN
+    False, # MOD_MATH
+    False, # MOD_PSQL
+    False, # MOD_SQLITE
+    False, # MOD_HTTP
+    False, # MOD_WEBSOCKET
+    False, # MOD_CURL
+    False, # MOD_UCF
+    False, # MOD_UCTCN
+    False, # MOD_ADAPTRAIN
     True,  # MOD_FTP
     True,  # MOD_SSH2
     True,  # MOD_GCRYPT
     True,  # MOD_ICONV
-    True,  # MOD_JIT
+    False, # MOD_JIT
     False, # MOD_LIGHTNING
-    True,  # MOD_LLVM
-    True,  # MOD_AV
-    True,  # MOD_AO
-    True,  # MOD_MPG
-    True,  # MOD_PORTAUDIO
-    True,  # MOD_GSTREAMER
+    False, # MOD_LLVM
+    False, # MOD_AV
+    False, # MOD_AO
+    False, # MOD_MPG
+    False, # MOD_PORTAUDIO
+    False, # MOD_GSTREAMER
     True,  # MOD_IMAGE
-    True,  # MOD_OPENCV
+    False, # MOD_OPENCV
     True,  # MOD_DOCU
-    True,  # MOD_GLUT
-    True,  # MOD_GLEW
-    True,  # MOD_GL
-    True,  # MOD_FTGL
+    False, # MOD_GLUT
+    False, # MOD_GLEW
+    False, # MOD_GL
+    False, # MOD_FTGL
     False, # MOD_VG
     False, # MOD_IMXEGL
-    True,  # MOD_SNMP
+    False, # MOD_SNMP
     False, # MOD_COMELM
-    True,  # MOD_UCPAS
+    False, # MOD_UCPAS
     True,  # MOD_NODE
     False, # MOD_DDB
     True,  # MOD_CONTAINERS
     True,  # MOD_GRAPH
     True,  # MOD_JSON
     True,  # MOD_XML
-    True,  # MOD_SOAPCL
-    True,  # MOD_SOAPSRV
-    True,  # MOD_PYTHON
-    True,  # MOD_V8
-    True,  # MOD_UV
-    True,  # MOD_FUSE
+    False, # MOD_SOAPCL
+    False, # MOD_SOAPSRV
+    False, # MOD_PYTHON
+    False, # MOD_V8
+    False, # MOD_UV
+    False, # MOD_FUSE
     False, # MOD_ANDROID
     False, # MOD_NACL
 ]
