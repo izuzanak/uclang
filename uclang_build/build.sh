@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# - configure modules -
+python configure.py > mf_mods.py
+
 # - generate makefile -
 python mf_gen.py > Makefile
 
