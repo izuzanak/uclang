@@ -8,7 +8,7 @@ built_in_class_s stack_class =
 {/*{{{*/
   "Stack",
   c_modifier_public | c_modifier_final,
-  21, stack_methods,
+  22, stack_methods,
   0, stack_variables,
   bic_stack_consts,
   bic_stack_init,
@@ -76,6 +76,11 @@ built_in_method_s stack_methods[] =
     "push#1",
     c_modifier_public | c_modifier_final,
     bic_stack_method_push_1
+  },
+  {
+    "push_ref#1",
+    c_modifier_public | c_modifier_final,
+    bic_stack_method_push_ref_1
   },
   {
     "pop#0",
@@ -609,6 +614,23 @@ bool bic_stack_method_push_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 
   src_0_location->v_reference_cnt.atomic_inc();
   array_ptr->push((pointer)src_0_location);
+
+  pointer &res_location = it.data_stack[res_loc_idx];
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_stack_method_push_ref_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  pointer &src_0_location = it.data_stack[stack_base + operands[c_src_0_op_idx]];
+
+  pointer_array_s *array_ptr = (pointer_array_s *)((location_s *)dst_location)->v_data_ptr;
+
+  location_s *new_ref_location = it.get_new_reference((location_s **)&src_0_location);
+  array_ptr->push((pointer)new_ref_location);
 
   pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_BLANK();

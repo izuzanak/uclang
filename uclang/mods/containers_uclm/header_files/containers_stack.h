@@ -31,6 +31,7 @@ bool bic_stack_method_Stack_1(interpreter_thread_s &it,unsigned stack_base,uli *
 bool bic_stack_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_stack_method_items_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_stack_method_push_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_stack_method_push_ref_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_stack_method_pop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_stack_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_stack_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
