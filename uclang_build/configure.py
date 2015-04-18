@@ -1,0 +1,102 @@
+#!/usr/bin/python
+
+import os
+
+index = 0
+PKG_NAME      = index; index += 1
+PKG_TEST_TYPE = index; index += 1
+PKG_TEST_PROP = index; index += 1
+
+c_packages = [
+  ["LIB_BASE"      ,"true"      ,[]],
+  ["LIB_FTGL"      ,"false"     ,[]],
+  ["LIB_NODE"      ,"true"      ,[]],
+  ["UCLANG"        ,"true"      ,[]],
+  ["NODE"          ,"true"      ,[]],
+  ["ENCIPHER"      ,"true"      ,[]],
+  ["MOD_BASE"      ,"true"      ,[]],
+  ["MOD_SYS"       ,"true"      ,[]],
+  ["MOD_TIME"      ,"true"      ,[]],
+  ["MOD_LANG"      ,"true"      ,[]],
+  ["MOD_PACK"      ,"true"      ,[]],
+  ["MOD_CIPHER"    ,"true"      ,[]],
+  ["MOD_PARSER"    ,"true"      ,[]],
+  ["MOD_MATH"      ,"directory" ,["/usr/include/glm"]],
+  ["MOD_PSQL"      ,"pkg-config",["libpq >= 9.4.1"]],
+  ["MOD_SQLITE"    ,"pkg-config",["sqlite3 >= 3.8.7.1"]],
+  ["MOD_HTTP"      ,"pkg-config",["libmicrohttpd >= 0.9.37"]],
+  ["MOD_WEBSOCKET" ,"pkg-config",["libwebsockets = 1.3"]],
+  ["MOD_CURL"      ,"pkg-config",["libcurl = 7.38.0"]],
+  ["MOD_UCF"       ,"false"     ,[]],
+  ["MOD_UCTCN"     ,"false"     ,[]],
+  ["MOD_ADAPTRAIN" ,"false"     ,[]],
+  ["MOD_FTP"       ,"false"     ,[]], # test
+  ["MOD_SSH2"      ,"pkg-config",["libssh2 = 1.4.3"]],
+  ["MOD_GCRYPT"    ,"false"     ,[]], # test
+  ["MOD_ICONV"     ,"false"     ,[]], # test
+  ["MOD_JIT"       ,"false"     ,[]], # test
+  ["MOD_LIGHTNING" ,"false"     ,[]],
+  ["MOD_LLVM"      ,"false"     ,[]],
+  ["MOD_AV"        ,"pkg-config",["libavutil >= 54.3.0","libavformat >= 56.1.0","libavcodec >= 56.1.0","libswscale >= 3.0.0"]],
+  ["MOD_AO"        ,"pkg-config",["ao >= 1.1.0"]],
+  ["MOD_MPG"       ,"pkg-config",["libmpg123 >= 1.20.1"]],
+  ["MOD_PORTAUDIO" ,"pkg-config",["portaudio-2.0 >= 19"]],
+  ["MOD_GSTREAMER" ,"pkg-config",["gstreamer-1.0 >= 1.4.4"]],
+  ["MOD_IMAGE"     ,"pkg-config",["libpng >= 1.2.50","libjpeg"]],
+  ["MOD_OPENCV"    ,"pkg-config",["opencv >= 2.4.9.1"]],
+  ["MOD_DOCU"      ,"true"      ,[]],
+  ["MOD_GLUT"      ,"false"     ,[]],
+  ["MOD_GLEW"      ,"false"     ,[]],
+  ["MOD_GL"        ,"false"     ,[]],
+  ["MOD_FTGL"      ,"false"     ,[]],
+  ["MOD_VG"        ,"false"     ,[]],
+  ["MOD_IMXEGL"    ,"false"     ,[]],
+  ["MOD_SNMP"      ,"false"     ,[]], # test
+  ["MOD_COMELM"    ,"false"     ,[]],
+  ["MOD_UCPAS"     ,"false"     ,[]],
+  ["MOD_NODE"      ,"true"      ,[]],
+  ["MOD_DDB"       ,"false"     ,[]],
+  ["MOD_CONTAINERS","true"      ,[]],
+  ["MOD_GRAPH"     ,"true"      ,[]],
+  ["MOD_JSON"      ,"true"      ,[]],
+  ["MOD_XML"       ,"pkg-config",["libxml-2.0 >= 2.9.1"]],
+  ["MOD_SOAPCL"    ,"false"     ,[]],
+  ["MOD_SOAPSRV"   ,"false"     ,[]],
+  ["MOD_PYTHON"    ,"pkg-config",["python-2.7 >= 2.7"]],
+  ["MOD_V8"        ,"false"     ,[]], # test
+  ["MOD_UV"        ,"false"     ,[]],
+  ["MOD_FUSE"      ,"pkg-config",["fuse >= 2.9.3"]],
+  ["MOD_ANDROID"   ,"false"     ,[]],
+  ["MOD_NACL"      ,"false"     ,[]],
+]
+
+# - print begin of array -
+print 'c_enabled = ['
+
+# - process packages -
+for package in c_packages:
+
+    test_type = package[PKG_TEST_TYPE];
+    enabled = True
+
+    if test_type == "true":
+        pass
+
+    elif test_type == "false":
+        enabled = False
+
+    elif test_type == "directory":
+        enabled &= os.path.isdir(package[PKG_TEST_PROP][0])
+
+    elif test_type == "pkg-config":
+        enabled &= os.system('pkg-config "' + '" "'.join(package[PKG_TEST_PROP]) + '"') == 0
+    
+    else:
+        raise Exception("Unknown package presence test type: %s" % test_type)
+
+    # - print module configuration -
+    print "    %s # %s" % ("True, " if enabled else "False,",package[PKG_NAME])
+
+# - print end of array -
+print "]"
+
