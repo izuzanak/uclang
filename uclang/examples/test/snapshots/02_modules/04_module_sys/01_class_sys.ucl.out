@@ -57,7 +57,7 @@ pipe.readln(): 01_class_sys.ucl
 
 === Sys directories manipulation methods =======================================
 
-Sys.getcwd() -> /home/jirka/folder/work/unicontrols/workspace/uclang/uclang/examples/02_modules/04_module_sys
+Sys.getcwd() -> /home/jirka/folder/work/programming/git/uclang/uclang/examples/02_modules/04_module_sys
 
 Sys.mkdir("/tmp/01_class_sys") -> <blank>
 Sys.chdir("/tmp/01_class_sys") -> <blank>

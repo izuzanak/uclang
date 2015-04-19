@@ -57,6 +57,17 @@ array.push(10) -> <blank>
 array.push(10) -> <blank>
 array          -> [1,2,3,4,5,10,10,10]
 
+=== Array method push_ref#1 ====================================================
+
+value                 -> 10
+array                 -> [1,2,3,4,5]
+array.push_ref(value) -> <blank>
+array.push_ref(value) -> <blank>
+array.push_ref(value) -> <blank>
+array                 -> [1,2,3,4,5,10,10,10]
+value = 100;          -> 100
+array                 -> [1,2,3,4,5,100,100,100]
+
 === Array method pop#0 =========================================================
 
 array       -> [1,2,3,4,5]

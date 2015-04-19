@@ -53,6 +53,17 @@ list.append(7) -> 6
 list.append(8) -> 7
 list           -> [1,2,3,4,5,6,7,8]
 
+=== List method append_ref#1 ===================================================
+
+value                  -> 10
+list                   -> [1,2,3,4,5]
+list.append_ref(value) -> 5
+list.append_ref(value) -> 6
+list.append_ref(value) -> 7
+list                   -> [1,2,3,4,5,10,10,10]
+value = 100;           -> 100
+list                   -> [1,2,3,4,5,100,100,100]
+
 === List method prepend#1 ======================================================
 
 list            -> [1,2,3,4,5]
@@ -60,6 +71,17 @@ list.prepend(6) -> 5
 list.prepend(7) -> 6
 list.prepend(8) -> 7
 list            -> [8,7,6,1,2,3,4,5]
+
+=== List method prepend_ref#1 ==================================================
+
+value                   -> 10
+list                    -> [1,2,3,4,5]
+list.prepend_ref(value) -> 5
+list.prepend_ref(value) -> 6
+list.prepend_ref(value) -> 7
+list                    -> [10,10,10,1,2,3,4,5]
+value = 100;            -> 100
+list                    -> [100,100,100,1,2,3,4,5]
 
 === List method insert_before#2 ================================================
 
@@ -69,6 +91,17 @@ list.insert_before(idx,7) -> 6
 list.insert_before(idx,8) -> 7
 list                      -> [1,2,6,7,8,3,4,5]
 
+=== List method insert_before_ref#2 ============================================
+
+value                             -> 10
+list                              -> [1,2,3,4,5]
+list.insert_before_ref(idx,value) -> 5
+list.insert_before_ref(idx,value) -> 6
+list.insert_before_ref(idx,value) -> 7
+list                              -> [1,2,10,10,10,3,4,5]
+value = 100;                      -> 100
+list                              -> [1,2,100,100,100,3,4,5]
+
 === List method insert_after#2 =================================================
 
 list                     -> [1,2,3,4,5]
@@ -76,6 +109,17 @@ list.insert_after(idx,6) -> 5
 list.insert_after(idx,7) -> 6
 list.insert_after(idx,8) -> 7
 list                     -> [1,2,3,8,7,6,4,5]
+
+=== List method insert_after_ref#2 =============================================
+
+value                            -> 10
+list                             -> [1,2,3,4,5]
+list.insert_after_ref(idx,value) -> 5
+list.insert_after_ref(idx,value) -> 6
+list.insert_after_ref(idx,value) -> 7
+list                             -> [1,2,3,10,10,10,4,5]
+value = 100;                     -> 100
+list                             -> [1,2,3,100,100,100,4,5]
 
 === List method remove#1 =======================================================
 

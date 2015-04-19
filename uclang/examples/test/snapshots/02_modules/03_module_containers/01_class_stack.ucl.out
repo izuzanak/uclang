@@ -46,6 +46,17 @@ stack.push(10) -> <blank>
 stack.push(10) -> <blank>
 stack          -> [1,2,3,4,5,10,10,10]
 
+=== Stack method push_ref#1 ====================================================
+
+value                 -> 10
+stack                 -> [1,2,3,4,5]
+stack.push_ref(value) -> <blank>
+stack.push_ref(value) -> <blank>
+stack.push_ref(value) -> <blank>
+stack                 -> [1,2,3,4,5,10,10,10]
+value = 100;          -> 100
+stack                 -> [1,2,3,4,5,100,100,100]
+
 === Stack method pop#0 =========================================================
 
 stack       -> [1,2,3,4,5]
