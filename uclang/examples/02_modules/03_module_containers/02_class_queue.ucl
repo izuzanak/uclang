@@ -22,6 +22,7 @@ class Main
     // public final clear#0
     // public final items#0
     // public final insert#1
+    // public final insert_ref#1
     // public final next#0
     // public final compare#1
     // public final item#1
@@ -80,6 +81,18 @@ class Main
     ("queue -> type: %s, value %s\n" % [(type queue).to_string(),queue.to_string()]).print();
 
     Tutorial.note("Queue method insert#1");
+    value = 10;
+    queue = new Queue([1,2,3,4,5]);
+    ("value                   -> %d\n" % value).print();
+    ("queue                   -> %s\n" % queue.to_string()).print();
+    ("queue.insert_ref(value) -> %s\n" % queue.insert_ref(value).to_string()).print();
+    ("queue.insert_ref(value) -> %s\n" % queue.insert_ref(value).to_string()).print();
+    ("queue.insert_ref(value) -> %s\n" % queue.insert_ref(value).to_string()).print();
+    ("queue                   -> %s\n" % queue.to_string()).print();
+    ("value = 100;            -> %d\n" % (value = 100)).print();
+    ("queue                   -> %s\n" % queue.to_string()).print();
+
+    Tutorial.note("Queue method insert_ref#1");
     queue = new Queue([1,2,3,4,5]);
     ("queue            -> %s\n" % queue.to_string()).print();
     ("queue.insert(10) -> %s\n" % queue.insert(10).to_string()).print();

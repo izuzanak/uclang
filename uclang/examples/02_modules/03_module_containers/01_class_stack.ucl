@@ -22,6 +22,7 @@ class Main
     // public final clear#0
     // public final items#0
     // public final push#1
+    // public final push_ref#1
     // public final pop#0
     // public final compare#1
     // public final item#1
@@ -86,6 +87,18 @@ class Main
     ("stack.push(10) -> %s\n" % stack.push(10).to_string()).print();
     ("stack.push(10) -> %s\n" % stack.push(10).to_string()).print();
     ("stack          -> %s\n" % stack.to_string()).print();
+
+    Tutorial.note("Stack method push_ref#1");
+    value = 10;
+    stack = new Stack([1,2,3,4,5]);
+    ("value                 -> %d\n" % value).print();
+    ("stack                 -> %s\n" % stack.to_string()).print();
+    ("stack.push_ref(value) -> %s\n" % stack.push_ref(value).to_string()).print();
+    ("stack.push_ref(value) -> %s\n" % stack.push_ref(value).to_string()).print();
+    ("stack.push_ref(value) -> %s\n" % stack.push_ref(value).to_string()).print();
+    ("stack                 -> %s\n" % stack.to_string()).print();
+    ("value = 100;          -> %d\n" % (value = 100)).print();
+    ("stack                 -> %s\n" % stack.to_string()).print();
 
     Tutorial.note("Stack method pop#0");
     stack = new Stack([1,2,3,4,5]);

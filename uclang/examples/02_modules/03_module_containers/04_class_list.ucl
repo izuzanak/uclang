@@ -23,9 +23,13 @@ class Main
     // public final clear#0
     // public final items#0
     // public final append#1
+    // public final append_ref#1
     // public final prepend#1
+    // public final prepend_ref#1
     // public final insert_before#2
+    // public final insert_before_ref#2
     // public final insert_after#2
+    // public final insert_after_ref#2
     // public final remove#1
     // public final has_idx#1
     // public final get_idx#1
@@ -103,6 +107,18 @@ class Main
     ("list.append(8) -> %d\n" % list.append(8)).print();
     ("list           -> %s\n" % list.to_string()).print();
 
+    Tutorial.note("List method append_ref#1");
+    value = 10;
+    list = new List([1,2,3,4,5]);
+    ("value                  -> %d\n" % value).print();
+    ("list                   -> %s\n" % list.to_string()).print();
+    ("list.append_ref(value) -> %d\n" % list.append_ref(value)).print();
+    ("list.append_ref(value) -> %d\n" % list.append_ref(value)).print();
+    ("list.append_ref(value) -> %d\n" % list.append_ref(value)).print();
+    ("list                   -> %s\n" % list.to_string()).print();
+    ("value = 100;           -> %d\n" % (value = 100)).print();
+    ("list                   -> %s\n" % list.to_string()).print();
+
     Tutorial.note("List method prepend#1");
     list = new List([1,2,3,4,5]);
     ("list            -> %s\n" % list.to_string()).print();
@@ -110,6 +126,18 @@ class Main
     ("list.prepend(7) -> %d\n" % list.prepend(7)).print();
     ("list.prepend(8) -> %d\n" % list.prepend(8)).print();
     ("list            -> %s\n" % list.to_string()).print();
+
+    Tutorial.note("List method prepend_ref#1");
+    value = 10;
+    list = new List([1,2,3,4,5]);
+    ("value                   -> %d\n" % value).print();
+    ("list                    -> %s\n" % list.to_string()).print();
+    ("list.prepend_ref(value) -> %d\n" % list.prepend_ref(value)).print();
+    ("list.prepend_ref(value) -> %d\n" % list.prepend_ref(value)).print();
+    ("list.prepend_ref(value) -> %d\n" % list.prepend_ref(value)).print();
+    ("list                    -> %s\n" % list.to_string()).print();
+    ("value = 100;            -> %d\n" % (value = 100)).print();
+    ("list                    -> %s\n" % list.to_string()).print();
 
     Tutorial.note("List method insert_before#2");
     list = new List([1,2,3,4,5]);
@@ -120,6 +148,19 @@ class Main
     ("list.insert_before(idx,8) -> %d\n" % list.insert_before(idx,8)).print();
     ("list                      -> %s\n" % list.to_string()).print();
 
+    Tutorial.note("List method insert_before_ref#2");
+    value = 10;
+    list = new List([1,2,3,4,5]);
+    idx = list.get_idx(3);
+    ("value                             -> %d\n" % value).print();
+    ("list                              -> %s\n" % list.to_string()).print();
+    ("list.insert_before_ref(idx,value) -> %d\n" % list.insert_before_ref(idx,value)).print();
+    ("list.insert_before_ref(idx,value) -> %d\n" % list.insert_before_ref(idx,value)).print();
+    ("list.insert_before_ref(idx,value) -> %d\n" % list.insert_before_ref(idx,value)).print();
+    ("list                              -> %s\n" % list.to_string()).print();
+    ("value = 100;                      -> %d\n" % (value = 100)).print();
+    ("list                              -> %s\n" % list.to_string()).print();
+
     Tutorial.note("List method insert_after#2");
     list = new List([1,2,3,4,5]);
     idx = list.get_idx(3);
@@ -128,6 +169,19 @@ class Main
     ("list.insert_after(idx,7) -> %d\n" % list.insert_after(idx,7)).print();
     ("list.insert_after(idx,8) -> %d\n" % list.insert_after(idx,8)).print();
     ("list                     -> %s\n" % list.to_string()).print();
+
+    Tutorial.note("List method insert_after_ref#2");
+    value = 10;
+    list = new List([1,2,3,4,5]);
+    idx = list.get_idx(3);
+    ("value                            -> %d\n" % value).print();
+    ("list                             -> %s\n" % list.to_string()).print();
+    ("list.insert_after_ref(idx,value) -> %d\n" % list.insert_after_ref(idx,value)).print();
+    ("list.insert_after_ref(idx,value) -> %d\n" % list.insert_after_ref(idx,value)).print();
+    ("list.insert_after_ref(idx,value) -> %d\n" % list.insert_after_ref(idx,value)).print();
+    ("list                             -> %s\n" % list.to_string()).print();
+    ("value = 100;                     -> %d\n" % (value = 100)).print();
+    ("list                             -> %s\n" % list.to_string()).print();
 
     Tutorial.note("List method remove#1");
     list = new List([1,2,3,4,5]);

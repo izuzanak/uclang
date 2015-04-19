@@ -21,6 +21,7 @@ class Main
     // public final clear#0
     // public final keys#0
     // public final items#0
+    // public final store_ref#2
     // public final has_key#1
     // public final remove_key#1
     // public final first_key#0
@@ -90,6 +91,17 @@ class Main
     items = dict.items();
     ("items -> type: %s, value %s\n" % [(type items).to_string(),items.to_string()]).print();
     ("dict  -> type: %s, value %s\n" % [(type dict).to_string(),dict.to_string()]).print();
+
+    Tutorial.note("Dict method store_ref#2");
+    value = 10;
+    dict = new Dict(["One",1,"Two",2,"Three",3]);
+    ("value                        -> %d\n" % value).print();
+    ("dict                         -> %s\n" % dict.to_string()).print();
+    ("dict.store_ref(\"Two\",value)  -> %s\n" % dict.store_ref("Two",value).to_string()).print();
+    ("dict.store_ref(\"Four\",value) -> %s\n" % dict.store_ref("Four",value).to_string()).print();
+    ("dict                         -> %s\n" % dict.to_string()).print();
+    ("value = 100;                 -> %d\n" % (value = 100)).print();
+    ("dict                         -> %s\n" % dict.to_string()).print();
 
     Tutorial.note("Dict method has_key#1");
     dict = new Dict(["One",1,"Two",2,"Three",3]);

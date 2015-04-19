@@ -24,6 +24,7 @@ class Main
     // public final clear#0
     // public final resize#1
     // public final push#1
+    // public final push_ref#1
     // public final pop#0
     // public final last#0
     // public final fill#1
@@ -101,6 +102,18 @@ class Main
     ("array.push(10) -> %s\n" % array.push(10).to_string()).print();
     ("array.push(10) -> %s\n" % array.push(10).to_string()).print();
     ("array          -> %s\n" % array.to_string()).print();
+
+    Tutorial.note("Array method push_ref#1");
+    value = 10;
+    array = [1,2,3,4,5];
+    ("value                 -> %d\n" % value).print();
+    ("array                 -> %s\n" % array.to_string()).print();
+    ("array.push_ref(value) -> %s\n" % array.push_ref(value).to_string()).print();
+    ("array.push_ref(value) -> %s\n" % array.push_ref(value).to_string()).print();
+    ("array.push_ref(value) -> %s\n" % array.push_ref(value).to_string()).print();
+    ("array                 -> %s\n" % array.to_string()).print();
+    ("value = 100;          -> %d\n" % (value = 100)).print();
+    ("array                 -> %s\n" % array.to_string()).print();
 
     Tutorial.note("Array method pop#0");
     array = [1,2,3,4,5];
