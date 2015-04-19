@@ -8,7 +8,7 @@ built_in_class_s list_class =
 {/*{{{*/
   "List",
   c_modifier_public | c_modifier_final,
-  28, list_methods,
+  32, list_methods,
   0, list_variables,
   bic_list_consts,
   bic_list_init,
@@ -83,9 +83,19 @@ built_in_method_s list_methods[] =
     bic_list_method_append_1
   },
   {
+    "append_ref#1",
+    c_modifier_public | c_modifier_final,
+    bic_list_method_append_ref_1
+  },
+  {
     "prepend#1",
     c_modifier_public | c_modifier_final,
     bic_list_method_prepend_1
+  },
+  {
+    "prepend_ref#1",
+    c_modifier_public | c_modifier_final,
+    bic_list_method_prepend_ref_1
   },
   {
     "insert_before#2",
@@ -93,9 +103,19 @@ built_in_method_s list_methods[] =
     bic_list_method_insert_before_2
   },
   {
+    "insert_before_ref#2",
+    c_modifier_public | c_modifier_final,
+    bic_list_method_insert_before_ref_2
+  },
+  {
     "insert_after#2",
     c_modifier_public | c_modifier_final,
     bic_list_method_insert_after_2
+  },
+  {
+    "insert_after_ref#2",
+    c_modifier_public | c_modifier_final,
+    bic_list_method_insert_after_ref_2
   },
   {
     "remove#1",
@@ -724,6 +744,24 @@ bool bic_list_method_append_1(interpreter_thread_s &it,unsigned stack_base,uli *
   return true;
 }/*}}}*/
 
+bool bic_list_method_append_ref_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  pointer &src_0_location = it.data_stack[stack_base + operands[c_src_0_op_idx]];
+
+  pointer_list_s *list_ptr = (pointer_list_s *)dst_location->v_data_ptr;
+
+  location_s *new_ref_location = it.get_new_reference((location_s **)&src_0_location);
+
+  long long int result = list_ptr->append((pointer)new_ref_location);
+
+  pointer &res_location = it.data_stack[res_loc_idx];
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
 bool bic_list_method_prepend_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
@@ -735,6 +773,90 @@ bool bic_list_method_prepend_1(interpreter_thread_s &it,unsigned stack_base,uli 
   src_0_location->v_reference_cnt.atomic_inc();
 
   long long int result = list_ptr->prepend((pointer)src_0_location);
+
+  pointer &res_location = it.data_stack[res_loc_idx];
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_list_method_prepend_ref_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  pointer &src_0_location = it.data_stack[stack_base + operands[c_src_0_op_idx]];
+
+  pointer_list_s *list_ptr = (pointer_list_s *)dst_location->v_data_ptr;
+
+  location_s *new_ref_location = it.get_new_reference((location_s **)&src_0_location);
+
+  long long int result = list_ptr->prepend((pointer)new_ref_location);
+
+  pointer &res_location = it.data_stack[res_loc_idx];
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_list_method_insert_before_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  long long int index;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,index))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("insert_before#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  BIC_LIST_CHECK_INDEX();
+
+  src_1_location->v_reference_cnt.atomic_inc();
+
+  long long int result = list_ptr->insert_before(index,(pointer)src_1_location);
+
+  pointer &res_location = it.data_stack[res_loc_idx];
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_list_method_insert_before_ref_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  pointer &src_1_location = it.data_stack[stack_base + operands[c_src_1_op_idx]];
+
+  long long int index;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,index))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("insert_before_ref#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(it.get_location_value(src_1_location)->v_type);
+
+    return false;
+  }
+
+  BIC_LIST_CHECK_INDEX();
+
+  location_s *new_ref_location = it.get_new_reference((location_s **)&src_1_location);
+
+  long long int result = list_ptr->insert_before(index,(pointer)new_ref_location);
 
   pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
@@ -775,12 +897,12 @@ bool bic_list_method_insert_after_2(interpreter_thread_s &it,unsigned stack_base
   return true;
 }/*}}}*/
 
-bool bic_list_method_insert_before_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_list_method_insert_after_ref_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+  pointer &src_1_location = it.data_stack[stack_base + operands[c_src_1_op_idx]];
 
   long long int index;
 
@@ -788,19 +910,19 @@ bool bic_list_method_insert_before_2(interpreter_thread_s &it,unsigned stack_bas
   if (!it.retrieve_integer(src_0_location,index))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("insert_before#2");
+    BIC_EXCEPTION_PUSH_METHOD_RI("insert_after_ref#2");
     new_exception->params.push(2);
     new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
+    new_exception->params.push(it.get_location_value(src_1_location)->v_type);
 
     return false;
   }
 
   BIC_LIST_CHECK_INDEX();
 
-  src_1_location->v_reference_cnt.atomic_inc();
+  location_s *new_ref_location = it.get_new_reference((location_s **)&src_1_location);
 
-  long long int result = list_ptr->insert_before(index,(pointer)src_1_location);
+  long long int result = list_ptr->insert_after(index,(pointer)new_ref_location);
 
   pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);

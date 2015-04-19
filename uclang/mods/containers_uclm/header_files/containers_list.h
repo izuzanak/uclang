@@ -32,9 +32,13 @@ bool bic_list_method_List_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 bool bic_list_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_list_method_items_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_list_method_append_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_list_method_append_ref_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_list_method_prepend_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_list_method_insert_after_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_list_method_prepend_ref_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_list_method_insert_before_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_list_method_insert_before_ref_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_list_method_insert_after_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_list_method_insert_after_ref_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_list_method_remove_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_list_method_has_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_list_method_get_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
