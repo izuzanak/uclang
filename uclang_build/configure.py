@@ -21,7 +21,7 @@ c_packages = [
   ["MOD_PACK"      ,"true"      ,[]],
   ["MOD_CIPHER"    ,"true"      ,[]],
   ["MOD_PARSER"    ,"true"      ,[]],
-  ["MOD_MATH"      ,"directory" ,["/usr/include/glm"]],
+  ["MOD_MATH"      ,"dirs"      ,["/usr/include/glm"]],
   ["MOD_PSQL"      ,"pkg-config",["libpq >= 9.4.1"]],
   ["MOD_SQLITE"    ,"pkg-config",["sqlite3 >= 3.8.7.1"]],
   ["MOD_HTTP"      ,"pkg-config",["libmicrohttpd >= 0.9.37"]],
@@ -30,10 +30,10 @@ c_packages = [
   ["MOD_UCF"       ,"false"     ,[]],
   ["MOD_UCTCN"     ,"false"     ,[]],
   ["MOD_ADAPTRAIN" ,"false"     ,[]],
-  ["MOD_FTP"       ,"false"     ,[]], # test
+  ["MOD_FTP"       ,"files"     ,["/usr/include/ftplib.h"]],
   ["MOD_SSH2"      ,"pkg-config",["libssh2 = 1.4.3"]],
-  ["MOD_GCRYPT"    ,"false"     ,[]], # test
-  ["MOD_ICONV"     ,"false"     ,[]], # test
+  ["MOD_GCRYPT"    ,"files"     ,["/usr/include/gcrypt.h"]],
+  ["MOD_ICONV"     ,"files"     ,["/usr/include/iconv.h"]],
   ["MOD_JIT"       ,"false"     ,[]], # test
   ["MOD_LIGHTNING" ,"false"     ,[]],
   ["MOD_LLVM"      ,"false"     ,[]],
@@ -63,7 +63,7 @@ c_packages = [
   ["MOD_SOAPCL"    ,"false"     ,[]],
   ["MOD_SOAPSRV"   ,"false"     ,[]],
   ["MOD_PYTHON"    ,"pkg-config",["python-2.7 >= 2.7"]],
-  ["MOD_V8"        ,"false"     ,[]], # test
+  ["MOD_V8"        ,"files"     ,["/usr/include/v8.h"]],
   ["MOD_UV"        ,"false"     ,[]],
   ["MOD_FUSE"      ,"pkg-config",["fuse >= 2.9.3"]],
   ["MOD_ANDROID"   ,"false"     ,[]],
@@ -85,8 +85,13 @@ for package in c_packages:
     elif test_type == "false":
         enabled = False
 
-    elif test_type == "directory":
-        enabled &= os.path.isdir(package[PKG_TEST_PROP][0])
+    elif test_type == "files":
+        for file_path in package[PKG_TEST_PROP]:
+            enabled &= os.path.isfile(file_path)
+
+    elif test_type == "dirs":
+        for dir_path in package[PKG_TEST_PROP]:
+            enabled &= os.path.isdir(dir_path)
 
     elif test_type == "pkg-config":
         enabled &= os.system('pkg-config "' + '" "'.join(package[PKG_TEST_PROP]) + '"') == 0
