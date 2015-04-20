@@ -1,6 +1,5 @@
 
 # class Stack
-
 Container class implementing simple abstract data type stack.
 
 ## Constructors
@@ -35,8 +34,8 @@ stack: [1,2,3]
 ## Operators
 
 #### Operator `operator_binary_equal#1`
-Assignment operator `=`. Location of object of class `Stack` is replaced by
-method parameter.
+Assignment operator `=`. Object of class `Stack` is replaced by method
+parameter.
 
 ##### Parameters:
 1. Any type.
@@ -58,7 +57,8 @@ stack: Hello world
 ```
 
 #### Operator `operator_binary_plus_equal#1`
-Append operator `+=`. Append to stack elements retrieved from method parameter.
+Append operator `+=`. Append elements retrieved from method parameter to object
+of class `Stack`.
 
 ##### Parameters:
 1. Iterable type.
@@ -78,7 +78,7 @@ stack: [1,2,3,4,5,6]
 
 #### Operator `operator_binary_double_equal#1`
 Comparison operator `==`. Compares object of class `Stack` with method
-parameter and return `1` if objects has same value and `0` otherwise.
+parameter and return `1` if objects has same value or `0` otherwise.
 
 ##### Parameters:
 1. Any type.
@@ -103,7 +103,7 @@ stack_0 == stack_2: 1
 
 #### Operator `operator_binary_exclamation_equal#1`
 Comparison operator `!=`. Compares object of class `Stack` with method parameter and
-return `0` if objects has same value and `1` otherwise.
+return `0` if objects has same value or `1` otherwise.
 
 ##### Parameters:
 1. Any type.
@@ -128,7 +128,8 @@ stack_0 != stack_2: 0
 
 #### Operator `operator_binary_plus#1`
 Concatenation operator `+`. Creates object of class `Stack` containing elements
-of original stack concatenated with elements retrieved from method parameter.
+of original object of class `Stack` concatenated with elements retrieved from
+method parameter.
 
 ##### Parameters:
 1. Iterable type.
@@ -146,6 +147,8 @@ stack_1 = new Stack([1,2,4]);
 ```
 stack_0 + stack_1: [1,2,3,1,2,4]
 ```
+
+## Methods
 
 #### Method `clear#0`
 Empty stack. Release all elements stored in object of class `Stack`.
@@ -472,5 +475,4 @@ stack.print();
 ```
 [1,2,3]
 ```
-
 
