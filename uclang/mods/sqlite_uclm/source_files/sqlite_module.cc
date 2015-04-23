@@ -144,8 +144,8 @@ built_in_class_s sqlite_conn_class =
 {/*{{{*/
   "SQLiteConn",
   c_modifier_public | c_modifier_final,
-  7, sqlite_conn_methods,
-  0, sqlite_conn_variables,
+  9, sqlite_conn_methods,
+  20, sqlite_conn_variables,
   bic_sqlite_conn_consts,
   bic_sqlite_conn_init,
   bic_sqlite_conn_clear,
@@ -172,6 +172,16 @@ built_in_method_s sqlite_conn_methods[] =
     "SQLiteConn#1",
     c_modifier_public | c_modifier_final,
     bic_sqlite_conn_method_SQLiteConn_1
+  },
+  {
+    "SQLiteConn#2",
+    c_modifier_public | c_modifier_final,
+    bic_sqlite_conn_method_SQLiteConn_2
+  },
+  {
+    "threadsafe#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_sqlite_conn_method_threadsafe_0
   },
   {
     "execute#1",
@@ -202,10 +212,67 @@ built_in_method_s sqlite_conn_methods[] =
 
 built_in_variable_s sqlite_conn_variables[] =
 {/*{{{*/
+
+  // - conn open constants -
+  { "OPEN_READONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPEN_READWRITE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPEN_CREATE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPEN_DELETEONCLOSE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPEN_EXCLUSIVE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPEN_AUTOPROXY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPEN_URI", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPEN_MEMORY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPEN_MAIN_DB", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPEN_TEMP_DB", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPEN_TRANSIENT_DB", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPEN_MAIN_JOURNAL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPEN_TEMP_JOURNAL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPEN_SUBJOURNAL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPEN_MASTER_JOURNAL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPEN_NOMUTEX", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPEN_FULLMUTEX", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPEN_SHAREDCACHE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPEN_PRIVATECACHE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPEN_WAL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_sqlite_conn_consts(location_array_s &const_locations)
 {/*{{{*/
+
+  // - insert sqlite connection open constants -
+  {
+    const_locations.push_blanks(20);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 20);
+
+#define CREATE_SQLITE_CONN_OPEN_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr++;
+
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_READONLY);
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_READWRITE);
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_CREATE);
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_DELETEONCLOSE);
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_EXCLUSIVE);
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_AUTOPROXY);
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_URI);
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_MEMORY);
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_MAIN_DB);
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_TEMP_DB);
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_TRANSIENT_DB);
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_MAIN_JOURNAL);
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_TEMP_JOURNAL);
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_SUBJOURNAL);
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_MASTER_JOURNAL);
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_NOMUTEX);
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_FULLMUTEX);
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_SHAREDCACHE);
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_PRIVATECACHE);
+    CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_WAL);
+  }
+
 }/*}}}*/
 
 void bic_sqlite_conn_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -266,6 +333,54 @@ bool bic_sqlite_conn_method_SQLiteConn_1(interpreter_thread_s &it,unsigned stack
   }
 
   dst_location->v_data_ptr = (basic_64b)db_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_sqlite_conn_method_SQLiteConn_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  long long int flags;
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string ||
+      !it.retrieve_integer(src_1_location,flags))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("SQLiteConn#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+  sqlite3 *db_ptr;
+
+  // - ERROR -
+  if (sqlite3_open_v2(string_ptr->data,&db_ptr,flags,NULL) != SQLITE_OK)
+  {
+    sqlite3_close(db_ptr);
+
+    exception_s::throw_exception(it,module.error_base + c_error_SQLITE_CONN_DB_OPEN_ERROR,operands[c_source_pos_idx],src_0_location);
+    return false;
+  }
+
+  dst_location->v_data_ptr = (basic_64b)db_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_sqlite_conn_method_threadsafe_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  long long int result = sqlite3_threadsafe();
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/

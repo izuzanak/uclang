@@ -50,6 +50,8 @@ void bic_sqlite_conn_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_sqlite_conn_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sqlite_conn_method_SQLiteConn_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_sqlite_conn_method_SQLiteConn_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_sqlite_conn_method_threadsafe_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sqlite_conn_method_execute_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sqlite_conn_method_prepare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sqlite_conn_method_errmsg_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
