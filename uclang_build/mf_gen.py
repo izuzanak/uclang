@@ -1257,7 +1257,7 @@ if cfg_ref[CFG_TARGET]:
       [ 
         "header_files",
         os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
-        os.sep.join(["..","..","..","ext_libs","ucframework","1.56","build","include"]),
+        os.sep.join(["..","..","..","ext_libs","ucframework","1.60","build","include"]),
         os.sep.join(["..","..","..","ext_libs","uctcn","2.27","build","include"])
       ],
       [ 
@@ -1265,7 +1265,7 @@ if cfg_ref[CFG_TARGET]:
       ],
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
-        os.sep.join(["..","..","..","ext_libs","ucframework","1.56","build","lib"]),
+        os.sep.join(["..","..","..","ext_libs","ucframework","1.60","build","lib"]),
         os.sep.join(["..","..","..","ext_libs","uctcn","2.27","build","lib"])
       ],
       opt_build, # GPP options
@@ -1287,7 +1287,7 @@ if cfg_ref[CFG_TARGET]:
       [ 
         "header_files",
         os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
-        os.sep.join(["..","..","..","ext_libs","ucframework","1.56","build","include"]),
+        os.sep.join(["..","..","..","ext_libs","ucframework","1.60","build","include"]),
         os.sep.join(["..","..","..","ext_libs","unicon","execnt","src"]),
         os.sep.join(["..","..","..","ext_libs","adaptrain","adaptrain-structs","include"]),
       ],
@@ -1296,7 +1296,7 @@ if cfg_ref[CFG_TARGET]:
       ],
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
-        os.sep.join(["..","..","..","ext_libs","ucframework","1.56","build","lib"]),
+        os.sep.join(["..","..","..","ext_libs","ucframework","1.60","build","lib"]),
       ],
       opt_build, # GPP options
       opt_link, # GPP link options
