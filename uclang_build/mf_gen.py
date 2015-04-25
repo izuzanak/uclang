@@ -701,7 +701,7 @@ class module_c:
 configuration = configuration_c()
 
 # set build and link compiler options
-opt_build = "-O2 -DNDEBUG -ffast-math " # -DNDEBUG
+opt_build = "-O2 -DNDEBUG -ffast-math -fPIC " # -DNDEBUG
 opt_link = ""
 
 if configuration.shell_type == configuration.C_SHELL_TYPE_BASH:
