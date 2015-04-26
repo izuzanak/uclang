@@ -146,6 +146,19 @@ class UclVar
   // - class FLOAT -
   static unsigned c_bi_mni_Float_0;
   static unsigned c_bi_mni_Float_1;
+  static unsigned c_bi_mni_sin_0;
+  static unsigned c_bi_mni_cos_0;
+  static unsigned c_bi_mni_tan_0;
+  static unsigned c_bi_mni_asin_0;
+  static unsigned c_bi_mni_acos_0;
+  static unsigned c_bi_mni_atan_0;
+  static unsigned c_bi_mni_exp_0;
+  static unsigned c_bi_mni_log_0;
+  static unsigned c_bi_mni_pow_1;
+  static unsigned c_bi_mni_sqrt_0;
+  static unsigned c_bi_mni_cbrt_0;
+  static unsigned c_bi_mni_hypot_1;
+  static unsigned c_bi_mni_isnan_0;
 
   // - class STRING -
   static unsigned c_bi_mni_String_0;
@@ -1351,7 +1364,7 @@ class UclVar
 
   inline UclVar compare(UclVar a_op)
   {/*{{{*/
-    return __call_0(c_bi_mni_compare_1);
+    return __call_1(c_bi_mni_compare_1,a_op);
   }/*}}}*/
 
   inline UclVar item(UclVar a_op)
@@ -1412,6 +1425,71 @@ class UclVar
   inline UclVar replace(UclVar a_op,UclVar a_op_1)
   {/*{{{*/
     return __call_2(c_bi_mni_replace_2,a_op,a_op_1);
+  }/*}}}*/
+
+  inline UclVar sin()
+  {/*{{{*/
+    return __call_0(c_bi_mni_sin_0);
+  }/*}}}*/
+
+  inline UclVar cos()
+  {/*{{{*/
+    return __call_0(c_bi_mni_cos_0);
+  }/*}}}*/
+
+  inline UclVar tan()
+  {/*{{{*/
+    return __call_0(c_bi_mni_tan_0);
+  }/*}}}*/
+
+  inline UclVar asin()
+  {/*{{{*/
+    return __call_0(c_bi_mni_asin_0);
+  }/*}}}*/
+
+  inline UclVar acos()
+  {/*{{{*/
+    return __call_0(c_bi_mni_acos_0);
+  }/*}}}*/
+
+  inline UclVar atan()
+  {/*{{{*/
+    return __call_0(c_bi_mni_atan_0);
+  }/*}}}*/
+
+  inline UclVar exp()
+  {/*{{{*/
+    return __call_0(c_bi_mni_exp_0);
+  }/*}}}*/
+
+  inline UclVar log()
+  {/*{{{*/
+    return __call_0(c_bi_mni_log_0);
+  }/*}}}*/
+
+  inline UclVar pow(UclVar a_op)
+  {/*{{{*/
+    return __call_1(c_bi_mni_pow_1,a_op);
+  }/*}}}*/
+
+  inline UclVar sqrt()
+  {/*{{{*/
+    return __call_0(c_bi_mni_sqrt_0);
+  }/*}}}*/
+
+  inline UclVar cbrt()
+  {/*{{{*/
+    return __call_0(c_bi_mni_cbrt_0);
+  }/*}}}*/
+
+  inline UclVar hypot(UclVar a_op)
+  {/*{{{*/
+    return __call_1(c_bi_mni_hypot_1,a_op);
+  }/*}}}*/
+
+  inline UclVar _isnan()
+  {/*{{{*/
+    return __call_0(c_bi_mni_isnan_0);
   }/*}}}*/
 
   inline UclVar split(UclVar a_op)

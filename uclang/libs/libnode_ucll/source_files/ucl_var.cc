@@ -102,6 +102,19 @@ unsigned UclVar::c_bi_mni_Integer_2;
 
 unsigned UclVar::c_bi_mni_Float_0;
 unsigned UclVar::c_bi_mni_Float_1;
+unsigned UclVar::c_bi_mni_sin_0;
+unsigned UclVar::c_bi_mni_cos_0;
+unsigned UclVar::c_bi_mni_tan_0;
+unsigned UclVar::c_bi_mni_asin_0;
+unsigned UclVar::c_bi_mni_acos_0;
+unsigned UclVar::c_bi_mni_atan_0;
+unsigned UclVar::c_bi_mni_exp_0;
+unsigned UclVar::c_bi_mni_log_0;
+unsigned UclVar::c_bi_mni_pow_1;
+unsigned UclVar::c_bi_mni_sqrt_0;
+unsigned UclVar::c_bi_mni_cbrt_0;
+unsigned UclVar::c_bi_mni_hypot_1;
+unsigned UclVar::c_bi_mni_isnan_0;
 
 unsigned UclVar::c_bi_mni_String_0;
 unsigned UclVar::c_bi_mni_String_1;
@@ -642,6 +655,19 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
 
   UCLVAR_RETRIEVE_METHOD_NAME_IDX(Float_0,"Float#0");
   UCLVAR_RETRIEVE_METHOD_NAME_IDX(Float_1,"Float#1");
+  UCLVAR_RETRIEVE_METHOD_NAME_IDX(sin_0,"sin#0");
+  UCLVAR_RETRIEVE_METHOD_NAME_IDX(cos_0,"cos#0");
+  UCLVAR_RETRIEVE_METHOD_NAME_IDX(tan_0,"tan#0");
+  UCLVAR_RETRIEVE_METHOD_NAME_IDX(asin_0,"asin#0");
+  UCLVAR_RETRIEVE_METHOD_NAME_IDX(acos_0,"acos#0");
+  UCLVAR_RETRIEVE_METHOD_NAME_IDX(atan_0,"atan#0");
+  UCLVAR_RETRIEVE_METHOD_NAME_IDX(exp_0,"exp#0");
+  UCLVAR_RETRIEVE_METHOD_NAME_IDX(log_0,"log#0");
+  UCLVAR_RETRIEVE_METHOD_NAME_IDX(pow_1,"pow#1");
+  UCLVAR_RETRIEVE_METHOD_NAME_IDX(sqrt_0,"sqrt#0");
+  UCLVAR_RETRIEVE_METHOD_NAME_IDX(cbrt_0,"cbrt#0");
+  UCLVAR_RETRIEVE_METHOD_NAME_IDX(hypot_1,"hypot#1");
+  UCLVAR_RETRIEVE_METHOD_NAME_IDX(isnan_0,"isnan#0");
 
   UCLVAR_RETRIEVE_METHOD_NAME_IDX(String_0,"String#0");
   UCLVAR_RETRIEVE_METHOD_NAME_IDX(String_1,"String#1");

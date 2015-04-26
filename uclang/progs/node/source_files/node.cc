@@ -149,6 +149,9 @@ int main(int argc,char **argv)
     (UclVar("String: %s\n") % UclVar::String()).print();
     (UclVar("String: %s\n") % UclVar::String(12.8)).print();
 
+    (UclVar("compare: %d\n") % (UclVar(15.6).compare(10.9))).print();
+    (UclVar("sin: %f\n") % (UclVar(15.6).sin())).print();
+
     UclVar str = "Some,Words,Separated,By,Commas";
     UclVar spl = str.split(",");
     (format % spl.to_string()).print();
