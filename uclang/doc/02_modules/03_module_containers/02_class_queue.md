@@ -1,5 +1,5 @@
 
-# class Queue
+# Class Queue
 Container class implementing simple abstract data type queue.
 
 ## Constructors
@@ -41,7 +41,7 @@ parameter.
 1. Any type.
 
 ##### Return:
-Return value of object.
+Value of object.
 
 ##### Example:
 
@@ -64,7 +64,7 @@ of class `Queue`.
 1. Iterable type.
 
 ##### Return:
-Return value of object.
+Value of object.
 
 ##### Example:
 ```cpp

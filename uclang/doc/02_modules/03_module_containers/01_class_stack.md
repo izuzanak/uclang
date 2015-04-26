@@ -1,5 +1,5 @@
 
-# class Stack
+# Class Stack
 Container class implementing simple abstract data type stack.
 
 ## Constructors
@@ -41,7 +41,7 @@ parameter.
 1. Any type.
 
 ##### Return:
-Return value of object.
+Value of object.
 
 ##### Example:
 
@@ -64,7 +64,7 @@ of class `Stack`.
 1. Iterable type.
 
 ##### Return:
-Return value of object.
+Value of object.
 
 ##### Example:
 ```cpp

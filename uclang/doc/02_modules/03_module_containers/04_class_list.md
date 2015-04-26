@@ -1,5 +1,5 @@
 
-# class List
+# Class List
 Container class implementing simple abstract data type list.
 
 ## Constructors
@@ -41,7 +41,7 @@ parameter.
 1. Any type.
 
 ##### Return:
-Return value of object.
+Value of object.
 
 ##### Example:
 
@@ -64,7 +64,7 @@ of class `List`.
 1. Iterable type.
 
 ##### Return:
-Return value of object.
+Value of object.
 
 ##### Example:
 ```cpp
@@ -513,15 +513,225 @@ list.get_idxs(3): [2]
 list.get_idxs(4): []
 ```
 
-<!-- FIXME TODO continue -->
 #### Method `compare#1`
+Compare object of class `List` with method parameter.
+
+##### Parameters:
+1. Any type.
+
+##### Return:
+Object of class `Integer`.
+* `-1` - if object of class `List` is lesser than method parameter.
+* `1` - if object of class `List` is greater than method parameter.
+* `0` - if object of class `List` is equal to method parameter.
+
+##### Example:
+```cpp
+list_0 = new List([1,2,3]);
+list_1 = new List([1,2,3,4]);
+("list_0.compare(list_1): %d\n" % list_0.compare(list_1)).print();
+("list_0.compare(list_0): %d\n" % list_0.compare(list_0)).print();
+("list_0.compare(0): %d\n" % list_0.compare(0)).print();
+```
+```
+list_0.compare(list_1): -1
+list_0.compare(list_0): 0
+list_0.compare(0): 1
+```
+
 #### Method `item#1`
+Retrieve element from object of class `List` stored at requested index position.
+
+##### Parameters:
+1. Type convertible to integer.
+
+##### Return:
+Object stored in object of class `List` at position of requested index.
+
+##### Example:
+```cpp
+list = new List([1,2,3]);
+("list: %s\n" % list.to_string()).print();
+("list.item(1): %d\n" % list.item(1)).print();
+("list.item(2): %d\n" % list.item(2)).print();
+```
+```
+list: [1,2,3]
+list.item(1): 2
+list.item(2): 3
+```
+
 #### Method `first_idx#0`
+Retrieve index of first element in object of class `List`.
+
+##### Return:
+* Object of class `Integer` if object of class `List` contain some elements.
+* Object of class `Blank` otherwise.
+
+##### Example:
+```cpp
+list = new List([1]);
+("list.first_idx(): %s\n" % list.first_idx().to_string()).print();
+list.remove(list.get_idx(1));
+("list.first_idx(): %s\n" % list.first_idx().to_string()).print();
+```
+```
+list.first_idx(): 0
+list.first_idx(): <blank>
+```
+
 #### Method `last_idx#0`
+Retrieve index of last element in object of class `List`.
+
+##### Return:
+* Object of class `Integer` if object of class `List` contain some elements.
+* Object of class `Blank` otherwise.
+
+##### Example:
+```cpp
+list = new List([1,2,3]);
+("list.last_idx(): %s\n" % list.last_idx().to_string()).print();
+list.remove(list.get_idx(3));
+("list.last_idx(): %s\n" % list.last_idx().to_string()).print();
+list.clear();
+("list.last_idx(): %s\n" % list.last_idx().to_string()).print();
+```
+```
+list.last_idx(): 2
+list.last_idx(): 1
+list.last_idx(): <blank>
+```
+
 #### Method `next_idx#1`
+From object of class `List` retrieve index of element following element
+identified by method parameter.
+
+##### Parameters:
+
+1. Type convertible to integer.
+
+##### Return:
+* Object of class `Integer` if there is some element following element
+  identified by method parameter.
+* Object of class `Blank` otherwise.
+
+##### Example:
+```cpp
+list = new List([1,2,3]);
+("list: %s\n" % list.to_string()).print();
+idx = list.first_idx();
+do {
+  ("idx: %s\n" % idx.to_string()).print();
+  idx = list.next_idx(idx);
+} while(Blank != idx);
+```
+```
+list: [1,2,3]
+idx: 0
+idx: 1
+idx: 2
+```
+
 #### Method `prev_idx#1`
+From object of class `List` retrieve index of element preceding element
+identified by method parameter.
+
+##### Parameters:
+
+1. Type convertible to integer.
+
+##### Return:
+* Object of class `Integer` if there is some element preceding element
+  identified by method parameter.
+* Object of class `Blank` otherwise.
+
+##### Example:
+```cpp
+list = new List([1,2,3]);
+("list: %s\n" % list.to_string()).print();
+idx = list.last_idx();
+do {
+  ("idx: %s\n" % idx.to_string()).print();
+  idx = list.prev_idx(idx);
+} while(Blank != idx);
+```
+```
+list: [1,2,3]
+idx: 2
+idx: 1
+idx: 0
+```
+
 #### Method `length#0`
+Retrieve count of elements in object of class `List`.
+
+##### Return:
+Object of class `Integer`.
+
+##### Example:
+```cpp
+list = new List([1,2,3]);
+("list.length(): %d\n" % list.length()).print();
+list.remove(list.get_idx(3));
+("list.length(): %d\n" % list.length()).print();
+```
+```
+list.length(): 3
+list.length(): 2
+```
+
 #### Method `to_string#0`
+Convert object of class `List` to object of class `String`. Each element of
+list is converted to string by call of its `to_string#0` method. As separator
+of string values of elements is used `,`.
+
+##### Return:
+Object of class `String`.
+
+##### Example:
+```cpp
+list = new List([1,2,3]);
+("list: %s\n" % list.to_string()).print();
+```
+```
+list: [1,2,3]
+```
+
 #### Method `to_string#1`
+Convert object of class `List` to object of class `String`. Each element of
+list is converted to string by call of its `to_string#0` method. As separator
+of string values is used method parameter.
+
+##### Parameters:
+1. Object of class `String`.
+
+##### Return:
+Object of class `String`.
+
+##### Example:
+```cpp
+list = new List([1,2,3,new List([1,2,3])]);
+("list: %s\n" % list.to_string("+")).print();
+("list: %s\n" % list.to_string("<->")).print();
+```
+```
+list: 1+2+3+[1,2,3]
+list: 1<->2<->3<->[1,2,3]
+```
+
 #### Method `print#0`
+Print string representation of object of class `List` to standard output.
+
+##### Return:
+Object of class `Blank`.
+
+##### Example:
+```cpp
+list = new List([1,2,3]);
+list.print();
+"\n".print();
+```
+```
+[1,2,3]
+```
 
