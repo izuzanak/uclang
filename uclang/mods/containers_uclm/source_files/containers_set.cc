@@ -436,18 +436,33 @@ built_in_variable_s set_variables[] =
     target_ptr->source_pos = operands[c_source_pos_idx];\
     \
     /* - if first and second are not empty - */\
-    if (first.count != 0 && second.count != 0) {\
-      \
+    if (first.count != 0 && second.count != 0)\
+    {\
+      pointer_tree_s *first_ptr;\
+      pointer_tree_s *second_ptr;\
+\
+      /* - order sets by size - */\
+      if (first.count <= second.count)\
+      {\
+        first_ptr = &first;\
+        second_ptr = &second;\
+      }\
+      else\
+      {\
+        first_ptr = &second;\
+        second_ptr = &first;\
+      }\
+\
       /* - traverse through first - */\
-      unsigned stack[first.get_descent_stack_size()];\
+      unsigned stack[first_ptr->get_descent_stack_size()];\
       unsigned *stack_ptr = stack;\
       \
-      unsigned f_idx = first.get_stack_min_value_idx(first.root_idx,&stack_ptr);\
+      unsigned f_idx = first_ptr->get_stack_min_value_idx(first_ptr->root_idx,&stack_ptr);\
       do {\
-        location_s *elm_location = (location_s *)first.data[f_idx].object;\
+        location_s *elm_location = (location_s *)first_ptr->data[f_idx].object;\
         \
         /* - retrieve index in second - */\
-        unsigned s_idx = second.get_idx((pointer)elm_location);\
+        unsigned s_idx = second_ptr->get_idx((pointer)elm_location);\
         \
         if (((location_s *)it.exception_location)->v_type != c_bi_class_blank) {\
           it.release_location_ptr(new_location);\
@@ -467,7 +482,7 @@ built_in_variable_s set_variables[] =
           }\
         }\
         \
-        f_idx = first.get_stack_next_idx(f_idx,&stack_ptr,stack);\
+        f_idx = first_ptr->get_stack_next_idx(f_idx,&stack_ptr,stack);\
       } while(f_idx != c_idx_not_exist);\
     }\
   }/*}}}*/
