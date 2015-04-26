@@ -1,5 +1,5 @@
 
-# class Stack
+# Class Stack
 Container class implementing simple abstract data type stack.
 
 ## Constructors

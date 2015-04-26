@@ -1,5 +1,5 @@
 
-# class List
+# Class List
 Container class implementing simple abstract data type list.
 
 ## Constructors

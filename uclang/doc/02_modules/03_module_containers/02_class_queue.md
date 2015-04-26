@@ -1,5 +1,5 @@
 
-# class Queue
+# Class Queue
 Container class implementing simple abstract data type queue.
 
 ## Constructors
