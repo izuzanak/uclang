@@ -1,0 +1,457 @@
+
+import sys;
+import containers;
+import json;
+import websocket;
+import jit;
+import lang;
+
+class Main
+{
+  static m_bi_method_names =
+  [/*{{{*/
+    "operator_binary_equal#1",
+    "operator_binary_plus_equal#1",
+    "operator_binary_minus_equal#1",
+    "operator_binary_asterisk_equal#1",
+    "operator_binary_slash_equal#1",
+    "operator_binary_percent_equal#1",
+    "operator_binary_double_ls_br_equal#1",
+    "operator_binary_double_rs_br_equal#1",
+    "operator_binary_ampersand_equal#1",
+    "operator_binary_pipe_equal#1",
+    "operator_binary_circumflex_equal#1",
+    "operator_binary_double_ampersand#1",
+    "operator_binary_double_pipe#1",
+    "operator_binary_ampersand#1",
+    "operator_binary_pipe#1",
+    "operator_binary_circumflex#1",
+    "operator_binary_double_equal#1",
+    "operator_binary_exclamation_equal#1",
+    "operator_binary_rs_br#1",
+    "operator_binary_ls_br#1",
+    "operator_binary_rs_br_equal#1",
+    "operator_binary_ls_br_equal#1",
+    "operator_binary_double_rs_br#1",
+    "operator_binary_double_ls_br#1",
+    "operator_binary_plus#1",
+    "operator_binary_minus#1",
+    "operator_binary_asterisk#1",
+    "operator_binary_slash#1",
+    "operator_binary_percent#1",
+    "operator_unary_post_double_plus#0",
+    "operator_unary_post_double_minus#0",
+    "operator_unary_pre_double_plus#0",
+    "operator_unary_pre_double_minus#0",
+    "operator_unary_pre_plus#0",
+    "operator_unary_pre_minus#0",
+    "operator_unary_pre_exclamation#0",
+    "operator_unary_pre_tilde#0",
+    "operator_binary_le_br_re_br#1",
+    "compare#1",
+    "item#1",
+    "first_idx#0",
+    "last_idx#0",
+    "next_idx#1",
+    "prev_idx#1",
+    "next_item#0",
+    "length#0",
+    "to_string#0",
+    "print#0"
+  ];/*}}}*/
+
+  static m_modules = 
+  [/*{{{*/
+    "base",
+    "sys",
+    "containers",
+    "json",
+    "sys",
+    "jit"
+  ];/*}}}*/
+
+  static m_module_classes = new Dict(
+  [/*{{{*/
+    "base",
+    [/*{{{*/
+      "Blank",
+      "Char",
+      "Integer",
+      "Float",
+      "String",
+      "Array",
+      "Error",
+      "Exception",
+      "Type",
+      "Mutex",
+      "Thread",
+      "Delegate",
+      "Buffer"
+    ],/*}}}*/
+    "sys",
+    [/*{{{*/
+      "Sys",
+      "Pipe",
+      "File",
+      "SocketAddr",
+      "Socket",
+      "Regex",
+      "Signal",
+      "Poll",
+      "Timer",
+      "Clock"
+    ],/*}}}*/
+    "containers",
+    [/*{{{*/
+      "Stack",
+      "Queue",
+      "Set",
+      "List",
+      "Tree",
+      "Dict"
+    ],/*}}}*/
+    "json",
+    [/*{{{*/
+      "Json"
+    ],/*}}}*/
+    "websocket",
+    [/*{{{*/
+      "WsContext",
+      "WsConn",
+      "WsClient",
+      "WsBase64"
+    ],/*}}}*/
+    "jit",
+    [/*{{{*/
+      "JitContext",
+      "JitFunction"
+    ]/*}}}*/
+  ]);/*}}}*/
+
+  m_header_bic_idxs;
+  m_source_bic_idxs;
+
+  m_header_bimn_idxs;
+  m_source_bimn_idxs;
+
+  m_header_bivn_idxs;
+  m_source_bivn_idxs;
+
+  m_header_classes;
+  m_source_bism_idxs;
+  m_source_biv_values;
+
+  m_source_init_sp_classes;
+
+  m_processed_method_names;
+  m_processed_var_names;
+
+  // - parameter lists cache -
+  m_param_lists = new Dict();
+
+  public generate_param_lists(a_param_count)
+  {/*{{{*/
+
+    // - if parameter lists are not created yet -
+    if (!m_param_lists.has_key(a_param_count))
+    {
+      // - create new parameter lists -
+      decl_params = [];
+      call_params = [""];
+
+      param_idx = 0;
+      while (param_idx < a_param_count)
+      {
+        decl_params.push("UclVar op_%d" % param_idx);
+        call_params.push("op_%d" % param_idx);
+
+        ++param_idx;
+      }
+
+      // - remove empty string if method has no parameters -
+      if (call_params.length() <= 1)
+      {
+        call_params = [];
+      }
+
+      // - update parameter list cache -
+      m_param_lists[a_param_count] = [decl_params.to_string(","),call_params.to_string(",")];
+    }
+
+    // - return parameter lists from cache -
+    return m_param_lists[a_param_count];
+  }/*}}}*/
+
+  public process_variable_name(a_var)
+  {/*{{{*/
+    var_name = a_var.name();
+    var_name_id = "c_bi_vni_%s" % var_name;
+
+    // - if variable name vas not processed yet -
+    if (!m_processed_var_names.contain(var_name))
+    {
+      m_header_bivn_idxs.push("  static unsigned %s;" % var_name_id);
+      m_source_bivn_idxs.push("unsigned UclVar::%s;" % var_name_id);
+
+      m_processed_var_names.insert(var_name);
+    }
+  }/*}}}*/
+
+  public process_variable(a_class_name,a_var)
+  {/*{{{*/
+    var_name = a_var.name();
+
+    m_header_classes.push("    static UclVar %s;" % var_name);
+    m_source_biv_values.push("UclVar UclVar::%s::%s = UclVar(NO_INIT());" % [a_class_name,var_name]);
+  }/*}}}*/
+
+  public process_method_name(a_method)
+  {/*{{{*/
+    method_name = a_method.name();
+    method_name_id = "c_bi_mni_%s" % method_name.replace("#","_");
+
+    // - if method name was not processed yet -
+    if (!m_processed_method_names.contain(method_name))
+    {
+      m_header_bimn_idxs.push("  static unsigned %s;" % method_name_id);
+      m_source_bimn_idxs.push("unsigned UclVar::%s;" % method_name_id);
+
+      m_processed_method_names.insert(method_name);
+    }
+  }/*}}}*/
+
+  public process_static_method(a_class_name,a_method,a_static_decl,a_static_impl)
+  {/*{{{*/
+    if (a_method.is_static())
+    {
+      method_name = a_method.name();
+      method_id = "c_bi_mi_%s" % method_name.replace("#","_");
+
+      a_static_decl.push("    static unsigned %s" % method_id);
+      m_source_bism_idxs.push("unsigned UclVar::%s::%s;" % [a_class_name,method_id]);
+
+      name_split = method_name.split("#");
+      method_name_wp = name_split[0];
+      param_count = new Integer(name_split[1]);
+
+      // - generate parameter lists -
+      param_lists = generate_param_lists(param_count);
+
+      a_static_impl.push("    inline static %s(%s)" % [method_name_wp,param_lists[0]]);
+      a_static_impl.push("    {/*{{{*/");
+      a_static_impl.push("      return __static_call_%d(%s%s)" % [param_count,method_id,param_lists[1]]);
+      a_static_impl.push("    }/*}}}*/");
+      a_static_impl.push("");
+    }
+  }/*}}}*/
+
+  public process_constructor(a_class_name,a_class_id,a_method)
+  {/*{{{*/
+    method_name = a_method.name();
+    name_split = method_name.split("#");
+    method_name_wp = name_split[0];
+
+    // - if method is constructor -
+    if (method_name_wp == a_class_name)
+    {
+      method_name_id = "c_bi_mni_%s" % method_name.replace("#","_");
+      param_count = new Integer(name_split[1]);
+
+      // - generate parameter lists -
+      param_lists = generate_param_lists(param_count);
+
+      // - generate constructor code -
+      m_header_classes.push("  inline static UclVar %s(%s)" %
+          [a_class_name,param_lists[0]]);
+
+      m_header_classes.push("  {/*{{{*/");
+      m_header_classes.push("    __new_object_%d(%s,%s%s);" %
+          [param_count,a_class_id,method_name_id,param_lists[1]]);
+
+      m_header_classes.push("  }/*}}}*/");
+      m_header_classes.push("");
+    }
+  }/*}}}*/
+
+  public process_class(a_class)
+  {/*{{{*/
+    class_name = a_class.name();
+    class_id = "c_bi_class_%s" % class_name;
+
+    class_methods = a_class.methods();
+    class_vars = a_class.vars();
+
+    // - append class comment string -
+    class_comment_str = "  // - class %s -" % class_name;
+    m_header_bimn_idxs.push(class_comment_str);
+    m_header_bivn_idxs.push(class_comment_str);
+    m_header_classes.push(class_comment_str);
+
+    m_header_bic_idxs.push("  static unsigned %s;" % class_id);
+    m_source_bic_idxs.push("unsigned UclVar::%s;" % class_id);
+    m_source_init_sp_classes.push("    UCLVAR_RETRIEVE_CLASS_IDX(%s,\"%s\");" % [class_name,class_name]);
+
+    has_variables = 0;
+    has_static_methods = 0;
+
+    // - process class method names -
+    for (method <- class_methods)
+    {
+      if (method.is_static())
+      {
+        has_static_methods = 1;
+      }
+
+      process_method_name(method);
+    }
+
+    // - process class variable names -
+    for (var <- class_vars)
+    {
+      has_variables = 1;
+      process_variable_name(var);
+    }
+
+    // - if class has variables or static methods -
+    if (has_variables || has_static_methods)
+    {
+      // - generate class code -
+      m_header_classes.push("  class %s" % class_name);
+      m_header_classes.push("  {/*{{{*/");
+
+      static_decl = [];
+      static_impl = [];
+
+      // - process static methods -
+      if (has_static_methods)
+      {
+        static_decl.push("    friend class UclVar;");
+        static_decl.push("    protected:");
+
+        for (method <- class_methods)
+        {
+          process_static_method(class_name,method,static_decl,static_impl);
+        }
+
+        // - append static method declaration -
+        m_header_classes += static_decl;
+        m_header_classes.push("");
+      }
+
+      // - process class variables -
+      if (has_variables)
+      {
+        m_header_classes.push("    public:");
+
+        for (var <- class_vars)
+        {
+          process_variable(class_name,var);
+        }
+
+        m_header_classes.push("");
+      }
+
+      // - append static method implementation -
+      if (static_impl.length() > 0)
+      {
+        m_header_classes += static_impl;
+      }
+
+      // - generate class code -
+      m_header_classes.push("  }/*}}}*/");
+      m_header_classes.push("");
+    }
+
+    // - process class constructors -
+    for (method <- class_methods)
+    {
+      process_constructor(class_name,class_id,method);
+    }
+  }/*}}}*/
+
+  public Main()
+  {/*{{{*/
+    m_header_bic_idxs = [];
+    m_header_bic_idxs.push("  // - built in class indexes declaration -");
+
+    m_source_bic_idxs = [];
+    m_source_bic_idxs.push("// - built in class indexes -");
+
+    m_header_bimn_idxs = [];
+    m_header_bimn_idxs.push("  // - built in method name indexes declaration -");
+
+    m_source_bimn_idxs = [];
+    m_source_bimn_idxs.push("// - built in method name indexes -");
+
+    for (bi_method_name <- m_bi_method_names)
+    {
+      bi_method_name_id = bi_method_name.replace("#","_");
+
+      m_header_bimn_idxs.push("  static unsigned c_bi_mni_%s;" % bi_method_name_id);
+      m_source_bimn_idxs.push("unsigned UclVar::%s;" % bi_method_name_id);
+    }
+
+    m_header_bivn_idxs = [];
+    m_header_bivn_idxs.push("  // - built in variable name indexes declaration -");
+
+    m_source_bivn_idxs = [];
+    m_source_bivn_idxs.push("// - built in variable name indexes -");
+
+    m_header_classes = [];
+    m_header_classes.push("  // - built in classes declaration -");
+
+    m_source_bism_idxs = [];
+    m_source_bism_idxs.push("// - built in static method indexes -");
+
+    m_source_biv_values = [];
+    m_source_biv_values.push("// - built in variable values -");
+
+    // - initialize script parser classes -
+    m_source_init_sp_classes = [];
+
+    // - set of already processed method names -
+    m_processed_method_names = new Set(m_bi_method_names);
+
+    // - set of already processed variable names -
+    m_processed_var_names = new Set();
+
+    // - process modules -
+    for (module_name <- m_modules)
+    {
+      m_source_init_sp_classes.push(
+"  // - module %s -
+  if (a_modules[c_uclvar_module_%s])
+  {" % [module_name,module_name]);
+
+      for (class_name <- m_module_classes[module_name])
+      {
+        process_class(Lang.cls(class_name));
+      }
+
+      m_source_init_sp_classes.push(
+"  }
+");
+    }
+
+    // FIXME debug output
+    //("%s\n" % m_header_bic_idxs.to_string("\n")).print();
+    //("%s\n" % m_source_bic_idxs.to_string("\n")).print();
+    //("%s\n" % m_header_bimn_idxs.to_string("\n")).print();
+    //("%s\n" % m_source_bimn_idxs.to_string("\n")).print();
+    //("%s\n" % m_header_bivn_idxs.to_string("\n")).print();
+    //("%s\n" % m_source_bivn_idxs.to_string("\n")).print();
+    //("%s\n" % m_header_classes.to_string("\n")).print();
+    //("%s\n" % m_source_bism_idxs.to_string("\n")).print();
+    //("%s\n" % m_source_biv_values.to_string("\n")).print();
+    ("%s\n" % m_source_init_sp_classes.to_string("\n")).print();
+
+    // FIXME debug output
+    //("%s\n" % m_processed_method_names.to_string()).print();
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    new Main();
+  }/*}}}*/
+}
+
