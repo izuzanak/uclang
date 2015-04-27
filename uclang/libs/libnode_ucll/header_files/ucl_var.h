@@ -378,7 +378,7 @@ class UclVar
   // - class JIT_FUNCTION -
   static unsigned c_bi_mni_signature_0;
 
-  // - built in variable name indexes -
+  // - built in constants name indexes -
 
   // - class MUTEX -
   static unsigned c_bi_vni_ERROR_INVALID;

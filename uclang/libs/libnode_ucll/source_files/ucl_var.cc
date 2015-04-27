@@ -302,7 +302,7 @@ unsigned UclVar::c_bi_mni_create_fun_1;
 
 unsigned UclVar::c_bi_mni_signature_0;
 
-// - built in variable name indexes -
+// - built in constants name indexes -
 unsigned UclVar::c_bi_vni_ERROR_INVALID;
 unsigned UclVar::c_bi_vni_ERROR_DEADLOCK;
 unsigned UclVar::c_bi_vni_ERROR_BUSY;
@@ -392,6 +392,7 @@ unsigned UclVar::c_bi_vni_TYPE_U64;
 unsigned UclVar::c_bi_vni_TYPE_F32;
 unsigned UclVar::c_bi_vni_TYPE_F64;
 
+// - static method indexes -
 unsigned UclVar::Sys::c_bi_mi_sleep_1;
 unsigned UclVar::Sys::c_bi_mi_srand_1;
 unsigned UclVar::Sys::c_bi_mi_rand_0;
@@ -428,6 +429,7 @@ unsigned UclVar::Json::c_bi_mi_parse_1;
 unsigned UclVar::WsBase64::c_bi_mi_encode_1;
 unsigned UclVar::WsBase64::c_bi_mi_decode_1;
 
+// - initialize built in constants values -
 UclVar UclVar::Mutex::ERROR_INVALID    = UclVar(NO_INIT());
 UclVar UclVar::Mutex::ERROR_DEADLOCK   = UclVar(NO_INIT());
 UclVar UclVar::Mutex::ERROR_BUSY       = UclVar(NO_INIT());
