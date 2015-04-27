@@ -66,6 +66,7 @@ void bic_class_ref_clear(interpreter_thread_s &it,location_s *location_ptr);
 bool bic_class_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_class_ref_method_ClassRef_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_class_ref_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_class_ref_method_is_built_in_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_class_ref_method_parent_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_class_ref_method_classes_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_class_ref_method_methods_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -87,6 +88,7 @@ void bic_method_ref_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_method_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_method_ref_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_method_ref_method_is_static_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_method_ref_method_parent_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_method_ref_method_params_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_method_ref_method_param_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
