@@ -412,14 +412,6 @@ class Main
     m_source_bimn_idxs = [];
     m_source_bimn_idxs.push("// - built in method name indexes -");
 
-    for (bi_method_name <- m_bi_method_names)
-    {
-      bi_method_name_id = bi_method_name.replace("#","_");
-
-      m_header_bimn_idxs.push("  static unsigned c_bi_mni_%s;" % bi_method_name_id);
-      m_source_bimn_idxs.push("unsigned UclVar::%s;" % bi_method_name_id);
-    }
-
     m_header_bivn_idxs = [];
     m_header_bivn_idxs.push("  // - built in variable name indexes declaration -");
 
@@ -440,8 +432,30 @@ class Main
 
     m_source_isp_bic_idxs = [];
     m_source_isp_bimn_idxs = [];
+    m_source_isp_bimn_idxs.push("  // - retrieve method name indexes -");
 
-    // FIXME TODO insert predefined bi methods to m_source_isp_bimn_idxs ...
+    // - insert built in methods -
+    {
+      for (bi_method_name <- m_bi_method_names)
+      {
+        bi_method_name_underscore = bi_method_name.replace("#","_");
+        bi_method_name_id = "c_bi_mni_%s" % bi_method_name_underscore;
+
+        m_header_bimn_idxs.push("  static unsigned %s;" % bi_method_name_id);
+        m_source_bimn_idxs.push("unsigned UclVar::%s;" % bi_method_name_id);
+
+        if (bi_method_name.get_idx("operator_") == 0)
+        {
+          m_source_isp_bimn_idxs.push("  %s = c_built_in_method_idxs[c_%s];" % [bi_method_name_id,bi_method_name.split("#")[0]]);
+        }
+        else
+        {
+          m_source_isp_bimn_idxs.push("  %s = c_built_in_method_idxs[c_built_in_method_%s];" % [bi_method_name_id,bi_method_name_underscore]);
+        }
+      }
+
+      m_source_isp_bimn_idxs.push("");
+    }
 
     // - set of already processed method names -
     m_processed_method_names = new Set(m_bi_method_names);
@@ -452,28 +466,26 @@ class Main
     // - process modules -
     for (module_name <- m_modules)
     {
-      m_source_isp_bic_idxs.push(
+      module_test_str = (
 "  // - module %s -
   if (a_modules[c_uclvar_module_%s])
   {" % [module_name,module_name]);
 
-      m_source_isp_bimn_idxs.push(
-"  // - module %s -
-  if (a_modules[c_uclvar_module_%s])
-  {" % [module_name,module_name]);
+      m_source_isp_bic_idxs.push(module_test_str);
+      m_source_isp_bimn_idxs.push(module_test_str);
 
+      // - process module classes -
       for (class_name <- m_module_classes[module_name])
       {
         process_class(Lang.cls(class_name));
       }
 
-      m_source_isp_bic_idxs.push(
+      module_end_str = (
 "  }
 ");
 
-      m_source_isp_bimn_idxs.push(
-"  }
-");
+      m_source_isp_bic_idxs.push(module_end_str);
+      m_source_isp_bimn_idxs.push(module_end_str);
     }
 
     // FIXME debug output
@@ -484,11 +496,11 @@ class Main
     //("%s\n" % m_header_bivn_idxs.to_string("\n")).print();
     //("%s\n" % m_source_bivn_idxs.to_string("\n")).print();
     //("%s\n" % m_header_classes.to_string("\n")).print();
-    ("%s\n" % m_header_methods.to_string("\n")).print();
+    //("%s\n" % m_header_methods.to_string("\n")).print();
     //("%s\n" % m_source_bism_idxs.to_string("\n")).print();
     //("%s\n" % m_source_biv_values.to_string("\n")).print();
     //("%s\n" % m_source_isp_bic_idxs.to_string("\n")).print();
-    //("%s\n" % m_source_isp_bimn_idxs.to_string("\n")).print();
+    ("%s\n" % m_source_isp_bimn_idxs.to_string("\n")).print();
 
   }/*}}}*/
 
