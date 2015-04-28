@@ -8,7 +8,7 @@ built_in_class_s dict_class =
 {/*{{{*/
   "Dict",
   c_modifier_public | c_modifier_final,
-  24, dict_methods,
+  26, dict_methods,
   0, dict_variables,
   bic_dict_consts,
   bic_dict_init,
@@ -93,6 +93,11 @@ built_in_method_s dict_methods[] =
     bic_dict_method_first_key_0
   },
   {
+    "last_key#0",
+    c_modifier_public | c_modifier_final,
+    bic_dict_method_last_key_0
+  },
+  {
     "next_key#1",
     c_modifier_public | c_modifier_final,
     bic_dict_method_next_key_1
@@ -121,6 +126,11 @@ built_in_method_s dict_methods[] =
     "first_idx#0",
     c_modifier_public | c_modifier_final,
     bic_dict_method_first_idx_0
+  },
+  {
+    "last_idx#0",
+    c_modifier_public | c_modifier_final,
+    bic_dict_method_last_idx_0
   },
   {
     "next_idx#1",
@@ -938,6 +948,32 @@ bool bic_dict_method_first_key_0(interpreter_thread_s &it,unsigned stack_base,ul
   return true;
 }/*}}}*/
 
+bool bic_dict_method_last_key_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;
+
+  if (tree_ptr->root_idx != c_idx_not_exist)
+  {
+    unsigned max_value_idx = tree_ptr->get_max_value_idx(tree_ptr->root_idx);
+
+    location_s *location_ptr = (location_s *)tree_ptr->data[max_value_idx].object.key;
+    location_ptr->v_reference_cnt.atomic_inc();
+
+    pointer &res_location = it.data_stack[res_loc_idx];
+    BIC_SET_RESULT(location_ptr)
+  }
+  else
+  {
+    pointer &res_location = it.data_stack[res_loc_idx];
+    BIC_SET_RESULT_BLANK();
+  }
+
+  return true;
+}/*}}}*/
+
 bool bic_dict_method_next_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
@@ -1112,6 +1148,29 @@ bool bic_dict_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,ul
   if (tree_ptr->root_idx != c_idx_not_exist)
   {
     long long int result = tree_ptr->get_min_value_idx(tree_ptr->root_idx);
+
+    pointer &res_location = it.data_stack[res_loc_idx];
+    BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+  }
+  else
+  {
+    pointer &res_location = it.data_stack[res_loc_idx];
+    BIC_SET_RESULT_BLANK();
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_dict_method_last_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)((location_s *)dst_location)->v_data_ptr;
+
+  if (tree_ptr->root_idx != c_idx_not_exist)
+  {
+    long long int result = tree_ptr->get_max_value_idx(tree_ptr->root_idx);
 
     pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SIMPLE_SET_RES(c_bi_class_integer,result);

@@ -47,6 +47,7 @@ bool bic_set_method_contain_1(interpreter_thread_s &it,unsigned stack_base,uli *
 bool bic_set_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_set_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_set_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_set_method_last_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_set_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_set_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_set_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

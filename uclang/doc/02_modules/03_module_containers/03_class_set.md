@@ -557,6 +557,28 @@ set.first_idx(): 0
 set.first_idx(): <blank>
 ```
 
+#### Method `last_idx#0`
+Retrieve index of last element in object of class `Set`.
+
+##### Return:
+* Object of class `Integer` if object of class `Set` contain some elements.
+* Object of class `Blank` otherwise.
+
+##### Example:
+```cpp
+set = new Set([1,2,3]);
+("set.last_idx(): %s\n" % set.last_idx().to_string()).print();
+set.remove(3);
+("set.last_idx(): %s\n" % set.last_idx().to_string()).print();
+set.clear();
+("set.last_idx(): %s\n" % set.last_idx().to_string()).print();
+```
+```
+set.last_idx(): 3
+set.last_idx(): 2
+set.last_idx(): <blank>
+```
+
 #### Method `next_idx#1`
 From object of class `Set` retrieve index of element following element
 identified by method parameter.

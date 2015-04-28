@@ -29,6 +29,7 @@ class Main
     // public final compare#1
     // public final item#1
     // public final first_idx#0
+    // public final last_idx#0
     // public final next_idx#1
     // public final length#0
     // public final to_string#0
@@ -122,6 +123,7 @@ class Main
     // public final compare#1
     // public final item#1
     // public final first_idx#0
+    // public final last_idx#0
     // public final next_idx#1
     // public final length#0
     // public final to_string#0
