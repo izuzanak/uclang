@@ -27,11 +27,13 @@ class Main
     // public final first_key#0
     // public final last_key#0
     // public final next_key#1
+    // public final prev_key#1
     // public final compare#1
     // public final item#1
     // public final first_idx#0
     // public final last_idx#0
     // public final next_idx#1
+    // public final prev_idx#1
     // public final length#0
     // public final to_string#0
     // public final to_string#1
@@ -129,10 +131,15 @@ class Main
       key = dict.next_key(key);
     }
 
-    Tutorial.note("Dict method last_key#0");
+    Tutorial.note("Dict methods last_key#0 and prev_key#1");
     dict = new Dict(["One",1,"Two",2,"Three",3,"Four",4]);
     ("dict -> %s\n" % dict.to_string()).print();
-    ("dict.last_key() -> %s\n" % dict.last_key().to_string()).print();
+    key = dict.last_key();
+    while (Blank != key)
+    {
+      ("key  -> %s\n" % key.to_string()).print();
+      key = dict.prev_key(key);
+    }
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl
@@ -142,6 +149,7 @@ class Main
     // public final first_idx#0
     // public final last_idx#0
     // public final next_idx#1
+    // public final prev_idx#1
     // public final length#0
     // public final to_string#0
     // public final to_string#1

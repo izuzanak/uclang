@@ -609,6 +609,36 @@ idx: 2
 idx: 3
 ```
 
+#### Method `prev_idx#1`
+From object of class `Set` retrieve index of element preceding element
+identified by method parameter.
+
+##### Parameters:
+
+1. Type convertible to integer.
+
+##### Return:
+* Object of class `Integer` if there is some element preceding element
+  identified by method parameter.
+* Object of class `Blank` otherwise.
+
+##### Example:
+```cpp
+set = new Set([1,2,3]);
+("set: %s\n" % set.to_string()).print();
+idx = set.last_idx();
+do {
+  ("idx: %s\n" % idx.to_string()).print();
+  idx = set.prev_idx(idx);
+} while(Blank != idx);
+```
+```
+set: [1,2,3]
+idx: 3
+idx: 2
+idx: 0
+```
+
 #### Method `length#0`
 Retrieve count of elements in object of class `Set`.
 

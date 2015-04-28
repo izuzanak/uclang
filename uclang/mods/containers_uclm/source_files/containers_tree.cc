@@ -8,7 +8,7 @@ built_in_class_s tree_class =
 {/*{{{*/
   "Tree",
   c_modifier_public | c_modifier_final,
-  23, tree_methods,
+  24, tree_methods,
   0, tree_variables,
   bic_tree_consts,
   bic_tree_init,
@@ -121,6 +121,11 @@ built_in_method_s tree_methods[] =
     "next_idx#1",
     c_modifier_public | c_modifier_final,
     bic_tree_method_next_idx_1
+  },
+  {
+    "prev_idx#1",
+    c_modifier_public | c_modifier_final,
+    bic_tree_method_prev_idx_1
   },
   {
     "length#0",
@@ -962,6 +967,35 @@ bool bic_tree_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli
 
   pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_CONT_INDEX(next_idx);
+
+  return true;
+}/*}}}*/
+
+bool bic_tree_method_prev_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int index;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,index))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("prev_idx#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  BIC_TREE_CHECK_INDEX();
+
+  long long int prev_idx = tree_ptr->get_prev_idx(index);
+
+  pointer &res_location = it.data_stack[res_loc_idx];
+  BIC_SET_RESULT_CONT_INDEX(prev_idx);
 
   return true;
 }/*}}}*/

@@ -1,5 +1,5 @@
  ---------------------------------------- 
-Exception: ERROR: in file: "03_class_set.ucl" on line: 171
+Exception: ERROR: in file: "03_class_set.ucl" on line: 172
     ("set.remove(6) -> %s\n" % set.remove(6).to_string()).print();
 
 Set does not contain requested element

@@ -31,6 +31,7 @@ class Main
     // public final first_idx#0
     // public final last_idx#0
     // public final next_idx#1
+    // public final prev_idx#1
     // public final length#0
     // public final to_string#0
     // public final to_string#1
@@ -125,6 +126,7 @@ class Main
     // public final first_idx#0
     // public final last_idx#0
     // public final next_idx#1
+    // public final prev_idx#1
     // public final length#0
     // public final to_string#0
     // public final to_string#1

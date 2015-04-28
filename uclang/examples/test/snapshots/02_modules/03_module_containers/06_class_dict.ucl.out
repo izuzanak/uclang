@@ -82,10 +82,13 @@ key  -> Two
 key  -> Four
 key  -> Three
 
-=== Dict method last_key#0 =====================================================
+=== Dict methods last_key#0 and prev_key#1 =====================================
 
 dict -> [One:1,Two:2,Four:4,Three:3]
-dict.last_key() -> Three
+key  -> Three
+key  -> Four
+key  -> Two
+key  -> One
 
 === Difference of to_string#0 and to_string#1 ==================================
 

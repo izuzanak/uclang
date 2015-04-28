@@ -36,6 +36,7 @@ bool bic_dict_method_remove_key_1(interpreter_thread_s &it,unsigned stack_base,u
 bool bic_dict_method_first_key_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dict_method_last_key_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dict_method_next_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_dict_method_prev_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dict_method_lee_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dict_method_gre_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dict_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -43,6 +44,7 @@ bool bic_dict_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 bool bic_dict_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dict_method_last_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dict_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_dict_method_prev_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dict_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dict_method_to_string_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
