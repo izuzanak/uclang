@@ -186,7 +186,7 @@ class Main
     return m_param_lists[a_param_count];
   }/*}}}*/
 
-  public process_variable_name(a_var)
+  public process_variable(a_class_name,a_var,a_class_vars)
   {/*{{{*/
     var_name = a_var.name();
     var_name_id = "c_bi_vni_%s" % var_name;
@@ -200,20 +200,49 @@ class Main
       // - insert variable name to processed variables names set -
       m_processed_var_names.insert(var_name);
     }
-  }/*}}}*/
 
-  public process_variable(a_class_name,a_var)
-  {/*{{{*/
-    var_name = a_var.name();
-
-    m_header_classes.push("    static UclVar %s;" % var_name);
+    a_class_vars.push("    static UclVar %s;" % var_name);
     m_source_biv_values.push("UclVar UclVar::%s::%s = UclVar(NO_INIT());" % [a_class_name,var_name]);
   }/*}}}*/
 
-  public process_method_name(a_class_name,a_method)
+  public process_method(a_class_name,a_class_id,a_method,a_class_constrs,a_static_decl,a_static_impl)
   {/*{{{*/
     method_name = a_method.name();
     method_name_id = "c_bi_mni_%s" % method_name.replace("#","_");
+
+    name_split = method_name.split("#");
+    method_name_wp = name_split[0];
+    param_count = new Integer(name_split[1]);
+
+    // - generate parameter lists -
+    param_lists = generate_param_lists(param_count);
+
+    // - if method is constructor -
+    if (method_name_wp == a_class_name)
+    {
+      a_class_constrs.push("  inline static UclVar %s(%s)" % [a_class_name,param_lists[0]]);
+      a_class_constrs.push("  {/*{{{*/");
+      a_class_constrs.push("    __new_object_%d(%s,%s%s);" % [param_count,a_class_id,method_name_id,param_lists[1]]);
+      a_class_constrs.push("  }/*}}}*/");
+      a_class_constrs.push("");
+    }
+    else
+    {
+      // - if method is static -
+      if (a_method.is_static())
+      {
+        method_id = "c_bi_mi_%s" % method_name.replace("#","_");
+
+        a_static_decl.push("    static unsigned %s" % method_id);
+        m_source_bism_idxs.push("unsigned UclVar::%s::%s;" % [a_class_name,method_id]);
+
+        a_static_impl.push("    inline static %s(%s)" % [method_name_wp,param_lists[0]]);
+        a_static_impl.push("    {/*{{{*/");
+        a_static_impl.push("      return __static_call_%d(%s%s)" % [param_count,method_id,param_lists[1]]);
+        a_static_impl.push("    }/*}}}*/");
+        a_static_impl.push("");
+      }
+    }
 
     // - if method name was not processed yet -
     if (!m_processed_method_names.contain(method_name))
@@ -221,22 +250,11 @@ class Main
       m_header_bimn_idxs.push("  static unsigned %s;" % method_name_id);
       m_source_bimn_idxs.push("unsigned UclVar::%s;" % method_name_id);
 
-      name_split = method_name.split("#");
-      method_name_wp = name_split[0];
-      param_count = new Integer(name_split[1]);
-
-      // - generate parameter lists -
-      param_lists = generate_param_lists(param_count);
-
-      // - if method is not constructor -
-      if (method_name_wp != a_class_name)
-      {
-        m_header_methods.push("  inline UclVar %s(%s)" % [method_name_wp,param_lists[0]]);
-        m_header_methods.push("  {/*{{{*/");
-        m_header_methods.push("    return __call_%d(%s%s);" % [param_count,method_name_id,param_lists[1]]);
-        m_header_methods.push("  }/*}}}*/");
-        m_header_methods.push("");
-      }
+      m_header_methods.push("  inline UclVar %s(%s)" % [method_name_wp,param_lists[0]]);
+      m_header_methods.push("  {/*{{{*/");
+      m_header_methods.push("    return __call_%d(%s%s);" % [param_count,method_name_id,param_lists[1]]);
+      m_header_methods.push("  }/*}}}*/");
+      m_header_methods.push("");
 
       // - insert method name to processed methods names set -
       m_processed_method_names.insert(method_name);
@@ -249,66 +267,10 @@ class Main
     }
   }/*}}}*/
 
-  public process_static_method(a_class_name,a_method,a_static_decl,a_static_impl)
-  {/*{{{*/
-    if (a_method.is_static())
-    {
-      method_name = a_method.name();
-      method_id = "c_bi_mi_%s" % method_name.replace("#","_");
-
-      a_static_decl.push("    static unsigned %s" % method_id);
-      m_source_bism_idxs.push("unsigned UclVar::%s::%s;" % [a_class_name,method_id]);
-
-      name_split = method_name.split("#");
-      method_name_wp = name_split[0];
-      param_count = new Integer(name_split[1]);
-
-      // - generate parameter lists -
-      param_lists = generate_param_lists(param_count);
-
-      a_static_impl.push("    inline static %s(%s)" % [method_name_wp,param_lists[0]]);
-      a_static_impl.push("    {/*{{{*/");
-      a_static_impl.push("      return __static_call_%d(%s%s)" % [param_count,method_id,param_lists[1]]);
-      a_static_impl.push("    }/*}}}*/");
-      a_static_impl.push("");
-    }
-  }/*}}}*/
-
-  public process_constructor(a_class_name,a_class_id,a_method)
-  {/*{{{*/
-    method_name = a_method.name();
-    name_split = method_name.split("#");
-    method_name_wp = name_split[0];
-
-    // - if method is constructor -
-    if (method_name_wp == a_class_name)
-    {
-      method_name_id = "c_bi_mni_%s" % method_name.replace("#","_");
-      param_count = new Integer(name_split[1]);
-
-      // - generate parameter lists -
-      param_lists = generate_param_lists(param_count);
-
-      // - generate constructor code -
-      m_header_classes.push("  inline static UclVar %s(%s)" %
-          [a_class_name,param_lists[0]]);
-
-      m_header_classes.push("  {/*{{{*/");
-      m_header_classes.push("    __new_object_%d(%s,%s%s);" %
-          [param_count,a_class_id,method_name_id,param_lists[1]]);
-
-      m_header_classes.push("  }/*}}}*/");
-      m_header_classes.push("");
-    }
-  }/*}}}*/
-
   public process_class(a_class)
   {/*{{{*/
     class_name = a_class.name();
     class_id = "c_bi_class_%s" % class_name;
-
-    class_methods = a_class.methods();
-    class_vars = a_class.vars();
 
     // - append class comment string -
     class_comment_str = "  // - class %s -" % class_name;
@@ -320,63 +282,44 @@ class Main
     m_source_bic_idxs.push("unsigned UclVar::%s;" % class_id);
     m_source_isp_bic_idxs.push("    UCLVAR_RETRIEVE_CLASS_IDX(%s,\"%s\");" % [class_id,class_name]);
 
-    has_variables = 0;
-    has_static_methods = 0;
+    class_constrs = [];
+    class_vars = [];
+    static_decl = [];
+    static_impl = [];
 
-    // - process class method names -
-    for (method <- class_methods)
+    // - process class methods -
+    for (method <- a_class.methods())
     {
-      if (method.is_static())
-      {
-        has_static_methods = 1;
-      }
-
-      process_method_name(class_name,method);
+      process_method(class_name,class_id,method,class_constrs,static_decl,static_impl);
     }
 
-    // - process class variable names -
-    for (var <- class_vars)
+    // - process class variables -
+    for (var <- a_class.vars())
     {
-      has_variables = 1;
-      process_variable_name(var);
+      process_variable(class_name,var,class_vars);
     }
 
     // - if class has variables or static methods -
-    if (has_variables || has_static_methods)
+    if (class_vars.length() > 0 || static_decl.length() > 0)
     {
       // - generate class code -
       m_header_classes.push("  class %s" % class_name);
       m_header_classes.push("  {/*{{{*/");
 
-      static_decl = [];
-      static_impl = [];
-
-      // - process static methods -
-      if (has_static_methods)
+      // - process static methods of class -
+      if (static_decl.length() > 0)
       {
-        static_decl.push("    friend class UclVar;");
-        static_decl.push("    protected:");
-
-        for (method <- class_methods)
-        {
-          process_static_method(class_name,method,static_decl,static_impl);
-        }
-
-        // - append static method declaration -
+        m_header_classes.push("    friend class UclVar;");
+        m_header_classes.push("    protected:");
         m_header_classes += static_decl;
         m_header_classes.push("");
       }
 
-      // - process class variables -
-      if (has_variables)
+      // - process variables of class -
+      if (class_vars.length() > 0)
       {
         m_header_classes.push("    public:");
-
-        for (var <- class_vars)
-        {
-          process_variable(class_name,var);
-        }
-
+        m_header_classes += class_vars;
         m_header_classes.push("");
       }
 
@@ -391,11 +334,8 @@ class Main
       m_header_classes.push("");
     }
 
-    // - process class constructors -
-    for (method <- class_methods)
-    {
-      process_constructor(class_name,class_id,method);
-    }
+    // - append class constructors -
+    m_header_classes += class_constrs;
   }/*}}}*/
 
   public Main()
@@ -434,7 +374,7 @@ class Main
     m_source_isp_bimn_idxs = [];
     m_source_isp_bimn_idxs.push("  // - retrieve method name indexes -");
 
-    // - insert built in methods -
+    // - insert predefined built in methods -
     {
       for (bi_method_name <- m_bi_method_names)
       {
@@ -495,12 +435,12 @@ class Main
     //("%s\n" % m_source_bimn_idxs.to_string("\n")).print();
     //("%s\n" % m_header_bivn_idxs.to_string("\n")).print();
     //("%s\n" % m_source_bivn_idxs.to_string("\n")).print();
-    //("%s\n" % m_header_classes.to_string("\n")).print();
+    ("%s\n" % m_header_classes.to_string("\n")).print();
     //("%s\n" % m_header_methods.to_string("\n")).print();
     //("%s\n" % m_source_bism_idxs.to_string("\n")).print();
     //("%s\n" % m_source_biv_values.to_string("\n")).print();
     //("%s\n" % m_source_isp_bic_idxs.to_string("\n")).print();
-    ("%s\n" % m_source_isp_bimn_idxs.to_string("\n")).print();
+    //("%s\n" % m_source_isp_bimn_idxs.to_string("\n")).print();
 
   }/*}}}*/
 
