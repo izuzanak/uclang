@@ -787,7 +787,7 @@ enum
     }\
     \
     /* - get return value - */\
-    location_s *ret_location = (location_s *)IT.get_stack_value(new_stack_base);\
+    location_s *ret_location = (location_s *)IT.data_stack[new_stack_base];\
     \
     ret_location->v_reference_cnt.atomic_inc();\
     TRG_LOCATION_PTR = ret_location;\
