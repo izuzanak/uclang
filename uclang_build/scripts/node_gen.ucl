@@ -136,6 +136,8 @@ class Main
     ]/*}}}*/
   ]);/*}}}*/
 
+  m_header_mod_idxs;
+
   m_header_bic_idxs;
   m_source_bic_idxs;
 
@@ -351,6 +353,8 @@ class Main
 
   public Main()
   {/*{{{*/
+    m_header_mod_idxs = [];
+
     m_header_bic_idxs = [];
     m_header_bic_idxs.push("  // - built in class indexes declaration -");
 
@@ -441,8 +445,11 @@ class Main
     m_processed_var_names = new Set();
 
     // - process modules -
+    first_module = 1;
     for (module_name <- m_modules)
     {
+      m_header_mod_idxs.push("  c_uclvar_module_%s%s," % [module_name,first_module ? " = 0" : ""]);
+
       module_test_str = (
 "  // - module %s -
   if (a_modules[c_uclvar_module_%s])
@@ -469,11 +476,17 @@ class Main
       m_source_isp_bivn_idxs.push(module_end_str);
       m_source_isp_bism_idxs.push(module_end_str);
       m_source_ii_bisc.push(module_end_str);
+
+      // - reset first module flag -
+      first_module = 0;
     }
 
+    m_header_mod_idxs.push("  c_uclvar_module_count");
+
     // FIXME debug output
+    ("%s\n" % m_header_mod_idxs.to_string("\n")).print();
     //("%s\n" % m_header_bic_idxs.to_string("\n")).print();
-    ("%s\n" % m_header_bimn_idxs.to_string("\n")).print();
+    //("%s\n" % m_header_bimn_idxs.to_string("\n")).print();
     //("%s\n" % m_header_bivn_idxs.to_string("\n")).print();
     //("%s\n" % m_header_classes.to_string("\n")).print();
     //("%s\n" % m_header_methods.to_string("\n")).print();
