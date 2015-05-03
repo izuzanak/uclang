@@ -48,17 +48,17 @@ class Main
     "operator_unary_pre_minus#0",
     "operator_unary_pre_exclamation#0",
     "operator_unary_pre_tilde#0",
-    "operator_binary_le_br_re_br#1",
-    "compare#1",
-    "item#1",
-    "first_idx#0",
-    "last_idx#0",
-    "next_idx#1",
-    "prev_idx#1",
-    "next_item#0",
-    "length#0",
-    "to_string#0",
-    "print#0"
+    "operator_binary_le_br_re_br#1"
+    //"compare#1",
+    //"item#1",
+    //"first_idx#0",
+    //"last_idx#0",
+    //"next_idx#1",
+    //"prev_idx#1",
+    //"next_item#0",
+    //"length#0",
+    //"to_string#0",
+    //"print#0"
   ];/*}}}*/
 
   static m_bi_method_names_set = new Set(m_bi_method_names);
@@ -70,7 +70,7 @@ class Main
     "sys",
     "containers",
     "json",
-    "sys",
+    "websocket",
     "jit"
   ];/*}}}*/
 
@@ -136,6 +136,52 @@ class Main
     ]/*}}}*/
   ]);/*}}}*/
 
+  static m_name_blacklist = new Set(
+  [/*{{{*/
+    "SIGINT",
+    "SIGTERM",
+    "SIGHUP",
+    "SIGQUIT",
+    "SIGILL",
+    "SIGTRAP",
+    "SIGABRT",
+    "SIGIOT",
+    "SIGBUS",
+    "SIGFPE",
+    "SIGKILL",
+    "SIGUSR1",
+    "SIGSEGV",
+    "SIGUSR2",
+    "SIGPIPE",
+    "SIGALRM",
+    "SIGSTKFLT",
+    "SIGCHLD",
+    "SIGCONT",
+    "SIGSTOP",
+    "SIGTSTP",
+    "SIGTTIN",
+    "SIGTTOU",
+    "SIGURG",
+    "SIGXCPU",
+    "SIGXFSZ",
+    "SIGVTALRM",
+    "SIGPROF",
+    "SIGWINCH",
+    "SIGIO",
+    "SIGPOLL",
+    "SIGPWR",
+    "SIGSYS",
+    "SIGUNUSED",
+    "SIGRTMIN",
+    "SIGRTMAX",
+    "CLOCK_REALTIME",
+    "CLOCK_MONOTONIC",
+    "CLOCK_PROCESS_CPUTIME_ID",
+    "CLOCK_THREAD_CPUTIME_ID",
+    "isnan#0",
+    "throw#0"
+  ]);/*}}}*/
+
   m_header_mod_idxs;
 
   m_header_bic_idxs;
@@ -198,9 +244,20 @@ class Main
     return m_param_lists[a_param_count];
   }/*}}}*/
 
+  public adjust_name(a_name)
+  {/*{{{*/
+    if (m_name_blacklist.contain(a_name))
+    {
+      return "_%s" % a_name;
+    }
+
+    return a_name;
+  }/*}}}*/
+
   public process_variable(a_class_name,a_class_id,a_var,a_class_vars)
   {/*{{{*/
-    var_name = a_var.name();
+    var_orig_name = a_var.name();
+    var_name = adjust_name(var_orig_name);
     var_name_id = "c_bi_vni_%s" % var_name;
 
     // - if variable name vas not processed yet -
@@ -208,7 +265,7 @@ class Main
     {
       m_header_bivn_idxs.push("  static unsigned %s;" % var_name_id);
       m_source_bivn_idxs.push("unsigned UclVar::%s;" % var_name_id);
-      m_source_isp_bivn_idxs.push("    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(%s,\"%s\");" % [var_name_id,var_name]);
+      m_source_isp_bivn_idxs.push("    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(%s,\"%s\");" % [var_name_id,var_orig_name]);
 
       // - insert variable name to processed variables names set -
       m_processed_var_names.insert(var_name);
@@ -221,7 +278,8 @@ class Main
 
   public process_method(a_class_name,a_class_id,a_method,a_class_constrs,a_static_decl,a_static_impl)
   {/*{{{*/
-    method_name = a_method.name();
+    method_orig_name = a_method.name();
+    method_name = adjust_name(method_orig_name);
     method_name_id = "c_bi_mni_%s" % method_name.replace("#","_");
 
     name_split = method_name.split("#");
@@ -236,7 +294,7 @@ class Main
     {
       a_class_constrs.push("  inline static UclVar %s(%s)" % [a_class_name,param_lists[0]]);
       a_class_constrs.push("  {/*{{{*/");
-      a_class_constrs.push("    __new_object_%d(%s,%s%s);" % [param_count,a_class_id,method_name_id,param_lists[1]]);
+      a_class_constrs.push("    return __new_object_%d(%s,%s%s);" % [param_count,a_class_id,method_name_id,param_lists[1]]);
       a_class_constrs.push("  }/*}}}*/");
       a_class_constrs.push("");
     }
@@ -247,13 +305,13 @@ class Main
       {
         method_id = "c_bi_mi_%s" % method_name.replace("#","_");
 
-        a_static_decl.push("    static unsigned %s" % method_id);
+        a_static_decl.push("    static unsigned %s;" % method_id);
         m_source_bism_idxs.push("unsigned UclVar::%s::%s;" % [a_class_name,method_id]);
-        m_source_isp_bism_idxs.push("    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(%s,%s,%s);" % [a_class_name,a_class_id,method_id]);
+        m_source_isp_bism_idxs.push("    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(%s,%s,%s,%s);" % [a_class_name,a_class_id,method_id,method_name_id]);
 
-        a_static_impl.push("    inline static %s(%s)" % [method_name_wp,param_lists[0]]);
+        a_static_impl.push("    inline static UclVar %s(%s)" % [method_name_wp,param_lists[0]]);
         a_static_impl.push("    {/*{{{*/");
-        a_static_impl.push("      return __static_call_%d(%s%s)" % [param_count,method_id,param_lists[1]]);
+        a_static_impl.push("      return __static_call_%d(%s%s);" % [param_count,method_id,param_lists[1]]);
         a_static_impl.push("    }/*}}}*/");
         a_static_impl.push("");
       }
@@ -265,11 +323,15 @@ class Main
       m_header_bimn_idxs.push("  static unsigned %s;" % method_name_id);
       m_source_bimn_idxs.push("unsigned UclVar::%s;" % method_name_id);
 
-      m_header_methods.push("  inline UclVar %s(%s)" % [method_name_wp,param_lists[0]]);
-      m_header_methods.push("  {/*{{{*/");
-      m_header_methods.push("    return __call_%d(%s%s);" % [param_count,method_name_id,param_lists[1]]);
-      m_header_methods.push("  }/*}}}*/");
-      m_header_methods.push("");
+      // - if method is not constructor -
+      if (method_name_wp != a_class_name)
+      {
+        m_header_methods.push("  inline UclVar %s(%s)" % [method_name_wp,param_lists[0]]);
+        m_header_methods.push("  {/*{{{*/");
+        m_header_methods.push("    return __call_%d(%s%s);" % [param_count,method_name_id,param_lists[1]]);
+        m_header_methods.push("  }/*}}}*/");
+        m_header_methods.push("");
+      }
 
       // - insert method name to processed methods names set -
       m_processed_method_names.insert(method_name);
@@ -278,7 +340,7 @@ class Main
     // - if method is not predefined built in method -
     if (!m_bi_method_names_set.contain(method_name))
     {
-      m_source_isp_bimn_idxs.push("    UCLVAR_RETRIEVE_METHOD_NAME_IDX(%s,\"%s\");" % [method_name_id,method_name]);
+      m_source_isp_bimn_idxs.push("    UCLVAR_RETRIEVE_METHOD_NAME_IDX(%s,\"%s\");" % [method_name_id,method_orig_name]);
     }
   }/*}}}*/
 
@@ -339,11 +401,12 @@ class Main
       // - append static method implementation -
       if (static_impl.length() > 0)
       {
+        m_header_classes.push("    public:");
         m_header_classes += static_impl;
       }
 
       // - generate class code -
-      m_header_classes.push("  }/*}}}*/");
+      m_header_classes.push("  };/*}}}*/");
       m_header_classes.push("");
     }
 
@@ -374,10 +437,16 @@ class Main
     m_source_bivn_idxs.push("// - built in variable name indexes -");
 
     m_header_classes = [];
-    m_header_classes.push("  // - built in classes declaration -");
+    m_header_classes.push(
+"  // - built in classes declaration -
+  /*{{{*/
+");
 
     m_header_methods = [];
-    m_header_methods.push("  // - built in methods -");
+    m_header_methods.push(
+"  // - built in methods -
+  /*{{{*/
+");
 
     m_source_bism_idxs = [];
     m_source_bism_idxs.push("// - built in static method indexes -");
@@ -388,6 +457,8 @@ class Main
     m_source_isp_bic_idxs = [];
     m_source_isp_bic_idxs.push(
 "  // - retrieve class indexes -
+  /*{{{*/
+
 #define UCLVAR_RETRIEVE_CLASS_IDX(ID,NAME) \\
   ID = a_parser.resolve_class_idx_by_name(NAME,c_idx_not_exist);\\
   cassert(ID != c_idx_not_exist);
@@ -396,6 +467,8 @@ class Main
     m_source_isp_bimn_idxs = [];
     m_source_isp_bimn_idxs.push(
 "  // - retrieve method name indexes -
+  /*{{{*/
+
 #define UCLVAR_RETRIEVE_METHOD_NAME_IDX(ID,NAME) \\
   ID = a_parser.method_symbol_names.get_idx_char_ptr(strlen(NAME),NAME);\\
   cassert(ID != c_idx_not_exist);
@@ -404,16 +477,41 @@ class Main
     m_source_isp_bivn_idxs = [];
     m_source_isp_bivn_idxs.push(
 "  // - retrieve variable name indexes -
+  /*{{{*/
+
 #define UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(ID,NAME) \\
   ID = a_parser.variable_symbol_names.get_idx_char_ptr(strlen(NAME),NAME);\\
   cassert(ID != c_idx_not_exist);
 ");
 
     m_source_isp_bism_idxs = [];
-    m_source_isp_bism_idxs.push("  // - retrieve static method indexes -");
+    m_source_isp_bism_idxs.push(
+"  // - retrieve static method indexes -
+  /*{{{*/
+
+#define UCLVAR_RETRIEVE_STATIC_METHOD_IDX(CLASS_NAME,CLASS_ID,METHOD_ID,METHOD_NAME_ID) \\
+  CLASS_NAME::METHOD_ID = a_parser.class_records[CLASS_ID].mnri_map[METHOD_NAME_ID];\\
+  cassert(CLASS_NAME::METHOD_ID != c_idx_not_exist);
+");
 
     m_source_ii_bisc = [];
-    m_source_ii_bisc.push("  // - retrieve static constant values -");
+    m_source_ii_bisc.push(
+"  // - retrieve static constant values -
+  /*{{{*/
+
+#define UCLVAR_RETRIEVE_STATIC_CONST(CLASS_NAME,CLASS_ID,VAR_NAME) \\
+{/*{{{*/\\
+  ri_ep_s &e_ri_ep = a_interpreter.class_records[CLASS_ID].vn_ri_ep_map.map_name(c_bi_vni_ ## VAR_NAME);\\
+  cassert(e_ri_ep.record_idx != c_idx_not_exist);\\
+  variable_record_s &vr = a_interpreter.variable_records[e_ri_ep.record_idx];\\
+  cassert((vr.modifiers & c_modifier_static) &&\\
+          (vr.modifiers & c_modifier_static_const));\\
+  location_s *tmp_location = a_interpreter.const_locations.data + e_ri_ep.element_position;\\
+  tmp_location->v_reference_cnt.atomic_inc();\\
+  CLASS_NAME::VAR_NAME.location_ptr = tmp_location;\\
+  static_const_array.push(&CLASS_NAME::VAR_NAME);\\
+}/*}}}*/
+");
 
     // - insert predefined built in methods -
     {
@@ -483,23 +581,35 @@ class Main
 
     m_header_mod_idxs.push("  c_uclvar_module_count");
 
-    // FIXME debug output
-    ("%s\n" % m_header_mod_idxs.to_string("\n")).print();
-    //("%s\n" % m_header_bic_idxs.to_string("\n")).print();
-    //("%s\n" % m_header_bimn_idxs.to_string("\n")).print();
-    //("%s\n" % m_header_bivn_idxs.to_string("\n")).print();
-    //("%s\n" % m_header_classes.to_string("\n")).print();
-    //("%s\n" % m_header_methods.to_string("\n")).print();
-    //("%s\n" % m_source_bic_idxs.to_string("\n")).print();
-    //("%s\n" % m_source_bimn_idxs.to_string("\n")).print();
-    //("%s\n" % m_source_bivn_idxs.to_string("\n")).print();
-    //("%s\n" % m_source_bism_idxs.to_string("\n")).print();
-    //("%s\n" % m_source_biv_values.to_string("\n")).print();
-    //("%s\n" % m_source_isp_bic_idxs.to_string("\n")).print();
-    //("%s\n" % m_source_isp_bimn_idxs.to_string("\n")).print();
-    //("%s\n" % m_source_isp_bivn_idxs.to_string("\n")).print();
-    //("%s\n" % m_source_isp_bism_idxs.to_string("\n")).print();
-    //("%s\n" % m_source_ii_bisc.to_string("\n")).print();
+    close_brackets = (
+"  /*}}}*/
+");
+
+    m_header_classes.push(close_brackets);
+    m_header_methods.push(close_brackets);
+    m_source_isp_bic_idxs.push(close_brackets);
+    m_source_isp_bimn_idxs.push(close_brackets);
+    m_source_isp_bivn_idxs.push(close_brackets);
+    m_source_isp_bism_idxs.push(close_brackets);
+    m_source_ii_bisc.push(close_brackets);
+
+    // - data output -
+    ("%s\n\n" % m_header_mod_idxs.to_string("\n")).print();
+    ("%s\n\n" % m_header_bic_idxs.to_string("\n")).print();
+    ("%s\n\n" % m_header_bimn_idxs.to_string("\n")).print();
+    ("%s\n\n" % m_header_bivn_idxs.to_string("\n")).print();
+    ("%s\n\n" % m_header_classes.to_string("\n")).print();
+    ("%s\n\n" % m_header_methods.to_string("\n")).print();
+    ("%s\n\n" % m_source_bic_idxs.to_string("\n")).print();
+    ("%s\n\n" % m_source_bimn_idxs.to_string("\n")).print();
+    ("%s\n\n" % m_source_bivn_idxs.to_string("\n")).print();
+    ("%s\n\n" % m_source_bism_idxs.to_string("\n")).print();
+    ("%s\n\n" % m_source_biv_values.to_string("\n")).print();
+    ("%s\n\n" % m_source_isp_bic_idxs.to_string("\n")).print();
+    ("%s\n\n" % m_source_isp_bimn_idxs.to_string("\n")).print();
+    ("%s\n\n" % m_source_isp_bivn_idxs.to_string("\n")).print();
+    ("%s\n\n" % m_source_isp_bism_idxs.to_string("\n")).print();
+    ("%s\n\n" % m_source_ii_bisc.to_string("\n")).print();
 
   }/*}}}*/
 
