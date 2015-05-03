@@ -1,5 +1,6 @@
 
 import sys;
+import node;
 import containers;
 import json;
 import websocket;
@@ -65,6 +66,7 @@ class Main
   static m_modules = 
   [/*{{{*/
     "base",
+    "node",
     "sys",
     "containers",
     "json",
@@ -89,6 +91,10 @@ class Main
       "Thread",
       "Delegate",
       "Buffer"
+    ],/*}}}*/
+    "node",
+    [/*{{{*/
+      "NodeCallback"
     ],/*}}}*/
     "sys",
     [/*{{{*/
@@ -146,6 +152,10 @@ class Main
 
   m_source_isp_bic_idxs;
   m_source_isp_bimn_idxs;
+  m_source_isp_bivn_idxs;
+  m_source_isp_bism_idxs;
+
+  m_source_ii_bisc;
 
   m_processed_method_names;
   m_processed_var_names;
@@ -186,7 +196,7 @@ class Main
     return m_param_lists[a_param_count];
   }/*}}}*/
 
-  public process_variable(a_class_name,a_var,a_class_vars)
+  public process_variable(a_class_name,a_class_id,a_var,a_class_vars)
   {/*{{{*/
     var_name = a_var.name();
     var_name_id = "c_bi_vni_%s" % var_name;
@@ -196,6 +206,7 @@ class Main
     {
       m_header_bivn_idxs.push("  static unsigned %s;" % var_name_id);
       m_source_bivn_idxs.push("unsigned UclVar::%s;" % var_name_id);
+      m_source_isp_bivn_idxs.push("    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(%s,\"%s\");" % [var_name_id,var_name]);
 
       // - insert variable name to processed variables names set -
       m_processed_var_names.insert(var_name);
@@ -203,6 +214,7 @@ class Main
 
     a_class_vars.push("    static UclVar %s;" % var_name);
     m_source_biv_values.push("UclVar UclVar::%s::%s = UclVar(NO_INIT());" % [a_class_name,var_name]);
+    m_source_ii_bisc.push("    UCLVAR_RETRIEVE_STATIC_CONST(%s,%s,%s);" % [a_class_name,a_class_id,var_name]);
   }/*}}}*/
 
   public process_method(a_class_name,a_class_id,a_method,a_class_constrs,a_static_decl,a_static_impl)
@@ -235,6 +247,7 @@ class Main
 
         a_static_decl.push("    static unsigned %s" % method_id);
         m_source_bism_idxs.push("unsigned UclVar::%s::%s;" % [a_class_name,method_id]);
+        m_source_isp_bism_idxs.push("    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(%s,%s,%s);" % [a_class_name,a_class_id,method_id]);
 
         a_static_impl.push("    inline static %s(%s)" % [method_name_wp,param_lists[0]]);
         a_static_impl.push("    {/*{{{*/");
@@ -274,8 +287,6 @@ class Main
 
     // - append class comment string -
     class_comment_str = "  // - class %s -" % class_name;
-    m_header_bimn_idxs.push(class_comment_str);
-    m_header_bivn_idxs.push(class_comment_str);
     m_header_classes.push(class_comment_str);
 
     m_header_bic_idxs.push("  static unsigned %s;" % class_id);
@@ -296,7 +307,7 @@ class Main
     // - process class variables -
     for (var <- a_class.vars())
     {
-      process_variable(class_name,var,class_vars);
+      process_variable(class_name,class_id,var,class_vars);
     }
 
     // - if class has variables or static methods -
@@ -371,8 +382,34 @@ class Main
     m_source_biv_values.push("// - built in variable values -");
 
     m_source_isp_bic_idxs = [];
+    m_source_isp_bic_idxs.push(
+"  // - retrieve class indexes -
+#define UCLVAR_RETRIEVE_CLASS_IDX(ID,NAME) \\
+  ID = a_parser.resolve_class_idx_by_name(NAME,c_idx_not_exist);\\
+  cassert(ID != c_idx_not_exist);
+");
+
     m_source_isp_bimn_idxs = [];
-    m_source_isp_bimn_idxs.push("  // - retrieve method name indexes -");
+    m_source_isp_bimn_idxs.push(
+"  // - retrieve method name indexes -
+#define UCLVAR_RETRIEVE_METHOD_NAME_IDX(ID,NAME) \\
+  ID = a_parser.method_symbol_names.get_idx_char_ptr(strlen(NAME),NAME);\\
+  cassert(ID != c_idx_not_exist);
+");
+
+    m_source_isp_bivn_idxs = [];
+    m_source_isp_bivn_idxs.push(
+"  // - retrieve variable name indexes -
+#define UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(ID,NAME) \\
+  ID = a_parser.variable_symbol_names.get_idx_char_ptr(strlen(NAME),NAME);\\
+  cassert(ID != c_idx_not_exist);
+");
+
+    m_source_isp_bism_idxs = [];
+    m_source_isp_bism_idxs.push("  // - retrieve static method indexes -");
+
+    m_source_ii_bisc = [];
+    m_source_ii_bisc.push("  // - retrieve static constant values -");
 
     // - insert predefined built in methods -
     {
@@ -413,6 +450,9 @@ class Main
 
       m_source_isp_bic_idxs.push(module_test_str);
       m_source_isp_bimn_idxs.push(module_test_str);
+      m_source_isp_bivn_idxs.push(module_test_str);
+      m_source_isp_bism_idxs.push(module_test_str);
+      m_source_ii_bisc.push(module_test_str);
 
       // - process module classes -
       for (class_name <- m_module_classes[module_name])
@@ -426,21 +466,27 @@ class Main
 
       m_source_isp_bic_idxs.push(module_end_str);
       m_source_isp_bimn_idxs.push(module_end_str);
+      m_source_isp_bivn_idxs.push(module_end_str);
+      m_source_isp_bism_idxs.push(module_end_str);
+      m_source_ii_bisc.push(module_end_str);
     }
 
     // FIXME debug output
     //("%s\n" % m_header_bic_idxs.to_string("\n")).print();
-    //("%s\n" % m_source_bic_idxs.to_string("\n")).print();
-    //("%s\n" % m_header_bimn_idxs.to_string("\n")).print();
-    //("%s\n" % m_source_bimn_idxs.to_string("\n")).print();
+    ("%s\n" % m_header_bimn_idxs.to_string("\n")).print();
     //("%s\n" % m_header_bivn_idxs.to_string("\n")).print();
-    //("%s\n" % m_source_bivn_idxs.to_string("\n")).print();
-    ("%s\n" % m_header_classes.to_string("\n")).print();
+    //("%s\n" % m_header_classes.to_string("\n")).print();
     //("%s\n" % m_header_methods.to_string("\n")).print();
+    //("%s\n" % m_source_bic_idxs.to_string("\n")).print();
+    //("%s\n" % m_source_bimn_idxs.to_string("\n")).print();
+    //("%s\n" % m_source_bivn_idxs.to_string("\n")).print();
     //("%s\n" % m_source_bism_idxs.to_string("\n")).print();
     //("%s\n" % m_source_biv_values.to_string("\n")).print();
     //("%s\n" % m_source_isp_bic_idxs.to_string("\n")).print();
     //("%s\n" % m_source_isp_bimn_idxs.to_string("\n")).print();
+    //("%s\n" % m_source_isp_bivn_idxs.to_string("\n")).print();
+    //("%s\n" % m_source_isp_bism_idxs.to_string("\n")).print();
+    //("%s\n" % m_source_ii_bisc.to_string("\n")).print();
 
   }/*}}}*/
 
