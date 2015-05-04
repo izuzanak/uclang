@@ -78,6 +78,8 @@ int main(int argc,char **argv)
   bool modules[c_uclvar_module_count];
   memset(modules,0,c_uclvar_module_count*sizeof(bool));
 
+  modules[c_uclvar_module_base] = true;
+  modules[c_uclvar_module_node] = true;
   modules[c_uclvar_module_sys] = true;
   modules[c_uclvar_module_containers] = true;
   modules[c_uclvar_module_json] = true;
