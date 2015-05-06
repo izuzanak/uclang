@@ -110,8 +110,8 @@ return `0` if objects has same value or `1` otherwise.
 
 ##### Return:
 Object of class `Integer`.
-  * `0` - method parameter has different value than object.
-  * `1` - method parameter has same value as object.
+  * `0` - method parameter has same value as object.
+  * `1` - method parameter has different value than object.
 
 ##### Example:
 ```cpp
@@ -154,7 +154,7 @@ stack_0 + stack_1: [1,2,3,1,2,4]
 Empty stack. Release all elements stored in object of class `Stack`.
 
 ##### Return:
-object of class `Blank`.
+Object of class `Blank`.
 
 ##### Example:
 ```cpp

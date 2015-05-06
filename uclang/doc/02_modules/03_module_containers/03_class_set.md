@@ -252,8 +252,8 @@ return `0` if objects has same value or `1` otherwise.
 
 ##### Return:
 Object of class `Integer`.
-  * `0` - method parameter has different value than object.
-  * `1` - method parameter has same value as object.
+  * `0` - method parameter has same value as object.
+  * `1` - method parameter has different value than object.
 
 ##### Example:
 ```cpp
@@ -325,8 +325,8 @@ method parameter.
 1. Iterable type.
 
 ##### Return
-Object of class `Set` containing elements of original set concatenated with
-elements retrieved from method parameter.
+Object of class `Set` containing elements of original set extended by elements
+retrieved from method parameter.
 
 ##### Example:
 ```cpp
@@ -387,7 +387,7 @@ set[3]: 3
 Empty set. Release all elements stored in object of class `Set`.
 
 ##### Return:
-object of class `Blank`.
+Object of class `Blank`.
 
 ##### Example:
 ```cpp
