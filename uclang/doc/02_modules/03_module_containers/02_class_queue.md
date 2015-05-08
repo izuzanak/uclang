@@ -7,7 +7,8 @@ Container class implementing simple abstract data type queue.
 #### Constructor `Queue#0`
 Create empty object of class `Queue`.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue = new Queue();
 ("queue: %s\n" % queue.to_string()).print();
@@ -22,7 +23,8 @@ Creates object of class `Queue` containing elements retrieved from method parame
 #### Parameters:
 1. Iterable type.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue = new Queue([1,2,3]);
 ("queue: %s\n" % queue.to_string()).print();
@@ -37,13 +39,15 @@ queue: [1,2,3]
 Assignment operator `=`. Object of class `Queue` is replaced by method
 parameter.
 
-##### Parameters:
+**Parameters:**
+
 1. Any type.
 
-##### Return:
+**Return:**
+
 Value of object.
 
-##### Example:
+**Example:**
 
 ```cpp
 queue = new Queue();
@@ -60,13 +64,16 @@ queue: Hello world
 Append operator `+=`. Append elements retrieved from method parameter to object
 of class `Queue`.
 
-##### Parameters:
+**Parameters:**
+
 1. Iterable type.
 
-##### Return:
+**Return:**
+
 Value of object.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue = new Queue([1,2,3]);
 queue += [4,5,6];
@@ -80,15 +87,18 @@ queue: [1,2,3,4,5,6]
 Comparison operator `==`. Compares object of class `Queue` with method
 parameter and return `1` if objects has same value or `0` otherwise.
 
-##### Parameters:
+**Parameters:**
+
 1. Any type.
 
-##### Return:
+**Return:**
+
 Object of class `Integer`.
   * `0` - method parameter has different value than object.
   * `1` - method parameter has same value as object.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue_0 = new Queue([1,2,3]);
 queue_1 = new Queue([1,2,4]);
@@ -105,15 +115,18 @@ queue_0 == queue_2: 1
 Comparison operator `!=`. Compares object of class `Queue` with method parameter and
 return `0` if objects has same value or `1` otherwise.
 
-##### Parameters:
+**Parameters:**
+
 1. Any type.
 
-##### Return:
+**Return:**
+
 Object of class `Integer`.
   * `0` - method parameter has same value as object.
   * `1` - method parameter has different value than object.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue_0 = new Queue([1,2,3]);
 queue_1 = new Queue([1,2,4]);
@@ -131,14 +144,17 @@ Concatenation operator `+`. Creates object of class `Queue` containing elements
 of original object of class `Queue` concatenated with elements retrieved from
 method parameter.
 
-##### Parameters:
+**Parameters:**
+
 1. Iterable type.
 
-##### Return
+**Return:**
+
 Object of class `Queue` containing elements of original object of class `Queue`
 concatenated with elements retrieved from method parameter.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue_0 = new Queue([1,2,3]);
 queue_1 = new Queue([1,2,4]);
@@ -153,10 +169,12 @@ queue_0 + queue_1: [1,2,3,1,2,4]
 #### Method `clear#0`
 Empty queue. Release all elements stored in object of class `Queue`.
 
-##### Return:
+**Return:**
+
 Object of class `Blank`.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue = new Queue([1,2,3]);
 ("queue: %s\n" % queue.to_string()).print();
@@ -172,15 +190,17 @@ queue: []
 Retrieve elements contained in object of class `Queue`. Elements are returned
 as object of class `Array`.
 
-##### Return:
+**Return:**
+
 Object of class `Array` containing all elements of queue.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue = new Queue([1,2,3]);
 array = queue.items();
 ("type array: %s\n" % (type array).to_string()).print();
-("array: %s\n" % queue.to_string()).print();
+("array: %s\n" % array.to_string()).print();
 ```
 ```
 type array: Array
@@ -190,13 +210,16 @@ array: [1,2,3]
 #### Method `insert#1`
 Insert method parameter to end of object of class `Queue`.
 
-##### Parameters:
+**Parameters:**
+
 1. Any type.
 
-##### Return:
+**Return:**
+
 Object of class `Blank`.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue = new Queue([1,2,3]);
 ("queue: %s\n" % queue.to_string()).print();
@@ -213,13 +236,16 @@ queue: [1,2,3,4,5,6]
 #### Method `insert_ref#1`
 Insert reference to method parameter to end of object of class `Queue`.
 
-##### Parameters:
+**Parameters:**
+
 1. Any type.
 
-##### Return:
+**Return:**
+
 Object of class `Blank`.
 
-##### Example:
+**Example:**
+
 ```cpp
 value = 10;
 queue = new Queue([1,2,3]);
@@ -238,10 +264,12 @@ queue: [1,2,3,100]
 #### Method `next#0`
 Retrieve and return next object from object of class `Queue`.
 
-##### Return:
+**Return:**
+
 Next object from queue.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue = new Queue([1,2,3]);
 ("queue: %s\n" % queue.to_string()).print();
@@ -257,16 +285,19 @@ queue.pop(): 2
 #### Method `compare#1`
 Compare object of class `Queue` with method parameter.
 
-##### Parameters:
+**Parameters:**
+
 1. Any type.
 
-##### Return:
+**Return:**
+
 Object of class `Integer`.
 * `-1` - if object of class `Queue` is lesser than method parameter.
 * `1` - if object of class `Queue` is greater than method parameter.
 * `0` - if object of class `Queue` is equal to method parameter.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue_0 = new Queue([1,2,3]);
 queue_1 = new Queue([1,2,3,4]);
@@ -283,13 +314,16 @@ queue_0.compare(0): 1
 #### Method `item#1`
 Retrieve element from object of class `Queue` stored at requested index position.
 
-##### Parameters:
+**Parameters:**
+
 1. Type convertible to integer.
 
-##### Return:
+**Return:**
+
 Object stored in object of class `Queue` at position of requested index.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue = new Queue([1,2,3]);
 ("queue: %s\n" % queue.to_string()).print();
@@ -305,11 +339,13 @@ queue.item(2): 3
 #### Method `first_idx#0`
 Retrieve index of first element in object of class `Queue`.
 
-##### Return:
-* Object of class `Integer` if object of class `Queue` contain some elements.
+**Return:**
+
+* Object of class `Integer` if object of class `Queue` contains some elements.
 * Object of class `Blank` otherwise.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue = new Queue([1]);
 ("queue.first_idx(): %s\n" % queue.first_idx().to_string()).print();
@@ -324,11 +360,13 @@ queue.first_idx(): <blank>
 #### Method `last_idx#0`
 Retrieve index of last element in object of class `Queue`.
 
-##### Return:
-* Object of class `Integer` if object of class `Queue` contain some elements.
+**Return:**
+
+* Object of class `Integer` if object of class `Queue` contains some elements.
 * Object of class `Blank` otherwise.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue = new Queue([1,2,3]);
 ("queue.last_idx(): %s\n" % queue.last_idx().to_string()).print();
@@ -347,16 +385,18 @@ queue.last_idx(): <blank>
 From object of class `Queue` retrieve index of element following element
 identified by method parameter.
 
-##### Parameters:
+**Parameters:**
 
 1. Type convertible to integer.
 
-##### Return:
+**Return:**
+
 * Object of class `Integer` if there is some element following element
   identified by method parameter.
 * Object of class `Blank` otherwise.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue = new Queue([1,2,3]);
 ("queue: %s\n" % queue.to_string()).print();
@@ -377,16 +417,18 @@ idx: 2
 From object of class `Queue` retrieve index of element preceding element
 identified by method parameter.
 
-##### Parameters:
+**Parameters:**
 
 1. Type convertible to integer.
 
-##### Return:
+**Return:**
+
 * Object of class `Integer` if there is some element preceding element
   identified by method parameter.
 * Object of class `Blank` otherwise.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue = new Queue([1,2,3]);
 ("queue: %s\n" % queue.to_string()).print();
@@ -406,10 +448,12 @@ idx: 0
 #### Method `length#0`
 Retrieve count of elements in object of class `Queue`.
 
-##### Return:
+**Return:**
+
 Object of class `Integer`.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue = new Queue([1,2,3]);
 ("queue.length(): %d\n" % queue.length()).print();
@@ -424,12 +468,14 @@ queue.length(): 2
 #### Method `to_string#0`
 Convert object of class `Queue` to object of class `String`. Each element of
 queue is converted to string by call of its `to_string#0` method. As separator
-of string values of elements is used `,`.
+of string values of elements is used character `,`.
 
-##### Return:
+**Return:**
+
 Object of class `String`.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue = new Queue([1,2,3]);
 ("queue: %s\n" % queue.to_string()).print();
@@ -443,13 +489,16 @@ Convert object of class `Queue` to object of class `String`. Each element of
 queue is converted to string by call of its `to_string#0` method. As separator
 of string values is used method parameter.
 
-##### Parameters:
+**Parameters:**
+
 1. Object of class `String`.
 
-##### Return:
+**Return:**
+
 Object of class `String`.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue = new Queue([1,2,3,new Queue([1,2,3])]);
 ("queue: %s\n" % queue.to_string("+")).print();
@@ -463,10 +512,12 @@ queue: 1<->2<->3<->[1,2,3]
 #### Method `print#0`
 Print string representation of object of class `Queue` to standard output.
 
-##### Return:
+**Return:**
+
 Object of class `Blank`.
 
-##### Example:
+**Example:**
+
 ```cpp
 queue = new Queue([1,2,3]);
 queue.print();

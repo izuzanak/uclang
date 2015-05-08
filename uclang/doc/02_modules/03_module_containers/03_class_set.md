@@ -7,7 +7,8 @@ Container class implementing simple abstract data type set.
 #### Constructor `Set#0`
 Creates empty object of class `Set`.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set();
 ("set: %s\n" % set.to_string()).print();
@@ -19,10 +20,12 @@ set: []
 #### Constructor `Set#1`
 Creates object of class `Set` containing elements retrieved from method parameter.
 
-##### Parameters:
+**Parameters:**
+
 1. Iterable type.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]);
 ("set: %s\n" % set.to_string()).print();
@@ -37,13 +40,15 @@ set: [1,2,3]
 Assignment operator `=`. Object of class `Set` is replaced by method
 parameter.
 
-##### Parameters:
+**Parameters:**
+
 1. Any type.
 
-##### Return:
+**Return:**
+
 Value of object.
 
-##### Example:
+**Example:**
 
 ```cpp
 set = new Set();
@@ -60,13 +65,16 @@ set: Hello world
 Append operator `+=`. Insert elements retrieved from method parameter to object
 of class `Set`.
 
-##### Parameters:
+**Parameters:**
+
 1. Iterable type.
 
-##### Return:
+**Return:**
+
 Value of object.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]);
 set += [3,4,5];
@@ -81,13 +89,16 @@ Set difference operator `-=`. Creates object of class `Set` containing elements
 from first object of class `Set` that are not contained in second object of
 class `Set`. Value of variable is set to result object of class `Set`.
 
-##### Parameters:
+**Parameters:**
+
 1. Object of class `Set`.
 
-##### Return:
+**Return:**
+
 Value of object.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]);
 set -= new Set([2,3,4]);
@@ -102,13 +113,16 @@ Set intersection operator `&=`. Creates object of class `Set` containing
 elements contained in both source objects of class `Set`. Value of variable is
 set to result object of class `Set`.
 
-##### Parameters:
+**Parameters:**
+
 1. Object of class `Set`.
 
-##### Return:
+**Return:**
+
 Value of object.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]);
 set &= new Set([2,3,4]);
@@ -123,13 +137,16 @@ Set union operator `|=`. Creates object of class `Set` containing elements from
 both source objects of class `Set`. Value of variable is set to result object
 of class `Set`.
 
-##### Parameters:
+**Parameters:**
+
 1. Object of class `Set`.
 
-##### Return:
+**Return:**
+
 Value of object.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]);
 set |= new Set([2,3,4]);
@@ -144,13 +161,16 @@ Set symmetric difference operator `^=`. Creates object of class `Set` containing
 elements from both source objects of class `Set` that are contained exactly in
 one of them. Value of variable is set to result object of class `Set`.
 
-##### Parameters:
+**Parameters:**
+
 1. Object of class `Set`.
 
-##### Return:
+**Return:**
+
 Value of object.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]);
 set ^= new Set([2,3,4]);
@@ -164,13 +184,16 @@ set: [1,4]
 Set intersection operator `&`. Creates object of class `Set` containing elements
 contained in both source objects of class `Set`.
 
-##### Parameters:
+**Parameters:**
+
 1. Object of class `Set`.
 
-##### Return:
+**Return:**
+
 Object of class `Set`.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]) & new Set([2,3,4]);
 ("set: %s\n" % set.to_string()).print();
@@ -183,13 +206,16 @@ set: [2,3]
 Set union operator `|`. Creates object of class `Set` containing elements
 from both source objects of class `Set`.
 
-##### Parameters:
+**Parameters:**
+
 1. Object of class `Set`.
 
-##### Return:
+**Return:**
+
 Object of class `Set`.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]) | new Set([2,3,4]);
 ("set: %s\n" % set.to_string()).print();
@@ -203,13 +229,16 @@ Set symmetric difference operator `^`. Creates object of class `Set` containing
 elements from both source objects of class `Set` that are contained exactly in
 one of them.
 
-##### Parameters:
+**Parameters:**
+
 1. Object of class `Set`.
 
-##### Return:
+**Return:**
+
 Object of class `Set`.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]) ^ new Set([2,3,4]);
 ("set: %s\n" % set.to_string()).print();
@@ -222,15 +251,18 @@ set: [1,4]
 Comparison operator `==`. Compares object of class `Set` with method
 parameter and return `1` if objects has same value or `0` otherwise.
 
-##### Parameters:
+**Parameters:**
+
 1. Any type.
 
-##### Return:
+**Return:**
+
 Object of class `Integer`.
   * `0` - method parameter has different value than object.
   * `1` - method parameter has same value as object.
 
-##### Example:
+**Example:**
+
 ```cpp
 set_0 = new Set([1,2,3]);
 set_1 = new Set([1,2,4]);
@@ -247,15 +279,18 @@ set_0 == set_2: 1
 Comparison operator `!=`. Compares object of class `Set` with method parameter and
 return `0` if objects has same value or `1` otherwise.
 
-##### Parameters:
+**Parameters:**
+
 1. Any type.
 
-##### Return:
+**Return:**
+
 Object of class `Integer`.
   * `0` - method parameter has same value as object.
   * `1` - method parameter has different value than object.
 
-##### Example:
+**Example:**
+
 ```cpp
 set_0 = new Set([1,2,3]);
 set_1 = new Set([1,2,4]);
@@ -272,15 +307,18 @@ set_0 != set_2: 0
 Subset test operator `>=`. Test if object of class `Set` given by method
 parameter is subset of object of class `Set`.
 
-##### Parameters:
+**Parameters:**
+
 1. Object of class `Set`.
 
-##### Return:
+**Return:**
+
 Object of class `Integer`.
   * `0` - method parameter is not subset of object.
   * `1` - method parameter is subset of object.
 
-##### Example:
+**Example:**
+
 ```cpp
 set_0 = new Set([1,2,3]);
 set_1 = new Set([1,2,3,4]);
@@ -296,15 +334,18 @@ set_1 >= set_0: 1
 Superset test operator `<=`. Test if object of class `Set` given by method
 parameter is superset of object of class `Set`.
 
-##### Parameters:
+**Parameters:**
+
 1. Object of class `Set`.
 
-##### Return:
+**Return:**
+
 Object of class `Integer`.
   * `0` - method parameter is not superset of object.
   * `1` - method parameter is superset of object.
 
-##### Example:
+**Example:**
+
 ```cpp
 set_0 = new Set([1,2,3]);
 set_1 = new Set([1,2,3,4]);
@@ -321,14 +362,17 @@ Concatenation operator `+`. Creates object of class `Set` containing elements
 of original object of class `Set` with inserted elements retrieved from
 method parameter.
 
-##### Parameters:
+**Parameters:**
+
 1. Iterable type.
 
-##### Return
+**Return:**
+
 Object of class `Set` containing elements of original set extended by elements
 retrieved from method parameter.
 
-##### Example:
+**Example:**
+
 ```cpp
 set_0 = new Set([1,2,3]);
 set_1 = new Set([1,2,4]);
@@ -343,13 +387,16 @@ Set difference operator `-`. Creates object of class `Set` containing elements
 from first object of class `Set` that are not contained in second object of
 class `Set`.
 
-##### Parameters:
+**Parameters:**
+
 1. Object of class `Set`.
 
-##### Return:
+**Return:**
+
 Object of class `Set`.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]) - new Set([2,3,4]);
 ("set: %s\n" % set.to_string()).print();
@@ -362,13 +409,16 @@ set: [1]
 Item selection operator `[]`. Retrieve element from object of class `Set`
 stored at requested index position.
 
-##### Parameters:
+**Parameters:**
+
 1. Type convertible to integer.
 
-##### Return:
+**Return:**
+
 Object stored in object of class `Set` at position of requested index.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]);
 ("set: %s\n" % set.to_string()).print();
@@ -386,10 +436,12 @@ set[3]: 3
 #### Method `clear#0`
 Empty set. Release all elements stored in object of class `Set`.
 
-##### Return:
+**Return:**
+
 Object of class `Blank`.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]);
 ("set: %s\n" % set.to_string()).print();
@@ -405,15 +457,17 @@ set: []
 Retrieve elements contained in object of class `Set`. Elements are returned
 as object of class `Array`.
 
-##### Return:
+**Return:**
+
 Object of class `Array` containing all elements of set.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]);
 array = set.items();
 ("type array: %s\n" % (type array).to_string()).print();
-("array: %s\n" % set.to_string()).print();
+("array: %s\n" % array.to_string()).print();
 ```
 ```
 type array: Array
@@ -423,13 +477,16 @@ array: [1,2,3]
 #### Method `insert#1`
 Insert method parameter to object of class `Set`.
 
-##### Parameters:
+**Parameters:**
+
 1. Any type.
 
-##### Return:
+**Return:**
+
 Object of class `Blank`.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]);
 ("set: %s\n" % set.to_string()).print();
@@ -446,13 +503,16 @@ set: [1,2,3,4,5]
 #### Method `remove#1`
 Remove element given by method parameter from object of class `Set`.
 
-##### Parameters:
+**Parameters:**
+
 1. Any type.
 
-##### Return:
+**Return:**
+
 Object of class `Blank`.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]);
 ("set: %s\n" % set.to_string()).print();
@@ -467,15 +527,18 @@ set: [1,3]
 #### Method `contain#1`
 Test if object of class `Set` contains object given by method parameter.
 
-##### Parameters:
+**Parameters:**
+
 1. Any type.
 
-##### Return:
-Object of class `Integer`.
-  * `0` - object of class `Set` does not contain method parameter.
-  * `1` - object of class `Set` contain method parameter.
+**Return:**
 
-##### Example:
+Object of class `Integer`.
+  * `0` - object of class `Set` does not contains method parameter.
+  * `1` - object of class `Set` contains method parameter.
+
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]);
 ("set: %s\n" % set.to_string()).print();
@@ -493,16 +556,19 @@ set.contain(4): 0
 #### Method `compare#1`
 Compare object of class `Set` with method parameter.
 
-##### Parameters:
+**Parameters:**
+
 1. Any type.
 
-##### Return:
+**Return:**
+
 Object of class `Integer`.
 * `-1` - if object of class `Set` is lesser than method parameter.
 * `1` - if object of class `Set` is greater than method parameter.
 * `0` - if object of class `Set` is equal to method parameter.
 
-##### Example:
+**Example:**
+
 ```cpp
 set_0 = new Set([1,2,3]);
 set_1 = new Set([1,2,3,4]);
@@ -519,13 +585,16 @@ set_0.compare(0): 1
 #### Method `item#1`
 Retrieve element from object of class `Set` stored at requested index position.
 
-##### Parameters:
+**Parameters:**
+
 1. Type convertible to integer.
 
-##### Return:
+**Return:**
+
 Object stored in object of class `Set` at position of requested index.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]);
 ("set: %s\n" % set.to_string()).print();
@@ -541,11 +610,13 @@ set.item(3): 3
 #### Method `first_idx#0`
 Retrieve index of first element in object of class `Set`.
 
-##### Return:
-* Object of class `Integer` if object of class `Set` contain some elements.
+**Return:**
+
+* Object of class `Integer` if object of class `Set` contains some elements.
 * Object of class `Blank` otherwise.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1]);
 ("set.first_idx(): %s\n" % set.first_idx().to_string()).print();
@@ -560,11 +631,13 @@ set.first_idx(): <blank>
 #### Method `last_idx#0`
 Retrieve index of last element in object of class `Set`.
 
-##### Return:
-* Object of class `Integer` if object of class `Set` contain some elements.
+**Return:**
+
+* Object of class `Integer` if object of class `Set` contains some elements.
 * Object of class `Blank` otherwise.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]);
 ("set.last_idx(): %s\n" % set.last_idx().to_string()).print();
@@ -583,16 +656,18 @@ set.last_idx(): <blank>
 From object of class `Set` retrieve index of element following element
 identified by method parameter.
 
-##### Parameters:
+**Parameters:**
 
 1. Type convertible to integer.
 
-##### Return:
+**Return:**
+
 * Object of class `Integer` if there is some element following element
   identified by method parameter.
 * Object of class `Blank` otherwise.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]);
 ("set: %s\n" % set.to_string()).print();
@@ -613,16 +688,18 @@ idx: 3
 From object of class `Set` retrieve index of element preceding element
 identified by method parameter.
 
-##### Parameters:
+**Parameters:**
 
 1. Type convertible to integer.
 
-##### Return:
+**Return:**
+
 * Object of class `Integer` if there is some element preceding element
   identified by method parameter.
 * Object of class `Blank` otherwise.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]);
 ("set: %s\n" % set.to_string()).print();
@@ -642,10 +719,12 @@ idx: 0
 #### Method `length#0`
 Retrieve count of elements in object of class `Set`.
 
-##### Return:
+**Return:**
+
 Object of class `Integer`.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]);
 ("set.length(): %d\n" % set.length()).print();
@@ -660,12 +739,14 @@ set.length(): 2
 #### Method `to_string#0`
 Convert object of class `Set` to object of class `String`. Each element of
 set is converted to string by call of its `to_string#0` method. As separator
-of string values of elements is used `,`.
+of string values of elements is used character `,`.
 
-##### Return:
+**Return:**
+
 Object of class `String`.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]);
 ("set: %s\n" % set.to_string()).print();
@@ -679,13 +760,16 @@ Convert object of class `Set` to object of class `String`. Each element of
 set is converted to string by call of its `to_string#0` method. As separator
 of string values is used method parameter.
 
-##### Parameters:
+**Parameters:**
+
 1. Object of class `String`.
 
-##### Return:
+**Return:**
+
 Object of class `String`.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3,new Set([1,2,3])]);
 ("set: %s\n" % set.to_string("+")).print();
@@ -699,10 +783,12 @@ set: 1<->2<->3<->[1,2,3]
 #### Method `print#0`
 Print string representation of object of class `Set` to standard output.
 
-##### Return:
+**Return:**
+
 Object of class `Blank`.
 
-##### Example:
+**Example:**
+
 ```cpp
 set = new Set([1,2,3]);
 set.print();
