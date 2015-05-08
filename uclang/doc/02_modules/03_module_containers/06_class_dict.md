@@ -635,9 +635,9 @@ dict.length(): 2
 
 #### Method `to_string#0`
 Convert object of class `Dict` to object of class `String`. Each key and
-element of dict is converted to string by call of its `to_string#0` method. As
-separator of string values of keys and elements is used character `:`. As
-separator of key-value pairs is used character `,`.
+element of dictionary is converted to string by call of its `to_string#0`
+method. As separator of string values of keys and elements is used character
+`:`. As separator of key-value pairs is used character `,`.
 
 **Return:**
 
@@ -655,7 +655,7 @@ dict: [One:1,Two:2,Three:3]
 
 #### Method `to_string#1`
 Convert object of class `Dict` to object of class `String`. Each element of
-dict is converted to string by call of its `to_string#0` method.  As separator
+dictionary is converted to string by call of its `to_string#0` method.  As separator
 of string values of keys and elements is used character `:`.  As separator of
 key-value pairs is used method parameter.
 
