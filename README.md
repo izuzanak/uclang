@@ -71,25 +71,10 @@ Here are some point, that motivated/motivates me to develop new high-level
 programming language:
 
 * C/C++ like syntax.
-* Language based on few simple principles, without exceptions.
+* Language based on few simple principles.
 * Threading support without constraints (no GIL).
 * Module system, no difference between binary and language modules.
 * Lightweight interpreter, that can be deployed at embedded devices.
-
-## Building interpreter
-
-Container generator [`cont`](https://github.com/izuzanak/cont) is needed for
-uclang compilation. Compile it and place binary `process` to your `PATH`
-directory.
-
-Enter build directory [`uclang_build`](https://github.com/izuzanak/uclang/tree/master/uclang_build)
-```
-cd uclang_build
-```
-Execute build script [`build.sh`](https://github.com/izuzanak/uclang/blob/master/uclang_build/build.sh)
-```
-sh build.sh
-```
 
 ## Documentation
 
@@ -170,6 +155,7 @@ class Main
 ```
 
 #### Dictionary and objects comparisons
+
 Objects of all classes can be compared as long as they implement method
 `compare#1`.  Implementation of dictionary using red-black tree accepts any
 comparable value as key, even objects of user defined classes.
@@ -200,5 +186,20 @@ Number
 String
 Array
 Dict
+```
+
+## Building interpreter
+
+Container generator [`cont`](https://github.com/izuzanak/cont) is needed for
+uclang compilation. Compile it and place binary `process` to your `PATH`
+directory.
+
+Enter build directory [`uclang_build`](https://github.com/izuzanak/uclang/tree/master/uclang_build)
+```
+cd uclang_build
+```
+Execute build script [`build.sh`](https://github.com/izuzanak/uclang/blob/master/uclang_build/build.sh)
+```
+sh build.sh
 ```
 
