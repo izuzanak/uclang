@@ -1,0 +1,151 @@
+
+import sys;
+import lang;
+import containers;
+
+class Main
+{
+  m_descr_lst;
+
+  static m_operator_names =
+  [/*{{{*/
+    "operator_binary_equal#1",
+    "operator_binary_plus_equal#1",
+    "operator_binary_minus_equal#1",
+    "operator_binary_asterisk_equal#1",
+    "operator_binary_slash_equal#1",
+    "operator_binary_percent_equal#1",
+    "operator_binary_double_ls_br_equal#1",
+    "operator_binary_double_rs_br_equal#1",
+    "operator_binary_ampersand_equal#1",
+    "operator_binary_pipe_equal#1",
+    "operator_binary_circumflex_equal#1",
+    "operator_binary_double_ampersand#1",
+    "operator_binary_double_pipe#1",
+    "operator_binary_ampersand#1",
+    "operator_binary_pipe#1",
+    "operator_binary_circumflex#1",
+    "operator_binary_double_equal#1",
+    "operator_binary_exclamation_equal#1",
+    "operator_binary_rs_br#1",
+    "operator_binary_ls_br#1",
+    "operator_binary_rs_br_equal#1",
+    "operator_binary_ls_br_equal#1",
+    "operator_binary_double_rs_br#1",
+    "operator_binary_double_ls_br#1",
+    "operator_binary_plus#1",
+    "operator_binary_minus#1",
+    "operator_binary_asterisk#1",
+    "operator_binary_slash#1",
+    "operator_binary_percent#1",
+    "operator_unary_post_double_plus#0",
+    "operator_unary_post_double_minus#0",
+    "operator_unary_pre_double_plus#0",
+    "operator_unary_pre_double_minus#0",
+    "operator_unary_pre_plus#0",
+    "operator_unary_pre_minus#0",
+    "operator_unary_pre_exclamation#0",
+    "operator_unary_pre_tilde#0",
+    "operator_binary_le_br_re_br#1"
+  ];/*}}}*/
+
+  static m_operator_set = new Set(m_operator_names);
+
+  public process_variable(a_class_name,a_var,a_class_vars)
+  {/*{{{*/
+    var_name = a_var.name();
+  }/*}}}*/
+
+  public process_method(a_class_name,a_method,a_class_constrs,a_class_operators,a_class_methods)
+  {/*{{{*/
+    method_name = a_method.name();
+
+    name_split = method_name.split("#");
+    method_name_wp = name_split[0];
+    param_count = new Integer(name_split[1]);
+
+    // - if method is constructor -
+    if (method_name_wp == a_class_name)
+    {
+      a_class_constrs.push("#### Constructor `%s`" % method_name);
+      a_class_constrs.push("");
+    }
+    else
+    {
+      // - if method is operator -
+      if (m_operator_set.contain(method_name))
+      {
+        a_class_operators.push("#### Operator `%s`" % method_name);
+        a_class_operators.push("");
+      }
+      else
+      {
+        a_class_methods.push("#### Method `%s`" % method_name);
+        a_class_methods.push("");
+      }
+    }
+  }/*}}}*/
+
+  public process_class(a_class)
+  {/*{{{*/
+    class_name = a_class.name();
+
+    m_descr_lst.push("# Class %s" % class_name);
+    m_descr_lst.push("");
+
+    class_vars      = [];
+    class_constrs   = [];
+    class_operators = [];
+    class_methods   = [];
+
+    // - process class methods -
+    for (method <- a_class.methods())
+    {
+      process_method(class_name,method,class_constrs,class_operators,class_methods);
+    }
+
+    // - process class variables -
+    for (var <- a_class.vars())
+    {
+      process_variable(class_name,var,class_vars);
+    }
+
+    if (class_constrs.length() > 0)
+    {
+      m_descr_lst.push("## Constructors");
+      m_descr_lst.push("");
+      m_descr_lst += class_constrs;
+    }
+
+    if (class_operators.length() > 0)
+    {
+
+      m_descr_lst.push("## Operators");
+      m_descr_lst.push("");
+      m_descr_lst += class_operators;
+    }
+
+    if (class_methods.length() > 0)
+    {
+      m_descr_lst.push("## Methods");
+      m_descr_lst.push("");
+      m_descr_lst += class_methods;
+    }
+  }/*}}}*/
+
+  public Main()
+  {/*{{{*/
+    m_descr_lst = [];
+
+    // - process selected class -
+    process_class(Lang.cls("Float"));
+
+    ("%s\n" % m_descr_lst.to_string("\n")).print();
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    new Main();
+  }/*}}}*/
+}
+
