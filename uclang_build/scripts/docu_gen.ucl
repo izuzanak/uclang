@@ -68,7 +68,6 @@ class Main
     if (method_name_wp == a_class_name)
     {
       a_class_constrs.push("#### Constructor `%s`" % method_name);
-      a_class_constrs.push("");
     }
     else
     {
@@ -76,12 +75,10 @@ class Main
       if (m_operator_set.contain(method_name))
       {
         a_class_operators.push("#### Operator `%s`" % method_name);
-        a_class_operators.push("");
       }
       else
       {
         a_class_methods.push("#### Method `%s`" % method_name);
-        a_class_methods.push("");
       }
     }
   }/*}}}*/
@@ -91,7 +88,6 @@ class Main
     class_name = a_class.name();
 
     m_descr_lst.push("# Class %s" % class_name);
-    m_descr_lst.push("");
 
     class_vars      = [];
     class_constrs   = [];
@@ -112,6 +108,7 @@ class Main
 
     if (class_constrs.length() > 0)
     {
+      m_descr_lst.push("");
       m_descr_lst.push("## Constructors");
       m_descr_lst.push("");
       m_descr_lst += class_constrs;
@@ -119,7 +116,7 @@ class Main
 
     if (class_operators.length() > 0)
     {
-
+      m_descr_lst.push("");
       m_descr_lst.push("## Operators");
       m_descr_lst.push("");
       m_descr_lst += class_operators;
@@ -127,6 +124,7 @@ class Main
 
     if (class_methods.length() > 0)
     {
+      m_descr_lst.push("");
       m_descr_lst.push("## Methods");
       m_descr_lst.push("");
       m_descr_lst += class_methods;
@@ -138,7 +136,7 @@ class Main
     m_descr_lst = [];
 
     // - process selected class -
-    process_class(Lang.cls("Float"));
+    process_class(Lang.cls("Integer"));
 
     ("%s\n" % m_descr_lst.to_string("\n")).print();
   }/*}}}*/
