@@ -57,6 +57,7 @@ c_packages = [
   ["MOD_NODE"      ,"true"      ,[]],
   ["MOD_DDB"       ,"false"     ,[]],
   ["MOD_CONTAINERS","true"      ,[]],
+  ["MOD_ALGORITHMS","true"      ,[]],
   ["MOD_GRAPH"     ,"true"      ,[]],
   ["MOD_JSON"      ,"true"      ,[]],
   ["MOD_XML"       ,"pkg-config",["libxml-2.0 >= 2.9.1"]],
