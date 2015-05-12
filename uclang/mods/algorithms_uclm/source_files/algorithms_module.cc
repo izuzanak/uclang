@@ -76,7 +76,7 @@ built_in_class_s algo_class =
 {/*{{{*/
   "Algo",
   c_modifier_public | c_modifier_final,
-  5, algo_methods,
+  7, algo_methods,
   0, algo_variables,
   bic_algo_consts,
   bic_algo_init,
@@ -109,6 +109,16 @@ built_in_method_s algo_methods[] =
     "map#2",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_algo_method_map_2
+  },
+  {
+    "reduce#3",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_algo_method_reduce_3
+  },
+  {
+    "filter#2",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_algo_method_filter_2
   },
   {
     "to_string#0",
@@ -145,7 +155,7 @@ built_in_variable_s algo_variables[] =
     }\
   }/*}}}*/
 
-#define BIC_ALGO_PROCESS_ITERABLE(SRC_LOCATION,ALGO_CODE) \
+#define BIC_ALGO_PROCESS_ITERABLE(SRC_LOCATION,ALGO_CODE,ERR_CODE) \
   {/*{{{*/\
     \
     /* - retrieve iterable type - */\
@@ -157,7 +167,7 @@ built_in_variable_s algo_variables[] =
       exception_s *new_exception = exception_s::throw_exception(it,c_error_OBJECT_OF_CLASS_IS_NOT_ITERABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       new_exception->params.push(SRC_LOCATION->v_type);\
       \
-      return false;\
+      ERR_CODE;\
     }\
     \
     if (iter_type == c_iter_first_idx_next_idx_item)\
@@ -167,18 +177,18 @@ built_in_variable_s algo_variables[] =
       location_s *item_reference;\
       \
       /* - retrieve first index - */\
-      BIC_CALL_FIRST_IDX(it,SRC_LOCATION,index,operands[c_source_pos_idx],return false;);\
+      BIC_CALL_FIRST_IDX(it,SRC_LOCATION,index,operands[c_source_pos_idx],ERR_CODE;);\
       \
       while (index != c_idx_not_exist)\
       {\
         /* - retrieve item location - */\
-        BIC_CALL_ITEM(it,SRC_LOCATION,index,item_reference,operands[c_source_pos_idx],return false;);\
+        BIC_CALL_ITEM(it,SRC_LOCATION,index,item_reference,operands[c_source_pos_idx],ERR_CODE;);\
         item_location = it.get_location_value(item_reference);\
         \
         ALGO_CODE;\
         \
         /* - retrieve next index - */\
-        BIC_CALL_NEXT_IDX(it,SRC_LOCATION,index,index,operands[c_source_pos_idx],return false;);\
+        BIC_CALL_NEXT_IDX(it,SRC_LOCATION,index,index,operands[c_source_pos_idx],ERR_CODE;);\
       }\
     }\
     else if (iter_type == c_iter_next_item)\
@@ -190,7 +200,7 @@ built_in_variable_s algo_variables[] =
       {\
         \
         /* - retrieve next item location - */\
-        BIC_CALL_NEXT_ITEM(it,SRC_LOCATION,item_reference,operands[c_source_pos_idx],return false;);\
+        BIC_CALL_NEXT_ITEM(it,SRC_LOCATION,item_reference,operands[c_source_pos_idx],ERR_CODE;);\
         item_location = it.get_location_value(item_reference);\
         \
         if (item_location->v_type == c_bi_class_blank)\
@@ -267,6 +277,8 @@ bool bic_algo_method_all_true_1(interpreter_thread_s &it,unsigned stack_base,uli
 
       it.release_location_ptr(item_reference);
       all_true &= result;
+    ,
+      return false;
     );
   }
 
@@ -320,6 +332,8 @@ bool bic_algo_method_any_true_1(interpreter_thread_s &it,unsigned stack_base,uli
 
       it.release_location_ptr(item_reference);
       any_true |= result;
+    ,
+      return false;
     );
   }
 
@@ -372,7 +386,7 @@ bool bic_algo_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
       location_s *trg_location = NULL;
       BIC_CALL_DELEGATE(it,delegate_ptr,(pointer *)&item_location,1,trg_location,operands[c_source_pos_idx],
         it.release_location_ptr(array_location);
-        return false
+        return false;
       );
 
       array_ptr->push(trg_location);
@@ -389,11 +403,14 @@ bool bic_algo_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
       BIC_CALL_DELEGATE(it,delegate_ptr,(pointer *)&item_location,1,trg_location,operands[c_source_pos_idx],
         it.release_location_ptr(item_reference);
         it.release_location_ptr(array_location);
-        return false
+        return false;
       );
 
       it.release_location_ptr(item_reference);
       array_ptr->push(trg_location);
+    ,
+      it.release_location_ptr(array_location);
+      return false;
     );
   }
 
@@ -401,6 +418,95 @@ bool bic_algo_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
   BIC_SET_RESULT(array_location);
 
   return true;
+}/*}}}*/
+
+bool bic_algo_method_reduce_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
+
+  if (src_2_location->v_type != c_bi_class_delegate)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_algo,"reduce#3");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+    
+    return false;
+  }
+
+  // - retrieve delegate pointer -
+  delegate_s *delegate_ptr = (delegate_s *)src_2_location->v_data_ptr;
+
+  // - ERROR -
+  if (delegate_ptr->param_cnt != 2)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_WRONG_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(2);
+
+    return false;
+  }
+
+  // - result location -
+  src_0_location->v_reference_cnt.atomic_inc();
+  location_s *inter_location = src_0_location;
+
+  // - process array -
+  if (src_1_location->v_type == c_bi_class_array)
+  {
+    BIC_ALGO_PROCESS_ARRAY(src_1_location,
+      pointer params[2] = {inter_location MP_COMMA item_location};
+
+      // - call delegate method -
+      location_s *trg_location = NULL;
+      BIC_CALL_DELEGATE(it,delegate_ptr,params,2,trg_location,operands[c_source_pos_idx],
+        it.release_location_ptr(inter_location);
+        return false;
+      );
+
+      it.release_location_ptr(inter_location);
+      inter_location = trg_location;
+    );
+  }
+
+  // - process iterable -
+  else
+  {
+    BIC_ALGO_PROCESS_ITERABLE(src_1_location,
+      pointer params[2] = {inter_location MP_COMMA item_location};
+
+      // - call delegate method -
+      location_s *trg_location = NULL;
+      BIC_CALL_DELEGATE(it,delegate_ptr,params,2,trg_location,operands[c_source_pos_idx],
+        it.release_location_ptr(item_reference);
+        it.release_location_ptr(inter_location);
+        return false;
+      );
+
+      it.release_location_ptr(item_reference);
+      it.release_location_ptr(inter_location);
+      inter_location = trg_location;
+    ,
+      it.release_location_ptr(inter_location);
+      return false;
+    );
+  }
+
+  pointer &res_location = it.data_stack[res_loc_idx];
+  BIC_SET_RESULT(inter_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_algo_method_filter_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  
+  // FIXME TODO continue ...
+  BIC_TODO_ERROR(__FILE__,__LINE__);
+  return false;
+
 }/*}}}*/
 
 bool bic_algo_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
