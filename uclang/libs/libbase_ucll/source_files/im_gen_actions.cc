@@ -463,7 +463,7 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
                 im.operands.push(c_op_modifier_object);\
                 im.operands.push(local_idx);\
                 \
-                /* - identifier is varable of actual (this) class - */\
+                /* - identifier is variable of actual (this) class - */\
                 begin_code.push(i_this_element);\
                 begin_code.push(exp.nodes[exp_node_idx + 1]);\
                 begin_code.push(local_idx);\

@@ -299,8 +299,8 @@ built_in_variable_s queue_variables[] =
     if (iter_type == c_iter_first_idx_next_idx_item)\
     {\
       long long index;\
-      location_s *item_location;\
       location_s *item_reference;\
+      location_s *item_location;\
       \
       /* - retrieve first index - */\
       BIC_CALL_FIRST_IDX(it,SRC_LOCATION,index,operands[c_source_pos_idx],return false;);\
