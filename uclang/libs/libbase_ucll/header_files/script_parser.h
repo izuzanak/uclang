@@ -2068,7 +2068,7 @@ inline void interpreter_thread_s::release_location_ptr(location_s *location_ptr)
   // - decrease and test reference counter -
   if (location_ptr->v_reference_cnt.atomic_dec_and_test())
   {
-    // - call release locaiton method -
+    // - call release location method -
     _release_location_ptr(location_ptr);
   }
 }/*}}}*/

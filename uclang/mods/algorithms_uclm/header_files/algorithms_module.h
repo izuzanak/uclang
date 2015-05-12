@@ -44,6 +44,7 @@ bool bic_algo_method_any_true_1(interpreter_thread_s &it,unsigned stack_base,uli
 bool bic_algo_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_algo_method_reduce_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_algo_method_filter_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_algo_method_zip_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_algo_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_algo_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
