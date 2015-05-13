@@ -26,6 +26,7 @@ C_MODULE_WEBSOCKET  = index; index += 1
 C_MODULE_CURL       = index; index += 1
 C_MODULE_UCF        = index; index += 1
 C_MODULE_UCTCN      = index; index += 1
+C_MODULE_UCMM       = index; index += 1
 C_MODULE_ADAPTRAIN  = index; index += 1
 C_MODULE_FTP        = index; index += 1
 C_MODULE_SSH2       = index; index += 1
@@ -95,6 +96,7 @@ c_cfg = [
     ["MOD_CURL"      ,c_enabled[C_MODULE_CURL]      ,C_UCLANG_DIR + "mods/curl_uclm"        ,None],
     ["MOD_UCF"       ,c_enabled[C_MODULE_UCF]       ,C_UCLANG_DIR + "mods/ucf_uclm"         ,None],
     ["MOD_UCTCN"     ,c_enabled[C_MODULE_UCTCN]     ,C_UCLANG_DIR + "mods/uctcn_uclm"       ,None],
+    ["MOD_UCMM"      ,c_enabled[C_MODULE_UCMM]      ,C_UCLANG_DIR + "mods/ucmm_uclm"        ,None],
     ["MOD_ADAPTRAIN" ,c_enabled[C_MODULE_ADAPTRAIN] ,C_UCLANG_DIR + "mods/adaptrain_uclm"   ,None],
     ["MOD_FTP"       ,c_enabled[C_MODULE_FTP]       ,C_UCLANG_DIR + "mods/ftp_uclm"         ,None],
     ["MOD_SSH2"      ,c_enabled[C_MODULE_SSH2]      ,C_UCLANG_DIR + "mods/ssh2_uclm"        ,None],

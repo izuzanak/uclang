@@ -29,6 +29,7 @@ c_packages = [
   ["MOD_CURL"      ,"pkg-config",["libcurl = 7.38.0"]],
   ["MOD_UCF"       ,"dirs"      ,["../ext_libs/ucframework/2.9"]],
   ["MOD_UCTCN"     ,"dirs"      ,["../ext_libs/ucframework/1.60","../ext_libs/uctcn/2.27"]],
+  ["MOD_UCMM"      ,"dirs"      ,["../ext_libs/ucmm/trunk"]],
   ["MOD_ADAPTRAIN" ,"dirs"      ,["../ext_libs/ucframework/1.60","../ext_libs/unicon","../ext_libs/adaptrain"]],
   ["MOD_FTP"       ,"files"     ,["/usr/include/ftplib.h"]],
   ["MOD_SSH2"      ,"pkg-config",["libssh2 = 1.4.3"]],

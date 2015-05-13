@@ -1276,6 +1276,34 @@ if cfg_ref[CFG_TARGET]:
     )
 # }}}
 
+# ucmm module
+cfg_ref = c_cfg[C_MODULE_UCMM]
+# {{{
+if cfg_ref[CFG_TARGET]:
+    cfg_ref[CFG_MODULE] = module_c(
+      configuration,
+      cfg_ref[CFG_DIR],
+      cfg_ref[CFG_NAME],
+      [ 
+        "header_files",
+        os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
+        os.sep.join(["..","..","..","ext_libs","ucmm","trunk","build","include"])
+      ],
+      [ 
+        "source_files",
+      ],
+      [ 
+        os.sep.join(["..","..","libs","libbase_ucll"]),
+        os.sep.join(["..","..","..","ext_libs","ucmm","trunk","build","lib"])
+      ],
+      opt_build, # GPP options
+      opt_link, # GPP link options
+      "", # GPP defines
+      [],
+      [],
+    )
+# }}}
+
 # adaptrain module
 cfg_ref = c_cfg[C_MODULE_ADAPTRAIN]
 # {{{
