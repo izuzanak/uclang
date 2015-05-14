@@ -357,11 +357,11 @@ bool bic_modem_manager_method_subscriber_id_0(interpreter_thread_s &it,unsigned 
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  // - retrieve subscriber id -
   std::string sub_id;
 
   try
   {
+    // - retrieve subscriber id -
     sub_id = ((ModemManager *)dst_location->v_data_ptr)->GetSubscriberId();
   }
 
@@ -600,7 +600,7 @@ built_in_class_s mm_network_info_class =
   "MMNetworkInfo",
   c_modifier_public | c_modifier_final,
   8, mm_network_info_methods,
-  0, mm_network_info_variables,
+  18, mm_network_info_variables,
   bic_mm_network_info_consts,
   bic_mm_network_info_init,
   bic_mm_network_info_clear,
@@ -662,10 +662,77 @@ built_in_method_s mm_network_info_methods[] =
 
 built_in_variable_s mm_network_info_variables[] =
 {/*{{{*/
+
+  // - network status constants -
+  { "STATUS_NOT_REGISTERED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "STATUS_REGISTERED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "STATUS_SEARCHING", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "STATUS_DENIED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "STATUS_UNKNOWN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "STATUS_ROAMING", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "STATUS_SMS_ONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "STATUS_ROAMING_SMS_ONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "STATUS_EMERGENCY_ONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - network type constants -
+  { "TYPE_NONE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_GSM", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_GPRS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_UMTS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_EDGE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_HSDPA", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_HSUPA", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_HSPA", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_LTE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_mm_network_info_consts(location_array_s &const_locations)
 {/*{{{*/
+
+  // - insert network status constants -
+  {
+    const_locations.push_blanks(9);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 9);
+
+#define CREATE_NETWORK_STATUS_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr++;
+
+    CREATE_NETWORK_STATUS_BIC_STATIC(NetworkStatus::NOT_REGISTERED);
+    CREATE_NETWORK_STATUS_BIC_STATIC(NetworkStatus::REGISTERED);
+    CREATE_NETWORK_STATUS_BIC_STATIC(NetworkStatus::SEARCHING);
+    CREATE_NETWORK_STATUS_BIC_STATIC(NetworkStatus::DENIED);
+    CREATE_NETWORK_STATUS_BIC_STATIC(NetworkStatus::UNKNOWN);
+    CREATE_NETWORK_STATUS_BIC_STATIC(NetworkStatus::ROAMING);
+    CREATE_NETWORK_STATUS_BIC_STATIC(NetworkStatus::SMS_ONLY);
+    CREATE_NETWORK_STATUS_BIC_STATIC(NetworkStatus::ROAMING_SMS_ONLY);
+    CREATE_NETWORK_STATUS_BIC_STATIC(NetworkStatus::EMERGENCY_ONLY);
+  }
+
+  // - insert network type constants -
+  {
+    const_locations.push_blanks(9);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 9);
+
+#define CREATE_NETWORK_TYPE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr++;
+
+    CREATE_NETWORK_TYPE_BIC_STATIC(NetworkType::NONE);
+    CREATE_NETWORK_TYPE_BIC_STATIC(NetworkType::GSM);
+    CREATE_NETWORK_TYPE_BIC_STATIC(NetworkType::GPRS);
+    CREATE_NETWORK_TYPE_BIC_STATIC(NetworkType::UMTS);
+    CREATE_NETWORK_TYPE_BIC_STATIC(NetworkType::EDGE);
+    CREATE_NETWORK_TYPE_BIC_STATIC(NetworkType::HSDPA);
+    CREATE_NETWORK_TYPE_BIC_STATIC(NetworkType::HSUPA);
+    CREATE_NETWORK_TYPE_BIC_STATIC(NetworkType::HSPA);
+    CREATE_NETWORK_TYPE_BIC_STATIC(NetworkType::LTE);
+  }
 }/*}}}*/
 
 void bic_mm_network_info_init(interpreter_thread_s &it,location_s *location_ptr)

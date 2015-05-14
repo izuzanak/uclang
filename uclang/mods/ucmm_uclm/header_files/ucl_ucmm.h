@@ -2,6 +2,10 @@
 #ifndef __UCL_UCMM_H
 #define __UCL_UCMM_H
 
+/*
+ Based on revision 4 of svn/ucmm.
+ */
+
 @begin
 include "script_parser.h"
 @end
