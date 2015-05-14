@@ -52,7 +52,7 @@ var person_list = function()
     go = ctx.global_object();
 
     // - list global properties -
-    ("global properties: %s\n" % go.prop_names().to_string()).print();
+    ("global properties: %s\n" % go.prop_names().value().to_string()).print();
 
     // - retrieve person from list -
     avone = go.persons.avone;
