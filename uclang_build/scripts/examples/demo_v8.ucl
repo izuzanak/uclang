@@ -1,0 +1,82 @@
+
+import containers;
+import v8;
+import json;
+
+class Main
+{
+  // - v8 source script -
+  script_src = ("
+Person = function(a_name,a_surname)
+{
+  this.name    = a_name;
+  this.surname = a_surname;
+}
+
+var persons = 
+{
+  omar  : new Person('Omar','Little'),
+  avone : new Person('Avone','Barksdale')
+}
+
+var person_list = function()
+{
+  var result = []; 
+  for (id in persons)
+  {
+    person = persons[id];
+    result.push(person.name + ' ' + person.surname);
+  }
+
+  return result;
+}
+");
+
+  // - print information about person -
+  public person_info(a_person)
+  {
+    return "%s %s" % [a_person.name.to_string(),a_person.surname.to_string()];
+  }
+
+  public Main()
+  {
+    // - create new context -
+    ctx = new V8Context();
+    ctx.enter();
+
+    // - compile and run script -
+    script = V8Script.compile(script_src);
+    script.run();
+
+    // - retrieve global object -
+    go = ctx.global_object();
+
+    // - list global properties -
+    ("global properties: %s\n" % go.prop_names().to_string()).print();
+
+    // - retrieve person from list -
+    avone = go.persons.avone;
+    ("person: %s\n" % person_info(avone)).print();
+    ("persons: %s\n" % go.person_list().value().to_string()).print();
+
+    // - add person to list -
+    frank = go.Person.construct(["Frank","Sobotka"]);
+    go.persons.frank = frank;
+    ("person: %s\n" % person_info(frank)).print();
+    ("persons: %s\n" % go.person_list().value().to_string()).print();
+
+    // - create persons JSON in javascript-
+    v8_json = go.JSON.stringify(go.persons);
+    ("v8_json:  %s\n" % v8_json.value()).print();
+
+    // - create persons JSON in uclang-
+    ucl_json = Json.create(go.persons.value());
+    ("ucl_json: %s\n" % ucl_json).print();
+  }
+
+  static public main(argv)
+  {
+    new Main();
+  }
+}
+
