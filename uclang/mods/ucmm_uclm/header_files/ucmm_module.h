@@ -23,6 +23,8 @@ enum
   c_error_MODEM_MANAGER_CREATE_ERROR = 0,
   c_error_MODEM_MANAGER_DEVICE_INFO_READ_ERROR,
   c_error_MODEM_MANAGER_NETWORK_INFO_READ_ERROR,
+  c_error_MODEM_MANAGER_SUBSCRIBER_ID_READ_ERROR,
+  c_error_MODEM_MANAGER_AT_COMMAND_ERROR,
 };
 
 // - UCMM error strings -
@@ -48,6 +50,7 @@ bool bic_modem_manager_method_ModemManager_1(interpreter_thread_s &it,unsigned s
 bool bic_modem_manager_method_device_info_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_modem_manager_method_network_info_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_modem_manager_method_subscriber_id_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_modem_manager_method_at_command_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_modem_manager_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_modem_manager_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
