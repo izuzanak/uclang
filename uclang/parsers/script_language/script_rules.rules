@@ -1296,7 +1296,7 @@ rules:
 	 out("   node_",this_idx," -> node_",pop(node_stack),"\n");
 	 push(node_stack,this_idx);
       else
-	 out(tabs,"operator binary pecent_equal\n");
+	 out(tabs,"operator binary percent_equal\n");
       fi
    }
    <H> -> <H> double_ls_br_equal <H> ->> 
