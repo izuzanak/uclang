@@ -26,3 +26,6 @@ def person_list():
 
     return result
 
+def json(a_json,a_dict):
+    return a_json.dumps(a_dict,separators=(',',':'))
+

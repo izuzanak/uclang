@@ -38,7 +38,7 @@ class Main
     ("persons: %s\n" % demo.person_list().value().to_string()).print();
 
     // - create persons JSON in python-
-    python_json = json.dumps(demo.person_dict());
+    python_json = demo.json(json,demo.person_dict());
     ("python_json: %s\n" % python_json.value()).print();
 
     // - create persons JSON in uclang-
