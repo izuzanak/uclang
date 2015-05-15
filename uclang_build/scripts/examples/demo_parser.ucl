@@ -1,0 +1,132 @@
+
+import parser;
+
+class Main
+{
+  // - string describing parser rules -
+  static public c_parser_rules = ("
+init_code: {null}
+
+terminals:
+  oct_int_const {'0'.<07>*}
+  dec_int_const {<19>.d*}
+  hex_int_const {'0'.[xX].(<09>+<af>+<AF>).(<09>+<af>+<AF>)*}
+
+  lr_br {'('}
+  rr_br {')'}
+
+  plus {'+'}
+  minus {'-'}
+  asterisk {'*'}
+  slash {'/'}
+  percent {'%'}
+
+  _SKIP_ {w.w*}
+  _END_ {'\\0'}
+
+nonterminals:
+  <start> <exp> <C> <B> <A>
+
+rules:
+  <start> -> <exp> _END_  ->> {null}
+  <exp> -> <C>            ->> {null}
+  <C> -> <C> plus <B>     ->> {null}
+  <C> -> <C> minus <B>    ->> {null}
+  <C> -> <B>              ->> {null}
+  <B> -> <B> asterisk <A> ->> {null}
+  <B> -> <B> slash <A>    ->> {null}
+  <B> -> <B> percent <A>  ->> {null}
+  <B> -> <A>              ->> {null}
+  <A> -> lr_br <C> rr_br  ->> {null}
+  <A> -> oct_int_const    ->> {null}
+  <A> -> dec_int_const    ->> {null}
+  <A> -> hex_int_const    ->> {null}
+");
+
+  // - identifiers of parse actions -
+  static public ACTION_CNT = 0;
+  static public ACTION_NONE     = ACTION_CNT++;
+  static public ACTION_PLUS     = ACTION_CNT++;
+  static public ACTION_MINUS    = ACTION_CNT++;
+  static public ACTION_ASTERISK = ACTION_CNT++;
+  static public ACTION_SLASH    = ACTION_CNT++;
+  static public ACTION_PERCENT  = ACTION_CNT++;
+  static public ACTION_OCT_INT  = ACTION_CNT++;
+  static public ACTION_DEC_INT  = ACTION_CNT++;
+  static public ACTION_HEX_INT  = ACTION_CNT++;
+
+  // - mapping from rule indexes to parse actions -
+  static public c_action_map =
+  [
+    ACTION_NONE,
+    ACTION_NONE,
+    ACTION_PLUS,
+    ACTION_MINUS,
+    ACTION_NONE,
+    ACTION_ASTERISK,
+    ACTION_SLASH,
+    ACTION_PERCENT,
+    ACTION_NONE,
+    ACTION_NONE,
+    ACTION_OCT_INT,
+    ACTION_DEC_INT,
+    ACTION_HEX_INT
+  ];
+
+  // - values stack -
+  m_stack = [];
+
+  // - parser callback -
+  public parse_cb(a_state)
+  {
+    switch (c_action_map[a_state.rule_idx()])
+    {
+      case ACTION_PLUS:
+          m_stack[m_stack.length() - 2] += m_stack.pop();
+      case ACTION_MINUS:
+          m_stack[m_stack.length() - 2] -= m_stack.pop();
+      case ACTION_ASTERISK:
+          m_stack[m_stack.length() - 2] *= m_stack.pop();
+      case ACTION_SLASH:
+          m_stack[m_stack.length() - 2] /= m_stack.pop();
+      case ACTION_PERCENT:
+          m_stack[m_stack.length() - 2] %= m_stack.pop();
+      case ACTION_OCT_INT:
+        m_stack.push(new Integer(a_state.rule_body(0),8));
+      case ACTION_DEC_INT:
+        m_stack.push(new Integer(a_state.rule_body(0),10));
+      case ACTION_HEX_INT:
+        m_stack.push(new Integer(a_state.rule_body(0),16));
+    }
+  }
+
+  public Main()
+  {
+    // - create parser from rules -
+    parser = new Parser(c_parser_rules);
+
+    // - create parse callback delegate -
+    parse_cb = new Delegate(this,"parse_cb",1);
+
+    idx = 0;
+    do {
+
+      // - create source string -
+      source = "5*(10 + %d) - 0x10" % idx;
+
+      // - parse source string -
+      m_stack = [];
+      parser.parse(source,parse_cb);
+
+      // - retrieve result from stack top -
+      ("%s = %d\n" % [source,m_stack.pop()]).print();
+
+    } while(++idx < 10);
+  }
+
+  static public main(argv)
+  {
+    new Main();
+  }
+}
+
