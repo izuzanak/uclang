@@ -5,7 +5,7 @@ include "basic.h"
 
 // - version string constant -
 const char *c_name_str = "uclang";
-const char *c_version_str = "0.01";
+const char *c_version_str = "0.1.0";
 
 // - time measuring data structures -
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX

@@ -43,11 +43,11 @@ Sys.system("ls") -> 0
 Sys.open("01_class_sys.ucl","r") -> File
 
 file.readln(): 
-file.readln(): // Language version 0.10
-file.readln(): 
 file.readln(): import tutorial;
 file.readln(): import sys;
 file.readln(): 
+file.readln(): class Main
+file.readln(): {
 
 === Sys method popen#2 =========================================================
 
