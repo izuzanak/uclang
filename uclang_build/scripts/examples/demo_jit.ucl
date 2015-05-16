@@ -1,0 +1,80 @@
+
+import jit;
+import pack;
+
+class Main
+{
+  public Main()
+  {
+    // - create jit context -
+    jit = new JitContext();
+
+    // - create factorial function -
+    fact = jit.create_fun("
+i64 fact(i64 n)
+{
+  i64 res = 1;
+
+  while (n > 1)
+  {
+    res *= n--;
+  }
+
+  return res;
+}
+");
+
+    // - create test function -
+    test = jit.create_fun("
+i32 test(i8 *data,u32 count)
+{
+  i64 *ptr = (i64 *)data;
+  i64 *ptr_end = ptr + count;
+  do {
+    *ptr = fact(*ptr);
+  } while(++ptr < ptr_end);
+
+  return 0;
+}");
+
+    // - process binary data -
+    {
+      // - create array of parameters -
+      value = 1;
+      values = [];
+      do {
+        values.push(value);
+      } while(++value <= 15);
+
+      ("values: %s\n" % values.to_string()).print();
+
+      // - pack values to binary string -
+      data = Pack.code("%dq" % values.length(),values);
+
+      // - call jit test function -
+      test.call([data,values.length()]);
+
+      // - unpack values from binary string -
+      factorials = Pack.decode("%dq" % values.length(),data);
+      factorials.pop();
+
+      ("factorials: %s\n" % factorials.to_string()).print();
+    }
+
+    // - call factorial directly -
+    {
+      value = 1;
+      do {
+
+        // - call jit fact function -
+        ("fact(%d): %d\n" % [value,fact.call([value])]).print();
+      } while(++value <= 15);
+    }
+  }
+
+  static public main(argv)
+  {
+    new Main();
+  }
+}
+
