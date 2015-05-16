@@ -1,0 +1,569 @@
+
+import containers;
+import fuse;
+import sys;
+import time;
+
+class Main
+{
+  static public files_time = Sys.time()/1000000;
+
+  static public find_node_spl(tree,path_spl)
+  {/*{{{*/
+    node = tree;
+
+    for (item <- path_spl)
+    {
+      if (item != "")
+      {
+        if (type node != type Dict)
+        {
+          return new Blank();
+        }
+
+        if (node.has_key(item))
+        {
+          node = node[item];
+        }
+        else
+        {
+          return new Blank();
+        }
+      }
+    }
+
+    return node;
+  }/*}}}*/
+
+  static public find_node(tree,path)
+  {/*{{{*/
+    return find_node_spl(tree,path.split(Sys.SEP));
+  }/*}}}*/
+
+  static public file_head(node,offset)
+  {/*{{{*/
+    chunk_idx = 0;
+    skipped = 0;
+    do {
+      chunk = node[chunk_idx];
+      skipped += chunk.length();
+
+      if (skipped > offset)
+      {
+        head_size = (offset - (skipped - chunk.length()));
+        break;
+      }
+
+      if (++chunk_idx >= node.length())
+      {
+        head_size = chunk.length();
+        --chunk_idx;
+        break;
+      }
+    } while(1);
+
+    return [head_size,chunk_idx];
+  }/*}}}*/
+
+  static public file_size(node)
+  {/*{{{*/
+    size = 0;
+
+    for (chunk <- node)
+    {
+      size += chunk.length();
+    }
+
+    return size;
+  }/*}}}*/
+
+  class CbHandler
+  {
+    public CbHandler() {}
+
+    public fuse_init()
+    {/*{{{*/
+    }/*}}}*/
+
+    public fuse_getattr(path,stat)
+    {/*{{{*/
+      node = Main.find_node(FuseHandle.get_handle().private_data(),path);
+
+      switch (type node)
+      {
+        case type Dict:
+        {
+          stat.st_mode(FuseStat.S_IFDIR | 0755);
+          stat.st_nlink(2);
+        }
+        case type Array:
+        {
+          stat.st_mode(FuseStat.S_IFREG | 0644);
+          stat.st_nlink(1);
+          stat.st_size(Main.file_size(node));
+        }
+        default:
+          return -FuseHandle.ENOENT;
+      }
+
+      stat.st_uid(1000);
+      stat.st_uid(1000);
+
+      stat.st_atime(files_time);
+      stat.st_mtime(files_time);
+      stat.st_ctime(files_time);
+
+      return 0;
+    }/*}}}*/
+
+    public fuse_readdir(path,filler,fi)
+    {/*{{{*/
+      node = Main.find_node(FuseHandle.get_handle().private_data(),path);
+
+      if (type node != type Dict)
+      {
+        return -FuseHandle.ENOTDIR;
+      }
+
+      filler.fill_dir(".");
+      filler.fill_dir("..");
+
+      for (item <- node)
+      {
+        filler.fill_dir(item);
+      }
+
+      return 0;
+    }/*}}}*/
+
+    public fuse_open(path,fi)
+    {/*{{{*/
+      return 0;
+    }/*}}}*/
+
+    public fuse_release(path,fi)
+    {/*{{{*/
+      node = Main.find_node(FuseHandle.get_handle().private_data(),path);
+
+      if (node.length() > 1)
+      {
+        joined = node.to_string("");
+        node.clear();
+        node.push(joined);
+      }
+
+      return 0;
+    }/*}}}*/
+
+    public fuse_opendir(path,fi)
+    {/*{{{*/
+      return 0;
+    }/*}}}*/
+
+    public fuse_releasedir(path,fi)
+    {/*{{{*/
+      return 0;
+    }/*}}}*/
+
+    public fuse_read(path,filler,fi)
+    {/*{{{*/
+      node = Main.find_node(FuseHandle.get_handle().private_data(),path);
+
+      switch (type node)
+      {
+        case type Dict:
+        {
+          return -FuseHandle.EISDIR;
+        }
+        case type Array:
+        {
+        }
+        default:
+        {
+          return -FuseHandle.ENOENT;
+        }
+      }
+
+      offset = filler.offset();
+
+      // - find head chunk -
+      fp_res = Main.file_head(node,offset);
+      head_size = fp_res[0];
+      chunk_idx = fp_res[1];
+
+      if (head_size == 0)
+      {
+        suffix = node[chunk_idx];
+      }
+      else
+      {
+        suffix = node[chunk_idx].tail(-head_size);
+      }
+
+      // - write chunk suffix -
+      if (filler.write(suffix))
+      {
+        return filler.writed();
+      }
+
+      // - write rest of file -
+      while (++chunk_idx < node.length())
+      {
+        if (filler.write(node[chunk_idx]))
+        {
+          return filler.writed();
+        }
+      }
+
+      return filler.writed();
+    }/*}}}*/
+
+    public fuse_write(path,data,offset,fi)
+    {/*{{{*/
+      node = Main.find_node(FuseHandle.get_handle().private_data(),path);
+
+      switch (type node)
+      {
+        case type Dict:
+        {
+          return -FuseHandle.EISDIR;
+        }
+        case type Array:
+        {
+        }
+        default:
+        {
+          return -FuseHandle.ENOENT;
+        }
+      }
+
+      file_size = Main.file_size(node);
+
+      if (file_size != offset)
+      {
+        if (file_size < offset)
+        {
+          node.push("\0"*(offset - file_size));
+          node.push(data);
+        }
+        else
+        {
+          // - find start chunk -
+          fp_res = Main.file_head(node,offset);
+          start_head_size = fp_res[0];
+          start_chunk_idx = fp_res[1];
+
+          prefix = node[start_chunk_idx].head(start_head_size);
+
+          // - find end chunk -
+          fp_res = Main.file_head(node,offset + data.length());
+          end_head_size = fp_res[0];
+          end_chunk_idx = fp_res[1];
+
+          if (end_head_size == 0)
+          {
+            suffix = node[end_chunk_idx];
+          }
+          else
+          {
+            suffix = node[end_chunk_idx].tail(-end_head_size);
+          }
+
+          // - store rest of file -
+          if (node.length() > end_chunk_idx + 1)
+          {
+            rest = node[end_chunk_idx + 1::];
+          }
+          else
+          {
+            rest = [];
+          }
+
+          // - remove rest of file -
+          while (node.length() > start_chunk_idx)
+          {
+            node.pop();
+          }
+
+          if (prefix != "") node.push(prefix);
+          node.push(data);
+          if (suffix != "") node.push(suffix);
+
+          for (chunk <- rest)
+          {
+            node.push(chunk);
+          }
+        }
+      }
+      else
+      {
+        node.push(data);
+      }
+
+      return data.length();
+    }/*}}}*/
+
+    public fuse_create(path,mode,fi)
+    {/*{{{*/
+      path_spl = path.split(Sys.SEP);
+
+      node = Main.find_node_spl(
+        FuseHandle.get_handle().private_data(),path_spl[:path_spl.length() - 2:]);
+
+      if (type node != type Dict)
+      {
+        return -FuseHandle.ENOENT;
+      }
+
+      node[path_spl.last()] = [""];
+
+      return 0;
+    }/*}}}*/
+    
+    public fuse_unlink(path)
+    {/*{{{*/
+      path_spl = path.split(Sys.SEP);
+
+      node = Main.find_node_spl(
+        FuseHandle.get_handle().private_data(),path_spl[:path_spl.length() - 2:]);
+      file_name = path_spl.last();
+
+      if (type node != type Dict)
+      {
+        return -FuseHandle.ENOENT;
+      }
+
+      if (!node.has_key(file_name))
+      {
+        return -FuseHandle.ENOENT;
+      }
+
+      if (type node[file_name] == type Dict)
+      {
+        return -FuseHandle.EISDIR;
+      }
+
+      node.remove_key(file_name);
+
+      return 0;
+    }/*}}}*/
+
+    public fuse_mkdir(path,mode)
+    {/*{{{*/
+      path_spl = path.split(Sys.SEP);
+
+      node = Main.find_node_spl(
+        FuseHandle.get_handle().private_data(),path_spl[:path_spl.length() - 2:]);
+
+      if (type node != type Dict)
+      {
+        return -FuseHandle.ENOENT;
+      }
+
+      node[path_spl.last()] = new Dict([]);
+
+      return 0;
+    }/*}}}*/
+
+    public fuse_rmdir(path)
+    {/*{{{*/
+      path_spl = path.split(Sys.SEP);
+
+      node = Main.find_node_spl(
+        FuseHandle.get_handle().private_data(),path_spl[:path_spl.length() - 2:]);
+      dir_name = path_spl.last();
+
+      if (type node != type Dict)
+      {
+        return -FuseHandle.ENOENT;
+      }
+
+      if (!node.has_key(dir_name))
+      {
+        return -FuseHandle.ENOENT;
+      }
+
+      dir = node[dir_name];
+
+      // - target is not directory -
+      if (type dir != type Dict)
+      {
+        return -FuseHandle.ENOTDIR;
+      }
+
+      // - diretory is not empty -
+      if (dir.length() != 0)
+      {
+        return -FuseHandle.ENOTEMPTY;
+      }
+
+      node.remove_key(dir_name);
+
+      return 0;
+    }/*}}}*/
+
+    public fuse_rename(path,new_path)
+    {/*{{{*/
+      old_path_spl = path.split(Sys.SEP);
+      new_path_spl = new_path.split(Sys.SEP);
+
+      tree = FuseHandle.get_handle().private_data();
+
+      old_node = Main.find_node_spl(tree,old_path_spl[:old_path_spl.length() - 2:]);
+      new_node = Main.find_node_spl(tree,new_path_spl[:new_path_spl.length() - 2:]);
+
+      old_name = old_path_spl.last();
+      new_name = new_path_spl.last();
+
+      if (type old_node != type Dict || type new_node != type Dict)
+      {
+        return -FuseHandle.ENOENT;
+      }
+
+      if (!old_node.has_key(old_name))
+      {
+        return -FuseHandle.ENOENT;
+      }
+
+      new_node[new_name] = old_node[old_name];
+      old_node.remove_key(old_name);
+
+      return 0;
+    }/*}}}*/
+
+    public fuse_truncate(path,size)
+    {/*{{{*/
+      node = Main.find_node(FuseHandle.get_handle().private_data(),path);
+
+      switch (type node)
+      {
+        case type Dict:
+        {
+          return -FuseHandle.EISDIR;
+        }
+        case type Array:
+        {
+        }
+        default:
+        {
+          return -FuseHandle.ENOENT;
+        }
+      }
+
+      file_size = Main.file_size(node);
+
+      if (size > file_size)
+      {
+        node.push("\0"*(size - file_size));
+      }
+      else
+      {
+        // - find head chunk -
+        fp_res = Main.file_head(node,size);
+        head_size = fp_res[0];
+        chunk_idx = fp_res[1];
+
+        prefix = node[chunk_idx].head(head_size);
+
+        // - remove rest of file -
+        while (node.length() > chunk_idx)
+        {
+          node.pop();
+        }
+
+        node.push(prefix);
+      }
+
+      return 0;
+    }/*}}}*/
+
+    public fuse_chmod(path,mode)
+    {/*{{{*/
+      return 0;
+    }/*}}}*/
+
+    public fuse_chown(path,uid,gid)
+    {/*{{{*/
+      return 0;
+    }/*}}}*/
+
+    public fuse_utimens(path,atime,mtime)
+    {/*{{{*/
+      return 0;
+    }/*}}}*/
+  }
+
+  public static main(argv)
+  {
+    // - retrieve mount directory -
+    if (argv.length() > 1)
+    {
+      mount_dir = argv[1];
+    }
+    else
+    {
+      "Default mount directory\n".print();
+
+      // - set default mount directory -
+      mount_dir = "/dev/shm/demo_fuse";
+    }
+
+    // - library fuse test -
+    handler = new CbHandler();
+
+    // - register fuse operations -
+    operations = new FuseOps([
+      FuseOps.INIT,       new Delegate(handler,"fuse_init",0),
+      FuseOps.GETATTR,    new Delegate(handler,"fuse_getattr",2),
+      FuseOps.READDIR,    new Delegate(handler,"fuse_readdir",3),
+      FuseOps.OPEN,       new Delegate(handler,"fuse_open",2),
+      FuseOps.RELEASE,    new Delegate(handler,"fuse_release",2),
+      FuseOps.OPENDIR,    new Delegate(handler,"fuse_opendir",2),
+      FuseOps.RELEASEDIR, new Delegate(handler,"fuse_releasedir",2),
+      FuseOps.READ,       new Delegate(handler,"fuse_read",3),
+      FuseOps.WRITE,      new Delegate(handler,"fuse_write",4),
+      FuseOps.CREATE,     new Delegate(handler,"fuse_create",3),
+      FuseOps.UNLINK,     new Delegate(handler,"fuse_unlink",1),
+      FuseOps.MKDIR,      new Delegate(handler,"fuse_mkdir",2),
+      FuseOps.RMDIR,      new Delegate(handler,"fuse_rmdir",1),
+      FuseOps.RENAME,     new Delegate(handler,"fuse_rename",2),
+      FuseOps.TRUNCATE,   new Delegate(handler,"fuse_truncate",2),
+      FuseOps.CHMOD,      new Delegate(handler,"fuse_chmod",2),
+      FuseOps.CHOWN,      new Delegate(handler,"fuse_chown",3),
+      FuseOps.UTIMENS,    new Delegate(handler,"fuse_utimens",3)
+    ]);
+
+    // - create fuse channel -
+    ("Mounting to directory: %s\n" % mount_dir).print();
+    channel = new FuseChannel(mount_dir,[]);
+
+    // - create fuse handle -
+    fuse = new FuseHandle(channel,operations,[]);
+
+    // - create some content -
+    fuse.private_data() = new Dict(
+    [
+      "file_1", ["File content 1\n"],
+      "file_2", ["File content 2\n"],
+      "file_3", ["File content 3\n"]
+    ]);
+
+    // - create directory content -
+    idx = 0;
+    dir = new Dict();
+    do {
+      dir["file_%d" % idx] = ["File content %d\n" % idx];
+    } while(++idx < 1024);
+
+    fuse.private_data()["directory"] = dir;
+
+    // - enter fuse main loop -
+    fuse.loop();
+
+    free fuse;
+    free channel;
+
+    return 0;
+  }
+}
+
