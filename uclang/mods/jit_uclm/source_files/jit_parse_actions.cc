@@ -2021,7 +2021,7 @@ bool jit_pa_function_call(jit_parser_s &_this)
     exp_node_s *en_ptr_end = exp_node_stack.data + exp_node_stack.used;
     jit_value_t *jv_ptr = jit_params;
     do {
-      *jv_ptr++ = (jit_value_t)en_ptr->value;
+      *jv_ptr++ = en_ptr->load_value(jit_function);
     } while(++en_ptr < en_ptr_end);
   }
 
