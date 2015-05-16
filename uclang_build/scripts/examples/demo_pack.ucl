@@ -1,0 +1,55 @@
+
+import containers;
+import pack;
+
+class Person
+{
+  m_name;
+  m_surname;
+
+  public Person(a_name,a_surname)
+  {
+    m_name    = a_name;
+    m_surname = a_surname;
+  }
+
+  public to_string()
+  {
+    return "%s %s" % [m_name,m_surname];
+  }
+}
+
+class Main
+{
+  public Main()
+  {
+    // - create various objects -
+    array = [1,2,3,4,5];    
+    set = new Set([1,2,3,4,5]);
+    dict = new Dict(["One",1,"Two",2,"Three",3,"Four",4]);
+    person = new Person("Frank","Sobotka");
+
+    // - pack object (array) to binary string -
+    data = Pack.pack([array,set,dict,person]);
+    ("data.length(): %d\n" % data.length()).print();
+
+    // - unpack object from binary string -
+    object = Pack.unpack(data);
+    ("object: %s\n" % object.to_string()).print();
+
+    // - pack integers to little endian ints -
+    data = Pack.code("<5i",array);
+    ("data.length(): %d\n" % data.length()).print();
+
+    // - unpack integers from little endian ints -
+    integers = Pack.decode("<5i",data);
+    integers.pop();
+    ("integers: %s\n" % integers.to_string()).print();
+  }
+
+  static public main(argv)
+  {
+    new Main();
+  }
+}
+
