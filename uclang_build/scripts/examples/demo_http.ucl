@@ -1,0 +1,58 @@
+
+import http;
+import sys;
+
+class Main
+{
+  public connection(a_conn)
+  {
+    switch (a_conn.get_type())
+    {
+      case HttpConn.TYPE_GET:
+      {
+        ("Serving: %s %s\n" % [a_conn.version(),a_conn.method()]).print();
+
+        // - create http response from string -
+        resp = new HttpResp(HttpResp.FROM_STRING,("
+<html>
+  <body>
+    Hello, browser!
+  </body>
+</html>
+"));
+
+        // - set response content type -
+        resp.add_header("Content-Type","text/html");
+        
+        // - queue response -
+        a_conn.queue_response(HttpResp.HTTP_OK,resp);
+      }
+
+      default:
+        ("Unsupported method: \"%s\"\n" % a_conn.method()).print();
+    }
+  }
+
+  public Main()
+  {
+    // - create http server -
+    server = new HttpServer(8888,new Delegate(this,"connection",1));
+    "HTTP server listening at localhost:8888\n".print();
+
+    do {
+      
+      // - poll http file descriptors -
+      poll = new Poll(server.get_fds());
+      poll.ready(5000);
+
+      // - process http actions -
+      server.process();
+    } while(1);
+  }
+
+  static public main(argv)
+  {
+    new Main();
+  }
+}
+
