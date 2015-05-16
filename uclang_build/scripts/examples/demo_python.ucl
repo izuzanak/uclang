@@ -12,13 +12,14 @@ class Main
     return "%s %s" % [a_person.name.to_string(),a_person.surname.to_string()];
   }
 
-  public Main()
+  public Main(a_argv)
   {
     sys = PyObject.module("sys");
+    os = PyObject.module("os");
     json = PyObject.module("json");
 
     // - update python import path -
-    sys.path.append("%s/scripts/examples/" % Sys.getcwd());
+    sys.path.append("%s/%s" % [Sys.getcwd(),os.path.split(a_argv[0])[0].value()]);
 
     // - load demo module -
     demo = PyObject.module("demo");
@@ -48,7 +49,7 @@ class Main
 
   static public main(argv)
   {
-    new Main();
+    new Main(argv);
   }
 }
 
