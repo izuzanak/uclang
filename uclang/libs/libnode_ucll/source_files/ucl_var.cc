@@ -335,17 +335,17 @@ unsigned UclVar::c_bi_vni_DELEGATE_NEGATIVE_PARAMETER_COUNT;
 unsigned UclVar::c_bi_vni_DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD;
 unsigned UclVar::c_bi_vni_DELEGATE_CALL_WRONG_PARAMETER_COUNT;
 unsigned UclVar::c_bi_vni_DELEGATE_WRONG_RETURN_VALUE_TYPE;
-unsigned UclVar::c_bi_vni_ERROR_INVALID;
-unsigned UclVar::c_bi_vni_ERROR_DEADLOCK;
-unsigned UclVar::c_bi_vni_ERROR_BUSY;
-unsigned UclVar::c_bi_vni_ERROR_PERMISSION;
-unsigned UclVar::c_bi_vni_ERROR_AGAIN;
-unsigned UclVar::c_bi_vni_ERROR_SEARCH;
+unsigned UclVar::c_bi_vni__ERROR_INVALID;
+unsigned UclVar::c_bi_vni__ERROR_DEADLOCK;
+unsigned UclVar::c_bi_vni__ERROR_BUSY;
+unsigned UclVar::c_bi_vni__ERROR_PERMISSION;
+unsigned UclVar::c_bi_vni__ERROR_AGAIN;
+unsigned UclVar::c_bi_vni__ERROR_SEARCH;
 unsigned UclVar::c_bi_vni_NAME;
 unsigned UclVar::c_bi_vni_SEP;
-unsigned UclVar::c_bi_vni_stdin;
-unsigned UclVar::c_bi_vni_stdout;
-unsigned UclVar::c_bi_vni_stderr;
+unsigned UclVar::c_bi_vni__stdin;
+unsigned UclVar::c_bi_vni__stdout;
+unsigned UclVar::c_bi_vni__stderr;
 unsigned UclVar::c_bi_vni_AF_UNIX;
 unsigned UclVar::c_bi_vni_AF_FILE;
 unsigned UclVar::c_bi_vni_AF_INET;
@@ -598,20 +598,20 @@ UclVar UclVar::Exception::DELEGATE_NEGATIVE_PARAMETER_COUNT = UclVar(NO_INIT());
 UclVar UclVar::Exception::DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD = UclVar(NO_INIT());
 UclVar UclVar::Exception::DELEGATE_CALL_WRONG_PARAMETER_COUNT = UclVar(NO_INIT());
 UclVar UclVar::Exception::DELEGATE_WRONG_RETURN_VALUE_TYPE = UclVar(NO_INIT());
-UclVar UclVar::Mutex::ERROR_INVALID = UclVar(NO_INIT());
-UclVar UclVar::Mutex::ERROR_DEADLOCK = UclVar(NO_INIT());
-UclVar UclVar::Mutex::ERROR_BUSY = UclVar(NO_INIT());
-UclVar UclVar::Mutex::ERROR_PERMISSION = UclVar(NO_INIT());
-UclVar UclVar::Thread::ERROR_AGAIN = UclVar(NO_INIT());
-UclVar UclVar::Thread::ERROR_SEARCH = UclVar(NO_INIT());
-UclVar UclVar::Thread::ERROR_INVALID = UclVar(NO_INIT());
-UclVar UclVar::Thread::ERROR_DEADLOCK = UclVar(NO_INIT());
-UclVar UclVar::Thread::ERROR_BUSY = UclVar(NO_INIT());
+UclVar UclVar::Mutex::_ERROR_INVALID = UclVar(NO_INIT());
+UclVar UclVar::Mutex::_ERROR_DEADLOCK = UclVar(NO_INIT());
+UclVar UclVar::Mutex::_ERROR_BUSY = UclVar(NO_INIT());
+UclVar UclVar::Mutex::_ERROR_PERMISSION = UclVar(NO_INIT());
+UclVar UclVar::Thread::_ERROR_AGAIN = UclVar(NO_INIT());
+UclVar UclVar::Thread::_ERROR_SEARCH = UclVar(NO_INIT());
+UclVar UclVar::Thread::_ERROR_INVALID = UclVar(NO_INIT());
+UclVar UclVar::Thread::_ERROR_DEADLOCK = UclVar(NO_INIT());
+UclVar UclVar::Thread::_ERROR_BUSY = UclVar(NO_INIT());
 UclVar UclVar::Sys::NAME = UclVar(NO_INIT());
 UclVar UclVar::Sys::SEP = UclVar(NO_INIT());
-UclVar UclVar::File::stdin = UclVar(NO_INIT());
-UclVar UclVar::File::stdout = UclVar(NO_INIT());
-UclVar UclVar::File::stderr = UclVar(NO_INIT());
+UclVar UclVar::File::_stdin = UclVar(NO_INIT());
+UclVar UclVar::File::_stdout = UclVar(NO_INIT());
+UclVar UclVar::File::_stderr = UclVar(NO_INIT());
 
 #ifdef ENABLE_CLASS_SOCKET
 UclVar UclVar::Socket::AF_UNIX = UclVar(NO_INIT());
@@ -1339,12 +1339,12 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD,"DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_DELEGATE_CALL_WRONG_PARAMETER_COUNT,"DELEGATE_CALL_WRONG_PARAMETER_COUNT");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_DELEGATE_WRONG_RETURN_VALUE_TYPE,"DELEGATE_WRONG_RETURN_VALUE_TYPE");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_ERROR_INVALID,"ERROR_INVALID");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_ERROR_DEADLOCK,"ERROR_DEADLOCK");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_ERROR_BUSY,"ERROR_BUSY");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_ERROR_PERMISSION,"ERROR_PERMISSION");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_ERROR_AGAIN,"ERROR_AGAIN");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_ERROR_SEARCH,"ERROR_SEARCH");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__ERROR_INVALID,"ERROR_INVALID");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__ERROR_DEADLOCK,"ERROR_DEADLOCK");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__ERROR_BUSY,"ERROR_BUSY");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__ERROR_PERMISSION,"ERROR_PERMISSION");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__ERROR_AGAIN,"ERROR_AGAIN");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__ERROR_SEARCH,"ERROR_SEARCH");
   }
 
   // - module node -
@@ -1357,9 +1357,9 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
   {
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_NAME,"NAME");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_SEP,"SEP");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_stdin,"stdin");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_stdout,"stdout");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_stderr,"stderr");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__stdin,"stdin");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__stdout,"stdout");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__stderr,"stderr");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_AF_UNIX,"AF_UNIX");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_AF_FILE,"AF_FILE");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_AF_INET,"AF_INET");
@@ -1703,15 +1703,15 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(Exception,c_bi_class_Exception,DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD);
     UCLVAR_RETRIEVE_STATIC_CONST(Exception,c_bi_class_Exception,DELEGATE_CALL_WRONG_PARAMETER_COUNT);
     UCLVAR_RETRIEVE_STATIC_CONST(Exception,c_bi_class_Exception,DELEGATE_WRONG_RETURN_VALUE_TYPE);
-    UCLVAR_RETRIEVE_STATIC_CONST(Mutex,c_bi_class_Mutex,ERROR_INVALID);
-    UCLVAR_RETRIEVE_STATIC_CONST(Mutex,c_bi_class_Mutex,ERROR_DEADLOCK);
-    UCLVAR_RETRIEVE_STATIC_CONST(Mutex,c_bi_class_Mutex,ERROR_BUSY);
-    UCLVAR_RETRIEVE_STATIC_CONST(Mutex,c_bi_class_Mutex,ERROR_PERMISSION);
-    UCLVAR_RETRIEVE_STATIC_CONST(Thread,c_bi_class_Thread,ERROR_AGAIN);
-    UCLVAR_RETRIEVE_STATIC_CONST(Thread,c_bi_class_Thread,ERROR_SEARCH);
-    UCLVAR_RETRIEVE_STATIC_CONST(Thread,c_bi_class_Thread,ERROR_INVALID);
-    UCLVAR_RETRIEVE_STATIC_CONST(Thread,c_bi_class_Thread,ERROR_DEADLOCK);
-    UCLVAR_RETRIEVE_STATIC_CONST(Thread,c_bi_class_Thread,ERROR_BUSY);
+    UCLVAR_RETRIEVE_STATIC_CONST(Mutex,c_bi_class_Mutex,_ERROR_INVALID);
+    UCLVAR_RETRIEVE_STATIC_CONST(Mutex,c_bi_class_Mutex,_ERROR_DEADLOCK);
+    UCLVAR_RETRIEVE_STATIC_CONST(Mutex,c_bi_class_Mutex,_ERROR_BUSY);
+    UCLVAR_RETRIEVE_STATIC_CONST(Mutex,c_bi_class_Mutex,_ERROR_PERMISSION);
+    UCLVAR_RETRIEVE_STATIC_CONST(Thread,c_bi_class_Thread,_ERROR_AGAIN);
+    UCLVAR_RETRIEVE_STATIC_CONST(Thread,c_bi_class_Thread,_ERROR_SEARCH);
+    UCLVAR_RETRIEVE_STATIC_CONST(Thread,c_bi_class_Thread,_ERROR_INVALID);
+    UCLVAR_RETRIEVE_STATIC_CONST(Thread,c_bi_class_Thread,_ERROR_DEADLOCK);
+    UCLVAR_RETRIEVE_STATIC_CONST(Thread,c_bi_class_Thread,_ERROR_BUSY);
   }
 
   // - module node -
@@ -1724,9 +1724,9 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
   {
     UCLVAR_RETRIEVE_STATIC_CONST(Sys,c_bi_class_Sys,NAME);
     UCLVAR_RETRIEVE_STATIC_CONST(Sys,c_bi_class_Sys,SEP);
-    UCLVAR_RETRIEVE_STATIC_CONST(File,c_bi_class_File,stdin);
-    UCLVAR_RETRIEVE_STATIC_CONST(File,c_bi_class_File,stdout);
-    UCLVAR_RETRIEVE_STATIC_CONST(File,c_bi_class_File,stderr);
+    UCLVAR_RETRIEVE_STATIC_CONST(File,c_bi_class_File,_stdin);
+    UCLVAR_RETRIEVE_STATIC_CONST(File,c_bi_class_File,_stdout);
+    UCLVAR_RETRIEVE_STATIC_CONST(File,c_bi_class_File,_stderr);
 
 #ifdef ENABLE_CLASS_SOCKET
     UCLVAR_RETRIEVE_STATIC_CONST(Socket,c_bi_class_Socket,AF_UNIX);

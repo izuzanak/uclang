@@ -376,17 +376,17 @@ class UclVar
   static unsigned c_bi_vni_DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD;
   static unsigned c_bi_vni_DELEGATE_CALL_WRONG_PARAMETER_COUNT;
   static unsigned c_bi_vni_DELEGATE_WRONG_RETURN_VALUE_TYPE;
-  static unsigned c_bi_vni_ERROR_INVALID;
-  static unsigned c_bi_vni_ERROR_DEADLOCK;
-  static unsigned c_bi_vni_ERROR_BUSY;
-  static unsigned c_bi_vni_ERROR_PERMISSION;
-  static unsigned c_bi_vni_ERROR_AGAIN;
-  static unsigned c_bi_vni_ERROR_SEARCH;
+  static unsigned c_bi_vni__ERROR_INVALID;
+  static unsigned c_bi_vni__ERROR_DEADLOCK;
+  static unsigned c_bi_vni__ERROR_BUSY;
+  static unsigned c_bi_vni__ERROR_PERMISSION;
+  static unsigned c_bi_vni__ERROR_AGAIN;
+  static unsigned c_bi_vni__ERROR_SEARCH;
   static unsigned c_bi_vni_NAME;
   static unsigned c_bi_vni_SEP;
-  static unsigned c_bi_vni_stdin;
-  static unsigned c_bi_vni_stdout;
-  static unsigned c_bi_vni_stderr;
+  static unsigned c_bi_vni__stdin;
+  static unsigned c_bi_vni__stdout;
+  static unsigned c_bi_vni__stderr;
   static unsigned c_bi_vni_AF_UNIX;
   static unsigned c_bi_vni_AF_FILE;
   static unsigned c_bi_vni_AF_INET;
@@ -799,10 +799,10 @@ class UclVar
     static unsigned c_bi_mi_print_0;
 
     public:
-    static UclVar ERROR_INVALID;
-    static UclVar ERROR_DEADLOCK;
-    static UclVar ERROR_BUSY;
-    static UclVar ERROR_PERMISSION;
+    static UclVar _ERROR_INVALID;
+    static UclVar _ERROR_DEADLOCK;
+    static UclVar _ERROR_BUSY;
+    static UclVar _ERROR_PERMISSION;
 
     public:
     inline static UclVar to_string()
@@ -832,11 +832,11 @@ class UclVar
     static unsigned c_bi_mi_print_0;
 
     public:
-    static UclVar ERROR_AGAIN;
-    static UclVar ERROR_SEARCH;
-    static UclVar ERROR_INVALID;
-    static UclVar ERROR_DEADLOCK;
-    static UclVar ERROR_BUSY;
+    static UclVar _ERROR_AGAIN;
+    static UclVar _ERROR_SEARCH;
+    static UclVar _ERROR_INVALID;
+    static UclVar _ERROR_DEADLOCK;
+    static UclVar _ERROR_BUSY;
 
     public:
     inline static UclVar yield()
@@ -1144,9 +1144,9 @@ class UclVar
     static unsigned c_bi_mi_print_0;
 
     public:
-    static UclVar stdin;
-    static UclVar stdout;
-    static UclVar stderr;
+    static UclVar _stdin;
+    static UclVar _stdout;
+    static UclVar _stderr;
 
     public:
     inline static UclVar to_string()

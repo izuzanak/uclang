@@ -195,25 +195,25 @@ int main(int argc,char **argv)
     mutex.try_lock();
     mutex.unlock();
 
-    (UclVar("Mutex::ERROR_INVALID: %s\n") % UclVar::Mutex::ERROR_INVALID.to_string()).print();
-    (UclVar("Mutex::ERROR_DEADLOCK: %s\n") % UclVar::Mutex::ERROR_DEADLOCK.to_string()).print();
-    (UclVar("Mutex::ERROR_BUSY: %s\n") % UclVar::Mutex::ERROR_BUSY.to_string()).print();
-    (UclVar("Mutex::ERROR_PERMISSION: %s\n") % UclVar::Mutex::ERROR_PERMISSION.to_string()).print();
+    (UclVar("Mutex::_ERROR_INVALID: %s\n") % UclVar::Mutex::_ERROR_INVALID.to_string()).print();
+    (UclVar("Mutex::_ERROR_DEADLOCK: %s\n") % UclVar::Mutex::_ERROR_DEADLOCK.to_string()).print();
+    (UclVar("Mutex::_ERROR_BUSY: %s\n") % UclVar::Mutex::_ERROR_BUSY.to_string()).print();
+    (UclVar("Mutex::_ERROR_PERMISSION: %s\n") % UclVar::Mutex::_ERROR_PERMISSION.to_string()).print();
 
-    (UclVar("Thread::ERROR_AGAIN: %s\n") % UclVar::Thread::ERROR_AGAIN.to_string()).print();
-    (UclVar("Thread::ERROR_SEARCH: %s\n") % UclVar::Thread::ERROR_SEARCH.to_string()).print();
-    (UclVar("Thread::ERROR_INVALID: %s\n") % UclVar::Thread::ERROR_INVALID.to_string()).print();
-    (UclVar("Thread::ERROR_DEADLOCK: %s\n") % UclVar::Thread::ERROR_DEADLOCK.to_string()).print();
-    (UclVar("Thread::ERROR_BUSY: %s\n") % UclVar::Thread::ERROR_BUSY.to_string()).print();
+    (UclVar("Thread::_ERROR_AGAIN: %s\n") % UclVar::Thread::_ERROR_AGAIN.to_string()).print();
+    (UclVar("Thread::_ERROR_SEARCH: %s\n") % UclVar::Thread::_ERROR_SEARCH.to_string()).print();
+    (UclVar("Thread::_ERROR_INVALID: %s\n") % UclVar::Thread::_ERROR_INVALID.to_string()).print();
+    (UclVar("Thread::_ERROR_DEADLOCK: %s\n") % UclVar::Thread::_ERROR_DEADLOCK.to_string()).print();
+    (UclVar("Thread::_ERROR_BUSY: %s\n") % UclVar::Thread::_ERROR_BUSY.to_string()).print();
 
     (UclVar("spl.to_string(\" : \"): %s\n") % spl.to_string(" : ")).print();
 
     //UclVar::Sys::sleep(100);
     UclVar::Sys::srand(13);
-    fprintf(stdout,"rand(): %lld\n",UclVar::Sys::rand().__int() % 1000);
-    fprintf(stdout,"getpid(): %lld\n",UclVar::Sys::getpid().__int());
-    fprintf(stdout,"getuid(): %lld\n",UclVar::Sys::getuid().__int());
-    fprintf(stdout,"getgid(): %lld\n",UclVar::Sys::getgid().__int());
+    fprintf(stdout,"rand(): %" HOST_LL_FORMAT "d\n",UclVar::Sys::rand().__int() % 1000);
+    fprintf(stdout,"getpid(): %" HOST_LL_FORMAT "d\n",UclVar::Sys::getpid().__int());
+    fprintf(stdout,"getuid(): %" HOST_LL_FORMAT "d\n",UclVar::Sys::getuid().__int());
+    fprintf(stdout,"getgid(): %" HOST_LL_FORMAT "d\n",UclVar::Sys::getgid().__int());
     UclVar::Sys::system("ls");
     UclVar::Sys::rmdir("koleda");
     UclVar::Sys::mkdir("koleda");
@@ -242,21 +242,24 @@ int main(int argc,char **argv)
     UclVar file = UclVar::File("elmeter.log","r");
     file.read();
 
-    UclVar::File::stdout.write("Output to stdout\n");
-    UclVar::File::stderr.write("Output to stderr\n");
+    UclVar::File::_stdout.write("Output to stdout\n");
+    UclVar::File::_stderr.write("Output to stderr\n");
 
     UclVar();
 
-    (UclVar("SocketAddr: %s\n") % UclVar::SocketAddr("192.168.2.69",8888).to_string()).print();
+    // FIXME debug socket test
+    //{
+    //  (UclVar("SocketAddr: %s\n") % UclVar::SocketAddr("192.168.2.69",8888).to_string()).print();
 
-    (UclVar("Socket::AF_UNIX: %s\n") % UclVar::Socket::AF_UNIX.to_string()).print();
-    (UclVar("Socket::AF_FILE: %s\n") % UclVar::Socket::AF_FILE.to_string()).print();
-    (UclVar("Socket::AF_INET: %s\n") % UclVar::Socket::AF_INET.to_string()).print();
-    (UclVar("Socket::SOCK_STREAM: %s\n") % UclVar::Socket::SOCK_STREAM.to_string()).print();
-    (UclVar("Socket::SOCK_DGRAM: %s\n") % UclVar::Socket::SOCK_DGRAM.to_string()).print();
-    (UclVar("Socket::SOCK_RAW: %s\n") % UclVar::Socket::SOCK_RAW.to_string()).print();
-    (UclVar("Socket::SO_RCVTIMEO: %s\n") % UclVar::Socket::SO_RCVTIMEO.to_string()).print();
-    (UclVar("Socket::SO_SNDTIMEO: %s\n") % UclVar::Socket::SO_SNDTIMEO.to_string()).print();
+    //  (UclVar("Socket::AF_UNIX: %s\n") % UclVar::Socket::AF_UNIX.to_string()).print();
+    //  (UclVar("Socket::AF_FILE: %s\n") % UclVar::Socket::AF_FILE.to_string()).print();
+    //  (UclVar("Socket::AF_INET: %s\n") % UclVar::Socket::AF_INET.to_string()).print();
+    //  (UclVar("Socket::SOCK_STREAM: %s\n") % UclVar::Socket::SOCK_STREAM.to_string()).print();
+    //  (UclVar("Socket::SOCK_DGRAM: %s\n") % UclVar::Socket::SOCK_DGRAM.to_string()).print();
+    //  (UclVar("Socket::SOCK_RAW: %s\n") % UclVar::Socket::SOCK_RAW.to_string()).print();
+    //  (UclVar("Socket::SO_RCVTIMEO: %s\n") % UclVar::Socket::SO_RCVTIMEO.to_string()).print();
+    //  (UclVar("Socket::SO_SNDTIMEO: %s\n") % UclVar::Socket::SO_SNDTIMEO.to_string()).print();
+    //}
 
     // FIXME debug socket test
     //{
@@ -273,9 +276,9 @@ int main(int argc,char **argv)
     //  } while((data != "END").__int());
     //}
 
-    UclVar regex = UclVar::Regex("xx*");
-    UclVar res = regex.match("aaaaxxxxxbbbb");
-    (UclVar("RES: %s\n") % res.to_string()).print();
+    //UclVar regex = UclVar::Regex("xx*");
+    //UclVar res = regex.match("aaaaxxxxxbbbb");
+    //(UclVar("RES: %s\n") % res.to_string()).print();
 
     UclVar poll_arr = UclVar::Array();
     (UclVar("Poll: %s\n") % UclVar::Poll(poll_arr).to_string()).print();
@@ -427,54 +430,54 @@ int main(int argc,char **argv)
     UclVar("-----\n").print();
 
     // - jit test -
-    {
-      fprintf(stdout,"TYPE_I8: %s\n",UclVar::JitContext::TYPE_I8.to_string().__str());
-      fprintf(stdout,"TYPE_U8: %s\n",UclVar::JitContext::TYPE_U8.to_string().__str());
-      fprintf(stdout,"TYPE_I16: %s\n",UclVar::JitContext::TYPE_I16.to_string().__str());
-      fprintf(stdout,"TYPE_U16: %s\n",UclVar::JitContext::TYPE_U16.to_string().__str());
-      fprintf(stdout,"TYPE_I32: %s\n",UclVar::JitContext::TYPE_I32.to_string().__str());
-      fprintf(stdout,"TYPE_U32: %s\n",UclVar::JitContext::TYPE_U32.to_string().__str());
-      fprintf(stdout,"TYPE_I64: %s\n",UclVar::JitContext::TYPE_I64.to_string().__str());
-      fprintf(stdout,"TYPE_U64: %s\n",UclVar::JitContext::TYPE_U64.to_string().__str());
-      fprintf(stdout,"TYPE_F32: %s\n",UclVar::JitContext::TYPE_F32.to_string().__str());
-      fprintf(stdout,"TYPE_F64: %s\n",UclVar::JitContext::TYPE_F64.to_string().__str());
-
-      //UclVar::Sys::exit(12);
-
-      UclVar jit_ctx = UclVar::JitContext();
-      UclVar jit_fun = jit_ctx.create_fun(
-"i32 test(u32 a_ptr,u32 a_cnt)"
-"{"
-"  i32 *ptr = (i32 *)a_ptr;"
-"  i32 *ptr_end = ptr + a_cnt;"
-""
-"  i32 idx = 0;"
-"  if (ptr < ptr_end)"
-"  {"
-"    do {"
-"      *ptr = idx++;"
-"    } while(++ptr < ptr_end);"
-"  }"
-""
-"  return 0;"
-"}"
-      );
-
-      int idx;
-      int num_cnt = 10;
-      int nums[num_cnt];
-      memset(nums,0,num_cnt*sizeof(int));
-      for (idx=0;idx<num_cnt;idx++) fprintf(stderr,"%d, ",nums[idx]); fprintf(stderr,"\n");
-
-      UclVar args_arr[] = {(long long int)nums,num_cnt};
-      UclVar args(ARRAY_LENGTH(args_arr),args_arr);
-
-      res = jit_fun.call(args);
-      for (idx=0;idx<num_cnt;idx++) fprintf(stderr,"%d, ",nums[idx]); fprintf(stderr,"\n");
-
-      fprintf(stdout,"jit_fun.signature(): %s\n",jit_fun.signature().to_string().__str());
-      fprintf(stdout,"res: %s\n",res.to_string().__str());
-    }
+//    {
+//      fprintf(stdout,"TYPE_I8: %s\n",UclVar::JitContext::TYPE_I8.to_string().__str());
+//      fprintf(stdout,"TYPE_U8: %s\n",UclVar::JitContext::TYPE_U8.to_string().__str());
+//      fprintf(stdout,"TYPE_I16: %s\n",UclVar::JitContext::TYPE_I16.to_string().__str());
+//      fprintf(stdout,"TYPE_U16: %s\n",UclVar::JitContext::TYPE_U16.to_string().__str());
+//      fprintf(stdout,"TYPE_I32: %s\n",UclVar::JitContext::TYPE_I32.to_string().__str());
+//      fprintf(stdout,"TYPE_U32: %s\n",UclVar::JitContext::TYPE_U32.to_string().__str());
+//      fprintf(stdout,"TYPE_I64: %s\n",UclVar::JitContext::TYPE_I64.to_string().__str());
+//      fprintf(stdout,"TYPE_U64: %s\n",UclVar::JitContext::TYPE_U64.to_string().__str());
+//      fprintf(stdout,"TYPE_F32: %s\n",UclVar::JitContext::TYPE_F32.to_string().__str());
+//      fprintf(stdout,"TYPE_F64: %s\n",UclVar::JitContext::TYPE_F64.to_string().__str());
+//
+//      //UclVar::Sys::exit(12);
+//
+//      UclVar jit_ctx = UclVar::JitContext();
+//      UclVar jit_fun = jit_ctx.create_fun(
+//"i32 test(u32 a_ptr,u32 a_cnt)"
+//"{"
+//"  i32 *ptr = (i32 *)a_ptr;"
+//"  i32 *ptr_end = ptr + a_cnt;"
+//""
+//"  i32 idx = 0;"
+//"  if (ptr < ptr_end)"
+//"  {"
+//"    do {"
+//"      *ptr = idx++;"
+//"    } while(++ptr < ptr_end);"
+//"  }"
+//""
+//"  return 0;"
+//"}"
+//      );
+//
+//      int idx;
+//      int num_cnt = 10;
+//      int nums[num_cnt];
+//      memset(nums,0,num_cnt*sizeof(int));
+//      for (idx=0;idx<num_cnt;idx++) fprintf(stderr,"%d, ",nums[idx]); fprintf(stderr,"\n");
+//
+//      UclVar args_arr[] = {(long long int)nums,num_cnt};
+//      UclVar args(ARRAY_LENGTH(args_arr),args_arr);
+//
+//      res = jit_fun.call(args);
+//      for (idx=0;idx<num_cnt;idx++) fprintf(stderr,"%d, ",nums[idx]); fprintf(stderr,"\n");
+//
+//      fprintf(stdout,"jit_fun.signature(): %s\n",jit_fun.signature().to_string().__str());
+//      fprintf(stdout,"res: %s\n",res.to_string().__str());
+//    }
   }
   catch (std::string reason)
   {

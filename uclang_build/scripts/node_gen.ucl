@@ -138,6 +138,15 @@ class Main
 
   static m_name_blacklist = new Set(
   [/*{{{*/
+    "ERROR_INVALID",
+    "ERROR_DEADLOCK",
+    "ERROR_BUSY",
+    "ERROR_PERMISSION",
+    "ERROR_AGAIN",
+    "ERROR_SEARCH",
+    "stdin",
+    "stdout",
+    "stderr",
     "SIGINT",
     "SIGTERM",
     "SIGHUP",
