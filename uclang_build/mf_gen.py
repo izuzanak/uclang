@@ -154,7 +154,7 @@ class configuration_c:
     elif self.shell_type == self.C_SHELL_TYPE_WINDOWS:
       string += "PROC=process\n"
     else:
-      assert false;
+      assert False
 
     return string
   #}}}
@@ -719,7 +719,7 @@ if configuration.compiler_type == configuration.C_COMPILER_GCC:
   elif configuration.shell_type == configuration.C_SHELL_TYPE_WINDOWS:
     opt_link += "$(OPT) -lpthread "
   else:
-    assert False;
+    assert False
 
 elif configuration.compiler_type == configuration.C_COMPILER_MS_VS:
   opt_build += "/nologo /MTd /Os "
@@ -2357,21 +2357,32 @@ if cfg_ref[CFG_TARGET]:
     )
 # }}}
 
+# compilation target selection
+if len(sys.argv) > 1:
+    selection = sys.argv[1::]
+    config = []
+    for comp in c_cfg:
+        if comp[CFG_NAME] in selection:
+            config.append(comp)
+
+else:
+    config = c_cfg
+
 # preprocess
-for comp in c_cfg:
+for comp in config:
     if comp[CFG_TARGET]:
         comp[CFG_MODULE].preprocess()
 
 print
 print configuration.str_setting()
 
-for comp in c_cfg:
+for comp in config:
     if comp[CFG_TARGET]:
         print comp[CFG_MODULE].str_setting()
 
 all_target_list = []
 proc_target_list = []
-for comp in c_cfg:
+for comp in config:
     if comp[CFG_TARGET]:
 
         # append component to compilation target list
@@ -2383,15 +2394,15 @@ for comp in c_cfg:
 print configuration.str_all_target(all_target_list)
 print configuration.str_process_target(proc_target_list)
 
-for comp in c_cfg:
+for comp in config:
     if comp[CFG_TARGET]:
         print comp[CFG_MODULE].str_processing()
 
-for comp in c_cfg:
+for comp in config:
     if comp[CFG_TARGET]:
         print comp[CFG_MODULE].str_compilation()
 
-for comp in c_cfg:
+for comp in config:
     if comp[CFG_TARGET]:
         print comp[CFG_MODULE].str_linking([])
 
