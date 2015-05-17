@@ -535,6 +535,7 @@ class Main
 
     // - create fuse channel -
     ("Mounting to directory: %s\n" % mount_dir).print();
+    ("Unmount by: fusermount -u %s\n" % mount_dir).print();
     channel = new FuseChannel(mount_dir,[]);
 
     // - create fuse handle -
