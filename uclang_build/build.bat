@@ -2,8 +2,6 @@
 ::
 :: Windows porting problems to solve:
 :: * pkg-config not present
-:: * ucl_var static constant names: ERROR_BUSY, stdin, stdout, stderr
-:: * program node use disabled (Windows) UclVar classes
 ::
 
 :: - configure modules -
