@@ -1,0 +1,147 @@
+#vim: set syntax=rules:
+
+init_code:
+{
+  tabs = {\};
+}
+
+terminals:
+   string {'"'.(|\\\"|+(('\\'.["\\/bfnrt])+('\\'.'u'.(<09>+<af>+<AF>).(<09>+<af>+<AF>).(<09>+<af>+<AF>).(<09>+<af>+<AF>))))*.'"'}
+   integer {('-'+e).('0'+(<19>.d*))}
+   float {('-'+e).('0'+(<19>.d*)).(('.'.d*)+e).(([eE].([+-]+e).d.d*)+e)}
+
+   true {"true"}
+   false {"false"}
+   null {"null"}
+
+   lc_br {'{'}
+   rc_br {'\}'}
+
+   le_br {'['}
+   re_br {']'}
+
+   comma {','}
+   colon {':'}
+
+   _SKIP_ {w.w*}
+   _END_ {'\0'}
+
+nonterminals:
+   <start>
+   <end_check>
+
+   <main_object>
+
+   <object>
+   <pairs>
+   <pairs_begin>
+   <pair_list>
+   <pair>
+
+   <array>
+   <values>
+   <values_begin>
+   <value_list>
+   <value>
+
+   <string>
+
+rules:
+   <start> -> <end_check> ->> {}
+
+   <end_check> -> <main_object> _END_ ->> {}
+   <end_check> -> _END_ ->> {}
+
+   <main_object> -> <object> ->> {}
+
+   <object> -> <pairs> rc_br ->>
+   {
+     table.remove(tabs);
+   }
+
+   <pairs> -> <pairs_begin> ->> {}
+
+   <pairs> -> <pairs_begin> <pair_list> ->> {}
+
+   <pairs_begin> -> lc_br ->>
+   {
+     print(table.concat(tabs,"").."object_begin");
+     table.insert(tabs,"  o ");
+   }
+
+   <pair_list> -> <pair_list> comma <pair> ->> {}
+
+   <pair_list> -> <pair> ->> {}
+
+   <pair> -> <string> colon <value> ->>
+   {
+     print(table.concat(tabs,"").."object_pair");
+   }
+
+   <array> -> <values> re_br ->> {}
+
+   <values> -> <values_begin> ->> {}
+
+   <values> -> <values_begin> <value_list> ->> {}
+
+   <values_begin> -> le_br ->>
+   {
+     print(table.concat(tabs,"").."array_begin");
+     table.insert(tabs,"  a ");
+   }
+
+   <value_list> -> <value_list> comma <value> ->>
+   {
+     print(table.concat(tabs,"").."array_value");
+   }
+
+   <value_list> -> <value> ->>
+   {
+     print(table.concat(tabs,"").."array_value");
+   }
+
+   <value> -> <string> ->>
+   {
+     print(table.concat(tabs,"").."val_string");
+   }
+
+   <value> -> integer ->>
+   {
+     print(table.concat(tabs,"").."val_integer: "..rule_body(0).."");
+   }
+
+   <value> -> float ->>
+   {
+     print(table.concat(tabs,"").."val_float: "..rule_body(0).."");
+   }
+
+   <value> -> <object> ->>
+   {
+     print(table.concat(tabs,"").."val_object");
+   }
+
+   <value> -> <array> ->>
+   {
+     table.remove(tabs);
+     print(table.concat(tabs,"").."val_array");
+   }
+
+   <value> -> true ->>
+   {
+     print(table.concat(tabs,"").."val_true");
+   }
+
+   <value> -> false ->>
+   {
+     print(table.concat(tabs,"").."val_false");
+   }
+   <value> -> null ->>
+   {
+     print(table.concat(tabs,"").."val_null");
+   }
+
+   <string> -> string ->>
+   {
+     print(table.concat(tabs,"").."string: "..rule_body(0).."");
+   }
+

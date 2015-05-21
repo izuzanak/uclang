@@ -1,6 +1,6 @@
 #vim: set syntax=rules:
 
-init_code: {null}
+init_code: {}
 
 terminals:
   comment {(("#".[!#].!'\n'*.'\n')+("//".[!/].!'\n'*.'\n')+("/*".[!*].(!'*'+('*'.!'/'))*."*/".[ \t]*.('\n'+e))).[ \t]*}
@@ -12,10 +12,10 @@ nonterminals:
   <comm>
 
 rules:
-  <start> -> <comm_list> _END_ ->> {null}
+  <start> -> <comm_list> _END_ ->> {}
 
-  <comm_list> -> <comm> ->> {null}
-  <comm_list> -> <comm_list> <comm> ->> {null}
+  <comm_list> -> <comm> ->> {}
+  <comm_list> -> <comm_list> <comm> ->> {}
 
-  <comm> -> comment ->> {out("comment\n");}
+  <comm> -> comment ->> {print("comment");}
 

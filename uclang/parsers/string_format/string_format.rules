@@ -1,0 +1,52 @@
+#vim: set syntax=rules:
+
+init_code: {}
+
+terminals:
+
+  minus {'-'}
+  flags {[+ #0].[-+ #0]*}
+  number {<09>.<09>*}
+  parameter {'*'}
+  dot {'.'}
+  percent {'%'}
+
+  character {'c'}
+  integer {[dioxX]}
+  float {[fFeEgG]}
+  string {'s'}
+
+  $ !!! FIXME comment this terminal before production
+  _END_ {'\n'}
+
+nonterminals:
+  <start>
+  <end_check>
+  <program>
+  <term_list>
+  <term>
+  
+rules:
+
+  <start> -> <end_check> ->> {}
+
+  $ !!! FIXME comment these two rules before production
+  <end_check> -> <program> _END_ ->> {}
+  <end_check> -> _END_ ->> {}
+
+  <program> -> <term_list> ->> {}
+
+  <term_list> -> <term> <term_list> ->> {}
+  <term_list> -> <term> ->> {}
+
+  <term> -> minus ->> {print("minus");}
+  <term> -> flags ->> {print("flags");}
+  <term> -> number ->> {print("number");}
+  <term> -> parameter ->> {print("parameter");}
+  <term> -> dot ->> {print("dot");}
+  <term> -> percent ->> {print("percent");}
+  <term> -> character ->> {print("character");}
+  <term> -> integer ->> {print("integer");}
+  <term> -> float ->> {print("float");}
+  <term> -> string ->> {print("string");}
+
