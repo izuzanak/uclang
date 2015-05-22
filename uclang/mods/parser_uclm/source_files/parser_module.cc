@@ -123,6 +123,7 @@ bool parser_print_exception(interpreter_s &it,exception_s &exception)
   case c_error_PARSER_CREATE_RULES_UNDEFINED_TERMINAL:
   case c_error_PARSER_CREATE_RULES_UNDEFINED_NONTERMINAL:
   case c_error_PARSER_CREATE_TERMINAL_REGULAR_EXPRESSION_PARSE_ERROR:
+  case c_error_PARSER_CREATE_RULES_DUPLICATE_RULE:
     {
       string_s &rules_source = *((string_s *)((location_s *)exception.obj_location)->v_data_ptr);
       unsigned rules_source_pos = exception.params[0];
@@ -163,20 +164,6 @@ bool parser_print_exception(interpreter_s &it,exception_s &exception)
         fprintf(stderr,"Error received while parsing regular expression of terminal symbol\n");
         fprintf(stderr," ---------------------------------------- \n");
         break;
-      }
-    }
-    break;
-  case c_error_PARSER_CREATE_RULES_DUPLICATE_RULE:
-    {
-      string_s &rules_source = *((string_s *)((location_s *)exception.obj_location)->v_data_ptr);
-      unsigned rules_source_pos = exception.params[0];
-
-      fprintf(stderr," ---------------------------------------- \n");
-      fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
-      fprintf(stderr,"Parser rules string on line: %u\n",rules_source.get_character_line(rules_source_pos));
-
-      switch (exception.type - module.error_base)
-      {
       case c_error_PARSER_CREATE_RULES_DUPLICATE_RULE:
         print_error_line(rules_source,rules_source_pos);
         fprintf(stderr,"\nDuplicate parser grammar rule\n");

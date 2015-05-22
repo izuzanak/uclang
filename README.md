@@ -7,7 +7,7 @@ Dynamic object-oriented, general-purpose, high-level programming language.
 Follows list of uclang programming language features, that are supported by
 its interpreter.
 
-### Features points
+### Feature list
 
 * Language syntax is designed to be easy to understand by C/C++ programmers.
   * Some syntax is derived from Java programming language.
