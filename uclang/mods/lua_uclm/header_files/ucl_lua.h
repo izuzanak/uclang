@@ -18,10 +18,41 @@ include "script_parser.h"
   }
 #endif
 
+/*
+ * definition of structure lua_value_s
+ */
+
+struct lua_value_s
+{
+  location_s *lua_state_loc;
+  int ref;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
 
 /*
- * constants and definitions
+ * inline methods of structure lua_value_s
  */
+
+inline void lua_value_s::init()
+{/*{{{*/
+  lua_state_loc = NULL;
+  ref = 0;
+}/*}}}*/
+
+inline void lua_value_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+  if (lua_state_loc != NULL)
+  {
+    lua_State *L = (lua_State *)lua_state_loc->v_data_ptr;
+    luaL_unref(L,LUA_REGISTRYINDEX,ref);
+
+    it.release_location_ptr(lua_state_loc);
+  }
+
+  init();
+}/*}}}*/
 
 #endif
 
