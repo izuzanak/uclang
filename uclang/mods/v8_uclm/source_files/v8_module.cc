@@ -12,7 +12,6 @@ unsigned c_bi_class_v8_object = c_idx_not_exist;
 unsigned c_bi_class_v8_reference = c_idx_not_exist;
 
 // - V8 indexes of remote classes -
-unsigned c_rm_class_set = c_idx_not_exist;
 unsigned c_rm_class_dict = c_idx_not_exist;
 
 // - V8 module -
@@ -82,15 +81,11 @@ bool v8_initialize(script_parser_s &sp)
   // - initialize v8_reference class identifier -
   c_bi_class_v8_reference = class_base_idx++;
 
-  // - retrieve remote set class index -
-  c_rm_class_set = sp.resolve_class_idx_by_name("Set",c_idx_not_exist);
-
   // - retrieve remote dict class index -
   c_rm_class_dict = sp.resolve_class_idx_by_name("Dict",c_idx_not_exist);
 
   // - ERROR -
-  if (c_rm_class_set == c_idx_not_exist ||
-      c_rm_class_dict == c_idx_not_exist)
+  if (c_rm_class_dict == c_idx_not_exist)
   {
     sp.error_code.push(ei_module_cannot_find_remote_class);
     sp.error_code.push(sp.module_names_positions[sp.module_idx].ui_first);

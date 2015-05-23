@@ -16,7 +16,6 @@ using namespace v8;
 
 extern unsigned c_bi_class_v8_object;
 extern unsigned c_bi_class_v8_reference;
-extern unsigned c_rm_class_set;
 extern unsigned c_rm_class_dict;
 
 // - max method name length -

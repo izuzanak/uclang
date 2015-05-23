@@ -6,6 +6,14 @@
 include "ucl_v8.h"
 @end
 
+// - V8 indexes of built in classes -
+extern unsigned c_bi_class_v8_engine;
+extern unsigned c_bi_class_v8_context;
+extern unsigned c_bi_class_v8_script;
+extern unsigned c_bi_class_v8_heap_stat;
+extern unsigned c_bi_class_v8_object;
+extern unsigned c_bi_class_v8_reference;
+
 // - V8 module -
 extern built_in_module_s module;
 

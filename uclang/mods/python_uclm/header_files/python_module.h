@@ -6,6 +6,11 @@
 include "ucl_python.h"
 @end
 
+// - PYTHON indexes of built in classes -
+extern unsigned c_bi_class_py_object;
+extern unsigned c_bi_class_py_attr_ref;
+extern unsigned c_bi_class_py_item_ref;
+
 // - PYTHON module -
 extern built_in_module_s module;
 
