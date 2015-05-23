@@ -66,6 +66,7 @@ c_packages = [
   ["MOD_SOAPSRV"   ,"false"     ,[]],
   ["MOD_PYTHON"    ,"pkg-config",["python-2.7 >= 2.7"]],
   ["MOD_V8"        ,"files"     ,["/usr/include/v8.h"]],
+  ["MOD_LUA"       ,"pkg-config",["lua5.2 >= 5.2.0"]],
   ["MOD_UV"        ,"false"     ,[]],
   ["MOD_FUSE"      ,"pkg-config",["fuse >= 2.9.3"]],
   ["MOD_ANDROID"   ,"false"     ,[]],

@@ -63,6 +63,7 @@ C_MODULE_SOAPCL     = index; index += 1
 C_MODULE_SOAPSRV    = index; index += 1
 C_MODULE_PYTHON     = index; index += 1
 C_MODULE_V8         = index; index += 1
+C_MODULE_LUA        = index; index += 1
 C_MODULE_UV         = index; index += 1
 C_MODULE_FUSE       = index; index += 1
 C_MODULE_ANDROID    = index; index += 1
@@ -133,6 +134,7 @@ c_cfg = [
     ["MOD_SOAPSRV"   ,c_enabled[C_MODULE_SOAPSRV]   ,C_UCLANG_DIR + "mods/soap/soapsrv_uclm",None],
     ["MOD_PYTHON"    ,c_enabled[C_MODULE_PYTHON]    ,C_UCLANG_DIR + "mods/python_uclm"      ,None],
     ["MOD_V8"        ,c_enabled[C_MODULE_V8]        ,C_UCLANG_DIR + "mods/v8_uclm"          ,None],
+    ["MOD_LUA"       ,c_enabled[C_MODULE_LUA]       ,C_UCLANG_DIR + "mods/lua_uclm"         ,None],
     ["MOD_UV"        ,c_enabled[C_MODULE_UV]        ,C_UCLANG_DIR + "mods/uv_uclm"          ,None],
     ["MOD_FUSE"      ,c_enabled[C_MODULE_FUSE]      ,C_UCLANG_DIR + "mods/fuse_uclm"        ,None],
     ["MOD_ANDROID"   ,c_enabled[C_MODULE_ANDROID]   ,C_UCLANG_DIR + "mods/android_uclm"     ,None],
