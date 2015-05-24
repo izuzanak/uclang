@@ -29,7 +29,7 @@ bool lua_s::create_lua_object(interpreter_thread_s &it,lua_State *L,location_s *
     lua_State *lv_ptr_L = (lua_State *)lv_ptr->lua_state_loc->v_data_ptr;
 
     // - lua value from another lua state -
-    if (lv_ptr_L != L)
+    if (L != lv_ptr_L)
     {
       return false;
     }

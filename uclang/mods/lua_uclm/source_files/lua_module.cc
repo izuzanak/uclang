@@ -14,11 +14,11 @@ unsigned c_rm_class_dict = c_idx_not_exist;
 // - LUA module -
 built_in_module_s module =
 {/*{{{*/
-  2,                   // Class count
+  3,                   // Class count
   lua_classes,         // Classes
 
   0,                   // Error base index
-  2,                   // Error count
+  5,                   // Error count
   lua_error_strings,   // Error strings
 
   lua_initialize,      // Initialize function
@@ -30,6 +30,7 @@ built_in_class_s *lua_classes[] =
 {/*{{{*/
   &lua_state_class,
   &lua_value_class,
+  &lua_reference_class,
 };/*}}}*/
 
 // - LUA error strings -
@@ -37,6 +38,9 @@ const char *lua_error_strings[] =
 {/*{{{*/
   "error_LUA_STATE_CREATE_NEW_STATE_ERROR",
   "error_LUA_STATE_DO_STRING_ERROR",
+  "error_LUA_VALUE_CREATE_ERROR",
+  "error_LUA_VALUE_VALUE_ERROR",
+  "error_LUA_VALUE_WRONG_VALUE_REFERENCE",
 };/*}}}*/
 
 // - LUA initialize -
@@ -49,6 +53,9 @@ bool lua_initialize(script_parser_s &sp)
 
   // - initialize lua_value class identifier -
   c_bi_class_lua_value = class_base_idx++;
+
+  // - initialize lua_reference class identifier -
+  c_bi_class_lua_reference = class_base_idx++;
 
   // - retrieve remote dict class index -
   c_rm_class_dict = sp.resolve_class_idx_by_name("Dict",c_idx_not_exist);
@@ -89,6 +96,27 @@ bool lua_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nLUA error: %s\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_LUA_VALUE_CREATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while creating LUA value\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_LUA_VALUE_VALUE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while retrieving value of LUA value\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_LUA_VALUE_WRONG_VALUE_REFERENCE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong reference to LUA value\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -296,8 +324,7 @@ bool bic_lua_state_method_new_value_1(interpreter_thread_s &it,unsigned stack_ba
   // - ERROR -
   if (!lua_s::create_lua_object(it,L,src_0_location))
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_LUA_VALUE_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -421,8 +448,8 @@ built_in_class_s lua_value_class =
   NULL,
   NULL,
   NULL,
-  NULL,
-  NULL
+  bic_lua_value_invoke,
+  bic_lua_value_member
 };/*}}}*/
 
 built_in_method_s lua_value_methods[] =
@@ -459,7 +486,7 @@ void bic_lua_value_consts(location_array_s &const_locations)
 
 void bic_lua_value_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = c_idx_not_exist;
+  location_ptr->v_data_ptr = (basic_64b)NULL;
 }/*}}}*/
 
 void bic_lua_value_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -471,6 +498,16 @@ void bic_lua_value_clear(interpreter_thread_s &it,location_s *location_ptr)
     lv_ptr->clear(it);
     cfree(lv_ptr);
   }
+}/*}}}*/
+
+bool bic_lua_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base,uli *operands)
+{/*{{{*/
+  cassert(0);
+}/*}}}*/
+
+bool bic_lua_value_member(interpreter_thread_s &it,uli *code,unsigned stack_base)
+{/*{{{*/
+  cassert(0);
 }/*}}}*/
 
 bool bic_lua_value_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -492,10 +529,16 @@ bool bic_lua_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,u
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  lua_value_s *lv_ptr = (lua_value_s *)dst_location->v_data_ptr;
-  lua_State *L = (lua_State *)lv_ptr->lua_state_loc->v_data_ptr;
+  location_s *lua_state_loc = *((location_s **)dst_location->v_data_ptr);
+  lua_State *L = (lua_State *)lua_state_loc->v_data_ptr;
 
-  lua_rawgeti(L,LUA_REGISTRYINDEX,lv_ptr->ref);
+  // - ERROR -
+  if (!lua_s::create_lua_object(it,L,dst_location))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_LUA_VALUE_WRONG_VALUE_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
   location_s *location_ptr = lua_s::lua_object_value(it,L,operands[c_source_pos_idx]);
 
   // - ERROR -
@@ -507,8 +550,7 @@ bool bic_lua_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,u
       return false;
     }
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_LUA_VALUE_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -522,10 +564,15 @@ bool bic_lua_value_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  lua_value_s *lv_ptr = (lua_value_s *)dst_location->v_data_ptr;
-  lua_State *L = (lua_State *)lv_ptr->lua_state_loc->v_data_ptr;
+  location_s *lua_state_loc = *((location_s **)dst_location->v_data_ptr);
+  lua_State *L = (lua_State *)lua_state_loc->v_data_ptr;
 
-  lua_rawgeti(L,LUA_REGISTRYINDEX,lv_ptr->ref);
+  // - ERROR -
+  if (!lua_s::create_lua_object(it,L,dst_location))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_LUA_VALUE_WRONG_VALUE_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
 
   size_t length;
   const char *data = luaL_tolstring(L,-1,&length);
@@ -545,15 +592,96 @@ bool bic_lua_value_method_print_0(interpreter_thread_s &it,unsigned stack_base,u
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  lua_value_s *lv_ptr = (lua_value_s *)dst_location->v_data_ptr;
-  lua_State *L = (lua_State *)lv_ptr->lua_state_loc->v_data_ptr;
+  location_s *lua_state_loc = *((location_s **)dst_location->v_data_ptr);
+  lua_State *L = (lua_State *)lua_state_loc->v_data_ptr;
 
-  lua_rawgeti(L,LUA_REGISTRYINDEX,lv_ptr->ref);
+  // - ERROR -
+  if (!lua_s::create_lua_object(it,L,dst_location))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_LUA_VALUE_WRONG_VALUE_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
   printf(luaL_tolstring(L,-1,NULL));
   lua_pop(L,2);
 
   BIC_SET_RESULT_BLANK();
 
   return true;
+}/*}}}*/
+
+// - class LUA_REFERENCE -
+built_in_class_s lua_reference_class =
+{/*{{{*/
+  "LuaReference",
+  c_modifier_public | c_modifier_final,
+  4, lua_reference_methods,
+  0, lua_reference_variables,
+  bic_lua_reference_consts,
+  bic_lua_reference_init,
+  bic_lua_reference_clear,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  bic_lua_value_invoke,
+  bic_lua_value_member
+};/*}}}*/
+
+built_in_method_s lua_reference_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_lua_reference_operator_binary_equal
+  },
+  {
+    "value#0",
+    c_modifier_public | c_modifier_final,
+    bic_lua_value_method_value_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final,
+    bic_lua_value_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final,
+    bic_lua_value_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s lua_reference_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_lua_reference_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_lua_reference_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (basic_64b)NULL;
+}/*}}}*/
+
+void bic_lua_reference_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  lua_reference_s *lr_ptr = (lua_reference_s *)location_ptr->v_data_ptr;
+
+  if (lr_ptr != NULL)
+  {
+    lr_ptr->clear(it);
+    cfree(lr_ptr);
+  }
+}/*}}}*/
+
+bool bic_lua_reference_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  cassert(0);
 }/*}}}*/
 

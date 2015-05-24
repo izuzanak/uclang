@@ -22,6 +22,9 @@ enum
 {
   c_error_LUA_STATE_CREATE_NEW_STATE_ERROR = 0,
   c_error_LUA_STATE_DO_STRING_ERROR,
+  c_error_LUA_VALUE_CREATE_ERROR,
+  c_error_LUA_VALUE_VALUE_ERROR,
+  c_error_LUA_VALUE_WRONG_VALUE_REFERENCE,
 };
 
 // - LUA error strings -
@@ -60,11 +63,24 @@ extern built_in_class_s lua_value_class;
 void bic_lua_value_consts(location_array_s &const_locations);
 void bic_lua_value_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_lua_value_clear(interpreter_thread_s &it,location_s *location_ptr);
+bool bic_lua_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base,uli *operands);
+bool bic_lua_value_member(interpreter_thread_s &it,uli *code,unsigned stack_base);
 
 bool bic_lua_value_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_lua_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_lua_value_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_lua_value_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class LUA_REFERENCE -
+extern built_in_variable_s lua_reference_variables[];
+extern built_in_method_s lua_reference_methods[];
+extern built_in_class_s lua_reference_class;
+
+void bic_lua_reference_consts(location_array_s &const_locations);
+void bic_lua_reference_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_lua_reference_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_lua_reference_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 

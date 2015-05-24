@@ -40,6 +40,23 @@ struct lua_value_s
 };
 
 /*
+ * definition of structure lua_reference_s
+ */
+
+struct lua_reference_s
+{
+  location_s *lua_state_loc;
+  int obj_ref;
+  int key_ref;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+
+  inline void get();
+  inline void set();
+};
+
+/*
  * definition of structure lua_s
  */
 class lua_s
@@ -71,6 +88,50 @@ inline void lua_value_s::clear(interpreter_thread_s &it)
   }
 
   init();
+}/*}}}*/
+
+/*
+ * inline methods of structure lua_reference_s
+ */
+
+inline void lua_reference_s::init()
+{/*{{{*/
+  lua_state_loc = NULL;
+  obj_ref = LUA_NOREF;
+  key_ref = LUA_NOREF;
+}/*}}}*/
+
+inline void lua_reference_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+  if (lua_state_loc != NULL)
+  {
+    lua_State *L = (lua_State *)lua_state_loc->v_data_ptr;
+    luaL_unref(L,LUA_REGISTRYINDEX,obj_ref);
+    luaL_unref(L,LUA_REGISTRYINDEX,key_ref);
+
+    it.release_location_ptr(lua_state_loc);
+  }
+
+  init();
+}/*}}}*/
+
+inline void lua_reference_s::get()
+{/*{{{*/
+  lua_State *L = (lua_State *)lua_state_loc->v_data_ptr;
+  lua_rawgeti(L,LUA_REGISTRYINDEX,obj_ref);
+  lua_rawgeti(L,LUA_REGISTRYINDEX,key_ref);
+  lua_rawget(L,-2);
+  lua_replace(L,-2);
+}/*}}}*/
+
+inline void lua_reference_s::set()
+{/*{{{*/
+  lua_State *L = (lua_State *)lua_state_loc->v_data_ptr;
+  lua_rawgeti(L,LUA_REGISTRYINDEX,obj_ref);
+  lua_rawgeti(L,LUA_REGISTRYINDEX,key_ref);
+  lua_pushvalue(L,-3);
+  lua_rawset(L,-3);
+  lua_pop(L,2);
 }/*}}}*/
 
 #endif
