@@ -6,6 +6,7 @@ include "lua_module.h"
 // - LUA indexes of built in classes -
 unsigned c_bi_class_lua_state = c_idx_not_exist;
 unsigned c_bi_class_lua_value = c_idx_not_exist;
+unsigned c_bi_class_lua_reference = c_idx_not_exist;
 
 // - LUA indexes of remote classes -
 unsigned c_rm_class_dict = c_idx_not_exist;
@@ -105,7 +106,7 @@ built_in_class_s lua_state_class =
 {/*{{{*/
   "LuaState",
   c_modifier_public | c_modifier_final,
-  7, lua_state_methods,
+  9, lua_state_methods,
   0, lua_state_variables,
   bic_lua_state_consts,
   bic_lua_state_init,
@@ -138,6 +139,16 @@ built_in_method_s lua_state_methods[] =
     "do_string#1",
     c_modifier_public | c_modifier_final,
     bic_lua_state_method_do_string_1
+  },
+  {
+    "new_value#1",
+    c_modifier_public | c_modifier_final,
+    bic_lua_state_method_new_value_1
+  },
+  {
+    "get_global#0",
+    c_modifier_public | c_modifier_final,
+    bic_lua_state_method_get_global_0
   },
   {
     "get_global#1",
@@ -181,6 +192,12 @@ void bic_lua_state_clear(interpreter_thread_s &it,location_s *location_ptr)
   // - if jit context object exists -
   if (L != NULL)
   {
+    // - test reference count -
+    lua_pushinteger(L,0);
+    int ref = luaL_ref(L,LUA_REGISTRYINDEX);
+    cassert(ref == 3 || ref == 4);
+    luaL_unref(L,LUA_REGISTRYINDEX,ref);
+
     // - test size of stack -
     cassert(lua_gettop(L) == 0);
 
@@ -268,6 +285,57 @@ bool bic_lua_state_method_do_string_1(interpreter_thread_s &it,unsigned stack_ba
   return true;
 }/*}}}*/
 
+bool bic_lua_state_method_new_value_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  lua_State *L = (lua_State *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (!lua_s::create_lua_object(it,L,src_0_location))
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - create lua value object -
+  lua_value_s *lv_ptr = (lua_value_s *)cmalloc(sizeof(lua_value_s));
+  lv_ptr->init();
+
+  dst_location->v_reference_cnt.atomic_inc();
+  lv_ptr->lua_state_loc = dst_location;
+  lv_ptr->ref = luaL_ref(L,LUA_REGISTRYINDEX);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_lua_value,lv_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_lua_state_method_get_global_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  lua_State *L = (lua_State *)dst_location->v_data_ptr;
+
+  // - create lua value object -
+  lua_value_s *lv_ptr = (lua_value_s *)cmalloc(sizeof(lua_value_s));
+  lv_ptr->init();
+
+  dst_location->v_reference_cnt.atomic_inc();
+  lv_ptr->lua_state_loc = dst_location;
+
+  lua_getglobal(L,"_G");
+  lv_ptr->ref = luaL_ref(L,LUA_REGISTRYINDEX);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_lua_value,lv_ptr);
+
+  return true;
+}/*}}}*/
+
 bool bic_lua_state_method_get_global_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
@@ -340,7 +408,7 @@ built_in_class_s lua_value_class =
 {/*{{{*/
   "LuaValue",
   c_modifier_public | c_modifier_final,
-  3, lua_value_methods,
+  4, lua_value_methods,
   0, lua_value_variables,
   bic_lua_value_consts,
   bic_lua_value_init,
@@ -363,6 +431,11 @@ built_in_method_s lua_value_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_lua_value_operator_binary_equal
+  },
+  {
+    "value#0",
+    c_modifier_public | c_modifier_final,
+    bic_lua_value_method_value_0
   },
   {
     "to_string#0",
@@ -410,6 +483,36 @@ bool bic_lua_value_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_lua_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  lua_value_s *lv_ptr = (lua_value_s *)dst_location->v_data_ptr;
+  lua_State *L = (lua_State *)lv_ptr->lua_state_loc->v_data_ptr;
+
+  lua_rawgeti(L,LUA_REGISTRYINDEX,lv_ptr->ref);
+  location_s *location_ptr = lua_s::lua_object_value(it,L,operands[c_source_pos_idx]);
+
+  // - ERROR -
+  if (location_ptr == NULL)
+  {
+    // - if exception was already thrown -
+    if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+    {
+      return false;
+    }
+
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_SET_RESULT(location_ptr);
 
   return true;
 }/*}}}*/

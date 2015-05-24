@@ -9,6 +9,7 @@ include "ucl_lua.h"
 // - LUA indexes of built in classes -
 extern unsigned c_bi_class_lua_state;
 extern unsigned c_bi_class_lua_value;
+extern unsigned c_bi_class_lua_reference;
 
 // - LUA module -
 extern built_in_module_s module;
@@ -44,6 +45,8 @@ void bic_lua_state_clear(interpreter_thread_s &it,location_s *location_ptr);
 bool bic_lua_state_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_lua_state_method_LuaState_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_lua_state_method_do_string_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_lua_state_method_new_value_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_lua_state_method_get_global_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_lua_state_method_get_global_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_lua_state_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_lua_state_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -59,6 +62,7 @@ void bic_lua_value_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_lua_value_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_lua_value_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_lua_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_lua_value_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_lua_value_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
