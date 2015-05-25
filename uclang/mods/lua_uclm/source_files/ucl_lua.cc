@@ -39,9 +39,17 @@ bool lua_s::create_lua_object(interpreter_thread_s &it,lua_State *L,location_s *
   }
   else if (location_ptr->v_type == c_bi_class_lua_reference)
   {/*{{{*/
-    
-    // FIXME TODO continue ...
-    return false;
+    lua_reference_s *lr_ptr = (lua_reference_s *)location_ptr->v_data_ptr;
+    lua_State *lr_ptr_L = (lua_State *)lr_ptr->lua_state_loc->v_data_ptr;
+
+    // - lua reference from another lua state -
+    if (L != lr_ptr_L)
+    {
+      return false;
+    }
+
+    lr_ptr->get();
+    return true;
   }/*}}}*/
   else if (location_ptr->v_type == c_rm_class_dict)
   {/*{{{*/

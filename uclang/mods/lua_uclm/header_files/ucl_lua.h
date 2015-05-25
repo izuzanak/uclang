@@ -26,6 +26,9 @@ extern unsigned c_bi_class_lua_value;
 extern unsigned c_bi_class_lua_reference;
 extern unsigned c_rm_class_dict;
 
+// - max method name length -
+const unsigned c_max_method_name_length = 256;
+
 /*
  * definition of structure lua_value_s
  */
