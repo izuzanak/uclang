@@ -22,14 +22,15 @@ enum
 {
   c_error_LUA_STATE_CREATE_NEW_STATE_ERROR = 0,
   c_error_LUA_STATE_DO_STRING_ERROR,
+  c_error_LUA_VALUE_WRONG_VALUE_REFERENCE,
   c_error_LUA_VALUE_INVOKE_FUNCTION_ERROR,
   c_error_LUA_VALUE_INVOKE_FUNCTION_WRONG_PARAMETER,
   c_error_LUA_VALUE_INVOKE_FUNCTION_RUN_ERROR,
   c_error_LUA_VALUE_MEMBER_SELECT_ERROR,
   c_error_LUA_VALUE_CREATE_ERROR,
   c_error_LUA_VALUE_VALUE_ERROR,
-  c_error_LUA_VALUE_WRONG_VALUE_REFERENCE,
-  c_error_LUA_VALUE_SET_PROP_ERROR,
+  c_error_LUA_VALUE_VALUE_IS_NOT_TABLE_ERROR,
+  c_error_LUA_REFERENCE_SET_PROP_ERROR,
 };
 
 // - LUA error strings -
@@ -74,6 +75,8 @@ bool bic_lua_value_member(interpreter_thread_s &it,uli *code,unsigned stack_base
 bool bic_lua_value_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_lua_value_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_lua_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_lua_value_method_keys_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_lua_value_method_items_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_lua_value_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_lua_value_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
