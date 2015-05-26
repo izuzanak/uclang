@@ -10,6 +10,7 @@ include "script_parser.h"
 using namespace Ucf;
 
 #include "uctypes.h"
+#include "dddshm.h"
 #include "ucxml.h"
 #include "apexcls.h"
 #include "ddb.h"
