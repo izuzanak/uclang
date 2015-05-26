@@ -1,0 +1,86 @@
+
+import containers;
+import lua;
+import json;
+
+class Main
+{
+  // - lua source script -
+  script_src = ("
+Person = {}
+Person.__index = Person
+
+function Person.create(a_name,a_surname)
+  local person = {}
+  setmetatable(person,Person)
+  person.name = a_name
+  person.surname = a_surname
+  return person
+end
+
+persons = 
+{
+  omar = Person.create('Omar','Little'),
+  avone = Person.create('Avone','Barksdale')
+}
+
+function person_list()
+  local result = {}
+
+  for id, person in pairs(persons) do
+    table.insert(result,person.name..' '..person.surname)
+  end
+
+  return result;
+end
+");
+
+  // - print information about person -
+  public person_info(a_person)
+  {
+    return "%s %s" % [a_person.name.to_string(),a_person.surname.to_string()];
+  }
+
+  public Main()
+  {
+    // - create new lua state -
+    L = new LuaState();
+
+    // - run lua code -
+    L.do_string(script_src);
+
+    // - retrieve global table -
+    _G = L.get_global();
+
+    // - load json module -
+    // FIXME TODO continue ...
+    //_G.require("json");
+
+    // - list global properties -
+    // FIXME TODO continue ...
+
+    // - retrieve person from list -
+    avone = _G.persons.avone;
+    ("person: %s\n" % person_info(avone)).print();
+    ("persons: %s\n" % _G.person_list().value().to_string()).print();
+
+    // - add person to list -
+    frank = _G.Person.create("Frank","Sobotka");
+    _G.persons.frank = frank;
+    ("person: %s\n" % person_info(frank)).print();
+    ("persons: %s\n" % _G.person_list().value().to_string()).print();
+
+    // - create persons JSON in lua-
+    // FIXME TODO ...
+
+    // - create persons JSON in uclang-
+    ucl_json = Json.create(_G.persons.value());
+    ("ucl_json: %s\n" % ucl_json).print();
+  }
+
+  static public main(argv)
+  {
+    new Main();
+  }
+}
+
