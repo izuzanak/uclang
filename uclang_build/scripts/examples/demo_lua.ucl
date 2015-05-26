@@ -52,12 +52,14 @@ end
     // - retrieve global table -
     _G = L.get_global();
 
+    // - export global symbols from lua library -
+    _G.package.loadlib("liblua5.2.so","*");
+
     // - load json module -
-    // FIXME TODO continue ...
-    //_G.require("json");
+    json = _G.require("json");
 
     // - list global properties -
-    // FIXME TODO continue ...
+    ("global properties: %s\n" % _G.keys().value().to_string()).print();
 
     // - retrieve person from list -
     avone = _G.persons.avone;
@@ -71,7 +73,8 @@ end
     ("persons: %s\n" % _G.person_list().value().to_string()).print();
 
     // - create persons JSON in lua-
-    // FIXME TODO ...
+    lua_json = json.encode.encode(_G.persons);
+    ("lua_json: %s\n" % lua_json.value()).print();
 
     // - create persons JSON in uclang-
     ucl_json = Json.create(_G.persons.value());

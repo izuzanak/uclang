@@ -12,7 +12,7 @@ unsigned lua_s::table_key_count(lua_State *L)
   unsigned count = 0;
 
   lua_pushnil(L);
-  while (lua_next(L,-2) != 0)
+  while (lua_next(L,-2))
   {
     ++count;
     lua_pop(L,1);
