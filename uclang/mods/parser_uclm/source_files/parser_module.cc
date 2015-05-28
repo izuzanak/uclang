@@ -488,7 +488,7 @@ built_in_class_s fa_source_class =
 {/*{{{*/
   "FaSource",
   c_modifier_public | c_modifier_final,
-  6, fa_source_methods,
+  7, fa_source_methods,
   0, fa_source_variables,
   bic_fa_source_consts,
   bic_fa_source_init,
@@ -528,6 +528,11 @@ built_in_method_s fa_source_methods[] =
     bic_fa_source_method_input_idx_0
   },
   {
+    "next_item#0",
+    c_modifier_public | c_modifier_final,
+    bic_fa_source_method_next_item_0
+  },
+  {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_fa_source_method_to_string_0
@@ -542,6 +547,37 @@ built_in_method_s fa_source_methods[] =
 built_in_variable_s fa_source_variables[] =
 {/*{{{*/
 };/*}}}*/
+
+#define BIC_FA_SOURCE_NEXT_ITEM() \
+{/*{{{*/\
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+\
+  fa_source_s *fs_ptr = (fa_source_s *)dst_location->v_data_ptr;\
+\
+  /* - retrieve final automata and source string - */\
+  final_automata_s *fa_ptr = (final_automata_s *)fs_ptr->final_automata_loc->v_data_ptr;\
+  string_s *string_ptr = (string_s *)fs_ptr->source_loc->v_data_ptr;\
+\
+  /* - update old input index - */\
+  fs_ptr->old_input_idx = fs_ptr->input_idx;\
+\
+  /* - recognize next terminal symbol - */\
+  unsigned terminal = fa_ptr->recognize(string_ptr->data,fs_ptr->input_idx,string_ptr->size - 1);\
+\
+  if (terminal != c_idx_not_exist)\
+  {\
+    long long int result = terminal;\
+\
+    BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
+  }\
+  else\
+  {\
+    BIC_SET_RESULT_BLANK();\
+  }\
+\
+  return true;\
+}/*}}}*/
 
 void bic_fa_source_consts(location_array_s &const_locations)
 {/*{{{*/
@@ -579,33 +615,7 @@ bool bic_fa_source_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 
 bool bic_fa_source_method_next_terminal_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  fa_source_s *fs_ptr = (fa_source_s *)dst_location->v_data_ptr;
-
-  // - retrieve final automata and source string -
-  final_automata_s *fa_ptr = (final_automata_s *)fs_ptr->final_automata_loc->v_data_ptr;
-  string_s *string_ptr = (string_s *)fs_ptr->source_loc->v_data_ptr;
-
-  // - update old input index -
-  fs_ptr->old_input_idx = fs_ptr->input_idx;
-
-  // - recognize next terminal symbol -
-  unsigned terminal = fa_ptr->recognize(string_ptr->data,fs_ptr->input_idx,string_ptr->size - 1);
-
-  if (terminal != c_idx_not_exist)
-  {
-    long long int result = terminal;
-
-    BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
-  }
-  else
-  {
-    BIC_SET_RESULT_BLANK();
-  }
-
-  return true;
+  BIC_FA_SOURCE_NEXT_ITEM();
 }/*}}}*/
 
 bool bic_fa_source_method_old_input_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -634,6 +644,11 @@ bool bic_fa_source_method_input_idx_0(interpreter_thread_s &it,unsigned stack_ba
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
+}/*}}}*/
+
+bool bic_fa_source_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_FA_SOURCE_NEXT_ITEM();
 }/*}}}*/
 
 bool bic_fa_source_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
