@@ -1,0 +1,69 @@
+
+init_code: {}
+
+terminals:
+   char_eps {'e'}
+   char_white {'w'}
+   char_digit {'d'}
+   char_letter {'l'}
+
+   char {'\''.(!'\\'+'\\'.(<07>.(<07>+e).(<07>+e)+'x'.(<09>+<af>+<AF>).(<09>+<af>+<AF>+e)+[abfnrtv\\?\'">\}\]|])).'\''}
+   char_no_char {"!'".(!'\\'+'\\'.(<07>.(<07>+e).(<07>+e)+'x'.(<09>+<af>+<AF>).(<09>+<af>+<AF>+e)+[abfnrtv\\?\'">\}\]|])).'\''}
+   char_str {'"'.(|\\"|+'\\'.(<07>.(<07>+e).(<07>+e)+'x'.(<09>+<af>+<AF>).(<09>+<af>+<AF>+e)+[abfnrtv\\?\'">\}\]|]))*.'"'}
+
+   char_range {'<'.(!'\\'+'\\'.(<07>.(<07>+e).(<07>+e)+'x'.(<09>+<af>+<AF>).(<09>+<af>+<AF>+e)+[abfnrtv\\?\'">\}\]|])).(!'\\'+'\\'.(<07>.(<07>+e).(<07>+e)+'x'.(<09>+<af>+<AF>).(<09>+<af>+<AF>+e)+[abfnrtv\\?\'">\}\]|])).'>'}
+   char_alter {'['.(|\\]|+'\\'.(<07>.(<07>+e).(<07>+e)+'x'.(<09>+<af>+<AF>).(<09>+<af>+<AF>+e)+[abfnrtv\\?\'">\}\]|]))*.']'}
+   char_except {'|'.(|\\\||+'\\'.(<07>.(<07>+e).(<07>+e)+'x'.(<09>+<af>+<AF>).(<09>+<af>+<AF>+e)+[abfnrtv\\?\'">\}\]|]))*.'|'}
+
+   lr_br {'('}
+   rr_br {')'}
+
+   iter {'*'}
+   conc {'.'}
+   alter {'+'}
+
+   _SKIP_ {w.w*}
+   _END_ {'\0'}
+
+nonterminals:
+   <start>
+   <C>
+   <B>
+   <A>
+
+rules:
+   $ 0
+   <start> -> <C> _END_ ->> {}
+   $ 1
+   <C> -> <C> alter <C> ->> {print("alter");}
+   $ 2
+   <C> -> <B> ->> {}
+   $ 3
+   <B> -> <B> conc <B> ->> {print("conc");}
+   $ 4
+   <B> -> <A> ->> {}
+   $ 5
+   <A> -> <A> iter ->> {print("iter");}
+   $ 6
+   <A> -> char_eps ->> {print("epsilon");}
+   $ 7
+   <A> -> char ->> {print(rule_body(0));}
+   $ 8
+   <A> -> char_white ->> {print("char_white");}
+   $ 9
+   <A> -> char_digit ->> {print("char_digit");}
+   $ 10
+   <A> -> char_letter ->> {print("char_letter");}
+   $ 11
+   <A> -> char_no_char ->> {print("char_no_char: "..rule_body(0));}
+   $ 12
+   <A> -> char_str ->> {print("char_str: "..rule_body(0));}
+   $ 13
+   <A> -> char_range ->> {print("char_range: "..rule_body(0));}
+   $ 14
+   <A> -> char_alter ->> {print("char_alter: "..rule_body(0));}
+   $ 15
+   <A> -> char_except ->> {print("char_except: "..rule_body(0));}
+   $ 16
+   <A> -> lr_br <C> rr_br ->> {}
+

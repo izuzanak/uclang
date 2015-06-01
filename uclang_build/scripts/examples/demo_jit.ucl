@@ -21,8 +21,7 @@ i64 fact(i64 n)
   }
 
   return res;
-}
-");
+}");
 
     // - create test function -
     test = jit.create_fun("
