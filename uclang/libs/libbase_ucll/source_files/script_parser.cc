@@ -2750,7 +2750,7 @@ void script_parser_s::initialize_parser(source_s &a_source,string_s &a_mods_path
 {/*{{{*/
   module_dirs.clear();
 
-  // - insert default import dircetories -
+  // - insert default import directories -
   module_dirs.push_blanks(2);
   module_dirs[0].set(strlen("."),".");
   module_dirs[1].set(strlen("modules"),"modules");
@@ -6935,7 +6935,7 @@ void script_parser_s::parse_script(unsigned a_source_idx)
   unsigned input_idx = 0;
   unsigned ret_term = c_idx_not_exist;
 
-  // - decipher cryptical source code -
+  // - decipher cryptic source code -
   {
     string_s &source = sources[source_idx].source_string;
 

@@ -434,7 +434,7 @@ bool bic_calc_service_method_process_0(interpreter_thread_s &it,unsigned stack_b
   soap_serve(se_ptr->soap_ptr);
   soap_end(se_ptr->soap_ptr);
 
-  // - if exception was occured in service routine -
+  // - if exception was occurred in service routine -
   if (se_ptr->proc_ret_code == c_run_return_code_EXCEPTION)
   {
     return false;

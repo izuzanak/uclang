@@ -639,7 +639,7 @@ bool bic_ssh2_session_method_userauth_list_1(interpreter_thread_s &it,unsigned s
   // - retrieve user string -
   string_s *user_ptr = (string_s *)src_0_location->v_data_ptr;
 
-  // - retrieve user athentication list -
+  // - retrieve user authentication list -
   char *userauth_list = libssh2_userauth_list(ssh2s_ptr->session,user_ptr->data,user_ptr->size - 1);
 
   // - ERROR -
@@ -1106,7 +1106,7 @@ bool bic_sftp_session_method_mkdir_2(interpreter_thread_s &it,unsigned stack_bas
   // - retrieve sftp session -
   sftp_session_s *sftps_ptr = (sftp_session_s *)dst_location->v_data_ptr;
 
-  // - retirieve directory name -
+  // - retrieve directory name -
   string_s *path_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
@@ -1141,7 +1141,7 @@ bool bic_sftp_session_method_rmdir_1(interpreter_thread_s &it,unsigned stack_bas
   // - retrieve sftp session -
   sftp_session_s *sftps_ptr = (sftp_session_s *)dst_location->v_data_ptr;
 
-  // - retirieve directory name -
+  // - retrieve directory name -
   string_s *path_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
@@ -1269,7 +1269,7 @@ bool bic_sftp_session_method_remove_1(interpreter_thread_s &it,unsigned stack_ba
   // - retrieve sftp session -
   sftp_session_s *sftps_ptr = (sftp_session_s *)dst_location->v_data_ptr;
 
-  // - retirieve file name -
+  // - retrieve file name -
   string_s *path_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
@@ -1313,7 +1313,7 @@ bool bic_sftp_session_method_open_3(interpreter_thread_s &it,unsigned stack_base
   // - retrieve sftp session -
   sftp_session_s *sftps_ptr = (sftp_session_s *)dst_location->v_data_ptr;
 
-  // - retirieve file name -
+  // - retrieve file name -
   string_s *file_name_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - create sftp handle object -

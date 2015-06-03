@@ -400,7 +400,7 @@ bool bic_sys_prop_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli
   // - read property value -
   value_ptr->size = 1 + __system_property_read(prop_info_ptr,name_ptr->data,value_ptr->data);
 
-  // - compute propery name length -
+  // - compute property name length -
   name_ptr->size = strlen(name_ptr->data) + 1;
 
   // - create target array pointer -
@@ -1055,7 +1055,7 @@ bool bic_activity_method_event_loop_0(interpreter_thread_s &it,unsigned stack_ba
 
   unsigned loop_ret_code = g_activity.loop_ret_code;
 
-  // - if exception occured in one of events -
+  // - if exception occurred in one of events -
   if (loop_ret_code == c_run_return_code_EXCEPTION)
   {
     return false;

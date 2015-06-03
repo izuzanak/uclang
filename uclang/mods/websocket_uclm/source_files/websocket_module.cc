@@ -638,7 +638,7 @@ bool bic_ws_context_method_process_1(interpreter_thread_s &it,unsigned stack_bas
   // - service websocket context -
   libwebsocket_service(wsc_ptr->context,timeout);
 
-  // - if exception occured -
+  // - if exception occurred -
   if (wsc_ptr->ret_code == c_run_return_code_EXCEPTION)
   {
     return false;

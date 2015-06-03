@@ -14,7 +14,7 @@ include "script_parser.h"
 void get_top_level_classes(interpreter_thread_s &it,ui_array_s &a_class_idxs);
 
 /**
- * \brief retrieve index of top level class with symbol identifierd by given index
+ * \brief retrieve index of top level class with symbol identified by given index
  *
  * \param it reference to interpreter thread
  * \param a_name_idx class symbol name index

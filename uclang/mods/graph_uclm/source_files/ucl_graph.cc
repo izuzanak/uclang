@@ -1407,7 +1407,7 @@ void graph_s::get_dot_code_params(string_s &a_string,const char *a_header,const 
   string_s value_str;
   value_str.init();
 
-  // - traverse throught vertices and print their values to output -
+  // - traverse thought vertices and print their values to output -
   if (vertices.root_idx != c_idx_not_exist)
   {
     unsigned stack[vertices.get_descent_stack_size()];
@@ -1434,7 +1434,7 @@ void graph_s::get_dot_code_params(string_s &a_string,const char *a_header,const 
     while(v_idx != c_idx_not_exist);
   }
 
-  // - traverse throught edges and print their values to output -
+  // - traverse thought edges and print their values to output -
   if (edges.root_idx != c_idx_not_exist)
   {
     unsigned stack[edges.get_descent_stack_size()];

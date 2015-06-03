@@ -689,7 +689,7 @@ void bic_glut_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   glut_s *glut_ptr = (glut_s *)location_ptr->v_data_ptr;
 
-  // - if glut oject exists -
+  // - if glut object exists -
   if (glut_ptr != NULL)
   {
     glut_ptr->clear(it);
@@ -1083,7 +1083,7 @@ bool bic_glut_method_MainLoop_0(interpreter_thread_s &it,unsigned stack_base,uli
   unsigned main_ret_code = glut_s::main_ret_code;
   glut_s::init_static();
 
-  // - if exception occured in one of events -
+  // - if exception occurred in one of events -
   if (main_ret_code == c_run_return_code_EXCEPTION)
   {
     return false;

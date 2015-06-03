@@ -267,7 +267,7 @@ bool bic_ao_format_method_AoFormat_5(interpreter_thread_s &it,unsigned stack_bas
   src_4_location->v_reference_cnt.atomic_inc();
   aof_ptr->matrix_loc_ptr = src_4_location;
 
-  // - set sample format propewrties -
+  // - set sample format properties -
   sample_format.bits = bits;
   sample_format.rate = rate;
   sample_format.channels = channels;

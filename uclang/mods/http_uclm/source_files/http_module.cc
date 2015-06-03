@@ -434,7 +434,7 @@ bool bic_http_server_method_process_0(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
-  // - if exception occured -
+  // - if exception occurred -
   if (srv_ptr->ret_code == c_run_return_code_EXCEPTION)
   {
     return false;
@@ -521,7 +521,7 @@ bool bic_http_server_method_process_1(interpreter_thread_s &it,unsigned stack_ba
     }
   }
 
-  // - if exception occured -
+  // - if exception occurred -
   if (srv_ptr->ret_code == c_run_return_code_EXCEPTION)
   {
     return false;

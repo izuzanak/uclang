@@ -936,7 +936,7 @@ bool bic_gl_font_method_buffer_2(interpreter_thread_s &it,unsigned stack_base,ul
     return false;
   }
 
-  // - retrieve names of shader atribute variables -
+  // - retrieve names of shader attribute variables -
   string_s *vertex_name_ptr = (string_s *)src_0_location->v_data_ptr;
   string_s *tex_coord_name_ptr = (string_s *)src_1_location->v_data_ptr;
 
@@ -996,7 +996,7 @@ bool bic_gl_font_method_measure_1(interpreter_thread_s &it,unsigned stack_base,u
   int max_y = 0;
   int min_y = 0;
 
-  // - exapnd process text macro -
+  // - expand process text macro -
   GL_FONT_PROCESS_TEXT(pos_x,pos_y,
 
     // - retrieve font -
@@ -1267,7 +1267,7 @@ bool bic_gl_font_buffer_method_push_text_1(interpreter_thread_s &it,unsigned sta
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
-  // - exapnd process text macro -
+  // - expand process text macro -
   GL_FONT_PROCESS_TEXT(pos_x,pos_y,
 
     // - retrieve font and vertex buffer -

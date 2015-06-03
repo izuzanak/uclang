@@ -121,7 +121,7 @@ struct string_s
 
   /*!
    * \brief convert utf32 unsigned int string to utf8 string
-   * \param a_src - pointer to source utf32 unsigned integeres
+   * \param a_src - pointer to source utf32 unsigned integers
    * \param a_trg - pointer to target utf8 characters
    * \param a_size - count of integers to be converted
    * \return count of converted characters

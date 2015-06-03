@@ -989,7 +989,7 @@ bool pa_method_parameters_done(string_s &source_string,script_parser_s &_this)
   name_string.size = 1 + snprintf(name_string.data,method_name_max_length,"%s#%u",source_string.data + tmp_name_pos.ui_first,m_parameter_cnt);
 #endif
 
-  // - test if method is class conctructor -
+  // - test if method is class constructor -
   if (strcmp(source_string.data + tmp_name_pos.ui_first,_this.class_symbol_names[parent_record.name_idx].data) == 0)
   {
     // - ERROR test constructor ilegal modifiers -
@@ -2271,7 +2271,7 @@ bool pa_switch_statement(string_s &source_string,script_parser_s &_this)
   // - remove switch description from stack -
   sds.used -= 1;
 
-  // - removw switch expression description from stack -
+  // - remove switch expression description from stack -
   seds.used -= 1;
 
   // - retrieve break and continue command positions -
@@ -2303,7 +2303,7 @@ bool pa_switch_expression(string_s &source_string,script_parser_s &_this)
   ui_array_s &sd = sds.last();
   sd.used = 0;
 
-  // - store swicth expression count -
+  // - store switch expression count -
   sd.push(1);
 
   // - push new switch expression description to stack -

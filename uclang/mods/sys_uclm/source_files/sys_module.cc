@@ -4242,7 +4242,7 @@ bool bic_regex_method_Regex_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
-  // - alocate regex pointer -
+  // - allocate regex pointer -
   regex_t *re = (regex_t *)cmalloc(sizeof(regex_t));
 
   // - compile regular expression -

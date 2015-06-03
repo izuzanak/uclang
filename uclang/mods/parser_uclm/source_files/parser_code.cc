@@ -6,7 +6,7 @@ include "parser_code.h"
 // - basic constants and definitions -
 
 /*
- * terminaly nacitane ze souboru popisujiciho jazyk
+ * terminals read from file describing rules
  */
 enum
 {
@@ -26,7 +26,7 @@ enum
 };
 
 /*
- * regularni vyrazy popisujici terminaly v souboru pravidel
+ * regular expressions describing terminals in rule file
  */
 const unsigned test_reg_exp_cnt = 13;
 const char *test_reg_exps[test_reg_exp_cnt] =
@@ -47,9 +47,9 @@ const char *test_reg_exps[test_reg_exp_cnt] =
 };
 
 /*
- * indexy terminalu definujicich specialni funkcnost v prekladaci
- * ktt_skip - ignorovane prekladacem
- * ktt_end - terminal ukoncujici rozklad
+ * indexes of terminals with special function
+ * ktt_skip - ignored by parser
+ * ktt_end - terminating parser
  */
 enum
 {
@@ -58,9 +58,7 @@ enum
 };
 
 /*
- * retezce popisujici terminaly s vyznamem pro prekladac
- * ingnorovanych terminalu by melo byt mozne definovat vic, to je umozneno
- * zapisem libovolneho poctu podtrzitek pred a za slovem SKIP
+ * string describing terminal with special meaning for parser
  */
 const unsigned c_key_terminal_cnt = 2;
 const char *key_terminals[c_key_terminal_cnt] =
@@ -313,30 +311,30 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
 
   clear();
 
-  // - rada popisu novych stavu -
+  // - queue of new states descriptions -
   fa_state_descr_queue_s queue;
   queue.init();
 
   fa_state_reg_states_s state_descrs;
   state_descrs.init();
 
-  // - pole prechodu vyuzivane v ramci jednoho stavu -
+  // - array of moves used by one state -
   fa_state_moves_array_s moves_array;
   moves_array.init();
 
-  // - pracovni zasobnik pro nektere volane funkce, aby se zbytecne nemusel alokovat pro kazdou novy -
+  // - work stack shared by called functions -
   ui_array_s work_stack;
   work_stack.init();
 
-  // - promenna popisujici nove vytvareny stav automatu -
+  // - description of new produced automata state -
   fa_state_descr_s new_state_descr;
   new_state_descr.init();
 
-  // - vlozeni prvniho zaznamu do rady popisu stavu -
+  // - insert first record to queue of new states description -
   {
     /*
-     * stav ze ktereho se vstupuje do prvniho stavu neexistuje
-     * mnozina reg. vyrazu obsahuje vsechny s indexem na pozici 0
+     * source state does not exist for first state. set of regular expressions
+     * contains all of them with index at position zero
      */
     queue.insert_blank();
     queue.last().from_state_id = c_idx_not_exist;
@@ -352,26 +350,26 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
     while(++idx < states_array.used);
   }
 
-  // - cyklus dokud neni prazdna rada popisu stavu -
+  // - loop while queue of news states is not empty -
   do
   {
 
-    // - ziska nasledujici popis stavu z rady -
+    // - retrieve description of next state from queue -
     fa_state_descr_s q_state_descr;
     q_state_descr.init();
     q_state_descr.swap(queue.next());
 
-    // - kontrola jestli jiz neni stejny stav definovany -
+    // - test if such state is not defined already -
     unsigned state_descr_idx = state_descrs.get_idx(q_state_descr.reg_states);
     if (state_descr_idx != c_idx_not_exist)
     {
 
       /*
-       * pokud ano, tak ziskej stav ze ktereho se prechazi do tohoto stavu
-       * ziskej index prechodu v tomto stavu, ktery souhlasi se znakem
-       * se kterym se prechazi, a ve stavu ze ktereho se prechazi indentifikuj jako
-       * cilovy tento stav
-       * pokracuj od zacatku
+       * if yes, retrieve source state for this state, retrieve move index in
+       * source state that matches move character, and in source state for this
+       * state set as target state already defined state
+       *
+       * continue at loop beginning
        */
       fa_state_s &state = states[q_state_descr.from_state_id];
 
@@ -386,21 +384,21 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
       continue;
     }
 
-    // - vytvoreni noveho stavu automatu, vytvor ref. na jeho koncovy terminal a mnozinu prechodu-
+    // - create new state of automata, create reference to its end terminal and set of moves-
     states.push_blank();
     unsigned &state_final = states.last().final;
     state_final = c_idx_not_exist;
     fa_state_moves_s &state_moves = states.last().moves;
 
-    // - nastaveni prechodu do tohoto stavu -
+    // - set moves to this state -
     reg_states_s &p_reg_states = q_state_descr.reg_states;
     cassert(p_reg_states.used != 0);
 
-    // - pokud existuje stav ze ktereho se vstoupilo do tohoto stavu -
+    // - if source state exists -
     if (q_state_descr.from_state_id != c_idx_not_exist)
     {
 
-      // - tak v tomto stavu nastav prechod do noveho stavu -
+      // - set move from source state to this state -
       fa_state_s &from_state = states[q_state_descr.from_state_id];
 
       fa_state_move_s s_move;
@@ -411,12 +409,12 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
       from_state.moves[move_idx].value = states.used - 1;
     }
 
-    // - vygenerovani pole prechodu z aktualnich pozic ve vyrazech -
+    // - generate array of moves from actual regexp positions -
     moves_array.used = 0;
     reg_state_s *p_reg_state_ptr = p_reg_states.data;
     reg_state_s *p_reg_state_ptr_end = p_reg_state_ptr + p_reg_states.used;
 
-    // - cyklus pres seznam regularnich vyrazu stavu a generovani mnoziny moznych prechodu -
+    // - loop through regexp list, and generation of possible moves set -
     do
     {
       moves_array.push_blank();
@@ -424,7 +422,7 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
       fa_state_s &state = states_array[p_reg_state_ptr->ui_first][p_reg_state_ptr->ui_second];
       moves_array.last() = state.moves;
 
-      // - prirazeni regularniho vyrazu ke koncovemu stavu -
+      // - assign regexp to final state -
       if (state.final)
       {
         if (state_final == c_idx_not_exist || moves_array.last().used == 0)
@@ -440,7 +438,7 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
     {
       unsigned short move_char = 0xffff;
 
-      // - vybere dalsi prechodovy znak z mnoziny -
+      // - get next move character from set -
       fa_state_moves_s *moves_ptr = moves_array.data;
       fa_state_moves_s *moves_ptr_end = moves_ptr + moves_array.used;
 
@@ -468,23 +466,23 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
         break;
       }
 
-      // - pridani noveho prechodu ze stavu bez urceni ciloveho stavu -
+      // - add new move from state without identification of target state -
       state_moves.push_blank();
       state_moves.last().idx = move_char;
 
-      // - vytvoreni popisu noveho stavu (cile prechodu s move_char) -
+      // - create description of move target state -
       new_state_descr.from_state_id = states.used - 1;
       new_state_descr.with_char = move_char;
       reg_states_s &new_reg_states = new_state_descr.reg_states;
 
       new_reg_states.used = 0;
 
-      // - nalezeni a zpracovani vsech prechodu s timto znakem -
+      // - found and process all moves by this character -
       p_reg_state_ptr = p_reg_states.data;
       moves_ptr = moves_array.data;
       moves_ptr_end = moves_ptr + moves_array.used;
 
-      // - cyklus pres vsechny prechody -
+      // - loop through all moves -
       do
       {
         if (moves_ptr->used > 0)
@@ -567,13 +565,13 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
       }
       while(++p_reg_state_ptr,++moves_ptr < moves_ptr_end);
 
-      // - vlozi popis noveho stavu do rady popisu stavu -
+      // - insert new state description to queue of new states descriptions -
       queue.insert_blank();
       queue.last().swap(new_state_descr);
     }
     while(1);
 
-    // - ulozi popis jiz akceptovaneho stavu, pro kontrolu podobnosti stavu -
+    // - store description of accepted state, for state existence control -
     state_descrs.push_blank();
     state_descrs.last().swap(q_state_descr.reg_states);
     q_state_descr.clear();
@@ -581,10 +579,10 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
   }
   while(queue.used > 0);
 
-  // - orezani zbytecne pridelene pameti -
+  // - flush redundant memory -
   states.flush();
 
-  // - odstrani docasne pouzivane dynamicke data -
+  // - release dynamically allocated memory -
   new_state_descr.clear();
   work_stack.clear();
   moves_array.clear();
@@ -592,12 +590,12 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
   queue.clear();
 
   /*
-   * vytvoreni efektivni ale rozsahle mnoziny prechodu jednotlivych stavu
+   * creates effective set of transitions
    */
 
   state_moves.copy_resize(states.used);
 
-  // - cyklus pres vsechny stavy automatu -
+  // - loop through all automata states -
   if (states.used != 0)
   {
     fa_state_s *state_ptr = states.data;
@@ -612,7 +610,7 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
       moves.copy_resize(c_base_char_cnt);
       moves.fill(c_idx_not_exist);
 
-      // - cyklus pres prechody stavu a jejich vyplneni do tabulky prechodu -
+      // - loop through all state moves and creation of transition table -
       if (state_ptr->moves.used != 0)
       {
         fa_state_move_s *move_ptr = state_ptr->moves.data;
@@ -626,7 +624,7 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
           }
           else
           {
-            // - zpracovani specialnich reg. znaku -
+            // - process special regular expressions -
             if (move_ptr->idx >= c_no_char_base)
             {
               unsigned *mt_ptr = moves.data;
@@ -738,17 +736,17 @@ unsigned final_automata_s::recognize(char *input,unsigned &input_idx,unsigned in
 {/*{{{*/
   debug_assert(input != NULL);
 
-  // - nastaveni pocatecniho stavu -
+  // - set first state -
   state_idx = 0;
 
-  // - nekonecny cyklus hledajici terminal -
+  // - endless loop searching for terminal symbol -
   do
   {
-    // - ziskani ref. na aktualni stav a priprava promenne pro nasledny stav -
+    // - retrieve reference to actual state and reset next state index -
     fa_state_s &state = states[state_idx];
     unsigned next_state_idx = c_idx_not_exist;
 
-    // - zpracovani nasledujiciho vstupniho znaku -
+    // - process next input character -
     unsigned short in_char;
     if (input_idx < input_length)
     {
@@ -759,13 +757,13 @@ unsigned final_automata_s::recognize(char *input,unsigned &input_idx,unsigned in
       in_char = '\0';
     }
 
-    // - prechod do nasledujiciho stavu -
+    // - retrieve next state index -
     next_state_idx = state_moves[state_idx][in_char];
 
-    // - prechod do nasledujiciho stavu pokud existuje -
+    // - transition to next state if it exists -
     if (next_state_idx != c_idx_not_exist)
     {
-      // - ukonceni vstupu -
+      // - input end -
       if (in_char == '\0')
       {
         return states[next_state_idx].final;
@@ -776,7 +774,7 @@ unsigned final_automata_s::recognize(char *input,unsigned &input_idx,unsigned in
       state_idx = next_state_idx;
     }
 
-    // - neexistuje prechod do dalsiho stavu, rozpoznany terminal je state.final -
+    // - if there is no next state -
     else
     {
       return state.final;
@@ -2044,14 +2042,14 @@ bool reg_parser_s::parse_reg_exp(string_s &source_string)
   fas_idx = 0;
   states.clear();
 
-  // - pole obsahujici zacatky a konce jednotlivych casti konecneho automatu -
+  // - array containing starts and ends of final automata parts -
   ui_array_s begin_idxs;
   begin_idxs.init();
 
   ui_array_s end_idxs;
   end_idxs.init();
 
-  // - promenne pouzivane pri rozkladu regularniho vyrazu -
+  // - variables used while parsing regular expression -
   unsigned old_input_idx = 0;
   unsigned input_idx = 0;
   unsigned ret_term = c_idx_not_exist;
@@ -2081,7 +2079,7 @@ bool reg_parser_s::parse_reg_exp(string_s &source_string)
       }
     }
 
-    // - nalezeni akce v tabulce akci -
+    // - select action from parse table -
     unsigned parse_action = reg_lalr_table[lalr_stack.last().lalr_state*c_reg_terminal_plus_nonterminal_cnt + ret_term];
 
     // - ERROR -
@@ -2102,17 +2100,17 @@ bool reg_parser_s::parse_reg_exp(string_s &source_string)
         break;
       }
 
-      // - vlozi na zasobnik novy stav a pozici terminalu ve zdrojovem retezci -
+      // - put new state and source string position to stack -
       lalr_stack.push(parse_action,old_input_idx,input_idx);
       ret_term = c_idx_not_exist;
     }
 
-    // -akce REDUCE-
+    // - action REDUCE -
     else
     {
       parse_action -= c_reg_lalr_table_reduce_base;
 
-      // - vypis indexu pravidla redukce na vystup -
+      // - process rule reduction -
       switch (parse_action)
       {
       case c_reduce_alter:
@@ -2123,7 +2121,7 @@ bool reg_parser_s::parse_reg_exp(string_s &source_string)
         unsigned second_end_idx = end_idxs.pop();
         unsigned first_end_idx = end_idxs.pop();
 
-        // - vytvoreni noveho stavu -
+        // - create new state -
         states.push_blank();
         unsigned begin_state_idx = states.used - 1;
         fa_state_s &begin_state = states[begin_state_idx];
@@ -2135,12 +2133,12 @@ bool reg_parser_s::parse_reg_exp(string_s &source_string)
         begin_state.moves.push_blank();
         begin_state.moves.last().set(0xffff,second_begin_idx);
 
-        // - vytvoreni koncoveho stavu -
+        // - create final state -
         states.push_blank();
         unsigned end_state_idx = states.used - 1;
         states[end_state_idx].final = 0;
 
-        // - spojeni koncu obou casti do koncoveho stavu -
+        // - connect ends of both parts to final state -
         {
           fa_state_s &s_state = states[second_end_idx];
           s_state.moves.push_blank();
@@ -2160,17 +2158,17 @@ bool reg_parser_s::parse_reg_exp(string_s &source_string)
       {/*{{{*/
         unsigned second_begin_idx = begin_idxs.pop();
 
-        // - poznamenani konce druhe casti -
+        // - store end of second part -
         unsigned tmp_end = end_idxs.pop();
 
         unsigned first_end_idx = end_idxs.pop();
 
-        // - pripojeni konce prvni casti k zacatku druhe casti -
+        // - connect end of first part to begin of second part -
         fa_state_s &state = states[first_end_idx];
         state.moves.push_blank();
         state.moves.last().set(0xffff,second_begin_idx);
 
-        // - zapis konce druhe casti -
+        // - store end of second part -
         end_idxs.push(tmp_end);
         }/*}}}*/
       break;
@@ -2409,7 +2407,7 @@ c_reduce_char_lbl:
         fa_state_s &end_state = states[end_state_idx];
         end_state.final = 0;
 
-        // - vygenerovani prijimanych znaku -
+        // - generate accepted characters -
         {
           unsigned b_char = 0;
           unsigned e_char_idx = 0;
@@ -2433,7 +2431,7 @@ c_reduce_char_lbl:
           }
           while(++e_char_idx < char_array.used);
 
-          // - doplneni znaku -
+          // - complete character set -
           if (b_char < 256)
           {
             do
@@ -2453,10 +2451,10 @@ c_reduce_char_lbl:
       break;
       }
 
-      // - odstraneni tela pravidla z vrcholu zasobniku -
+      // - remove rule body from stack -
       lalr_stack.used -= reg_rule_body_lengths[parse_action];
 
-      // - ulozeni noveho stavu automatu na zasobnik -
+      // - push new state to stack top -
       unsigned goto_val = reg_lalr_table[lalr_stack.last().lalr_state*c_reg_terminal_plus_nonterminal_cnt + reg_rule_head_idxs[parse_action]];
       lalr_stack.push(goto_val);
     }
@@ -2464,10 +2462,10 @@ c_reduce_char_lbl:
   }
   while(1);
 
-  // - zapsani pocatecniho stavu automatu -
+  // - store final automata first state -
   fas_idx = begin_idxs.pop();
 
-  // - oznaceni konecnych stavu -
+  // - mark final states -
   states[end_idxs.pop()].final = 1;
 
   end_idxs.clear();
@@ -2479,7 +2477,7 @@ c_reduce_char_lbl:
 bool reg_parser_s::NKA_to_DKA()
 {/*{{{*/
 
-  // - presunuti nedeterministickeho automatu -
+  // - swap NFA to local variables -
   unsigned nka_fas_idx = fas_idx;
   fas_idx = 0;
 
@@ -2487,19 +2485,19 @@ bool reg_parser_s::NKA_to_DKA()
   nka_states.init();
   nka_states.swap(states);
 
-  // - mnoziny eps-uzaveru jednotlivych stavu nk-automatu -
+  // - sets of epsilon closures of NFA states -
   ui_array_sets_s eps_closures;
   eps_closures.init();
 
-  // - seznam jiz zpracovanych multi stavu s jejich indexy ve vytvarenem automatu -
+  // - list of already processed multi states with their indexes in target DFA -
   reg_mul_state_map_array_s ms_map_array;
   ms_map_array.init();
 
-  // - rada potencialne nezpracovanych stavu -
+  // - queue of potentially unprocessed states -
   reg_mul_state_move_queue_s msm_queue;
   msm_queue.init();
 
-  // - spocitani eps-uzaveru jednotlivych stavu, a konecnosti stavu pri uvazovani eps. prechodu -
+  // - compute epsilon closures of states, and states finality -
   {
     eps_closures.copy_resize(nka_states.used);
     eps_closures.used = nka_states.used;
@@ -2511,7 +2509,7 @@ bool reg_parser_s::NKA_to_DKA()
     processed_states.init();
     processed_states.copy_resize(nka_states.used);
 
-    // - cyklus pres vsechny stavy nedeterministickeho automatu -
+    // - loop through all states of NFA -
     unsigned s_idx = 0;
     do
     {
@@ -2522,12 +2520,12 @@ bool reg_parser_s::NKA_to_DKA()
 
       processed_states.fill(false);
 
-      // - cyklus do vyprazdneni zasobniku -
+      // - loop while stack is not empty -
       do
       {
         unsigned ss_idx = state_idx_stack.pop();
 
-        // - pokud je jiz uzaver stavu na pozici ss_idx spocitan, zkopiruj jeho obsah do pocitaneho uzaveru -
+        // - if epsilon closure for position ss_idx is already computed, add its content to closure -
         if (ss_idx < s_idx)
         {
           ui_array_set_s &ss_eps_closure = eps_closures[ss_idx];
@@ -2543,12 +2541,12 @@ bool reg_parser_s::NKA_to_DKA()
         else
         {
 
-          // - pokud se stav na pozici ss_idx v uzaveru nenachazi tak jej do nej vloz -
+          // - if state at position ss_idx is not contained in closure  -
           if (!processed_states[ss_idx])
           {
 
-            // - stavy do kterych se z vlozeneho stavu prechazi s eps. prechodem pridej do
-            // zasobniku -
+            // - push states which are target of epsilon move from inserted state 
+            // to stack -
             unsigned have_no_eps_move = false;
 
             fa_state_s &state = nka_states[ss_idx];
@@ -2572,7 +2570,7 @@ bool reg_parser_s::NKA_to_DKA()
               while(++m_idx < state.moves.used);
             }
 
-            // - pokud stav obsahuje i jine nez eps. prechody pridej jej do eps uzaveru -
+            // - if state contain other than epsilon moves add it to epsilon closure -
             if (have_no_eps_move || state.final)
             {
               eps_closure.push(ss_idx);
@@ -2590,7 +2588,7 @@ bool reg_parser_s::NKA_to_DKA()
     state_idx_stack.clear();
   }
 
-  // - vlozeni pocatecniho stavu {0} do vstupni rady -
+  // - insert first state {0} to input queue -
   msm_queue.insert_blank();
   {
     reg_mul_state_move_s &mul_state_move = msm_queue.last();
@@ -2614,7 +2612,7 @@ bool reg_parser_s::NKA_to_DKA()
     if (mul_state_idx == c_idx_not_exist)
     {
 
-      // - vytvoreni noveho stavu -
+      // - create new state -
       states.push_blank();
       fa_state_s &state = states.last();
       state.final = 0;
@@ -2626,11 +2624,11 @@ bool reg_parser_s::NKA_to_DKA()
 
       mul_state_idx = ms_map_array.used - 1;
 
-      // - nalezeni dalsich prechodu z noveho stavu -
+      // - find next move from from new state -
       new_mul_state_moves.used = 0;
       ui_array_set_s &mul_state = ms_map.mul_state;
 
-      // - cyklus pres vsechny nka stavy v eps. uzaveru -
+      // - loop through all states of NFA in epsilon closure -
       if (mul_state.used != 0)
       {
         unsigned s_idx = 0;
@@ -2638,7 +2636,7 @@ bool reg_parser_s::NKA_to_DKA()
         {
           fa_state_s &nka_state = nka_states[mul_state[s_idx]];
 
-          // - nastaveni konecnosti noveho stavu -
+          // - set finality of new state -
           if (nka_state.final)
           {
             state.final = 1;
@@ -2646,7 +2644,7 @@ bool reg_parser_s::NKA_to_DKA()
 
           reg_state_moves_s &state_moves = nka_state.moves;
 
-          // - cyklus pres vsechny prechody v aktualnim stavu (z eps. uzaveru) -
+          // - loop through all moves in actual state -
           if (state_moves.used != 0)
           {
             unsigned m_idx = 0;
@@ -2654,11 +2652,11 @@ bool reg_parser_s::NKA_to_DKA()
             {
               reg_state_move_s &move = state_moves[m_idx];
 
-              // - kdyz se nejedna o eps. prechod -
+              // - id move is not epsilon move -
               if (move.idx != 0xffff)
               {
 
-                // - generuj nove kandidaty na stav deterministickeho automatu -
+                // - generate new candidates for DFA states -
                 unsigned mc_idx = new_mul_state_moves.get_idx_by_move_char(move.idx);
                 if (mc_idx == c_idx_not_exist)
                 {
@@ -2695,7 +2693,7 @@ bool reg_parser_s::NKA_to_DKA()
 
     unsigned this_state_idx = ms_map_array[mul_state_idx].dka_state_idx;
 
-    // - zapis prechodu do tohoto stavu -
+    // - write move to this state -
     if (mul_state_move.from_state != c_idx_not_exist)
     {
       fa_state_s &state = states[mul_state_move.from_state];
@@ -2883,7 +2881,7 @@ bool p_creat_descr_s::load_final_automata_set_new()
   reg_parser_s reg_parser;
   reg_parser.init();
 
-  // - zpracovani reg. vyrazu urcenych pro cteni souboru pravidel -
+  // - process regular expressions for parsing of rule file -
   {
     unsigned re_idx = 0;
     do
@@ -2905,7 +2903,7 @@ bool p_creat_descr_s::load_final_automata_set_new()
 
   states_array.used = 0;
 
-  // - zpracovani reg. vyrazu rozpoznavajicich klicove terminaly -
+  // - process regular expressions for parsing key terminals -
   {
     unsigned re_idx = 0;
     do
@@ -2967,7 +2965,7 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
     }
   }
 
-  // - skip semantic code -
+  // - find init semantic code -
   while(1)
   {
     old_input_idx = input_idx;
@@ -3007,20 +3005,20 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
 
     do
     {
-      // - dokud neni vracen terminal rt_nonterminals -
+      // - while terminal rt_nonterminals is not returned -
       old_input_idx = input_idx;
       if ((ret_term = rule_file_fa.recognize(a_data,input_idx,input_length)) == rt_nonterminals)
       {
         break;
       }
 
-      // - preskakuj bile mista a kometare -
+      // - skip white characters and comments -
       if (ret_term <= rt_sec_comment)
       {
         continue;
       }
 
-      // - nacteni jmena terminalu -
+      // - read terminal name -
       if (terminal_state == 0)
       {
         // - ERROR -
@@ -3049,7 +3047,7 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
         terminal_state = 1;
       }
 
-      // - regularni vyraz popisujici terminal -
+      // - regular expression describing terminal -
       else
       {
         // - ERROR -
@@ -3082,21 +3080,21 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
     return false;
   }
 
-  // - zpracovani nonterminalu -
+  // - process nonterminal -
   {
     p_nonterminal_s new_nonterminal;
     new_nonterminal.init();
 
     do
     {
-      // - dokud neni vracen terminal rt_rules -
+      // - while terminal rt_rules is not returned -
       old_input_idx = input_idx;
       if ((ret_term = rule_file_fa.recognize(a_data,input_idx,input_length)) == rt_rules)
       {
         break;
       }
 
-      // - preskoc bila mista -
+      // - skip white characters and comments -
       if (ret_term <= rt_sec_comment)
       {
         continue;
@@ -3110,7 +3108,7 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
         LOAD_FROM_RULE_CHAR_PTR_SYNTAX_ERROR();
       }
 
-      // - nacteni jmena neterminalniho symbolu -
+      // - read nonterminal name -
       new_nonterminal.name.set(input_idx - old_input_idx,a_data + old_input_idx);
 
       // - ERROR -
@@ -3143,7 +3141,7 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
     return false;
   }
 
-  // - zpracovani pravidel -
+  // - process rules -
   {
     unsigned rule_head_index = 0;
     unsigned rule_state = 0;
@@ -3152,7 +3150,7 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
 
     do
     {
-      // - dokud neni vracen konec vstupu -
+      // - while terminal rt_input_end is not returned -
       old_input_idx = input_idx;
       if ((ret_term = rule_file_fa.recognize(a_data,input_idx,input_length)) == rt_input_end)
       {
@@ -3166,7 +3164,7 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
 
       if (rule_state < 2)
       {
-        // - nacteni hlavy pravidla -
+        // - read rule head -
         if (rule_state == 0)
         {
 
@@ -3197,7 +3195,7 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
           rule_state = 1;
         }
 
-        // - potvrzeni oddeleni hlavy pravidla a jeho tela -
+        // - read separator of rule head and its body -
         else
         {
 
@@ -3215,7 +3213,7 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
       }
       else
       {
-        // - nacteni tela pravidla -
+        // - read rule body -
         if (rule_state == 2)
         {
           if (ret_term == rt_identifier)
@@ -3255,7 +3253,7 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
             new_rule.body.push(terminals.used + idx);
           }
 
-          // - oddeleni tela pravidla a jeho semantickeho kodu -
+          // - separator of rule body and its semantic code -
           else
           {
 
@@ -3278,7 +3276,7 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
           }
         }
 
-        // - nacteni semantickeho kodu pravidla -
+        // - read semantic code of rule -
         else
         {
 
@@ -3433,7 +3431,7 @@ bool p_creat_descr_s::compute_firsts()
   p_rule_idxs_sets_s first_rule_idxs_sets;
   first_rule_idxs_sets.init();
 
-  // - vypocet mnozin firsts pro nonterminalni symboly
+  // - compute firsts set for nonterminal symbols -
   {
     unsigned non_idx = 0;
 
@@ -3445,26 +3443,26 @@ bool p_creat_descr_s::compute_firsts()
       first_set.push(non_idx + terminals.used);
       first_rule_idxs_sets.push_clear();
 
-      // - cyklus pres elementy v mnozine first -
+      // - loop through elements in set first -
       unsigned fs_idx = 0;
       do
       {
-        // - pokud je element nonterminal -
+        // - if element is nonterminal -
         if (first_set[fs_idx] >= terminals.used)
         {
           unsigned r_idx = 0;
 
-          // - cyklus pres vsechny pravidla -
+          // - loop through all rules -
           do
           {
             p_rule_s &rule_ref = rules[r_idx];
 
-            // - kdyz je hlava pravidla stejna jako kontrolovany nonterminal -
+            // - if head of rule is same as testing nonterminal -
             if (rule_ref.head == first_set[fs_idx])
             {
               unsigned first_body = rule_ref.body[0];
 
-              // - kdyz element jeste neni v mnozine first_set -
+              // - if element is not yet in set first_set -
               unsigned first_body_idx = first_set.get_idx(first_body);
               if (first_body_idx == c_idx_not_exist)
               {
@@ -3483,7 +3481,7 @@ bool p_creat_descr_s::compute_firsts()
       }
       while(++fs_idx < first_set.used);
 
-      // - vlozeni mnoziny first nonterminalu do seznamu -
+      // - insert set first nonterminals to list -
       firsts.push_blank();
       firsts.last().swap(first_set);
 
@@ -3506,25 +3504,25 @@ bool p_creat_descr_s::compute_follows_of_nonterminal(unsigned nonterm_idx,bb_arr
 
   unsigned r_idx = 0;
 
-  // - cyklus pres vsechny pravidla -
+  // - loop through all rules -
   do
   {
     p_rule_s &rule = rules[r_idx];
     unsigned rb_idx = 0;
 
-    // - cyklus pres pravou stranu pravidla -
+    // - loop through rule body -
     do
     {
-      // - kdyz je nalezen sledovany nonterminal -
+      // - if watched nonterminal was found -
       if (nonterm_idx == rule.body[rb_idx])
       {
 
-        // - pokud se nachazi uvnitr tela pravidla -
+        // - if nonterminal is inside rule body -
         if (rb_idx < rule.body.used - 1)
         {
           unsigned element = rule.body[rb_idx + 1];
 
-          // - kdyz je element terminal vloz jej do mnoziny follow -
+          // - if element is terminal insert it to set follow -
           if (element < terminals.used)
           {
             if (ret_follows.get_idx(element) == c_idx_not_exist)
@@ -3533,28 +3531,27 @@ bool p_creat_descr_s::compute_follows_of_nonterminal(unsigned nonterm_idx,bb_arr
             }
           }
 
-          // - kdyz je element nonterminal vloz jeho first mnozinu do mnoziny follow -
+          // - if element is nonterminal insert its set first to set follow -
           else
           {
             ret_follows.add_to_set(firsts[element - terminals.used]);
           }
         }
 
-        // - kdyz se nachazi na konci pravidla -
+        // - if nonterminal is at end of rule body -
         else
         {
 
-          // - pokud hlava pravidla jeste nebyla pouzita na rozepsani pouzij ji -
+          // - if rule head was not used yet, use it -
           if (nonterm_used.get_idx(rule.head) == c_idx_not_exist)
           {
 
-            // - jestli jiz byla spocitana mnozina follow hlavy vloz ji do mnoziny follow
-            // jinak ji spocitej a spocitej a zaznamenej vypocet jeji mnoziny follow pokud
-            // probehl ciste (tj. bez omezeni pocitani nekterych neterminalu) -
+            // - if set follow of rule head was not computed yet -
             if (!follows_created[rule.head - terminals.used])
             {
               nonterm_used.push(rule.head);
 
+              // - compute set follow of rule head and store it if compute was clean -
               bool this_clean = compute_follows_of_nonterminal(rule.head,follows_created,nonterm_used,follows[rule.head - terminals.used]);
 
               if (this_clean)
@@ -3567,10 +3564,11 @@ bool p_creat_descr_s::compute_follows_of_nonterminal(unsigned nonterm_idx,bb_arr
               }
             }
 
+            // - add set follow of rule head to set follow -
             ret_follows.add_to_set(follows[rule.head - terminals.used]);
           }
 
-          // - kdyz uz byla pouzita hlava pravidla na rozepsani nepokracuj ale oznac vypocet za necisty -
+          // - if rule head was already used mark computation as not clean -
           else
           {
             clean = false;
@@ -3610,7 +3608,7 @@ bool p_creat_descr_s::compute_follows()
 
   unsigned non_idx = 0;
 
-  // - cyklus pres vsechny neterminaly -
+  // - loop through all nonterminals -
   do
   {
     if (!follows_created[non_idx])
@@ -3635,7 +3633,7 @@ bool p_creat_descr_s::compute_kernels()
 
   kernels.used = 0;
 
-  // - vytvoreni prvniho jadra rozkladu obsahujiciho prvni pravidlo s iteratorem pred prvnim elementem pravidla -
+  // - create first kernel containing first rule with iter before first item of body -
   {
     kernels.push_clear();
     p_kernel_rule_dots_s &rule_dots = kernels.last().rule_dots;
@@ -3653,22 +3651,22 @@ bool p_creat_descr_s::compute_kernels()
 
   unsigned k_idx = 0;
 
-  // - cyklus pres jiz vytvorena jadra -
+  // - loop through already created kernels -
   do
   {
-    // - pokud jadro obsahuje nejake pravidla -
+    // - if kernel contain some rules -
     if (kernels[k_idx].rule_dots.used != 0)
     {
       p_kernel_rule_dots_s *rule_dots = &kernels[k_idx].rule_dots;
 
       unsigned rd_idx = 0;
 
-      // - cyklus pres vsechny pravidla jadra -
+      // - loop through all rules of kernel -
       do
       {
         p_kernel_rule_dot_s *rule_dot = rule_dots->data + rd_idx;
 
-        // - kdyz iterator neni na konci tela pravidla -
+        // - if iter is not at end of rule body -
         if (rule_dot->ui_second < rules[rule_dot->ui_first].body.used)
         {
           unsigned element = rules[rule_dot->ui_first].body[rule_dot->ui_second];
@@ -3684,15 +3682,15 @@ bool p_creat_descr_s::compute_kernels()
           {
             unsigned ef_idx = 0;
 
-            // - cyklus pres vsechny cleny v mnozine element_first -
+            // - loop through all members in set element_first -
             do
             {
-              // - vyvor nove jadro rozkladu -
+              // - create new kernel -
               p_kernel_rule_dots_s &nk_rule_dots = new_kernel.rule_dots;
               nk_rule_dots.used = 0;
 
-              // - vloz vsechny pravidla ktera generuji element v mnozine first s iteratorem za timto
-              // prvnim elementem -
+              // - insert all rules generating element in set first with
+              // iterator after first element -
               if (element >= terminals.used)
               {
                 ui_array_set_s &ef_rules = first_rules[element - terminals.used][ef_idx];
@@ -3714,36 +3712,36 @@ bool p_creat_descr_s::compute_kernels()
                 }
               }
 
-              // - pokud je prvkem v mnozine first samotny element zkopiruj jeho pravidlo z aktualniho jadra
-              // a posun iterator za nej -
+              // - if element in set first is tested element, copy its rule
+              // from actual kernel, and place iterator after it -
               if (ef_idx == 0)
               {
                 nk_rule_dots.push(kernels[k_idx].rule_dots[rd_idx]);
                 nk_rule_dots.last().ui_second++;
               }
 
-              // - do mnoziny prechodu vloz prechod ze zpracovavaneho jadra se zpracovavanym elementem
-              // ve first -
+              // - to set of transitions insert transition from processed
+              // kernel with element in set first -
               p_kernel_gotos_s &gotos = new_kernel.gotos;
               gotos.used = 0;
               gotos.push_blank();
               gotos.data[0].set(k_idx,element_first[ef_idx]);
 
-              // - prohledej jiz vygenerovane jadra -
+              // - search in already generated kernels -
               unsigned tmp_k_idx = kernels.get_idx_by_rule_dots(new_kernel);
 
-              // - pokud neexistuje jadro se stejnou mnozinou rule_dots uloz nove -
+              // - if kernel with same set rule_dots does not exists, store new kernel -
               if (tmp_k_idx == c_idx_not_exist)
               {
                 kernels.push_blank();
                 kernels.last().swap(new_kernel);
 
-                // - obnoveni ukazatelu po mozne realokaci pole -
+                // - retrieve pointers after possible reallocation -
                 rule_dots = &kernels[k_idx].rule_dots;
                 rule_dot = rule_dots->data + rd_idx;
               }
 
-              // - pokud jiz existuje takove jadro pridej do jeho mnoziny gotos vygenerovany prechod -
+              // - if such kernel does exist, add generated transition to its set gotos -
               else
               {
                 kernels[tmp_k_idx].gotos.push(gotos[0]);
@@ -3769,7 +3767,7 @@ bool p_creat_descr_s::create_lalr_table(p_lalr_table_s &lalr_table)
 {/*{{{*/
   cassert(terminals.used != 0 && nonterminals.used != 0 && firsts.used != 0 && follows.used != 0 && kernels.used != 0);
 
-  // - vytvori prazdnou tabulku -
+  // - create empty table -
   lalr_table.clear();
   lalr_table.resize(terminals.used + nonterminals.used,kernels.used);
   lalr_table.fill(c_idx_not_exist);
@@ -3777,24 +3775,24 @@ bool p_creat_descr_s::create_lalr_table(p_lalr_table_s &lalr_table)
   {
     unsigned k_idx = 0;
 
-    // - cyklus pres vsechny jadra rozkladu -
+    // - loop through all kernels -
     do
     {
       p_kernel_gotos_s &gotos = kernels[k_idx].gotos;
 
-      // - pokud pole gotos obsahuje nejake prvky -
+      // - if array gotos contain some elements -
       if (gotos.used != 0)
       {
         unsigned g_idx = 0;
 
-        // - cyklus pres vsechny prvky v poli gotos -
+        // - loop through all elements in gotos array -
         do
         {
           unsigned &value = lalr_table.value(gotos[g_idx].ui_second,gotos[g_idx].ui_first);
 
-          // - pokud je element nonterminal (gotos[g_idx].ui_second < terminals.used)
-          // zapis do tabulky akci shift, jinak zapis do tabulky prechodu cislo
-          // stavu, na ktery se presunout po redukci -
+          // - if element is terminal (gotos[g_idx].ui_second < terminals.used)
+          // write action shift to table of actions, otherwise write index of
+          // target state to table of transitions -
 
           // - ERROR -
           if (value != c_idx_not_exist)
@@ -3822,32 +3820,32 @@ bool p_creat_descr_s::create_lalr_table(p_lalr_table_s &lalr_table)
       p_kernel_rule_dots_s &rule_dots = kernels[k_idx].rule_dots;
       unsigned rd_idx = 0;
 
-      // - cyklus pres vsechny pravidla v jadre  -
+      // - loop through all rules in kernel -
       do
       {
         p_kernel_rule_dot_s &rule_dot = rule_dots[rd_idx];
 
-        // - pokud se iterator nachazi na konci tela pravidla -
+        // - if iterator is at end of rule body -
         if (rules[rule_dot.ui_first].body.used == rule_dot.ui_second)
         {
 
           p_follow_set_s &head_follow = follows[rules[rule_dot.ui_first].head - terminals.used];
 
-          // - pokud neni follow mnozina hlavy pravidla prazdna -
+          // - if set follow of rule head is not empty -
           if (head_follow.used != 0)
           {
             unsigned hf_idx = 0;
 
-            // - cyklus pres vsechny prvky v mnozine head_follow -
+            // - loop through all elements in set head_follow -
             do
             {
-              // - pokud je element terminalni symbol -
+              // - if element is terminal symbol -
               if (head_follow[hf_idx] < terminals.used)
               {
                 bool good = true;
                 unsigned rd2_idx = 0;
 
-                // - Kontrola zda neexistuje v jadre takove pravidlo, ktere by umoznovalo akci shift tj. redukce by byla predcasna. Pokud ne good == true -
+                // - check if there is such rule in kernel, that enables shift action, if no good == true -
                 do
                 {
                   p_kernel_rule_dot_s &rule_dot2 = rule_dots[rd2_idx];
@@ -3863,7 +3861,7 @@ bool p_creat_descr_s::create_lalr_table(p_lalr_table_s &lalr_table)
                 }
                 while(++rd2_idx < rule_dots.used);
 
-                // - pokud good zapise do tabulky redukci podle pravidla rule_dots[rd_idx] -
+                // - if reduction is not premature, write reduction to reduction table bz rule rule_dots[rd_idx] -
                 if (good)
                 {
                   unsigned &value = lalr_table.value(head_follow[hf_idx],k_idx);
@@ -3931,10 +3929,10 @@ bool parser_s::create_from_rule_string(string_s &rule_string)
   // - set interpreter thread pointer -
   creat_descr.it_ptr = it_ptr;
 
-  // - nacteni konecnych automatu vyuzivanych ke zpracovani souboru pravidel -
+  // - read final automata set used for processing rules file -
   creat_descr.load_final_automata_set_new();
 
-  // - nacteni terminalu, neterminalu a pravidel z retezce -
+  // - read terminals, nonterminals and rules from string -
   if (!creat_descr.load_from_rule_string(rule_string))
   {
     creat_descr.clear();
@@ -3950,7 +3948,7 @@ bool parser_s::create_from_rule_string(string_s &rule_string)
     return false;
   }
 
-  // - ulozeni poctu terminalu gramatiky -
+  // - store count of grammar terminals -
   terminal_cnt = creat_descr.terminals.used;
 
   if (!(creat_descr.find_key_terminals(end_terminal,skip_terminals)
@@ -3973,7 +3971,7 @@ bool parser_s::create_from_rule_string(string_s &rule_string)
     return false;
   }
 
-  // - vytvoreni popisu pravidel parseru -
+  // - retrieve init semantic code -
   {
     p_rules_s &rules = creat_descr.rules;
     rule_descrs.used = 0;
@@ -3984,7 +3982,7 @@ bool parser_s::create_from_rule_string(string_s &rule_string)
 
       unsigned r_idx = 0;
 
-      // - cyklus pres vsechny pravidla -
+      // - loop through all rules -
       do
       {
         p_rule_descr_s &rule_descr = rule_descrs.data[r_idx];

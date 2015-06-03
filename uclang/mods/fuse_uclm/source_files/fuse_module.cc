@@ -1109,7 +1109,7 @@ bool bic_fuse_handle_method_loop_0(interpreter_thread_s &it,unsigned stack_base,
   // - reset fuse handle it pointer -
   fhnd_ptr->it_ptr = NULL;
 
-  // - if exception occured -
+  // - if exception occurred -
   if (fhnd_ptr->ret_code == c_run_return_code_EXCEPTION)
   {
     return false;

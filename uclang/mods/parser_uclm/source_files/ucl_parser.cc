@@ -19,14 +19,14 @@ bool parse_state_s::parse_source_string(location_s *parse_state_loc,delegate_s *
   final_automata_s &final_automata = parser.final_automata;
   p_lalr_table_s &lalr_table = parser.lalr_table;
 
-  // - vychozi nastaveni lalr_stavoveho zasobniku -
+  // - initialize lalr parser stack -
   lalr_stack.used = 0;
   lalr_stack.push(0,0,0);
 
   // - reset parser error flag -
   a_parser_err = false;
 
-  // - promenne popisujici stav konecneho lexikalniho automatu -
+  // - variables describing state of lexical automata -
   old_input_idx = 0;
   input_idx = 0;
   unsigned input_length = source_string.size - 1;
@@ -34,7 +34,7 @@ bool parse_state_s::parse_source_string(location_s *parse_state_loc,delegate_s *
 
   do
   {
-    // - rozpoznani dalsiho terminalu na vstupu -
+    // - recognize next terminal symbol -
     while (ret_term == c_idx_not_exist)
     {
       old_input_idx = input_idx;
@@ -58,7 +58,7 @@ bool parse_state_s::parse_source_string(location_s *parse_state_loc,delegate_s *
       }
     }
 
-    // - nalezeni akce v tabulce akci -
+    // - select parse action from parse action table -
     parse_action = lalr_table.value(ret_term,lalr_stack.last().lalr_state);
 
     // - ERROR -
@@ -72,22 +72,22 @@ bool parse_state_s::parse_source_string(location_s *parse_state_loc,delegate_s *
       return false;
     }
 
-    // - akce SHIFT -
+    // - action SHIFT -
     if (parse_action < c_lalr_table_reduce_base)
     {
-      // - kdyz byl prijmut koncovy terminal ukonci rozklad -
+      // - if end terminal was received end parsing process -
       if (ret_term == end_terminal)
       {
         break;
       }
 
-      // - vlozi na zasobnik novy stav a pozici terminalu ve zdrojovem retezci -
+      // - insert new parse state and location of terminal to parse stack -
       lalr_stack.push(parse_action,old_input_idx,input_idx);
 
       ret_term = c_idx_not_exist;
     }
 
-    // - akce REDUCE -
+    // - action REDUCE -
     else
     {
       parse_action -= c_lalr_table_reduce_base;

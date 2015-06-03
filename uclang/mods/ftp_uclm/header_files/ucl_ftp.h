@@ -52,7 +52,7 @@ struct ftp_session_s
 };
 
 /*
- * definition of structure ftp_hadnle_s
+ * definition of structure ftp_handle_s
  */
 
 struct ftp_handle_s

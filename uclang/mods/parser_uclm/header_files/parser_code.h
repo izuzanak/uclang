@@ -43,7 +43,7 @@ enum
 };
 
 /*
- * identifikace operaci prirazenych k redukcim
+ * identification of operations assigned to reductions
  */
 
 enum
@@ -67,12 +67,12 @@ enum
   c_reduce_null_3
 };
 
-// rozkladove konstanty
+// parse constants
 const unsigned c_reg_rule_cnt = 17;
 const unsigned reg_rule_head_idxs[c_reg_rule_cnt] = {17, 18, 18, 19, 19, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, };
 const unsigned reg_rule_body_lengths[c_reg_rule_cnt] = {2, 3, 1, 3, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, };
 
-//rozkladova tabulka
+// lalr parse table
 #define reg_blank c_idx_not_exist
 #define REG_SHIFT(VALUE) VALUE
 #define REG_REDUCE(VALUE) c_reg_lalr_table_reduce_base + VALUE
@@ -462,32 +462,27 @@ struct
   bool create_final_automata_new(final_automata_s &final_automata);
 
   /*
-   * spocita mnozinu firsts pro neterminaly
-   * tj. mnozinu elementu se kterymi muze zacinat jakykoli literal rozepsatelny
-   * z tohoto neterminalu
+   * compute set first for nonterminal symbols
    */
   bool compute_firsts();
 
   /*
-   * spocita mnozinu follow jednoho neterminalniho symbolu
+   * compute set follow of one nonterminal symbol
    */
   bool compute_follows_of_nonterminal(unsigned nonterm_idx,bb_array_s &follows_created,ui_array_s &nonterm_used,p_follow_set_s &ret_follows);
 
   /*
-   * spocita mnozinu follow ke vsem neterminalnim symbolum
-   * tj. mnozinu obsahujici seznam elementu, ktere mohou v nejakem literalu
-   * rozepsanem z pocatecniho symbolu gramatiky nasledovat za timto symbolem
+   * compute set follow for nonterminal symbols
    */
   bool compute_follows();
 
   /*
-   * spocita jadra rozkladu prekladace podle nactenych pravidel
-   * s vyuzitim mnozin firsts, first_rules a follows
+   * compute parse kernels 
    */
   bool compute_kernels();
 
   /*
-   * vytvori rozkladovou tabulku na zaklade jader rozkladu
+   * create parse table based on parse kernels
    */
   bool create_lalr_table(p_lalr_table_s &lalr_table);
 }

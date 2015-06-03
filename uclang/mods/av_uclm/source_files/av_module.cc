@@ -374,7 +374,7 @@ bool bic_av_format_method_AvFormat_1(interpreter_thread_s &it,unsigned stack_bas
   // - set format context -
   avf_ptr->format_ctx = format_ctx;
 
-  // - alocate and set memory to zero -
+  // - allocate and set memory to zero -
   avf_ptr->codec_ctxs = (AVCodecContext **)cmalloc(format_ctx->nb_streams*sizeof(AVCodecContext *));
   memset(avf_ptr->codec_ctxs,0,format_ctx->nb_streams*sizeof(AVCodecContext *));
 

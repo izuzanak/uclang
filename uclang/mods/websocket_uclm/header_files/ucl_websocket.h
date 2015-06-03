@@ -22,7 +22,7 @@ XXX:
  */
 
 /*
- * contants and definitions
+ * constants and definitions
  */ 
 
 extern unsigned c_bi_class_ws_conn;

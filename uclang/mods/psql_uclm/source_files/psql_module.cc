@@ -271,7 +271,7 @@ bool bic_psql_conn_method_PSqlConn_1(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  // - retirieve psql connection pointer -
+  // - retrieve psql connection pointer -
   dst_location->v_data_ptr = (basic_64b)conn_ptr;
 
   return true;
