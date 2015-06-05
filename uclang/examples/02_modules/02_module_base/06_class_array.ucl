@@ -63,7 +63,7 @@ class Main
     ("array_0 != array_1 -> %d\n" % (array_0 != array_1)).print();
     ("array_0 != 10      -> %d\n" % (array_0 != 10)).print();
 
-    // Plus operators push content of ierable to array
+    // Plus operators push content of iterable to array
     //
     Tutorial.note("Array plus operators");
     arr_0 = [1,2,3];

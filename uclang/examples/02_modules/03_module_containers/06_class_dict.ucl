@@ -67,7 +67,7 @@ class Main
     }
 
     // Access to value by select item operator using non-existing key will
-    // create this key and assing Blank value to it
+    // create this key and assign Blank value to it
     //
     Tutorial.note("Dict item select operator, non existing key");
     ("dict         -> %s\n" % dict.to_string()).print();

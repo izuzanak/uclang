@@ -786,7 +786,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
         while (loop_run)
         {
 
-          // - retireve index of code to be executed -
+          // - retrieve index of code to be executed -
           unsigned code_idx = fg_ptr[c_fg_switch_defaults + default_cnt + *ei_ptr];
 
           // - if code index is not empty, and not equal to last executed code -

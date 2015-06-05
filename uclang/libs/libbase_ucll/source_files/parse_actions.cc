@@ -2200,7 +2200,7 @@ bool pa_switch_statement(string_s &source_string,script_parser_s &_this)
     // - test if expression stack contain exactly one node -
     debug_assert(ed.tmp_exp_info.used == 1);
 
-    // - backup temporaray flow graph base -
+    // - backup temporary flow graph base -
     unsigned tmp_flow_graph_base = tmp_flow_graph.used;
 
     // - creation of description of flow graph node -

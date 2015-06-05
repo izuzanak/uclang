@@ -40,7 +40,7 @@ class Main
     ("regex_2.match(\"number: 100\") -> %s\n" % regex_2.match("number: 100").to_string()).print();
 
     // Method match#2 matches position of first substring matching regular
-    // expression with its subexpressions. Second atgument of method match#2
+    // expression with its subexpressions. Second argument of method match#2
     // describe count of requested subexpressions
     //
     Tutorial.note("Regex method match#2");

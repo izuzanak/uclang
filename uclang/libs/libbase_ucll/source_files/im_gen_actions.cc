@@ -1775,7 +1775,7 @@ bool im_conditional_expression(expression_s &exp,uli_array_s &begin_code,uli_arr
       unsigned tmp_local_idx = im.free_stack_idxs.used != 0?im.free_stack_idxs.pop():im.stack_idx_max++;
       code[code_idx + ice_stack_trg] = tmp_local_idx;
 
-      // - store position of onditional expression result reference -
+      // - store position of conditional expression result reference -
       im.operand_stack.push(im.operands.used);
       im.operands.push(c_op_modifier_object | c_op_modifier_tmp);
       im.operands.push(tmp_local_idx);
