@@ -268,7 +268,7 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
   \
   if (vri_ptr < vri_ptr_end) {\
     \
-    /* - test of variable name uniqueness in class - */\
+    /* - test variable name uniqueness in class - */\
     do {\
       \
       /* - PARSE ERROR - */\
@@ -325,11 +325,11 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
 // -- PA_OPERATOR_UNARY --
 #define PA_OPERATOR_UNARY(OP_NAME) \
   {/*{{{*/\
-    /* - store of node position - */\
+    /* - store node position - */\
     unsigned tmp_node_idx = ed.tmp_expression.used;\
     idx_size_s &exp_info = ed.tmp_exp_info.pop();\
     \
-    /* - store of node to expression - */\
+    /* - store node to expression - */\
     ed.tmp_expression.push(c_node_type_ ## OP_NAME);\
     ed.tmp_expression.push(SET_SRC_POS(_this.source_idx,_this.old_input_idx));\
     ed.tmp_expression.push(exp_info.ui_first);\
@@ -345,7 +345,7 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
 // -- PA_OPERATOR_BINARY --
 #define PA_OPERATOR_BINARY(OP_NAME) \
   {/*{{{*/\
-    /* - store of node position - */\
+    /* - store node position - */\
     unsigned tmp_node_idx = ed.tmp_expression.used;\
     idx_size_s *tei_ptr = ed.tmp_exp_info.data + ed.tmp_exp_info.used - 2;\
     \
@@ -400,7 +400,7 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
           \
           if (ts_ptr[first_end_cnt + 1] >= c_fgts_bc_value_base) {\
             \
-            /* - store of ends of first thread a special begins - */\
+            /* - store ends of first thread a special begins - */\
             unsigned *tse_ptr = ts_ptr + 1;\
             unsigned *tse_ptr_end = tse_ptr + first_end_cnt;\
             ui_array_s &bc_ends = fgd.fgts_bc_ends_array.last()[ts_ptr[first_end_cnt + 1] - c_fgts_bc_value_base];\
@@ -451,10 +451,10 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
 // -- PA_IDENTIFIER --
 #define PA_IDENTIFIER(INSTRUCTION,NAME_IDX,CODE_POS) \
   {/*{{{*/\
-    /* - store of node position- */\
+    /* - store node position- */\
     unsigned tmp_node_idx = ed.tmp_expression.used;\
     \
-    /* - store of node to expression - */\
+    /* - store node to expression - */\
     ed.tmp_expression.push(INSTRUCTION);\
     ed.tmp_expression.push(SET_SRC_POS(_this.source_idx,CODE_POS));\
     ed.tmp_expression.push(NAME_IDX);\
@@ -636,7 +636,7 @@ bool pa_class_def_end(string_s &source_string,script_parser_s &_this)
 
   // *****
 
-  // - remove of class index from parent record stack -
+  // - remove class index from parent record stack -
   parent_record_idxs.used--;
 
   debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_class_def_end\n"));
@@ -661,7 +661,7 @@ bool pa_class_name(string_s &source_string,script_parser_s &_this)
   // - get index of class name -
   unsigned name_idx = _this.class_symbol_names.get_idx_char_ptr_insert(name_length,name_data);
 
-  // - test of uniqueness of class name -
+  // - test uniqueness of class name -
   unsigned parent_record_idx = parent_record_idxs.used != 0 ? parent_record_idxs.last() : c_idx_not_exist;
   unsigned class_record_idx = _this.get_nested_enclosing_class_idx_by_name_idx(name_idx,parent_record_idx);
 
@@ -843,7 +843,7 @@ bool pa_method_def_end(string_s &source_string,script_parser_s &_this)
   // - setting flow graph index in method -
   method_records.last().flow_graph_idx = method_flow_graphs.used;
 
-  // - copy (swap) of parsed flow graph -
+  // - copy (swap) parsed flow graph -
   method_flow_graphs.push_blank();
   exp_flow_graph_s &method_flow_graph = method_flow_graphs.last();
 
@@ -851,7 +851,7 @@ bool pa_method_def_end(string_s &source_string,script_parser_s &_this)
   method_flow_graph.nodes.swap(tmp_flow_graph);
   method_flow_graph.expressions.swap(tmp_expressions);
 
-  // - remove of temporary data -
+  // - remove temporary data -
   fgd.fg_thread_stack.used = 0;
   fgd.fgts_cnt.used = 0;
 
@@ -938,12 +938,12 @@ bool pa_method_name(string_s &source_string,script_parser_s &_this)
   method_record.parent_record = parent_record_idx;
   method_record.flow_graph_idx = c_idx_not_exist;
 
-  // - store of position of method name in code -
+  // - store position of method name in code -
   name_pos_s &name_position = method_record.name_position;
   name_position.ui_first = SET_SRC_POS(_this.source_idx,lse.terminal_start);
   name_position.ui_second = SET_SRC_POS(_this.source_idx,lse.terminal_end);
 
-  // - store of method index to parent class -
+  // - store method index to parent class -
   class_record.method_record_idxs.push(method_record_idx);
 
   // - initialization of modifier -
@@ -1006,7 +1006,7 @@ bool pa_method_parameters_done(string_s &source_string,script_parser_s &_this)
   unsigned name_idx = _this.get_method_name_idx_swap(name_string);
   name_string.clear();
 
-  // - test of uniqueness of method in parent class -
+  // - test uniqueness of method in parent class -
   ui_array_s &class_mr_idxs = parent_record.method_record_idxs;
 
   if (class_mr_idxs.used != 0)
@@ -1029,7 +1029,7 @@ bool pa_method_parameters_done(string_s &source_string,script_parser_s &_this)
     while(++mri_ptr < mri_ptr_end);
   }
 
-  // - setting of method name index -
+  // - setting method name index -
   method_record.name_idx = name_idx;
 
   debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_method_parameters_done: name: %s\n",_this.method_symbol_names[name_idx].data));
@@ -1056,7 +1056,7 @@ bool pa_method_parameter(string_s &source_string,script_parser_s &_this)
   // - get parameter parent method -
   method_record_s &method_record = method_records.last();
 
-  // - test of method parameter uniqueness -
+  // - test method parameter uniqueness -
   ui_array_s &method_pr_idxs = method_record.parameter_record_idxs;
   if (method_pr_idxs.used != 0)
   {
@@ -1119,7 +1119,7 @@ bool pa_method_reference_parameter(string_s &source_string,script_parser_s &_thi
   // - get parent method -
   method_record_s &method_record = method_records.last();
 
-  // - test of uniqueness of method parameter name in parent method -
+  // - test uniqueness of method parameter name in parent method -
   ui_array_s &method_pr_idxs = method_record.parameter_record_idxs;
   if (method_pr_idxs.used != 0)
   {
@@ -1203,14 +1203,14 @@ bool pa_method_body_empty(string_s &source_string,script_parser_s &_this)
 
   // - creation of expression defining constant 0 -
 
-  // - search of constant in constant array -
+  // - search constant in constant array -
   unsigned ci_idx = const_ints.get_idx(0);
   if (ci_idx == c_idx_not_exist)
   {
     ci_idx = const_ints.insert(0);
   }
 
-  // - store of node position -
+  // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
 
   ed.tmp_expression.push(c_node_type_const_int);
@@ -1748,7 +1748,7 @@ bool pa_while_statement(string_s &source_string,script_parser_s &_this)
 
     ts_ptr[1] = ts_ptr[2];
 
-    // - attaching of ends of body to begin of expression -
+    // - attach ends of body to begin of expression -
     if (body_end_cnt != 0)
     {
       unsigned *tse_ptr = ts_ptr + 4;
@@ -1934,7 +1934,7 @@ bool pa_do_while_statement(string_s &source_string,script_parser_s &_this)
     debug_assert(0);
   }
 
-  // - remove of positions of break and continue records -
+  // - remove positions of break and continue records -
   fgd.fgts_bc_ends_array.used--;
 
   debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_do_while_statement\n"));
@@ -2052,7 +2052,7 @@ bool pa_for_statement(string_s &source_string,script_parser_s &_this)
     debug_assert(0);
   }
 
-  // - remove of positions of break and continue records -
+  // - remove positions of break and continue records -
   fgd.fgts_bc_ends_array.used--;
 
   // - join created thread to preceding assign expression -
@@ -2432,7 +2432,7 @@ bool pa_break(string_s &source_string,script_parser_s &_this)
     return false;
   }
 
-  // - store of thread describing break -
+  // - store thread describing break -
   fgd.fgts_type.push(c_fgts_type_thread);
   fgd.fgts_cnt.push(0);
   fgd.fg_thread_stack.push(c_fgts_value_break);
@@ -2460,7 +2460,7 @@ bool pa_continue(string_s &source_string,script_parser_s &_this)
     return false;
   }
 
-  // - store of thread describing continue -
+  // - store thread describing continue -
   fgd.fgts_type.push(c_fgts_type_thread);
   fgd.fgts_cnt.push(0);
   fgd.fg_thread_stack.push(c_fgts_value_continue);
@@ -2501,7 +2501,7 @@ bool pa_elements_array(string_s &source_string,script_parser_s &_this)
 
   unsigned array_member_cnt = member_cnt.pop();
 
-  // - store of node position -
+  // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
 
   // - insertion of node to expression -
@@ -3121,7 +3121,7 @@ bool pa_slice_range(string_s &source_string,script_parser_s &_this)
 
   // *****
 
-  // - store of node position -
+  // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
   idx_size_s *tei_ptr = ed.tmp_exp_info.data + ed.tmp_exp_info.used - 4;
 
@@ -3156,14 +3156,14 @@ bool pa_slice_blank_value(string_s &source_string,script_parser_s &_this)
 
   // *****
 
-  // - search of constant in constant array -
+  // - search constant in constant array -
   unsigned ci_idx = const_ints.get_idx(LLONG_MAX);
   if (ci_idx == c_idx_not_exist)
   {
     ci_idx = const_ints.insert(LLONG_MAX);
   }
 
-  // - store of node position -
+  // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
 
   ed.tmp_expression.push(c_node_type_const_int);
@@ -3244,7 +3244,7 @@ bool pa_new_object(string_s &source_string,script_parser_s &_this)
   // - get index of class name -
   unsigned name_idx = _this.class_symbol_names.get_idx_char_ptr_insert(name_length,name_data);
 
-  // - count of constructor parameters -
+  // - count constructor parameters -
   unsigned c_parameter_cnt = member_cnt.pop();
 
   // - creation of space for storing of constructor name -
@@ -3419,11 +3419,11 @@ bool pa_type_identification(string_s &source_string,script_parser_s &_this)
 
   // *****
 
-  // - store of node position -
+  // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
   idx_size_s &exp_info = ed.tmp_exp_info.pop();
 
-  // - store of node to expression -
+  // - store node to expression -
   ed.tmp_expression.push(c_node_type_type_identification);
   ed.tmp_expression.push(exp_info.ui_first);
 
@@ -3445,16 +3445,16 @@ bool pa_object_reference_copy(string_s &source_string,script_parser_s &_this)
 
   // *****
 
-  // - store of node position -
+  // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
   idx_size_s *tei_ptr = ed.tmp_exp_info.data + ed.tmp_exp_info.used - 2;
 
-  // - store of node to expression -
+  // - store node to expression -
   ed.tmp_expression.push(c_node_type_object_reference_copy);
   ed.tmp_expression.push(tei_ptr[0].ui_first);
   ed.tmp_expression.push(tei_ptr[1].ui_first);
 
-  // - remove of old nodes from stack -
+  // - remove old nodes from stack -
   ed.tmp_exp_info.used -= 2;
 
   // - create expression info node -
@@ -3475,18 +3475,18 @@ bool pa_conditional_expression(string_s &source_string,script_parser_s &_this)
 
   // *****
 
-  // - store of node position -
+  // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
   idx_size_s *tei_ptr = ed.tmp_exp_info.data + ed.tmp_exp_info.used - 3;
 
-  // - store of node to expression -
+  // - store node to expression -
   ed.tmp_expression.push(c_node_type_conditional_expression);
   ed.tmp_expression.push(SET_SRC_POS(_this.source_idx,_this.old_input_idx));
   ed.tmp_expression.push(tei_ptr[0].ui_first);
   ed.tmp_expression.push(tei_ptr[1].ui_first);
   ed.tmp_expression.push(tei_ptr[2].ui_first);
 
-  // - remove of old nodes from stack -
+  // - remove old nodes from stack -
   ed.tmp_exp_info.used -= 3;
 
   // - create expression info node -
@@ -3515,7 +3515,7 @@ bool pa_object_member_select(string_s &source_string,script_parser_s &_this)
   // - get index of variable name -
   unsigned name_idx = _this.variable_symbol_names.get_idx_char_ptr_insert(name_length,name_data);
 
-  // - store of node position -
+  // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
   idx_size_s &exp_info = ed.tmp_exp_info.pop();
 
@@ -3714,7 +3714,7 @@ bool pa_const_char(string_s &source_string,script_parser_s &_this)
     cc_idx = const_chars.used - 1;
   }
 
-  // - store of node position -
+  // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
 
   ed.tmp_expression.push(c_node_type_const_char);
@@ -3744,7 +3744,7 @@ bool pa_const_octal_char(string_s &source_string,script_parser_s &_this)
   unsigned char_num_end = (lse.terminal_end - lse.terminal_start) - 1;
   char *char_num_data = source_string.data + lse.terminal_start;
 
-  // - retrieve of char number -
+  // - retrieve char number -
   char_num_data[char_num_end] = '\0';
   char const_char = strtol(char_num_data + 2,NULL,8);
   char_num_data[char_num_end] = '\'';
@@ -3757,7 +3757,7 @@ bool pa_const_octal_char(string_s &source_string,script_parser_s &_this)
     cc_idx = const_chars.used - 1;
   }
 
-  // - store of node position -
+  // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
 
   ed.tmp_expression.push(c_node_type_const_char);
@@ -3792,7 +3792,7 @@ bool pa_const_hex_char(string_s &source_string,script_parser_s &_this)
   unsigned char_num_end = (lse.terminal_end - lse.terminal_start) - 1;
   char *char_num_data = source_string.data + lse.terminal_start;
 
-  // - retrieve of char number -
+  // - retrieve char number -
   char_num_data[char_num_end] = '\0';
   char const_char = strtol(char_num_data + 3,NULL,16);
   char_num_data[char_num_end] = '\'';
@@ -3805,7 +3805,7 @@ bool pa_const_hex_char(string_s &source_string,script_parser_s &_this)
     cc_idx = const_chars.used - 1;
   }
 
-  // - store of node position -
+  // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
 
   ed.tmp_expression.push(c_node_type_const_char);
@@ -3884,7 +3884,7 @@ bool pa_const_backslash_char(string_s &source_string,script_parser_s &_this)
     cc_idx = const_chars.used - 1;
   }
 
-  // - store of node position -
+  // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
 
   ed.tmp_expression.push(c_node_type_const_char);
@@ -3920,7 +3920,7 @@ bool pa_const_oct_int(string_s &source_string,script_parser_s &_this)
   unsigned num_end = lse.terminal_end - lse.terminal_start;
   char *num_data = source_string.data + lse.terminal_start;
 
-  // - retrieve of number -
+  // - retrieve number -
   char tmp_char = num_data[num_end];
   num_data[num_end] = '\0';
   long long int const_int = strtoll(num_data,NULL,8);
@@ -3933,7 +3933,7 @@ bool pa_const_oct_int(string_s &source_string,script_parser_s &_this)
     ci_idx = const_ints.insert(const_int);
   }
 
-  // - store of node position -
+  // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
 
   ed.tmp_expression.push(c_node_type_const_int);
@@ -3967,7 +3967,7 @@ bool pa_const_dec_int(string_s &source_string,script_parser_s &_this)
   unsigned num_end = lse.terminal_end - lse.terminal_start;
   char *num_data = source_string.data + lse.terminal_start;
 
-  // - retrieve of number -
+  // - retrieve number -
   char tmp_char = num_data[num_end];
   num_data[num_end] = '\0';
   long long int const_int = strtoll(num_data,NULL,10);
@@ -3980,7 +3980,7 @@ bool pa_const_dec_int(string_s &source_string,script_parser_s &_this)
     ci_idx = const_ints.insert(const_int);
   }
 
-  // - store of node position -
+  // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
 
   ed.tmp_expression.push(c_node_type_const_int);
@@ -4014,7 +4014,7 @@ bool pa_const_hex_int(string_s &source_string,script_parser_s &_this)
   unsigned num_end = lse.terminal_end - lse.terminal_start;
   char *num_data = source_string.data + lse.terminal_start;
 
-  // - retrieve of number -
+  // - retrieve number -
   char tmp_char = num_data[num_end];
   num_data[num_end] = '\0';
   long long int const_int = strtoll(num_data,NULL,16);
@@ -4027,7 +4027,7 @@ bool pa_const_hex_int(string_s &source_string,script_parser_s &_this)
     ci_idx = const_ints.insert(const_int);
   }
 
-  // - store of node position -
+  // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
 
   ed.tmp_expression.push(c_node_type_const_int);
@@ -4061,7 +4061,7 @@ bool pa_const_float(string_s &source_string,script_parser_s &_this)
   unsigned float_num_end = lse.terminal_end - lse.terminal_start;
   char *float_num_data = source_string.data + lse.terminal_start;
 
-  // - retrieve of number from string -
+  // - retrieve number from string -
   char tmp_char = float_num_data[float_num_end];
   float_num_data[float_num_end] = '\0';
   double const_float = strtod(float_num_data,NULL);
@@ -4074,7 +4074,7 @@ bool pa_const_float(string_s &source_string,script_parser_s &_this)
     cd_idx = const_floats.insert(const_float);
   }
 
-  // - store of node position -
+  // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
 
   ed.tmp_expression.push(c_node_type_const_float);
@@ -4120,7 +4120,7 @@ bool pa_const_string(string_s &source_string,script_parser_s &_this)
       {
         ptr++;
 
-        // - process of char represented by octal number -
+        // - process char represented by octal number -
         if (*ptr >= '0' && *ptr <= '7')
         {
           char new_char = *ptr++ - '0';
@@ -4137,7 +4137,7 @@ bool pa_const_string(string_s &source_string,script_parser_s &_this)
 
           char_buffer.push(new_char);
         }
-        // - process of char representation by hexadecimal number -
+        // - process char representation by hexadecimal number -
         else if (*ptr == 'x')
         {
           ptr++;
@@ -4247,7 +4247,7 @@ bool pa_const_string(string_s &source_string,script_parser_s &_this)
     char_buffer.clear();
   }
 
-  // - store of node position -
+  // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
 
   ed.tmp_expression.push(c_node_type_const_string);

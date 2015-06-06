@@ -144,7 +144,7 @@ unsigned script_parser_s::get_nested_enclosing_class_idx_by_name_idx(unsigned a_
     return c_idx_not_exist;
   }
 
-  // - test of parent class name -
+  // - test parent class name -
   class_record_s &parent_class = class_records[a_parent_class_idx];
   if (parent_class.name_idx == a_name_idx) return a_parent_class_idx;
 
@@ -1616,7 +1616,7 @@ void script_parser_s::DEBUG_show_dot_format_flow_graph(exp_flow_graph_s &fg)
   unsigned *fg_data = fg_nodes.data;
   unsigned fg_idx = 0;
 
-  // - output of node description and edges between them -
+  // - output node description and edges between them -
   do
   {
     unsigned *fg_ptr = fg_data + fg_idx;
@@ -2540,7 +2540,7 @@ bool script_parser_s::import_module(built_in_module_s *a_module_ptr)
       // - get index of class name -
       unsigned class_name_idx = class_symbol_names.get_idx_char_ptr_insert(strlen(built_in_class.name),built_in_class.name);
 
-      // - test of uniqueness of built in class name -
+      // - test uniqueness of built in class name -
       unsigned class_record_idx = resolve_class_idx_by_name_idx(class_name_idx,c_idx_not_exist);
 
       // - MODULE IMPORT ERROR -
@@ -2585,7 +2585,7 @@ bool script_parser_s::import_module(built_in_module_s *a_module_ptr)
           // - get index of method name -
           unsigned method_name_idx = method_symbol_names.get_idx_char_ptr_insert(strlen(built_in_method.name),built_in_method.name);
 
-          // - test of uniqueness of method in parent class -
+          // - test uniqueness of method in parent class -
           ui_array_s &class_mr_idxs = class_record.method_record_idxs;
 
           if (class_mr_idxs.used != 0)
@@ -2620,7 +2620,7 @@ bool script_parser_s::import_module(built_in_module_s *a_module_ptr)
           method_record.modifiers = built_in_method.modifiers | c_modifier_built_in;
           method_record.parent_record = class_record_idx;
 
-          // - store of position of method name in code -
+          // - store position of method name in code -
           name_pos_s &name_position = method_record.name_position;
           name_position.ui_first = c_idx_not_exist;
           name_position.ui_second = c_idx_not_exist;
@@ -2628,7 +2628,7 @@ bool script_parser_s::import_module(built_in_module_s *a_module_ptr)
           // - initialize method function pointer -
           method_record.bi_method_caller = built_in_method.method_caller;
 
-          // - store of method index to parent class -
+          // - store method index to parent class -
           class_mr_idxs.push(method_record_idx);
 
         }
@@ -2645,7 +2645,7 @@ bool script_parser_s::import_module(built_in_module_s *a_module_ptr)
           // - get index of variable name -
           unsigned variable_name_idx = variable_symbol_names.get_idx_char_ptr_insert(strlen(built_in_variable.name),built_in_variable.name);
 
-          // - test of variable name uniqueness in class -
+          // - test variable name uniqueness in class -
           ui_array_s &class_vr_idxs = class_record.variable_record_idxs;
 
           if (class_vr_idxs.used != 0)
@@ -2653,7 +2653,7 @@ bool script_parser_s::import_module(built_in_module_s *a_module_ptr)
             unsigned *vri_ptr = class_vr_idxs.data;
             unsigned *vri_ptr_end = vri_ptr + class_vr_idxs.used;
 
-            // - test of variable name uniqueness in class -
+            // - test variable name uniqueness in class -
             do
             {
 
@@ -6958,7 +6958,7 @@ void script_parser_s::parse_script(unsigned a_source_idx)
   do
   {
 
-    // - retrieve of next terminal symbol -
+    // - retrieve next terminal symbol -
     while (ret_term == c_idx_not_exist)
     {
       old_input_idx = input_idx;
@@ -6975,14 +6975,14 @@ void script_parser_s::parse_script(unsigned a_source_idx)
         return;
       }
 
-      // - skip of _SKIP_ terminals -
+      // - skipping of _SKIP_ terminals -
       if (ret_term >= 83 && ret_term <= 86)
       {
         ret_term = c_idx_not_exist;
       }
     }
 
-    // - retrieve of action from table of actions -
+    // - retrieve action from table of actions -
     unsigned parse_action = lalr_table[lalr_stack.last().lalr_state*c_terminal_plus_nonterminal_cnt + ret_term];
 
     // - PARSE ERROR wrong syntax -
@@ -7013,7 +7013,7 @@ void script_parser_s::parse_script(unsigned a_source_idx)
     {
       parse_action -= c_lalr_table_reduce_base;
 
-      // - call of assigned function to reduction -
+      // - call assigned function to reduction -
       if (script_pa_callers[parse_action] != pa_null)
       {
         if (!script_pa_callers[parse_action](sources[source_idx].source_string,*this))
@@ -7022,10 +7022,10 @@ void script_parser_s::parse_script(unsigned a_source_idx)
         }
       }
 
-      // - remove of rule body from lalr_stack -
+      // - remove rule body from lalr_stack -
       lalr_stack.used -= rule_body_lengths[parse_action];
 
-      // - insert of new automat state to stack -
+      // - insert new automat state to stack -
       unsigned goto_val = lalr_table[lalr_stack.last().lalr_state*c_terminal_plus_nonterminal_cnt + rule_head_idxs[parse_action]];
       lalr_stack.push(goto_val);
     }
@@ -7218,7 +7218,7 @@ void script_parser_s::element_search()
         if (!(class_record.modifiers & c_modifier_abstract))
         {
 
-          // - clear of function mapping method names to classes methods -
+          // - clear function mapping method names to classes methods -
           ui_array_s &mnri_map = class_record.mnri_map;
           mnri_map.used = 0;
           mnri_map.copy_resize(method_symbol_names.used);
@@ -7227,7 +7227,7 @@ void script_parser_s::element_search()
 
         }
 
-        // - clear of function mapping variable names to class variables -
+        // - clear function mapping variable names to class variables -
         ri_ep_array_s &vn_ri_ep_map = class_record.vn_ri_ep_map;
         vn_ri_ep_map.used = 0;
         vn_ri_ep_map.copy_resize(variable_symbol_names.used);
@@ -7407,7 +7407,7 @@ bool script_parser_s::generate_expression_intermediate_code(uli_array_s &begin_c
 
   memset(im_descr.done_exp_nodes.data,0xffff,exp.nodes.used*sizeof(unsigned));
 
-  // - clear of array of expression operands -
+  // - clear array of expression operands -
   im_descr.operands.used = 0;
   im_descr.operand_stack.used = 0;
 
@@ -7490,7 +7490,7 @@ void script_parser_s::generate_intermediate_code()
       unsigned tcr_idx = top_class_queue.next();
       class_queue.insert(tcr_idx);
 
-      // - clear of array of identifier operands, and clear of variable name mapping -
+      // - clear array of identifier operands, and clear of variable name mapping -
       im_descr.found_operands.used = 0;
       memset(im_descr.var_name_fo_map.data,(int)c_idx_not_exist,im_descr.var_name_fo_map.used*sizeof(unsigned));
       memset(im_descr.const_idx_fo_map.data,(int)c_idx_not_exist,im_descr.const_idx_fo_map.used*sizeof(unsigned));
@@ -7566,7 +7566,7 @@ void script_parser_s::generate_intermediate_code()
     static_begin_code.push(i_expression_end);
     static_run_time_code.push(i_expression_end);
 
-    // - set of stack size -
+    // - set stack size -
     stack_size = im_descr.stack_idx_max;
   }
 
@@ -7596,7 +7596,7 @@ void script_parser_s::generate_intermediate_code()
         im_descr.method_idx = c_idx_not_exist;
         im_descr.free_stack_idxs.used = 0;
 
-        // - clear of array of identifier operands, and clear of name mapping -
+        // - clear array of identifier operands, and clear of name mapping -
         im_descr.found_operands.used = 0;
         memset(im_descr.var_name_fo_map.data,(int)c_idx_not_exist,im_descr.var_name_fo_map.used*sizeof(unsigned));
         memset(im_descr.const_idx_fo_map.data,(int)c_idx_not_exist,im_descr.const_idx_fo_map.used*sizeof(unsigned));
@@ -7666,25 +7666,25 @@ void script_parser_s::generate_intermediate_code()
               if (method_record.modifiers & c_modifier_static)
               {
 
-                // - set of modifier of generated code -
+                // - set modifier of generated code -
                 im_descr.code_modifiers = c_code_modifier_run_time | c_code_modifier_static;
 
-                // - count of method parameters on stack -
+                // - count method parameters on stack -
                 im_descr.stack_idx_max = method_record.parameter_record_idxs.used;
               }
               else
               {
 
-                // - set of modifiers of generated code -
+                // - set modifiers of generated code -
                 im_descr.code_modifiers = c_code_modifier_run_time;
 
-                // - count of parameters of methods on stack + this -
+                // - count parameters of methods on stack + this -
                 im_descr.stack_idx_max = method_record.parameter_record_idxs.used + 1;
               }
 
               im_descr.free_stack_idxs.used = 0;
 
-              // - clear of array of identifier operands, and clear of variable name mapping -
+              // - clear array of identifier operands, and clear of variable name mapping -
               im_descr.found_operands.used = 0;
               memset(im_descr.var_name_fo_map.data,(int)c_idx_not_exist,im_descr.var_name_fo_map.used*sizeof(unsigned));
               memset(im_descr.const_idx_fo_map.data,(int)c_idx_not_exist,im_descr.const_idx_fo_map.used*sizeof(unsigned));
@@ -7700,7 +7700,7 @@ void script_parser_s::generate_intermediate_code()
 #define GENERATE_INTERMEDIATE_CODE_PROCESS_EXPRESSION(CODE) \
 {/*{{{*/\
 \
-  /* - attach of expression code to flow graph node - */\
+  /* - attach expression code to flow graph node - */\
   fgn_ptr[c_fg_expression_idx] = method_record.run_time_code.used;\
 \
   im_descr.exp_idx = me_idx;\
@@ -7807,7 +7807,7 @@ void script_parser_s::generate_intermediate_code()
               }
               while(fgn_ptr < fgn_ptr_end);
 
-              // - insert of end instruction to begin code -
+              // - insert end instruction to begin code -
               method_record.begin_code.push(i_expression_end);
 
               // - set method stack size -

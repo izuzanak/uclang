@@ -2621,7 +2621,7 @@ bool llvm_parser_s::parse_source()
 
   do
   {
-    // - retrieve of next terminal symbol -
+    // - retrieve next terminal symbol -
     while (ret_term == c_idx_not_exist)
     {
       old_input_idx = input_idx;
@@ -2639,14 +2639,14 @@ bool llvm_parser_s::parse_source()
         return false;
       }
 
-      // - skip of _SKIP_ terminals -
+      // - skipping of _SKIP_ terminals -
       if (ret_term >= 66 && ret_term <= 69)
       {
         ret_term = c_idx_not_exist;
       }
     }
 
-    // - retrieve of action from table of actions -
+    // - retrieve action from table of actions -
     unsigned parse_action = llvm_lalr_table[lalr_stack.last().lalr_state*c_llvm_terminal_plus_nonterminal_cnt + ret_term];
 
     // - PARSE ERROR wrong syntax -
@@ -2678,7 +2678,7 @@ bool llvm_parser_s::parse_source()
     {
       parse_action -= c_llvm_lalr_table_reduce_base;
 
-      // - call of function assigned to reduction -
+      // - call function assigned to reduction -
       if (llvm_pa_callers[parse_action] != llvm_pa_null)
       {
         if (!llvm_pa_callers[parse_action](*this))
@@ -2687,10 +2687,10 @@ bool llvm_parser_s::parse_source()
         }
       }
 
-      // - remove of rule body from lalr_stack -
+      // - remove rule body from lalr_stack -
       lalr_stack.used -= llvm_rule_body_lengths[parse_action];
 
-      // - insert of new automat state to stack -
+      // - insert new automat state to stack -
       unsigned goto_val = llvm_lalr_table[lalr_stack.last().lalr_state*c_llvm_terminal_plus_nonterminal_cnt + llvm_rule_head_idxs[parse_action]];
       lalr_stack.push(goto_val);
     }

@@ -2128,7 +2128,7 @@ bool jit_pa_const_hex_char(jit_parser_s &_this)
   unsigned char_num_end = (lse.terminal_end - lse.terminal_start) - 1;
   char *char_num_data = source_string.data + lse.terminal_start;
 
-  // - retrieve of char number -
+  // - retrieve char number -
   char_num_data[char_num_end] = '\0';
   int const_char = strtol(char_num_data + 3,NULL,16);
   char_num_data[char_num_end] = '\'';

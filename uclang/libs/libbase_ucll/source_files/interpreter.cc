@@ -86,7 +86,7 @@ void interpreter_thread_s::_release_location_ptr(location_s *location_ptr)
     if (!(INTERPRETER->class_records[location_ptr->v_type].modifiers & c_modifier_built_in))
     {
 
-      // - store of pointers to objects -
+      // - store pointers to objects -
       pointer_array_s *object_ptr = (pointer_array_s *)location_ptr->v_data_ptr;
 
       if (object_ptr->used != 0)
@@ -182,7 +182,7 @@ bool interpreter_thread_s::create_new_object_blank_constructor(location_s *new_l
         while(--stack_size_cnt > 0);
       }
 
-      // - launch of class initialization begin code -
+      // - launch class initialization begin code -
       if (!run_expression_code(e_class_record.init_begin_code.data,new_stack_base,NULL))
       {
         release_stack_from(new_stack_base);
@@ -190,7 +190,7 @@ bool interpreter_thread_s::create_new_object_blank_constructor(location_s *new_l
         return false;
       }
 
-      // - launch of class initialization run time code -
+      // - launch class initialization run time code -
       if (!run_expression_code(e_class_record.init_run_time_code.data,new_stack_base,NULL))
       {
         release_stack_from(new_stack_base);
@@ -201,11 +201,11 @@ bool interpreter_thread_s::create_new_object_blank_constructor(location_s *new_l
     }
     while(--ec_ptr >= ec_ptr_end);
 
-    // - remove of parameters from stack -
+    // - remove parameters from stack -
     release_stack_from(new_stack_base);
   }
 
-  // - call of object constructor -
+  // - call object constructor -
   unsigned method_ri = class_record.mnri_map.map_name(code[inoa_constr_name]);
 
   // - ERROR -
@@ -230,7 +230,7 @@ bool interpreter_thread_s::create_new_object_blank_constructor(location_s *new_l
   if (method_record.modifiers & c_modifier_built_in)
   {
 
-    // - call of function implementing built in constructor -
+    // - call function implementing built in constructor -
     uli tmp_code[3] = {inoa_source_pos,c_idx_not_exist,0};
     if (!method_record.bi_method_caller(*this,new_stack_base,tmp_code))
     {
@@ -256,7 +256,7 @@ bool interpreter_thread_s::create_new_object_blank_constructor(location_s *new_l
       while(--stack_size_cnt);
     }
 
-    // - launch of method begin code -
+    // - launch method begin code -
     if (!run_expression_code(method_record.begin_code.data,new_stack_base,NULL))
     {
       release_stack_from(new_stack_base);
@@ -264,7 +264,7 @@ bool interpreter_thread_s::create_new_object_blank_constructor(location_s *new_l
       return false;
     }
 
-    // - launch of method run time code -
+    // - launch method run time code -
     if (!run_method_code(method_record,new_stack_base,c_idx_not_exist))
     {
       return false;
@@ -364,7 +364,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
     continue;\
   }\
 \
-  /* - remove of parameters from stack - */\
+  /* - remove parameters from stack - */\
   if (start_fg_idx == c_idx_not_exist)\
   {\
     release_stack_from(stack_base);\
@@ -389,7 +389,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
     switch (*fg_ptr)
     {
 
-      // - process of expression -
+      // - process expression -
     case c_fg_type_expression:
     {/*{{{*/
       if (!run_expression_code(code + fg_ptr[c_fg_expression_idx],stack_base,NULL))
@@ -401,7 +401,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
     }/*}}}*/
     break;
 
-    // - process of condition -
+    // - process condition -
     case c_fg_type_condition:
     {/*{{{*/
       unsigned tested_value;
@@ -426,7 +426,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
     }/*}}}*/
     break;
 
-    // - process of return expression -
+    // - process return expression -
     case c_fg_type_return_expression:
     {/*{{{*/
       unsigned return_src_idx;
@@ -451,7 +451,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
       release_location_ptr((location_s *)return_trg);
       return_trg = (pointer)rp_location;
 
-      // - remove of parameters from stack -
+      // - remove parameters from stack -
       if (start_fg_idx == c_idx_not_exist)
       {
         release_stack_from(stack_base);
@@ -493,7 +493,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
   \
   FG_TYPE_FOR_LOOP_RELEASE();\
   \
-  /* - remove of parameters from stack - */\
+  /* - remove parameters from stack - */\
   if (start_fg_idx == c_idx_not_exist)\
   {\
     release_stack_from(stack_base);\
@@ -506,7 +506,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
 {/*{{{*/\
   FG_TYPE_FOR_LOOP_RELEASE();\
   \
-  /* - remove of parameters from stack - */\
+  /* - remove parameters from stack - */\
   if (start_fg_idx == c_idx_not_exist)\
   {\
     release_stack_from(stack_base);\
@@ -686,7 +686,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
     case c_fg_type_break:
     {/*{{{*/
 
-      // - remove of parameters from stack -
+      // - remove parameters from stack -
       if (start_fg_idx == c_idx_not_exist)
       {
         release_stack_from(stack_base);
@@ -700,7 +700,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
     case c_fg_type_continue:
     {/*{{{*/
 
-      // - remove of parameters from stack -
+      // - remove parameters from stack -
       if (start_fg_idx == c_idx_not_exist)
       {
         release_stack_from(stack_base);
@@ -739,7 +739,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
   \
   FG_TYPE_SWITCH_RELEASE();\
   \
-  /* - remove of parameters from stack - */\
+  /* - remove parameters from stack - */\
   if (start_fg_idx == c_idx_not_exist)\
   {\
     release_stack_from(stack_base);\
@@ -752,7 +752,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
 {/*{{{*/\
   FG_TYPE_SWITCH_RELEASE();\
   \
-  /* - remove of parameters from stack - */\
+  /* - remove parameters from stack - */\
   if (start_fg_idx == c_idx_not_exist)\
   {\
     release_stack_from(stack_base);\
@@ -895,7 +895,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
   }
   while(fg_idx != c_idx_not_exist);
 
-  // - remove of parameters from stack -
+  // - remove parameters from stack -
   if (start_fg_idx == c_idx_not_exist)
   {
     release_stack_from(stack_base);
@@ -960,7 +960,7 @@ bool interpreter_thread_s::call_method(uli *code,unsigned stack_base)
       code[icl_last_class] = call_location->v_type;
       code[icl_last_bi_mc] = (uli)method_record.bi_method_caller;
 
-      // - call of built in method -
+      // - call built in method -
       if (!method_record.bi_method_caller(*this,stack_base,code + icl_source_pos))
       {
         return false;
@@ -1213,7 +1213,7 @@ void interpreter_s::create_constant_and_static_locations()
 
   location_s *cv_ptr = const_locations.data;
 
-  // - process of char constants -
+  // - process char constants -
   if (const_chars.used != 0)
   {
     char *c_ptr = const_chars.data;
@@ -1228,7 +1228,7 @@ void interpreter_s::create_constant_and_static_locations()
     while(++cv_ptr,++c_ptr < c_ptr_end);
   }
 
-  // - process of int constants -
+  // - process int constants -
   if (const_ints.used != 0)
   {
     unsigned ci_idx = 0;
@@ -1241,7 +1241,7 @@ void interpreter_s::create_constant_and_static_locations()
     while(++cv_ptr,++ci_idx < const_ints.used);
   }
 
-  // - process of float constants -
+  // - process float constants -
   if (const_floats.used != 0)
   {
     unsigned cf_idx = 0;
@@ -1254,7 +1254,7 @@ void interpreter_s::create_constant_and_static_locations()
     while(++cv_ptr,++cf_idx < const_floats.used);
   }
 
-  // - process of string constants -
+  // - process string constants -
   if (const_strings.used != 0)
   {
     unsigned cs_idx = 0;
@@ -1267,7 +1267,7 @@ void interpreter_s::create_constant_and_static_locations()
     while(++cv_ptr,++cs_idx < const_strings.used);
   }
 
-  // - creation of type constants -
+  // - creation type constants -
   if (class_records.used != 0)
   {
     unsigned cr_idx = 0;
@@ -1328,7 +1328,7 @@ void interpreter_s::release_constant_and_static_locations()
   // - set thread pointer to interpreter -
   dummy_thread.interpreter_ptr = this;
 
-  // - release of static built in constants -
+  // - release static built in constants -
   unsigned parse_constant_cnt = const_chars.used + const_ints.used +
                                 const_floats.used + const_strings.used + class_records.used;
 
@@ -1345,7 +1345,7 @@ void interpreter_s::release_constant_and_static_locations()
     while(++cv_ptr < cv_ptr_end);
   }
 
-  // - release of locations of static variables -
+  // - release locations of static variables -
   if (static_element_cnt != 0)
   {
     pointer *sl_ptr = static_location_ptrs.data;
@@ -1460,7 +1460,7 @@ bool interpreter_s::run_new_thread(interpreter_thread_s &p_thread,unsigned p_sta
   thread_location->v_reference_cnt.atomic_set(2);
   thread_location->v_data_ptr = (basic_64b)new_thread_ptr;
 
-  // - store of location to old thread stack -
+  // - store location to old thread stack -
   pointer &stack_location = p_thread.data_stack[p_stack_base + p_stack_trg];
   p_thread.release_location_ptr((location_s *)stack_location);
   stack_location = (pointer)thread_location;
@@ -1471,19 +1471,19 @@ bool interpreter_s::run_new_thread(interpreter_thread_s &p_thread,unsigned p_sta
 
   thread->interpreter_ptr = (pointer)this;
 
-  // - attach of thread location -
+  // - attach thread location -
   thread->thread_location = (pointer)thread_location;
 
-  // - copy of blank thread location, and exception location -
+  // - copy blank thread location, and exception location -
   ((location_s *)p_thread.blank_location)->v_reference_cnt.atomic_add(2);
   thread->blank_location = p_thread.blank_location;
   thread->exception_location = p_thread.blank_location;
 
-  // - store of position of location of return value -
+  // - store position of location of return value -
   ((location_s *)thread->blank_location)->v_reference_cnt.atomic_inc();
   thread->data_stack.push(thread->blank_location);
 
-  // - store of method parameters to thread stack -
+  // - store method parameters to thread stack -
   {
     if (param_cnt != 0)
     {
@@ -1535,7 +1535,7 @@ bool interpreter_s::run_new_thread(interpreter_thread_s &p_thread,unsigned p_sta
   nt_start_info[0] = (pointer)thread;
   nt_start_info[1] = (pointer)&method_record;
 
-  // - increase of interpreter thread count -
+  // - increase interpreter thread count -
   thread_cnt.atomic_inc();
 
   int ret = new_thread_ptr->create((void *)new_thread_function,(void *)nt_start_info);
@@ -1543,28 +1543,28 @@ bool interpreter_s::run_new_thread(interpreter_thread_s &p_thread,unsigned p_sta
   if (ret != c_error_OK)
   {
 
-    // - decrease of interpreter thread count -
+    // - decrease interpreter thread count -
     thread_cnt.atomic_dec();
 
-    // - release of temporary block -
+    // - release temporary block -
     cfree(nt_start_info);
 
-    // - release of location from stack -
+    // - release location from stack -
     thread->release_stack_from(0);
 
-    // - release of thread location -
+    // - release thread location -
     p_thread.release_location_ptr((location_s *)thread->thread_location);
 
-    // - release of blank and exception locations of thread -
+    // - release blank and exception locations of thread -
     p_thread.release_location_ptr((location_s *)thread->blank_location);
     p_thread.release_location_ptr((location_s *)thread->exception_location);
 
-    // - release of thread description from memory -
+    // - release thread description from memory -
     thread->free_variables_clear();
     thread->clear();
     cfree(thread);
 
-    // - release of location of thread variable -
+    // - release location of thread variable -
     p_thread.release_location_ptr(thread_location);
 
     // - creation of error value location -
@@ -1573,7 +1573,7 @@ bool interpreter_s::run_new_thread(interpreter_thread_s &p_thread,unsigned p_sta
     error_location->v_reference_cnt.atomic_set(1);
     error_location->v_data_ptr = (basic_64b)ret;
 
-    // - insert of error value to return position -
+    // - insert error value to return position -
     p_thread.data_stack[p_stack_base + p_stack_trg] = (pointer)error_location;
   }
 
@@ -1692,7 +1692,7 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
       while(--stack_size_cnt);
     }
 
-    // - launch of static begin code -
+    // - launch static begin code -
     thread->run_expression_code(static_begin_code.data,0,NULL);
     if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
     {
@@ -1704,7 +1704,7 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
     else
     {
 
-      // - launch of static run time code -
+      // - launch static run time code -
       thread->run_expression_code(static_run_time_code.data,0,NULL);
       if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
       {
@@ -1721,7 +1721,7 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
         // - set pointer to interpreter main thread -
         main_thread_ptr = thread;
 
-        // - store of position of location for return value at stack -
+        // - store position of location for return value at stack -
         ((location_s *)thread->blank_location)->v_reference_cnt.atomic_inc();
         thread->data_stack.push(thread->blank_location);
 
@@ -1780,7 +1780,7 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
           }
         }
 
-        // - launch of method begin code -
+        // - launch method begin code -
         thread->run_expression_code(method_record.begin_code.data,1,NULL);
         if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
         {
@@ -1792,7 +1792,7 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
         else
         {
 
-          // - launch of method run time code -
+          // - launch method run time code -
           thread->run_method_code(method_record,1,0);
           if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
           {
@@ -1816,7 +1816,7 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
               return_value = (long long int)return_location->v_data_ptr;
             }
 
-            // - release of location of return value -
+            // - release location of return value -
             thread->release_location_ptr(return_location);
           }
         }
@@ -1825,7 +1825,7 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
   }
   catch (int) {}
 
-  // - release of location from stack -
+  // - release location from stack -
   thread->release_stack_from(0);
 
   // - wait for end of all threads -
@@ -1837,14 +1837,14 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
   // - remove pointer to interpreter main thread -
   main_thread_ptr = NULL;
 
-  // - release of thread locations -
+  // - release thread locations -
   thread->release_location_ptr((location_s *)thread->thread_location);
 
-  // - release of thread blank and exception locations -
+  // - release thread blank and exception locations -
   thread->release_location_ptr((location_s *)thread->blank_location);
   thread->release_location_ptr((location_s *)thread->exception_location);
 
-  // - remove of thread description from memory -
+  // - remove othread description from memory -
   thread->free_variables_clear();
   thread->clear();
   cfree(thread);
@@ -1862,7 +1862,7 @@ void *new_thread_function(void *nt_start_info)
 #ifdef LINUX
   sigset_t signal_set;
 
-  // - set of term signals to be blocked -
+  // - set term signals to be blocked -
   sigemptyset(&signal_set);
   sigaddset(&signal_set,SIGINT);
   sigaddset(&signal_set,SIGTERM);
@@ -1872,7 +1872,7 @@ void *new_thread_function(void *nt_start_info)
   cassert(pthread_sigmask(SIG_BLOCK,&signal_set,NULL) == 0);
 #endif
 
-  // - acquire of pointer to thread and its method -
+  // - acquire pointer to thread and its method -
   interpreter_thread_s *thread = (interpreter_thread_s *)(((pointer *)nt_start_info)[0]);
   method_record_s *method_record_ptr = (method_record_s *)(((pointer *)nt_start_info)[1]);
   cfree(nt_start_info);
@@ -1883,7 +1883,7 @@ void *new_thread_function(void *nt_start_info)
   try
   {
 
-    // - launch of method begin code -
+    // - launch method begin code -
     thread->run_expression_code(method_record_ptr->begin_code.data,1,NULL);
     if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
     {
@@ -1895,7 +1895,7 @@ void *new_thread_function(void *nt_start_info)
     else
     {
 
-      // - launch of method run time code -
+      // - launch method run time code -
       thread->run_method_code(*method_record_ptr,1,0);
       if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
       {
@@ -1918,20 +1918,20 @@ void *new_thread_function(void *nt_start_info)
   }
   catch (int) {}
 
-  // - release of locations from stack -
+  // - release locations from stack -
   thread->release_stack_from(0);
 
-  // - release of thread location -
+  // - release thread location -
   thread->release_location_ptr((location_s *)thread->thread_location);
 
-  // - release of thread blank and exception locations -
+  // - release thread blank and exception locations -
   thread->release_location_ptr((location_s *)thread->blank_location);
   thread->release_location_ptr((location_s *)thread->exception_location);
 
-  // - decrease of interpreter running threads -
+  // - decrease interpreter running threads -
   ((interpreter_s *)thread->interpreter_ptr)->thread_cnt.atomic_dec();
 
-  // - remove of thread description from memory -
+  // - remove thread description from memory -
   thread->free_variables_clear();
   thread->clear();
   cfree(thread);

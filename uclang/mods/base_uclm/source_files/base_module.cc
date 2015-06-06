@@ -3129,7 +3129,7 @@ bool bic_integer_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  // - print of value to standard output -
+  // - print value to standard output -
   printf("%" HOST_LL_FORMAT "d",(long long int)dst_location->v_data_ptr);
 
   BIC_SET_RESULT_BLANK();
@@ -4102,7 +4102,7 @@ bool bic_float_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  // - print of value to standard output -
+  // - print value to standard output -
   printf("%f",*((double *)&dst_location->v_data_ptr));
 
   BIC_SET_RESULT_BLANK();
@@ -5756,7 +5756,7 @@ bool bic_string_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli 
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  // - print of value to standard output -
+  // - print value to standard output -
   ((string_s *)dst_location->v_data_ptr)->print();
 
   BIC_SET_RESULT_BLANK();
@@ -6557,11 +6557,11 @@ bool bic_array_method_resize_1(interpreter_thread_s &it,unsigned stack_base,uli 
     return false;
   }
 
-  // - increase of array size -
+  // - increase array size -
   if (new_size > (int)array_ptr->used)
   {
 
-    // - increase of reference count on blank location -
+    // - increase reference count on blank location -
     ((location_s *)it.blank_location)->v_reference_cnt.atomic_add(new_size - array_ptr->used);
 
     // - resize pointer array -
@@ -7229,7 +7229,7 @@ bool bic_error_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  // - print of error to standard output -
+  // - print error to standard output -
   printf("%s",((interpreter_s *)it.interpreter_ptr)->error_strings[(unsigned)dst_location->v_data_ptr].data);
 
   BIC_SET_RESULT_BLANK();
@@ -7970,7 +7970,7 @@ bool bic_type_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *o
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
 
-  // - print of value to standard output -
+  // - print value to standard output -
   printf("%s",interpreter.class_symbol_names[interpreter.class_records[(unsigned)dst_location->v_data_ptr].name_idx].data);
 
   BIC_SET_RESULT_BLANK();
@@ -8163,7 +8163,7 @@ bool bic_mutex_method_unlock_0(interpreter_thread_s &it,unsigned stack_base,uli 
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  // - unlock of mutex -
+  // - unlock mutex -
   unsigned ret = ((mutex_s *)dst_location->v_data_ptr)->unlock();
 
   if (ret != c_error_OK)

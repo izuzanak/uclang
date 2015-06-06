@@ -272,7 +272,7 @@ enum
       string_s *s_ptr = strings.data;\
       string_s *s_ptr_end = s_ptr + strings.used;\
       \
-      /* - copy of first string - */\
+      /* - copy first string - */\
       memcpy(rs_ptr,s_ptr->data,(s_ptr->size - 1)*sizeof(char));\
       rs_ptr += s_ptr->size - 1;\
       s_ptr++;\
@@ -309,7 +309,7 @@ enum
       string_s *s_ptr = strings.data;\
       string_s *s_ptr_end = s_ptr + strings.used;\
       \
-      /* - copy of first string - */\
+      /* - copy first string - */\
       memcpy(rs_ptr,s_ptr->data,(s_ptr->size - 1)*sizeof(char));\
       rs_ptr += s_ptr->size - 1;\
       s_ptr++;\

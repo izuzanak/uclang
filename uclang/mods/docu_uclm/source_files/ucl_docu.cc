@@ -1429,7 +1429,7 @@ bool docu_parsed_s::parse(interpreter_thread_s &it,string_s &a_source)
     {
       parse_action -= c_dp_lalr_table_reduce_base;
 
-      // - call of assigned function to reduction -
+      // - call assigned function to reduction -
       if (pa_callers[parse_action] != pa_null)
       {
         if (!pa_callers[parse_action](it,*this))

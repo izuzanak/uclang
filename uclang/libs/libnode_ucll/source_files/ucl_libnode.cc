@@ -192,20 +192,20 @@ bool UclNode::Clear()
   // - release ucl variables -
   UclVar::Release(interpreter);
 
-  // - release of location from stack -
+  // - release location from stack -
   thread->release_stack_from(0);
 
   // - remove pointer to interpreter main thread -
   interpreter.main_thread_ptr = NULL;
 
-  // - release of thread locations -
+  // - release thread locations -
   thread->release_location_ptr((location_s *)thread->thread_location);
 
-  // - release of thread blank and exception locations -
+  // - release thread blank and exception locations -
   thread->release_location_ptr((location_s *)thread->blank_location);
   thread->release_location_ptr((location_s *)thread->exception_location);
 
-  // - remove of thread description from memory -
+  // - remove thread description from memory -
   thread->free_variables_clear();
   thread->clear();
   cfree(thread);
@@ -217,7 +217,7 @@ bool UclNode::Clear()
 
   interpreter.clear();
 
-  // - release of parser -
+  // - release parser -
   parser.clear();
 
   return true;

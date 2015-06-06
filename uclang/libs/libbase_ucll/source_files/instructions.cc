@@ -128,7 +128,7 @@ int inst_call(inst_params_s *params)
   // - test if caller address for built in class is stored -
   if (code[icl_last_class] == ((location_s *)it.get_stack_value(stack_base + code[icl_parm_this]))->v_type)
   {
-    // - call of built in method -
+    // - call built in method -
     if (!((bi_method_caller_dt)(code[icl_last_bi_mc]))(it,stack_base,code + icl_source_pos))
     {
       return c_run_return_code_EXCEPTION;
@@ -412,7 +412,7 @@ int inst_new_object(inst_params_s *params)
         while(--stack_size_cnt > 0);
       }
 
-      // - launch of class initializing begin code -
+      // - launch class initializing begin code -
       if (!it.run_expression_code(e_class_record.init_begin_code.data,new_stack_base,NULL))
       {
         it.release_stack_from(new_stack_base);
@@ -420,7 +420,7 @@ int inst_new_object(inst_params_s *params)
         return c_run_return_code_EXCEPTION;
       }
 
-      // - launch of class initializing run time code -
+      // - launch class initializing run time code -
       if (!it.run_expression_code(e_class_record.init_run_time_code.data,new_stack_base,NULL))
       {
         it.release_stack_from(new_stack_base);
@@ -431,11 +431,11 @@ int inst_new_object(inst_params_s *params)
     }
     while(--ec_ptr >= ec_ptr_end);
 
-    // - remove of parameters from stack -
+    // - remove parameters from stack -
     it.release_stack_from(new_stack_base);
   }
 
-  // - call of class constructor -
+  // - call class constructor -
   unsigned method_ri = class_record.mnri_map.map_name(code[ino_constr_name]);
 
   // - ERROR -
@@ -453,7 +453,7 @@ int inst_new_object(inst_params_s *params)
   if (method_record.modifiers & c_modifier_built_in)
   {
 
-    // - call of built in class constructor -
+    // - call built in class constructor -
     if (!method_record.bi_method_caller(it,stack_base,code + ino_source_pos))
     {
       return c_run_return_code_EXCEPTION;
@@ -555,7 +555,7 @@ int inst_new_object_array(inst_params_s *params)
     return c_run_return_code_EXCEPTION;
   }
 
-  // - test of array size correctness -
+  // - test array size correctness -
 
   // - ERROR -
   if (obj_array_size < 0)
@@ -585,7 +585,7 @@ int inst_new_object_array(inst_params_s *params)
       if (!it.create_new_object_blank_constructor((location_s *)*o_ptr,code))
       {
 
-        // - remove of so far created array elements -
+        // - remove so far created array elements -
         if (o_ptr >= object_array->data)
         {
           pointer *co_ptr = object_array->data;
@@ -791,7 +791,7 @@ int inst_object_member_select(inst_params_s *params)
   }
   else 
   {
-    // - acquire of reference to object member -
+    // - acquire reference to object member -
     variable_record_s &variable_record = IT_INTERPRETER->variable_records[element_ri_ep.record_idx];
 
     // - if member is private, test correctness of access -
@@ -818,7 +818,7 @@ int inst_object_member_select(inst_params_s *params)
       if (variable_record.modifiers & c_modifier_static_const)
       {
 
-        // - process of built in static variable -
+        // - process built in static variable -
         location_s *location = IT_INTERPRETER->const_locations.data + element_ri_ep.element_position;
         location->v_reference_cnt.atomic_inc();
 

@@ -202,7 +202,7 @@ void *run_interpreter(void *data)
     mods_path.clear();
     source.clear();
 
-    // - parse of source script -
+    // - parse source script -
     debug_message_1(fprintf(stderr,"main: script_parser, source parse\n"); tm_mark_time());
     parser.parse_script(0);
 
@@ -322,7 +322,7 @@ void *run_interpreter(void *data)
       }
     }
 
-    // - release of parser -
+    // - release parser -
     debug_message_1(fprintf(stderr,"main: parser remove\n"); tm_mark_time());
     parser.clear();
     debug_message_1(fprintf(stderr,"main: parser remove (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));

@@ -192,7 +192,7 @@ bool pa_json_val_integer(json_parser_s &_this)
   unsigned int_num_end = lse.terminal_end - lse.terminal_start;
   char *int_num_data = source_string.data + lse.terminal_start;
 
-  // - retrieve of number from string -
+  // - retrieve number from string -
   char tmp_char = int_num_data[int_num_end];
   int_num_data[int_num_end] = '\0';
   long long int const_int = strtoll(int_num_data,NULL,10);
@@ -245,7 +245,7 @@ bool pa_json_val_float(json_parser_s &_this)
   unsigned float_num_end = lse.terminal_end - lse.terminal_start;
   char *float_num_data = source_string.data + lse.terminal_start;
 
-  // - retrieve of number from string -
+  // - retrieve number from string -
   char tmp_char = float_num_data[float_num_end];
   float_num_data[float_num_end] = '\0';
   double const_float = strtod(float_num_data,NULL);

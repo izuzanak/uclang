@@ -1373,7 +1373,7 @@ bool bic_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
       string_s *s_ptr = strings.data;
       string_s *s_ptr_end = s_ptr + strings.used;
 
-      // - copy of first string -
+      // - copy first string -
       memcpy(rs_ptr,s_ptr->data,(s_ptr->size - 1)*sizeof(char));
       rs_ptr += (s_ptr++)->size - 1;
       *rs_ptr++ = ':';
@@ -1481,7 +1481,7 @@ bool bic_dict_method_to_string_1(interpreter_thread_s &it,unsigned stack_base,ul
       string_s *s_ptr = strings.data;
       string_s *s_ptr_end = s_ptr + strings.used;
 
-      // - copy of first string -
+      // - copy first string -
       memcpy(rs_ptr,s_ptr->data,(s_ptr->size - 1)*sizeof(char));
       rs_ptr += (s_ptr++)->size - 1;
       *rs_ptr++ = ':';
