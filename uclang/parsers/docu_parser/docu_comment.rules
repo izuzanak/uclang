@@ -1,6 +1,6 @@
 #vim: set syntax=rules:
 
-init_code: {null}
+init_code: {}
 
 terminals:
   empty_line {'\n'}
@@ -41,39 +41,39 @@ nonterminals:
   <line>
 
 rules:
-  <start> -> <end_check> ->> {null}
+  <start> -> <end_check> ->> {}
 
-  <end_check> -> <code> _END_ ->> {null}
-  <end_check> -> _END_ ->> {null}
+  <end_check> -> <code> _END_ ->> {}
+  <end_check> -> _END_ ->> {}
 
-  <code> -> <heading> <item_list> ->> {null}
-  <code> -> <item_list> ->> {null}
+  <code> -> <heading> <item_list> ->> {}
+  <code> -> <item_list> ->> {}
 
-  <heading> -> <paragraph> ->> {null}
-  <heading> -> <after> <paragraph> ->> {null}
-  <heading> -> <after> ->> {null}
+  <heading> -> <paragraph> ->> {}
+  <heading> -> <after> <paragraph> ->> {}
+  <heading> -> <after> ->> {}
 
-  <paragraph> -> <line_list> ->> {out("paragraph\n");}
+  <paragraph> -> <line_list> ->> {print("paragraph")}
 
-  <after> -> ls_br ->> {out("after_member\n");}
+  <after> -> ls_br ->> {print("after_member")}
 
-  <item_list> -> <item> ->> {null}
-  <item_list> -> <item_list> <item> ->> {null}
+  <item_list> -> <item> ->> {}
+  <item_list> -> <item_list> <item> ->> {}
 
-  <item> -> empty_line ->> {null}
-  <item> -> empty_line <paragraph> ->> {null}
+  <item> -> empty_line ->> {}
+  <item> -> empty_line <paragraph> ->> {}
 
-  <item> -> brief <line_list> ->> {out("brief\n");}
-  <item> -> param <line_list> ->> {out("param: ",rule_body(0),"\n");}
-  <item> -> return <line_list> ->> {out("return\n");}
+  <item> -> brief <line_list> ->> {print("brief")}
+  <item> -> param <line_list> ->> {print("param: "..rule_body(0).."")}
+  <item> -> return <line_list> ->> {print("return")}
 
-  <item> -> file ->> {out("file: ",rule_body(0),"\n");}
-  <item> -> class ->> {out("class: ",rule_body(0),"\n");}
-  <item> -> method ->> {out("method: ",rule_body(0),"\n");}
-  <item> -> var ->> {out("var: ",rule_body(0),"\n");}
+  <item> -> file ->> {print("file: "..rule_body(0).."")}
+  <item> -> class ->> {print("class: "..rule_body(0).."")}
+  <item> -> method ->> {print("method: "..rule_body(0).."")}
+  <item> -> var ->> {print("var: "..rule_body(0).."")}
 
-  <line_list> -> <line> ->> {null}
-  <line_list> -> <line_list> <line> ->> {null}
+  <line_list> -> <line> ->> {}
+  <line_list> -> <line_list> <line> ->> {}
 
-  <line> -> text_line ->> {out("--------------------------------------------| ",rule_body(0));}
+  <line> -> text_line ->> {print("--------------------------------------------| ",rule_body(0));}
 
