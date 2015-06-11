@@ -68,9 +68,9 @@ struct string_s
 
   /*!
    * \brief swap string variables with another string
-   * \param second - reference to another string
+   * \param a_second - reference to another string
    */
-  inline void swap(string_s &second);
+  inline void swap(string_s &a_second);
 
   /*!
    * \brief select one character from string
@@ -81,17 +81,17 @@ struct string_s
 
   /*!
    * \brief set string to value of another string
-   * \param src - reference to another string
+   * \param a_src - reference to another string
    * \return reference to this string
    */
-  inline string_s &operator=(string_s &src);
+  inline string_s &operator=(string_s &a_src);
 
   /*!
    * \brief compare value with another string
-   * \param second - reference to another string
+   * \param a_second - reference to another string
    * \return result of comparison
    */
-  inline bool operator==(string_s &second);
+  inline bool operator==(string_s &a_second);
 
   /*!
    * \brief compare string with string described by its length and its data
@@ -136,37 +136,37 @@ struct string_s
 
   /*!
    * \brief load string from given stream
-   * \param stream - stream from which is string loaded
+   * \param a_stream - stream from which is string loaded
    */
-  bool read_line_from_stream(FILE *stream);
+  bool read_line_from_stream(FILE *a_stream);
 
   /*!
    * \brief load string from text file
-   * \param file - name of file containing string text
+   * \param a_file - name of file containing string text
    * \return true if string is successfully loaded
    */
-  inline bool load_text_file(const char *file);
+  inline bool load_text_file(const char *a_file);
 
   /*!
    * \brief save string to text file
-   * \param file - name of target file
+   * \param a_file - name of target file
    * \return true if string is successfully saved
    */
-  inline bool save_text_file(const char *file);
+  inline bool save_text_file(const char *a_file);
 
   /*!
    * \brief create string of desired format
-   * \param format - format as in printf functions family
+   * \param a_format - format as in printf functions family
    * \param ... - list of parameters desired in format
    */
-  void setf(const char *format,...);
+  void setf(const char *a_format,...);
 
   /*!
-   * \brief conctenate string of desired format
-   * \param format - format as in printf functions family
+   * \brief concatenate string of desired format
+   * \param a_format - format as in printf functions family
    * \param ... - list of parameters demanded in format
    */
-  void concf(const char *format,...);
+  void concf(const char *a_format,...);
 
   /*!
    * \brief find position of given string in string from given index
@@ -268,15 +268,15 @@ inline void string_s::conc_set(unsigned a_flength,const char *a_fdata,unsigned a
   size = a_flength + a_slength + 1;
 }/*}}}*/
 
-inline void string_s::swap(string_s &second)
+inline void string_s::swap(string_s &a_second)
 {/*{{{*/
   unsigned tmp_size = size;
-  size = second.size;
-  second.size = tmp_size;
+  size = a_second.size;
+  a_second.size = tmp_size;
 
   char *tmp_data = data;
-  data = second.data;
-  second.data = tmp_data;
+  data = a_second.data;
+  a_second.data = tmp_data;
 }/*}}}*/
 
 inline char &string_s::operator[](unsigned a_idx)
@@ -285,24 +285,24 @@ inline char &string_s::operator[](unsigned a_idx)
   return data[a_idx];
 }/*}}}*/
 
-inline string_s &string_s::operator=(string_s &src)
+inline string_s &string_s::operator=(string_s &a_src)
 {/*{{{*/
   clear();
 
-  if (src.data == &c_string_terminating_char) return *this;
-  data = (char *)cmalloc(src.size*sizeof(char));
-  memcpy(data,src.data,(src.size - 1)*sizeof(char));
-  data[src.size - 1] = '\0';
-  size = src.size;
+  if (a_src.data == &c_string_terminating_char) return *this;
+  data = (char *)cmalloc(a_src.size*sizeof(char));
+  memcpy(data,a_src.data,(a_src.size - 1)*sizeof(char));
+  data[a_src.size - 1] = '\0';
+  size = a_src.size;
 
   return *this;
 }/*}}}*/
 
-inline bool string_s::operator==(string_s &second)
+inline bool string_s::operator==(string_s &a_second)
 {/*{{{*/
-  if (size != second.size) return false;
+  if (size != a_second.size) return false;
   if (data == &c_string_terminating_char) return true;
-  return (memcmp(data,second.data,(size - 1)*sizeof(char)) == 0);
+  return (memcmp(data,a_second.data,(size - 1)*sizeof(char)) == 0);
 }/*}}}*/
 
 inline bool string_s::compare_char_ptr(unsigned a_length,const char *a_data)
@@ -317,10 +317,10 @@ inline unsigned string_s::print()
   return fwrite(data,size - 1,1,stdout);
 }/*}}}*/
 
-inline bool string_s::load_text_file(const char *file)
+inline bool string_s::load_text_file(const char *a_file)
 {/*{{{*/
-  if (file == NULL) return false;
-  FILE *f = fopen(file,"r");
+  if (a_file == NULL) return false;
+  FILE *f = fopen(a_file,"r");
   if (f == NULL) return false;
 
   fseek(f,0,SEEK_END);
@@ -342,10 +342,10 @@ inline bool string_s::load_text_file(const char *file)
   return true;
 }/*}}}*/
 
-inline bool string_s::save_text_file(const char *file)
+inline bool string_s::save_text_file(const char *a_file)
 {/*{{{*/
-  if (file == NULL) return false;
-  FILE *f = fopen(file,"w");
+  if (a_file == NULL) return false;
+  FILE *f = fopen(a_file,"w");
   if (f == NULL) return false;
 
   if (size > 1)

@@ -149,14 +149,14 @@ unsigned string_s::utf32_to_utf8(unsigned *a_src,char *a_trg,unsigned a_size)
   return t_ptr - (unsigned char *)a_trg;
 }/*}}}*/
 
-bool string_s::read_line_from_stream(FILE *stream)
+bool string_s::read_line_from_stream(FILE *a_stream)
 {/*{{{*/
   clear();
 
   const unsigned c_buffer_size = 256;
   char buffer[c_buffer_size];
 
-  if (fgets(buffer,c_buffer_size,stream) == NULL)
+  if (fgets(buffer,c_buffer_size,a_stream) == NULL)
   {
     return false;
   }
@@ -174,7 +174,7 @@ bool string_s::read_line_from_stream(FILE *stream)
 
   do
   {
-    if (fgets(buffer,c_buffer_size,stream) == NULL)
+    if (fgets(buffer,c_buffer_size,a_stream) == NULL)
     {
       break;
     }
@@ -195,7 +195,7 @@ bool string_s::read_line_from_stream(FILE *stream)
   return true;
 }/*}}}*/
 
-void string_s::setf(const char *format,...)
+void string_s::setf(const char *a_format,...)
 {/*{{{*/
   clear();
 
@@ -208,13 +208,13 @@ void string_s::setf(const char *format,...)
   {
     data = (char *)cmalloc(alloc_size*sizeof(char));
 
-    va_start(ap,format);
+    va_start(ap,a_format);
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_DSP
     // DSP FIXME
-    int cnt = vsprintf(data,format,ap);
+    int cnt = vsprintf(data,a_format,ap);
 #else
-    int cnt = vsnprintf(data,alloc_size,format,ap);
+    int cnt = vsnprintf(data,alloc_size,a_format,ap);
 #endif
     va_end(ap);
 
@@ -231,7 +231,7 @@ void string_s::setf(const char *format,...)
   while(1);
 }/*}}}*/
 
-void string_s::concf(const char *format,...)
+void string_s::concf(const char *a_format,...)
 {/*{{{*/
   const int init_size = 256;
   int alloc_size = init_size;
@@ -246,13 +246,13 @@ void string_s::concf(const char *format,...)
   {
     fmt_str.data = (char *)cmalloc(alloc_size*sizeof(char));
 
-    va_start(ap,format);
+    va_start(ap,a_format);
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_DSP
     // DSP FIXME
-    int cnt = vsprintf(fmt_str.data,format,ap);
+    int cnt = vsprintf(fmt_str.data,a_format,ap);
 #else
-    int cnt = vsnprintf(fmt_str.data,alloc_size,format,ap);
+    int cnt = vsnprintf(fmt_str.data,alloc_size,a_format,ap);
 #endif
     va_end(ap);
 
