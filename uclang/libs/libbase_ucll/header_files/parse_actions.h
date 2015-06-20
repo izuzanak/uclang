@@ -10,8 +10,6 @@ bool pa_null(string_s &source_string,script_parser_s &_this);
 bool pa_import(string_s &source_string,script_parser_s &_this);
 bool pa_namespace_def_end(string_s &source_string,script_parser_s &_this);
 bool pa_namespace_name(string_s &source_string,script_parser_s &_this);
-bool pa_namespace_using(string_s &source_string,script_parser_s &_this);
-bool pa_namespace_id(string_s &source_string,script_parser_s &_this);
 bool pa_modifier_public(string_s &source_string,script_parser_s &_this);
 bool pa_modifier_private(string_s &source_string,script_parser_s &_this);
 bool pa_modifier_static(string_s &source_string,script_parser_s &_this);

@@ -10,7 +10,7 @@ include "script_parser.h"
 const unsigned max_number_string_length = 12;
 
 // - callers of parse action functions -
-const unsigned c_script_parse_action_cnt = 174;
+const unsigned c_script_parse_action_cnt = 172;
 bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,script_parser_s &_this) =
 {/*{{{*/
 
@@ -28,10 +28,8 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
   pa_namespace_def_end,
   pa_namespace_name,
   pa_null,
-  pa_namespace_using,
   pa_null,
   pa_null,
-  pa_namespace_id,
 
   pa_modifier_public,
   pa_modifier_private,
@@ -267,8 +265,8 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
   /* - get position of variable name - */\
   unsigned name_idx = _this.variable_symbol_names.get_idx_char_ptr_insert(name_length,name_data);\
   \
-  unsigned parent_record_idx = parent_record_idxs.last();\
-  class_record_s &class_record = class_records[parent_record_idx];\
+  unsigned parent_class_idx = parent_class_idxs.last();\
+  class_record_s &class_record = class_records[parent_class_idx];\
   ui_array_s &class_vr_idxs = class_record.variable_record_idxs;\
   \
   unsigned *vri_ptr = class_vr_idxs.data;\
@@ -283,7 +281,7 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
       if (variable_records[*vri_ptr].name_idx == name_idx) {\
         _this.error_code.push(ei_duplicate_class_element_name);\
         _this.error_code.push(SET_SRC_POS(_this.source_idx,lse.terminal_start));\
-        _this.error_code.push(parent_record_idx);\
+        _this.error_code.push(parent_class_idx);\
         _this.error_code.push(name_idx);\
         \
         break;\
@@ -306,7 +304,7 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
     _this.error_code.push(ei_variable_ilegall_modifier);\
     _this.error_code.push(SET_SRC_POS(_this.source_idx,lse.terminal_start));\
     _this.error_code.push(variable_records.used - 1);\
-    _this.error_code.push(parent_record_idx);\
+    _this.error_code.push(parent_class_idx);\
   }\
   \
   /* - PARSE ERROR modifiers - */\
@@ -316,7 +314,7 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
   }\
   \
   variable_record.modifiers = _this.modifiers;\
-  variable_record.parent_record = parent_record_idx;\
+  variable_record.parent_record = parent_class_idx;\
   variable_record.init_expression_idx = c_idx_not_exist;\
   \
   name_pos_s &name_position = variable_record.name_position;\
@@ -580,25 +578,65 @@ bool pa_import(string_s &source_string,script_parser_s &_this)
 
 bool pa_namespace_def_end(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"pa_namespace_def_end\n");
+  ui_array_s &parent_namespace_idxs = _this.parent_namespace_idxs;
+  ui_array_s &using_namespace_idxs = _this.using_namespace_idxs;
+
+  // *****
+
+  // - remove namespace index from parent namespace stack -
+  parent_namespace_idxs.used--;
+
+  // - remove namespace index from using namespace stack -
+  using_namespace_idxs.used--;
+
+  debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_namespace_def_end\n"));
+
   return true;
 }/*}}}*/
 
 bool pa_namespace_name(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"pa_namespace_name\n");
-  return true;
-}/*}}}*/
+  namespace_records_s &namespace_records = _this.namespace_records;
+  ui_array_s &parent_namespace_idxs = _this.parent_namespace_idxs;
+  ui_array_s &using_namespace_idxs = _this.using_namespace_idxs;
+  lalr_stack_s &lalr_stack = _this.lalr_stack;
 
-bool pa_namespace_using(string_s &source_string,script_parser_s &_this)
-{/*{{{*/
-  fprintf(stderr,"pa_namespace_using\n");
-  return true;
-}/*}}}*/
+  // *****
 
-bool pa_namespace_id(string_s &source_string,script_parser_s &_this)
-{/*{{{*/
-  fprintf(stderr,"pa_namespace_id\n");
+  // - get position of namespace name -
+  lalr_stack_element_s &lse = lalr_stack.last();
+  unsigned name_length = lse.terminal_end - lse.terminal_start;
+  char *name_data = source_string.data + lse.terminal_start;
+
+  // - get index of namespace name -
+  unsigned name_idx = _this.namespace_symbol_names.get_idx_char_ptr_insert(name_length,name_data);
+
+  // - test if namespace was already defined -
+  unsigned parent_namespace_idx = parent_namespace_idxs.last();
+  unsigned namespace_record_idx = _this.get_namespace_idx_by_name_idx(name_idx,parent_namespace_idx);
+
+  if (namespace_record_idx == c_idx_not_exist)
+  {
+    // - creation of new namespace record -
+    namespace_records.push_blank();
+    namespace_record_idx = namespace_records.used - 1;
+    namespace_record_s &namespace_record = namespace_records.last();
+
+    // - setting of variables describing namespace -
+    namespace_record.name_idx = name_idx;
+
+    // - store namespace index to parent namespace -
+    namespace_records[parent_namespace_idx].namespace_record_idxs.push(namespace_record_idx);
+  }
+
+  // - push namespace record index to parent namespace stack -
+  parent_namespace_idxs.push(namespace_record_idx);
+
+  // - push namespace record index to using namespace stack -
+  using_namespace_idxs.push(namespace_record_idx);
+
+  debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_namespace_name: %s\n",_this.namespace_symbol_names[name_idx].data));
+
   return true;
 }/*}}}*/
 
@@ -664,12 +702,12 @@ bool pa_modifier_parallel(string_s &source_string,script_parser_s &_this)
 
 bool pa_class_def_end(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  ui_array_s &parent_record_idxs = _this.parent_record_idxs;
+  ui_array_s &parent_class_idxs = _this.parent_class_idxs;
 
   // *****
 
-  // - remove class index from parent record stack -
-  parent_record_idxs.used--;
+  // - remove class index from parent class stack -
+  parent_class_idxs.used--;
 
   debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_class_def_end\n"));
 
@@ -678,10 +716,12 @@ bool pa_class_def_end(string_s &source_string,script_parser_s &_this)
 
 bool pa_class_name(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
+  namespace_records_s &namespace_records = _this.namespace_records;
   class_records_s &class_records = _this.class_records;
-  ui_array_s &parent_record_idxs = _this.parent_record_idxs;
+  ui_array_s &parent_namespace_idxs = _this.parent_namespace_idxs;
+  ui_array_s &using_namespace_idxs = _this.using_namespace_idxs;
+  ui_array_s &parent_class_idxs = _this.parent_class_idxs;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
-  ui_array_s &top_level_idxs = _this.top_level_idxs;
 
   // *****
 
@@ -694,15 +734,15 @@ bool pa_class_name(string_s &source_string,script_parser_s &_this)
   unsigned name_idx = _this.class_symbol_names.get_idx_char_ptr_insert(name_length,name_data);
 
   // - test uniqueness of class name -
-  unsigned parent_record_idx = parent_record_idxs.used != 0 ? parent_record_idxs.last() : c_idx_not_exist;
-  unsigned class_record_idx = _this.get_nested_enclosing_class_idx_by_name_idx(name_idx,parent_record_idx);
+  unsigned parent_class_idx = parent_class_idxs.used != 0 ? parent_class_idxs.last() : c_idx_not_exist;
+  unsigned class_record_idx = _this.get_nested_enclosing_class_idx_by_name_idx(name_idx,parent_class_idx);
 
   // - PARSE ERROR -
   if (class_record_idx != c_idx_not_exist)
   {
     _this.error_code.push(ei_duplicate_class_name);
     _this.error_code.push(SET_SRC_POS(_this.source_idx,lse.terminal_start));
-    _this.error_code.push(parent_record_idx);
+    _this.error_code.push(parent_class_idx);
     _this.error_code.push(name_idx);
   }
 
@@ -720,7 +760,7 @@ bool pa_class_name(string_s &source_string,script_parser_s &_this)
     _this.error_code.push(ei_class_ilegall_modifier);
     _this.error_code.push(SET_SRC_POS(_this.source_idx,lse.terminal_start));
     _this.error_code.push(class_record_idx);
-    _this.error_code.push(parent_record_idx);
+    _this.error_code.push(parent_class_idx);
   }
 
   // - PARSE ERROR test of disallowed modifier combinations  -
@@ -731,8 +771,11 @@ bool pa_class_name(string_s &source_string,script_parser_s &_this)
   }
 
   class_record.modifiers = _this.modifiers;
-  class_record.parent_record = parent_record_idx;
+  class_record.parent_record = parent_class_idx;
   class_record.extend_class_idx = c_idx_not_exist;
+
+  // - save class using namespaces -
+  class_record.using_namespace_idxs = using_namespace_idxs;
 
   // - save class name position in code -
   name_pos_s &name_position = class_record.name_position;
@@ -740,17 +783,20 @@ bool pa_class_name(string_s &source_string,script_parser_s &_this)
   name_position.ui_second = SET_SRC_POS(_this.source_idx,lse.terminal_end);
 
   // - store new class record index in parent class record -
-  if (parent_record_idx != c_idx_not_exist)
+  if (parent_class_idx != c_idx_not_exist)
   {
-    class_records[parent_record_idx].class_record_idxs.push(class_record_idx);
+    class_records[parent_class_idx].class_record_idxs.push(class_record_idx);
   }
   else
   {
-    top_level_idxs.push(class_record_idx);
+    unsigned parent_namespace_idx = parent_namespace_idxs.last();
+
+    // - store index to parent namespace -
+    namespace_records[parent_namespace_idx].class_record_idxs.push(class_record_idx);
   }
 
-  // - push this class record index to parent list -
-  parent_record_idxs.push(class_record_idx);
+  // - push this class record index to parent class stack -
+  parent_class_idxs.push(class_record_idx);
 
   // - initialization of modifiers -
   _this.modifiers = 0;
@@ -763,7 +809,7 @@ bool pa_class_name(string_s &source_string,script_parser_s &_this)
 bool pa_class_extends(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   class_records_s &class_records = _this.class_records;
-  ui_array_s &parent_record_idxs = _this.parent_record_idxs;
+  ui_array_s &parent_class_idxs = _this.parent_class_idxs;
   ui_array_s &extending_idxs = _this.extending_idxs;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
@@ -778,7 +824,7 @@ bool pa_class_extends(string_s &source_string,script_parser_s &_this)
   unsigned name_idx = _this.class_symbol_names.get_idx_char_ptr_insert(name_length,name_data);
 
   // - get record index of extending class -
-  unsigned extending_class_idx = parent_record_idxs.last();
+  unsigned extending_class_idx = parent_class_idxs.last();
 
   class_records[extending_class_idx].extend_class_idx = name_idx;
 
@@ -794,7 +840,7 @@ bool pa_element_name(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   class_records_s &class_records = _this.class_records;
   variable_records_s &variable_records = _this.variable_records;
-  ui_array_s &parent_record_idxs = _this.parent_record_idxs;
+  ui_array_s &parent_class_idxs = _this.parent_class_idxs;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
@@ -834,7 +880,7 @@ bool pa_element_name_pa_identifier(string_s &source_string,script_parser_s &_thi
 {/*{{{*/
   class_records_s &class_records = _this.class_records;
   variable_records_s &variable_records = _this.variable_records;
-  ui_array_s &parent_record_idxs = _this.parent_record_idxs;
+  ui_array_s &parent_class_idxs = _this.parent_class_idxs;
   expression_descr_s &ed = _this.expression_descr;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
@@ -902,7 +948,7 @@ bool pa_method_name(string_s &source_string,script_parser_s &_this)
   class_records_s &class_records = _this.class_records;
   method_records_s &method_records = _this.method_records;
   unsigned &modifiers = _this.modifiers;
-  ui_array_s &parent_record_idxs = _this.parent_record_idxs;
+  ui_array_s &parent_class_idxs = _this.parent_class_idxs;
   name_pos_array_s &tmp_name_pos_array = _this.tmp_name_pos_array;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
@@ -914,8 +960,8 @@ bool pa_method_name(string_s &source_string,script_parser_s &_this)
   tmp_name_pos_array.last().set(lse.terminal_start,lse.terminal_end);
 
   // - get index of parent class -
-  unsigned parent_record_idx = parent_record_idxs.last();
-  class_record_s &class_record = class_records[parent_record_idx];
+  unsigned parent_class_idx = parent_class_idxs.last();
+  class_record_s &class_record = class_records[parent_class_idx];
 
   // - creation of new method record -
   method_records.push_blank();
@@ -962,12 +1008,12 @@ bool pa_method_name(string_s &source_string,script_parser_s &_this)
       _this.error_code.push(ei_abstract_method_no_abstract_class);
       _this.error_code.push(SET_SRC_POS(_this.source_idx,lse.terminal_start));
       _this.error_code.push(method_record_idx);
-      _this.error_code.push(parent_record_idx);
+      _this.error_code.push(parent_class_idx);
     }
   }
 
   method_record.modifiers = modifiers;
-  method_record.parent_record = parent_record_idx;
+  method_record.parent_record = parent_class_idx;
   method_record.flow_graph_idx = c_idx_not_exist;
 
   // - store position of method name in code -
@@ -995,12 +1041,12 @@ bool pa_method_parameters_done(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   class_records_s &class_records = _this.class_records;
   method_records_s &method_records = _this.method_records;
-  ui_array_s &parent_record_idxs = _this.parent_record_idxs;
+  ui_array_s &parent_class_idxs = _this.parent_class_idxs;
   name_pos_s &tmp_name_pos = _this.tmp_name_pos_array.pop();
 
   // *****
 
-  class_record_s &parent_record = class_records[parent_record_idxs.last()];
+  class_record_s &parent_record = class_records[parent_class_idxs.last()];
 
   method_record_s &method_record = method_records.last();
   unsigned m_parameter_cnt = method_record.parameter_record_idxs.used;
@@ -1054,7 +1100,7 @@ bool pa_method_parameters_done(string_s &source_string,script_parser_s &_this)
       {
         _this.error_code.push(ei_duplicate_class_method_name);
         _this.error_code.push(SET_SRC_POS(_this.source_idx,tmp_name_pos.ui_first));
-        _this.error_code.push(parent_record_idxs.last());
+        _this.error_code.push(parent_class_idxs.last());
         _this.error_code.push(name_idx);
       }
     }
