@@ -33,13 +33,14 @@ terminals:
 
    float_const {(d*.((d.'.')+('.'.d)).d*)+((d*.((d.'.')+('.'.d)+d).d*).[eE].([+-]+e).d.d*)}
 
-   $string_const {'"'.(|\\\"\n|+(('\\'.<07>.(<07>+e).(<07>+e))+('\\'.'x'.(<09>+<af>+<AF>).(<09>+<af>+<AF>+e))+('\\'.[abfnrtv\\?\'"])))*.'"'}
-   $string_const {('"'.(|\\\"\n|+(('\\'.<07>.(<07>+e).(<07>+e))+('\\'.'x'.(<09>+<af>+<AF>).(<09>+<af>+<AF>+e))+('\\'.[abfnrtv\\?\'"])))*.'"'.w*)*}
    string_const {'"'.(|\\\"|+(('\\'.<07>.(<07>+e).(<07>+e))+('\\'.'x'.(<09>+<af>+<AF>).(<09>+<af>+<AF>+e))+('\\'.[abfnrtv\\?\'"])))*.'"'}
 
    id {('_'+l).('_'+l+d)*}
 
    import {"import"}
+
+   namespace {"namespace"}
+   using {"using"}
 
    class {"class"}
    extends {"extends"}
@@ -143,7 +144,13 @@ nonterminals:
 
    <def_modifier>
 
-   <top_class_list>
+   <namespace_def_list>
+   <namespace_def>
+   <namespace_name>
+
+   <namespace_id_list>
+   <namespace_id>
+
    <top_class>
 
    <class_def>
@@ -252,12 +259,12 @@ rules:
          table.insert(node_stack,this_idx);
       end
    }
-   <import_list> -> <top_class_list> ->>
+   <import_list> -> <namespace_def_list> ->>
    {
       if gen_parse_tree == 1 then
          this_idx = node_idx;
          node_idx = node_idx + 1;
-         print("   node_"..this_idx.." [label = \"<top_class_list>\"]");
+         print("   node_"..this_idx.." [label = \"<namespace_def_list>\"]");
          print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
          table.insert(node_stack,this_idx);
       end
@@ -272,6 +279,119 @@ rules:
          table.insert(node_stack,this_idx);
       else
          print(table.concat(tabs,"").."import module: \""..rule_body(1).."\"");
+      end
+   }
+
+   $ -- namespace list --
+   <namespace_def_list> -> <namespace_def> <namespace_def_list> ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"<namespace_def> <namespace_def_list>\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      end
+   }
+
+   <namespace_def_list> -> <namespace_def> ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"<namespace_def>\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      end
+   }
+
+   $ -- namespace definition --
+   <namespace_def> -> <namespace_name> lc_br <namespace_def_list> rc_br ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"<namespace_name> { <namespace_def_list> \}\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      else
+         table.remove(tabs);
+         print(table.concat(tabs,"").."namespace def end");
+      end
+   }
+
+   <namespace_name> -> namespace id ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"namespace "..rule_body(1).."\"]");
+         table.insert(node_stack,this_idx);
+      else
+         print(table.concat(tabs,"").."namespace name: \""..rule_body(1).."\"");
+         table.insert(tabs," n  ");
+      end
+   }
+
+   <namespace_def> -> <top_class> ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"<top_class>\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      end
+   }
+
+   $ -- using namespace --
+   <namespace_def> -> using <namespace_id_list> semicolon ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"using <namespace_id_list> ;\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      else
+         print(table.concat(tabs,"").."namespace using\"");
+      end
+   }
+
+   <namespace_id_list> -> <namespace_id> dot <namespace_id_list> ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"<namespace_id> . <namespace_id_list>\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      end
+   }
+
+   <namespace_id_list> -> <namespace_id> ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"<namespace_id>\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      end
+   }
+
+   <namespace_id> -> id ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \""..rule_body(0).."\"]");
+         table.insert(node_stack,this_idx);
+      else
+         print(table.concat(tabs,"").."namespace id: \""..rule_body(0).."\"");
       end
    }
 
@@ -340,29 +460,6 @@ rules:
          table.insert(node_stack,this_idx);
       else
          print(table.concat(tabs,"").."modifier parallel");
-      end
-   }
-
-   $ -- top class list --
-   <top_class_list> -> <top_class> <top_class_list> ->>
-   {
-      if gen_parse_tree == 1 then
-         this_idx = node_idx;
-         node_idx = node_idx + 1;
-         print("   node_"..this_idx.." [label = \"<top_class> <top_class_list>\"]");
-         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
-         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
-         table.insert(node_stack,this_idx);
-      end
-   }
-   <top_class_list> -> <top_class> ->>
-   {
-      if gen_parse_tree == 1 then
-         this_idx = node_idx;
-         node_idx = node_idx + 1;
-         print("   node_"..this_idx.." [label = \"<top_class>\"]");
-         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
-         table.insert(node_stack,this_idx);
       end
    }
 
@@ -2126,7 +2223,8 @@ rules:
    <A> -> backslash_char_const ->>
    {
       if gen_parse_tree == 1 then
-         print("   node_"..node_idx.." [label = \"'\\"..substr(rule_body(0)..1..size(rule_body(0)) - 1).."\"]");
+         value = rule_body(0);
+         print("   node_"..node_idx.." [label = \"'\\"..string.sub(value,2,string.len(value)).."\"]");
          table.insert(node_stack,node_idx);
          node_idx = node_idx + 1;
       else

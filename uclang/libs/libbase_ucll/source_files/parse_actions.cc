@@ -10,7 +10,7 @@ include "script_parser.h"
 const unsigned max_number_string_length = 12;
 
 // - callers of parse action functions -
-const unsigned c_script_parse_action_cnt = 167;
+const unsigned c_script_parse_action_cnt = 174;
 bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,script_parser_s &_this) =
 {/*{{{*/
 
@@ -23,6 +23,16 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
   pa_null,
   pa_import,
 
+  pa_null,
+  pa_null,
+  pa_namespace_def_end,
+  pa_namespace_name,
+  pa_null,
+  pa_namespace_using,
+  pa_null,
+  pa_null,
+  pa_namespace_id,
+
   pa_modifier_public,
   pa_modifier_private,
   pa_modifier_static,
@@ -30,8 +40,6 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
   pa_modifier_final,
   pa_modifier_parallel,
 
-  pa_null,
-  pa_null,
   pa_null,
   pa_null,
 
@@ -567,6 +575,30 @@ bool pa_import(string_s &source_string,script_parser_s &_this)
     name_pos.ui_second = SET_SRC_POS(_this.source_idx,lse.terminal_end);
   }
 
+  return true;
+}/*}}}*/
+
+bool pa_namespace_def_end(string_s &source_string,script_parser_s &_this)
+{/*{{{*/
+  fprintf(stderr,"pa_namespace_def_end\n");
+  return true;
+}/*}}}*/
+
+bool pa_namespace_name(string_s &source_string,script_parser_s &_this)
+{/*{{{*/
+  fprintf(stderr,"pa_namespace_name\n");
+  return true;
+}/*}}}*/
+
+bool pa_namespace_using(string_s &source_string,script_parser_s &_this)
+{/*{{{*/
+  fprintf(stderr,"pa_namespace_using\n");
+  return true;
+}/*}}}*/
+
+bool pa_namespace_id(string_s &source_string,script_parser_s &_this)
+{/*{{{*/
+  fprintf(stderr,"pa_namespace_id\n");
   return true;
 }/*}}}*/
 
