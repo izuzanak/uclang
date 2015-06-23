@@ -254,6 +254,7 @@ void *run_interpreter(void *data)
             //parser.DEBUG_show_variables();
             //parser.DEBUG_show_methods();
             //parser.DEBUG_show_classes();
+            //parser.DEBUG_show_namespaces();
 
             //parser.DEBUG_show_init_expressions();
             //parser.DEBUG_show_method_flow_graphs();
