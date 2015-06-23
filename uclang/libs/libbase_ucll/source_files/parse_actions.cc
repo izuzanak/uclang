@@ -10,7 +10,7 @@ include "script_parser.h"
 const unsigned max_number_string_length = 12;
 
 // - callers of parse action functions -
-const unsigned c_script_parse_action_cnt = 172;
+const unsigned c_script_parse_action_cnt = 177;
 bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,script_parser_s &_this) =
 {/*{{{*/
 
@@ -26,9 +26,14 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
   pa_null,
   pa_null,
   pa_namespace_def_end,
-  pa_namespace_name,
+  pa_namespace_def_name,
+  pa_namespace_using_end,
+  pa_namespace_using_name,
   pa_null,
   pa_null,
+  pa_null,
+  pa_null,
+  pa_namespace_identifier,
   pa_null,
 
   pa_modifier_public,
@@ -594,11 +599,85 @@ bool pa_namespace_def_end(string_s &source_string,script_parser_s &_this)
   return true;
 }/*}}}*/
 
-bool pa_namespace_name(string_s &source_string,script_parser_s &_this)
+bool pa_namespace_def_name(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   namespace_records_s &namespace_records = _this.namespace_records;
+  ui_array_s &namespace_name_idxs = _this.namespace_name_idxs;
   ui_array_s &parent_namespace_idxs = _this.parent_namespace_idxs;
   ui_array_s &using_namespace_idxs = _this.using_namespace_idxs;
+
+  // *****
+
+  // - retrieve parent namespace -
+  unsigned parent_namespace_idx = parent_namespace_idxs.last();
+  unsigned namespace_record_idx;
+
+  // - process namespace names -
+  unsigned *nni_ptr = namespace_name_idxs.data;
+  unsigned *nni_ptr_end = nni_ptr + namespace_name_idxs.used;
+  do {
+    
+    // - retrieve namespace in parent namespace -
+    namespace_record_idx = _this.get_namespace_idx_by_name_idx(*nni_ptr,parent_namespace_idx);
+
+    // - if namespace does not exist -
+    if (namespace_record_idx == c_idx_not_exist)
+    {
+      // - create new namespace record -
+      namespace_records.push_blank();
+      namespace_record_idx = namespace_records.used - 1;
+      namespace_record_s &namespace_record = namespace_records.last();
+
+      // - setting of variables describing namespace -
+      namespace_record.name_idx = *nni_ptr;
+
+      // - store namespace index to parent namespace -
+      namespace_records[parent_namespace_idx].namespace_record_idxs.push(namespace_record_idx);
+    }
+
+    // - set parent namespace oindex for next iteration -
+    parent_namespace_idx = namespace_record_idx;
+
+  } while(++nni_ptr < nni_ptr_end);
+
+  // - remove namespace names -
+  namespace_name_idxs.used = 0;
+
+  // - push namespace record index to parent namespace stack -
+  parent_namespace_idxs.push(namespace_record_idx);
+
+  // - push namespace record index to using namespace stack -
+  using_namespace_idxs.push(namespace_record_idx);
+
+  debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_namespace_def_name\n"));
+
+  return true;
+}/*}}}*/
+
+bool pa_namespace_using_end(string_s &source_string,script_parser_s &_this)
+{/*{{{*/
+
+  // FIXME debug ouput
+  fprintf(stderr,"pa_namespace_using_end\n");
+
+  debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_namespace_using_end\n"));
+
+  return true;
+}/*}}}*/
+
+bool pa_namespace_using_name(string_s &source_string,script_parser_s &_this)
+{/*{{{*/
+  // FIXME debug ouput
+  fprintf(stderr,"pa_namespace_using_name\n");
+
+  debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_namespace_using_name\n"));
+
+  return true;
+}/*}}}*/
+
+bool pa_namespace_identifier(string_s &source_string,script_parser_s &_this)
+{/*{{{*/
+  ui_array_s &namespace_name_idxs = _this.namespace_name_idxs;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
@@ -611,31 +690,13 @@ bool pa_namespace_name(string_s &source_string,script_parser_s &_this)
   // - get index of namespace name -
   unsigned name_idx = _this.namespace_symbol_names.get_idx_char_ptr_insert(name_length,name_data);
 
-  // - test if namespace was already defined -
-  unsigned parent_namespace_idx = parent_namespace_idxs.last();
-  unsigned namespace_record_idx = _this.get_namespace_idx_by_name_idx(name_idx,parent_namespace_idx);
+  // - store namespace name index -
+  namespace_name_idxs.push(name_idx);
 
-  if (namespace_record_idx == c_idx_not_exist)
-  {
-    // - creation of new namespace record -
-    namespace_records.push_blank();
-    namespace_record_idx = namespace_records.used - 1;
-    namespace_record_s &namespace_record = namespace_records.last();
+  // FIXME debug ouput
+  fprintf(stderr,"pa_namespace_identifier: %s\n",_this.namespace_symbol_names[name_idx].data);
 
-    // - setting of variables describing namespace -
-    namespace_record.name_idx = name_idx;
-
-    // - store namespace index to parent namespace -
-    namespace_records[parent_namespace_idx].namespace_record_idxs.push(namespace_record_idx);
-  }
-
-  // - push namespace record index to parent namespace stack -
-  parent_namespace_idxs.push(namespace_record_idx);
-
-  // - push namespace record index to using namespace stack -
-  using_namespace_idxs.push(namespace_record_idx);
-
-  debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_namespace_name: %s\n",_this.namespace_symbol_names[name_idx].data));
+  debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_namespace_identifier: %s\n",_this.namespace_symbol_names[name_idx].data));
 
   return true;
 }/*}}}*/
