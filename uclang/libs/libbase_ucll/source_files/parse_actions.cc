@@ -670,13 +670,15 @@ bool pa_namespace_using_end(string_s &source_string,script_parser_s &_this)
 
 bool pa_namespace_using_name(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
+  namespace_records_s &namespace_records = _this.namespace_records;
   ui_array_s &namespace_name_idxs = _this.namespace_name_idxs;
   ui_array_s &using_namespace_idxs = _this.using_namespace_idxs;
 
   // *****
 
   // - search from global namespace -
-  unsigned namespace_record_idx = 0;
+  unsigned parent_namespace_idx = 0;
+  unsigned namespace_record_idx;
 
   // - process namespace names -
   unsigned *nni_ptr = namespace_name_idxs.data;
@@ -684,17 +686,25 @@ bool pa_namespace_using_name(string_s &source_string,script_parser_s &_this)
   do {
     
     // - retrieve namespace in parent namespace -
-    namespace_record_idx = _this.get_namespace_idx_by_name_idx(*nni_ptr,namespace_record_idx);
+    namespace_record_idx = _this.get_namespace_idx_by_name_idx(*nni_ptr,parent_namespace_idx);
 
-    // - PARSE ERROR -
+    // - if namespace does not exist -
     if (namespace_record_idx == c_idx_not_exist)
     {
-      _this.error_code.push(ei_cannot_resolve_namespace);
-      _this.error_code.push(nni_ptr[1]);
-      _this.error_code.push(nni_ptr[0]);
+      // - create new namespace record -
+      namespace_records.push_blank();
+      namespace_record_idx = namespace_records.used - 1;
+      namespace_record_s &namespace_record = namespace_records.last();
 
-      return false;
+      // - setting of variables describing namespace -
+      namespace_record.name_idx = *nni_ptr;
+
+      // - store namespace index to parent namespace -
+      namespace_records[parent_namespace_idx].namespace_record_idxs.push(namespace_record_idx);
     }
+
+    // - set parent namespace index for next iteration -
+    parent_namespace_idx = namespace_record_idx;
 
   } while((nni_ptr += 2) < nni_ptr_end);
 

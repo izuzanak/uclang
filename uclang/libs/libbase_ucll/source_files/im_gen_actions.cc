@@ -504,22 +504,20 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
           /* - ERROR - */\
           if (class_ri == c_idx_not_exist)\
           {\
-            _this.error_code.push(ei_class_name_cannot_be_resolved);\
-            _this.error_code.push(exp.nodes[exp_node_idx + 1]);\
-            _this.error_code.push(id_idx);\
-            \
-            return false;\
+            id_idx = c_idx_not_exist;\
           }\
-          \
-          /* - insertion of new operand describing identifier - */\
-          im.var_name_fo_map[id_name_idx] = im.found_operands.used;\
-          im.found_operands.push(c_op_modifier_static_class);\
-          im.found_operands.push(class_ri);\
-          \
-          /* - store information about identifier operand to operand stack - */\
-          im.operand_stack.push(im.operands.used);\
-          im.operands.push(c_op_modifier_static_class);\
-          im.operands.push(class_ri);\
+          else\
+          {\
+            /* - insertion of new operand describing identifier - */\
+            im.var_name_fo_map[id_name_idx] = im.found_operands.used;\
+            im.found_operands.push(c_op_modifier_static_class);\
+            im.found_operands.push(class_ri);\
+            \
+            /* - store information about identifier operand to operand stack - */\
+            im.operand_stack.push(im.operands.used);\
+            im.operands.push(c_op_modifier_static_class);\
+            im.operands.push(class_ri);\
+          }\
         }\
       }\
       \

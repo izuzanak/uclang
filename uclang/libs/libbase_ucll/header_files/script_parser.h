@@ -311,8 +311,6 @@ enum
   ei_unrecognizable_terminal,
   ei_wrong_program_syntax,
 
-  ei_cannot_resolve_namespace,
-
   ei_duplicate_class_element_name,
   ei_duplicate_class_method_name,
   ei_duplicate_class_name,
