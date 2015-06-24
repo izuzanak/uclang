@@ -845,11 +845,11 @@ void script_parser_s::DEBUG_show_namespaces()
       if (nsri_ptr < nsri_ptr_end)
       {
         do {
-          printf("%s.",namespace_symbol_names[namespace_records[*nsri_ptr].name_idx].data);
+          printf("%s.",class_symbol_names[namespace_records[*nsri_ptr].name_idx].data);
         } while((nsri_ptr += 2) < nsri_ptr_end);
       }
 
-      printf("%s:",namespace_symbol_names[namespace_record.name_idx].data);
+      printf("%s:",class_symbol_names[namespace_record.name_idx].data);
 
       // - print namespace classes -
       ui_array_s &class_record_idxs = namespace_record.class_record_idxs;
@@ -3284,7 +3284,6 @@ void script_parser_s::initialize_parser(source_s &a_source,string_s &a_mods_path
 
   error_strings.clear();
 
-  namespace_symbol_names.clear();
   class_symbol_names.clear();
   method_symbol_names.clear();
   variable_symbol_names.clear();
@@ -3315,7 +3314,7 @@ void script_parser_s::initialize_parser(source_s &a_source,string_s &a_mods_path
 
   // - insertion of global namespace -
   {
-    unsigned global_namespace_name_idx = namespace_symbol_names.get_idx_char_ptr_insert(6,"Global");
+    unsigned global_namespace_name_idx = class_symbol_names.get_idx_char_ptr_insert(6,"Global");
 
     namespace_records.push_blank();
     namespace_records.last().name_idx = global_namespace_name_idx;

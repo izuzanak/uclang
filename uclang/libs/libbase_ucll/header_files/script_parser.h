@@ -855,7 +855,6 @@ struct
     string_array_s:error_strings
 
     $// - symbol names -
-    string_rb_tree_s:namespace_symbol_names
     string_rb_tree_s:class_symbol_names
     string_rb_tree_s:method_symbol_names
     string_rb_tree_s:variable_symbol_names
@@ -965,7 +964,7 @@ struct
 
   /*!
    * \brief retrieve namespace record index by namespace name index
-   * \param a_name_idx - index of namespace name (in namespace_symbol_names)
+   * \param a_name_idx - index of namespace name (in class_symbol_names)
    * \param a_parent_namespace_idx - namespace record index of namespace to be searched
    * \return index of namespace record, or c_idx_not_exist
    */

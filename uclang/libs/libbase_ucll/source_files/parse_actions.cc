@@ -732,13 +732,13 @@ bool pa_namespace_identifier(string_s &source_string,script_parser_s &_this)
   char *name_data = source_string.data + lse.terminal_start;
 
   // - get index of namespace name -
-  unsigned name_idx = _this.namespace_symbol_names.get_idx_char_ptr_insert(name_length,name_data);
+  unsigned name_idx = _this.class_symbol_names.get_idx_char_ptr_insert(name_length,name_data);
 
   // - store namespace name index and position -
   namespace_name_idxs.push(name_idx);
   namespace_name_idxs.push(lse.terminal_start);
 
-  debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_namespace_identifier: %s\n",_this.namespace_symbol_names[name_idx].data));
+  debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_namespace_identifier: %s\n",_this.class_symbol_names[name_idx].data));
 
   return true;
 }/*}}}*/
