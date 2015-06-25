@@ -3,6 +3,12 @@
 include "script_parser.h"
 @end
 
+/*
+ * constants and definitions
+ */
+
+const unsigned max_number_string_length = 12;
+
 // - callers of intermediate code generating functions -
 const unsigned c_script_im_gen_action_cnt = 58;
 bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,script_parser_s &_this) =
@@ -1217,15 +1223,17 @@ bool im_new_object(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,s
   // *****
 
   unsigned exp_node_idx = im.exp_node_stack.last();
-  unsigned parm_cnt = exp.nodes[exp_node_idx + 4];
+  unsigned parm_cnt = exp.nodes[exp_node_idx + 2];
 
   if (im.done_exp_nodes[exp_node_idx] == c_idx_not_exist)
   {
+    // - process class access -
+    im.exp_node_stack.push(exp.nodes[exp_node_idx + 3]);
 
     // - process constructor parameters -
     if (parm_cnt != 0)
     {
-      unsigned *m_ptr_end = exp.nodes.data + exp_node_idx + 4;
+      unsigned *m_ptr_end = exp.nodes.data + exp_node_idx + 3;
       unsigned *m_ptr = m_ptr_end + parm_cnt;
 
       do
@@ -1240,25 +1248,29 @@ bool im_new_object(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,s
   }
   else
   {
-
     // - get temporary stack location for reference to new object -
     unsigned tmp_local_idx = im.free_stack_idxs.used != 0?im.free_stack_idxs.pop():im.stack_idx_max++;
 
-    // - get class record index by class name -
-    unsigned class_record_idx = _this.resolve_class_idx_by_name_idx(exp.nodes[exp_node_idx + 2],im.class_idx);
-
-    // - ERROR class name can not be resolved -
-    if (class_record_idx == c_idx_not_exist)
-    {
-      _this.error_code.push(ei_class_name_cannot_be_resolved);
-      _this.error_code.push(exp.nodes[exp_node_idx + 1]);
-      _this.error_code.push(exp.nodes[exp_node_idx + 2]);
-
-      return false;
-    }
+    // - retrieve static class access -
+    unsigned *op_ptr = im.operands.data + im.operand_stack.pop();
+    unsigned class_record_idx = op_ptr[1];
 
     class_record_s &class_record = class_records[class_record_idx];
-    unsigned method_ri = class_record.mnri_map.map_name(exp.nodes[exp_node_idx + 3]);
+
+    // - creation of space for method name -
+    string_s &class_name = _this.class_symbol_names[class_record.name_idx];
+    unsigned method_name_max_length = class_name.size - 1 + max_number_string_length;
+
+    string_s name_string;
+    name_string.data = (char *)cmalloc(method_name_max_length);
+    name_string.size = 1 + snprintf(name_string.data,method_name_max_length,"%s#%u",class_name.data,parm_cnt);
+
+    // - get index of method name -
+    unsigned method_name_idx = _this.get_method_name_idx_swap(name_string);
+    name_string.clear();
+
+    // - retrieve constructor record index -
+    unsigned method_ri = class_record.mnri_map.map_name(method_name_idx);
 
     // - ERROR -
     if (method_ri == c_idx_not_exist)
@@ -1266,7 +1278,7 @@ bool im_new_object(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,s
       _this.error_code.push(ei_class_does_not_have_constructor);
       _this.error_code.push(exp.nodes[exp_node_idx + 1]);
       _this.error_code.push(class_record_idx);
-      _this.error_code.push(exp.nodes[exp_node_idx + 3]);
+      _this.error_code.push(method_name_idx);
 
       return false;
     }
@@ -1283,7 +1295,7 @@ bool im_new_object(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,s
     code.push(parm_cnt);
     code.push(class_record_idx);
     code.push(exp.nodes[exp_node_idx + 1]);
-    code.push(exp.nodes[exp_node_idx + 3]);
+    code.push(method_name_idx);
     code.push(tmp_local_idx);
 
     // - process object constructor parameters -
@@ -1312,9 +1324,9 @@ bool im_new_object(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,s
         }
       }
       while(++ops_ptr < ops_ptr_end);
-
-      im.operand_stack.used -= parm_cnt;
     }
+
+    im.operand_stack.used -= parm_cnt;
 
     // - store operand of new object -
     im.operand_stack.push(im.operands.used);
@@ -1342,8 +1354,9 @@ bool im_new_objects_array(expression_s &exp,uli_array_s &begin_code,uli_array_s 
   if (im.done_exp_nodes[exp_node_idx] == c_idx_not_exist)
   {
 
-    // - process location describing size of object array -
-    im.exp_node_stack.push(exp.nodes[exp_node_idx + 4]);
+    // - process class access and size of object array -
+    im.exp_node_stack.push(exp.nodes[exp_node_idx + 2]);
+    im.exp_node_stack.push(exp.nodes[exp_node_idx + 3]);
     im.done_exp_nodes[exp_node_idx] = 1;
   }
   else
@@ -1352,21 +1365,26 @@ bool im_new_objects_array(expression_s &exp,uli_array_s &begin_code,uli_array_s 
     // - get temporary location for store of location of reference to object array -
     unsigned tmp_local_idx = im.free_stack_idxs.used != 0?im.free_stack_idxs.pop():im.stack_idx_max++;
 
-    // - get class record index by class name -
-    unsigned class_record_idx = _this.resolve_class_idx_by_name_idx(exp.nodes[exp_node_idx + 2],im.class_idx);
-
-    // - ERROR class cannot be resolved -
-    if (class_record_idx == c_idx_not_exist)
-    {
-      _this.error_code.push(ei_class_name_cannot_be_resolved);
-      _this.error_code.push(exp.nodes[exp_node_idx + 1]);
-      _this.error_code.push(exp.nodes[exp_node_idx + 2]);
-
-      return false;
-    }
+    // - retrieve static class access -
+    unsigned *op_ptr = im.operands.data + im.operand_stack.pop();
+    unsigned class_record_idx = op_ptr[1];
 
     class_record_s &class_record = class_records[class_record_idx];
-    unsigned method_ri = class_record.mnri_map.map_name(exp.nodes[exp_node_idx + 3]);
+
+    // - creation of space for method name -
+    string_s &class_name = _this.class_symbol_names[class_record.name_idx];
+    unsigned method_name_max_length = class_name.size - 1 + max_number_string_length;
+
+    string_s name_string;
+    name_string.data = (char *)cmalloc(method_name_max_length);
+    name_string.size = 1 + snprintf(name_string.data,method_name_max_length,"%s#0",class_name.data);
+
+    // - get index of method name -
+    unsigned method_name_idx = _this.get_method_name_idx_swap(name_string);
+    name_string.clear();
+
+    // - retrieve constructor record index -
+    unsigned method_ri = class_record.mnri_map.map_name(method_name_idx);
 
     // - ERROR -
     if (method_ri == c_idx_not_exist)
@@ -1374,7 +1392,7 @@ bool im_new_objects_array(expression_s &exp,uli_array_s &begin_code,uli_array_s 
       _this.error_code.push(ei_class_does_not_have_constructor);
       _this.error_code.push(exp.nodes[exp_node_idx + 1]);
       _this.error_code.push(class_record_idx);
-      _this.error_code.push(exp.nodes[exp_node_idx + 3]);
+      _this.error_code.push(method_name_idx);
 
       return false;
     }
@@ -1392,10 +1410,10 @@ bool im_new_objects_array(expression_s &exp,uli_array_s &begin_code,uli_array_s 
     code.push(exp.nodes[exp_node_idx + 1]);
     code.push(tmp_local_idx);
     code.push(class_record_idx);
-    code.push(exp.nodes[exp_node_idx + 3]);
+    code.push(method_name_idx);
 
     // - process operator describing reference to variable containing array size -
-    unsigned *op_ptr = im.operands.data + im.operand_stack.pop();
+    op_ptr = im.operands.data + im.operand_stack.pop();
 
     // - ERROR -
     if (!(*op_ptr & c_op_modifier_object))

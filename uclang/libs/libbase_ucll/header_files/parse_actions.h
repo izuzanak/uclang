@@ -104,7 +104,6 @@ bool pa_identifier(string_s &source_string,script_parser_s &_this);
 bool pa_this_access(string_s &source_string,script_parser_s &_this);
 bool pa_new_object(string_s &source_string,script_parser_s &_this);
 bool pa_new_objects_array(string_s &source_string,script_parser_s &_this);
-bool pa_object_class_name(string_s &source_string,script_parser_s &_this);
 bool pa_free_object(string_s &source_string,script_parser_s &_this);
 bool pa_type_identification(string_s &source_string,script_parser_s &_this);
 bool pa_object_reference_copy(string_s &source_string,script_parser_s &_this);

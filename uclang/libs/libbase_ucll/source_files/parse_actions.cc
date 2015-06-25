@@ -10,7 +10,7 @@ include "script_parser.h"
 const unsigned max_number_string_length = 12;
 
 // - callers of parse action functions -
-const unsigned c_script_parse_action_cnt = 178;
+const unsigned c_script_parse_action_cnt = 179;
 bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,script_parser_s &_this) =
 {/*{{{*/
 
@@ -218,7 +218,7 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
 
   pa_new_object,
   pa_new_objects_array,
-  pa_object_class_name,
+  pa_null,
 
   pa_free_object,
 
@@ -227,6 +227,7 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
 
   pa_conditional_expression,
 
+  pa_null,
   pa_class_access,
   pa_object_member_select,
 
@@ -1167,11 +1168,7 @@ bool pa_method_parameters_done(string_s &source_string,script_parser_s &_this)
   char tmp_char = source_string[tmp_name_pos.ui_second];
   source_string[tmp_name_pos.ui_second] = '\0';
 
-#if SYSTEM_TYPE == SYSTEM_TYPE_DSP
-  name_string.size = 1 + sprintf(name_string.data,"%s#%u",source_string.data + tmp_name_pos.ui_first,m_parameter_cnt);
-#else
   name_string.size = 1 + snprintf(name_string.data,method_name_max_length,"%s#%u",source_string.data + tmp_name_pos.ui_first,m_parameter_cnt);
-#endif
 
   // - test if method is class constructor -
   if (strcmp(source_string.data + tmp_name_pos.ui_first,_this.class_symbol_names[parent_record.name_idx].data) == 0)
@@ -3415,58 +3412,28 @@ bool pa_this_access(string_s &source_string,script_parser_s &_this)
 
 bool pa_new_object(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  name_pos_s &tmp_name_pos = _this.tmp_name_pos_array.pop();
   ui_array_s &member_cnt = _this.member_cnt;
   expression_descr_s &ed = _this.expression_descr;
 
   // *****
 
-  // - get position of name -
-  unsigned name_length = tmp_name_pos.ui_second - tmp_name_pos.ui_first;
-  char *name_data = source_string.data + tmp_name_pos.ui_first;
-
-  // - get index of class name -
-  unsigned name_idx = _this.class_symbol_names.get_idx_char_ptr_insert(name_length,name_data);
-
   // - count constructor parameters -
   unsigned c_parameter_cnt = member_cnt.pop();
 
-  // - creation of space for storing of constructor name -
-  unsigned method_name_max_length = (tmp_name_pos.ui_second - tmp_name_pos.ui_first) + max_number_string_length;
-
-  string_s name_string;
-  name_string.data = (char *)cmalloc(method_name_max_length);
-
-  // - creation of complete constructor name -
-  char tmp_char = source_string[tmp_name_pos.ui_second];
-  source_string[tmp_name_pos.ui_second] = '\0';
-
-#if SYSTEM_TYPE == SYSTEM_TYPE_DSP
-  name_string.size = 1 + sprintf(name_string.data,"%s#%u",source_string.data + tmp_name_pos.ui_first,c_parameter_cnt);
-#else
-  name_string.size = 1 + snprintf(name_string.data,method_name_max_length,"%s#%u",source_string.data + tmp_name_pos.ui_first,c_parameter_cnt);
-#endif
-
-  source_string[tmp_name_pos.ui_second] = tmp_char;
-
-  // - get index of constructor name -
-  unsigned c_name_idx = _this.get_method_name_idx_swap(name_string);
-  name_string.clear();
-
   // - position of created node -
   unsigned tmp_node_idx = ed.tmp_expression.used;
+  idx_size_s *tei_ptr = ed.tmp_exp_info.data + ed.tmp_exp_info.used - (1 + c_parameter_cnt);
 
   ed.tmp_expression.push(c_node_type_new_object);
   ed.tmp_expression.push(SET_SRC_POS(_this.source_idx,_this.old_input_idx));
-  ed.tmp_expression.push(name_idx);
-  ed.tmp_expression.push(c_name_idx);
   ed.tmp_expression.push(c_parameter_cnt);
+  ed.tmp_expression.push(tei_ptr[0].ui_first);
 
-  unsigned exp_size = 5;
+  unsigned exp_size = tei_ptr[0].ui_second + 4;
 
   if (c_parameter_cnt != 0)
   {
-    idx_size_s *tei_ptr = ed.tmp_exp_info.data + ed.tmp_exp_info.used - c_parameter_cnt;
+    ++tei_ptr;
     idx_size_s *tei_ptr_end = ed.tmp_exp_info.data + ed.tmp_exp_info.used;
 
     do
@@ -3475,9 +3442,10 @@ bool pa_new_object(string_s &source_string,script_parser_s &_this)
       exp_size += 1 + tei_ptr->ui_second;
     }
     while(++tei_ptr < tei_ptr_end);
-
-    ed.tmp_exp_info.used -= c_parameter_cnt;
   }
+
+  // - remove old nodes from stack -
+  ed.tmp_exp_info.used -= 1 + c_parameter_cnt;
 
   // - create expression info node -
   ed.tmp_exp_info.push_blank();
@@ -3493,56 +3461,28 @@ bool pa_new_object(string_s &source_string,script_parser_s &_this)
 
 bool pa_new_objects_array(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  name_pos_s &tmp_name_pos = _this.tmp_name_pos_array.pop();
   expression_descr_s &ed = _this.expression_descr;
 
   // *****
 
-  // - get name position -
-  unsigned name_length = tmp_name_pos.ui_second - tmp_name_pos.ui_first;
-  char *name_data = source_string.data + tmp_name_pos.ui_first;
-
-  // - get index of class name -
-  unsigned name_idx = _this.class_symbol_names.get_idx_char_ptr_insert(name_length,name_data);
-
-  // - creation of space for storing of constructor name -
-  unsigned method_name_max_length = (tmp_name_pos.ui_second - tmp_name_pos.ui_first) + 3;
-
-  string_s name_string;
-  name_string.data = (char *)cmalloc(method_name_max_length);
-
-  // - creation of complete constructor name -
-  char tmp_char = source_string[tmp_name_pos.ui_second];
-  source_string[tmp_name_pos.ui_second] = '\0';
-
-#if SYSTEM_TYPE == SYSTEM_TYPE_DSP
-  name_string.size = 1 + sprintf(name_string.data,"%s#0",source_string.data + tmp_name_pos.ui_first);
-#else
-  name_string.size = 1 + snprintf(name_string.data,method_name_max_length,"%s#0",source_string.data + tmp_name_pos.ui_first);
-#endif
-
-  source_string[tmp_name_pos.ui_second] = tmp_char;
-
-  // - get index of constructor name -
-  unsigned c_name_idx = _this.get_method_name_idx_swap(name_string);
-  name_string.clear();
-
   // - position of created node -
   unsigned tmp_node_idx = ed.tmp_expression.used;
-  idx_size_s &exp_info = ed.tmp_exp_info.pop();
+  idx_size_s *tei_ptr = ed.tmp_exp_info.data + ed.tmp_exp_info.used - 2;
 
   ed.tmp_expression.push(c_node_type_new_objects_array);
   ed.tmp_expression.push(SET_SRC_POS(_this.source_idx,_this.old_input_idx));
-  ed.tmp_expression.push(name_idx);
-  ed.tmp_expression.push(c_name_idx);
-  ed.tmp_expression.push(exp_info.ui_first);
+  ed.tmp_expression.push(tei_ptr[0].ui_first);
+  ed.tmp_expression.push(tei_ptr[1].ui_first);
+
+  // - remove old nodes from stack -
+  ed.tmp_exp_info.used -= 2;
 
   // - create expression info node -
   ed.tmp_exp_info.push_blank();
   idx_size_s &tmp_exp_info = ed.tmp_exp_info.last();
 
   tmp_exp_info.ui_first = tmp_node_idx;
-  tmp_exp_info.ui_second = exp_info.ui_second + 5;
+  tmp_exp_info.ui_second = tei_ptr[0].ui_second + tei_ptr[1].ui_second + 4;
 
   debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_new_objects_array\n"));
 
@@ -3571,28 +3511,6 @@ bool pa_free_object(string_s &source_string,script_parser_s &_this)
   tmp_exp_info.ui_second = exp_info.ui_second + 3;
 
   debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_free_object\n"));
-
-  return true;
-}/*}}}*/
-
-bool pa_object_class_name(string_s &source_string,script_parser_s &_this)
-{/*{{{*/
-  name_pos_array_s &tmp_name_pos_array = _this.tmp_name_pos_array;
-  lalr_stack_s &lalr_stack = _this.lalr_stack;
-
-  // *****
-
-  // - store position of created object name -
-  lalr_stack_element_s &lse = lalr_stack.last();
-  tmp_name_pos_array.push_blank();
-  tmp_name_pos_array.last().set(lse.terminal_start,lse.terminal_end);
-
-  debug_message_4(
-    char tmp_char = source_string[lse.terminal_end];
-    source_string[lse.terminal_end] = '\0';
-    fprintf(stderr,"script_parser: parse_action: pa_object_class_name: %s\n",source_string.data + lse.terminal_start);
-    source_string[lse.terminal_end] = tmp_char;
-  );
 
   return true;
 }/*}}}*/
@@ -3781,11 +3699,7 @@ bool pa_this_method_call(string_s &source_string,script_parser_s &_this)
   char tmp_char = source_string[lse.terminal_end];
   source_string[lse.terminal_end] = '\0';
 
-#if SYSTEM_TYPE == SYSTEM_TYPE_DSP
-  name_string.size = 1 + sprintf(name_string.data,"%s#%u",source_string.data + lse.terminal_start,m_parameter_cnt);
-#else
   name_string.size = 1 + snprintf(name_string.data,method_name_max_length,"%s#%u",source_string.data + lse.terminal_start,m_parameter_cnt);
-#endif
 
   source_string[lse.terminal_end] = tmp_char;
 
@@ -3851,11 +3765,7 @@ bool pa_object_method_call(string_s &source_string,script_parser_s &_this)
   char tmp_char = source_string[tmp_name_pos.ui_second];
   source_string[tmp_name_pos.ui_second] = '\0';
 
-#if SYSTEM_TYPE == SYSTEM_TYPE_DSP
-  name_string.size = 1 + sprintf(name_string.data,"%s#%u",source_string.data + tmp_name_pos.ui_first,m_parameter_cnt);
-#else
   name_string.size = 1 + snprintf(name_string.data,method_name_max_length,"%s#%u",source_string.data + tmp_name_pos.ui_first,m_parameter_cnt);
-#endif
 
   source_string[tmp_name_pos.ui_second] = tmp_char;
 

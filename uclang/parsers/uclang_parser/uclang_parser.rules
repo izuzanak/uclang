@@ -58,7 +58,8 @@ terminals:
 
    at {'@'}
    equal_at {"=@"}
-   sequence {"<-"}
+   left_arrow {"<-"}
+   right_arrow {"->"}
 
    lr_br {'('}
    rr_br {')'}
@@ -206,7 +207,7 @@ nonterminals:
    <parameter_list>
 
    <object_class_name>
-
+   <class_access>
    <object_member>
 
    <array_elements>
@@ -387,30 +388,19 @@ rules:
       end
    }
 
-   <namespace_id_list> -> <namespace_id_list> dot <namespace_id> ->>
+   <namespace_id_list> ->  <namespace_id> <namespace_id_list> ->>
    {
       if gen_parse_tree == 1 then
          this_idx = node_idx;
          node_idx = node_idx + 1;
-         print("   node_"..this_idx.." [label = \"<namespace_id_list> dot <namespace_id>\"]");
+         print("   node_"..this_idx.." [label = \"<namespace_id> <namespace_id_list>\"]");
          print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
          print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
          table.insert(node_stack,this_idx);
       end
    }
 
-   <namespace_id_list> -> <namespace_id> ->>
-   {
-      if gen_parse_tree == 1 then
-         this_idx = node_idx;
-         node_idx = node_idx + 1;
-         print("   node_"..this_idx.." [label = \"<namespace_id>\"]");
-         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
-         table.insert(node_stack,this_idx);
-      end
-   }
-
-   <namespace_id> -> id ->>
+   <namespace_id_list> -> id ->>
    {
       if gen_parse_tree == 1 then
          this_idx = node_idx;
@@ -419,6 +409,18 @@ rules:
          table.insert(node_stack,this_idx);
       else
          print(table.concat(tabs,"").."namespace id: \""..rule_body(0).."\"");
+      end
+   }
+
+   <namespace_id> -> id right_arrow ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \""..rule_body(0).." ->\"]");
+         table.insert(node_stack,this_idx);
+      else
+         print(table.concat(tabs,"").."namespace id arrow: \""..rule_body(0).."\"");
       end
    }
 
@@ -1073,7 +1075,7 @@ rules:
          print(table.concat(tabs,"").."for statement");
       end
    }
-   <for_expression> -> <for_identifier> sequence <exp> ->>
+   <for_expression> -> <for_identifier> left_arrow <exp> ->>
    {
       if gen_parse_tree == 1 then
          this_idx = node_idx;
@@ -2036,15 +2038,14 @@ rules:
    }
 
    $ -- object class name --
-   <object_class_name> -> new id ->>
+   <object_class_name> -> new <class_access> ->>
    {
       if gen_parse_tree == 1 then
          this_idx = node_idx;
          node_idx = node_idx + 1;
-         print("   node_"..this_idx.." [label = \"new "..rule_body(1).."\"]");
+         print("   node_"..this_idx.." [label = \"new <class_access>\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
          table.insert(node_stack,this_idx);
-      else
-         print(table.concat(tabs,"").."object class name: \""..rule_body(1).."\"");
       end
    }
 
@@ -2104,6 +2105,32 @@ rules:
          table.insert(node_stack,this_idx);
       else
          print(table.concat(tabs,"").."conditional expression");
+      end
+   }
+
+   $ -- class access --
+   <A> -> <namespace_id> <class_access> ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"<namespace_id> <class_access>\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      end
+   }
+
+   <class_access> -> <namespace_id_list> ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"<namespace_id_list>\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      else
+         print(table.concat(tabs,"").."class access");
       end
    }
 
