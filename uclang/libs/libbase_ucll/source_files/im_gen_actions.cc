@@ -1801,53 +1801,68 @@ bool im_class_access(expression_s &exp,uli_array_s &begin_code,uli_array_s &code
 
   unsigned exp_node_idx = im.exp_node_stack.last();
 
-  // - retrieve namespace record index -
-  unsigned namespace_ri = _this.resolve_namespace_idx_by_name_idx(exp.nodes[exp_node_idx + 3]);
-
-  // - ERROR -
-  if (namespace_ri == c_idx_not_exist)
-  {
-    _this.error_code.push(ei_namespace_name_cannot_be_resolved);
-    _this.error_code.push(exp.nodes[exp_node_idx + 1]);
-    _this.error_code.push(exp.nodes[exp_node_idx + 3]);
-
-    return false;
-  }
-
   // - retrieve count of names -
   unsigned name_cnt = exp.nodes[exp_node_idx + 2];
-  unsigned *name_ptr = exp.nodes.data + exp_node_idx + 4;
 
-  if (name_cnt > 2)
+  // - class record index -
+  unsigned class_ri;
+
+  // - class name with preceding namespaces -
+  if (name_cnt > 1)
   {
-    unsigned *name_ptr_end = name_ptr + name_cnt - 2;
-    do {
+    // - retrieve namespace record index -
+    unsigned namespace_ri = _this.resolve_namespace_idx_by_name_idx(exp.nodes[exp_node_idx + 3]);
 
-      // - retrieve next namespace record index -
-      namespace_ri = _this.get_parent_namespace_namespace_idx_by_name_idx(*name_ptr,namespace_ri);
+    // - ERROR -
+    if (namespace_ri == c_idx_not_exist)
+    {
+      _this.error_code.push(ei_namespace_name_cannot_be_resolved);
+      _this.error_code.push(exp.nodes[exp_node_idx + 1]);
+      _this.error_code.push(exp.nodes[exp_node_idx + 3]);
 
-      // - ERROR -
-      if (namespace_ri == c_idx_not_exist)
-      {
-        _this.error_code.push(ei_namespace_name_cannot_be_resolved);
-        _this.error_code.push(exp.nodes[exp_node_idx + 1]);
-        _this.error_code.push(*name_ptr);
+      return false;
+    }
 
-        return false;
-      }
+    unsigned *name_ptr = exp.nodes.data + exp_node_idx + 4;
 
-    } while(++name_ptr < name_ptr_end);
+    if (name_cnt > 2)
+    {
+      unsigned *name_ptr_end = name_ptr + name_cnt - 2;
+      do {
+
+        // - retrieve next namespace record index -
+        namespace_ri = _this.get_parent_namespace_namespace_idx_by_name_idx(*name_ptr,namespace_ri);
+
+        // - ERROR -
+        if (namespace_ri == c_idx_not_exist)
+        {
+          _this.error_code.push(ei_namespace_name_cannot_be_resolved);
+          _this.error_code.push(exp.nodes[exp_node_idx + 1]);
+          _this.error_code.push(*name_ptr);
+
+          return false;
+        }
+
+      } while(++name_ptr < name_ptr_end);
+    }
+
+    // - retrieve class record index -
+    class_ri = _this.get_parent_namespace_class_idx_by_name_idx(*name_ptr,namespace_ri);
   }
 
-  // - retrieve class record index -
-  unsigned class_ri = _this.get_parent_namespace_class_idx_by_name_idx(*name_ptr,namespace_ri);
+  // - only class name -
+  else
+  {
+    // - retrieve class record index -
+    class_ri = _this.resolve_class_idx_by_name_idx(exp.nodes[exp_node_idx + 3],im.class_idx);
+  }
 
   // - ERROR -
   if (class_ri == c_idx_not_exist)
   {
     _this.error_code.push(ei_class_name_cannot_be_resolved);
     _this.error_code.push(exp.nodes[exp_node_idx + 1]);
-    _this.error_code.push(*name_ptr);
+    _this.error_code.push(exp.nodes[exp_node_idx + 2 + name_cnt]);
 
     return false;
   }
