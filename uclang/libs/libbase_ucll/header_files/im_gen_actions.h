@@ -56,6 +56,7 @@ bool im_free_object(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,
 bool im_type_identification(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,script_parser_s &_this);
 bool im_object_reference_copy(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,script_parser_s &_this);
 bool im_conditional_expression(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,script_parser_s &_this);
+bool im_class_access(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,script_parser_s &_this);
 bool im_object_member_select(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,script_parser_s &_this);
 bool im_this_method_call(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,script_parser_s &_this);
 bool im_object_method_call(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,script_parser_s &_this);

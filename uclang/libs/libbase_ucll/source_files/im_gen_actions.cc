@@ -4,7 +4,7 @@ include "script_parser.h"
 @end
 
 // - callers of intermediate code generating functions -
-const unsigned c_script_im_gen_action_cnt = 57;
+const unsigned c_script_im_gen_action_cnt = 58;
 bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,script_parser_s &_this) =
 {/*{{{*/
   im_elements_array,
@@ -57,6 +57,7 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
   im_type_identification,
   im_object_reference_copy,
   im_conditional_expression,
+  im_class_access,
   im_object_member_select,
   im_this_method_call,
   im_object_method_call,
@@ -1788,6 +1789,71 @@ bool im_conditional_expression(expression_s &exp,uli_array_s &begin_code,uli_arr
   }
 
   debug_message_4(fprintf(stderr,"script_parser: intermediate generate: im_conditional_expression\n"));
+
+  return true;
+}/*}}}*/
+
+bool im_class_access(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,script_parser_s &_this)
+{/*{{{*/
+  im_descr_s &im = _this.im_descr;
+
+  // *****
+
+  unsigned exp_node_idx = im.exp_node_stack.last();
+
+  // - retrieve namespace record index -
+  unsigned namespace_ri = _this.resolve_namespace_idx_by_name_idx(exp.nodes[exp_node_idx + 3]);
+
+  // - ERROR -
+  if (namespace_ri == c_idx_not_exist)
+  {
+    // FIXME TODO report error ...
+    cassert(0);
+    return false;
+  }
+
+  // - retrieve count of names -
+  unsigned name_cnt = exp.nodes[exp_node_idx + 2];
+  unsigned *name_ptr = exp.nodes.data + exp_node_idx + 4;
+
+  if (name_cnt > 2)
+  {
+    unsigned *name_ptr_end = name_ptr + name_cnt - 2;
+    do {
+
+      // - retrieve next namespace record index -
+      namespace_ri = _this.get_parent_namespace_namespace_idx_by_name_idx(*name_ptr,namespace_ri);
+
+      // - ERROR -
+      if (namespace_ri == c_idx_not_exist)
+      {
+        // FIXME TODO report error ...
+        cassert(0);
+        return false;
+      }
+
+    } while(++name_ptr < name_ptr_end);
+  }
+
+  // - retrieve class record index -
+  unsigned class_ri = _this.get_parent_namespace_class_idx_by_name_idx(*name_ptr,namespace_ri);
+
+  // - ERROR -
+  if (class_ri == c_idx_not_exist)
+  {
+    // FIXME TODO report error ...
+    cassert(0);
+    return false;
+  }
+
+  // - store static reference to class -
+  im.operand_stack.push(im.operands.used);
+  im.operands.push(c_op_modifier_static_class);
+  im.operands.push(class_ri);
+
+  im.exp_node_stack.used--;
+
+  debug_message_4(fprintf(stderr,"script_parser: intermediate generate: im_class_access\n"));
 
   return true;
 }/*}}}*/

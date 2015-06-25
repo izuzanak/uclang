@@ -146,6 +146,7 @@ enum
   c_node_type_type_identification,
   c_node_type_object_reference_copy,
   c_node_type_conditional_expression,
+  c_node_type_class_access,
   c_node_type_object_member_select,
   c_node_type_this_method_call,
   c_node_type_object_method_call,
@@ -390,9 +391,9 @@ enum
 /*
  * parse constants
  */
-const unsigned c_rule_cnt = 177;
-const unsigned rule_head_idxs[c_rule_cnt] = {90, 91, 91, 92, 93, 93, 94, 96, 96, 97, 98, 97, 99, 100, 100, 101, 101, 102, 97, 95, 95, 95, 95, 95, 95, 103, 103, 104, 105, 106, 106, 107, 107, 108, 108, 109, 109, 109, 110, 110, 111, 112, 113, 114, 115, 115, 116, 116, 117, 117, 118, 118, 118, 119, 120, 120, 121, 122, 122, 123, 121, 124, 125, 126, 121, 127, 127, 121, 128, 121, 129, 121, 130, 131, 132, 121, 133, 134, 134, 135, 136, 136, 137, 137, 121, 121, 121, 121, 160, 146, 146, 147, 148, 148, 138, 139, 140, 153, 153, 153, 153, 153, 153, 153, 153, 153, 153, 153, 153, 154, 154, 154, 155, 155, 155, 155, 155, 155, 155, 156, 156, 156, 156, 157, 157, 157, 158, 158, 158, 159, 159, 159, 159, 160, 160, 160, 160, 160, 160, 160, 160, 160, 149, 149, 150, 150, 151, 152, 152, 160, 160, 160, 160, 160, 144, 160, 160, 160, 153, 160, 160, 160, 141, 141, 142, 143, 143, 145, 160, 160, 160, 160, 160, 160, 160, 160, 160, };
-const unsigned rule_body_lengths[c_rule_cnt] = {1, 2, 1, 1, 2, 1, 3, 2, 1, 3, 2, 3, 3, 2, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 3, 2, 3, 1, 2, 1, 2, 1, 1, 1, 1, 2, 2, 3, 1, 3, 2, 2, 1, 3, 1, 1, 2, 1, 2, 3, 1, 2, 1, 1, 2, 3, 1, 1, 4, 1, 4, 3, 1, 3, 3, 1, 5, 1, 5, 3, 1, 1, 6, 1, 2, 1, 2, 3, 2, 3, 1, 2, 2, 3, 2, 2, 1, 2, 1, 3, 1, 3, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 3, 3, 1, 3, 3, 3, 3, 3, 3, 1, 3, 3, 3, 1, 3, 3, 1, 3, 3, 1, 3, 3, 3, 1, 2, 2, 2, 2, 2, 2, 2, 2, 4, 1, 1, 1, 2, 2, 2, 1, 3, 1, 1, 3, 4, 2, 2, 2, 3, 5, 1, 3, 3, 1, 2, 1, 3, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, };
+const unsigned c_rule_cnt = 178;
+const unsigned rule_head_idxs[c_rule_cnt] = {91, 92, 92, 93, 94, 94, 95, 97, 97, 98, 99, 98, 100, 101, 101, 102, 102, 103, 98, 96, 96, 96, 96, 96, 96, 104, 104, 105, 106, 107, 107, 108, 108, 109, 109, 110, 110, 110, 111, 111, 112, 113, 114, 115, 116, 116, 117, 117, 118, 118, 119, 119, 119, 120, 121, 121, 122, 123, 123, 124, 122, 125, 126, 127, 122, 128, 128, 122, 129, 122, 130, 122, 131, 132, 133, 122, 134, 135, 135, 136, 137, 137, 138, 138, 122, 122, 122, 122, 161, 147, 147, 148, 149, 149, 139, 140, 141, 154, 154, 154, 154, 154, 154, 154, 154, 154, 154, 154, 154, 155, 155, 155, 156, 156, 156, 156, 156, 156, 156, 157, 157, 157, 157, 158, 158, 158, 159, 159, 159, 160, 160, 160, 160, 161, 161, 161, 161, 161, 161, 161, 161, 161, 150, 150, 151, 151, 152, 153, 153, 161, 161, 161, 161, 161, 145, 161, 161, 161, 154, 161, 161, 161, 161, 142, 142, 143, 144, 144, 146, 161, 161, 161, 161, 161, 161, 161, 161, 161, };
+const unsigned rule_body_lengths[c_rule_cnt] = {1, 2, 1, 1, 2, 1, 3, 2, 1, 3, 2, 3, 3, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 3, 2, 3, 1, 2, 1, 2, 1, 1, 1, 1, 2, 2, 3, 1, 3, 2, 2, 1, 3, 1, 1, 2, 1, 2, 3, 1, 2, 1, 1, 2, 3, 1, 1, 4, 1, 4, 3, 1, 3, 3, 1, 5, 1, 5, 3, 1, 1, 6, 1, 2, 1, 2, 3, 2, 3, 1, 2, 2, 3, 2, 2, 1, 2, 1, 3, 1, 3, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 3, 3, 1, 3, 3, 3, 3, 3, 3, 1, 3, 3, 3, 1, 3, 3, 1, 3, 3, 1, 3, 3, 3, 1, 2, 2, 2, 2, 2, 2, 2, 2, 4, 1, 1, 1, 2, 2, 2, 1, 3, 1, 1, 3, 4, 2, 2, 2, 3, 5, 2, 1, 3, 3, 1, 2, 1, 3, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, };
 
 /*
  * LALR parse table
@@ -403,8 +404,8 @@ const unsigned rule_body_lengths[c_rule_cnt] = {1, 2, 1, 1, 2, 1, 3, 2, 1, 3, 2,
 #define GOTO(VALUE) VALUE
 
 const unsigned c_lalr_table_reduce_base = 0x80000000;
-const unsigned c_terminal_plus_nonterminal_cnt = 161;
-const unsigned lalr_state_cnt = 307;
+const unsigned c_terminal_plus_nonterminal_cnt = 162;
+const unsigned lalr_state_cnt = 309;
 
 extern const unsigned lalr_table[lalr_state_cnt*c_terminal_plus_nonterminal_cnt];
 
@@ -963,20 +964,27 @@ struct
   inline unsigned get_method_name_idx_swap(string_s &a_name);
 
   /*!
-   * \brief retrieve namespace record index by namespace name index
+   * \brief resolve namespace record index by namespace name index
    * \param a_name_idx - index of namespace name (in class_symbol_names)
-   * \param a_parent_namespace_idx - namespace record index of namespace to be searched
    * \return index of namespace record, or c_idx_not_exist
    */
-  unsigned get_namespace_idx_by_name_idx(unsigned a_name_idx,unsigned a_parent_namespace_idx);
+  unsigned resolve_namespace_idx_by_name_idx(unsigned a_name_idx);
+
+  /*!
+   * \brief retrieve namespace record index by namespace name index in parent namespace
+   * \param a_name_idx - index of namespace name (in class_symbol_names)
+   * \param a_namespace_idx - namespace record index of namespace to be searched
+   * \return index of namespace record, or c_idx_not_exist
+   */
+  unsigned get_parent_namespace_namespace_idx_by_name_idx(unsigned a_name_idx,unsigned a_namespace_idx);
 
   /*!
    * \brief finds class record index by its name in defined parent class
    * \param a_name_idx - index of class name (in class_symbol_names)
-   * \param a_parent_class_idx - index of parent class record (in class_records)
+   * \param a_class_idx - index of parent class record (in class_records)
    * \return return class record index, or c_idx_not_exist
    */
-  unsigned get_nested_enclosing_class_idx_by_name_idx(unsigned a_name_idx,unsigned a_parent_class_idx);
+  unsigned get_nested_enclosing_class_idx_by_name_idx(unsigned a_name_idx,unsigned a_class_idx);
 
   /*!
    * \brief resolve class record index by class name index
@@ -995,20 +1003,12 @@ struct
   inline unsigned resolve_class_idx_by_name(const char *a_name,unsigned a_class_idx);
 
   /*!
-   * \brief resolve class record index by class name index in top namespace
+   * \brief resolve class record index by class name index in parent namespace
    * \param a_name_idx - index of class name (in class_symbol_names)
-   * \param a_class_idx - class record index of class from which search begins
+   * \param a_namespace_idx - namespace record index of namespace to be searched
    * \return index of class record, or c_idx_not_exist
    */
-  unsigned get_topns_class_idx_by_name_idx(unsigned a_name_idx,unsigned a_class_idx);
-
-  /*!
-   * \brief resolve class record index by class name in top namespace
-   * \param a_name - name of class to be resolved
-   * \param a_class_idx - class record index of class from which search begins
-   * \return index of class record, or c_idx_not_exist
-   */
-  inline unsigned get_topns_class_idx_by_name(const char *a_name,unsigned a_class_idx);
+  unsigned get_parent_namespace_class_idx_by_name_idx(unsigned a_name_idx,unsigned a_namespace_idx);
 
 #if SYSTEM_TYPE != SYSTEM_TYPE_DSP
   void DEBUG_show_variables();
@@ -1614,17 +1614,6 @@ inline unsigned script_parser_s::resolve_class_idx_by_name(const char *a_name,un
   }
 
   return resolve_class_idx_by_name_idx(name_idx,a_class_idx);
-}/*}}}*/
-
-inline unsigned script_parser_s::get_topns_class_idx_by_name(const char *a_name,unsigned a_class_idx)
-{/*{{{*/
-  unsigned name_idx = class_symbol_names.get_idx_char_ptr(strlen(a_name),a_name);
-  if (name_idx == c_idx_not_exist)
-  {
-    return c_idx_not_exist;
-  }
-
-  return get_topns_class_idx_by_name_idx(name_idx,a_class_idx);
 }/*}}}*/
 
 @begin
