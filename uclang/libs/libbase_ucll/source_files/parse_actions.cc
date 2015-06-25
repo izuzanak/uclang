@@ -261,6 +261,42 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
  * parse action macros
  */
 
+// -- PA_NAMESPACE_LIST --
+#define PA_NAMESPACE_LIST() \
+{/*{{{*/\
+\
+  /* - process namespace names - */\
+  unsigned *nni_ptr = namespace_name_idxs.data;\
+  unsigned *nni_ptr_end = nni_ptr + namespace_name_idxs.used;\
+  do {\
+    \
+    /* - retrieve namespace in parent namespace - */\
+    namespace_ri = _this.get_parent_namespace_namespace_idx_by_name_idx(*nni_ptr,parent_namespace_ri);\
+\
+    /* - if namespace does not exist - */\
+    if (namespace_ri == c_idx_not_exist)\
+    {\
+      /* - create new namespace record - */\
+      namespace_records.push_blank();\
+      namespace_ri = namespace_records.used - 1;\
+      namespace_record_s &namespace_record = namespace_records.last();\
+\
+      /* - setting of variables describing namespace - */\
+      namespace_record.name_idx = *nni_ptr;\
+\
+      /* - store namespace index to parent namespace - */\
+      namespace_records[parent_namespace_ri].namespace_record_idxs.push(namespace_ri);\
+    }\
+\
+    /* - set parent namespace index for next iteration - */\
+    parent_namespace_ri = namespace_ri;\
+\
+  } while((nni_ptr += 2) < nni_ptr_end);\
+\
+  /* - remove namespace names - */\
+  namespace_name_idxs.used = 0;\
+}/*}}}*/
+
 // -- PA_ELEMENT_NAME --
 #define PA_ELEMENT_NAME(LALR_STACK_POSITION) \
   /*{{{*/\
@@ -613,36 +649,7 @@ bool pa_namespace_def_name(string_s &source_string,script_parser_s &_this)
   unsigned parent_namespace_ri = parent_namespace_idxs.last();
   unsigned namespace_ri;
 
-  // - process namespace names -
-  unsigned *nni_ptr = namespace_name_idxs.data;
-  unsigned *nni_ptr_end = nni_ptr + namespace_name_idxs.used;
-  do {
-    
-    // - retrieve namespace in parent namespace -
-    namespace_ri = _this.get_parent_namespace_namespace_idx_by_name_idx(*nni_ptr,parent_namespace_ri);
-
-    // - if namespace does not exist -
-    if (namespace_ri == c_idx_not_exist)
-    {
-      // - create new namespace record -
-      namespace_records.push_blank();
-      namespace_ri = namespace_records.used - 1;
-      namespace_record_s &namespace_record = namespace_records.last();
-
-      // - setting of variables describing namespace -
-      namespace_record.name_idx = *nni_ptr;
-
-      // - store namespace index to parent namespace -
-      namespace_records[parent_namespace_ri].namespace_record_idxs.push(namespace_ri);
-    }
-
-    // - set parent namespace index for next iteration -
-    parent_namespace_ri = namespace_ri;
-
-  } while((nni_ptr += 2) < nni_ptr_end);
-
-  // - remove namespace names -
-  namespace_name_idxs.used = 0;
+  PA_NAMESPACE_LIST();
 
   // - push namespace record index to parent namespace stack -
   parent_namespace_idxs.push(namespace_ri);
@@ -681,36 +688,7 @@ bool pa_namespace_using_name(string_s &source_string,script_parser_s &_this)
   unsigned parent_namespace_ri = 0;
   unsigned namespace_ri;
 
-  // - process namespace names -
-  unsigned *nni_ptr = namespace_name_idxs.data;
-  unsigned *nni_ptr_end = nni_ptr + namespace_name_idxs.used;
-  do {
-    
-    // - retrieve namespace in parent namespace -
-    namespace_ri = _this.get_parent_namespace_namespace_idx_by_name_idx(*nni_ptr,parent_namespace_ri);
-
-    // - if namespace does not exist -
-    if (namespace_ri == c_idx_not_exist)
-    {
-      // - create new namespace record -
-      namespace_records.push_blank();
-      namespace_ri = namespace_records.used - 1;
-      namespace_record_s &namespace_record = namespace_records.last();
-
-      // - setting of variables describing namespace -
-      namespace_record.name_idx = *nni_ptr;
-
-      // - store namespace index to parent namespace -
-      namespace_records[parent_namespace_ri].namespace_record_idxs.push(namespace_ri);
-    }
-
-    // - set parent namespace index for next iteration -
-    parent_namespace_ri = namespace_ri;
-
-  } while((nni_ptr += 2) < nni_ptr_end);
-
-  // - remove namespace names -
-  namespace_name_idxs.used = 0;
+  PA_NAMESPACE_LIST();
 
   // - push namespace record index to using namespace stack -
   using_namespace_idxs.push(namespace_ri);
