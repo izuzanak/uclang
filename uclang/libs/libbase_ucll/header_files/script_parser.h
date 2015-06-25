@@ -367,6 +367,7 @@ enum
   ei_static_reference_to_nonstatic_variable,
   ei_cannot_access_private_variable,
 
+  ei_namespace_name_cannot_be_resolved,
   ei_class_name_cannot_be_resolved,
   ei_variable_name_cannot_be_resolved,
 

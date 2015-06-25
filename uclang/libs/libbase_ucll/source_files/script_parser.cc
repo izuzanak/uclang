@@ -9061,6 +9061,13 @@ void script_parser_s::process_errors()
         ei_ptr += 3;
       }
       break;
+      case ei_namespace_name_cannot_be_resolved:
+        fprintf(stderr,"%u. ERROR: in file: \"%s\" on line: %u\n",error_idx,source.file_name.data,source.source_string.get_character_line(source_pos));
+        print_error_line(source.source_string,source_pos);
+        fprintf(stderr,"\nNamespace name %s cannot be resolved\n",class_symbol_names[ei_ptr[2]].data);
+
+        ei_ptr += 3;
+        break;
       case ei_class_name_cannot_be_resolved:
         fprintf(stderr,"%u. ERROR: in file: \"%s\" on line: %u\n",error_idx,source.file_name.data,source.source_string.get_character_line(source_pos));
         print_error_line(source.source_string,source_pos);

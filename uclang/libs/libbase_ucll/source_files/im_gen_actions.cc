@@ -1807,8 +1807,10 @@ bool im_class_access(expression_s &exp,uli_array_s &begin_code,uli_array_s &code
   // - ERROR -
   if (namespace_ri == c_idx_not_exist)
   {
-    // FIXME TODO report error ...
-    cassert(0);
+    _this.error_code.push(ei_namespace_name_cannot_be_resolved);
+    _this.error_code.push(exp.nodes[exp_node_idx + 1]);
+    _this.error_code.push(exp.nodes[exp_node_idx + 3]);
+
     return false;
   }
 
@@ -1827,8 +1829,10 @@ bool im_class_access(expression_s &exp,uli_array_s &begin_code,uli_array_s &code
       // - ERROR -
       if (namespace_ri == c_idx_not_exist)
       {
-        // FIXME TODO report error ...
-        cassert(0);
+        _this.error_code.push(ei_namespace_name_cannot_be_resolved);
+        _this.error_code.push(exp.nodes[exp_node_idx + 1]);
+        _this.error_code.push(*name_ptr);
+
         return false;
       }
 
@@ -1841,8 +1845,10 @@ bool im_class_access(expression_s &exp,uli_array_s &begin_code,uli_array_s &code
   // - ERROR -
   if (class_ri == c_idx_not_exist)
   {
-    // FIXME TODO report error ...
-    cassert(0);
+    _this.error_code.push(ei_class_name_cannot_be_resolved);
+    _this.error_code.push(exp.nodes[exp_node_idx + 1]);
+    _this.error_code.push(*name_ptr);
+
     return false;
   }
 
