@@ -916,29 +916,22 @@ bool pa_class_name(string_s &source_string,script_parser_s &_this)
 bool pa_class_extends(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   class_records_s &class_records = _this.class_records;
+  ui_array_s &namespace_name_idxs = _this.namespace_name_idxs;
   ui_array_s &parent_class_idxs = _this.parent_class_idxs;
   ui_array_s &extending_idxs = _this.extending_idxs;
-  lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
-
-  // - get position of name of extended class -
-  lalr_stack_element_s &lse = lalr_stack[lalr_stack.used - 2];
-  unsigned name_length = lse.terminal_end - lse.terminal_start;
-  char *name_data = source_string.data + lse.terminal_start;
-
-  // - get index of extended class name -
-  unsigned name_idx = _this.class_symbol_names.get_idx_char_ptr_insert(name_length,name_data);
 
   // - get record index of extending class -
   unsigned extending_class_idx = parent_class_idxs.last();
 
-  class_records[extending_class_idx].extend_class_idx = name_idx;
+  // - store extended class identification -
+  class_records[extending_class_idx].extend_array.swap(namespace_name_idxs);
 
   // - store information of extended class to extending class -
   extending_idxs.push(extending_class_idx);
 
-  debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_class_extends: %s\n",_this.class_symbol_names[name_idx].data));
+  debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_class_extends\n"));
 
   return true;
 }/*}}}*/

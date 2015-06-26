@@ -556,15 +556,16 @@ rules:
       end
    }
 
-   <class_extends> -> extends id lc_br ->>
+   <class_extends> -> extends <namespace_id_list> lc_br ->>
    {
       if gen_parse_tree == 1 then
          this_idx = node_idx;
          node_idx = node_idx + 1;
-         print("   node_"..this_idx.." [label = \"extends "..rule_body(1).." {\"]");
+         print("   node_"..this_idx.." [label = \"extends <namespace_id_list> {\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
          table.insert(node_stack,this_idx);
       else
-         print(table.concat(tabs,"").."class extends: \""..rule_body(1).."\"");
+         print(table.concat(tabs,"").."class extends");
       end
    }
    <class_extends> -> lc_br ->>

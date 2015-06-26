@@ -48,7 +48,7 @@ const unsigned lalr_table[lalr_state_cnt*c_terminal_plus_nonterminal_cnt] =
        blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,   SHIFT(32),       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,    GOTO(46),    GOTO(31),       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,
        blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,  REDUCE(25),  REDUCE(25),  REDUCE(25),       blank,  REDUCE(25),  REDUCE(25),  REDUCE(25),  REDUCE(25),  REDUCE(25),  REDUCE(25),       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,  REDUCE(25),       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,  REDUCE(25),       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,
        blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,   SHIFT(55),       blank,       blank,       blank,   SHIFT(23),       blank,   SHIFT(16),   SHIFT(17),   SHIFT(18),   SHIFT(19),   SHIFT(20),   SHIFT(21),       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,   SHIFT(49),       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,    GOTO(50),       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,    GOTO(53),    GOTO(22),       blank,    GOTO(47),    GOTO(48),    GOTO(51),    GOTO(52),    GOTO(56),    GOTO(58),    GOTO(54),    GOTO(57),       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,
-       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,   SHIFT(59),       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,
+       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,   SHIFT(32),       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,    GOTO(59),    GOTO(31),       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,
        blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,  REDUCE(30),       blank,       blank,       blank,  REDUCE(30),       blank,  REDUCE(30),  REDUCE(30),  REDUCE(30),  REDUCE(30),  REDUCE(30),  REDUCE(30),       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,  REDUCE(30),       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,
        blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,  REDUCE(28),       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,  REDUCE(28),       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,
        blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,   REDUCE(6),   REDUCE(6),   REDUCE(6),   REDUCE(6),       blank,   REDUCE(6),   REDUCE(6),   REDUCE(6),   REDUCE(6),   REDUCE(6),   REDUCE(6),       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,       blank,
@@ -7949,8 +7949,71 @@ void script_parser_s::extended_classes_search()
       // - set class using namespaces -
       using_namespace_idxs.swap(extending_class.using_namespace_idxs);
 
-      // - acquire index of class record by index of its name -
-      unsigned ext_class_idx = resolve_class_idx_by_name_idx(extending_class.extend_class_idx,extending_class.parent_record);
+      ui_array_s &extend_array = extending_class.extend_array;
+      unsigned ext_class_idx;
+
+      // - retrieve index of extended class record -
+      {
+        unsigned name_cnt = extend_array.used >> 1;
+
+        // - class name with preceding namespaces -
+        if (name_cnt > 1)
+        {
+          // - retrieve namespace record index -
+          unsigned namespace_ri = resolve_namespace_idx_by_name_idx(extend_array[0]);
+
+          // - SEMANTIC ERROR -
+          if (namespace_ri == c_idx_not_exist)
+          {
+            // - reset class using namespaces -
+            extending_class.using_namespace_idxs.swap(using_namespace_idxs);
+
+            error_code.push(ei_namespace_name_cannot_be_resolved);
+            error_code.push(extend_array[1]);
+            error_code.push(extend_array[0]);
+
+            extending_class.extend_class_idx = c_idx_not_exist;
+            return;
+          }
+
+          unsigned *name_ptr = extend_array.data + 2;
+
+          if (name_cnt > 2)
+          {
+            unsigned *name_ptr_end = name_ptr + extend_array.used - 4;
+            do {
+
+              // - retrieve next namespace record index -
+              namespace_ri = get_parent_namespace_namespace_idx_by_name_idx(*name_ptr,namespace_ri);
+
+              // - SEMANTIC ERROR -
+              if (namespace_ri == c_idx_not_exist)
+              {
+                // - reset class using namespaces -
+                extending_class.using_namespace_idxs.swap(using_namespace_idxs);
+
+                error_code.push(ei_namespace_name_cannot_be_resolved);
+                error_code.push(name_ptr[1]);
+                error_code.push(name_ptr[0]);
+
+                extending_class.extend_class_idx = c_idx_not_exist;
+                return;
+              }
+
+            } while((name_ptr += 2) < name_ptr_end);
+          }
+
+          // - retrieve class record index -
+          ext_class_idx = get_parent_namespace_class_idx_by_name_idx(*name_ptr,namespace_ri);
+        }
+
+        // - only class name -
+        else
+        {
+          // - retrieve class record index -
+          ext_class_idx = resolve_class_idx_by_name_idx(extend_array[0],extending_class.parent_record);
+        }
+      }
 
       // - reset class using namespaces -
       extending_class.using_namespace_idxs.swap(using_namespace_idxs);
@@ -7960,7 +8023,7 @@ void script_parser_s::extended_classes_search()
       {
         error_code.push(ei_cannot_resolve_extended_class);
         error_code.push(extending_class.name_position.ui_first);
-        error_code.push(extending_class.extend_class_idx);
+        error_code.push(extend_array[extend_array.used - 2]);
 
         extending_class.extend_class_idx = c_idx_not_exist;
         return;
@@ -7981,7 +8044,7 @@ void script_parser_s::extended_classes_search()
       {
         error_code.push(ei_cannot_extend_final_class);
         error_code.push(extending_class.name_position.ui_first);
-        error_code.push(extending_class.extend_class_idx);
+        error_code.push(extend_array[extend_array.used - 2]);
 
         extending_class.extend_class_idx = c_idx_not_exist;
         return;
@@ -7989,9 +8052,11 @@ void script_parser_s::extended_classes_search()
 
       debug_message_5(fprintf(stderr,"script_parser: class %s extends class search %s -> %u\n",class_symbol_names[extending_class.name_idx].data,class_symbol_names[extending_class.extend_class_idx].data,ext_class_idx));
 
+      // - release extend array values -
+      extend_array.used = 0;
+
       // - insertion extended class index to record of extending class -
       extending_class.extend_class_idx = ext_class_idx;
-
     }
     while(++ep_ptr < ep_ptr_end);
   }
