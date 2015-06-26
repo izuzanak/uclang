@@ -676,19 +676,7 @@ struct
 
 // -- class_records_s --
 @begin
-array<class_record_s>
-
-additions
-{
-  /*!
-   * \brief get class record index by its name
-   * \param a_name_idx - index of class name
-   * \return class record index, c_idx_not_exist if class not exist
-   */
-  unsigned get_class_idx_by_name_idx(unsigned a_name_idx);
-}
-
-class_records_s;
+array<class_record_s> class_records_s;
 @end
 
 // -- method_record_s --
@@ -861,7 +849,7 @@ struct
     string_rb_tree_s:method_symbol_names
     string_rb_tree_s:variable_symbol_names
 
-    $// - classes, methods and variables records -
+    $// - namespaces, classes, methods and variables records -
     namespace_records_s:namespace_records
     class_records_s:class_records
     method_records_s:method_records
@@ -1004,7 +992,7 @@ struct
   inline unsigned resolve_class_idx_by_name(const char *a_name,unsigned a_class_idx);
 
   /*!
-   * \brief resolve class record index by class name index in parent namespace
+   * \brief retrieve class record index by class name index in parent namespace
    * \param a_name_idx - index of class name (in class_symbol_names)
    * \param a_namespace_idx - namespace record index of namespace to be searched
    * \return index of class record, or c_idx_not_exist
@@ -1350,7 +1338,8 @@ struct
     string_rb_tree_s:method_symbol_names
     string_rb_tree_s:variable_symbol_names
 
-    $// - classes, methods and variables records -
+    $// - namespaces, classes, methods and variables records -
+    namespace_records_s:namespace_records
     class_records_s:class_records
     method_records_s:method_records
     variable_records_s:variable_records
@@ -1415,6 +1404,13 @@ struct
    * \brief print message based on given exception
    */
   void print_exception_message(exception_s &exception);
+
+  /*!
+   * \brief retrieve class record index by class name index in global namespace
+   * \param a_name_idx - index of class name (in class_symbol_names)
+   * \return index of class record, or c_idx_not_exist
+   */
+  unsigned get_global_namespace_class_idx_by_name_idx(unsigned a_name_idx);
 
   /*!
    * \brief creates and execute desired method in new thread

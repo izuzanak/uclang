@@ -1150,6 +1150,7 @@ void interpreter_s::create_from_script_parser(script_parser_s &sp)
   method_symbol_names.swap(sp.method_symbol_names);
   variable_symbol_names.swap(sp.variable_symbol_names);
 
+  namespace_records.swap(sp.namespace_records);
   class_records.swap(sp.class_records);
   method_records.swap(sp.method_records);
   variable_records.swap(sp.variable_records);
@@ -1447,6 +1448,30 @@ void interpreter_s::print_exception_message(exception_s &exception)
 
 }/*}}}*/
 
+unsigned interpreter_s::get_global_namespace_class_idx_by_name_idx(unsigned a_name_idx)
+{/*{{{*/
+
+  // - search for name in global namespace -
+  ui_array_s &global_ns_class_records = namespace_records[0].class_record_idxs;
+
+  // - if there are some classes in global namespace -
+  if (global_ns_class_records.used != 0)
+  {
+    unsigned *gni_ptr = global_ns_class_records.data;
+    unsigned *gni_ptr_end = gni_ptr + global_ns_class_records.used;
+    do
+    {
+      if (class_records[*gni_ptr].name_idx == a_name_idx)
+      {
+        return *gni_ptr;
+      }
+    }
+    while(++gni_ptr < gni_ptr_end);
+  }
+
+  return c_idx_not_exist;
+}/*}}}*/
+
 bool interpreter_s::run_new_thread(interpreter_thread_s &p_thread,unsigned p_stack_base,unsigned p_stack_trg,method_record_s &method_record,unsigned param_cnt,uli *parms)
 {/*{{{*/
 
@@ -1595,7 +1620,7 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
   // - retrieve main method index -
   if (class_name_idx != c_idx_not_exist && method_name_idx != c_idx_not_exist)
   {
-    class_record_idx = class_records.get_class_idx_by_name_idx(class_name_idx);
+    class_record_idx = get_global_namespace_class_idx_by_name_idx(class_name_idx);
     if (class_record_idx != c_idx_not_exist && !(class_records[class_record_idx].modifiers & c_modifier_built_in))
     {
       method_record_idx = class_records[class_record_idx].mnri_map.map_name(method_name_idx);

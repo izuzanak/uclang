@@ -370,25 +370,6 @@ methods class_record_s
 methods class_records_s
 @end
 
-unsigned class_records_s::get_class_idx_by_name_idx(unsigned a_name_idx)
-{/*{{{*/
-  if (used == 0) return c_idx_not_exist;
-
-  class_record_s *cr_ptr = data;
-  class_record_s *cr_ptr_end = cr_ptr + used;
-
-  do
-  {
-    if (cr_ptr->name_idx == a_name_idx)
-    {
-      return cr_ptr - data;
-    }
-  }
-  while(++cr_ptr < cr_ptr_end);
-
-  return c_idx_not_exist;
-}/*}}}*/
-
 // -- method_records_s --
 @begin
 methods method_records_s
