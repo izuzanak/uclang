@@ -21,7 +21,8 @@ var persons =
 
 var person_list = function()
 {
-  var result = []; 
+  var result = [];
+
   for (id in persons)
   {
     person = persons[id];
@@ -35,7 +36,9 @@ var person_list = function()
   // - print information about person -
   public person_info(a_person)
   {
-    return "%s %s" % [a_person.name.to_string(),a_person.surname.to_string()];
+    return "%s %s" % [
+      a_person.name.to_string(),
+      a_person.surname.to_string()];
   }
 
   public Main()
@@ -54,22 +57,22 @@ var person_list = function()
     // - list global properties -
     ("global properties: %s\n" % go.prop_names().value().to_string()).print();
 
-    // - retrieve person from list -
+    // - retrieve person from object -
     avone = go.persons.avone;
     ("person: %s\n" % person_info(avone)).print();
     ("persons: %s\n" % go.person_list().value().to_string()).print();
 
-    // - add person to list -
+    // - add person to object -
     frank = go.Person.construct(["Frank","Sobotka"]);
     go.persons.frank = frank;
     ("person: %s\n" % person_info(frank)).print();
     ("persons: %s\n" % go.person_list().value().to_string()).print();
 
-    // - create persons JSON in javascript-
+    // - create persons JSON in javascript -
     v8_json = go.JSON.stringify(go.persons);
     ("v8_json:  %s\n" % v8_json.value()).print();
 
-    // - create persons JSON in uclang-
+    // - create persons JSON in uclang -
     ucl_json = Json.create(go.persons.value());
     ("ucl_json: %s\n" % ucl_json).print();
   }

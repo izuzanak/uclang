@@ -5,8 +5,8 @@ class Person:
         self.surname = a_surname;
 
 persons = {
-  "omar" : Person('Omar','Little'),
-  "avone" : Person('Avone','Barksdale')
+  'omar' : Person('Omar','Little'),
+  'avone' : Person('Avone','Barksdale')
 }
 
 def person_dict():

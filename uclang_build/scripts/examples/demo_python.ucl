@@ -1,7 +1,6 @@
 
 import containers;
 import python;
-import sys;
 import json;
 
 class Main
@@ -9,17 +8,21 @@ class Main
   // - print information about person -
   public person_info(a_person)
   {
-    return "%s %s" % [a_person.name.to_string(),a_person.surname.to_string()];
+    return "%s %s" % [
+      a_person.name.to_string(),
+      a_person.surname.to_string()];
   }
 
   public Main(a_argv)
   {
-    sys = PyObject.module("sys");
-    os = PyObject.module("os");
+    sys  = PyObject.module("sys");
+    os   = PyObject.module("os");
     json = PyObject.module("json");
 
     // - update python import path -
-    sys.path.append("%s/%s" % [Sys.getcwd(),os.path.split(a_argv[0])[0].value()]);
+    sys.path.append("%s/%s" % [
+        os.getcwd().value(),
+        os.path.split(a_argv[0])[0].value()]);
 
     // - load demo module -
     demo = PyObject.module("demo");
@@ -27,22 +30,22 @@ class Main
     // - module demo properties -
     ("demo properties: %s\n" % demo.dir().value().to_string()).print();
 
-    // - retrieve person from list -
+    // - retrieve person from dictionary -
     avone = demo.persons["avone"];
     ("person: %s\n" % person_info(avone)).print();
     ("persons: %s\n" % demo.person_list().value().to_string()).print();
 
-    // - add person to list -
+    // - add person to dictionary -
     frank = demo.Person("Frank","Sobotka");
     demo.persons["frank"] = frank;
     ("person: %s\n" % person_info(frank)).print();
     ("persons: %s\n" % demo.person_list().value().to_string()).print();
 
-    // - create persons JSON in python-
+    // - create persons JSON in python -
     python_json = demo.json(json,demo.person_dict());
     ("python_json: %s\n" % python_json.value()).print();
 
-    // - create persons JSON in uclang-
+    // - create persons JSON in uclang -
     ucl_json = Json.create(demo.person_dict().value());
     ("ucl_json:    %s\n" % ucl_json).print();
   }
