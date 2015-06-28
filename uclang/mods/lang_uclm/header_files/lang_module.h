@@ -8,6 +8,7 @@ include "ucl_lang.h"
 
 // - LANG indexes of built in classes -
 extern unsigned c_bi_class_lang;
+extern unsigned c_bi_class_namespace_ref;
 extern unsigned c_bi_class_class_ref;
 extern unsigned c_bi_class_method_ref;
 extern unsigned c_bi_class_var_ref;
@@ -53,6 +54,25 @@ bool bic_lang_method_classes_0(interpreter_thread_s &it,unsigned stack_base,uli 
 bool bic_lang_method_cls_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_lang_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_lang_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class NAMESPACE_REF -
+extern built_in_variable_s namespace_ref_variables[];
+extern built_in_method_s namespace_ref_methods[];
+extern built_in_class_s namespace_ref_class;
+
+void bic_namespace_ref_consts(location_array_s &const_locations);
+void bic_namespace_ref_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_namespace_ref_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_namespace_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_namespace_ref_method_global_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_namespace_ref_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_namespace_ref_method_namespaces_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_namespace_ref_method_classes_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_namespace_ref_method_nspace_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_namespace_ref_method_cls_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_namespace_ref_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_namespace_ref_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 // - class CLASS_REF -
 extern built_in_variable_s class_ref_variables[];
