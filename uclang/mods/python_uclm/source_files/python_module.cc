@@ -1223,7 +1223,7 @@ bool bic_py_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
   }
 
   char *buffer;
-  int length;
+  Py_ssize_t length;
 
   // - retrieve python string properties -
   PyString_AsStringAndSize(pyo_str,&buffer,&length);

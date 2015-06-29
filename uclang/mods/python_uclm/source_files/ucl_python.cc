@@ -322,7 +322,7 @@ location_s *python_c::py_object_value(interpreter_thread_s &it,PyObject *pyo_obj
   else if (PyString_Check(pyo_obj))
   {
     char *buffer;
-    int length;
+    Py_ssize_t length;
 
     // - retrieve python string properties -
     PyString_AsStringAndSize(pyo_obj,&buffer,&length);
