@@ -191,15 +191,37 @@ Dict
 ## Building interpreter
 
 Container generator [`cont`](https://github.com/izuzanak/cont) is needed for
-uclang compilation. Compile it and place binary `process` to your `PATH`
-directory.
+compilation of interpreter. It will be automatically compiled in following
+compilation steps.
 
-Enter build directory [`uclang_build`](https://github.com/izuzanak/uclang/tree/master/uclang_build)
+### Linux compilation
+
+For compilation of interpreter on Linux OS perform following steps:
+
+  * Download script [`try_uclang.sh`](https://raw.githubusercontent.com/izuzanak/uclang/master/uclang_try/try_uclang.sh).
+
 ```
-cd uclang_build
+wget https://raw.githubusercontent.com/izuzanak/uclang/master/uclang_try/try_uclang.sh
 ```
-Execute build script [`build.sh`](https://github.com/izuzanak/uclang/blob/master/uclang_build/build.sh)
+
+  * Check prerequisites mentioned in script.
+  * Execute script `try_uclang.sh`.
+
 ```
-sh build.sh
+bash try_uclang.sh
+```
+
+It will clone two repositories `cont` and `uclang`, and subsequently compile
+container generator and interpreter of uclang programing language.
+
+### Linux example scripts
+
+Example scripts can be executed by following commands:
+
+```
+cd uclang/uclang_build
+export LD_LIBRARY_PATH=$(pwd)
+./uclang scripts/hello.ucl
+...
 ```
 

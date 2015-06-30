@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# Script will clone, compile and test uclang language interpreter. Main purpose
-# of script is to test and demonstrate function of uclang modules: python, lua
-# and v8.
+# Script will clone, compile and test uclang language interpreter.
 
 # Usage example:
 #   bash try_uclang.sh
 #   bash try_uclang.sh python lua v8
 
-# PREREQUISITES: bash, git, python2.7, pkg-config, libs used by modules:
-# libv8-dev, libpython2.7-dev, liblua5.2-dev, lua-json, ...
+# PREREQUISITES: bash, git, python2.7, pkg-config, ...
+
+# In case of intention to test modules python, lua and v8, following packages
+# are also required: libv8-dev, libpython2.7-dev, liblua5.2-dev, lua-json, ...
 
 ROOT_DIR=$(pwd)
 
