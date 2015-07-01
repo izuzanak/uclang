@@ -5,6 +5,7 @@ include "lang_module.h"
 
 // - LANG indexes of built in classes -
 unsigned c_bi_class_lang = c_idx_not_exist;
+unsigned c_bi_class_namespace_ref = c_idx_not_exist;
 unsigned c_bi_class_class_ref = c_idx_not_exist;
 unsigned c_bi_class_method_ref = c_idx_not_exist;
 unsigned c_bi_class_var_ref = c_idx_not_exist;
@@ -13,11 +14,11 @@ unsigned c_bi_class_param_ref = c_idx_not_exist;
 // - LANG module -
 built_in_module_s module =
 {/*{{{*/
-  5,                    // Class count
+  6,                    // Class count
   lang_classes,         // Classes
 
   0,                    // Error base index
-  5,                    // Error count
+  7,                    // Error count
   lang_error_strings,   // Error strings
 
   lang_initialize,      // Initialize function
@@ -28,6 +29,7 @@ built_in_module_s module =
 built_in_class_s *lang_classes[] =
 {/*{{{*/
   &lang_class,
+  &namespace_ref_class,
   &class_ref_class,
   &method_ref_class,
   &var_ref_class,
@@ -38,6 +40,8 @@ built_in_class_s *lang_classes[] =
 const char *lang_error_strings[] =
 {/*{{{*/
   "error_LANG_CLASS_WAS_NOT_FOUND",
+  "error_NAMESPACE_REF_NAMESPACE_WAS_NOT_FOUND",
+  "error_NAMESPACE_REF_CLASS_WAS_NOT_FOUND",
   "error_CLASS_REF_CLASS_WAS_NOT_FOUND",
   "error_CLASS_REF_METHOD_WAS_NOT_FOUND",
   "error_CLASS_REF_VARIABLE_WAS_NOT_FOUND",
@@ -51,6 +55,9 @@ bool lang_initialize(script_parser_s &sp)
 
   // - initialize lang class identifier -
   c_bi_class_lang = class_base_idx++;
+
+  // - initialize namespace_ref class identifier -
+  c_bi_class_namespace_ref = class_base_idx++;
 
   // - initialize class_ref class identifier -
   c_bi_class_class_ref = class_base_idx++;
@@ -85,6 +92,28 @@ bool lang_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nTop level class named \"%s\" was not found\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_NAMESPACE_REF_NAMESPACE_WAS_NOT_FOUND:
+  {
+    namespace_record_s &namespace_record = it.namespace_records[exception.params[0]];
+
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nNamespace %s does not contain namespace named \"%s\"\n",it.class_symbol_names[namespace_record.name_idx].data,((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+  }
+  break;
+  case c_error_NAMESPACE_REF_CLASS_WAS_NOT_FOUND:
+  {
+    namespace_record_s &namespace_record = it.namespace_records[exception.params[0]];
+
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nNamespace %s does not contain class named \"%s\"\n",it.class_symbol_names[namespace_record.name_idx].data,((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+  }
+  break;
   case c_error_CLASS_REF_CLASS_WAS_NOT_FOUND:
   {
     class_record_s &class_record = it.class_records[exception.params[0]];
@@ -251,32 +280,26 @@ bool bic_lang_method_classes_0(interpreter_thread_s &it,unsigned stack_base,uli 
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
-  // - top level class record index array -
-  ui_array_s tlcr_idxs;
-  tlcr_idxs.init();
-
-  // - retrieve top level class record indexes -
-  get_top_level_classes(it,tlcr_idxs);
+  namespace_record_s &namespace_record = ((interpreter_s *)it.interpreter_ptr)->namespace_records[0];
+  ui_array_s &class_record_idxs = namespace_record.class_record_idxs;
 
   // - construct result array -
   pointer_array_s *array_ptr = it.get_new_array_ptr();
 
-  if (tlcr_idxs.used != 0)
+  if (class_record_idxs.used != 0)
   {
-    unsigned *tlcri_ptr = tlcr_idxs.data;
-    unsigned *tlcri_ptr_end = tlcri_ptr + tlcr_idxs.used;
+    unsigned *cri_ptr = class_record_idxs.data;
+    unsigned *cri_ptr_end = cri_ptr + class_record_idxs.used;
 
     do
     {
-      long long int value = *tlcri_ptr;
+      long long int value = *cri_ptr;
 
       BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_class_ref,value);
       array_ptr->push(new_location);
     }
-    while(++tlcri_ptr < tlcri_ptr_end);
+    while(++cri_ptr < cri_ptr_end);
   }
-
-  tlcr_idxs.clear();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
   BIC_SET_RESULT(new_location);
@@ -300,8 +323,9 @@ bool bic_lang_method_cls_1(interpreter_thread_s &it,unsigned stack_base,uli *ope
     return false;
   }
 
-  class_records_s &class_records = ((interpreter_s *)it.interpreter_ptr)->class_records;
-  string_rb_tree_s &class_symbol_names = ((interpreter_s *)it.interpreter_ptr)->class_symbol_names;
+  interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
+  string_rb_tree_s &class_symbol_names = interpreter.class_symbol_names;
+  class_records_s &class_records = interpreter.class_records;
 
   // - retrieve class name index -
   unsigned class_name_idx = class_symbol_names.get_idx(*((string_s *)src_0_location->v_data_ptr));
@@ -313,32 +337,26 @@ bool bic_lang_method_cls_1(interpreter_thread_s &it,unsigned stack_base,uli *ope
     return false;
   }
 
-  // - top level class record index array -
-  ui_array_s tlcr_idxs;
-  tlcr_idxs.init();
-
-  // - retrieve top level class record indexes -
-  get_top_level_classes(it,tlcr_idxs);
+  namespace_record_s &namespace_record = ((interpreter_s *)it.interpreter_ptr)->namespace_records[0];
+  ui_array_s &class_record_idxs = namespace_record.class_record_idxs;
 
   // - find class index by name -
   unsigned cr_idx = c_idx_not_exist;
-  if (tlcr_idxs.used != 0)
+  if (class_record_idxs.used != 0)
   {
-    unsigned *tlcri_ptr = tlcr_idxs.data;
-    unsigned *tlcri_ptr_end = tlcri_ptr + tlcr_idxs.used;
+    unsigned *cri_ptr = class_record_idxs.data;
+    unsigned *cri_ptr_end = cri_ptr + class_record_idxs.used;
 
     do
     {
-      if (class_name_idx == class_records[*tlcri_ptr].name_idx)
+      if (class_name_idx == class_records[*cri_ptr].name_idx)
       {
-        cr_idx = *tlcri_ptr;
+        cr_idx = *cri_ptr;
         break;
       }
     }
-    while(++tlcri_ptr < tlcri_ptr_end);
+    while(++cri_ptr < cri_ptr_end);
   }
-
-  tlcr_idxs.clear();
 
   // - ERROR -
   if (cr_idx == c_idx_not_exist)
@@ -509,8 +527,9 @@ bool bic_class_ref_method_name_0(interpreter_thread_s &it,unsigned stack_base,ul
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  class_records_s &class_records = ((interpreter_s *)it.interpreter_ptr)->class_records;
-  string_rb_tree_s &class_symbol_names = ((interpreter_s *)it.interpreter_ptr)->class_symbol_names;
+  interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
+  string_rb_tree_s &class_symbol_names = interpreter.class_symbol_names;
+  class_records_s &class_records = interpreter.class_records;
 
   long long int cr_idx = (long long int)dst_location->v_data_ptr;
 
@@ -684,8 +703,9 @@ bool bic_class_ref_method_cls_1(interpreter_thread_s &it,unsigned stack_base,uli
     return false;
   }
 
-  class_records_s &class_records = ((interpreter_s *)it.interpreter_ptr)->class_records;
-  string_rb_tree_s &class_symbol_names = ((interpreter_s *)it.interpreter_ptr)->class_symbol_names;
+  interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
+  string_rb_tree_s &class_symbol_names = interpreter.class_symbol_names;
+  class_records_s &class_records = interpreter.class_records;
 
   long long int cr_idx = (long long int)dst_location->v_data_ptr;
 
@@ -753,9 +773,10 @@ bool bic_class_ref_method_method_1(interpreter_thread_s &it,unsigned stack_base,
     return false;
   }
 
-  class_records_s &class_records = ((interpreter_s *)it.interpreter_ptr)->class_records;
-  method_records_s &method_records = ((interpreter_s *)it.interpreter_ptr)->method_records;
-  string_rb_tree_s &method_symbol_names = ((interpreter_s *)it.interpreter_ptr)->method_symbol_names;
+  interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
+  string_rb_tree_s &method_symbol_names = interpreter.method_symbol_names;
+  class_records_s &class_records = interpreter.class_records;
+  method_records_s &method_records = interpreter.method_records;
 
   long long int cr_idx = (long long int)dst_location->v_data_ptr;
 
@@ -823,9 +844,10 @@ bool bic_class_ref_method_variable_1(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  class_records_s &class_records = ((interpreter_s *)it.interpreter_ptr)->class_records;
-  variable_records_s &variable_records = ((interpreter_s *)it.interpreter_ptr)->variable_records;
-  string_rb_tree_s &variable_symbol_names = ((interpreter_s *)it.interpreter_ptr)->variable_symbol_names;
+  interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
+  string_rb_tree_s &variable_symbol_names = interpreter.variable_symbol_names;
+  class_records_s &class_records = interpreter.class_records;
+  variable_records_s &variable_records = interpreter.variable_records;
 
   long long int cr_idx = (long long int)dst_location->v_data_ptr;
 
@@ -890,6 +912,369 @@ bool bic_class_ref_method_print_0(interpreter_thread_s &it,unsigned stack_base,u
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
   printf("ClassRef");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class NAMESPACE_REF -
+built_in_class_s namespace_ref_class =
+{/*{{{*/
+  "NamespaceRef",
+  c_modifier_public | c_modifier_final,
+  9, namespace_ref_methods,
+  0, namespace_ref_variables,
+  bic_namespace_ref_consts,
+  bic_namespace_ref_init,
+  bic_namespace_ref_clear,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};/*}}}*/
+
+built_in_method_s namespace_ref_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_namespace_ref_operator_binary_equal
+  },
+  {
+    "global#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_namespace_ref_method_global_0
+  },
+  {
+    "name#0",
+    c_modifier_public | c_modifier_final,
+    bic_namespace_ref_method_name_0
+  },
+  {
+    "namespaces#0",
+    c_modifier_public | c_modifier_final,
+    bic_namespace_ref_method_namespaces_0
+  },
+  {
+    "classes#0",
+    c_modifier_public | c_modifier_final,
+    bic_namespace_ref_method_classes_0
+  },
+  {
+    "nspace#1",
+    c_modifier_public | c_modifier_final,
+    bic_namespace_ref_method_nspace_1
+  },
+  {
+    "cls#1",
+    c_modifier_public | c_modifier_final,
+    bic_namespace_ref_method_cls_1
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_namespace_ref_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_namespace_ref_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s namespace_ref_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_namespace_ref_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_namespace_ref_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (basic_64b)0;
+}/*}}}*/
+
+void bic_namespace_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+}/*}}}*/
+
+bool bic_namespace_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_namespace_ref_method_global_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  BIC_SIMPLE_SET_RES(c_bi_class_namespace_ref,0);
+
+  return true;
+}/*}}}*/
+
+bool bic_namespace_ref_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
+  string_rb_tree_s &class_symbol_names = interpreter.class_symbol_names;
+  namespace_records_s &namespace_records = interpreter.namespace_records;
+
+  long long int nsr_idx = (long long int)dst_location->v_data_ptr;
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  *string_ptr = class_symbol_names[namespace_records[nsr_idx].name_idx];
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_namespace_ref_method_namespaces_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  namespace_records_s &namespace_records = ((interpreter_s *)it.interpreter_ptr)->namespace_records;
+
+  long long int nsr_idx = (long long int)dst_location->v_data_ptr;
+
+  // - retrieve namespace record indexes -
+  ui_array_s &namespace_record_idxs = namespace_records[nsr_idx].namespace_record_idxs;
+
+  // - construct result array -
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+  if (namespace_record_idxs.used != 0)
+  {
+    unsigned *nsri_ptr = namespace_record_idxs.data;
+    unsigned *nsri_ptr_end = nsri_ptr + namespace_record_idxs.used;
+
+    do
+    {
+      long long int value = *nsri_ptr;
+
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_namespace_ref,value);
+      array_ptr->push(new_location);
+    }
+    while(++nsri_ptr < nsri_ptr_end);
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_namespace_ref_method_classes_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  namespace_records_s &namespace_records = ((interpreter_s *)it.interpreter_ptr)->namespace_records;
+
+  long long int nsr_idx = (long long int)dst_location->v_data_ptr;
+
+  // - retrieve class record indexes -
+  ui_array_s &class_record_idxs = namespace_records[nsr_idx].class_record_idxs;
+
+  // - construct result array -
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+  if (class_record_idxs.used != 0)
+  {
+    unsigned *cri_ptr = class_record_idxs.data;
+    unsigned *cri_ptr_end = cri_ptr + class_record_idxs.used;
+
+    do
+    {
+      long long int value = *cri_ptr;
+
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_class_ref,value);
+      array_ptr->push(new_location);
+    }
+    while(++cri_ptr < cri_ptr_end);
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_namespace_ref_method_nspace_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("nspace#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
+  string_rb_tree_s &class_symbol_names = interpreter.class_symbol_names;
+  namespace_records_s &namespace_records = interpreter.namespace_records;
+
+  long long int nsr_idx = (long long int)dst_location->v_data_ptr;
+
+  // - retrieve namespace name index -
+  unsigned namespace_name_idx = class_symbol_names.get_idx(*((string_s *)src_0_location->v_data_ptr));
+
+  // - ERROR -
+  if (namespace_name_idx == c_idx_not_exist)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_NAMESPACE_REF_NAMESPACE_WAS_NOT_FOUND,operands[c_source_pos_idx],src_0_location);
+    new_exception->params.push(nsr_idx);
+
+    return false;
+  }
+
+  // - retrieve namespace record indexes -
+  ui_array_s &namespace_record_idxs = namespace_records[nsr_idx].namespace_record_idxs;
+
+  // - find namespace record index by name -
+  unsigned fnsr_idx = c_idx_not_exist;
+  if (namespace_record_idxs.used != 0)
+  {
+    unsigned *nsri_ptr = namespace_record_idxs.data;
+    unsigned *nsri_ptr_end = nsri_ptr + namespace_record_idxs.used;
+
+    do
+    {
+      if (namespace_name_idx == namespace_records[*nsri_ptr].name_idx)
+      {
+        fnsr_idx = *nsri_ptr;
+        break;
+      }
+    }
+    while(++nsri_ptr < nsri_ptr_end);
+  }
+
+  // - ERROR -
+  if (fnsr_idx == c_idx_not_exist)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_NAMESPACE_REF_NAMESPACE_WAS_NOT_FOUND,operands[c_source_pos_idx],src_0_location);
+    new_exception->params.push(nsr_idx);
+
+    return false;
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_namespace_ref,fnsr_idx);
+
+  return true;
+}/*}}}*/
+
+bool bic_namespace_ref_method_cls_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("nspace#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
+  string_rb_tree_s &class_symbol_names = interpreter.class_symbol_names;
+  namespace_records_s &namespace_records = interpreter.namespace_records;
+  class_records_s &class_records = interpreter.class_records;
+
+  long long int nsr_idx = (long long int)dst_location->v_data_ptr;
+
+  // - retrieve class name index -
+  unsigned class_name_idx = class_symbol_names.get_idx(*((string_s *)src_0_location->v_data_ptr));
+
+  // - ERROR -
+  if (class_name_idx == c_idx_not_exist)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_NAMESPACE_REF_CLASS_WAS_NOT_FOUND,operands[c_source_pos_idx],src_0_location);
+    new_exception->params.push(nsr_idx);
+
+    return false;
+  }
+
+  // - retrieve class record indexes -
+  ui_array_s &class_record_idxs = namespace_records[nsr_idx].class_record_idxs;
+
+  // - find class record index by name -
+  unsigned fcr_idx = c_idx_not_exist;
+  if (class_record_idxs.used != 0)
+  {
+    unsigned *cri_ptr = class_record_idxs.data;
+    unsigned *cri_ptr_end = cri_ptr + class_record_idxs.used;
+
+    do
+    {
+      if (class_name_idx == class_records[*cri_ptr].name_idx)
+      {
+        fcr_idx = *cri_ptr;
+        break;
+      }
+    }
+    while(++cri_ptr < cri_ptr_end);
+  }
+
+  // - ERROR -
+  if (fcr_idx == c_idx_not_exist)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_NAMESPACE_REF_CLASS_WAS_NOT_FOUND,operands[c_source_pos_idx],src_0_location);
+    new_exception->params.push(nsr_idx);
+
+    return false;
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_class_ref,fcr_idx);
+
+  return true;
+}/*}}}*/
+
+bool bic_namespace_ref_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("NamespaceRef"),"NamespaceRef");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_namespace_ref_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  printf("NamespaceRef");
 
   BIC_SET_RESULT_BLANK();
 
@@ -998,8 +1383,9 @@ bool bic_method_ref_method_name_0(interpreter_thread_s &it,unsigned stack_base,u
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  method_records_s &method_records = ((interpreter_s *)it.interpreter_ptr)->method_records;
-  string_rb_tree_s &method_symbol_names = ((interpreter_s *)it.interpreter_ptr)->method_symbol_names;
+  interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
+  string_rb_tree_s &method_symbol_names = interpreter.method_symbol_names;
+  method_records_s &method_records = interpreter.method_records;
 
   long long int mr_idx = (long long int)dst_location->v_data_ptr;
 
@@ -1101,9 +1487,10 @@ bool bic_method_ref_method_param_1(interpreter_thread_s &it,unsigned stack_base,
     return false;
   }
 
-  method_records_s &method_records = ((interpreter_s *)it.interpreter_ptr)->method_records;
-  variable_records_s &variable_records = ((interpreter_s *)it.interpreter_ptr)->variable_records;
-  string_rb_tree_s &variable_symbol_names = ((interpreter_s *)it.interpreter_ptr)->variable_symbol_names;
+  interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
+  string_rb_tree_s &variable_symbol_names = interpreter.variable_symbol_names;
+  method_records_s &method_records = interpreter.method_records;
+  variable_records_s &variable_records = interpreter.variable_records;
 
   long long int mr_idx = (long long int)dst_location->v_data_ptr;
 
@@ -1261,8 +1648,9 @@ bool bic_var_ref_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli 
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  variable_records_s &variable_records = ((interpreter_s *)it.interpreter_ptr)->variable_records;
-  string_rb_tree_s &variable_symbol_names = ((interpreter_s *)it.interpreter_ptr)->variable_symbol_names;
+  interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
+  string_rb_tree_s &variable_symbol_names = interpreter.variable_symbol_names;
+  variable_records_s &variable_records = interpreter.variable_records;
 
   long long int vr_idx = (long long int)dst_location->v_data_ptr;
 
@@ -1403,8 +1791,9 @@ bool bic_param_ref_method_name_0(interpreter_thread_s &it,unsigned stack_base,ul
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  variable_records_s &variable_records = ((interpreter_s *)it.interpreter_ptr)->variable_records;
-  string_rb_tree_s &variable_symbol_names = ((interpreter_s *)it.interpreter_ptr)->variable_symbol_names;
+  interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
+  string_rb_tree_s &variable_symbol_names = interpreter.variable_symbol_names;
+  variable_records_s &variable_records = interpreter.variable_records;
 
   long long int vr_idx = (long long int)dst_location->v_data_ptr;
 
