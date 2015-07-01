@@ -18,7 +18,7 @@ built_in_module_s module =
   lang_classes,         // Classes
 
   0,                    // Error base index
-  5,                    // Error count
+  7,                    // Error count
   lang_error_strings,   // Error strings
 
   lang_initialize,      // Initialize function
@@ -40,6 +40,8 @@ built_in_class_s *lang_classes[] =
 const char *lang_error_strings[] =
 {/*{{{*/
   "error_LANG_CLASS_WAS_NOT_FOUND",
+  "error_NAMESPACE_REF_NAMESPACE_WAS_NOT_FOUND",
+  "error_NAMESPACE_REF_CLASS_WAS_NOT_FOUND",
   "error_CLASS_REF_CLASS_WAS_NOT_FOUND",
   "error_CLASS_REF_METHOD_WAS_NOT_FOUND",
   "error_CLASS_REF_VARIABLE_WAS_NOT_FOUND",
@@ -90,6 +92,28 @@ bool lang_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nTop level class named \"%s\" was not found\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_NAMESPACE_REF_NAMESPACE_WAS_NOT_FOUND:
+  {
+    namespace_record_s &namespace_record = it.namespace_records[exception.params[0]];
+
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nNamespace %s does not contain namespace named \"%s\"\n",it.class_symbol_names[namespace_record.name_idx].data,((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+  }
+  break;
+  case c_error_NAMESPACE_REF_CLASS_WAS_NOT_FOUND:
+  {
+    namespace_record_s &namespace_record = it.namespace_records[exception.params[0]];
+
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nNamespace %s does not contain class named \"%s\"\n",it.class_symbol_names[namespace_record.name_idx].data,((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+  }
+  break;
   case c_error_CLASS_REF_CLASS_WAS_NOT_FOUND:
   {
     class_record_s &class_record = it.class_records[exception.params[0]];
@@ -1125,8 +1149,9 @@ bool bic_namespace_ref_method_nspace_1(interpreter_thread_s &it,unsigned stack_b
   // - ERROR -
   if (namespace_name_idx == c_idx_not_exist)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_NAMESPACE_REF_NAMESPACE_WAS_NOT_FOUND,operands[c_source_pos_idx],src_0_location);
+    new_exception->params.push(nsr_idx);
+
     return false;
   }
 
@@ -1154,8 +1179,9 @@ bool bic_namespace_ref_method_nspace_1(interpreter_thread_s &it,unsigned stack_b
   // - ERROR -
   if (fnsr_idx == c_idx_not_exist)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_NAMESPACE_REF_NAMESPACE_WAS_NOT_FOUND,operands[c_source_pos_idx],src_0_location);
+    new_exception->params.push(nsr_idx);
+
     return false;
   }
 
@@ -1194,8 +1220,9 @@ bool bic_namespace_ref_method_cls_1(interpreter_thread_s &it,unsigned stack_base
   // - ERROR -
   if (class_name_idx == c_idx_not_exist)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_NAMESPACE_REF_CLASS_WAS_NOT_FOUND,operands[c_source_pos_idx],src_0_location);
+    new_exception->params.push(nsr_idx);
+
     return false;
   }
 
@@ -1223,8 +1250,9 @@ bool bic_namespace_ref_method_cls_1(interpreter_thread_s &it,unsigned stack_base
   // - ERROR -
   if (fcr_idx == c_idx_not_exist)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_NAMESPACE_REF_CLASS_WAS_NOT_FOUND,operands[c_source_pos_idx],src_0_location);
+    new_exception->params.push(nsr_idx);
+
     return false;
   }
 

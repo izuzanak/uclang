@@ -24,6 +24,8 @@ extern built_in_class_s *lang_classes[];
 enum
 {
   c_error_LANG_CLASS_WAS_NOT_FOUND = 0,
+  c_error_NAMESPACE_REF_NAMESPACE_WAS_NOT_FOUND,
+  c_error_NAMESPACE_REF_CLASS_WAS_NOT_FOUND,
   c_error_CLASS_REF_CLASS_WAS_NOT_FOUND,
   c_error_CLASS_REF_METHOD_WAS_NOT_FOUND,
   c_error_CLASS_REF_VARIABLE_WAS_NOT_FOUND,
