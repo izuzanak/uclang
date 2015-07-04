@@ -15,8 +15,7 @@ int main(int argc,char **argv)
 
   try {
 
-    // - construct dictionary -
-    UclVar data = UclVar::Dict();
+    // - create persons array -
     UclVar persons = UclVar::Array();
 
     UclVar person = UclVar::Dict();
@@ -34,7 +33,8 @@ int main(int argc,char **argv)
     person["surname"] = "Sobotka";
     persons.push(person);
 
-    // - update data -
+    // - create object dictionary -
+    UclVar data = UclVar::Dict();
     data["count"] = persons.length();
     data["persons"] = persons;
 

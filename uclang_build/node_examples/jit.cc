@@ -14,6 +14,11 @@ int main(int argc,char **argv)
 
   try {
 
+// - construct array from list -
+#define GET_ARRAY(NAME,LIST) \
+  UclVar NAME ## list[] = LIST;\
+  UclVar NAME(ARRAY_LENGTH(NAME ## list),NAME ## list);\
+
     // - create jit context -
     UclVar jit_ctx = UclVar::JitContext();
 
@@ -28,8 +33,7 @@ int main(int argc,char **argv)
     );
 
     {
-      UclVar args_arr[] = {(long long int)10};
-      UclVar args(ARRAY_LENGTH(args_arr),args_arr);
+      GET_ARRAY(args,{(long long int)10});
       printf("fact(10): %s\n",fact_fun.call(args).to_string().__str());
     }
 
@@ -59,8 +63,7 @@ int main(int argc,char **argv)
     for (int idx=0;idx<num_cnt;idx++) fprintf(stderr,"%d, ",nums[idx]); fprintf(stderr,"\n");
 
     {
-      UclVar args_arr[] = {(long long int)nums,num_cnt};
-      UclVar args(ARRAY_LENGTH(args_arr),args_arr);
+      GET_ARRAY(args,{(long long int)nums MP_COMMA num_cnt});
       UclVar res = jit_fun.call(args);
     }
 

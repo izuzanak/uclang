@@ -4,7 +4,7 @@ UCLANG_BUILD_DIR=${UCLANG_DIR}/uclang_build
 LIBS_DIR=${UCLANG_DIR}/uclang/libs
 
 CC_FLAGS=-O2 -DLINUX -fno-strict-aliasing -Wall
-CC_LIBS=-L${LIBS_DIR} -lbase_ucll -lnode_ucll
+CC_LIBS=-L${UCLANG_BUILD_DIR} -lbase_ucll -lnode_ucll
 
 all: dict json jit
 
