@@ -48,6 +48,13 @@ fi
 
 cd $ROOT_DIR
 
+# - compile node examples -
+cd uclang/uclang_build/node_examples
+make -s
+
+cd $ROOT_DIR
+
+
 # - run demo scripts -
 UCL_BUILD_DIR=uclang/uclang_build
 

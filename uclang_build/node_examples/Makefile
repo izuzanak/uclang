@@ -17,12 +17,15 @@ p.ucl_libnode.h:
 
 # - compile examples -
 dict: p.ucl_libnode.h dict.cc
+	printf "Compiling: node example dict\n"
 	g++ dict.cc -o dict ${CC_FLAGS} ${CC_LIBS}
 
 json: p.ucl_libnode.h json.cc
+	printf "Compiling: node example json\n"
 	g++ json.cc -o json ${CC_FLAGS} ${CC_LIBS}
 
 jit: p.ucl_libnode.h jit.cc
+	printf "Compiling: node example jit\n"
 	g++ jit.cc -o jit ${CC_FLAGS} ${CC_LIBS}
 
 clean:
