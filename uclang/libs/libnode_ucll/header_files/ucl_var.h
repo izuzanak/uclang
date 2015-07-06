@@ -501,7 +501,7 @@ class UclVar
   inline void INTEGER(long long int a_value);
   inline void FLOAT(double a_value);
   inline void STRING(unsigned a_length,const char *a_data);
-  inline void ARRAY(unsigned a_size,UclVar a_array[]);
+  inline void ARRAY(unsigned a_size,const UclVar *a_array);
 
   UclVar __call_0(unsigned a_method_idx);
   UclVar __call_1(unsigned a_method_idx,UclVar a_op);
@@ -558,7 +558,10 @@ class UclVar
   inline UclVar(double a_value)                       { FLOAT(a_value); }
   inline UclVar(const char *a_data)                   { STRING(strlen(a_data),a_data); }
   inline UclVar(unsigned a_length,const char *a_data) { STRING(a_length,a_data); }
-  inline UclVar(unsigned a_size,UclVar a_array[])     { ARRAY(a_size,a_array); }
+  inline UclVar(unsigned a_size,UclVar *a_array)      { ARRAY(a_size,a_array); }
+
+  // - only in C++11 -
+  //inline UclVar(std::initializer_list<UclVar> list)   { ARRAY(list.size(),list.begin()); }
 
   inline char __char();
   inline long long int __int();
@@ -2820,14 +2823,14 @@ inline void UclVar::STRING(unsigned a_length,const char *a_data)
   it_ptr->release_location_ptr(tmp_location);
 }/*}}}*/
 
-inline void UclVar::ARRAY(unsigned a_size,UclVar a_array[])
+inline void UclVar::ARRAY(unsigned a_size,const UclVar *a_array)
 {/*{{{*/
   pointer_array_s *array_ptr = it_ptr->get_new_array_ptr();
 
   if (a_size > 0)
   {
-    UclVar *ucv_ptr = a_array;
-    UclVar *ucv_ptr_end = ucv_ptr + a_size;
+    const UclVar *ucv_ptr = a_array;
+    const UclVar *ucv_ptr_end = ucv_ptr + a_size;
     
     do {
       ucv_ptr->location_ptr->v_reference_cnt.atomic_inc();

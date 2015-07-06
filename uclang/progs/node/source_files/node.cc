@@ -93,6 +93,12 @@ int main(int argc,char **argv)
     //string.init();
     //string.load_text_file("config.json");
 
+    // - only in C++11 -
+    //{
+    //  UclVar array = {1,2,3,4,"Hello World!!!"};
+    //  fprintf(stderr,"array: %s\n",array.to_string().__str());
+    //}
+
     //UclVar data = UclVar::Json::parse(string.data);
     //string.clear();
 
