@@ -51,6 +51,7 @@ bool bic_pas_method_master_ip_0(interpreter_thread_s &it,unsigned stack_base,uli
 bool bic_pas_method_master_ip_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pas_method_device_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pas_method_device_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_pas_method_update_device_status_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pas_method_samples_append_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pas_method_samples_append_silence_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pas_method_samples_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

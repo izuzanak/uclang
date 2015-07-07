@@ -121,7 +121,7 @@ built_in_class_s pas_class =
 {/*{{{*/
   "Pas",
   c_modifier_public | c_modifier_final,
-  21, pas_methods,
+  22, pas_methods,
   1, pas_variables,
   bic_pas_consts,
   bic_pas_init,
@@ -169,6 +169,11 @@ built_in_method_s pas_methods[] =
     "device#1",
     c_modifier_public | c_modifier_final,
     bic_pas_method_device_1
+  },
+  {
+    "update_device_status#0",
+    c_modifier_public | c_modifier_final,
+    bic_pas_method_update_device_status_0
   },
   {
     "samples_append#1",
@@ -546,6 +551,24 @@ bool bic_pas_method_device_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 
   // - update pas device -
   pas_s::device = *pd_ptr;
+
+  // - unlock pas data mutex -
+  pas_s::mutex.unlock();
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_pas_method_update_device_status_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  // - lock pas data mutex -
+  pas_s::mutex.lock();
+
+  // - update device status -
+  pas_update_status(pas_s::device.uid,pas_s::device.vid,pas_s::device.fail_code,pas_s::device.status,&pas_s::device.ident);
 
   // - unlock pas data mutex -
   pas_s::mutex.unlock();
