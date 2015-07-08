@@ -16,8 +16,8 @@ int main(int argc,char **argv)
 
 // - construct array from list -
 #define GET_ARRAY(NAME,LIST) \
-  UclVar NAME ## list[] = LIST;\
-  UclVar NAME(ARRAY_LENGTH(NAME ## list),NAME ## list);\
+  UclVar NAME ## _list[] = LIST;\
+  UclVar NAME(ARRAY_LENGTH(NAME ## _list),NAME ## _list);\
 
     // - create jit context -
     UclVar jit_ctx = UclVar::JitContext();

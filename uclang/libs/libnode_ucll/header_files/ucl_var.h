@@ -560,8 +560,9 @@ class UclVar
   inline UclVar(unsigned a_length,const char *a_data) { STRING(a_length,a_data); }
   inline UclVar(unsigned a_size,UclVar *a_array)      { ARRAY(a_size,a_array); }
 
-  // - only in C++11 -
-  //inline UclVar(std::initializer_list<UclVar> list)   { ARRAY(list.size(),list.begin()); }
+#if __cplusplus >= 201103
+  inline UclVar(std::initializer_list<UclVar> list)   { ARRAY(list.size(),list.begin()); }
+#endif
 
   inline char __char();
   inline long long int __int();
