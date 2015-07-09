@@ -1,0 +1,90 @@
+
+import sys;
+import pack;
+import containers;
+
+import firmware;
+
+class Main
+{/*{{{*/
+
+  public inspect_bin_image(a_bin_file)
+  {/*{{{*/
+    f = new File(a_bin_file,"r");
+    fw = new Firmware(f.read());
+    f.close();
+
+    "HEADER:\n".print();
+    fw.m_header.print();
+    "\n".print();
+
+    ("ADDRESSES:\n%s\n\n" % new Set(fw.m_script_addrs).to_string()).print();
+  }/*}}}*/
+
+  public unpack_bin_image(a_bin_file,a_directory)
+  {/*{{{*/
+    f = new File(a_bin_file,"r");
+    fw = new Firmware(f.read());
+    f.close();
+
+    ram_progs = fw.retrieve_ram_progs();
+    ram_progs.save(a_directory);
+  }/*}}}*/
+
+  public pack_bin_image(a_src_bin_file,a_trg_bin_file,a_directory)
+  {/*{{{*/
+    f = new File(a_src_bin_file,"r");
+    fw = new Firmware(f.read());
+    f.close();
+
+    ram_progs = new RamProgs();
+    ram_progs.load(a_directory);
+    fw.update_ram_progs(ram_progs);
+
+    new File(a_trg_bin_file,"w").write(fw.write());
+  }/*}}}*/
+
+  public Main(a_argv)
+  {/*{{{*/
+    SOURCE_BIN = "sdma-imx6q-to1.bin";
+    TARGET_BIN = "sdma-imx6q-mod.bin";
+
+    for (arg <- a_argv[1::])
+    {
+      item_idx = 0;
+      items = arg.split(":");
+
+      option = items[item_idx++];
+      switch (option)
+      {
+        case "info":
+          {/*{{{*/
+            while(item_idx < items.length())
+            {
+              option = items[item_idx++];
+
+              switch (option)
+              {
+              case "source","src": inspect_bin_image(SOURCE_BIN);
+              case "target","trg": inspect_bin_image(TARGET_BIN);
+              default:
+                new Exception("Unknown option: \"%s\"" % option).throw();
+              }
+            }
+          }/*}}}*/
+        case "unpack": unpack_bin_image(SOURCE_BIN,"firmware");
+        case "pack": pack_bin_image(SOURCE_BIN,TARGET_BIN,"firmware_mod");
+        default:
+          new Exception("Unknown option: \"%s\"" % option).throw();
+      }
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    new Main(argv);
+
+    return 0;
+  }/*}}}*/
+}/*}}}*/
+

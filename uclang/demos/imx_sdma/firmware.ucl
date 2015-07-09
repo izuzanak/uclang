@@ -1,0 +1,416 @@
+
+import disassembler;
+import assembler;
+
+// important addresses
+// ssish_2_mcu_addr;
+// mcu_2_ssish_addr
+
+// instructions reference
+// page: 4718
+
+// SDMA scripts overview
+// page: 5747
+
+class Header
+{/*{{{*/
+  public static SDMA_FIRMWARE_MAGIC = 0x414d4453;
+
+  public m_magic;
+  public m_version_major;
+  public m_version_minor;
+  public m_script_addrs_start;
+  public m_num_script_addrs;
+  public m_ram_code_start;
+  public m_ram_code_size;
+
+  public Header()
+  {/*{{{*/
+  }/*}}}*/
+
+  public read(a_data)
+  {/*{{{*/
+    values = Pack.decode("<7I",a_data);
+    a_data = values.pop();
+
+    v_idx = 0;
+    m_magic              = values[v_idx++];
+    m_version_major      = values[v_idx++];
+    m_version_minor      = values[v_idx++];
+    m_script_addrs_start = values[v_idx++];
+    m_num_script_addrs   = values[v_idx++];
+    m_ram_code_start     = values[v_idx++];
+    m_ram_code_size      = values[v_idx++];
+
+    // - ERROR -
+    if (m_magic != SDMA_FIRMWARE_MAGIC)
+    {
+      new Exception("Mismatch firmware magic number").throw();
+    }
+
+    // - ERROR -
+    if (m_script_addrs_start != 7*4)
+    {
+      new Exception("Unexpected script address start offset").throw();
+    }
+
+    // - ERROR -
+    if (m_num_script_addrs != 38)
+    {
+      new Exception("Unexpected count of script addresses").throw();
+    }
+
+    // - ERROR -
+    if (m_ram_code_start != m_script_addrs_start + m_num_script_addrs*4)
+    {
+      new Exception("Unexpected ram code start offset").throw();
+    }
+
+    // - ERROR -
+    if (m_ram_code_size + m_ram_code_start != a_data.length() + 7*4)
+    {
+      new Exception("Unexpected ram code size").throw();
+    }
+
+    return a_data;
+  }/*}}}*/
+
+  public write(a_res)
+  {/*{{{*/
+    a_res.push(Pack.code("<7I",[
+      m_magic,
+      m_version_major,
+      m_version_minor,
+      m_script_addrs_start,
+      m_num_script_addrs,
+      m_ram_code_start,
+      m_ram_code_size
+    ]));
+  }/*}}}*/
+
+  public print()
+  {/*{{{*/
+    ("m_magic:              %d\n" % m_magic).print();
+    ("m_version_major:      %d\n" % m_version_major).print();
+    ("m_version_minor:      %d\n" % m_version_minor).print();
+    ("m_script_addrs_start: %d\n" % m_script_addrs_start).print();
+    ("m_num_script_addrs:   %d\n" % m_num_script_addrs).print();
+    ("m_ram_code_start:     %d\n" % m_ram_code_start).print();
+    ("m_ram_code_size:      %d\n" % m_ram_code_size).print();
+  }/*}}}*/
+}/*}}}*/
+
+class Firmware
+{/*{{{*/
+  static public SCRIPT_ID_COUNT = 0;
+
+  // - script identifiers -
+  /*{{{*/
+  static public AP_2_AP_ADDR              = SCRIPT_ID_COUNT++;
+  static public AP_2_BP_ADDR              = SCRIPT_ID_COUNT++;
+  static public AP_2_AP_FIXED_ADDR        = SCRIPT_ID_COUNT++;
+  static public BP_2_AP_ADDR              = SCRIPT_ID_COUNT++;
+  static public LOOPBACK_ON_DSP_SIDE_ADDR = SCRIPT_ID_COUNT++;
+  static public MCU_INTERRUPT_ONLY_ADDR   = SCRIPT_ID_COUNT++;
+  static public FIRI_2_PER_ADDR           = SCRIPT_ID_COUNT++;
+  static public FIRI_2_MCU_ADDR           = SCRIPT_ID_COUNT++;
+  static public PER_2_FIRI_ADDR           = SCRIPT_ID_COUNT++;
+  static public MCU_2_FIRI_ADDR           = SCRIPT_ID_COUNT++;
+  static public UART_2_PER_ADDR           = SCRIPT_ID_COUNT++;
+  static public UART_2_MCU_ADDR           = SCRIPT_ID_COUNT++;
+  static public PER_2_APP_ADDR            = SCRIPT_ID_COUNT++;
+  static public MCU_2_APP_ADDR            = SCRIPT_ID_COUNT++;
+  static public PER_2_PER_ADDR            = SCRIPT_ID_COUNT++;
+  static public UARTSH_2_PER_ADDR         = SCRIPT_ID_COUNT++;
+  static public UARTSH_2_MCU_ADDR         = SCRIPT_ID_COUNT++;
+  static public PER_2_SHP_ADDR            = SCRIPT_ID_COUNT++;
+  static public MCU_2_SHP_ADDR            = SCRIPT_ID_COUNT++;
+  static public ATA_2_MCU_ADDR            = SCRIPT_ID_COUNT++;
+  static public MCU_2_ATA_ADDR            = SCRIPT_ID_COUNT++;
+  static public APP_2_PER_ADDR            = SCRIPT_ID_COUNT++;
+  static public APP_2_MCU_ADDR            = SCRIPT_ID_COUNT++;
+  static public SHP_2_PER_ADDR            = SCRIPT_ID_COUNT++;
+  static public SHP_2_MCU_ADDR            = SCRIPT_ID_COUNT++;
+  static public MSHC_2_MCU_ADDR           = SCRIPT_ID_COUNT++;
+  static public MCU_2_MSHC_ADDR           = SCRIPT_ID_COUNT++;
+  static public SPDIF_2_MCU_ADDR          = SCRIPT_ID_COUNT++;
+  static public MCU_2_SPDIF_ADDR          = SCRIPT_ID_COUNT++;
+  static public ASRC_2_MCU_ADDR           = SCRIPT_ID_COUNT++;
+  static public EXT_MEM_2_IPU_ADDR        = SCRIPT_ID_COUNT++;
+  static public DESCRAMBLER_ADDR          = SCRIPT_ID_COUNT++;
+  static public DPTC_DVFS_ADDR            = SCRIPT_ID_COUNT++;
+  static public UTRA_ADDR                 = SCRIPT_ID_COUNT++;
+  static public RAM_CODE_START_ADDR       = SCRIPT_ID_COUNT++;
+  static public MCU_2_SSISH_ADDR          = SCRIPT_ID_COUNT++;
+  static public SSISH_2_MCU_ADDR          = SCRIPT_ID_COUNT++;
+  static public HDMI_DMA_ADDR             = SCRIPT_ID_COUNT++;
+  /*}}}*/
+
+  static public c_script_id_names =
+  [/*{{{*/
+    "AP_2_AP_ADDR",
+    "AP_2_BP_ADDR",
+    "AP_2_AP_FIXED_ADDR",
+    "BP_2_AP_ADDR",
+    "LOOPBACK_ON_DSP_SIDE_ADDR",
+    "MCU_INTERRUPT_ONLY_ADDR",
+    "FIRI_2_PER_ADDR",
+    "FIRI_2_MCU_ADDR",
+    "PER_2_FIRI_ADDR",
+    "MCU_2_FIRI_ADDR",
+    "UART_2_PER_ADDR",
+    "UART_2_MCU_ADDR",
+    "PER_2_APP_ADDR",
+    "MCU_2_APP_ADDR",
+    "PER_2_PER_ADDR",
+    "UARTSH_2_PER_ADDR",
+    "UARTSH_2_MCU_ADDR",
+    "PER_2_SHP_ADDR",
+    "MCU_2_SHP_ADDR",
+    "ATA_2_MCU_ADDR",
+    "MCU_2_ATA_ADDR",
+    "APP_2_PER_ADDR",
+    "APP_2_MCU_ADDR",
+    "SHP_2_PER_ADDR",
+    "SHP_2_MCU_ADDR",
+    "MSHC_2_MCU_ADDR",
+    "MCU_2_MSHC_ADDR",
+    "SPDIF_2_MCU_ADDR",
+    "MCU_2_SPDIF_ADDR",
+    "ASRC_2_MCU_ADDR",
+    "EXT_MEM_2_IPU_ADDR",
+    "DESCRAMBLER_ADDR",
+    "DPTC_DVFS_ADDR",
+    "UTRA_ADDR",
+    "RAM_CODE_START_ADDR",
+    "MCU_2_SSISH_ADDR",
+    "SSISH_2_MCU_ADDR",
+    "HDMI_DMA_ADDR"
+  ];/*}}}*/
+
+  public m_header;
+  public m_script_addrs;
+  public m_ram;
+
+  public Firmware(a_data)
+  {/*{{{*/
+    read(a_data);
+  }/*}}}*/
+
+  public read(a_data)
+  {/*{{{*/
+    m_header = new Header();
+    a_data = m_header.read(a_data);
+
+    m_script_addrs = Pack.decode("<%di" % m_header.m_num_script_addrs,a_data);
+    a_data = m_script_addrs.pop();
+
+    m_ram = a_data;
+  }/*}}}*/
+
+  public write()
+  {/*{{{*/
+    res = [];
+
+    m_header.write(res);
+    res.push(Pack.code("<%di" % m_header.m_num_script_addrs,m_script_addrs));
+    res.push(m_ram);
+
+    return res.to_string("");
+  }/*}}}*/
+
+  public retrieve_ram_progs()
+  {/*{{{*/
+
+    // - create ram programs result -
+    ram_progs = new RamProgs();
+
+    // - retrieve ram start address -
+    ram_start = m_script_addrs[Firmware.RAM_CODE_START_ADDR];
+
+    // - create address to script id map -
+    addr_to_script_id = new Dict();
+    script_id = 0;
+    do {
+      
+      // - retrieve script address -
+      address = m_script_addrs[script_id];
+
+      // - if script is in ram and is not ram start address -
+      if (address >= ram_start && script_id != Firmware.RAM_CODE_START_ADDR)
+      {
+        addr_to_script_id[address] = script_id;
+      }
+    } while(++script_id < Firmware.SCRIPT_ID_COUNT);
+
+    // - create address tree (sorted multiset) -
+    addr_tree = new Tree(m_script_addrs);
+
+    // - find and skip ram start address -
+    p_idx = addr_tree.get_idx(ram_start);
+    p_idx = addr_tree.next_idx(p_idx);
+
+    // - create disassemble object -
+    dis = new Disassemble();
+
+    // - process all ram addresses -
+    while (Blank != p_idx)
+    {
+      // - retrieve next script address index -
+      p_next_idx = addr_tree.next_idx(p_idx);
+
+      // - retrieve script address -
+      from_addr = addr_tree[p_idx];
+
+      // - if next address exists -
+      if (Blank != p_next_idx)
+      {
+        to_addr = addr_tree[p_next_idx];
+      }
+      else
+      {
+        to_addr = ram_start + (m_header.m_ram_code_size >> 1);
+      }
+
+      // - ERROR -
+      if (!addr_to_script_id.has_key(from_addr))
+      {
+        new Exception("Cannot find script identifier").throw();
+      }
+
+      // - store script identifier -
+      ram_progs.m_script_ids.push(addr_to_script_id[from_addr]);
+
+      // - relative to ram start, normal addresing -
+      from = (from_addr - ram_start) << 1;
+      to = (to_addr - ram_start) << 1;
+
+      // - retrieve code from ram -
+      code = m_ram.range(from,to - 1);
+
+      // - disassemble code -
+      ram_progs.m_progs.push(dis.process(from_addr,code));
+
+      // - set next script address index -
+      p_idx = p_next_idx;
+    }
+
+    // - release circ. refs -
+    dis.release();
+
+    return ram_progs;
+  }/*}}}*/
+
+  public update_ram_progs(a_ram_progs)
+  {/*{{{*/
+
+    // - retrieve ram start address -
+    ram_start = m_script_addrs[Firmware.RAM_CODE_START_ADDR];
+    
+    // - script addresses and its codes -
+    script_addrs = [];
+    codes = [];
+
+    // - create assemble object -
+    asm = new Assemble();
+
+    address = ram_start;
+    for (source <- a_ram_progs.m_progs)
+    {
+      // - compile assembler code -
+      code = asm.process(address,source);
+
+      // - store code -
+      codes.push(code);
+      script_addrs.push(address);
+
+      // - update script address -
+      address += code.length() >> 1;
+    }
+
+    // - release circ. refs -
+    asm.release();
+
+    // - join script codes to ram code -
+    ram_code = codes.to_string("");
+
+    // - update script addresses -
+    idx = 0;
+    while (idx < a_ram_progs.m_script_ids.length())
+    {
+      m_script_addrs[a_ram_progs.m_script_ids[idx]] = script_addrs[idx];
+      ++idx;
+    }
+    
+    // - update header ram code size -
+    m_header.m_ram_code_size = ram_code.length();
+
+    // - update ram code -
+    m_ram = ram_code;
+  }/*}}}*/
+}/*}}}*/
+
+class RamProgs
+{/*{{{*/
+  static public c_info_file_name = "info.dat";
+
+  public m_script_ids;
+  public m_progs;
+
+  public RamProgs()
+  {/*{{{*/
+    m_script_ids = [];
+    m_progs = [];
+  }/*}}}*/
+
+  public save(a_dir_name)
+  {/*{{{*/
+    
+    // - clear and create target directory -
+    Sys.system("rm -rf %s; mkdir -p %s" % [a_dir_name,a_dir_name]);
+    
+    // - write info -
+    file_name = "%s/%s" % [a_dir_name,c_info_file_name];
+    f = new File(file_name,"w");
+    f.write(Pack.pack(m_script_ids));
+    f.close();
+
+    // - write script sources -
+    idx = 0;
+    while (idx < m_script_ids.length())
+    {
+      file_name = "%s/%s.asm" % [a_dir_name,Firmware.c_script_id_names[m_script_ids[idx]]];
+
+      f = new File(file_name,"w");
+      f.write(m_progs[idx]);
+      f.close();
+
+      ++idx;
+    }
+  }/*}}}*/
+
+  public load(a_dir_name)
+  {/*{{{*/
+    
+    // - read info -
+    file_name = "%s/%s" % [a_dir_name,c_info_file_name];
+    f = new File(file_name,"r");
+    m_script_ids = Pack.unpack(f.read());
+    f.close();
+    
+    m_progs = [];
+
+    idx = 0;
+    while (idx < m_script_ids.length())
+    {
+      file_name = "%s/%s.asm" % [a_dir_name,Firmware.c_script_id_names[m_script_ids[idx]]];
+
+      f = new File(file_name,"r");
+      m_progs.push(f.read());
+      f.close();
+
+      ++idx;
+    }
+  }/*}}}*/
+}/*}}}*/
+

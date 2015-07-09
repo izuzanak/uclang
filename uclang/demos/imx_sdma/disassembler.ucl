@@ -1,0 +1,321 @@
+
+class Disassemble
+{/*{{{*/
+  static public c_label_name_loop   = "exit";
+  static public c_label_name_branch = "labelr";
+  static public c_label_name_jump   = "label";
+
+  m_a0x14;
+  m_f8x2;
+  m_f8x2_n0x8;
+  m_j8x3;
+  m_noargs;
+  m_p0x8;
+  m_r8x3;
+  m_r8x3_d3x5_b0x3;
+  m_r8x3_i0x8;
+  m_r8x3_n0x5;
+  m_r8x3_s0x3;
+  m_r8x3_u0x8;
+
+  m_codes;
+  m_labels;
+  m_addr;
+
+  public Disassemble()
+  {/*{{{*/
+    m_a0x14          = new Delegate(this,"a0x14",1);
+    m_f8x2           = new Delegate(this,"f8x2",1);
+    m_f8x2_n0x8      = new Delegate(this,"f8x2_n0x8",1);
+    m_j8x3           = new Delegate(this,"j8x3",1);
+    m_noargs         = new Delegate(this,"noargs",1);
+    m_p0x8           = new Delegate(this,"p0x8",1);
+    m_r8x3           = new Delegate(this,"r8x3",1);
+    m_r8x3_d3x5_b0x3 = new Delegate(this,"r8x3_d3x5_b0x3",1);
+    m_r8x3_i0x8      = new Delegate(this,"r8x3_i0x8",1);
+    m_r8x3_n0x5      = new Delegate(this,"r8x3_n0x5",1);
+    m_r8x3_s0x3      = new Delegate(this,"r8x3_s0x3",1);
+    m_r8x3_u0x8      = new Delegate(this,"r8x3_u0x8",1);
+
+    m_codes =
+    [/*{{{*/
+      [ 0x0000, ~0,                          "yield",    m_noargs ],
+      [ 0x0100, ~0,                          "yieldge",  m_noargs ],
+      [ 0x0005, ~0,                          "softbkpt", m_noargs ],
+      [ 0x0006, ~0,                          "ret",      m_noargs ],
+      [ 0x0707, ~0,                          "illegal",  m_noargs ],
+      [ 0x06e2, ~0,                          "cpshreg",  m_noargs ],
+      [ 0x0000, ~(7 << 8),                   "done",     m_j8x3 ],
+      [ 0x0001, ~(7 << 8),                   "notify",   m_j8x3 ],
+      [ 0x0007, ~(3 << 8),                   "clrf",     m_f8x2 ],
+      [ 0x0008, ~(7 << 8),                   "jmpr",     m_r8x3 ],
+      [ 0x0009, ~(7 << 8),                   "jsrr",     m_r8x3 ],
+      [ 0x000a, ~(7 << 8),                   "ldrpc",    m_r8x3 ],
+      [ 0x0010, ~(7 << 8),                   "revb",     m_r8x3 ],
+      [ 0x0011, ~(7 << 8),                   "revblo",   m_r8x3 ],
+      [ 0x0012, ~(7 << 8),                   "rorb",     m_r8x3 ],
+      [ 0x0014, ~(7 << 8),                   "ror1",     m_r8x3 ],
+      [ 0x0015, ~(7 << 8),                   "lsr1",     m_r8x3 ],
+      [ 0x0016, ~(7 << 8),                   "asr1",     m_r8x3 ],
+      [ 0x0017, ~(7 << 8),                   "lsl1",     m_r8x3 ],
+      [ 0x0020, ~((7 << 8) | 31),            "bclri",    m_r8x3_n0x5 ],
+      [ 0x0040, ~((7 << 8) | 31),            "bseti",    m_r8x3_n0x5 ],
+      [ 0x0060, ~((7 << 8) | 31),            "btsti",    m_r8x3_n0x5 ],
+      [ 0x0088, ~((7 << 8) | 7),             "mov",      m_r8x3_s0x3 ],
+      [ 0x0090, ~((7 << 8) | 7),             "xor",      m_r8x3_s0x3 ],
+      [ 0x0098, ~((7 << 8) | 7),             "add",      m_r8x3_s0x3 ],
+      [ 0x00a0, ~((7 << 8) | 7),             "sub",      m_r8x3_s0x3 ],
+      [ 0x00a8, ~((7 << 8) | 7),             "or",       m_r8x3_s0x3 ],
+      [ 0x00b0, ~((7 << 8) | 7),             "andn",     m_r8x3_s0x3 ],
+      [ 0x00b8, ~((7 << 8) | 7),             "and",      m_r8x3_s0x3 ],
+      [ 0x00c0, ~((7 << 8) | 7),             "tst",      m_r8x3_s0x3 ],
+      [ 0x00c8, ~((7 << 8) | 7),             "cmpeq",    m_r8x3_s0x3 ],
+      [ 0x00d0, ~((7 << 8) | 7),             "cmplt",    m_r8x3_s0x3 ],
+      [ 0x00d8, ~((7 << 8) | 7),             "cmphs",    m_r8x3_s0x3 ],
+      [ 0x0800, ~((7 << 8) | 255),           "ldi",      m_r8x3_i0x8 ],
+      [ 0x1000, ~((7 << 8) | 255),           "xori",     m_r8x3_i0x8 ],
+      [ 0x1800, ~((7 << 8) | 255),           "addi",     m_r8x3_i0x8 ],
+      [ 0x2000, ~((7 << 8) | 255),           "subi",     m_r8x3_i0x8 ],
+      [ 0x2800, ~((7 << 8) | 255),           "ori",      m_r8x3_i0x8 ],
+      [ 0x3000, ~((7 << 8) | 255),           "andni",    m_r8x3_i0x8 ],
+      [ 0x3800, ~((7 << 8) | 255),           "andi",     m_r8x3_i0x8 ],
+      [ 0x4000, ~((7 << 8) | 255),           "tsti",     m_r8x3_i0x8 ],
+      [ 0x4800, ~((7 << 8) | 255),           "cmpeqi",   m_r8x3_i0x8 ],
+      [ 0x5000, ~((7 << 8) | (31 << 3) | 7), "ld",       m_r8x3_d3x5_b0x3 ],
+      [ 0x5800, ~((7 << 8) | (31 << 3) | 7), "st",       m_r8x3_d3x5_b0x3 ],
+      [ 0x6000, ~((7 << 8) | 255),           "ldf",      m_r8x3_u0x8 ],
+      [ 0x6800, ~((7 << 8) | 255),           "stf",      m_r8x3_u0x8 ],
+      [ 0x7800, ~((3 << 8) | 255),           "loop",     m_f8x2_n0x8 ],
+      [ 0x7c00, ~255,                        "bf",       m_p0x8 ],
+      [ 0x7d00, ~255,                        "bt",       m_p0x8 ],
+      [ 0x7e00, ~255,                        "bsf",      m_p0x8 ],
+      [ 0x7f00, ~255,                        "bdf",      m_p0x8 ],
+      [ 0x8000, ~16383,                      "jmp",      m_a0x14 ],
+      [ 0xc000, ~16383,                      "jsr",      m_a0x14 ]
+    ];/*}}}*/
+  }/*}}}*/
+
+  public release()
+  {/*{{{*/
+    free m_codes;
+
+    free m_a0x14;
+    free m_f8x2;
+    free m_f8x2_n0x8;
+    free m_j8x3;
+    free m_noargs;
+    free m_p0x8;
+    free m_r8x3;
+    free m_r8x3_d3x5_b0x3;
+    free m_r8x3_i0x8;
+    free m_r8x3_n0x5;
+    free m_r8x3_s0x3;
+    free m_r8x3_u0x8;
+  }/*}}}*/
+
+  public a0x14(a_instr)
+  {/*{{{*/
+    a = a_instr & 16383;
+
+    // - store label -
+    m_labels.push([a,m_addr,c_label_name_jump]);
+
+    return "%s";
+  }/*}}}*/
+
+  public f8x2(a_instr)
+  {/*{{{*/
+    f = (a_instr >> 8) & 3;
+
+    return "%d" % f;
+  }/*}}}*/
+
+  public f8x2_n0x8(a_instr)
+  {/*{{{*/
+    f = (a_instr >> 8) & 3;
+
+    n = a_instr & 255;
+
+    // - store label -
+    m_labels.push([m_addr + 1 + n,m_addr,c_label_name_loop]);
+
+    return "%%s, %d" % [f];
+  }/*}}}*/
+
+  public j8x3(a_instr)
+  {/*{{{*/
+    j = (a_instr >> 8) & 7;
+
+    return " %d" % j;
+  }/*}}}*/
+
+  public noargs(a_instr)
+  {/*{{{*/
+    return "";
+  }/*}}}*/
+
+  public p0x8(a_instr)
+  {/*{{{*/
+    p = a_instr & 255;
+
+    if (p > 127)
+    {
+      p -= 256;
+    }
+
+    // - store label -
+    m_labels.push([m_addr + 1 + p,m_addr,c_label_name_branch]);
+
+    return "%s";
+  }/*}}}*/
+
+  public r8x3(a_instr)
+  {/*{{{*/
+    r = (a_instr >> 8) & 7;
+
+    return "r%d" % r;
+  }/*}}}*/
+
+  public r8x3_d3x5_b0x3(a_instr)
+  {/*{{{*/
+    r = (a_instr >> 8) & 7;
+    d = (a_instr >> 3) & 31;
+    b = a_instr & 7;
+
+    return "r%d, (r%d, %d)" % [r,b,d];
+  }/*}}}*/
+
+  public r8x3_i0x8(a_instr)
+  {/*{{{*/
+    r = (a_instr >> 8) & 7;
+    i = a_instr & 255;
+
+    return "r%d, %d" % [r,i];
+  }/*}}}*/
+
+  public r8x3_n0x5(a_instr)
+  {/*{{{*/
+    r = (a_instr >> 8) & 7;
+    i = a_instr & 31;
+
+    return "r%d, %d" % [r,i];
+  }/*}}}*/
+
+  public r8x3_s0x3(a_instr)
+  {/*{{{*/
+    r = (a_instr >> 8) & 7;
+    s = a_instr & 7;
+
+    return "r%d, r%d" % [r,s];
+  }/*}}}*/
+
+  public r8x3_u0x8(a_instr)
+  {/*{{{*/
+    r = (a_instr >> 8) & 7;
+    u = a_instr & 255;
+
+    switch (u)
+    {
+      case  0: u_str = "MSA";
+      case 16: u_str = "MSA_FR";
+      case 32: u_str = "MSA_PF";
+      case 48: u_str = "MSA_PF_FR";
+      case  4: u_str = "MDA";
+      case 20: u_str = "MDA_FR";
+      case 40: u_str = "MD_SZ0_FL";
+      case  9: u_str = "MD_SZ8";
+      case 41: u_str = "MD_SZ8_FL";
+      case 10: u_str = "MD_SZ16";
+      case 42: u_str = "MD_SZ16_FL";
+      case 11: u_str = "MD_SZ32";
+      case 43: u_str = "MD_SZ32_FL";
+      case 24: u_str = "MD_CPY";
+      case 15: u_str = "MS";
+      case 12: u_str = "MS_SZ0";
+      default:
+        u_str = u.to_string();
+    }
+
+    return "r%d, %s" % [r,u_str];
+  }/*}}}*/
+
+  public process(a_addr,a_mem)
+  {/*{{{*/
+    
+    // - ERROR -
+    if (a_mem.length() % 2)
+    {
+      new Exception("Memory is not aligned by two bytes").throw();
+    }
+
+    // - initialize label list -
+    m_labels = [];
+
+    // - address of actual instruction -
+    m_addr = a_addr;
+
+    // - retrieve instructions -
+    instr_cnt = a_mem.length() >> 1;
+    instrs = Pack.decode("%dH" % instr_cnt,a_mem);
+    instrs.pop();
+
+    // - result file strings -
+    asm_list = new List();
+
+    // - process all instructions -
+    for (instr <- instrs)
+    {
+      found = 0;
+
+      for (code <- m_codes)
+      {
+        // - test code -
+        if (instr & code[1] == code[0])
+        {
+          asm_list.append(("    %-8.8s %s" % [code[2],code[3].call([instr])]));
+
+          found = 1;
+          break;
+        }
+      }
+
+      // - ERROR -
+      if (!found)
+      {
+        new Exception("Cannot found instruction: 0x%4.4x" % instr).throw();
+      }
+
+      // - increase actual instruction address -
+      ++m_addr;
+    }
+
+    // - process labels -
+    label_idx = 0;
+    for (label <- m_labels)
+    {
+      // - reference to source instruction -
+      instr_ref =@ asm_list[label[1] - a_addr];
+
+      // - if target is in program address space -
+      if (label[0] >= a_addr && label[0] < m_addr)
+      {
+        // - create label name -
+        label_name = "%s_%d" % [label[2],label_idx++];
+
+        // - insert label in code strings -
+        asm_list.insert_before(label[0] - a_addr,"%s:" % label_name);
+
+        // - update label name in source instruction -
+        instr_ref = instr_ref % label_name;
+      }
+      else
+      {
+        // - update address in source instruction -
+        instr_ref = instr_ref % label[0].to_string();
+      }
+    }
+
+    return asm_list.to_string("\n");
+  }/*}}}*/
+}/*}}}*/
+

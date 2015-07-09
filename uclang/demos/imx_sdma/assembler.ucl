@@ -1,0 +1,479 @@
+
+class Assemble
+{/*{{{*/
+  static public LBL_TYPE_CNT = 0;
+  static public LBL_TYPE_LOOP   = LBL_TYPE_CNT++;
+  static public LBL_TYPE_BRANCH = LBL_TYPE_CNT++;
+  static public LBL_TYPE_JUMP   = LBL_TYPE_CNT++;
+
+  m_ignore_cb;
+  m_label_cb;
+  m_a0x14;
+  m_f8x2;
+  m_f8x2_n0x8;
+  m_j8x3;
+  m_noargs;
+  m_p0x8;
+  m_r8x3;
+  m_r8x3_d3x5_b0x3;
+  m_r8x3_i0x8;
+  m_r8x3_n0x5;
+  m_r8x3_s0x3;
+  m_r8x3_u0x8;
+
+  m_codes;
+
+  m_code_list;
+  m_labels;
+  m_label_refs;
+
+  public Assemble()
+  {/*{{{*/
+    m_ignore_cb      = new Delegate(this,"ignore_cb",3);
+    m_label_cb       = new Delegate(this,"label_cb",3);
+    m_a0x14          = new Delegate(this,"a0x14",3);
+    m_f8x2           = new Delegate(this,"f8x2",3);
+    m_f8x2_n0x8      = new Delegate(this,"f8x2_n0x8",3);
+    m_j8x3           = new Delegate(this,"j8x3",3);
+    m_noargs         = new Delegate(this,"noargs",3);
+    m_p0x8           = new Delegate(this,"p0x8",3);
+    m_r8x3           = new Delegate(this,"r8x3",3);
+    m_r8x3_d3x5_b0x3 = new Delegate(this,"r8x3_d3x5_b0x3",3);
+    m_r8x3_i0x8      = new Delegate(this,"r8x3_i0x8",3);
+    m_r8x3_n0x5      = new Delegate(this,"r8x3_n0x5",3);
+    m_r8x3_s0x3      = new Delegate(this,"r8x3_s0x3",3);
+    m_r8x3_u0x8      = new Delegate(this,"r8x3_u0x8",3);
+
+    num = "\\(-\\{0,1\\}[0-9][0-9]*\\)";
+    reg = "r\\([0-9][0-9]*\\)";
+    lbl = "\\([a-z][a-z0-9_]*\\)";
+    dma = "\\([A-Z][A-Z0-9_]*\\)";
+
+    m_codes =
+    [/*{{{*/
+      [ new Regex("^ *$"), 0x0000, m_ignore_cb ],
+      [ new Regex("^ *%s: *$" % lbl), 0x0000, m_label_cb ],
+      [ new Regex("^ *yield *$"),    0x0000, m_noargs ],
+      [ new Regex("^ *yieldge *$"),  0x0100, m_noargs ],
+      [ new Regex("^ *softbkpt *$"), 0x0005, m_noargs ],
+      [ new Regex("^ *ret *$"),      0x0006, m_noargs ],
+      [ new Regex("^ *illegal *$"),  0x0707, m_noargs ],
+      [ new Regex("^ *cpshreg *$"),  0x06e2, m_noargs ],
+      [ new Regex("^ *done *%s *$"   % num), 0x0000, m_j8x3 ],
+      [ new Regex("^ *notify *%s *$" % num), 0x0001, m_j8x3 ],
+      [ new Regex("^ *clrf *%s *$"   % num), 0x0007, m_f8x2 ],
+      [ new Regex("^ *jmpr *%s *$"   % reg), 0x0008, m_r8x3 ],
+      [ new Regex("^ *jsrr *%s *$"   % reg), 0x0009, m_r8x3 ],
+      [ new Regex("^ *ldrpc *%s *$"  % reg), 0x000a, m_r8x3 ],
+      [ new Regex("^ *revb *%s *$"   % reg), 0x0010, m_r8x3 ],
+      [ new Regex("^ *revblo *%s *$" % reg), 0x0011, m_r8x3 ],
+      [ new Regex("^ *rorb *%s *$"   % reg), 0x0012, m_r8x3 ],
+      [ new Regex("^ *ror1 *%s *$"   % reg), 0x0014, m_r8x3 ],
+      [ new Regex("^ *lsr1 *%s *$"   % reg), 0x0015, m_r8x3 ],
+      [ new Regex("^ *asr1 *%s *$"   % reg), 0x0016, m_r8x3 ],
+      [ new Regex("^ *lsl1 *%s *$"   % reg), 0x0017, m_r8x3 ],
+      [ new Regex("^ *bclri *%s *, *%s *$"  % [reg,num]), 0x0020, m_r8x3_n0x5 ],
+      [ new Regex("^ *bseti *%s *, *%s *$"  % [reg,num]), 0x0040, m_r8x3_n0x5 ],
+      [ new Regex("^ *btsti *%s *, *%s *$"  % [reg,num]), 0x0060, m_r8x3_n0x5 ],
+      [ new Regex("^ *mov *%s *, *%s *$"    % [reg,reg]), 0x0088, m_r8x3_s0x3 ],
+      [ new Regex("^ *xor *%s *, *%s *$"    % [reg,reg]), 0x0090, m_r8x3_s0x3 ],
+      [ new Regex("^ *add *%s *, *%s *$"    % [reg,reg]), 0x0098, m_r8x3_s0x3 ],
+      [ new Regex("^ *sub *%s *, *%s *$"    % [reg,reg]), 0x00a0, m_r8x3_s0x3 ],
+      [ new Regex("^ *or *%s *, *%s *$"     % [reg,reg]), 0x00a8, m_r8x3_s0x3 ],
+      [ new Regex("^ *andn *%s *, *%s *$"   % [reg,reg]), 0x00b0, m_r8x3_s0x3 ],
+      [ new Regex("^ *and *%s *, *%s *$"    % [reg,reg]), 0x00b8, m_r8x3_s0x3 ],
+      [ new Regex("^ *tst *%s *, *%s *$"    % [reg,reg]), 0x00c0, m_r8x3_s0x3 ],
+      [ new Regex("^ *cmpeq *%s *, *%s *$"  % [reg,reg]), 0x00c8, m_r8x3_s0x3 ],
+      [ new Regex("^ *cmplt *%s *, *%s *$"  % [reg,reg]), 0x00d0, m_r8x3_s0x3 ],
+      [ new Regex("^ *cmphs *%s *, *%s *$"  % [reg,reg]), 0x00d8, m_r8x3_s0x3 ],
+      [ new Regex("^ *ldi *%s *, *%s *$"    % [reg,num]), 0x0800, m_r8x3_i0x8 ],
+      [ new Regex("^ *xori *%s *, *%s *$"   % [reg,num]), 0x1000, m_r8x3_i0x8 ],
+      [ new Regex("^ *addi *%s *, *%s *$"   % [reg,num]), 0x1800, m_r8x3_i0x8 ],
+      [ new Regex("^ *subi *%s *, *%s *$"   % [reg,num]), 0x2000, m_r8x3_i0x8 ],
+      [ new Regex("^ *ori *%s *, *%s *$"    % [reg,num]), 0x2800, m_r8x3_i0x8 ],
+      [ new Regex("^ *andni *%s *, *%s *$"  % [reg,num]), 0x3000, m_r8x3_i0x8 ],
+      [ new Regex("^ *andi *%s *, *%s *$"   % [reg,num]), 0x3800, m_r8x3_i0x8 ],
+      [ new Regex("^ *tsti *%s *, *%s *$"   % [reg,num]), 0x4000, m_r8x3_i0x8 ],
+      [ new Regex("^ *cmpeqi *%s *, *%s *$" % [reg,num]), 0x4800, m_r8x3_i0x8 ],
+      [ new Regex("^ *ld *%s *, *( *%s *, *%s *) *$" % [reg,reg,num]), 0x5000, m_r8x3_d3x5_b0x3 ],
+      [ new Regex("^ *st *%s *, *( *%s *, *%s *) *$" % [reg,reg,num]), 0x5800, m_r8x3_d3x5_b0x3 ],
+      [ new Regex("^ *ldf *%s *, *%s *$"   % [reg,num]),  0x6000, m_r8x3_u0x8 ],
+      [ new Regex("^ *ldf *%s *, *%s *$"   % [reg,dma]),  0x6000, m_r8x3_u0x8 ],
+      [ new Regex("^ *stf *%s *, *%s *$"   % [reg,num]),  0x6800, m_r8x3_u0x8 ],
+      [ new Regex("^ *stf *%s *, *%s *$"   % [reg,dma]),  0x6800, m_r8x3_u0x8 ],
+      [ new Regex("^ *loop *%s *, *%s *$"   % [num,num]), 0x7800, m_f8x2_n0x8 ],
+      [ new Regex("^ *loop *%s *, *%s *$"   % [lbl,num]), 0x7800, m_f8x2_n0x8 ],
+      [ new Regex("^ *bf *%s *$"  % num), 0x7c00, m_p0x8 ],
+      [ new Regex("^ *bf *%s *$"  % lbl), 0x7c00, m_p0x8 ],
+      [ new Regex("^ *bt *%s *$"  % num), 0x7d00, m_p0x8 ],
+      [ new Regex("^ *bt *%s *$"  % lbl), 0x7d00, m_p0x8 ],
+      [ new Regex("^ *bsf *%s *$" % num), 0x7e00, m_p0x8 ],
+      [ new Regex("^ *bsf *%s *$" % lbl), 0x7e00, m_p0x8 ],
+      [ new Regex("^ *bdf *%s *$" % num), 0x7f00, m_p0x8 ],
+      [ new Regex("^ *bdf *%s *$" % lbl), 0x7f00, m_p0x8 ],
+      [ new Regex("^ *jmp *%s *$" % num), 0x8000, m_a0x14 ],
+      [ new Regex("^ *jmp *%s *$" % lbl), 0x8000, m_a0x14 ],
+      [ new Regex("^ *jsr *%s *$" % num), 0xc000, m_a0x14 ],
+      [ new Regex("^ *jsr *%s *$" % lbl), 0xc000, m_a0x14 ]
+    ];/*}}}*/
+  }/*}}}*/
+
+  public release()
+  {/*{{{*/
+    free m_codes;
+
+    free m_ignore_cb;
+    free m_label_cb;
+    free m_a0x14;
+    free m_f8x2;
+    free m_f8x2_n0x8;
+    free m_j8x3;
+    free m_noargs;
+    free m_p0x8;
+    free m_r8x3;
+    free m_r8x3_d3x5_b0x3;
+    free m_r8x3_i0x8;
+    free m_r8x3_n0x5;
+    free m_r8x3_s0x3;
+    free m_r8x3_u0x8;
+  }/*}}}*/
+
+  public range_test(@a_value,a_mask)
+  {/*{{{*/
+    a_value &= a_mask;
+  }/*}}}*/
+
+  public ignore_cb(a_code,a_line,a_match)
+  {/*{{{*/
+  }/*}}}*/
+
+  public label_cb(a_code,a_line,a_match)
+  {/*{{{*/
+    l_match = a_match[1];
+    l_str = a_line.range(l_match[0],l_match[1] - 1);
+
+    // - store label info -
+    m_labels.push([m_code_list.length(),l_str]);
+  }/*}}}*/
+
+  public a0x14(a_code,a_line,a_match)
+  {/*{{{*/
+    ad_match = a_match[1];
+    ad_str = a_line.range(ad_match[0],ad_match[1] - 1);
+
+    try {
+      ad = new Integer(ad_str);
+    }
+    catch (e)
+    {
+      // - store label reference info -
+      m_label_refs.push([LBL_TYPE_JUMP,m_code_list.length(),ad_str]);
+
+      // - fill by zeros -
+      ad = 0;
+    }
+
+    range_test(ad,16383);
+    m_code_list.push(a_code | ad);
+  }/*}}}*/
+
+  public f8x2(a_code,a_line,a_match)
+  {/*{{{*/
+    f_match = a_match[1];
+    f = new Integer(a_line.range(f_match[0],f_match[1] - 1));
+
+    range_test(f,3);
+    m_code_list.push(a_code | (f << 8));
+  }/*}}}*/
+
+  public f8x2_n0x8(a_code,a_line,a_match)
+  {/*{{{*/
+    f_match = a_match[2];
+    f = new Integer(a_line.range(f_match[0],f_match[1] - 1));
+
+    n_match = a_match[1];
+    n_str = a_line.range(n_match[0],n_match[1] - 1);
+
+    try {
+      n = new Integer(n_str);
+
+      if (n <= 0 || n > 255)
+      {
+        new Exception("Loop address is out of range").throw();
+      }
+    }
+    catch (e)
+    {
+      // - store label reference info -
+      m_label_refs.push([LBL_TYPE_LOOP,m_code_list.length(),n_str]);
+
+      // - fill by zeros -
+      n = 0;
+    }
+
+    range_test(f,3);
+    range_test(n,255);
+    m_code_list.push(a_code | (f << 8) | n);
+  }/*}}}*/
+
+  public j8x3(a_code,a_line,a_match)
+  {/*{{{*/
+    j_match = a_match[1];
+    j = new Integer(a_line.range(j_match[0],j_match[1] - 1));
+
+    range_test(j,7);
+    m_code_list.push(a_code | (j << 8));
+  }/*}}}*/
+
+  public noargs(a_code,a_line,a_match)
+  {/*{{{*/
+    m_code_list.push(a_code);
+  }/*}}}*/
+
+  public p0x8(a_code,a_line,a_match)
+  {/*{{{*/
+    p_match = a_match[1];
+    p_str = a_line.range(p_match[0],p_match[1] - 1);
+
+    try {
+      p = new Integer(p_str);
+
+      // - ERROR -
+      if (p < -128 || p > 127)
+      {
+        new Exception("Branch address is out of range").throw();
+      }
+    }
+    catch (e)
+    {
+      // - store label reference info -
+      m_label_refs.push([LBL_TYPE_BRANCH,m_code_list.length(),p_str]);
+
+      // - fill by zeros -
+      p = 0;
+    }
+
+    range_test(p,255);
+    m_code_list.push(a_code | p);
+  }/*}}}*/
+
+  public r8x3(a_code,a_line,a_match)
+  {/*{{{*/
+    r_match = a_match[1];
+    r = new Integer(a_line.range(r_match[0],r_match[1] - 1));
+
+    range_test(r,7);
+    m_code_list.push(a_code | (r << 8));
+  }/*}}}*/
+
+  public r8x3_d3x5_b0x3(a_code,a_line,a_match)
+  {/*{{{*/
+    r_match = a_match[1];
+    r = new Integer(a_line.range(r_match[0],r_match[1] - 1));
+
+    b_match = a_match[2];
+    b = new Integer(a_line.range(b_match[0],b_match[1] - 1));
+
+    d_match = a_match[3];
+    d = new Integer(a_line.range(d_match[0],d_match[1] - 1));
+
+    // - ERROR -
+    if (d < 0)
+    {
+      new Exception("Negative displacement is illegal").throw();
+    }
+
+    range_test(r,7);
+    range_test(b,7);
+    range_test(d,31);
+    m_code_list.push(a_code | (r << 8) | (d << 3) | b);
+  }/*}}}*/
+
+  public r8x3_i0x8(a_code,a_line,a_match)
+  {/*{{{*/
+    r_match = a_match[1];
+    r = new Integer(a_line.range(r_match[0],r_match[1] - 1));
+
+    i_match = a_match[2];
+    i = new Integer(a_line.range(i_match[0],i_match[1] - 1));
+
+    range_test(r,7);
+    range_test(i,255);
+    m_code_list.push(a_code | (r << 8) | i);
+  }/*}}}*/
+
+  public r8x3_n0x5(a_code,a_line,a_match)
+  {/*{{{*/
+    r_match = a_match[1];
+    r = new Integer(a_line.range(r_match[0],r_match[1] - 1));
+
+    n_match = a_match[2];
+    n = new Integer(a_line.range(n_match[0],n_match[1] - 1));
+
+    range_test(r,7);
+    range_test(n,31);
+    m_code_list.push(a_code | (r << 8) | n);
+  }/*}}}*/
+
+  public r8x3_s0x3(a_code,a_line,a_match)
+  {/*{{{*/
+    r_match = a_match[1];
+    r = new Integer(a_line.range(r_match[0],r_match[1] - 1));
+
+    s_match = a_match[2];
+    s = new Integer(a_line.range(s_match[0],s_match[1] - 1));
+
+    range_test(r,7);
+    range_test(s,7);
+    m_code_list.push(a_code | (r << 8) | s);
+  }/*}}}*/
+
+  public r8x3_u0x8(a_code,a_line,a_match)
+  {/*{{{*/
+    r_match = a_match[1];
+    r = new Integer(a_line.range(r_match[0],r_match[1] - 1));
+
+    u_match = a_match[2];
+    u_str = a_line.range(u_match[0],u_match[1] - 1);
+
+    try {
+      u = new Integer(u_str);
+    }
+    catch (e)
+    {
+      switch (u_str)
+      {
+        case "MSA":        u = 0;
+        case "MSA_FR":     u = 16;
+        case "MSA_PF":     u = 32;
+        case "MSA_PF_FR":  u = 48;
+        case "MDA":        u = 4;
+        case "MDA_FR":     u = 20;
+        case "MD_SZ0_FL":  u = 40;
+        case "MD_SZ8":     u = 9;
+        case "MD_SZ8_FL":  u = 41;
+        case "MD_SZ16":    u = 10;
+        case "MD_SZ16_FL": u = 42;
+        case "MD_SZ32":    u = 11;
+        case "MD_SZ32_FL": u = 43;
+        case "MD_CPY":     u = 24;
+        case "MS":         u = 15;
+        case "MS_SZ0":     u = 12;
+        default:
+          new Exception("Unrecognized DMA burst instruction").throw();
+      }
+    }
+
+    range_test(r,7);
+    range_test(u,255);
+    m_code_list.push(a_code | (r << 8) | u);
+  }/*}}}*/
+
+  public process(a_addr,a_source)
+  {/*{{{*/
+
+    // - initialize process variables -
+    m_code_list = [];
+    m_labels = [];
+    m_label_refs = [];
+
+    // - process all instructions -
+    for (instr <- a_source.split("\n"))
+    {
+      found = 0;
+
+      for (code <- m_codes)
+      {
+        if (Blank != (match = code[0].match(instr,4)))
+        {
+          code[2].call([code[1],instr,match]);
+          found = 1;
+        }
+      }
+
+      // - ERROR -
+      if (!found)
+      {
+        new Exception("Cannot process instruction \"%s\"" % instr).throw();
+      }
+    }
+
+    // - process labels -
+    {
+      // - create label map -
+      label_map = new Dict();
+      for (label <- m_labels)
+      {
+        // - ERROR -
+        if (label_map.has_key(label[1]))
+        {
+          new Exception("Duplicit label identifier: \"%s\"" % label[1]).throw();
+        }
+
+        label_map[label[1]] = label;
+      }
+
+      // - process label references -
+      for (label_ref <- m_label_refs)
+      {
+        label = label_map[label_ref[2]];
+
+        // - ERROR -
+        if (Blank == label)
+        {
+          new Exception("Reference to undefined label \"%s\"" % label_ref[2]).throw();
+        }
+
+        switch (label_ref[0])
+        {
+          case LBL_TYPE_LOOP:
+          {/*{{{*/
+            offset = label[0] - (label_ref[1] + 1);
+            
+            // - ERROR -
+            if (offset <= 0 || offset > 255)
+            {
+              new Exception("Loop label is out of range").throw();
+            }
+            
+            range_test(offset,255);
+
+            code =@ m_code_list[label_ref[1]];
+            code |= offset;
+          }/*}}}*/
+          case LBL_TYPE_BRANCH:
+          {/*{{{*/
+            offset = label[0] - (label_ref[1] + 1);
+            
+            // - ERROR -
+            if (offset < -128 || offset > 127)
+            {
+              new Exception("Branch label is out of range").throw();
+            }
+            
+            range_test(offset,255);
+
+            code =@ m_code_list[label_ref[1]];
+            code |= offset;
+          }/*}}}*/
+          case LBL_TYPE_JUMP:
+          {/*{{{*/
+            address = label[0] + a_addr;
+            
+            range_test(address,16383);
+
+            code =@ m_code_list[label_ref[1]];
+            code |= address;
+          }/*}}}*/
+          default:
+          {
+            new Exception("Unrecognized label type").throw();
+          }
+        }
+      }
+    }
+
+    return Pack.code("%dH" % m_code_list.length(),m_code_list);
+  }/*}}}*/
+}/*}}}*/
+
