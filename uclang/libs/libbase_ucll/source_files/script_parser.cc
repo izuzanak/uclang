@@ -8330,9 +8330,6 @@ void script_parser_s::generate_intermediate_code()
   // - test if any classes was defined -
   if (top_class_queue.used <= 0)
   {
-    error_code.push(ei_no_classes_defined);
-    error_code.push(SET_SRC_POS(0,0));
-
     top_class_queue.clear();
     return;
   }
@@ -9012,11 +9009,6 @@ void script_parser_s::process_errors()
         ei_ptr += 4;
       }
       break;
-      case ei_no_classes_defined:
-        fprintf(stderr,"ERROR: No classes has been defined in code\n");
-
-        ei_ptr += 2;
-        break;
       case ei_class_does_not_contain_method:
       {
         class_record_s &class_record = class_records[ei_ptr[2]];

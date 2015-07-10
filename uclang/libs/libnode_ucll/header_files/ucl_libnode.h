@@ -21,7 +21,7 @@ class UclNode
   inline UclNode();
   inline ~UclNode();
 
-  bool Initialize(bool *a_modules);
+  bool Initialize(const char **a_modules);
   bool Clear();
 
   inline void PrintExceptionMessage();

@@ -608,7 +608,7 @@ bool pa_import(string_s &source_string,script_parser_s &_this)
     module_names.push_blank();
     module_names.last().set(name_length,name_data);
 
-    // Set module import name position
+    // - set module import name position -
     module_names_positions.push_blank();
     name_pos_s &name_pos = module_names_positions.last();
 

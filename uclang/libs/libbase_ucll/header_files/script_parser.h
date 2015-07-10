@@ -353,9 +353,6 @@ enum
   ei_must_implement_inherited_abstract_method,
   ei_cannot_override_final_method,
 
-  // - generate_intermediate_code -
-  ei_no_classes_defined,
-
   // - im_gen_actions -
   ei_class_does_not_contain_method,
   ei_class_does_not_have_constructor,

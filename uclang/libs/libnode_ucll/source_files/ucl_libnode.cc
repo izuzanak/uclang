@@ -13,7 +13,7 @@ UclNode g_UclNode;
  * methods of class UclNode
  */
 
-bool UclNode::Initialize(bool *a_modules)
+bool UclNode::Initialize(const char **a_modules)
 {/*{{{*/
 
   // - source initialization -
@@ -55,7 +55,7 @@ bool UclNode::Initialize(bool *a_modules)
     mods_path.clear();
     source.clear();
 
-    exit(125);
+    return false;
   }
 
   // - creation of parser object -
@@ -67,71 +67,97 @@ bool UclNode::Initialize(bool *a_modules)
   // - exist errors -
   if (parser.error_code.used != 0)
   {
-    parser.process_errors();
+    Clear();
     return false;
   }
 
 #define UCL_NODE_IMPORT_MODULE(NAME) \
 {/*{{{*/\
-  parser.module_names.push_blank();\
-  parser.module_names.last().set(strlen(NAME),NAME);\
+  const char *name_data = NAME;\
+  unsigned name_length = strlen(name_data);\
 \
-  parser.module_names_positions.push_blank();\
-  parser.module_names_positions.last().set(SET_SRC_POS(0,0),SET_SRC_POS(0,0));\
-\
-  parser.load_module(NAME "_uclm" DYNAMIC_LIB_EXTENSION);\
-\
-  /* - exist errors - */\
-  if (parser.error_code.used != 0)\
+  /* - insert module name to module names array - */\
+  unsigned name_idx = parser.module_names.get_idx_char_ptr(name_length,name_data);\
+  if (name_idx == c_idx_not_exist)\
   {\
-    parser.process_errors();\
-    cassert(0);\
-  }\
+    parser.module_names.push_blank();\
+    parser.module_names.last().set(name_length,name_data);\
 \
-  parser.module_idx++;\
+    /* - set module import name position - */\
+    parser.module_names_positions.push_blank();\
+    parser.module_names_positions.last().set(SET_SRC_POS(0,0),SET_SRC_POS(0,0));\
+  }\
 }/*}}}*/
 
+  // - always import module node -
   UCL_NODE_IMPORT_MODULE("node");
 
-  // - module sys -
-  if (a_modules[c_uclvar_module_sys])
+  // - import user defined modules -
+  const char **module = a_modules;
+  while (*module)
   {
-    UCL_NODE_IMPORT_MODULE("sys");
+    UCL_NODE_IMPORT_MODULE(*module);
+    ++module;
   }
 
-  // - module containers -
-  if (a_modules[c_uclvar_module_containers])
+  parser.process_modules();
+  if (parser.error_code.used != 0)
   {
-    UCL_NODE_IMPORT_MODULE("containers");
+    parser.process_errors();
+
+    Clear();
+    return false;
   }
 
-  // - module json -
-  if (a_modules[c_uclvar_module_json])
+  parser.extended_classes_search();
+  if (parser.error_code.used != 0)
   {
-    UCL_NODE_IMPORT_MODULE("json");
-  }
+    parser.process_errors();
 
-  // - module websocket -
-  if (a_modules[c_uclvar_module_websocket])
-  {
-    UCL_NODE_IMPORT_MODULE("websocket");
-  }
-
-  // - module jit -
-  if (a_modules[c_uclvar_module_jit])
-  {
-    UCL_NODE_IMPORT_MODULE("jit");
+    Clear();
+    return false;
   }
 
   parser.element_search();
   if (parser.error_code.used != 0)
   {
     parser.process_errors();
+
+    Clear();
     return false;
   }
 
+  parser.generate_intermediate_code();
+  if (parser.error_code.used != 0)
+  {
+    parser.process_errors();
+
+    Clear();
+    return false;
+  }
+
+  // - create ucl node module bool list -
+  bool modules[c_uclvar_module_count];
+
+  // - always presented modules -
+  modules[c_uclvar_module_base] = true;
+  modules[c_uclvar_module_node] = true;
+
+#define UCL_NODE_CHECK_MODULE_PRESENCE(NAME) \
+{/*{{{*/\
+  modules[c_uclvar_module_ ## NAME] =\
+    parser.module_names.get_idx_char_ptr(strlen(#NAME),#NAME) != c_idx_not_exist;\
+}/*}}}*/
+
+  // - check modules presence -
+  UCL_NODE_CHECK_MODULE_PRESENCE(sys);
+  UCL_NODE_CHECK_MODULE_PRESENCE(containers);
+  UCL_NODE_CHECK_MODULE_PRESENCE(json);
+  UCL_NODE_CHECK_MODULE_PRESENCE(websocket);
+  UCL_NODE_CHECK_MODULE_PRESENCE(jit);
+
   // - initialize ucl variables (parser) -
-  UclVar::Initialize(parser,a_modules);
+  UclVar::Initialize(parser,modules);
 
   interpreter.create_from_script_parser(parser);
 
@@ -141,7 +167,7 @@ bool UclNode::Initialize(bool *a_modules)
   interpreter.create_constant_and_static_locations();
 
   // - initialize ucl variables (interpreter) -
-  UclVar::Initialize(interpreter,a_modules);
+  UclVar::Initialize(interpreter,modules);
 
   // - create interpreter thread -
   {
@@ -176,8 +202,61 @@ bool UclNode::Initialize(bool *a_modules)
       thread->exception_location = (pointer)new_location;
     }
 
-    // - set pointer to interpreter main thread -
-    interpreter.main_thread_ptr = thread;
+    try
+    {
+      // - setting of stack for static code -
+      if (interpreter.stack_size != 0)
+      {
+        unsigned stack_size_cnt = interpreter.stack_size;
+        ((location_s *)thread->blank_location)->v_reference_cnt.atomic_add(stack_size_cnt);
+
+        do
+        {
+          thread->data_stack.push(thread->blank_location);
+        }
+        while(--stack_size_cnt);
+      }
+
+      if (interpreter.static_begin_code.used != 0)
+      {
+        // - launch static begin code -
+        thread->run_expression_code(interpreter.static_begin_code.data,0,NULL);
+        if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
+        {
+          // - print exception message -
+          exception_s *exception_ptr = (exception_s *)((location_s *)thread->exception_location)->v_data_ptr;
+          interpreter.print_exception_message(*exception_ptr);
+
+          Clear();
+          return false;
+        }
+      }
+
+      if (interpreter.static_run_time_code.used != 0)
+      {
+        // - launch static run time code -
+        thread->run_expression_code(interpreter.static_run_time_code.data,0,NULL);
+        if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
+        {
+          // - print exception message -
+          exception_s *exception_ptr = (exception_s *)((location_s *)thread->exception_location)->v_data_ptr;
+          interpreter.print_exception_message(*exception_ptr);
+
+          Clear();
+          return false;
+        }
+      }
+
+      thread->release_stack_from(0);
+
+      // - set pointer to interpreter main thread -
+      interpreter.main_thread_ptr = thread;
+    }
+    catch (int)
+    {
+      Clear();
+      return false;
+    }
   }
 
   // - initialize UclVar thread -
@@ -192,29 +271,33 @@ bool UclNode::Clear()
   // - release ucl variables -
   UclVar::Release(interpreter);
 
-  // - release location from stack -
-  thread->release_stack_from(0);
+  if (thread != NULL)
+  {
+    // - release location from stack -
+    thread->release_stack_from(0);
 
-  // - remove pointer to interpreter main thread -
-  interpreter.main_thread_ptr = NULL;
+    // - remove pointer to interpreter main thread -
+    interpreter.main_thread_ptr = NULL;
 
-  // - release thread locations -
-  thread->release_location_ptr((location_s *)thread->thread_location);
+    // - release thread locations -
+    thread->release_location_ptr((location_s *)thread->thread_location);
 
-  // - release thread blank and exception locations -
-  thread->release_location_ptr((location_s *)thread->blank_location);
-  thread->release_location_ptr((location_s *)thread->exception_location);
+    // - release thread blank and exception locations -
+    thread->release_location_ptr((location_s *)thread->blank_location);
+    thread->release_location_ptr((location_s *)thread->exception_location);
 
-  // - remove thread description from memory -
-  thread->free_variables_clear();
-  thread->clear();
-  cfree(thread);
+    // - remove thread description from memory -
+    thread->free_variables_clear();
+    thread->clear();
+    cfree(thread);
+  }
 
   interpreter.release_constant_and_static_locations();
 
   // - remove global pointer to interpreter -
   interpreter_ptr = NULL;
 
+  // - release interpreter -
   interpreter.clear();
 
   // - release parser -
