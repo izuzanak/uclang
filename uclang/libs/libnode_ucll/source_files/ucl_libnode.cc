@@ -64,13 +64,6 @@ bool UclNode::Initialize(const char **a_modules)
   mods_path.clear();
   source.clear();
 
-  // - exist errors -
-  if (parser.error_code.used != 0)
-  {
-    Clear();
-    return false;
-  }
-
 #define UCL_NODE_IMPORT_MODULE(NAME) \
 {/*{{{*/\
   const char *name_data = NAME;\
@@ -89,7 +82,7 @@ bool UclNode::Initialize(const char **a_modules)
   }\
 }/*}}}*/
 
-  // - always import module node -
+  // - always imported modules -
   UCL_NODE_IMPORT_MODULE("node");
 
   // - import user defined modules -
