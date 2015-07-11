@@ -3,7 +3,7 @@ import disassembler;
 import assembler;
 
 // important addresses
-// ssish_2_mcu_addr;
+// ssish_2_mcu_addr
 // mcu_2_ssish_addr
 
 // instructions reference
