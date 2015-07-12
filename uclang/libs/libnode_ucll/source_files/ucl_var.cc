@@ -2243,3 +2243,181 @@ UclVar UclVar::__new_object_3(unsigned a_class_idx,unsigned a_name_idx,UclVar a_
   );
 }/*}}}*/
 
+#define UCLVAR_NEW_CLASS_IDX_CONSTRUCTOR_NAME_IDX(PARAM_CNT_CHAR) \
+/*{{{*/\
+  interpreter_s &interpreter = *((interpreter_s *)it_ptr->interpreter_ptr);\
+\
+  const char *name_data = a_name.data();\
+  unsigned name_length = a_name.length();\
+\
+  char method_name[c_max_method_name_length];\
+  memcpy(method_name,name_data,name_length);\
+\
+  char *n_ptr = method_name + name_length;\
+  *n_ptr++ = '#';\
+  *n_ptr++ = PARAM_CNT_CHAR;\
+  *n_ptr = '\0';\
+\
+  unsigned class_name_idx = interpreter.class_symbol_names.get_idx_char_ptr(name_length,name_data);\
+  unsigned method_name_idx = interpreter.method_symbol_names.get_idx_char_ptr(name_length + 2,method_name);\
+  unsigned class_record_idx = c_idx_not_exist;\
+\
+  if (class_name_idx != c_idx_not_exist)\
+  {\
+    class_record_idx = interpreter.get_global_namespace_class_idx_by_name_idx(class_name_idx);\
+  }\
+\
+  /* - ERROR - */\
+  if (class_record_idx == c_idx_not_exist)\
+  {\
+    /* FIXME TODO process error: ei_class_name_cannot_be_resolved */\
+    cassert(0);\
+  }\
+\
+  /* - ERROR - */\
+  if (method_name_idx == c_idx_not_exist)\
+  {\
+    /* FIXME TODO process error: ei_class_does_not_have_constructor */\
+    cassert(0);\
+  }\
+/*}}}*/
+
+UclVar UclVar::__new(std::string a_name)
+{/*{{{*/
+  UCLVAR_NEW_CLASS_IDX_CONSTRUCTOR_NAME_IDX('0');
+
+  return __new_object_0(class_record_idx,method_name_idx);
+}/*}}}*/
+
+UclVar UclVar::__new(std::string a_name,UclVar a_op)
+{/*{{{*/
+  UCLVAR_NEW_CLASS_IDX_CONSTRUCTOR_NAME_IDX('1');
+
+  return __new_object_1(class_record_idx,method_name_idx,a_op);
+}/*}}}*/
+
+UclVar UclVar::__new(std::string a_name,UclVar a_op,UclVar a_op_1)
+{/*{{{*/
+  UCLVAR_NEW_CLASS_IDX_CONSTRUCTOR_NAME_IDX('2');
+
+  return __new_object_2(class_record_idx,method_name_idx,a_op,a_op_1);
+}/*}}}*/
+
+UclVar UclVar::__new(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2)
+{/*{{{*/
+  UCLVAR_NEW_CLASS_IDX_CONSTRUCTOR_NAME_IDX('3');
+
+  return __new_object_3(class_record_idx,method_name_idx,a_op,a_op_1,a_op_2);
+}/*}}}*/
+
+#define UCLVAR_METHOD_NAME_IDX(PARAM_CNT_CHAR) \
+/*{{{*/\
+  interpreter_s &interpreter = *((interpreter_s *)it_ptr->interpreter_ptr);\
+\
+  const char *name_data = a_name.data();\
+  unsigned name_length = a_name.length();\
+\
+  char method_name[c_max_method_name_length];\
+  memcpy(method_name,name_data,name_length);\
+\
+  char *n_ptr = method_name + name_length;\
+  *n_ptr++ = '#';\
+  *n_ptr++ = PARAM_CNT_CHAR;\
+  *n_ptr = '\0';\
+\
+  unsigned method_name_idx = interpreter.method_symbol_names.get_idx_char_ptr(name_length + 2,method_name);\
+\
+  /* - ERROR - */\
+  if (method_name_idx == c_idx_not_exist)\
+  {\
+    /* FIXME TODO process error: ei_class_does_not_contain_method */\
+    cassert(0);\
+  }\
+/*}}}*/
+
+UclVar UclVar::__call(std::string a_name)
+{/*{{{*/
+  UCLVAR_METHOD_NAME_IDX('0');
+
+  return __call_0(method_name_idx);
+}/*}}}*/
+
+UclVar UclVar::__call(std::string a_name,UclVar a_op)
+{/*{{{*/
+  UCLVAR_METHOD_NAME_IDX('1');
+
+  return __call_1(method_name_idx,a_op);
+}/*}}}*/
+
+UclVar UclVar::__call(std::string a_name,UclVar a_op,UclVar a_op_1)
+{/*{{{*/
+  UCLVAR_METHOD_NAME_IDX('2');
+
+  return __call_2(method_name_idx,a_op,a_op_1);
+}/*}}}*/
+
+UclVar UclVar::__call(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2)
+{/*{{{*/
+  UCLVAR_METHOD_NAME_IDX('3');
+
+  return __call_3(method_name_idx,a_op,a_op_1,a_op_2);
+}/*}}}*/
+
+UclVar UclVar::__call(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2,UclVar a_op_3)
+{/*{{{*/
+  UCLVAR_METHOD_NAME_IDX('4');
+
+  return __call_4(method_name_idx,a_op,a_op_1,a_op_2,a_op_3);
+}/*}}}*/
+
+UclVar UclVar::__member(std::string a_name)
+{/*{{{*/
+  interpreter_s &interpreter = *((interpreter_s *)it_ptr->interpreter_ptr);
+
+  unsigned variable_name_idx = interpreter.variable_symbol_names.get_idx_char_ptr(a_name.length(),a_name.data());
+
+  /* - ERROR - */
+  if (variable_name_idx == c_idx_not_exist)
+  {
+    /* FIXME TODO process error: ei_class_does_not_contain_variable */
+    cassert(0);
+  }
+
+  unsigned new_stack_base = it_ptr->data_stack.used;
+
+  ((location_s *)it_ptr->blank_location)->v_reference_cnt.atomic_inc();
+  it_ptr->data_stack.push(it_ptr->blank_location);
+
+  location_ptr->v_reference_cnt.atomic_inc();
+  it_ptr->data_stack.push((pointer)location_ptr);
+
+  /* - create dummy code - */
+  uli tmp_code[5] = {
+    i_object_member_select,
+    0,
+    0,
+    variable_name_idx,
+    1
+  };
+
+  uli *tmp_code_ptr = tmp_code;
+  unsigned return_value;
+
+  inst_params_s params = {it_ptr,&tmp_code_ptr,new_stack_base,&return_value};
+
+  /* - ERROR - */
+  if (inst_object_member_select(&params) == c_run_return_code_EXCEPTION)
+  {
+    it_ptr->release_stack_from(new_stack_base);
+
+    throw std::string("Exception");
+  }
+
+  /* - create return ucl variable - */
+  UclVar ret_value((location_s **)&it_ptr->data_stack[new_stack_base]);
+
+  it_ptr->release_stack_from(new_stack_base);
+
+  return ret_value;
+}/*}}}*/
+

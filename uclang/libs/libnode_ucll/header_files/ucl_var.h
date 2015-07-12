@@ -15,6 +15,9 @@ include "script_parser.h"
 #define ENABLE_CLASS_REGEX
 #endif
 
+// - max method name length -
+const unsigned c_max_method_name_length = 256;
+
 // - callback prototypes -
 typedef class UclVar UclVar;
 typedef UclVar (*t_node_callback_0)();
@@ -519,6 +522,19 @@ class UclVar
   static UclVar __new_object_3(unsigned a_class_idx,unsigned a_name_idx,UclVar a_op,UclVar a_op_1,UclVar a_op_2);
 
   public:
+  static UclVar __new(std::string a_name);
+  static UclVar __new(std::string a_name,UclVar a_op);
+  static UclVar __new(std::string a_name,UclVar a_op,UclVar a_op_1);
+  static UclVar __new(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2);
+
+  UclVar __call(std::string a_name);
+  UclVar __call(std::string a_name,UclVar a_op);
+  UclVar __call(std::string a_name,UclVar a_op,UclVar a_op_1);
+  UclVar __call(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2);
+  UclVar __call(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2,UclVar a_op_3);
+
+  UclVar __member(std::string a_name);
+
   static void Initialize(script_parser_s &a_parser,bool *a_modules);
   static void Initialize(interpreter_s &a_interpreter,bool *a_modules);
   static void InitThread(interpreter_thread_s &a_it);
@@ -569,6 +585,7 @@ class UclVar
   inline double __float();
   inline const char *__str();
 
+  inline void __free();
   inline UclVar __type();
 
   inline static UclVar Delegate(t_node_callback_0 cb_ptr)
@@ -2852,9 +2869,10 @@ inline char UclVar::__char()
 {/*{{{*/
   location_s *tmp_location = it_ptr->get_location_value(location_ptr);
 
+  // - ERROR -
   if (tmp_location->v_type != c_bi_class_char)
   {
-    throw std::string("Conversion error");
+    throw std::string("Conversion to __char error");
   }
 
   return (char)tmp_location->v_data_ptr;
@@ -2864,9 +2882,10 @@ inline long long int UclVar::__int()
 {/*{{{*/
   long long int value;
 
+  // - ERROR -
   if (!it_ptr->retrieve_integer(it_ptr->get_location_value(location_ptr),value))
   {
-    throw std::string("Conversion error");
+    throw std::string("Conversion to __int error");
   }
 
   return value;
@@ -2876,9 +2895,10 @@ inline double UclVar::__float()
 {/*{{{*/
   double value;
 
+  // - ERROR -
   if (!it_ptr->retrieve_float(it_ptr->get_location_value(location_ptr),value))
   {
-    throw std::string("Conversion error");
+    throw std::string("Conversion to __float error");
   }
 
   return value;
@@ -2888,12 +2908,21 @@ inline const char *UclVar::__str()
 {/*{{{*/
   location_s *tmp_location = it_ptr->get_location_value(location_ptr);
 
+  // - ERROR -
   if (tmp_location->v_type != c_bi_class_string)
   {
-    throw std::string("Conversion error");
+    throw std::string("Conversion to __str error");
   }
 
   return ((string_s *)tmp_location->v_data_ptr)->data;
+}/*}}}*/
+
+
+inline void UclVar::__free()
+{/*{{{*/
+  it_ptr->release_location_ptr(location_ptr);
+
+  BLANK();
 }/*}}}*/
 
 inline UclVar UclVar::__type()

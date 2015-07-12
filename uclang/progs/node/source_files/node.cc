@@ -9,7 +9,8 @@ int main(int argc,char **argv)
 
   // - select modules to import -
   const char *modules[] = {
-    "sys","containers","json","websocket","jit",NULL
+    "node_test",NULL
+    //"sys","containers","json","websocket","jit",NULL
   };
 
   // - initialize uclang node -
@@ -27,6 +28,48 @@ int main(int argc,char **argv)
 
         printf("array: %s\n",array.to_string().__str());
       }
+
+      // FIXME object construction test
+      UclVar test = UclVar::__new("NodeTest");
+      printf("test: %s\n",test.to_string().__str());
+      test.__free();
+
+      test = UclVar::__new("NodeTest","a");
+      printf("test: %s\n",test.to_string().__str());
+      test.__free();
+
+      test = UclVar::__new("NodeTest","a","b");
+      printf("test: %s\n",test.to_string().__str());
+      test.__free();
+
+      test = UclVar::__new("NodeTest","a","b","c");
+      printf("test: %s\n",test.to_string().__str());
+      test.__free();
+
+      // FIXME method call test
+      test = UclVar::__new("NodeTest");
+      test.__call("print");
+      putchar('\n');
+      test.__call("print","a");
+      putchar('\n');
+      test.__call("print","a","b");
+      putchar('\n');
+      test.__call("print","a","b","c");
+      putchar('\n');
+      test.__call("print","a","b","c","d");
+      putchar('\n');
+      test.__free();
+
+      // FIXME method call return value test
+      test = UclVar::__new("NodeTest");
+      UclVar val = test.__call("to_string");
+      printf("val: %s\n",val.to_string().__str());
+      test.__free();
+
+      // FIXME member select test
+      test = UclVar::__new("NodeTest","a","b");
+      printf("test.m_value: %s\n",test.__member("m_value").__str());
+      test.__free();
 
 #if __cplusplus >= 201103
 
