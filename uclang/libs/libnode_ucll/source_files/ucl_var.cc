@@ -2259,7 +2259,7 @@ UclVar UclVar::__new_object_3(unsigned a_class_idx,unsigned a_name_idx,UclVar a_
   *n_ptr = '\0';\
 \
   unsigned class_name_idx = interpreter.class_symbol_names.get_idx_char_ptr(name_length,name_data);\
-  unsigned method_name_idx = interpreter.method_symbol_names.get_idx_char_ptr(name_length + 2,method_name);\
+  unsigned method_name_idx = interpreter.method_symbol_names.get_idx_char_ptr_insert(name_length + 2,method_name);\
   unsigned class_record_idx = c_idx_not_exist;\
 \
   if (class_name_idx != c_idx_not_exist)\
@@ -2271,13 +2271,6 @@ UclVar UclVar::__new_object_3(unsigned a_class_idx,unsigned a_name_idx,UclVar a_
   if (class_record_idx == c_idx_not_exist)\
   {\
     /* FIXME TODO process error: ei_class_name_cannot_be_resolved */\
-    cassert(0);\
-  }\
-\
-  /* - ERROR - */\
-  if (method_name_idx == c_idx_not_exist)\
-  {\
-    /* FIXME TODO process error: ei_class_does_not_have_constructor */\
     cassert(0);\
   }\
 /*}}}*/
@@ -2325,14 +2318,7 @@ UclVar UclVar::__new(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2)
   *n_ptr++ = PARAM_CNT_CHAR;\
   *n_ptr = '\0';\
 \
-  unsigned method_name_idx = interpreter.method_symbol_names.get_idx_char_ptr(name_length + 2,method_name);\
-\
-  /* - ERROR - */\
-  if (method_name_idx == c_idx_not_exist)\
-  {\
-    /* FIXME TODO process error: ei_class_does_not_contain_method */\
-    cassert(0);\
-  }\
+  unsigned method_name_idx = interpreter.method_symbol_names.get_idx_char_ptr_insert(name_length + 2,method_name);\
 /*}}}*/
 
 UclVar UclVar::__call(std::string a_name)
@@ -2374,14 +2360,7 @@ UclVar UclVar::__member(std::string a_name)
 {/*{{{*/
   interpreter_s &interpreter = *((interpreter_s *)it_ptr->interpreter_ptr);
 
-  unsigned variable_name_idx = interpreter.variable_symbol_names.get_idx_char_ptr(a_name.length(),a_name.data());
-
-  /* - ERROR - */
-  if (variable_name_idx == c_idx_not_exist)
-  {
-    /* FIXME TODO process error: ei_class_does_not_contain_variable */
-    cassert(0);
-  }
+  unsigned variable_name_idx = interpreter.variable_symbol_names.get_idx_char_ptr_insert(a_name.length(),a_name.data());
 
   unsigned new_stack_base = it_ptr->data_stack.used;
 
