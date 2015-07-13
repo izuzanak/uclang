@@ -2243,12 +2243,140 @@ UclVar UclVar::__new_object_3(unsigned a_class_idx,unsigned a_name_idx,UclVar a_
   );
 }/*}}}*/
 
+#define UCLVAR_METHOD_NAME_IDX(PARAM_CNT_CHAR) \
+/*{{{*/\
+  interpreter_s &interpreter = *((interpreter_s *)it_ptr->interpreter_ptr);\
+\
+  const char *name_data = a_method_name.data();\
+  unsigned name_length = a_method_name.length();\
+\
+  char method_name[c_max_method_name_length];\
+  memcpy(method_name,name_data,name_length);\
+\
+  char *n_ptr = method_name + name_length;\
+  *n_ptr++ = '#';\
+  *n_ptr++ = PARAM_CNT_CHAR;\
+  *n_ptr = '\0';\
+\
+  unsigned method_name_idx = interpreter.method_symbol_names.get_idx_char_ptr_insert(name_length + 2,method_name);\
+/*}}}*/
+
+UclVar UclVar::__call(std::string a_method_name)
+{/*{{{*/
+  UCLVAR_METHOD_NAME_IDX('0');
+
+  return __call_0(method_name_idx);
+}/*}}}*/
+
+UclVar UclVar::__call(std::string a_method_name,UclVar a_op)
+{/*{{{*/
+  UCLVAR_METHOD_NAME_IDX('1');
+
+  return __call_1(method_name_idx,a_op);
+}/*}}}*/
+
+UclVar UclVar::__call(std::string a_method_name,UclVar a_op,UclVar a_op_1)
+{/*{{{*/
+  UCLVAR_METHOD_NAME_IDX('2');
+
+  return __call_2(method_name_idx,a_op,a_op_1);
+}/*}}}*/
+
+UclVar UclVar::__call(std::string a_method_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2)
+{/*{{{*/
+  UCLVAR_METHOD_NAME_IDX('3');
+
+  return __call_3(method_name_idx,a_op,a_op_1,a_op_2);
+}/*}}}*/
+
+UclVar UclVar::__call(std::string a_method_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2,UclVar a_op_3)
+{/*{{{*/
+  UCLVAR_METHOD_NAME_IDX('4');
+
+  return __call_4(method_name_idx,a_op,a_op_1,a_op_2,a_op_3);
+}/*}}}*/
+
+#define UCLVAR_STATIC_METHOD_NAME_IDX(PARAM_CNT_CHAR) \
+/*{{{*/\
+  interpreter_s &interpreter = *((interpreter_s *)it_ptr->interpreter_ptr);\
+\
+  unsigned name_length = a_method_name.length();\
+  char method_name[c_max_method_name_length];\
+  memcpy(method_name,a_method_name.data(),name_length);\
+\
+  char *n_ptr = method_name + name_length;\
+  *n_ptr++ = '#';\
+  *n_ptr++ = PARAM_CNT_CHAR;\
+  *n_ptr = '\0';\
+\
+  unsigned class_name_idx = interpreter.class_symbol_names.get_idx_char_ptr(a_class_name.length(),a_class_name.data());\
+  unsigned class_record_idx = c_idx_not_exist;\
+\
+  if (class_name_idx != c_idx_not_exist)\
+  {\
+    class_record_idx = interpreter.get_global_namespace_class_idx_by_name_idx(class_name_idx);\
+  }\
+\
+  /* - ERROR - */\
+  if (class_record_idx == c_idx_not_exist)\
+  {\
+    char buff[512];\
+    snprintf(buff,512,"Class name %s cannot be resolved",a_class_name.data());\
+    throw std::string(buff);\
+  }\
+\
+  unsigned method_name_idx = interpreter.method_symbol_names.get_idx_char_ptr(name_length + 2,method_name);\
+  unsigned method_record_idx = c_idx_not_exist;\
+\
+  if (method_name_idx != c_idx_not_exist)\
+  {\
+    method_record_idx = interpreter.class_records[class_record_idx].mnri_map[method_name_idx];\
+  }\
+\
+  /* - ERROR - */\
+  if (method_record_idx == c_idx_not_exist)\
+  {\
+    char buff[512];\
+    snprintf(buff,512,"Class %s does not contain method %s",a_class_name.data(),a_method_name.data());\
+    throw std::string(buff);\
+  }\
+\
+  /* - ERROR - */\
+  if (!(interpreter.method_records[method_record_idx].modifiers & c_modifier_static))\
+  {\
+    char buff[512];\
+    snprintf(buff,512,"Method %s of class %s is not static",a_method_name.data(),a_class_name.data());\
+    throw std::string(buff);\
+  }\
+/*}}}*/
+
+UclVar UclVar::__static_call(std::string a_class_name,std::string a_method_name)
+{/*{{{*/
+  UCLVAR_STATIC_METHOD_NAME_IDX('0');
+
+  return __static_call_0(method_record_idx);
+}/*}}}*/
+
+UclVar UclVar::__static_call(std::string a_class_name,std::string a_method_name,UclVar a_op)
+{/*{{{*/
+  UCLVAR_STATIC_METHOD_NAME_IDX('1');
+
+  return __static_call_1(method_record_idx,a_op);
+}/*}}}*/
+
+UclVar UclVar::__static_call(std::string a_class_name,std::string a_method_name,UclVar a_op,UclVar a_op_1)
+{/*{{{*/
+  UCLVAR_STATIC_METHOD_NAME_IDX('2');
+
+  return __static_call_2(method_record_idx,a_op,a_op_1);
+}/*}}}*/
+
 #define UCLVAR_NEW_CLASS_IDX_CONSTRUCTOR_NAME_IDX(PARAM_CNT_CHAR) \
 /*{{{*/\
   interpreter_s &interpreter = *((interpreter_s *)it_ptr->interpreter_ptr);\
 \
-  const char *name_data = a_name.data();\
-  unsigned name_length = a_name.length();\
+  const char *name_data = a_class_name.data();\
+  unsigned name_length = a_class_name.length();\
 \
   char method_name[c_max_method_name_length];\
   memcpy(method_name,name_data,name_length);\
@@ -2270,90 +2398,38 @@ UclVar UclVar::__new_object_3(unsigned a_class_idx,unsigned a_name_idx,UclVar a_
   /* - ERROR - */\
   if (class_record_idx == c_idx_not_exist)\
   {\
-    /* FIXME TODO process error: ei_class_name_cannot_be_resolved */\
-    cassert(0);\
+    char buff[512];\
+    snprintf(buff,512,"Class name %s cannot be resolved",name_data);\
+    throw std::string(buff);\
   }\
 /*}}}*/
 
-UclVar UclVar::__new(std::string a_name)
+UclVar UclVar::__new(std::string a_class_name)
 {/*{{{*/
   UCLVAR_NEW_CLASS_IDX_CONSTRUCTOR_NAME_IDX('0');
 
   return __new_object_0(class_record_idx,method_name_idx);
 }/*}}}*/
 
-UclVar UclVar::__new(std::string a_name,UclVar a_op)
+UclVar UclVar::__new(std::string a_class_name,UclVar a_op)
 {/*{{{*/
   UCLVAR_NEW_CLASS_IDX_CONSTRUCTOR_NAME_IDX('1');
 
   return __new_object_1(class_record_idx,method_name_idx,a_op);
 }/*}}}*/
 
-UclVar UclVar::__new(std::string a_name,UclVar a_op,UclVar a_op_1)
+UclVar UclVar::__new(std::string a_class_name,UclVar a_op,UclVar a_op_1)
 {/*{{{*/
   UCLVAR_NEW_CLASS_IDX_CONSTRUCTOR_NAME_IDX('2');
 
   return __new_object_2(class_record_idx,method_name_idx,a_op,a_op_1);
 }/*}}}*/
 
-UclVar UclVar::__new(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2)
+UclVar UclVar::__new(std::string a_class_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2)
 {/*{{{*/
   UCLVAR_NEW_CLASS_IDX_CONSTRUCTOR_NAME_IDX('3');
 
   return __new_object_3(class_record_idx,method_name_idx,a_op,a_op_1,a_op_2);
-}/*}}}*/
-
-#define UCLVAR_METHOD_NAME_IDX(PARAM_CNT_CHAR) \
-/*{{{*/\
-  interpreter_s &interpreter = *((interpreter_s *)it_ptr->interpreter_ptr);\
-\
-  const char *name_data = a_name.data();\
-  unsigned name_length = a_name.length();\
-\
-  char method_name[c_max_method_name_length];\
-  memcpy(method_name,name_data,name_length);\
-\
-  char *n_ptr = method_name + name_length;\
-  *n_ptr++ = '#';\
-  *n_ptr++ = PARAM_CNT_CHAR;\
-  *n_ptr = '\0';\
-\
-  unsigned method_name_idx = interpreter.method_symbol_names.get_idx_char_ptr_insert(name_length + 2,method_name);\
-/*}}}*/
-
-UclVar UclVar::__call(std::string a_name)
-{/*{{{*/
-  UCLVAR_METHOD_NAME_IDX('0');
-
-  return __call_0(method_name_idx);
-}/*}}}*/
-
-UclVar UclVar::__call(std::string a_name,UclVar a_op)
-{/*{{{*/
-  UCLVAR_METHOD_NAME_IDX('1');
-
-  return __call_1(method_name_idx,a_op);
-}/*}}}*/
-
-UclVar UclVar::__call(std::string a_name,UclVar a_op,UclVar a_op_1)
-{/*{{{*/
-  UCLVAR_METHOD_NAME_IDX('2');
-
-  return __call_2(method_name_idx,a_op,a_op_1);
-}/*}}}*/
-
-UclVar UclVar::__call(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2)
-{/*{{{*/
-  UCLVAR_METHOD_NAME_IDX('3');
-
-  return __call_3(method_name_idx,a_op,a_op_1,a_op_2);
-}/*}}}*/
-
-UclVar UclVar::__call(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2,UclVar a_op_3)
-{/*{{{*/
-  UCLVAR_METHOD_NAME_IDX('4');
-
-  return __call_4(method_name_idx,a_op,a_op_1,a_op_2,a_op_3);
 }/*}}}*/
 
 UclVar UclVar::__member(std::string a_name)

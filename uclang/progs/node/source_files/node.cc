@@ -66,6 +66,18 @@ int main(int argc,char **argv)
       printf("val: %s\n",val.to_string().__str());
       test.__free();
 
+      // FIXME static method call test
+      UclVar value;
+
+      value = UclVar::__static_call("NodeTest","static_method");
+      printf("value: %lld\n",value.__int());
+
+      value = UclVar::__static_call("NodeTest","static_method",1);
+      printf("value: %lld\n",value.__int());
+
+      value = UclVar::__static_call("NodeTest","static_method",1,2);
+      printf("value: %lld\n",value.__int());
+
       // FIXME member select test
       test = UclVar::__new("NodeTest","a","b");
       printf("test.m_value: %s\n",test.__member("m_value").__str());

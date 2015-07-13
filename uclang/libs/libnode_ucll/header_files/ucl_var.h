@@ -522,16 +522,20 @@ class UclVar
   static UclVar __new_object_3(unsigned a_class_idx,unsigned a_name_idx,UclVar a_op,UclVar a_op_1,UclVar a_op_2);
 
   public:
+  UclVar __call(std::string a_method_name);
+  UclVar __call(std::string a_method_name,UclVar a_op);
+  UclVar __call(std::string a_method_name,UclVar a_op,UclVar a_op_1);
+  UclVar __call(std::string a_method_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2);
+  UclVar __call(std::string a_method_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2,UclVar a_op_3);
+
+  static UclVar __static_call(std::string a_class_name,std::string a_method_name);
+  static UclVar __static_call(std::string a_class_name,std::string a_method_name,UclVar a_op);
+  static UclVar __static_call(std::string a_class_name,std::string a_method_name,UclVar a_op,UclVar a_op_1);
+
   static UclVar __new(std::string a_name);
   static UclVar __new(std::string a_name,UclVar a_op);
   static UclVar __new(std::string a_name,UclVar a_op,UclVar a_op_1);
   static UclVar __new(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2);
-
-  UclVar __call(std::string a_name);
-  UclVar __call(std::string a_name,UclVar a_op);
-  UclVar __call(std::string a_name,UclVar a_op,UclVar a_op_1);
-  UclVar __call(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2);
-  UclVar __call(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2,UclVar a_op_3);
 
   UclVar __member(std::string a_name);
 
