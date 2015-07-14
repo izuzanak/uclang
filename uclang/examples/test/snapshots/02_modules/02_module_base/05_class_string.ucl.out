@@ -90,6 +90,11 @@ string[2]: l
 string[3]: l
 string[4]: o
 
+=== String method create#1 =====================================================
+
+string.length() -> 256
+string.length() -> 512
+
 === String method split#1 ======================================================
 
 string            -> One Two Three Four

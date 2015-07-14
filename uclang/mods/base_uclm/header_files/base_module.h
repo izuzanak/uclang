@@ -236,6 +236,7 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
 bool bic_string_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_string_method_String_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_string_method_String_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_string_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_string_method_split_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_string_method_join_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_string_method_head_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);

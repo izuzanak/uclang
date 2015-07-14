@@ -4115,7 +4115,7 @@ built_in_class_s string_class =
 {/*{{{*/
   "String",
   c_modifier_public | c_modifier_final,
-  26, string_methods,
+  27, string_methods,
   0, string_variables,
   bic_string_consts,
   bic_string_init,
@@ -4188,6 +4188,11 @@ built_in_method_s string_methods[] =
     "String#1",
     c_modifier_public | c_modifier_final,
     bic_string_method_String_1
+  },
+  {
+    "create#1",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_string_method_create_1
   },
   {
     "split#1",
@@ -5134,6 +5139,32 @@ bool bic_string_method_String_1(interpreter_thread_s &it,unsigned stack_base,uli
 
     return false;
   }
+
+  return true;
+}/*}}}*/
+
+bool bic_string_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int length;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,length))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_string,"create#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->create(length);
+
+  BIC_SET_RESULT_STRING(string_ptr);
 
   return true;
 }/*}}}*/
@@ -8728,7 +8759,7 @@ built_in_method_s buffer_methods[] =
   },
   {
     "size#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_buffer_method_size_0
   },
   {

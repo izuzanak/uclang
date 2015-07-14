@@ -21,6 +21,7 @@ class Main
     // public final operator_binary_le_br_re_br#1
     // public final String#0
     // public final String#1
+    // public final create#1
     // public final split#1
     // public final join#1
     // public final head#1
@@ -133,6 +134,12 @@ string";
     do {
       ("string[%d]: %c\n" % [idx,string[idx]]).print();
     } while(++idx < string.length());
+
+    Tutorial.note("String method create#1");
+    string = String.create(256);
+    ("string.length() -> %d\n" % string.length()).print();
+    string = String.create(512);
+    ("string.length() -> %d\n" % string.length()).print();
 
     Tutorial.note("String method split#1");
     string = "One Two Three Four";

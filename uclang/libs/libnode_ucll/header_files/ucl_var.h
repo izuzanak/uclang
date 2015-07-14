@@ -156,6 +156,7 @@ class UclVar
   static unsigned c_bi_mni__isnan_0;
   static unsigned c_bi_mni_String_0;
   static unsigned c_bi_mni_String_1;
+  static unsigned c_bi_mni_create_1;
   static unsigned c_bi_mni_split_1;
   static unsigned c_bi_mni_join_1;
   static unsigned c_bi_mni_head_1;
@@ -309,7 +310,6 @@ class UclVar
   static unsigned c_bi_mni_prev_key_1;
   static unsigned c_bi_mni_lee_key_1;
   static unsigned c_bi_mni_gre_key_1;
-  static unsigned c_bi_mni_create_1;
   static unsigned c_bi_mni_create_nice_2;
   static unsigned c_bi_mni_parse_1;
   static unsigned c_bi_mni_WsContext_2;
@@ -699,6 +699,20 @@ class UclVar
   }/*}}}*/
 
   // - class String -
+  class String
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_create_1;
+
+    public:
+    inline static UclVar create(UclVar op_0)
+    {/*{{{*/
+      return __static_call_1(c_bi_mi_create_1,op_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
   inline static UclVar String()
   {/*{{{*/
     return __new_object_0(c_bi_class_String,c_bi_mni_String_0);
@@ -2076,6 +2090,11 @@ class UclVar
     return __call_0(c_bi_mni__isnan_0);
   }/*}}}*/
 
+  inline UclVar create(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_create_1,op_0);
+  }/*}}}*/
+
   inline UclVar split(UclVar op_0)
   {/*{{{*/
     return __call_1(c_bi_mni_split_1,op_0);
@@ -2674,11 +2693,6 @@ class UclVar
   inline UclVar gre_key(UclVar op_0)
   {/*{{{*/
     return __call_1(c_bi_mni_gre_key_1,op_0);
-  }/*}}}*/
-
-  inline UclVar create(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_create_1,op_0);
   }/*}}}*/
 
   inline UclVar create_nice(UclVar op_0,UclVar op_1)
