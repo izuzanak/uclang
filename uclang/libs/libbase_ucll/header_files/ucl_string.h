@@ -238,12 +238,10 @@ inline void string_s::create(unsigned a_length)
 inline void string_s::set(unsigned a_length,const char *a_data)
 {/*{{{*/
   clear();
-  data = (char *)cmalloc((a_length + 1)*sizeof(char));
+  if (a_length == 0) return;
 
-  if (a_length != 0)
-  {
-    memcpy(data,a_data,a_length*sizeof(char));
-  }
+  data = (char *)cmalloc((a_length + 1)*sizeof(char));
+  memcpy(data,a_data,a_length*sizeof(char));
 
   data[a_length] = '\0';
   size = a_length + 1;
