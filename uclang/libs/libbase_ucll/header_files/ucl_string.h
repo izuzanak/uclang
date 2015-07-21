@@ -229,6 +229,8 @@ inline void string_s::clear()
 inline void string_s::create(unsigned a_length)
 {/*{{{*/
   clear();
+  if (a_length == 0) return;
+
   data = (char *)cmalloc((a_length + 1)*sizeof(char));
 
   data[a_length] = '\0';
