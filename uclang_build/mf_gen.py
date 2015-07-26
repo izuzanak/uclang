@@ -1518,6 +1518,34 @@ if cfg_ref[CFG_TARGET]:
     )
 # }}}
 
+# ga module
+cfg_ref = c_cfg[C_MODULE_GA]
+# {{{
+if cfg_ref[CFG_TARGET]:
+    cfg_ref[CFG_MODULE] = module_c(
+      configuration,
+      cfg_ref[CFG_DIR],
+      cfg_ref[CFG_NAME],
+      [ 
+        "header_files",
+        os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
+        os.sep.join(["..","..","..","ext_libs","galib","galib247"]),
+      ],
+      [ 
+        "source_files",
+      ],
+      [ 
+        os.sep.join(["..","..","libs","libbase_ucll"]),
+        os.sep.join(["..","..","..","ext_libs","galib","galib247","ga"]),
+      ],
+      opt_build, # GPP options
+      opt_link + "-lga ", # GPP link options
+      "", # GPP defines
+      [],
+      [],
+    )
+# }}}
+
 # av module
 cfg_ref = c_cfg[C_MODULE_AV]
 # {{{

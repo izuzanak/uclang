@@ -13,7 +13,6 @@ include "script_parser.h"
 extern unsigned c_bi_class_fuse_channel;
 extern unsigned c_bi_class_fuse_ops;
 extern unsigned c_bi_class_fuse_handle;
-extern unsigned c_bi_class_fuse_context;
 extern unsigned c_bi_class_fuse_stat;
 extern unsigned c_bi_class_fuse_file_info;
 extern unsigned c_bi_class_fuse_dir_filler;

@@ -13,6 +13,7 @@ extern unsigned c_bi_class_fuse_handle;
 extern unsigned c_bi_class_fuse_stat;
 extern unsigned c_bi_class_fuse_file_info;
 extern unsigned c_bi_class_fuse_dir_filler;
+extern unsigned c_bi_class_fuse_file_filler;
 
 // - FUSE module -
 extern built_in_module_s module;
