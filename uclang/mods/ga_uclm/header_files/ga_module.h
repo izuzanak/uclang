@@ -53,6 +53,7 @@ bool bic_ga_real_genome_operator_binary_equal(interpreter_thread_s &it,unsigned 
 bool bic_ga_real_genome_method_GaRealGenome_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ga_real_genome_method_evolve_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ga_real_genome_method_values_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ga_real_genome_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ga_real_genome_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ga_real_genome_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

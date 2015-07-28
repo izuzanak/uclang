@@ -142,7 +142,7 @@ built_in_class_s ga_real_genome_class =
 {/*{{{*/
   "GaRealGenome",
   c_modifier_public | c_modifier_final,
-  6, ga_real_genome_methods,
+  7, ga_real_genome_methods,
   0, ga_real_genome_variables,
   bic_ga_real_genome_consts,
   bic_ga_real_genome_init,
@@ -182,6 +182,11 @@ built_in_method_s ga_real_genome_methods[] =
     bic_ga_real_genome_method_values_0
   },
   {
+    "data#0",
+    c_modifier_public | c_modifier_final,
+    bic_ga_real_genome_method_data_0
+  },
+  {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_ga_real_genome_method_to_string_0
@@ -196,6 +201,60 @@ built_in_method_s ga_real_genome_methods[] =
 built_in_variable_s ga_real_genome_variables[] =
 {/*{{{*/
 };/*}}}*/
+
+#define BIC_GA_REAL_GENOME_RETRIEVE_VALUES() \
+{/*{{{*/\
+\
+  /* - create result array - */\
+  pointer_array_s *array_ptr = it.get_new_array_ptr();\
+  BIC_CREATE_NEW_LOCATION(array_loc,c_bi_class_array,array_ptr);\
+\
+  /* - retrieve genome size - */\
+  unsigned genome_size = genome_ptr->length();\
+\
+  /* - retrieve genome genes - */\
+  if (genome_size > 0)\
+  {\
+    unsigned idx = 0;\
+    do {\
+\
+      /* - retrieve gene value - */\
+      double value = genome_ptr->gene(idx);\
+      basic_64b &v_data_ptr = *((basic_64b *)&value);\
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);\
+      array_ptr->push(new_location);\
+\
+    } while(++idx < genome_size);\
+  }\
+\
+  BIC_SET_RESULT(array_loc);\
+}/*}}}*/
+
+#define BIC_GA_REAL_GENOME_RETRIEVE_DATA() \
+{/*{{{*/\
+\
+  /* - retrieve genome size - */\
+  unsigned genome_size = genome_ptr->length();\
+\
+  /* - create result string - */\
+  string_s *string_ptr = it.get_new_string_ptr();\
+  string_ptr->create(genome_size*sizeof(float));\
+\
+  /* - retrieve genome genes - */\
+  if (genome_size > 0)\
+  {\
+    unsigned idx = 0;\
+    float *s_ptr = (float *)string_ptr->data;\
+    do {\
+\
+      /* - retrieve gene value - */\
+      *s_ptr++ = genome_ptr->gene(idx);\
+\
+    } while(++idx < genome_size);\
+  }\
+\
+  BIC_SET_RESULT_STRING(string_ptr);\
+}/*}}}*/
 
 void bic_ga_real_genome_consts(location_array_s &const_locations)
 {/*{{{*/
@@ -401,30 +460,25 @@ bool bic_ga_real_genome_method_values_0(interpreter_thread_s &it,unsigned stack_
   
   ga_real_genome_s *grg_ptr = (ga_real_genome_s *)dst_location->v_data_ptr;
 
-  // - create result array -
-  pointer_array_s *array_ptr = it.get_new_array_ptr();
-  BIC_CREATE_NEW_LOCATION(array_loc,c_bi_class_array,array_ptr);
+  // - retrieve genome -
+  GARealGenome *genome_ptr = grg_ptr->genome;
 
-  // - retrieve genome and its size -
-  GARealGenome &genome = *grg_ptr->genome;
-  unsigned genome_size = genome.length();
+  BIC_GA_REAL_GENOME_RETRIEVE_VALUES();
 
-  // - retrieve genome genes -
-  if (genome_size > 0)
-  {
-    unsigned idx = 0;
-    do {
+  return true;
+}/*}}}*/
 
-      // - retrieve gene value -
-      double value = genome.gene(idx);
-      basic_64b &v_data_ptr = *((basic_64b *)&value);
-      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);
-      array_ptr->push(new_location);
+bool bic_ga_real_genome_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  
+  ga_real_genome_s *grg_ptr = (ga_real_genome_s *)dst_location->v_data_ptr;
 
-    } while(++idx < genome_size);
-  }
+  // - retrieve genome -
+  GARealGenome *genome_ptr = grg_ptr->genome;
 
-  BIC_SET_RESULT(array_loc);
+  BIC_GA_REAL_GENOME_RETRIEVE_DATA();
 
   return true;
 }/*}}}*/
@@ -543,29 +597,7 @@ bool bic_ga_tmp_real_genome_method_values_0(interpreter_thread_s &it,unsigned st
   
   GARealGenome *genome_ptr = (GARealGenome *)dst_location->v_data_ptr;
 
-  // - create result array -
-  pointer_array_s *array_ptr = it.get_new_array_ptr();
-  BIC_CREATE_NEW_LOCATION(array_loc,c_bi_class_array,array_ptr);
-
-  // - retrieve genome size -
-  unsigned genome_size = genome_ptr->length();
-
-  // - retrieve genome genes -
-  if (genome_size > 0)
-  {
-    unsigned idx = 0;
-    do {
-
-      // - retrieve gene value -
-      double value = genome_ptr->gene(idx);
-      basic_64b &v_data_ptr = *((basic_64b *)&value);
-      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);
-      array_ptr->push(new_location);
-
-    } while(++idx < genome_size);
-  }
-
-  BIC_SET_RESULT(array_loc);
+  BIC_GA_REAL_GENOME_RETRIEVE_VALUES();
 
   return true;
 }/*}}}*/
@@ -577,27 +609,7 @@ bool bic_ga_tmp_real_genome_method_data_0(interpreter_thread_s &it,unsigned stac
   
   GARealGenome *genome_ptr = (GARealGenome *)dst_location->v_data_ptr;
 
-  // - retrieve genome size -
-  unsigned genome_size = genome_ptr->length();
-
-  // - create result string -
-  string_s *string_ptr = it.get_new_string_ptr();
-  string_ptr->create(genome_size*sizeof(float));
-
-  // - retrieve genome genes -
-  if (genome_size > 0)
-  {
-    unsigned idx = 0;
-    float *s_ptr = (float *)string_ptr->data;
-    do {
-
-      // - retrieve gene value -
-      *s_ptr++ = genome_ptr->gene(idx);
-
-    } while(++idx < genome_size);
-  }
-
-  BIC_SET_RESULT_STRING(string_ptr);
+  BIC_GA_REAL_GENOME_RETRIEVE_DATA();
 
   return true;
 }/*}}}*/
