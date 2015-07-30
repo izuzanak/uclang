@@ -6,11 +6,12 @@ include "ga_module.h"
 // - GA indexes of built in classes -
 unsigned c_bi_class_ga_real_genome = c_idx_not_exist;
 unsigned c_bi_class_ga_tmp_real_genome = c_idx_not_exist;
+unsigned c_bi_class_ga_steady_state = c_idx_not_exist;
 
 // - GA module -
 built_in_module_s module =
 {/*{{{*/
-  2,                   // Class count
+  3,                   // Class count
   ga_classes,          // Classes
 
   0,                   // Error base index
@@ -26,6 +27,7 @@ built_in_class_s *ga_classes[] =
 {/*{{{*/
   &ga_real_genome_class,
   &ga_tmp_real_genome_class,
+  &ga_steady_state_class,
 };/*}}}*/
 
 // - GA error strings -
@@ -56,6 +58,9 @@ bool ga_initialize(script_parser_s &sp)
 
   // - initialize ga_tmp_real_genome class identifier -
   c_bi_class_ga_tmp_real_genome = class_base_idx++;
+
+  // - initialize ga_steady_state class identifier -
+  c_bi_class_ga_steady_state = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -142,7 +147,7 @@ built_in_class_s ga_real_genome_class =
 {/*{{{*/
   "GaRealGenome",
   c_modifier_public | c_modifier_final,
-  7, ga_real_genome_methods,
+  8, ga_real_genome_methods,
   0, ga_real_genome_variables,
   bic_ga_real_genome_consts,
   bic_ga_real_genome_init,
@@ -175,6 +180,11 @@ built_in_method_s ga_real_genome_methods[] =
     "evolve#4",
     c_modifier_public | c_modifier_final,
     bic_ga_real_genome_method_evolve_4
+  },
+  {
+    "steady_state#4",
+    c_modifier_public | c_modifier_final,
+    bic_ga_real_genome_method_steady_state_4
   },
   {
     "values#0",
@@ -340,14 +350,15 @@ bool bic_ga_real_genome_method_GaRealGenome_4(interpreter_thread_s &it,unsigned 
     return false;
   }
 
-  // - create new real genome object -
+  // - create ga real genome object -
   ga_real_genome_s *grg_ptr = (ga_real_genome_s *)cmalloc(sizeof(ga_real_genome_s));
+  grg_ptr->init();
 
   GARealAlleleSet alleles(lower,upper);
-  grg_ptr->genome = new GARealGenome(length,alleles,ga_s::objective_real);
+  grg_ptr->genome_ptr = new GARealGenome(length,alleles,ga_s::objective_real);
 
   // - set genome user data pointer -
-  grg_ptr->genome->userData(grg_ptr);
+  grg_ptr->genome_ptr->userData(grg_ptr);
 
   src_3_location->v_reference_cnt.atomic_inc();
   grg_ptr->objective_dlg = src_3_location;
@@ -420,7 +431,7 @@ bool bic_ga_real_genome_method_evolve_4(interpreter_thread_s &it,unsigned stack_
   grg_ptr->source_pos = operands[c_source_pos_idx];
   grg_ptr->ret_code = c_run_return_code_OK;
 
-  GARealGenome &genome = *grg_ptr->genome;
+  GARealGenome &genome = *grg_ptr->genome_ptr;
 
   // - create genetic algorithm -
   GASteadyStateGA ga(genome);
@@ -453,6 +464,97 @@ bool bic_ga_real_genome_method_evolve_4(interpreter_thread_s &it,unsigned stack_
   return true;
 }/*}}}*/
 
+bool bic_ga_real_genome_method_steady_state_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
+  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
+
+  long long int generation_cnt;
+  long long int population_size;
+  double mutation;
+  double crossover;
+
+  if (!it.retrieve_integer(src_0_location,generation_cnt) ||
+      !it.retrieve_integer(src_1_location,population_size) ||
+      !it.retrieve_float(src_2_location,mutation) ||
+      !it.retrieve_float(src_3_location,crossover))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("steady_state#4");
+    new_exception->params.push(4);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+    new_exception->params.push(src_2_location->v_type);
+    new_exception->params.push(src_3_location->v_type);
+
+    return false;
+  }
+
+  // - ERROR -
+  if (generation_cnt <= 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GA_GENERATION_COUNT_ZERO_OR_NEGATIVE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (population_size <= 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GA_POPULATION_SIZE_ZERO_OR_NEGATIVE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (mutation < 0.0 || mutation > 1.0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GA_MUTATION_PROBABILITY_RANGE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (crossover < 0.0 || crossover > 1.0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GA_CROSSOVER_PROBABILITY_RANGE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  ga_real_genome_s *grg_ptr = (ga_real_genome_s *)dst_location->v_data_ptr;
+  grg_ptr->it_ptr = &it;
+  grg_ptr->source_pos = operands[c_source_pos_idx];
+  grg_ptr->ret_code = c_run_return_code_OK;
+
+  // - create ga steady state object -
+  ga_steady_state_s *gss_ptr = (ga_steady_state_s *)cmalloc(sizeof(ga_steady_state_s));
+  gss_ptr->init();
+
+  // - set reference to genome location -
+  dst_location->v_reference_cnt.atomic_inc();
+  gss_ptr->ga_genome_loc = dst_location;
+
+  // - create steady state genetic algorithm -
+  GASteadyStateGA *ga_ptr = new GASteadyStateGA(*grg_ptr->genome_ptr);
+  gss_ptr->ga_ptr = ga_ptr;
+
+  ga_ptr->minimize();
+  ga_ptr->nGenerations(generation_cnt);
+  ga_ptr->populationSize(population_size);
+  ga_ptr->pMutation(mutation);
+  ga_ptr->pCrossover(crossover);
+
+  ga_ptr->initialize(); 
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_ga_steady_state,gss_ptr);
+
+  pointer &res_location = it.data_stack[res_loc_idx];
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
 bool bic_ga_real_genome_method_values_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -461,7 +563,7 @@ bool bic_ga_real_genome_method_values_0(interpreter_thread_s &it,unsigned stack_
   ga_real_genome_s *grg_ptr = (ga_real_genome_s *)dst_location->v_data_ptr;
 
   // - retrieve genome -
-  GARealGenome *genome_ptr = grg_ptr->genome;
+  GARealGenome *genome_ptr = grg_ptr->genome_ptr;
 
   BIC_GA_REAL_GENOME_RETRIEVE_VALUES();
 
@@ -476,7 +578,7 @@ bool bic_ga_real_genome_method_data_0(interpreter_thread_s &it,unsigned stack_ba
   ga_real_genome_s *grg_ptr = (ga_real_genome_s *)dst_location->v_data_ptr;
 
   // - retrieve genome -
-  GARealGenome *genome_ptr = grg_ptr->genome;
+  GARealGenome *genome_ptr = grg_ptr->genome_ptr;
 
   BIC_GA_REAL_GENOME_RETRIEVE_DATA();
 
@@ -641,6 +743,182 @@ bool bic_ga_tmp_real_genome_method_print_0(interpreter_thread_s &it,unsigned sta
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
   printf("GaTmpRealGenome");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class GA_STEADY_STATE -
+built_in_class_s ga_steady_state_class =
+{/*{{{*/
+  "GaSteadyState",
+  c_modifier_public | c_modifier_final,
+  6, ga_steady_state_methods,
+  0, ga_steady_state_variables,
+  bic_ga_steady_state_consts,
+  bic_ga_steady_state_init,
+  bic_ga_steady_state_clear,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};/*}}}*/
+
+built_in_method_s ga_steady_state_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_ga_steady_state_operator_binary_equal
+  },
+  {
+    "done#0",
+    c_modifier_public | c_modifier_final,
+    bic_ga_steady_state_method_done_0
+  },
+  {
+    "step#0",
+    c_modifier_public | c_modifier_final,
+    bic_ga_steady_state_method_step_0
+  },
+  {
+    "best_individual#0",
+    c_modifier_public | c_modifier_final,
+    bic_ga_steady_state_method_best_individual_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_ga_steady_state_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_ga_steady_state_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s ga_steady_state_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_ga_steady_state_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_ga_steady_state_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (basic_64b)NULL;
+}/*}}}*/
+
+void bic_ga_steady_state_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  ga_steady_state_s *gss_ptr = (ga_steady_state_s *)location_ptr->v_data_ptr;
+
+  if (gss_ptr != NULL)
+  {
+    gss_ptr->clear(it);
+    cfree(gss_ptr);
+  }
+}/*}}}*/
+
+bool bic_ga_steady_state_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_ga_steady_state_method_done_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  ga_steady_state_s *gss_ptr = (ga_steady_state_s *)dst_location->v_data_ptr;
+
+  long long int result = gss_ptr->ga_ptr->done();
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_ga_steady_state_method_step_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  ga_steady_state_s *gss_ptr = (ga_steady_state_s *)dst_location->v_data_ptr;
+
+  // - if genetic algoritm is not complete -
+  if (!gss_ptr->ga_ptr->done())
+  {
+    // - retrieve and setup genome pointer -
+    ga_real_genome_s *grg_ptr = (ga_real_genome_s *)gss_ptr->ga_genome_loc->v_data_ptr;
+    grg_ptr->it_ptr = &it;
+    grg_ptr->source_pos = operands[c_source_pos_idx];
+    grg_ptr->ret_code = c_run_return_code_OK;
+
+    // - execute one genetic algorithm step -
+    gss_ptr->ga_ptr->step();
+
+    // - if exception occurred -
+    if (grg_ptr->ret_code == c_run_return_code_EXCEPTION)
+    {
+      return false;
+    }
+  }
+
+  pointer &res_location = it.data_stack[res_loc_idx];
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_ga_steady_state_method_best_individual_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  ga_steady_state_s *gss_ptr = (ga_steady_state_s *)dst_location->v_data_ptr;
+  ga_real_genome_s *grg_ptr = (ga_real_genome_s *)gss_ptr->ga_genome_loc->v_data_ptr;
+
+  // - retrieve best individual -
+  *grg_ptr->genome_ptr = gss_ptr->ga_ptr->statistics().bestIndividual();
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_ga_steady_state_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("GasteadyState"),"GasteadyState");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_ga_steady_state_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  printf("GasteadyState");
 
   BIC_SET_RESULT_BLANK();
 

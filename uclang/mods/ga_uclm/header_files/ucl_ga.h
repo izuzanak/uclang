@@ -26,8 +26,21 @@ struct ga_real_genome_s
   unsigned source_pos;
   unsigned ret_code;
 
-  GARealGenome *genome;
+  GARealGenome *genome_ptr;
   location_s *objective_dlg;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
+ * definition of structure ga_steady_state_s
+ */
+
+struct ga_steady_state_s
+{
+  GASteadyStateGA *ga_ptr;
+  location_s *ga_genome_loc;
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
@@ -52,7 +65,7 @@ inline void ga_real_genome_s::init()
   source_pos = 0;
   ret_code = c_run_return_code_OK;
 
-  genome = NULL;
+  genome_ptr = NULL;
   objective_dlg = NULL;
 }/*}}}*/
 
@@ -65,10 +78,38 @@ inline void ga_real_genome_s::clear(interpreter_thread_s &it)
     it.release_location_ptr(objective_dlg);
   }
 
-  // - release genome -
-  if (genome != NULL)
+  // - release genome pointer -
+  if (genome_ptr != NULL)
   {
-    delete genome;
+    delete genome_ptr;
+  }
+
+  init();
+}/*}}}*/
+
+/*
+ * inline methods of structure ga_steady_state_s
+ */
+
+inline void ga_steady_state_s::init()
+{/*{{{*/
+  ga_ptr = NULL;
+  ga_genome_loc = NULL;
+}/*}}}*/
+
+inline void ga_steady_state_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+
+  // - release genetic algorithm pointer -
+  if (ga_ptr != NULL)
+  {
+    delete ga_ptr;
+  }
+
+  // - release genome location -
+  if (ga_genome_loc != NULL)
+  {
+    it.release_location_ptr(ga_genome_loc);
   }
 
   init();
