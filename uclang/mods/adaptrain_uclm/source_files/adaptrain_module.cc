@@ -2328,10 +2328,10 @@ bool bic_ato_loco_method_AtoLoco_1(interpreter_thread_s &it,unsigned stack_base,
   ATO_LOCO_COPY(loco.NAME.ticks,U16);\
 }/*}}}*/
 
-  memcpy(&loco.MD5digest,&src_loco.MD5digest,sizeof(sLOCO::MD5digest));
-  memcpy(&loco.LocoId,&src_loco.LocoId,sizeof(sLOCO::LocoId));
-  memcpy(&loco.LocoType,&src_loco.LocoType,sizeof(sLOCO::LocoType));
-  memcpy(&loco.UIC_Id,&src_loco.UIC_Id,sizeof(sLOCO::UIC_Id));
+  memcpy(loco.MD5digest,src_loco.MD5digest,sizeof(sLOCO::MD5digest));
+  memcpy(loco.LocoId,src_loco.LocoId,sizeof(sLOCO::LocoId));
+  memcpy(loco.LocoType,src_loco.LocoType,sizeof(sLOCO::LocoType));
+  memcpy(loco.UIC_Id,src_loco.UIC_Id,sizeof(sLOCO::UIC_Id));
 
   ATO_LOCO_DATETIME48_COPY(TimeStamp);
 
@@ -2431,7 +2431,6 @@ bool bic_ato_loco_method_AtoLoco_1(interpreter_thread_s &it,unsigned stack_base,
 
   return true;
 }/*}}}*/
-
 
 bool bic_ato_loco_method_LocoId_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
@@ -2676,9 +2675,9 @@ bool bic_ato_train_method_AtoTrain_1(interpreter_thread_s &it,unsigned stack_bas
   ATO_TRAIN_COPY(train.NAME.ticks,U16);\
 }/*}}}*/
 
-  memcpy(&train.MD5digest,&src_train.MD5digest,sizeof(sTRAIN::MD5digest));
-  memcpy(&train.TrainId,&src_train.TrainId,sizeof(sTRAIN::TrainId));
-  memcpy(&train.TrainIdNum,&src_train.TrainIdNum,sizeof(sTRAIN::TrainIdNum));
+  memcpy(train.MD5digest,src_train.MD5digest,sizeof(sTRAIN::MD5digest));
+  memcpy(train.TrainId,src_train.TrainId,sizeof(sTRAIN::TrainId));
+  memcpy(train.TrainIdNum,src_train.TrainIdNum,sizeof(sTRAIN::TrainIdNum));
 
   ATO_TRAIN_DATETIME48_COPY(TimeStamp);
 

@@ -99,6 +99,13 @@ struct sEVTARCH_RECORD_R32
 {/*{{{*/\
   U8 digest[16];\
 \
+  /* - ERROR - */\
+  if (string_ptr->size < 17)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_ ## ERROR_CODE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
   Ucf::MD5Digest md5;\
   md5.Append((U8 *)string_ptr->data + 16,string_ptr->size - 17);\
   md5.Finish(digest);\
