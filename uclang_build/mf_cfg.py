@@ -13,6 +13,7 @@ C_NODE_PROG         = index; index += 1
 C_ENCIPHER_PROG     = index; index += 1
 C_MODULE_BASE       = index; index += 1
 C_MODULE_SYS        = index; index += 1
+C_MODULE_INOTIFY    = index; index += 1
 C_MODULE_TIME       = index; index += 1
 C_MODULE_LANG       = index; index += 1
 C_MODULE_PACK       = index; index += 1
@@ -85,6 +86,7 @@ c_cfg = [
     ["ENCIPHER"      ,c_enabled[C_ENCIPHER_PROG]    ,C_UCLANG_DIR + "progs/encipher"        ,None],
     ["MOD_BASE"      ,c_enabled[C_MODULE_BASE]      ,C_UCLANG_DIR + "mods/base_uclm"        ,None],
     ["MOD_SYS"       ,c_enabled[C_MODULE_SYS]       ,C_UCLANG_DIR + "mods/sys_uclm"         ,None],
+    ["MOD_INOTIFY"   ,c_enabled[C_MODULE_INOTIFY]   ,C_UCLANG_DIR + "mods/inotify_uclm"     ,None],
     ["MOD_TIME"      ,c_enabled[C_MODULE_TIME]      ,C_UCLANG_DIR + "mods/time_uclm"        ,None],
     ["MOD_LANG"      ,c_enabled[C_MODULE_LANG]      ,C_UCLANG_DIR + "mods/lang_uclm"        ,None],
     ["MOD_PACK"      ,c_enabled[C_MODULE_PACK]      ,C_UCLANG_DIR + "mods/pack_uclm"        ,None],

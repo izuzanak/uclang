@@ -16,6 +16,7 @@ c_packages = [
   ["ENCIPHER"      ,"true"      ,[]],
   ["MOD_BASE"      ,"true"      ,[]],
   ["MOD_SYS"       ,"true"      ,[]],
+  ["MOD_INOTIFY"   ,"files"     ,["/usr/include/sys/inotify.h"]],
   ["MOD_TIME"      ,"true"      ,[]],
   ["MOD_LANG"      ,"true"      ,[]],
   ["MOD_PACK"      ,"true"      ,[]],
