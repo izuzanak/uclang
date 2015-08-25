@@ -53,7 +53,7 @@ built_in_module_s module =
   sys_classes,          // Classes
 
   0,                    // Error base index
-  33                    // Error count
+  35                    // Error count
 
 #ifdef ENABLE_CLASS_SOCKET
   + 14
@@ -124,6 +124,8 @@ const char *sys_error_strings[] =
   "error_PIPE_CLOSE_ERROR",
   "error_PIPE_NOT_OPENED",
   "error_FILE_OPEN_ERROR",
+  "error_FILE_SEEK_ERROR",
+  "error_FILE_TELL_ERROR",
   "error_FILE_CLOSE_ERROR",
   "error_FILE_NOT_OPENED",
 
@@ -351,6 +353,20 @@ bool sys_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nCannot open file \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FILE_SEEK_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot set position (seek) in file\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FILE_TELL_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot retrieve position in file\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_FILE_CLOSE_ERROR:
@@ -1787,7 +1803,7 @@ bool bic_sys_method_time_0(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
   timeval tv;
-  
+
   // - ERROR -
   if (gettimeofday(&tv,NULL) != 0)
   {
@@ -2101,8 +2117,8 @@ built_in_class_s file_class =
 {/*{{{*/
   "File",
   c_modifier_public | c_modifier_final,
-  13, file_methods,
-  3, file_variables,
+  15, file_methods,
+  3 + 3, file_variables,
   bic_file_consts,
   bic_file_init,
   bic_file_clear,
@@ -2134,6 +2150,16 @@ built_in_method_s file_methods[] =
     "File#2",
     c_modifier_public | c_modifier_final,
     bic_file_method_File_2
+  },
+  {
+    "seek#2",
+    c_modifier_public | c_modifier_final,
+    bic_file_method_seek_2
+  },
+  {
+    "tell#0",
+    c_modifier_public | c_modifier_final,
+    bic_file_method_tell_0
   },
   {
     "close#0",
@@ -2189,18 +2215,17 @@ built_in_method_s file_methods[] =
 
 built_in_variable_s file_variables[] =
 {/*{{{*/
-  {
-    "stdin",
-    c_modifier_public | c_modifier_static | c_modifier_static_const
-  },
-  {
-    "stdout",
-    c_modifier_public | c_modifier_static | c_modifier_static_const
-  },
-  {
-    "stderr",
-    c_modifier_public | c_modifier_static | c_modifier_static_const
-  },
+
+  // - insert standard file stream constants -
+  { "stdin",  c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "stdout", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "stderr", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - seek whence values -
+  { "SEEK_SET", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SEEK_CUR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SEEK_END", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_file_consts(location_array_s &const_locations)
@@ -2221,6 +2246,23 @@ void bic_file_consts(location_array_s &const_locations)
     CREATE_FILE_STREAM_BIC_STATIC(stdout);
     CREATE_FILE_STREAM_BIC_STATIC(stderr);
   }
+
+  // - insert seek whence values -
+  {
+    const_locations.push_blanks(3);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 3);
+
+#define CREATE_FILE_SEEK_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr++;
+
+    CREATE_FILE_SEEK_BIC_STATIC(SEEK_SET);
+    CREATE_FILE_SEEK_BIC_STATIC(SEEK_CUR);
+    CREATE_FILE_SEEK_BIC_STATIC(SEEK_END);
+  }
+
 }/*}}}*/
 
 void bic_file_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -2268,6 +2310,80 @@ bool bic_file_method_File_2(interpreter_thread_s &it,unsigned stack_base,uli *op
   SYS_FILE_OPEN(c_bi_class_file,"File#2");
 
   dst_location->v_data_ptr = (basic_64b)f;
+
+  return true;
+}/*}}}*/
+
+bool bic_file_method_seek_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  long long int offset;
+  long long int whence;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,offset) ||
+      !it.retrieve_integer(src_1_location,whence))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("seek#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  // - retrieve pointer to file -
+  FILE *f = (FILE *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (f == NULL)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (fseek(f,offset,whence) != 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_FILE_SEEK_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_file_method_tell_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  // - retrieve pointer to file -
+  FILE *f = (FILE *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (f == NULL)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  long long int result = ftell(f);
+
+  // - ERROR -
+  if (result < 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_FILE_TELL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
@@ -5010,7 +5126,7 @@ void bic_poll_init(interpreter_thread_s &it,location_s *location_ptr)
 
 void bic_poll_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  
+
   // - retrieve poll pointer -
   poll_s *poll_ptr = (poll_s *)location_ptr->v_data_ptr;
 
@@ -5075,7 +5191,7 @@ bool bic_poll_method_Poll_1(interpreter_thread_s &it,unsigned stack_base,uli *op
     do {
       location_s *fd_location = it.get_location_value(p_ptr[0]);
       location_s *events_location = it.get_location_value(p_ptr[1]);
-      
+
       // - ERROR -
       if (fd_location->v_type != c_bi_class_integer ||
           events_location->v_type != c_bi_class_integer)
@@ -5410,7 +5526,7 @@ bool bic_timer_method_remain_0(interpreter_thread_s &it,unsigned stack_base,uli 
     timer_record_s &record = records.data[r_idx].object;
 
     long long result = record.target_stamp - timer_s::get_stamp();
-    
+
     BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
   }
   else
@@ -5440,7 +5556,7 @@ bool bic_timer_method_process_0(interpreter_thread_s &it,unsigned stack_base,uli
     do {
       unsigned r_idx = next_idx;
       next_idx = records.get_next_idx(r_idx);
-      
+
       // - retrieve timer record -
       timer_record_s &record = records.data[r_idx].object;
 

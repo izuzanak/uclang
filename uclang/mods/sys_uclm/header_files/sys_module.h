@@ -59,6 +59,8 @@ enum
   c_error_PIPE_NOT_OPENED,
 
   c_error_FILE_OPEN_ERROR,
+  c_error_FILE_SEEK_ERROR,
+  c_error_FILE_TELL_ERROR,
   c_error_FILE_CLOSE_ERROR,
   c_error_FILE_NOT_OPENED,
 
@@ -194,6 +196,8 @@ void bic_file_clear(interpreter_thread_s &it,location_s *location_ptr);
 bool bic_file_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_file_method_File_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_file_method_File_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_file_method_seek_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_file_method_tell_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_file_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_file_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_file_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
