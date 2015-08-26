@@ -103,7 +103,7 @@ built_in_class_s inotify_class =
   "Inotify",
   c_modifier_public | c_modifier_final,
   7, inotify_methods,
-  24, inotify_variables,
+  23, inotify_variables,
   bic_inotify_consts,
   bic_inotify_init,
   bic_inotify_clear,
@@ -181,7 +181,6 @@ built_in_variable_s inotify_variables[] =
   { "IN_IGNORED", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "IN_ONLYDIR", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "IN_DONT_FOLLOW", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "IN_EXCL_UNLINK", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "IN_MASK_ADD", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "IN_ISDIR", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "IN_ONESHOT", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -194,8 +193,8 @@ void bic_inotify_consts(location_array_s &const_locations)
 
   // - insert inotify watch flags -
   {
-    const_locations.push_blanks(24);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 24);
+    const_locations.push_blanks(23);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 23);
 
 #define CREATE_INOTIFY_WATCH_FLAG_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -222,7 +221,6 @@ void bic_inotify_consts(location_array_s &const_locations)
     CREATE_INOTIFY_WATCH_FLAG_BIC_STATIC(IN_IGNORED);
     CREATE_INOTIFY_WATCH_FLAG_BIC_STATIC(IN_ONLYDIR);
     CREATE_INOTIFY_WATCH_FLAG_BIC_STATIC(IN_DONT_FOLLOW);
-    CREATE_INOTIFY_WATCH_FLAG_BIC_STATIC(IN_EXCL_UNLINK);
     CREATE_INOTIFY_WATCH_FLAG_BIC_STATIC(IN_MASK_ADD);
     CREATE_INOTIFY_WATCH_FLAG_BIC_STATIC(IN_ISDIR);
     CREATE_INOTIFY_WATCH_FLAG_BIC_STATIC(IN_ONESHOT);
