@@ -2019,6 +2019,32 @@ if cfg_ref[CFG_TARGET]:
     )
 # }}}
 
+# fgettools module
+cfg_ref = c_cfg[C_MODULE_FGETTOOLS]
+# {{{
+if cfg_ref[CFG_TARGET]:
+    cfg_ref[CFG_MODULE] = module_c(
+      configuration,
+      cfg_ref[CFG_DIR],
+      cfg_ref[CFG_NAME],
+      [ 
+        "header_files",
+        os.sep.join(["..","..","libs","libbase_ucll","header_files"])
+      ],
+      [ 
+        "source_files",
+      ],
+      [ 
+        os.sep.join(["..","..","libs","libbase_ucll"])
+      ],
+      opt_build, # GPP options
+      opt_link, # GPP link options
+      "", # GPP defines
+      [],
+      [],
+    )
+# }}}
+
 # node module
 cfg_ref = c_cfg[C_MODULE_NODE]
 # {{{

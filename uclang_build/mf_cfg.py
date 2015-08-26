@@ -54,6 +54,7 @@ C_MODULE_IMXEGL     = index; index += 1
 C_MODULE_SNMP       = index; index += 1
 C_MODULE_COMELM     = index; index += 1
 C_MODULE_UCPAS      = index; index += 1
+C_MODULE_FGETTOOLS  = index; index += 1
 C_MODULE_NODE       = index; index += 1
 C_MODULE_DDB        = index; index += 1
 C_MODULE_CONTAINERS = index; index += 1
@@ -127,6 +128,7 @@ c_cfg = [
     ["MOD_SNMP"      ,c_enabled[C_MODULE_SNMP]      ,C_UCLANG_DIR + "mods/snmp_uclm"        ,None],
     ["MOD_COMELM"    ,c_enabled[C_MODULE_COMELM]    ,C_UCLANG_DIR + "mods/comelm_uclm"      ,None],
     ["MOD_UCPAS"     ,c_enabled[C_MODULE_UCPAS]     ,C_UCLANG_DIR + "mods/ucpas_uclm"       ,None],
+    ["MOD_FGETTOOLS" ,c_enabled[C_MODULE_FGETTOOLS] ,C_UCLANG_DIR + "mods/fgettools_uclm"   ,None],
     ["MOD_NODE"      ,c_enabled[C_MODULE_NODE]      ,C_UCLANG_DIR + "mods/node_uclm"        ,None],
     ["MOD_DDB"       ,c_enabled[C_MODULE_DDB]       ,C_UCLANG_DIR + "mods/ddb_uclm"         ,None],
     ["MOD_CONTAINERS",c_enabled[C_MODULE_CONTAINERS],C_UCLANG_DIR + "mods/containers_uclm"  ,None],

@@ -57,6 +57,7 @@ c_packages = [
   ["MOD_SNMP"      ,"false"     ,[]], # test
   ["MOD_COMELM"    ,"false"     ,[]],
   ["MOD_UCPAS"     ,"dirs"      ,["../ext_libs/ucpas/libpas"]],
+  ["MOD_FGETTOOLS" ,"true"      ,[]],
   ["MOD_NODE"      ,"true"      ,[]],
   ["MOD_DDB"       ,"false"     ,[]],
   ["MOD_CONTAINERS","true"      ,[]],
