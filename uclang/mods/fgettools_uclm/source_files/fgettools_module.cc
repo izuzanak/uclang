@@ -154,9 +154,9 @@ built_in_method_s fget_target_methods[] =
     bic_fget_target_method_FgetTarget_3
   },
   {
-    "requests#1",
+    "received#1",
     c_modifier_public | c_modifier_final,
-    bic_fget_target_method_requests_1
+    bic_fget_target_method_received_1
   },
   {
     "update_data#2",
@@ -357,7 +357,26 @@ bool bic_fget_target_method_FgetTarget_3(interpreter_thread_s &it,unsigned stack
   return true;
 }/*}}}*/
 
-bool bic_fget_target_method_requests_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+#define BIC_FGET_TARGET_CREATE_REQUEST_RECEIVE() \
+{/*{{{*/\
+  pointer_array_s *request_ptr = it.get_new_array_ptr();\
+  request_ptr->copy_resize(2);\
+\
+  BIC_CREATE_NEW_LOCATION(request_loc,c_bi_class_array,request_ptr);\
+\
+  requests_ptr->push(request_loc);\
+\
+  long long int block_idx = start_idx;\
+  long long int block_cnt = (end_idx - start_idx) + 1;\
+\
+  BIC_CREATE_NEW_LOCATION(block_idx_loc,c_bi_class_integer,block_idx);\
+  BIC_CREATE_NEW_LOCATION(block_cnt_loc,c_bi_class_integer,block_cnt);\
+\
+  request_ptr->push(block_idx_loc);\
+  request_ptr->push(block_cnt_loc);\
+}/*}}}*/
+
+bool bic_fget_target_method_received_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -365,18 +384,18 @@ bool bic_fget_target_method_requests_1(interpreter_thread_s &it,unsigned stack_b
 
   long long int request_cnt;
 
-  // - ERROR -
+  /* - ERROR - */
   if (!it.retrieve_integer(src_0_location,request_cnt))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("requests#1");
+    BIC_EXCEPTION_PUSH_METHOD_RI("received#1");
     new_exception->params.push(1);
     new_exception->params.push(src_0_location->v_type);
 
     return false;
   }
 
-  // - ERROR -
+  /* - ERROR - */
   if (request_cnt < 0)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FGET_TARGET_NEGATIVE_REQUEST_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -402,47 +421,11 @@ bool bic_fget_target_method_requests_1(interpreter_thread_s &it,unsigned stack_b
 
     do {
 
-      // - if package was received -
+      /* - if package was received - */
       if (ft_ptr->map_ptr[index >> 3] & (1 << (index & 0x07)))
       {
         ++done_cnt;
 
-        if (request_cnt > 0 && start_idx != c_idx_not_exist)
-        {
-
-#define BIC_FGET_TARGET_CREATE_REQUEST() \
-{/*{{{*/\
-  pointer_array_s *request_ptr = it.get_new_array_ptr();\
-  request_ptr->copy_resize(2);\
-\
-  BIC_CREATE_NEW_LOCATION(request_loc,c_bi_class_array,request_ptr);\
-\
-  requests_ptr->push(request_loc);\
-\
-  long long int block_idx = start_idx;\
-  long long int block_cnt = (end_idx - start_idx) + 1;\
-\
-  BIC_CREATE_NEW_LOCATION(block_idx_loc,c_bi_class_integer,block_idx);\
-  BIC_CREATE_NEW_LOCATION(block_cnt_loc,c_bi_class_integer,block_cnt);\
-\
-  request_ptr->push(block_idx_loc);\
-  request_ptr->push(block_cnt_loc);\
-}/*}}}*/
-
-          // - create request -
-          BIC_FGET_TARGET_CREATE_REQUEST()
-
-          // - reset start index -
-          start_idx = c_idx_not_exist;
-
-          // - decrease count of requests -
-          --request_cnt;
-        }
-      }
-
-      // - if package was not received -
-      else
-      {
         if (start_idx == c_idx_not_exist)
         {
           start_idx = index;
@@ -451,18 +434,34 @@ bool bic_fget_target_method_requests_1(interpreter_thread_s &it,unsigned stack_b
         end_idx = index;
       }
 
-      // - increase index -
+      /* - if package was not received - */
+      else
+      {
+        if (request_cnt > 0 && start_idx != c_idx_not_exist)
+        {
+          /* - create request - */
+          BIC_FGET_TARGET_CREATE_REQUEST_RECEIVE()
+
+          /* - reset start index - */
+          start_idx = c_idx_not_exist;
+
+          /* - decrease count of requests - */
+          --request_cnt;
+        }
+      }
+
+      /* - increase index - */
       if (++index >= ft_ptr->block_cnt)
       {
         if (request_cnt > 0 && start_idx != c_idx_not_exist)
         {
-          // - create request -
-          BIC_FGET_TARGET_CREATE_REQUEST()
+          /* - create request - */
+          BIC_FGET_TARGET_CREATE_REQUEST_RECEIVE()
 
-          // - reset start index -
+          /* - reset start index - */
           start_idx = c_idx_not_exist;
 
-          // - decrease count of requests -
+          /* - decrease count of requests - */
           --request_cnt;
         }
 
@@ -471,7 +470,7 @@ bool bic_fget_target_method_requests_1(interpreter_thread_s &it,unsigned stack_b
 
     } while(index != begin_idx);
 
-    // - update done package counter -
+    /* - update done package counter - */
     ft_ptr->done_cnt = done_cnt;
   }
 
