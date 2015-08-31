@@ -23,6 +23,7 @@ enum
   c_error_FGET_TARGET_CANNOT_OPEN_MAP_FILE,
   c_error_FGET_TARGET_FILES_SIZE_MISMATCH,
   c_error_FGET_TARGET_CANNOT_MAP_FILES_TO_MEMORY,
+  c_error_FGET_TARGET_INVALID_INDEX_VALUE,
   c_error_FGET_TARGET_NEGATIVE_REQUEST_COUNT,
   c_error_FGET_TARGET_INVALID_BLOCK_INDEX,
 };
@@ -47,6 +48,7 @@ void bic_fget_target_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_fget_target_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fget_target_method_FgetTarget_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fget_target_method_index_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fget_target_method_received_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fget_target_method_update_data_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fget_target_method_block_cnt_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

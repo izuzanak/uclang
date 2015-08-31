@@ -13,7 +13,7 @@ built_in_module_s module =
   fgettools_classes,         // Classes
 
   0,                         // Error base index
-  7,                         // Error count
+  8,                         // Error count
   fgettools_error_strings,   // Error strings
 
   fgettools_initialize,      // Initialize function
@@ -35,6 +35,7 @@ const char *fgettools_error_strings[] =
   "error_FGET_TARGET_FILES_SIZE_MISMATCH",
   "error_FGET_TARGET_CANNOT_MAP_FILES_TO_MEMORY",
   "error_FGET_TARGET_NEGATIVE_REQUEST_COUNT",
+  "error_FGET_TARGET_INVALID_INDEX_VALUE",
   "error_FGET_TARGET_INVALID_BLOCK_INDEX",
 };/*}}}*/
 
@@ -102,6 +103,13 @@ bool fgettools_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nRequested negative count %" HOST_LL_FORMAT "d of requests\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_FGET_TARGET_INVALID_INDEX_VALUE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid index value %" HOST_LL_FORMAT "d cannot be set\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_FGET_TARGET_INVALID_BLOCK_INDEX:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -124,7 +132,7 @@ built_in_class_s fget_target_class =
 {/*{{{*/
   "FgetTarget",
   c_modifier_public | c_modifier_final,
-  9, fget_target_methods,
+  10, fget_target_methods,
   0, fget_target_variables,
   bic_fget_target_consts,
   bic_fget_target_init,
@@ -152,6 +160,11 @@ built_in_method_s fget_target_methods[] =
     "FgetTarget#3",
     c_modifier_public | c_modifier_final,
     bic_fget_target_method_FgetTarget_3
+  },
+  {
+    "index#1",
+    c_modifier_public | c_modifier_final,
+    bic_fget_target_method_index_1
   },
   {
     "received#1",
@@ -357,6 +370,44 @@ bool bic_fget_target_method_FgetTarget_3(interpreter_thread_s &it,unsigned stack
   return true;
 }/*}}}*/
 
+bool bic_fget_target_method_index_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int index;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,index))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("index#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  fget_target_s *ft_ptr = (fget_target_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (index < 0 || index >= ft_ptr->block_cnt)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FGET_TARGET_INVALID_INDEX_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(index);
+
+    return false;
+  }
+
+  // - set fget target index -
+  ft_ptr->index = index;
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
 #define BIC_FGET_TARGET_CREATE_REQUEST_RECEIVE() \
 {/*{{{*/\
   pointer_array_s *request_ptr = it.get_new_array_ptr();\
@@ -384,7 +435,7 @@ bool bic_fget_target_method_received_1(interpreter_thread_s &it,unsigned stack_b
 
   long long int request_cnt;
 
-  /* - ERROR - */
+  // - ERROR -
   if (!it.retrieve_integer(src_0_location,request_cnt))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -395,7 +446,7 @@ bool bic_fget_target_method_received_1(interpreter_thread_s &it,unsigned stack_b
     return false;
   }
 
-  /* - ERROR - */
+  // - ERROR -
   if (request_cnt < 0)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FGET_TARGET_NEGATIVE_REQUEST_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -411,7 +462,7 @@ bool bic_fget_target_method_received_1(interpreter_thread_s &it,unsigned stack_b
 
   if (ft_ptr->block_cnt > 0)
   {
-    unsigned &index = ft_ptr->index;
+    unsigned index = ft_ptr->index;
 
     unsigned done_cnt = 0;
     unsigned begin_idx = index;
@@ -421,7 +472,7 @@ bool bic_fget_target_method_received_1(interpreter_thread_s &it,unsigned stack_b
 
     do {
 
-      /* - if package was received - */
+      // - if package was received -
       if (ft_ptr->map_ptr[index >> 3] & (1 << (index & 0x07)))
       {
         ++done_cnt;
@@ -434,34 +485,40 @@ bool bic_fget_target_method_received_1(interpreter_thread_s &it,unsigned stack_b
         end_idx = index;
       }
 
-      /* - if package was not received - */
+      // - if package was not received -
       else
       {
         if (request_cnt > 0 && start_idx != c_idx_not_exist)
         {
-          /* - create request - */
+          // - create request -
           BIC_FGET_TARGET_CREATE_REQUEST_RECEIVE()
 
-          /* - reset start index - */
+          // - update fget target index -
+          ft_ptr->index = index;
+
+          // - reset start index -
           start_idx = c_idx_not_exist;
 
-          /* - decrease count of requests - */
+          // - decrease count of requests -
           --request_cnt;
         }
       }
 
-      /* - increase index - */
+      // - increase index -
       if (++index >= ft_ptr->block_cnt)
       {
         if (request_cnt > 0 && start_idx != c_idx_not_exist)
         {
-          /* - create request - */
+          // - create request -
           BIC_FGET_TARGET_CREATE_REQUEST_RECEIVE()
 
-          /* - reset start index - */
+          // - update fget target index -
+          ft_ptr->index = index;
+
+          // - reset start index -
           start_idx = c_idx_not_exist;
 
-          /* - decrease count of requests - */
+          // - decrease count of requests -
           --request_cnt;
         }
 
@@ -470,7 +527,7 @@ bool bic_fget_target_method_received_1(interpreter_thread_s &it,unsigned stack_b
 
     } while(index != begin_idx);
 
-    /* - update done package counter - */
+    // - update done package counter -
     ft_ptr->done_cnt = done_cnt;
   }
 
@@ -513,19 +570,28 @@ bool bic_fget_target_method_update_data_2(interpreter_thread_s &it,unsigned stac
     return false;
   }
 
-  // - update target file -
-  char *data_ptr = ft_ptr->file_ptr + block_index*ft_ptr->block_size;
-  unsigned data_size = string_ptr->size - 1;
-
-  memcpy(data_ptr,string_ptr->data,data_size);
-  msync(data_ptr,data_size,MS_SYNC);
-
-  // - update map file -
+  // - retrieve map file byte -
   char *byte_ptr = ft_ptr->map_ptr + (block_index >> 3);
-  *byte_ptr |= 1 << (block_index & 0x07);
-  msync(byte_ptr,1,MS_SYNC);
+  char bit_mask = 1 << (block_index & 0x07);
 
-  BIC_SET_RESULT_BLANK();
+  // - block need for update test -
+  long long int update = (*byte_ptr & bit_mask) == 0;
+
+  if (update)
+  {
+    // - update target file -
+    char *data_ptr = ft_ptr->file_ptr + block_index*ft_ptr->block_size;
+    unsigned data_size = string_ptr->size - 1;
+
+    memcpy(data_ptr,string_ptr->data,data_size);
+    msync(data_ptr,data_size,MS_SYNC);
+
+    // - update map file -
+    *byte_ptr |= bit_mask;
+    msync(byte_ptr,1,MS_SYNC);
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,update);
 
   return true;
 }/*}}}*/
