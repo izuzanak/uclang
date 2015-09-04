@@ -9,7 +9,7 @@ int main(int argc,char **argv)
 
   // - select modules to import -
   const char *modules[] = {
-    "node_test",NULL
+    "node_test","sys",NULL
     //"sys","containers","json","websocket","jit",NULL
   };
 

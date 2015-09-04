@@ -242,6 +242,8 @@ class UclVar
   static unsigned c_bi_mni_next_item_0;
   static unsigned c_bi_mni_File_0;
   static unsigned c_bi_mni_File_2;
+  static unsigned c_bi_mni_seek_2;
+  static unsigned c_bi_mni_tell_0;
   static unsigned c_bi_mni_SocketAddr_2;
   static unsigned c_bi_mni_name_0;
   static unsigned c_bi_mni_port_0;
@@ -390,6 +392,9 @@ class UclVar
   static unsigned c_bi_vni__stdin;
   static unsigned c_bi_vni__stdout;
   static unsigned c_bi_vni__stderr;
+  static unsigned c_bi_vni__SEEK_SET;
+  static unsigned c_bi_vni__SEEK_CUR;
+  static unsigned c_bi_vni__SEEK_END;
   static unsigned c_bi_vni_AF_UNIX;
   static unsigned c_bi_vni_AF_FILE;
   static unsigned c_bi_vni_AF_INET;
@@ -1186,6 +1191,9 @@ class UclVar
     static UclVar _stdin;
     static UclVar _stdout;
     static UclVar _stderr;
+    static UclVar _SEEK_SET;
+    static UclVar _SEEK_CUR;
+    static UclVar _SEEK_END;
 
     public:
     inline static UclVar to_string()
@@ -2450,6 +2458,16 @@ class UclVar
     return __call_0(c_bi_mni_next_item_0);
   }/*}}}*/
 
+  inline UclVar seek(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_seek_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar tell()
+  {/*{{{*/
+    return __call_0(c_bi_mni_tell_0);
+  }/*}}}*/
+
   inline UclVar name()
   {/*{{{*/
     return __call_0(c_bi_mni_name_0);
@@ -2934,7 +2952,6 @@ inline const char *UclVar::__str()
 
   return ((string_s *)tmp_location->v_data_ptr)->data;
 }/*}}}*/
-
 
 inline void UclVar::__free()
 {/*{{{*/

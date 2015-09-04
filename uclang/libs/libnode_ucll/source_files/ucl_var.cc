@@ -198,6 +198,8 @@ unsigned UclVar::c_bi_mni_get_fd_0;
 unsigned UclVar::c_bi_mni_next_item_0;
 unsigned UclVar::c_bi_mni_File_0;
 unsigned UclVar::c_bi_mni_File_2;
+unsigned UclVar::c_bi_mni_seek_2;
+unsigned UclVar::c_bi_mni_tell_0;
 unsigned UclVar::c_bi_mni_SocketAddr_2;
 unsigned UclVar::c_bi_mni_name_0;
 unsigned UclVar::c_bi_mni_port_0;
@@ -346,6 +348,9 @@ unsigned UclVar::c_bi_vni_SEP;
 unsigned UclVar::c_bi_vni__stdin;
 unsigned UclVar::c_bi_vni__stdout;
 unsigned UclVar::c_bi_vni__stderr;
+unsigned UclVar::c_bi_vni__SEEK_SET;
+unsigned UclVar::c_bi_vni__SEEK_CUR;
+unsigned UclVar::c_bi_vni__SEEK_END;
 unsigned UclVar::c_bi_vni_AF_UNIX;
 unsigned UclVar::c_bi_vni_AF_FILE;
 unsigned UclVar::c_bi_vni_AF_INET;
@@ -613,6 +618,9 @@ UclVar UclVar::Sys::SEP = UclVar(NO_INIT());
 UclVar UclVar::File::_stdin = UclVar(NO_INIT());
 UclVar UclVar::File::_stdout = UclVar(NO_INIT());
 UclVar UclVar::File::_stderr = UclVar(NO_INIT());
+UclVar UclVar::File::_SEEK_SET = UclVar(NO_INIT());
+UclVar UclVar::File::_SEEK_CUR = UclVar(NO_INIT());
+UclVar UclVar::File::_SEEK_END = UclVar(NO_INIT());
 
 #ifdef ENABLE_CLASS_SOCKET
 UclVar UclVar::Socket::AF_UNIX = UclVar(NO_INIT());
@@ -1033,6 +1041,8 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_File_0,"File#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_File_2,"File#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_seek_2,"seek#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_tell_0,"tell#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_close_0,"close#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_1,"write#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_flush_0,"flush#0");
@@ -1362,6 +1372,9 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__stdin,"stdin");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__stdout,"stdout");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__stderr,"stderr");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SEEK_SET,"SEEK_SET");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SEEK_CUR,"SEEK_CUR");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SEEK_END,"SEEK_END");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_AF_UNIX,"AF_UNIX");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_AF_FILE,"AF_FILE");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_AF_INET,"AF_INET");
@@ -1730,6 +1743,9 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(File,c_bi_class_File,_stdin);
     UCLVAR_RETRIEVE_STATIC_CONST(File,c_bi_class_File,_stdout);
     UCLVAR_RETRIEVE_STATIC_CONST(File,c_bi_class_File,_stderr);
+    UCLVAR_RETRIEVE_STATIC_CONST(File,c_bi_class_File,_SEEK_SET);
+    UCLVAR_RETRIEVE_STATIC_CONST(File,c_bi_class_File,_SEEK_CUR);
+    UCLVAR_RETRIEVE_STATIC_CONST(File,c_bi_class_File,_SEEK_END);
 
 #ifdef ENABLE_CLASS_SOCKET
     UCLVAR_RETRIEVE_STATIC_CONST(Socket,c_bi_class_Socket,AF_UNIX);
