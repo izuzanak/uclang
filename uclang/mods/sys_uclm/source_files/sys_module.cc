@@ -1855,7 +1855,7 @@ built_in_class_s pipe_class =
 {/*{{{*/
   "Pipe",
   c_modifier_public | c_modifier_final,
-  13, pipe_methods,
+  15, pipe_methods,
   0, pipe_variables,
   bic_pipe_consts,
   bic_pipe_init,
@@ -1900,6 +1900,11 @@ built_in_method_s pipe_methods[] =
     bic_stream_method_write_1
   },
   {
+    "write_close#1",
+    c_modifier_public | c_modifier_final,
+    bic_pipe_method_write_close_1
+  },
+  {
     "flush#0",
     c_modifier_public | c_modifier_final,
     bic_stream_method_flush_0
@@ -1918,6 +1923,11 @@ built_in_method_s pipe_methods[] =
     "read#1",
     c_modifier_public | c_modifier_final,
     bic_stream_method_read_1
+  },
+  {
+    "read_close#0",
+    c_modifier_public | c_modifier_final,
+    bic_pipe_method_read_close_0
   },
   {
     "get_fd#0",
@@ -1944,6 +1954,104 @@ built_in_method_s pipe_methods[] =
 built_in_variable_s pipe_variables[] =
 {/*{{{*/
 };/*}}}*/
+
+#define BIC_STREAM_METHOD_WRITE_1() \
+/*{{{*/\
+\
+  /* - retrieve pointer to stream - */\
+  FILE *f = (FILE *)dst_location->v_data_ptr;\
+\
+  /* - ERROR - */\
+  if (f == NULL)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_STREAM_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;\
+  unsigned string_length = string_ptr->size - 1;\
+\
+  /* - ERROR - */\
+  if (fwrite(string_ptr->data,1,string_length,f) != string_length)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_STREAM_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  BIC_SET_RESULT_BLANK();\
+/*}}}*/
+
+#define BIC_STREAM_METHOD_READ_0() \
+/*{{{*/\
+\
+  /* - retrieve pointer to stream - */\
+  FILE *f = (FILE *)dst_location->v_data_ptr;\
+\
+  /* - ERROR - */\
+  if (f == NULL)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_STREAM_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  const unsigned c_buffer_add = 1024;\
+\
+  /* - target data buffer - */\
+  bc_array_s data_buffer;\
+  data_buffer.init();\
+\
+  unsigned read_cnt;\
+  do\
+  {\
+    unsigned old_used = data_buffer.used;\
+    data_buffer.push_blanks(c_buffer_add);\
+    read_cnt = fread(data_buffer.data + old_used,1,c_buffer_add,f);\
+  }\
+  while(read_cnt >= c_buffer_add);\
+\
+  if (ferror(f))\
+  {\
+    data_buffer.clear();\
+\
+    exception_s::throw_exception(it,module.error_base + c_error_STREAM_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  data_buffer.used = (data_buffer.used - c_buffer_add) + read_cnt;\
+\
+  /* - was any data read from file - */\
+  if (data_buffer.used == 0)\
+  {\
+    data_buffer.clear();\
+\
+    BIC_SET_RESULT_BLANK();\
+  }\
+  else\
+  {\
+    data_buffer.push('\0');\
+\
+    /* - return data string - */\
+    string_s *string_ptr = it.get_new_string_ptr();\
+    string_ptr->data = data_buffer.data;\
+    string_ptr->size = data_buffer.used;\
+\
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);\
+    BIC_SET_RESULT(new_location);\
+  }\
+/*}}}*/
+
+#define BIC_PIPE_METHOD_CLOSE_0() \
+/*{{{*/\
+\
+  /* - ERROR - */\
+  if (PCLOSE_FNAME(f) == -1)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_PIPE_CLOSE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  dst_location->v_data_ptr = (basic_64b)NULL;\
+/*}}}*/
 
 void bic_pipe_consts(location_array_s &const_locations)
 {/*{{{*/
@@ -2078,16 +2186,43 @@ bool bic_pipe_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *o
     return false;
   }
 
+  BIC_PIPE_METHOD_CLOSE_0();
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_pipe_method_write_close_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
   // - ERROR -
-  if (PCLOSE_FNAME(f) == -1)
+  if (src_0_location->v_type != c_bi_class_string)
   {
-    exception_s::throw_exception(it,module.error_base + c_error_PIPE_CLOSE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("write_close#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)NULL;
+  BIC_STREAM_METHOD_WRITE_1();
+  BIC_PIPE_METHOD_CLOSE_0();
 
-  BIC_SET_RESULT_BLANK();
+  return true;
+}/*}}}*/
+
+bool bic_pipe_method_read_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  BIC_STREAM_METHOD_READ_0();
+  BIC_PIPE_METHOD_CLOSE_0();
 
   return true;
 }/*}}}*/
@@ -2117,7 +2252,7 @@ built_in_class_s file_class =
 {/*{{{*/
   "File",
   c_modifier_public | c_modifier_final,
-  15, file_methods,
+  17, file_methods,
   3 + 3, file_variables,
   bic_file_consts,
   bic_file_init,
@@ -2172,6 +2307,11 @@ built_in_method_s file_methods[] =
     bic_stream_method_write_1
   },
   {
+    "write_close#1",
+    c_modifier_public | c_modifier_final,
+    bic_file_method_write_close_1
+  },
+  {
     "flush#0",
     c_modifier_public | c_modifier_final,
     bic_stream_method_flush_0
@@ -2190,6 +2330,11 @@ built_in_method_s file_methods[] =
     "read#1",
     c_modifier_public | c_modifier_final,
     bic_stream_method_read_1
+  },
+  {
+    "read_close#0",
+    c_modifier_public | c_modifier_final,
+    bic_file_method_read_close_0
   },
   {
     "get_fd#0",
@@ -2227,6 +2372,19 @@ built_in_variable_s file_variables[] =
   { "SEEK_END", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
+
+#define BIC_FILE_METHOD_CLOSE_0() \
+/*{{{*/\
+\
+  /* - ERROR - */\
+  if (fclose(f) != 0)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_FILE_CLOSE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  dst_location->v_data_ptr = (basic_64b)NULL;\
+/*}}}*/
 
 void bic_file_consts(location_array_s &const_locations)
 {/*{{{*/
@@ -2403,16 +2561,43 @@ bool bic_file_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *o
     return false;
   }
 
+  BIC_FILE_METHOD_CLOSE_0();
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_file_method_write_close_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
   // - ERROR -
-  if (fclose(f) != 0)
+  if (src_0_location->v_type != c_bi_class_string)
   {
-    exception_s::throw_exception(it,module.error_base + c_error_FILE_CLOSE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("write_close#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)NULL;
+  BIC_STREAM_METHOD_WRITE_1();
+  BIC_FILE_METHOD_CLOSE_0();
 
-  BIC_SET_RESULT_BLANK();
+  return true;
+}/*}}}*/
+
+bool bic_file_method_read_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  BIC_STREAM_METHOD_READ_0();
+  BIC_FILE_METHOD_CLOSE_0();
 
   return true;
 }/*}}}*/
@@ -3584,27 +3769,7 @@ bool bic_stream_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli 
     return false;
   }
 
-  // - retrieve pointer to stream -
-  FILE *f = (FILE *)dst_location->v_data_ptr;
-
-  // - ERROR -
-  if (f == NULL)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_STREAM_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-  unsigned string_length = string_ptr->size - 1;
-
-  // - ERROR -
-  if (fwrite(string_ptr->data,1,string_length,f) != string_length)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_STREAM_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  BIC_SET_RESULT_BLANK();
+  BIC_STREAM_METHOD_WRITE_1();
 
   return true;
 }/*}}}*/
@@ -3640,60 +3805,7 @@ bool bic_stream_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  // - retrieve pointer to stream -
-  FILE *f = (FILE *)dst_location->v_data_ptr;
-
-  // - ERROR -
-  if (f == NULL)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_STREAM_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  const unsigned c_buffer_add = 1024;
-
-  // - target data buffer -
-  bc_array_s data_buffer;
-  data_buffer.init();
-
-  unsigned read_cnt;
-  do
-  {
-    unsigned old_used = data_buffer.used;
-    data_buffer.push_blanks(c_buffer_add);
-    read_cnt = fread(data_buffer.data + old_used,1,c_buffer_add,f);
-  }
-  while(read_cnt >= c_buffer_add);
-
-  if (ferror(f))
-  {
-    data_buffer.clear();
-
-    exception_s::throw_exception(it,module.error_base + c_error_STREAM_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  data_buffer.used = (data_buffer.used - c_buffer_add) + read_cnt;
-
-  // - was any data read from file -
-  if (data_buffer.used == 0)
-  {
-    data_buffer.clear();
-
-    BIC_SET_RESULT_BLANK();
-  }
-  else
-  {
-    data_buffer.push('\0');
-
-    // - return data string -
-    string_s *string_ptr = it.get_new_string_ptr();
-    string_ptr->data = data_buffer.data;
-    string_ptr->size = data_buffer.used;
-
-    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
-    BIC_SET_RESULT(new_location);
-  }
+  BIC_STREAM_METHOD_READ_0();
 
   return true;
 }/*}}}*/

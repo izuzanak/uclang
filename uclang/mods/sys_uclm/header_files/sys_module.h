@@ -181,6 +181,8 @@ bool bic_pipe_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
 bool bic_pipe_method_Pipe_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pipe_method_Pipe_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pipe_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_pipe_method_write_close_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_pipe_method_read_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pipe_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pipe_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -199,6 +201,8 @@ bool bic_file_method_File_2(interpreter_thread_s &it,unsigned stack_base,uli *op
 bool bic_file_method_seek_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_file_method_tell_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_file_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_file_method_write_close_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_file_method_read_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_file_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_file_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
