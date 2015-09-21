@@ -1212,10 +1212,10 @@ bool bic_ftp_handle_method_write_1(interpreter_thread_s &it,unsigned stack_base,
   }
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-  ssize_t string_lenght = string_ptr->size - 1;
+  ssize_t string_length = string_ptr->size - 1;
 
   // - ERROR -
-  if (FtpWrite(string_ptr->data,string_lenght,ftph_ptr->nb_ptr) != string_lenght)
+  if (FtpWrite(string_ptr->data,string_length,ftph_ptr->nb_ptr) != string_length)
   {
     exception_s::throw_exception(it,module.error_base + c_error_FTP_HANDLE_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;

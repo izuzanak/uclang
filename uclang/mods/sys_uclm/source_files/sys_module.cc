@@ -3595,10 +3595,10 @@ bool bic_stream_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli 
   }
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-  unsigned string_lenght = string_ptr->size - 1;
+  unsigned string_length = string_ptr->size - 1;
 
   // - ERROR -
-  if (fwrite(string_ptr->data,1,string_lenght,f) != string_lenght)
+  if (fwrite(string_ptr->data,1,string_length,f) != string_length)
   {
     exception_s::throw_exception(it,module.error_base + c_error_STREAM_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
