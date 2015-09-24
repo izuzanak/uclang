@@ -1991,6 +1991,35 @@ if cfg_ref[CFG_TARGET]:
     )
 # }}}
 
+# dlms module
+cfg_ref = c_cfg[C_MODULE_DLMS]
+# {{{
+if cfg_ref[CFG_TARGET]:
+    cfg_ref[CFG_MODULE] = module_c(
+      configuration,
+      cfg_ref[CFG_DIR],
+      cfg_ref[CFG_NAME],
+      [ 
+        "header_files",
+        os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
+        os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
+        os.sep.join(["..","..","..","ext_libs","gurux","include"]),
+      ],
+      [ 
+        "source_files",
+      ],
+      [ 
+        os.sep.join(["..","..","libs","libbase_ucll"]),
+        os.sep.join(["..","..","..","ext_libs","gurux","lib"]),
+      ],
+      opt_build, # GPP options
+      opt_link, # GPP link options
+      "", # GPP defines
+      [],
+      [],
+    )
+# }}}
+
 # ucpas module
 cfg_ref = c_cfg[C_MODULE_UCPAS]
 # {{{
