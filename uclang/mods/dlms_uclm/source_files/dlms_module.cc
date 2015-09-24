@@ -84,7 +84,7 @@ built_in_class_s dlms_server_class =
 {/*{{{*/
   "DlmsServer",
   c_modifier_public | c_modifier_final,
-  4, dlms_server_methods,
+  6, dlms_server_methods,
   0, dlms_server_variables,
   bic_dlms_server_consts,
   bic_dlms_server_init,
@@ -112,6 +112,16 @@ built_in_method_s dlms_server_methods[] =
     "DlmsServer#1",
     c_modifier_public | c_modifier_final,
     bic_dlms_server_method_DlmsServer_1
+  },
+  {
+    "get_fds#0",
+    c_modifier_public | c_modifier_final,
+    bic_dlms_server_method_get_fds_0
+  },
+  {
+    "process#0",
+    c_modifier_public | c_modifier_final,
+    bic_dlms_server_method_process_0
   },
   {
     "to_string#0",
@@ -202,6 +212,55 @@ bool bic_dlms_server_method_DlmsServer_1(interpreter_thread_s &it,unsigned stack
 
   // - set destination data pointer -
   dst_location->v_data_ptr = (basic_64b)dlmss_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_dlms_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  CGXDLMSBase *dlmss_ptr = (CGXDLMSBase *)dst_location->v_data_ptr;
+  CGXNet &media = dlmss_ptr->m_Media;
+
+  // - create result array -
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+  if (media.m_ServerSocket)
+  {
+    BIC_CREATE_NEW_LOCATION(fd_location,c_bi_class_integer,media.m_ServerSocket);
+    array_ptr->push(fd_location);
+
+    BIC_CREATE_NEW_LOCATION(flags_location,c_bi_class_integer,POLLIN | POLLPRI);
+    array_ptr->push(flags_location);
+  }
+
+  if (media.m_Socket)
+  {
+    BIC_CREATE_NEW_LOCATION(fd_location,c_bi_class_integer,media.m_Socket);
+    array_ptr->push(fd_location);
+
+    BIC_CREATE_NEW_LOCATION(flags_location,c_bi_class_integer,POLLIN | POLLPRI);
+    array_ptr->push(flags_location);
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_dlms_server_method_process_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  CGXDLMSBase *dlmss_ptr = (CGXDLMSBase *)dst_location->v_data_ptr;
+  dlmss_ptr->m_Media.ListenerStep();
+
+  pointer &res_location = it.data_stack[res_loc_idx];
+  BIC_SET_RESULT_BLANK();
 
   return true;
 }/*}}}*/

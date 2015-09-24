@@ -42,6 +42,8 @@ void bic_dlms_server_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_dlms_server_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dlms_server_method_DlmsServer_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_dlms_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_dlms_server_method_process_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dlms_server_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dlms_server_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

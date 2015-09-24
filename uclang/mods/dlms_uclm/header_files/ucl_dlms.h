@@ -6,6 +6,7 @@
 include "script_parser.h"
 @end
 
+#include <poll.h>
 #include <string>
 #include <vector>
 using namespace std;
@@ -16,8 +17,8 @@ using namespace std;
 
 class CGXDLMSBase : public CGXDLMSServerBase,IGXMediaListener,IGXNetListener
 {
-  CGXNet m_Media;
   public:
+  CGXNet m_Media;
 
   // - constructor -
   CGXDLMSBase(bool UseLogicalNameReferencing = true,

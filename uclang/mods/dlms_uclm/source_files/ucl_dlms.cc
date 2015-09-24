@@ -22,7 +22,6 @@ include "ucl_dlms.h"
 #include "GuruxDLMS/Objects/GXDLMSModemInitialisation.h"
 #include "GuruxDLMS/Objects/GXDLMSActionSet.h"
 
-/////////////////////////////////////////////////////////////////////////////
 int CGXDLMSBase::Init(int port)
 {/*{{{*/
 
@@ -52,7 +51,6 @@ int CGXDLMSBase::Init(int port)
 
   CGXDLMSVariant id_complete(id_comp_str.c_str());
   id_complete.ChangeType(DLMS_DATA_TYPE_OCTET_STRING);
-
   GetItems().push_back(new CGXDLMSData("0.0.42.0.0.255",id_complete));
 
   // - register electricity id 1 -
@@ -68,8 +66,16 @@ int CGXDLMSBase::Init(int port)
   item_el_id2->GetAttributes().push_back(CGXDLMSAttribute(2,DLMS_DATA_TYPE_UINT32));
   GetItems().push_back(item_el_id2);
 
-  // - add test register code -
-  CGXDLMSRegister* item_reg = new CGXDLMSRegister("1.1.21.25.0.255");
+  // - pointer to register item -
+  CGXDLMSRegister *item_reg;
+
+  // - add register VALUE_ACTIVE_ENERGY_POSITIVE -
+  item_reg = new CGXDLMSRegister("1.0.1.8.0.255",1.0,45,0.0);
+  item_reg->SetAccess(2,ACCESSMODE_READ);
+  GetItems().push_back(item_reg);
+
+  // - add register VALUE_ACTIVE_ENERGY_NEGATIVE -
+  item_reg = new CGXDLMSRegister("1.0.2.8.0.255",1.0,45,0.0);
   item_reg->SetAccess(2,ACCESSMODE_READ);
   GetItems().push_back(item_reg);
 
@@ -87,7 +93,6 @@ int CGXDLMSBase::Init(int port)
   return ERROR_CODES_OK;
 }/*}}}*/
 
-/////////////////////////////////////////////////////////////////////////////
 int CGXDLMSBase::OnRead(CGXDLMSObject* pItem,int index,CGXDLMSVariant& value,DLMS_DATA_TYPE& type)
 {/*{{{*/
   fprintf(stderr,"CGXDLMSBase::OnRead\n");
@@ -112,7 +117,7 @@ int CGXDLMSBase::OnRead(CGXDLMSObject* pItem,int index,CGXDLMSVariant& value,DLM
   }
 
   CGXDLMSVariant null;
-  int ret = ((IGXDLMSBase*) pItem)->GetValue(index,0,null,value);
+  int ret = ((IGXDLMSBase*)pItem)->GetValue(index,0,null,value);
   if (ret != ERROR_CODES_OK)
   {
     return ret;
@@ -121,24 +126,39 @@ int CGXDLMSBase::OnRead(CGXDLMSObject* pItem,int index,CGXDLMSVariant& value,DLM
   // - retrieve item name -
   std::string item_name = pItem->GetName().ToString();
 
+  // FIXME debug output
+  fprintf(stderr,"READ PAIR: %d - %s\n",value.vt,item_name.c_str());
+
   // - set value according to item name -
-  if (value.vt == DLMS_DATA_TYPE_DATETIME && item_name == "0.0.1.0.0.255")
+  switch (value.vt)
   {
-    value = CGXDateTime::Now();
-    return ERROR_CODES_OK;
-  }
-  else if (value.vt == DLMS_DATA_TYPE_NONE && item_name == "1.1.21.25.0.255")
-  {
-    time_t time_val;
-    value = time(&time_val);
-    return ERROR_CODES_OK;
+    case DLMS_DATA_TYPE_DATETIME:
+      if (item_name == "0.0.1.0.0.255")
+      {
+        value = CGXDateTime::Now();
+        return ERROR_CODES_OK;
+      }
+      break;
+    case DLMS_DATA_TYPE_FLOAT64:
+      if (item_name == "1.0.1.8.0.255")
+      {
+        value = 100.0;
+        return ERROR_CODES_OK;
+      }
+      else if (item_name == "1.0.2.8.0.255")
+      {
+        value = 100.0;
+        return ERROR_CODES_OK;
+      }
+      break;
+    default:
+      break;
   }
 
   // - use curent value -
   return ERROR_CODES_FALSE;
 }/*}}}*/
 
-/////////////////////////////////////////////////////////////////////////////
 int CGXDLMSBase::OnWrite(CGXDLMSObject* pItem,int index,int selector,CGXDLMSVariant& value)
 {/*{{{*/
   fprintf(stderr,"CGXDLMSBase::OnWrite\n");
@@ -146,7 +166,6 @@ int CGXDLMSBase::OnWrite(CGXDLMSObject* pItem,int index,int selector,CGXDLMSVari
   return ERROR_CODES_FALSE;
 }/*}}}*/
 
-/////////////////////////////////////////////////////////////////////////////
 int CGXDLMSBase::OnAction(CGXDLMSObject* pItem,int index,CGXDLMSVariant& data)
 {/*{{{*/
   fprintf(stderr,"CGXDLMSBase::OnAction\n");
@@ -154,7 +173,6 @@ int CGXDLMSBase::OnAction(CGXDLMSObject* pItem,int index,CGXDLMSVariant& data)
   return ERROR_CODES_FALSE;
 }/*}}}*/
 
-/////////////////////////////////////////////////////////////////////////////
 int CGXDLMSBase::OnInvalidConnection()
 {/*{{{*/
   fprintf(stderr,"CGXDLMSBase::OnInvalidConnection\n");
