@@ -15,8 +15,10 @@ using namespace std;
 #include "GuruxCommon/GXMediaListener.h"
 #include "GuruxDLMS/GXDLMSServerBase.h"
 
+#include "GuruxDLMS/Objects/GXDLMSRegister.h"
+
 class CGXDLMSBase : public CGXDLMSServerBase,IGXMediaListener,IGXNetListener
-{
+{/*{{{*/
   public:
   CGXNet m_Media;
 
@@ -26,16 +28,17 @@ class CGXDLMSBase : public CGXDLMSServerBase,IGXMediaListener,IGXNetListener
               unsigned short MaxReceivePDUSize = 0xFFFF) :
               CGXDLMSServerBase(UseLogicalNameReferencing,
               IntefaceType,0xFFFF)
-  {
-  }
+  {/*{{{*/
+  }/*}}}*/
 
   // - destructor -
   virtual ~CGXDLMSBase(void)
-  {
+  {/*{{{*/
     m_Media.Close();
-  }
+  }/*}}}*/
 
-  int Init(int port);
+  int PrepareInit(string a_man_id,string a_serial,int a_port);
+  int Init();
   int OnRead(CGXDLMSObject* pItem,int index,CGXDLMSVariant& value,DLMS_DATA_TYPE& type);
   int OnWrite(CGXDLMSObject* pItem,int index,int selector,CGXDLMSVariant& value);
   int OnAction(CGXDLMSObject* pItem,int index,CGXDLMSVariant& data);
@@ -43,25 +46,25 @@ class CGXDLMSBase : public CGXDLMSServerBase,IGXMediaListener,IGXNetListener
 
   // - called when client has been disconnected -
   void OnClientConnected(IGXMedia* pSender,CConnectionEventArgs& e)
-  {
+  {/*{{{*/
     fprintf(stderr,"Client Connected : %s\r\n",e.GetInfo().c_str());
-  }
+  }/*}}}*/
 
   // - called when client has been disconnected -
   void OnClientDisconnected(IGXMedia* pSender,CConnectionEventArgs& e)
-  {
+  {/*{{{*/
     fprintf(stderr,"Client Disonnected : %s\r\n",e.GetInfo().c_str());
-  }
+  }/*}}}*/
 
   // - called on error -
   void OnError(IGXMedia* pSender,basic_string<char>& ex)
-  {
+  {/*{{{*/
     fprintf(stderr,"Error has occurred : %s\r\n",ex.c_str());
-  }
+  }/*}}}*/
 
   // - called when media component receives data -
   void OnReceived(IGXMedia* pSender,CReceiveEventArgs& e)
-  {
+  {/*{{{*/
     unsigned char* pReply = NULL;
     int size = 0;
     fprintf(stderr,"<- %s\r\n",GXHelpers::bytesToHex(&e.getData()[0],e.getData().size()).c_str());
@@ -74,26 +77,58 @@ class CGXDLMSBase : public CGXDLMSServerBase,IGXMediaListener,IGXNetListener
       fprintf(stderr,"-> %s\r\n",GXHelpers::bytesToHex(pReply,size).c_str());
       m_Media.Send(pReply,size,e.getSenderInfo());
     }
-  }
+  }/*}}}*/
 
   // - called when media state changes -
   void OnMediaStateChange(IGXMedia* pSender,CMediaStateEventArgs& e)
-  {
+  {/*{{{*/
     fprintf(stderr,"CGXDLMSBase::OnMediaStateChange\n");
-  }
+  }/*}}}*/
 
   // - called when the Media is sending or receiving data -
   void OnTrace(IGXMedia* pSender,CTraceEventArgs& e)
-  {
+  {/*{{{*/
     fprintf(stderr,"%s\r\n",e.ToString().c_str());
-  }
+  }/*}}}*/
 
   // - called when property is changed on a component -
   void OnPropertyChanged(IGXMedia* pSender,CPropertyChangedEventArgs& e)
-  {
+  {/*{{{*/
     fprintf(stderr,"CGXDLMSBase::OnPropertyChanged\n");
-  }
+  }/*}}}*/
+};/*}}}*/
+
+/*
+ * definition of structure dlms_object_s
+ */
+
+struct dlms_object_s
+{
+  location_s *dlmss_ptr;
+  unsigned index;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
 };
+
+/*
+ * inline methods of structure dlms_object_s
+ */
+
+inline void dlms_object_s::init()
+{/*{{{*/
+  dlmss_ptr = NULL;
+}/*}}}*/
+
+inline void dlms_object_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+  if (dlmss_ptr != NULL)
+  {
+    it.release_location_ptr(dlmss_ptr);
+  }
+
+  init();
+}/*}}}*/
 
 #endif
 

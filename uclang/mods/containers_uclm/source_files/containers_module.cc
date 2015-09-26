@@ -163,21 +163,21 @@ bool containers_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\n Invalid dictionary key value\n");
+    fprintf(stderr,"\nInvalid dictionary key value\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_DICT_SOURCE_NOT_DIVISIBLE_BY_TWO:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\n Length of dictionary source is not divisible by two\n");
+    fprintf(stderr,"\nLength of dictionary source is not divisible by two\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_DICT_SOURCES_NOT_SAME_LENGTH:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\n Lengths of dictionary sources are not equal\n");
+    fprintf(stderr,"\nLengths of dictionary sources are not equal\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
