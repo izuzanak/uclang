@@ -23,8 +23,8 @@ include "script_parser.h"
  * basic definitions and constants
  */
 
-const unsigned short c_two_bytes = 0xff00;
-const bool c_little_endian = ((unsigned char *)&c_two_bytes)[1] == 0xff;
+extern const unsigned short c_two_bytes;
+extern const bool c_little_endian;
 
 /*
  * ato aru archive cookie

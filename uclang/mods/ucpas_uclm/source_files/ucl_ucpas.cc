@@ -3,6 +3,17 @@
 include "ucl_ucpas.h"
 @end
 
+/*
+ * basic definitions and constants
+ */
+
+const unsigned short c_two_bytes = 0xff00;
+const bool c_little_endian = ((unsigned char *)&c_two_bytes)[1] == 0xff;
+
+/*
+ * static members of structure pas_s
+ */
+
 unsigned pas_s::lib_status = PAS_STATUS_CLOSED;
 
 mutex_s pas_s::mutex;
