@@ -73,10 +73,8 @@ void bic_dlms_object_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_dlms_object_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dlms_object_method_code_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-
-// FIXME TODO continue ...
-//bool bic_dlms_object_method_object_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_dlms_object_method_data_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_dlms_object_method_object_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_dlms_object_method_data_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dlms_object_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dlms_object_method_value_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dlms_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
