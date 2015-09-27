@@ -40,10 +40,13 @@ class Main
 
     Tutorial.note("Pipe methods write#1 and flush#0");
     pipe = new Pipe("cat","w");
-
     pipe.write("Hello world!\n");
     pipe.flush();
     pipe.close();
+
+    Tutorial.note("Pipe method write_close#1");
+    pipe = new Pipe("cat","w");
+    pipe.write_close("Hello world!\n");
 
     Tutorial.note("Pipe method read#0");
     pipe = new Pipe("ls","r");
@@ -67,6 +70,11 @@ class Main
     ("pipe.read(10) -> %s\n" % pipe.read(10)).print();
     ("pipe.read(10) -> %s\n" % pipe.read(10)).print();
     pipe.close();
+
+    Tutorial.note("Pipe method read_close#0");
+    pipe = new Pipe("ls","r");
+    ("pipe              -> %s\n" % pipe.to_string()).print();
+    ("pipe.read_close() -> %s\n" % pipe.read_close()).print();
 
     Tutorial.note("Pipe method get_fd#1");
     pipe = new Pipe("cat","w");

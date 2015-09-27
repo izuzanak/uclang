@@ -14,12 +14,16 @@ class Main
     // public final operator_binary_equal#1
     // public final File#0
     // public final File#2
+    // public final seek#2
+    // public final tell#0
     // public final close#0
     // public final write#1
+    // public final write_close#1
     // public final flush#0
     // public final read#0
     // public final readln#0
     // public final read#1
+    // public final read_close#0
     // public final get_fd#0
     // public final next_item#0
     // public final static to_string#0
@@ -30,17 +34,26 @@ class Main
     ("File: %s\n" % (file = new File("03_class_file.ucl","r")).to_string()).print();
     file.close();
 
-    Tutorial.note("File method close#0");
+    Tutorial.note("File methods seek#2, tell#0 and close#0");
     file = new File("/tmp/03_class_file.ucl","w");
-    ("file         -> %s\n" % file.to_string()).print();
-    ("file.close() -> %s\n" % file.close().to_string()).print();
+    file.write_close("Hello world!\n");
+
+    file = new File("/tmp/03_class_file.ucl","r");
+    ("file                       -> %s\n" % file.to_string()).print();
+    ("file.tell()                -> %d\n" % file.tell()).print();
+    ("file.seek(5,File.SEEK_SET) -> %s\n" % file.seek(5,File.SEEK_SET).to_string()).print();
+    ("file.tell()                -> %d\n" % file.tell()).print();
+    ("file.close()               -> %s\n" % file.close().to_string()).print();
 
     Tutorial.note("File methods write#1 and flush#0");
     file = new File("/tmp/03_class_file.ucl","w");
-
     file.write("Hello world!\nHello again!\n");
     file.flush();
     file.close();
+
+    Tutorial.note("File method write_close#1");
+    file = new File("/tmp/03_class_file.ucl","w");
+    file.write_close("Hello world!\nHello again!\n");
 
     Tutorial.note("File method read#0");
     file = new File("/tmp/03_class_file.ucl","r");
@@ -64,6 +77,11 @@ class Main
     ("file.read(10) -> %s\n" % file.read(10)).print();
     ("file.read(10) -> %s\n" % file.read(10)).print();
     file.close();
+
+    Tutorial.note("File method read_close#0");
+    file = new File("/tmp/03_class_file.ucl","r");
+    ("file              -> %s\n" % file.to_string()).print();
+    ("file.read_close() -> %s\n" % file.read_close()).print();
 
     Tutorial.note("File method get_fd#1");
     file = new File("/tmp/03_class_file.ucl","r");

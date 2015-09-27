@@ -1,4 +1,5 @@
 Hello world!
+Hello world!
 
 === Pipe object ================================================================
 
@@ -11,6 +12,9 @@ pipe         -> Pipe
 pipe.close() -> <blank>
 
 === Pipe methods write#1 and flush#0 ===========================================
+
+
+=== Pipe method write_close#1 ==================================================
 
 
 === Pipe method read#0 =========================================================
@@ -46,6 +50,20 @@ pipe          -> Pipe
 pipe.read(10) -> 01_class_s
 pipe.read(10) -> ys.ucl
 02_
+
+=== Pipe method read_close#0 ===================================================
+
+pipe              -> Pipe
+pipe.read_close() -> 01_class_sys.ucl
+02_class_pipe.ucl
+03_class_file.ucl
+04_class_socket
+05_class_regex.ucl
+06_class_signal.ucl
+07_class_poll.ucl
+08_class_timer.ucl
+09_class_clock.ucl
+
 
 === Pipe method get_fd#1 =======================================================
 

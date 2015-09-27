@@ -3,12 +3,18 @@
 
 File: File
 
-=== File method close#0 ========================================================
+=== File methods seek#2, tell#0 and close#0 ====================================
 
-file         -> File
-file.close() -> <blank>
+file                       -> File
+file.tell()                -> 0
+file.seek(5,File.SEEK_SET) -> <blank>
+file.tell()                -> 5
+file.close()               -> <blank>
 
 === File methods write#1 and flush#0 ===========================================
+
+
+=== File method write_close#1 ==================================================
 
 
 === File method read#0 =========================================================
@@ -30,6 +36,13 @@ file          -> File
 file.read(10) -> Hello worl
 file.read(10) -> d!
 Hello a
+
+=== File method read_close#0 ===================================================
+
+file              -> File
+file.read_close() -> Hello world!
+Hello again!
+
 
 === File method get_fd#1 =======================================================
 
