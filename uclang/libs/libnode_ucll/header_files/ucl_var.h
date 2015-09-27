@@ -234,10 +234,12 @@ class UclVar
   static unsigned c_bi_mni_Pipe_2;
   static unsigned c_bi_mni_close_0;
   static unsigned c_bi_mni_write_1;
+  static unsigned c_bi_mni_write_close_1;
   static unsigned c_bi_mni_flush_0;
   static unsigned c_bi_mni_read_0;
   static unsigned c_bi_mni_readln_0;
   static unsigned c_bi_mni_read_1;
+  static unsigned c_bi_mni_read_close_0;
   static unsigned c_bi_mni_get_fd_0;
   static unsigned c_bi_mni_next_item_0;
   static unsigned c_bi_mni_File_0;
@@ -2428,6 +2430,11 @@ class UclVar
     return __call_1(c_bi_mni_write_1,op_0);
   }/*}}}*/
 
+  inline UclVar write_close(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_write_close_1,op_0);
+  }/*}}}*/
+
   inline UclVar flush()
   {/*{{{*/
     return __call_0(c_bi_mni_flush_0);
@@ -2446,6 +2453,11 @@ class UclVar
   inline UclVar read(UclVar op_0)
   {/*{{{*/
     return __call_1(c_bi_mni_read_1,op_0);
+  }/*}}}*/
+
+  inline UclVar read_close()
+  {/*{{{*/
+    return __call_0(c_bi_mni_read_close_0);
   }/*}}}*/
 
   inline UclVar get_fd()

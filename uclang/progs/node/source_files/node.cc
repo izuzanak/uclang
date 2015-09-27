@@ -83,6 +83,10 @@ int main(int argc,char **argv)
       printf("test.m_value: %s\n",test.__member("m_value").__str());
       test.__free();
 
+      // FIXME write_close, read_close test
+      UclVar data = UclVar::File("node.log","r").read_close();
+      UclVar::File("test.log","w").write_close(data);
+
 #if __cplusplus >= 201103
 
       // - c++11 initializer_list -
