@@ -47,19 +47,16 @@ class CGXDLMSBase : public CGXDLMSServerBase,IGXMediaListener,IGXNetListener
   // - called when client has been disconnected -
   void OnClientConnected(IGXMedia* pSender,CConnectionEventArgs& e)
   {/*{{{*/
-    fprintf(stderr,"Client Connected : %s\r\n",e.GetInfo().c_str());
   }/*}}}*/
 
   // - called when client has been disconnected -
   void OnClientDisconnected(IGXMedia* pSender,CConnectionEventArgs& e)
   {/*{{{*/
-    fprintf(stderr,"Client Disonnected : %s\r\n",e.GetInfo().c_str());
   }/*}}}*/
 
   // - called on error -
   void OnError(IGXMedia* pSender,basic_string<char>& ex)
   {/*{{{*/
-    fprintf(stderr,"Error has occurred : %s\r\n",ex.c_str());
   }/*}}}*/
 
   // - called when media component receives data -
@@ -67,14 +64,12 @@ class CGXDLMSBase : public CGXDLMSServerBase,IGXMediaListener,IGXNetListener
   {/*{{{*/
     unsigned char* pReply = NULL;
     int size = 0;
-    fprintf(stderr,"<- %s\r\n",GXHelpers::bytesToHex(&e.getData()[0],e.getData().size()).c_str());
 
     HandleRequest(e.getData(),pReply,size);
 
     // - reply is null if we do not want to send any data to the client -
     if (size != 0)
     {
-      fprintf(stderr,"-> %s\r\n",GXHelpers::bytesToHex(pReply,size).c_str());
       m_Media.Send(pReply,size,e.getSenderInfo());
     }
   }/*}}}*/
@@ -82,19 +77,16 @@ class CGXDLMSBase : public CGXDLMSServerBase,IGXMediaListener,IGXNetListener
   // - called when media state changes -
   void OnMediaStateChange(IGXMedia* pSender,CMediaStateEventArgs& e)
   {/*{{{*/
-    fprintf(stderr,"CGXDLMSBase::OnMediaStateChange\n");
   }/*}}}*/
 
   // - called when the Media is sending or receiving data -
   void OnTrace(IGXMedia* pSender,CTraceEventArgs& e)
   {/*{{{*/
-    fprintf(stderr,"%s\r\n",e.ToString().c_str());
   }/*}}}*/
 
   // - called when property is changed on a component -
   void OnPropertyChanged(IGXMedia* pSender,CPropertyChangedEventArgs& e)
   {/*{{{*/
-    fprintf(stderr,"CGXDLMSBase::OnPropertyChanged\n");
   }/*}}}*/
 };/*}}}*/
 

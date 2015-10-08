@@ -16,10 +16,12 @@ class Main
     // public final Pipe#2
     // public final close#0
     // public final write#1
+    // public final write_close#1
     // public final flush#0
     // public final read#0
     // public final readln#0
     // public final read#1
+    // public final read_close#0
     // public final get_fd#0
     // public final next_item#0
     // public final static to_string#0

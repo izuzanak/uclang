@@ -35,7 +35,6 @@ int CGXDLMSBase::PrepareInit(string a_man_id,string a_serial,int a_port)
   int ret;
   if ((ret = m_Media.Open()) != 0)
   {
-    fprintf(stderr,"Media open failed %d",ret);
     return ret;
   }
 
@@ -83,7 +82,6 @@ int CGXDLMSBase::Init()
 
 int CGXDLMSBase::OnRead(CGXDLMSObject* pItem,int index,CGXDLMSVariant& value,DLMS_DATA_TYPE& type)
 {/*{{{*/
-  fprintf(stderr,"CGXDLMSBase::OnRead\n");
 
   // - framework handle logical name -
   if (index == 1)
@@ -138,22 +136,16 @@ int CGXDLMSBase::OnRead(CGXDLMSObject* pItem,int index,CGXDLMSVariant& value,DLM
 
 int CGXDLMSBase::OnWrite(CGXDLMSObject* pItem,int index,int selector,CGXDLMSVariant& value)
 {/*{{{*/
-  fprintf(stderr,"CGXDLMSBase::OnWrite\n");
-
   return ERROR_CODES_FALSE;
 }/*}}}*/
 
 int CGXDLMSBase::OnAction(CGXDLMSObject* pItem,int index,CGXDLMSVariant& data)
 {/*{{{*/
-  fprintf(stderr,"CGXDLMSBase::OnAction\n");
-
   return ERROR_CODES_FALSE;
 }/*}}}*/
 
 int CGXDLMSBase::OnInvalidConnection()
 {/*{{{*/
-  fprintf(stderr,"CGXDLMSBase::OnInvalidConnection\n");
-
   return ERROR_CODES_OK;
 }/*}}}*/
 

@@ -2002,7 +2002,6 @@ if cfg_ref[CFG_TARGET]:
       [ 
         "header_files",
         os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
-        os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
         os.sep.join(["..","..","..","ext_libs","gurux","include"]),
       ],
       [ 
