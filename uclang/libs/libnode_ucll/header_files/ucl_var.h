@@ -13,6 +13,8 @@ include "script_parser.h"
 #define ENABLE_CLASS_SOCKET
 #endif
 #define ENABLE_CLASS_REGEX
+#define ENABLE_CLASS_POLL
+#define ENABLE_CLASS_CLOCK
 #endif
 
 // - max method name length -
@@ -1289,7 +1291,7 @@ class UclVar
   }/*}}}*/
 #endif
 
-#ifdef ENABLE_CLASS_SOCKET
+#ifdef ENABLE_CLASS_REGEX
   // - class Regex -
   class Regex
   {/*{{{*/
@@ -1399,6 +1401,7 @@ class UclVar
 
   };/*}}}*/
 
+#ifdef ENABLE_CLASS_POLL
   // - class Poll -
   class Poll
   {/*{{{*/
@@ -1432,6 +1435,7 @@ class UclVar
   {/*{{{*/
     return __new_object_1(c_bi_class_Poll,c_bi_mni_Poll_1,op_0);
   }/*}}}*/
+#endif
 
   // - class Timer -
   class Timer
@@ -1459,6 +1463,7 @@ class UclVar
     return __new_object_0(c_bi_class_Timer,c_bi_mni_Timer_0);
   }/*}}}*/
 
+#ifdef ENABLE_CLASS_CLOCK
   // - class Clock -
   class Clock
   {/*{{{*/
@@ -1503,6 +1508,7 @@ class UclVar
     }/*}}}*/
 
   };/*}}}*/
+#endif
 
   // - class Stack -
   inline static UclVar Stack()
