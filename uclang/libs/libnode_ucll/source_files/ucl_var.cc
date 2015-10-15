@@ -512,33 +512,27 @@ unsigned UclVar::Pipe::c_bi_mi_to_string_0;
 unsigned UclVar::Pipe::c_bi_mi_print_0;
 unsigned UclVar::File::c_bi_mi_to_string_0;
 unsigned UclVar::File::c_bi_mi_print_0;
-
 #ifdef ENABLE_CLASS_SOCKET
 unsigned UclVar::SocketAddr::c_bi_mi_to_string_0;
 unsigned UclVar::SocketAddr::c_bi_mi_print_0;
 unsigned UclVar::Socket::c_bi_mi_to_string_0;
 unsigned UclVar::Socket::c_bi_mi_print_0;
 #endif
-
 #ifdef ENABLE_CLASS_REGEX
 unsigned UclVar::Regex::c_bi_mi_to_string_0;
 unsigned UclVar::Regex::c_bi_mi_print_0;
 #endif
-
 unsigned UclVar::Signal::c_bi_mi_bind_2;
 unsigned UclVar::Signal::c_bi_mi_unbind_1;
 unsigned UclVar::Signal::c_bi_mi_send_2;
 unsigned UclVar::Signal::c_bi_mi_to_string_0;
 unsigned UclVar::Signal::c_bi_mi_print_0;
-
 #ifdef ENABLE_CLASS_POLL
 unsigned UclVar::Poll::c_bi_mi_to_string_0;
 unsigned UclVar::Poll::c_bi_mi_print_0;
 #endif
-
 unsigned UclVar::Timer::c_bi_mi_to_string_0;
 unsigned UclVar::Timer::c_bi_mi_print_0;
-
 #ifdef ENABLE_CLASS_CLOCK
 unsigned UclVar::Clock::c_bi_mi_getres_1;
 unsigned UclVar::Clock::c_bi_mi_gettime_1;
@@ -546,7 +540,6 @@ unsigned UclVar::Clock::c_bi_mi_settime_2;
 unsigned UclVar::Clock::c_bi_mi_to_string_0;
 unsigned UclVar::Clock::c_bi_mi_print_0;
 #endif
-
 unsigned UclVar::Json::c_bi_mi_create_1;
 unsigned UclVar::Json::c_bi_mi_create_nice_2;
 unsigned UclVar::Json::c_bi_mi_parse_1;
@@ -631,7 +624,6 @@ UclVar UclVar::File::_stderr = UclVar(NO_INIT());
 UclVar UclVar::File::_SEEK_SET = UclVar(NO_INIT());
 UclVar UclVar::File::_SEEK_CUR = UclVar(NO_INIT());
 UclVar UclVar::File::_SEEK_END = UclVar(NO_INIT());
-
 #ifdef ENABLE_CLASS_SOCKET
 UclVar UclVar::Socket::AF_UNIX = UclVar(NO_INIT());
 UclVar UclVar::Socket::AF_FILE = UclVar(NO_INIT());
@@ -642,9 +634,9 @@ UclVar UclVar::Socket::SOCK_RAW = UclVar(NO_INIT());
 UclVar UclVar::Socket::SO_RCVTIMEO = UclVar(NO_INIT());
 UclVar UclVar::Socket::SO_SNDTIMEO = UclVar(NO_INIT());
 #endif
-
 UclVar UclVar::Signal::_SIGINT = UclVar(NO_INIT());
 UclVar UclVar::Signal::_SIGTERM = UclVar(NO_INIT());
+#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
 UclVar UclVar::Signal::_SIGHUP = UclVar(NO_INIT());
 UclVar UclVar::Signal::_SIGQUIT = UclVar(NO_INIT());
 UclVar UclVar::Signal::_SIGILL = UclVar(NO_INIT());
@@ -679,7 +671,7 @@ UclVar UclVar::Signal::_SIGSYS = UclVar(NO_INIT());
 UclVar UclVar::Signal::_SIGUNUSED = UclVar(NO_INIT());
 UclVar UclVar::Signal::_SIGRTMIN = UclVar(NO_INIT());
 UclVar UclVar::Signal::_SIGRTMAX = UclVar(NO_INIT());
-
+#endif
 #ifdef ENABLE_CLASS_POLL
 UclVar UclVar::Poll::POLLIN = UclVar(NO_INIT());
 UclVar UclVar::Poll::POLLPRI = UclVar(NO_INIT());
@@ -688,14 +680,12 @@ UclVar UclVar::Poll::POLLERR = UclVar(NO_INIT());
 UclVar UclVar::Poll::POLLHUP = UclVar(NO_INIT());
 UclVar UclVar::Poll::POLLNVAL = UclVar(NO_INIT());
 #endif
-
 #ifdef ENABLE_CLASS_CLOCK
 UclVar UclVar::Clock::_CLOCK_REALTIME = UclVar(NO_INIT());
 UclVar UclVar::Clock::_CLOCK_MONOTONIC = UclVar(NO_INIT());
 UclVar UclVar::Clock::_CLOCK_PROCESS_CPUTIME_ID = UclVar(NO_INIT());
 UclVar UclVar::Clock::_CLOCK_THREAD_CPUTIME_ID = UclVar(NO_INIT());
 #endif
-
 UclVar UclVar::WsContext::PORT_NO_LISTEN = UclVar(NO_INIT());
 UclVar UclVar::WsConn::WRITE_TEXT = UclVar(NO_INIT());
 UclVar UclVar::WsConn::WRITE_BINARY = UclVar(NO_INIT());
@@ -792,24 +782,18 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Sys,"Sys");
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Pipe,"Pipe");
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_File,"File");
-
 #ifdef ENABLE_CLASS_SOCKET
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_SocketAddr,"SocketAddr");
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Socket,"Socket");
 #endif
-
 #ifdef ENABLE_CLASS_REGEX
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Regex,"Regex");
 #endif
-
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Signal,"Signal");
-
 #ifdef ENABLE_CLASS_POLL
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Poll,"Poll");
 #endif
-
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Timer,"Timer");
-
 #ifdef ENABLE_CLASS_CLOCK
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Clock,"Clock");
 #endif
@@ -997,7 +981,9 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_join_0,"join#0");
+#ifdef ENABLE_THREAD_TRY_JOIN
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_try_join_0,"try_join#0");
+#endif
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_detach_0,"detach#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_yield_0,"yield#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
@@ -1081,7 +1067,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_next_item_0,"next_item#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-
 #ifdef ENABLE_CLASS_SOCKET
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_SocketAddr_2,"SocketAddr#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_name_0,"name#0");
@@ -1107,7 +1092,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
 #endif
-
 #ifdef ENABLE_CLASS_REGEX
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Regex_0,"Regex#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Regex_1,"Regex#1");
@@ -1117,13 +1101,11 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
 #endif
-
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_bind_2,"bind#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_unbind_1,"unbind#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_send_2,"send#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-
 #ifdef ENABLE_CLASS_POLL
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Poll_1,"Poll#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_ready_1,"ready#1");
@@ -1131,14 +1113,12 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
 #endif
-
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Timer_0,"Timer#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_schedule_3,"schedule#3");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_process_0,"process#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_remain_0,"remain#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-
 #ifdef ENABLE_CLASS_CLOCK
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_getres_1,"getres#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_gettime_1,"gettime#1");
@@ -1410,6 +1390,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SEEK_SET,"SEEK_SET");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SEEK_CUR,"SEEK_CUR");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SEEK_END,"SEEK_END");
+#ifdef ENABLE_CLASS_SOCKET
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_AF_UNIX,"AF_UNIX");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_AF_FILE,"AF_FILE");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_AF_INET,"AF_INET");
@@ -1418,8 +1399,10 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_SOCK_RAW,"SOCK_RAW");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_SO_RCVTIMEO,"SO_RCVTIMEO");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_SO_SNDTIMEO,"SO_SNDTIMEO");
+#endif
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SIGINT,"SIGINT");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SIGTERM,"SIGTERM");
+#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SIGHUP,"SIGHUP");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SIGQUIT,"SIGQUIT");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SIGILL,"SIGILL");
@@ -1454,16 +1437,21 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SIGUNUSED,"SIGUNUSED");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SIGRTMIN,"SIGRTMIN");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SIGRTMAX,"SIGRTMAX");
+#endif
+#ifdef ENABLE_CLASS_POLL
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_POLLIN,"POLLIN");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_POLLPRI,"POLLPRI");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_POLLOUT,"POLLOUT");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_POLLERR,"POLLERR");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_POLLHUP,"POLLHUP");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_POLLNVAL,"POLLNVAL");
+#endif
+#ifdef ENABLE_CLASS_CLOCK
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__CLOCK_REALTIME,"CLOCK_REALTIME");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__CLOCK_MONOTONIC,"CLOCK_MONOTONIC");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__CLOCK_PROCESS_CPUTIME_ID,"CLOCK_PROCESS_CPUTIME_ID");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__CLOCK_THREAD_CPUTIME_ID,"CLOCK_THREAD_CPUTIME_ID");
+#endif
   }
 
   // - module containers -
@@ -1611,33 +1599,27 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Pipe,c_bi_class_Pipe,c_bi_mi_print_0,c_bi_mni_print_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(File,c_bi_class_File,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(File,c_bi_class_File,c_bi_mi_print_0,c_bi_mni_print_0);
-
 #ifdef ENABLE_CLASS_SOCKET
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(SocketAddr,c_bi_class_SocketAddr,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(SocketAddr,c_bi_class_SocketAddr,c_bi_mi_print_0,c_bi_mni_print_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Socket,c_bi_class_Socket,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Socket,c_bi_class_Socket,c_bi_mi_print_0,c_bi_mni_print_0);
 #endif
-
 #ifdef ENABLE_CLASS_REGEX
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Regex,c_bi_class_Regex,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Regex,c_bi_class_Regex,c_bi_mi_print_0,c_bi_mni_print_0);
 #endif
-
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Signal,c_bi_class_Signal,c_bi_mi_bind_2,c_bi_mni_bind_2);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Signal,c_bi_class_Signal,c_bi_mi_unbind_1,c_bi_mni_unbind_1);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Signal,c_bi_class_Signal,c_bi_mi_send_2,c_bi_mni_send_2);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Signal,c_bi_class_Signal,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Signal,c_bi_class_Signal,c_bi_mi_print_0,c_bi_mni_print_0);
-
 #ifdef ENABLE_CLASS_POLL
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Poll,c_bi_class_Poll,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Poll,c_bi_class_Poll,c_bi_mi_print_0,c_bi_mni_print_0);
 #endif
-
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Timer,c_bi_class_Timer,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Timer,c_bi_class_Timer,c_bi_mi_print_0,c_bi_mni_print_0);
-
 #ifdef ENABLE_CLASS_CLOCK
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Clock,c_bi_class_Clock,c_bi_mi_getres_1,c_bi_mni_getres_1);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Clock,c_bi_class_Clock,c_bi_mi_gettime_1,c_bi_mni_gettime_1);
@@ -1788,7 +1770,6 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(File,c_bi_class_File,_SEEK_SET);
     UCLVAR_RETRIEVE_STATIC_CONST(File,c_bi_class_File,_SEEK_CUR);
     UCLVAR_RETRIEVE_STATIC_CONST(File,c_bi_class_File,_SEEK_END);
-
 #ifdef ENABLE_CLASS_SOCKET
     UCLVAR_RETRIEVE_STATIC_CONST(Socket,c_bi_class_Socket,AF_UNIX);
     UCLVAR_RETRIEVE_STATIC_CONST(Socket,c_bi_class_Socket,AF_FILE);
@@ -1799,9 +1780,9 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(Socket,c_bi_class_Socket,SO_RCVTIMEO);
     UCLVAR_RETRIEVE_STATIC_CONST(Socket,c_bi_class_Socket,SO_SNDTIMEO);
 #endif
-
     UCLVAR_RETRIEVE_STATIC_CONST(Signal,c_bi_class_Signal,_SIGINT);
     UCLVAR_RETRIEVE_STATIC_CONST(Signal,c_bi_class_Signal,_SIGTERM);
+#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
     UCLVAR_RETRIEVE_STATIC_CONST(Signal,c_bi_class_Signal,_SIGHUP);
     UCLVAR_RETRIEVE_STATIC_CONST(Signal,c_bi_class_Signal,_SIGQUIT);
     UCLVAR_RETRIEVE_STATIC_CONST(Signal,c_bi_class_Signal,_SIGILL);
@@ -1836,7 +1817,7 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(Signal,c_bi_class_Signal,_SIGUNUSED);
     UCLVAR_RETRIEVE_STATIC_CONST(Signal,c_bi_class_Signal,_SIGRTMIN);
     UCLVAR_RETRIEVE_STATIC_CONST(Signal,c_bi_class_Signal,_SIGRTMAX);
-
+#endif
 #ifdef ENABLE_CLASS_POLL
     UCLVAR_RETRIEVE_STATIC_CONST(Poll,c_bi_class_Poll,POLLIN);
     UCLVAR_RETRIEVE_STATIC_CONST(Poll,c_bi_class_Poll,POLLPRI);
@@ -1845,7 +1826,6 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(Poll,c_bi_class_Poll,POLLHUP);
     UCLVAR_RETRIEVE_STATIC_CONST(Poll,c_bi_class_Poll,POLLNVAL);
 #endif
-
 #ifdef ENABLE_CLASS_CLOCK
     UCLVAR_RETRIEVE_STATIC_CONST(Clock,c_bi_class_Clock,_CLOCK_REALTIME);
     UCLVAR_RETRIEVE_STATIC_CONST(Clock,c_bi_class_Clock,_CLOCK_MONOTONIC);

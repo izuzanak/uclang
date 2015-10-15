@@ -8,6 +8,10 @@ include "script_parser.h"
 
 #include <string>
 
+#ifdef _GNU_SOURCE
+#define ENABLE_THREAD_TRY_JOIN
+#endif
+
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
 #if SYSTEM_TYPE_UNIX_SOCKET == ENABLED
 #define ENABLE_CLASS_SOCKET
@@ -1338,6 +1342,7 @@ class UclVar
     public:
     static UclVar _SIGINT;
     static UclVar _SIGTERM;
+#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
     static UclVar _SIGHUP;
     static UclVar _SIGQUIT;
     static UclVar _SIGILL;
@@ -1372,6 +1377,7 @@ class UclVar
     static UclVar _SIGUNUSED;
     static UclVar _SIGRTMIN;
     static UclVar _SIGRTMAX;
+#endif
 
     public:
     inline static UclVar bind(UclVar op_0,UclVar op_1)
@@ -2271,10 +2277,12 @@ class UclVar
     return __call_0(c_bi_mni_join_0);
   }/*}}}*/
 
+#ifdef ENABLE_THREAD_TRY_JOIN
   inline UclVar try_join()
   {/*{{{*/
     return __call_0(c_bi_mni_try_join_0);
   }/*}}}*/
+#endif
 
   inline UclVar detach()
   {/*{{{*/
