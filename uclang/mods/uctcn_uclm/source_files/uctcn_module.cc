@@ -17,7 +17,7 @@ built_in_module_s module =
   uctcn_classes,          // Classes
 
   0,                      // Error base index
-  35,                     // Error count
+  38,                     // Error count
   uctcn_error_strings,    // Error strings
 
   uctcn_initialize,       // Initialize function
@@ -70,8 +70,11 @@ const char *uctcn_error_strings[] =
   "error_PROC_VAR_SET_UNFORCE_ERROR",
   "error_PROC_VARIABLE_SET_UNKNOWN_TYPE",
   "error_PROC_VARIABLE_SET_WRONG_TYPE",
+  "error_PROC_VARIABLE_SET_WRONG_ARRAY_ELEMENT_COUNT",
+  "error_PROC_VARIABLE_SET_WRONG_ARRAY_ELEMENT_TYPE",
   "error_PROC_VARIABLE_UNIMPLEMENTED_TYPE",
   "error_PROC_VARIABLE_GET_UNKNOWN_TYPE",
+  "error_PROC_VARIABLE_GET_STRING_UNSUPPORTED_TYPE",
 };/*}}}*/
 
 // - UCTCN initialize -
@@ -339,6 +342,20 @@ bool uctcn_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nProcess variable wrong value type, expected %s\n",it.class_symbol_names[it.class_records[exception.params[0]].name_idx].data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_PROC_VARIABLE_SET_WRONG_ARRAY_ELEMENT_COUNT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nProcess variable wrong array element count %" HOST_LL_FORMAT "d, expected %" HOST_LL_FORMAT "d\n",exception.params[0],exception.params[1]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PROC_VARIABLE_SET_WRONG_ARRAY_ELEMENT_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nProcess variable wrong array element type, expected %s\n",it.class_symbol_names[it.class_records[exception.params[0]].name_idx].data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_PROC_VARIABLE_UNIMPLEMENTED_TYPE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -351,6 +368,13 @@ bool uctcn_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nProcess variable get error, unknown variable type\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PROC_VARIABLE_GET_STRING_UNSUPPORTED_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nProcess variable get string error, unsupported variable type\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -1290,8 +1314,33 @@ bool bic_traffic_port_method_create_set_1(interpreter_thread_s &it,unsigned stac
       return false;
     }
 
+    // - flag indicating worng count of value elements -
+    bool err_count;
+
+    // - data type is array -
+    if (c_type_array[type])
+    {
+      err_count = count <= 0;
+
+      switch (type)
+      {
+        case dt_odd_u8_array:
+          err_count |= !(count & 0x01);
+          break;
+        case dt_even_u8_array:
+          err_count |= count & 0x01;
+          break;
+      }
+    }
+    
+    // - data type is not array -
+    else
+    {
+      err_count = count != 0;
+    }
+
     // - ERROR -
-    if (c_type_array[type] ? count <= 0 : count != 0)
+    if (err_count)
     {
       pvs_ptr->clear(it);
       cfree(pvs_ptr);
@@ -1979,7 +2028,7 @@ built_in_class_s proc_variable_class =
 {/*{{{*/
   "ProcVariable",
   c_modifier_public | c_modifier_final,
-  7, proc_variable_methods,
+  8, proc_variable_methods,
   27 + 6, proc_variable_variables,
   bic_proc_variable_consts,
   bic_proc_variable_init,
@@ -2022,6 +2071,11 @@ built_in_method_s proc_variable_methods[] =
     "get#0",
     c_modifier_public | c_modifier_final,
     bic_proc_variable_method_get_0
+  },
+  {
+    "get_string#0",
+    c_modifier_public | c_modifier_final,
+    bic_proc_variable_method_get_string_0
   },
   {
     "to_string#0",
@@ -2349,6 +2403,75 @@ bool bic_proc_variable_method_set_1(interpreter_thread_s &it,unsigned stack_base
 
   case dt_odd_u8_array:
   case dt_even_u8_array:
+    {
+      switch (src_0_location->v_type)
+      {
+        case c_bi_class_string:
+          {
+            string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+            // - ERROR -
+            if (string_ptr->size - 1 != pv_list.u8ArrayCount)
+            {
+              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PROC_VARIABLE_SET_WRONG_ARRAY_ELEMENT_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+              new_exception->params.push(string_ptr->size - 1);
+              new_exception->params.push(pv_list.u8ArrayCount);
+
+              return false;
+            }
+
+            unsigned char *c_ptr = (unsigned char *)string_ptr->data;
+            unsigned char *c_ptr_end = c_ptr + string_ptr->size - 1;
+            unsigned char *v_ptr = (unsigned char *)pv_list.pVariable;
+            do {
+              *v_ptr = *c_ptr;
+            } while(++v_ptr,++c_ptr < c_ptr_end);
+          }
+          break;
+        case c_bi_class_array:
+          {
+            pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+            // - ERROR -
+            if (array_ptr->used != pv_list.u8ArrayCount)
+            {
+              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PROC_VARIABLE_SET_WRONG_ARRAY_ELEMENT_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+              new_exception->params.push(array_ptr->used);
+              new_exception->params.push(pv_list.u8ArrayCount);
+
+              return false;
+            }
+
+            pointer *a_ptr = array_ptr->data;
+            pointer *a_ptr_end = a_ptr + array_ptr->used;
+            unsigned char *v_ptr = (unsigned char *)pv_list.pVariable;
+            long long int value;
+            do {
+              location_s *item_location = it.get_location_value(*a_ptr);
+              
+              // - ERROR -
+              if (!it.retrieve_integer(item_location,value))
+              {
+                exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PROC_VARIABLE_SET_WRONG_ARRAY_ELEMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+                new_exception->params.push(c_bi_class_integer);
+
+                return false;
+              }
+
+              *v_ptr = value;
+            } while(++v_ptr,++a_ptr < a_ptr_end);
+          }
+          break;
+
+        // - ERROR -
+        default:
+          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PROC_VARIABLE_SET_WRONG_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          new_exception->params.push(c_bi_class_array);
+
+          return false;
+      }
+    }
+    break;
   case dt_u16_array:
   case dt_i16_array:
   case dt_u32_array:
@@ -2501,6 +2624,27 @@ bool bic_proc_variable_method_get_0(interpreter_thread_s &it,unsigned stack_base
 
   case dt_odd_u8_array:
   case dt_even_u8_array:
+  {
+    pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+    if (pv_list.u8ArrayCount > 0)
+    {
+      unsigned char *v_ptr = (unsigned char *)pv_list.pVariable;
+      unsigned char *v_ptr_end = v_ptr + pv_list.u8ArrayCount;
+      do {
+        long long int value = *v_ptr;
+
+        BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
+        array_ptr->push(new_location);
+
+      } while(++v_ptr < v_ptr_end);
+    }
+
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+    BIC_SET_RESULT(new_location);
+  }
+  break;
+
   case dt_u16_array:
   case dt_i16_array:
   case dt_u32_array:
@@ -2514,6 +2658,50 @@ bool bic_proc_variable_method_get_0(interpreter_thread_s &it,unsigned stack_base
   default:
 
     exception_s::throw_exception(it,module.error_base + c_error_PROC_VARIABLE_GET_UNKNOWN_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_proc_variable_method_get_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  proc_variable_s *pv_ptr = (proc_variable_s *)dst_location->v_data_ptr;
+  proc_var_set_s *pvs_ptr = (proc_var_set_s *)pv_ptr->pvs_ptr->v_data_ptr;
+
+  // - retrieve process variable -
+  pv_list_s &pv_list = pvs_ptr->list_array[pv_ptr->var_idx];
+
+  switch (pv_list.u8DerivedType)
+  {
+  case dt_odd_u8_array:
+  case dt_even_u8_array:
+  {
+    string_s *string_ptr = it.get_new_string_ptr();
+
+    if (pv_list.u8ArrayCount > 0)
+    {
+      string_ptr->create(pv_list.u8ArrayCount);
+
+      unsigned char *v_ptr = (unsigned char *)pv_list.pVariable;
+      unsigned char *v_ptr_end = v_ptr + pv_list.u8ArrayCount;
+      unsigned char *c_ptr = (unsigned char *)string_ptr->data;
+      do {
+        *c_ptr = *v_ptr;
+      } while(++c_ptr,++v_ptr < v_ptr_end);
+    }
+    
+    BIC_SET_RESULT_STRING(string_ptr);
+  }
+  break;
+
+  // - ERROR -
+  default:
+
+    exception_s::throw_exception(it,module.error_base + c_error_PROC_VARIABLE_GET_STRING_UNSUPPORTED_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 

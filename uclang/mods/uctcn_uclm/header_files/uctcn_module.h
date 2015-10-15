@@ -55,8 +55,11 @@ enum
   c_error_PROC_VAR_SET_UNFORCE_ERROR,
   c_error_PROC_VARIABLE_SET_UNKNOWN_TYPE,
   c_error_PROC_VARIABLE_SET_WRONG_TYPE,
+  c_error_PROC_VARIABLE_SET_WRONG_ARRAY_ELEMENT_COUNT,
+  c_error_PROC_VARIABLE_SET_WRONG_ARRAY_ELEMENT_TYPE,
   c_error_PROC_VARIABLE_UNIMPLEMENTED_TYPE,
   c_error_PROC_VARIABLE_GET_UNKNOWN_TYPE,
+  c_error_PROC_VARIABLE_GET_STRING_UNSUPPORTED_TYPE,
 };
 
 // - UCTCN error strings -
@@ -161,6 +164,7 @@ bool bic_proc_variable_method_name_0(interpreter_thread_s &it,unsigned stack_bas
 bool bic_proc_variable_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_proc_variable_method_set_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_proc_variable_method_get_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_proc_variable_method_get_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_proc_variable_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_proc_variable_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
