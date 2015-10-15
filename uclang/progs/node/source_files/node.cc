@@ -70,13 +70,13 @@ int main(int argc,char **argv)
       UclVar value;
 
       value = UclVar::__static_call("NodeTest","static_method");
-      printf("value: %lld\n",value.__int());
+      printf("value: %" HOST_LL_FORMAT "d\n",value.__int());
 
       value = UclVar::__static_call("NodeTest","static_method",1);
-      printf("value: %lld\n",value.__int());
+      printf("value: %" HOST_LL_FORMAT "d\n",value.__int());
 
       value = UclVar::__static_call("NodeTest","static_method",1,2);
-      printf("value: %lld\n",value.__int());
+      printf("value: %" HOST_LL_FORMAT "d\n",value.__int());
 
       // FIXME member select test
       test = UclVar::__new("NodeTest","a","b");
