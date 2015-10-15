@@ -60,10 +60,6 @@ int CGXDLMSBase::PrepareInit(string a_man_id,string a_serial,int a_port)
   item_el_id2->GetAttributes().push_back(CGXDLMSAttribute(2,DLMS_DATA_TYPE_UINT32));
   GetItems().push_back(item_el_id2);
 
-  // - add clock: 0.0.1.0.0.255 -
-  CGXDLMSClock* pClock = new CGXDLMSClock();
-  GetItems().push_back(pClock);
-
   return ERROR_CODES_OK;
 }/*}}}*/
 
@@ -112,23 +108,6 @@ int CGXDLMSBase::OnRead(CGXDLMSObject* pItem,int index,CGXDLMSVariant& value,DLM
   // - retrieve item name -
   string item_name;
   pItem->GetLogicalName(item_name);
-
-  // FIXME debug output
-  //fprintf(stderr,"READ PAIR: %d - %s\n",value.vt,item_name.c_str());
-
-  // - set value according to item name -
-  switch (value.vt)
-  {
-    case DLMS_DATA_TYPE_DATETIME:
-      if (item_name == "0.0.1.0.0.255")
-      {
-        value = CGXDateTime::Now();
-        return ERROR_CODES_OK;
-      }
-      break;
-    default:
-      break;
-  }
 
   // - use curent value -
   return ERROR_CODES_FALSE;

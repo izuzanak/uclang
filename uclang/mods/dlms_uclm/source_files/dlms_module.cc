@@ -94,7 +94,7 @@ bool dlms_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nLength of object array is not divisible by two\n");
+    fprintf(stderr,"\nLength of object array is not divisible by four\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_DLMS_SERVER_INVALID_OBJECT_ARRAY_VALUE_TYPE:
@@ -411,7 +411,7 @@ bool bic_dlms_server_method_DlmsServer_4(interpreter_thread_s &it,unsigned stack
   }
 
   // - ERROR -
-  if (objs_ptr->used & 0x01)
+  if (objs_ptr->used & 0x02)
   {
     exception_s::throw_exception(it,module.error_base + c_error_DLMS_SERVER_INVALID_OBJECT_ARRAY_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -439,7 +439,6 @@ bool bic_dlms_server_method_DlmsServer_4(interpreter_thread_s &it,unsigned stack
     pointer *p_ptr_end = p_ptr + objs_ptr->used;
     do {
       location_s *code_loc = it.get_location_value(p_ptr[0]);
-      location_s *type_loc = it.get_location_value(p_ptr[1]);
 
       // - ERROR -
       if (code_loc->v_type != c_bi_class_string)
@@ -450,17 +449,22 @@ bool bic_dlms_server_method_DlmsServer_4(interpreter_thread_s &it,unsigned stack
         return false;
       }
 
-      string_s *obj_code = (string_s *)code_loc->v_data_ptr;
       long long int data_type;
+      double scaler;
+      long long int unit;
 
       // - ERROR -
-      if (!it.retrieve_integer(type_loc,data_type))
+      if (!it.retrieve_integer(it.get_location_value(p_ptr[1]),data_type) ||
+          !it.retrieve_float(it.get_location_value(p_ptr[2]),scaler) ||
+          !it.retrieve_integer(it.get_location_value(p_ptr[3]),unit))
       {
         delete dlmss_ptr;
 
         exception_s::throw_exception(it,module.error_base + c_error_DLMS_SERVER_INVALID_OBJECT_ARRAY_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
+
+      string_s *obj_code = (string_s *)code_loc->v_data_ptr;
 
       switch (data_type)
       {
@@ -512,11 +516,15 @@ bool bic_dlms_server_method_DlmsServer_4(interpreter_thread_s &it,unsigned stack
           }
       }
 
+      // - set register unit and scaler -
+      reg_ptr->SetScaler(scaler);
+      reg_ptr->SetUnit(unit);
+
       // - add object to server -
       reg_ptr->SetAccess(2,ACCESSMODE_READ);
       items.push_back(reg_ptr);
 
-    } while((p_ptr += 2) < p_ptr_end);
+    } while((p_ptr += 4) < p_ptr_end);
   }
 
   // - ERROR -
