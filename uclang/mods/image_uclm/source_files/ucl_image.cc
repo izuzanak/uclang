@@ -146,7 +146,6 @@ bool image_s::io_fill(unsigned char *a_color)
     } while(ptr < ptr_end);\
   }
 
-
   switch (pixel_format)
   {
     case c_image_pixel_format_GRAY8:

@@ -13,7 +13,7 @@ built_in_module_s module =
   image_classes,          // Classes
 
   0,                      // Error base index
-  13,                     // Error count
+  14,                     // Error count
   image_error_strings,    // Error strings
 
   image_initialize,       // Initialize function
@@ -42,6 +42,7 @@ const char *image_error_strings[] =
   "error_IMAGE_JPEG_FILE_READ_ERROR",
   "error_IMAGE_JPEG_FILE_WRITE_ERROR",
   "error_IMAGE_IMAGE_OPERATION_ERROR",
+  "error_IMAGE_IMAGE_OPERATION_INVALID_COLOR",
 };/*}}}*/
 
 // - IMAGE initialize -
@@ -157,6 +158,13 @@ bool image_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nImage operation error\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_IMAGE_IMAGE_OPERATION_INVALID_COLOR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nImage operation, invalid image color\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   default:
     class_stack.clear();
     return false;
@@ -172,7 +180,7 @@ built_in_class_s image_class =
 {/*{{{*/
   "Image",
   c_modifier_public | c_modifier_final,
-  18, image_methods,
+  19, image_methods,
   3, image_variables,
   bic_image_consts,
   bic_image_init,
@@ -265,6 +273,11 @@ built_in_method_s image_methods[] =
     "io_clear#0",
     c_modifier_public | c_modifier_final,
     bic_image_method_io_clear_0
+  },
+  {
+    "io_fill#1",
+    c_modifier_public | c_modifier_final,
+    bic_image_method_io_fill_1
   },
   {
     "io_copy#1",
@@ -1189,6 +1202,86 @@ bool bic_image_method_io_clear_0(interpreter_thread_s &it,unsigned stack_base,ul
 
   image_s *img_ptr = (image_s *)dst_location->v_data_ptr;
   img_ptr->io_clear();
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_image_method_io_fill_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_array)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("io_fill#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  image_s *img_ptr = (image_s *)dst_location->v_data_ptr;
+  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+  bool size_err = false;
+
+  switch (img_ptr->pixel_format)
+  {
+  case c_image_pixel_format_GRAY8:
+    size_err = array_ptr->used != 1;
+    break;
+  case c_image_pixel_format_RGB24:
+    size_err = array_ptr->used != 3;
+    break;
+  case c_image_pixel_format_RGBA:
+    size_err = array_ptr->used != 4;
+    break;
+  
+  // - ERROR -
+  default:
+
+    exception_s::throw_exception(it,module.error_base + c_error_IMAGE_UNSUPPORTED_PIXEL_FORMAT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (size_err)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_IMAGE_IMAGE_OPERATION_INVALID_COLOR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  unsigned char color[4];
+  unsigned comp_idx = 0;
+
+  pointer *a_ptr = array_ptr->data;
+  pointer *a_ptr_end = a_ptr + array_ptr->used;
+  do {
+    location_s *item_location = it.get_location_value(*a_ptr);
+
+    long long int component;
+
+    // - ERROR -
+    if (!it.retrieve_integer(item_location,component))
+    {
+      exception_s::throw_exception(it,module.error_base + c_error_IMAGE_IMAGE_OPERATION_INVALID_COLOR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
+    color[comp_idx++] = component;
+
+  } while(++a_ptr < a_ptr_end);
+
+  // - ERROR -
+  if (!img_ptr->io_fill(color))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_IMAGE_IMAGE_OPERATION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
 
   BIC_SET_RESULT_BLANK();
 

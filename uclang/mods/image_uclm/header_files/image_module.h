@@ -31,6 +31,7 @@ enum
   c_error_IMAGE_JPEG_FILE_READ_ERROR,
   c_error_IMAGE_JPEG_FILE_WRITE_ERROR,
   c_error_IMAGE_IMAGE_OPERATION_ERROR,
+  c_error_IMAGE_IMAGE_OPERATION_INVALID_COLOR,
 };
 
 // - IMAGE error strings -
@@ -66,6 +67,7 @@ bool bic_image_method_write_jpeg_file_2(interpreter_thread_s &it,unsigned stack_
 bool bic_image_method_duplicate_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_referred_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_io_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_image_method_io_fill_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_io_copy_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
