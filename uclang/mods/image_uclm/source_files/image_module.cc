@@ -1214,8 +1214,99 @@ bool bic_image_method_io_fill_1(interpreter_thread_s &it,unsigned stack_base,uli
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
-  if (src_0_location->v_type != c_bi_class_array)
+  image_s *img_ptr = (image_s *)dst_location->v_data_ptr;
+  unsigned char color[4];
+
+  switch (src_0_location->v_type)
   {
+  case c_bi_class_integer:
+    {/*{{{*/
+      long long int components;
+      it.retrieve_integer(src_0_location,components);
+
+
+      switch (img_ptr->pixel_format)
+      {
+      case c_image_pixel_format_GRAY8:
+        color[0] = components & 0xff;
+        break;
+      case c_image_pixel_format_RGB24:
+        color[0] = (components >> 16) & 0xff;
+        color[1] = (components >>  8) & 0xff;
+        color[2] = components & 0xff;
+        break;
+      case c_image_pixel_format_RGBA:
+        color[0] = (components >> 24) & 0xff;
+        color[1] = (components >> 16) & 0xff;
+        color[2] = (components >>  8) & 0xff;
+        color[3] = components & 0xff;
+        break;
+      
+      // - ERROR -
+      default:
+
+        exception_s::throw_exception(it,module.error_base + c_error_IMAGE_UNSUPPORTED_PIXEL_FORMAT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+    }/*}}}*/
+    break;
+
+  case c_bi_class_array:
+    {/*{{{*/
+      pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+      bool size_err = false;
+
+      switch (img_ptr->pixel_format)
+      {
+      case c_image_pixel_format_GRAY8:
+        size_err = array_ptr->used != 1;
+        break;
+      case c_image_pixel_format_RGB24:
+        size_err = array_ptr->used != 3;
+        break;
+      case c_image_pixel_format_RGBA:
+        size_err = array_ptr->used != 4;
+        break;
+      
+      // - ERROR -
+      default:
+
+        exception_s::throw_exception(it,module.error_base + c_error_IMAGE_UNSUPPORTED_PIXEL_FORMAT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+
+      // - ERROR -
+      if (size_err)
+      {
+        exception_s::throw_exception(it,module.error_base + c_error_IMAGE_IMAGE_OPERATION_INVALID_COLOR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+
+      // - retrieve color components -
+      pointer *a_ptr = array_ptr->data;
+      pointer *a_ptr_end = a_ptr + array_ptr->used;
+      unsigned component_idx = 0;
+      do {
+        location_s *item_location = it.get_location_value(*a_ptr);
+
+        long long int component;
+
+        // - ERROR -
+        if (!it.retrieve_integer(item_location,component))
+        {
+          exception_s::throw_exception(it,module.error_base + c_error_IMAGE_IMAGE_OPERATION_INVALID_COLOR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          return false;
+        }
+
+        color[component_idx++] = component;
+      } while(++a_ptr < a_ptr_end);
+    }/*}}}*/
+    break;
+
+  // - ERROR -
+  default:
+    
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("io_fill#1");
     new_exception->params.push(1);
@@ -1223,58 +1314,6 @@ bool bic_image_method_io_fill_1(interpreter_thread_s &it,unsigned stack_base,uli
 
     return false;
   }
-
-  image_s *img_ptr = (image_s *)dst_location->v_data_ptr;
-  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
-
-  bool size_err = false;
-
-  switch (img_ptr->pixel_format)
-  {
-  case c_image_pixel_format_GRAY8:
-    size_err = array_ptr->used != 1;
-    break;
-  case c_image_pixel_format_RGB24:
-    size_err = array_ptr->used != 3;
-    break;
-  case c_image_pixel_format_RGBA:
-    size_err = array_ptr->used != 4;
-    break;
-  
-  // - ERROR -
-  default:
-
-    exception_s::throw_exception(it,module.error_base + c_error_IMAGE_UNSUPPORTED_PIXEL_FORMAT,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - ERROR -
-  if (size_err)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_IMAGE_IMAGE_OPERATION_INVALID_COLOR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  unsigned char color[4];
-  unsigned comp_idx = 0;
-
-  pointer *a_ptr = array_ptr->data;
-  pointer *a_ptr_end = a_ptr + array_ptr->used;
-  do {
-    location_s *item_location = it.get_location_value(*a_ptr);
-
-    long long int component;
-
-    // - ERROR -
-    if (!it.retrieve_integer(item_location,component))
-    {
-      exception_s::throw_exception(it,module.error_base + c_error_IMAGE_IMAGE_OPERATION_INVALID_COLOR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-      return false;
-    }
-
-    color[comp_idx++] = component;
-
-  } while(++a_ptr < a_ptr_end);
 
   // - ERROR -
   if (!img_ptr->io_fill(color))
