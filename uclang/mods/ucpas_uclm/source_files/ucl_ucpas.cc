@@ -66,23 +66,32 @@ fn_t pas_s::callback(u32_t event,u16_t type,void *data,u32_t data_size)
       static short samples[PAS_SAMPLES];
 
       // - if there are samples to be played -
-      if (pas_s::sample_queue.used > 0 && !pas_s::paused)
+      if (pas_s::sample_queue.used > 0)
       {
-        // - retrieve samples from queue -
-        short *s_ptr = samples;
-        short *s_ptr_end = samples + PAS_SAMPLES;
-        do {
-          *s_ptr++ = pas_s::sample_queue.next();
-        } while(s_ptr < s_ptr_end && pas_s::sample_queue.used > 0);
-
-        // - erase rest of sample data -
-        if (s_ptr < s_ptr_end)
+        // - if playback is paused -
+        if (pas_s::paused)
         {
-          memset(s_ptr,0,(s_ptr_end - s_ptr_end)*sizeof(short));
+          // - send empty set of samples -
+          ret_val = pas_sendaudio(PKT_TYPE_XPDO_AUDIO_A,PKT_STATUS_ANNOUNCE,audio_section,priority,NULL,0);
         }
+        else
+        {
+          // - retrieve samples from queue -
+          short *s_ptr = samples;
+          short *s_ptr_end = samples + PAS_SAMPLES;
+          do {
+            *s_ptr++ = pas_s::sample_queue.next();
+          } while(s_ptr < s_ptr_end && pas_s::sample_queue.used > 0);
 
-        // - send samples to be played -
-        ret_val = pas_sendaudio(PKT_TYPE_XPDO_AUDIO_A,PKT_STATUS_ANNOUNCE,audio_section,priority,samples,PAS_SAMPLES);
+          // - erase rest of sample data -
+          if (s_ptr < s_ptr_end)
+          {
+            memset(s_ptr,0,(s_ptr_end - s_ptr_end)*sizeof(short));
+          }
+
+          // - send samples to be played -
+          ret_val = pas_sendaudio(PKT_TYPE_XPDO_AUDIO_A,PKT_STATUS_ANNOUNCE,audio_section,priority,samples,PAS_SAMPLES);
+        }
       }
     }
     break;
