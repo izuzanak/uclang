@@ -4380,8 +4380,9 @@ bool bic_string_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s
 {/*{{{*/
   string_s *string_ptr = (string_s *)location_ptr->v_data_ptr;
 
-  stream.append(string_ptr->size,(const char *)string_ptr->data);
-  stream.append(sizeof(unsigned),(const char *)&string_ptr->size);
+  unsigned length = string_ptr->size - 1;
+  stream.append(length,(const char *)string_ptr->data);
+  stream.append(sizeof(unsigned),(const char *)&length);
 
   return true;
 }/*}}}*/
@@ -4397,16 +4398,16 @@ bool bic_string_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_arra
     return false;
   }
 
-  unsigned size;
-  stream.from_end(sizeof(unsigned),(char *)&size,order_bytes);
+  unsigned length;
+  stream.from_end(sizeof(unsigned),(char *)&length,order_bytes);
 
-  if (stream.used < size)
+  if (stream.used < length)
   {
     return false;
   }
 
-  string_ptr->create(size - 1);
-  stream.from_end(size,string_ptr->data,false);
+  string_ptr->create(length);
+  stream.from_end(length,string_ptr->data,false);
 
   return true;
 }/*}}}*/
