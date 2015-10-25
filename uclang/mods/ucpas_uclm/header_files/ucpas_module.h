@@ -56,6 +56,9 @@ bool bic_pas_method_samples_append_1(interpreter_thread_s &it,unsigned stack_bas
 bool bic_pas_method_samples_append_silence_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pas_method_samples_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pas_method_samples_count_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_pas_method_hold_delay_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_pas_method_hold_delay_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_pas_method_holding_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pas_method_audio_section_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pas_method_audio_section_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pas_method_priority_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

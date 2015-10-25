@@ -20,6 +20,8 @@ mutex_s pas_s::mutex;
 u32_t pas_s::master_ip;
 pas_device_s pas_s::device;
 si_queue_s pas_s::sample_queue;
+unsigned pas_s::hold_delay;
+unsigned pas_s::hold_counter;
 unsigned pas_s::audio_section;
 unsigned pas_s::priority;
 unsigned pas_s::volume;

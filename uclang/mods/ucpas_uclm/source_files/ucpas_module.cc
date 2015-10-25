@@ -121,7 +121,7 @@ built_in_class_s pas_class =
 {/*{{{*/
   "Pas",
   c_modifier_public | c_modifier_final,
-  22, pas_methods,
+  25, pas_methods,
   1, pas_variables,
   bic_pas_consts,
   bic_pas_init,
@@ -194,6 +194,21 @@ built_in_method_s pas_methods[] =
     "samples_count#0",
     c_modifier_public | c_modifier_final,
     bic_pas_method_samples_count_0
+  },
+  {
+    "hold_delay#0",
+    c_modifier_public | c_modifier_final,
+    bic_pas_method_hold_delay_0
+  },
+  {
+    "hold_delay#1",
+    c_modifier_public | c_modifier_final,
+    bic_pas_method_hold_delay_1
+  },
+  {
+    "holding#0",
+    c_modifier_public | c_modifier_final,
+    bic_pas_method_holding_0
   },
   {
     "audio_section#0",
@@ -609,6 +624,9 @@ bool bic_pas_method_samples_append_1(interpreter_thread_s &it,unsigned stack_bas
     // - lock pas data mutex -
     pas_s::mutex.lock();
 
+    // - reset hold counter -
+    pas_s::hold_counter = 0;
+
     if (c_little_endian)
     {
       // - append data to sample queue -
@@ -675,6 +693,9 @@ bool bic_pas_method_samples_append_silence_1(interpreter_thread_s &it,unsigned s
     // - lock pas data mutex -
     pas_s::mutex.lock();
 
+    // - reset hold counter -
+    pas_s::hold_counter = 0;
+
     // - append data to sample queue -
     long long int sample_idx = 0;
     do {
@@ -696,6 +717,8 @@ bool bic_pas_method_samples_clear_0(interpreter_thread_s &it,unsigned stack_base
 
   // - lock pas data mutex -
   pas_s::mutex.lock();
+
+  // FIXME TODO set hold counter to delay?
 
   // - remove all samples from pas samples queue -
   pas_s::sample_queue.clear();
@@ -726,11 +749,82 @@ bool bic_pas_method_samples_count_0(interpreter_thread_s &it,unsigned stack_base
   return true;
 }/*}}}*/
 
+bool bic_pas_method_hold_delay_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  // - lock pas data mutex -
+  pas_s::mutex.lock();
+
+  long long int result = pas_s::hold_delay;
+
+  // - unlock pas data mutex -
+  pas_s::mutex.unlock();
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_pas_method_hold_delay_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int hold_delay;
+
+  if (!it.retrieve_integer(src_0_location,hold_delay))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("hold_delay#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  // - lock pas data mutex -
+  pas_s::mutex.lock();
+
+  pas_s::hold_delay = hold_delay;
+
+  // - unlock pas data mutex -
+  pas_s::mutex.unlock();
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_pas_method_holding_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  // - lock pas data mutex -
+  pas_s::mutex.lock();
+
+  long long result = pas_s::hold_counter > 0;
+
+  // - unlock pas data mutex -
+  pas_s::mutex.unlock();
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
 bool bic_pas_method_audio_section_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
+  // - lock pas data mutex -
+  pas_s::mutex.lock();
+
   long long int result = pas_s::audio_section;
+
+  // - unlock pas data mutex -
+  pas_s::mutex.unlock();
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
@@ -755,7 +849,13 @@ bool bic_pas_method_audio_section_1(interpreter_thread_s &it,unsigned stack_base
     return false;
   }
 
+  // - lock pas data mutex -
+  pas_s::mutex.lock();
+
   pas_s::audio_section = audio_section;
+
+  // - unlock pas data mutex -
+  pas_s::mutex.unlock();
 
   BIC_SET_RESULT_BLANK();
 
@@ -766,7 +866,13 @@ bool bic_pas_method_priority_0(interpreter_thread_s &it,unsigned stack_base,uli 
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
+  // - lock pas data mutex -
+  pas_s::mutex.lock();
+
   long long int result = pas_s::priority;
+
+  // - unlock pas data mutex -
+  pas_s::mutex.unlock();
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
@@ -791,7 +897,13 @@ bool bic_pas_method_priority_1(interpreter_thread_s &it,unsigned stack_base,uli 
     return false;
   }
 
+  // - lock pas data mutex -
+  pas_s::mutex.lock();
+
   pas_s::priority = priority;
+
+  // - unlock pas data mutex -
+  pas_s::mutex.unlock();
 
   BIC_SET_RESULT_BLANK();
 
@@ -802,7 +914,13 @@ bool bic_pas_method_volume_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
+  // - lock pas data mutex -
+  pas_s::mutex.lock();
+
   long long int result = pas_s::volume;
+
+  // - unlock pas data mutex -
+  pas_s::mutex.unlock();
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
@@ -836,7 +954,13 @@ bool bic_pas_method_volume_1(interpreter_thread_s &it,unsigned stack_base,uli *o
     return false;
   }
 
+  // - lock pas data mutex -
+  pas_s::mutex.lock();
+
   pas_s::volume = volume;
+
+  // - unlock pas data mutex -
+  pas_s::mutex.unlock();
 
   BIC_SET_RESULT_BLANK();
 
@@ -861,7 +985,13 @@ bool bic_pas_method_pause_1(interpreter_thread_s &it,unsigned stack_base,uli *op
     return false;
   }
 
+  // - lock pas data mutex -
+  pas_s::mutex.lock();
+
   pas_s::paused = state != 0;
+
+  // - unlock pas data mutex -
+  pas_s::mutex.unlock();
 
   BIC_SET_RESULT_BLANK();
 

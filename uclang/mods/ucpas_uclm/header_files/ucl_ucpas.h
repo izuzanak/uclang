@@ -67,6 +67,8 @@ struct  pas_s
   static u32_t master_ip;
   static pas_device_s device;
   static si_queue_s sample_queue;
+  static unsigned hold_delay;
+  static unsigned hold_counter;
   static unsigned audio_section;
   static unsigned priority;
   static unsigned volume;
@@ -125,6 +127,8 @@ inline void pas_s::init()
   master_ip = 0;
   device.init();
   sample_queue.init();
+  hold_delay = 1000;
+  hold_counter = 0;
   audio_section = 0;
   priority = 0;
   volume = 50;
