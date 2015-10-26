@@ -329,10 +329,12 @@ void *run_interpreter(void *data)
     debug_message_1(fprintf(stderr,"main: parser remove (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
   }
 
+#if !defined(ANDROID)
   // - exit with return code -
   exit(return_value);
+#endif
 
-  return NULL;
+  return (pointer)return_value;
 }/*}}}*/
 
 #if SYSTEM_TYPE_UNIX_CHROME_NACL != ENABLED

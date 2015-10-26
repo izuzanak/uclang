@@ -1722,7 +1722,7 @@ if cfg_ref[CFG_TARGET]:
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # GPP options
-      opt_link + "-lpng -ljpeg", # GPP link options
+      opt_link + "-lpng -ljpeg ", # GPP link options
       "", # GPP defines
       [],
       [],
