@@ -127,7 +127,7 @@ inline void pas_s::init()
   master_ip = 0;
   device.init();
   sample_queue.init();
-  hold_delay = 1000;
+  hold_delay = (1000*PAS_SAMPLES)/10;
   hold_counter = 0;
   audio_section = 0;
   priority = 0;

@@ -756,7 +756,7 @@ bool bic_pas_method_hold_delay_0(interpreter_thread_s &it,unsigned stack_base,ul
   // - lock pas data mutex -
   pas_s::mutex.lock();
 
-  long long int result = pas_s::hold_delay;
+  long long int result = (pas_s::hold_delay*10)/PAS_SAMPLES;
 
   // - unlock pas data mutex -
   pas_s::mutex.unlock();
@@ -787,7 +787,7 @@ bool bic_pas_method_hold_delay_1(interpreter_thread_s &it,unsigned stack_base,ul
   // - lock pas data mutex -
   pas_s::mutex.lock();
 
-  pas_s::hold_delay = hold_delay;
+  pas_s::hold_delay = (hold_delay*PAS_SAMPLES)/10;
 
   // - unlock pas data mutex -
   pas_s::mutex.unlock();

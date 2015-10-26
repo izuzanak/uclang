@@ -85,14 +85,46 @@ fn_t pas_s::callback(u32_t event,u16_t type,void *data,u32_t data_size)
             *s_ptr++ = pas_s::sample_queue.next();
           } while(s_ptr < s_ptr_end && pas_s::sample_queue.used > 0);
 
-          // - erase rest of sample data -
+          // - if sample buffer is not full -
           if (s_ptr < s_ptr_end)
           {
+            // - clear rest of sample data -
             memset(s_ptr,0,(s_ptr_end - s_ptr_end)*sizeof(short));
           }
 
           // - send samples to be played -
           ret_val = pas_sendaudio(PKT_TYPE_XPDO_AUDIO_A,PKT_STATUS_ANNOUNCE,audio_section,priority,samples,PAS_SAMPLES);
+
+          // - if send queue is empty -
+          if (pas_s::sample_queue.used <= 0)
+          {
+            // - enable holding -
+            pas_s::hold_counter = pas_s::hold_delay;
+          }
+        }
+      }
+      else
+      {
+        // - if holding is active -
+        if (pas_s::hold_counter > 0)
+        {
+          if (pas_s::paused)
+          {
+            // - reset hold counter -
+            pas_s::hold_counter = 0;
+          }
+          else
+          {
+            // - clear samples -
+            memset(samples,0,PAS_SAMPLES*sizeof(short));
+
+            // - send samples to be played -
+            ret_val = pas_sendaudio(PKT_TYPE_XPDO_AUDIO_A,PKT_STATUS_ANNOUNCE,audio_section,priority,samples,PAS_SAMPLES);
+
+            // - modify hold counter -
+            pas_s::hold_counter > PAS_SAMPLES ?
+              pas_s::hold_counter -= PAS_SAMPLES : pas_s::hold_counter = 0;
+          }
         }
       }
     }
