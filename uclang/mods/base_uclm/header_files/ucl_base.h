@@ -7,7 +7,7 @@
 include "script_parser.h"
 @end
 
-#ifdef _GNU_SOURCE
+#if defined(_GNU_SOURCE) && !defined(ANDROID)
 #define ENABLE_THREAD_TRY_JOIN
 #endif
 
