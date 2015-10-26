@@ -166,7 +166,7 @@ inline unsigned thread_s::join(void **return_ptr)
 inline unsigned thread_s::try_join(void **return_ptr)
 {/*{{{*/
 #if THREAD_LIB == THREAD_LIB_PTHREAD
-#ifdef _GNU_SOURCE
+#if defined(_GNU_SOURCE) && !defined(ANDROID)
   int ret = pthread_tryjoin_np(thread,return_ptr);
   switch (ret)
   {
