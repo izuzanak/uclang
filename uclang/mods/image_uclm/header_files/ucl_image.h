@@ -7,7 +7,10 @@ include "script_parser.h"
 @end
 
 #include "png.h"
+
+extern "C" {
 #include "jpeglib.h"
+}
 
 // - conversions -
 #define c_icsv ((sizeof(int) - sizeof(char)) << 3)
