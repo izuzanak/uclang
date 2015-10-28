@@ -2388,6 +2388,32 @@ if cfg_ref[CFG_TARGET]:
     )
 # }}}
 
+# mono module
+cfg_ref = c_cfg[C_MODULE_MONO]
+# {{{
+if cfg_ref[CFG_TARGET]:
+    cfg_ref[CFG_MODULE] = module_c(
+      configuration,
+      cfg_ref[CFG_DIR],
+      cfg_ref[CFG_NAME],
+      [ 
+        "header_files",
+        os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
+      ],
+      [ 
+        "source_files",
+      ],
+      [
+        os.sep.join(["..","..","libs","libbase_ucll"])
+      ],
+      opt_build + "-I/usr/include/mono-2.0 ", # GPP options
+      opt_link + "-lmono-2.0 ", # GPP link options
+      "", # GPP defines
+      [],
+      [],
+    )
+# }}}
+
 # uv module
 cfg_ref = c_cfg[C_MODULE_UV]
 # {{{
