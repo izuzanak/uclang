@@ -2406,7 +2406,7 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build + "-I/usr/include/mono-2.0 ", # GPP options
+      opt_build + "-I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include -I/usr/include/mono-2.0 ", # GPP options
       opt_link + "-lmono-2.0 ", # GPP link options
       "", # GPP defines
       [],
