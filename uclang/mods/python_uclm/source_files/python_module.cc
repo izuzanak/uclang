@@ -662,7 +662,7 @@ bool bic_py_object_method_tuple_1(interpreter_thread_s &it,unsigned stack_base,u
   // - ERROR -
   if (pyo_tuple == NULL)
   {
-    exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_TUPLE_CREATE_ERROR,operands[c_source_pos_idx],src_0_location);
+    exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_TUPLE_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 

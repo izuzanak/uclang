@@ -19,12 +19,23 @@ include "script_parser.h"
 #endif
 
 /*
- * definition of structure mono_object_s
+ * constants and definitions
  */
 
-struct mono_object_s
+extern unsigned c_bi_class_mono_object;
+extern unsigned c_bi_class_mono_property;
+extern unsigned c_rm_class_dict;
+
+// - max method name length -
+const unsigned c_max_method_name_length = 256;
+
+/*
+ * definition of structure mono_property_s
+ */
+
+struct mono_property_s
 {
-  MonoObject *obj;
+  MonoProperty *mono_prop;
   guint32 gchandle;
 
   inline void init();
@@ -41,24 +52,36 @@ class mono_c
   static MonoAssembly *assembly;
   static MonoImage *image;
 
+  static MonoClass *array_class;
+
+  static MonoMethod *list_constr;
+  static MonoMethod *list_add;
+
+  static MonoMethod *dict_constr;
+  static MonoMethod *dict_add;
+
   public:
   inline mono_c();
   inline ~mono_c();
+  
+  static MonoObject *create_mono_object(interpreter_thread_s &it,location_s *location_ptr);
+  static MonoObject *create_mono_array(interpreter_thread_s &it,location_s *location_ptr);
+  static location_s *mono_object_value(interpreter_thread_s &it,MonoObject *mono_obj,uli source_pos);
 };
 
 /*
- * inline methods of structure mono_object_s
+ * inline methods of structure mono_property_s
  */
 
-inline void mono_object_s::init()
+inline void mono_property_s::init()
 {/*{{{*/
-  obj = NULL;
+  mono_prop = NULL;
   gchandle = 0;
 }/*}}}*/
 
-inline void mono_object_s::clear(interpreter_thread_s &it)
+inline void mono_property_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (obj != NULL)
+  if (gchandle != 0)
   {
     mono_gchandle_free(gchandle);
   }

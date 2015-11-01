@@ -9,6 +9,8 @@ include "ucl_mono.h"
 // - MONO indexes of built in classes -
 extern unsigned c_bi_class_mono_assembly;
 extern unsigned c_bi_class_mono_class;
+extern unsigned c_bi_class_mono_object;
+extern unsigned c_bi_class_mono_property;
 
 // - MONO module -
 extern built_in_module_s module;
@@ -23,8 +25,19 @@ enum
   c_error_MONO_ASSEMBLY_NO_STRING_COMMAND_LINE_ARGUMET,
   c_error_MONO_ASSEMBLY_OPEN_ERROR,
   c_error_MONO_ASSEMBLY_EXEC_ERROR,
+  c_error_MONO_ASSEMBLY_INVALID_UCLANG_CLASSES,
   c_error_MONO_ASSEMBLY_NOT_OPEN,
   c_error_MONO_ASSEMBLY_CLASS_NOT_FOUND,
+  c_error_MONO_CLASS_CANNOT_FIND_CONSTRUCTOR,
+  c_error_MONO_OBJECT_INVOKE_METHOD_UNKNOWN_NAME,
+  c_error_MONO_OBJECT_INVOKE_METHOD_WRONG_PARAMETER,
+  c_error_MONO_OBJECT_MEMBER_SELECT_UNKNOWN_NAME,
+  c_error_MONO_OBJECT_CREATE_ERROR,
+  c_error_MONO_OBJECT_WRONG_OBJECT_REFERENCE,
+  c_error_MONO_OBJECT_ARRAY_CREATE_ERROR,
+  c_error_MONO_OBJECT_VALUE_ERROR,
+  c_error_MONO_OBJECT_TO_STRING_ERROR,
+  c_error_MONO_PROPERTY_NO_SET_METHOD,
 };
 
 // - MONO error strings -
@@ -60,10 +73,44 @@ void bic_mono_class_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_mono_class_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_mono_class_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_mono_class_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_mono_class_method_name_space_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mono_class_method__name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mono_class_method__namespace_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mono_class_method__new_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mono_class_method_fields_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mono_class_method_methods_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mono_class_method_properties_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mono_class_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mono_class_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class MONO_OBJECT -
+extern built_in_variable_s mono_object_variables[];
+extern built_in_method_s mono_object_methods[];
+extern built_in_class_s mono_object_class;
+
+void bic_mono_object_consts(location_array_s &const_locations);
+void bic_mono_object_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_mono_object_clear(interpreter_thread_s &it,location_s *location_ptr);
+bool bic_mono_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base,uli *operands);
+bool bic_mono_object_member(interpreter_thread_s &it,uli *code,unsigned stack_base);
+
+bool bic_mono_object_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mono_object_method_MonoObject_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mono_object_method__array_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mono_object_method__value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mono_object_method__class_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mono_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mono_object_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class MONO_PROPERTY -
+extern built_in_variable_s mono_property_variables[];
+extern built_in_method_s mono_property_methods[];
+extern built_in_class_s mono_property_class;
+
+void bic_mono_property_consts(location_array_s &const_locations);
+void bic_mono_property_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_mono_property_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_mono_property_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 
