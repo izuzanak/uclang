@@ -22,6 +22,7 @@ extern built_in_class_s *mono_classes[];
 enum
 {
   c_error_MONO_ASSEMBLY_ALREADY_OPEN = 0,
+  c_error_MONO_ASSEMBLY_NO_COMMAND_LINE_ARGUMENTS,
   c_error_MONO_ASSEMBLY_NO_STRING_COMMAND_LINE_ARGUMET,
   c_error_MONO_ASSEMBLY_OPEN_ERROR,
   c_error_MONO_ASSEMBLY_EXEC_ERROR,
@@ -58,7 +59,8 @@ void bic_mono_assembly_consts(location_array_s &const_locations);
 void bic_mono_assembly_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_mono_assembly_clear(interpreter_thread_s &it,location_s *location_ptr);
 
-bool bic_mono_assembly_method_open_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mono_assembly_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mono_assembly_method_MonoAssembly_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mono_assembly_method_get_class_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mono_assembly_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mono_assembly_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

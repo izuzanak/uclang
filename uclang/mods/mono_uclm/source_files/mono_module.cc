@@ -10,6 +10,10 @@ unsigned c_bi_class_mono_object = c_idx_not_exist;
 unsigned c_bi_class_mono_property = c_idx_not_exist;
 
 // - MONO indexes of remote classes -
+unsigned c_rm_class_stack = c_idx_not_exist;
+unsigned c_rm_class_queue = c_idx_not_exist;
+unsigned c_rm_class_set = c_idx_not_exist;
+unsigned c_rm_class_list = c_idx_not_exist;
 unsigned c_rm_class_dict = c_idx_not_exist;
 
 // - MONO module -
@@ -19,7 +23,7 @@ built_in_module_s module =
   mono_classes,         // Classes
 
   0,                    // Error base index
-  17,                   // Error count
+  18,                   // Error count
   mono_error_strings,   // Error strings
 
   mono_initialize,      // Initialize function
@@ -39,6 +43,7 @@ built_in_class_s *mono_classes[] =
 const char *mono_error_strings[] =
 {/*{{{*/
   "error_MONO_ASSEMBLY_ALREADY_OPEN",
+  "error_MONO_ASSEMBLY_NO_COMMAND_LINE_ARGUMENTS",
   "error_MONO_ASSEMBLY_NO_STRING_COMMAND_LINE_ARGUMET",
   "error_MONO_ASSEMBLY_OPEN_ERROR",
   "error_MONO_ASSEMBLY_EXEC_ERROR",
@@ -74,11 +79,27 @@ bool mono_initialize(script_parser_s &sp)
   // - initialize mono_property class identifier -
   c_bi_class_mono_property = class_base_idx++;
 
+  // - retrieve remote stack class index -
+  c_rm_class_stack = sp.resolve_class_idx_by_name("Stack",c_idx_not_exist);
+
+  // - retrieve remote queue class index -
+  c_rm_class_queue = sp.resolve_class_idx_by_name("Queue",c_idx_not_exist);
+
+  // - retrieve remote set class index -
+  c_rm_class_set = sp.resolve_class_idx_by_name("Set",c_idx_not_exist);
+
+  // - retrieve remote list class index -
+  c_rm_class_list = sp.resolve_class_idx_by_name("List",c_idx_not_exist);
+
   // - retrieve remote dict class index -
   c_rm_class_dict = sp.resolve_class_idx_by_name("Dict",c_idx_not_exist);
 
   // - ERROR -
-  if (c_rm_class_dict == c_idx_not_exist)
+  if (c_rm_class_stack == c_idx_not_exist ||
+      c_rm_class_queue == c_idx_not_exist ||
+      c_rm_class_set == c_idx_not_exist ||
+      c_rm_class_list == c_idx_not_exist ||
+      c_rm_class_dict == c_idx_not_exist)
   {
     sp.error_code.push(ei_module_cannot_find_remote_class);
     sp.error_code.push(sp.module_names_positions[sp.module_idx].ui_first);
@@ -106,6 +127,13 @@ bool mono_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nMono assembly is already open\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_MONO_ASSEMBLY_NO_COMMAND_LINE_ARGUMENTS:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMono assembly, expected at least one command line argument\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_MONO_ASSEMBLY_NO_STRING_COMMAND_LINE_ARGUMET:
@@ -140,7 +168,7 @@ bool mono_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nMono assembly was not opened yet\n");
+    fprintf(stderr,"\nMono assembly is not opened\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_MONO_ASSEMBLY_CLASS_NOT_FOUND:
@@ -244,7 +272,7 @@ built_in_class_s mono_assembly_class =
 {/*{{{*/
   "MonoAssembly",
   c_modifier_public | c_modifier_final,
-  4, mono_assembly_methods,
+  5, mono_assembly_methods,
   0, mono_assembly_variables,
   bic_mono_assembly_consts,
   bic_mono_assembly_init,
@@ -264,9 +292,14 @@ built_in_class_s mono_assembly_class =
 built_in_method_s mono_assembly_methods[] =
 {/*{{{*/
   {
-    "open#2",
-    c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_mono_assembly_method_open_2
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_mono_assembly_operator_binary_equal
+  },
+  {
+    "MonoAssembly#2",
+    c_modifier_public | c_modifier_final,
+    bic_mono_assembly_method_MonoAssembly_2
   },
   {
     "get_class#2",
@@ -295,17 +328,41 @@ void bic_mono_assembly_consts(location_array_s &const_locations)
 
 void bic_mono_assembly_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  cassert(0);
+  location_ptr->v_data_ptr = (basic_64b)NULL;
 }/*}}}*/
 
 void bic_mono_assembly_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  cassert(0);
+  if (mono_c::assembly_opened)
+  {
+    // - reset mono assembly opened flag -
+    mono_c::assembly_opened = false;
+
+    if (mono_c::domain != NULL)
+    {
+      // - cleanup mono jit -
+      mono_jit_cleanup(mono_c::domain);
+    }
+  }
 }/*}}}*/
 
-bool bic_mono_assembly_method_open_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_mono_assembly_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_mono_assembly_method_MonoAssembly_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
@@ -331,11 +388,19 @@ bool bic_mono_assembly_method_open_2(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
+  if (array_ptr->used < 1)
+  {
+    // FIXME debug output
+    fprintf(stderr,"THROW EXCEPTION\n");
+
+    exception_s::throw_exception(it,module.error_base + c_error_MONO_ASSEMBLY_NO_COMMAND_LINE_ARGUMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - retrieve arguments -
   int argc = array_ptr->used;
   char *argv[array_ptr->used];
 
-  // - retrieve arguments -
-  if (array_ptr->used > 0)
   {
     pointer *a_ptr = array_ptr->data;
     pointer *a_ptr_end = a_ptr + array_ptr->used;
@@ -356,17 +421,23 @@ bool bic_mono_assembly_method_open_2(interpreter_thread_s &it,unsigned stack_bas
     } while(++av_ptr,++a_ptr < a_ptr_end);
   }
 
-  // - open mono assembly -
-  mono_c::assembly = mono_domain_assembly_open(mono_c::domain,string_ptr->data);
+  // - initialize mono domain -
+  mono_c::domain = mono_jit_init("uclang");
 
-  if (mono_c::assembly != NULL)
+  if (mono_c::domain != NULL)
   {
-    // - retrieve mono assembly image -
-    mono_c::image = mono_assembly_get_image(mono_c::assembly);
+    // - open mono assembly -
+    mono_c::assembly = mono_domain_assembly_open(mono_c::domain,string_ptr->data);
+
+    if (mono_c::assembly != NULL)
+    {
+      // - retrieve mono assembly image -
+      mono_c::image = mono_assembly_get_image(mono_c::assembly);
+    }
   }
 
   // - ERROR -
-  if (mono_c::assembly == NULL || mono_c::image == NULL)
+  if (mono_c::domain == NULL || mono_c::assembly == NULL || mono_c::image == NULL)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_ASSEMBLY_OPEN_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -389,16 +460,25 @@ bool bic_mono_assembly_method_open_2(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  // - retrieve container classes -
-  mono_c::array_class = mono_array_class_get(mono_get_object_class(),1);
-
   // - retrieve container constructors -
-  mono_c::list_constr = mono_class_get_method_from_name(cont_class,"list",0);
+  mono_c::list_constr = mono_class_get_method_from_name(cont_class,"list",1);
+  mono_c::stack_constr = mono_class_get_method_from_name(cont_class,"stack",1);
+  mono_c::queue_constr = mono_class_get_method_from_name(cont_class,"queue",1);
+  mono_c::hset_constr = mono_class_get_method_from_name(cont_class,"hset",1);
+  mono_c::llist_constr = mono_class_get_method_from_name(cont_class,"llist",1);
   mono_c::dict_constr = mono_class_get_method_from_name(cont_class,"dict",0);
+
+  // - retrieve special methods -
+  mono_c::dict_unwrap = mono_class_get_method_from_name(cont_class,"dict_unwrap",3);
 
   // - ERROR -
   if (mono_c::list_constr == NULL ||
-      mono_c::dict_constr == NULL)
+      mono_c::stack_constr == NULL ||
+      mono_c::queue_constr == NULL ||
+      mono_c::hset_constr == NULL ||
+      mono_c::llist_constr == NULL ||
+      mono_c::dict_constr == NULL ||
+      mono_c::dict_unwrap == NULL)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_ASSEMBLY_INVALID_UCLANG_CLASSES,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -413,30 +493,61 @@ bool bic_mono_assembly_method_open_2(interpreter_thread_s &it,unsigned stack_bas
   }\
 }/*}}}*/
 
-  MonoObject *mono_exc;
+  MonoObject *mono_exc = NULL;
+
+  // - create empty array parameter -
+  MonoArray *array_obj = mono_array_new(mono_c::domain,mono_get_object_class(),0);
+  void **params = (void **)&array_obj;
 
   // - retrieve container classes -
-  MonoObject *list_obj = mono_runtime_invoke(mono_c::list_constr,NULL,NULL,&mono_exc);
+  mono_c::array_class = mono_array_class_get(mono_get_object_class(),1);
+
+  MonoObject *list_obj = mono_runtime_invoke(mono_c::list_constr,NULL,params,&mono_exc);
   MONO_ASSEMBLY_OPEN_CHECK_EXCEPTION();
-  MonoClass *list_class = mono_object_get_class(list_obj);
+  mono_c::list_class = mono_object_get_class(list_obj);
+
+  MonoObject *stack_obj = mono_runtime_invoke(mono_c::stack_constr,NULL,params,&mono_exc);
+  MONO_ASSEMBLY_OPEN_CHECK_EXCEPTION();
+  mono_c::stack_class = mono_object_get_class(stack_obj);
+
+  MonoObject *queue_obj = mono_runtime_invoke(mono_c::queue_constr,NULL,params,&mono_exc);
+  MONO_ASSEMBLY_OPEN_CHECK_EXCEPTION();
+  mono_c::queue_class = mono_object_get_class(queue_obj);
+
+  MonoObject *hset_obj = mono_runtime_invoke(mono_c::hset_constr,NULL,params,&mono_exc);
+  MONO_ASSEMBLY_OPEN_CHECK_EXCEPTION();
+  mono_c::hset_class = mono_object_get_class(hset_obj);
+
+  MonoObject *llist_obj = mono_runtime_invoke(mono_c::llist_constr,NULL,params,&mono_exc);
+  MONO_ASSEMBLY_OPEN_CHECK_EXCEPTION();
+  mono_c::llist_class = mono_object_get_class(llist_obj);
 
   MonoObject *dict_obj = mono_runtime_invoke(mono_c::dict_constr,NULL,NULL,&mono_exc);
   MONO_ASSEMBLY_OPEN_CHECK_EXCEPTION();
-  MonoClass *dict_class = mono_object_get_class(dict_obj);
+  mono_c::dict_class = mono_object_get_class(dict_obj);
 
   // - retrieve container methods -
-  mono_c::list_add = mono_class_get_method_from_name(list_class,"Add",1);
-  mono_c::dict_add = mono_class_get_method_from_name(dict_class,"Add",2);
+  mono_c::list_to_array = mono_class_get_method_from_name(mono_c::list_class,"ToArray",0);
+  mono_c::stack_to_array = mono_class_get_method_from_name(mono_c::stack_class,"ToArray",0);
+  mono_c::queue_to_array = mono_class_get_method_from_name(mono_c::queue_class,"ToArray",0);
+
+  mono_c::dict_add = mono_class_get_method_from_name(mono_c::dict_class,"Add",2);
 
   // - ERROR -
-  if (mono_c::list_add == NULL ||
+  if (mono_c::list_to_array == NULL ||
+      mono_c::stack_to_array == NULL ||
+      mono_c::queue_to_array == NULL ||
       mono_c::dict_add == NULL)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_ASSEMBLY_INVALID_UCLANG_CLASSES,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  // - set mono assembly reference -
+  mono_c::assembly_loc = dst_location;
+
+  // - set mono assembly opened flag -
+  mono_c::assembly_opened = true;
 
   return true;
 }/*}}}*/
@@ -463,7 +574,7 @@ bool bic_mono_assembly_method_get_class_2(interpreter_thread_s &it,unsigned stac
   string_s *name_ptr = (string_s *)src_1_location->v_data_ptr;
 
   // - ERROR -
-  if (mono_c::assembly == NULL)
+  if (!mono_c::assembly_opened)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_ASSEMBLY_NOT_OPEN,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -478,6 +589,7 @@ bool bic_mono_assembly_method_get_class_2(interpreter_thread_s &it,unsigned stac
     return false;
   }
 
+  mono_c::assembly_ref_inc();
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_mono_class,mono_class);
   BIC_SET_RESULT(new_location)
 
@@ -590,6 +702,7 @@ void bic_mono_class_init(interpreter_thread_s &it,location_s *location_ptr)
 
 void bic_mono_class_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
+  mono_c::assembly_ref_dec(it);
 }/*}}}*/
 
 bool bic_mono_class_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -668,18 +781,12 @@ bool bic_mono_class_method__new_1(interpreter_thread_s &it,unsigned stack_base,u
   
   MonoObject *mono_obj = mono_object_new(mono_c::domain,mono_class);
 
-  MonoObject *mono_exc;
+  MonoObject *mono_exc = NULL;
   mono_runtime_invoke_array(mono_ctor,mono_obj,(MonoArray *)mono_params,&mono_exc);
-
-  // - ERROR -
-  if (mono_exc)
-  {
-    // FIXME TODO forward exception
-    cassert(0);
-  }
+  BIC_MONO_CHECK_EXCEPTION();
 
   // - create mono object handle -
-  guint32 gchandle = mono_gchandle_new(mono_obj,TRUE);
+  guint32 gchandle = mono_c::gchandle_new(mono_obj);
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_mono_object,gchandle);
   BIC_SET_RESULT(new_location);
@@ -883,7 +990,7 @@ void bic_mono_object_clear(interpreter_thread_s &it,location_s *location_ptr)
 
   if (gchandle != 0)
   {
-    mono_gchandle_free(gchandle);
+    mono_c::gchandle_free(it,gchandle);
   }
 }/*}}}*/
 
@@ -949,18 +1056,12 @@ bool bic_mono_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_ba
   }
 
   // - call object method -
-  MonoObject *mono_exc;
+  MonoObject *mono_exc = NULL;
   MonoObject *mono_result = mono_runtime_invoke_array(mono_method,mono_dst,mono_params,&mono_exc);
-
-  // - ERROR -
-  if (mono_exc)
-  {
-    // FIXME TODO forward exception
-    cassert(0);
-  }
+  BIC_MONO_CHECK_EXCEPTION();
 
   // - create mono object handle -
-  guint32 gchandle = mono_gchandle_new(mono_result,TRUE);
+  guint32 gchandle = mono_c::gchandle_new(mono_result);
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_mono_object,gchandle);
 
@@ -1006,6 +1107,7 @@ bool bic_mono_object_member(interpreter_thread_s &it,uli *code,unsigned stack_ba
   mp_ptr->gchandle = mono_gchandle_new(mono_dst,TRUE);
 
   // - create target location -
+  mono_c::assembly_ref_inc();
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_mono_property,mp_ptr);
 
   pointer &trg_location = it.data_stack[stack_base + code[ioms_stack_trg]];
@@ -1034,6 +1136,13 @@ bool bic_mono_object_method_MonoObject_1(interpreter_thread_s &it,unsigned stack
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
+  // - ERROR -
+  if (!mono_c::assembly_opened)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_MONO_ASSEMBLY_NOT_OPEN,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
   // - create mono object -
   MonoObject *mono_obj = mono_c::create_mono_object(it,src_0_location);
 
@@ -1045,7 +1154,7 @@ bool bic_mono_object_method_MonoObject_1(interpreter_thread_s &it,unsigned stack
   }
 
   // - create mono object handle -
-  guint32 gchandle = mono_gchandle_new(mono_obj,TRUE);
+  guint32 gchandle = mono_c::gchandle_new(mono_obj);
 
   // - set mono object handle -
   dst_location->v_data_ptr = (basic_64b)gchandle;
@@ -1059,7 +1168,7 @@ bool bic_mono_object_method__array_1(interpreter_thread_s &it,unsigned stack_bas
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
-  if (mono_c::assembly == NULL)
+  if (!mono_c::assembly_opened)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_ASSEMBLY_NOT_OPEN,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1076,7 +1185,7 @@ bool bic_mono_object_method__array_1(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - create mono object handle -
-  guint32 gchandle = mono_gchandle_new(mono_array,TRUE);
+  guint32 gchandle = mono_c::gchandle_new(mono_array);
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_mono_object,gchandle);
   BIC_SET_RESULT(new_location);
@@ -1134,6 +1243,7 @@ bool bic_mono_object_method__class_0(interpreter_thread_s &it,unsigned stack_bas
 
   MonoClass *mono_class = mono_object_get_class(mono_dst);
 
+  mono_c::assembly_ref_inc();
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_mono_class,mono_class)
   BIC_SET_RESULT(new_location);
 
@@ -1154,15 +1264,9 @@ bool bic_mono_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_
     return false;
   }
 
-  MonoObject *mono_exc;
+  MonoObject *mono_exc = NULL;
   MonoString *mono_str = mono_object_to_string(mono_dst,&mono_exc);
-
-  // - ERROR -
-  if (mono_exc)
-  {
-    // FIXME TODO forward exception
-    cassert(0);
-  }
+  BIC_MONO_CHECK_EXCEPTION();
 
   MonoError error;
   char *utf8_str = mono_string_to_utf8_checked(mono_str,&error);
@@ -1198,15 +1302,9 @@ bool bic_mono_object_method_print_0(interpreter_thread_s &it,unsigned stack_base
     return false;
   }
 
-  MonoObject *mono_exc;
+  MonoObject *mono_exc = NULL;
   MonoString *mono_str = mono_object_to_string(mono_dst,&mono_exc);
-
-  // - ERROR -
-  if (mono_exc)
-  {
-    // FIXME TODO forward exception
-    cassert(0);
-  }
+  BIC_MONO_CHECK_EXCEPTION();
 
   MonoError error;
   char *utf8_str = mono_string_to_utf8_checked(mono_str,&error);
@@ -1299,6 +1397,8 @@ void bic_mono_property_clear(interpreter_thread_s &it,location_s *location_ptr)
   {
     mp_ptr->clear(it);
     cfree(mp_ptr);
+
+    mono_c::assembly_ref_dec(it);
   }
 }/*}}}*/
 
@@ -1334,19 +1434,13 @@ bool bic_mono_property_operator_binary_equal(interpreter_thread_s &it,unsigned s
   MonoArray *mono_params = mono_array_new(mono_c::domain,mono_get_object_class(),1);
   mono_array_set(mono_params,MonoObject *,0,mono_src_0);
 
-  MonoObject *mono_exc;
+  MonoObject *mono_exc = NULL;
   mono_runtime_invoke_array(mono_set_method,
       mono_gchandle_get_target(mp_ptr->gchandle),mono_params,&mono_exc);
-
-  // - ERROR -
-  if (mono_exc)
-  {
-    // FIXME TODO forward exception
-    cassert(0);
-  }
+  BIC_MONO_CHECK_EXCEPTION();
 
   // - create mono object handle -
-  guint32 gchandle = mono_gchandle_new(mono_src_0,TRUE);
+  guint32 gchandle = mono_c::gchandle_new(mono_src_0);
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_mono_object,gchandle);
   BIC_SET_RESULT(new_location);

@@ -420,7 +420,7 @@ location_s *python_c::py_object_value(interpreter_thread_s &it,PyObject *pyo_obj
     return set_location;
   }/*}}}*/
   else if (PyDict_Check(pyo_obj))
-  {
+  {/*{{{*/
     pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)cmalloc(sizeof(pointer_map_tree_s));
     tree_ptr->init();
     tree_ptr->it_ptr = &it;
@@ -494,7 +494,7 @@ location_s *python_c::py_object_value(interpreter_thread_s &it,PyObject *pyo_obj
     }
 
     return dict_location;
-  }
+  }/*}}}*/
 
   return NULL;
 }/*}}}*/
