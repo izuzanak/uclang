@@ -1113,6 +1113,16 @@ struct
 exception_s;
 @end
 
+// -- pointer_queue_s --
+@begin
+queue<pointer> pointer_queue_s;
+@end
+
+// -- pointer_list_s --
+@begin
+safe_list<pointer> pointer_list_s;
+@end
+
 // -- pointer_tree_s --
 @begin
 safe_rb_tree<pointer
@@ -1626,6 +1636,16 @@ inline void exception_s::print()
 {/*{{{*/
   printf("Exception");
 }/*}}}*/
+
+// -- pointer_queue_s --
+@begin
+inlines pointer_queue_s
+@end
+
+// -- pointer_list_s --
+@begin
+inlines pointer_list_s
+@end
 
 // -- pointer_tree_s --
 @begin

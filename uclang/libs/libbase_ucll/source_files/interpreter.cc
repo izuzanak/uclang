@@ -39,6 +39,16 @@ exception_s *exception_s::throw_exception(interpreter_thread_s &it,unsigned a_ty
   return new_exception;
 }/*}}}*/
 
+// -- pointer_queue_s --
+@begin
+methods pointer_queue_s
+@end
+
+// -- pointer_list_s --
+@begin
+methods pointer_list_s
+@end
+
 // -- pointer_tree_s --
 @begin
 methods pointer_tree_s

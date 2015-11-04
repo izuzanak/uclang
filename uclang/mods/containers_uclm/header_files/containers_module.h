@@ -3,7 +3,7 @@
 #define __CONTAINERS_MODULE_H
 
 @begin
-include "containers.h"
+include "script_parser.h"
 @end
 
 // - CONTAINERS indexes of built in classes -
