@@ -334,7 +334,7 @@ void *run_interpreter(void *data)
   exit(return_value);
 #endif
 
-  return (pointer)return_value;
+  return (pointer)(t_ps_uint)return_value;
 }/*}}}*/
 
 #if SYSTEM_TYPE_UNIX_CHROME_NACL != ENABLED
