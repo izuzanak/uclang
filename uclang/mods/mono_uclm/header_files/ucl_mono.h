@@ -120,7 +120,7 @@ class mono_c
 
   public:
 
-  static inline bool int_value(MonoObject *mono_obj,int &result);
+  static inline bool int_value(MonoObject *mono_obj,long long &result);
 
   static inline void assembly_ref_inc();
   static inline void assembly_ref_dec(interpreter_thread_s &it);
@@ -184,17 +184,36 @@ inline MonoObject *mono_reference_s::get_item()
   MonoObject *mono_key = mono_gchandle_get_target(gchnd_key);
   MonoClass *mono_class = mono_object_get_class(mono_obj);
  
-  // FIXME TODO continue ...
-
-  if (mono_class == mono_c::list_class)
+  if (mono_class == mono_c::array_class)
   {
-    int idx;
-    void *params[1] = {&idx};
+    MonoArray *mono_array = (MonoArray *)mono_obj;
 
-    if (!mono_c::int_value(mono_key,idx))
+    long long ll_idx;
+    if (!mono_c::int_value(mono_key,ll_idx))
     {
       return NULL;
     }
+
+    uintptr_t idx = ll_idx;
+    uintptr_t length = mono_array_length(mono_array);
+
+    if (idx < 0 || idx >= length)
+    {
+      return NULL;
+    }
+
+    return mono_array_get(mono_array,MonoObject *,idx);
+  }
+  if (mono_class == mono_c::list_class)
+  {
+    long long ll_idx;
+    if (!mono_c::int_value(mono_key,ll_idx))
+    {
+      return NULL;
+    }
+
+    int idx = ll_idx;
+    void *params[1] = {&idx};
 
     MonoObject *mono_exc = NULL;
     MonoObject *mono_result = mono_property_get_value(mono_c::list_item,
@@ -224,17 +243,38 @@ inline bool mono_reference_s::set_item(MonoObject *mono_value)
   MonoObject *mono_key = mono_gchandle_get_target(gchnd_key);
   MonoClass *mono_class = mono_object_get_class(mono_obj);
 
-  // FIXME TODO continue ...
+  if (mono_class == mono_c::array_class)
+  {
+    MonoArray *mono_array = (MonoArray *)mono_obj;
 
+    long long ll_idx;
+    if (!mono_c::int_value(mono_key,ll_idx))
+    {
+      return NULL;
+    }
+
+    uintptr_t idx = ll_idx;
+    uintptr_t length = mono_array_length(mono_array);
+
+    if (idx < 0 || idx >= length)
+    {
+      return NULL;
+    }
+
+    mono_array_set(mono_array,MonoObject *,idx,mono_value);
+
+    return true;
+  }
   if (mono_class == mono_c::list_class)
   {
-    int idx;
-    void *params[2] = {&idx,mono_value};
-
-    if (!mono_c::int_value(mono_key,idx))
+    long long ll_idx;
+    if (!mono_c::int_value(mono_key,ll_idx))
     {
-      return false;
+      return NULL;
     }
+
+    int idx = ll_idx;
+    void *params[2] = {&idx,mono_value};
 
     MonoObject *mono_exc = NULL;
     mono_property_set_value(mono_c::list_item,mono_obj,params,&mono_exc);
@@ -262,7 +302,7 @@ inline bool mono_reference_s::set_item(MonoObject *mono_value)
  * inline methods of class mono_c
  */
 
-inline bool mono_c::int_value(MonoObject *mono_obj,int &result)
+inline bool mono_c::int_value(MonoObject *mono_obj,long long &result)
 {/*{{{*/
   MonoClass *mono_class = mono_object_get_class(mono_obj);
 
