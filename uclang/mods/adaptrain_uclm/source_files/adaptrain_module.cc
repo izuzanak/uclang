@@ -545,6 +545,7 @@ bool bic_ato_aru_method_AtoAru_1(interpreter_thread_s &it,unsigned stack_base,ul
   switch (std_head.u16DataType)
   {
     case TUDINT:
+    case TDWORD:
       record_size = sizeof(sEVTARCH_RECORD_U32);
       break;
     case TREAL:
@@ -587,9 +588,14 @@ bool bic_ato_aru_method_AtoAru_1(interpreter_thread_s &it,unsigned stack_base,ul
     // - allocate records memory -
     aa_ptr->records = cmalloc(records_mem_size);
 
-#define EVTARCH_RECORD_COPY(NAME,TYPE) \
+#define EVTARCH_RECORD_COPY_BSWP(NAME,TYPE) \
 {/*{{{*/\
     memcpy_bo(&t_ptr->NAME,&s_ptr->NAME,sizeof(TYPE),c_little_endian);\
+}/*}}}*/
+
+#define EVTARCH_RECORD_COPY(NAME,TYPE) \
+{/*{{{*/\
+    memcpy_bo(&t_ptr->NAME,&s_ptr->NAME,sizeof(TYPE),false);\
 }/*}}}*/
 
     // - process archive records -
@@ -601,10 +607,10 @@ bool bic_ato_aru_method_AtoAru_1(interpreter_thread_s &it,unsigned stack_base,ul
           sEVTARCH_RECORD_U32 *s_ptr_end = s_ptr + std_head.i32TotalEvents;
           sEVTARCH_RECORD_U32 *t_ptr = (sEVTARCH_RECORD_U32 *)aa_ptr->records;
           do {
-            EVTARCH_RECORD_COPY(r32XValue,R32);
-            EVTARCH_RECORD_COPY(u8TimeStampms,U8);
-            EVTARCH_RECORD_COPY(u8Status,U8);
-            EVTARCH_RECORD_COPY(u32Value,U32);
+            EVTARCH_RECORD_COPY_BSWP(r32XValue,R32);
+            EVTARCH_RECORD_COPY_BSWP(u8TimeStampms,U8);
+            EVTARCH_RECORD_COPY_BSWP(u8Status,U8);
+            EVTARCH_RECORD_COPY_BSWP(u32Value,U32);
           } while(++t_ptr,++s_ptr < s_ptr_end);
         }/*}}}*/
         break;
@@ -614,24 +620,49 @@ bool bic_ato_aru_method_AtoAru_1(interpreter_thread_s &it,unsigned stack_base,ul
           sEVTARCH_RECORD_R32 *s_ptr_end = s_ptr + std_head.i32TotalEvents;
           sEVTARCH_RECORD_R32 *t_ptr = (sEVTARCH_RECORD_R32 *)aa_ptr->records;
           do {
-            EVTARCH_RECORD_COPY(r32XValue,R32);
-            EVTARCH_RECORD_COPY(u8TimeStampms,U8);
-            EVTARCH_RECORD_COPY(u8Status,U8);
-            EVTARCH_RECORD_COPY(r32Value,R32);
+            EVTARCH_RECORD_COPY_BSWP(r32XValue,R32);
+            EVTARCH_RECORD_COPY_BSWP(u8TimeStampms,U8);
+            EVTARCH_RECORD_COPY_BSWP(u8Status,U8);
+            EVTARCH_RECORD_COPY_BSWP(r32Value,R32);
           } while(++t_ptr,++s_ptr < s_ptr_end);
         }/*}}}*/
         break;
-      case TWORD:
       case TTDticks:
         {/*{{{*/
           sEVTARCH_RECORD_U16 *s_ptr = (sEVTARCH_RECORD_U16 *)(string_ptr->data + sizeof(sFILEARCH_HEAD));
           sEVTARCH_RECORD_U16 *s_ptr_end = s_ptr + std_head.i32TotalEvents;
           sEVTARCH_RECORD_U16 *t_ptr = (sEVTARCH_RECORD_U16 *)aa_ptr->records;
           do {
-            EVTARCH_RECORD_COPY(r32XValue,R32);
-            EVTARCH_RECORD_COPY(u8TimeStampms,U8);
-            EVTARCH_RECORD_COPY(u8Status,U8);
+            EVTARCH_RECORD_COPY_BSWP(r32XValue,R32);
+            EVTARCH_RECORD_COPY_BSWP(u8TimeStampms,U8);
+            EVTARCH_RECORD_COPY_BSWP(u8Status,U8);
+            EVTARCH_RECORD_COPY_BSWP(u16Value,U16);
+          } while(++t_ptr,++s_ptr < s_ptr_end);
+        }/*}}}*/
+        break;
+      case TWORD:
+        {/*{{{*/
+          sEVTARCH_RECORD_U16 *s_ptr = (sEVTARCH_RECORD_U16 *)(string_ptr->data + sizeof(sFILEARCH_HEAD));
+          sEVTARCH_RECORD_U16 *s_ptr_end = s_ptr + std_head.i32TotalEvents;
+          sEVTARCH_RECORD_U16 *t_ptr = (sEVTARCH_RECORD_U16 *)aa_ptr->records;
+          do {
+            EVTARCH_RECORD_COPY_BSWP(r32XValue,R32);
+            EVTARCH_RECORD_COPY_BSWP(u8TimeStampms,U8);
+            EVTARCH_RECORD_COPY_BSWP(u8Status,U8);
             EVTARCH_RECORD_COPY(u16Value,U16);
+          } while(++t_ptr,++s_ptr < s_ptr_end);
+        }/*}}}*/
+        break;
+      case TDWORD:
+        {/*{{{*/
+          sEVTARCH_RECORD_U32 *s_ptr = (sEVTARCH_RECORD_U32 *)(string_ptr->data + sizeof(sFILEARCH_HEAD));
+          sEVTARCH_RECORD_U32 *s_ptr_end = s_ptr + std_head.i32TotalEvents;
+          sEVTARCH_RECORD_U32 *t_ptr = (sEVTARCH_RECORD_U32 *)aa_ptr->records;
+          do {
+            EVTARCH_RECORD_COPY_BSWP(r32XValue,R32);
+            EVTARCH_RECORD_COPY_BSWP(u8TimeStampms,U8);
+            EVTARCH_RECORD_COPY_BSWP(u8Status,U8);
+            EVTARCH_RECORD_COPY(u32Value,U32);
           } while(++t_ptr,++s_ptr < s_ptr_end);
         }/*}}}*/
         break;
@@ -894,6 +925,7 @@ bool bic_ato_aru_record_method_status_0(interpreter_thread_s &it,unsigned stack_
   switch (aa_ptr->head.stdHead.u16DataType)
   {
     case TUDINT:
+    case TDWORD:
       result = ((sEVTARCH_RECORD_U32 *)aa_ptr->records)[aar_ptr->index].u8Status;
       break;
     case TREAL:
@@ -930,6 +962,7 @@ bool bic_ato_aru_record_method_x_value_0(interpreter_thread_s &it,unsigned stack
   switch (aa_ptr->head.stdHead.u16DataType)
   {
     case TUDINT:
+    case TDWORD:
       result = ((sEVTARCH_RECORD_U32 *)aa_ptr->records)[aar_ptr->index].r32XValue;
       break;
     case TREAL:
@@ -966,6 +999,7 @@ bool bic_ato_aru_record_method_value_0(interpreter_thread_s &it,unsigned stack_b
   {
     case TUDINT:
     case TWORD:
+    case TDWORD:
     case TTDticks:
       {
         long long int result;
@@ -973,6 +1007,7 @@ bool bic_ato_aru_record_method_value_0(interpreter_thread_s &it,unsigned stack_b
         switch (aa_ptr->head.stdHead.u16DataType)
         {
           case TUDINT:
+          case TDWORD:
             result = ((sEVTARCH_RECORD_U32 *)aa_ptr->records)[aar_ptr->index].u32Value;
             break;
           case TWORD:
