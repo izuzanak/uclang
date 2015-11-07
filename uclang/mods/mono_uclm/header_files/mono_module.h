@@ -22,7 +22,8 @@ extern built_in_class_s *mono_classes[];
 // - MONO error identifiers -
 enum
 {
-  c_error_MONO_ASSEMBLY_ALREADY_OPEN = 0,
+  c_error_MONO_RUNTIME_EXCEPTION = 0,
+  c_error_MONO_ASSEMBLY_ALREADY_OPEN,
   c_error_MONO_ASSEMBLY_NO_COMMAND_LINE_ARGUMENTS,
   c_error_MONO_ASSEMBLY_NO_STRING_COMMAND_LINE_ARGUMET,
   c_error_MONO_ASSEMBLY_OPEN_ERROR,

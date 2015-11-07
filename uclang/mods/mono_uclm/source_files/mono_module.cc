@@ -24,7 +24,7 @@ built_in_module_s module =
   mono_classes,         // Classes
 
   0,                    // Error base index
-  20,                   // Error count
+  21,                   // Error count
   mono_error_strings,   // Error strings
 
   mono_initialize,      // Initialize function
@@ -44,6 +44,7 @@ built_in_class_s *mono_classes[] =
 // - MONO error strings -
 const char *mono_error_strings[] =
 {/*{{{*/
+  "error_MONO_RUNTIME_EXCEPTION",
   "error_MONO_ASSEMBLY_ALREADY_OPEN",
   "error_MONO_ASSEMBLY_NO_COMMAND_LINE_ARGUMENTS",
   "error_MONO_ASSEMBLY_NO_STRING_COMMAND_LINE_ARGUMET",
@@ -129,6 +130,27 @@ bool mono_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
+  case c_error_MONO_RUNTIME_EXCEPTION:
+    {
+      location_s *obj_location = (location_s *)exception.obj_location;
+
+      fprintf(stderr," ---------------------------------------- \n");
+      fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+      print_error_line(source.source_string,source_pos);
+      fprintf(stderr,"\nMono runtime exception");
+
+      if (obj_location->v_type == c_bi_class_string)
+      {
+        fprintf(stderr,":\n\n%s\n",((string_s *)obj_location->v_data_ptr)->data);
+      }
+      else
+      {
+        fprintf(stderr,"\n");
+      }
+
+      fprintf(stderr," ---------------------------------------- \n");
+    }
+    break;
   case c_error_MONO_ASSEMBLY_ALREADY_OPEN:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -508,14 +530,14 @@ bool bic_mono_assembly_method_MonoAssembly_2(interpreter_thread_s &it,unsigned s
 
 #define MONO_ASSEMBLY_OPEN_CHECK_EXCEPTION() \
 {/*{{{*/\
-  if (mono_exc)\
+  if (mono_c::mono_exc)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_MONO_ASSEMBLY_INVALID_UCLANG_CLASSES,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
 }/*}}}*/
 
-  MonoObject *mono_exc = NULL;
+  mono_c::mono_exc = NULL;
 
   // - create empty array parameter -
   MonoArray *array_obj = mono_array_new(mono_c::domain,mono_get_object_class(),0);
@@ -524,27 +546,27 @@ bool bic_mono_assembly_method_MonoAssembly_2(interpreter_thread_s &it,unsigned s
   // - retrieve container classes -
   mono_c::array_class = mono_array_class_get(mono_get_object_class(),1);
 
-  MonoObject *list_obj = mono_runtime_invoke(mono_c::list_constr,NULL,params,&mono_exc);
+  MonoObject *list_obj = mono_runtime_invoke(mono_c::list_constr,NULL,params,&mono_c::mono_exc);
   MONO_ASSEMBLY_OPEN_CHECK_EXCEPTION();
   mono_c::list_class = mono_object_get_class(list_obj);
 
-  MonoObject *stack_obj = mono_runtime_invoke(mono_c::stack_constr,NULL,params,&mono_exc);
+  MonoObject *stack_obj = mono_runtime_invoke(mono_c::stack_constr,NULL,params,&mono_c::mono_exc);
   MONO_ASSEMBLY_OPEN_CHECK_EXCEPTION();
   mono_c::stack_class = mono_object_get_class(stack_obj);
 
-  MonoObject *queue_obj = mono_runtime_invoke(mono_c::queue_constr,NULL,params,&mono_exc);
+  MonoObject *queue_obj = mono_runtime_invoke(mono_c::queue_constr,NULL,params,&mono_c::mono_exc);
   MONO_ASSEMBLY_OPEN_CHECK_EXCEPTION();
   mono_c::queue_class = mono_object_get_class(queue_obj);
 
-  MonoObject *hset_obj = mono_runtime_invoke(mono_c::hset_constr,NULL,params,&mono_exc);
+  MonoObject *hset_obj = mono_runtime_invoke(mono_c::hset_constr,NULL,params,&mono_c::mono_exc);
   MONO_ASSEMBLY_OPEN_CHECK_EXCEPTION();
   mono_c::hset_class = mono_object_get_class(hset_obj);
 
-  MonoObject *llist_obj = mono_runtime_invoke(mono_c::llist_constr,NULL,params,&mono_exc);
+  MonoObject *llist_obj = mono_runtime_invoke(mono_c::llist_constr,NULL,params,&mono_c::mono_exc);
   MONO_ASSEMBLY_OPEN_CHECK_EXCEPTION();
   mono_c::llist_class = mono_object_get_class(llist_obj);
 
-  MonoObject *dict_obj = mono_runtime_invoke(mono_c::dict_constr,NULL,NULL,&mono_exc);
+  MonoObject *dict_obj = mono_runtime_invoke(mono_c::dict_constr,NULL,NULL,&mono_c::mono_exc);
   MONO_ASSEMBLY_OPEN_CHECK_EXCEPTION();
   mono_c::dict_class = mono_object_get_class(dict_obj);
 
@@ -814,9 +836,9 @@ bool bic_mono_class_method__new_1(interpreter_thread_s &it,unsigned stack_base,u
   
   MonoObject *mono_obj = mono_object_new(mono_c::domain,mono_class);
 
-  MonoObject *mono_exc = NULL;
-  mono_runtime_invoke_array(mono_ctor,mono_obj,(MonoArray *)mono_params,&mono_exc);
-  BIC_MONO_CHECK_EXCEPTION();
+  mono_c::mono_exc = NULL;
+  mono_runtime_invoke_array(mono_ctor,mono_obj,(MonoArray *)mono_params,&mono_c::mono_exc);
+  BIC_MONO_CHECK_EXCEPTION_RETHROW();
 
   // - create mono object handle -
   guint32 gchandle = mono_c::gchandle_new(mono_obj);
@@ -1094,9 +1116,9 @@ bool bic_mono_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_ba
   }
 
   // - call object method -
-  MonoObject *mono_exc = NULL;
-  MonoObject *mono_result = mono_runtime_invoke_array(mono_method,mono_dst,mono_params,&mono_exc);
-  BIC_MONO_CHECK_EXCEPTION();
+  mono_c::mono_exc = NULL;
+  MonoObject *mono_result = mono_runtime_invoke_array(mono_method,mono_dst,mono_params,&mono_c::mono_exc);
+  BIC_MONO_CHECK_EXCEPTION_RETHROW();
 
   // - create mono object handle -
   guint32 gchandle = mono_c::gchandle_new(mono_result);
@@ -1340,9 +1362,9 @@ bool bic_mono_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_
     return false;
   }
 
-  MonoObject *mono_exc = NULL;
-  MonoString *mono_str = mono_object_to_string(mono_dst,&mono_exc);
-  BIC_MONO_CHECK_EXCEPTION();
+  mono_c::mono_exc = NULL;
+  MonoString *mono_str = mono_object_to_string(mono_dst,&mono_c::mono_exc);
+  BIC_MONO_CHECK_EXCEPTION_RETHROW();
 
   MonoError error;
   char *utf8_str = mono_string_to_utf8_checked(mono_str,&error);
@@ -1350,6 +1372,8 @@ bool bic_mono_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_
   // - ERROR -
   if (!mono_error_ok(&error))
   {
+    mono_error_cleanup(&error);
+
     exception_s::throw_exception(it,module.error_base + c_error_MONO_OBJECT_TO_STRING_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -1378,9 +1402,9 @@ bool bic_mono_object_method_print_0(interpreter_thread_s &it,unsigned stack_base
     return false;
   }
 
-  MonoObject *mono_exc = NULL;
-  MonoString *mono_str = mono_object_to_string(mono_dst,&mono_exc);
-  BIC_MONO_CHECK_EXCEPTION();
+  mono_c::mono_exc = NULL;
+  MonoString *mono_str = mono_object_to_string(mono_dst,&mono_c::mono_exc);
+  BIC_MONO_CHECK_EXCEPTION_RETHROW();
 
   MonoError error;
   char *utf8_str = mono_string_to_utf8_checked(mono_str,&error);
@@ -1388,6 +1412,8 @@ bool bic_mono_object_method_print_0(interpreter_thread_s &it,unsigned stack_base
   // - ERROR -
   if (!mono_error_ok(&error))
   {
+    mono_error_cleanup(&error);
+
     exception_s::throw_exception(it,module.error_base + c_error_MONO_OBJECT_TO_STRING_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -1515,10 +1541,10 @@ bool bic_mono_property_operator_binary_equal(interpreter_thread_s &it,unsigned s
   MonoArray *mono_params = mono_array_new(mono_c::domain,mono_get_object_class(),1);
   mono_array_set(mono_params,MonoObject *,0,mono_src_0);
 
-  MonoObject *mono_exc = NULL;
+  mono_c::mono_exc = NULL;
   mono_runtime_invoke_array(mono_set_method,
-      mono_gchandle_get_target(mp_ptr->gchandle),mono_params,&mono_exc);
-  BIC_MONO_CHECK_EXCEPTION();
+      mono_gchandle_get_target(mp_ptr->gchandle),mono_params,&mono_c::mono_exc);
+  BIC_MONO_CHECK_EXCEPTION_RETHROW();
 
   // - create mono object handle -
   guint32 gchandle = mono_c::gchandle_new(mono_src_0);

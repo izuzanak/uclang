@@ -10,6 +10,8 @@ include "ucl_mono.h"
 location_s *mono_c::assembly_loc = NULL;
 bool mono_c::assembly_opened = false;;
 
+MonoObject *mono_c::mono_exc = NULL;
+
 MonoDomain   *mono_c::domain   = NULL;
 MonoAssembly *mono_c::assembly = NULL;
 MonoImage    *mono_c::image    = NULL;
@@ -56,12 +58,12 @@ MonoObject *mono_c::create_mono_object(interpreter_thread_s &it,location_s *loca
   {/*{{{*/
     mono_property_s *mp_ptr = (mono_property_s *)location_ptr->v_data_ptr;
 
-    MonoObject *mono_exc = NULL;
+    mono_c::mono_exc = NULL;
     MonoObject *mono_result = mono_property_get_value(mp_ptr->mono_prop,
       mono_gchandle_get_target(mp_ptr->gchandle),
       NULL,&mono_exc);
 
-    BIC_MONO_CHECK_EXCEPTION();
+    BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
 
     return mono_result;
   }/*}}}*/
@@ -93,9 +95,9 @@ MonoObject *mono_c::create_mono_object(interpreter_thread_s &it,location_s *loca
       } while(++ptr < ptr_end);
     }
 
-    MonoObject *mono_exc = NULL;
+    mono_c::mono_exc = NULL;
     MonoObject *mono_stack = mono_runtime_invoke(stack_constr,NULL,(void **)&mono_array,&mono_exc);
-    BIC_MONO_CHECK_EXCEPTION();
+    BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
 
     return mono_stack;
   }/*}}}*/
@@ -159,9 +161,9 @@ MonoObject *mono_c::create_mono_object(interpreter_thread_s &it,location_s *loca
       }
     }
 
-    MonoObject *mono_exc = NULL;
+    mono_c::mono_exc = NULL;
     MonoObject *mono_queue = mono_runtime_invoke(queue_constr,NULL,(void **)&mono_array,&mono_exc);
-    BIC_MONO_CHECK_EXCEPTION();
+    BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
 
     return mono_queue;
   }/*}}}*/
@@ -195,9 +197,9 @@ MonoObject *mono_c::create_mono_object(interpreter_thread_s &it,location_s *loca
       while(t_idx != c_idx_not_exist);
     }
 
-    MonoObject *mono_exc = NULL;
+    mono_c::mono_exc = NULL;
     MonoObject *mono_hset = mono_runtime_invoke(hset_constr,NULL,(void **)&mono_array,&mono_exc);
-    BIC_MONO_CHECK_EXCEPTION();
+    BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
 
     return mono_hset;
   }/*}}}*/
@@ -228,9 +230,9 @@ MonoObject *mono_c::create_mono_object(interpreter_thread_s &it,location_s *loca
       while(l_idx != c_idx_not_exist);
     }
 
-    MonoObject *mono_exc = NULL;
+    mono_c::mono_exc = NULL;
     MonoObject *mono_list = mono_runtime_invoke(llist_constr,NULL,(void **)&mono_array,&mono_exc);
-    BIC_MONO_CHECK_EXCEPTION();
+    BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
 
     return mono_list;
   }/*}}}*/
@@ -239,9 +241,9 @@ MonoObject *mono_c::create_mono_object(interpreter_thread_s &it,location_s *loca
     pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)location_ptr->v_data_ptr;
 
     // - create new dictionary -
-    MonoObject *mono_exc = NULL;
+    mono_c::mono_exc = NULL;
     MonoObject *mono_dict = mono_runtime_invoke(dict_constr,NULL,NULL,&mono_exc);
-    BIC_MONO_CHECK_EXCEPTION();
+    BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
 
     if (tree_ptr->root_idx != c_idx_not_exist)
     {
@@ -274,7 +276,7 @@ MonoObject *mono_c::create_mono_object(interpreter_thread_s &it,location_s *loca
 
         void *mono_params[2] = {mono_key,mono_value};
         mono_runtime_invoke(dict_add,mono_dict,mono_params,&mono_exc);
-        BIC_MONO_CHECK_EXCEPTION();
+        BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
 
         t_idx = tree_ptr->get_stack_next_idx(t_idx,&stack_ptr,stack);
       }
@@ -334,9 +336,9 @@ MonoObject *mono_c::create_mono_object(interpreter_thread_s &it,location_s *loca
           } while(++ptr < ptr_end);
         }
 
-        MonoObject *mono_exc = NULL;
+        mono_c::mono_exc = NULL;
         MonoObject *mono_list = mono_runtime_invoke(list_constr,NULL,(void **)&mono_array,&mono_exc);
-        BIC_MONO_CHECK_EXCEPTION();
+        BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
 
         return mono_list;
       }/*}}}*/
@@ -457,6 +459,7 @@ location_s *mono_c::mono_object_value(interpreter_thread_s &it,MonoObject *mono_
     // - ERROR -
     if (!mono_error_ok(&error))
     {
+      mono_error_cleanup(&error);
       return NULL;
     }
 
@@ -499,9 +502,9 @@ location_s *mono_c::mono_object_value(interpreter_thread_s &it,MonoObject *mono_
   }/*}}}*/
   if (mono_class == list_class)
   {/*{{{*/
-    MonoObject *mono_exc = NULL;
+    mono_c::mono_exc = NULL;
     MonoArray *mono_array = (MonoArray *)mono_runtime_invoke(list_to_array,mono_obj,NULL,&mono_exc);
-    BIC_MONO_CHECK_EXCEPTION();
+    BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
 
     uintptr_t length = mono_array_length(mono_array);
 
@@ -532,9 +535,9 @@ location_s *mono_c::mono_object_value(interpreter_thread_s &it,MonoObject *mono_
   }/*}}}*/
   if (mono_class == stack_class)
   {/*{{{*/
-    MonoObject *mono_exc = NULL;
+    mono_c::mono_exc = NULL;
     MonoArray *mono_array = (MonoArray *)mono_runtime_invoke(stack_to_array,mono_obj,NULL,&mono_exc);
-    BIC_MONO_CHECK_EXCEPTION();
+    BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
 
     uintptr_t length = mono_array_length(mono_array);
 
@@ -565,10 +568,10 @@ location_s *mono_c::mono_object_value(interpreter_thread_s &it,MonoObject *mono_
   }/*}}}*/
   if (mono_class == queue_class)
   {/*{{{*/
-    MonoObject *mono_exc = NULL;
+    mono_c::mono_exc = NULL;
 
     MonoArray *mono_array = (MonoArray *)mono_runtime_invoke(queue_to_array,mono_obj,NULL,&mono_exc);
-    BIC_MONO_CHECK_EXCEPTION();
+    BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
 
     uintptr_t length = mono_array_length(mono_array);
 
@@ -601,10 +604,10 @@ location_s *mono_c::mono_object_value(interpreter_thread_s &it,MonoObject *mono_
   }/*}}}*/
   if (mono_class == hset_class)
   {/*{{{*/
-    MonoObject *mono_exc = NULL;
+    mono_c::mono_exc = NULL;
 
     MonoArray *mono_array = (MonoArray *)mono_runtime_invoke(hset_arr,NULL,(void **)&mono_obj,&mono_exc);
-    BIC_MONO_CHECK_EXCEPTION();
+    BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
 
     uintptr_t length = mono_array_length(mono_array);
 
@@ -653,10 +656,10 @@ location_s *mono_c::mono_object_value(interpreter_thread_s &it,MonoObject *mono_
   }/*}}}*/
   if (mono_class == llist_class)
   {/*{{{*/
-    MonoObject *mono_exc = NULL;
+    mono_c::mono_exc = NULL;
 
     MonoArray *mono_array = (MonoArray *)mono_runtime_invoke(llist_arr,NULL,(void **)&mono_obj,&mono_exc);
-    BIC_MONO_CHECK_EXCEPTION();
+    BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
 
     uintptr_t length = mono_array_length(mono_array);
 
@@ -696,7 +699,7 @@ location_s *mono_c::mono_object_value(interpreter_thread_s &it,MonoObject *mono_
 
     MonoObject *mono_exc;
     mono_runtime_invoke(dict_arr,NULL,mono_params,&mono_exc);
-    BIC_MONO_CHECK_EXCEPTION();
+    BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
 
     MonoArray *mono_array_keys = (MonoArray *)mono_keys;
     MonoArray *mono_array_values = (MonoArray *)mono_values;
@@ -769,5 +772,43 @@ location_s *mono_c::mono_object_value(interpreter_thread_s &it,MonoObject *mono_
   }/*}}}*/
 
   return NULL;
+}/*}}}*/
+
+location_s *mono_c::get_exc_obj_location(interpreter_thread_s &it)
+{/*{{{*/
+  cassert(mono_exc != NULL);
+
+  char *utf8_str = NULL;
+
+  // - retrieve exception string -
+  MonoObject *other_exc;
+  MonoString *exc_str = mono_object_to_string(mono_exc,&other_exc);
+
+  if (other_exc == NULL)
+  {
+    // - retrieve string as utf8 c string -
+    MonoError error;
+    utf8_str = mono_string_to_utf8_checked(exc_str,&error);
+
+    if (!mono_error_ok(&error))
+    {
+      mono_error_cleanup(&error);
+      utf8_str = NULL;
+    }
+  }
+
+  // if exception string was retrieved
+  if (utf8_str != NULL)
+  {
+    string_s *string_ptr = it.get_new_string_ptr();
+    string_ptr->set(strlen(utf8_str),utf8_str);
+    mono_free(utf8_str);
+
+    BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_string,string_ptr,0);
+
+    return new_location;
+  }
+
+  return (location_s *)it.blank_location;
 }/*}}}*/
 

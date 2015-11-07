@@ -31,18 +31,22 @@ extern unsigned c_rm_class_set;
 extern unsigned c_rm_class_list;
 extern unsigned c_rm_class_dict;
 
-#define BIC_MONO_CHECK_EXCEPTION(CODE) \
+#define BIC_MONO_CHECK_EXCEPTION_RETHROW() \
 {/*{{{*/\
-  if (mono_exc)\
+  if (mono_c::mono_exc)\
   {\
-    CODE;\
-    \
-    mono_print_unhandled_exception(mono_exc);\
-    \
-    /* FIXME TODO forward exception */\
-    cassert(0);\
+    exception_s::throw_exception(it,module.error_base + c_error_MONO_RUNTIME_EXCEPTION,operands[c_source_pos_idx],mono_c::get_exc_obj_location(it));\
+    return false;\
   }\
-}/*}}}*/\
+}/*}}}*/
+
+#define BIC_MONO_CHECK_EXCEPTION_RETURN_NULL() \
+{/*{{{*/\
+  if (mono_c::mono_exc)\
+  {\
+    return NULL;\
+  }\
+}/*}}}*/
 
 // - max method name length -
 const unsigned c_max_method_name_length = 256;
@@ -86,6 +90,8 @@ class mono_c
   static bool assembly_opened;
 
   public:
+  static MonoObject *mono_exc;
+
   static MonoDomain *domain;
   static MonoAssembly *assembly;
   static MonoImage *image;
@@ -131,6 +137,7 @@ class mono_c
   static MonoObject *create_mono_object(interpreter_thread_s &it,location_s *location_ptr);
   static MonoObject *create_mono_array(interpreter_thread_s &it,location_s *location_ptr);
   static location_s *mono_object_value(interpreter_thread_s &it,MonoObject *mono_obj,uli source_pos);
+  static location_s *get_exc_obj_location(interpreter_thread_s &it);
 };
 
 /*
@@ -215,21 +222,21 @@ inline MonoObject *mono_reference_s::get_item()
     int idx = ll_idx;
     void *params[1] = {&idx};
 
-    MonoObject *mono_exc = NULL;
+    mono_c::mono_exc = NULL;
     MonoObject *mono_result = mono_property_get_value(mono_c::list_item,
-        mono_obj,params,&mono_exc);
+        mono_obj,params,&mono_c::mono_exc);
 
-    BIC_MONO_CHECK_EXCEPTION();
+    BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
 
     return mono_result;
   }
   if (mono_class == mono_c::dict_class)
   {
-    MonoObject *mono_exc = NULL;
+    mono_c::mono_exc = NULL;
     MonoObject *mono_result = mono_property_get_value(mono_c::dict_item,
-        mono_obj,(void **)&mono_key,&mono_exc);
+        mono_obj,(void **)&mono_key,&mono_c::mono_exc);
 
-    BIC_MONO_CHECK_EXCEPTION();
+    BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
 
     return mono_result;
   }
@@ -276,10 +283,9 @@ inline bool mono_reference_s::set_item(MonoObject *mono_value)
     int idx = ll_idx;
     void *params[2] = {&idx,mono_value};
 
-    MonoObject *mono_exc = NULL;
-    mono_property_set_value(mono_c::list_item,mono_obj,params,&mono_exc);
-
-    BIC_MONO_CHECK_EXCEPTION();
+    mono_c::mono_exc = NULL;
+    mono_property_set_value(mono_c::list_item,mono_obj,params,&mono_c::mono_exc);
+    BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
 
     return true;
   }
@@ -287,10 +293,9 @@ inline bool mono_reference_s::set_item(MonoObject *mono_value)
   {
     void *params[2] = {mono_key,mono_value};
 
-    MonoObject *mono_exc = NULL;
-    mono_property_set_value(mono_c::dict_item,mono_obj,params,&mono_exc);
-
-    BIC_MONO_CHECK_EXCEPTION();
+    mono_c::mono_exc = NULL;
+    mono_property_set_value(mono_c::dict_item,mono_obj,params,&mono_c::mono_exc);
+    BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
 
     return true;
   }
