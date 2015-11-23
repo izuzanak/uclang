@@ -87,10 +87,10 @@ built_in_class_s bin_array_class =
   bic_bin_array_init,
   bic_bin_array_clear,
   NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  bic_bin_array_length,
+  bic_bin_array_item,
+  bic_bin_array_first_idx,
+  bic_bin_array_next_idx,
   NULL,
   NULL,
   NULL,
@@ -191,9 +191,9 @@ built_in_variable_s bin_array_variables[] =
 
 };/*}}}*/
 
-#define BIC_BIN_ARRAY_GET_USED() \
+#define BIC_BIN_ARRAY_GET_USED(LOCATION) \
   /*{{{*/\
-  bin_array_s *ba_ptr = (bin_array_s *)((location_s *)dst_location)->v_data_ptr;\
+  bin_array_s *ba_ptr = (bin_array_s *)((location_s *)(LOCATION))->v_data_ptr;\
   unsigned used;\
 \
   switch (ba_ptr->type)\
@@ -211,7 +211,7 @@ built_in_variable_s bin_array_variables[] =
 
 #define BIC_BIN_ARRAY_CHECK_INDEX() \
   /*{{{*/\
-  BIC_BIN_ARRAY_GET_USED();\
+  BIC_BIN_ARRAY_GET_USED(dst_location);\
   \
   /* - ERROR - */\
   if (index < 0 || index >= used)\
@@ -284,6 +284,42 @@ void bic_bin_array_clear(interpreter_thread_s &it,location_s *location_ptr)
     ba_ptr->clear(it);
     cfree(ba_ptr);
   }
+}/*}}}*/
+
+unsigned bic_bin_array_length(location_s *location_ptr)
+{/*{{{*/
+  BIC_BIN_ARRAY_GET_USED(location_ptr);
+  return used;
+}/*}}}*/
+
+location_s *bic_bin_array_item(interpreter_thread_s &it,location_s *location_ptr,unsigned index)
+{/*{{{*/
+  BIC_BIN_ARRAY_GET_USED(location_ptr);
+
+  // FIXME TODO check index ...
+  cassert(index < used);
+
+  // - create bin array reference -
+  bin_array_ref_s *bar_ptr = ba_ptr->create_reference(location_ptr,index);
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_bin_array_ref,bar_ptr);
+  return new_location;
+}/*}}}*/
+
+unsigned bic_bin_array_first_idx(location_s *location_ptr)
+{/*{{{*/
+  BIC_BIN_ARRAY_GET_USED(location_ptr);
+  return used != 0 ? 0 : c_idx_not_exist;
+}/*}}}*/
+
+unsigned bic_bin_array_next_idx(location_s *location_ptr,unsigned index)
+{/*{{{*/
+  BIC_BIN_ARRAY_GET_USED(location_ptr);
+
+  // FIXME TODO check index ...
+  cassert(index < used);
+
+  return (index + 1 < used) ? index + 1 : c_idx_not_exist;
 }/*}}}*/
 
 bool bic_bin_array_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -551,7 +587,7 @@ bool bic_bin_array_method_first_idx_0(interpreter_thread_s &it,unsigned stack_ba
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  BIC_BIN_ARRAY_GET_USED();
+  BIC_BIN_ARRAY_GET_USED(dst_location);
 
   if (used > 0)
   {
@@ -570,7 +606,7 @@ bool bic_bin_array_method_last_idx_0(interpreter_thread_s &it,unsigned stack_bas
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  BIC_BIN_ARRAY_GET_USED();
+  BIC_BIN_ARRAY_GET_USED(dst_location);
 
   if (used > 0)
   {
@@ -836,7 +872,7 @@ built_in_class_s bin_array_ref_class =
 {/*{{{*/
   "BinArrayRef",
   c_modifier_public | c_modifier_final,
-  3, bin_array_ref_methods,
+  4, bin_array_ref_methods,
   0, bin_array_ref_variables,
   bic_bin_array_ref_consts,
   bic_bin_array_ref_init,
@@ -860,15 +896,19 @@ built_in_method_s bin_array_ref_methods[] =
     c_modifier_public | c_modifier_final,
     bic_bin_array_ref_operator_binary_equal
   },
-
+  {
+    "value#0",
+    c_modifier_public | c_modifier_final,
+    bic_bin_array_ref_method_value_0
+  },
   {
     "to_string#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_bin_array_ref_method_to_string_0
   },
   {
     "print#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_bin_array_ref_method_print_0
   },
 };/*}}}*/
@@ -899,22 +939,142 @@ void bic_bin_array_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 bool bic_bin_array_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
-  src_0_location->v_reference_cnt.atomic_add(2);
+  bin_array_ref_s *bar_ptr = (bin_array_ref_s *)dst_location->v_data_ptr;
+  bin_array_s *ba_ptr = (bin_array_s *)bar_ptr->ba_location->v_data_ptr;
 
-  BIC_SET_DESTINATION(src_0_location);
-  BIC_SET_RESULT(src_0_location);
+  switch (ba_ptr->type)
+  {
+  case c_bin_array_type_int32:
+  case c_bin_array_type_uint32:
+    {
+      long long int value;
+
+      // - ERROR -
+      if (!it.retrieve_integer(src_0_location,value))
+      {
+        // FIXME TODO throw proper exception
+        BIC_TODO_ERROR(__FILE__,__LINE__);
+        return false;
+      }
+
+#define BIC_BIN_ARRAY_REF_OPERATOR_BINARY_EQUAL_INTEGER(ARR_TYPE,TYPE) \
+{/*{{{*/\
+  ARR_TYPE *array_ptr = (ARR_TYPE *)ba_ptr->cont;\
+\
+  /* - ERROR - */\
+  if (bar_ptr->index >= array_ptr->used)\
+  {\
+    /* FIXME TODO throw proper exception */\
+    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    return false;\
+  }\
+\
+  TYPE &value_ref = array_ptr->data[bar_ptr->index];\
+  value_ref = value;\
+  value = value_ref;\
+}/*}}}*/
+
+      switch (ba_ptr->type)
+      {
+      case c_bin_array_type_int32:
+        BIC_BIN_ARRAY_REF_OPERATOR_BINARY_EQUAL_INTEGER(bi_array_s,int);
+        break;
+      case c_bin_array_type_uint32:
+        BIC_BIN_ARRAY_REF_OPERATOR_BINARY_EQUAL_INTEGER(ui_array_s,unsigned);
+        break;
+      }
+
+      BIC_SIMPLE_SET_RES(c_bi_class_integer,value);
+    }
+    break;
+  default:
+    cassert(0);
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_array_ref_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  bin_array_ref_s *bar_ptr = (bin_array_ref_s *)dst_location->v_data_ptr;
+  bin_array_s *ba_ptr = (bin_array_s *)bar_ptr->ba_location->v_data_ptr;
+
+#define BIC_BIN_ARRAY_REF_INTEGER_VALUE(ARR_TYPE) \
+{/*{{{*/\
+  ARR_TYPE *array_ptr = (ARR_TYPE *)ba_ptr->cont;\
+\
+  /* - ERROR - */\
+  if (bar_ptr->index >= array_ptr->used)\
+  {\
+    /* FIXME TODO throw proper exception */\
+    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    return false;\
+  }\
+\
+  long long int result = array_ptr->data[bar_ptr->index];\
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
+}/*}}}*/
+
+  switch (ba_ptr->type)
+  {
+  case c_bin_array_type_int32:
+    BIC_BIN_ARRAY_REF_INTEGER_VALUE(bi_array_s);
+    break;
+  case c_bin_array_type_uint32:
+    BIC_BIN_ARRAY_REF_INTEGER_VALUE(ui_array_s);
+    break;
+  default:
+    cassert(0);
+  }
 
   return true;
 }/*}}}*/
 
 bool bic_bin_array_ref_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  BIC_TO_STRING_WITHOUT_DEST(
-    string_ptr->set(strlen("BinArrayRef"),"BinArrayRef");
-  );
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  bin_array_ref_s *bar_ptr = (bin_array_ref_s *)dst_location->v_data_ptr;
+  bin_array_s *ba_ptr = (bin_array_s *)bar_ptr->ba_location->v_data_ptr;
+
+#define BIC_BIN_ARRAY_REF_TO_STRING(ARR_TYPE,TYPE,FORMAT) \
+{/*{{{*/\
+  ARR_TYPE *array_ptr = (ARR_TYPE *)ba_ptr->cont;\
+\
+  /* - ERROR - */\
+  if (bar_ptr->index >= array_ptr->used)\
+  {\
+    /* FIXME TODO throw proper exception */\
+    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    return false;\
+  }\
+\
+  TYPE value = array_ptr->data[bar_ptr->index];\
+\
+  string_s *string_ptr = it.get_new_string_ptr();\
+  string_ptr->setf(FORMAT,value);\
+\
+  BIC_SET_RESULT_STRING(string_ptr);\
+}/*}}}*/
+
+  switch (ba_ptr->type)
+  {
+  case c_bin_array_type_int32:
+    BIC_BIN_ARRAY_REF_TO_STRING(bi_array_s,int,"%d")
+    break;
+  case c_bin_array_type_uint32:
+    BIC_BIN_ARRAY_REF_TO_STRING(ui_array_s,unsigned,"%u")
+    break;
+  default:
+    cassert(0);
+  }
 
   return true;
 }/*}}}*/
@@ -922,8 +1082,37 @@ bool bic_bin_array_ref_method_to_string_0(interpreter_thread_s &it,unsigned stac
 bool bic_bin_array_ref_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  printf("BinArrayRef");
+  bin_array_ref_s *bar_ptr = (bin_array_ref_s *)dst_location->v_data_ptr;
+  bin_array_s *ba_ptr = (bin_array_s *)bar_ptr->ba_location->v_data_ptr;
+
+#define BIC_BIN_ARRAY_REF_PRINT(ARR_TYPE,FORMAT) \
+{/*{{{*/\
+  ARR_TYPE *array_ptr = (ARR_TYPE *)ba_ptr->cont;\
+\
+  /* - ERROR - */\
+  if (bar_ptr->index >= array_ptr->used)\
+  {\
+    /* FIXME TODO throw proper exception */\
+    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    return false;\
+  }\
+\
+  printf(FORMAT,array_ptr->data[bar_ptr->index]);\
+}/*}}}*/
+
+  switch (ba_ptr->type)
+  {
+  case c_bin_array_type_int32:
+    BIC_BIN_ARRAY_REF_PRINT(bi_array_s,"%d")
+    break;
+  case c_bin_array_type_uint32:
+    BIC_BIN_ARRAY_REF_PRINT(ui_array_s,"%u")
+    break;
+  default:
+    cassert(0);
+  }
 
   BIC_SET_RESULT_BLANK();
 

@@ -39,6 +39,14 @@ extern built_in_class_s bin_array_class;
 void bic_bin_array_consts(location_array_s &const_locations);
 void bic_bin_array_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_bin_array_clear(interpreter_thread_s &it,location_s *location_ptr);
+unsigned bic_bin_array_length(location_s *location_ptr);
+location_s *bic_bin_array_item(interpreter_thread_s &it,location_s *location_ptr,unsigned index);
+unsigned bic_bin_array_first_idx(location_s *location_ptr);
+unsigned bic_bin_array_next_idx(location_s *location_ptr,unsigned index);
+
+// FIXME TODO continue ...
+//bool bic_bin_array_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack);
+//bool bic_bin_array_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack,bool order_bytes,unsigned source_pos);
 
 bool bic_bin_array_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -67,6 +75,7 @@ void bic_bin_array_ref_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_bin_array_ref_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_bin_array_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_array_ref_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_ref_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_ref_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
