@@ -243,13 +243,8 @@ built_in_variable_s bin_array_variables[] =
     \
     BIC_BIN_ARRAY_CHECK_INDEX();\
     \
-    /* - create bin array ref object - */\
-    bin_array_ref_s *bar_ptr = (bin_array_ref_s *)cmalloc(sizeof(bin_array_ref_s));\
-    bar_ptr->init();\
-    \
-    ((location_s *)dst_location)->v_reference_cnt.atomic_inc();\
-    bar_ptr->ba_loc = (location_s *)dst_location;\
-    bar_ptr->index = index;\
+    /* - create bin array reference - */\
+    bin_array_ref_s *bar_ptr = ba_ptr->create_reference((location_s *)dst_location,index);\
     \
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_bin_array_ref,bar_ptr);\
     BIC_SET_RESULT(new_location);\
@@ -897,8 +892,7 @@ void bic_bin_array_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 
   if (bar_ptr != NULL)
   {
-    bar_ptr->clear(it);
-    cfree(bar_ptr);
+    ((bin_array_s *)bar_ptr->ba_location->v_data_ptr)->release_reference(it,bar_ptr);
   }
 }/*}}}*/
 
