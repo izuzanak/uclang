@@ -6366,7 +6366,7 @@ built_in_class_s md5_class =
 {/*{{{*/
   "Md5",
   c_modifier_public | c_modifier_final,
-  6, md5_methods,
+  7, md5_methods,
   0, md5_variables,
   bic_md5_consts,
   bic_md5_init,
@@ -6404,6 +6404,11 @@ built_in_method_s md5_methods[] =
     "value#0",
     c_modifier_public | c_modifier_final,
     bic_md5_method_value_0
+  },
+  {
+    "string#0",
+    c_modifier_public | c_modifier_final,
+    bic_md5_method_string_0
   },
   {
     "to_string#0",
@@ -6517,6 +6522,47 @@ bool bic_md5_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
   // - retrieve digest from md5 -
   md5_copy.Finish((unsigned char *)string_ptr->data);
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_md5_method_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  // - retrieve crc pointer -
+  MD5Digest *md5_ptr = (MD5Digest *)dst_location->v_data_ptr;
+
+  MD5Digest md5_copy;
+  memcpy(&md5_copy,md5_ptr,sizeof(MD5Digest));
+
+  // - retrieve digest from md5 -
+  unsigned char buffer[16];
+  md5_copy.Finish(buffer);
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->create(32);
+
+  // - convert bytes to string -
+  unsigned char *b_ptr = buffer;
+  unsigned char *b_ptr_end = b_ptr + 16;
+  char *s_ptr = string_ptr->data;
+
+  do {
+    unsigned char byte = *b_ptr;
+
+    // - convert first four bits -
+    char value = (byte & 0xf0) >> 4;
+    *s_ptr++ = value < 10 ? '0' + value : 'a' + (value - 10);
+
+    // - convert last four bits -
+    value = byte & 0xf;
+    *s_ptr++ = value < 10 ? '0' + value : 'a' + (value - 10);
+
+  } while(++b_ptr < b_ptr_end);
 
   BIC_SET_RESULT_STRING(string_ptr);
 

@@ -370,6 +370,7 @@ bool bic_md5_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,
 bool bic_md5_method_Md5_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_md5_method_append_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_md5_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_md5_method_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_md5_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_md5_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
