@@ -60,6 +60,7 @@ C_MODULE_NODE       = index; index += 1
 C_MODULE_DDB        = index; index += 1
 C_MODULE_CONTAINERS = index; index += 1
 C_MODULE_ALGORITHMS = index; index += 1
+C_MODULE_BINBITS    = index; index += 1
 C_MODULE_GRAPH      = index; index += 1
 C_MODULE_JSON       = index; index += 1
 C_MODULE_XML        = index; index += 1
@@ -136,6 +137,7 @@ c_cfg = [
     ["MOD_DDB"       ,c_enabled[C_MODULE_DDB]       ,C_UCLANG_DIR + "mods/ddb_uclm"         ,None],
     ["MOD_CONTAINERS",c_enabled[C_MODULE_CONTAINERS],C_UCLANG_DIR + "mods/containers_uclm"  ,None],
     ["MOD_ALGORITHMS",c_enabled[C_MODULE_ALGORITHMS],C_UCLANG_DIR + "mods/algorithms_uclm"  ,None],
+    ["MOD_BINBITS"   ,c_enabled[C_MODULE_BINBITS]   ,C_UCLANG_DIR + "mods/binbits_uclm"     ,None],
     ["MOD_GRAPH"     ,c_enabled[C_MODULE_GRAPH]     ,C_UCLANG_DIR + "mods/graph_uclm"       ,None],
     ["MOD_JSON"      ,c_enabled[C_MODULE_JSON]      ,C_UCLANG_DIR + "mods/json_uclm"        ,None],
     ["MOD_XML"       ,c_enabled[C_MODULE_XML]       ,C_UCLANG_DIR + "mods/xml_uclm"         ,None],
