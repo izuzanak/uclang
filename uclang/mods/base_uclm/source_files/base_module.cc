@@ -4337,7 +4337,7 @@ int bic_string_compare(location_s *first_loc,location_s *second_loc)
 
   if (first->size < second->size) return -1;
   if (first->size > second->size) return 1;
-  return strncmp(first->data,second->data,first->size - 1);
+  return memcmp(first->data,second->data,first->size - 1);
 }/*}}}*/
 
 unsigned bic_string_length(location_s *location_ptr)
@@ -5683,7 +5683,7 @@ bool bic_string_method_compare_1(interpreter_thread_s &it,unsigned stack_base,ul
 
     if (first->size == second->size)
     {
-      result = strncmp(first->data,second->data,first->size - 1);
+      result = memcmp(first->data,second->data,first->size - 1);
     }
     else
     {

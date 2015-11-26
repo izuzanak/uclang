@@ -374,7 +374,7 @@ inline int string_rb_tree_s::__compare_value(string_s &a_first,string_s &a_secon
 {/*{{{*/
   if (a_first.size < a_second.size) return -1;
   if (a_first.size > a_second.size) return 1;
-  return strncmp(a_first.data,a_second.data,a_first.size - 1);
+  return memcmp(a_first.data,a_second.data,a_first.size - 1);
 }/*}}}*/
 
 inline unsigned string_rb_tree_s::get_idx_char_ptr(unsigned a_length,const char *a_data)

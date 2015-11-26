@@ -129,7 +129,7 @@ inline int snmp_object_rb_tree_s::__compare_value(snmp_object_s &a_first,snmp_ob
 
   if (f_name.size < s_name.size) return -1;
   if (f_name.size > s_name.size) return 1;
-  return strncmp(f_name.data,s_name.data,f_name.size - 1);
+  return memcmp(f_name.data,s_name.data,f_name.size - 1);
 }/*}}}*/
 
 /*
