@@ -491,11 +491,15 @@ bool bic_json_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,
       {
         buffer.push('{');
 
-        // - push tabulator to indent -
-        JSON_CREATE_NICE_PUSH_TAB();
+        // - if dictionary is not empty -
+        if (tree_ptr->count != 0)
+        {
+          // - push tabulator to indent -
+          JSON_CREATE_NICE_PUSH_TAB();
 
-        // - insert indentation -
-        JSON_CREATE_NICE_INDENT();
+          // - insert indentation -
+          JSON_CREATE_NICE_INDENT();
+        }
 
         cs_elm.index = tree_ptr->root_idx == c_idx_not_exist ? 
           c_idx_not_exist : tree_ptr->get_min_value_idx(tree_ptr->root_idx);
@@ -545,11 +549,15 @@ bool bic_json_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,
       }
       else
       {
-        // - remove tabulator from indent -
-        JSON_CREATE_NICE_POP_TAB();
+        // - if dictionary is not empty -
+        if (tree_ptr->count != 0)
+        {
+          // - remove tabulator from indent -
+          JSON_CREATE_NICE_POP_TAB();
 
-        // - insert indentation -
-        JSON_CREATE_NICE_INDENT();
+          // - insert indentation -
+          JSON_CREATE_NICE_INDENT();
+        }
 
         buffer.push('}');
 
@@ -609,11 +617,15 @@ bool bic_json_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,
           {
             buffer.push('[');
 
-            // - push tabulator to indent -
-            JSON_CREATE_NICE_PUSH_TAB();
+            // - if array is not empty -
+            if (array_ptr->used != 0)
+            {
+              // - push tabulator to indent -
+              JSON_CREATE_NICE_PUSH_TAB();
 
-            // - insert indentation -
-            JSON_CREATE_NICE_INDENT();
+              // - insert indentation -
+              JSON_CREATE_NICE_INDENT();
+            }
 
             cs_elm.index = 0;
             cs_elm.initialize = false;
@@ -639,11 +651,15 @@ bool bic_json_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,
           }
           else
           {
-            // - remove tabulator from indent -
-            JSON_CREATE_NICE_POP_TAB();
+            // - if array is not empty -
+            if (array_ptr->used != 0)
+            {
+              // - remove tabulator from indent -
+              JSON_CREATE_NICE_POP_TAB();
 
-            // - insert indentation -
-            JSON_CREATE_NICE_INDENT();
+              // - insert indentation -
+              JSON_CREATE_NICE_INDENT();
+            }
 
             buffer.push(']');
 
