@@ -19,7 +19,11 @@ extern built_in_class_s *binbits_classes[];
 // - BINBITS error identifiers -
 enum
 {
-  c_error_BIN_ARRAY_DUMMY_ERROR = 0,
+  c_error_BIN_ARRAY_UNKNOWN_DATA_TYPE = 0,
+  c_error_BIN_ARRAY_INDEX_EXCEEDS_RANGE,
+  c_error_BIN_ARRAY_CANNOT_RESIZE_TO_SMALLER_SIZE,
+  c_error_BIN_ARRAY_NO_ELEMENTS,
+  c_error_BIN_ARRAY_REF_INVALID_REFERENCE,
 };
 
 // - BINBITS error strings -

@@ -14,7 +14,7 @@ built_in_module_s module =
   binbits_classes,         // Classes
 
   0,                       // Error base index
-  1,                       // Error count
+  5,                       // Error count
   binbits_error_strings,   // Error strings
 
   binbits_initialize,      // Initialize function
@@ -31,7 +31,11 @@ built_in_class_s *binbits_classes[] =
 // - BINBITS error strings -
 const char *binbits_error_strings[] =
 {/*{{{*/
-  "error_BIN_ARRAY_DUMMY_ERROR",
+  "error_BIN_ARRAY_UNKNOWN_DATA_TYPE",
+  "error_BIN_ARRAY_INDEX_EXCEEDS_RANGE",
+  "error_BIN_ARRAY_CANNOT_RESIZE_TO_SMALLER_SIZE",
+  "error_BIN_ARRAY_NO_ELEMENTS",
+  "error_BIN_ARRAY_REF_INVALID_REFERENCE",
 };/*}}}*/
 
 // - BINBITS initialize -
@@ -59,11 +63,39 @@ bool binbits_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_BIN_ARRAY_DUMMY_ERROR:
+  case c_error_BIN_ARRAY_UNKNOWN_DATA_TYPE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nBinary array dummy error\n");
+    fprintf(stderr,"\nData type not supported by binary array\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_BIN_ARRAY_INDEX_EXCEEDS_RANGE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nIndex %" HOST_LL_FORMAT "d exceeds binary array range\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_BIN_ARRAY_CANNOT_RESIZE_TO_SMALLER_SIZE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nResize binary array of size %" HOST_LL_FORMAT "d to size %" HOST_LL_FORMAT "d\n",exception.params[1],exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_BIN_ARRAY_NO_ELEMENTS:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nBinary array does not contain any elements\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_BIN_ARRAY_REF_INVALID_REFERENCE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid binary array reference\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -216,8 +248,9 @@ built_in_variable_s bin_array_variables[] =
   /* - ERROR - */\
   if (index < 0 || index >= used)\
   {\
-    /* FIXME TODO throw proper exception */\
-    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(index);\
+    \
     return false;\
   }\
   /*}}}*/
@@ -384,9 +417,7 @@ bool bic_bin_array_method_BinArray_1(interpreter_thread_s &it,unsigned stack_bas
 
   // - ERROR -
   default:
-    
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_UNKNOWN_DATA_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -454,8 +485,10 @@ bool bic_bin_array_method_resize_1(interpreter_thread_s &it,unsigned stack_base,
   /* - ERROR - */\
   if (array_ptr->used > new_size)\
   {\
-    /* FIXME TODO throw proper exception */\
-    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_CANNOT_RESIZE_TO_SMALLER_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(new_size);\
+    new_exception->params.push(array_ptr->used);\
+\
     return false;\
   }\
 \
@@ -502,8 +535,11 @@ bool bic_bin_array_method_push_1(interpreter_thread_s &it,unsigned stack_base,ul
       // - ERROR -
       if (!it.retrieve_integer(src_0_location,value))
       {
-        // FIXME TODO throw proper exception
-        BIC_TODO_ERROR(__FILE__,__LINE__);
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("push#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
         return false;
       }
 
@@ -543,8 +579,7 @@ bool bic_bin_array_method_pop_0(interpreter_thread_s &it,unsigned stack_base,uli
       // - ERROR -
       if (array_ptr->used == 0)
       {
-        // FIXME TODO throw proper exception
-        BIC_TODO_ERROR(__FILE__,__LINE__);
+        exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_NO_ELEMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
 
@@ -559,8 +594,7 @@ bool bic_bin_array_method_pop_0(interpreter_thread_s &it,unsigned stack_base,uli
       // - ERROR -
       if (array_ptr->used == 0)
       {
-        // FIXME TODO throw proper exception
-        BIC_TODO_ERROR(__FILE__,__LINE__);
+        exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_NO_ELEMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
 
@@ -955,8 +989,11 @@ bool bic_bin_array_ref_operator_binary_equal(interpreter_thread_s &it,unsigned s
       // - ERROR -
       if (!it.retrieve_integer(src_0_location,value))
       {
-        // FIXME TODO throw proper exception
-        BIC_TODO_ERROR(__FILE__,__LINE__);
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_equal#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
         return false;
       }
 
@@ -967,8 +1004,7 @@ bool bic_bin_array_ref_operator_binary_equal(interpreter_thread_s &it,unsigned s
   /* - ERROR - */\
   if (bar_ptr->index >= array_ptr->used)\
   {\
-    /* FIXME TODO throw proper exception */\
-    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_REF_INVALID_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
 \
@@ -1012,8 +1048,7 @@ bool bic_bin_array_ref_method_value_0(interpreter_thread_s &it,unsigned stack_ba
   /* - ERROR - */\
   if (bar_ptr->index >= array_ptr->used)\
   {\
-    /* FIXME TODO throw proper exception */\
-    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_REF_INVALID_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
 \
@@ -1051,8 +1086,7 @@ bool bic_bin_array_ref_method_to_string_0(interpreter_thread_s &it,unsigned stac
   /* - ERROR - */\
   if (bar_ptr->index >= array_ptr->used)\
   {\
-    /* FIXME TODO throw proper exception */\
-    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_REF_INVALID_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
 \
@@ -1094,8 +1128,7 @@ bool bic_bin_array_ref_method_print_0(interpreter_thread_s &it,unsigned stack_ba
   /* - ERROR - */\
   if (bar_ptr->index >= array_ptr->used)\
   {\
-    /* FIXME TODO throw proper exception */\
-    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_REF_INVALID_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
 \
