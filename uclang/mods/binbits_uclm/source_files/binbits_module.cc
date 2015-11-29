@@ -113,7 +113,7 @@ built_in_class_s bin_array_class =
 {/*{{{*/
   "BinArray",
   c_modifier_public | c_modifier_final,
-  16, bin_array_methods,
+  21, bin_array_methods,
   2, bin_array_variables,
   bic_bin_array_consts,
   bic_bin_array_init,
@@ -166,6 +166,31 @@ built_in_method_s bin_array_methods[] =
     "pop#0",
     c_modifier_public | c_modifier_final,
     bic_bin_array_method_pop_0
+  },
+  {
+    "last#0",
+    c_modifier_public | c_modifier_final,
+    bic_bin_array_method_last_0
+  },
+  {
+    "fill#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_array_method_fill_1
+  },
+  {
+    "get_idx#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_array_method_get_idx_1
+  },
+  {
+    "get_idxs#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_array_method_get_idxs_1
+  },
+  {
+    "compare#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_array_method_compare_1
   },
   {
     "item#1",
@@ -607,6 +632,136 @@ bool bic_bin_array_method_pop_0(interpreter_thread_s &it,unsigned stack_base,uli
   }
 
   return true;
+}/*}}}*/
+
+bool bic_bin_array_method_last_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
+
+  switch (ba_ptr->type)
+  {
+  case c_bin_array_type_int32:
+    {/*{{{*/
+      bi_array_s *array_ptr = (bi_array_s *)ba_ptr->cont;
+
+      // - ERROR -
+      if (array_ptr->used == 0)
+      {
+        exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_NO_ELEMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+
+      long long int result = array_ptr->last();
+      BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+    }/*}}}*/
+    break;
+  case c_bin_array_type_uint32:
+    {/*{{{*/
+      ui_array_s *array_ptr = (ui_array_s *)ba_ptr->cont;
+
+      // - ERROR -
+      if (array_ptr->used == 0)
+      {
+        exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_NO_ELEMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+
+      long long int result = array_ptr->last();
+      BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+    }/*}}}*/
+    break;
+  default:
+    cassert(0);
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_array_method_fill_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
+
+  switch (ba_ptr->type)
+  {
+  case c_bin_array_type_int32:
+  case c_bin_array_type_uint32:
+    {
+      long long int value;
+
+      // - ERROR -
+      if (!it.retrieve_integer(src_0_location,value))
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("fill#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
+        return false;
+      }
+
+      switch (ba_ptr->type)
+      {
+      case c_bin_array_type_int32:
+        {/*{{{*/
+          bi_array_s *array_ptr = (bi_array_s *)ba_ptr->cont;
+          unsigned size = array_ptr->size;
+
+          array_ptr->size = array_ptr->used;
+          array_ptr->fill(value);
+          array_ptr->size = size;
+        }/*}}}*/
+        break;
+      case c_bin_array_type_uint32:
+        {/*{{{*/
+          ui_array_s *array_ptr = (ui_array_s *)ba_ptr->cont;
+          unsigned size = array_ptr->size;
+
+          array_ptr->size = array_ptr->used;
+          array_ptr->fill(value);
+          array_ptr->size = size;
+        }/*}}}*/
+        break;
+      }
+    }
+    break;
+  default:
+    cassert(0);
+  }
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_array_method_get_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+
+  // FIXME TODO continue ...
+  BIC_TODO_ERROR(__FILE__,__LINE__);
+  return false;
+}/*}}}*/
+
+bool bic_bin_array_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  
+  // FIXME TODO continue ...
+  BIC_TODO_ERROR(__FILE__,__LINE__);
+  return false;
+}/*}}}*/
+
+bool bic_bin_array_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  
+  // FIXME TODO continue ...
+  BIC_TODO_ERROR(__FILE__,__LINE__);
+  return false;
 }/*}}}*/
 
 bool bic_bin_array_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)

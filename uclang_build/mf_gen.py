@@ -142,10 +142,10 @@ class configuration_c:
     string += "\n"
 
     if self.compiler_type == self.C_COMPILER_GCC:
-      #string += "GPP=clang++\n"
-      string += "GPP=g++\n"
+      #string += "CXX=clang++\n"
+      string += "CXX=g++\n"
     elif self.compiler_type == self.C_COMPILER_MS_VS:
-      string += "GPP=cl\n"
+      string += "CXX=cl\n"
     else:
       assert False
 
@@ -558,9 +558,9 @@ class project_c:
 
       if self.conf.compiler_type == self.conf.C_COMPILER_GCC:
         string += self.conf.str_message("Compiling : %s : %s" % (self.project_name,self.processed[p_idx]))
-        string += "\t$(GPP) -c $(%s_OPT) $(%s_DEFINES) \"$(%s_PROC)%s%s\" $(%s_SETTINGS) -o \"$(%s_OBJECT)%s%s\"\n" % (self.abbr,self.abbr,self.abbr,os.sep,self.processed[p_idx],self.abbr,self.abbr,os.sep,self.objects[p_idx])
+        string += "\t$(CXX) -c $(%s_OPT) $(%s_DEFINES) \"$(%s_PROC)%s%s\" $(%s_SETTINGS) -o \"$(%s_OBJECT)%s%s\"\n" % (self.abbr,self.abbr,self.abbr,os.sep,self.processed[p_idx],self.abbr,self.abbr,os.sep,self.objects[p_idx])
       elif self.conf.compiler_type == self.conf.C_COMPILER_MS_VS:
-        string += "\t$(GPP) /c $(%s_OPT) $(%s_DEFINES) \"$(%s_PROC)%s%s\" $(%s_SETTINGS) \"/Fo$(%s_OBJECT)%s%s\"\n" % (self.abbr,self.abbr,self.abbr,os.sep,self.processed[p_idx],self.abbr,self.abbr,os.sep,self.objects[p_idx])
+        string += "\t$(CXX) /c $(%s_OPT) $(%s_DEFINES) \"$(%s_PROC)%s%s\" $(%s_SETTINGS) \"/Fo$(%s_OBJECT)%s%s\"\n" % (self.abbr,self.abbr,self.abbr,os.sep,self.processed[p_idx],self.abbr,self.abbr,os.sep,self.objects[p_idx])
       else:
         assert False
 
@@ -603,7 +603,7 @@ class project_c:
     string += "   %s\n" % obj_line_lst[-1]
 
     string += self.conf.str_message("Linking   : %s : %s" % (self.project_name,self.target))
-    string += "\t$(GPP) $(%s_OPT) $(%s_DEFINES)" % (self.abbr,self.abbr)
+    string += "\t$(CXX) $(%s_OPT) $(%s_DEFINES)" % (self.abbr,self.abbr)
 
     if self.conf.compiler_type == self.conf.C_COMPILER_GCC:
       string += "-o \"$(%s_TMP)%s%s\"\\\n" % (self.abbr,os.sep,self.target)
@@ -746,9 +746,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -774,9 +774,9 @@ if cfg_ref[CFG_TARGET]:
         os.sep.join(["..","..","libs","libbase_ucll"]),
         os.sep.join(["..","..","libs","libnode_ucll"]),
       ],
-      opt_build, # GPP options
+      opt_build, # CXX options
       opt_link,
-      "", # GPP defines
+      "", # CXX defines
       [],
       [],
     )
@@ -800,9 +800,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -823,9 +823,9 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -846,9 +846,9 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [],
-      opt_build + "-I/usr/include/freetype2 ", # GPP options
-      opt_link + "-lfreetype -lGLEW -lGL -lglut -lm ", # GPP link options
-      "", # GPP defines
+      opt_build + "-I/usr/include/freetype2 ", # CXX options
+      opt_link + "-lfreetype -lGLEW -lGL -lglut -lm ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -872,9 +872,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -898,9 +898,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -924,9 +924,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # "-lrt " GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # "-lrt " CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -950,9 +950,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -976,9 +976,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1002,9 +1002,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1028,9 +1028,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1054,9 +1054,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1080,9 +1080,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1106,9 +1106,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1132,9 +1132,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link + "-lpq ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lpq ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1158,9 +1158,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link + "-lsqlite3 ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lsqlite3 ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1184,9 +1184,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link + "-lmicrohttpd ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lmicrohttpd ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1210,9 +1210,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link + "-lwebsockets ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lwebsockets ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1236,9 +1236,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link + "-lcurl ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lcurl ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1264,9 +1264,9 @@ if cfg_ref[CFG_TARGET]:
         os.sep.join(["..","..","libs","libbase_ucll"]),
         os.sep.join(["..","..","..","ext_libs","ucframework","2.9","build","lib"]),
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1294,9 +1294,9 @@ if cfg_ref[CFG_TARGET]:
         os.sep.join(["..","..","..","ext_libs","ucframework","1.60","build","lib"]),
         os.sep.join(["..","..","..","ext_libs","uctcn","2.27","build","lib"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1322,9 +1322,9 @@ if cfg_ref[CFG_TARGET]:
         os.sep.join(["..","..","libs","libbase_ucll"]),
         os.sep.join(["..","..","..","ext_libs","ucmm","trunk","build","lib"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1352,9 +1352,9 @@ if cfg_ref[CFG_TARGET]:
         os.sep.join(["..","..","libs","libbase_ucll"]),
         os.sep.join(["..","..","..","ext_libs","ucframework","1.60","build","lib"]),
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1378,9 +1378,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link + "-lftp ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lftp ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1404,9 +1404,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link + "-lssh2 ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lssh2 ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1430,9 +1430,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link + "-lgcrypt ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lgcrypt ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1456,9 +1456,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1484,9 +1484,9 @@ if cfg_ref[CFG_TARGET]:
         os.sep.join(["..","..","libs","libbase_ucll"]),
         os.sep.join(["..","..","..","ext_libs","libjit","libjit","lib"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1510,9 +1510,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link + "-llightning ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-llightning ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1536,9 +1536,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build + "-std=c++11 `llvm-config --cppflags` ", # GPP options
-      opt_link + "`llvm-config --ldflags --libs core jit native` -lz -ltinfo ", # GPP link options
-      "", # GPP defines
+      opt_build + "-std=c++11 `llvm-config --cppflags` ", # CXX options
+      opt_link + "`llvm-config --ldflags --libs core jit native` -lz -ltinfo ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1564,9 +1564,9 @@ if cfg_ref[CFG_TARGET]:
         os.sep.join(["..","..","libs","libbase_ucll"]),
         os.sep.join(["..","..","..","ext_libs","galib","galib247","ga"]),
       ],
-      opt_build, # GPP options
-      opt_link + "-lga ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lga ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1590,9 +1590,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build + "-D__STDC_CONSTANT_MACROS ", # GPP options
-      opt_link + "-lavutil -lavformat -lavcodec -lswscale ", # GPP link options
-      "", # GPP defines
+      opt_build + "-D__STDC_CONSTANT_MACROS ", # CXX options
+      opt_link + "-lavutil -lavformat -lavcodec -lswscale ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1616,9 +1616,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link + "-lao ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lao ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1642,9 +1642,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link + "-lmpg123 ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lmpg123 ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1668,9 +1668,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link + "-lportaudio ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lportaudio ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1695,9 +1695,9 @@ if cfg_ref[CFG_TARGET]:
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build + "-I/usr/include/gstreamer-1.0 -I/usr/include/libxml2 -I/usr/include/glib-2.0 " +
-                  "-I/usr/lib/i386-linux-gnu/glib-2.0/include -I/usr/lib/i386-linux-gnu/gstreamer-1.0/include ", # GPP options
-      opt_link + "-lz -lgstreamer-1.0 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lxml2 -lglib-2.0 ", # GPP link options
-      "", # GPP defines
+                  "-I/usr/lib/i386-linux-gnu/glib-2.0/include -I/usr/lib/i386-linux-gnu/gstreamer-1.0/include ", # CXX options
+      opt_link + "-lz -lgstreamer-1.0 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lxml2 -lglib-2.0 ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1721,9 +1721,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link + "-lpng -ljpeg ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lpng -ljpeg ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1747,9 +1747,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link + "-lopencv_core -lopencv_imgproc -lopencv_highgui ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lopencv_core -lopencv_imgproc -lopencv_highgui ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1773,9 +1773,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1799,9 +1799,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link + "-lglut ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lglut ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1825,9 +1825,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link + "-lGLEW ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lGLEW ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1851,9 +1851,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link + "-lGL -lm ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lGL -lm ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1879,9 +1879,9 @@ if cfg_ref[CFG_TARGET]:
         os.sep.join(["..","..","libs","libbase_ucll"]),
         os.sep.join(["..","..","libs","libftgl_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1905,9 +1905,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1932,9 +1932,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1958,9 +1958,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link + "-lnetsnmp -lnetsnmpagent ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lnetsnmp -lnetsnmpagent ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -1984,9 +1984,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2012,9 +2012,9 @@ if cfg_ref[CFG_TARGET]:
         os.sep.join(["..","..","libs","libbase_ucll"]),
         os.sep.join(["..","..","..","ext_libs","gurux","lib"]),
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2040,9 +2040,9 @@ if cfg_ref[CFG_TARGET]:
         os.sep.join(["..","..","libs","libbase_ucll"]),
         os.sep.join(["..","..","..","ext_libs","ucpas","libpas"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2066,9 +2066,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2094,9 +2094,9 @@ if cfg_ref[CFG_TARGET]:
         os.sep.join(["..","..","libs","libbase_ucll"]),
         os.sep.join(["..","..","libs","libnode_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2120,9 +2120,9 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2146,9 +2146,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2172,9 +2172,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2198,9 +2198,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2224,9 +2224,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2250,9 +2250,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2276,9 +2276,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build + "-I/usr/include/libxml2 ", # GPP options
-      opt_link + "-lxml2 ", # GPP link options
-      "", # GPP defines
+      opt_build + "-I/usr/include/libxml2 ", # CXX options
+      opt_link + "-lxml2 ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2302,9 +2302,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link + "-lgsoap ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lgsoap ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2328,9 +2328,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link + "-lgsoap ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lgsoap ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2354,9 +2354,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build + "-I/usr/include/python2.7 ", # GPP options, -DPy_DEBUG
-      opt_link + "-lpython2.7 ", # GPP link options, -lpython2.7_d
-      "", # GPP defines
+      opt_build + "-I/usr/include/python2.7 ", # CXX options, -DPy_DEBUG
+      opt_link + "-lpython2.7 ", # CXX link options, -lpython2.7_d
+      "", # CXX defines
       [],
       [],
     )
@@ -2380,9 +2380,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link + "-lv8 ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-lv8 ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2406,9 +2406,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link + "-llua5.2 ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-llua5.2 ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2432,9 +2432,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build + "-I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include -I/usr/include/mono-2.0 ", # GPP options
-      opt_link + "-lmono-2.0 ", # GPP link options
-      "", # GPP defines
+      opt_build + "-I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include -I/usr/include/mono-2.0 ", # CXX options
+      opt_link + "-lmono-2.0 ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2458,9 +2458,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link + "-luv ", # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link + "-luv ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2484,9 +2484,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build + "-D_FILE_OFFSET_BITS=64 ", # GPP options
-      opt_link + "-lfuse ", # GPP link options
-      "", # GPP defines
+      opt_build + "-D_FILE_OFFSET_BITS=64 ", # CXX options
+      opt_link + "-lfuse ", # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2510,9 +2510,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )
@@ -2536,9 +2536,9 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # GPP options
-      opt_link, # GPP link options
-      "", # GPP defines
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
       [],
       [],
     )

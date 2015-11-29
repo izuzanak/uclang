@@ -59,6 +59,11 @@ bool bic_bin_array_method_clear_0(interpreter_thread_s &it,unsigned stack_base,u
 bool bic_bin_array_method_resize_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_push_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_pop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_array_method_last_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_array_method_fill_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_array_method_get_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_array_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_array_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_last_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
