@@ -1139,7 +1139,7 @@ bool bic_v8_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base
   }
 
   // - prepare parameters -
-  Handle<Value> hnd_params[param_cnt];
+  Handle<Value> hnd_params[c_max_method_param_cnt];
 
   if (param_cnt > 0)
   {
@@ -1604,7 +1604,7 @@ bool bic_v8_object_method_construct_1(interpreter_thread_s &it,unsigned stack_ba
 
   // - prepare parameters -
   unsigned param_cnt = array_ptr->used;
-  Handle<Value> hnd_params[param_cnt];
+  Handle<Value> hnd_params[c_max_method_param_cnt];
 
   if (param_cnt > 0)
   {

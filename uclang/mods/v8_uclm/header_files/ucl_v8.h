@@ -21,6 +21,9 @@ extern unsigned c_rm_class_dict;
 // - max method name length -
 const unsigned c_max_method_name_length = 256;
 
+// - max method parameter count -
+const unsigned c_max_method_param_cnt = 32;
+
 // - basic handle type (same size as handler) -
 typedef pointer v8_htype;
 

@@ -4032,7 +4032,6 @@ bool p_creat_descr_s::compute_kernels()
 
                 // - retrieve pointers after possible reallocation -
                 rule_dots = &kernels[k_idx].rule_dots;
-                rule_dot = rule_dots->data + rd_idx;
               }
 
               // - if such kernel does exist, add generated transition to its set gotos -

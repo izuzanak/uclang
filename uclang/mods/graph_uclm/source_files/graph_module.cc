@@ -499,13 +499,16 @@ bool bic_graph_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s 
   }
 
   // - append vertex locations -
-  pointer *vl_ptr = v_locations;
-  pointer *vl_ptr_end = vl_ptr + vertices.count;
-  do
+  if (vertices.root_idx != c_idx_not_exist)
   {
-    loc_stack.push(*vl_ptr);
+    pointer *vl_ptr = v_locations;
+    pointer *vl_ptr_end = vl_ptr + vertices.count;
+    do
+    {
+      loc_stack.push(*vl_ptr);
+    }
+    while(++vl_ptr < vl_ptr_end);
   }
-  while(++vl_ptr < vl_ptr_end);
 
   cfree(v_idx_to_v_pos);
   cfree(v_locations);
@@ -833,6 +836,9 @@ bool bic_graph_method_subgraph_1(interpreter_thread_s &it,unsigned stack_base,ul
       // - ERROR -
       if (item_location->v_type != c_bi_class_integer)
       {
+        cfree(e_used);
+        edge_idxs.clear();
+
         exception_s::throw_exception(it,module.error_base + c_error_GRAPH_EDGE_INDEX_EXPECTED_INTEGER,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
@@ -918,6 +924,15 @@ bool bic_graph_method_subgraph_2(interpreter_thread_s &it,unsigned stack_base,ul
   ui_array_s edge_idxs;
   edge_idxs.init();
 
+#define BIC_GRAPH_METHOD_SUBGRAPH_2_CLEAR() \
+{/*{{{*/\
+  cfree(v_used);\
+  cfree(e_used);\
+\
+  vertex_idxs.clear();\
+  edge_idxs.clear();\
+}/*}}}*/
+
   pointer_array_s *vertex_array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
   if (vertex_array_ptr->used > 0)
@@ -930,6 +945,8 @@ bool bic_graph_method_subgraph_2(interpreter_thread_s &it,unsigned stack_base,ul
       // - ERROR -
       if (item_location->v_type != c_bi_class_integer)
       {
+        BIC_GRAPH_METHOD_SUBGRAPH_2_CLEAR();
+
         exception_s::throw_exception(it,module.error_base + c_error_GRAPH_VERTEX_INDEX_EXPECTED_INTEGER,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
@@ -939,11 +956,7 @@ bool bic_graph_method_subgraph_2(interpreter_thread_s &it,unsigned stack_base,ul
       // - ERROR -
       if (!graph_ptr->ucl_check_vertex_idx(vertex_idx))
       {
-        cfree(v_used);
-        cfree(e_used);
-
-        vertex_idxs.clear();
-        edge_idxs.clear();
+        BIC_GRAPH_METHOD_SUBGRAPH_2_CLEAR();
 
         exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GRAPH_VERTEX_INDEX_INVALID,operands[c_source_pos_idx],(location_s *)it.blank_location);
         new_exception->params.push(vertex_idx);
@@ -972,6 +985,8 @@ bool bic_graph_method_subgraph_2(interpreter_thread_s &it,unsigned stack_base,ul
       // - ERROR -
       if (item_location->v_type != c_bi_class_integer)
       {
+        BIC_GRAPH_METHOD_SUBGRAPH_2_CLEAR();
+
         exception_s::throw_exception(it,module.error_base + c_error_GRAPH_EDGE_INDEX_EXPECTED_INTEGER,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
@@ -981,11 +996,7 @@ bool bic_graph_method_subgraph_2(interpreter_thread_s &it,unsigned stack_base,ul
       // - ERROR -
       if (!graph_ptr->ucl_check_edge_idx(edge_idx))
       {
-        cfree(v_used);
-        cfree(e_used);
-
-        vertex_idxs.clear();
-        edge_idxs.clear();
+        BIC_GRAPH_METHOD_SUBGRAPH_2_CLEAR();
 
         exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GRAPH_EDGE_INDEX_INVALID,operands[c_source_pos_idx],(location_s *)it.blank_location);
         new_exception->params.push(edge_idx);

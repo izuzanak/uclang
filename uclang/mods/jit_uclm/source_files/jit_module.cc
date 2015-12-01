@@ -342,6 +342,9 @@ bool bic_jit_context_method_JitContext_0(interpreter_thread_s &it,unsigned stack
   // - ERROR -
   if ((jc_ptr->context = jit_context_create()) == NULL)
   {
+    jc_ptr->clear(it);
+    cfree(jc_ptr);
+
     exception_s::throw_exception(it,module.error_base + c_error_JIT_CONTEXT_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }

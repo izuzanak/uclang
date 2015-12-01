@@ -994,7 +994,7 @@ bool bic_lua_value_method_print_0(interpreter_thread_s &it,unsigned stack_base,u
     return false;
   }
 
-  printf(luaL_tolstring(L,-1,NULL));
+  printf("%s",luaL_tolstring(L,-1,NULL));
   lua_pop(L,2);
 
   BIC_SET_RESULT_BLANK();

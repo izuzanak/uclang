@@ -845,7 +845,7 @@ bool bic_dict_method_store_ref_2(interpreter_thread_s &it,unsigned stack_base,ul
     src_0_location->v_reference_cnt.atomic_inc();
 
     pointer_map_s insert_map = {(pointer)src_0_location,(pointer)new_ref_location};
-    index = tree_ptr->insert(insert_map);
+    tree_ptr->insert(insert_map);
 
     if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
     {

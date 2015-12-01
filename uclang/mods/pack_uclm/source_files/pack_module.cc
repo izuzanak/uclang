@@ -892,6 +892,8 @@ PCD_WRITE_DATA:
           count = 1;
         }/*}}}*/
         break;
+        default:
+          cassert(0);
         }
       }
     }
@@ -1225,6 +1227,8 @@ bool bic_pack_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *
           }
         }/*}}}*/
         break;
+        default:
+          cassert(0);
         }
       }
     }

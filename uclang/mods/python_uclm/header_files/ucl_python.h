@@ -46,7 +46,7 @@ struct py_reference_s
 class python_c
 {
   private:
-  void *dl_handle = NULL;
+  void *dl_handle;
 
   public:
   inline python_c();

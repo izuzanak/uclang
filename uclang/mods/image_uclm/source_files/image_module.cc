@@ -397,6 +397,10 @@ built_in_variable_s image_variables[] =
   /* - ERROR - */\
   if (setjmp(png_jmpbuf(png_ptr)))\
   {\
+    cfree(row_ptrs);\
+    png_destroy_read_struct(&png_ptr,&info_ptr,NULL);\
+    RELEASE_CODE;\
+\
     exception_s::throw_exception(it,module.error_base + c_error_IMAGE_PNG_DATA_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\

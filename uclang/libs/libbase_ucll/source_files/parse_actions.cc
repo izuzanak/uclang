@@ -1006,7 +1006,7 @@ bool pa_method_def_end(string_s &source_string,script_parser_s &_this)
   // *****
 
   // - test if thread was created on stack of graph flow -
-  debug_assert(fgd.fgts_type.used == 1);
+  debug_assert(fgd.fgts_type.used > 0);
 
   // - if method body contains no code -
   if (fgd.fgts_type.last() == c_fgts_type_blank)
@@ -1034,7 +1034,6 @@ bool pa_method_def_end(string_s &source_string,script_parser_s &_this)
   fgd.fgts_cnt.used = 0;
 
   debug_assert(fgd.fg_thread_stack.used == 0);
-  debug_assert(fgd.fgts_type.used == 0);
   debug_assert(fgd.fgts_cnt.used == 0);
   debug_assert(tmp_flow_graph.used == 0);
 

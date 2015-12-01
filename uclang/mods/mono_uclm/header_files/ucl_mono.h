@@ -48,6 +48,14 @@ extern unsigned c_rm_class_dict;
   }\
 }/*}}}*/
 
+#define BIC_MONO_CHECK_EXCEPTION_RETURN_FALSE() \
+{/*{{{*/\
+  if (mono_c::mono_exc)\
+  {\
+    return false;\
+  }\
+}/*}}}*/
+
 // - max method name length -
 const unsigned c_max_method_name_length = 256;
 
@@ -204,7 +212,7 @@ inline MonoObject *mono_reference_s::get_item()
     uintptr_t idx = ll_idx;
     uintptr_t length = mono_array_length(mono_array);
 
-    if (idx < 0 || idx >= length)
+    if (idx >= length)
     {
       return NULL;
     }
@@ -257,15 +265,15 @@ inline bool mono_reference_s::set_item(MonoObject *mono_value)
     long long ll_idx;
     if (!mono_c::int_value(mono_key,ll_idx))
     {
-      return NULL;
+      return false;
     }
 
     uintptr_t idx = ll_idx;
     uintptr_t length = mono_array_length(mono_array);
 
-    if (idx < 0 || idx >= length)
+    if (idx >= length)
     {
-      return NULL;
+      return false;
     }
 
     mono_array_set(mono_array,MonoObject *,idx,mono_value);
@@ -277,7 +285,7 @@ inline bool mono_reference_s::set_item(MonoObject *mono_value)
     long long ll_idx;
     if (!mono_c::int_value(mono_key,ll_idx))
     {
-      return NULL;
+      return false;
     }
 
     int idx = ll_idx;
@@ -285,7 +293,7 @@ inline bool mono_reference_s::set_item(MonoObject *mono_value)
 
     mono_c::mono_exc = NULL;
     mono_property_set_value(mono_c::list_item,mono_obj,params,&mono_c::mono_exc);
-    BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
+    BIC_MONO_CHECK_EXCEPTION_RETURN_FALSE();
 
     return true;
   }
@@ -295,7 +303,7 @@ inline bool mono_reference_s::set_item(MonoObject *mono_value)
 
     mono_c::mono_exc = NULL;
     mono_property_set_value(mono_c::dict_item,mono_obj,params,&mono_c::mono_exc);
-    BIC_MONO_CHECK_EXCEPTION_RETURN_NULL();
+    BIC_MONO_CHECK_EXCEPTION_RETURN_FALSE();
 
     return true;
   }

@@ -297,6 +297,9 @@ bool bic_http_server_method_HttpServer_2(interpreter_thread_s &it,unsigned stack
   // - ERROR -
   if (daemon_ptr == NULL)
   {
+    srv_ptr->clear(it);
+    cfree(srv_ptr);
+
     exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_CANNOT_START_DAEMON,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }

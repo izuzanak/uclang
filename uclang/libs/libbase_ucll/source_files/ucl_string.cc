@@ -325,6 +325,7 @@ unsigned string_s::get_print_size_between(unsigned f_idx,unsigned s_idx)
   unsigned utf32_data[char_cnt];
 
   int utf32_cnt = utf8_to_utf32(data + f_idx,utf32_data,char_cnt);
+  if (utf32_cnt < 0) return 0;
 
   unsigned *c_ptr = utf32_data;
   unsigned *c_ptr_end = c_ptr + utf32_cnt;

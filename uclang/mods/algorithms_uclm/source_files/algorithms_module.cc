@@ -560,6 +560,7 @@ bool bic_algo_method_filter_2(interpreter_thread_s &it,unsigned stack_base,uli *
       if (!it.test_value(trg_location,result))
       {
         it.release_location_ptr(trg_location);
+        it.release_location_ptr(array_location);
 
         exception_s *new_exception = exception_s::throw_exception(it,c_error_CANNOT_TEST_TYPE_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
         new_exception->params.push(trg_location->v_type);
@@ -597,6 +598,7 @@ bool bic_algo_method_filter_2(interpreter_thread_s &it,unsigned stack_base,uli *
       {
         it.release_location_ptr(item_reference);
         it.release_location_ptr(trg_location);
+        it.release_location_ptr(array_location);
 
         exception_s *new_exception = exception_s::throw_exception(it,c_error_CANNOT_TEST_TYPE_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
         new_exception->params.push(trg_location->v_type);

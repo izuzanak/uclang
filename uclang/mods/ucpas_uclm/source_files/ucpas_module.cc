@@ -476,7 +476,7 @@ bool bic_pas_method_master_ip_1(interpreter_thread_s &it,unsigned stack_base,uli
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   do {
-    unsigned comp[4];
+    long comp[4];
     char *ptr = string_ptr->data;
     char *end_ptr;
 

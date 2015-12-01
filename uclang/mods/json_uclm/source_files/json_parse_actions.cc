@@ -107,7 +107,7 @@ bool pa_json_object_pair(json_parser_s &_this)
 
     // - key does not exists, insert new value -
     pointer_map_s insert_map = {(pointer)key_location,(pointer)value_location};
-    index = tree_ptr->insert(insert_map);
+    tree_ptr->insert(insert_map);
     cassert(((location_s *)it.exception_location)->v_type == c_bi_class_blank);
   }
   else

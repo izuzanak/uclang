@@ -1458,12 +1458,12 @@ void bic_ws_base64_consts(location_array_s &const_locations)
 
 void bic_ws_base64_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  cassert(0)
+  cassert(0);
 }/*}}}*/
 
 void bic_ws_base64_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  cassert(0)
+  cassert(0);
 }/*}}}*/
 
 bool bic_ws_base64_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
