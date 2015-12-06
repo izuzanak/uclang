@@ -113,7 +113,7 @@ built_in_class_s bin_array_class =
 {/*{{{*/
   "BinArray",
   c_modifier_public | c_modifier_final,
-  21, bin_array_methods,
+  23, bin_array_methods,
   2, bin_array_variables,
   bic_bin_array_consts,
   bic_bin_array_init,
@@ -136,6 +136,16 @@ built_in_method_s bin_array_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_bin_array_operator_binary_equal
+  },
+  {
+    "operator_binary_double_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_array_operator_binary_double_equal
+  },
+  {
+    "operator_binary_exclamation_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_array_operator_binary_exclamation_equal
   },
   {
     "operator_binary_le_br_re_br#1",
@@ -247,6 +257,67 @@ built_in_variable_s bin_array_variables[] =
   { "TYPE_UINT32", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
+
+#define BIC_BIN_ARRAY_COMPARE_ELEMENTS(ARRAY_TYPE,TYPE) \
+{/*{{{*/\
+  ARRAY_TYPE *f_array_ptr = (ARRAY_TYPE *)f_ba_ptr->cont;\
+  ARRAY_TYPE *s_array_ptr = (ARRAY_TYPE *)s_ba_ptr->cont;\
+\
+  if (f_array_ptr->used != s_array_ptr->used)\
+  {\
+    result = f_array_ptr->used < s_array_ptr->used ? -1 : 1;\
+  }\
+  else\
+  {\
+    result = 0;\
+\
+    if (f_array_ptr->used > 0)\
+    {\
+      TYPE *f_ptr = f_array_ptr->data;\
+      TYPE *f_ptr_end = f_ptr + f_array_ptr->used;\
+      TYPE *s_ptr = s_array_ptr->data;\
+      do {\
+        if (*f_ptr != *s_ptr)\
+        {\
+          result = *f_ptr < *s_ptr ? -1 : 1;\
+          break;\
+        }\
+      } while(++s_ptr,++f_ptr < f_ptr_end);\
+    }\
+  }\
+}/*}}}*/
+
+#define BIC_BIN_ARRAY_COMPARE(FIRST_LOC_PTR,SECOND_LOC_PTR,SOURCE_POS) \
+  {/*{{{*/\
+    if ((SECOND_LOC_PTR)->v_type == c_bi_class_bin_array)\
+    {\
+      bin_array_s *f_ba_ptr = (bin_array_s *)(FIRST_LOC_PTR)->v_data_ptr;\
+      bin_array_s *s_ba_ptr = (bin_array_s *)(SECOND_LOC_PTR)->v_data_ptr;\
+\
+      if (f_ba_ptr->type == s_ba_ptr->type)\
+      {\
+        switch (f_ba_ptr->type)\
+        {\
+        case c_bin_array_type_int32:\
+          BIC_BIN_ARRAY_COMPARE_ELEMENTS(bi_array_s,int);\
+          break;\
+        case c_bin_array_type_uint32:\
+          BIC_BIN_ARRAY_COMPARE_ELEMENTS(ui_array_s,unsigned);\
+          break;\
+        default:\
+          cassert(0);\
+        }\
+      }\
+      else\
+      {\
+        result = f_ba_ptr->type < s_ba_ptr->type ? -1 : 1;\
+      }\
+    }\
+    else\
+    {\
+      result = c_bi_class_bin_array < (SECOND_LOC_PTR)->v_type ? -1 : 1;\
+    }\
+  }/*}}}*/
 
 #define BIC_BIN_ARRAY_GET_USED(LOCATION) \
   /*{{{*/\
@@ -390,6 +461,38 @@ bool bic_bin_array_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_array_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result;
+
+  BIC_BIN_ARRAY_COMPARE(dst_location,src_0_location,operands[c_source_pos_idx]);
+  result = result == 0;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_array_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result;
+
+  BIC_BIN_ARRAY_COMPARE(dst_location,src_0_location,operands[c_source_pos_idx]);
+  result = result != 0;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
@@ -758,10 +861,17 @@ bool bic_bin_array_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_bin_array_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  
-  // FIXME TODO continue ...
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result;
+
+  BIC_BIN_ARRAY_COMPARE(dst_location,src_0_location,operands[c_source_pos_idx]);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
 }/*}}}*/
 
 bool bic_bin_array_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
