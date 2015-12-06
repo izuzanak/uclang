@@ -845,18 +845,126 @@ bool bic_bin_array_method_fill_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_bin_array_method_get_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
-  // FIXME TODO continue ...
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
+  bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
+
+  long long int index;
+
+  switch (ba_ptr->type)
+  {
+  case c_bin_array_type_int32:
+  case c_bin_array_type_uint32:
+    {
+      long long int value;
+
+      // - ERROR -
+      if (!it.retrieve_integer(src_0_location,value))
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("get_idx#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
+        return false;
+      }
+
+      switch (ba_ptr->type)
+      {
+      case c_bin_array_type_int32:
+        index = ((bi_array_s *)ba_ptr->cont)->get_idx(value);
+        break;
+      case c_bin_array_type_uint32:
+        index = ((ui_array_s *)ba_ptr->cont)->get_idx(value);
+        break;
+      }
+    }
+    break;
+  default:
+    cassert(0);
+  }
+
+  BIC_SET_RESULT_CONT_INDEX(index);
+
+  return true;
 }/*}}}*/
 
 bool bic_bin_array_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  
-  // FIXME TODO continue ...
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
+
+  ui_array_s idxs_array;
+  idxs_array.init();
+
+#define BIC_BIN_ARRAY_GET_IDXS(ARRAY_TYPE,TYPE) \
+{/*{{{*/\
+  ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)ba_ptr->cont;\
+  \
+  if (array_ptr->used != 0)\
+  {\
+    TYPE *ptr = array_ptr->data;\
+    TYPE *ptr_end = ptr + array_ptr->used;\
+    do {\
+      if (*ptr == value)\
+      {\
+        idxs_array.push(ptr - array_ptr->data);\
+      }\
+    } while(++ptr < ptr_end);\
+  }\
+}/*}}}*/
+
+  switch (ba_ptr->type)
+  {
+  case c_bin_array_type_int32:
+  case c_bin_array_type_uint32:
+    {
+      long long int value;
+
+      // - ERROR -
+      if (!it.retrieve_integer(src_0_location,value))
+      {
+        idxs_array.clear();
+
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("get_idxs#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
+        return false;
+      }
+
+      switch (ba_ptr->type)
+      {
+      case c_bin_array_type_int32:
+        BIC_BIN_ARRAY_GET_IDXS(bi_array_s,int);
+        break;
+      case c_bin_array_type_uint32:
+        BIC_BIN_ARRAY_GET_IDXS(ui_array_s,unsigned);
+        break;
+      }
+    }
+    break;
+  default:
+    cassert(0);
+  }
+
+  // - construct array from temporary array of indexes -
+  pointer_array_s *res_array_ptr = it.get_new_array_ptr();
+
+  BIC_CONT_CONSTRUCT_IDXS_ARRAY();
+
+  idxs_array.clear();
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,res_array_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
 }/*}}}*/
 
 bool bic_bin_array_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
