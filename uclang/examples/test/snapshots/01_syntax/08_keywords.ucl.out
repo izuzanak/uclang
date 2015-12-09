@@ -17,7 +17,7 @@ type obj: Array, obj: [0,0,0,0,0,0,0,0,0,0]
 type obj: Array, obj: [,,,,,,,,,]
 type obj: Array, obj: [[],[],[],[],[],[],[],[],[],[]]
 
-=== Keyword "free" release object, and set its value to Blank ==================
+=== Keyword "free" release object, and set variable value to Blank =============
 
 type obj: Array, obj: [[],[],[],[],[],[],[],[],[],[]]
 type obj: Blank, obj: <blank>

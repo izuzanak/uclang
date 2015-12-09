@@ -60,6 +60,12 @@ class Main
 }
 ```
 
+```
+user@machine$ ./uclang example.ucl First Seconf Third Fourth
+argv: [example.ucl,First,Seconf,Third,Fourth]
+user@machine$
+```
+
 ### Program exit status
 
 Program exit status can be returned from method `Main.main#1`. Exit status is
@@ -77,5 +83,13 @@ class Main
     return 1;
   }
 }
+```
+
+```
+user@machine$ ./uclang example.ucl 
+Hello world!
+user@machine$ echo $?
+1
+user@machine$ 
 ```
 

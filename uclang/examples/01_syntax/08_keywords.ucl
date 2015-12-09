@@ -17,9 +17,9 @@ class Main
   static public main(argv)
   {
     // List of language keywords:
-    // import, class, extends, public, private, static, abstract, final, parallel,
-    // new, free, this, type, if, else, do, while, for, switch, case, default,
-    // break, continue, return, try, catch
+    // import, namespace, using, class, extends, public, private, static, abstract,
+    // final, parallel, new, free, this, type, if, else, do, while, for, switch, case,
+    // default, break, continue, return, try, catch
 
     // List of language special keyword/operators
     // @, =@, <-, ?, :
@@ -55,7 +55,7 @@ class Main
     ("type obj: %s, obj: %s\n" % [(type obj).to_string(),obj.to_string()]).print();
 
     // Keyword free release object instance
-    Tutorial.note("Keyword \"free\" release object, and set its value to Blank");
+    Tutorial.note("Keyword \"free\" release object, and set variable value to Blank");
     obj = new Array[10];
     ("type obj: %s, obj: %s\n" % [(type obj).to_string(),obj.to_string()]).print();
     free obj;

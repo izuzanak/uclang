@@ -2,85 +2,673 @@
 import sys;
 import lang;
 import containers;
+import ucf;
+import json;
 
 class Main
 {
   m_descr_lst;
 
-  static m_operator_names =
+  static public METHOD_TYPE_CNT = 0;
+  static public METHOD_TYPE_UNKNOWN     = METHOD_TYPE_CNT++;
+  static public METHOD_TYPE_CONSTRUCTOR = METHOD_TYPE_CNT++;
+  static public METHOD_TYPE_OPERATOR    = METHOD_TYPE_CNT++;
+  static public METHOD_TYPE_METHOD      = METHOD_TYPE_CNT++;
+
+  static OPERATORS = new Dict(
   [/*{{{*/
-    "operator_binary_equal#1",
-    "operator_binary_plus_equal#1",
-    "operator_binary_minus_equal#1",
-    "operator_binary_asterisk_equal#1",
-    "operator_binary_slash_equal#1",
-    "operator_binary_percent_equal#1",
-    "operator_binary_double_ls_br_equal#1",
-    "operator_binary_double_rs_br_equal#1",
-    "operator_binary_ampersand_equal#1",
-    "operator_binary_pipe_equal#1",
-    "operator_binary_circumflex_equal#1",
-    "operator_binary_double_ampersand#1",
-    "operator_binary_double_pipe#1",
-    "operator_binary_ampersand#1",
-    "operator_binary_pipe#1",
-    "operator_binary_circumflex#1",
-    "operator_binary_double_equal#1",
-    "operator_binary_exclamation_equal#1",
-    "operator_binary_rs_br#1",
-    "operator_binary_ls_br#1",
-    "operator_binary_rs_br_equal#1",
-    "operator_binary_ls_br_equal#1",
-    "operator_binary_double_rs_br#1",
-    "operator_binary_double_ls_br#1",
-    "operator_binary_plus#1",
-    "operator_binary_minus#1",
-    "operator_binary_asterisk#1",
-    "operator_binary_slash#1",
-    "operator_binary_percent#1",
-    "operator_unary_post_double_plus#0",
-    "operator_unary_post_double_minus#0",
-    "operator_unary_pre_double_plus#0",
-    "operator_unary_pre_double_minus#0",
-    "operator_unary_pre_plus#0",
-    "operator_unary_pre_minus#0",
-    "operator_unary_pre_exclamation#0",
-    "operator_unary_pre_tilde#0",
-    "operator_binary_le_br_re_br#1"
-  ];/*}}}*/
+    "operator_binary_equal#1",              [],
+    "operator_binary_plus_equal#1",         [],
+    "operator_binary_minus_equal#1",        [],
+    "operator_binary_asterisk_equal#1",     [],
+    "operator_binary_slash_equal#1",        [],
+    "operator_binary_percent_equal#1",      [],
+    "operator_binary_double_ls_br_equal#1", [],
+    "operator_binary_double_rs_br_equal#1", [],
+    "operator_binary_ampersand_equal#1",    [],
+    "operator_binary_pipe_equal#1",         [],
+    "operator_binary_circumflex_equal#1",   [],
+    "operator_binary_double_ampersand#1",   [],
+    "operator_binary_double_pipe#1",        [],
+    "operator_binary_ampersand#1",          [],
+    "operator_binary_pipe#1",               [],
+    "operator_binary_circumflex#1",         [],
+    "operator_binary_double_equal#1",       [],
+    "operator_binary_exclamation_equal#1",  [],
+    "operator_binary_rs_br#1",              [],
+    "operator_binary_ls_br#1",              [],
+    "operator_binary_rs_br_equal#1",        [],
+    "operator_binary_ls_br_equal#1",        [],
+    "operator_binary_double_rs_br#1",       [],
+    "operator_binary_double_ls_br#1",       [],
+    "operator_binary_plus#1",               [],
+    "operator_binary_minus#1",              [],
+    "operator_binary_asterisk#1",           [],
+    "operator_binary_slash#1",              [],
+    "operator_binary_percent#1",            [],
+    "operator_unary_post_double_plus#0",    [],
+    "operator_unary_post_double_minus#0",   [],
+    "operator_unary_pre_double_plus#0",     [],
+    "operator_unary_pre_double_minus#0",    [],
+    "operator_unary_pre_plus#0",            [],
+    "operator_unary_pre_minus#0",           [],
+    "operator_unary_pre_exclamation#0",     [],
+    "operator_unary_pre_tilde#0",           [],
+    "operator_binary_le_br_re_br#1",        []
+  ]);/*}}}*/
 
-  static m_operator_set = new Set(m_operator_names);
+  static SPECIAL_METHODS = new Dict(
+  [/*{{{*/
+    "compare#1",   [],
+    "item#1",      [],
+    "first_idx#0", [],
+    "last_idx#0",  [],
+    "next_idx#1",  [],
+    "prev_idx#1",  [],
+    "next_item#0", [],
+    "length#0",    [],
+    "to_string#0", [],
+    "print#0",     []
+  ]);/*}}}*/
 
-  public process_variable(a_class_name,a_var,a_class_vars)
+  static CLASS_CONSTANTS = new Dict(
+  [
+    "Char",    "'\\x41'",
+    "Integer", "123",
+    "Float",   "1.234",
+    "String",  "\"Hello world!\"",
+    "Dict",    "new Dict([\"One\",1,\"Two\",2,\"Three\",3])"
+  ]);
+
+  static CLASS_CODES = new Dict(
+  [
+    "Stack", new Dict(
+    [
+      "remove_last", "%s.pop();",
+      "clear", "%s.clear();"
+    ]),
+    "Queue", new Dict(
+    [
+      "remove_first", "%s.next();",
+      "clear", "%s.clear();"
+    ])
+  ]);
+
+  static public SNIPPET_FILE = "./snippet.ucl";
+  static public TARGET_CLASS = "Stack";
+  static public TARGET_MODULES = ["sys","containers","json"];
+
+  static public assert(a_cond)
+  {/*{{{*/
+    if (!a_cond)
+    {
+      new Exception("Assert condition failed").throw();
+    }
+  }/*}}}*/
+
+  public test_code_snippet(a_code)
+  {/*{{{*/
+    code = [];
+
+    for (module <- TARGET_MODULES)
+    {
+      code.push("import %s;" % module);
+    }
+
+    code.push("
+class Main
+{
+  static public main(argv)
+  {
+    %s
+  }
+}
+" % a_code);
+
+    new File(SNIPPET_FILE,"w").write_close(code.to_string("\n"));
+    resp = new Pipe("./uclang %s" % SNIPPET_FILE,"r").read_close();
+
+    return resp;
+  }/*}}}*/
+
+  public class_has_default_constructor(a_class)
+  {/*{{{*/
+    try
+    {
+      a_class.method("%s#0" % a_class.name());
+      return 1;
+    }
+    catch (e) {}
+
+    return 0;
+  }/*}}}*/
+
+  public class_is_container(a_class)
+  {/*{{{*/
+    try
+    {
+      a_class.method("to_string#1");
+      return 1;
+    }
+    catch (e) {}
+
+    return 0;
+  }/*}}}*/
+
+  public code_create_class_object(a_class,a_var_name)
+  {/*{{{*/
+    class_name = a_class.name();
+
+    if (CLASS_CONSTANTS.has_key(class_name))
+    {
+      return "%s = %s;" % [a_var_name,CLASS_CONSTANTS[class_name]];
+    }
+
+    if (class_is_container(a_class))
+    {
+      return "%s = new %s([1,2,3,4,5,6]);" % [a_var_name,class_name];
+    }
+
+    if (class_has_default_constructor(a_class))
+    {
+      return "%s = new %s();" % [a_var_name,class_name];
+    }
+
+    return new Blank();
+  }/*}}}*/
+
+  public code_remove_first_element(a_class_name)
+  {/*{{{*/
+    if (Blank != (codes = CLASS_CODES[a_class_name]))
+    {
+      if (Blank != (code = codes["remove_first"]))
+      {
+        return code;
+      }
+    }
+
+    return new Blank();
+  }/*}}}*/
+
+  public code_remove_last_element(a_class_name)
+  {/*{{{*/
+    if (Blank != (codes = CLASS_CODES[a_class_name]))
+    {
+      if (Blank != (code = codes["remove_last"]))
+      {
+        return code;
+      }
+    }
+
+    return new Blank();
+  }/*}}}*/
+
+  public code_clear(a_class_name)
+  {/*{{{*/
+    if (Blank != (codes = CLASS_CODES[a_class_name]))
+    {
+      if (Blank != (code = codes["clear"]))
+      {
+        return code;
+      }
+    }
+
+    return new Blank();
+  }/*}}}*/
+
+  public process_variable(a_class,a_var,a_class_vars)
   {/*{{{*/
     var_name = a_var.name();
   }/*}}}*/
 
-  public process_method(a_class_name,a_method,a_class_constrs,a_class_operators,a_class_methods)
+  public process_method(a_class,a_method,a_class_constrs,a_class_operators,a_class_methods)
   {/*{{{*/
+    class_name = a_class.name();
     method_name = a_method.name();
 
     name_split = method_name.split("#");
     method_name_wp = name_split[0];
     param_count = new Integer(name_split[1]);
 
+    // - type of method -
+    method_type = METHOD_TYPE_UNKNOWN;
+
     // - if method is constructor -
-    if (method_name_wp == a_class_name)
+    if (method_name_wp == class_name)
     {
-      a_class_constrs.push("#### Constructor `%s`" % method_name);
+      method_type = METHOD_TYPE_CONSTRUCTOR;
+      method_lst = a_class_constrs;
     }
     else
     {
       // - if method is operator -
-      if (m_operator_set.contain(method_name))
+      if (OPERATORS.has_key(method_name))
       {
-        a_class_operators.push("#### Operator `%s`" % method_name);
+        method_lst = a_class_operators;
+        method_type = METHOD_TYPE_OPERATOR;
       }
       else
       {
-        a_class_methods.push("#### Method `%s`" % method_name);
+        method_lst = a_class_methods;
+        method_type = METHOD_TYPE_METHOD;
       }
     }
+
+    // - retrieve static string -
+    static_str = a_method.is_static() ? "`static` " : "";
+
+    // - retrieve special string -
+    spec_str = SPECIAL_METHODS.has_key(method_name) ? "`spec` " : "";
+
+    // - create method lists -
+    descr_lst = [];
+    params_lsts = new Array[param_count];
+    return_lst = [];
+
+    switch (method_type)
+    {
+      case METHOD_TYPE_CONSTRUCTOR:
+      {/*{{{*/
+        method_lst.push("#### Constructor %s%s`%s`" % [spec_str,static_str,method_name]);
+        method_lst.push("");
+
+        if (param_count == 0)
+        {
+          descr_lst.push("Creates default object of class `%s`." % class_name);
+        }
+        else
+        {
+          descr_lst.push("Creates object of class `%s` ... TODO description." % class_name);
+        }
+      }/*}}}*/
+      case METHOD_TYPE_OPERATOR:
+      {/*{{{*/
+        method_lst.push("#### Operator %s%s`%s`" % [spec_str,static_str,method_name]);
+        method_lst.push("");
+
+        switch (method_name) {}
+      }/*}}}*/
+      case METHOD_TYPE_METHOD:
+      {/*{{{*/
+        method_lst.push("#### Method %s%s`%s`" % [spec_str,static_str,method_name]);
+        method_lst.push("");
+
+        switch (method_name)
+        {
+          case "first_idx#0":
+          {/*{{{*/
+            assert(!a_method.is_static());
+
+            if (class_name == "Dict")
+            {
+              descr_lst.push("Retrieve index of first key in object of class `%s`." % class_name);
+              return_lst.push("* Object of class `Integer` if object of class `%s` contains some keys." % class_name);
+            }
+            else
+            {
+              descr_lst.push("Retrieve index of first element in object of class `%s`." % class_name);
+              return_lst.push("* Object of class `Integer` if object of class `%s` contains some elements." % class_name);
+            }
+
+            return_lst.push("* Object of class `Blank` otherwise.");
+
+            obj_code = code_create_class_object(a_class,"obj");
+
+            if (Blank != obj_code)
+            {
+              ex_code = ("
+%s
+(\"obj.first_idx: %%s\\n\" %% obj.first_idx().to_string()).print();
+" % obj_code);
+
+              if (Blank != (rm_first_code = code_remove_first_element(class_name)))
+              {
+                ex_code += ("%s
+(\"obj.first_idx: %%s\\n\" %% obj.first_idx().to_string()).print();
+") %(rm_first_code % "obj");
+              }
+
+              if (Blank != (clear_code = code_clear(class_name)))
+              {
+                ex_code += ("%s
+(\"obj.first_idx: %%s\\n\" %% obj.first_idx().to_string()).print();
+") %(clear_code % "obj");
+              }
+            }
+
+            // - test example code snippet -
+            if (Blank != ex_code)
+            {
+              ex_resp = test_code_snippet(ex_code);
+            }
+          }/*}}}*/
+          case "last_idx#0":
+          {/*{{{*/
+            assert(!a_method.is_static());
+
+            if (class_name == "Dict")
+            {
+              descr_lst.push("Retrieve index of last key in object of class `%s`." % class_name);
+              return_lst.push("* Object of class `Integer` if object of class `%s` contains some keys." % class_name);
+            }
+            else
+            {
+              descr_lst.push("Retrieve index of last element in object of class `%s`." % class_name);
+              return_lst.push("* Object of class `Integer` if object of class `%s` contains some elements." % class_name);
+            }
+
+            return_lst.push("* Object of class `Blank` otherwise.");
+
+            obj_code = code_create_class_object(a_class,"obj");
+
+            if (Blank != obj_code)
+            {
+              ex_code = ("
+%s
+(\"obj.last_idx: %%s\\n\" %% obj.last_idx().to_string()).print();
+" % obj_code);
+
+              if (Blank != (rm_last_code = code_remove_last_element(class_name)))
+              {
+                ex_code += ("%s
+(\"obj.last_idx: %%s\\n\" %% obj.last_idx().to_string()).print();
+") %(rm_last_code % "obj");
+              }
+
+              if (Blank != (clear_code = code_clear(class_name)))
+              {
+                ex_code += ("%s
+(\"obj.last_idx: %%s\\n\" %% obj.last_idx().to_string()).print();
+") %(clear_code % "obj");
+              }
+            }
+
+            // - test example code snippet -
+            if (Blank != ex_code)
+            {
+              ex_resp = test_code_snippet(ex_code);
+            }
+          }/*}}}*/
+          case "length#0":
+          {/*{{{*/
+            assert(!a_method.is_static());
+
+            if (class_name == "Dict")
+            {
+              descr_lst.push("Retrieve count of keys in object of class `%s`." % class_name);
+            }
+            else
+            {
+              descr_lst.push("Retrieve count of elements in object of class `%s`." % class_name);
+            }
+
+            return_lst.push("* Object of class `Integer`.");
+
+            obj_code = code_create_class_object(a_class,"obj");
+
+            if (Blank != obj_code)
+            {
+              ex_code = ("
+%s
+(\"obj.length(): %%d\\n\" %% obj.length()).print();
+" % obj_code);
+            }
+
+            // - test example code snippet -
+            if (Blank != ex_code)
+            {
+              ex_resp = test_code_snippet(ex_code);
+            }
+          }/*}}}*/
+          case "to_string#0":
+          {/*{{{*/
+            descr_lst.push("Convert object of class `%s` to object of class `String`." % class_name);
+            return_lst.push("* Object of class `String`.");
+
+            if (a_method.is_static())
+            {
+              ex_code = ("
+(\"%s.to_string(): %%s\\n\" %% %s.to_string()).print();
+" % [class_name,class_name]);
+            }
+            else
+            {
+              obj_code = code_create_class_object(a_class,"obj");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+(\"obj.to_string(): %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+              }
+            }
+
+            // - test example code snippet -
+            if (Blank != ex_code)
+            {
+              if (Blank != (ex_resp = test_code_snippet(ex_code)))
+              {
+                if (ex_resp == "%s.to_string(): %s\n" % [class_name,class_name])
+                {
+                  descr_lst.push("This method returns name of class `%s`." % class_name);
+                }
+                else
+                {
+                  if (class_name == "String")
+                  {
+                    descr_lst.push("Reference counter of object is increased.");
+                  }
+                  else
+                  {
+                    if (class_is_container(a_class))
+                    {
+                      if (class_name == "Dict")
+                      {
+                        descr_lst.push(
+"Each key and element of object of class `%s` is converted to string by call of
+its `to_string#0` method. As separator of string values of keys and elements is
+used character `:`. As separator of key-element pairs is used character `,`." %
+class_name);
+                      }
+                      else
+                      {
+                        descr_lst.push(
+"Each element of object of class `%s` is converted to string by call of its
+`to_string#0` method. As separator of string values is used character `,`." %
+class_name);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }/*}}}*/
+          case "to_string#1":
+          {/*{{{*/
+            assert(!a_method.is_static());
+
+            descr_lst.push("Convert object of class `%s` to object of class `String`." % class_name);
+            params_lsts[0].push("Object of class `String`. Separator of values formated to result string.");
+            return_lst.push("* Object of class `String`.");
+
+            obj_code = code_create_class_object(a_class,"obj");
+
+            if (Blank != obj_code)
+            {
+              ex_code = ("
+%s
+(\"obj.to_string(\\\"+\\\"): %%s\\n\" %% obj.to_string(\"+\")).print();
+(\"obj.to_string(\\\"<->\\\"): %%s\\n\" %% obj.to_string(\"<->\")).print();
+" % obj_code);
+            }
+
+            // - test example code snippet -
+            if (Blank != ex_code)
+            {
+              if (Blank != (ex_resp = test_code_snippet(ex_code)))
+              {
+                if (class_is_container(a_class))
+                {
+                  if (class_name == "Dict")
+                  {
+                        descr_lst.push(
+"Each key and element of object of class `%s` is converted to string by call of
+its `to_string#0` method. As separator of string values of keys and elements is
+used character `:`. As separator of key-element pairs is used method parameter." %
+class_name);
+                  }
+                  else
+                  {
+                    descr_lst.push(
+"Each element of object of class `%s` is converted to string by call of its
+`to_string#0` method. As separator of string values is used method parameter." %
+class_name);
+                  }
+                }
+              }
+            }
+          }/*}}}*/
+          case "print#0":
+          {/*{{{*/
+            if (class_name == "String")
+            {
+              descr_lst.push("Print object of class `%s` to standard output." % class_name);
+            }
+            else
+            {
+              descr_lst.push("Print string representation of object of class `%s` to standard output." % class_name);
+            }
+
+            if (a_method.is_static())
+            {
+              ex_code = ("
+%s.print();
+\"\\n\".print();
+" % class_name);
+            }
+            else
+            {
+              obj_code = code_create_class_object(a_class,"obj");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+obj.print();
+\"\\n\".print();
+" % obj_code);
+              }
+            }
+
+            // - test example code snippet -
+            if (Blank != ex_code)
+            {
+              if (Blank != (ex_resp = test_code_snippet(ex_code)))
+              {
+                if (ex_resp == "%s\n" % class_name)
+                {
+                  descr_lst.push("This method prints name of class `%s`." % class_name);
+                }
+                else
+                {
+                  if (class_name == "String") {}
+                  else
+                  {
+                    if (class_is_container(a_class))
+                    {
+                      if (class_name == "Dict")
+                      {
+                        descr_lst.push(
+"Each key and element of object of class `%s` is printed by call of its
+`print#0` method. As separator of printed values of keys and elements is used
+character `:`. As separator of key-element pairs is used character `,`." %
+class_name);
+                      }
+                      else
+                      {
+                        descr_lst.push(
+"Each element of object of class `%s` is printed by call of its `print#0`
+method. As separator of printed values is used character `,`." % class_name);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }/*}}}*/
+        }
+      }/*}}}*/
+    }
+
+    // - append description list -
+    if (descr_lst.length() > 0)
+    {
+      method_lst += descr_lst;
+    }
+    else
+    {
+      method_lst.push("TODO description.");
+    }
+
+    // - generate list of parameters -
+    if (param_count > 0)
+    {
+      method_lst.push("");
+      method_lst.push("**Parameters:**");
+
+      param_num = 0;
+      do {
+        param_lst = params_lsts[param_num];
+
+        if (param_lst.length() > 0)
+        {
+          method_lst.push("%d. %s" % [param_num + 1,param_lst.to_string("\n")]);
+        }
+        else
+        {
+          method_lst.push("%d. TODO parameter." % (param_num + 1));
+        }
+      } while(++param_num < param_count);
+    }
+
+    // - fenerate return value if any -
+    method_lst.push("");
+    method_lst.push("**Return:**");
+    method_lst.push("");
+
+    if (return_lst.length() > 0)
+    {
+      method_lst += return_lst;
+    }
+    else
+    {
+      method_lst.push("* Object of class `Blank`.");
+    }
+
+    // - generate examples -
+    method_lst.push("");
+    method_lst.push("**Example:**");
+    method_lst.push("");
+
+    if (Blank != ex_resp)
+    {
+      method_lst.push("```cpp%s```" % ex_code);
+      method_lst.push("```");
+      method_lst.push("%s```" % ex_resp);
+    }
+    else
+    {
+      method_lst.push("```cpp
+TODO example source
+```
+```
+TODO example result
+```
+");
+    }
+
+    method_lst.push("");
   }/*}}}*/
 
   public process_class(a_class)
@@ -97,13 +685,13 @@ class Main
     // - process class methods -
     for (method <- a_class.methods())
     {
-      process_method(class_name,method,class_constrs,class_operators,class_methods);
+      process_method(a_class,method,class_constrs,class_operators,class_methods);
     }
 
     // - process class variables -
     for (var <- a_class.vars())
     {
-      process_variable(class_name,var,class_vars);
+      process_variable(a_class,var,class_vars);
     }
 
     if (class_constrs.length() > 0)
@@ -136,7 +724,7 @@ class Main
     m_descr_lst = [];
 
     // - process selected class -
-    process_class(Lang.cls("Integer"));
+    process_class(Lang.cls(TARGET_CLASS));
 
     ("%s\n" % m_descr_lst.to_string("\n")).print();
   }/*}}}*/
