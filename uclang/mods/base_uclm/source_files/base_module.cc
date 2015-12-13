@@ -2496,55 +2496,7 @@ bool bic_integer_operator_binary_minus_equal(interpreter_thread_s &it,unsigned s
 
 bool bic_integer_operator_binary_asterisk_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int result = (long long int)((location_s *)dst_location)->v_data_ptr;
-
-  switch (src_0_location->v_type)
-  {
-  case c_bi_class_char:
-    result *= (char)src_0_location->v_data_ptr;
-    break;
-  case c_bi_class_integer:
-    result *= (long long int)src_0_location->v_data_ptr;
-    break;
-  case c_bi_class_float:
-    result = (long long int)(result **((double *)&src_0_location->v_data_ptr));
-    break;
-  case c_bi_class_string:
-  {
-    long long int mult = result;
-    string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
-
-    string_s *result_ptr = it.get_new_string_ptr();
-
-    if (mult >= 0)
-    {
-      result_ptr->mult_char_ptr(source_ptr->size - 1,source_ptr->data,mult);
-    }
-
-    BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_string,result_ptr,2);
-
-    BIC_SET_DESTINATION(new_location);
-    BIC_SET_RESULT(new_location);
-
-    return true;
-  }
-  break;
-
-  /* - ERROR - */
-  default:
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_asterisk_equal#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
-  BIC_SIMPLE_SET_DST_AND_RES(c_bi_class_integer,result);
+  BIC_INTEGER_BINARY_EQUAL_OPS_CHAR_INTEGER_FLOAT(*,"operator_binary_asterisk_equal#1");
 
   return true;
 }/*}}}*/
