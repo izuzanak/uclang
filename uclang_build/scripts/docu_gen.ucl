@@ -4,6 +4,23 @@ import lang;
 import containers;
 import ucf;
 import json;
+import parser;
+
+class MethodDescr
+{
+  public m_descr;
+  public m_params;
+  public m_return;
+  public m_ex_code;
+
+  public MethodDescr(a_descr,a_params,a_return,a_ex_code)
+  {/*{{{*/
+    m_descr = a_descr;
+    m_params = a_params;
+    m_return = a_return;
+    m_ex_code = a_ex_code;
+  }/*}}}*/
+}
 
 class Main
 {
@@ -71,40 +88,13 @@ class Main
     "print#0",     []
   ]);/*}}}*/
 
-  static CLASS_CONSTANTS = new Dict(
-  [
-    "Char",    "'\\x41'",
-    "Integer", "123",
-    "Float",   "1.234",
-    "String",  "\"Hello world!\"",
-    "Dict",    "new Dict([\"One\",1,\"Two\",2,\"Three\",3])"
-  ]);
-
-  static CLASS_CODES = new Dict(
-  [
-    "Stack", new Dict(
-    [
-      "remove_last", "%s.pop();",
-      "clear", "%s.clear();"
-    ]),
-    "Queue", new Dict(
-    [
-      "remove_first", "%s.next();",
-      "clear", "%s.clear();"
-    ])
-  ]);
+  static CLASS_PROPERTIES;
 
   static public SNIPPET_FILE = "./snippet.ucl";
-  static public TARGET_CLASS = "Stack";
-  static public TARGET_MODULES = ["sys","containers","json"];
+  static public TARGET_CLASS_NAME = "Integer";
+  static public TARGET_MODULES = ["sys","containers","json","parser"];
 
-  static public assert(a_cond)
-  {/*{{{*/
-    if (!a_cond)
-    {
-      new Exception("Assert condition failed").throw();
-    }
-  }/*}}}*/
+  m_target_class;
 
   public test_code_snippet(a_code)
   {/*{{{*/
@@ -131,6 +121,502 @@ class Main
     return resp;
   }/*}}}*/
 
+  // - class properties -
+
+  public initialize_class_properties()
+  {/*{{{*/
+    if (Blank != CLASS_PROPERTIES)
+    {
+      new Exception("Class properties were already initialized").throw();
+    }
+
+    CLASS_PROPERTIES = new Dict();
+
+    CLASS_PROPERTIES["Blank"] = new Dict(
+    [/*{{{*/
+      "create_compare","0"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Char"] = new Dict(
+    [/*{{{*/
+      "create_example","'\\x41'",
+      "create_compare","'\\x42'",
+      "check_print","(\"%s == '\\\\0': %%d\\n\" %% (%s == '\\0')).print();"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Integer"] = new Dict(
+    [/*{{{*/
+      "create_example","123",
+      "create_compare","0xff",
+      "create_arith","567"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Float"] = new Dict(
+    [/*{{{*/
+      "create_example","12.234",
+      "create_compare","14.972"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["String"] = class_String = new Dict(
+    [/*{{{*/
+      "create_example","\"Hello world!\"",
+      "create_compare","\"How are you?\"",
+      "iter_index_name","index",
+      "iter_element_name","character"
+    ]);/*}}}*/
+
+    class_String["methods"] = new Dict(
+    [/*{{{*/
+      "String#1", new MethodDescr(
+"Creates object of class `String` from method parameter.",
+["Object of class %s, %s, %s or %s." % 
+[doc_class_ref("Char"), doc_class_ref("Integer"),
+ doc_class_ref("Float"),doc_class_ref("String")]],
+new Blank(),"
+obj = new String(%s);
+(\"obj: %%s\\n\" %% obj).print();
+obj = new String(%s);
+(\"obj: %%s\\n\" %% obj).print();
+obj = new String(%s);
+(\"obj: %%s\\n\" %% obj).print();
+obj = new String(%s);
+(\"obj: %%s\\n\" %% obj).print();
+" % [get_property("Char","create_example"),
+     get_property("Integer","create_example"),
+     get_property("Float","create_example"),
+     get_property("String","create_example")])
+    ]);/*}}}*/
+
+    CLASS_PROPERTIES["Array"] = class_Array = new Dict(
+    [/*{{{*/
+      "create_example","[1,2,3,4,5]",
+      "create_compare","[1,2,3,4,6]",
+      "iter_index_name","index",
+      "iter_element_name","element",
+      "iter_first_idx", "%s.first_idx()",
+      "iter_last_idx", "%s.last_idx()",
+      "iter_next_idx", "%s.next_idx(%s)",
+      "cont_remove_last", "%s.pop()",
+      "cont_clear", "%s.clear()"
+    ]);/*}}}*/
+
+    class_Array["methods"] = new Dict(
+    [/*{{{*/
+      "operator_binary_ls_br_equal#1", new MethodDescr(
+"Copy values of elements retrieved from method parameter to values of elements
+of object of class `Array`.",
+["Iterable type."],"* Value of object.","
+obj = [];
+a = b = c = 0;
+obj.push_ref(a);
+obj.push_ref(b);
+obj.push_ref(c);
+(\"a,b,c: %s\\n\" % [a,b,c].to_string()).print();
+obj <= [1,2,3];
+(\"a,b,c: %s\\n\" % [a,b,c].to_string()).print();
+"),
+      "resize#1", new MethodDescr(
+"Resize object of class `Array` to size determined by method parameter. New
+elements are initialized to objects of class %s." % doc_class_ref("Blank"),
+["Object of class convertible to %s." % doc_class_ref("Integer")],"* Object of class `%s`." % doc_class_ref("Blank"),"
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+obj.resize(8);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % get_code(m_target_class,"obj","create_example"))
+    ]);/*}}}*/
+
+    CLASS_PROPERTIES["Stack"] = new Dict(
+    [/*{{{*/
+      "iter_element_name","element",
+      "iter_first_idx", "%s.first_idx()",
+      "iter_last_idx", "%s.last_idx()",
+      "iter_next_idx", "%s.next_idx(%s)",
+      "cont_remove_last", "%s.pop()",
+      "cont_clear", "%s.clear()"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Queue"] = new Dict(
+    [/*{{{*/
+      "iter_element_name","element",
+      "iter_first_idx", "%s.first_idx()",
+      "iter_last_idx", "%s.last_idx()",
+      "iter_next_idx", "%s.next_idx(%s)",
+      "cont_remove_first", "%s.next()",
+      "cont_clear", "%s.clear()"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Set"] = class_Set = new Dict(
+    [/*{{{*/
+      "iter_indexes",[0,2,3],
+      "iter_index_name","index",
+      "iter_element_name","element",
+      "iter_first_idx", "%s.first_idx()",
+      "iter_last_idx", "%s.last_idx()",
+      "iter_next_idx", "%s.next_idx(%s)",
+      "cont_clear", "%s.clear()"
+    ]);/*}}}*/
+
+    class_Set["methods"] = new Dict(
+    [/*{{{*/
+      "remove#1", new MethodDescr(
+"From object of class `Set` remove elements with value equal to value of method
+parameter.",
+["Any type."],"* Object of class `Blank`.","
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+obj.remove(2);
+obj.remove(4);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % get_code(m_target_class,"obj","create_example")),
+      "operator_binary_minus_equal#1", new MethodDescr(
+"Set difference operator `-=`. Creates object of class `Set` containing
+elements from first object of class `Set` that are not contained in second
+object of class `Set`. Value of variable is set to result object of class
+`Set`.",
+["Object of class `Set`."],"* Value of object.","
+%s
+%s
+obj_0 -= obj_1;
+(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
+" % [get_code(m_target_class,"obj_0","create_example"),
+    get_code(m_target_class,"obj_1","create_compare")]),
+      "operator_binary_ampersand_equal#1", new MethodDescr(
+"Set intersection operator `&=`. Creates object of class `Set` containing
+elements contained in both source objects of class `Set`. Value of variable is
+set to result object of class `Set`.",
+["Object of class `Set`."],"* Value of object.","
+%s
+%s
+obj_0 &= obj_1;
+(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
+" % [get_code(m_target_class,"obj_0","create_example"),
+    get_code(m_target_class,"obj_1","create_compare")]),
+      "operator_binary_pipe_equal#1", new MethodDescr(
+"Set union operator `|=`. Creates object of class `Set` containing elements
+from both source objects of class `Set`. Value of variable is set to result
+object of class `Set`.",
+["Object of class `Set`."],"* Value of object.","
+%s
+%s
+obj_0 |= obj_1;
+(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
+" % [get_code(m_target_class,"obj_0","create_example"),
+    get_code(m_target_class,"obj_1","create_compare")]),
+      "operator_binary_circumflex_equal#1", new MethodDescr(
+"Set symmetric difference operator `^=`. Creates object of class `Set`
+containing elements from both source objects of class `Set` that are contained
+exactly in one of them. Value of variable is set to result object of class
+`Set`.",
+["Object of class `Set`."],"* Value of object.","
+%s
+%s
+obj_0 ^= obj_1;
+(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
+" % [get_code(m_target_class,"obj_0","create_example"),
+    get_code(m_target_class,"obj_1","create_compare")]),
+      "operator_binary_ampersand#1", new MethodDescr(
+"Set intersection operator `&`. Creates object of class `Set` containing
+elements contained in both source objects of class `Set`.",
+["Object of class `Set`."],"* Object of class `Set`.","
+%s
+%s
+res = obj_0 & obj_1;
+(\"res: %%s\\n\" %% res.to_string()).print();
+" % [get_code(m_target_class,"obj_0","create_example"),
+    get_code(m_target_class,"obj_1","create_compare")]),
+      "operator_binary_pipe#1", new MethodDescr(
+"Set union operator `|`. Creates object of class `Set` containing elements from
+both source objects of class `Set`.",
+["Object of class `Set`."],"* Object of class `Set`.","
+%s
+%s
+res = obj_0 | obj_1;
+(\"res: %%s\\n\" %% res.to_string()).print();
+" % [get_code(m_target_class,"obj_0","create_example"),
+    get_code(m_target_class,"obj_1","create_compare")]),
+      "operator_binary_circumflex#1", new MethodDescr(
+"Set symmetric difference operator `^`. Creates object of class `Set`
+containing elements from both source objects of class `Set` that are contained
+exactly in one of them.",
+["Object of class `Set`."],"* Object of class `Set`.","
+%s
+%s
+res = obj_0 ^ obj_1;
+(\"res: %%s\\n\" %% res.to_string()).print();
+" % [get_code(m_target_class,"obj_0","create_example"),
+    get_code(m_target_class,"obj_1","create_compare")]),
+      "operator_binary_rs_br_equal#1", new MethodDescr(
+"Subset test operator `>=`. Test if object of class `Set` given by method
+parameter is subset of object of class `Set`.",
+["Object of class `Set`."],
+"* Object of class %s.
+  * `0` - method parameter is not subset of object.
+  * `1` - method parameter is subset of object." % doc_class_ref("Integer"),"
+%s
+obj_1 = new Set(obj_0[0:2:]);
+(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
+(\"obj_1: %%s\\n\" %% obj_1.to_string()).print();
+(\"obj_0 >= obj_1: %%d\\n\" %% (obj_0 >= obj_1)).print();
+(\"obj_1 >= obj_0: %%d\\n\" %% (obj_1 >= obj_0)).print();
+" % get_code(m_target_class,"obj_0","create_example")),
+      "operator_binary_ls_br_equal#1", new MethodDescr(
+"Superset test operator `<=`. Test if object of class `Set` given by method
+parameter is superset of object of class `Set`.",
+["Object of class `Set`."],
+"* Object of class %s.
+  * `0` - method parameter is not superset of object.
+  * `1` - method parameter is superset of object." % doc_class_ref("Integer"),"
+%s
+obj_1 = new Set(obj_0[0:2:]);
+(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
+(\"obj_1: %%s\\n\" %% obj_1.to_string()).print();
+(\"obj_0 <= obj_1: %%d\\n\" %% (obj_0 <= obj_1)).print();
+(\"obj_1 <= obj_0: %%d\\n\" %% (obj_1 <= obj_0)).print();
+" % get_code(m_target_class,"obj_0","create_example")),
+      "operator_binary_minus#1", new MethodDescr(
+"Set difference operator `-`. Creates object of class `Set` containing elements
+from first object of class `Set` that are not contained in second object of
+class `Set`.",
+["Object of class `Set`."],"* Object of class `Set`.","
+%s
+%s
+res = obj_0 - obj_1;
+(\"res: %%s\\n\" %% res.to_string()).print();
+" % [get_code(m_target_class,"obj_0","create_example"),
+    get_code(m_target_class,"obj_1","create_compare")])
+    ]);/*}}}*/
+
+    CLASS_PROPERTIES["List"] = new Dict(
+    [/*{{{*/
+      "iter_index_name","index",
+      "iter_element_name","element",
+      "iter_first_idx", "%s.first_idx()",
+      "iter_last_idx", "%s.last_idx()",
+      "iter_next_idx", "%s.next_idx(%s)",
+      "cont_clear", "%s.clear()"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Tree"] = new Dict(
+    [/*{{{*/
+      "iter_indexes",[0,2,3],
+      "iter_index_name","index",
+      "iter_element_name","element",
+      "iter_first_idx", "%s.first_idx()",
+      "iter_last_idx", "%s.last_idx()",
+      "iter_next_idx", "%s.next_idx(%s)",
+      "cont_clear", "%s.clear()"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Dict"] = class_Dict = new Dict(
+    [/*{{{*/
+      "create_example","new Dict([\"One\",1,\"Two\",2,\"Three\",3])",
+      "create_compare","new Dict([\"One\",1,\"Two\",2,\"Three\",3,\"Four\",4])",
+      "iter_indexes",["One","Two"],
+      "iter_index_name","key",
+      "iter_element_name","key",
+      "iter_first_idx", "%s.first_idx()",
+      "iter_last_idx", "%s.last_idx()",
+      "iter_next_idx", "%s.next_idx(%s)",
+      "iter_first_key", "%s.first_key()",
+      "iter_last_key", "%s.last_key()",
+      "iter_remove_key", "%s.remove_key(%s)",
+      "cont_clear", "%s.clear()"
+    ]);/*}}}*/
+
+    class_Dict["methods"] = new Dict(
+    [/*{{{*/
+      "Dict#1", new MethodDescr(
+"Creates object of class `Dict` based on elements retrieved from method
+parameter. Values of parameter elements represents alternating keys and values
+of new object of class `Dict`.",["Iterable type."],new Blank(),"
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % get_code(m_target_class,"obj","create_example"))
+    ]);/*}}}*/
+
+  }/*}}}*/
+
+  public get_property(a_class_name,a_code_id)
+  {/*{{{*/
+    if (Blank != (properties = CLASS_PROPERTIES[a_class_name]))
+    {
+      if (Blank != (property = properties[a_code_id]))
+      {
+        return property;
+      }
+    }
+
+    return new Blank();
+  }/*}}}*/
+
+  public get_code(a_class,a_var_name,a_code_type)
+  {/*{{{*/
+    class_name = a_class.name();
+
+    switch (a_code_type)
+    {
+      case "create_example":
+      {/*{{{*/
+        if (Blank != (create_example = get_property(class_name,a_code_type)))
+        {
+          return "%s = %s;" % [a_var_name,create_example];
+        }
+
+        if (class_is_container(a_class))
+        {
+          return "%s = new %s([1,2,3,4,5]);" % [a_var_name,class_name];
+        }
+
+        if (class_has_default_constructor(a_class))
+        {
+          return "%s = new %s();" % [a_var_name,class_name];
+        }
+      }/*}}}*/
+      case "create_compare":
+      {/*{{{*/
+        if (Blank != (create_compare = get_property(class_name,a_code_type)))
+        {
+          return "%s = %s;" % [a_var_name,create_compare];
+        }
+
+        if (class_is_container(a_class))
+        {
+          return "%s = new %s([1,2,6,7,8]);" % [a_var_name,class_name];
+        }
+      }/*}}}*/
+      case "create_repeated":
+      {/*{{{*/
+        if (Blank != (create_repeated = get_property(class_name,a_code_type)))
+        {
+          return "%s = %s;" % [a_var_name,create_repeated];
+        }
+
+        if (class_is_container(a_class))
+        {
+          return "%s = new %s([1,2,2,4,2,5]);" % [a_var_name,class_name];
+        }
+      }/*}}}*/
+      case "iter_indexes":
+      {/*{{{*/
+        if (Blank != (iter_indexes = get_property(class_name,"iter_indexes")))
+        {
+          return iter_indexes;
+        }
+
+        if (class_is_container(a_class))
+        {
+          return [0,1,2];
+        }
+      }/*}}}*/
+      case "check_print":
+      {/*{{{*/
+        if (Blank != (check_print = get_property(class_name,a_code_type)))
+        {
+          return check_print % [a_var_name,a_var_name];
+        }
+
+        return "(\"%s: %%s\\n\" %% %s.to_string()).print();" %
+          [a_var_name,a_var_name];
+      }/*}}}*/
+    }
+
+    return new Blank();
+  }/*}}}*/
+
+  public get_function_name(a_class_name,a_method_name_wp,a_param_count,a_method_type)
+  {/*{{{*/
+
+    // - generate function name -
+    prev = '\x00';
+    class_name_lst = [];
+    for (char <- a_class_name)
+    {
+      if (char >= 'A' && char <= 'Z')
+      {
+        if (prev != '\x00')
+        {
+          class_name_lst.push('_');
+        }
+
+        class_name_lst.push(char + '\x20');
+      }
+      else 
+      {
+        class_name_lst.push(char);
+      }
+      prev = char;
+    }
+
+    switch (a_method_type)
+    {
+      case METHOD_TYPE_CONSTRUCTOR,METHOD_TYPE_METHOD:
+        return "bic_%s_method_%s_%d" % [class_name_lst.to_string(""),a_method_name_wp,a_param_count];
+      case METHOD_TYPE_OPERATOR:
+        return "bic_%s_%s" % [class_name_lst.to_string(""),a_method_name_wp];
+    }
+  }/*}}}*/
+
+  public get_source(a_class_name,a_method_name_wp,a_param_count,a_method_type)
+  {/*{{{*/
+
+    // - retrieve function name -
+    fun_name = get_function_name(a_class_name,a_method_name_wp,a_param_count,a_method_type);
+
+    // FIXME debug output
+    File.stderr.write("%s#%d - %s\n" % [a_method_name_wp,a_param_count,fun_name]);
+
+    // - retrieve source file line -
+    file_line = new Pipe("grep -n 'bool %s(interpreter_thread_s &it,unsigned stack_base,uli \\*operands)' $(find ../uclang/mods/ -name '*.cc')" % 
+        fun_name,"r").read_close();
+
+    // - if source file line was found -
+    if (Blank != file_line)
+    {
+      // - retrieve source file url -
+      file_line_spl = file_line.split(":");
+      source_url = "https://github.com/izuzanak/uclang/blob/master/uclang/%s#L%s" % 
+        [file_line_spl[0],file_line_spl[1]];
+
+      return source_url;
+    }
+
+    return new Blank();
+  }/*}}}*/
+
+  public get_method_descr(a_class_name,a_method_name,@a_descr_lst,@a_param_lsts,@a_return_lst,@a_ex_code)
+  {/*{{{*/
+    if (Blank != (properties = CLASS_PROPERTIES[a_class_name]))
+    {
+      if (Blank != (methods = properties["methods"]))
+      {
+        if (methods.has_key(a_method_name))
+        {
+          method = methods[a_method_name];
+
+          // - set method description -
+          if (Blank != method.m_descr) a_descr_lst.push(method.m_descr);
+
+          if (a_param_lsts.length() != method.m_params.length())
+          {
+            new Exception("Invalid count of parameters in method descr %s.%s" % [a_class_name,a_method_name]).throw();
+          }
+
+          // - set parameter descriptions -
+          param_idx = 0;
+          for (param <- method.m_params)
+          {
+            a_param_lsts[param_idx++].push(param);
+          }
+
+          // - set return description -
+          if (Blank != method.m_return) a_return_lst.push(method.m_return);
+
+          // - set example code -
+          a_ex_code = method.m_ex_code;
+
+          return 1;
+        }
+      }
+    }
+
+    return 0;
+  }/*}}}*/
+
+  // - class tests -
+
   public class_has_default_constructor(a_class)
   {/*{{{*/
     try
@@ -155,66 +641,14 @@ class Main
     return 0;
   }/*}}}*/
 
-  public code_create_class_object(a_class,a_var_name)
+  // - document generators -
+
+  public doc_class_ref(a_class_name)
   {/*{{{*/
-    class_name = a_class.name();
-
-    if (CLASS_CONSTANTS.has_key(class_name))
-    {
-      return "%s = %s;" % [a_var_name,CLASS_CONSTANTS[class_name]];
-    }
-
-    if (class_is_container(a_class))
-    {
-      return "%s = new %s([1,2,3,4,5,6]);" % [a_var_name,class_name];
-    }
-
-    if (class_has_default_constructor(a_class))
-    {
-      return "%s = new %s();" % [a_var_name,class_name];
-    }
-
-    return new Blank();
+    return "`ref_%s`" % a_class_name;
   }/*}}}*/
 
-  public code_remove_first_element(a_class_name)
-  {/*{{{*/
-    if (Blank != (codes = CLASS_CODES[a_class_name]))
-    {
-      if (Blank != (code = codes["remove_first"]))
-      {
-        return code;
-      }
-    }
-
-    return new Blank();
-  }/*}}}*/
-
-  public code_remove_last_element(a_class_name)
-  {/*{{{*/
-    if (Blank != (codes = CLASS_CODES[a_class_name]))
-    {
-      if (Blank != (code = codes["remove_last"]))
-      {
-        return code;
-      }
-    }
-
-    return new Blank();
-  }/*}}}*/
-
-  public code_clear(a_class_name)
-  {/*{{{*/
-    if (Blank != (codes = CLASS_CODES[a_class_name]))
-    {
-      if (Blank != (code = codes["clear"]))
-      {
-        return code;
-      }
-    }
-
-    return new Blank();
-  }/*}}}*/
+  // - generators -
 
   public process_variable(a_class,a_var,a_class_vars)
   {/*{{{*/
@@ -262,317 +696,1548 @@ class Main
 
     // - create method lists -
     descr_lst = [];
-    params_lsts = new Array[param_count];
+    param_lsts = new Array[param_count];
     return_lst = [];
+
+    // - retrieve method source line -
+    source_url = get_source(class_name,method_name_wp,param_count,method_type);
 
     switch (method_type)
     {
       case METHOD_TYPE_CONSTRUCTOR:
       {/*{{{*/
-        method_lst.push("#### Constructor %s%s`%s`" % [spec_str,static_str,method_name]);
-        method_lst.push("");
+        method_lst.push("### Constructor %s%s%s\n" % [spec_str,static_str,
+            Blank != source_url ? "[`%s`](%s)" % [method_name,source_url] : "`%s`" % method_name]);
 
-        if (param_count == 0)
+        // - if explicit description is not available -
+        if (!get_method_descr(class_name,method_name,descr_lst,param_lsts,return_lst,ex_code))
         {
-          descr_lst.push("Creates default object of class `%s`." % class_name);
-        }
-        else
-        {
-          descr_lst.push("Creates object of class `%s` ... TODO description." % class_name);
+          switch (param_count)
+          {
+            case 0:
+            {/*{{{*/
+              descr_lst.push("Creates default object of class `%s`." % class_name);
+
+              print_code = get_code(a_class,"obj","check_print");
+
+              ex_code = ("
+obj = new %s();
+%s
+" % [class_name,print_code]);
+            }/*}}}*/
+            case 1:
+            {/*{{{*/
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Creates object of class `%s` containing elements retrieved from method parameter." % class_name);
+                param_lsts[0].push("Iterable type.");
+
+                arr_code = get_property("Array","create_example");
+
+                if (Blank != arr_code)
+                {
+                  ex_code = ("
+obj = new %s(%s);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % [class_name,arr_code]);
+                }
+              }
+              else
+              {
+                descr_lst.push("Creates object of class `%s`. TODO description." % class_name);
+              }
+            }/*}}}*/
+            default:
+            {
+              descr_lst.push("Creates object of class `%s`. TODO description." % class_name);
+            }
+          }
         }
       }/*}}}*/
       case METHOD_TYPE_OPERATOR:
       {/*{{{*/
-        method_lst.push("#### Operator %s%s`%s`" % [spec_str,static_str,method_name]);
-        method_lst.push("");
+        method_lst.push("### Operator %s%s%s\n" % [spec_str,static_str,
+            Blank != source_url ? "[`%s`](%s)" % [method_name,source_url] : "`%s`" % method_name]);
 
-        switch (method_name) {}
-      }/*}}}*/
-      case METHOD_TYPE_METHOD:
-      {/*{{{*/
-        method_lst.push("#### Method %s%s`%s`" % [spec_str,static_str,method_name]);
-        method_lst.push("");
-
-        switch (method_name)
+        // - if explicit description is not available -
+        if (!get_method_descr(class_name,method_name,descr_lst,param_lsts,return_lst,ex_code))
         {
-          case "first_idx#0":
-          {/*{{{*/
-            assert(!a_method.is_static());
+          switch (method_name)
+          {
+            case "operator_binary_equal#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-            if (class_name == "Dict")
-            {
-              descr_lst.push("Retrieve index of first key in object of class `%s`." % class_name);
-              return_lst.push("* Object of class `Integer` if object of class `%s` contains some keys." % class_name);
-            }
-            else
-            {
-              descr_lst.push("Retrieve index of first element in object of class `%s`." % class_name);
-              return_lst.push("* Object of class `Integer` if object of class `%s` contains some elements." % class_name);
-            }
+              descr_lst.push("Assignment operator `=`. Object of class `%s` is replaced by method parameter." % class_name);
+              param_lsts[0].push("Any type.");
+              return_lst.push("* Method parameter.");
 
-            return_lst.push("* Object of class `Blank` otherwise.");
-
-            obj_code = code_create_class_object(a_class,"obj");
-
-            if (Blank != obj_code)
-            {
-              ex_code = ("
-%s
-(\"obj.first_idx: %%s\\n\" %% obj.first_idx().to_string()).print();
-" % obj_code);
-
-              if (Blank != (rm_first_code = code_remove_first_element(class_name)))
-              {
-                ex_code += ("%s
-(\"obj.first_idx: %%s\\n\" %% obj.first_idx().to_string()).print();
-") %(rm_first_code % "obj");
-              }
-
-              if (Blank != (clear_code = code_clear(class_name)))
-              {
-                ex_code += ("%s
-(\"obj.first_idx: %%s\\n\" %% obj.first_idx().to_string()).print();
-") %(clear_code % "obj");
-              }
-            }
-
-            // - test example code snippet -
-            if (Blank != ex_code)
-            {
-              ex_resp = test_code_snippet(ex_code);
-            }
-          }/*}}}*/
-          case "last_idx#0":
-          {/*{{{*/
-            assert(!a_method.is_static());
-
-            if (class_name == "Dict")
-            {
-              descr_lst.push("Retrieve index of last key in object of class `%s`." % class_name);
-              return_lst.push("* Object of class `Integer` if object of class `%s` contains some keys." % class_name);
-            }
-            else
-            {
-              descr_lst.push("Retrieve index of last element in object of class `%s`." % class_name);
-              return_lst.push("* Object of class `Integer` if object of class `%s` contains some elements." % class_name);
-            }
-
-            return_lst.push("* Object of class `Blank` otherwise.");
-
-            obj_code = code_create_class_object(a_class,"obj");
-
-            if (Blank != obj_code)
-            {
-              ex_code = ("
-%s
-(\"obj.last_idx: %%s\\n\" %% obj.last_idx().to_string()).print();
-" % obj_code);
-
-              if (Blank != (rm_last_code = code_remove_last_element(class_name)))
-              {
-                ex_code += ("%s
-(\"obj.last_idx: %%s\\n\" %% obj.last_idx().to_string()).print();
-") %(rm_last_code % "obj");
-              }
-
-              if (Blank != (clear_code = code_clear(class_name)))
-              {
-                ex_code += ("%s
-(\"obj.last_idx: %%s\\n\" %% obj.last_idx().to_string()).print();
-") %(clear_code % "obj");
-              }
-            }
-
-            // - test example code snippet -
-            if (Blank != ex_code)
-            {
-              ex_resp = test_code_snippet(ex_code);
-            }
-          }/*}}}*/
-          case "length#0":
-          {/*{{{*/
-            assert(!a_method.is_static());
-
-            if (class_name == "Dict")
-            {
-              descr_lst.push("Retrieve count of keys in object of class `%s`." % class_name);
-            }
-            else
-            {
-              descr_lst.push("Retrieve count of elements in object of class `%s`." % class_name);
-            }
-
-            return_lst.push("* Object of class `Integer`.");
-
-            obj_code = code_create_class_object(a_class,"obj");
-
-            if (Blank != obj_code)
-            {
-              ex_code = ("
-%s
-(\"obj.length(): %%d\\n\" %% obj.length()).print();
-" % obj_code);
-            }
-
-            // - test example code snippet -
-            if (Blank != ex_code)
-            {
-              ex_resp = test_code_snippet(ex_code);
-            }
-          }/*}}}*/
-          case "to_string#0":
-          {/*{{{*/
-            descr_lst.push("Convert object of class `%s` to object of class `String`." % class_name);
-            return_lst.push("* Object of class `String`.");
-
-            if (a_method.is_static())
-            {
-              ex_code = ("
-(\"%s.to_string(): %%s\\n\" %% %s.to_string()).print();
-" % [class_name,class_name]);
-            }
-            else
-            {
-              obj_code = code_create_class_object(a_class,"obj");
+              obj_code = get_code(a_class,"obj","create_example");
 
               if (Blank != obj_code)
               {
                 ex_code = ("
 %s
-(\"obj.to_string(): %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+obj = \"New value\";
+(\"obj: %%s\\n\" %% obj.to_string()).print();
 " % obj_code);
               }
-            }
+            }/*}}}*/
+            case "operator_binary_plus_equal#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-            // - test example code snippet -
-            if (Blank != ex_code)
-            {
-              if (Blank != (ex_resp = test_code_snippet(ex_code)))
+              if (class_is_container(a_class))
               {
-                if (ex_resp == "%s.to_string(): %s\n" % [class_name,class_name])
+                descr_lst.push("Append operator `+=`. Append elements retrieved from method parameter to object of class `%s`." % class_name);
+                param_lsts[0].push("Iterable type.");
+                return_lst.push("* Value of object.");
+
+                obj_code = get_code(a_class,"obj","create_example");
+                arr_code = get_property("Array","create_example");
+
+                if (Blank != obj_code && Blank != arr_code)
                 {
-                  descr_lst.push("This method returns name of class `%s`." % class_name);
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+obj += %s;
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % [obj_code,arr_code]);
                 }
-                else
+              }
+              else
+              {
+                descr_lst.push("Add and assign operator `+=`. It adds value of method parameter to value of object of class `%s`." % class_name);
+                param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
+                return_lst.push("* Value of object.");
+
+                obj_code = get_code(a_class,"obj","create_example");
+                create_arith_code = get_property(class_name,"create_arith");
+
+                if (Blank != obj_code && Blank != create_arith_code)
                 {
-                  if (class_name == "String")
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+
+                  if (Blank != (create_char_code = get_property("Char","create_example")))
                   {
-                    descr_lst.push("Reference counter of object is increased.");
+                    ex_code += ("obj += %s;
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % create_char_code);
+                  }
+
+                  ex_code += ("obj += %s;
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % create_arith_code);
+
+                  if (Blank != (create_float_code = get_property("Float","create_example")))
+                  {
+                    ex_code += ("obj += %s;
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % create_float_code);
+                  }
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_minus_equal#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Substract and assign operator `-=`. It substracts value of method parameter from value of object of class `%s`." % class_name);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
+              return_lst.push("* Value of object.");
+
+              obj_code = get_code(a_class,"obj","create_example");
+              create_arith_code = get_property(class_name,"create_arith");
+
+              if (Blank != obj_code && Blank != create_arith_code)
+              {
+                ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+
+                if (Blank != (create_char_code = get_property("Char","create_example")))
+                {
+                  ex_code += ("obj -= %s;
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % create_char_code);
+                }
+
+                ex_code += ("obj -= %s;
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % create_arith_code);
+
+                if (Blank != (create_float_code = get_property("Float","create_example")))
+                {
+                  ex_code += ("obj -= %s;
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % create_float_code);
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_asterisk_equal#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Multiply and assign operator `*=`. It multiplies value of object of class `%s` by value of method parameter." % class_name);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
+              return_lst.push("* Value of object.");
+
+              obj_code = get_code(a_class,"obj","create_example");
+              create_arith_code = get_property(class_name,"create_arith");
+
+              if (Blank != obj_code && Blank != create_arith_code)
+              {
+                ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+
+                if (Blank != (create_char_code = get_property("Char","create_example")))
+                {
+                  ex_code += ("obj *= %s;
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % create_char_code);
+                }
+
+                ex_code += ("obj *= %s;
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % create_arith_code);
+
+                if (Blank != (create_float_code = get_property("Float","create_example")))
+                {
+                  ex_code += ("obj *= %s;
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % create_float_code);
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_double_equal#1":
+            {/*{{{*/
+              if (a_method.is_static() && class_name != "Blank") new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Comparison operator `==`. Compares object of class `%s` with method parameter and return `1` if objects has same value or `0` otherwise." % class_name);
+              param_lsts[0].push("Any type.");
+              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
+              return_lst.push("  * `0` - method parameter has different value than object.");
+              return_lst.push("  * `1` - method parameter has same value as object.");
+
+              obj_code = get_code(a_class,"obj_0","create_example");
+              obj_cmp_code = get_code(a_class,"obj_1","create_compare");
+
+              if (Blank != obj_code && Blank != obj_cmp_code)
+              {
+                ex_code = ("
+%s
+%s
+obj_2 = obj_0;
+(\"obj_0 == obj_1: %%d\\n\" %% (obj_0 == obj_1)).print();
+(\"obj_0 == obj_2: %%d\\n\" %% (obj_0 == obj_2)).print();
+" % [obj_code,obj_cmp_code]);
+              }
+            }/*}}}*/
+            case "operator_binary_exclamation_equal#1":
+            {/*{{{*/
+              if (a_method.is_static() && class_name != "Blank") new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Comparison operator `!=`. Compares object of class `%s` with method parameter and return `0` if objects has same value or `1` otherwise." % class_name);
+              param_lsts[0].push("Any type.");
+              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
+              return_lst.push("  * `0` - method parameter has same value as object.");
+              return_lst.push("  * `1` - method parameter has different value than object.");
+
+              obj_code = get_code(a_class,"obj_0","create_example");
+              obj_cmp_code = get_code(a_class,"obj_1","create_compare");
+
+              if (Blank != obj_code && Blank != obj_cmp_code)
+              {
+                ex_code = ("
+%s
+%s
+obj_2 = obj_0;
+(\"obj_0 != obj_1: %%d\\n\" %% (obj_0 != obj_1)).print();
+(\"obj_0 != obj_2: %%d\\n\" %% (obj_0 != obj_2)).print();
+" % [obj_code,obj_cmp_code]);
+              }
+            }/*}}}*/
+            case "operator_binary_plus#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Concatenation operator `+`. Creates object of class `%s` containing elements of original object of class `%s` concatenated with elements retrieved from method parameter." % [class_name,class_name]);
+                param_lsts[0].push("Iterable type.");
+                return_lst.push("* Object of class `%s` containing elements of original object of class `%s` concatenated with elements retrieved from method parameter." % [class_name,class_name]);
+
+                obj_code = get_code(a_class,"obj","create_example");
+                arr_code = get_property("Array","create_example");
+
+                if (Blank != obj_code && Blank != arr_code)
+                {
+                  ex_code = ("
+%s
+res = obj + %s;
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"res: %%s\\n\" %% res.to_string()).print();
+" % [obj_code,arr_code]);
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_le_br_re_br#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Item selection operator `[]`.");
+
+              if (Blank != (idx_name = get_property(class_name,"iter_index_name")))
+              {
+                descr_lst.push("Retrieve element from object of class `%s` stored at requested %s position." % [class_name,idx_name]);
+
+                switch (idx_name)
+                {
+                  case "index": param_lsts[0].push("Type convertible to integer.");
+                  case "key": param_lsts[0].push("Any type.");
+                }
+
+                return_lst.push(" * Object stored in object of class `%s` at position of requested %s." % [class_name,idx_name]);
+
+                obj_code = get_code(a_class,"obj","create_example");
+                iter_indexes = get_code(a_class,0,"iter_indexes");
+
+                if (Blank != obj_code && Blank != iter_indexes)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % [obj_code]);
+                  
+                  for (idx <- iter_indexes)
+                  {
+                    idx_str = type String == type idx ? "\"%s\"" % idx : idx.to_string();
+                    ex_code += ("(\"obj[%s]: %%s\\n\" %% obj[%s].to_string()).print();
+" % [idx_str.replace("\"","\\\""),idx_str]);
+                  }
+                }
+
+              }
+            }/*}}}*/
+          }
+        }
+      }/*}}}*/
+      case METHOD_TYPE_METHOD:
+      {/*{{{*/
+        method_lst.push("### Method %s%s%s\n" % [spec_str,static_str,
+            Blank != source_url ? "[`%s`](%s)" % [method_name,source_url] : "`%s`" % method_name]);
+
+        // - if explicit description is not available -
+        if (!get_method_descr(class_name,method_name,descr_lst,param_lsts,return_lst,ex_code))
+        {
+          switch (method_name)
+          {
+            case "clear#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Release all elements stored in object of class `%s`." % class_name);
+                return_lst.push("* Object of class %s." % doc_class_ref("Blank"));
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+obj.clear();
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "keys#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Retrieve keys contained in object of class `%s`. Keys are returned as object of class %s." % [class_name,doc_class_ref("Array")]);
+                return_lst.push("* Object of class %s containing all keys." % doc_class_ref("Array"));
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+keys = obj.keys();
+(\"type keys: %%s\\n\" %% (type keys).to_string()).print();
+(\"keys: %%s\\n\" %% keys.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "items#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Retrieve list of elements contained in object of class `%s`. Elements are returned as object of class %s." % [class_name,doc_class_ref("Array")]);
+                return_lst.push("* Object of class %s containing all elements." % doc_class_ref("Array"));
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+items = obj.items();
+(\"type items: %%s\\n\" %% (type items).to_string()).print();
+(\"items: %%s\\n\" %% items.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "push#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Insert method parameter to end of object of class `%s`." % class_name);
+                param_lsts[0].push("Any type.");
+                return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+obj.push(6);
+obj.push(7);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "push_ref#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Insert reference to method parameter to end of object of class `%s`." % class_name);
+                param_lsts[0].push("Any type.");
+                return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+value = 0;
+obj.push_ref(value);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+value = \"Hello world!\";
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "insert#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Insert method parameter to object of class `%s`." % class_name);
+                param_lsts[0].push("Any type.");
+                return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+obj.insert(5);
+obj.insert(6);
+obj.insert(7);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "insert_ref#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Insert reference to method parameter to object of class `%s`." % class_name);
+                param_lsts[0].push("Any type.");
+                return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+value = 0;
+obj.insert_ref(value);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+value = \"Hello world!\";
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "append#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Append method parameter to end of object of class `%s`." % class_name);
+                param_lsts[0].push("Any type.");
+                return_lst.push("* Object of class `%s`. Index of appended element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj.append(1): %%d\\n\" %% obj.append(1)).print();
+(\"obj.append(2): %%d\\n\" %% obj.append(2)).print();
+(\"obj.append(3): %%d\\n\" %% obj.append(3)).print();
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "append_ref#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Append reference to method parameter to end of object of class `%s`." % class_name);
+                param_lsts[0].push("Any type.");
+                return_lst.push("* Object of class `%s`. Index of appended element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+value = 0;
+(\"obj.append_ref(value): %%d\\n\" %% obj.append_ref(value)).print();
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+value = \"Hello world!\";
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "prepend#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Prepend method parameter before begining of object of class `%s`." % class_name);
+                param_lsts[0].push("Any type.");
+                return_lst.push("* Object of class `%s`. Index of prepended element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj.prepend(1): %%d\\n\" %% obj.prepend(1)).print();
+(\"obj.prepend(2): %%d\\n\" %% obj.prepend(2)).print();
+(\"obj.prepend(3): %%d\\n\" %% obj.prepend(3)).print();
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "prepend_ref#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Prepend reference to method parameter before begining of object of class `%s`." % class_name);
+                param_lsts[0].push("Any type.");
+                return_lst.push("* Object of class `%s`. Index of prepended element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+value = 0;
+(\"obj.prepend_ref(value): %%d\\n\" %% obj.prepend_ref(value)).print();
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+value = \"Hello world!\";
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "insert_before#2":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Insert second method parameter before element identified by first method parameter to object of class `%s`." % class_name);
+                param_lsts[0].push("Type convertible to integer.");
+                param_lsts[1].push("Any type.");
+                return_lst.push("* Object of class `%s`. Index of inserted element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+idx = obj.get_idx(2);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+obj.insert_before(idx,4);
+obj.insert_before(idx,5);
+obj.insert_before(idx,6);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "insert_before_ref#2":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Insert reference to second method parameter before element identified by first method parameter to object of class `%s`." % class_name);
+                param_lsts[0].push("Type convertible to integer.");
+                param_lsts[1].push("Any type.");
+                return_lst.push("* Object of class `%s`. Index of inserted element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+value = 0;
+idx = obj.get_idx(2);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+obj.insert_before_ref(idx,value);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+value = \"Hello world!\";
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "insert_after#2":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Insert second method parameter after element identified by first method parameter to object of class `%s`." % class_name);
+                param_lsts[0].push("Type convertible to integer.");
+                param_lsts[1].push("Any type.");
+                return_lst.push("* Object of class `%s`. Index of inserted element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+idx = obj.get_idx(2);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+obj.insert_after(idx,4);
+obj.insert_after(idx,5);
+obj.insert_after(idx,6);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "insert_after_ref#2":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Insert reference to second method parameter after element identified by first method parameter to object of class `%s`." % class_name);
+                param_lsts[0].push("Type convertible to integer.");
+                param_lsts[1].push("Any type.");
+                return_lst.push("* Object of class `%s`. Index of inserted element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+value = 0;
+idx = obj.get_idx(2);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+obj.insert_after_ref(idx,value);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+value = \"Hello world!\";
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "pop#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Remove and return last element from object of class `%s`." % class_name);
+                return_lst.push("* Object removed from object of class `%s`." % class_name);
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj.pop(): %%s\\n\" %% obj.pop().to_string()).print();
+(\"obj.pop(): %%s\\n\" %% obj.pop().to_string()).print();
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "last#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Retrieve and return last element of object of class `%s`." % class_name);
+                return_lst.push("* Object representing last element of object of class `%s`." % class_name);
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj.last(): %%s\\n\" %% obj.last().to_string()).print();
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "next#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Remove and return first element from object of class `%s`." % class_name);
+                return_lst.push("* Object removed from object of class `%s`." % class_name);
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj.next(): %%s\\n\" %% obj.next().to_string()).print();
+(\"obj.next(): %%s\\n\" %% obj.next().to_string()).print();
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "remove#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Remove element from object of class `%s` stored at position determined by method parameter." % class_name);
+                param_lsts[0].push("Type convertible to integer.");
+                return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
+
+                obj_code = get_code(a_class,"obj","create_example");
+                iter_indexes = get_code(a_class,0,"iter_indexes");
+
+                if (Blank != obj_code && Blank != iter_indexes)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+obj.remove(%d);
+obj.remove(%d);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % [obj_code,iter_indexes[0],iter_indexes[1]]);
+                }
+              }
+            }/*}}}*/
+            case "contain#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Test if object of class `%s` contains element with same value as object given by method parameter." % class_name);
+                param_lsts[0].push("Any type.");
+                return_lst.push("Object of class `%s`.
+  * `0` - object of class `%s` does not contain method parameter.
+  * `1` - object of class `%s` does contain method parameter." % [doc_class_ref("Integer"),class_name,class_name]);
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj.contain(1): %%d\\n\" %% obj.contain(1)).print();
+(\"obj.contain(100): %%d\\n\" %% obj.contain(100)).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "fill#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Replace all elements of object of class `%s` by method parameter." % class_name);
+                param_lsts[0].push("Any type.");
+                return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+obj.fill(0);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "has_idx#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Test if object of class `%s` contains element with index given by method parameter." % class_name);
+                param_lsts[0].push("Type convertible to integer.");
+                return_lst.push("Object of class %s.
+  * `1` - if object of class `%s` contains element with given index.
+  * `0` - otherwise.
+" % [doc_class_ref("Integer"),class_name]);
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj.has_idx(2): %%d\\n\" %% obj.has_idx(2)).print();
+(\"obj.has_idx(100): %%d\\n\" %% obj.has_idx(100)).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "get_idx#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("From object of class `%s`, retrieve index of first element equal to method parameter." % class_name);
+                param_lsts[0].push("Any type.");
+                return_lst.push("* Object of class `%s`, if method parameter is contained as element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
+                return_lst.push("* Object of class `%s` otherwise." % doc_class_ref("Blank"));
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj.get_idx(2): %%s\\n\" %% obj.get_idx(2).to_string()).print();
+(\"obj.get_idx(100): %%s\\n\" %% obj.get_idx(100).to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "get_idxs#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("From object of class `%s`, retrieve indexes of elements that are equal to method parameter. Element indexes are returned as object of class `%s`." % [class_name,doc_class_ref("Array")]);
+                param_lsts[0].push("Any type.");
+                return_lst.push("* Object of class `%s` containing indexes of elements, that are equal to method parameter." % doc_class_ref("Array"));
+
+                obj_code = get_code(a_class,"obj","create_repeated");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj.get_idxs(2): %%s\\n\" %% obj.get_idxs(2).to_string()).print();
+(\"obj.get_idxs(100): %%s\\n\" %% obj.get_idxs(100).to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "store_ref#2":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Store reference to second method parameter under key determined by first method parameter in object of class `%s`." % class_name);
+                param_lsts[0].push("Any type.");
+                param_lsts[1].push("Any type.");
+                return_lst.push("* Object of class %s." % doc_class_ref("Blank"));
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+value = 0;
+obj.store_ref(\"Value\",value);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+value = \"Hello world!\";
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "has_key#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Test if object of class `%s` has key given by method parameter." % class_name);
+                param_lsts[0].push("Any type.");
+                return_lst.push("Object of class %s.
+* `0` - object of class `%s` does not have given key.
+* `1` - object of class `%s` has given key.
+" % [doc_class_ref("Integer"),class_name,class_name]);
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj.has_key(\\\"Two\\\"): %%d\\n\" %% obj.has_key(\"Two\")).print();
+(\"obj.has_key(\\\"Three\\\"): %%d\\n\" %% obj.has_key(\"Three\")).print();
+(\"obj.has_key(\\\"Four\\\"): %%d\\n\" %% obj.has_key(\"Four\")).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "remove_key#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Remove key given by method parameter from object of class `%s`. Value of object stored under key will be also removed." % class_name);
+                param_lsts[0].push("Any type.");
+                return_lst.push("Object of class %s." % doc_class_ref("Blank"));
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+obj.remove_key(\"Two\");
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "first_key#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Retrieve first key of object of class `%s`." % class_name);
+                return_lst.push("* Value of first key of object of class `%s` if it contains some elements." % class_name);
+                return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj.first_key(): %%s\\n\" %% obj.first_key().to_string()).print();
+" % obj_code);
+
+                  if (Blank != (iter_remove_key_code = get_property(class_name,"iter_remove_key")))
+                  {
+                    ex_code += ("%s;
+(\"obj.first_key(): %%s\\n\" %% obj.first_key().to_string()).print();
+") % (iter_remove_key_code % ["obj","obj.first_key()"]);
+
+                  }
+                  if (Blank != (clear_code = get_property(class_name,"cont_clear")))
+                  {
+                    ex_code += ("%s;
+(\"obj.first_key(): %%s\\n\" %% obj.first_key().to_string()).print();
+") % (clear_code % "obj");
+                  }
+                }
+              }
+            }/*}}}*/
+            case "last_key#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Retrieve last key of object of class `%s`." % class_name);
+                return_lst.push("* Value of last key of object of class `%s` if it contains some elements." % class_name);
+                return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj.last_key(): %%s\\n\" %% obj.last_key().to_string()).print();
+" % obj_code);
+
+                  if (Blank != (iter_remove_key_code = get_property(class_name,"iter_remove_key")))
+                  {
+                    ex_code += ("%s;
+(\"obj.last_key(): %%s\\n\" %% obj.last_key().to_string()).print();
+") % (iter_remove_key_code % ["obj","obj.last_key()"]);
+                  }
+
+                  if (Blank != (clear_code = get_property(class_name,"cont_clear")))
+                  {
+                    ex_code += ("%s;
+(\"obj.last_key(): %%s\\n\" %% obj.last_key().to_string()).print();
+") % (clear_code % "obj");
+                  }
+                }
+              }
+            }/*}}}*/
+            case "next_key#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("From object of class `%s` retrieve key following key identified by method parameter." % class_name);
+                param_lsts[0].push("Any type.");
+                return_lst.push("* Value of key following key identified by method parameter, if key identified by method parameter is not last key in object of class `%s`." % class_name);
+                return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+
+                obj_code = get_code(a_class,"obj","create_example");
+                iter_first_key_code = get_property(class_name,"iter_first_key");
+
+                if (Blank != obj_code && Blank != iter_first_key_code)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+key = %s;
+do {
+  (\"key: %%s\\n\" %% key.to_string()).print();
+  key = obj.next_key(key);
+} while(Blank != key);
+" % [obj_code,iter_first_key_code % "obj"]);
+                }
+              }
+            }/*}}}*/
+            case "prev_key#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("From object of class `%s` retrieve key preceding key identified by method parameter." % class_name);
+                param_lsts[0].push("Any type.");
+                return_lst.push("* Value of key preceding key identified by method parameter, if key identified by method parameter is not first key in object of class `%s`." % class_name);
+                return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+
+                obj_code = get_code(a_class,"obj","create_example");
+                iter_last_key_code = get_property(class_name,"iter_last_key");
+
+                if (Blank != obj_code && Blank != iter_last_key_code)
+                {
+                  ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+key = %s;
+do {
+  (\"key: %%s\\n\" %% key.to_string()).print();
+  key = obj.prev_key(key);
+} while(Blank != key);
+" % [obj_code,iter_last_key_code % "obj"]);
+                }
+              }
+            }/*}}}*/
+            case "lee_key#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Retrieve key of object of class `%s` which value is less or equal than value of method parameter." % class_name);
+                param_lsts[0].push("Any type.");
+                return_lst.push("* Value of key of object of class `%s` which is less or equal than value of method parameter." % class_name);
+                return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+
+                ex_code = ("
+obj = new Dict([1.0,\"One\",2.0,\"Two\",3.0,\"Three\"]);
+(\"obj.lee_key(0.6): %s\\n\" % obj.lee_key(0.6).to_string()).print();
+(\"obj.lee_key(1.5): %s\\n\" % obj.lee_key(1.5).to_string()).print();
+(\"obj.lee_key(2.1): %s\\n\" % obj.lee_key(2.1).to_string()).print();
+");
+              }
+            }/*}}}*/
+            case "gre_key#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                descr_lst.push("Retrieve key of object of class `%s` which value is greater or equal than value of method parameter." % class_name);
+                param_lsts[0].push("Any type.");
+                return_lst.push("* Value of key of object of class `%s` which is greater or equal than value of method parameter." % class_name);
+                return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+
+                ex_code = ("
+obj = new Dict([1.0,\"One\",2.0,\"Two\",3.0,\"Three\"]);
+(\"obj.gre_key(1.5): %s\\n\" % obj.gre_key(1.5).to_string()).print();
+(\"obj.gre_key(2.1): %s\\n\" % obj.gre_key(2.1).to_string()).print();
+(\"obj.gre_key(3.2): %s\\n\" % obj.gre_key(3.2).to_string()).print();
+");
+              }
+            }/*}}}*/
+            case "compare#1":
+            {/*{{{*/
+              if (a_method.is_static() && class_name != "Blank") new Exception("Method \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Compare object of class `%s` with method parameter." % class_name);
+              param_lsts[0].push("Any type.");
+              return_lst.push("* Integer `-1` if object of class `%s` is lesser than method parameter." % class_name);
+              return_lst.push("* Integer `1` if object of class `%s` is greater than method parameter." % class_name);
+              return_lst.push("* Integer `0` if object of class `%s` is equal to method parameter." % class_name);
+
+              obj_code = get_code(a_class,"obj_0","create_example");
+              obj_cmp_code = get_code(a_class,"obj_1","create_compare");
+
+              if (Blank != obj_code && Blank != obj_cmp_code)
+              {
+                ex_code = ("
+%s
+%s
+(\"obj_0.compare(obj_1): %%d\\n\" %% obj_0.compare(obj_1)).print();
+(\"obj_1.compare(obj_0): %%d\\n\" %% obj_1.compare(obj_0)).print();
+(\"obj_0.compare(obj_0): %%d\\n\" %% obj_0.compare(obj_0)).print();
+" % [obj_code,obj_cmp_code]);
+              }
+            }/*}}}*/
+            case "item#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+              if (Blank == (elm_name = get_property(class_name,"iter_element_name")))
+                new Exception("Property \"iter_element_name\" of class \"%s\" is not defined" % class_name).throw();
+
+              descr_lst.push("Retrieve %s from object of class `%s` stored at requested index position." % [elm_name,class_name]);
+              param_lsts[0].push("Type convertible to integer.");
+              return_lst.push("* Object representing %s in object of class `%s` at position of requested index." % [elm_name,class_name]);
+              return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+
+              obj_code = get_code(a_class,"obj","create_example");
+              iter_first_idx_code = get_property(class_name,"iter_first_idx");
+              iter_next_idx_code = get_property(class_name,"iter_next_idx");
+
+              if (Blank != obj_code && Blank != iter_first_idx_code && Blank != iter_next_idx_code)
+              {
+                ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+idx = %s;
+do {
+  (\"obj.item(%%d): %%s\\n\" %% [idx,obj.item(idx).to_string()]).print();
+  idx = %s;
+} while(Blank != idx);
+" % [obj_code,iter_first_idx_code % "obj",iter_next_idx_code % ["obj","idx"]]);
+              }
+            }/*}}}*/
+            case "first_idx#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+              if (Blank == (elm_name = get_property(class_name,"iter_element_name")))
+                new Exception("Property \"iter_element_name\" of class \"%s\" is not defined" % class_name).throw();
+
+              descr_lst.push("Retrieve index of first %s in object of class `%s`." % [elm_name,class_name]);
+              return_lst.push("* Object of class %s if object of class `%s` contains some %ss." % [doc_class_ref("Integer"),class_name,elm_name]);
+              return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+
+              obj_code = get_code(a_class,"obj","create_example");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+(\"obj.first_idx: %%s\\n\" %% obj.first_idx().to_string()).print();
+" % obj_code);
+
+                if (Blank != (cont_remove_first_code = get_property(class_name,"cont_remove_first")))
+                {
+                  ex_code += ("%s;
+(\"obj.first_idx: %%s\\n\" %% obj.first_idx().to_string()).print();
+") % (cont_remove_first_code % "obj");
+                }
+
+                if (Blank != (clear_code = get_property(class_name,"cont_clear")))
+                {
+                  ex_code += ("%s;
+(\"obj.first_idx: %%s\\n\" %% obj.first_idx().to_string()).print();
+") % (clear_code % "obj");
+                }
+              }
+            }/*}}}*/
+            case "last_idx#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+              if (Blank == (elm_name = get_property(class_name,"iter_element_name")))
+                new Exception("Property \"iter_element_name\" of class \"%s\" is not defined" % class_name).throw();
+
+              descr_lst.push("Retrieve index of last %s in object of class `%s`." % [elm_name,class_name]);
+              return_lst.push("* Object of class %s if object of class `%s` contains some %ss." % [doc_class_ref("Integer"),class_name,elm_name]);
+              return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+
+              obj_code = get_code(a_class,"obj","create_example");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+(\"obj.last_idx: %%s\\n\" %% obj.last_idx().to_string()).print();
+" % obj_code);
+
+                if (Blank != (cont_remove_last_code = get_property(class_name,"cont_remove_last")))
+                {
+                  ex_code += ("%s;
+(\"obj.last_idx: %%s\\n\" %% obj.last_idx().to_string()).print();
+") % (cont_remove_last_code % "obj");
+                }
+
+                if (Blank != (clear_code = get_property(class_name,"cont_clear")))
+                {
+                  ex_code += ("%s;
+(\"obj.last_idx: %%s\\n\" %% obj.last_idx().to_string()).print();
+") % (clear_code % "obj");
+                }
+              }
+            }/*}}}*/
+            case "next_idx#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+              if (Blank == (elm_name = get_property(class_name,"iter_element_name")))
+                new Exception("Property \"iter_element_name\" of class \"%s\" is not defined" % class_name).throw();
+
+              descr_lst.push("From object of class `%s` retrieve index of %s following %s identified by method parameter." % [class_name,elm_name,elm_name]);
+              param_lsts[0].push("Type convertible to integer.");
+              return_lst.push("* Object of class %s if there is some %s following %s identified by method parameter." % [doc_class_ref("Integer"),elm_name,elm_name]);
+              return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+
+              obj_code = get_code(a_class,"obj","create_example");
+              iter_first_idx_code = get_property(class_name,"iter_first_idx");
+
+              if (Blank != obj_code && Blank != iter_first_idx_code)
+              {
+                ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+idx = %s;
+do {
+  (\"idx: %%s\\n\" %% idx.to_string()).print();
+  idx = obj.next_idx(idx);
+} while(Blank != idx);
+" % [obj_code,iter_first_idx_code % "obj"]);
+              }
+            }/*}}}*/
+            case "prev_idx#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+              if (Blank == (elm_name = get_property(class_name,"iter_element_name")))
+                new Exception("Property \"iter_element_name\" of class \"%s\" is not defined" % class_name).throw();
+
+              descr_lst.push("From object of class `%s` retrieve index of %s preceding %s identified by method parameter." % [class_name,elm_name,elm_name]);
+              return_lst.push("* Object of class %s if there is some %s preceding %s identified by method parameter." % [doc_class_ref("Integer"),elm_name,elm_name]);
+              param_lsts[0].push("Type convertible to integer.");
+              return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+
+              obj_code = get_code(a_class,"obj","create_example");
+              iter_last_idx_code = get_property(class_name,"iter_last_idx");
+
+              if (Blank != obj_code && Blank != iter_last_idx_code)
+              {
+                ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+idx = %s;
+do {
+  (\"idx: %%s\\n\" %% idx.to_string()).print();
+  idx = obj.prev_idx(idx);
+} while(Blank != idx);
+" % [obj_code,iter_last_idx_code % "obj"]);
+              }
+            }/*}}}*/
+            case "length#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+              if (Blank == (elm_name = get_property(class_name,"iter_element_name")))
+                new Exception("Property \"iter_element_name\" of class \"%s\" is not defined" % class_name).throw();
+
+              descr_lst.push("Retrieve count of %ss in object of class `%s`." % [elm_name,class_name]);
+              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
+
+              obj_code = get_code(a_class,"obj","create_example");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+(\"obj.length(): %%d\\n\" %% obj.length()).print();
+" % obj_code);
+
+                if (Blank != (clear_code = get_property(class_name,"cont_clear")))
+                {
+                  ex_code += ("%s;
+(\"obj.length(): %%d\\n\" %% obj.length()).print();
+") % (clear_code % "obj");
+                }
+              }
+            }/*}}}*/
+            case "to_string#0":
+            {/*{{{*/
+              descr_lst.push("Convert object of class `%s` to object of class %s." % [class_name,doc_class_ref("String")]);
+              return_lst.push("* Object of class %s." % doc_class_ref("String"));
+
+              if (a_method.is_static())
+              {
+                ex_code = ("
+(\"%s.to_string(): %%s\\n\" %% %s.to_string()).print();
+" % [class_name,class_name]);
+              }
+              else
+              {
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+(\"obj.to_string(): %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+                }
+              }
+
+              // - test example code snippet -
+              if (Blank != ex_code)
+              {
+                if (Blank != (ex_resp = test_code_snippet(ex_code)))
+                {
+                  if (ex_resp == "%s.to_string(): %s\n" % [class_name,class_name])
+                  {
+                    descr_lst.push("This method returns name of class `%s`." % class_name);
                   }
                   else
                   {
-                    if (class_is_container(a_class))
+                    if (class_name == "String")
                     {
-                      if (class_name == "Dict")
+                      descr_lst.push("Reference counter of object is increased.");
+                    }
+                    else
+                    {
+                      if (class_is_container(a_class))
                       {
-                        descr_lst.push(
+                        if (class_name == "Dict")
+                        {
+                          descr_lst.push(
 "Each key and element of object of class `%s` is converted to string by call of
 its `to_string#0` method. As separator of string values of keys and elements is
 used character `:`. As separator of key-element pairs is used character `,`." %
 class_name);
-                      }
-                      else
-                      {
-                        descr_lst.push(
+                        }
+                        else
+                        {
+                          descr_lst.push(
 "Each element of object of class `%s` is converted to string by call of its
 `to_string#0` method. As separator of string values is used character `,`." %
 class_name);
+                        }
                       }
                     }
                   }
                 }
-              }
-            }
-          }/*}}}*/
-          case "to_string#1":
-          {/*{{{*/
-            assert(!a_method.is_static());
-
-            descr_lst.push("Convert object of class `%s` to object of class `String`." % class_name);
-            params_lsts[0].push("Object of class `String`. Separator of values formated to result string.");
-            return_lst.push("* Object of class `String`.");
-
-            obj_code = code_create_class_object(a_class,"obj");
-
-            if (Blank != obj_code)
-            {
-              ex_code = ("
-%s
-(\"obj.to_string(\\\"+\\\"): %%s\\n\" %% obj.to_string(\"+\")).print();
-(\"obj.to_string(\\\"<->\\\"): %%s\\n\" %% obj.to_string(\"<->\")).print();
-" % obj_code);
-            }
-
-            // - test example code snippet -
-            if (Blank != ex_code)
-            {
-              if (Blank != (ex_resp = test_code_snippet(ex_code)))
-              {
-                if (class_is_container(a_class))
+                else
                 {
-                  if (class_name == "Dict")
-                  {
-                        descr_lst.push(
-"Each key and element of object of class `%s` is converted to string by call of
-its `to_string#0` method. As separator of string values of keys and elements is
-used character `:`. As separator of key-element pairs is used method parameter." %
-class_name);
-                  }
-                  else
-                  {
-                    descr_lst.push(
-"Each element of object of class `%s` is converted to string by call of its
-`to_string#0` method. As separator of string values is used method parameter." %
-class_name);
-                  }
+                  ex_code = new Blank();
                 }
               }
-            }
-          }/*}}}*/
-          case "print#0":
-          {/*{{{*/
-            if (class_name == "String")
-            {
-              descr_lst.push("Print object of class `%s` to standard output." % class_name);
-            }
-            else
-            {
-              descr_lst.push("Print string representation of object of class `%s` to standard output." % class_name);
-            }
+            }/*}}}*/
+            case "to_string#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
 
-            if (a_method.is_static())
-            {
-              ex_code = ("
-%s.print();
-\"\\n\".print();
-" % class_name);
-            }
-            else
-            {
-              obj_code = code_create_class_object(a_class,"obj");
+              descr_lst.push("Convert object of class `%s` to object of class %s." % [class_name,doc_class_ref("String")]);
+              param_lsts[0].push("Object of class %s. Separator of values formated to result string." % doc_class_ref("String"));
+              return_lst.push("* Object of class %s." % doc_class_ref("String"));
+
+              obj_code = get_code(a_class,"obj","create_example");
 
               if (Blank != obj_code)
               {
                 ex_code = ("
 %s
-obj.print();
-\"\\n\".print();
+(\"obj.to_string(\\\"+\\\"): %%s\\n\" %% obj.to_string(\"+\")).print();
+(\"obj.to_string(\\\"<->\\\"): %%s\\n\" %% obj.to_string(\"<->\")).print();
 " % obj_code);
               }
-            }
 
-            // - test example code snippet -
-            if (Blank != ex_code)
-            {
-              if (Blank != (ex_resp = test_code_snippet(ex_code)))
+              // - test example code snippet -
+              if (Blank != ex_code)
               {
-                if (ex_resp == "%s\n" % class_name)
+                if (Blank != (ex_resp = test_code_snippet(ex_code)))
                 {
-                  descr_lst.push("This method prints name of class `%s`." % class_name);
+                  if (class_is_container(a_class))
+                  {
+                    if (class_name == "Dict")
+                    {
+                          descr_lst.push(
+"Each key and element of object of class `%s` is converted to string by call of
+its `to_string#0` method. As separator of string values of keys and elements is
+used character `:`. As separator of key-element pairs is used method parameter." %
+class_name);
+                    }
+                    else
+                    {
+                      descr_lst.push(
+"Each element of object of class `%s` is converted to string by call of its
+`to_string#0` method. As separator of string values is used method parameter." %
+class_name);
+                    }
+                  }
                 }
                 else
                 {
-                  if (class_name == "String") {}
+                  ex_code = new Blank();
+                }
+              }
+            }/*}}}*/
+            case "print#0":
+            {/*{{{*/
+              if (class_name == "String")
+              {
+                descr_lst.push("Print object of class `%s` to standard output." % class_name);
+              }
+              else
+              {
+                descr_lst.push("Print string representation of object of class `%s` to standard output." % class_name);
+              }
+
+              if (a_method.is_static())
+              {
+                ex_code = ("
+%s.print();
+\"\\n\".print();
+" % class_name);
+              }
+              else
+              {
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+obj.print();
+\"\\n\".print();
+" % obj_code);
+                }
+              }
+
+              // - test example code snippet -
+              if (Blank != ex_code)
+              {
+                if (Blank != (ex_resp = test_code_snippet(ex_code)))
+                {
+                  if (ex_resp == "%s\n" % class_name)
+                  {
+                    descr_lst.push("This method prints name of class `%s`." % class_name);
+                  }
                   else
                   {
                     if (class_is_container(a_class))
@@ -594,9 +2259,13 @@ method. As separator of printed values is used character `,`." % class_name);
                     }
                   }
                 }
+                else
+                {
+                  ex_code = new Blank();
+                }
               }
-            }
-          }/*}}}*/
+            }/*}}}*/
+          }
         }
       }/*}}}*/
     }
@@ -616,10 +2285,11 @@ method. As separator of printed values is used character `,`." % class_name);
     {
       method_lst.push("");
       method_lst.push("**Parameters:**");
+      method_lst.push("");
 
       param_num = 0;
       do {
-        param_lst = params_lsts[param_num];
+        param_lst = param_lsts[param_num];
 
         if (param_lst.length() > 0)
         {
@@ -632,18 +2302,27 @@ method. As separator of printed values is used character `,`." % class_name);
       } while(++param_num < param_count);
     }
 
-    // - fenerate return value if any -
-    method_lst.push("");
-    method_lst.push("**Return:**");
-    method_lst.push("");
+    // - generate return value if any -
+    if (method_type != METHOD_TYPE_CONSTRUCTOR)
+    {
+      method_lst.push("");
+      method_lst.push("**Return:**");
+      method_lst.push("");
 
-    if (return_lst.length() > 0)
-    {
-      method_lst += return_lst;
+      if (return_lst.length() > 0)
+      {
+        method_lst += return_lst;
+      }
+      else
+      {
+        method_lst.push("* Object of class %s." % doc_class_ref("Blank"));
+      }
     }
-    else
+
+    // - test example code snippet if any -
+    if (Blank != ex_code)
     {
-      method_lst.push("* Object of class `Blank`.");
+      ex_resp = test_code_snippet(ex_code);
     }
 
     // - generate examples -
@@ -721,10 +2400,18 @@ TODO example result
 
   public Main()
   {/*{{{*/
+
+    // - retrieve target class -
+    m_target_class = Lang.cls(TARGET_CLASS_NAME);
+
+    // - initialize class properties -
+    initialize_class_properties();
+
+    // - create empty description list -
     m_descr_lst = [];
 
     // - process selected class -
-    process_class(Lang.cls(TARGET_CLASS));
+    process_class(m_target_class);
 
     ("%s\n" % m_descr_lst.to_string("\n")).print();
   }/*}}}*/
