@@ -61,8 +61,8 @@ class Main
 ```
 
 ```
-user@machine$ ./uclang example.ucl First Seconf Third Fourth
-argv: [example.ucl,First,Seconf,Third,Fourth]
+user@machine$ ./uclang example.ucl First Second Third Fourth
+argv: [example.ucl,First,Second,Third,Fourth]
 user@machine$
 ```
 

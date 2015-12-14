@@ -91,8 +91,15 @@ class Main
   static CLASS_PROPERTIES;
 
   static public SNIPPET_FILE = "./snippet.ucl";
-  static public TARGET_CLASS_NAME = "Integer";
+  static public TARGET_CLASS_NAME = "Char";
   static public TARGET_MODULES = ["sys","containers","json","parser"];
+
+  static public TYPE_PRIORITY = new Dict(
+  [/*{{{*/
+    "Char",   0,
+    "Integer",1,
+    "Float",  2
+  ]);/*}}}*/
 
   m_target_class;
 
@@ -138,20 +145,31 @@ class Main
     ]);/*}}}*/
     CLASS_PROPERTIES["Char"] = new Dict(
     [/*{{{*/
-      "create_example","'\\x41'",
+      "create_example","'a'",
       "create_compare","'\\x42'",
-      "check_print","(\"%s == '\\\\0': %%d\\n\" %% (%s == '\\0')).print();"
+      "create_zero","'\\x0'",
+      "create_arith","'\\x41'",
+      "create_small","'\\x02'",
+      "create_large","'\\x7f'",
+      "check_print","(\"%s: %%d\\n\" %% new Integer(%s)).print();"
     ]);/*}}}*/
     CLASS_PROPERTIES["Integer"] = new Dict(
     [/*{{{*/
       "create_example","123",
       "create_compare","0xff",
-      "create_arith","567"
+      "create_zero","0",
+      "create_arith","567",
+      "create_small","2",
+      "create_large","0xffffffff"
     ]);/*}}}*/
     CLASS_PROPERTIES["Float"] = new Dict(
     [/*{{{*/
       "create_example","12.234",
-      "create_compare","14.972"
+      "create_compare","14.972",
+      "create_zero","0.0",
+      "create_arith","549.2",
+      "create_small","2.532",
+      "create_arith","567.67"
     ]);/*}}}*/
     CLASS_PROPERTIES["String"] = class_String = new Dict(
     [/*{{{*/
@@ -444,7 +462,16 @@ of new object of class `Dict`.",["Iterable type."],new Blank(),"
 
   public get_code(a_class,a_var_name,a_code_type)
   {/*{{{*/
-    class_name = a_class.name();
+
+    // - retrieve class name -
+    if (type String == type a_class)
+    {
+      class_name = a_class;
+    }
+    else
+    {
+      class_name = a_class.name();
+    }
 
     switch (a_code_type)
     {
@@ -475,6 +502,34 @@ of new object of class `Dict`.",["Iterable type."],new Blank(),"
         if (class_is_container(a_class))
         {
           return "%s = new %s([1,2,6,7,8]);" % [a_var_name,class_name];
+        }
+      }/*}}}*/
+      case "create_zero":
+      {/*{{{*/
+        if (Blank != (create_compare = get_property(class_name,a_code_type)))
+        {
+          return "%s = %s;" % [a_var_name,create_compare];
+        }
+      }/*}}}*/
+      case "create_arith":
+      {/*{{{*/
+        if (Blank != (create_compare = get_property(class_name,a_code_type)))
+        {
+          return "%s = %s;" % [a_var_name,create_compare];
+        }
+      }/*}}}*/
+      case "create_small":
+      {/*{{{*/
+        if (Blank != (create_compare = get_property(class_name,a_code_type)))
+        {
+          return "%s = %s;" % [a_var_name,create_compare];
+        }
+      }/*}}}*/
+      case "create_large":
+      {/*{{{*/
+        if (Blank != (create_compare = get_property(class_name,a_code_type)))
+        {
+          return "%s = %s;" % [a_var_name,create_compare];
         }
       }/*}}}*/
       case "create_repeated":
@@ -615,6 +670,11 @@ of new object of class `Dict`.",["Iterable type."],new Blank(),"
     return 0;
   }/*}}}*/
 
+  public get_prior_type(a_first,a_second)
+  {/*{{{*/
+    return TYPE_PRIORITY[a_first] > TYPE_PRIORITY[a_second] ? a_first : a_second;
+  }/*}}}*/
+
   // - class tests -
 
   public class_has_default_constructor(a_class)
@@ -700,7 +760,7 @@ of new object of class `Dict`.",["Iterable type."],new Blank(),"
     return_lst = [];
 
     // - retrieve method source line -
-    source_url = get_source(class_name,method_name_wp,param_count,method_type);
+    //source_url = get_source(class_name,method_name_wp,param_count,method_type);
 
     switch (method_type)
     {
@@ -816,32 +876,35 @@ obj += %s;
   * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
                 return_lst.push("* Value of object.");
 
-                obj_code = get_code(a_class,"obj","create_example");
-                create_arith_code = get_property(class_name,"create_arith");
+                obj_code = get_code(a_class,"obj","create_arith");
+                print_code = get_code(a_class,"obj","check_print");
 
-                if (Blank != obj_code && Blank != create_arith_code)
+                if (Blank != obj_code)
                 {
                   ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-" % obj_code);
+%s
+" % [obj_code,print_code]);
 
                   if (Blank != (create_char_code = get_property("Char","create_example")))
                   {
                     ex_code += ("obj += %s;
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-" % create_char_code);
+%s
+" % [create_char_code,print_code]);
                   }
 
-                  ex_code += ("obj += %s;
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-" % create_arith_code);
+                  if (Blank != (create_integer_code = get_property("Integer","create_example")))
+                  {
+                    ex_code += ("obj += %s;
+%s
+" % [create_integer_code,print_code]);
+                  }
 
                   if (Blank != (create_float_code = get_property("Float","create_example")))
                   {
                     ex_code += ("obj += %s;
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-" % create_float_code);
+%s
+" % [create_float_code,print_code]);
                   }
                 }
               }
@@ -857,32 +920,35 @@ obj += %s;
   * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
               return_lst.push("* Value of object.");
 
-              obj_code = get_code(a_class,"obj","create_example");
-              create_arith_code = get_property(class_name,"create_arith");
+              obj_code = get_code(a_class,"obj","create_arith");
+              print_code = get_code(a_class,"obj","check_print");
 
-              if (Blank != obj_code && Blank != create_arith_code)
+              if (Blank != obj_code)
               {
                 ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-" % obj_code);
+%s
+" % [obj_code,print_code]);
 
                 if (Blank != (create_char_code = get_property("Char","create_example")))
                 {
                   ex_code += ("obj -= %s;
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-" % create_char_code);
+%s
+" % [create_char_code,print_code]);
                 }
 
-                ex_code += ("obj -= %s;
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-" % create_arith_code);
+                if (Blank != (create_integer_code = get_property("Integer","create_example")))
+                {
+                  ex_code += ("obj -= %s;
+%s
+" % [create_integer_code,print_code]);
+                }
 
                 if (Blank != (create_float_code = get_property("Float","create_example")))
                 {
                   ex_code += ("obj -= %s;
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-" % create_float_code);
+%s
+" % [create_float_code,print_code]);
                 }
               }
             }/*}}}*/
@@ -897,32 +963,445 @@ obj += %s;
   * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
               return_lst.push("* Value of object.");
 
-              obj_code = get_code(a_class,"obj","create_example");
-              create_arith_code = get_property(class_name,"create_arith");
+              obj_code = get_code(a_class,"obj","create_arith");
+              print_code = get_code(a_class,"obj","check_print");
 
-              if (Blank != obj_code && Blank != create_arith_code)
+              if (Blank != obj_code)
               {
                 ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-" % obj_code);
+%s
+" % [obj_code,print_code]);
 
                 if (Blank != (create_char_code = get_property("Char","create_example")))
                 {
                   ex_code += ("obj *= %s;
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-" % create_char_code);
+%s
+" % [create_char_code,print_code]);
                 }
 
-                ex_code += ("obj *= %s;
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-" % create_arith_code);
+                if (Blank != (create_integer_code = get_property("Integer","create_example")))
+                {
+                  ex_code += ("obj *= %s;
+%s
+" % [create_integer_code,print_code]);
+                }
 
                 if (Blank != (create_float_code = get_property("Float","create_example")))
                 {
                   ex_code += ("obj *= %s;
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-" % create_float_code);
+%s
+" % [create_float_code,print_code]);
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_slash_equal#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Divide and assign operator `/=`. It divides value of object of class `%s` by value of method parameter." % class_name);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
+              return_lst.push("* Value of object.");
+
+              obj_code = get_code(a_class,"obj","create_large");
+              print_code = get_code(a_class,"obj","check_print");
+
+              if (Blank != obj_code)
+              {
+                ex_code = "\n";
+
+                if (Blank != (create_char_code = get_property("Char","create_example")))
+                {
+                  ex_code += ("%s
+obj /= %s;
+%s
+" % [obj_code,create_char_code,print_code]);
+                }
+
+                if (Blank != (create_integer_code = get_property("Integer","create_example")))
+                {
+                  ex_code += ("%s
+obj /= %s;
+%s
+" % [obj_code,create_integer_code,print_code]);
+                }
+
+                if (Blank != (create_float_code = get_property("Float","create_example")))
+                {
+                  ex_code += ("%s
+obj /= %s;
+%s
+" % [obj_code,create_float_code,print_code]);
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_percent_equal#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Modulus and assign operator `%%=`. It takes modulus of value of object of class `%s` divided by value of method parameter." % class_name);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
+              return_lst.push("* Value of object.");
+
+              obj_code = get_code(a_class,"obj","create_arith");
+              print_code = get_code(a_class,"obj","check_print");
+
+              if (Blank != obj_code)
+              {
+                ex_code = "\n";
+
+                if (Blank != (create_char_code = get_property("Char","create_example")))
+                {
+                  ex_code += ("%s
+obj %%= %s;
+%s
+" % [obj_code,create_char_code,print_code]);
+                }
+
+                if (Blank != (create_integer_code = get_property("Integer","create_example")))
+                {
+                  ex_code += ("%s
+obj %%= %s;
+%s
+" % [obj_code,create_integer_code,print_code]);
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_double_ls_br_equal#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Left shift and assign operator `<<=`. Value of object of class `%s` is shifted to left by count of bits given by method parameter." % class_name);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
+              return_lst.push("* Value of object.");
+
+              obj_code = get_code(a_class,"obj","create_arith");
+              print_code = get_code(a_class,"obj","check_print");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+%s
+" % [obj_code,print_code]);
+
+                if (Blank != (create_char_code = get_property("Char","create_small")))
+                {
+                  ex_code += ("obj <<= %s;
+%s
+" % [create_char_code,print_code]);
+                }
+
+                if (Blank != (create_integer_code = get_property("Integer","create_small")))
+                {
+                  ex_code += ("obj <<= %s;
+%s
+" % [create_integer_code,print_code]);
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_double_rs_br_equal#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Right shift and assign operator `>>=`. Value of object of class `%s` is shifted to right by count of bits given by method parameter." % class_name);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
+              return_lst.push("* Value of object.");
+
+              obj_code = get_code(a_class,"obj","create_arith");
+              print_code = get_code(a_class,"obj","check_print");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+%s
+" % [obj_code,print_code]);
+
+                if (Blank != (create_char_code = get_property("Char","create_small")))
+                {
+                  ex_code += ("obj >>= %s;
+%s
+" % [create_char_code,print_code]);
+                }
+
+                if (Blank != (create_integer_code = get_property("Integer","create_small")))
+                {
+                  ex_code += ("obj >>= %s;
+%s
+" % [create_integer_code,print_code]);
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_ampersand_equal#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Binary AND and assign operator `&=`. Value of
+object of class `%s` is modified according to value determined by
+method parameter. Bit in result value is set, if it exists in
+object of class `%s` and method parameter." % [class_name,class_name]);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
+              return_lst.push("* Value of object.");
+
+              obj_code = get_code(a_class,"obj","create_arith");
+              print_code = get_code(a_class,"obj","check_print");
+
+              if (Blank != obj_code)
+              {
+                ex_code = "\n";
+
+                if (Blank != (create_char_code = get_property("Char","create_example")))
+                {
+                  ex_code += ("%s
+obj &= %s;
+%s
+" % [obj_code,create_char_code,print_code]);
+                }
+
+                if (Blank != (create_integer_code = get_property("Integer","create_example")))
+                {
+                  ex_code += ("%s
+obj &= %s;
+%s
+" % [obj_code,create_integer_code,print_code]);
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_pipe_equal#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Binary OR and assign operator `|=`. Value of
+object of class `%s` is modified according to value determined by
+method parameter. Bit in result value is set, if it exists in
+object of class `%s` or in method parameter." % [class_name,class_name]);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
+              return_lst.push("* Value of object.");
+
+              obj_code = get_code(a_class,"obj","create_arith");
+              print_code = get_code(a_class,"obj","check_print");
+
+              if (Blank != obj_code)
+              {
+                ex_code = "\n";
+
+                if (Blank != (create_char_code = get_property("Char","create_example")))
+                {
+                  ex_code += ("%s
+obj |= %s;
+%s
+" % [obj_code,create_char_code,print_code]);
+                }
+
+                if (Blank != (create_integer_code = get_property("Integer","create_example")))
+                {
+                  ex_code += ("%s
+obj |= %s;
+%s
+" % [obj_code,create_integer_code,print_code]);
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_circumflex_equal#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Binary XOR and assign operator `^=`. Value of
+object of class `%s` is modified according to value determined by
+method parameter. Bit in result value is set, if it exists in
+object of class `%s` or in method parameter, but not both." %
+              [class_name,class_name]);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
+              return_lst.push("* Value of object.");
+
+              obj_code = get_code(a_class,"obj","create_arith");
+              print_code = get_code(a_class,"obj","check_print");
+
+              if (Blank != obj_code)
+              {
+                ex_code = "\n";
+
+                if (Blank != (create_char_code = get_property("Char","create_example")))
+                {
+                  ex_code += ("%s
+obj ^= %s;
+%s
+" % [obj_code,create_char_code,print_code]);
+                }
+
+                if (Blank != (create_integer_code = get_property("Integer","create_example")))
+                {
+                  ex_code += ("%s
+obj ^= %s;
+%s
+" % [obj_code,create_integer_code,print_code]);
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_double_ampersand#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Logical AND operator `&&`.  If object of class
+`%s` is non-zero and value of method parameter is also non-zero
+condition becomes true." % class_name);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
+              return_lst.push("* Integer `1` if both operands are non-zero.");
+              return_lst.push("* Integer `0` if either of operands is zero.");
+
+              create_zero_code = get_code(a_class,"obj_0","create_zero");
+              obj_code = get_code(a_class,"obj_1","create_example");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+(\"obj_0 && 0: %%d\\n\" %% (obj_0 && 0)).print();
+(\"obj_0 && 1: %%d\\n\" %% (obj_0 && 1)).print();
+%s
+(\"obj_1 && 0: %%d\\n\" %% (obj_1 && 0)).print();
+(\"obj_1 && 1: %%d\\n\" %% (obj_1 && 1)).print();
+" % [create_zero_code,obj_code]);
+              }
+            }/*}}}*/
+            case "operator_binary_double_pipe#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Logical OR operator `||`.  If object of class
+`%s` is non-zero or value of method parameter is non-zero
+condition becomes true." % class_name);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
+              return_lst.push("* Integer `1` if either of operands is non-zero.");
+              return_lst.push("* Integer `0` if both operands are zero.");
+
+              create_zero_code = get_code(a_class,"obj_0","create_zero");
+              obj_code = get_code(a_class,"obj_1","create_example");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+(\"obj_0 || 0: %%d\\n\" %% (obj_0 || 0)).print();
+(\"obj_0 || 1: %%d\\n\" %% (obj_0 || 1)).print();
+%s
+(\"obj_1 || 0: %%d\\n\" %% (obj_1 || 0)).print();
+(\"obj_1 || 1: %%d\\n\" %% (obj_1 || 1)).print();
+" % [create_zero_code,obj_code]);
+              }
+            }/*}}}*/
+            case "operator_binary_ampersand#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Binary AND operator `&`. Bit in result value is set, if it exists in object of class `%s` and in method parameter." % class_name);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
+              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
+
+              obj_code = get_code(a_class,"obj","create_arith");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+" % obj_code);
+
+                if (Blank != (create_char_code = get_property("Char","create_example")))
+                {
+                  ex_code += ("(\"obj & %s: %%d\\n\" %% (obj & %s)).print();
+" % [create_char_code,create_char_code]);
+                }
+
+                if (Blank != (create_integer_code = get_property("Integer","create_example")))
+                {
+                  ex_code += ("(\"obj & %s: %%d\\n\" %% (obj & %s)).print();
+" % [create_integer_code,create_integer_code]);
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_pipe#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Binary OR operator `|`. Bit in result value is set, if it exists in object of class `%s` or in method parameter." % class_name);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
+              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
+
+              obj_code = get_code(a_class,"obj","create_arith");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+" % obj_code);
+
+                if (Blank != (create_char_code = get_property("Char","create_example")))
+                {
+                  ex_code += ("(\"obj | %s: %%d\\n\" %% (obj | %s)).print();
+" % [create_char_code,create_char_code]);
+                }
+
+                if (Blank != (create_integer_code = get_property("Integer","create_example")))
+                {
+                  ex_code += ("(\"obj | %s: %%d\\n\" %% (obj | %s)).print();
+" % [create_integer_code,create_integer_code]);
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_circumflex#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Binary XOR operator `^`. Bit in result value is set, if it exists in object of class `%s` or in method parameter, but not both." % class_name);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
+              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
+
+              obj_code = get_code(a_class,"obj","create_arith");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+" % obj_code);
+
+                if (Blank != (create_char_code = get_property("Char","create_example")))
+                {
+                  ex_code += ("(\"obj ^ %s: %%d\\n\" %% (obj ^ %s)).print();
+" % [create_char_code,create_char_code]);
+                }
+
+                if (Blank != (create_integer_code = get_property("Integer","create_example")))
+                {
+                  ex_code += ("(\"obj ^ %s: %%d\\n\" %% (obj ^ %s)).print();
+" % [create_integer_code,create_integer_code]);
                 }
               }
             }/*}}}*/
@@ -974,6 +1453,242 @@ obj_2 = obj_0;
 " % [obj_code,obj_cmp_code]);
               }
             }/*}}}*/
+            case "operator_binary_rs_br#1":
+            {/*{{{*/
+              if (a_method.is_static() && class_name != "Blank") new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Greater test operator `>`. Test if value of object of class `%s` is greater than value of method parameter." % class_name);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
+              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
+              return_lst.push("  * `1` - value of object of class `%s` is greater than value of method parameter." % class_name);
+              return_lst.push("  * `0` - value of object of class `%s` is less or equal than value of method parameter." % class_name);
+
+              obj_code = get_code(a_class,"obj","create_arith");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+
+                if (Blank != (create_char_code = get_property("Char","create_example")))
+                {
+                  ex_code += ("(\"obj > %s: %%d\\n\" %% (obj > %s)).print();
+" % [create_char_code,create_char_code]);
+                }
+
+                if (Blank != (create_integer_code = get_property("Integer","create_example")))
+                {
+                  ex_code += ("(\"obj > %s: %%d\\n\" %% (obj > %s)).print();
+" % [create_integer_code,create_integer_code]);
+                }
+
+                if (Blank != (create_float_code = get_property("Float","create_example")))
+                {
+                  ex_code += ("(\"obj > %s: %%d\\n\" %% (obj > %s)).print();
+" % [create_float_code,create_float_code]);
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_ls_br#1":
+            {/*{{{*/
+              if (a_method.is_static() && class_name != "Blank") new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Lesser test operator `<`. Test if value of object of class `%s` is lesser than value of method parameter." % class_name);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
+              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
+              return_lst.push("  * `1` - value of object of class `%s` is less than value of method parameter." % class_name);
+              return_lst.push("  * `0` - value of object of class `%s` is greater or equal than value of method parameter." % class_name);
+
+              obj_code = get_code(a_class,"obj","create_arith");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+
+                if (Blank != (create_char_code = get_property("Char","create_example")))
+                {
+                  ex_code += ("(\"obj < %s: %%d\\n\" %% (obj < %s)).print();
+" % [create_char_code,create_char_code]);
+                }
+
+                if (Blank != (create_integer_code = get_property("Integer","create_example")))
+                {
+                  ex_code += ("(\"obj < %s: %%d\\n\" %% (obj < %s)).print();
+" % [create_integer_code,create_integer_code]);
+                }
+
+                if (Blank != (create_float_code = get_property("Float","create_example")))
+                {
+                  ex_code += ("(\"obj < %s: %%d\\n\" %% (obj < %s)).print();
+" % [create_float_code,create_float_code]);
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_rs_br_equal#1":
+            {/*{{{*/
+              if (a_method.is_static() && class_name != "Blank") new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Greater or equal test operator `>=`. Test if value of object of class `%s` is greater or equal than value of method parameter." % class_name);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
+              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
+              return_lst.push("  * `1` - value of object of class `%s` is greater or equal than value of method parameter." % class_name);
+              return_lst.push("  * `0` - value of object of class `%s` is less than value of method parameter." % class_name);
+
+              obj_code = get_code(a_class,"obj","create_arith");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+
+                if (Blank != (create_char_code = get_property("Char","create_example")))
+                {
+                  ex_code += ("(\"obj >= %s: %%d\\n\" %% (obj >= %s)).print();
+" % [create_char_code,create_char_code]);
+                }
+
+                if (Blank != (create_integer_code = get_property("Integer","create_example")))
+                {
+                  ex_code += ("(\"obj >= %s: %%d\\n\" %% (obj >= %s)).print();
+" % [create_integer_code,create_integer_code]);
+                }
+
+                if (Blank != (create_float_code = get_property("Float","create_example")))
+                {
+                  ex_code += ("(\"obj >= %s: %%d\\n\" %% (obj >= %s)).print();
+" % [create_float_code,create_float_code]);
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_ls_br_equal#1":
+            {/*{{{*/
+              if (a_method.is_static() && class_name != "Blank") new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Lesser or equal test operator `<=`. Test if value of object of class `%s` is lesser or equal than value of method parameter." % class_name);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
+              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
+              return_lst.push("  * `1` - value of object of class `%s` is less or equal than value of method parameter." % class_name);
+              return_lst.push("  * `0` - value of object of class `%s` is greater than value of method parameter." % class_name);
+
+              obj_code = get_code(a_class,"obj","create_arith");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+
+                if (Blank != (create_char_code = get_property("Char","create_example")))
+                {
+                  ex_code += ("(\"obj <= %s: %%d\\n\" %% (obj <= %s)).print();
+" % [create_char_code,create_char_code]);
+                }
+
+                if (Blank != (create_integer_code = get_property("Integer","create_example")))
+                {
+                  ex_code += ("(\"obj <= %s: %%d\\n\" %% (obj <= %s)).print();
+" % [create_integer_code,create_integer_code]);
+                }
+
+                if (Blank != (create_float_code = get_property("Float","create_example")))
+                {
+                  ex_code += ("(\"obj <= %s: %%d\\n\" %% (obj <= %s)).print();
+" % [create_float_code,create_float_code]);
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_double_rs_br#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Right shift operator `>>`. Value of object of class `%s` is shifted to right by count of bits given by method parameter." % class_name);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
+              return_lst.push("* Object of class `%s`." % class_name);
+
+              obj_code = get_code(a_class,"obj","create_arith");
+              print_code = get_code(a_class,"obj","check_print");
+              res_print_code = get_code(a_class,"res","check_print");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+%s
+" % [obj_code,print_code]);
+
+                if (Blank != (create_char_code = get_property("Char","create_small")))
+                {
+                  ex_code += ("res = obj >> %s;
+%s
+" % [create_char_code,res_print_code]);
+                }
+
+                if (Blank != (create_integer_code = get_property("Integer","create_small")))
+                {
+                  ex_code += ("res = obj >> %s;
+%s
+" % [create_integer_code,res_print_code]);
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_double_ls_br#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Left shift operator `<<`. Value of object of class `%s` is shifted to left by count of bits given by method parameter." % class_name);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
+              return_lst.push("* Object of class `%s`." % class_name);
+
+              obj_code = get_code(a_class,"obj","create_arith");
+              print_code = get_code(a_class,"obj","check_print");
+              res_print_code = get_code(a_class,"res","check_print");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+%s
+" % [obj_code,print_code]);
+
+                if (Blank != (create_char_code = get_property("Char","create_small")))
+                {
+                  ex_code += ("res = obj << %s;
+%s
+" % [create_char_code,res_print_code]);
+                }
+
+                if (Blank != (create_integer_code = get_property("Integer","create_small")))
+                {
+                  ex_code += ("res = obj << %s;
+%s
+" % [create_integer_code,res_print_code]);
+                }
+              }
+            }/*}}}*/
             case "operator_binary_plus#1":
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
@@ -995,6 +1710,255 @@ res = obj + %s;
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 (\"res: %%s\\n\" %% res.to_string()).print();
 " % [obj_code,arr_code]);
+                }
+              }
+              else
+              {
+                descr_lst.push("Add operator `+`. It adds value of method parameter to value of object of class `%s`." % class_name);
+
+                param_classes = ["Char","Integer","Float"];
+
+                ret_classes = new Set();
+                for (param_class <- param_classes)
+                  ret_classes.insert(get_prior_type(class_name,param_class));
+
+                param_lsts[0].push("One from following:");
+                for (param_class <- param_classes)
+                  param_lsts[0].push("  * Object of class %s." % doc_class_ref(param_class));
+
+                if (ret_classes.length() > 1)
+                {
+                  return_lst.push("* One From following:");
+                  for (param_class <- param_classes)
+                    if (ret_classes.contain(param_class))
+                      return_lst.push("  * Object of class %s." % doc_class_ref(param_class));
+                }
+                else
+                {
+                  return_lst.push("* Object of class %s." % doc_class_ref(ret_classes.item(ret_classes.first_idx())));
+                }
+
+                obj_code = get_code(a_class,"obj","create_arith");
+                print_code = get_code(a_class,"obj","check_print");
+
+                if (Blank != obj_code)
+                {
+                  ex_code = ("
+%s
+%s
+" % [obj_code,print_code]);
+
+                  for (param_class <- param_classes)
+                  {
+                    if (Blank != (create_code = get_property(param_class,"create_example")) &&
+                        Blank != (print_code = get_code(get_prior_type(class_name,param_class),"res","check_print")))
+                    {
+                      ex_code += ("res = obj + %s;
+%s
+" % [create_code,print_code]);
+                    }
+                  }
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_minus#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Substract operator `-`. It substract value of method parameter from value of object of class `%s`." % class_name);
+
+              param_classes = ["Char","Integer","Float"];
+
+              ret_classes = new Set();
+              for (param_class <- param_classes)
+                ret_classes.insert(get_prior_type(class_name,param_class));
+
+              param_lsts[0].push("One from following:");
+              for (param_class <- param_classes)
+                param_lsts[0].push("  * Object of class %s." % doc_class_ref(param_class));
+
+              if (ret_classes.length() > 1)
+              {
+                return_lst.push("* One From following:");
+                for (param_class <- param_classes)
+                  if (ret_classes.contain(param_class))
+                    return_lst.push("  * Object of class %s." % doc_class_ref(param_class));
+              }
+              else
+              {
+                return_lst.push("* Object of class %s." % doc_class_ref(ret_classes.item(ret_classes.first_idx())));
+              }
+
+              obj_code = get_code(a_class,"obj","create_arith");
+              print_code = get_code(a_class,"obj","check_print");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+%s
+" % [obj_code,print_code]);
+
+                for (param_class <- param_classes)
+                {
+                  if (Blank != (create_code = get_property(param_class,"create_example")) &&
+                      Blank != (print_code = get_code(get_prior_type(class_name,param_class),"res","check_print")))
+                  {
+                    ex_code += ("res = obj - %s;
+%s
+" % [create_code,print_code]);
+                  }
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_asterisk#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Multiply operator `*`. It multiplies value of object of class `%s` by value of method parameter." % class_name);
+
+              param_classes = ["Char","Integer","Float"];
+
+              ret_classes = new Set();
+              for (param_class <- param_classes)
+                ret_classes.insert(get_prior_type(class_name,param_class));
+
+              param_lsts[0].push("One from following:");
+              for (param_class <- param_classes)
+                param_lsts[0].push("  * Object of class %s." % doc_class_ref(param_class));
+
+              if (ret_classes.length() > 1)
+              {
+                return_lst.push("* One From following:");
+                for (param_class <- param_classes)
+                  if (ret_classes.contain(param_class))
+                    return_lst.push("  * Object of class %s." % doc_class_ref(param_class));
+              }
+              else
+              {
+                return_lst.push("* Object of class %s." % doc_class_ref(ret_classes.item(ret_classes.first_idx())));
+              }
+
+              // - exception for integer -
+              if (class_name == "Integer")
+              {
+                descr_lst.push("If method parameter is object of class %s, then result will be created as repeated concatenation of this string." % doc_class_ref("String"));
+                param_lsts[0].push("  * Object of class %s." % doc_class_ref("String"));
+                return_lst.push("  * Object of class %s." % doc_class_ref("String"));
+              }
+
+              obj_code = get_code(a_class,"obj","create_small");
+              print_code = get_code(a_class,"obj","check_print");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+%s
+" % [obj_code,print_code]);
+
+                for (param_class <- param_classes)
+                {
+                  if (Blank != (create_code = get_property(param_class,"create_example")) &&
+                      Blank != (print_code = get_code(get_prior_type(class_name,param_class),"res","check_print")))
+                  {
+                    ex_code += ("res = obj * %s;
+%s
+" % [create_code,print_code]);
+                  }
+                }
+
+                // - exception for integer -
+                if (class_name == "Integer")
+                {
+                  if (Blank != (create_code = get_property("String","create_example")) &&
+                      Blank != (print_code = get_code("String","res","check_print")))
+                  {
+                    ex_code += ("res = obj * %s;
+%s
+" % [create_code,print_code]);
+                  }
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_slash#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Divide operator `/`. It divides value of object of class `%s` by value of method parameter." % class_name);
+
+              param_classes = ["Char","Integer","Float"];
+
+              ret_classes = new Set();
+              for (param_class <- param_classes)
+                ret_classes.insert(get_prior_type(class_name,param_class));
+
+              param_lsts[0].push("One from following:");
+              for (param_class <- param_classes)
+                param_lsts[0].push("  * Object of class %s." % doc_class_ref(param_class));
+
+              if (ret_classes.length() > 1)
+              {
+                return_lst.push("* One From following:");
+                for (param_class <- param_classes)
+                  if (ret_classes.contain(param_class))
+                    return_lst.push("  * Object of class %s." % doc_class_ref(param_class));
+              }
+              else
+              {
+                return_lst.push("* Object of class %s." % doc_class_ref(ret_classes.item(ret_classes.first_idx())));
+              }
+
+              obj_code = get_code(a_class,"obj","create_arith");
+              print_code = get_code(a_class,"obj","check_print");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+%s
+" % [obj_code,print_code]);
+
+                for (param_class <- param_classes)
+                {
+                  if (Blank != (create_code = get_property(param_class,"create_small")) &&
+                      Blank != (print_code = get_code(get_prior_type(class_name,param_class),"res","check_print")))
+                  {
+                    ex_code += ("res = obj / %s;
+%s
+" % [create_code,print_code]);
+                  }
+                }
+              }
+            }/*}}}*/
+            case "operator_binary_percent#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              descr_lst.push("Modulus operator `%%`. It takes modulus of value of object of class `%s` divided by value of method parameter." % class_name);
+              param_lsts[0].push("One from following:
+  * Object of class %s.
+  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
+              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
+
+              obj_code = get_code(a_class,"obj","create_arith");
+
+              if (Blank != obj_code)
+              {
+                ex_code = ("
+%s
+" % obj_code);
+
+                if (Blank != (create_char_code = get_property("Char","create_example")))
+                {
+                  ex_code += ("(\"obj %%%% %s: %%d\\n\" %% (obj %% %s)).print();
+" % [create_char_code,create_char_code]);
+                }
+
+                if (Blank != (create_integer_code = get_property("Integer","create_example")))
+                {
+                  ex_code += ("(\"obj %%%% %s: %%d\\n\" %% (obj %% %s)).print();
+" % [create_integer_code,create_integer_code]);
                 }
               }
             }/*}}}*/
