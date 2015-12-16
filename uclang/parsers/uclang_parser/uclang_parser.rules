@@ -919,7 +919,7 @@ rules:
       end
    }
 
-   $ - try catch statement -
+   $ -- try catch statement --
    <command> -> <try_catch_block> ->>
    {
       if gen_parse_tree == 1 then
