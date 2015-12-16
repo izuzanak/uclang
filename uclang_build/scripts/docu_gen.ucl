@@ -91,7 +91,7 @@ class Main
   static CLASS_PROPERTIES;
 
   static public SNIPPET_FILE = "./snippet.ucl";
-  static public TARGET_CLASS_NAME = "Char";
+  static public TARGET_CLASS_NAME = "Float";
   static public TARGET_MODULES = ["sys","containers","json","parser"];
 
   static public TYPE_PRIORITY = new Dict(
@@ -101,7 +101,15 @@ class Main
     "Float",  2
   ]);/*}}}*/
 
+  // - target class reference -
   m_target_class;
+  m_target_name;
+
+  // - method lists -
+  m_meth_descr_lst;
+  m_meth_param_lsts;
+  m_meth_return_lst;
+  m_meth_ex_code;
 
   public test_code_snippet(a_code)
   {/*{{{*/
@@ -145,10 +153,10 @@ class Main
     ]);/*}}}*/
     CLASS_PROPERTIES["Char"] = new Dict(
     [/*{{{*/
-      "create_example","'a'",
-      "create_compare","'\\x42'",
+      "create_example","'e'",
+      "create_compare","'\\x46'",
       "create_zero","'\\x0'",
-      "create_arith","'\\x41'",
+      "create_arith","'\\x45'",
       "create_small","'\\x02'",
       "create_large","'\\x7f'",
       "check_print","(\"%s: %%d\\n\" %% new Integer(%s)).print();"
@@ -631,7 +639,7 @@ of new object of class `Dict`.",["Iterable type."],new Blank(),"
     return new Blank();
   }/*}}}*/
 
-  public get_method_descr(a_class_name,a_method_name,@a_descr_lst,@a_param_lsts,@a_return_lst,@a_ex_code)
+  public get_method_descr(a_class_name,a_method_name)
   {/*{{{*/
     if (Blank != (properties = CLASS_PROPERTIES[a_class_name]))
     {
@@ -642,9 +650,9 @@ of new object of class `Dict`.",["Iterable type."],new Blank(),"
           method = methods[a_method_name];
 
           // - set method description -
-          if (Blank != method.m_descr) a_descr_lst.push(method.m_descr);
+          if (Blank != method.m_descr) m_meth_descr_lst.push(method.m_descr);
 
-          if (a_param_lsts.length() != method.m_params.length())
+          if (m_meth_param_lsts.length() != method.m_params.length())
           {
             new Exception("Invalid count of parameters in method descr %s.%s" % [a_class_name,a_method_name]).throw();
           }
@@ -653,14 +661,14 @@ of new object of class `Dict`.",["Iterable type."],new Blank(),"
           param_idx = 0;
           for (param <- method.m_params)
           {
-            a_param_lsts[param_idx++].push(param);
+            m_meth_param_lsts[param_idx++].push(param);
           }
 
           // - set return description -
-          if (Blank != method.m_return) a_return_lst.push(method.m_return);
+          if (Blank != method.m_return) m_meth_return_lst.push(method.m_return);
 
           // - set example code -
-          a_ex_code = method.m_ex_code;
+          m_meth_ex_code = method.m_ex_code;
 
           return 1;
         }
@@ -715,6 +723,192 @@ of new object of class `Dict`.",["Iterable type."],new Blank(),"
     var_name = a_var.name();
   }/*}}}*/
 
+  public pm_operator_binary_t0(a_descr,a_param_classes,a_obj_type,a_param_type,a_op_str)
+  {/*{{{*/
+    m_meth_descr_lst.push(a_descr);
+
+    ret_classes = new Set();
+    for (param_class <- a_param_classes)
+      ret_classes.insert(get_prior_type(m_target_name,param_class));
+
+    if (a_param_classes.length() > 1)
+    {
+      m_meth_param_lsts[0].push("One from following:");
+      for (param_class <- a_param_classes)
+        m_meth_param_lsts[0].push("  * Object of class %s." % doc_class_ref(param_class));
+    }
+    else
+    {
+      m_meth_param_lsts[0].push("* Object of class %s." % doc_class_ref(a_param_classes[0]));
+    }
+
+    if (ret_classes.length() > 1)
+    {
+      m_meth_return_lst.push("* One From following:");
+      for (param_class <- a_param_classes)
+        if (ret_classes.contain(param_class))
+          m_meth_return_lst.push("  * Object of class %s." % doc_class_ref(param_class));
+    }
+    else
+    {
+      m_meth_return_lst.push("* Object of class %s." % doc_class_ref(ret_classes.item(ret_classes.first_idx())));
+    }
+
+    obj_code = get_code(m_target_class,"obj",a_obj_type);
+    print_code = get_code(m_target_class,"obj","check_print");
+
+    if (Blank != obj_code)
+    {
+      m_meth_ex_code = ("
+%s
+%s
+" % [obj_code,print_code]);
+
+      for (param_class <- a_param_classes)
+      {
+        if (Blank != (create_code = get_property(param_class,a_param_type)) &&
+            Blank != (print_code = get_code(get_prior_type(m_target_name,param_class),"res","check_print")))
+        {
+          m_meth_ex_code += ("res = obj %s %s;
+%s
+" % [a_op_str,create_code,print_code]);
+        }
+      }
+    }
+  }/*}}}*/
+
+  public pm_operator_binary_t1(a_descr,a_param_classes,a_obj_type,a_param_type,a_op_str)
+  {/*{{{*/
+    m_meth_descr_lst.push(a_descr);
+
+    if (a_param_classes.length() > 1)
+    {
+      m_meth_param_lsts[0].push("One from following:");
+      for (param_class <- a_param_classes)
+        m_meth_param_lsts[0].push("  * Object of class %s." % doc_class_ref(param_class));
+    }
+    else
+    {
+      m_meth_param_lsts[0].push("* Object of class %s." % doc_class_ref(a_param_classes[0]));
+    }
+
+    m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
+
+    obj_code = get_code(m_target_class,"obj",a_obj_type);
+
+    if (Blank != obj_code)
+    {
+      m_meth_ex_code = ("
+%s
+" % obj_code);
+
+      for (param_class <- a_param_classes)
+      {
+        if (Blank != (create_code = get_property(param_class,a_param_type)))
+        {
+          m_meth_ex_code += ("(\"obj %s %s: %%d\\n\" %% (obj %s %s)).print();
+" % [a_op_str.replace("%","%%"),create_code,a_op_str,create_code]);
+        }
+      }
+    }
+  }/*}}}*/
+
+  public pm_operator_binary_t2(a_descr,a_param_classes,a_obj_type,a_param_type,a_op_str)
+  {/*{{{*/
+    m_meth_descr_lst.push(a_descr);
+
+    if (a_param_classes.length() > 1)
+    {
+      m_meth_param_lsts[0].push("One from following:");
+      for (param_class <- a_param_classes)
+        m_meth_param_lsts[0].push("  * Object of class %s." % doc_class_ref(param_class));
+    }
+    else
+    {
+      m_meth_param_lsts[0].push("* Object of class %s." % doc_class_ref(a_param_classes[0]));
+    }
+
+    m_meth_return_lst.push("* Object of class `%s`." % m_target_name);
+
+    obj_code = get_code(m_target_class,"obj",a_obj_type);
+    print_code = get_code(m_target_class,"obj","check_print");
+    res_print_code = get_code(m_target_class,"res","check_print");
+
+    if (Blank != obj_code)
+    {
+      m_meth_ex_code = ("
+%s
+%s
+" % [obj_code,print_code]);
+
+      for (param_class <- a_param_classes)
+      {
+        if (Blank != (create_code = get_property(param_class,a_param_type)))
+        {
+          m_meth_ex_code += ("res = obj %s %s;
+%s
+" % [a_op_str,create_code,res_print_code]);
+        }
+      }
+    }
+  }/*}}}*/
+
+  public pm_operator_binary_t3(a_descr,a_param_classes,a_return_lst,a_obj_type,a_param_type,a_op_str)
+  {/*{{{*/
+    m_meth_descr_lst.push(a_descr);
+
+    if (a_param_classes.length() > 1)
+    {
+      m_meth_param_lsts[0].push("One from following:");
+      for (param_class <- a_param_classes)
+        m_meth_param_lsts[0].push("  * Object of class %s." % doc_class_ref(param_class));
+    }
+    else
+    {
+      m_meth_param_lsts[0].push("* Object of class %s." % doc_class_ref(a_param_classes[0]));
+    }
+
+    m_meth_return_lst += a_return_lst;
+
+    obj_code = get_code(m_target_class,"obj",a_obj_type);
+
+    if (Blank != obj_code)
+    {
+      m_meth_ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+
+      for (param_class <- a_param_classes)
+      {
+        if (Blank != (create_char_code = get_property(param_class,a_param_type)))
+        {
+        m_meth_ex_code += ("(\"obj %s %s: %%d\\n\" %% (obj %s %s)).print();
+" % [a_op_str.replace("%","%%"),create_char_code,a_op_str,create_char_code]);
+        }
+      }
+    }
+  }/*}}}*/
+
+  public pm_operator_binary_t4(a_descr,a_obj_type,a_op_obj)
+  {/*{{{*/
+    m_meth_descr_lst.push(a_descr);
+    m_meth_return_lst.push("* Object of class `%s`." % m_target_name);
+
+    obj_code = get_code(m_target_name,"obj",a_obj_type);
+    print_code = get_code(m_target_name,"obj","check_print");
+
+    if (Blank != obj_code)
+    {
+      m_meth_ex_code = ("
+%s
+%s
+obj = %s;
+%s
+" % [obj_code,print_code,a_op_obj,print_code]);
+    }
+  }/*}}}*/
+
   public process_method(a_class,a_method,a_class_constrs,a_class_operators,a_class_methods)
   {/*{{{*/
     class_name = a_class.name();
@@ -755,9 +949,10 @@ of new object of class `Dict`.",["Iterable type."],new Blank(),"
     spec_str = SPECIAL_METHODS.has_key(method_name) ? "`spec` " : "";
 
     // - create method lists -
-    descr_lst = [];
-    param_lsts = new Array[param_count];
-    return_lst = [];
+    m_meth_descr_lst = [];
+    m_meth_param_lsts = new Array[param_count];
+    m_meth_return_lst = [];
+    m_meth_ex_code = new Blank();
 
     // - retrieve method source line -
     //source_url = get_source(class_name,method_name_wp,param_count,method_type);
@@ -770,17 +965,17 @@ of new object of class `Dict`.",["Iterable type."],new Blank(),"
             Blank != source_url ? "[`%s`](%s)" % [method_name,source_url] : "`%s`" % method_name]);
 
         // - if explicit description is not available -
-        if (!get_method_descr(class_name,method_name,descr_lst,param_lsts,return_lst,ex_code))
+        if (!get_method_descr(class_name,method_name))
         {
           switch (param_count)
           {
             case 0:
             {/*{{{*/
-              descr_lst.push("Creates default object of class `%s`." % class_name);
+              m_meth_descr_lst.push("Creates default object of class `%s`." % class_name);
 
               print_code = get_code(a_class,"obj","check_print");
 
-              ex_code = ("
+              m_meth_ex_code = ("
 obj = new %s();
 %s
 " % [class_name,print_code]);
@@ -789,14 +984,14 @@ obj = new %s();
             {/*{{{*/
               if (class_is_container(a_class))
               {
-                descr_lst.push("Creates object of class `%s` containing elements retrieved from method parameter." % class_name);
-                param_lsts[0].push("Iterable type.");
+                m_meth_descr_lst.push("Creates object of class `%s` containing elements retrieved from method parameter." % class_name);
+                m_meth_param_lsts[0].push("Iterable type.");
 
                 arr_code = get_property("Array","create_example");
 
                 if (Blank != arr_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 obj = new %s(%s);
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 " % [class_name,arr_code]);
@@ -804,12 +999,12 @@ obj = new %s(%s);
               }
               else
               {
-                descr_lst.push("Creates object of class `%s`. TODO description." % class_name);
+                m_meth_descr_lst.push("Creates object of class `%s`. TODO description." % class_name);
               }
             }/*}}}*/
             default:
             {
-              descr_lst.push("Creates object of class `%s`. TODO description." % class_name);
+              m_meth_descr_lst.push("Creates object of class `%s`. TODO description." % class_name);
             }
           }
         }
@@ -820,7 +1015,7 @@ obj = new %s(%s);
             Blank != source_url ? "[`%s`](%s)" % [method_name,source_url] : "`%s`" % method_name]);
 
         // - if explicit description is not available -
-        if (!get_method_descr(class_name,method_name,descr_lst,param_lsts,return_lst,ex_code))
+        if (!get_method_descr(class_name,method_name))
         {
           switch (method_name)
           {
@@ -828,15 +1023,15 @@ obj = new %s(%s);
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Assignment operator `=`. Object of class `%s` is replaced by method parameter." % class_name);
-              param_lsts[0].push("Any type.");
-              return_lst.push("* Method parameter.");
+              m_meth_descr_lst.push("Assignment operator `=`. Object of class `%s` is replaced by method parameter." % class_name);
+              m_meth_param_lsts[0].push("Any type.");
+              m_meth_return_lst.push("* Method parameter.");
 
               obj_code = get_code(a_class,"obj","create_example");
 
               if (Blank != obj_code)
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 obj = \"New value\";
@@ -850,16 +1045,16 @@ obj = \"New value\";
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Append operator `+=`. Append elements retrieved from method parameter to object of class `%s`." % class_name);
-                param_lsts[0].push("Iterable type.");
-                return_lst.push("* Value of object.");
+                m_meth_descr_lst.push("Append operator `+=`. Append elements retrieved from method parameter to object of class `%s`." % class_name);
+                m_meth_param_lsts[0].push("Iterable type.");
+                m_meth_return_lst.push("* Value of object.");
 
                 obj_code = get_code(a_class,"obj","create_example");
                 arr_code = get_property("Array","create_example");
 
                 if (Blank != obj_code && Blank != arr_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 obj += %s;
@@ -869,40 +1064,40 @@ obj += %s;
               }
               else
               {
-                descr_lst.push("Add and assign operator `+=`. It adds value of method parameter to value of object of class `%s`." % class_name);
-                param_lsts[0].push("One from following:
+                m_meth_descr_lst.push("Add and assign operator `+=`. Operator adds value of method parameter to value of object of class `%s`." % class_name);
+                m_meth_param_lsts[0].push("One from following:
   * Object of class %s.
   * Object of class %s.
   * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
-                return_lst.push("* Value of object.");
+                m_meth_return_lst.push("* Value of object.");
 
                 obj_code = get_code(a_class,"obj","create_arith");
                 print_code = get_code(a_class,"obj","check_print");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 %s
 " % [obj_code,print_code]);
 
                   if (Blank != (create_char_code = get_property("Char","create_example")))
                   {
-                    ex_code += ("obj += %s;
+                    m_meth_ex_code += ("obj += %s;
 %s
 " % [create_char_code,print_code]);
                   }
 
                   if (Blank != (create_integer_code = get_property("Integer","create_example")))
                   {
-                    ex_code += ("obj += %s;
+                    m_meth_ex_code += ("obj += %s;
 %s
 " % [create_integer_code,print_code]);
                   }
 
                   if (Blank != (create_float_code = get_property("Float","create_example")))
                   {
-                    ex_code += ("obj += %s;
+                    m_meth_ex_code += ("obj += %s;
 %s
 " % [create_float_code,print_code]);
                   }
@@ -913,40 +1108,40 @@ obj += %s;
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Substract and assign operator `-=`. It substracts value of method parameter from value of object of class `%s`." % class_name);
-              param_lsts[0].push("One from following:
+              m_meth_descr_lst.push("Substract and assign operator `-=`. Operator substracts value of method parameter from value of object of class `%s`." % class_name);
+              m_meth_param_lsts[0].push("One from following:
   * Object of class %s.
   * Object of class %s.
   * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
-              return_lst.push("* Value of object.");
+              m_meth_return_lst.push("* Value of object.");
 
               obj_code = get_code(a_class,"obj","create_arith");
               print_code = get_code(a_class,"obj","check_print");
 
               if (Blank != obj_code)
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 %s
 %s
 " % [obj_code,print_code]);
 
                 if (Blank != (create_char_code = get_property("Char","create_example")))
                 {
-                  ex_code += ("obj -= %s;
+                  m_meth_ex_code += ("obj -= %s;
 %s
 " % [create_char_code,print_code]);
                 }
 
                 if (Blank != (create_integer_code = get_property("Integer","create_example")))
                 {
-                  ex_code += ("obj -= %s;
+                  m_meth_ex_code += ("obj -= %s;
 %s
 " % [create_integer_code,print_code]);
                 }
 
                 if (Blank != (create_float_code = get_property("Float","create_example")))
                 {
-                  ex_code += ("obj -= %s;
+                  m_meth_ex_code += ("obj -= %s;
 %s
 " % [create_float_code,print_code]);
                 }
@@ -956,40 +1151,40 @@ obj += %s;
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Multiply and assign operator `*=`. It multiplies value of object of class `%s` by value of method parameter." % class_name);
-              param_lsts[0].push("One from following:
+              m_meth_descr_lst.push("Multiply and assign operator `*=`. Operator multiplies value of object of class `%s` by value of method parameter." % class_name);
+              m_meth_param_lsts[0].push("One from following:
   * Object of class %s.
   * Object of class %s.
   * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
-              return_lst.push("* Value of object.");
+              m_meth_return_lst.push("* Value of object.");
 
               obj_code = get_code(a_class,"obj","create_arith");
               print_code = get_code(a_class,"obj","check_print");
 
               if (Blank != obj_code)
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 %s
 %s
 " % [obj_code,print_code]);
 
                 if (Blank != (create_char_code = get_property("Char","create_example")))
                 {
-                  ex_code += ("obj *= %s;
+                  m_meth_ex_code += ("obj *= %s;
 %s
 " % [create_char_code,print_code]);
                 }
 
                 if (Blank != (create_integer_code = get_property("Integer","create_example")))
                 {
-                  ex_code += ("obj *= %s;
+                  m_meth_ex_code += ("obj *= %s;
 %s
 " % [create_integer_code,print_code]);
                 }
 
                 if (Blank != (create_float_code = get_property("Float","create_example")))
                 {
-                  ex_code += ("obj *= %s;
+                  m_meth_ex_code += ("obj *= %s;
 %s
 " % [create_float_code,print_code]);
                 }
@@ -999,23 +1194,23 @@ obj += %s;
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Divide and assign operator `/=`. It divides value of object of class `%s` by value of method parameter." % class_name);
-              param_lsts[0].push("One from following:
+              m_meth_descr_lst.push("Divide and assign operator `/=`. Operator divides value of object of class `%s` by value of method parameter." % class_name);
+              m_meth_param_lsts[0].push("One from following:
   * Object of class %s.
   * Object of class %s.
   * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
-              return_lst.push("* Value of object.");
+              m_meth_return_lst.push("* Value of object.");
 
               obj_code = get_code(a_class,"obj","create_large");
               print_code = get_code(a_class,"obj","check_print");
 
               if (Blank != obj_code)
               {
-                ex_code = "\n";
+                m_meth_ex_code = "\n";
 
                 if (Blank != (create_char_code = get_property("Char","create_example")))
                 {
-                  ex_code += ("%s
+                  m_meth_ex_code += ("%s
 obj /= %s;
 %s
 " % [obj_code,create_char_code,print_code]);
@@ -1023,7 +1218,7 @@ obj /= %s;
 
                 if (Blank != (create_integer_code = get_property("Integer","create_example")))
                 {
-                  ex_code += ("%s
+                  m_meth_ex_code += ("%s
 obj /= %s;
 %s
 " % [obj_code,create_integer_code,print_code]);
@@ -1031,7 +1226,7 @@ obj /= %s;
 
                 if (Blank != (create_float_code = get_property("Float","create_example")))
                 {
-                  ex_code += ("%s
+                  m_meth_ex_code += ("%s
 obj /= %s;
 %s
 " % [obj_code,create_float_code,print_code]);
@@ -1042,22 +1237,22 @@ obj /= %s;
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Modulus and assign operator `%%=`. It takes modulus of value of object of class `%s` divided by value of method parameter." % class_name);
-              param_lsts[0].push("One from following:
+              m_meth_descr_lst.push("Modulus and assign operator `%%=`. Operater computes modulus of value of object of class `%s` divided by value of method parameter." % class_name);
+              m_meth_param_lsts[0].push("One from following:
   * Object of class %s.
   * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
-              return_lst.push("* Value of object.");
+              m_meth_return_lst.push("* Value of object.");
 
               obj_code = get_code(a_class,"obj","create_arith");
               print_code = get_code(a_class,"obj","check_print");
 
               if (Blank != obj_code)
               {
-                ex_code = "\n";
+                m_meth_ex_code = "\n";
 
                 if (Blank != (create_char_code = get_property("Char","create_example")))
                 {
-                  ex_code += ("%s
+                  m_meth_ex_code += ("%s
 obj %%= %s;
 %s
 " % [obj_code,create_char_code,print_code]);
@@ -1065,7 +1260,7 @@ obj %%= %s;
 
                 if (Blank != (create_integer_code = get_property("Integer","create_example")))
                 {
-                  ex_code += ("%s
+                  m_meth_ex_code += ("%s
 obj %%= %s;
 %s
 " % [obj_code,create_integer_code,print_code]);
@@ -1076,32 +1271,32 @@ obj %%= %s;
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Left shift and assign operator `<<=`. Value of object of class `%s` is shifted to left by count of bits given by method parameter." % class_name);
-              param_lsts[0].push("One from following:
+              m_meth_descr_lst.push("Left shift and assign operator `<<=`. Value of object of class `%s` is shifted to left by count of bits given by method parameter." % class_name);
+              m_meth_param_lsts[0].push("One from following:
   * Object of class %s.
   * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
-              return_lst.push("* Value of object.");
+              m_meth_return_lst.push("* Value of object.");
 
               obj_code = get_code(a_class,"obj","create_arith");
               print_code = get_code(a_class,"obj","check_print");
 
               if (Blank != obj_code)
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 %s
 %s
 " % [obj_code,print_code]);
 
                 if (Blank != (create_char_code = get_property("Char","create_small")))
                 {
-                  ex_code += ("obj <<= %s;
+                  m_meth_ex_code += ("obj <<= %s;
 %s
 " % [create_char_code,print_code]);
                 }
 
                 if (Blank != (create_integer_code = get_property("Integer","create_small")))
                 {
-                  ex_code += ("obj <<= %s;
+                  m_meth_ex_code += ("obj <<= %s;
 %s
 " % [create_integer_code,print_code]);
                 }
@@ -1111,32 +1306,32 @@ obj %%= %s;
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Right shift and assign operator `>>=`. Value of object of class `%s` is shifted to right by count of bits given by method parameter." % class_name);
-              param_lsts[0].push("One from following:
+              m_meth_descr_lst.push("Right shift and assign operator `>>=`. Value of object of class `%s` is shifted to right by count of bits given by method parameter." % class_name);
+              m_meth_param_lsts[0].push("One from following:
   * Object of class %s.
   * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
-              return_lst.push("* Value of object.");
+              m_meth_return_lst.push("* Value of object.");
 
               obj_code = get_code(a_class,"obj","create_arith");
               print_code = get_code(a_class,"obj","check_print");
 
               if (Blank != obj_code)
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 %s
 %s
 " % [obj_code,print_code]);
 
                 if (Blank != (create_char_code = get_property("Char","create_small")))
                 {
-                  ex_code += ("obj >>= %s;
+                  m_meth_ex_code += ("obj >>= %s;
 %s
 " % [create_char_code,print_code]);
                 }
 
                 if (Blank != (create_integer_code = get_property("Integer","create_small")))
                 {
-                  ex_code += ("obj >>= %s;
+                  m_meth_ex_code += ("obj >>= %s;
 %s
 " % [create_integer_code,print_code]);
                 }
@@ -1146,25 +1341,25 @@ obj %%= %s;
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Binary AND and assign operator `&=`. Value of
+              m_meth_descr_lst.push("Binary AND and assign operator `&=`. Value of
 object of class `%s` is modified according to value determined by
 method parameter. Bit in result value is set, if it exists in
 object of class `%s` and method parameter." % [class_name,class_name]);
-              param_lsts[0].push("One from following:
+              m_meth_param_lsts[0].push("One from following:
   * Object of class %s.
   * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
-              return_lst.push("* Value of object.");
+              m_meth_return_lst.push("* Value of object.");
 
               obj_code = get_code(a_class,"obj","create_arith");
               print_code = get_code(a_class,"obj","check_print");
 
               if (Blank != obj_code)
               {
-                ex_code = "\n";
+                m_meth_ex_code = "\n";
 
                 if (Blank != (create_char_code = get_property("Char","create_example")))
                 {
-                  ex_code += ("%s
+                  m_meth_ex_code += ("%s
 obj &= %s;
 %s
 " % [obj_code,create_char_code,print_code]);
@@ -1172,7 +1367,7 @@ obj &= %s;
 
                 if (Blank != (create_integer_code = get_property("Integer","create_example")))
                 {
-                  ex_code += ("%s
+                  m_meth_ex_code += ("%s
 obj &= %s;
 %s
 " % [obj_code,create_integer_code,print_code]);
@@ -1183,25 +1378,25 @@ obj &= %s;
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Binary OR and assign operator `|=`. Value of
+              m_meth_descr_lst.push("Binary OR and assign operator `|=`. Value of
 object of class `%s` is modified according to value determined by
 method parameter. Bit in result value is set, if it exists in
 object of class `%s` or in method parameter." % [class_name,class_name]);
-              param_lsts[0].push("One from following:
+              m_meth_param_lsts[0].push("One from following:
   * Object of class %s.
   * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
-              return_lst.push("* Value of object.");
+              m_meth_return_lst.push("* Value of object.");
 
               obj_code = get_code(a_class,"obj","create_arith");
               print_code = get_code(a_class,"obj","check_print");
 
               if (Blank != obj_code)
               {
-                ex_code = "\n";
+                m_meth_ex_code = "\n";
 
                 if (Blank != (create_char_code = get_property("Char","create_example")))
                 {
-                  ex_code += ("%s
+                  m_meth_ex_code += ("%s
 obj |= %s;
 %s
 " % [obj_code,create_char_code,print_code]);
@@ -1209,7 +1404,7 @@ obj |= %s;
 
                 if (Blank != (create_integer_code = get_property("Integer","create_example")))
                 {
-                  ex_code += ("%s
+                  m_meth_ex_code += ("%s
 obj |= %s;
 %s
 " % [obj_code,create_integer_code,print_code]);
@@ -1220,26 +1415,26 @@ obj |= %s;
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Binary XOR and assign operator `^=`. Value of
+              m_meth_descr_lst.push("Binary XOR and assign operator `^=`. Value of
 object of class `%s` is modified according to value determined by
 method parameter. Bit in result value is set, if it exists in
 object of class `%s` or in method parameter, but not both." %
               [class_name,class_name]);
-              param_lsts[0].push("One from following:
+              m_meth_param_lsts[0].push("One from following:
   * Object of class %s.
   * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
-              return_lst.push("* Value of object.");
+              m_meth_return_lst.push("* Value of object.");
 
               obj_code = get_code(a_class,"obj","create_arith");
               print_code = get_code(a_class,"obj","check_print");
 
               if (Blank != obj_code)
               {
-                ex_code = "\n";
+                m_meth_ex_code = "\n";
 
                 if (Blank != (create_char_code = get_property("Char","create_example")))
                 {
-                  ex_code += ("%s
+                  m_meth_ex_code += ("%s
 obj ^= %s;
 %s
 " % [obj_code,create_char_code,print_code]);
@@ -1247,7 +1442,7 @@ obj ^= %s;
 
                 if (Blank != (create_integer_code = get_property("Integer","create_example")))
                 {
-                  ex_code += ("%s
+                  m_meth_ex_code += ("%s
 obj ^= %s;
 %s
 " % [obj_code,create_integer_code,print_code]);
@@ -1258,22 +1453,22 @@ obj ^= %s;
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Logical AND operator `&&`.  If object of class
+              m_meth_descr_lst.push("Logical AND operator `&&`.  If object of class
 `%s` is non-zero and value of method parameter is also non-zero
 condition becomes true." % class_name);
-              param_lsts[0].push("One from following:
+              m_meth_param_lsts[0].push("One from following:
   * Object of class %s.
   * Object of class %s.
   * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
-              return_lst.push("* Integer `1` if both operands are non-zero.");
-              return_lst.push("* Integer `0` if either of operands is zero.");
+              m_meth_return_lst.push("* Integer `1` if both operands are non-zero.");
+              m_meth_return_lst.push("* Integer `0` if either of operands is zero.");
 
               create_zero_code = get_code(a_class,"obj_0","create_zero");
               obj_code = get_code(a_class,"obj_1","create_example");
 
               if (Blank != obj_code)
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 %s
 (\"obj_0 && 0: %%d\\n\" %% (obj_0 && 0)).print();
 (\"obj_0 && 1: %%d\\n\" %% (obj_0 && 1)).print();
@@ -1287,22 +1482,22 @@ condition becomes true." % class_name);
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Logical OR operator `||`.  If object of class
+              m_meth_descr_lst.push("Logical OR operator `||`.  If object of class
 `%s` is non-zero or value of method parameter is non-zero
 condition becomes true." % class_name);
-              param_lsts[0].push("One from following:
+              m_meth_param_lsts[0].push("One from following:
   * Object of class %s.
   * Object of class %s.
   * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
-              return_lst.push("* Integer `1` if either of operands is non-zero.");
-              return_lst.push("* Integer `0` if both operands are zero.");
+              m_meth_return_lst.push("* Integer `1` if either of operands is non-zero.");
+              m_meth_return_lst.push("* Integer `0` if both operands are zero.");
 
               create_zero_code = get_code(a_class,"obj_0","create_zero");
               obj_code = get_code(a_class,"obj_1","create_example");
 
               if (Blank != obj_code)
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 %s
 (\"obj_0 || 0: %%d\\n\" %% (obj_0 || 0)).print();
 (\"obj_0 || 1: %%d\\n\" %% (obj_0 || 1)).print();
@@ -1316,111 +1511,51 @@ condition becomes true." % class_name);
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Binary AND operator `&`. Bit in result value is set, if it exists in object of class `%s` and in method parameter." % class_name);
-              param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
-              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
-
-              obj_code = get_code(a_class,"obj","create_arith");
-
-              if (Blank != obj_code)
-              {
-                ex_code = ("
-%s
-" % obj_code);
-
-                if (Blank != (create_char_code = get_property("Char","create_example")))
-                {
-                  ex_code += ("(\"obj & %s: %%d\\n\" %% (obj & %s)).print();
-" % [create_char_code,create_char_code]);
-                }
-
-                if (Blank != (create_integer_code = get_property("Integer","create_example")))
-                {
-                  ex_code += ("(\"obj & %s: %%d\\n\" %% (obj & %s)).print();
-" % [create_integer_code,create_integer_code]);
-                }
-              }
+              pm_operator_binary_t1(
+                "Binary AND operator `&`. Bit in result value is set, if it exists in object of class `%s` and in method parameter." % class_name,
+                ["Char","Integer"],
+                "create_arith",
+                "create_example",
+                "&");
             }/*}}}*/
             case "operator_binary_pipe#1":
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Binary OR operator `|`. Bit in result value is set, if it exists in object of class `%s` or in method parameter." % class_name);
-              param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
-              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
-
-              obj_code = get_code(a_class,"obj","create_arith");
-
-              if (Blank != obj_code)
-              {
-                ex_code = ("
-%s
-" % obj_code);
-
-                if (Blank != (create_char_code = get_property("Char","create_example")))
-                {
-                  ex_code += ("(\"obj | %s: %%d\\n\" %% (obj | %s)).print();
-" % [create_char_code,create_char_code]);
-                }
-
-                if (Blank != (create_integer_code = get_property("Integer","create_example")))
-                {
-                  ex_code += ("(\"obj | %s: %%d\\n\" %% (obj | %s)).print();
-" % [create_integer_code,create_integer_code]);
-                }
-              }
+              pm_operator_binary_t1(
+                "Binary OR operator `|`. Bit in result value is set, if it exists in object of class `%s` or in method parameter." % class_name,
+                ["Char","Integer"],
+                "create_arith",
+                "create_example",
+                "|");
             }/*}}}*/
             case "operator_binary_circumflex#1":
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Binary XOR operator `^`. Bit in result value is set, if it exists in object of class `%s` or in method parameter, but not both." % class_name);
-              param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
-              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
-
-              obj_code = get_code(a_class,"obj","create_arith");
-
-              if (Blank != obj_code)
-              {
-                ex_code = ("
-%s
-" % obj_code);
-
-                if (Blank != (create_char_code = get_property("Char","create_example")))
-                {
-                  ex_code += ("(\"obj ^ %s: %%d\\n\" %% (obj ^ %s)).print();
-" % [create_char_code,create_char_code]);
-                }
-
-                if (Blank != (create_integer_code = get_property("Integer","create_example")))
-                {
-                  ex_code += ("(\"obj ^ %s: %%d\\n\" %% (obj ^ %s)).print();
-" % [create_integer_code,create_integer_code]);
-                }
-              }
+              pm_operator_binary_t1(
+                "Binary XOR operator `^`. Bit in result value is set, if it exists in object of class `%s` or in method parameter, but not both." % class_name,
+                ["Char","Integer"],
+                "create_arith",
+                "create_example",
+                "^");
             }/*}}}*/
             case "operator_binary_double_equal#1":
             {/*{{{*/
               if (a_method.is_static() && class_name != "Blank") new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Comparison operator `==`. Compares object of class `%s` with method parameter and return `1` if objects has same value or `0` otherwise." % class_name);
-              param_lsts[0].push("Any type.");
-              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
-              return_lst.push("  * `0` - method parameter has different value than object.");
-              return_lst.push("  * `1` - method parameter has same value as object.");
+              m_meth_descr_lst.push("Comparison operator `==`. Compares object of class `%s` with method parameter and return `1` if objects has same value or `0` otherwise." % class_name);
+              m_meth_param_lsts[0].push("Any type.");
+              m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
+              m_meth_return_lst.push("  * `0` - method parameter has different value than object.");
+              m_meth_return_lst.push("  * `1` - method parameter has same value as object.");
 
               obj_code = get_code(a_class,"obj_0","create_example");
               obj_cmp_code = get_code(a_class,"obj_1","create_compare");
 
               if (Blank != obj_code && Blank != obj_cmp_code)
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 %s
 %s
 obj_2 = obj_0;
@@ -1433,18 +1568,18 @@ obj_2 = obj_0;
             {/*{{{*/
               if (a_method.is_static() && class_name != "Blank") new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Comparison operator `!=`. Compares object of class `%s` with method parameter and return `0` if objects has same value or `1` otherwise." % class_name);
-              param_lsts[0].push("Any type.");
-              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
-              return_lst.push("  * `0` - method parameter has same value as object.");
-              return_lst.push("  * `1` - method parameter has different value than object.");
+              m_meth_descr_lst.push("Comparison operator `!=`. Compares object of class `%s` with method parameter and return `0` if objects has same value or `1` otherwise." % class_name);
+              m_meth_param_lsts[0].push("Any type.");
+              m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
+              m_meth_return_lst.push("  * `0` - method parameter has same value as object.");
+              m_meth_return_lst.push("  * `1` - method parameter has different value than object.");
 
               obj_code = get_code(a_class,"obj_0","create_example");
               obj_cmp_code = get_code(a_class,"obj_1","create_compare");
 
               if (Blank != obj_code && Blank != obj_cmp_code)
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 %s
 %s
 obj_2 = obj_0;
@@ -1457,237 +1592,87 @@ obj_2 = obj_0;
             {/*{{{*/
               if (a_method.is_static() && class_name != "Blank") new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Greater test operator `>`. Test if value of object of class `%s` is greater than value of method parameter." % class_name);
-              param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
-              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
-              return_lst.push("  * `1` - value of object of class `%s` is greater than value of method parameter." % class_name);
-              return_lst.push("  * `0` - value of object of class `%s` is less or equal than value of method parameter." % class_name);
-
-              obj_code = get_code(a_class,"obj","create_arith");
-
-              if (Blank != obj_code)
-              {
-                ex_code = ("
-%s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-" % obj_code);
-
-                if (Blank != (create_char_code = get_property("Char","create_example")))
-                {
-                  ex_code += ("(\"obj > %s: %%d\\n\" %% (obj > %s)).print();
-" % [create_char_code,create_char_code]);
-                }
-
-                if (Blank != (create_integer_code = get_property("Integer","create_example")))
-                {
-                  ex_code += ("(\"obj > %s: %%d\\n\" %% (obj > %s)).print();
-" % [create_integer_code,create_integer_code]);
-                }
-
-                if (Blank != (create_float_code = get_property("Float","create_example")))
-                {
-                  ex_code += ("(\"obj > %s: %%d\\n\" %% (obj > %s)).print();
-" % [create_float_code,create_float_code]);
-                }
-              }
+              pm_operator_binary_t3(
+                "Greater test operator `>`. Test if value of object of class `%s` is greater than value of method parameter." % class_name,
+                ["Char","Integer","Float"],
+                [
+                  "* Object of class %s." % doc_class_ref("Integer"),
+                  "  * `1` - value of object of class `%s` is greater than value of method parameter." % class_name,
+                  "  * `0` - value of object of class `%s` is less or equal than value of method parameter." % class_name
+                ],
+                "create_arith",
+                "create_example",
+                ">");
             }/*}}}*/
             case "operator_binary_ls_br#1":
             {/*{{{*/
               if (a_method.is_static() && class_name != "Blank") new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Lesser test operator `<`. Test if value of object of class `%s` is lesser than value of method parameter." % class_name);
-              param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
-              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
-              return_lst.push("  * `1` - value of object of class `%s` is less than value of method parameter." % class_name);
-              return_lst.push("  * `0` - value of object of class `%s` is greater or equal than value of method parameter." % class_name);
-
-              obj_code = get_code(a_class,"obj","create_arith");
-
-              if (Blank != obj_code)
-              {
-                ex_code = ("
-%s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-" % obj_code);
-
-                if (Blank != (create_char_code = get_property("Char","create_example")))
-                {
-                  ex_code += ("(\"obj < %s: %%d\\n\" %% (obj < %s)).print();
-" % [create_char_code,create_char_code]);
-                }
-
-                if (Blank != (create_integer_code = get_property("Integer","create_example")))
-                {
-                  ex_code += ("(\"obj < %s: %%d\\n\" %% (obj < %s)).print();
-" % [create_integer_code,create_integer_code]);
-                }
-
-                if (Blank != (create_float_code = get_property("Float","create_example")))
-                {
-                  ex_code += ("(\"obj < %s: %%d\\n\" %% (obj < %s)).print();
-" % [create_float_code,create_float_code]);
-                }
-              }
+              pm_operator_binary_t3(
+                "Lesser test operator `<`. Test if value of object of class `%s` is lesser than value of method parameter." % class_name,
+                ["Char","Integer","Float"],
+                [
+                  "* Object of class %s." % doc_class_ref("Integer"),
+                  "  * `1` - value of object of class `%s` is less than value of method parameter." % class_name,
+                  "  * `0` - value of object of class `%s` is greater or equal than value of method parameter." % class_name
+                ],
+                "create_arith",
+                "create_example",
+                "<");
             }/*}}}*/
             case "operator_binary_rs_br_equal#1":
             {/*{{{*/
               if (a_method.is_static() && class_name != "Blank") new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Greater or equal test operator `>=`. Test if value of object of class `%s` is greater or equal than value of method parameter." % class_name);
-              param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
-              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
-              return_lst.push("  * `1` - value of object of class `%s` is greater or equal than value of method parameter." % class_name);
-              return_lst.push("  * `0` - value of object of class `%s` is less than value of method parameter." % class_name);
-
-              obj_code = get_code(a_class,"obj","create_arith");
-
-              if (Blank != obj_code)
-              {
-                ex_code = ("
-%s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-" % obj_code);
-
-                if (Blank != (create_char_code = get_property("Char","create_example")))
-                {
-                  ex_code += ("(\"obj >= %s: %%d\\n\" %% (obj >= %s)).print();
-" % [create_char_code,create_char_code]);
-                }
-
-                if (Blank != (create_integer_code = get_property("Integer","create_example")))
-                {
-                  ex_code += ("(\"obj >= %s: %%d\\n\" %% (obj >= %s)).print();
-" % [create_integer_code,create_integer_code]);
-                }
-
-                if (Blank != (create_float_code = get_property("Float","create_example")))
-                {
-                  ex_code += ("(\"obj >= %s: %%d\\n\" %% (obj >= %s)).print();
-" % [create_float_code,create_float_code]);
-                }
-              }
+              pm_operator_binary_t3(
+                "Greater or equal test operator `>=`. Test if value of object of class `%s` is greater or equal than value of method parameter." % class_name,
+                ["Char","Integer","Float"],
+                [
+                  "* Object of class %s." % doc_class_ref("Integer"),
+                  "  * `1` - value of object of class `%s` is greater or equal than value of method parameter." % class_name,
+                  "  * `0` - value of object of class `%s` is less than value of method parameter." % class_name
+                ],
+                "create_arith",
+                "create_example",
+                ">=");
             }/*}}}*/
             case "operator_binary_ls_br_equal#1":
             {/*{{{*/
               if (a_method.is_static() && class_name != "Blank") new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Lesser or equal test operator `<=`. Test if value of object of class `%s` is lesser or equal than value of method parameter." % class_name);
-              param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
-              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
-              return_lst.push("  * `1` - value of object of class `%s` is less or equal than value of method parameter." % class_name);
-              return_lst.push("  * `0` - value of object of class `%s` is greater than value of method parameter." % class_name);
-
-              obj_code = get_code(a_class,"obj","create_arith");
-
-              if (Blank != obj_code)
-              {
-                ex_code = ("
-%s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-" % obj_code);
-
-                if (Blank != (create_char_code = get_property("Char","create_example")))
-                {
-                  ex_code += ("(\"obj <= %s: %%d\\n\" %% (obj <= %s)).print();
-" % [create_char_code,create_char_code]);
-                }
-
-                if (Blank != (create_integer_code = get_property("Integer","create_example")))
-                {
-                  ex_code += ("(\"obj <= %s: %%d\\n\" %% (obj <= %s)).print();
-" % [create_integer_code,create_integer_code]);
-                }
-
-                if (Blank != (create_float_code = get_property("Float","create_example")))
-                {
-                  ex_code += ("(\"obj <= %s: %%d\\n\" %% (obj <= %s)).print();
-" % [create_float_code,create_float_code]);
-                }
-              }
+              pm_operator_binary_t3(
+                "Lesser or equal test operator `<=`. Test if value of object of class `%s` is lesser or equal than value of method parameter." % class_name,
+                ["Char","Integer","Float"],
+                [
+                  "* Object of class %s." % doc_class_ref("Integer"),
+                  "  * `1` - value of object of class `%s` is less or equal than value of method parameter." % class_name,
+                  "  * `0` - value of object of class `%s` is greater than value of method parameter." % class_name
+                ],
+                "create_arith",
+                "create_example",
+                "<=");
             }/*}}}*/
             case "operator_binary_double_rs_br#1":
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Right shift operator `>>`. Value of object of class `%s` is shifted to right by count of bits given by method parameter." % class_name);
-              param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
-              return_lst.push("* Object of class `%s`." % class_name);
-
-              obj_code = get_code(a_class,"obj","create_arith");
-              print_code = get_code(a_class,"obj","check_print");
-              res_print_code = get_code(a_class,"res","check_print");
-
-              if (Blank != obj_code)
-              {
-                ex_code = ("
-%s
-%s
-" % [obj_code,print_code]);
-
-                if (Blank != (create_char_code = get_property("Char","create_small")))
-                {
-                  ex_code += ("res = obj >> %s;
-%s
-" % [create_char_code,res_print_code]);
-                }
-
-                if (Blank != (create_integer_code = get_property("Integer","create_small")))
-                {
-                  ex_code += ("res = obj >> %s;
-%s
-" % [create_integer_code,res_print_code]);
-                }
-              }
+              pm_operator_binary_t2(
+                "Right shift operator `>>`. Value of object of class `%s` is shifted to right by count of bits given by method parameter." % class_name,
+                ["Char","Integer"],
+                "create_arith",
+                "create_small",
+                ">>");
             }/*}}}*/
             case "operator_binary_double_ls_br#1":
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Left shift operator `<<`. Value of object of class `%s` is shifted to left by count of bits given by method parameter." % class_name);
-              param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
-              return_lst.push("* Object of class `%s`." % class_name);
-
-              obj_code = get_code(a_class,"obj","create_arith");
-              print_code = get_code(a_class,"obj","check_print");
-              res_print_code = get_code(a_class,"res","check_print");
-
-              if (Blank != obj_code)
-              {
-                ex_code = ("
-%s
-%s
-" % [obj_code,print_code]);
-
-                if (Blank != (create_char_code = get_property("Char","create_small")))
-                {
-                  ex_code += ("res = obj << %s;
-%s
-" % [create_char_code,res_print_code]);
-                }
-
-                if (Blank != (create_integer_code = get_property("Integer","create_small")))
-                {
-                  ex_code += ("res = obj << %s;
-%s
-" % [create_integer_code,res_print_code]);
-                }
-              }
+              pm_operator_binary_t2(
+                "Left shift operator `<<`. Value of object of class `%s` is shifted to left by count of bits given by method parameter." % class_name,
+                ["Char","Integer"],
+                "create_arith",
+                "create_small",
+                "<<");
             }/*}}}*/
             case "operator_binary_plus#1":
             {/*{{{*/
@@ -1695,16 +1680,16 @@ obj_2 = obj_0;
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Concatenation operator `+`. Creates object of class `%s` containing elements of original object of class `%s` concatenated with elements retrieved from method parameter." % [class_name,class_name]);
-                param_lsts[0].push("Iterable type.");
-                return_lst.push("* Object of class `%s` containing elements of original object of class `%s` concatenated with elements retrieved from method parameter." % [class_name,class_name]);
+                m_meth_descr_lst.push("Concatenation operator `+`. Creates object of class `%s` containing elements of original object of class `%s` concatenated with elements retrieved from method parameter." % [class_name,class_name]);
+                m_meth_param_lsts[0].push("Iterable type.");
+                m_meth_return_lst.push("* Object of class `%s` containing elements of original object of class `%s` concatenated with elements retrieved from method parameter." % [class_name,class_name]);
 
                 obj_code = get_code(a_class,"obj","create_example");
                 arr_code = get_property("Array","create_example");
 
                 if (Blank != obj_code && Blank != arr_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 res = obj + %s;
 (\"obj: %%s\\n\" %% obj.to_string()).print();
@@ -1714,170 +1699,49 @@ res = obj + %s;
               }
               else
               {
-                descr_lst.push("Add operator `+`. It adds value of method parameter to value of object of class `%s`." % class_name);
-
-                param_classes = ["Char","Integer","Float"];
-
-                ret_classes = new Set();
-                for (param_class <- param_classes)
-                  ret_classes.insert(get_prior_type(class_name,param_class));
-
-                param_lsts[0].push("One from following:");
-                for (param_class <- param_classes)
-                  param_lsts[0].push("  * Object of class %s." % doc_class_ref(param_class));
-
-                if (ret_classes.length() > 1)
-                {
-                  return_lst.push("* One From following:");
-                  for (param_class <- param_classes)
-                    if (ret_classes.contain(param_class))
-                      return_lst.push("  * Object of class %s." % doc_class_ref(param_class));
-                }
-                else
-                {
-                  return_lst.push("* Object of class %s." % doc_class_ref(ret_classes.item(ret_classes.first_idx())));
-                }
-
-                obj_code = get_code(a_class,"obj","create_arith");
-                print_code = get_code(a_class,"obj","check_print");
-
-                if (Blank != obj_code)
-                {
-                  ex_code = ("
-%s
-%s
-" % [obj_code,print_code]);
-
-                  for (param_class <- param_classes)
-                  {
-                    if (Blank != (create_code = get_property(param_class,"create_example")) &&
-                        Blank != (print_code = get_code(get_prior_type(class_name,param_class),"res","check_print")))
-                    {
-                      ex_code += ("res = obj + %s;
-%s
-" % [create_code,print_code]);
-                    }
-                  }
-                }
+                pm_operator_binary_t0(
+                  "Add operator `+`. Operator adds value of method parameter to value of object of class `%s`." % class_name,
+                  ["Char","Integer","Float"],
+                  "create_arith",
+                  "create_example",
+                  "+");
               }
             }/*}}}*/
             case "operator_binary_minus#1":
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Substract operator `-`. It substract value of method parameter from value of object of class `%s`." % class_name);
-
-              param_classes = ["Char","Integer","Float"];
-
-              ret_classes = new Set();
-              for (param_class <- param_classes)
-                ret_classes.insert(get_prior_type(class_name,param_class));
-
-              param_lsts[0].push("One from following:");
-              for (param_class <- param_classes)
-                param_lsts[0].push("  * Object of class %s." % doc_class_ref(param_class));
-
-              if (ret_classes.length() > 1)
-              {
-                return_lst.push("* One From following:");
-                for (param_class <- param_classes)
-                  if (ret_classes.contain(param_class))
-                    return_lst.push("  * Object of class %s." % doc_class_ref(param_class));
-              }
-              else
-              {
-                return_lst.push("* Object of class %s." % doc_class_ref(ret_classes.item(ret_classes.first_idx())));
-              }
-
-              obj_code = get_code(a_class,"obj","create_arith");
-              print_code = get_code(a_class,"obj","check_print");
-
-              if (Blank != obj_code)
-              {
-                ex_code = ("
-%s
-%s
-" % [obj_code,print_code]);
-
-                for (param_class <- param_classes)
-                {
-                  if (Blank != (create_code = get_property(param_class,"create_example")) &&
-                      Blank != (print_code = get_code(get_prior_type(class_name,param_class),"res","check_print")))
-                  {
-                    ex_code += ("res = obj - %s;
-%s
-" % [create_code,print_code]);
-                  }
-                }
-              }
+              pm_operator_binary_t0(
+                "Substract operator `-`. Operator substracts value of method parameter from value of object of class `%s`." % class_name,
+                ["Char","Integer","Float"],
+                "create_arith",
+                "create_example",
+                "-");
             }/*}}}*/
             case "operator_binary_asterisk#1":
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Multiply operator `*`. It multiplies value of object of class `%s` by value of method parameter." % class_name);
+              pm_operator_binary_t0(
+                "Multiply operator `*`. It multiplies value of object of class `%s` by value of method parameter." % class_name,
+                ["Char","Integer","Float"],
+                "create_small",
+                "create_example",
+                "*");
 
-              param_classes = ["Char","Integer","Float"];
-
-              ret_classes = new Set();
-              for (param_class <- param_classes)
-                ret_classes.insert(get_prior_type(class_name,param_class));
-
-              param_lsts[0].push("One from following:");
-              for (param_class <- param_classes)
-                param_lsts[0].push("  * Object of class %s." % doc_class_ref(param_class));
-
-              if (ret_classes.length() > 1)
-              {
-                return_lst.push("* One From following:");
-                for (param_class <- param_classes)
-                  if (ret_classes.contain(param_class))
-                    return_lst.push("  * Object of class %s." % doc_class_ref(param_class));
-              }
-              else
-              {
-                return_lst.push("* Object of class %s." % doc_class_ref(ret_classes.item(ret_classes.first_idx())));
-              }
-
-              // - exception for integer -
               if (class_name == "Integer")
               {
-                descr_lst.push("If method parameter is object of class %s, then result will be created as repeated concatenation of this string." % doc_class_ref("String"));
-                param_lsts[0].push("  * Object of class %s." % doc_class_ref("String"));
-                return_lst.push("  * Object of class %s." % doc_class_ref("String"));
-              }
+                m_meth_descr_lst.push("If method parameter is object of class %s, then result will be created as repeated concatenation of this string." % doc_class_ref("String"));
+                m_meth_param_lsts[0].push("  * Object of class %s." % doc_class_ref("String"));
+                m_meth_return_lst.push("  * Object of class %s." % doc_class_ref("String"));
 
-              obj_code = get_code(a_class,"obj","create_small");
-              print_code = get_code(a_class,"obj","check_print");
-
-              if (Blank != obj_code)
-              {
-                ex_code = ("
-%s
-%s
-" % [obj_code,print_code]);
-
-                for (param_class <- param_classes)
+                if (Blank != m_meth_ex_code &&
+                    Blank != (create_code = get_property("String","create_example")) &&
+                    Blank != (print_code = get_code("String","res","check_print")))
                 {
-                  if (Blank != (create_code = get_property(param_class,"create_example")) &&
-                      Blank != (print_code = get_code(get_prior_type(class_name,param_class),"res","check_print")))
-                  {
-                    ex_code += ("res = obj * %s;
+                    m_meth_ex_code += ("res = obj * %s;
 %s
 " % [create_code,print_code]);
-                  }
-                }
-
-                // - exception for integer -
-                if (class_name == "Integer")
-                {
-                  if (Blank != (create_code = get_property("String","create_example")) &&
-                      Blank != (print_code = get_code("String","res","check_print")))
-                  {
-                    ex_code += ("res = obj * %s;
-%s
-" % [create_code,print_code]);
-                  }
                 }
               }
             }/*}}}*/
@@ -1885,107 +1749,132 @@ res = obj + %s;
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Divide operator `/`. It divides value of object of class `%s` by value of method parameter." % class_name);
-
-              param_classes = ["Char","Integer","Float"];
-
-              ret_classes = new Set();
-              for (param_class <- param_classes)
-                ret_classes.insert(get_prior_type(class_name,param_class));
-
-              param_lsts[0].push("One from following:");
-              for (param_class <- param_classes)
-                param_lsts[0].push("  * Object of class %s." % doc_class_ref(param_class));
-
-              if (ret_classes.length() > 1)
-              {
-                return_lst.push("* One From following:");
-                for (param_class <- param_classes)
-                  if (ret_classes.contain(param_class))
-                    return_lst.push("  * Object of class %s." % doc_class_ref(param_class));
-              }
-              else
-              {
-                return_lst.push("* Object of class %s." % doc_class_ref(ret_classes.item(ret_classes.first_idx())));
-              }
-
-              obj_code = get_code(a_class,"obj","create_arith");
-              print_code = get_code(a_class,"obj","check_print");
-
-              if (Blank != obj_code)
-              {
-                ex_code = ("
-%s
-%s
-" % [obj_code,print_code]);
-
-                for (param_class <- param_classes)
-                {
-                  if (Blank != (create_code = get_property(param_class,"create_small")) &&
-                      Blank != (print_code = get_code(get_prior_type(class_name,param_class),"res","check_print")))
-                  {
-                    ex_code += ("res = obj / %s;
-%s
-" % [create_code,print_code]);
-                  }
-                }
-              }
+              pm_operator_binary_t0(
+                "Divide operator `/`. Operator divides value of object of class `%s` by value of method parameter." % class_name,
+                ["Char","Integer","Float"],
+                "create_arith",
+                "create_small",
+                "/");
             }/*}}}*/
             case "operator_binary_percent#1":
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Modulus operator `%%`. It takes modulus of value of object of class `%s` divided by value of method parameter." % class_name);
-              param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
-              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
+              pm_operator_binary_t0(
+                "Modulus operator `%%`. Operator computes modulus of value of object of class `%s` divided by value of method parameter." % class_name,
+                ["Char","Integer"],
+                "create_arith",
+                "create_example",
+                "%");
+            }/*}}}*/
+            case "operator_unary_post_double_plus#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              obj_code = get_code(a_class,"obj","create_arith");
+              m_meth_descr_lst.push("Post increment operator `++`. Increase value of object of class `%s` by one." % class_name);
+              m_meth_return_lst.push("* Value of object before incrementation.");
+
+              obj_code = get_code(a_class,"obj","create_example");
 
               if (Blank != obj_code)
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 %s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj++: %%s\\n\" %% (obj++).to_string()).print();
+(\"obj: %%s\\n\" %% obj.to_string()).print();
 " % obj_code);
-
-                if (Blank != (create_char_code = get_property("Char","create_example")))
-                {
-                  ex_code += ("(\"obj %%%% %s: %%d\\n\" %% (obj %% %s)).print();
-" % [create_char_code,create_char_code]);
-                }
-
-                if (Blank != (create_integer_code = get_property("Integer","create_example")))
-                {
-                  ex_code += ("(\"obj %%%% %s: %%d\\n\" %% (obj %% %s)).print();
-" % [create_integer_code,create_integer_code]);
-                }
               }
+            }/*}}}*/
+            case "operator_unary_post_double_minus#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              m_meth_descr_lst.push("Post decrement operator `--`. Decrease value of object of class `%s` by one." % class_name);
+              m_meth_return_lst.push("* Value of object before decrementation.");
+
+              obj_code = get_code(a_class,"obj","create_example");
+
+              if (Blank != obj_code)
+              {
+                m_meth_ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj--: %%s\\n\" %% (obj--).to_string()).print();
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+              }
+            }/*}}}*/
+            case "operator_unary_pre_double_plus#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              m_meth_descr_lst.push("Pre increment operator `++`. Increase value of object of class `%s` by one." % class_name);
+              m_meth_return_lst.push("* Value of object.");
+
+              obj_code = get_code(a_class,"obj","create_example");
+
+              if (Blank != obj_code)
+              {
+                m_meth_ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"++obj: %%s\\n\" %% (++obj).to_string()).print();
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+              }
+            }/*}}}*/
+            case "operator_unary_pre_double_minus#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              m_meth_descr_lst.push("Pre decrement operator `--`. Decrease value of object of class `%s` by one." % class_name);
+              m_meth_return_lst.push("* Value of object.");
+
+              obj_code = get_code(a_class,"obj","create_example");
+
+              if (Blank != obj_code)
+              {
+                m_meth_ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"--obj: %%s\\n\" %% (--obj).to_string()).print();
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+              }
+            }/*}}}*/
+            case "operator_unary_pre_plus#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              pm_operator_binary_t4("Unary operator `+`. Return value of object of class `%s`." % class_name,
+              "create_example",
+              "+obj");
             }/*}}}*/
             case "operator_binary_le_br_re_br#1":
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Item selection operator `[]`.");
+              m_meth_descr_lst.push("Item selection operator `[]`.");
 
               if (Blank != (idx_name = get_property(class_name,"iter_index_name")))
               {
-                descr_lst.push("Retrieve element from object of class `%s` stored at requested %s position." % [class_name,idx_name]);
+                m_meth_descr_lst.push("Retrieve element from object of class `%s` stored at requested %s position." % [class_name,idx_name]);
 
                 switch (idx_name)
                 {
-                  case "index": param_lsts[0].push("Type convertible to integer.");
-                  case "key": param_lsts[0].push("Any type.");
+                  case "index": m_meth_param_lsts[0].push("Type convertible to integer.");
+                  case "key": m_meth_param_lsts[0].push("Any type.");
                 }
 
-                return_lst.push(" * Object stored in object of class `%s` at position of requested %s." % [class_name,idx_name]);
+                m_meth_return_lst.push(" * Object stored in object of class `%s` at position of requested %s." % [class_name,idx_name]);
 
                 obj_code = get_code(a_class,"obj","create_example");
                 iter_indexes = get_code(a_class,0,"iter_indexes");
 
                 if (Blank != obj_code && Blank != iter_indexes)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 " % [obj_code]);
@@ -1993,7 +1882,7 @@ res = obj + %s;
                   for (idx <- iter_indexes)
                   {
                     idx_str = type String == type idx ? "\"%s\"" % idx : idx.to_string();
-                    ex_code += ("(\"obj[%s]: %%s\\n\" %% obj[%s].to_string()).print();
+                    m_meth_ex_code += ("(\"obj[%s]: %%s\\n\" %% obj[%s].to_string()).print();
 " % [idx_str.replace("\"","\\\""),idx_str]);
                   }
                 }
@@ -2009,7 +1898,7 @@ res = obj + %s;
             Blank != source_url ? "[`%s`](%s)" % [method_name,source_url] : "`%s`" % method_name]);
 
         // - if explicit description is not available -
-        if (!get_method_descr(class_name,method_name,descr_lst,param_lsts,return_lst,ex_code))
+        if (!get_method_descr(class_name,method_name))
         {
           switch (method_name)
           {
@@ -2019,14 +1908,14 @@ res = obj + %s;
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Release all elements stored in object of class `%s`." % class_name);
-                return_lst.push("* Object of class %s." % doc_class_ref("Blank"));
+                m_meth_descr_lst.push("Release all elements stored in object of class `%s`." % class_name);
+                m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Blank"));
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 obj.clear();
@@ -2041,14 +1930,14 @@ obj.clear();
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Retrieve keys contained in object of class `%s`. Keys are returned as object of class %s." % [class_name,doc_class_ref("Array")]);
-                return_lst.push("* Object of class %s containing all keys." % doc_class_ref("Array"));
+                m_meth_descr_lst.push("Retrieve keys contained in object of class `%s`. Keys are returned as object of class %s." % [class_name,doc_class_ref("Array")]);
+                m_meth_return_lst.push("* Object of class %s containing all keys." % doc_class_ref("Array"));
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 keys = obj.keys();
@@ -2064,14 +1953,14 @@ keys = obj.keys();
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Retrieve list of elements contained in object of class `%s`. Elements are returned as object of class %s." % [class_name,doc_class_ref("Array")]);
-                return_lst.push("* Object of class %s containing all elements." % doc_class_ref("Array"));
+                m_meth_descr_lst.push("Retrieve list of elements contained in object of class `%s`. Elements are returned as object of class %s." % [class_name,doc_class_ref("Array")]);
+                m_meth_return_lst.push("* Object of class %s containing all elements." % doc_class_ref("Array"));
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 items = obj.items();
@@ -2087,15 +1976,15 @@ items = obj.items();
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Insert method parameter to end of object of class `%s`." % class_name);
-                param_lsts[0].push("Any type.");
-                return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
+                m_meth_descr_lst.push("Insert method parameter to end of object of class `%s`." % class_name);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 obj.push(6);
@@ -2111,15 +2000,15 @@ obj.push(7);
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Insert reference to method parameter to end of object of class `%s`." % class_name);
-                param_lsts[0].push("Any type.");
-                return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
+                m_meth_descr_lst.push("Insert reference to method parameter to end of object of class `%s`." % class_name);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 value = 0;
 obj.push_ref(value);
@@ -2136,15 +2025,15 @@ value = \"Hello world!\";
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Insert method parameter to object of class `%s`." % class_name);
-                param_lsts[0].push("Any type.");
-                return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
+                m_meth_descr_lst.push("Insert method parameter to object of class `%s`." % class_name);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 obj.insert(5);
@@ -2161,15 +2050,15 @@ obj.insert(7);
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Insert reference to method parameter to object of class `%s`." % class_name);
-                param_lsts[0].push("Any type.");
-                return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
+                m_meth_descr_lst.push("Insert reference to method parameter to object of class `%s`." % class_name);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 value = 0;
 obj.insert_ref(value);
@@ -2186,15 +2075,15 @@ value = \"Hello world!\";
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Append method parameter to end of object of class `%s`." % class_name);
-                param_lsts[0].push("Any type.");
-                return_lst.push("* Object of class `%s`. Index of appended element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
+                m_meth_descr_lst.push("Append method parameter to end of object of class `%s`." % class_name);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("* Object of class `%s`. Index of appended element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 (\"obj.append(1): %%d\\n\" %% obj.append(1)).print();
@@ -2211,15 +2100,15 @@ value = \"Hello world!\";
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Append reference to method parameter to end of object of class `%s`." % class_name);
-                param_lsts[0].push("Any type.");
-                return_lst.push("* Object of class `%s`. Index of appended element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
+                m_meth_descr_lst.push("Append reference to method parameter to end of object of class `%s`." % class_name);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("* Object of class `%s`. Index of appended element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 value = 0;
 (\"obj.append_ref(value): %%d\\n\" %% obj.append_ref(value)).print();
@@ -2236,15 +2125,15 @@ value = \"Hello world!\";
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Prepend method parameter before begining of object of class `%s`." % class_name);
-                param_lsts[0].push("Any type.");
-                return_lst.push("* Object of class `%s`. Index of prepended element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
+                m_meth_descr_lst.push("Prepend method parameter before begining of object of class `%s`." % class_name);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("* Object of class `%s`. Index of prepended element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 (\"obj.prepend(1): %%d\\n\" %% obj.prepend(1)).print();
@@ -2261,15 +2150,15 @@ value = \"Hello world!\";
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Prepend reference to method parameter before begining of object of class `%s`." % class_name);
-                param_lsts[0].push("Any type.");
-                return_lst.push("* Object of class `%s`. Index of prepended element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
+                m_meth_descr_lst.push("Prepend reference to method parameter before begining of object of class `%s`." % class_name);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("* Object of class `%s`. Index of prepended element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 value = 0;
 (\"obj.prepend_ref(value): %%d\\n\" %% obj.prepend_ref(value)).print();
@@ -2286,16 +2175,16 @@ value = \"Hello world!\";
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Insert second method parameter before element identified by first method parameter to object of class `%s`." % class_name);
-                param_lsts[0].push("Type convertible to integer.");
-                param_lsts[1].push("Any type.");
-                return_lst.push("* Object of class `%s`. Index of inserted element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
+                m_meth_descr_lst.push("Insert second method parameter before element identified by first method parameter to object of class `%s`." % class_name);
+                m_meth_param_lsts[0].push("Type convertible to integer.");
+                m_meth_param_lsts[1].push("Any type.");
+                m_meth_return_lst.push("* Object of class `%s`. Index of inserted element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 idx = obj.get_idx(2);
 (\"obj: %%s\\n\" %% obj.to_string()).print();
@@ -2313,16 +2202,16 @@ obj.insert_before(idx,6);
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Insert reference to second method parameter before element identified by first method parameter to object of class `%s`." % class_name);
-                param_lsts[0].push("Type convertible to integer.");
-                param_lsts[1].push("Any type.");
-                return_lst.push("* Object of class `%s`. Index of inserted element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
+                m_meth_descr_lst.push("Insert reference to second method parameter before element identified by first method parameter to object of class `%s`." % class_name);
+                m_meth_param_lsts[0].push("Type convertible to integer.");
+                m_meth_param_lsts[1].push("Any type.");
+                m_meth_return_lst.push("* Object of class `%s`. Index of inserted element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 value = 0;
 idx = obj.get_idx(2);
@@ -2341,16 +2230,16 @@ value = \"Hello world!\";
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Insert second method parameter after element identified by first method parameter to object of class `%s`." % class_name);
-                param_lsts[0].push("Type convertible to integer.");
-                param_lsts[1].push("Any type.");
-                return_lst.push("* Object of class `%s`. Index of inserted element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
+                m_meth_descr_lst.push("Insert second method parameter after element identified by first method parameter to object of class `%s`." % class_name);
+                m_meth_param_lsts[0].push("Type convertible to integer.");
+                m_meth_param_lsts[1].push("Any type.");
+                m_meth_return_lst.push("* Object of class `%s`. Index of inserted element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 idx = obj.get_idx(2);
 (\"obj: %%s\\n\" %% obj.to_string()).print();
@@ -2368,16 +2257,16 @@ obj.insert_after(idx,6);
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Insert reference to second method parameter after element identified by first method parameter to object of class `%s`." % class_name);
-                param_lsts[0].push("Type convertible to integer.");
-                param_lsts[1].push("Any type.");
-                return_lst.push("* Object of class `%s`. Index of inserted element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
+                m_meth_descr_lst.push("Insert reference to second method parameter after element identified by first method parameter to object of class `%s`." % class_name);
+                m_meth_param_lsts[0].push("Type convertible to integer.");
+                m_meth_param_lsts[1].push("Any type.");
+                m_meth_return_lst.push("* Object of class `%s`. Index of inserted element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 value = 0;
 idx = obj.get_idx(2);
@@ -2396,14 +2285,14 @@ value = \"Hello world!\";
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Remove and return last element from object of class `%s`." % class_name);
-                return_lst.push("* Object removed from object of class `%s`." % class_name);
+                m_meth_descr_lst.push("Remove and return last element from object of class `%s`." % class_name);
+                m_meth_return_lst.push("* Object removed from object of class `%s`." % class_name);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 (\"obj.pop(): %%s\\n\" %% obj.pop().to_string()).print();
@@ -2419,14 +2308,14 @@ value = \"Hello world!\";
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Retrieve and return last element of object of class `%s`." % class_name);
-                return_lst.push("* Object representing last element of object of class `%s`." % class_name);
+                m_meth_descr_lst.push("Retrieve and return last element of object of class `%s`." % class_name);
+                m_meth_return_lst.push("* Object representing last element of object of class `%s`." % class_name);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 (\"obj.last(): %%s\\n\" %% obj.last().to_string()).print();
@@ -2441,14 +2330,14 @@ value = \"Hello world!\";
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Remove and return first element from object of class `%s`." % class_name);
-                return_lst.push("* Object removed from object of class `%s`." % class_name);
+                m_meth_descr_lst.push("Remove and return first element from object of class `%s`." % class_name);
+                m_meth_return_lst.push("* Object removed from object of class `%s`." % class_name);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 (\"obj.next(): %%s\\n\" %% obj.next().to_string()).print();
@@ -2464,16 +2353,16 @@ value = \"Hello world!\";
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Remove element from object of class `%s` stored at position determined by method parameter." % class_name);
-                param_lsts[0].push("Type convertible to integer.");
-                return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
+                m_meth_descr_lst.push("Remove element from object of class `%s` stored at position determined by method parameter." % class_name);
+                m_meth_param_lsts[0].push("Type convertible to integer.");
+                m_meth_return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
 
                 obj_code = get_code(a_class,"obj","create_example");
                 iter_indexes = get_code(a_class,0,"iter_indexes");
 
                 if (Blank != obj_code && Blank != iter_indexes)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 obj.remove(%d);
@@ -2489,9 +2378,9 @@ obj.remove(%d);
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Test if object of class `%s` contains element with same value as object given by method parameter." % class_name);
-                param_lsts[0].push("Any type.");
-                return_lst.push("Object of class `%s`.
+                m_meth_descr_lst.push("Test if object of class `%s` contains element with same value as object given by method parameter." % class_name);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("Object of class `%s`.
   * `0` - object of class `%s` does not contain method parameter.
   * `1` - object of class `%s` does contain method parameter." % [doc_class_ref("Integer"),class_name,class_name]);
 
@@ -2499,7 +2388,7 @@ obj.remove(%d);
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 (\"obj.contain(1): %%d\\n\" %% obj.contain(1)).print();
@@ -2514,15 +2403,15 @@ obj.remove(%d);
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Replace all elements of object of class `%s` by method parameter." % class_name);
-                param_lsts[0].push("Any type.");
-                return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
+                m_meth_descr_lst.push("Replace all elements of object of class `%s` by method parameter." % class_name);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 obj.fill(0);
@@ -2537,9 +2426,9 @@ obj.fill(0);
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Test if object of class `%s` contains element with index given by method parameter." % class_name);
-                param_lsts[0].push("Type convertible to integer.");
-                return_lst.push("Object of class %s.
+                m_meth_descr_lst.push("Test if object of class `%s` contains element with index given by method parameter." % class_name);
+                m_meth_param_lsts[0].push("Type convertible to integer.");
+                m_meth_return_lst.push("Object of class %s.
   * `1` - if object of class `%s` contains element with given index.
   * `0` - otherwise.
 " % [doc_class_ref("Integer"),class_name]);
@@ -2548,7 +2437,7 @@ obj.fill(0);
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 (\"obj.has_idx(2): %%d\\n\" %% obj.has_idx(2)).print();
@@ -2563,16 +2452,16 @@ obj.fill(0);
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("From object of class `%s`, retrieve index of first element equal to method parameter." % class_name);
-                param_lsts[0].push("Any type.");
-                return_lst.push("* Object of class `%s`, if method parameter is contained as element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
-                return_lst.push("* Object of class `%s` otherwise." % doc_class_ref("Blank"));
+                m_meth_descr_lst.push("From object of class `%s`, retrieve index of first element equal to method parameter." % class_name);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("* Object of class `%s`, if method parameter is contained as element in object of class `%s`." % [doc_class_ref("Integer"),class_name]);
+                m_meth_return_lst.push("* Object of class `%s` otherwise." % doc_class_ref("Blank"));
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 (\"obj.get_idx(2): %%s\\n\" %% obj.get_idx(2).to_string()).print();
@@ -2587,15 +2476,15 @@ obj.fill(0);
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("From object of class `%s`, retrieve indexes of elements that are equal to method parameter. Element indexes are returned as object of class `%s`." % [class_name,doc_class_ref("Array")]);
-                param_lsts[0].push("Any type.");
-                return_lst.push("* Object of class `%s` containing indexes of elements, that are equal to method parameter." % doc_class_ref("Array"));
+                m_meth_descr_lst.push("From object of class `%s`, retrieve indexes of elements that are equal to method parameter. Element indexes are returned as object of class `%s`." % [class_name,doc_class_ref("Array")]);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("* Object of class `%s` containing indexes of elements, that are equal to method parameter." % doc_class_ref("Array"));
 
                 obj_code = get_code(a_class,"obj","create_repeated");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 (\"obj.get_idxs(2): %%s\\n\" %% obj.get_idxs(2).to_string()).print();
@@ -2610,16 +2499,16 @@ obj.fill(0);
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Store reference to second method parameter under key determined by first method parameter in object of class `%s`." % class_name);
-                param_lsts[0].push("Any type.");
-                param_lsts[1].push("Any type.");
-                return_lst.push("* Object of class %s." % doc_class_ref("Blank"));
+                m_meth_descr_lst.push("Store reference to second method parameter under key determined by first method parameter in object of class `%s`." % class_name);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_param_lsts[1].push("Any type.");
+                m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Blank"));
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 value = 0;
 obj.store_ref(\"Value\",value);
@@ -2636,9 +2525,9 @@ value = \"Hello world!\";
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Test if object of class `%s` has key given by method parameter." % class_name);
-                param_lsts[0].push("Any type.");
-                return_lst.push("Object of class %s.
+                m_meth_descr_lst.push("Test if object of class `%s` has key given by method parameter." % class_name);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("Object of class %s.
 * `0` - object of class `%s` does not have given key.
 * `1` - object of class `%s` has given key.
 " % [doc_class_ref("Integer"),class_name,class_name]);
@@ -2647,7 +2536,7 @@ value = \"Hello world!\";
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 (\"obj.has_key(\\\"Two\\\"): %%d\\n\" %% obj.has_key(\"Two\")).print();
@@ -2663,15 +2552,15 @@ value = \"Hello world!\";
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Remove key given by method parameter from object of class `%s`. Value of object stored under key will be also removed." % class_name);
-                param_lsts[0].push("Any type.");
-                return_lst.push("Object of class %s." % doc_class_ref("Blank"));
+                m_meth_descr_lst.push("Remove key given by method parameter from object of class `%s`. Value of object stored under key will be also removed." % class_name);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("Object of class %s." % doc_class_ref("Blank"));
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 obj.remove_key(\"Two\");
@@ -2686,29 +2575,29 @@ obj.remove_key(\"Two\");
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Retrieve first key of object of class `%s`." % class_name);
-                return_lst.push("* Value of first key of object of class `%s` if it contains some elements." % class_name);
-                return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+                m_meth_descr_lst.push("Retrieve first key of object of class `%s`." % class_name);
+                m_meth_return_lst.push("* Value of first key of object of class `%s` if it contains some elements." % class_name);
+                m_meth_return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj.first_key(): %%s\\n\" %% obj.first_key().to_string()).print();
 " % obj_code);
 
                   if (Blank != (iter_remove_key_code = get_property(class_name,"iter_remove_key")))
                   {
-                    ex_code += ("%s;
+                    m_meth_ex_code += ("%s;
 (\"obj.first_key(): %%s\\n\" %% obj.first_key().to_string()).print();
 ") % (iter_remove_key_code % ["obj","obj.first_key()"]);
 
                   }
                   if (Blank != (clear_code = get_property(class_name,"cont_clear")))
                   {
-                    ex_code += ("%s;
+                    m_meth_ex_code += ("%s;
 (\"obj.first_key(): %%s\\n\" %% obj.first_key().to_string()).print();
 ") % (clear_code % "obj");
                   }
@@ -2721,29 +2610,29 @@ obj.remove_key(\"Two\");
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Retrieve last key of object of class `%s`." % class_name);
-                return_lst.push("* Value of last key of object of class `%s` if it contains some elements." % class_name);
-                return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+                m_meth_descr_lst.push("Retrieve last key of object of class `%s`." % class_name);
+                m_meth_return_lst.push("* Value of last key of object of class `%s` if it contains some elements." % class_name);
+                m_meth_return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
 
                 obj_code = get_code(a_class,"obj","create_example");
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj.last_key(): %%s\\n\" %% obj.last_key().to_string()).print();
 " % obj_code);
 
                   if (Blank != (iter_remove_key_code = get_property(class_name,"iter_remove_key")))
                   {
-                    ex_code += ("%s;
+                    m_meth_ex_code += ("%s;
 (\"obj.last_key(): %%s\\n\" %% obj.last_key().to_string()).print();
 ") % (iter_remove_key_code % ["obj","obj.last_key()"]);
                   }
 
                   if (Blank != (clear_code = get_property(class_name,"cont_clear")))
                   {
-                    ex_code += ("%s;
+                    m_meth_ex_code += ("%s;
 (\"obj.last_key(): %%s\\n\" %% obj.last_key().to_string()).print();
 ") % (clear_code % "obj");
                   }
@@ -2756,17 +2645,17 @@ obj.remove_key(\"Two\");
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("From object of class `%s` retrieve key following key identified by method parameter." % class_name);
-                param_lsts[0].push("Any type.");
-                return_lst.push("* Value of key following key identified by method parameter, if key identified by method parameter is not last key in object of class `%s`." % class_name);
-                return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+                m_meth_descr_lst.push("From object of class `%s` retrieve key following key identified by method parameter." % class_name);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("* Value of key following key identified by method parameter, if key identified by method parameter is not last key in object of class `%s`." % class_name);
+                m_meth_return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
 
                 obj_code = get_code(a_class,"obj","create_example");
                 iter_first_key_code = get_property(class_name,"iter_first_key");
 
                 if (Blank != obj_code && Blank != iter_first_key_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 key = %s;
@@ -2784,17 +2673,17 @@ do {
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("From object of class `%s` retrieve key preceding key identified by method parameter." % class_name);
-                param_lsts[0].push("Any type.");
-                return_lst.push("* Value of key preceding key identified by method parameter, if key identified by method parameter is not first key in object of class `%s`." % class_name);
-                return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+                m_meth_descr_lst.push("From object of class `%s` retrieve key preceding key identified by method parameter." % class_name);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("* Value of key preceding key identified by method parameter, if key identified by method parameter is not first key in object of class `%s`." % class_name);
+                m_meth_return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
 
                 obj_code = get_code(a_class,"obj","create_example");
                 iter_last_key_code = get_property(class_name,"iter_last_key");
 
                 if (Blank != obj_code && Blank != iter_last_key_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 key = %s;
@@ -2812,12 +2701,12 @@ do {
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Retrieve key of object of class `%s` which value is less or equal than value of method parameter." % class_name);
-                param_lsts[0].push("Any type.");
-                return_lst.push("* Value of key of object of class `%s` which is less or equal than value of method parameter." % class_name);
-                return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+                m_meth_descr_lst.push("Retrieve key of object of class `%s` which value is less or equal than value of method parameter." % class_name);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("* Value of key of object of class `%s` which is less or equal than value of method parameter." % class_name);
+                m_meth_return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
 
-                ex_code = ("
+                m_meth_ex_code = ("
 obj = new Dict([1.0,\"One\",2.0,\"Two\",3.0,\"Three\"]);
 (\"obj.lee_key(0.6): %s\\n\" % obj.lee_key(0.6).to_string()).print();
 (\"obj.lee_key(1.5): %s\\n\" % obj.lee_key(1.5).to_string()).print();
@@ -2831,12 +2720,12 @@ obj = new Dict([1.0,\"One\",2.0,\"Two\",3.0,\"Three\"]);
 
               if (class_is_container(a_class))
               {
-                descr_lst.push("Retrieve key of object of class `%s` which value is greater or equal than value of method parameter." % class_name);
-                param_lsts[0].push("Any type.");
-                return_lst.push("* Value of key of object of class `%s` which is greater or equal than value of method parameter." % class_name);
-                return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+                m_meth_descr_lst.push("Retrieve key of object of class `%s` which value is greater or equal than value of method parameter." % class_name);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("* Value of key of object of class `%s` which is greater or equal than value of method parameter." % class_name);
+                m_meth_return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
 
-                ex_code = ("
+                m_meth_ex_code = ("
 obj = new Dict([1.0,\"One\",2.0,\"Two\",3.0,\"Three\"]);
 (\"obj.gre_key(1.5): %s\\n\" % obj.gre_key(1.5).to_string()).print();
 (\"obj.gre_key(2.1): %s\\n\" % obj.gre_key(2.1).to_string()).print();
@@ -2848,18 +2737,18 @@ obj = new Dict([1.0,\"One\",2.0,\"Two\",3.0,\"Three\"]);
             {/*{{{*/
               if (a_method.is_static() && class_name != "Blank") new Exception("Method \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Compare object of class `%s` with method parameter." % class_name);
-              param_lsts[0].push("Any type.");
-              return_lst.push("* Integer `-1` if object of class `%s` is lesser than method parameter." % class_name);
-              return_lst.push("* Integer `1` if object of class `%s` is greater than method parameter." % class_name);
-              return_lst.push("* Integer `0` if object of class `%s` is equal to method parameter." % class_name);
+              m_meth_descr_lst.push("Compare object of class `%s` with method parameter." % class_name);
+              m_meth_param_lsts[0].push("Any type.");
+              m_meth_return_lst.push("* Integer `-1` if object of class `%s` is lesser than method parameter." % class_name);
+              m_meth_return_lst.push("* Integer `1` if object of class `%s` is greater than method parameter." % class_name);
+              m_meth_return_lst.push("* Integer `0` if object of class `%s` is equal to method parameter." % class_name);
 
               obj_code = get_code(a_class,"obj_0","create_example");
               obj_cmp_code = get_code(a_class,"obj_1","create_compare");
 
               if (Blank != obj_code && Blank != obj_cmp_code)
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 %s
 %s
 (\"obj_0.compare(obj_1): %%d\\n\" %% obj_0.compare(obj_1)).print();
@@ -2874,10 +2763,10 @@ obj = new Dict([1.0,\"One\",2.0,\"Two\",3.0,\"Three\"]);
               if (Blank == (elm_name = get_property(class_name,"iter_element_name")))
                 new Exception("Property \"iter_element_name\" of class \"%s\" is not defined" % class_name).throw();
 
-              descr_lst.push("Retrieve %s from object of class `%s` stored at requested index position." % [elm_name,class_name]);
-              param_lsts[0].push("Type convertible to integer.");
-              return_lst.push("* Object representing %s in object of class `%s` at position of requested index." % [elm_name,class_name]);
-              return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+              m_meth_descr_lst.push("Retrieve %s from object of class `%s` stored at requested index position." % [elm_name,class_name]);
+              m_meth_param_lsts[0].push("Type convertible to integer.");
+              m_meth_return_lst.push("* Object representing %s in object of class `%s` at position of requested index." % [elm_name,class_name]);
+              m_meth_return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
 
               obj_code = get_code(a_class,"obj","create_example");
               iter_first_idx_code = get_property(class_name,"iter_first_idx");
@@ -2885,7 +2774,7 @@ obj = new Dict([1.0,\"One\",2.0,\"Two\",3.0,\"Three\"]);
 
               if (Blank != obj_code && Blank != iter_first_idx_code && Blank != iter_next_idx_code)
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 idx = %s;
@@ -2902,29 +2791,29 @@ do {
               if (Blank == (elm_name = get_property(class_name,"iter_element_name")))
                 new Exception("Property \"iter_element_name\" of class \"%s\" is not defined" % class_name).throw();
 
-              descr_lst.push("Retrieve index of first %s in object of class `%s`." % [elm_name,class_name]);
-              return_lst.push("* Object of class %s if object of class `%s` contains some %ss." % [doc_class_ref("Integer"),class_name,elm_name]);
-              return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+              m_meth_descr_lst.push("Retrieve index of first %s in object of class `%s`." % [elm_name,class_name]);
+              m_meth_return_lst.push("* Object of class %s if object of class `%s` contains some %ss." % [doc_class_ref("Integer"),class_name,elm_name]);
+              m_meth_return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
 
               obj_code = get_code(a_class,"obj","create_example");
 
               if (Blank != obj_code)
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 %s
 (\"obj.first_idx: %%s\\n\" %% obj.first_idx().to_string()).print();
 " % obj_code);
 
                 if (Blank != (cont_remove_first_code = get_property(class_name,"cont_remove_first")))
                 {
-                  ex_code += ("%s;
+                  m_meth_ex_code += ("%s;
 (\"obj.first_idx: %%s\\n\" %% obj.first_idx().to_string()).print();
 ") % (cont_remove_first_code % "obj");
                 }
 
                 if (Blank != (clear_code = get_property(class_name,"cont_clear")))
                 {
-                  ex_code += ("%s;
+                  m_meth_ex_code += ("%s;
 (\"obj.first_idx: %%s\\n\" %% obj.first_idx().to_string()).print();
 ") % (clear_code % "obj");
                 }
@@ -2936,29 +2825,29 @@ do {
               if (Blank == (elm_name = get_property(class_name,"iter_element_name")))
                 new Exception("Property \"iter_element_name\" of class \"%s\" is not defined" % class_name).throw();
 
-              descr_lst.push("Retrieve index of last %s in object of class `%s`." % [elm_name,class_name]);
-              return_lst.push("* Object of class %s if object of class `%s` contains some %ss." % [doc_class_ref("Integer"),class_name,elm_name]);
-              return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+              m_meth_descr_lst.push("Retrieve index of last %s in object of class `%s`." % [elm_name,class_name]);
+              m_meth_return_lst.push("* Object of class %s if object of class `%s` contains some %ss." % [doc_class_ref("Integer"),class_name,elm_name]);
+              m_meth_return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
 
               obj_code = get_code(a_class,"obj","create_example");
 
               if (Blank != obj_code)
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 %s
 (\"obj.last_idx: %%s\\n\" %% obj.last_idx().to_string()).print();
 " % obj_code);
 
                 if (Blank != (cont_remove_last_code = get_property(class_name,"cont_remove_last")))
                 {
-                  ex_code += ("%s;
+                  m_meth_ex_code += ("%s;
 (\"obj.last_idx: %%s\\n\" %% obj.last_idx().to_string()).print();
 ") % (cont_remove_last_code % "obj");
                 }
 
                 if (Blank != (clear_code = get_property(class_name,"cont_clear")))
                 {
-                  ex_code += ("%s;
+                  m_meth_ex_code += ("%s;
 (\"obj.last_idx: %%s\\n\" %% obj.last_idx().to_string()).print();
 ") % (clear_code % "obj");
                 }
@@ -2970,17 +2859,17 @@ do {
               if (Blank == (elm_name = get_property(class_name,"iter_element_name")))
                 new Exception("Property \"iter_element_name\" of class \"%s\" is not defined" % class_name).throw();
 
-              descr_lst.push("From object of class `%s` retrieve index of %s following %s identified by method parameter." % [class_name,elm_name,elm_name]);
-              param_lsts[0].push("Type convertible to integer.");
-              return_lst.push("* Object of class %s if there is some %s following %s identified by method parameter." % [doc_class_ref("Integer"),elm_name,elm_name]);
-              return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+              m_meth_descr_lst.push("From object of class `%s` retrieve index of %s following %s identified by method parameter." % [class_name,elm_name,elm_name]);
+              m_meth_param_lsts[0].push("Type convertible to integer.");
+              m_meth_return_lst.push("* Object of class %s if there is some %s following %s identified by method parameter." % [doc_class_ref("Integer"),elm_name,elm_name]);
+              m_meth_return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
 
               obj_code = get_code(a_class,"obj","create_example");
               iter_first_idx_code = get_property(class_name,"iter_first_idx");
 
               if (Blank != obj_code && Blank != iter_first_idx_code)
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 idx = %s;
@@ -2997,17 +2886,17 @@ do {
               if (Blank == (elm_name = get_property(class_name,"iter_element_name")))
                 new Exception("Property \"iter_element_name\" of class \"%s\" is not defined" % class_name).throw();
 
-              descr_lst.push("From object of class `%s` retrieve index of %s preceding %s identified by method parameter." % [class_name,elm_name,elm_name]);
-              return_lst.push("* Object of class %s if there is some %s preceding %s identified by method parameter." % [doc_class_ref("Integer"),elm_name,elm_name]);
-              param_lsts[0].push("Type convertible to integer.");
-              return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+              m_meth_descr_lst.push("From object of class `%s` retrieve index of %s preceding %s identified by method parameter." % [class_name,elm_name,elm_name]);
+              m_meth_return_lst.push("* Object of class %s if there is some %s preceding %s identified by method parameter." % [doc_class_ref("Integer"),elm_name,elm_name]);
+              m_meth_param_lsts[0].push("Type convertible to integer.");
+              m_meth_return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
 
               obj_code = get_code(a_class,"obj","create_example");
               iter_last_idx_code = get_property(class_name,"iter_last_idx");
 
               if (Blank != obj_code && Blank != iter_last_idx_code)
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 idx = %s;
@@ -3024,21 +2913,21 @@ do {
               if (Blank == (elm_name = get_property(class_name,"iter_element_name")))
                 new Exception("Property \"iter_element_name\" of class \"%s\" is not defined" % class_name).throw();
 
-              descr_lst.push("Retrieve count of %ss in object of class `%s`." % [elm_name,class_name]);
-              return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
+              m_meth_descr_lst.push("Retrieve count of %ss in object of class `%s`." % [elm_name,class_name]);
+              m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
 
               obj_code = get_code(a_class,"obj","create_example");
 
               if (Blank != obj_code)
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 %s
 (\"obj.length(): %%d\\n\" %% obj.length()).print();
 " % obj_code);
 
                 if (Blank != (clear_code = get_property(class_name,"cont_clear")))
                 {
-                  ex_code += ("%s;
+                  m_meth_ex_code += ("%s;
 (\"obj.length(): %%d\\n\" %% obj.length()).print();
 ") % (clear_code % "obj");
                 }
@@ -3046,12 +2935,12 @@ do {
             }/*}}}*/
             case "to_string#0":
             {/*{{{*/
-              descr_lst.push("Convert object of class `%s` to object of class %s." % [class_name,doc_class_ref("String")]);
-              return_lst.push("* Object of class %s." % doc_class_ref("String"));
+              m_meth_descr_lst.push("Convert object of class `%s` to object of class %s." % [class_name,doc_class_ref("String")]);
+              m_meth_return_lst.push("* Object of class %s." % doc_class_ref("String"));
 
               if (a_method.is_static())
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 (\"%s.to_string(): %%s\\n\" %% %s.to_string()).print();
 " % [class_name,class_name]);
               }
@@ -3061,7 +2950,7 @@ do {
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 (\"obj.to_string(): %%s\\n\" %% obj.to_string()).print();
 " % obj_code);
@@ -3069,19 +2958,19 @@ do {
               }
 
               // - test example code snippet -
-              if (Blank != ex_code)
+              if (Blank != m_meth_ex_code)
               {
-                if (Blank != (ex_resp = test_code_snippet(ex_code)))
+                if (Blank != (ex_resp = test_code_snippet(m_meth_ex_code)))
                 {
                   if (ex_resp == "%s.to_string(): %s\n" % [class_name,class_name])
                   {
-                    descr_lst.push("This method returns name of class `%s`." % class_name);
+                    m_meth_descr_lst.push("This method returns name of class `%s`." % class_name);
                   }
                   else
                   {
                     if (class_name == "String")
                     {
-                      descr_lst.push("Reference counter of object is increased.");
+                      m_meth_descr_lst.push("Reference counter of object is increased.");
                     }
                     else
                     {
@@ -3089,7 +2978,7 @@ do {
                       {
                         if (class_name == "Dict")
                         {
-                          descr_lst.push(
+                          m_meth_descr_lst.push(
 "Each key and element of object of class `%s` is converted to string by call of
 its `to_string#0` method. As separator of string values of keys and elements is
 used character `:`. As separator of key-element pairs is used character `,`." %
@@ -3097,7 +2986,7 @@ class_name);
                         }
                         else
                         {
-                          descr_lst.push(
+                          m_meth_descr_lst.push(
 "Each element of object of class `%s` is converted to string by call of its
 `to_string#0` method. As separator of string values is used character `,`." %
 class_name);
@@ -3108,7 +2997,7 @@ class_name);
                 }
                 else
                 {
-                  ex_code = new Blank();
+                  m_meth_ex_code = new Blank();
                 }
               }
             }/*}}}*/
@@ -3116,15 +3005,15 @@ class_name);
             {/*{{{*/
               if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
 
-              descr_lst.push("Convert object of class `%s` to object of class %s." % [class_name,doc_class_ref("String")]);
-              param_lsts[0].push("Object of class %s. Separator of values formated to result string." % doc_class_ref("String"));
-              return_lst.push("* Object of class %s." % doc_class_ref("String"));
+              m_meth_descr_lst.push("Convert object of class `%s` to object of class %s." % [class_name,doc_class_ref("String")]);
+              m_meth_param_lsts[0].push("Object of class %s. Separator of values formated to result string." % doc_class_ref("String"));
+              m_meth_return_lst.push("* Object of class %s." % doc_class_ref("String"));
 
               obj_code = get_code(a_class,"obj","create_example");
 
               if (Blank != obj_code)
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 %s
 (\"obj.to_string(\\\"+\\\"): %%s\\n\" %% obj.to_string(\"+\")).print();
 (\"obj.to_string(\\\"<->\\\"): %%s\\n\" %% obj.to_string(\"<->\")).print();
@@ -3132,15 +3021,15 @@ class_name);
               }
 
               // - test example code snippet -
-              if (Blank != ex_code)
+              if (Blank != m_meth_ex_code)
               {
-                if (Blank != (ex_resp = test_code_snippet(ex_code)))
+                if (Blank != (ex_resp = test_code_snippet(m_meth_ex_code)))
                 {
                   if (class_is_container(a_class))
                   {
                     if (class_name == "Dict")
                     {
-                          descr_lst.push(
+                          m_meth_descr_lst.push(
 "Each key and element of object of class `%s` is converted to string by call of
 its `to_string#0` method. As separator of string values of keys and elements is
 used character `:`. As separator of key-element pairs is used method parameter." %
@@ -3148,7 +3037,7 @@ class_name);
                     }
                     else
                     {
-                      descr_lst.push(
+                      m_meth_descr_lst.push(
 "Each element of object of class `%s` is converted to string by call of its
 `to_string#0` method. As separator of string values is used method parameter." %
 class_name);
@@ -3157,7 +3046,7 @@ class_name);
                 }
                 else
                 {
-                  ex_code = new Blank();
+                  m_meth_ex_code = new Blank();
                 }
               }
             }/*}}}*/
@@ -3165,16 +3054,16 @@ class_name);
             {/*{{{*/
               if (class_name == "String")
               {
-                descr_lst.push("Print object of class `%s` to standard output." % class_name);
+                m_meth_descr_lst.push("Print object of class `%s` to standard output." % class_name);
               }
               else
               {
-                descr_lst.push("Print string representation of object of class `%s` to standard output." % class_name);
+                m_meth_descr_lst.push("Print string representation of object of class `%s` to standard output." % class_name);
               }
 
               if (a_method.is_static())
               {
-                ex_code = ("
+                m_meth_ex_code = ("
 %s.print();
 \"\\n\".print();
 " % class_name);
@@ -3185,7 +3074,7 @@ class_name);
 
                 if (Blank != obj_code)
                 {
-                  ex_code = ("
+                  m_meth_ex_code = ("
 %s
 obj.print();
 \"\\n\".print();
@@ -3194,13 +3083,13 @@ obj.print();
               }
 
               // - test example code snippet -
-              if (Blank != ex_code)
+              if (Blank != m_meth_ex_code)
               {
-                if (Blank != (ex_resp = test_code_snippet(ex_code)))
+                if (Blank != (ex_resp = test_code_snippet(m_meth_ex_code)))
                 {
                   if (ex_resp == "%s\n" % class_name)
                   {
-                    descr_lst.push("This method prints name of class `%s`." % class_name);
+                    m_meth_descr_lst.push("This method prints name of class `%s`." % class_name);
                   }
                   else
                   {
@@ -3208,7 +3097,7 @@ obj.print();
                     {
                       if (class_name == "Dict")
                       {
-                        descr_lst.push(
+                        m_meth_descr_lst.push(
 "Each key and element of object of class `%s` is printed by call of its
 `print#0` method. As separator of printed values of keys and elements is used
 character `:`. As separator of key-element pairs is used character `,`." %
@@ -3216,7 +3105,7 @@ class_name);
                       }
                       else
                       {
-                        descr_lst.push(
+                        m_meth_descr_lst.push(
 "Each element of object of class `%s` is printed by call of its `print#0`
 method. As separator of printed values is used character `,`." % class_name);
                       }
@@ -3225,7 +3114,7 @@ method. As separator of printed values is used character `,`." % class_name);
                 }
                 else
                 {
-                  ex_code = new Blank();
+                  m_meth_ex_code = new Blank();
                 }
               }
             }/*}}}*/
@@ -3235,9 +3124,9 @@ method. As separator of printed values is used character `,`." % class_name);
     }
 
     // - append description list -
-    if (descr_lst.length() > 0)
+    if (m_meth_descr_lst.length() > 0)
     {
-      method_lst += descr_lst;
+      method_lst += m_meth_descr_lst;
     }
     else
     {
@@ -3253,7 +3142,7 @@ method. As separator of printed values is used character `,`." % class_name);
 
       param_num = 0;
       do {
-        param_lst = param_lsts[param_num];
+        param_lst = m_meth_param_lsts[param_num];
 
         if (param_lst.length() > 0)
         {
@@ -3273,9 +3162,9 @@ method. As separator of printed values is used character `,`." % class_name);
       method_lst.push("**Return:**");
       method_lst.push("");
 
-      if (return_lst.length() > 0)
+      if (m_meth_return_lst.length() > 0)
       {
-        method_lst += return_lst;
+        method_lst += m_meth_return_lst;
       }
       else
       {
@@ -3284,9 +3173,9 @@ method. As separator of printed values is used character `,`." % class_name);
     }
 
     // - test example code snippet if any -
-    if (Blank != ex_code)
+    if (Blank != m_meth_ex_code)
     {
-      ex_resp = test_code_snippet(ex_code);
+      ex_resp = test_code_snippet(m_meth_ex_code);
     }
 
     // - generate examples -
@@ -3296,7 +3185,7 @@ method. As separator of printed values is used character `,`." % class_name);
 
     if (Blank != ex_resp)
     {
-      method_lst.push("```cpp%s```" % ex_code);
+      method_lst.push("```cpp%s```" % m_meth_ex_code);
       method_lst.push("```");
       method_lst.push("%s```" % ex_resp);
     }
@@ -3367,6 +3256,7 @@ TODO example result
 
     // - retrieve target class -
     m_target_class = Lang.cls(TARGET_CLASS_NAME);
+    m_target_name = m_target_class.name();
 
     // - initialize class properties -
     initialize_class_properties();
