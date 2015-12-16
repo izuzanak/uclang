@@ -190,6 +190,7 @@ bool bic_float_operator_unary_pre_double_plus(interpreter_thread_s &it,unsigned 
 bool bic_float_operator_unary_pre_double_minus(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_float_operator_unary_pre_plus(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_float_operator_unary_pre_minus(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_float_operator_unary_pre_exclamation(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_float_method_Float_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_float_method_Float_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_float_method_sin_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

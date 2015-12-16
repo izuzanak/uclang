@@ -33,6 +33,7 @@ class Main
     // public final operator_unary_pre_double_minus#0
     // public final operator_unary_pre_plus#0
     // public final operator_unary_pre_minus#0
+    // public final operator_unary_pre_exclamation#0
     // public final Float#0
     // public final Float#1
     // public final sin#0
@@ -129,6 +130,10 @@ class Main
     ("0.0 || 0.0 -> %d\n" % (0.0 || 0.0)).print();
     ("1.0 || 1.0 -> %d\n" % (1.0 || 1.0)).print();
     ("1.0 || 0.0 -> %d\n" % (1.0 || 0.0)).print();
+
+    Tutorial.note("Float exclamation operator");
+    ("! 0.0 -> %d\n" % (! 0.0)).print();
+    ("! 1.0 -> %d\n" % (! 1.0)).print();
 
     Tutorial.note("Float compare operators");
     float_0 = 125.25;

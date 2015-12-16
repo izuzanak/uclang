@@ -1801,7 +1801,12 @@ bool bic_char_operator_unary_pre_minus(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_char_operator_unary_pre_exclamation(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  BIC_CHAR_PRE_UNARY_TMP_RESULT(!);
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = ! (char)dst_location->v_data_ptr;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
@@ -3122,7 +3127,7 @@ built_in_class_s float_class =
 {/*{{{*/
   "Float",
   c_modifier_public | c_modifier_final,
-  41, float_methods,
+  42, float_methods,
   0, float_variables,
   bic_float_consts,
   bic_float_init,
@@ -3255,6 +3260,11 @@ built_in_method_s float_methods[] =
     "operator_unary_pre_minus#0",
     c_modifier_public | c_modifier_final,
     bic_float_operator_unary_pre_minus
+  },
+  {
+    "operator_unary_pre_exclamation#0",
+    c_modifier_public | c_modifier_final,
+    bic_float_operator_unary_pre_exclamation
   },
   {
     "Float#0",
@@ -3894,6 +3904,18 @@ bool bic_float_operator_unary_pre_plus(interpreter_thread_s &it,unsigned stack_b
 bool bic_float_operator_unary_pre_minus(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_FLOAT_PRE_UNARY_TMP_RESULT(-);
+
+  return true;
+}/*}}}*/
+
+bool bic_float_operator_unary_pre_exclamation(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = ! *((double *)&dst_location->v_data_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
