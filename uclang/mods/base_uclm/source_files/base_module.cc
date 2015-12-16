@@ -1724,7 +1724,35 @@ bool bic_char_operator_binary_slash(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_char_operator_binary_percent(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  BIC_CHAR_BINARY_OPS_CHAR_INTEGER_RESULT_INTEGER(%,"operator_binary_percent#1");
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  
+  unsigned v_type;
+  basic_64b v_data_ptr;
+  
+  switch (src_0_location->v_type) {
+  case c_bi_class_char:
+    v_type = c_bi_class_char;
+    v_data_ptr = (basic_64b)((char)dst_location->v_data_ptr % (char)src_0_location->v_data_ptr);
+    break;
+  case c_bi_class_integer:
+    v_type = c_bi_class_integer;
+    v_data_ptr = (basic_64b)((char)dst_location->v_data_ptr % (long long int)src_0_location->v_data_ptr);
+    break;
+  break;
+  
+  /* - ERROR - */
+  default:
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_percent#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+    
+    return false;
+  }
+  
+  BIC_SIMPLE_SET_RES(v_type,v_data_ptr);
 
   return true;
 }/*}}}*/
