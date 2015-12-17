@@ -6,6 +6,30 @@ import ucf;
 import json;
 import parser;
 
+class VarClassDescr
+{
+  public m_descr;
+  public m_defined;
+
+  public VarClassDescr(a_descr)
+  {/*{{{*/
+    m_descr = a_descr;
+    m_defined = 0;
+  }/*}}}*/
+}
+
+class VariableDescr
+{
+  public m_descr;
+  public m_var_class;
+
+  public VariableDescr(a_descr,a_var_class)
+  {/*{{{*/
+    m_descr = a_descr;
+    m_var_class = a_var_class;
+  }/*}}}*/
+}
+
 class MethodDescr
 {
   public m_descr;
@@ -91,15 +115,19 @@ class Main
   static CLASS_PROPERTIES;
 
   static public SNIPPET_FILE = "./snippet.ucl";
-  static public TARGET_CLASS_NAME = "Float";
-  static public TARGET_MODULES = ["sys","containers","json","parser"];
 
   static public TYPE_PRIORITY = new Dict(
   [/*{{{*/
     "Char",   0,
     "Integer",1,
-    "Float",  2
+    "Float",  2,
+    "String", 3
   ]);/*}}}*/
+
+  // - command lne arguments -
+  m_arg_class;
+  m_arg_modules;
+  m_arg_file;
 
   // - target class reference -
   m_target_class;
@@ -115,7 +143,7 @@ class Main
   {/*{{{*/
     code = [];
 
-    for (module <- TARGET_MODULES)
+    for (module <- m_arg_modules)
     {
       code.push("import %s;" % module);
     }
@@ -138,6 +166,33 @@ class Main
 
   // - class properties -
 
+  public gm_trigo_t0(a_name,a_fun)
+  {/*{{{*/
+    return new MethodDescr(
+"Compute %s of value of object of class `%s`. Angle is given in radians." % [a_name,m_target_name],
+[],"Object of class %s." % doc_class_ref(m_target_name),"
+pi = 3.1415926535897932384626433;
+(\"res: %%f\\n\" %% (0.0).%s()).print();
+(\"res: %%f\\n\" %% (0.25 * pi).%s()).print();
+(\"res: %%f\\n\" %% (0.5 * pi).%s()).print();
+(\"res: %%f\\n\" %% (0.75 * pi).%s()).print();
+" % [a_fun,a_fun,a_fun,a_fun]);
+  }/*}}}*/
+
+  public gm_trigo_t1(a_name,a_fun)
+  {/*{{{*/
+    return new MethodDescr(
+"Compute principal value of arc %s of value of object of class `%s`. Result
+value represents angle in radians whose %s is equal to value of object of class
+`%s`." % [a_name,m_target_name,a_name,m_target_name],
+[],"Object of class %s." % doc_class_ref(m_target_name),"
+pi = 3.1415926535897932384626433;
+(\"res: %%f\\n\" %% (0.0.%s()/pi)).print();
+(\"res: %%f\\n\" %% ((2.0.sqrt()/2).%s()/pi)).print();
+(\"res: %%f\\n\" %% (1.0.%s()/pi)).print();
+" % [a_fun,a_fun,a_fun]);
+  }/*}}}*/
+
   public initialize_class_properties()
   {/*{{{*/
     if (Blank != CLASS_PROPERTIES)
@@ -149,10 +204,12 @@ class Main
 
     CLASS_PROPERTIES["Blank"] = new Dict(
     [/*{{{*/
+      "description","Class describing blank value.",
       "create_compare","0"
     ]);/*}}}*/
-    CLASS_PROPERTIES["Char"] = new Dict(
+    CLASS_PROPERTIES["Char"] = class_Char = new Dict(
     [/*{{{*/
+      "description","Class describing single byte characters.",
       "create_example","'e'",
       "create_compare","'\\x46'",
       "create_zero","'\\x0'",
@@ -161,8 +218,9 @@ class Main
       "create_large","'\\x7f'",
       "check_print","(\"%s: %%d\\n\" %% new Integer(%s)).print();"
     ]);/*}}}*/
-    CLASS_PROPERTIES["Integer"] = new Dict(
+    CLASS_PROPERTIES["Integer"] = class_Integer = new Dict(
     [/*{{{*/
+      "description","Class describing signed 64bit integer numbers.",
       "create_example","123",
       "create_compare","0xff",
       "create_zero","0",
@@ -170,49 +228,33 @@ class Main
       "create_small","2",
       "create_large","0xffffffff"
     ]);/*}}}*/
-    CLASS_PROPERTIES["Float"] = new Dict(
+    CLASS_PROPERTIES["Float"] = class_Float = new Dict(
     [/*{{{*/
+      "description","Class describing 64bit real numbers.",
       "create_example","12.234",
       "create_compare","14.972",
       "create_zero","0.0",
       "create_arith","549.2",
       "create_small","2.532",
-      "create_arith","567.67"
+      "create_large","56787236.67"
     ]);/*}}}*/
     CLASS_PROPERTIES["String"] = class_String = new Dict(
     [/*{{{*/
-      "create_example","\"Hello world!\"",
+      "description","Class describing strings of one byte characters.",
+      "create_example","\"Hi world!\"",
       "create_compare","\"How are you?\"",
+      "iter_indexes",[0,1,2,3,4],
       "iter_index_name","index",
-      "iter_element_name","character"
+      "iter_element_name","character",
+      "iter_first_idx", "%s.first_idx()",
+      "iter_next_idx", "%s.next_idx(%s)",
+      "cont_clear", "%s = \"\""
     ]);/*}}}*/
-
-    class_String["methods"] = new Dict(
-    [/*{{{*/
-      "String#1", new MethodDescr(
-"Creates object of class `String` from method parameter.",
-["Object of class %s, %s, %s or %s." % 
-[doc_class_ref("Char"), doc_class_ref("Integer"),
- doc_class_ref("Float"),doc_class_ref("String")]],
-new Blank(),"
-obj = new String(%s);
-(\"obj: %%s\\n\" %% obj).print();
-obj = new String(%s);
-(\"obj: %%s\\n\" %% obj).print();
-obj = new String(%s);
-(\"obj: %%s\\n\" %% obj).print();
-obj = new String(%s);
-(\"obj: %%s\\n\" %% obj).print();
-" % [get_property("Char","create_example"),
-     get_property("Integer","create_example"),
-     get_property("Float","create_example"),
-     get_property("String","create_example")])
-    ]);/*}}}*/
-
     CLASS_PROPERTIES["Array"] = class_Array = new Dict(
     [/*{{{*/
+      "description","Container class implementing abstract data type dynamic array (vector).",
       "create_example","[1,2,3,4,5]",
-      "create_compare","[1,2,3,4,6]",
+      "create_compare","[1,2,6,7,8]",
       "iter_index_name","index",
       "iter_element_name","element",
       "iter_first_idx", "%s.first_idx()",
@@ -221,35 +263,9 @@ obj = new String(%s);
       "cont_remove_last", "%s.pop()",
       "cont_clear", "%s.clear()"
     ]);/*}}}*/
-
-    class_Array["methods"] = new Dict(
-    [/*{{{*/
-      "operator_binary_ls_br_equal#1", new MethodDescr(
-"Copy values of elements retrieved from method parameter to values of elements
-of object of class `Array`.",
-["Iterable type."],"* Value of object.","
-obj = [];
-a = b = c = 0;
-obj.push_ref(a);
-obj.push_ref(b);
-obj.push_ref(c);
-(\"a,b,c: %s\\n\" % [a,b,c].to_string()).print();
-obj <= [1,2,3];
-(\"a,b,c: %s\\n\" % [a,b,c].to_string()).print();
-"),
-      "resize#1", new MethodDescr(
-"Resize object of class `Array` to size determined by method parameter. New
-elements are initialized to objects of class %s." % doc_class_ref("Blank"),
-["Object of class convertible to %s." % doc_class_ref("Integer")],"* Object of class `%s`." % doc_class_ref("Blank"),"
-%s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-obj.resize(8);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-" % get_code(m_target_class,"obj","create_example"))
-    ]);/*}}}*/
-
     CLASS_PROPERTIES["Stack"] = new Dict(
     [/*{{{*/
+      "description","Container class implementing abstract data type stack.",
       "iter_element_name","element",
       "iter_first_idx", "%s.first_idx()",
       "iter_last_idx", "%s.last_idx()",
@@ -259,6 +275,7 @@ obj.resize(8);
     ]);/*}}}*/
     CLASS_PROPERTIES["Queue"] = new Dict(
     [/*{{{*/
+      "description","Container class implementing abstract data type queue.",
       "iter_element_name","element",
       "iter_first_idx", "%s.first_idx()",
       "iter_last_idx", "%s.last_idx()",
@@ -268,6 +285,7 @@ obj.resize(8);
     ]);/*}}}*/
     CLASS_PROPERTIES["Set"] = class_Set = new Dict(
     [/*{{{*/
+      "description","Container class implementing abstract data type set.",
       "iter_indexes",[0,2,3],
       "iter_index_name","index",
       "iter_element_name","element",
@@ -276,139 +294,9 @@ obj.resize(8);
       "iter_next_idx", "%s.next_idx(%s)",
       "cont_clear", "%s.clear()"
     ]);/*}}}*/
-
-    class_Set["methods"] = new Dict(
-    [/*{{{*/
-      "remove#1", new MethodDescr(
-"From object of class `Set` remove elements with value equal to value of method
-parameter.",
-["Any type."],"* Object of class `Blank`.","
-%s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-obj.remove(2);
-obj.remove(4);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-" % get_code(m_target_class,"obj","create_example")),
-      "operator_binary_minus_equal#1", new MethodDescr(
-"Set difference operator `-=`. Creates object of class `Set` containing
-elements from first object of class `Set` that are not contained in second
-object of class `Set`. Value of variable is set to result object of class
-`Set`.",
-["Object of class `Set`."],"* Value of object.","
-%s
-%s
-obj_0 -= obj_1;
-(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
-" % [get_code(m_target_class,"obj_0","create_example"),
-    get_code(m_target_class,"obj_1","create_compare")]),
-      "operator_binary_ampersand_equal#1", new MethodDescr(
-"Set intersection operator `&=`. Creates object of class `Set` containing
-elements contained in both source objects of class `Set`. Value of variable is
-set to result object of class `Set`.",
-["Object of class `Set`."],"* Value of object.","
-%s
-%s
-obj_0 &= obj_1;
-(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
-" % [get_code(m_target_class,"obj_0","create_example"),
-    get_code(m_target_class,"obj_1","create_compare")]),
-      "operator_binary_pipe_equal#1", new MethodDescr(
-"Set union operator `|=`. Creates object of class `Set` containing elements
-from both source objects of class `Set`. Value of variable is set to result
-object of class `Set`.",
-["Object of class `Set`."],"* Value of object.","
-%s
-%s
-obj_0 |= obj_1;
-(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
-" % [get_code(m_target_class,"obj_0","create_example"),
-    get_code(m_target_class,"obj_1","create_compare")]),
-      "operator_binary_circumflex_equal#1", new MethodDescr(
-"Set symmetric difference operator `^=`. Creates object of class `Set`
-containing elements from both source objects of class `Set` that are contained
-exactly in one of them. Value of variable is set to result object of class
-`Set`.",
-["Object of class `Set`."],"* Value of object.","
-%s
-%s
-obj_0 ^= obj_1;
-(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
-" % [get_code(m_target_class,"obj_0","create_example"),
-    get_code(m_target_class,"obj_1","create_compare")]),
-      "operator_binary_ampersand#1", new MethodDescr(
-"Set intersection operator `&`. Creates object of class `Set` containing
-elements contained in both source objects of class `Set`.",
-["Object of class `Set`."],"* Object of class `Set`.","
-%s
-%s
-res = obj_0 & obj_1;
-(\"res: %%s\\n\" %% res.to_string()).print();
-" % [get_code(m_target_class,"obj_0","create_example"),
-    get_code(m_target_class,"obj_1","create_compare")]),
-      "operator_binary_pipe#1", new MethodDescr(
-"Set union operator `|`. Creates object of class `Set` containing elements from
-both source objects of class `Set`.",
-["Object of class `Set`."],"* Object of class `Set`.","
-%s
-%s
-res = obj_0 | obj_1;
-(\"res: %%s\\n\" %% res.to_string()).print();
-" % [get_code(m_target_class,"obj_0","create_example"),
-    get_code(m_target_class,"obj_1","create_compare")]),
-      "operator_binary_circumflex#1", new MethodDescr(
-"Set symmetric difference operator `^`. Creates object of class `Set`
-containing elements from both source objects of class `Set` that are contained
-exactly in one of them.",
-["Object of class `Set`."],"* Object of class `Set`.","
-%s
-%s
-res = obj_0 ^ obj_1;
-(\"res: %%s\\n\" %% res.to_string()).print();
-" % [get_code(m_target_class,"obj_0","create_example"),
-    get_code(m_target_class,"obj_1","create_compare")]),
-      "operator_binary_rs_br_equal#1", new MethodDescr(
-"Subset test operator `>=`. Test if object of class `Set` given by method
-parameter is subset of object of class `Set`.",
-["Object of class `Set`."],
-"* Object of class %s.
-  * `0` - method parameter is not subset of object.
-  * `1` - method parameter is subset of object." % doc_class_ref("Integer"),"
-%s
-obj_1 = new Set(obj_0[0:2:]);
-(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
-(\"obj_1: %%s\\n\" %% obj_1.to_string()).print();
-(\"obj_0 >= obj_1: %%d\\n\" %% (obj_0 >= obj_1)).print();
-(\"obj_1 >= obj_0: %%d\\n\" %% (obj_1 >= obj_0)).print();
-" % get_code(m_target_class,"obj_0","create_example")),
-      "operator_binary_ls_br_equal#1", new MethodDescr(
-"Superset test operator `<=`. Test if object of class `Set` given by method
-parameter is superset of object of class `Set`.",
-["Object of class `Set`."],
-"* Object of class %s.
-  * `0` - method parameter is not superset of object.
-  * `1` - method parameter is superset of object." % doc_class_ref("Integer"),"
-%s
-obj_1 = new Set(obj_0[0:2:]);
-(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
-(\"obj_1: %%s\\n\" %% obj_1.to_string()).print();
-(\"obj_0 <= obj_1: %%d\\n\" %% (obj_0 <= obj_1)).print();
-(\"obj_1 <= obj_0: %%d\\n\" %% (obj_1 <= obj_0)).print();
-" % get_code(m_target_class,"obj_0","create_example")),
-      "operator_binary_minus#1", new MethodDescr(
-"Set difference operator `-`. Creates object of class `Set` containing elements
-from first object of class `Set` that are not contained in second object of
-class `Set`.",
-["Object of class `Set`."],"* Object of class `Set`.","
-%s
-%s
-res = obj_0 - obj_1;
-(\"res: %%s\\n\" %% res.to_string()).print();
-" % [get_code(m_target_class,"obj_0","create_example"),
-    get_code(m_target_class,"obj_1","create_compare")])
-    ]);/*}}}*/
-
     CLASS_PROPERTIES["List"] = new Dict(
     [/*{{{*/
+      "description","Container class implementing abstract data type list.",
       "iter_index_name","index",
       "iter_element_name","element",
       "iter_first_idx", "%s.first_idx()",
@@ -418,6 +306,7 @@ res = obj_0 - obj_1;
     ]);/*}}}*/
     CLASS_PROPERTIES["Tree"] = new Dict(
     [/*{{{*/
+      "description","Container class implementing abstract data type tree.",
       "iter_indexes",[0,2,3],
       "iter_index_name","index",
       "iter_element_name","element",
@@ -428,6 +317,7 @@ res = obj_0 - obj_1;
     ]);/*}}}*/
     CLASS_PROPERTIES["Dict"] = class_Dict = new Dict(
     [/*{{{*/
+      "description","Container class implementing abstract data type dictionary.",
       "create_example","new Dict([\"One\",1,\"Two\",2,\"Three\",3])",
       "create_compare","new Dict([\"One\",1,\"Two\",2,\"Three\",3,\"Four\",4])",
       "iter_indexes",["One","Two"],
@@ -441,17 +331,458 @@ res = obj_0 - obj_1;
       "iter_remove_key", "%s.remove_key(%s)",
       "cont_clear", "%s.clear()"
     ]);/*}}}*/
-
-    class_Dict["methods"] = new Dict(
+    CLASS_PROPERTIES["File"] = class_File = new Dict(
     [/*{{{*/
-      "Dict#1", new MethodDescr(
-"Creates object of class `Dict` based on elements retrieved from method
+      "description","Class providing access to system files.",
+      "source_id","\\(file\\|stream\\)"
+    ]);/*}}}*/
+
+    if (m_target_name == "Char")
+    {
+      class_Char["methods"] = new Dict(
+      [/*{{{*/
+        "Char#1", new MethodDescr(
+"Creates object of class `%s` from method parameter." % m_target_name,
+["Object of class %s or %s." % [doc_class_ref("Char"), doc_class_ref("Integer")]],
+new Blank(),"
+(\"obj: %%c\\n\" %% new Char(%s)).print();
+(\"obj: %%c\\n\" %% new Char(%s)).print();
+" % [get_property("Char","create_example"),"0x041"])
+      ]);/*}}}*/
+    }
+
+    if (m_target_name == "Integer")
+    {
+      class_Integer["methods"] = new Dict(
+      [/*{{{*/
+        "Integer#1", new MethodDescr(
+"Creates object of class `%s` from method parameter." % m_target_name,
+["Object of class %s, %s, %s or %s." % 
+[doc_class_ref("Char"),doc_class_ref("Integer"),
+ doc_class_ref("Float"),doc_class_ref("String")]],
+new Blank(),"
+(\"obj: %%d\\n\" %% new Integer(%s)).print();
+(\"obj: %%d\\n\" %% new Integer(%s)).print();
+(\"obj: %%d\\n\" %% new Integer(%s)).print();
+(\"obj: %%d\\n\" %% new Integer(\"512\")).print();
+(\"obj: %%d\\n\" %% new Integer(\"0xff\")).print();
+" % [get_property("Char","create_example"),
+     get_property("Integer","create_example"),
+     get_property("Float","create_example")]),
+        "Integer#2", new MethodDescr(
+"Creates object of class `%s` from its string representation." % m_target_name,
+["Object of class %s, containing string representation of integer value." % doc_class_ref("String"),
+ "Object of class %s, representing base of integer stored in first method parameter. Must be value from 2 to 36." % doc_class_ref("Integer")],
+new Blank(),"
+(\"obj: %d\\n\" % new Integer(\"1110\",2)).print();
+(\"obj: %d\\n\" % new Integer(\"777\",8)).print();
+(\"obj: %d\\n\" % new Integer(\"1245\",10)).print();
+(\"obj: %d\\n\" % new Integer(\"7e\",16)).print();
+(\"obj: %d\\n\" % new Integer(\"0xfff\",16)).print();
+")
+      ]);/*}}}*/
+    }
+
+    if (m_target_name == "Float")
+    {
+      class_Float["methods"] = new Dict(
+      [/*{{{*/
+        "Float#1", new MethodDescr(
+"Creates object of class `%s` from method parameter." % m_target_name,
+["Object of class %s, %s, %s or %s." % 
+[doc_class_ref("Char"),doc_class_ref("Integer"),
+ doc_class_ref("Float"),doc_class_ref("String")]],
+new Blank(),"
+(\"obj: %%f\\n\" %% new Float(%s)).print();
+(\"obj: %%f\\n\" %% new Float(%s)).print();
+(\"obj: %%f\\n\" %% new Float(%s)).print();
+(\"obj: %%f\\n\" %% new Float(\"51.26\")).print();
+(\"obj: %%f\\n\" %% new Float(\"151e-2\")).print();
+(\"obj: %%f\\n\" %% new Float(\"0xff\")).print();
+" % [get_property("Char","create_example"),
+     get_property("Integer","create_example"),
+     get_property("Float","create_example")]),
+        "sin#0", gm_trigo_t0("sine","sin"),
+        "cos#0", gm_trigo_t0("cosine","cos"),
+        "tan#0", gm_trigo_t0("tangent","tan"),
+        "asin#0", gm_trigo_t1("sine","asin"),
+        "acos#0", gm_trigo_t1("cosine","acos"),
+        "atan#0", gm_trigo_t1("tangent","atan"),
+        "exp#0", new MethodDescr(
+"Compute value of e (the base  of  natural  logarithms) raised to the power
+determined by value of object of class `%s`." % m_target_name,
+[],"Object of class %s." % doc_class_ref(m_target_name),"
+(\"res: %f\\n\" % 0.0.exp()).print();
+(\"res: %f\\n\" % 1.0.exp()).print();
+(\"res: %f\\n\" % 10.0.exp()).print();
+"),
+        "log#0", new MethodDescr(
+"Compute natural logarithm of value of object of class `%s`." % m_target_name,
+[],"Object of class %s." % doc_class_ref(m_target_name),"
+(\"res: %f\\n\" % 1.0.log()).print();
+(\"res: %f\\n\" % 2.718282.log()).print();
+(\"res: %f\\n\" % 22026.465795.log()).print();
+"),
+        "pow#1", new MethodDescr(
+"Compute power of value of object of class `%s` raised to the value given by method parameter." % m_target_name,
+["Object of type %s, %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]],
+"Object of class %s." % doc_class_ref(m_target_name),"
+%s
+(\"obj: %%f\\n\" %% obj).print();
+(\"res: %%f\\n\" %% obj.pow(%s)).print();
+(\"res: %%f\\n\" %% obj.pow(%s)).print();
+(\"res: %%f\\n\" %% obj.pow(%s)).print();
+" % [get_code("Float","obj","create_arith"),
+     get_property("Char","create_small"),
+     get_property("Integer","create_small"),
+     get_property("Float","create_small")]),
+        "sqrt#0", new MethodDescr(
+"Compute nonnegative square root of value of object of class `%s`." % m_target_name,
+[],"Object of class %s." % doc_class_ref(m_target_name),"
+(\"res: %f\\n\" % 25.0.sqrt()).print();
+(\"res: %f\\n\" % 144.0.sqrt()).print();
+(\"res: %f\\n\" % 11..sqrt()).print();
+"),
+        "cbrt#0", new MethodDescr(
+"Compute real cube root of value of object of class `%s`." % m_target_name,
+[],"Object of class %s." % doc_class_ref(m_target_name),"
+(\"res: %f\\n\" % 1000.0.cbrt()).print();
+(\"res: %f\\n\" % 1331.0.cbrt()).print();
+(\"res: %f\\n\" % 11..cbrt()).print();
+"),
+        "hypot#1", new MethodDescr(
+"Compute length of the hypotenuse of a right-angled triangle with sides
+determined by value of object of class `%s` and method parameter." % m_target_name,
+["Object of type %s, %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]],
+"Object of class %s." % doc_class_ref(m_target_name),"
+%s
+(\"obj: %%f\\n\" %% obj).print();
+(\"res: %%f\\n\" %% obj.hypot(%s)).print();
+(\"res: %%f\\n\" %% obj.hypot(%s)).print();
+(\"res: %%f\\n\" %% obj.hypot(%s)).print();
+" % [get_code("Float","obj","create_arith"),
+     get_property("Char","create_example"),
+     get_property("Integer","create_example"),
+     get_property("Float","create_example")]),
+        "isnan#0", new MethodDescr(
+"Test if value of object of class `%s` is not an number." % m_target_name,
+[],"Object of class %s." % doc_class_ref(m_target_name),"
+(\"res: %d\\n\" % 1000.0.isnan()).print();
+(\"res: %d\\n\" % ((-1.0).sqrt()).isnan()).print();
+")
+      ]);/*}}}*/
+    }
+
+    if (m_target_name == "String")
+    {
+      class_String["methods"] = new Dict(
+      [/*{{{*/
+        "String#1", new MethodDescr(
+"Creates object of class `%s` from method parameter." % m_target_name,
+["Object of class %s, %s, %s or %s." % 
+[doc_class_ref("Char"),doc_class_ref("Integer"),
+ doc_class_ref("Float"),doc_class_ref("String")]],
+new Blank(),"
+obj = new String(%s);
+(\"obj: %%s\\n\" %% obj).print();
+obj = new String(%s);
+(\"obj: %%s\\n\" %% obj).print();
+obj = new String(%s);
+(\"obj: %%s\\n\" %% obj).print();
+obj = new String(%s);
+(\"obj: %%s\\n\" %% obj).print();
+" % [get_property("Char","create_example"),
+     get_property("Integer","create_example"),
+     get_property("Float","create_example"),
+     get_property("String","create_example")]),
+        "operator_binary_plus_equal#1", new MethodDescr(
+"Append and assign operator `+=`. Operator appends value of method parameter to value of object of class `%s`." % m_target_name,
+["Object of class %s." % doc_class_ref("String")],
+"* Value of object.","
+%s
+(\"obj: %%s\\n\" %% obj).print();
+obj += \" How are you?\";
+(\"obj: %%s\\n\" %% obj).print();
+" % get_code(m_target_name,"obj","create_example")),
+        "operator_binary_asterisk_equal#1", new MethodDescr(
+"Repeat and assign operator `*=`. Repeat value of object of class `%s` `x` times, where `x` is given by method parameter." % m_target_name,
+["Type convertible to integer."],
+"* Value of object.","
+%s
+(\"obj: %%s\\n\" %% obj).print();
+obj *= 5;
+(\"obj: %%s\\n\" %% obj).print();
+" % get_code(m_target_name,"obj","create_example")),
+        "operator_binary_plus#1", new MethodDescr(
+"Append operator `+`. Append value of method parameter to value of object of class `%s`." % m_target_name,
+["Object of class %s." % doc_class_ref("String")],
+"* Object of class %s." % doc_class_ref("String"),"
+%s
+(\"obj: %%s\\n\" %% obj).print();
+(\"res: %%s\\n\" %% (obj + \" How are you?\")).print();
+" % get_code(m_target_name,"obj","create_example")),
+        "operator_binary_asterisk#1", new MethodDescr(
+"Repeat operator `*`. Repeat value of object of class `%s` `x` times, where `x` is given by method parameter." % m_target_name,
+["Type convertible to integer."],
+"* Value of class %s." % doc_class_ref("String"),"
+%s
+(\"obj: %%s\\n\" %% obj).print();
+(\"res: %%s\\n\" %% (obj * 5)).print();
+" % get_code(m_target_name,"obj","create_example")),
+        "operator_binary_percent#1", new MethodDescr(
+"String format operator `%%`. Value of class `%s` is formatted according to formating characters contained in it." % m_target_name,
+["Any type supported by formating characters or object of class %s." % doc_class_ref("Array")],
+"* Value of class %s." % doc_class_ref("String"),"
+(\"res: %%s\\n\" %% (\"char:    %%c\" %% %s)).print();
+(\"res: %%s\\n\" %% (\"integer: %%d\" %% %s)).print();
+(\"res: %%s\\n\" %% (\"float:   %%f\" %% %s)).print();
+(\"res: %%s\\n\" %% (\"string:  %%s\" %% %s)).print();
+(\"res: %%s\\n\" %% (\"array:   %%d,%%d,%%d\" %% [1,2,3])).print();
+" % [get_property("Char","create_example"),
+     get_property("Integer","create_example"),
+     get_property("Float","create_example"),
+     get_property("String","create_example")]),
+        "create#1", new MethodDescr(
+"Create new object of class `%s` which size is given by method parameter." % m_target_name,
+["Type convertible to integer."],
+"* Object of class %s." % doc_class_ref("String"),"
+obj = String.create(%s);
+(\"obj.length(): %%d\\n\" %% obj.length()).print();
+obj = String.create(%s);
+(\"obj.length(): %%d\\n\" %% obj.length()).print();
+obj = String.create(%s);
+(\"obj.length(): %%d\\n\" %% obj.length()).print();
+" % [get_property("Char","create_example"),
+     get_property("Integer","create_example"),
+     get_property("Float","create_example")]),
+        "split#1", new MethodDescr(
+"Split object of class `%s` to object of class %s containing one or more objects of class %s." % [m_target_name,doc_class_ref("Array"),m_target_name],
+["Object of class %s." % doc_class_ref("String")],
+"* Object of class %s containing one or more objects of class %s." % [doc_class_ref("Array"),doc_class_ref("String")],"
+%s
+(\"obj: %%s\\n\" %% obj).print();
+(\"res: %%s\\n\" %% obj.split(\" \").to_string()).print();
+" % get_code(m_target_class,"obj","create_example")),
+        "join#1", new MethodDescr(
+"Objects of iterable which is given as method parameter are converted to
+strings by call of its to_string#0 method.  Result strings are then
+concatenated to one string, with object of class %s used as separator." % m_target_name,
+["Iterable type."],
+"* Object of class %s." % doc_class_ref("String"),"
+obj = %s;
+(\"res: %%s\\n\" %% \" \".join(obj).to_string()).print();
+obj = %s;
+(\"res: %%s\\n\" %% \" \".join(obj).to_string()).print();
+obj = [\"numbers:\",1,2,3,4,\"end\"];
+(\"res: %%s\\n\" %% \" \".join(obj).to_string()).print();
+" % [get_property("Array","create_example"),get_property("Dict","create_example")]),
+        "head#1", new MethodDescr(
+"Retrieve substring of object of class %s containing first `n` characters, where `n` is given by method parameter." % m_target_name,
+["Object of class convertible to %s." % doc_class_ref("Integer")],
+"* Object of class %s." % doc_class_ref("String"),"
+%s
+(\"obj.head(2): %%s\\n\" %% obj.head(2)).print();
+(\"obj.head(8.25): %%s\\n\" %% obj.head(8.25)).print();
+(\"obj.head(-1): %%s\\n\" %% obj.head(-1)).print();
+" % get_code(m_target_class,"obj","create_example"))
+      ]);/*}}}*/
+    }
+
+    if (m_target_name == "Array")
+    {
+      class_Array["methods"] = new Dict(
+      [/*{{{*/
+        "operator_binary_ls_br_equal#1", new MethodDescr(
+"Copy values of elements retrieved from method parameter to values of elements
+of object of class `%s`." % m_target_name,
+["Iterable type."],"* Value of object.","
+obj = [];
+a = b = c = 0;
+obj.push_ref(a);
+obj.push_ref(b);
+obj.push_ref(c);
+(\"a,b,c: %s\\n\" % [a,b,c].to_string()).print();
+obj <= [1,2,3];
+(\"a,b,c: %s\\n\" % [a,b,c].to_string()).print();
+"),
+        "resize#1", new MethodDescr(
+"Resize object of class `%s` to size given by method parameter. New
+elements are initialized to objects of class %s." % [m_target_name,doc_class_ref("Blank")],
+["Object of class convertible to %s." % doc_class_ref("Integer")],
+"* Object of class `%s`." % doc_class_ref("Blank"),"
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+obj.resize(8);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % get_code(m_target_class,"obj","create_example"))
+      ]);/*}}}*/
+    }
+
+    if (m_target_name == "Set")
+    {
+      class_Set["methods"] = new Dict(
+      [/*{{{*/
+        "remove#1", new MethodDescr(
+"From object of class `%s` remove elements with value equal to value of method
+parameter." % m_target_name,
+["Any type."],"* Object of class `Blank`.","
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+obj.remove(2);
+obj.remove(4);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % get_code(m_target_class,"obj","create_example")),
+        "operator_binary_minus_equal#1", new MethodDescr(
+"Set difference operator `-=`. Creates object of class `%s` containing
+elements from first object of class `%s` that are not contained in second
+object of class `%s`. Value of variable is set to result object of class
+`%s`." % [m_target_name,m_target_name,m_target_name,m_target_name],
+["Object of class `Set`."],"* Value of object.","
+%s
+%s
+obj_0 -= obj_1;
+(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
+" % [get_code(m_target_class,"obj_0","create_example"),
+     get_code(m_target_class,"obj_1","create_compare")]),
+        "operator_binary_ampersand_equal#1", new MethodDescr(
+"Set intersection operator `&=`. Creates object of class `%s` containing
+elements contained in both source objects of class `%s`. Value of variable is
+set to result object of class `%s`." % [m_target_name,m_target_name,m_target_name],
+["Object of class `Set`."],"* Value of object.","
+%s
+%s
+obj_0 &= obj_1;
+(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
+" % [get_code(m_target_class,"obj_0","create_example"),
+     get_code(m_target_class,"obj_1","create_compare")]),
+        "operator_binary_pipe_equal#1", new MethodDescr(
+"Set union operator `|=`. Creates object of class `%s` containing elements
+from both source objects of class `%s`. Value of variable is set to result
+object of class `%s`." % [m_target_name,m_target_name,m_target_name],
+["Object of class `Set`."],"* Value of object.","
+%s
+%s
+obj_0 |= obj_1;
+(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
+" % [get_code(m_target_class,"obj_0","create_example"),
+     get_code(m_target_class,"obj_1","create_compare")]),
+        "operator_binary_circumflex_equal#1", new MethodDescr(
+"Set symmetric difference operator `^=`. Creates object of class `%s`
+containing elements from both source objects of class `%s` that are contained
+exactly in one of them. Value of variable is set to result object of class
+`%s`." % [m_target_name,m_target_name,m_target_name],
+["Object of class `Set`."],"* Value of object.","
+%s
+%s
+obj_0 ^= obj_1;
+(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
+" % [get_code(m_target_class,"obj_0","create_example"),
+     get_code(m_target_class,"obj_1","create_compare")]),
+        "operator_binary_ampersand#1", new MethodDescr(
+"Set intersection operator `&`. Creates object of class `%s` containing
+elements contained in both source objects of class `%s`." % [m_target_name,m_target_name],
+["Object of class `Set`."],"* Object of class `Set`.","
+%s
+%s
+res = obj_0 & obj_1;
+(\"res: %%s\\n\" %% res.to_string()).print();
+" % [get_code(m_target_class,"obj_0","create_example"),
+     get_code(m_target_class,"obj_1","create_compare")]),
+        "operator_binary_pipe#1", new MethodDescr(
+"Set union operator `|`. Creates object of class `%s` containing elements from
+both source objects of class `%s`." % [m_target_name,m_target_name],
+["Object of class `Set`."],"* Object of class `Set`.","
+%s
+%s
+res = obj_0 | obj_1;
+(\"res: %%s\\n\" %% res.to_string()).print();
+" % [get_code(m_target_class,"obj_0","create_example"),
+     get_code(m_target_class,"obj_1","create_compare")]),
+        "operator_binary_circumflex#1", new MethodDescr(
+"Set symmetric difference operator `^`. Creates object of class `%s`
+containing elements from both source objects of class `%s` that are contained
+exactly in one of them." % [m_target_name,m_target_name],
+["Object of class `Set`."],"* Object of class `Set`.","
+%s
+%s
+res = obj_0 ^ obj_1;
+(\"res: %%s\\n\" %% res.to_string()).print();
+" % [get_code(m_target_class,"obj_0","create_example"),
+     get_code(m_target_class,"obj_1","create_compare")]),
+        "operator_binary_rs_br_equal#1", new MethodDescr(
+"Subset test operator `>=`. Test if object of class `%s` given by method
+parameter is subset of object of class `%s`." % [m_target_name,m_target_name],
+["Object of class `Set`."],
+"* Object of class %s.
+  * `0` - method parameter is not subset of object.
+  * `1` - method parameter is subset of object." % doc_class_ref("Integer"),"
+%s
+obj_1 = new Set(obj_0[0:2:]);
+(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
+(\"obj_1: %%s\\n\" %% obj_1.to_string()).print();
+(\"obj_0 >= obj_1: %%d\\n\" %% (obj_0 >= obj_1)).print();
+(\"obj_1 >= obj_0: %%d\\n\" %% (obj_1 >= obj_0)).print();
+" % get_code(m_target_class,"obj_0","create_example")),
+        "operator_binary_ls_br_equal#1", new MethodDescr(
+"Superset test operator `<=`. Test if object of class `%s` given by method
+parameter is superset of object of class `%s`." % [m_target_name,m_target_name],
+["Object of class `Set`."],
+"* Object of class %s.
+  * `0` - method parameter is not superset of object.
+  * `1` - method parameter is superset of object." % doc_class_ref("Integer"),"
+%s
+obj_1 = new Set(obj_0[0:2:]);
+(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
+(\"obj_1: %%s\\n\" %% obj_1.to_string()).print();
+(\"obj_0 <= obj_1: %%d\\n\" %% (obj_0 <= obj_1)).print();
+(\"obj_1 <= obj_0: %%d\\n\" %% (obj_1 <= obj_0)).print();
+" % get_code(m_target_class,"obj_0","create_example")),
+        "operator_binary_minus#1", new MethodDescr(
+"Set difference operator `-`. Creates object of class `%s` containing elements
+from first object of class `%s` that are not contained in second object of
+class `%s`." % [m_target_name,m_target_name,m_target_name],
+["Object of class `Set`."],"* Object of class `Set`.","
+%s
+%s
+res = obj_0 - obj_1;
+(\"res: %%s\\n\" %% res.to_string()).print();
+" % [get_code(m_target_class,"obj_0","create_example"),
+     get_code(m_target_class,"obj_1","create_compare")])
+      ]);/*}}}*/
+    }
+
+    if (m_target_name == "Dict")
+    {
+      class_Dict["methods"] = new Dict(
+      [/*{{{*/
+        "Dict#1", new MethodDescr(
+"Creates object of class `%s` based on elements retrieved from method
 parameter. Values of parameter elements represents alternating keys and values
-of new object of class `Dict`.",["Iterable type."],new Blank(),"
+of new object of class `%s`." % [m_target_name,m_target_name],
+["Iterable type."],new Blank(),"
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 " % get_code(m_target_class,"obj","create_example"))
-    ]);/*}}}*/
+      ]);/*}}}*/
+    }
+
+    if (m_target_name == "File")
+    {
+      class_File["var_classes"] = new Dict(
+      [/*{{{*/
+        "files",new VarClassDescr("Files related to current process"),
+        "seek_consts",new VarClassDescr("Constants of `File.seek#2` method.")
+      ]);/*}}}*/
+      class_File["variables"] = new Dict(
+      [/*{{{*/
+        "stdin",new VariableDescr("Object of class `File` representing standard input of process.","files"),
+        "stdout",new VariableDescr("Object of class `File` representing standard output of process.","files"),
+        "stderr",new VariableDescr("Object of class `File` representing error output of process.","files"),
+        "SEEK_SET",new VariableDescr("Object of class `Integer`. Seek position relative to file begining.","seek_consts"),
+        "SEEK_CUR",new VariableDescr("Object of class `Integer`. Seek position relative to current position.","seek_consts"),
+        "SEEK_END",new VariableDescr("Object of class `Integer`. Seek position relative to end of file.","seek_consts")
+      ]);/*}}}*/
+    }
 
   }/*}}}*/
 
@@ -582,33 +913,38 @@ of new object of class `Dict`.",["Iterable type."],new Blank(),"
   public get_function_name(a_class_name,a_method_name_wp,a_param_count,a_method_type)
   {/*{{{*/
 
-    // - generate function name -
-    prev = '\x00';
-    class_name_lst = [];
-    for (char <- a_class_name)
+    if (Blank == (source_id = get_property(a_class_name,"source_id")))
     {
-      if (char >= 'A' && char <= 'Z')
+      // - generate function name -
+      prev = '\x00';
+      class_name_lst = [];
+      for (char <- a_class_name)
       {
-        if (prev != '\x00')
+        if (char >= 'A' && char <= 'Z')
         {
-          class_name_lst.push('_');
-        }
+          if (prev != '\x00')
+          {
+            class_name_lst.push('_');
+          }
 
-        class_name_lst.push(char + '\x20');
+          class_name_lst.push(char + '\x20');
+        }
+        else 
+        {
+          class_name_lst.push(char);
+        }
+        prev = char;
       }
-      else 
-      {
-        class_name_lst.push(char);
-      }
-      prev = char;
+
+      source_id = class_name_lst.to_string("");
     }
 
     switch (a_method_type)
     {
       case METHOD_TYPE_CONSTRUCTOR,METHOD_TYPE_METHOD:
-        return "bic_%s_method_%s_%d" % [class_name_lst.to_string(""),a_method_name_wp,a_param_count];
+        return "bic_%s_method_%s_%d" % [source_id,a_method_name_wp,a_param_count];
       case METHOD_TYPE_OPERATOR:
-        return "bic_%s_%s" % [class_name_lst.to_string(""),a_method_name_wp];
+        return "bic_%s_%s" % [source_id,a_method_name_wp];
     }
   }/*}}}*/
 
@@ -713,46 +1049,81 @@ of new object of class `Dict`.",["Iterable type."],new Blank(),"
 
   public doc_class_ref(a_class_name)
   {/*{{{*/
-    return "`ref_%s`" % a_class_name;
+    return "`%s`" % a_class_name;
   }/*}}}*/
 
   // - generators -
 
   public process_variable(a_class,a_var,a_class_vars)
   {/*{{{*/
+    class_name = a_class.name();
     var_name = a_var.name();
+
+    if (CLASS_PROPERTIES[m_target_name]["variables"].has_key(var_name))
+    {
+      variable = CLASS_PROPERTIES[m_target_name]["variables"][var_name];
+      var_class = CLASS_PROPERTIES[m_target_name]["var_classes"][variable.m_var_class];
+
+      if (!var_class.m_defined)
+      {
+        a_class_vars.push("");
+        a_class_vars.push("* %s" % var_class.m_descr);
+
+        var_class.m_defined = 1;
+      }
+
+      a_class_vars.push("  * `%s.%s` - %s" % [class_name,var_name,variable.m_descr]);
+    }
+    else
+    {
+      a_class_vars.push("  * `%s.%s` - TODO variable description ..." % [class_name,var_name]);
+    }
+  }/*}}}*/
+
+  public pm_params_list(a_param_classes)
+  {/*{{{*/
+
+    // - generate list of parameters -
+    params = [];
+    if (a_param_classes.length() > 1)
+      for (param_class <- a_param_classes[:-2:])
+        params.push(doc_class_ref(param_class));
+
+    m_meth_param_lsts[0].push("Object of class %s%s%s." % 
+      [params.to_string(", "),params.length() > 0 ? " or " : "",doc_class_ref(a_param_classes.last())]);
+  }/*}}}*/
+
+  public pm_arith_prior_return_list(a_param_classes)
+  {/*{{{*/
+
+    // - generate list of return values -
+    ret_classes_set = new Set();
+    ret_classes = [];
+    for (param_class <- a_param_classes)
+    {
+      ret_class = get_prior_type(m_target_name,param_class);
+
+      if (!ret_classes_set.contain(ret_class))
+      {
+        ret_classes.push(ret_class);
+        ret_classes_set.insert(ret_class);
+      }
+    }
+
+    returns = [];
+    if (ret_classes.length() > 1)
+      for (param_class <- ret_classes[:-2:])
+        returns.push(doc_class_ref(param_class));
+
+    m_meth_return_lst.push("* Object of class %s%s%s." % 
+      [returns.to_string(", "),returns.length() > 0 ? " or " : "",doc_class_ref(ret_classes.last())]);
   }/*}}}*/
 
   public pm_operator_binary_t0(a_descr,a_param_classes,a_obj_type,a_param_type,a_op_str)
   {/*{{{*/
     m_meth_descr_lst.push(a_descr);
-
-    ret_classes = new Set();
-    for (param_class <- a_param_classes)
-      ret_classes.insert(get_prior_type(m_target_name,param_class));
-
-    if (a_param_classes.length() > 1)
-    {
-      m_meth_param_lsts[0].push("One from following:");
-      for (param_class <- a_param_classes)
-        m_meth_param_lsts[0].push("  * Object of class %s." % doc_class_ref(param_class));
-    }
-    else
-    {
-      m_meth_param_lsts[0].push("* Object of class %s." % doc_class_ref(a_param_classes[0]));
-    }
-
-    if (ret_classes.length() > 1)
-    {
-      m_meth_return_lst.push("* One From following:");
-      for (param_class <- a_param_classes)
-        if (ret_classes.contain(param_class))
-          m_meth_return_lst.push("  * Object of class %s." % doc_class_ref(param_class));
-    }
-    else
-    {
-      m_meth_return_lst.push("* Object of class %s." % doc_class_ref(ret_classes.item(ret_classes.first_idx())));
-    }
+    pm_params_list(a_param_classes);
+    pm_arith_prior_return_list(a_param_classes);
 
     obj_code = get_code(m_target_class,"obj",a_obj_type);
     print_code = get_code(m_target_class,"obj","check_print");
@@ -780,18 +1151,7 @@ of new object of class `Dict`.",["Iterable type."],new Blank(),"
   public pm_operator_binary_t1(a_descr,a_param_classes,a_obj_type,a_param_type,a_op_str)
   {/*{{{*/
     m_meth_descr_lst.push(a_descr);
-
-    if (a_param_classes.length() > 1)
-    {
-      m_meth_param_lsts[0].push("One from following:");
-      for (param_class <- a_param_classes)
-        m_meth_param_lsts[0].push("  * Object of class %s." % doc_class_ref(param_class));
-    }
-    else
-    {
-      m_meth_param_lsts[0].push("* Object of class %s." % doc_class_ref(a_param_classes[0]));
-    }
-
+    pm_params_list(a_param_classes);
     m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
 
     obj_code = get_code(m_target_class,"obj",a_obj_type);
@@ -816,18 +1176,7 @@ of new object of class `Dict`.",["Iterable type."],new Blank(),"
   public pm_operator_binary_t2(a_descr,a_param_classes,a_obj_type,a_param_type,a_op_str)
   {/*{{{*/
     m_meth_descr_lst.push(a_descr);
-
-    if (a_param_classes.length() > 1)
-    {
-      m_meth_param_lsts[0].push("One from following:");
-      for (param_class <- a_param_classes)
-        m_meth_param_lsts[0].push("  * Object of class %s." % doc_class_ref(param_class));
-    }
-    else
-    {
-      m_meth_param_lsts[0].push("* Object of class %s." % doc_class_ref(a_param_classes[0]));
-    }
-
+    pm_params_list(a_param_classes);
     m_meth_return_lst.push("* Object of class `%s`." % m_target_name);
 
     obj_code = get_code(m_target_class,"obj",a_obj_type);
@@ -856,18 +1205,7 @@ of new object of class `Dict`.",["Iterable type."],new Blank(),"
   public pm_operator_binary_t3(a_descr,a_param_classes,a_return_lst,a_obj_type,a_param_type,a_op_str)
   {/*{{{*/
     m_meth_descr_lst.push(a_descr);
-
-    if (a_param_classes.length() > 1)
-    {
-      m_meth_param_lsts[0].push("One from following:");
-      for (param_class <- a_param_classes)
-        m_meth_param_lsts[0].push("  * Object of class %s." % doc_class_ref(param_class));
-    }
-    else
-    {
-      m_meth_param_lsts[0].push("* Object of class %s." % doc_class_ref(a_param_classes[0]));
-    }
-
+    pm_params_list(a_param_classes);
     m_meth_return_lst += a_return_lst;
 
     obj_code = get_code(m_target_class,"obj",a_obj_type);
@@ -909,7 +1247,7 @@ obj = %s;
     }
   }/*}}}*/
 
-  public process_method(a_class,a_method,a_class_constrs,a_class_operators,a_class_methods)
+  public process_method(a_class,a_method,a_class_too,a_class_toc,a_class_tom,a_class_constrs,a_class_operators,a_class_methods)
   {/*{{{*/
     class_name = a_class.name();
     method_name = a_method.name();
@@ -955,7 +1293,11 @@ obj = %s;
     m_meth_ex_code = new Blank();
 
     // - retrieve method source line -
-    //source_url = get_source(class_name,method_name_wp,param_count,method_type);
+    source_url = get_source(class_name,method_name_wp,param_count,method_type);
+
+    // - insert method reference -
+    method_lst.push("<a name=\"%s\" />" % method_name);
+    method_lst.push("");
 
     switch (method_type)
     {
@@ -963,6 +1305,9 @@ obj = %s;
       {/*{{{*/
         method_lst.push("### Constructor %s%s%s\n" % [spec_str,static_str,
             Blank != source_url ? "[`%s`](%s)" % [method_name,source_url] : "`%s`" % method_name]);
+
+        // - update table of contents -
+        a_class_toc.push("  * Constructor [`%s`](#%s)" % [method_name,method_name.replace("#","%23")]);
 
         // - if explicit description is not available -
         if (!get_method_descr(class_name,method_name))
@@ -1011,8 +1356,13 @@ obj = new %s(%s);
       }/*}}}*/
       case METHOD_TYPE_OPERATOR:
       {/*{{{*/
+        method_lst.push("<a name=\"%s\" />" % method_name);
+        method_lst.push("");
         method_lst.push("### Operator %s%s%s\n" % [spec_str,static_str,
             Blank != source_url ? "[`%s`](%s)" % [method_name,source_url] : "`%s`" % method_name]);
+
+        // - update table of contents -
+        a_class_too.push("  * Operator [`%s`](#%s)" % [method_name,method_name.replace("#","%23")]);
 
         // - if explicit description is not available -
         if (!get_method_descr(class_name,method_name))
@@ -1050,7 +1400,7 @@ obj = \"New value\";
                 m_meth_return_lst.push("* Value of object.");
 
                 obj_code = get_code(a_class,"obj","create_example");
-                arr_code = get_property("Array","create_example");
+                arr_code = get_property("Array","create_compare");
 
                 if (Blank != obj_code && Blank != arr_code)
                 {
@@ -1065,10 +1415,7 @@ obj += %s;
               else
               {
                 m_meth_descr_lst.push("Add and assign operator `+=`. Operator adds value of method parameter to value of object of class `%s`." % class_name);
-                m_meth_param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
+                m_meth_param_lsts[0].push("Object of class %s, %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
                 m_meth_return_lst.push("* Value of object.");
 
                 obj_code = get_code(a_class,"obj","create_arith");
@@ -1108,11 +1455,8 @@ obj += %s;
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              m_meth_descr_lst.push("Substract and assign operator `-=`. Operator substracts value of method parameter from value of object of class `%s`." % class_name);
-              m_meth_param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
+              m_meth_descr_lst.push("Subtract and assign operator `-=`. Operator subtracts value of method parameter from value of object of class `%s`." % class_name);
+              m_meth_param_lsts[0].push("Object of class %s, %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
               m_meth_return_lst.push("* Value of object.");
 
               obj_code = get_code(a_class,"obj","create_arith");
@@ -1152,10 +1496,7 @@ obj += %s;
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
               m_meth_descr_lst.push("Multiply and assign operator `*=`. Operator multiplies value of object of class `%s` by value of method parameter." % class_name);
-              m_meth_param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
+              m_meth_param_lsts[0].push("Object of class %s, %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
               m_meth_return_lst.push("* Value of object.");
 
               obj_code = get_code(a_class,"obj","create_arith");
@@ -1195,10 +1536,7 @@ obj += %s;
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
               m_meth_descr_lst.push("Divide and assign operator `/=`. Operator divides value of object of class `%s` by value of method parameter." % class_name);
-              m_meth_param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
+              m_meth_param_lsts[0].push("Object of class %s, %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
               m_meth_return_lst.push("* Value of object.");
 
               obj_code = get_code(a_class,"obj","create_large");
@@ -1237,10 +1575,8 @@ obj /= %s;
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              m_meth_descr_lst.push("Modulus and assign operator `%%=`. Operater computes modulus of value of object of class `%s` divided by value of method parameter." % class_name);
-              m_meth_param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
+              m_meth_descr_lst.push("Modulus and assign operator `%%=`. Operator computes modulus of value of object of class `%s` divided by value of method parameter." % class_name);
+              m_meth_param_lsts[0].push("Object of class %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
               m_meth_return_lst.push("* Value of object.");
 
               obj_code = get_code(a_class,"obj","create_arith");
@@ -1272,9 +1608,7 @@ obj %%= %s;
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
               m_meth_descr_lst.push("Left shift and assign operator `<<=`. Value of object of class `%s` is shifted to left by count of bits given by method parameter." % class_name);
-              m_meth_param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
+              m_meth_param_lsts[0].push("Object of class %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
               m_meth_return_lst.push("* Value of object.");
 
               obj_code = get_code(a_class,"obj","create_arith");
@@ -1307,9 +1641,7 @@ obj %%= %s;
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
               m_meth_descr_lst.push("Right shift and assign operator `>>=`. Value of object of class `%s` is shifted to right by count of bits given by method parameter." % class_name);
-              m_meth_param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
+              m_meth_param_lsts[0].push("Object of class %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
               m_meth_return_lst.push("* Value of object.");
 
               obj_code = get_code(a_class,"obj","create_arith");
@@ -1341,13 +1673,11 @@ obj %%= %s;
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              m_meth_descr_lst.push("Binary AND and assign operator `&=`. Value of
-object of class `%s` is modified according to value determined by
+              m_meth_descr_lst.push("Bitwise AND and assign operator `&=`. Value of
+object of class `%s` is modified according to value given by
 method parameter. Bit in result value is set, if it exists in
 object of class `%s` and method parameter." % [class_name,class_name]);
-              m_meth_param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
+              m_meth_param_lsts[0].push("Object of class %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
               m_meth_return_lst.push("* Value of object.");
 
               obj_code = get_code(a_class,"obj","create_arith");
@@ -1378,13 +1708,11 @@ obj &= %s;
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              m_meth_descr_lst.push("Binary OR and assign operator `|=`. Value of
-object of class `%s` is modified according to value determined by
+              m_meth_descr_lst.push("Bitwise OR and assign operator `|=`. Value of
+object of class `%s` is modified according to value given by
 method parameter. Bit in result value is set, if it exists in
 object of class `%s` or in method parameter." % [class_name,class_name]);
-              m_meth_param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
+              m_meth_param_lsts[0].push("Object of class %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
               m_meth_return_lst.push("* Value of object.");
 
               obj_code = get_code(a_class,"obj","create_arith");
@@ -1415,14 +1743,12 @@ obj |= %s;
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
-              m_meth_descr_lst.push("Binary XOR and assign operator `^=`. Value of
-object of class `%s` is modified according to value determined by
+              m_meth_descr_lst.push("Bitwise XOR and assign operator `^=`. Value of
+object of class `%s` is modified according to value given by
 method parameter. Bit in result value is set, if it exists in
 object of class `%s` or in method parameter, but not both." %
               [class_name,class_name]);
-              m_meth_param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
+              m_meth_param_lsts[0].push("Object of class %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]);
               m_meth_return_lst.push("* Value of object.");
 
               obj_code = get_code(a_class,"obj","create_arith");
@@ -1456,10 +1782,7 @@ obj ^= %s;
               m_meth_descr_lst.push("Logical AND operator `&&`.  If object of class
 `%s` is non-zero and value of method parameter is also non-zero
 condition becomes true." % class_name);
-              m_meth_param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
+              m_meth_param_lsts[0].push("Object of class %s, %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
               m_meth_return_lst.push("* Integer `1` if both operands are non-zero.");
               m_meth_return_lst.push("* Integer `0` if either of operands is zero.");
 
@@ -1485,10 +1808,7 @@ condition becomes true." % class_name);
               m_meth_descr_lst.push("Logical OR operator `||`.  If object of class
 `%s` is non-zero or value of method parameter is non-zero
 condition becomes true." % class_name);
-              m_meth_param_lsts[0].push("One from following:
-  * Object of class %s.
-  * Object of class %s.
-  * Object of class %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
+              m_meth_param_lsts[0].push("Object of class %s, %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
               m_meth_return_lst.push("* Integer `1` if either of operands is non-zero.");
               m_meth_return_lst.push("* Integer `0` if both operands are zero.");
 
@@ -1512,7 +1832,7 @@ condition becomes true." % class_name);
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
               pm_operator_binary_t1(
-                "Binary AND operator `&`. Bit in result value is set, if it exists in object of class `%s` and in method parameter." % class_name,
+                "Bitwise AND operator `&`. Bit in result value is set, if it exists in object of class `%s` and in method parameter." % class_name,
                 ["Char","Integer"],
                 "create_arith",
                 "create_example",
@@ -1523,7 +1843,7 @@ condition becomes true." % class_name);
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
               pm_operator_binary_t1(
-                "Binary OR operator `|`. Bit in result value is set, if it exists in object of class `%s` or in method parameter." % class_name,
+                "Bitwise OR operator `|`. Bit in result value is set, if it exists in object of class `%s` or in method parameter." % class_name,
                 ["Char","Integer"],
                 "create_arith",
                 "create_example",
@@ -1534,7 +1854,7 @@ condition becomes true." % class_name);
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
               pm_operator_binary_t1(
-                "Binary XOR operator `^`. Bit in result value is set, if it exists in object of class `%s` or in method parameter, but not both." % class_name,
+                "Bitwise XOR operator `^`. Bit in result value is set, if it exists in object of class `%s` or in method parameter, but not both." % class_name,
                 ["Char","Integer"],
                 "create_arith",
                 "create_example",
@@ -1712,7 +2032,7 @@ res = obj + %s;
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
               pm_operator_binary_t0(
-                "Substract operator `-`. Operator substracts value of method parameter from value of object of class `%s`." % class_name,
+                "Subtract operator `-`. Operator subtracts value of method parameter from value of object of class `%s`." % class_name,
                 ["Char","Integer","Float"],
                 "create_arith",
                 "create_example",
@@ -1722,27 +2042,25 @@ res = obj + %s;
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
 
+              param_classes = ["Char","Integer","Float"];
+
+              // - integer string parameter -
+              if (class_name == "Integer")
+              {
+                param_classes.push("String");
+              }
+
               pm_operator_binary_t0(
                 "Multiply operator `*`. It multiplies value of object of class `%s` by value of method parameter." % class_name,
-                ["Char","Integer","Float"],
+                param_classes,
                 "create_small",
                 "create_example",
                 "*");
 
+              // - integer string parameter -
               if (class_name == "Integer")
               {
                 m_meth_descr_lst.push("If method parameter is object of class %s, then result will be created as repeated concatenation of this string." % doc_class_ref("String"));
-                m_meth_param_lsts[0].push("  * Object of class %s." % doc_class_ref("String"));
-                m_meth_return_lst.push("  * Object of class %s." % doc_class_ref("String"));
-
-                if (Blank != m_meth_ex_code &&
-                    Blank != (create_code = get_property("String","create_example")) &&
-                    Blank != (print_code = get_code("String","res","check_print")))
-                {
-                    m_meth_ex_code += ("res = obj * %s;
-%s
-" % [create_code,print_code]);
-                }
               }
             }/*}}}*/
             case "operator_binary_slash#1":
@@ -1851,6 +2169,42 @@ res = obj + %s;
               "create_example",
               "+obj");
             }/*}}}*/
+            case "operator_unary_pre_minus#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              pm_operator_binary_t4("Unary negative operator `-`. Return negative value of object of class `%s`." % class_name,
+              "create_example",
+              "-obj");
+            }/*}}}*/
+            case "operator_unary_pre_exclamation#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              m_meth_descr_lst.push("Logical NOT operator `!`. Reverse logical state of value of object of class `%s`." % class_name);
+              m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
+
+              obj_code = get_code(m_target_name,"obj","create_example");
+              print_code = get_code(m_target_name,"obj","check_print");
+
+              if (Blank != obj_code)
+              {
+                m_meth_ex_code = ("
+%s
+%s
+obj = !obj;
+%s
+" % [obj_code,print_code,print_code]);
+              }
+            }/*}}}*/
+            case "operator_unary_pre_tilde#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
+
+              pm_operator_binary_t4("Bitwise complement operator `~`. Return binary complement of value of object of class `%s`." % class_name,
+              "create_example",
+              "~obj");
+            }/*}}}*/
             case "operator_binary_le_br_re_br#1":
             {/*{{{*/
               if (a_method.is_static()) new Exception("Operator \"%s\" is static" % method_name).throw();
@@ -1894,8 +2248,13 @@ res = obj + %s;
       }/*}}}*/
       case METHOD_TYPE_METHOD:
       {/*{{{*/
+        method_lst.push("<a name=\"%s\" />" % method_name);
+        method_lst.push("");
         method_lst.push("### Method %s%s%s\n" % [spec_str,static_str,
             Blank != source_url ? "[`%s`](%s)" % [method_name,source_url] : "`%s`" % method_name]);
+
+        // - update table of contents -
+        a_class_tom.push("  * Method [`%s`](#%s)" % [method_name,method_name.replace("#","%23")]);
 
         // - if explicit description is not available -
         if (!get_method_descr(class_name,method_name))
@@ -2353,7 +2712,7 @@ value = \"Hello world!\";
 
               if (class_is_container(a_class))
               {
-                m_meth_descr_lst.push("Remove element from object of class `%s` stored at position determined by method parameter." % class_name);
+                m_meth_descr_lst.push("Remove element from object of class `%s` stored at position given by method parameter." % class_name);
                 m_meth_param_lsts[0].push("Type convertible to integer.");
                 m_meth_return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
 
@@ -2499,7 +2858,7 @@ obj.fill(0);
 
               if (class_is_container(a_class))
               {
-                m_meth_descr_lst.push("Store reference to second method parameter under key determined by first method parameter in object of class `%s`." % class_name);
+                m_meth_descr_lst.push("Store reference to second method parameter under key given by first method parameter in object of class `%s`." % class_name);
                 m_meth_param_lsts[0].push("Any type.");
                 m_meth_param_lsts[1].push("Any type.");
                 m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Blank"));
@@ -3208,7 +3567,22 @@ TODO example result
     class_name = a_class.name();
 
     m_descr_lst.push("# Class %s" % class_name);
+    m_descr_lst.push("");
 
+    // - retrieve class description -
+    class_descr = get_property(m_target_name,"description");
+    if (Blank != class_descr)
+    {
+      m_descr_lst.push(class_descr);
+    }
+    else
+    {
+      m_descr_lst.push("TODO class description ...");
+    }
+
+    class_toc       = [];
+    class_too       = [];
+    class_tom       = [];
     class_vars      = [];
     class_constrs   = [];
     class_operators = [];
@@ -3217,13 +3591,38 @@ TODO example result
     // - process class methods -
     for (method <- a_class.methods())
     {
-      process_method(a_class,method,class_constrs,class_operators,class_methods);
+      process_method(a_class,method,class_too,class_toc,class_tom,class_constrs,class_operators,class_methods);
     }
 
     // - process class variables -
     for (var <- a_class.vars())
     {
       process_variable(a_class,var,class_vars);
+    }
+
+    if (class_vars.length() > 0)
+    {
+      m_descr_lst.push("");
+      m_descr_lst.push("## Static constants");
+      m_descr_lst += class_vars;
+    }
+
+    if (class_tom.length() > 0)
+    {
+      m_descr_lst.push("");
+      m_descr_lst.push("## Table of methods");
+      m_descr_lst.push("");
+      m_descr_lst.push("* Constructors");
+      m_descr_lst.push("");
+      m_descr_lst += class_toc;
+      m_descr_lst.push("");
+      m_descr_lst.push("* Operators");
+      m_descr_lst.push("");
+      m_descr_lst += class_too;
+      m_descr_lst.push("");
+      m_descr_lst.push("* Methods");
+      m_descr_lst.push("");
+      m_descr_lst += class_tom;
     }
 
     if (class_constrs.length() > 0)
@@ -3251,11 +3650,22 @@ TODO example result
     }
   }/*}}}*/
 
-  public Main()
+  public Main(a_argv)
   {/*{{{*/
 
+    // - ERORR -
+    if (a_argv.length() < 3)
+    {
+      new Exception("Expected at least two arguments: <class_name> <file_name> [<module_list>]").throw();
+    }
+
+    // - process command line arguments -
+    m_arg_class = a_argv[1];
+    m_arg_file = a_argv[2];
+    m_arg_modules = a_argv.length() > 3 ? a_argv[3].split(":") : [];
+
     // - retrieve target class -
-    m_target_class = Lang.cls(TARGET_CLASS_NAME);
+    m_target_class = Lang.cls(m_arg_class);
     m_target_name = m_target_class.name();
 
     // - initialize class properties -
@@ -3267,12 +3677,13 @@ TODO example result
     // - process selected class -
     process_class(m_target_class);
 
-    ("%s\n" % m_descr_lst.to_string("\n")).print();
+    // - write result to target File -
+    new File(m_arg_file,"w").write_close(m_descr_lst.to_string("\n"));
   }/*}}}*/
 
   static public main(argv)
   {/*{{{*/
-    new Main();
+    new Main(argv);
   }/*}}}*/
 }
 
