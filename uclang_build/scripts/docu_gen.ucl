@@ -337,6 +337,57 @@ pi = 3.1415926535897932384626433;
       "description","Class providing access to system files.",
       "source_id","\\(file\\|stream\\)"
     ]);/*}}}*/
+    CLASS_PROPERTIES["FinalAutomata"] = class_FinalAutomata = new Dict(
+    [/*{{{*/
+      "description","Class implementing final automata designed for recognition
+of terminal symbols in input source strings. Final automata can be used
+for recognition of binary data sequences too.",
+      "create_example",
+"new FinalAutomata(
+[
+  \"'0'.<07>*\",
+  \"<19>.d*\",
+  \"'0'.[xX].(<09>+<af>+<AF>).(<09>+<af>+<AF>)*\",
+  \"('_'+l).('_'+l+d)*\",
+  \"w.w*\"
+])"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["FaSource"] = class_FaSource = new Dict(
+    [/*{{{*/
+      "description","Class of objects representing reference to object of class
+%s and object of class %s. Object also holds information about position
+of last recognized terminal symbol." % [doc_class_ref("FinalAutomata"),doc_class_ref("String")],
+      "create_example_obj",
+"fa = new FinalAutomata([\"('_'+l).('_'+l+d)*\",\"w.w*\"]);
+obj = fa.get_source(\"hello world\");"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Parser"] = class_Parser = new Dict(
+    [/*{{{*/
+      "description","Class implementing parser capable to perform lexical and
+syntactical analysis of input strings. Parser construction is based on
+string containing description of language terminal symbols and its
+grammar rules.
+
+Parser demo is introduced in script - [parser
+demo](https://github.com/izuzanak/uclang/blob/master/uclang_build/scripts/examples/demo_parser.ucl).",
+      "create_example_obj",
+"obj = new Parser(\"
+  init_code: {}
+  terminals: id {('_'+l).('_'+l+d)*} excl {'!'} _SKIP_ {w.w*} _END_ {'\\\\0'}
+  nonterminals: <start> <exp>
+  rules:
+    <start> -> <exp> _END_ ->> {}
+    <exp> -> excl <exp>    ->> {}
+    <exp> -> id            ->> {}
+\");"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["ParseState"] = class_ParseState = new Dict(
+    [/*{{{*/
+      "description","Objects of class `%s` describes parsing state related to
+source string and object of class %s. Object of class `%s` is acquired as
+parameter of callback called from object of class %s." %
+[m_target_name,doc_class_ref("Parser"),m_target_name,doc_class_ref("Parser")]
+    ]);/*}}}*/
 
     if (m_target_name == "Char")
     {
@@ -833,6 +884,112 @@ of new object of class `%s`." % [m_target_name,m_target_name],
       ]);/*}}}*/
     }
 
+    if (m_target_name == "FinalAutomata")
+    {
+      class_FinalAutomata["methods"] = new Dict(
+      [/*{{{*/
+        "FinalAutomata#1", new MethodDescr(
+"Creates final automata recognizing terminal symbols, from array of strings
+describing regular expressions.",
+["Object of class %s containing objects of class %s representing regular
+expressions describing terminal symbols." %
+[doc_class_ref("Array"),doc_class_ref("String")]],new Blank(),"
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % get_code(m_target_class,"obj","create_example")),
+        "get_source#1", new MethodDescr(
+"Create object of class %s that can be used for retrieval of terminal symbol indexes." % doc_class_ref("FaSource"),
+["Object of class %s representing source string in which terminals should be recognized." % doc_class_ref("String")],
+"* Object of class %s." % doc_class_ref("FaSource"),"
+fa = new FinalAutomata([\"('_'+l).('_'+l+d)*\",\"w.w*\"]);
+obj = fa.get_source(\"Hello world\");
+(\"obj: %s\\n\" % obj.to_string()).print();
+")
+      ]);/*}}}*/
+    }
+
+    if (m_target_name == "FaSource")
+    {
+      class_FaSource["methods"] = new Dict(
+      [/*{{{*/
+        "next_terminal#0", new MethodDescr(
+"Retrieve next terminal symbol identified by object of class %s. If no terminal
+symbol was recognized, method will return object of class %s." %
+[doc_class_ref("Integer"),doc_class_ref("Blank")],
+[],
+"* Object of class %s if next terminal symbol was recognized. Integer represents index in original array of regular expressions used to create object of class %s.
+* Object of class %s if next terminal symbol was not recognized." % [doc_class_ref("Integer"),doc_class_ref("FinalAtomata"),doc_class_ref("Blank")],"
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+while(Blank != (term = obj.next_terminal()))
+{
+  (\"terminal: %%d\\n\" %% term).print();
+}
+" % get_property(m_target_name,"create_example_obj")),
+        "old_input_idx#0", new MethodDescr(
+"Retrieve index in source string that refers to beginning of last recognized terminal symbol.",
+[],
+"* Object of class %s representing index in source string that refers to beginning of last recognized terminal symbol." % doc_class_ref("Integer"),"
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+while(Blank != (term = obj.next_terminal()))
+{
+  (\"obj.old_input_idx(): %%d\\n\" %% obj.old_input_idx()).print();
+}
+" % get_property(m_target_name,"create_example_obj")),
+        "input_idx#0", new MethodDescr(
+"Retrieve index in source string referring to first character that was not yet processed by final automata.",
+[],
+"* Object of class %s representing index in source string referring to first character that was not yet processed by final automata." % doc_class_ref("Integer"),"
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+while(Blank != (term = obj.next_terminal()))
+{
+  (\"obj.input_idx(): %%d\\n\" %% obj.input_idx()).print();
+}
+" % get_property(m_target_name,"create_example_obj")),
+        "next_item#0", new MethodDescr(
+"Retrieve next terminal symbol identified by object of class %s. If no terminal symbol was recognized, method will return object of class %s. Presence of this method implies that object of class `%s` is iterable." %
+[doc_class_ref("Integer"),doc_class_ref("Blank"),m_target_name],
+[],
+"* Object of class %s if next terminal symbol was recognized. Integer represents index in original array of regular expressions used to create object of class %s.
+* Object of class %s if next terminal symbol was not recognized." % [doc_class_ref("Integer"),doc_class_ref("FinalAtomata"),doc_class_ref("Blank")],"
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+for (term <- obj)
+{
+  (\"terminal: %%d\\n\" %% term).print();
+}
+" % get_property(m_target_name,"create_example_obj"))
+      ]);/*}}}*/
+    }
+
+    if (m_target_name == "Parser")
+    {
+      class_Parser["methods"] = new Dict(
+      [/*{{{*/
+        "Parser#1", new MethodDescr(
+"Create object of class `%s` based on string containing description of language terminal
+symbols and its grammar rules." % m_target_name,
+["Object of class %s containing description of language terminal symbols and
+its grammar rules." % doc_class_ref("String")],new Blank(),"
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % get_code(m_target_class,"obj","create_example")),
+        "parse#2", new MethodDescr(
+"Parse source string given as first method parameter, and for each reduction
+occurred according to language grammar rules, call delegate given as second
+method parameter. Delegate accepts one parameter represented by object of class
+%s." % doc_class_ref("ParseState"),
+["Object of class %s representing string to be parsed by parser." % doc_class_ref("String"),
+"Object of class %s to be called when reduction according to language grammar rule has occur." % doc_class_ref("Delegate")],
+"* Object of class %s." % doc_class_ref("Blank"),"
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % get_code(m_target_class,"obj","create_example"))
+      ]);/*}}}*/
+    }
+
   }/*}}}*/
 
   public get_property(a_class_name,a_code_id)
@@ -868,6 +1025,11 @@ of new object of class `%s`." % [m_target_name,m_target_name],
         if (Blank != (create_example = get_property(class_name,a_code_type)))
         {
           return "%s = %s;" % [a_var_name,create_example];
+        }
+
+        if (Blank != (create_example_obj = get_property(class_name,"create_example_obj")))
+        {
+          return create_example_obj;
         }
 
         if (class_is_container(a_class))
@@ -3656,25 +3818,35 @@ TODO example result
       m_descr_lst.push("-----");
     }
 
-    if (class_tom.length() > 0)
+    m_descr_lst.push("");
+    m_descr_lst.push("## Table of methods");
+
+    if (class_toc.length() > 0)
     {
-      m_descr_lst.push("");
-      m_descr_lst.push("## Table of methods");
       m_descr_lst.push("");
       m_descr_lst.push("* Constructors");
       m_descr_lst.push("");
       m_descr_lst += class_toc;
+    }
+
+    if (class_too.length() > 0)
+    {
       m_descr_lst.push("");
       m_descr_lst.push("* Operators");
       m_descr_lst.push("");
       m_descr_lst += class_too;
+    }
+
+    if (class_tom.length() > 0)
+    {
       m_descr_lst.push("");
       m_descr_lst.push("* Methods");
       m_descr_lst.push("");
       m_descr_lst += class_tom;
-      m_descr_lst.push("");
-      m_descr_lst.push("-----");
     }
+
+    m_descr_lst.push("");
+    m_descr_lst.push("-----");
 
     if (class_constrs.length() > 0)
     {

@@ -1,14 +1,35 @@
-
 # Class ParseState
-Objects of class `ParseState` describes parsing state related to source string
-and object of class `Parser`. Object of class `ParseState` is acquired as
+
+Objects of class `ParseState` describes parsing state related to
+source string and object of class `Parser`. Object of class `ParseState` is acquired as
 parameter of callback called from object of class `Parser`.
+
+-----
+
+## Table of methods
+
+* Operators
+
+  * Operator [`operator_binary_equal#1`](#operator_binary_equal%231)
+
+* Methods
+
+  * Method [`rule_idx#0`](#rule_idx%230)
+  * Method [`rule_body#1`](#rule_body%231)
+  * Method [`old_input_idx#0`](#old_input_idx%230)
+  * Method [`input_idx#0`](#input_idx%230)
+  * Method [`to_string#0`](#to_string%230)
+  * Method [`print#0`](#print%230)
+
+-----
 
 ## Operators
 
-#### Operator `operator_binary_equal#1`
-Assignment operator `=`. Object of class `ParseState` is replaced by method
-parameter.
+<a name="operator_binary_equal#1" />
+
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L991)
+
+Assignment operator `=`. Object of class `ParseState` is replaced by method parameter.
 
 **Parameters:**
 
@@ -16,7 +37,7 @@ parameter.
 
 **Return:**
 
-Value of object.
+* Method parameter.
 
 **Example:**
 
@@ -35,15 +56,19 @@ a_state: Hello world
 a_state: Hello world
 ```
 
+-----
+
 ## Methods
 
-#### Method `rule_idx#0`
+<a name="rule_idx#0" />
+
+### Method [`rule_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L1005)
+
 Retrieve index of rule according to which reduction occurred.
 
 **Return:**
 
-Object of class `Integer` representing index of rule according to which
-reduction occurred.
+* Object of class `Integer` representing index of rule according to which reduction occurred.
 
 **Example:**
 
@@ -61,7 +86,10 @@ a_state.rule_idx(): 1
 a_state.rule_idx(): 1
 ```
 
-#### Method `rule_body#1`
+<a name="rule_body#1" />
+
+### Method [`rule_body#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L1026)
+
 Retrieve object of class `String` representing substring of parsed source
 string which is represented by item in rule body at position identified by
 index given as method parameter.
@@ -73,9 +101,9 @@ index given as method parameter.
 
 **Return:**
 
-Object of class `String` representing substring of parsed source string which
-is represented by item in rule body at position identified by index given as
-method parameter.
+* Object of class `String` representing substring of parsed source string which
+  is represented by item in rule body at position identified by index given as
+  method parameter.
 
 **Example:**
 
@@ -100,14 +128,17 @@ test
 ! - !!!test
 ```
 
-#### Method `old_input_idx#0`
+<a name="old_input_idx#0" />
+
+### Method [`old_input_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L1080)
+
 Retrieve index to source string that refers to beginning of last recognized
 terminal symbol.
 
 **Return:**
 
-Object of class `Integer` representing index to source string that refers to
-beginning of last recognized terminal symbol.
+* Object of class `Integer` representing index to source string that refers to
+  beginning of last recognized terminal symbol.
 
 **Example:**
 
@@ -125,14 +156,17 @@ a_state.old_input_idx(): 8
 a_state.old_input_idx(): 8
 ```
 
-#### Method `input_idx#0`
+<a name="input_idx#0" />
+
+### Method [`input_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L1101)
+
 Retrieve index to source string referring to first character that was not yet
 processed by parser.
 
 **Return:**
 
-Object of class `Integer` representing index to source string referring to
-first character that was not yet processed by parser.
+* Object of class `Integer` representing index to source string referring to
+  first character that was not yet processed by parser.
 
 **Example:**
 
@@ -150,52 +184,43 @@ a_state.input_idx(): 8
 a_state.input_idx(): 8
 ```
 
-#### Method `to_string#0`
-Convert object of class `ParseState` to object of class `String`.  This
-method returns name of class `ParseState`.
+<a name="to_string#0" />
+
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L1122)
+
+Convert object of class `ParseState` to object of class `String`.
+This method returns name of class `ParseState`.
 
 **Return:**
 
-Object of class `String`.
+* Object of class `String`.
 
 **Example:**
 
 ```cpp
-public parse_cb(a_state)
-{
-  ("a_state: %s\n" % a_state.to_string()).print();
-}
+("ParseState.to_string(): %s\n" % ParseState.to_string()).print();
 ```
 ```
-a_state: ParseState
-a_state: ParseState
-a_state: ParseState
-a_state: ParseState
-a_state: ParseState
+ParseState.to_string(): ParseState
 ```
 
-#### Method `print#0`
-Print string representation of object of class `ParseState` to standard
-output. This method prints name of class `ParseState`.
+<a name="print#0" />
+
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L1131)
+
+Print string representation of object of class `ParseState` to standard output.
+This method prints name of class `ParseState`.
 
 **Return:**
 
-Object of class `Blank`.
+* Object of class `Blank`.
 
 **Example:**
 
 ```cpp
-public parse_cb(a_state)
-{
-  a_state.print();
-  "\n".print();
-}
+ParseState.print();
+"\n".print();
 ```
 ```
-a_state: ParseState
-a_state: ParseState
-a_state: ParseState
-a_state: ParseState
-a_state: ParseState
+ParseState
 ```
-

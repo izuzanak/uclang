@@ -1,27 +1,51 @@
-
 # Class Parser
-Class implementing parser capable to perform lexical and syntactical analysis
-of input strings. Parser construction is based on string containing description
-of language terminal symbols and its grammar rules.
 
-## Language rules string
-> FIXME TODO continue ...
+Class implementing parser capable to perform lexical and
+syntactical analysis of input strings. Parser construction is based on
+string containing description of language terminal symbols and its
+grammar rules.
+
+Parser demo is introduced in script - [parser
+demo](https://github.com/izuzanak/uclang/blob/master/uclang_build/scripts/examples/demo_parser.ucl).
+
+-----
+
+## Table of methods
+
+* Constructors
+
+  * Constructor [`Parser#1`](#Parser%231)
+
+* Operators
+
+  * Operator [`operator_binary_equal#1`](#operator_binary_equal%231)
+
+* Methods
+
+  * Method [`parse#2`](#parse%232)
+  * Method [`to_string#0`](#to_string%230)
+  * Method [`print#0`](#print%230)
+
+-----
 
 ## Constructors
 
-#### Constructor `Parser#1`
-Creates parser based on string containing description of language terminal
+<a name="Parser#1" />
+
+### Constructor [`Parser#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L763)
+
+Create object of class `Parser` based on string containing description of language terminal
 symbols and its grammar rules.
 
 **Parameters:**
 
-1. Object of class `String` containing description of language terminal symbols
-   and its grammar rules.
+1. Object of class `String` containing description of language terminal symbols and
+its grammar rules.
 
 **Example:**
 
 ```cpp
-parser = new Parser("
+obj = new Parser("
   init_code: {}
   terminals: id {('_'+l).('_'+l+d)*} excl {'!'} _SKIP_ {w.w*} _END_ {'\\0'}
   nonterminals: <start> <exp>
@@ -30,17 +54,21 @@ parser = new Parser("
     <exp> -> excl <exp>    ->> {}
     <exp> -> id            ->> {}
 ");
-("parser: %s\n" % parser.to_string()).print();
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-parser: Parser
+obj: Parser
 ```
+
+-----
 
 ## Operators
 
-#### Operator `operator_binary_equal#1`
-Assignment operator `=`. Object of class `Parser` is replaced by method
-parameter.
+<a name="operator_binary_equal#1" />
+
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L749)
+
+Assignment operator `=`. Object of class `Parser` is replaced by method parameter.
 
 **Parameters:**
 
@@ -48,12 +76,12 @@ parameter.
 
 **Return:**
 
-Value of object.
+* Method parameter.
 
 **Example:**
 
 ```cpp
-parser = new Parser("
+obj = new Parser("
   init_code: {}
   terminals: id {('_'+l).('_'+l+d)*} excl {'!'} _SKIP_ {w.w*} _END_ {'\\0'}
   nonterminals: <start> <exp>
@@ -62,18 +90,23 @@ parser = new Parser("
     <exp> -> excl <exp>    ->> {}
     <exp> -> id            ->> {}
 ");
-("parser: %s\n" % parser.to_string()).print();
-parser = "Hello world";
-("parser: %s\n" % parser.to_string()).print();
+("obj: %s\n" % obj.to_string()).print();
+obj = "New value";
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-parser: Parser
-parser: Hello world
+obj: Parser
+obj: New value
 ```
+
+-----
 
 ## Methods
 
-#### Method `parse#2`
+<a name="parse#2" />
+
+### Method [`parse#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L813)
+
 Parse source string given as first method parameter, and for each reduction
 occurred according to language grammar rules, call delegate given as second
 method parameter. Delegate accepts one parameter represented by object of class
@@ -82,12 +115,11 @@ method parameter. Delegate accepts one parameter represented by object of class
 **Parameters:**
 
 1. Object of class `String` representing string to be parsed by parser.
-2. Object of class `Delegate` to be called when reduction according to language
-   grammar rule has occur.
+2. Object of class `Delegate` to be called when reduction according to language grammar rule has occur.
 
 **Return:**
 
-Object of class `Blank`.
+* Object of class `Blank`.
 
 **Example:**
 
@@ -104,59 +136,45 @@ parser = new Parser("
 parser.parse("!!!!test",new Delegate(this,"parse_cb",1));
 ```
 
-Complete parser demo is introduced in script:
-[Parser demo](https://github.com/izuzanak/uclang/blob/master/uclang_build/scripts/examples/demo_parser.ucl)
+More in description of class [`ParseState`](https://github.com/izuzanak/uclang/blob/master/uclang/doc/02_modules/05_module_parser/04_class_parse_state.md)
 
-#### Method `to_string#0`
-Convert object of class `Parser` to object of class `String`.  This
-method returns name of class `Parser`.
+<a name="to_string#0" />
+
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L886)
+
+Convert object of class `Parser` to object of class `String`.
+This method returns name of class `Parser`.
 
 **Return:**
 
-Object of class `String`.
+* Object of class `String`.
 
 **Example:**
 
 ```cpp
-parser = new Parser("
-  init_code: {}
-  terminals: id {('_'+l).('_'+l+d)*} excl {'!'} _SKIP_ {w.w*} _END_ {'\\0'}
-  nonterminals: <start> <exp>
-  rules:
-    <start> -> <exp> _END_ ->> {}
-    <exp> -> excl <exp>    ->> {}
-    <exp> -> id            ->> {}
-");
-("parser: %s\n" % parser.to_string()).print();
+("Parser.to_string(): %s\n" % Parser.to_string()).print();
 ```
 ```
-parser: Parser
+Parser.to_string(): Parser
 ```
 
-#### Method `print#0`
-Print string representation of object of class `Parser` to standard
-output. This method prints name of class `Parser`.
+<a name="print#0" />
+
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L895)
+
+Print string representation of object of class `Parser` to standard output.
+This method prints name of class `Parser`.
 
 **Return:**
 
-Object of class `Blank`.
+* Object of class `Blank`.
 
 **Example:**
 
 ```cpp
-parser = new Parser("
-  init_code: {}
-  terminals: id {('_'+l).('_'+l+d)*} excl {'!'} _SKIP_ {w.w*} _END_ {'\\0'}
-  nonterminals: <start> <exp>
-  rules:
-    <start> -> <exp> _END_ ->> {}
-    <exp> -> excl <exp>    ->> {}
-    <exp> -> id            ->> {}
-");
-parser.print();
+Parser.print();
 "\n".print();
 ```
 ```
 Parser
 ```
-

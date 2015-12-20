@@ -24,3 +24,9 @@
 ./uclang scripts/docu_gen.ucl Tree ../uclang/doc/02_modules/03_module_containers/05_class_tree.md containers
 ./uclang scripts/docu_gen.ucl Dict ../uclang/doc/02_modules/03_module_containers/06_class_dict.md containers
 
+# Generate parser documentation
+./uclang scripts/docu_gen.ucl FinalAutomata ../uclang/doc/02_modules/05_module_parser/01_class_final_automata.md parser
+./uclang scripts/docu_gen.ucl FaSource ../uclang/doc/02_modules/05_module_parser/02_class_fa_source.md parser
+# HM ./uclang scripts/docu_gen.ucl Parser ../uclang/doc/02_modules/05_module_parser/03_class_parser.md parser
+# HM ./uclang scripts/docu_gen.ucl ParseState ../uclang/doc/02_modules/05_module_parser/04_class_parse_state.md parser
+
