@@ -1,23 +1,66 @@
-
 # Class Stack
-Container class implementing simple abstract data type stack.
+
+Container class implementing abstract data type stack.
+
+-----
+
+## Table of methods
+
+* Constructors
+
+  * Constructor [`Stack#0`](#Stack%230)
+  * Constructor [`Stack#1`](#Stack%231)
+
+* Operators
+
+  * Operator [`operator_binary_equal#1`](#operator_binary_equal%231)
+  * Operator [`operator_binary_plus_equal#1`](#operator_binary_plus_equal%231)
+  * Operator [`operator_binary_double_equal#1`](#operator_binary_double_equal%231)
+  * Operator [`operator_binary_exclamation_equal#1`](#operator_binary_exclamation_equal%231)
+  * Operator [`operator_binary_plus#1`](#operator_binary_plus%231)
+
+* Methods
+
+  * Method [`clear#0`](#clear%230)
+  * Method [`items#0`](#items%230)
+  * Method [`push#1`](#push%231)
+  * Method [`push_ref#1`](#push_ref%231)
+  * Method [`pop#0`](#pop%230)
+  * Method [`compare#1`](#compare%231)
+  * Method [`item#1`](#item%231)
+  * Method [`first_idx#0`](#first_idx%230)
+  * Method [`last_idx#0`](#last_idx%230)
+  * Method [`next_idx#1`](#next_idx%231)
+  * Method [`prev_idx#1`](#prev_idx%231)
+  * Method [`length#0`](#length%230)
+  * Method [`to_string#0`](#to_string%230)
+  * Method [`to_string#1`](#to_string%231)
+  * Method [`print#0`](#print%230)
+
+-----
 
 ## Constructors
 
-#### Constructor `Stack#0`
-Creates empty object of class `Stack`.
+<a name="Stack#0" />
+
+### Constructor [`Stack#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L523)
+
+Creates default object of class `Stack`.
 
 **Example:**
 
 ```cpp
-stack = new Stack();
-("stack: %s\n" % stack.to_string()).print();
+obj = new Stack();
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-stack: []
+obj: []
 ```
 
-#### Constructor `Stack#1`
+<a name="Stack#1" />
+
+### Constructor [`Stack#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L528)
+
 Creates object of class `Stack` containing elements retrieved from method parameter.
 
 **Parameters:**
@@ -27,18 +70,22 @@ Creates object of class `Stack` containing elements retrieved from method parame
 **Example:**
 
 ```cpp
-stack = new Stack([1,2,3]);
-("stack: %s\n" % stack.to_string()).print();
+obj = new Stack([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-stack: [1,2,3]
+obj: [1,2,3,4,5]
 ```
+
+-----
 
 ## Operators
 
-#### Operator `operator_binary_equal#1`
-Assignment operator `=`. Object of class `Stack` is replaced by method
-parameter.
+<a name="operator_binary_equal#1" />
+
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L412)
+
+Assignment operator `=`. Object of class `Stack` is replaced by method parameter.
 
 **Parameters:**
 
@@ -46,24 +93,26 @@ parameter.
 
 **Return:**
 
-Value of object.
+* Method parameter.
 
 **Example:**
 
 ```cpp
-stack = new Stack();
-("stack: %s\n" % stack.to_string()).print();
-stack = "Hello world";
-("stack: %s\n" % stack.to_string()).print();
+obj = new Stack([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+obj = "New value";
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-stack: []
-stack: Hello world
+obj: [1,2,3,4,5]
+obj: New value
 ```
 
-#### Operator `operator_binary_plus_equal#1`
-Append operator `+=`. Append elements retrieved from method parameter to object
-of class `Stack`.
+<a name="operator_binary_plus_equal#1" />
+
+### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L428)
+
+Append operator `+=`. Append elements retrieved from method parameter to object of class `Stack`.
 
 **Parameters:**
 
@@ -71,22 +120,26 @@ of class `Stack`.
 
 **Return:**
 
-Value of object.
+* Value of object.
 
 **Example:**
 
 ```cpp
-stack = new Stack([1,2,3]);
-stack += [4,5,6];
-("stack: %s\n" % stack.to_string()).print();
+obj = new Stack([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+obj += [1,2,6,7,8];
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-stack: [1,2,3,4,5,6]
+obj: [1,2,3,4,5]
+obj: [1,2,3,4,5,1,2,6,7,8]
 ```
 
-#### Operator `operator_binary_double_equal#1`
-Comparison operator `==`. Compares object of class `Stack` with method
-parameter and return `1` if objects has same value or `0` otherwise.
+<a name="operator_binary_double_equal#1" />
+
+### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L456)
+
+Comparison operator `==`. Compares object of class `Stack` with method parameter and return `1` if objects has same value or `0` otherwise.
 
 **Parameters:**
 
@@ -94,27 +147,29 @@ parameter and return `1` if objects has same value or `0` otherwise.
 
 **Return:**
 
-Object of class `Integer`.
+* Object of class `Integer`.
   * `0` - method parameter has different value than object.
   * `1` - method parameter has same value as object.
 
 **Example:**
 
 ```cpp
-stack_0 = new Stack([1,2,3]);
-stack_1 = new Stack([1,2,4]);
-stack_2 = stack_0;
-("stack_0 == stack_1: %d\n" % (stack_0 == stack_1)).print();
-("stack_0 == stack_2: %d\n" % (stack_0 == stack_2)).print();
+obj_0 = new Stack([1,2,3,4,5]);
+obj_1 = new Stack([1,2,6,7,8]);
+obj_2 = obj_0;
+("obj_0 == obj_1: %d\n" % (obj_0 == obj_1)).print();
+("obj_0 == obj_2: %d\n" % (obj_0 == obj_2)).print();
 ```
 ```
-stack_0 == stack_1: 0
-stack_0 == stack_2: 1
+obj_0 == obj_1: 0
+obj_0 == obj_2: 1
 ```
 
-#### Operator `operator_binary_exclamation_equal#1`
-Comparison operator `!=`. Compares object of class `Stack` with method parameter and
-return `0` if objects has same value or `1` otherwise.
+<a name="operator_binary_exclamation_equal#1" />
+
+### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L473)
+
+Comparison operator `!=`. Compares object of class `Stack` with method parameter and return `0` if objects has same value or `1` otherwise.
 
 **Parameters:**
 
@@ -122,28 +177,29 @@ return `0` if objects has same value or `1` otherwise.
 
 **Return:**
 
-Object of class `Integer`.
+* Object of class `Integer`.
   * `0` - method parameter has same value as object.
   * `1` - method parameter has different value than object.
 
 **Example:**
 
 ```cpp
-stack_0 = new Stack([1,2,3]);
-stack_1 = new Stack([1,2,4]);
-stack_2 = stack_0;
-("stack_0 != stack_1: %d\n" % (stack_0 != stack_1)).print();
-("stack_0 != stack_2: %d\n" % (stack_0 != stack_2)).print();
+obj_0 = new Stack([1,2,3,4,5]);
+obj_1 = new Stack([1,2,6,7,8]);
+obj_2 = obj_0;
+("obj_0 != obj_1: %d\n" % (obj_0 != obj_1)).print();
+("obj_0 != obj_2: %d\n" % (obj_0 != obj_2)).print();
 ```
 ```
-stack_0 != stack_1: 1
-stack_0 != stack_2: 0
+obj_0 != obj_1: 1
+obj_0 != obj_2: 0
 ```
 
-#### Operator `operator_binary_plus#1`
-Concatenation operator `+`. Creates object of class `Stack` containing elements
-of original object of class `Stack` concatenated with elements retrieved from
-method parameter.
+<a name="operator_binary_plus#1" />
+
+### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L490)
+
+Concatenation operator `+`. Creates object of class `Stack` containing elements of original object of class `Stack` concatenated with elements retrieved from method parameter.
 
 **Parameters:**
 
@@ -151,64 +207,77 @@ method parameter.
 
 **Return:**
 
-Object of class `Stack` containing elements of original stack concatenated with
-elements retrieved from method parameter.
+* Object of class `Stack` containing elements of original object of class `Stack` concatenated with elements retrieved from method parameter.
 
 **Example:**
 
 ```cpp
-stack_0 = new Stack([1,2,3]);
-stack_1 = new Stack([1,2,4]);
-("stack_0 + stack_1: %s\n" % (stack_0 + stack_1).to_string()).print();
+obj = new Stack([1,2,3,4,5]);
+res = obj + [1,2,3,4,5];
+("obj: %s\n" % obj.to_string()).print();
+("res: %s\n" % res.to_string()).print();
 ```
 ```
-stack_0 + stack_1: [1,2,3,1,2,4]
+obj: [1,2,3,4,5]
+res: [1,2,3,4,5,1,2,3,4,5]
 ```
+
+-----
 
 ## Methods
 
-#### Method `clear#0`
-Empty stack. Release all elements stored in object of class `Stack`.
+<a name="clear#0" />
+
+### Method [`clear#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L550)
+
+Release all elements stored in object of class `Stack`.
 
 **Return:**
 
-Object of class `Blank`.
+* Object of class `Blank`.
 
 **Example:**
 
 ```cpp
-stack = new Stack([1,2,3]);
-("stack: %s\n" % stack.to_string()).print();
-stack.clear();
-("stack: %s\n" % stack.to_string()).print();
+obj = new Stack([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+obj.clear();
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-stack: [1,2,3]
-stack: []
+obj: [1,2,3,4,5]
+obj: []
 ```
 
-#### Method `items#0`
-Retrieve elements contained in object of class `Stack`. Elements are returned
-as object of class `Array`.
+<a name="items#0" />
+
+### Method [`items#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L577)
+
+Retrieve list of elements contained in object of class `Stack`. Elements are returned as object of class `Array`.
 
 **Return:**
 
-Object of class `Array` containing all elements of stack.
+* Object of class `Array` containing all elements.
 
 **Example:**
 
 ```cpp
-stack = new Stack([1,2,3]);
-array = stack.items();
-("type array: %s\n" % (type array).to_string()).print();
-("array: %s\n" % array.to_string()).print();
+obj = new Stack([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+items = obj.items();
+("type items: %s\n" % (type items).to_string()).print();
+("items: %s\n" % items.to_string()).print();
 ```
 ```
-type array: Array
-array: [1,2,3]
+obj: [1,2,3,4,5]
+type items: Array
+items: [1,2,3,4,5]
 ```
 
-#### Method `push#1`
+<a name="push#1" />
+
+### Method [`push#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L607)
+
 Insert method parameter to end of object of class `Stack`.
 
 **Parameters:**
@@ -217,24 +286,26 @@ Insert method parameter to end of object of class `Stack`.
 
 **Return:**
 
-Object of class `Blank`.
+* Object of class ``Blank``.
 
 **Example:**
 
 ```cpp
-stack = new Stack([1,2,3]);
-("stack: %s\n" % stack.to_string()).print();
-stack.push(4);
-stack.push(5);
-stack.push(6);
-("stack: %s\n" % stack.to_string()).print();
+obj = new Stack([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+obj.push(6);
+obj.push(7);
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-stack: [1,2,3]
-stack: [1,2,3,4,5,6]
+obj: [1,2,3,4,5]
+obj: [1,2,3,4,5,6,7]
 ```
 
-#### Method `push_ref#1`
+<a name="push_ref#1" />
+
+### Method [`push_ref#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L624)
+
 Insert reference to method parameter to end of object of class `Stack`.
 
 **Parameters:**
@@ -243,47 +314,53 @@ Insert reference to method parameter to end of object of class `Stack`.
 
 **Return:**
 
-Object of class `Blank`.
+* Object of class ``Blank``.
 
 **Example:**
 
 ```cpp
-value = 10;
-stack = new Stack([1,2,3]);
-("stack: %s\n" % stack.to_string()).print();
-stack.push_ref(value);
-("stack: %s\n" % stack.to_string()).print();
-value = 100;
-("stack: %s\n" % stack.to_string()).print();
+obj = new Stack([1,2,3,4,5]);
+value = 0;
+obj.push_ref(value);
+("obj: %s\n" % obj.to_string()).print();
+value = "Hello world!";
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-stack: [1,2,3]
-stack: [1,2,3,10]
-stack: [1,2,3,100]
+obj: [1,2,3,4,5,0]
+obj: [1,2,3,4,5,Hello world!]
 ```
 
-#### Method `pop#0`
-Retrieve and return object from top of object of class `Stack`.
+<a name="pop#0" />
+
+### Method [`pop#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L641)
+
+Remove and return last element from object of class `Stack`.
 
 **Return:**
 
-Object from top of stack.
+* Object removed from object of class `Stack`.
 
 **Example:**
 
 ```cpp
-stack = new Stack([1,2,3]);
-("stack: %s\n" % stack.to_string()).print();
-("stack.pop(): %d\n" % stack.pop()).print();
-("stack.pop(): %d\n" % stack.pop()).print();
+obj = new Stack([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+("obj.pop(): %s\n" % obj.pop().to_string()).print();
+("obj.pop(): %s\n" % obj.pop().to_string()).print();
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-stack: [1,2,3]
-stack.pop(): 3
-stack.pop(): 2
+obj: [1,2,3,4,5]
+obj.pop(): 5
+obj.pop(): 4
+obj: [1,2,3]
 ```
 
-#### Method `compare#1`
+<a name="compare#1" />
+
+### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L664)
+
 Compare object of class `Stack` with method parameter.
 
 **Parameters:**
@@ -292,27 +369,29 @@ Compare object of class `Stack` with method parameter.
 
 **Return:**
 
-Object of class `Integer`.
-* `-1` - if object of class `Stack` is lesser than method parameter.
-* `1` - if object of class `Stack` is greater than method parameter.
-* `0` - if object of class `Stack` is equal to method parameter.
+* Integer `-1` if object of class `Stack` is lesser than method parameter.
+* Integer `1` if object of class `Stack` is greater than method parameter.
+* Integer `0` if object of class `Stack` is equal to method parameter.
 
 **Example:**
 
 ```cpp
-stack_0 = new Stack([1,2,3]);
-stack_1 = new Stack([1,2,3,4]);
-("stack_0.compare(stack_1): %d\n" % stack_0.compare(stack_1)).print();
-("stack_0.compare(stack_0): %d\n" % stack_0.compare(stack_0)).print();
-("stack_0.compare(0): %d\n" % stack_0.compare(0)).print();
+obj_0 = new Stack([1,2,3,4,5]);
+obj_1 = new Stack([1,2,6,7,8]);
+("obj_0.compare(obj_1): %d\n" % obj_0.compare(obj_1)).print();
+("obj_1.compare(obj_0): %d\n" % obj_1.compare(obj_0)).print();
+("obj_0.compare(obj_0): %d\n" % obj_0.compare(obj_0)).print();
 ```
 ```
-stack_0.compare(stack_1): -1
-stack_0.compare(stack_0): 0
-stack_0.compare(0): 1
+obj_0.compare(obj_1): -1
+obj_1.compare(obj_0): 1
+obj_0.compare(obj_0): 0
 ```
 
-#### Method `item#1`
+<a name="item#1" />
+
+### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L680)
+
 Retrieve element from object of class `Stack` stored at requested index position.
 
 **Parameters:**
@@ -321,23 +400,33 @@ Retrieve element from object of class `Stack` stored at requested index position
 
 **Return:**
 
-Object stored in object of class `Stack` at position of requested index.
+* Object representing element in object of class `Stack` at position of requested index.
+* Object of class `Blank` otherwise.
 
 **Example:**
 
 ```cpp
-stack = new Stack([1,2,3]);
-("stack: %s\n" % stack.to_string()).print();
-("stack.item(1): %d\n" % stack.item(1)).print();
-("stack.item(2): %d\n" % stack.item(2)).print();
+obj = new Stack([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+idx = obj.first_idx();
+do {
+  ("obj.item(%d): %s\n" % [idx,obj.item(idx).to_string()]).print();
+  idx = obj.next_idx(idx);
+} while(Blank != idx);
 ```
 ```
-stack: [1,2,3]
-stack.item(1): 2
-stack.item(2): 3
+obj: [1,2,3,4,5]
+obj.item(0): 1
+obj.item(1): 2
+obj.item(2): 3
+obj.item(3): 4
+obj.item(4): 5
 ```
 
-#### Method `first_idx#0`
+<a name="first_idx#0" />
+
+### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L710)
+
 Retrieve index of first element in object of class `Stack`.
 
 **Return:**
@@ -348,17 +437,20 @@ Retrieve index of first element in object of class `Stack`.
 **Example:**
 
 ```cpp
-stack = new Stack([1]);
-("stack.first_idx(): %s\n" % stack.first_idx().to_string()).print();
-stack.pop();
-("stack.first_idx(): %s\n" % stack.first_idx().to_string()).print();
+obj = new Stack([1,2,3,4,5]);
+("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
+obj.clear();
+("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
 ```
 ```
-stack.first_idx(): 0
-stack.first_idx(): <blank>
+obj.first_idx: 0
+obj.first_idx: <blank>
 ```
 
-#### Method `last_idx#0`
+<a name="last_idx#0" />
+
+### Method `spec` [`last_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L731)
+
 Retrieve index of last element in object of class `Stack`.
 
 **Return:**
@@ -369,22 +461,24 @@ Retrieve index of last element in object of class `Stack`.
 **Example:**
 
 ```cpp
-stack = new Stack([1,2,3]);
-("stack.last_idx(): %s\n" % stack.last_idx().to_string()).print();
-stack.pop();
-("stack.last_idx(): %s\n" % stack.last_idx().to_string()).print();
-stack.clear();
-("stack.last_idx(): %s\n" % stack.last_idx().to_string()).print();
+obj = new Stack([1,2,3,4,5]);
+("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
+obj.pop();
+("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
+obj.clear();
+("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
 ```
 ```
-stack.last_idx(): 2
-stack.last_idx(): 1
-stack.last_idx(): <blank>
+obj.last_idx: 4
+obj.last_idx: 3
+obj.last_idx: <blank>
 ```
 
-#### Method `next_idx#1`
-From object of class `Stack` retrieve index of element following element
-identified by method parameter.
+<a name="next_idx#1" />
+
+### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L754)
+
+From object of class `Stack` retrieve index of element following element identified by method parameter.
 
 **Parameters:**
 
@@ -392,31 +486,34 @@ identified by method parameter.
 
 **Return:**
 
-* Object of class `Integer` if there is some element following element
-  identified by method parameter.
+* Object of class `Integer` if there is some element following element identified by method parameter.
 * Object of class `Blank` otherwise.
 
 **Example:**
 
 ```cpp
-stack = new Stack([1,2,3]);
-("stack: %s\n" % stack.to_string()).print();
-idx = stack.first_idx();
+obj = new Stack([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+idx = obj.first_idx();
 do {
   ("idx: %s\n" % idx.to_string()).print();
-  idx = stack.next_idx(idx);
+  idx = obj.next_idx(idx);
 } while(Blank != idx);
 ```
 ```
-stack: [1,2,3]
+obj: [1,2,3,4,5]
 idx: 0
 idx: 1
 idx: 2
+idx: 3
+idx: 4
 ```
 
-#### Method `prev_idx#1`
-From object of class `Stack` retrieve index of element preceding element
-identified by method parameter.
+<a name="prev_idx#1" />
+
+### Method `spec` [`prev_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L789)
+
+From object of class `Stack` retrieve index of element preceding element identified by method parameter.
 
 **Parameters:**
 
@@ -424,107 +521,121 @@ identified by method parameter.
 
 **Return:**
 
-* Object of class `Integer` if there is some element preceding element
-  identified by method parameter.
+* Object of class `Integer` if there is some element preceding element identified by method parameter.
 * Object of class `Blank` otherwise.
 
 **Example:**
 
 ```cpp
-stack = new Stack([1,2,3]);
-("stack: %s\n" % stack.to_string()).print();
-idx = stack.last_idx();
+obj = new Stack([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+idx = obj.last_idx();
 do {
   ("idx: %s\n" % idx.to_string()).print();
-  idx = stack.prev_idx(idx);
+  idx = obj.prev_idx(idx);
 } while(Blank != idx);
 ```
 ```
-stack: [1,2,3]
+obj: [1,2,3,4,5]
+idx: 4
+idx: 3
 idx: 2
 idx: 1
 idx: 0
 ```
 
-#### Method `length#0`
+<a name="length#0" />
+
+### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L826)
+
 Retrieve count of elements in object of class `Stack`.
 
 **Return:**
 
-Object of class `Integer`.
+* Object of class `Integer`.
 
 **Example:**
 
 ```cpp
-stack = new Stack([1,2,3]);
-("stack.length(): %d\n" % stack.length()).print();
-stack.pop();
-("stack.length(): %d\n" % stack.length()).print();
+obj = new Stack([1,2,3,4,5]);
+("obj.length(): %d\n" % obj.length()).print();
+obj.clear();
+("obj.length(): %d\n" % obj.length()).print();
 ```
 ```
-stack.length(): 3
-stack.length(): 2
+obj.length(): 5
+obj.length(): 0
 ```
 
-#### Method `to_string#0`
-Convert object of class `Stack` to object of class `String`. Each element of
-stack is converted to string by call of its `to_string#0` method. As separator
-of string values of elements is used character `,`.
+<a name="to_string#0" />
+
+### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L839)
+
+Convert object of class `Stack` to object of class `String`.
+Each element of object of class `Stack` is converted to string by call of its
+`to_string#0` method. As separator of string values is used character `,`.
 
 **Return:**
 
-Object of class `String`.
+* Object of class `String`.
 
 **Example:**
 
 ```cpp
-stack = new Stack([1,2,3]);
-("stack: %s\n" % stack.to_string()).print();
+obj = new Stack([1,2,3,4,5]);
+("obj.to_string(): %s\n" % obj.to_string()).print();
 ```
 ```
-stack: [1,2,3]
+obj.to_string(): [1,2,3,4,5]
 ```
 
-#### Method `to_string#1`
-Convert object of class `Stack` to object of class `String`. Each element of
-stack is converted to string by call of its `to_string#0` method. As separator
-of string values is used method parameter.
+<a name="to_string#1" />
+
+### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L881)
+
+Convert object of class `Stack` to object of class `String`.
+Each element of object of class `Stack` is converted to string by call of its
+`to_string#0` method. As separator of string values is used method parameter.
 
 **Parameters:**
 
-1. Object of class `String`.
+1. Object of class `String`. Separator of values formated to result string.
 
 **Return:**
 
-Object of class `String`.
+* Object of class `String`.
 
 **Example:**
 
 ```cpp
-stack = new Stack([1,2,3,new Stack([1,2,3])]);
-("stack: %s\n" % stack.to_string("+")).print();
-("stack: %s\n" % stack.to_string("<->")).print();
+obj = new Stack([1,2,3,4,5]);
+("obj.to_string(\"+\"): %s\n" % obj.to_string("+")).print();
+("obj.to_string(\"<->\"): %s\n" % obj.to_string("<->")).print();
 ```
 ```
-stack: 1+2+3+[1,2,3]
-stack: 1<->2<->3<->[1,2,3]
+obj.to_string("+"): 1+2+3+4+5
+obj.to_string("<->"): 1<->2<->3<->4<->5
 ```
 
-#### Method `print#0`
+<a name="print#0" />
+
+### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L936)
+
 Print string representation of object of class `Stack` to standard output.
+Each element of object of class `Stack` is printed by call of its `print#0`
+method. As separator of printed values is used character `,`.
 
 **Return:**
 
-Object of class `Blank`.
+* Object of class `Blank`.
 
 **Example:**
 
 ```cpp
-stack = new Stack([1,2,3]);
-stack.print();
+obj = new Stack([1,2,3,4,5]);
+obj.print();
 "\n".print();
 ```
 ```
-[1,2,3]
+[1,2,3,4,5]
 ```
-

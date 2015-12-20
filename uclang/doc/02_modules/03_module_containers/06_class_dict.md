@@ -1,23 +1,72 @@
-
 # Class Dict
-Container class implementing simple abstract data type dictionary.
+
+Container class implementing abstract data type dictionary.
+
+-----
+
+## Table of methods
+
+* Constructors
+
+  * Constructor [`Dict#0`](#Dict%230)
+  * Constructor [`Dict#1`](#Dict%231)
+
+* Operators
+
+  * Operator [`operator_binary_equal#1`](#operator_binary_equal%231)
+  * Operator [`operator_binary_double_equal#1`](#operator_binary_double_equal%231)
+  * Operator [`operator_binary_exclamation_equal#1`](#operator_binary_exclamation_equal%231)
+  * Operator [`operator_binary_le_br_re_br#1`](#operator_binary_le_br_re_br%231)
+
+* Methods
+
+  * Method [`clear#0`](#clear%230)
+  * Method [`keys#0`](#keys%230)
+  * Method [`items#0`](#items%230)
+  * Method [`store_ref#2`](#store_ref%232)
+  * Method [`has_key#1`](#has_key%231)
+  * Method [`remove_key#1`](#remove_key%231)
+  * Method [`first_key#0`](#first_key%230)
+  * Method [`last_key#0`](#last_key%230)
+  * Method [`next_key#1`](#next_key%231)
+  * Method [`prev_key#1`](#prev_key%231)
+  * Method [`lee_key#1`](#lee_key%231)
+  * Method [`gre_key#1`](#gre_key%231)
+  * Method [`compare#1`](#compare%231)
+  * Method [`item#1`](#item%231)
+  * Method [`first_idx#0`](#first_idx%230)
+  * Method [`last_idx#0`](#last_idx%230)
+  * Method [`next_idx#1`](#next_idx%231)
+  * Method [`prev_idx#1`](#prev_idx%231)
+  * Method [`length#0`](#length%230)
+  * Method [`to_string#0`](#to_string%230)
+  * Method [`to_string#1`](#to_string%231)
+  * Method [`print#0`](#print%230)
+
+-----
 
 ## Constructors
 
-#### Constructor `Dict#0`
-Creates empty object of class `Dict`.
+<a name="Dict#0" />
+
+### Constructor [`Dict#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L688)
+
+Creates default object of class `Dict`.
 
 **Example:**
 
 ```cpp
-dict = new Dict();
-("dict: %s\n" % dict.to_string()).print();
+obj = new Dict();
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-dict: []
+obj: []
 ```
 
-#### Constructor `Dict#1`
+<a name="Dict#1" />
+
+### Constructor [`Dict#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L693)
+
 Creates object of class `Dict` based on elements retrieved from method
 parameter. Values of parameter elements represents alternating keys and values
 of new object of class `Dict`.
@@ -29,18 +78,22 @@ of new object of class `Dict`.
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Three",3]);
-("dict: %s\n" % dict.to_string()).print();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-dict: [One:1,Two:2,Three:3]
+obj: [One:1,Two:2,Three:3]
 ```
+
+-----
 
 ## Operators
 
-#### Operator `operator_binary_equal#1`
-Assignment operator `=`. Object of class `Dict` is replaced by method
-parameter.
+<a name="operator_binary_equal#1" />
+
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L593)
+
+Assignment operator `=`. Object of class `Dict` is replaced by method parameter.
 
 **Parameters:**
 
@@ -48,24 +101,26 @@ parameter.
 
 **Return:**
 
-Value of object.
+* Method parameter.
 
 **Example:**
 
 ```cpp
-dict = new Dict();
-("dict: %s\n" % dict.to_string()).print();
-dict = "Hello world";
-("dict: %s\n" % dict.to_string()).print();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj: %s\n" % obj.to_string()).print();
+obj = "New value";
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-dict: []
-dict: Hello world
+obj: [One:1,Two:2,Three:3]
+obj: New value
 ```
 
-#### Operator `operator_binary_double_equal#1`
-Comparison operator `==`. Compares object of class `Dict` with method
-parameter and return `1` if objects has same value or `0` otherwise.
+<a name="operator_binary_double_equal#1" />
+
+### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L609)
+
+Comparison operator `==`. Compares object of class `Dict` with method parameter and return `1` if objects has same value or `0` otherwise.
 
 **Parameters:**
 
@@ -73,27 +128,29 @@ parameter and return `1` if objects has same value or `0` otherwise.
 
 **Return:**
 
-Object of class `Integer`.
+* Object of class `Integer`.
   * `0` - method parameter has different value than object.
   * `1` - method parameter has same value as object.
 
 **Example:**
 
 ```cpp
-dict_0 = new Dict(["One",1,"Two",2,"Three",3]);
-dict_1 = new Dict(["One",1,"Two",2,"Three",4]);
-dict_2 = dict_0;
-("dict_0 == dict_1: %d\n" % (dict_0 == dict_1)).print();
-("dict_0 == dict_2: %d\n" % (dict_0 == dict_2)).print();
+obj_0 = new Dict(["One",1,"Two",2,"Three",3]);
+obj_1 = new Dict(["One",1,"Two",2,"Three",3,"Four",4]);
+obj_2 = obj_0;
+("obj_0 == obj_1: %d\n" % (obj_0 == obj_1)).print();
+("obj_0 == obj_2: %d\n" % (obj_0 == obj_2)).print();
 ```
 ```
-dict_0 == dict_1: 0
-dict_0 == dict_2: 1
+obj_0 == obj_1: 0
+obj_0 == obj_2: 1
 ```
 
-#### Operator `operator_binary_exclamation_equal#1`
-Comparison operator `!=`. Compares object of class `Dict` with method parameter and
-return `0` if objects has same value or `1` otherwise.
+<a name="operator_binary_exclamation_equal#1" />
+
+### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L626)
+
+Comparison operator `!=`. Compares object of class `Dict` with method parameter and return `0` if objects has same value or `1` otherwise.
 
 **Parameters:**
 
@@ -101,27 +158,30 @@ return `0` if objects has same value or `1` otherwise.
 
 **Return:**
 
-Object of class `Integer`.
+* Object of class `Integer`.
   * `0` - method parameter has same value as object.
   * `1` - method parameter has different value than object.
 
 **Example:**
 
 ```cpp
-dict_0 = new Dict(["One",1,"Two",2,"Three",3]);
-dict_1 = new Dict(["One",1,"Two",2,"Three",4]);
-dict_2 = dict_0;
-("dict_0 != dict_1: %d\n" % (dict_0 != dict_1)).print();
-("dict_0 != dict_2: %d\n" % (dict_0 != dict_2)).print();
+obj_0 = new Dict(["One",1,"Two",2,"Three",3]);
+obj_1 = new Dict(["One",1,"Two",2,"Three",3,"Four",4]);
+obj_2 = obj_0;
+("obj_0 != obj_1: %d\n" % (obj_0 != obj_1)).print();
+("obj_0 != obj_2: %d\n" % (obj_0 != obj_2)).print();
 ```
 ```
-dict_0 != dict_1: 1
-dict_0 != dict_2: 0
+obj_0 != obj_1: 1
+obj_0 != obj_2: 0
 ```
 
-#### Operator `operator_binary_le_br_re_br#1`
-Item selection operator `[]`. Retrieve element from object of class `Dict`
-stored at requested key position.
+<a name="operator_binary_le_br_re_br#1" />
+
+### Operator [`operator_binary_le_br_re_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L643)
+
+Item selection operator `[]`.
+Retrieve element from object of class `Dict` stored at requested key position.
 
 **Parameters:**
 
@@ -129,89 +189,104 @@ stored at requested key position.
 
 **Return:**
 
-Object stored in object of class `Dict` at position of requested key.
+ * Object stored in object of class `Dict` at position of requested key.
 
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Three",3]);
-("dict: %s\n" % dict.to_string()).print();
-("dict[\"One\"]: %d\n" % dict["One"]).print();
-("dict[\"Two\"]: %d\n" % dict["Two"]).print();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj: %s\n" % obj.to_string()).print();
+("obj[\"One\"]: %s\n" % obj["One"].to_string()).print();
+("obj[\"Two\"]: %s\n" % obj["Two"].to_string()).print();
 ```
 ```
-dict: [One:1,Two:2,Three:3]
-dict["One"]: 1
-dict["Two"]: 2
+obj: [One:1,Two:2,Three:3]
+obj["One"]: 1
+obj["Two"]: 2
 ```
+
+-----
 
 ## Methods
 
-#### Method `clear#0`
-Empty dictionary. Release all elements stored in object of class `Dict`.
+<a name="clear#0" />
+
+### Method [`clear#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L717)
+
+Release all elements stored in object of class `Dict`.
 
 **Return:**
 
-Object of class `Blank`.
+* Object of class `Blank`.
 
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Three",3]);
-("dict: %s\n" % dict.to_string()).print();
-dict.clear();
-("dict: %s\n" % dict.to_string()).print();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj: %s\n" % obj.to_string()).print();
+obj.clear();
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-dict: [One:1,Two:2,Three:3]
-dict: []
+obj: [One:1,Two:2,Three:3]
+obj: []
 ```
 
-#### Method `keys#0`
-Retrieve keys contained in object of class `Dict`. Keys are returned as object
-of class `Array`.
+<a name="keys#0" />
+
+### Method [`keys#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L750)
+
+Retrieve keys contained in object of class `Dict`. Keys are returned as object of class `Array`.
 
 **Return:**
 
-Object of class `Array` containing all keys of dictionary.
+* Object of class `Array` containing all keys.
 
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Three",3]);
-array = dict.keys();
-("type array: %s\n" % (type array).to_string()).print();
-("array: %s\n" % array.to_string()).print();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj: %s\n" % obj.to_string()).print();
+keys = obj.keys();
+("type keys: %s\n" % (type keys).to_string()).print();
+("keys: %s\n" % keys.to_string()).print();
 ```
 ```
-type array: Array
-array: [One,Two,Three]
+obj: [One:1,Two:2,Three:3]
+type keys: Array
+keys: [One,Two,Three]
 ```
 
-#### Method `items#0`
-Retrieve elements contained in object of class `Dict`. Elements are returned
-as object of class `Array`.
+<a name="items#0" />
+
+### Method [`items#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L787)
+
+Retrieve list of elements contained in object of class `Dict`. Elements are returned as object of class `Array`.
 
 **Return:**
 
-Object of class `Array` containing all elements of dictionary.
+* Object of class `Array` containing all elements.
 
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Three",3]);
-array = dict.items();
-("type array: %s\n" % (type array).to_string()).print();
-("array: %s\n" % array.to_string()).print();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj: %s\n" % obj.to_string()).print();
+items = obj.items();
+("type items: %s\n" % (type items).to_string()).print();
+("items: %s\n" % items.to_string()).print();
 ```
 ```
-type array: Array
-array: [1,2,3]
+obj: [One:1,Two:2,Three:3]
+type items: Array
+items: [1,2,3]
 ```
 
-#### Method `store_ref#2`
-Store reference to second method parameter under key determined by first
-method parameter in object of class `Dict`.
+<a name="store_ref#2" />
+
+### Method [`store_ref#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L821)
+
+Store reference to second method parameter under key given by first method parameter in object of class `Dict`.
 
 **Parameters:**
 
@@ -220,26 +295,27 @@ method parameter in object of class `Dict`.
 
 **Return:**
 
-Object of class `Blank`.
+* Object of class `Blank`.
 
 **Example:**
 
 ```cpp
-value = 10;
-dict = new Dict(["One",1,"Two",2,"Three",3]);
-("dict: %s\n" % dict.to_string()).print();
-dict.store_ref("Two",value);
-("dict: %s\n" % dict.to_string()).print();
-value = 100;
-("dict: %s\n" % dict.to_string()).print();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+value = 0;
+obj.store_ref("Value",value);
+("obj: %s\n" % obj.to_string()).print();
+value = "Hello world!";
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-dict: [One:1,Two:2,Three:3]
-dict: [One:1,Two:10,Three:3]
-dict: [One:1,Two:100,Three:3]
+obj: [One:1,Two:2,Three:3,Value:0]
+obj: [One:1,Two:2,Three:3,Value:Hello world!]
 ```
 
-#### Method `has_key#1`
+<a name="has_key#1" />
+
+### Method [`has_key#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L869)
+
 Test if object of class `Dict` has key given by method parameter.
 
 **Parameters:**
@@ -249,28 +325,31 @@ Test if object of class `Dict` has key given by method parameter.
 **Return:**
 
 Object of class `Integer`.
-  * `0` - object of class `Dict` does not have given key.
-  * `1` - object of class `Dict` has given key.
+* `0` - object of class `Dict` does not have given key.
+* `1` - object of class `Dict` has given key.
+
 
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Three",3]);
-("dict: %s\n" % dict.to_string()).print();
-("dict.has_key(\"Two\"): %d\n" % dict.has_key("Two")).print();
-("dict.has_key(\"Three\"): %d\n" % dict.has_key("Three")).print();
-("dict.has_key(\"Four\"): %d\n" % dict.has_key("Four")).print();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj: %s\n" % obj.to_string()).print();
+("obj.has_key(\"Two\"): %d\n" % obj.has_key("Two")).print();
+("obj.has_key(\"Three\"): %d\n" % obj.has_key("Three")).print();
+("obj.has_key(\"Four\"): %d\n" % obj.has_key("Four")).print();
 ```
 ```
-dict: [One:1,Two:2,Three:3]
-dict.has_key("Two"): 1
-dict.has_key("Three"): 1
-dict.has_key("Four"): 0
+obj: [One:1,Two:2,Three:3]
+obj.has_key("Two"): 1
+obj.has_key("Three"): 1
+obj.has_key("Four"): 0
 ```
 
-#### Method `remove_key#1`
-Remove key given by method parameter from object of class `Dict`.
-Value of object stored under key to be removed is also removed.
+<a name="remove_key#1" />
+
+### Method [`remove_key#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L896)
+
+Remove key given by method parameter from object of class `Dict`. Value of object stored under key will be also removed.
 
 **Parameters:**
 
@@ -283,17 +362,20 @@ Object of class `Blank`.
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Three",3]);
-("dict: %s\n" % dict.to_string()).print();
-dict.remove_key("Two");
-("dict: %s\n" % dict.to_string()).print();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj: %s\n" % obj.to_string()).print();
+obj.remove_key("Two");
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-dict: [One:1,Two:2,Three:3]
-dict: [One:1,Three:3]
+obj: [One:1,Two:2,Three:3]
+obj: [One:1,Three:3]
 ```
 
-#### Method `first_key#0`
+<a name="first_key#0" />
+
+### Method [`first_key#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L935)
+
 Retrieve first key of object of class `Dict`.
 
 **Return:**
@@ -304,17 +386,23 @@ Retrieve first key of object of class `Dict`.
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1]);
-("dict.first_key(): %s\n" % dict.first_key().to_string()).print();
-dict.remove_key("One");
-("dict.first_key(): %s\n" % dict.first_key().to_string()).print();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj.first_key(): %s\n" % obj.first_key().to_string()).print();
+obj.remove_key(obj.first_key());
+("obj.first_key(): %s\n" % obj.first_key().to_string()).print();
+obj.clear();
+("obj.first_key(): %s\n" % obj.first_key().to_string()).print();
 ```
 ```
-dict.first_key(): One
-dict.first_key(): <blank>
+obj.first_key(): One
+obj.first_key(): Two
+obj.first_key(): <blank>
 ```
 
-#### Method `last_key#0`
+<a name="last_key#0" />
+
+### Method [`last_key#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L961)
+
 Retrieve last key of object of class `Dict`.
 
 **Return:**
@@ -325,22 +413,24 @@ Retrieve last key of object of class `Dict`.
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Three",3]);
-("dict.last_key(): %s\n" % dict.last_key().to_string()).print();
-dict.remove_key("Three");
-("dict.last_key(): %s\n" % dict.last_key().to_string()).print();
-dict.clear();
-("dict.last_key(): %s\n" % dict.last_key().to_string()).print();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj.last_key(): %s\n" % obj.last_key().to_string()).print();
+obj.remove_key(obj.last_key());
+("obj.last_key(): %s\n" % obj.last_key().to_string()).print();
+obj.clear();
+("obj.last_key(): %s\n" % obj.last_key().to_string()).print();
 ```
 ```
-dict.last_key(): Three
-dict.last_key(): Two
-dict.last_key(): <blank>
+obj.last_key(): Three
+obj.last_key(): Two
+obj.last_key(): <blank>
 ```
 
-#### Method `next_key#1`
-From object of class `Dict` retrieve key following key identified by method
-parameter.
+<a name="next_key#1" />
+
+### Method [`next_key#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L987)
+
+From object of class `Dict` retrieve key following key identified by method parameter.
 
 **Parameters:**
 
@@ -348,31 +438,32 @@ parameter.
 
 **Return:**
 
-* Value of key following key identified by method parameter, if key identified
-  by method parameter is not last key in object of class `Dict`.
+* Value of key following key identified by method parameter, if key identified by method parameter is not last key in object of class `Dict`.
 * Object of class `Blank` otherwise.
 
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Three",3]);
-("dict: %s\n" % dict.to_string()).print();
-key = dict.first_key();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj: %s\n" % obj.to_string()).print();
+key = obj.first_key();
 do {
   ("key: %s\n" % key.to_string()).print();
-  key = dict.next_key(key);
+  key = obj.next_key(key);
 } while(Blank != key);
 ```
 ```
-dict: [One:1,Two:2,Three:3]
+obj: [One:1,Two:2,Three:3]
 key: One
 key: Two
 key: Three
 ```
 
-#### Method `prev_key#1`
-From object of class `Dict` retrieve key preceding key identified by method
-parameter.
+<a name="prev_key#1" />
+
+### Method [`prev_key#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1033)
+
+From object of class `Dict` retrieve key preceding key identified by method parameter.
 
 **Parameters:**
 
@@ -380,77 +471,89 @@ parameter.
 
 **Return:**
 
-* Value of key preceding key identified by method parameter, if key identified
-  by method parameter is not first key in object of class `Dict`.
+* Value of key preceding key identified by method parameter, if key identified by method parameter is not first key in object of class `Dict`.
 * Object of class `Blank` otherwise.
 
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Three",3]);
-("dict: %s\n" % dict.to_string()).print();
-key = dict.last_key();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj: %s\n" % obj.to_string()).print();
+key = obj.last_key();
 do {
   ("key: %s\n" % key.to_string()).print();
-  key = dict.prev_key(key);
+  key = obj.prev_key(key);
 } while(Blank != key);
 ```
 ```
-dict: [One:1,Two:2,Three:3]
+obj: [One:1,Two:2,Three:3]
 key: Three
 key: Two
 key: One
 ```
 
-#### Method `lee_key#1`
-Retrieve key of object of class `Dict` which value is less or equal
-than value of method parameter.
+<a name="lee_key#1" />
+
+### Method [`lee_key#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1079)
+
+Retrieve key of object of class `Dict` which value is less or equal than value of method parameter.
+
+**Parameters:**
+
+1. Any type.
 
 **Return:**
 
-* Value of key of object of class `Dict` which is less or equal than value of
-  method parameter.
+* Value of key of object of class `Dict` which is less or equal than value of method parameter.
 * Object of class `Blank` otherwise.
 
 **Example:**
 
 ```cpp
-dict = new Dict([1.0,"One",2.0,"Two",3.0,"Three"]);
-("dict.lee_key(0.6): %s\n" % dict.lee_key(0.6).to_string()).print();
-("dict.lee_key(1.5): %s\n" % dict.lee_key(1.5).to_string()).print();
-("dict.lee_key(2.1): %s\n" % dict.lee_key(2.1).to_string()).print();
+obj = new Dict([1.0,"One",2.0,"Two",3.0,"Three"]);
+("obj.lee_key(0.6): %s\n" % obj.lee_key(0.6).to_string()).print();
+("obj.lee_key(1.5): %s\n" % obj.lee_key(1.5).to_string()).print();
+("obj.lee_key(2.1): %s\n" % obj.lee_key(2.1).to_string()).print();
 ```
 ```
-dict.lee_key(0.6): <blank>
-dict.lee_key(1.5): 1.000000
-dict.lee_key(2.1): 2.000000
+obj.lee_key(0.6): <blank>
+obj.lee_key(1.5): 1.000000
+obj.lee_key(2.1): 2.000000
 ```
 
-#### Method `gre_key#1`
-Retrieve key of object of class `Dict` which value is greater or equal
-than value of method parameter.
+<a name="gre_key#1" />
+
+### Method [`gre_key#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1115)
+
+Retrieve key of object of class `Dict` which value is greater or equal than value of method parameter.
+
+**Parameters:**
+
+1. Any type.
 
 **Return:**
 
-* Value of key of object of class `Dict` which is greater or equal than value
-  of method parameter.
+* Value of key of object of class `Dict` which is greater or equal than value of method parameter.
 * Object of class `Blank` otherwise.
 
 **Example:**
 
 ```cpp
-dict = new Dict([1.0,"One",2.0,"Two",3.0,"Three"]);
-("dict.gre_key(1.5): %s\n" % dict.gre_key(1.5).to_string()).print();
-("dict.gre_key(2.1): %s\n" % dict.gre_key(2.1).to_string()).print();
-("dict.gre_key(3.2): %s\n" % dict.gre_key(3.2).to_string()).print();
+obj = new Dict([1.0,"One",2.0,"Two",3.0,"Three"]);
+("obj.gre_key(1.5): %s\n" % obj.gre_key(1.5).to_string()).print();
+("obj.gre_key(2.1): %s\n" % obj.gre_key(2.1).to_string()).print();
+("obj.gre_key(3.2): %s\n" % obj.gre_key(3.2).to_string()).print();
 ```
 ```
-dict.gre_key(1.5): 2.000000
-dict.gre_key(2.1): 3.000000
-dict.gre_key(3.2): <blank>
+obj.gre_key(1.5): 2.000000
+obj.gre_key(2.1): 3.000000
+obj.gre_key(3.2): <blank>
 ```
 
-#### Method `compare#1`
+<a name="compare#1" />
+
+### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1151)
+
 Compare object of class `Dict` with method parameter.
 
 **Parameters:**
@@ -459,27 +562,29 @@ Compare object of class `Dict` with method parameter.
 
 **Return:**
 
-Object of class `Integer`.
-* `-1` - if object of class `Dict` is lesser than method parameter.
-* `1` - if object of class `Dict` is greater than method parameter.
-* `0` - if object of class `Dict` is equal to method parameter.
+* Integer `-1` if object of class `Dict` is lesser than method parameter.
+* Integer `1` if object of class `Dict` is greater than method parameter.
+* Integer `0` if object of class `Dict` is equal to method parameter.
 
 **Example:**
 
 ```cpp
-dict_0 = new Dict(["One",1,"Two",2,"Three",3]);
-dict_1 = new Dict(["One",1,"Two",2,"Three",4]);
-("dict_0.compare(dict_1): %d\n" % dict_0.compare(dict_1)).print();
-("dict_0.compare(dict_0): %d\n" % dict_0.compare(dict_0)).print();
-("dict_0.compare(0): %d\n" % dict_0.compare(0)).print();
+obj_0 = new Dict(["One",1,"Two",2,"Three",3]);
+obj_1 = new Dict(["One",1,"Two",2,"Three",3,"Four",4]);
+("obj_0.compare(obj_1): %d\n" % obj_0.compare(obj_1)).print();
+("obj_1.compare(obj_0): %d\n" % obj_1.compare(obj_0)).print();
+("obj_0.compare(obj_0): %d\n" % obj_0.compare(obj_0)).print();
 ```
 ```
-dict_0.compare(dict_1): -1
-dict_0.compare(dict_0): 0
-dict_0.compare(0): 1
+obj_0.compare(obj_1): -1
+obj_1.compare(obj_0): 1
+obj_0.compare(obj_0): 0
 ```
 
-#### Method `item#1`
+<a name="item#1" />
+
+### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1167)
+
 Retrieve key from object of class `Dict` stored at requested index position.
 
 **Parameters:**
@@ -488,23 +593,31 @@ Retrieve key from object of class `Dict` stored at requested index position.
 
 **Return:**
 
-Object representing key in object of class `Dict` at position of requested index.
+* Object representing key in object of class `Dict` at position of requested index.
+* Object of class `Blank` otherwise.
 
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Three",3]);
-("dict: %s\n" % dict.to_string()).print();
-("dict.item(2): %s\n" % dict.item(2)).print();
-("dict.item(3): %s\n" % dict.item(3)).print();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj: %s\n" % obj.to_string()).print();
+idx = obj.first_idx();
+do {
+  ("obj.item(%d): %s\n" % [idx,obj.item(idx).to_string()]).print();
+  idx = obj.next_idx(idx);
+} while(Blank != idx);
 ```
 ```
-dict: [One:1,Two:2,Three:3]
-dict.item(2): Two
-dict.item(3): Three
+obj: [One:1,Two:2,Three:3]
+obj.item(0): One
+obj.item(2): Two
+obj.item(3): Three
 ```
 
-#### Method `first_idx#0`
+<a name="first_idx#0" />
+
+### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1197)
+
 Retrieve index of first key in object of class `Dict`.
 
 **Return:**
@@ -515,17 +628,20 @@ Retrieve index of first key in object of class `Dict`.
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1]);
-("dict.first_idx(): %s\n" % dict.first_idx().to_string()).print();
-dict.remove_key("One");
-("dict.first_idx(): %s\n" % dict.first_idx().to_string()).print();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
+obj.clear();
+("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
 ```
 ```
-dict.first_idx(): 0
-dict.first_idx(): <blank>
+obj.first_idx: 0
+obj.first_idx: <blank>
 ```
 
-#### Method `last_idx#0`
+<a name="last_idx#0" />
+
+### Method `spec` [`last_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1220)
+
 Retrieve index of last key in object of class `Dict`.
 
 **Return:**
@@ -536,22 +652,21 @@ Retrieve index of last key in object of class `Dict`.
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Three",3]);
-("dict.last_idx(): %s\n" % dict.last_idx().to_string()).print();
-dict.remove_key("Three");
-("dict.last_idx(): %s\n" % dict.last_idx().to_string()).print();
-dict.clear();
-("dict.last_idx(): %s\n" % dict.last_idx().to_string()).print();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
+obj.clear();
+("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
 ```
 ```
-dict.last_idx(): 3
-dict.last_idx(): 2
-dict.last_idx(): <blank>
+obj.last_idx: 3
+obj.last_idx: <blank>
 ```
 
-#### Method `next_idx#1`
-From object of class `Dict` retrieve index of key following key
-identified by method parameter.
+<a name="next_idx#1" />
+
+### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1243)
+
+From object of class `Dict` retrieve index of key following key identified by method parameter.
 
 **Parameters:**
 
@@ -559,31 +674,32 @@ identified by method parameter.
 
 **Return:**
 
-* Object of class `Integer` if there is some key following key identified by
-  method parameter.
+* Object of class `Integer` if there is some key following key identified by method parameter.
 * Object of class `Blank` otherwise.
 
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Three",3]);
-("dict: %s\n" % dict.to_string()).print();
-idx = dict.first_idx();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj: %s\n" % obj.to_string()).print();
+idx = obj.first_idx();
 do {
   ("idx: %s\n" % idx.to_string()).print();
-  idx = dict.next_idx(idx);
+  idx = obj.next_idx(idx);
 } while(Blank != idx);
 ```
 ```
-dict: [One:1,Two:2,Three:3]
+obj: [One:1,Two:2,Three:3]
 idx: 0
 idx: 2
 idx: 3
 ```
 
-#### Method `prev_idx#1`
-From object of class `Dict` retrieve index of key preceding key
-identified by method parameter.
+<a name="prev_idx#1" />
+
+### Method `spec` [`prev_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1272)
+
+From object of class `Dict` retrieve index of key preceding key identified by method parameter.
 
 **Parameters:**
 
@@ -591,109 +707,122 @@ identified by method parameter.
 
 **Return:**
 
-* Object of class `Integer` if there is some key preceding key identified by
-  method parameter.
+* Object of class `Integer` if there is some key preceding key identified by method parameter.
 * Object of class `Blank` otherwise.
 
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Three",3]);
-("dict: %s\n" % dict.to_string()).print();
-idx = dict.last_idx();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj: %s\n" % obj.to_string()).print();
+idx = obj.last_idx();
 do {
   ("idx: %s\n" % idx.to_string()).print();
-  idx = dict.prev_idx(idx);
+  idx = obj.prev_idx(idx);
 } while(Blank != idx);
 ```
 ```
-dict: [One:1,Two:2,Three:3]
+obj: [One:1,Two:2,Three:3]
 idx: 3
 idx: 2
 idx: 0
 ```
 
-#### Method `length#0`
+<a name="length#0" />
+
+### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1301)
+
 Retrieve count of keys in object of class `Dict`.
 
 **Return:**
 
-Object of class `Integer`.
+* Object of class `Integer`.
 
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Three",3]);
-("dict.length(): %d\n" % dict.length()).print();
-dict.remove_key("Two");
-("dict.length(): %d\n" % dict.length()).print();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj.length(): %d\n" % obj.length()).print();
+obj.clear();
+("obj.length(): %d\n" % obj.length()).print();
 ```
 ```
-dict.length(): 3
-dict.length(): 2
+obj.length(): 3
+obj.length(): 0
 ```
 
-#### Method `to_string#0`
-Convert object of class `Dict` to object of class `String`. Each key and
-element of dictionary is converted to string by call of its `to_string#0`
-method. As separator of string values of keys and elements is used character
-`:`. As separator of key-value pairs is used character `,`.
+<a name="to_string#0" />
+
+### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1314)
+
+Convert object of class `Dict` to object of class `String`.
+Each key and element of object of class `Dict` is converted to string by call of
+its `to_string#0` method. As separator of string values of keys and elements is
+used character `:`. As separator of key-element pairs is used character `,`.
 
 **Return:**
 
-Object of class `String`.
+* Object of class `String`.
 
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Three",3]);
-("dict: %s\n" % dict.to_string()).print();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj.to_string(): %s\n" % obj.to_string()).print();
 ```
 ```
-dict: [One:1,Two:2,Three:3]
+obj.to_string(): [One:1,Two:2,Three:3]
 ```
 
-#### Method `to_string#1`
-Convert object of class `Dict` to object of class `String`. Each element of
-dictionary is converted to string by call of its `to_string#0` method.  As separator
-of string values of keys and elements is used character `:`.  As separator of
-key-value pairs is used method parameter.
+<a name="to_string#1" />
+
+### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1412)
+
+Convert object of class `Dict` to object of class `String`.
+Each key and element of object of class `Dict` is converted to string by call of
+its `to_string#0` method. As separator of string values of keys and elements is
+used character `:`. As separator of key-element pairs is used method parameter.
 
 **Parameters:**
 
-1. Object of class `String`.
+1. Object of class `String`. Separator of values formated to result string.
 
 **Return:**
 
-Object of class `String`.
+* Object of class `String`.
 
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Dict",new Dict(["One",1,"Two",2,"Three",3])]);
-("dict: %s\n" % dict.to_string("+")).print();
-("dict: %s\n" % dict.to_string("<->")).print();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+("obj.to_string(\"+\"): %s\n" % obj.to_string("+")).print();
+("obj.to_string(\"<->\"): %s\n" % obj.to_string("<->")).print();
 ```
 ```
-dict: One:1+Two:2+Dict:[One:1,Two:2,Three:3]
-dict: One:1<->Two:2<->Dict:[One:1,Two:2,Three:3]
+obj.to_string("+"): One:1+Two:2+Three:3
+obj.to_string("<->"): One:1<->Two:2<->Three:3
 ```
 
-#### Method `print#0`
+<a name="print#0" />
+
+### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1519)
+
 Print string representation of object of class `Dict` to standard output.
+Each key and element of object of class `Dict` is printed by call of its
+`print#0` method. As separator of printed values of keys and elements is used
+character `:`. As separator of key-element pairs is used character `,`.
 
 **Return:**
 
-Object of class `Blank`.
+* Object of class `Blank`.
 
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Three",3]);
-dict.print();
+obj = new Dict(["One",1,"Two",2,"Three",3]);
+obj.print();
 "\n".print();
 ```
 ```
 [One:1,Two:2,Three:3]
 ```
-

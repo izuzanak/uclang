@@ -1,23 +1,68 @@
-
 # Class Tree
-Container class implementing simple abstract data type tree.
+
+Container class implementing abstract data type tree.
+
+-----
+
+## Table of methods
+
+* Constructors
+
+  * Constructor [`Tree#0`](#Tree%230)
+  * Constructor [`Tree#1`](#Tree%231)
+
+* Operators
+
+  * Operator [`operator_binary_equal#1`](#operator_binary_equal%231)
+  * Operator [`operator_binary_plus_equal#1`](#operator_binary_plus_equal%231)
+  * Operator [`operator_binary_double_equal#1`](#operator_binary_double_equal%231)
+  * Operator [`operator_binary_exclamation_equal#1`](#operator_binary_exclamation_equal%231)
+  * Operator [`operator_binary_plus#1`](#operator_binary_plus%231)
+  * Operator [`operator_binary_le_br_re_br#1`](#operator_binary_le_br_re_br%231)
+
+* Methods
+
+  * Method [`clear#0`](#clear%230)
+  * Method [`items#0`](#items%230)
+  * Method [`insert#1`](#insert%231)
+  * Method [`remove#1`](#remove%231)
+  * Method [`get_idx#1`](#get_idx%231)
+  * Method [`get_idxs#1`](#get_idxs%231)
+  * Method [`compare#1`](#compare%231)
+  * Method [`item#1`](#item%231)
+  * Method [`first_idx#0`](#first_idx%230)
+  * Method [`last_idx#0`](#last_idx%230)
+  * Method [`next_idx#1`](#next_idx%231)
+  * Method [`prev_idx#1`](#prev_idx%231)
+  * Method [`length#0`](#length%230)
+  * Method [`to_string#0`](#to_string%230)
+  * Method [`to_string#1`](#to_string%231)
+  * Method [`print#0`](#print%230)
+
+-----
 
 ## Constructors
 
-#### Constructor `Tree#0`
-Creates empty object of class `Tree`.
+<a name="Tree#0" />
+
+### Constructor [`Tree#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L664)
+
+Creates default object of class `Tree`.
 
 **Example:**
 
 ```cpp
-tree = new Tree();
-("tree: %s\n" % tree.to_string()).print();
+obj = new Tree();
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-tree: []
+obj: []
 ```
 
-#### Constructor `Tree#1`
+<a name="Tree#1" />
+
+### Constructor [`Tree#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L669)
+
 Creates object of class `Tree` containing elements retrieved from method parameter.
 
 **Parameters:**
@@ -27,18 +72,22 @@ Creates object of class `Tree` containing elements retrieved from method paramet
 **Example:**
 
 ```cpp
-tree = new Tree([1,2,3]);
-("tree: %s\n" % tree.to_string()).print();
+obj = new Tree([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-tree: [1,2,3]
+obj: [1,2,3,4,5]
 ```
+
+-----
 
 ## Operators
 
-#### Operator `operator_binary_equal#1`
-Assignment operator `=`. Object of class `Tree` is replaced by method
-parameter.
+<a name="operator_binary_equal#1" />
+
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L541)
+
+Assignment operator `=`. Object of class `Tree` is replaced by method parameter.
 
 **Parameters:**
 
@@ -46,24 +95,26 @@ parameter.
 
 **Return:**
 
-Value of object.
+* Method parameter.
 
 **Example:**
 
 ```cpp
-tree = new Tree();
-("tree: %s\n" % tree.to_string()).print();
-tree = "Hello world";
-("tree: %s\n" % tree.to_string()).print();
+obj = new Tree([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+obj = "New value";
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-tree: []
-tree: Hello world
+obj: [1,2,3,4,5]
+obj: New value
 ```
 
-#### Operator `operator_binary_plus_equal#1`
-Append operator `+=`. Insert elements retrieved from method parameter to object
-of class `Tree`.
+<a name="operator_binary_plus_equal#1" />
+
+### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L557)
+
+Append operator `+=`. Append elements retrieved from method parameter to object of class `Tree`.
 
 **Parameters:**
 
@@ -71,22 +122,26 @@ of class `Tree`.
 
 **Return:**
 
-Value of object.
+* Value of object.
 
 **Example:**
 
 ```cpp
-tree = new Tree([1,2,3]);
-tree += [3,4,5];
-("tree: %s\n" % tree.to_string()).print();
+obj = new Tree([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+obj += [1,2,6,7,8];
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-tree: [1,2,3,3,4,5]
+obj: [1,2,3,4,5]
+obj: [1,1,2,2,3,4,5,6,7,8]
 ```
 
-#### Operator `operator_binary_double_equal#1`
-Comparison operator `==`. Compares object of class `Tree` with method
-parameter and return `1` if objects has same value or `0` otherwise.
+<a name="operator_binary_double_equal#1" />
+
+### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L587)
+
+Comparison operator `==`. Compares object of class `Tree` with method parameter and return `1` if objects has same value or `0` otherwise.
 
 **Parameters:**
 
@@ -94,27 +149,29 @@ parameter and return `1` if objects has same value or `0` otherwise.
 
 **Return:**
 
-Object of class `Integer`.
+* Object of class `Integer`.
   * `0` - method parameter has different value than object.
   * `1` - method parameter has same value as object.
 
 **Example:**
 
 ```cpp
-tree_0 = new Tree([1,2,3]);
-tree_1 = new Tree([1,2,4]);
-tree_2 = tree_0;
-("tree_0 == tree_1: %d\n" % (tree_0 == tree_1)).print();
-("tree_0 == tree_2: %d\n" % (tree_0 == tree_2)).print();
+obj_0 = new Tree([1,2,3,4,5]);
+obj_1 = new Tree([1,2,6,7,8]);
+obj_2 = obj_0;
+("obj_0 == obj_1: %d\n" % (obj_0 == obj_1)).print();
+("obj_0 == obj_2: %d\n" % (obj_0 == obj_2)).print();
 ```
 ```
-tree_0 == tree_1: 0
-tree_0 == tree_2: 1
+obj_0 == obj_1: 0
+obj_0 == obj_2: 1
 ```
 
-#### Operator `operator_binary_exclamation_equal#1`
-Comparison operator `!=`. Compares object of class `Tree` with method parameter and
-return `0` if objects has same value or `1` otherwise.
+<a name="operator_binary_exclamation_equal#1" />
+
+### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L604)
+
+Comparison operator `!=`. Compares object of class `Tree` with method parameter and return `0` if objects has same value or `1` otherwise.
 
 **Parameters:**
 
@@ -122,28 +179,29 @@ return `0` if objects has same value or `1` otherwise.
 
 **Return:**
 
-Object of class `Integer`.
+* Object of class `Integer`.
   * `0` - method parameter has same value as object.
   * `1` - method parameter has different value than object.
 
 **Example:**
 
 ```cpp
-tree_0 = new Tree([1,2,3]);
-tree_1 = new Tree([1,2,4]);
-tree_2 = tree_0;
-("tree_0 != tree_1: %d\n" % (tree_0 != tree_1)).print();
-("tree_0 != tree_2: %d\n" % (tree_0 != tree_2)).print();
+obj_0 = new Tree([1,2,3,4,5]);
+obj_1 = new Tree([1,2,6,7,8]);
+obj_2 = obj_0;
+("obj_0 != obj_1: %d\n" % (obj_0 != obj_1)).print();
+("obj_0 != obj_2: %d\n" % (obj_0 != obj_2)).print();
 ```
 ```
-tree_0 != tree_1: 1
-tree_0 != tree_2: 0
+obj_0 != obj_1: 1
+obj_0 != obj_2: 0
 ```
 
-#### Operator `operator_binary_plus#1`
-Concatenation operator `+`. Creates object of class `Tree` containing elements
-of original object of class `Tree` with inserted elements retrieved from
-method parameter.
+<a name="operator_binary_plus#1" />
+
+### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L621)
+
+Concatenation operator `+`. Creates object of class `Tree` containing elements of original object of class `Tree` concatenated with elements retrieved from method parameter.
 
 **Parameters:**
 
@@ -151,225 +209,26 @@ method parameter.
 
 **Return:**
 
-Object of class `Tree` containing elements of original tree extended by
-elements retrieved from method parameter.
+* Object of class `Tree` containing elements of original object of class `Tree` concatenated with elements retrieved from method parameter.
 
 **Example:**
 
 ```cpp
-tree_0 = new Tree([1,2,3]);
-tree_1 = new Tree([1,2,4]);
-("tree_0 + tree_1: %s\n" % (tree_0 + tree_1).to_string()).print();
+obj = new Tree([1,2,3,4,5]);
+res = obj + [1,2,3,4,5];
+("obj: %s\n" % obj.to_string()).print();
+("res: %s\n" % res.to_string()).print();
 ```
 ```
-tree_0 + tree_1: [1,1,2,2,3,4]
+obj: [1,2,3,4,5]
+res: [1,1,2,2,3,3,4,4,5,5]
 ```
 
-#### Operator `operator_binary_le_br_re_br#1`
-Item selection operator `[]`. Retrieve element from object of class `Tree`
-stored at requested index position.
+<a name="operator_binary_le_br_re_br#1" />
 
-**Parameters:**
+### Operator [`operator_binary_le_br_re_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L657)
 
-1. Type convertible to integer.
-
-**Return:**
-
-Object stored in object of class `Tree` at position of requested index.
-
-**Example:**
-
-```cpp
-tree = new Tree([1,2,3]);
-("tree: %s\n" % tree.to_string()).print();
-("tree[1]: %d\n" % tree[1]).print();
-("tree[2]: %d\n" % tree[2]).print();
-```
-```
-tree: [1,2,3]
-tree[2]: 2
-tree[3]: 3
-```
-
-## Methods
-
-#### Method `clear#0`
-Empty tree. Release all elements stored in object of class `Tree`.
-
-**Return:**
-
-Object of class `Blank`.
-
-**Example:**
-
-```cpp
-tree = new Tree([1,2,3]);
-("tree: %s\n" % tree.to_string()).print();
-tree.clear();
-("tree: %s\n" % tree.to_string()).print();
-```
-```
-tree: [1,2,3]
-tree: []
-```
-
-#### Method `items#0`
-Retrieve elements contained in object of class `Tree`. Elements are returned
-as object of class `Array`.
-
-**Return:**
-
-Object of class `Array` containing all elements of tree.
-
-**Example:**
-
-```cpp
-tree = new Tree([1,2,3]);
-array = tree.items();
-("type array: %s\n" % (type array).to_string()).print();
-("array: %s\n" % array.to_string()).print();
-```
-```
-type array: Array
-array: [1,2,3]
-```
-
-#### Method `insert#1`
-Insert method parameter to object of class `Tree`.
-
-**Parameters:**
-
-1. Any type.
-
-**Return:**
-
-Object of class `Blank`.
-
-**Example:**
-
-```cpp
-tree = new Tree([1,2,3]);
-("tree: %s\n" % tree.to_string()).print();
-tree.insert(3);
-tree.insert(4);
-tree.insert(5);
-("tree: %s\n" % tree.to_string()).print();
-```
-```
-tree: [1,2,3]
-tree: [1,2,3,3,4,5]
-```
-
-#### Method `remove#1`
-Remove element given by method parameter from object of class `Tree`.
-
-**Parameters:**
-
-1. Any type.
-
-**Return:**
-
-Object of class `Blank`.
-
-**Example:**
-
-```cpp
-tree = new Tree([1,2,3]);
-("tree: %s\n" % tree.to_string()).print();
-tree.remove(2);
-("tree: %s\n" % tree.to_string()).print();
-```
-```
-tree: [1,2,3]
-tree: [1,3]
-```
-
-#### Method `get_idx#1`
-Retrieve index of method parameter in object of class `Tree`.
-
-**Parameters:**
-
-1. Any type.
-
-**Return:**
-
-* Object of class `Integer`, if method parameter is contained as element in
-  object of class `Tree`.
-* Object of class `Blank` otherwise.
-
-**Example:**
-
-```cpp
-tree = new Tree([1,2,3]);
-("tree: %s\n" % tree.to_string()).print();
-("tree.get_idx(3): %s\n" % tree.get_idx(3).to_string()).print();
-("tree.get_idx(4): %s\n" % tree.get_idx(4).to_string()).print();
-```
-```
-tree: [1,2,3]
-tree.get_idx(3): 3
-tree.get_idx(4): <blank>
-```
-
-#### Method `get_idxs#1`
-Retrieve indexes of method parameter in object of class `Tree`. Element indexes
-are returned as object of class `Array`.
-
-**Parameters:**
-
-1. Any type.
-
-**Return:**
-
-* Object of class `Array` containing indexes of elements of object of class
-  `Tree` equal to method parameter.
-
-**Example:**
-
-```cpp
-tree = new Tree([1,2,3,2,2]);
-("tree: %s\n" % tree.to_string()).print();
-("tree.get_idxs(2): %s\n" % tree.get_idxs(2).to_string()).print();
-("tree.get_idxs(3): %s\n" % tree.get_idxs(3).to_string()).print();
-("tree.get_idxs(4): %s\n" % tree.get_idxs(4).to_string()).print();
-```
-```
-tree: [1,2,2,2,3]
-tree.get_idxs(2): [2,5,4]
-tree.get_idxs(3): [3]
-tree.get_idxs(4): []
-```
-
-#### Method `compare#1`
-Compare object of class `Tree` with method parameter.
-
-**Parameters:**
-
-1. Any type.
-
-**Return:**
-
-Object of class `Integer`.
-* `-1` - if object of class `Tree` is lesser than method parameter.
-* `1` - if object of class `Tree` is greater than method parameter.
-* `0` - if object of class `Tree` is equal to method parameter.
-
-**Example:**
-
-```cpp
-tree_0 = new Tree([1,2,3]);
-tree_1 = new Tree([1,2,3,4]);
-("tree_0.compare(tree_1): %d\n" % tree_0.compare(tree_1)).print();
-("tree_0.compare(tree_0): %d\n" % tree_0.compare(tree_0)).print();
-("tree_0.compare(0): %d\n" % tree_0.compare(0)).print();
-```
-```
-tree_0.compare(tree_1): -1
-tree_0.compare(tree_0): 0
-tree_0.compare(0): 1
-```
-
-#### Method `item#1`
+Item selection operator `[]`.
 Retrieve element from object of class `Tree` stored at requested index position.
 
 **Parameters:**
@@ -378,23 +237,260 @@ Retrieve element from object of class `Tree` stored at requested index position.
 
 **Return:**
 
-Object stored in object of class `Tree` at position of requested index.
+ * Object stored in object of class `Tree` at position of requested index.
 
 **Example:**
 
 ```cpp
-tree = new Tree([1,2,3]);
-("tree: %s\n" % tree.to_string()).print();
-("tree.item(2): %d\n" % tree.item(2)).print();
-("tree.item(3): %d\n" % tree.item(3)).print();
+obj = new Tree([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+("obj[0]: %s\n" % obj[0].to_string()).print();
+("obj[2]: %s\n" % obj[2].to_string()).print();
+("obj[3]: %s\n" % obj[3].to_string()).print();
 ```
 ```
-tree: [1,2,3]
-tree.item(2): 2
-tree.item(3): 3
+obj: [1,2,3,4,5]
+obj[0]: 1
+obj[2]: 2
+obj[3]: 3
 ```
 
-#### Method `first_idx#0`
+-----
+
+## Methods
+
+<a name="clear#0" />
+
+### Method [`clear#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L693)
+
+Release all elements stored in object of class `Tree`.
+
+**Return:**
+
+* Object of class `Blank`.
+
+**Example:**
+
+```cpp
+obj = new Tree([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+obj.clear();
+("obj: %s\n" % obj.to_string()).print();
+```
+```
+obj: [1,2,3,4,5]
+obj: []
+```
+
+<a name="items#0" />
+
+### Method [`items#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L723)
+
+Retrieve list of elements contained in object of class `Tree`. Elements are returned as object of class `Array`.
+
+**Return:**
+
+* Object of class `Array` containing all elements.
+
+**Example:**
+
+```cpp
+obj = new Tree([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+items = obj.items();
+("type items: %s\n" % (type items).to_string()).print();
+("items: %s\n" % items.to_string()).print();
+```
+```
+obj: [1,2,3,4,5]
+type items: Array
+items: [1,2,3,4,5]
+```
+
+<a name="insert#1" />
+
+### Method [`insert#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L757)
+
+Insert method parameter to object of class `Tree`.
+
+**Parameters:**
+
+1. Any type.
+
+**Return:**
+
+* Object of class ``Blank``.
+
+**Example:**
+
+```cpp
+obj = new Tree([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+obj.insert(5);
+obj.insert(6);
+obj.insert(7);
+("obj: %s\n" % obj.to_string()).print();
+```
+```
+obj: [1,2,3,4,5]
+obj: [1,2,3,4,5,5,6,7]
+```
+
+<a name="remove#1" />
+
+### Method [`remove#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L782)
+
+Remove element from object of class `Tree` stored at position given by method parameter.
+
+**Parameters:**
+
+1. Type convertible to integer.
+
+**Return:**
+
+* Object of class ``Blank``.
+
+**Example:**
+
+```cpp
+obj = new Tree([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+obj.remove(0);
+obj.remove(2);
+("obj: %s\n" % obj.to_string()).print();
+```
+```
+obj: [1,2,3,4,5]
+obj: [3,4,5]
+```
+
+<a name="get_idx#1" />
+
+### Method [`get_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L812)
+
+From object of class `Tree`, retrieve index of first element equal to method parameter.
+
+**Parameters:**
+
+1. Any type.
+
+**Return:**
+
+* Object of class ``Integer``, if method parameter is contained as element in object of class `Tree`.
+* Object of class ``Blank`` otherwise.
+
+**Example:**
+
+```cpp
+obj = new Tree([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+("obj.get_idx(2): %s\n" % obj.get_idx(2).to_string()).print();
+("obj.get_idx(100): %s\n" % obj.get_idx(100).to_string()).print();
+```
+```
+obj: [1,2,3,4,5]
+obj.get_idx(2): 2
+obj.get_idx(100): <blank>
+```
+
+<a name="get_idxs#1" />
+
+### Method [`get_idxs#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L836)
+
+From object of class `Tree`, retrieve indexes of elements that are equal to method parameter. Element indexes are returned as object of class ``Array``.
+
+**Parameters:**
+
+1. Any type.
+
+**Return:**
+
+* Object of class ``Array`` containing indexes of elements, that are equal to method parameter.
+
+**Example:**
+
+```cpp
+obj = new Tree([1,2,2,4,2,5]);
+("obj: %s\n" % obj.to_string()).print();
+("obj.get_idxs(2): %s\n" % obj.get_idxs(2).to_string()).print();
+("obj.get_idxs(100): %s\n" % obj.get_idxs(100).to_string()).print();
+```
+```
+obj: [1,2,2,2,4,5]
+obj.get_idxs(2): [2,5,3]
+obj.get_idxs(100): []
+```
+
+<a name="compare#1" />
+
+### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L876)
+
+Compare object of class `Tree` with method parameter.
+
+**Parameters:**
+
+1. Any type.
+
+**Return:**
+
+* Integer `-1` if object of class `Tree` is lesser than method parameter.
+* Integer `1` if object of class `Tree` is greater than method parameter.
+* Integer `0` if object of class `Tree` is equal to method parameter.
+
+**Example:**
+
+```cpp
+obj_0 = new Tree([1,2,3,4,5]);
+obj_1 = new Tree([1,2,6,7,8]);
+("obj_0.compare(obj_1): %d\n" % obj_0.compare(obj_1)).print();
+("obj_1.compare(obj_0): %d\n" % obj_1.compare(obj_0)).print();
+("obj_0.compare(obj_0): %d\n" % obj_0.compare(obj_0)).print();
+```
+```
+obj_0.compare(obj_1): -1
+obj_1.compare(obj_0): 1
+obj_0.compare(obj_0): 0
+```
+
+<a name="item#1" />
+
+### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L892)
+
+Retrieve element from object of class `Tree` stored at requested index position.
+
+**Parameters:**
+
+1. Type convertible to integer.
+
+**Return:**
+
+* Object representing element in object of class `Tree` at position of requested index.
+* Object of class `Blank` otherwise.
+
+**Example:**
+
+```cpp
+obj = new Tree([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+idx = obj.first_idx();
+do {
+  ("obj.item(%d): %s\n" % [idx,obj.item(idx).to_string()]).print();
+  idx = obj.next_idx(idx);
+} while(Blank != idx);
+```
+```
+obj: [1,2,3,4,5]
+obj.item(0): 1
+obj.item(2): 2
+obj.item(3): 3
+obj.item(4): 4
+obj.item(5): 5
+```
+
+<a name="first_idx#0" />
+
+### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L899)
+
 Retrieve index of first element in object of class `Tree`.
 
 **Return:**
@@ -405,17 +501,20 @@ Retrieve index of first element in object of class `Tree`.
 **Example:**
 
 ```cpp
-tree = new Tree([1]);
-("tree.first_idx(): %s\n" % tree.first_idx().to_string()).print();
-tree.remove(tree.get_idx(1));
-("tree.first_idx(): %s\n" % tree.first_idx().to_string()).print();
+obj = new Tree([1,2,3,4,5]);
+("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
+obj.clear();
+("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
 ```
 ```
-tree.first_idx(): 0
-tree.first_idx(): <blank>
+obj.first_idx: 0
+obj.first_idx: <blank>
 ```
 
-#### Method `last_idx#0`
+<a name="last_idx#0" />
+
+### Method `spec` [`last_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L922)
+
 Retrieve index of last element in object of class `Tree`.
 
 **Return:**
@@ -426,22 +525,21 @@ Retrieve index of last element in object of class `Tree`.
 **Example:**
 
 ```cpp
-tree = new Tree([1,2,3]);
-("tree.last_idx(): %s\n" % tree.last_idx().to_string()).print();
-tree.remove(tree.get_idx(3));
-("tree.last_idx(): %s\n" % tree.last_idx().to_string()).print();
-tree.clear();
-("tree.last_idx(): %s\n" % tree.last_idx().to_string()).print();
+obj = new Tree([1,2,3,4,5]);
+("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
+obj.clear();
+("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
 ```
 ```
-tree.last_idx(): 3
-tree.last_idx(): 2
-tree.last_idx(): <blank>
+obj.last_idx: 5
+obj.last_idx: <blank>
 ```
 
-#### Method `next_idx#1`
-From object of class `Tree` retrieve index of element following element
-identified by method parameter.
+<a name="next_idx#1" />
+
+### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L945)
+
+From object of class `Tree` retrieve index of element following element identified by method parameter.
 
 **Parameters:**
 
@@ -449,31 +547,34 @@ identified by method parameter.
 
 **Return:**
 
-* Object of class `Integer` if there is some element following element
-  identified by method parameter.
+* Object of class `Integer` if there is some element following element identified by method parameter.
 * Object of class `Blank` otherwise.
 
 **Example:**
 
 ```cpp
-tree = new Tree([1,2,3]);
-("tree: %s\n" % tree.to_string()).print();
-idx = tree.first_idx();
+obj = new Tree([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+idx = obj.first_idx();
 do {
   ("idx: %s\n" % idx.to_string()).print();
-  idx = tree.next_idx(idx);
+  idx = obj.next_idx(idx);
 } while(Blank != idx);
 ```
 ```
-tree: [1,2,3]
+obj: [1,2,3,4,5]
 idx: 0
 idx: 2
 idx: 3
+idx: 4
+idx: 5
 ```
 
-#### Method `prev_idx#1`
-From object of class `Tree` retrieve index of element preceding element
-identified by method parameter.
+<a name="prev_idx#1" />
+
+### Method `spec` [`prev_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L974)
+
+From object of class `Tree` retrieve index of element preceding element identified by method parameter.
 
 **Parameters:**
 
@@ -481,107 +582,121 @@ identified by method parameter.
 
 **Return:**
 
-* Object of class `Integer` if there is some element preceding element
-  identified by method parameter.
+* Object of class `Integer` if there is some element preceding element identified by method parameter.
 * Object of class `Blank` otherwise.
 
 **Example:**
 
 ```cpp
-tree = new Tree([1,2,3]);
-("tree: %s\n" % tree.to_string()).print();
-idx = tree.last_idx();
+obj = new Tree([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+idx = obj.last_idx();
 do {
   ("idx: %s\n" % idx.to_string()).print();
-  idx = tree.prev_idx(idx);
+  idx = obj.prev_idx(idx);
 } while(Blank != idx);
 ```
 ```
-tree: [1,2,3]
+obj: [1,2,3,4,5]
+idx: 5
+idx: 4
 idx: 3
 idx: 2
 idx: 0
 ```
 
-#### Method `length#0`
+<a name="length#0" />
+
+### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L1003)
+
 Retrieve count of elements in object of class `Tree`.
 
 **Return:**
 
-Object of class `Integer`.
+* Object of class `Integer`.
 
 **Example:**
 
 ```cpp
-tree = new Tree([1,2,3]);
-("tree.length(): %d\n" % tree.length()).print();
-tree.remove(tree.get_idx(2));
-("tree.length(): %d\n" % tree.length()).print();
+obj = new Tree([1,2,3,4,5]);
+("obj.length(): %d\n" % obj.length()).print();
+obj.clear();
+("obj.length(): %d\n" % obj.length()).print();
 ```
 ```
-tree.length(): 3
-tree.length(): 2
+obj.length(): 5
+obj.length(): 0
 ```
 
-#### Method `to_string#0`
-Convert object of class `Tree` to object of class `String`. Each element of
-tree is converted to string by call of its `to_string#0` method. As separator
-of string values of elements is used character `,`.
+<a name="to_string#0" />
+
+### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L1016)
+
+Convert object of class `Tree` to object of class `String`.
+Each element of object of class `Tree` is converted to string by call of its
+`to_string#0` method. As separator of string values is used character `,`.
 
 **Return:**
 
-Object of class `String`.
+* Object of class `String`.
 
 **Example:**
 
 ```cpp
-tree = new Tree([1,2,3]);
-("tree: %s\n" % tree.to_string()).print();
+obj = new Tree([1,2,3,4,5]);
+("obj.to_string(): %s\n" % obj.to_string()).print();
 ```
 ```
-tree: [1,2,3]
+obj.to_string(): [1,2,3,4,5]
 ```
 
-#### Method `to_string#1`
-Convert object of class `Tree` to object of class `String`. Each element of
-tree is converted to string by call of its `to_string#0` method. As separator
-of string values is used method parameter.
+<a name="to_string#1" />
+
+### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L1061)
+
+Convert object of class `Tree` to object of class `String`.
+Each element of object of class `Tree` is converted to string by call of its
+`to_string#0` method. As separator of string values is used method parameter.
 
 **Parameters:**
 
-1. Object of class `String`.
+1. Object of class `String`. Separator of values formated to result string.
 
 **Return:**
 
-Object of class `String`.
+* Object of class `String`.
 
 **Example:**
 
 ```cpp
-tree = new Tree([1,2,3,new Tree([1,2,3])]);
-("tree: %s\n" % tree.to_string("+")).print();
-("tree: %s\n" % tree.to_string("<->")).print();
+obj = new Tree([1,2,3,4,5]);
+("obj.to_string(\"+\"): %s\n" % obj.to_string("+")).print();
+("obj.to_string(\"<->\"): %s\n" % obj.to_string("<->")).print();
 ```
 ```
-tree: 1+2+3+[1,2,3]
-tree: 1<->2<->3<->[1,2,3]
+obj.to_string("+"): 1+2+3+4+5
+obj.to_string("<->"): 1<->2<->3<->4<->5
 ```
 
-#### Method `print#0`
+<a name="print#0" />
+
+### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L1119)
+
 Print string representation of object of class `Tree` to standard output.
+Each element of object of class `Tree` is printed by call of its `print#0`
+method. As separator of printed values is used character `,`.
 
 **Return:**
 
-Object of class `Blank`.
+* Object of class `Blank`.
 
 **Example:**
 
 ```cpp
-tree = new Tree([1,2,3]);
-tree.print();
+obj = new Tree([1,2,3,4,5]);
+obj.print();
 "\n".print();
 ```
 ```
-[1,2,3]
+[1,2,3,4,5]
 ```
-

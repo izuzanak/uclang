@@ -243,6 +243,7 @@ pi = 3.1415926535897932384626433;
       "description","Class describing strings of one byte characters.",
       "create_example","\"Hi world!\"",
       "create_compare","\"How are you?\"",
+      "create_repeated","\"This sentence contain more than one character 'e'.\"",
       "iter_indexes",[0,1,2,3,4],
       "iter_index_name","index",
       "iter_element_name","character",
@@ -556,7 +557,7 @@ obj = String.create(%s);
      get_property("Integer","create_example"),
      get_property("Float","create_example")]),
         "split#1", new MethodDescr(
-"Split object of class `%s` to object of class %s containing one or more objects of class %s." % [m_target_name,doc_class_ref("Array"),m_target_name],
+"Split object of class `%s` to object of class `%s` containing one or more objects of class `%s`." % [m_target_name,doc_class_ref("Array"),m_target_name],
 ["Object of class %s." % doc_class_ref("String")],
 "* Object of class %s containing one or more objects of class %s." % [doc_class_ref("Array"),doc_class_ref("String")],"
 %s
@@ -566,7 +567,7 @@ obj = String.create(%s);
         "join#1", new MethodDescr(
 "Objects of iterable which is given as method parameter are converted to
 strings by call of its to_string#0 method.  Result strings are then
-concatenated to one string, with object of class %s used as separator." % m_target_name,
+concatenated to one string, with object of class `%s` used as separator." % m_target_name,
 ["Iterable type."],
 "* Object of class %s." % doc_class_ref("String"),"
 obj = %s;
@@ -577,13 +578,61 @@ obj = [\"numbers:\",1,2,3,4,\"end\"];
 (\"res: %%s\\n\" %% \" \".join(obj).to_string()).print();
 " % [get_property("Array","create_example"),get_property("Dict","create_example")]),
         "head#1", new MethodDescr(
-"Retrieve substring of object of class %s containing first `n` characters, where `n` is given by method parameter." % m_target_name,
+"Retrieve substring of object of class `%s` containing first `n` characters, where `n` is given by method parameter." % m_target_name,
 ["Object of class convertible to %s." % doc_class_ref("Integer")],
 "* Object of class %s." % doc_class_ref("String"),"
 %s
 (\"obj.head(2): %%s\\n\" %% obj.head(2)).print();
 (\"obj.head(8.25): %%s\\n\" %% obj.head(8.25)).print();
 (\"obj.head(-1): %%s\\n\" %% obj.head(-1)).print();
+" % get_code(m_target_class,"obj","create_example")),
+        "tail#1", new MethodDescr(
+"Retrieve substring of object of class `%s` containing last `n` characters, where `n` is given by method parameter." % m_target_name,
+["Object of class convertible to %s." % doc_class_ref("Integer")],
+"* Object of class %s." % doc_class_ref("String"),"
+%s
+(\"obj.tail(6): %%s\\n\" %% obj.tail(6)).print();
+(\"obj.tail(6.25): %%s\\n\" %% obj.tail(6.25)).print();
+(\"obj.tail(-3): %%s\\n\" %% obj.tail(-3)).print();
+" % get_code(m_target_class,"obj","create_example")),
+        "range#2", new MethodDescr(
+"From object of class `%s` retrieve substring identified by indexes of first and last character in source string." % m_target_name,
+["Object of class convertible to %s." % doc_class_ref("Integer"),
+ "Object of class convertible to %s." % doc_class_ref("Integer")],
+"* Object of class %s." % doc_class_ref("String"),"
+%s
+(\"obj.range(0,1): %%s\\n\" %% obj.range(0,1)).print();
+(\"obj.range(3,-2): %%s\\n\" %% obj.range(3,-2)).print();
+(\"obj.range(-1,-1): %%s\\n\" %% obj.range(-1,-1)).print();
+" % get_code(m_target_class,"obj","create_example")),
+        "get_idx#1", new MethodDescr(
+"Retrieve index of substring given by method parameter in object of class `%s`." % m_target_name,
+["Object of class %s." % doc_class_ref("String")],
+"* Object of class %s, if substring is contained in object of class `%s`.
+* Object of class %s otherwise." % [doc_class_ref("Integer"),m_target_name,doc_class_ref("Blank")]
+,"
+%s
+(\"obj.get_idx(\\\"Hi\\\"): %%d\\n\" %% obj.get_idx(\"Hi\")).print();
+(\"obj.get_idx(\\\"world\\\"): %%d\\n\" %% obj.get_idx(\"world\")).print();
+(\"obj.get_idx(\\\"Test\\\"): %%s\\n\" %% obj.get_idx(\"Test\").to_string()).print();
+" % get_code(m_target_class,"obj","create_example")),
+        "get_idxs#1", new MethodDescr(
+"Retrieve all indexes of substring given by method parameter in object of class `%s`." % m_target_name,
+["Object of class %s." % doc_class_ref("String")],
+"* Object of class %s, containing all positions of substring in original object of class `%s`." % [doc_class_ref("Array"),m_target_name],"
+%s
+(\"obj.get_idxs(\\\"one\\\"): %%s\\n\" %% obj.get_idxs(\"one\").to_string()).print();
+(\"obj.get_idxs(\\\"Test\\\"): %%s\\n\" %% obj.get_idxs(\"Test\").to_string()).print();
+(\"obj.get_idxs(\\\"e\\\"): %%s\\n\" %% obj.get_idxs(\"e\").to_string()).print();
+" % get_code(m_target_class,"obj","create_repeated")),
+        "replace#2", new MethodDescr(
+"In object of class `%s` replace all substrings given as first method parameter by string given as second method parameter." % m_target_name,
+["Object of class %s identifying substrings to be replaced by second method parameter." % doc_class_ref("String"),
+ "Object of class %s which replaces substrings identified by first method parameter." % doc_class_ref("String")],
+"* Object of class %s." % doc_class_ref("String"),"
+%s
+(\"res: %%s\\n\" %% obj.replace(\"Hi\",\"Hello\")).print();
+(\"res: %%s\\n\" %% obj.replace(\"world\",\"universe\")).print();
 " % get_code(m_target_class,"obj","create_example"))
       ]);/*}}}*/
     }
@@ -771,7 +820,7 @@ of new object of class `%s`." % [m_target_name,m_target_name],
       class_File["var_classes"] = new Dict(
       [/*{{{*/
         "files",new VarClassDescr("Files related to current process"),
-        "seek_consts",new VarClassDescr("Constants of `File.seek#2` method.")
+        "seek_consts",new VarClassDescr("Constants of [`File.seek#2`](#seek%232) method.")
       ]);/*}}}*/
       class_File["variables"] = new Dict(
       [/*{{{*/
@@ -1356,8 +1405,6 @@ obj = new %s(%s);
       }/*}}}*/
       case METHOD_TYPE_OPERATOR:
       {/*{{{*/
-        method_lst.push("<a name=\"%s\" />" % method_name);
-        method_lst.push("");
         method_lst.push("### Operator %s%s%s\n" % [spec_str,static_str,
             Blank != source_url ? "[`%s`](%s)" % [method_name,source_url] : "`%s`" % method_name]);
 
@@ -2248,8 +2295,6 @@ obj = !obj;
       }/*}}}*/
       case METHOD_TYPE_METHOD:
       {/*{{{*/
-        method_lst.push("<a name=\"%s\" />" % method_name);
-        method_lst.push("");
         method_lst.push("### Method %s%s%s\n" % [spec_str,static_str,
             Blank != source_url ? "[`%s`](%s)" % [method_name,source_url] : "`%s`" % method_name]);
 
@@ -3555,8 +3600,7 @@ TODO example source
 ```
 ```
 TODO example result
-```
-");
+```");
     }
 
     method_lst.push("");
@@ -3600,11 +3644,16 @@ TODO example result
       process_variable(a_class,var,class_vars);
     }
 
+    m_descr_lst.push("");
+    m_descr_lst.push("-----");
+
     if (class_vars.length() > 0)
     {
       m_descr_lst.push("");
       m_descr_lst.push("## Static constants");
       m_descr_lst += class_vars;
+      m_descr_lst.push("");
+      m_descr_lst.push("-----");
     }
 
     if (class_tom.length() > 0)
@@ -3623,6 +3672,8 @@ TODO example result
       m_descr_lst.push("* Methods");
       m_descr_lst.push("");
       m_descr_lst += class_tom;
+      m_descr_lst.push("");
+      m_descr_lst.push("-----");
     }
 
     if (class_constrs.length() > 0)
@@ -3631,6 +3682,7 @@ TODO example result
       m_descr_lst.push("## Constructors");
       m_descr_lst.push("");
       m_descr_lst += class_constrs;
+      m_descr_lst.push("-----");
     }
 
     if (class_operators.length() > 0)
@@ -3639,6 +3691,7 @@ TODO example result
       m_descr_lst.push("## Operators");
       m_descr_lst.push("");
       m_descr_lst += class_operators;
+      m_descr_lst.push("-----");
     }
 
     if (class_methods.length() > 0)

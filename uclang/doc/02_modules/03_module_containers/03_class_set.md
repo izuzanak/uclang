@@ -1,23 +1,77 @@
-
 # Class Set
-Container class implementing simple abstract data type set.
+
+Container class implementing abstract data type set.
+
+-----
+
+## Table of methods
+
+* Constructors
+
+  * Constructor [`Set#0`](#Set%230)
+  * Constructor [`Set#1`](#Set%231)
+
+* Operators
+
+  * Operator [`operator_binary_equal#1`](#operator_binary_equal%231)
+  * Operator [`operator_binary_plus_equal#1`](#operator_binary_plus_equal%231)
+  * Operator [`operator_binary_minus_equal#1`](#operator_binary_minus_equal%231)
+  * Operator [`operator_binary_ampersand_equal#1`](#operator_binary_ampersand_equal%231)
+  * Operator [`operator_binary_pipe_equal#1`](#operator_binary_pipe_equal%231)
+  * Operator [`operator_binary_circumflex_equal#1`](#operator_binary_circumflex_equal%231)
+  * Operator [`operator_binary_ampersand#1`](#operator_binary_ampersand%231)
+  * Operator [`operator_binary_pipe#1`](#operator_binary_pipe%231)
+  * Operator [`operator_binary_circumflex#1`](#operator_binary_circumflex%231)
+  * Operator [`operator_binary_double_equal#1`](#operator_binary_double_equal%231)
+  * Operator [`operator_binary_exclamation_equal#1`](#operator_binary_exclamation_equal%231)
+  * Operator [`operator_binary_rs_br_equal#1`](#operator_binary_rs_br_equal%231)
+  * Operator [`operator_binary_ls_br_equal#1`](#operator_binary_ls_br_equal%231)
+  * Operator [`operator_binary_plus#1`](#operator_binary_plus%231)
+  * Operator [`operator_binary_minus#1`](#operator_binary_minus%231)
+  * Operator [`operator_binary_le_br_re_br#1`](#operator_binary_le_br_re_br%231)
+
+* Methods
+
+  * Method [`clear#0`](#clear%230)
+  * Method [`items#0`](#items%230)
+  * Method [`insert#1`](#insert%231)
+  * Method [`remove#1`](#remove%231)
+  * Method [`contain#1`](#contain%231)
+  * Method [`compare#1`](#compare%231)
+  * Method [`item#1`](#item%231)
+  * Method [`first_idx#0`](#first_idx%230)
+  * Method [`last_idx#0`](#last_idx%230)
+  * Method [`next_idx#1`](#next_idx%231)
+  * Method [`prev_idx#1`](#prev_idx%231)
+  * Method [`length#0`](#length%230)
+  * Method [`to_string#0`](#to_string%230)
+  * Method [`to_string#1`](#to_string%231)
+  * Method [`print#0`](#print%230)
+
+-----
 
 ## Constructors
 
-#### Constructor `Set#0`
-Creates empty object of class `Set`.
+<a name="Set#0" />
+
+### Constructor [`Set#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1346)
+
+Creates default object of class `Set`.
 
 **Example:**
 
 ```cpp
-set = new Set();
-("set: %s\n" % set.to_string()).print();
+obj = new Set();
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-set: []
+obj: []
 ```
 
-#### Constructor `Set#1`
+<a name="Set#1" />
+
+### Constructor [`Set#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1351)
+
 Creates object of class `Set` containing elements retrieved from method parameter.
 
 **Parameters:**
@@ -27,18 +81,22 @@ Creates object of class `Set` containing elements retrieved from method paramete
 **Example:**
 
 ```cpp
-set = new Set([1,2,3]);
-("set: %s\n" % set.to_string()).print();
+obj = new Set([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-set: [1,2,3]
+obj: [1,2,3,4,5]
 ```
+
+-----
 
 ## Operators
 
-#### Operator `operator_binary_equal#1`
-Assignment operator `=`. Object of class `Set` is replaced by method
-parameter.
+<a name="operator_binary_equal#1" />
+
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L851)
+
+Assignment operator `=`. Object of class `Set` is replaced by method parameter.
 
 **Parameters:**
 
@@ -46,24 +104,26 @@ parameter.
 
 **Return:**
 
-Value of object.
+* Method parameter.
 
 **Example:**
 
 ```cpp
-set = new Set();
-("set: %s\n" % set.to_string()).print();
-set = "Hello world";
-("set: %s\n" % set.to_string()).print();
+obj = new Set([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+obj = "New value";
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-set: []
-set: Hello world
+obj: [1,2,3,4,5]
+obj: New value
 ```
 
-#### Operator `operator_binary_plus_equal#1`
-Append operator `+=`. Insert elements retrieved from method parameter to object
-of class `Set`.
+<a name="operator_binary_plus_equal#1" />
+
+### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L867)
+
+Append operator `+=`. Append elements retrieved from method parameter to object of class `Set`.
 
 **Parameters:**
 
@@ -71,23 +131,29 @@ of class `Set`.
 
 **Return:**
 
-Value of object.
+* Value of object.
 
 **Example:**
 
 ```cpp
-set = new Set([1,2,3]);
-set += [3,4,5];
-("set: %s\n" % set.to_string()).print();
+obj = new Set([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+obj += [1,2,6,7,8];
+("obj: %s\n" % obj.to_string()).print();
 ```
 ```
-set: [1,2,3,4,5]
+obj: [1,2,3,4,5]
+obj: [1,2,3,4,5,6,7,8]
 ```
 
-#### Operator `operator_binary_minus_equal#1`
-Set difference operator `-=`. Creates object of class `Set` containing elements
-from first object of class `Set` that are not contained in second object of
-class `Set`. Value of variable is set to result object of class `Set`.
+<a name="operator_binary_minus_equal#1" />
+
+### Operator [`operator_binary_minus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L897)
+
+Set difference operator `-=`. Creates object of class `Set` containing
+elements from first object of class `Set` that are not contained in second
+object of class `Set`. Value of variable is set to result object of class
+`Set`.
 
 **Parameters:**
 
@@ -95,20 +161,24 @@ class `Set`. Value of variable is set to result object of class `Set`.
 
 **Return:**
 
-Value of object.
+* Value of object.
 
 **Example:**
 
 ```cpp
-set = new Set([1,2,3]);
-set -= new Set([2,3,4]);
-("set: %s\n" % set.to_string()).print();
+obj_0 = new Set([1,2,3,4,5]);
+obj_1 = new Set([1,2,6,7,8]);
+obj_0 -= obj_1;
+("obj_0: %s\n" % obj_0.to_string()).print();
 ```
 ```
-set: [1]
+obj_0: [3,4,5]
 ```
 
-#### Operator `operator_binary_ampersand_equal#1`
+<a name="operator_binary_ampersand_equal#1" />
+
+### Operator [`operator_binary_ampersand_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L940)
+
 Set intersection operator `&=`. Creates object of class `Set` containing
 elements contained in both source objects of class `Set`. Value of variable is
 set to result object of class `Set`.
@@ -119,23 +189,27 @@ set to result object of class `Set`.
 
 **Return:**
 
-Value of object.
+* Value of object.
 
 **Example:**
 
 ```cpp
-set = new Set([1,2,3]);
-set &= new Set([2,3,4]);
-("set: %s\n" % set.to_string()).print();
+obj_0 = new Set([1,2,3,4,5]);
+obj_1 = new Set([1,2,6,7,8]);
+obj_0 &= obj_1;
+("obj_0: %s\n" % obj_0.to_string()).print();
 ```
 ```
-set: [2,3]
+obj_0: [1,2]
 ```
 
-#### Operator `operator_binary_pipe_equal#1`
-Set union operator `|=`. Creates object of class `Set` containing elements from
-both source objects of class `Set`. Value of variable is set to result object
-of class `Set`.
+<a name="operator_binary_pipe_equal#1" />
+
+### Operator [`operator_binary_pipe_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L983)
+
+Set union operator `|=`. Creates object of class `Set` containing elements
+from both source objects of class `Set`. Value of variable is set to result
+object of class `Set`.
 
 **Parameters:**
 
@@ -143,23 +217,28 @@ of class `Set`.
 
 **Return:**
 
-Value of object.
+* Value of object.
 
 **Example:**
 
 ```cpp
-set = new Set([1,2,3]);
-set |= new Set([2,3,4]);
-("set: %s\n" % set.to_string()).print();
+obj_0 = new Set([1,2,3,4,5]);
+obj_1 = new Set([1,2,6,7,8]);
+obj_0 |= obj_1;
+("obj_0: %s\n" % obj_0.to_string()).print();
 ```
 ```
-set: [1,2,3,4]
+obj_0: [1,2,3,4,5,6,7,8]
 ```
 
-#### Operator `operator_binary_circumflex_equal#1`
-Set symmetric difference operator `^=`. Creates object of class `Set` containing
-elements from both source objects of class `Set` that are contained exactly in
-one of them. Value of variable is set to result object of class `Set`.
+<a name="operator_binary_circumflex_equal#1" />
+
+### Operator [`operator_binary_circumflex_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1026)
+
+Set symmetric difference operator `^=`. Creates object of class `Set`
+containing elements from both source objects of class `Set` that are contained
+exactly in one of them. Value of variable is set to result object of class
+`Set`.
 
 **Parameters:**
 
@@ -167,22 +246,26 @@ one of them. Value of variable is set to result object of class `Set`.
 
 **Return:**
 
-Value of object.
+* Value of object.
 
 **Example:**
 
 ```cpp
-set = new Set([1,2,3]);
-set ^= new Set([2,3,4]);
-("set: %s\n" % set.to_string()).print();
+obj_0 = new Set([1,2,3,4,5]);
+obj_1 = new Set([1,2,6,7,8]);
+obj_0 ^= obj_1;
+("obj_0: %s\n" % obj_0.to_string()).print();
 ```
 ```
-set: [1,4]
+obj_0: [3,4,5,6,7,8]
 ```
 
-#### Operator `operator_binary_ampersand#1`
-Set intersection operator `&`. Creates object of class `Set` containing elements
-contained in both source objects of class `Set`.
+<a name="operator_binary_ampersand#1" />
+
+### Operator [`operator_binary_ampersand#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1069)
+
+Set intersection operator `&`. Creates object of class `Set` containing
+elements contained in both source objects of class `Set`.
 
 **Parameters:**
 
@@ -190,21 +273,26 @@ contained in both source objects of class `Set`.
 
 **Return:**
 
-Object of class `Set`.
+* Object of class `Set`.
 
 **Example:**
 
 ```cpp
-set = new Set([1,2,3]) & new Set([2,3,4]);
-("set: %s\n" % set.to_string()).print();
+obj_0 = new Set([1,2,3,4,5]);
+obj_1 = new Set([1,2,6,7,8]);
+res = obj_0 & obj_1;
+("res: %s\n" % res.to_string()).print();
 ```
 ```
-set: [2,3]
+res: [1,2]
 ```
 
-#### Operator `operator_binary_pipe#1`
-Set union operator `|`. Creates object of class `Set` containing elements
-from both source objects of class `Set`.
+<a name="operator_binary_pipe#1" />
+
+### Operator [`operator_binary_pipe#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1104)
+
+Set union operator `|`. Creates object of class `Set` containing elements from
+both source objects of class `Set`.
 
 **Parameters:**
 
@@ -212,22 +300,27 @@ from both source objects of class `Set`.
 
 **Return:**
 
-Object of class `Set`.
+* Object of class `Set`.
 
 **Example:**
 
 ```cpp
-set = new Set([1,2,3]) | new Set([2,3,4]);
-("set: %s\n" % set.to_string()).print();
+obj_0 = new Set([1,2,3,4,5]);
+obj_1 = new Set([1,2,6,7,8]);
+res = obj_0 | obj_1;
+("res: %s\n" % res.to_string()).print();
 ```
 ```
-set: [1,2,3,4]
+res: [1,2,3,4,5,6,7,8]
 ```
 
-#### Operator `operator_binary_circumflex#1`
-Set symmetric difference operator `^`. Creates object of class `Set` containing
-elements from both source objects of class `Set` that are contained exactly in
-one of them.
+<a name="operator_binary_circumflex#1" />
+
+### Operator [`operator_binary_circumflex#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1139)
+
+Set symmetric difference operator `^`. Creates object of class `Set`
+containing elements from both source objects of class `Set` that are contained
+exactly in one of them.
 
 **Parameters:**
 
@@ -235,21 +328,25 @@ one of them.
 
 **Return:**
 
-Object of class `Set`.
+* Object of class `Set`.
 
 **Example:**
 
 ```cpp
-set = new Set([1,2,3]) ^ new Set([2,3,4]);
-("set: %s\n" % set.to_string()).print();
+obj_0 = new Set([1,2,3,4,5]);
+obj_1 = new Set([1,2,6,7,8]);
+res = obj_0 ^ obj_1;
+("res: %s\n" % res.to_string()).print();
 ```
 ```
-set: [1,4]
+res: [3,4,5,6,7,8]
 ```
 
-#### Operator `operator_binary_double_equal#1`
-Comparison operator `==`. Compares object of class `Set` with method
-parameter and return `1` if objects has same value or `0` otherwise.
+<a name="operator_binary_double_equal#1" />
+
+### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1174)
+
+Comparison operator `==`. Compares object of class `Set` with method parameter and return `1` if objects has same value or `0` otherwise.
 
 **Parameters:**
 
@@ -257,27 +354,29 @@ parameter and return `1` if objects has same value or `0` otherwise.
 
 **Return:**
 
-Object of class `Integer`.
+* Object of class `Integer`.
   * `0` - method parameter has different value than object.
   * `1` - method parameter has same value as object.
 
 **Example:**
 
 ```cpp
-set_0 = new Set([1,2,3]);
-set_1 = new Set([1,2,4]);
-set_2 = set_0;
-("set_0 == set_1: %d\n" % (set_0 == set_1)).print();
-("set_0 == set_2: %d\n" % (set_0 == set_2)).print();
+obj_0 = new Set([1,2,3,4,5]);
+obj_1 = new Set([1,2,6,7,8]);
+obj_2 = obj_0;
+("obj_0 == obj_1: %d\n" % (obj_0 == obj_1)).print();
+("obj_0 == obj_2: %d\n" % (obj_0 == obj_2)).print();
 ```
 ```
-set_0 == set_1: 0
-set_0 == set_2: 1
+obj_0 == obj_1: 0
+obj_0 == obj_2: 1
 ```
 
-#### Operator `operator_binary_exclamation_equal#1`
-Comparison operator `!=`. Compares object of class `Set` with method parameter and
-return `0` if objects has same value or `1` otherwise.
+<a name="operator_binary_exclamation_equal#1" />
+
+### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1191)
+
+Comparison operator `!=`. Compares object of class `Set` with method parameter and return `0` if objects has same value or `1` otherwise.
 
 **Parameters:**
 
@@ -285,25 +384,28 @@ return `0` if objects has same value or `1` otherwise.
 
 **Return:**
 
-Object of class `Integer`.
+* Object of class `Integer`.
   * `0` - method parameter has same value as object.
   * `1` - method parameter has different value than object.
 
 **Example:**
 
 ```cpp
-set_0 = new Set([1,2,3]);
-set_1 = new Set([1,2,4]);
-set_2 = set_0;
-("set_0 != set_1: %d\n" % (set_0 != set_1)).print();
-("set_0 != set_2: %d\n" % (set_0 != set_2)).print();
+obj_0 = new Set([1,2,3,4,5]);
+obj_1 = new Set([1,2,6,7,8]);
+obj_2 = obj_0;
+("obj_0 != obj_1: %d\n" % (obj_0 != obj_1)).print();
+("obj_0 != obj_2: %d\n" % (obj_0 != obj_2)).print();
 ```
 ```
-set_0 != set_1: 1
-set_0 != set_2: 0
+obj_0 != obj_1: 1
+obj_0 != obj_2: 0
 ```
 
-#### Operator `operator_binary_rs_br_equal#1`
+<a name="operator_binary_rs_br_equal#1" />
+
+### Operator [`operator_binary_rs_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1208)
+
 Subset test operator `>=`. Test if object of class `Set` given by method
 parameter is subset of object of class `Set`.
 
@@ -313,24 +415,31 @@ parameter is subset of object of class `Set`.
 
 **Return:**
 
-Object of class `Integer`.
+* Object of class `Integer`.
   * `0` - method parameter is not subset of object.
   * `1` - method parameter is subset of object.
 
 **Example:**
 
 ```cpp
-set_0 = new Set([1,2,3]);
-set_1 = new Set([1,2,3,4]);
-("set_0 >= set_1: %d\n" % (set_0 >= set_1)).print();
-("set_1 >= set_0: %d\n" % (set_1 >= set_0)).print();
+obj_0 = new Set([1,2,3,4,5]);
+obj_1 = new Set(obj_0[0:2:]);
+("obj_0: %s\n" % obj_0.to_string()).print();
+("obj_1: %s\n" % obj_1.to_string()).print();
+("obj_0 >= obj_1: %d\n" % (obj_0 >= obj_1)).print();
+("obj_1 >= obj_0: %d\n" % (obj_1 >= obj_0)).print();
 ```
 ```
-set_0 >= set_1: 0
-set_1 >= set_0: 1
+obj_0: [1,2,3,4,5]
+obj_1: [1,2,3]
+obj_0 >= obj_1: 1
+obj_1 >= obj_0: 0
 ```
 
-#### Operator `operator_binary_ls_br_equal#1`
+<a name="operator_binary_ls_br_equal#1" />
+
+### Operator [`operator_binary_ls_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1239)
+
 Superset test operator `<=`. Test if object of class `Set` given by method
 parameter is superset of object of class `Set`.
 
@@ -340,27 +449,32 @@ parameter is superset of object of class `Set`.
 
 **Return:**
 
-Object of class `Integer`.
+* Object of class `Integer`.
   * `0` - method parameter is not superset of object.
   * `1` - method parameter is superset of object.
 
 **Example:**
 
 ```cpp
-set_0 = new Set([1,2,3]);
-set_1 = new Set([1,2,3,4]);
-("set_0 <= set_1: %d\n" % (set_0 <= set_1)).print();
-("set_1 <= set_0: %d\n" % (set_1 <= set_0)).print();
+obj_0 = new Set([1,2,3,4,5]);
+obj_1 = new Set(obj_0[0:2:]);
+("obj_0: %s\n" % obj_0.to_string()).print();
+("obj_1: %s\n" % obj_1.to_string()).print();
+("obj_0 <= obj_1: %d\n" % (obj_0 <= obj_1)).print();
+("obj_1 <= obj_0: %d\n" % (obj_1 <= obj_0)).print();
 ```
 ```
-set_0 <= set_1: 1
-set_1 <= set_0: 0
+obj_0: [1,2,3,4,5]
+obj_1: [1,2,3]
+obj_0 <= obj_1: 0
+obj_1 <= obj_0: 1
 ```
 
-#### Operator `operator_binary_plus#1`
-Concatenation operator `+`. Creates object of class `Set` containing elements
-of original object of class `Set` with inserted elements retrieved from
-method parameter.
+<a name="operator_binary_plus#1" />
+
+### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1270)
+
+Concatenation operator `+`. Creates object of class `Set` containing elements of original object of class `Set` concatenated with elements retrieved from method parameter.
 
 **Parameters:**
 
@@ -368,21 +482,25 @@ method parameter.
 
 **Return:**
 
-Object of class `Set` containing elements of original set extended by elements
-retrieved from method parameter.
+* Object of class `Set` containing elements of original object of class `Set` concatenated with elements retrieved from method parameter.
 
 **Example:**
 
 ```cpp
-set_0 = new Set([1,2,3]);
-set_1 = new Set([1,2,4]);
-("set_0 + set_1: %s\n" % (set_0 + set_1).to_string()).print();
+obj = new Set([1,2,3,4,5]);
+res = obj + [1,2,3,4,5];
+("obj: %s\n" % obj.to_string()).print();
+("res: %s\n" % res.to_string()).print();
 ```
 ```
-set_0 + set_1: [1,2,3,4]
+obj: [1,2,3,4,5]
+res: [1,2,3,4,5]
 ```
 
-#### Operator `operator_binary_minus#1`
+<a name="operator_binary_minus#1" />
+
+### Operator [`operator_binary_minus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1306)
+
 Set difference operator `-`. Creates object of class `Set` containing elements
 from first object of class `Set` that are not contained in second object of
 class `Set`.
@@ -393,196 +511,25 @@ class `Set`.
 
 **Return:**
 
-Object of class `Set`.
+* Object of class `Set`.
 
 **Example:**
 
 ```cpp
-set = new Set([1,2,3]) - new Set([2,3,4]);
-("set: %s\n" % set.to_string()).print();
+obj_0 = new Set([1,2,3,4,5]);
+obj_1 = new Set([1,2,6,7,8]);
+res = obj_0 - obj_1;
+("res: %s\n" % res.to_string()).print();
 ```
 ```
-set: [1]
+res: [3,4,5]
 ```
 
-#### Operator `operator_binary_le_br_re_br#1`
-Item selection operator `[]`. Retrieve element from object of class `Set`
-stored at requested index position.
+<a name="operator_binary_le_br_re_br#1" />
 
-**Parameters:**
+### Operator [`operator_binary_le_br_re_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1341)
 
-1. Type convertible to integer.
-
-**Return:**
-
-Object stored in object of class `Set` at position of requested index.
-
-**Example:**
-
-```cpp
-set = new Set([1,2,3]);
-("set: %s\n" % set.to_string()).print();
-("set[1]: %d\n" % set[1]).print();
-("set[2]: %d\n" % set[2]).print();
-```
-```
-set: [1,2,3]
-set[2]: 2
-set[3]: 3
-```
-
-## Methods
-
-#### Method `clear#0`
-Empty set. Release all elements stored in object of class `Set`.
-
-**Return:**
-
-Object of class `Blank`.
-
-**Example:**
-
-```cpp
-set = new Set([1,2,3]);
-("set: %s\n" % set.to_string()).print();
-set.clear();
-("set: %s\n" % set.to_string()).print();
-```
-```
-set: [1,2,3]
-set: []
-```
-
-#### Method `items#0`
-Retrieve elements contained in object of class `Set`. Elements are returned
-as object of class `Array`.
-
-**Return:**
-
-Object of class `Array` containing all elements of set.
-
-**Example:**
-
-```cpp
-set = new Set([1,2,3]);
-array = set.items();
-("type array: %s\n" % (type array).to_string()).print();
-("array: %s\n" % array.to_string()).print();
-```
-```
-type array: Array
-array: [1,2,3]
-```
-
-#### Method `insert#1`
-Insert method parameter to object of class `Set`.
-
-**Parameters:**
-
-1. Any type.
-
-**Return:**
-
-Object of class `Blank`.
-
-**Example:**
-
-```cpp
-set = new Set([1,2,3]);
-("set: %s\n" % set.to_string()).print();
-set.insert(3);
-set.insert(4);
-set.insert(5);
-("set: %s\n" % set.to_string()).print();
-```
-```
-set: [1,2,3]
-set: [1,2,3,4,5]
-```
-
-#### Method `remove#1`
-Remove element given by method parameter from object of class `Set`.
-
-**Parameters:**
-
-1. Any type.
-
-**Return:**
-
-Object of class `Blank`.
-
-**Example:**
-
-```cpp
-set = new Set([1,2,3]);
-("set: %s\n" % set.to_string()).print();
-set.remove(2);
-("set: %s\n" % set.to_string()).print();
-```
-```
-set: [1,2,3]
-set: [1,3]
-```
-
-#### Method `contain#1`
-Test if object of class `Set` contains object given by method parameter.
-
-**Parameters:**
-
-1. Any type.
-
-**Return:**
-
-Object of class `Integer`.
-  * `0` - object of class `Set` does not contains method parameter.
-  * `1` - object of class `Set` contains method parameter.
-
-**Example:**
-
-```cpp
-set = new Set([1,2,3]);
-("set: %s\n" % set.to_string()).print();
-("set.contain(2): %d\n" % set.contain(2)).print();
-("set.contain(3): %d\n" % set.contain(3)).print();
-("set.contain(4): %d\n" % set.contain(4)).print();
-```
-```
-set: [1,2,3]
-set.contain(2): 1
-set.contain(3): 1
-set.contain(4): 0
-```
-
-#### Method `compare#1`
-Compare object of class `Set` with method parameter.
-
-**Parameters:**
-
-1. Any type.
-
-**Return:**
-
-Object of class `Integer`.
-* `-1` - if object of class `Set` is lesser than method parameter.
-* `1` - if object of class `Set` is greater than method parameter.
-* `0` - if object of class `Set` is equal to method parameter.
-
-**Example:**
-
-```cpp
-set_0 = new Set([1,2,3]);
-set_1 = new Set([1,2,3,4]);
-("set_0.compare(set_1): %d\n" % set_0.compare(set_1)).print();
-("set_0.compare(set_0): %d\n" % set_0.compare(set_0)).print();
-("set_0.compare(0): %d\n" % set_0.compare(0)).print();
-```
-```
-set_0.compare(set_1): -1
-set_0.compare(set_0): 0
-set_0.compare(0): 1
-```
-
-#### Method `item#1`
+Item selection operator `[]`.
 Retrieve element from object of class `Set` stored at requested index position.
 
 **Parameters:**
@@ -591,23 +538,234 @@ Retrieve element from object of class `Set` stored at requested index position.
 
 **Return:**
 
-Object stored in object of class `Set` at position of requested index.
+ * Object stored in object of class `Set` at position of requested index.
 
 **Example:**
 
 ```cpp
-set = new Set([1,2,3]);
-("set: %s\n" % set.to_string()).print();
-("set.item(2): %d\n" % set.item(2)).print();
-("set.item(3): %d\n" % set.item(3)).print();
+obj = new Set([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+("obj[0]: %s\n" % obj[0].to_string()).print();
+("obj[2]: %s\n" % obj[2].to_string()).print();
+("obj[3]: %s\n" % obj[3].to_string()).print();
 ```
 ```
-set: [1,2,3]
-set.item(2): 2
-set.item(3): 3
+obj: [1,2,3,4,5]
+obj[0]: 1
+obj[2]: 2
+obj[3]: 3
 ```
 
-#### Method `first_idx#0`
+-----
+
+## Methods
+
+<a name="clear#0" />
+
+### Method [`clear#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1375)
+
+Release all elements stored in object of class `Set`.
+
+**Return:**
+
+* Object of class `Blank`.
+
+**Example:**
+
+```cpp
+obj = new Set([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+obj.clear();
+("obj: %s\n" % obj.to_string()).print();
+```
+```
+obj: [1,2,3,4,5]
+obj: []
+```
+
+<a name="items#0" />
+
+### Method [`items#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1405)
+
+Retrieve list of elements contained in object of class `Set`. Elements are returned as object of class `Array`.
+
+**Return:**
+
+* Object of class `Array` containing all elements.
+
+**Example:**
+
+```cpp
+obj = new Set([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+items = obj.items();
+("type items: %s\n" % (type items).to_string()).print();
+("items: %s\n" % items.to_string()).print();
+```
+```
+obj: [1,2,3,4,5]
+type items: Array
+items: [1,2,3,4,5]
+```
+
+<a name="insert#1" />
+
+### Method [`insert#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1439)
+
+Insert method parameter to object of class `Set`.
+
+**Parameters:**
+
+1. Any type.
+
+**Return:**
+
+* Object of class ``Blank``.
+
+**Example:**
+
+```cpp
+obj = new Set([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+obj.insert(5);
+obj.insert(6);
+obj.insert(7);
+("obj: %s\n" % obj.to_string()).print();
+```
+```
+obj: [1,2,3,4,5]
+obj: [1,2,3,4,5,6,7]
+```
+
+<a name="remove#1" />
+
+### Method [`remove#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1465)
+
+From object of class `Set` remove elements with value equal to value of method
+parameter.
+
+**Parameters:**
+
+1. Any type.
+
+**Return:**
+
+* Object of class `Blank`.
+
+**Example:**
+
+```cpp
+obj = new Set([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+obj.remove(2);
+obj.remove(4);
+("obj: %s\n" % obj.to_string()).print();
+```
+```
+obj: [1,2,3,4,5]
+obj: [1,3,5]
+```
+
+<a name="contain#1" />
+
+### Method [`contain#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1499)
+
+Test if object of class `Set` contains element with same value as object given by method parameter.
+
+**Parameters:**
+
+1. Any type.
+
+**Return:**
+
+Object of class ``Integer``.
+  * `0` - object of class `Set` does not contain method parameter.
+  * `1` - object of class `Set` does contain method parameter.
+
+**Example:**
+
+```cpp
+obj = new Set([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+("obj.contain(1): %d\n" % obj.contain(1)).print();
+("obj.contain(100): %d\n" % obj.contain(100)).print();
+```
+```
+obj: [1,2,3,4,5]
+obj.contain(1): 1
+obj.contain(100): 0
+```
+
+<a name="compare#1" />
+
+### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1524)
+
+Compare object of class `Set` with method parameter.
+
+**Parameters:**
+
+1. Any type.
+
+**Return:**
+
+* Integer `-1` if object of class `Set` is lesser than method parameter.
+* Integer `1` if object of class `Set` is greater than method parameter.
+* Integer `0` if object of class `Set` is equal to method parameter.
+
+**Example:**
+
+```cpp
+obj_0 = new Set([1,2,3,4,5]);
+obj_1 = new Set([1,2,6,7,8]);
+("obj_0.compare(obj_1): %d\n" % obj_0.compare(obj_1)).print();
+("obj_1.compare(obj_0): %d\n" % obj_1.compare(obj_0)).print();
+("obj_0.compare(obj_0): %d\n" % obj_0.compare(obj_0)).print();
+```
+```
+obj_0.compare(obj_1): -1
+obj_1.compare(obj_0): 1
+obj_0.compare(obj_0): 0
+```
+
+<a name="item#1" />
+
+### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1540)
+
+Retrieve element from object of class `Set` stored at requested index position.
+
+**Parameters:**
+
+1. Type convertible to integer.
+
+**Return:**
+
+* Object representing element in object of class `Set` at position of requested index.
+* Object of class `Blank` otherwise.
+
+**Example:**
+
+```cpp
+obj = new Set([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+idx = obj.first_idx();
+do {
+  ("obj.item(%d): %s\n" % [idx,obj.item(idx).to_string()]).print();
+  idx = obj.next_idx(idx);
+} while(Blank != idx);
+```
+```
+obj: [1,2,3,4,5]
+obj.item(0): 1
+obj.item(2): 2
+obj.item(3): 3
+obj.item(4): 4
+obj.item(5): 5
+```
+
+<a name="first_idx#0" />
+
+### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1545)
+
 Retrieve index of first element in object of class `Set`.
 
 **Return:**
@@ -618,17 +776,20 @@ Retrieve index of first element in object of class `Set`.
 **Example:**
 
 ```cpp
-set = new Set([1]);
-("set.first_idx(): %s\n" % set.first_idx().to_string()).print();
-set.remove(1);
-("set.first_idx(): %s\n" % set.first_idx().to_string()).print();
+obj = new Set([1,2,3,4,5]);
+("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
+obj.clear();
+("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
 ```
 ```
-set.first_idx(): 0
-set.first_idx(): <blank>
+obj.first_idx: 0
+obj.first_idx: <blank>
 ```
 
-#### Method `last_idx#0`
+<a name="last_idx#0" />
+
+### Method `spec` [`last_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1568)
+
 Retrieve index of last element in object of class `Set`.
 
 **Return:**
@@ -639,22 +800,21 @@ Retrieve index of last element in object of class `Set`.
 **Example:**
 
 ```cpp
-set = new Set([1,2,3]);
-("set.last_idx(): %s\n" % set.last_idx().to_string()).print();
-set.remove(3);
-("set.last_idx(): %s\n" % set.last_idx().to_string()).print();
-set.clear();
-("set.last_idx(): %s\n" % set.last_idx().to_string()).print();
+obj = new Set([1,2,3,4,5]);
+("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
+obj.clear();
+("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
 ```
 ```
-set.last_idx(): 3
-set.last_idx(): 2
-set.last_idx(): <blank>
+obj.last_idx: 5
+obj.last_idx: <blank>
 ```
 
-#### Method `next_idx#1`
-From object of class `Set` retrieve index of element following element
-identified by method parameter.
+<a name="next_idx#1" />
+
+### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1591)
+
+From object of class `Set` retrieve index of element following element identified by method parameter.
 
 **Parameters:**
 
@@ -662,31 +822,34 @@ identified by method parameter.
 
 **Return:**
 
-* Object of class `Integer` if there is some element following element
-  identified by method parameter.
+* Object of class `Integer` if there is some element following element identified by method parameter.
 * Object of class `Blank` otherwise.
 
 **Example:**
 
 ```cpp
-set = new Set([1,2,3]);
-("set: %s\n" % set.to_string()).print();
-idx = set.first_idx();
+obj = new Set([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+idx = obj.first_idx();
 do {
   ("idx: %s\n" % idx.to_string()).print();
-  idx = set.next_idx(idx);
+  idx = obj.next_idx(idx);
 } while(Blank != idx);
 ```
 ```
-set: [1,2,3]
+obj: [1,2,3,4,5]
 idx: 0
 idx: 2
 idx: 3
+idx: 4
+idx: 5
 ```
 
-#### Method `prev_idx#1`
-From object of class `Set` retrieve index of element preceding element
-identified by method parameter.
+<a name="prev_idx#1" />
+
+### Method `spec` [`prev_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1620)
+
+From object of class `Set` retrieve index of element preceding element identified by method parameter.
 
 **Parameters:**
 
@@ -694,107 +857,121 @@ identified by method parameter.
 
 **Return:**
 
-* Object of class `Integer` if there is some element preceding element
-  identified by method parameter.
+* Object of class `Integer` if there is some element preceding element identified by method parameter.
 * Object of class `Blank` otherwise.
 
 **Example:**
 
 ```cpp
-set = new Set([1,2,3]);
-("set: %s\n" % set.to_string()).print();
-idx = set.last_idx();
+obj = new Set([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+idx = obj.last_idx();
 do {
   ("idx: %s\n" % idx.to_string()).print();
-  idx = set.prev_idx(idx);
+  idx = obj.prev_idx(idx);
 } while(Blank != idx);
 ```
 ```
-set: [1,2,3]
+obj: [1,2,3,4,5]
+idx: 5
+idx: 4
 idx: 3
 idx: 2
 idx: 0
 ```
 
-#### Method `length#0`
+<a name="length#0" />
+
+### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1649)
+
 Retrieve count of elements in object of class `Set`.
 
 **Return:**
 
-Object of class `Integer`.
+* Object of class `Integer`.
 
 **Example:**
 
 ```cpp
-set = new Set([1,2,3]);
-("set.length(): %d\n" % set.length()).print();
-set.remove(2);
-("set.length(): %d\n" % set.length()).print();
+obj = new Set([1,2,3,4,5]);
+("obj.length(): %d\n" % obj.length()).print();
+obj.clear();
+("obj.length(): %d\n" % obj.length()).print();
 ```
 ```
-set.length(): 3
-set.length(): 2
+obj.length(): 5
+obj.length(): 0
 ```
 
-#### Method `to_string#0`
-Convert object of class `Set` to object of class `String`. Each element of
-set is converted to string by call of its `to_string#0` method. As separator
-of string values of elements is used character `,`.
+<a name="to_string#0" />
+
+### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1662)
+
+Convert object of class `Set` to object of class `String`.
+Each element of object of class `Set` is converted to string by call of its
+`to_string#0` method. As separator of string values is used character `,`.
 
 **Return:**
 
-Object of class `String`.
+* Object of class `String`.
 
 **Example:**
 
 ```cpp
-set = new Set([1,2,3]);
-("set: %s\n" % set.to_string()).print();
+obj = new Set([1,2,3,4,5]);
+("obj.to_string(): %s\n" % obj.to_string()).print();
 ```
 ```
-set: [1,2,3]
+obj.to_string(): [1,2,3,4,5]
 ```
 
-#### Method `to_string#1`
-Convert object of class `Set` to object of class `String`. Each element of
-set is converted to string by call of its `to_string#0` method. As separator
-of string values is used method parameter.
+<a name="to_string#1" />
+
+### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1707)
+
+Convert object of class `Set` to object of class `String`.
+Each element of object of class `Set` is converted to string by call of its
+`to_string#0` method. As separator of string values is used method parameter.
 
 **Parameters:**
 
-1. Object of class `String`.
+1. Object of class `String`. Separator of values formated to result string.
 
 **Return:**
 
-Object of class `String`.
+* Object of class `String`.
 
 **Example:**
 
 ```cpp
-set = new Set([1,2,3,new Set([1,2,3])]);
-("set: %s\n" % set.to_string("+")).print();
-("set: %s\n" % set.to_string("<->")).print();
+obj = new Set([1,2,3,4,5]);
+("obj.to_string(\"+\"): %s\n" % obj.to_string("+")).print();
+("obj.to_string(\"<->\"): %s\n" % obj.to_string("<->")).print();
 ```
 ```
-set: 1+2+3+[1,2,3]
-set: 1<->2<->3<->[1,2,3]
+obj.to_string("+"): 1+2+3+4+5
+obj.to_string("<->"): 1<->2<->3<->4<->5
 ```
 
-#### Method `print#0`
+<a name="print#0" />
+
+### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1765)
+
 Print string representation of object of class `Set` to standard output.
+Each element of object of class `Set` is printed by call of its `print#0`
+method. As separator of printed values is used character `,`.
 
 **Return:**
 
-Object of class `Blank`.
+* Object of class `Blank`.
 
 **Example:**
 
 ```cpp
-set = new Set([1,2,3]);
-set.print();
+obj = new Set([1,2,3,4,5]);
+obj.print();
 "\n".print();
 ```
 ```
-[1,2,3]
+[1,2,3,4,5]
 ```
-
