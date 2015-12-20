@@ -218,18 +218,16 @@ pi = 3.1415926535897932384626433;
       "create_large","'\\x7f'",
       "check_print","(\"%s: %%d\\n\" %% new Integer(%s)).print();"
     ]);/*}}}*/
-
-    class_Char["methods"] = new Dict(
+    CLASS_PROPERTIES["Integer"] = class_Integer = new Dict(
     [/*{{{*/
-      "Char#1", new MethodDescr(
-"Creates object of class `%s` from method parameter." % m_target_name,
-["Object of class %s or %s." % [doc_class_ref("Char"), doc_class_ref("Integer")]],
-new Blank(),"
-(\"obj: %%c\\n\" %% new Char(%s)).print();
-(\"obj: %%c\\n\" %% new Char(%s)).print();
-" % [get_property("Char","create_example"),"0x041"])
+      "description","Class describing signed 64bit integer numbers.",
+      "create_example","123",
+      "create_compare","0xff",
+      "create_zero","0",
+      "create_arith","567",
+      "create_small","2",
+      "create_large","0xffffffff"
     ]);/*}}}*/
-
     CLASS_PROPERTIES["Float"] = class_Float = new Dict(
     [/*{{{*/
       "description","Class describing 64bit real numbers.",
@@ -240,7 +238,6 @@ new Blank(),"
       "create_small","2.532",
       "create_large","56787236.67"
     ]);/*}}}*/
-
     CLASS_PROPERTIES["String"] = class_String = new Dict(
     [/*{{{*/
       "description","Class describing strings of one byte characters.",
