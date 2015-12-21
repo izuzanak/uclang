@@ -124,7 +124,7 @@ class Main
     "String", 3
   ]);/*}}}*/
 
-  // - command lne arguments -
+  // - command line arguments -
   m_arg_class;
   m_arg_modules;
   m_arg_file;
@@ -143,23 +143,36 @@ class Main
   {/*{{{*/
     code = [];
 
-    for (module <- m_arg_modules)
+    // - import requested modules -
+    if (m_arg_modules.length() > 0)
     {
-      code.push("import %s;" % module);
+      for (module <- m_arg_modules)
+        code.push("import %s;" % module);
+
+      code.push("\n");
     }
 
-    code.push("
+    // - if extra code is requested for target class -
+    if (Blank != (extra_code = get_property(m_target_name,"extra_code")))
+    {
+      code.push(extra_code % a_code);
+    }
+    // - generate standard code -
+    else
+    {
+      code.push("
 class Main
 {
-  static public main(argv)
+  public static main(argv)
   {
-    %s
+%s
   }
 }
 " % a_code);
+    }
 
-    new File(SNIPPET_FILE,"w").write_close(code.to_string("\n"));
-    resp = new Pipe("./uclang %s" % SNIPPET_FILE,"r").read_close();
+    new File(SNIPPET_FILE,"w").write_close(code.to_string(""));
+    resp = new Pipe("./uclang %s 2>&1" % SNIPPET_FILE,"r").read_close();
 
     return resp;
   }/*}}}*/
@@ -263,6 +276,45 @@ pi = 3.1415926535897932384626433;
       "iter_next_idx", "%s.next_idx(%s)",
       "cont_remove_last", "%s.pop()",
       "cont_clear", "%s.clear()"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Error"] = new Dict(
+    [/*{{{*/
+      "description","Class describing objects identifying various error types.",
+      "create_compare","new Mutex().unlock()"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Exception"] = class_Exception = new Dict(
+    [/*{{{*/
+      "description","Class describing objects representing various types of exceptions.",
+      "create_example","new Exception(\"Simple exception\")"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Type"] = class_Type = new Dict(
+    [/*{{{*/
+      "description","Class describing one particular data type, by identification of its class.",
+      "create_example","type Integer",
+      "create_compare","type [1,2,3,4,5]"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Mutex"] = class_Mutex = new Dict(
+    [/*{{{*/
+      "description","Class representing system wide mutual exclusion objects."
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Thread"] = class_Thread = new Dict(
+    [/*{{{*/
+      "description","Class representing operating system threads.",
+      "extra_code","
+class Main
+{
+  public static parallel thread_fun(a_param)
+  {
+    return \"Thread return: \" + a_param;
+  }
+
+  public static main(argv)
+  {
+%s
+  }
+}
+",
+      "create_example","thread_fun(\"Data\")"
     ]);/*}}}*/
     CLASS_PROPERTIES["Stack"] = new Dict(
     [/*{{{*/
@@ -370,6 +422,25 @@ grammar rules.
 
 Parser demo is introduced in script - [parser
 demo](https://github.com/izuzanak/uclang/blob/master/uclang_build/scripts/examples/demo_parser.ucl).",
+      "extra_code","
+class Main
+{
+  public parse_cb(a_state)
+  {
+    (\"a_state.rule_idx(): %%d\\n\" %% a_state.rule_idx()).print();
+  }
+
+  public Main(a_argv)
+  {
+%s
+  }
+
+  public static main(argv)
+  {
+    new Main(argv);
+  }
+}
+",
       "create_example_obj",
 "obj = new Parser(\"
   init_code: {}
@@ -386,7 +457,37 @@ demo](https://github.com/izuzanak/uclang/blob/master/uclang_build/scripts/exampl
       "description","Objects of class `%s` describes parsing state related to
 source string and object of class %s. Object of class `%s` is acquired as
 parameter of callback called from object of class %s." %
-[m_target_name,doc_class_ref("Parser"),m_target_name,doc_class_ref("Parser")]
+[m_target_name,doc_class_ref("Parser"),m_target_name,doc_class_ref("Parser")],
+      "extra_code","
+class Main
+{
+  public parse_cb(a_state)
+  {
+    %s
+  }
+
+  public Main(a_argv)
+  {
+    parser = new Parser(\"
+      init_code: {}
+      terminals: id {('_'+l).('_'+l+d)*} excl {'!'} _SKIP_ {w.w*} _END_ {'\\\\0'}
+      nonterminals: <start> <exp>
+      rules:
+        <start> -> <exp> _END_ ->> {}
+        <exp> -> excl <exp>    ->> {}
+        <exp> -> id            ->> {}
+    \");
+
+    parser.parse(\"!!test\",new Delegate(this,\"parse_cb\",1));
+  }
+
+  public static main(argv)
+  {
+    new Main(argv);
+  }
+}
+",
+      "create_example","a_state"
     ]);/*}}}*/
 
     if (m_target_name == "Char")
@@ -718,6 +819,246 @@ obj.resize(8);
       ]);/*}}}*/
     }
 
+    if (m_target_name == "Exception")
+    {
+      class_Exception["var_classes"] = new Dict(
+      [/*{{{*/
+        "built_in",new VarClassDescr("Built in exceptions")
+      ]);/*}}}*/
+      class_Exception["variables"] = new Dict(
+      [/*{{{*/
+        "USER_EXCEPTION",new VariableDescr(new Blank(),"built_in"),
+        "TODO_EXCEPTION",new VariableDescr(new Blank(),"built_in"),
+        "CLASS_DOES_NOT_CONTAIN_CONSTRUCTOR",new VariableDescr(new Blank(),"built_in"),
+        "CLASS_DOES_NOT_CONTAIN_METHOD",new VariableDescr(new Blank(),"built_in"),
+        "CLASS_DOES_NOT_CONTAIN_VARIABLE",new VariableDescr(new Blank(),"built_in"),
+        "CANNOT_ACCESS_PRIVATE_METHOD",new VariableDescr(new Blank(),"built_in"),
+        "CANNOT_ACCESS_PRIVATE_VARIABLE",new VariableDescr(new Blank(),"built_in"),
+        "METHOD_CANNOT_RETURN_VALUE",new VariableDescr(new Blank(),"built_in"),
+        "CANNOT_TEST_TYPE_VALUE",new VariableDescr(new Blank(),"built_in"),
+        "CANNOT_CONVERT_TYPE_TO_INTEGER",new VariableDescr(new Blank(),"built_in"),
+        "CANNOT_USE_NEGATIVE_NUMBER",new VariableDescr(new Blank(),"built_in"),
+        "SLICE_NOT_INTEGER_ARGUMENTS",new VariableDescr(new Blank(),"built_in"),
+        "SLICE_START_LESS_THAN_ZERO",new VariableDescr(new Blank(),"built_in"),
+        "SLICE_STOP_LESS_THAN_ZERO",new VariableDescr(new Blank(),"built_in"),
+        "SLICE_STEP_EQUAL_TO_ZERO",new VariableDescr(new Blank(),"built_in"),
+        "OBJECT_OF_CLASS_IS_NOT_ITERABLE",new VariableDescr(new Blank(),"built_in"),
+        "UNEXPECTED_END_OF_ITERABLE",new VariableDescr(new Blank(),"built_in"),
+        "BUILT_IN_NOT_IMPLEMENTED_METHOD",new VariableDescr(new Blank(),"built_in"),
+        "METHOD_NOT_DEFINED_WITH_PARAMETERS",new VariableDescr(new Blank(),"built_in"),
+        "WRONG_METHOD_PARAMETER_VALUE",new VariableDescr(new Blank(),"built_in"),
+        "DIVISION_BY_ZERO",new VariableDescr(new Blank(),"built_in"),
+        "NEGATIVE_SHIFT_COUNT",new VariableDescr(new Blank(),"built_in"),
+        "METHOD_NOT_RETURN_INTEGER",new VariableDescr(new Blank(),"built_in"),
+        "METHOD_NOT_RETURN_STRING",new VariableDescr(new Blank(),"built_in"),
+        "METHOD_NOT_RETURN_INDEX",new VariableDescr(new Blank(),"built_in"),
+        "INTEGER_BASE_OUT_OF_RANGE",new VariableDescr(new Blank(),"built_in"),
+        "INTEGER_CONVERT_INVALID_STRING",new VariableDescr(new Blank(),"built_in"),
+        "FLOAT_CONVERT_INVALID_STRING",new VariableDescr(new Blank(),"built_in"),
+        "STRING_FORMAT_NOT_ENOUGH_ARGUMENTS",new VariableDescr(new Blank(),"built_in"),
+        "STRING_FORMAT_WRONG_ARGUMENT_TYPE",new VariableDescr(new Blank(),"built_in"),
+        "STRING_FORMAT_ARGUMENT_FORMAT_ERROR",new VariableDescr(new Blank(),"built_in"),
+        "STRING_FORMAT_WRONG_FORMAT_SPECIFIER",new VariableDescr(new Blank(),"built_in"),
+        "STRING_FORMAT_NOT_ALL_ARGUMENTS_CONVERTED",new VariableDescr(new Blank(),"built_in"),
+        "STRING_INDEX_EXCEEDS_RANGE",new VariableDescr(new Blank(),"built_in"),
+        "STRING_WRONG_RANGE_INDEXES",new VariableDescr(new Blank(),"built_in"),
+        "STRING_CONVERT_FROM_INTEGER",new VariableDescr(new Blank(),"built_in"),
+        "STRING_CONVERT_FROM_FLOAT",new VariableDescr(new Blank(),"built_in"),
+        "ARRAY_INDEX_EXCEEDS_RANGE",new VariableDescr(new Blank(),"built_in"),
+        "ARRAY_CANNOT_RESIZE_TO_SMALLER_SIZE",new VariableDescr(new Blank(),"built_in"),
+        "ARRAY_NO_ELEMENTS",new VariableDescr(new Blank(),"built_in"),
+        "ARRAY_ELEMENT_ASSIGN_NOT_SAME_LENGTH",new VariableDescr(new Blank(),"built_in"),
+        "DELEGATE_NEGATIVE_PARAMETER_COUNT",new VariableDescr(new Blank(),"built_in"),
+        "DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD",new VariableDescr(new Blank(),"built_in"),
+        "DELEGATE_CALL_WRONG_PARAMETER_COUNT",new VariableDescr(new Blank(),"built_in"),
+        "DELEGATE_WRONG_RETURN_VALUE_TYPE",new VariableDescr(new Blank(),"built_in")
+      ]);/*}}}*/
+      class_Exception["methods"] = new Dict(
+      [/*{{{*/
+        "Exception#1", new MethodDescr(
+"Creates user exception (object of class `%s`) encapsulating object given by method parameter." % m_target_name,
+["Any type."],
+new Blank(),"
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % get_code(m_target_class,"obj","create_example")),
+        "throw#0", new MethodDescr(
+"Throws exception represented by object of class `%s`." % m_target_name,
+[],new Blank(),"
+try
+{
+  %s.throw();
+}
+catch (exc)
+{
+  (\"exc: %%s\\n\" %% exc.to_string()).print();
+}
+" % get_property(m_target_name,"create_example")),
+        "get_type#0", new MethodDescr(
+"Retrieve object of class %s representing type of exception." % doc_class_ref("Error"),
+[],"* Object of class %s." % doc_class_ref("Error"),"
+%s
+(\"obj.get_type(): %%s\\n\" %% obj.get_type().to_string()).print();
+" % get_code(m_target_class,"obj","create_example")),
+        "get_value#0", new MethodDescr(
+"Retrieve value encapsulated by object of type `%s`." % m_target_name,
+[],"* Any type.","
+%s
+(\"obj.get_value(): %%s\\n\" %% obj.get_value()).print();
+" % get_code(m_target_class,"obj","create_example")),
+        "get_file_name#0", new MethodDescr(
+"Return name of source file in which object of class `%s` was thrown." % m_target_name,
+[],"* Object of class %s if exception was thrown.
+* Object of class %s otherwise." % [doc_class_ref("String"),doc_class_ref("Blank")],"
+try {
+  %s
+  (\"obj.get_file_name(): %%s\\n\" %% obj.get_file_name().to_string()).print();
+  obj.throw();
+}
+catch (exc)
+{
+  (\"exc.get_file_name(): %%s\\n\" %% exc.get_file_name()).print();
+}
+" % get_code(m_target_class,"obj","create_example")),
+        "get_line#0", new MethodDescr(
+"Return line of source file in which object of class `%s` was thrown." % m_target_name,
+[],"* Object of class %s if exception was thrown.
+* Object of class %s otherwise." % [doc_class_ref("Integer"),doc_class_ref("Blank")],"
+try {
+  %s
+  (\"obj.get_line(): %%s\\n\" %% obj.get_line().to_string()).print();
+  obj.throw();
+}
+catch (exc)
+{
+  (\"exc.get_line(): %%d\\n\" %% exc.get_line()).print();
+}
+" % get_code(m_target_class,"obj","create_example")),
+        "error_print#0", new MethodDescr(
+"Print information about exception described by object of class `%s` to
+error output of process." % m_target_name,
+[],"* Object of class %s." % doc_class_ref("Blank"),"
+try {
+  %s.throw();
+}
+catch (exc)
+{
+  exc.error_print();
+}
+" % get_property(m_target_name,"create_example"))
+      ]);/*}}}*/
+    }
+
+    if (m_target_name == "Type")
+    {
+      class_Type["methods"] = new Dict(
+      [/*{{{*/
+        "Type#1", new MethodDescr(
+"Create object of class `%s` identifying type of method parameter." % m_target_name,
+["Any type."],
+new Blank(),"
+obj = new Type(\"Hello world\");
+(\"obj: %s\\n\" % obj.to_string()).print();
+")
+      ]);/*}}}*/
+    }
+
+    if (m_target_name == "Mutex")
+    {
+      class_Mutex["var_classes"] = new Dict(
+      [/*{{{*/
+        "error",new VarClassDescr("Error codes")
+      ]);/*}}}*/
+      class_Mutex["variables"] = new Dict(
+      [/*{{{*/
+        "ERROR_INVALID",new VariableDescr(new Blank(),"error"),
+        "ERROR_DEADLOCK",new VariableDescr(new Blank(),"error"),
+        "ERROR_BUSY",new VariableDescr(new Blank(),"error"),
+        "ERROR_PERMISSION",new VariableDescr(new Blank(),"error")
+      ]);/*}}}*/
+      class_Mutex["methods"] = new Dict(
+      [/*{{{*/
+        "lock#0", new MethodDescr(
+"Try to lock object of class `%s` by calling thread. If mutex is already
+locked, calling thread blocks until the mutex becomes available." %
+m_target_name,
+[],"* Object of class %s if object of class `%s` was successfully locked.
+* Object of class %s otherwise." % [doc_class_ref("Blank"),m_target_name,doc_class_ref("Error")],"
+%s
+(\"obj.lock(): %%s\\n\" %% obj.lock().to_string()).print();
+obj.unlock();
+" % get_code(m_target_class,"obj","create_example")),
+        "try_lock#0", new MethodDescr(
+"Try to lock object of class `%s` by calling thread. If mutex is already
+locked, method do not blocks and returns object of class %s immediately." %
+[m_target_name,doc_class_ref("Error")],
+[],"* Object of class %s if object of class `%s` was successfully locked.
+* Object of class %s otherwise." % [doc_class_ref("Blank"),m_target_name,doc_class_ref("Error")],"
+%s
+(\"obj.try_lock(): %%s\\n\" %% obj.try_lock().to_string()).print();
+obj.unlock();
+" % get_code(m_target_class,"obj","create_example")),
+        "unlock#0", new MethodDescr(
+"Unlock object of class `%s` owned by calling thread." % m_target_name,
+[],"* Object of class %s if object of class `%s` was successfully unlocked.
+* Object of class %s otherwise." % [doc_class_ref("Blank"),m_target_name,doc_class_ref("Error")],"
+%s
+obj.lock();
+(\"obj.unlock(): %%s\\n\" %% obj.unlock().to_string()).print();
+" % get_code(m_target_class,"obj","create_example"))
+      ]);/*}}}*/
+    }
+
+    if (m_target_name == "Thread")
+    {
+      class_Thread["var_classes"] = new Dict(
+      [/*{{{*/
+        "error",new VarClassDescr("Error codes")
+      ]);/*}}}*/
+      class_Thread["variables"] = new Dict(
+      [/*{{{*/
+        "ERROR_AGAIN",new VariableDescr(new Blank(),"error"),
+        "ERROR_SEARCH",new VariableDescr(new Blank(),"error"),
+        "ERROR_INVALID",new VariableDescr(new Blank(),"error"),
+        "ERROR_DEADLOCK",new VariableDescr(new Blank(),"error"),
+        "ERROR_BUSY",new VariableDescr(new Blank(),"error")
+      ]);/*}}}*/
+      class_Thread["methods"] = new Dict(
+      [/*{{{*/
+        "join#0", new MethodDescr(
+"Method waits for thread specified by object of class `%s` to terminate." % m_target_name,
+[],"* Value returned by entry method of successfully joined thread.
+* Object of class %s if thread was not joined." % doc_class_ref("Error"),"
+%s
+(\"obj.join(): %%s\\n\" %% obj.join().to_string()).print();
+" % get_code(m_target_class,"obj","create_example")),
+        "try_join#0", new MethodDescr(
+"Method tries to join thread specified by object of class `%s`. Method returns
+immediately even if thread was not yet terminated." % m_target_name,
+[],"* Value returned by entry method of successfully joined thread.
+* Object of class %s if thread was not joined." % doc_class_ref("Error"),"
+%s
+(\"obj.try_join(): %%s\\n\" %% obj.try_join().to_string()).print();
+Sys.sleep(100);
+(\"obj.try_join(): %%s\\n\" %% obj.try_join().to_string()).print();
+" % get_code(m_target_class,"obj","create_example")),
+        "detach#0", new MethodDescr(
+"Method marks thread specified by object of class `%s` as detached.
+When detached thread terminates its resources are released without need for
+joining." % m_target_name,
+[],"* Return object of class %s if thread was successfully detached.
+* Object of class %s otherwise." % [doc_class_ref("Blank"),doc_class_ref("Error")],"
+%s
+(\"obj.detach(): %%s\\n\" %% obj.detach().to_string()).print();
+" % get_code(m_target_class,"obj","create_example")),
+        "yield#0", new MethodDescr(
+"Method suspend thread execution in favor of other threads running in system.",
+[],"* Object of class %s." % doc_class_ref("Blank"),"
+(\"Thread.yield(): %s\\n\" % Thread.yield().to_string()).print();
+")
+      ]);/*}}}*/
+    }
+
     if (m_target_name == "Set")
     {
       class_Set["methods"] = new Dict(
@@ -985,8 +1326,44 @@ method parameter. Delegate accepts one parameter represented by object of class
 "Object of class %s to be called when reduction according to language grammar rule has occur." % doc_class_ref("Delegate")],
 "* Object of class %s." % doc_class_ref("Blank"),"
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+obj.parse(\"!!test\",new Delegate(this,\"parse_cb\",1));
 " % get_code(m_target_class,"obj","create_example"))
+      ]);/*}}}*/
+    }
+
+    if (m_target_name == "ParseState")
+    {
+      class_ParseState["methods"] = new Dict(
+      [/*{{{*/
+        "rule_idx#0", new MethodDescr(
+"Retrieve index of rule according to which reduction occurred.",
+[],"* Object of class %s representing index of rule according to which reduction occurred." % doc_class_ref("Integer"),"
+(\"a_state.rule_idx(): %d\\n\" % a_state.rule_idx()).print();
+"),
+        "rule_body#1", new MethodDescr(
+"Retrieve substring of parsed source string which is represented by item in
+rule body at position identified by index given as method parameter.",
+["Object of class %s representing index of rule item." % doc_class_ref("Integer")],
+"* Object of class %s." % doc_class_ref("String"),"
+if (a_state.rule_idx() == 1)
+  (\"%s - %s\\n\" % [a_state.rule_body(0),a_state.rule_body(1)]).print();
+else
+  (\"%s\\n\" % a_state.rule_body(0)).print();
+"),
+        "old_input_idx#0", new MethodDescr(
+"Retrieve index to source string that refers to beginning of last recognized
+terminal symbol.",
+[],"* Object of class %s representing index to source string that refers to
+  beginning of last recognized terminal symbol." % doc_class_ref("Integer"),"
+(\"a_state.old_input_idx(): %d\\n\" % a_state.old_input_idx()).print();
+"),
+        "input_idx#0", new MethodDescr(
+"Retrieve index to source string referring to first character that was not yet
+processed by parser.",
+[],"* Object of class %s representing index to source string referring to
+  first character that was not yet processed by parser." % doc_class_ref("Integer"),"
+(\"a_state.input_idx(): %d\\n\" % a_state.input_idx()).print();
+")
       ]);/*}}}*/
     }
 
@@ -1283,7 +1660,8 @@ method parameter. Delegate accepts one parameter represented by object of class
         var_class.m_defined = 1;
       }
 
-      a_class_vars.push("  * `%s.%s` - %s" % [class_name,var_name,variable.m_descr]);
+      a_class_vars.push("  * `%s.%s`%s" %
+        [class_name,var_name,Blank != variable.m_descr ? " - %s" % variable.m_descr : ""]);
     }
     else
     {
@@ -3627,6 +4005,8 @@ class_name);
                 m_meth_descr_lst.push("Print string representation of object of class `%s` to standard output." % class_name);
               }
 
+              m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Blank"));
+
               if (a_method.is_static())
               {
                 m_meth_ex_code = ("
@@ -3722,20 +4102,13 @@ method. As separator of printed values is used character `,`." % class_name);
     }
 
     // - generate return value if any -
-    if (method_type != METHOD_TYPE_CONSTRUCTOR)
+    if (method_type != METHOD_TYPE_CONSTRUCTOR &&
+        m_meth_return_lst.length() > 0)
     {
       method_lst.push("");
       method_lst.push("**Return:**");
       method_lst.push("");
-
-      if (m_meth_return_lst.length() > 0)
-      {
-        method_lst += m_meth_return_lst;
-      }
-      else
-      {
-        method_lst.push("* Object of class %s." % doc_class_ref("Blank"));
-      }
+      method_lst += m_meth_return_lst;
     }
 
     // - test example code snippet if any -

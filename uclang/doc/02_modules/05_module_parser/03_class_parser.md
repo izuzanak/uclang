@@ -124,7 +124,7 @@ method parameter. Delegate accepts one parameter represented by object of class
 **Example:**
 
 ```cpp
-parser = new Parser("
+obj = new Parser("
   init_code: {}
   terminals: id {('_'+l).('_'+l+d)*} excl {'!'} _SKIP_ {w.w*} _END_ {'\\0'}
   nonterminals: <start> <exp>
@@ -133,10 +133,13 @@ parser = new Parser("
     <exp> -> excl <exp>    ->> {}
     <exp> -> id            ->> {}
 ");
-parser.parse("!!!!test",new Delegate(this,"parse_cb",1));
+obj.parse("!!test",new Delegate(this,"parse_cb",1));
 ```
-
-More in description of class [`ParseState`](https://github.com/izuzanak/uclang/blob/master/uclang/doc/02_modules/05_module_parser/04_class_parse_state.md)
+```
+a_state.rule_idx(): 2
+a_state.rule_idx(): 1
+a_state.rule_idx(): 1
+```
 
 <a name="to_string#0" />
 
