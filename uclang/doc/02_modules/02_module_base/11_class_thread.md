@@ -32,6 +32,27 @@ Class representing operating system threads.
 
 -----
 
+## Example context
+
+All examples introduced below are executed in following context.
+
+```cpp
+class Main
+{
+  public static parallel thread_fun(a_param)
+  {
+    return "Thread return: " + a_param;
+  }
+
+  public static main(argv)
+  {
+--------------------------------- example code ---------------------------------
+  }
+}
+```
+
+-----
+
 ## Operators
 
 <a name="operator_binary_equal#1" />

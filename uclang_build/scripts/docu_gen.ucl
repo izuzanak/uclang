@@ -1642,33 +1642,6 @@ processed by parser.",
 
   // - generators -
 
-  public process_variable(a_class,a_var,a_class_vars)
-  {/*{{{*/
-    class_name = a_class.name();
-    var_name = a_var.name();
-
-    if (CLASS_PROPERTIES[m_target_name]["variables"].has_key(var_name))
-    {
-      variable = CLASS_PROPERTIES[m_target_name]["variables"][var_name];
-      var_class = CLASS_PROPERTIES[m_target_name]["var_classes"][variable.m_var_class];
-
-      if (!var_class.m_defined)
-      {
-        a_class_vars.push("");
-        a_class_vars.push("* %s" % var_class.m_descr);
-
-        var_class.m_defined = 1;
-      }
-
-      a_class_vars.push("  * `%s.%s`%s" %
-        [class_name,var_name,Blank != variable.m_descr ? " - %s" % variable.m_descr : ""]);
-    }
-    else
-    {
-      a_class_vars.push("  * `%s.%s` - TODO variable description ..." % [class_name,var_name]);
-    }
-  }/*}}}*/
-
   public pm_params_list(a_param_classes)
   {/*{{{*/
 
@@ -1836,29 +1809,58 @@ obj = %s;
     }
   }/*}}}*/
 
+  public process_variable(a_class,a_var,a_class_vars)
+  {/*{{{*/
+    class_name = a_class.name();
+    var_name = a_var.name();
+
+    // - retrieve variable description -
+    if (CLASS_PROPERTIES[m_target_name]["variables"].has_key(var_name))
+    {
+      variable = CLASS_PROPERTIES[m_target_name]["variables"][var_name];
+      var_class = CLASS_PROPERTIES[m_target_name]["var_classes"][variable.m_var_class];
+
+      if (!var_class.m_defined)
+      {
+        a_class_vars.push("");
+        a_class_vars.push("* %s" % var_class.m_descr);
+
+        var_class.m_defined = 1;
+      }
+
+      a_class_vars.push("  * `%s.%s`%s" %
+        [class_name,var_name,Blank != variable.m_descr ? " - %s" % variable.m_descr : ""]);
+    }
+    else
+    {
+      a_class_vars.push("  * `%s.%s` - TODO variable description ..." % [class_name,var_name]);
+    }
+  }/*}}}*/
+
   public process_method(a_class,a_method,a_class_too,a_class_toc,a_class_tom,a_class_constrs,a_class_operators,a_class_methods)
   {/*{{{*/
     class_name = a_class.name();
     method_name = a_method.name();
 
+    // - process method name -
     name_split = method_name.split("#");
     method_name_wp = name_split[0];
     param_count = new Integer(name_split[1]);
 
-    // - type of method -
+    // - retrieve method type -
     method_type = METHOD_TYPE_UNKNOWN;
 
-    // - if method is constructor -
     if (method_name_wp == class_name)
     {
+      // - method is constructor -
       method_type = METHOD_TYPE_CONSTRUCTOR;
       method_lst = a_class_constrs;
     }
     else
     {
-      // - if method is operator -
       if (OPERATORS.has_key(method_name))
       {
+        // - method is operator -
         method_lst = a_class_operators;
         method_type = METHOD_TYPE_OPERATOR;
       }
@@ -1875,7 +1877,7 @@ obj = %s;
     // - retrieve special string -
     spec_str = SPECIAL_METHODS.has_key(method_name) ? "`spec` " : "";
 
-    // - create method lists -
+    // - create method describing lists -
     m_meth_descr_lst = [];
     m_meth_param_lsts = new Array[param_count];
     m_meth_return_lst = [];
@@ -4149,8 +4151,7 @@ TODO example result
     m_descr_lst.push("");
 
     // - retrieve class description -
-    class_descr = get_property(m_target_name,"description");
-    if (Blank != class_descr)
+    if (Blank != (class_descr = get_property(m_target_name,"description")))
     {
       m_descr_lst.push(class_descr);
     }
@@ -4159,9 +4160,12 @@ TODO example result
       m_descr_lst.push("TODO class description ...");
     }
 
+    // - tables of constructors, operators and methods -
     class_toc       = [];
     class_too       = [];
     class_tom       = [];
+
+    // - description of class properties -
     class_vars      = [];
     class_constrs   = [];
     class_operators = [];
@@ -4182,6 +4186,7 @@ TODO example result
     m_descr_lst.push("");
     m_descr_lst.push("-----");
 
+    // - generate list of static constants -
     if (class_vars.length() > 0)
     {
       m_descr_lst.push("");
@@ -4194,6 +4199,7 @@ TODO example result
     m_descr_lst.push("");
     m_descr_lst.push("## Table of methods");
 
+    // - generate table of constructors -
     if (class_toc.length() > 0)
     {
       m_descr_lst.push("");
@@ -4202,6 +4208,7 @@ TODO example result
       m_descr_lst += class_toc;
     }
 
+    // - generate table of operators -
     if (class_too.length() > 0)
     {
       m_descr_lst.push("");
@@ -4210,6 +4217,7 @@ TODO example result
       m_descr_lst += class_too;
     }
 
+    // - generate table of methods -
     if (class_tom.length() > 0)
     {
       m_descr_lst.push("");
@@ -4221,6 +4229,20 @@ TODO example result
     m_descr_lst.push("");
     m_descr_lst.push("-----");
 
+    // - generate context of examples -
+    if (Blank != (extra_code = get_property(m_target_name,"extra_code")))
+    {
+      m_descr_lst.push("");
+      m_descr_lst.push("## Example context");
+      m_descr_lst.push("");
+      m_descr_lst.push("All examples introduced below are executed in following context.");
+      m_descr_lst.push("");
+      m_descr_lst.push("```cpp%s```" % (extra_code % "--------------------------------- example code ---------------------------------"));
+      m_descr_lst.push("");
+      m_descr_lst.push("-----");
+    }
+
+    // - generate description of constructors -
     if (class_constrs.length() > 0)
     {
       m_descr_lst.push("");
@@ -4230,6 +4252,7 @@ TODO example result
       m_descr_lst.push("-----");
     }
 
+    // - generate description of operators -
     if (class_operators.length() > 0)
     {
       m_descr_lst.push("");
@@ -4239,6 +4262,7 @@ TODO example result
       m_descr_lst.push("-----");
     }
 
+    // - generate description of methods -
     if (class_methods.length() > 0)
     {
       m_descr_lst.push("");

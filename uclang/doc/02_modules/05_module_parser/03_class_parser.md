@@ -28,6 +28,32 @@ demo](https://github.com/izuzanak/uclang/blob/master/uclang_build/scripts/exampl
 
 -----
 
+## Example context
+
+All examples introduced below are executed in following context.
+
+```cpp
+class Main
+{
+  public parse_cb(a_state)
+  {
+    ("a_state.rule_idx(): %d\n" % a_state.rule_idx()).print();
+  }
+
+  public Main(a_argv)
+  {
+--------------------------------- example code ---------------------------------
+  }
+
+  public static main(argv)
+  {
+    new Main(argv);
+  }
+}
+```
+
+-----
+
 ## Constructors
 
 <a name="Parser#1" />

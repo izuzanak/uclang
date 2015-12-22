@@ -23,6 +23,42 @@ parameter of callback called from object of class `Parser`.
 
 -----
 
+## Example context
+
+All examples introduced below are executed in following context.
+
+```cpp
+class Main
+{
+  public parse_cb(a_state)
+  {
+    --------------------------------- example code ---------------------------------
+  }
+
+  public Main(a_argv)
+  {
+    parser = new Parser("
+      init_code: {}
+      terminals: id {('_'+l).('_'+l+d)*} excl {'!'} _SKIP_ {w.w*} _END_ {'\\0'}
+      nonterminals: <start> <exp>
+      rules:
+        <start> -> <exp> _END_ ->> {}
+        <exp> -> excl <exp>    ->> {}
+        <exp> -> id            ->> {}
+    ");
+
+    parser.parse("!!test",new Delegate(this,"parse_cb",1));
+  }
+
+  public static main(argv)
+  {
+    new Main(argv);
+  }
+}
+```
+
+-----
+
 ## Operators
 
 <a name="operator_binary_equal#1" />
