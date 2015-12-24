@@ -14,7 +14,7 @@ class Main
 
     // If statement syntax
     //
-    // <command> -> if ( <condition> ) <command>
+    // <command> -> if ( <expression> ) <command>
     //
 
     Tutorial.note("If statement");
@@ -25,7 +25,7 @@ class Main
 
     // If else statement syntax
     //
-    // <command> -> if ( <condition> ) <command> else <command>
+    // <command> -> if ( <expression> ) <command> else <command>
     //
 
     Tutorial.note("If else statement");
@@ -40,10 +40,10 @@ class Main
 
     // Switch statement syntax
     //
-    // <command> -> switch ( <exp> )
+    // <command> -> switch ( <expression> )
     // {
-    //   case <exp> : <command>
-    //   case <exp> , <exp> , ... : <command>
+    //   case <expression> : <command>
+    //   case <expression> , <expression> , ... : <command>
     //   default : <command>
     // }
     //
@@ -131,7 +131,7 @@ class Main
     
     // Conditional expression syntax
     //
-    // <exp> -> <condition> ? <exp> : <exp>
+    // <expression> -> <expression> ? <expression> : <expression>
     //
 
     Tutorial.note("Conditional expression");

@@ -1,69 +1,39 @@
 # uclang - programming language
 
-Dynamic object-oriented, general-purpose, high-level programming language.
+Dynamic, object-oriented, general-purpose, high-level programming language.
 
 ## Language features
 
-Follows list of uclang programming language features, that are supported by
-its interpreter.
+Follows list of uclang features, that are supported by its interpreter.
 
 ### Feature list
 
 * Language syntax is designed to be easy to understand by C/C++ programmers.
   * Some syntax is derived from Java programming language.
-* Object oriented approach.
+* Strong object oriented approach.
   * Everything is object. 
   * No global functions at all.
-  * All actions are performed by calling methods of objects.
+  * All actions are performed by executing of methods.
 * Support for inheritance.
 * Support for exceptions.
 * Support for native threads, no GIL (Global Interpreter Lock).
-* Module system enabling creation of binary modules in C/C++.
-  * Language built in data types are implemented as language module.
-* Lightweight interpreter.
+* Module system designed for straightforward creation of binary modules in C/C++.
+  * Language built in data types are implemented as binary module.
+* Fast and lightweight interpreter.
 
 ## Motivation
 
 C/C++ are excellent programming languages, but they are quite heavy-footed when
-it comes to rapid development or prototyping.  With increasing computing power
-of today's computers, many high-level programming languages emerged.
+it comes to rapid development or prototyping.
 
-<!--
-Many of widely known high-level programming languages have indisputable
-influence on programing as we know it today. Some of these languages are even
-used as first programming language in programming courses (MIT - Python).
--->
+As programmer who started programming in Pascal programming language I was
+surprised by simplicity of C. If you keep in mind few basic concepts (data
+types, memory, pointers), all higher level features derives from it
+intuitively.
 
-As programmer who started programming in Pacal programming language I was
-surprised by simplicity of C. You just need to keep in mind few basic
-principles, and everything else in C language derives from these.  C++
-programming language extends set of basic principles by OOP (Object Oriented
-Programming) and references.
-
-It would be nice to have high-level programming language for fast prototyping
-and rapid development, that would be: simple, strong and unrestricted like
-C/C++ among compiled languages.
-
-<!--
-Advantages and drawbacks of some widespread high-level languages:
-
-* Python
-  * `-` Extraordinary language syntax to which everybody (including me) have to get used to.
-  * `-` Too many unnecessary global functions and keywords.
-  * `-` Global interpreter lock (GIL).
-  * `+` Sophisticated module system, no difference between binary and language modules.
-    * `+` Huge amount of native modules and libraries.
-  * `-` Heavyweight interpreters, that are not so easily deployable on embedded devices.
-
-* JavaScript
-  * C/C++ like syntax more or less.
-  * `+` Simple principles behind whole language.
-    * `-` Arrays implemented as objects.
-  * `+` Effective implementation and optimization (V8 JavaScript engine).
-  * `-` Too many pitfalls waiting on unexperienced JavaScript programmers.
-  * `-` One execution thread for process (not counting GC thread).
-    * `+` Simplicity of usage resulting from this characteristics.
--->
+It would be nice (at least fro me) to have high-level programming language for
+fast prototyping and rapid development, that would be: simple, strong and
+unrestricted like C/C++ among compiled languages.
 
 ### Motivation points
 
@@ -73,8 +43,9 @@ programming language:
 * C/C++ like syntax.
 * Language based on few simple principles.
 * Threading support without constraints (no GIL).
-* Module system, no difference between binary and language modules.
-* Lightweight interpreter, that can be deployed at embedded devices.
+* Implicit comparison by type and value, no `===` or `!==` and alike operators.
+* Module system, no difference between binary and uclang modules.
+* Lightweight interpreter, deployable on embedded devices.
 
 ## Documentation
 
@@ -107,7 +78,7 @@ Hello world!!!
 
 #### Dynamic variable types
 
-Variable type can be changed any time by assign operator.
+Type of variable can be changed any time by assign operator.
 
 ```cpp
 class Main
@@ -133,7 +104,8 @@ Value is of type Blank.
 
 #### Operators known from C/C++
 
-Standard operators known from C/C++ are supported.
+All standard operators known from C/C++ are supported, and have same intuitive
+functionality.
 
 ```cpp
 class Main
