@@ -1,8 +1,7 @@
 
 # Flow branching
 
-This document describes branching structures and syntax of loops used in
-uclang.
+This document describes branching structures used in uclang.
 
 ### If statement
 
