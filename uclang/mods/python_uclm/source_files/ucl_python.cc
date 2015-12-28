@@ -299,14 +299,14 @@ location_s *python_c::py_object_value(interpreter_thread_s &it,PyObject *pyo_obj
   }
   else if (PyInt_Check(pyo_obj))
   {
-    long long value = PyInt_AsLong(pyo_obj);
+    long long int value = PyInt_AsLong(pyo_obj);
 
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
     return new_location;
   }
   else if (PyLong_Check(pyo_obj))
   {
-    long long value = PyLong_AsLongLong(pyo_obj);
+    long long int value = PyLong_AsLongLong(pyo_obj);
 
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
     return new_location;

@@ -134,7 +134,7 @@ class mono_c
 
   public:
 
-  static inline bool int_value(MonoObject *mono_obj,long long &result);
+  static inline bool int_value(MonoObject *mono_obj,long long int &result);
 
   static inline void assembly_ref_inc();
   static inline void assembly_ref_dec(interpreter_thread_s &it);
@@ -203,7 +203,7 @@ inline MonoObject *mono_reference_s::get_item()
   {
     MonoArray *mono_array = (MonoArray *)mono_obj;
 
-    long long ll_idx;
+    long long int ll_idx;
     if (!mono_c::int_value(mono_key,ll_idx))
     {
       return NULL;
@@ -221,7 +221,7 @@ inline MonoObject *mono_reference_s::get_item()
   }
   if (mono_class == mono_c::list_class)
   {
-    long long ll_idx;
+    long long int ll_idx;
     if (!mono_c::int_value(mono_key,ll_idx))
     {
       return NULL;
@@ -262,7 +262,7 @@ inline bool mono_reference_s::set_item(MonoObject *mono_value)
   {
     MonoArray *mono_array = (MonoArray *)mono_obj;
 
-    long long ll_idx;
+    long long int ll_idx;
     if (!mono_c::int_value(mono_key,ll_idx))
     {
       return false;
@@ -282,7 +282,7 @@ inline bool mono_reference_s::set_item(MonoObject *mono_value)
   }
   if (mono_class == mono_c::list_class)
   {
-    long long ll_idx;
+    long long int ll_idx;
     if (!mono_c::int_value(mono_key,ll_idx))
     {
       return false;
@@ -315,7 +315,7 @@ inline bool mono_reference_s::set_item(MonoObject *mono_value)
  * inline methods of class mono_c
  */
 
-inline bool mono_c::int_value(MonoObject *mono_obj,long long &result)
+inline bool mono_c::int_value(MonoObject *mono_obj,long long int &result)
 {/*{{{*/
   MonoClass *mono_class = mono_object_get_class(mono_obj);
 

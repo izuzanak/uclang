@@ -1043,7 +1043,7 @@ bool bic_sys_method_getpid_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
-  long long result;
+  long long int result;
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
   result = getpid();
@@ -1065,7 +1065,7 @@ bool bic_sys_method_getuid_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
-  long long result;
+  long long int result;
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
   result = getuid();
@@ -1085,7 +1085,7 @@ bool bic_sys_method_getgid_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
-  long long result;
+  long long int result;
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
   result = getgid();
@@ -5637,7 +5637,7 @@ bool bic_timer_method_remain_0(interpreter_thread_s &it,unsigned stack_base,uli 
     unsigned r_idx = records.get_min_value_idx(records.root_idx);
     timer_record_s &record = records.data[r_idx].object;
 
-    long long result = record.target_stamp - timer_s::get_stamp();
+    long long int result = record.target_stamp - timer_s::get_stamp();
 
     BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
   }

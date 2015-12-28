@@ -4117,7 +4117,7 @@ built_in_class_s string_class =
 {/*{{{*/
   "String",
   c_modifier_public | c_modifier_final,
-  27, string_methods,
+  28, string_methods,
   0, string_variables,
   bic_string_consts,
   bic_string_init,
@@ -4235,6 +4235,11 @@ built_in_method_s string_methods[] =
     "replace#2",
     c_modifier_public | c_modifier_final,
     bic_string_method_replace_2
+  },
+  {
+    "contain#1",
+    c_modifier_public | c_modifier_final,
+    bic_string_method_contain_1
   },
   {
     "compare#1",
@@ -5537,7 +5542,7 @@ bool bic_string_method_get_idx_1(interpreter_thread_s &it,unsigned stack_base,ul
   string_s *string_ptr = (string_s *)dst_location->v_data_ptr;
   string_s *substr_ptr = (string_s *)src_0_location->v_data_ptr;
 
-  long long idx = string_ptr->get_idx(0,substr_ptr->size - 1,substr_ptr->data);
+  long long int idx = string_ptr->get_idx(0,substr_ptr->size - 1,substr_ptr->data);
 
   BIC_SET_RESULT_CONT_INDEX(idx);
 
@@ -5666,6 +5671,35 @@ bool bic_string_method_replace_2(interpreter_thread_s &it,unsigned stack_base,ul
   result_ptr->size = buffer.used;
 
   BIC_SET_RESULT_STRING(result_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_string_method_contain_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("contain#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  // - retrieve string pointers -
+  string_s *string_ptr = (string_s *)dst_location->v_data_ptr;
+  string_s *substr_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  unsigned idx = string_ptr->get_idx(0,substr_ptr->size - 1,substr_ptr->data);
+  long long int result = idx != c_idx_not_exist;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/

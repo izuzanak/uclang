@@ -3671,33 +3671,47 @@ obj = new Dict([1.0,\"One\",2.0,\"Two\",3.0,\"Three\"]);
             case "contain#1":
             {/*{{{*/
               if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
-              if (Blank == (elm_name = get_property(class_name,"iter_element_name")))
-                new Exception("Property \"iter_element_name\" of class \"%s\" is not defined" % class_name).throw();
 
-              if (class_is_container(a_class))
+              if (class_name == "String")
               {
-                m_meth_descr_lst.push("Test if object of class `%s` contains %s with same value as object given by method parameter." % [class_name,elm_name]);
-                m_meth_param_lsts[0].push("Any type.");
+                m_meth_descr_lst.push("Test if object of class `%s` contains substring equal to method parameter." % class_name);
+                m_meth_param_lsts[0].push("Object of class `%s`." % doc_class_ref("String"));
                 m_meth_return_lst.push("Object of class `%s`.
-  * `0` - object of class `%s` does not contain %s equal to method parameter.
-  * `1` - object of class `%s` does contain %s equal to method parameter." % [doc_class_ref("Integer"),class_name,elm_name,class_name,elm_name]);
+  * `0` - object of class `%s` does not contain substring equal to method parameter.
+  * `1` - object of class `%s` does contain substring equal to method parameter." % [doc_class_ref("Integer"),class_name,class_name]);
 
                 obj_code = get_code(a_class,"obj","create_example");
                 contain_values = get_code(a_class,0,"contain_values");
-
-                if (Blank != obj_code && Blank != contain_values)
+              }
+              else
+              {
+                if (class_is_container(a_class))
                 {
-                  m_meth_ex_code = ("
+                  if (Blank == (elm_name = get_property(class_name,"iter_element_name")))
+                    new Exception("Property \"iter_element_name\" of class \"%s\" is not defined" % class_name).throw();
+
+                  m_meth_descr_lst.push("Test if object of class `%s` contains %s with same value as object given by method parameter." % [class_name,elm_name]);
+                  m_meth_param_lsts[0].push("Any type.");
+                  m_meth_return_lst.push("Object of class `%s`.
+  * `0` - object of class `%s` does not contain %s equal to method parameter.
+  * `1` - object of class `%s` does contain %s equal to method parameter." % [doc_class_ref("Integer"),class_name,elm_name,class_name,elm_name]);
+
+                  obj_code = get_code(a_class,"obj","create_example");
+                  contain_values = get_code(a_class,0,"contain_values");
+                }
+              }
+
+              if (Blank != obj_code && Blank != contain_values)
+              {
+                m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
 " % obj_code);
 
-                  for (value <- contain_values)
-                  {
-                    val_str = type String == type value ? "\"%s\"" % value : $value;
-                    m_meth_ex_code += ("(\"obj.contain(%s): %%d\\n\" %% obj.contain(%s)).print();
+                for (value <- contain_values)
+                {
+                  val_str = type String == type value ? "\"%s\"" % value : $value;
+                  m_meth_ex_code += ("(\"obj.contain(%s): %%d\\n\" %% obj.contain(%s)).print();
 " % [val_str.replace("\"","\\\""),val_str]);
-                  }
                 }
               }
             }/*}}}*/

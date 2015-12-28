@@ -400,7 +400,7 @@ bool bic_http_server_method_timeout_0(interpreter_thread_s &it,unsigned stack_ba
   MHD_Daemon *daemon_ptr = srv_ptr->daemon_ptr;
 
   MHD_UNSIGNED_LONG_LONG mhd_timeout;
-  long long result;
+  long long int result;
 
   // - retrieve mhd timeout -
   if (MHD_get_timeout(daemon_ptr,&mhd_timeout) == MHD_YES)

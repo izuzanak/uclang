@@ -246,6 +246,7 @@ bool bic_string_method_range_2(interpreter_thread_s &it,unsigned stack_base,uli 
 bool bic_string_method_get_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_string_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_string_method_replace_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_string_method_contain_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_string_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_string_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_string_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

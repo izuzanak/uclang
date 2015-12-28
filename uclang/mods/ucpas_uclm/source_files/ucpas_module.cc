@@ -739,7 +739,7 @@ bool bic_pas_method_samples_count_0(interpreter_thread_s &it,unsigned stack_base
   pas_s::mutex.lock();
 
   // - retrieve count of samples in pas queue -
-  long long result = pas_s::sample_queue.used;
+  long long int result = pas_s::sample_queue.used;
 
   // - unlock pas data mutex -
   pas_s::mutex.unlock();
@@ -804,7 +804,7 @@ bool bic_pas_method_holding_0(interpreter_thread_s &it,unsigned stack_base,uli *
   // - lock pas data mutex -
   pas_s::mutex.lock();
 
-  long long result = pas_s::hold_counter > 0;
+  long long int result = pas_s::hold_counter > 0;
 
   // - unlock pas data mutex -
   pas_s::mutex.unlock();

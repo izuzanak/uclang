@@ -419,7 +419,7 @@ location_s *mono_c::mono_object_value(interpreter_thread_s &it,MonoObject *mono_
 
 #define MONO_OBJECT_UNBOX_INTEGER(TYPE) \
 {/*{{{*/\
-  long long value = *((TYPE *)mono_object_unbox(mono_obj));\
+  long long int value = *((TYPE *)mono_object_unbox(mono_obj));\
 \
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);\
   return new_location;\
