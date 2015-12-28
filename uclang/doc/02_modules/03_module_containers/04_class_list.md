@@ -704,13 +704,11 @@ Object of class ``Integer``.
 
 ```cpp
 obj = new List([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
 ("obj.contain(1): %d\n" % obj.contain(1)).print();
 ("obj.contain(2): %d\n" % obj.contain(2)).print();
 ("obj.contain(100): %d\n" % obj.contain(100)).print();
 ```
 ```
-obj: [1,2,3,4,5]
 obj.contain(1): 1
 obj.contain(2): 1
 obj.contain(100): 0

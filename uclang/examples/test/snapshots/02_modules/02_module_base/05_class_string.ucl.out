@@ -147,5 +147,13 @@ string.replace("new","old") -> Well hello brave old world!
 string.replace("ll","xx")   -> Wexx hexxo brave new world!
 string                      -> Well hello brave new world!
 
+=== String method contain ======================================================
+
+string                  -> Hello world!
+string.contain("Hello") -> 1
+string.contain("world") -> 1
+string.contain("Hi")    -> 0
+string                  -> Hello world!
+
 === Tutorial end ===============================================================
 

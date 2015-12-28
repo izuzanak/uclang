@@ -28,6 +28,7 @@ class Main
     // public final fill#1
     // public final get_idx#1
     // public final get_idxs#1
+    // public final contain#1
     // public final compare#1
     // public final item#1
     // public final first_idx#0
@@ -142,6 +143,14 @@ class Main
     array = [1,5,5,2,5];
     ("array             -> %s\n" % array.to_string()).print();
     ("array.get_idxs(5) -> %s\n" % array.get_idxs(5).to_string()).print();
+
+    Tutorial.note("Array method contain");
+    array = [1,2,3,4,5];
+    ("array            -> %s\n" % array.to_string()).print();
+    ("array.contain(2) -> %d\n" % array.contain(2)).print();
+    ("array.contain(4) -> %d\n" % array.contain(4)).print();
+    ("array.contain(6) -> %d\n" % array.contain(6)).print();
+    ("array            -> %s\n" % array.to_string()).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl

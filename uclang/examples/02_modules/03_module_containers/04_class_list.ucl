@@ -32,6 +32,7 @@ class Main
     // public final has_idx#1
     // public final get_idx#1
     // public final get_idxs#1
+    // public final contain#1
     // public final compare#1
     // public final item#1
     // public final first_idx#0
@@ -205,6 +206,14 @@ class Main
     ("list             -> %s\n" % list.to_string()).print();
     ("list.get_idxs(2) -> %s\n" % list.get_idxs(2).to_string()).print();
     ("list.get_idxs(3) -> %s\n" % list.get_idxs(3).to_string()).print();
+
+    Tutorial.note("List method contain#0");
+    list = new List([1,2,3,4,5]);
+    ("list            -> %s\n" % list.to_string()).print();
+    ("list.contain(2) -> %d\n" % list.contain(2)).print();
+    ("list.contain(4) -> %d\n" % list.contain(4)).print();
+    ("list.contain(6) -> %d\n" % list.contain(6)).print();
+    ("list            -> %s\n" % list.to_string()).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl

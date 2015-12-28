@@ -79,7 +79,7 @@ Class describing objects representing various types of exceptions.
 
 <a name="Exception#0" />
 
-### Constructor [`Exception#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7654)
+### Constructor [`Exception#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7688)
 
 Creates default object of class `Exception`.
 
@@ -95,7 +95,7 @@ obj: Exception
 
 <a name="Exception#1" />
 
-### Constructor [`Exception#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7668)
+### Constructor [`Exception#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7702)
 
 Creates user exception (object of class `Exception`) encapsulating object given by method parameter.
 
@@ -119,7 +119,7 @@ obj: Exception
 
 <a name="throw#0" />
 
-### Method [`throw#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7689)
+### Method [`throw#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7723)
 
 Throws exception represented by object of class `Exception`.
 
@@ -141,7 +141,7 @@ exc: Exception
 
 <a name="get_type#0" />
 
-### Method [`get_type#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7712)
+### Method [`get_type#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7746)
 
 Retrieve object of class `Error` representing type of exception.
 
@@ -161,7 +161,7 @@ obj.get_type(): error_USER_EXCEPTION
 
 <a name="get_value#0" />
 
-### Method [`get_value#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7725)
+### Method [`get_value#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7759)
 
 Retrieve value encapsulated by object of type `Exception`.
 
@@ -181,7 +181,7 @@ obj.get_value(): Simple exception
 
 <a name="get_file_name#0" />
 
-### Method [`get_file_name#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7743)
+### Method [`get_file_name#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7777)
 
 Return name of source file in which object of class `Exception` was thrown.
 
@@ -210,7 +210,7 @@ exc.get_file_name(): ./snippet.ucl
 
 <a name="get_line#0" />
 
-### Method [`get_line#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7769)
+### Method [`get_line#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7803)
 
 Return line of source file in which object of class `Exception` was thrown.
 
@@ -239,7 +239,7 @@ exc.get_line(): 10
 
 <a name="error_print#0" />
 
-### Method [`error_print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7793)
+### Method [`error_print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7827)
 
 Print information about exception described by object of class `Exception` to
 error output of process.
@@ -270,7 +270,7 @@ Simple exception
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7821)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7855)
 
 Convert object of class `Exception` to object of class `String`.
 This method returns name of class `Exception`.
@@ -290,7 +290,7 @@ Exception.to_string(): Exception
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7830)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7864)
 
 Print string representation of object of class `Exception` to standard output.
 This method prints name of class `Exception`.

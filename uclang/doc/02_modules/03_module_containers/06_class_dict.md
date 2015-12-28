@@ -571,13 +571,11 @@ Object of class ``Integer``.
 
 ```cpp
 obj = new Dict(["One",1,"Two",2,"Three",3]);
-("obj: %s\n" % obj.to_string()).print();
 ("obj.contain(\"One\"): %d\n" % obj.contain("One")).print();
 ("obj.contain(\"Two\"): %d\n" % obj.contain("Two")).print();
 ("obj.contain(\"Seven\"): %d\n" % obj.contain("Seven")).print();
 ```
 ```
-obj: [One:1,Two:2,Three:3]
 obj.contain("One"): 1
 obj.contain("Two"): 1
 obj.contain("Seven"): 0

@@ -145,6 +145,14 @@ list             -> [1,2,3,3,2,4]
 list.get_idxs(2) -> [1,4]
 list.get_idxs(3) -> [2,3]
 
+=== List method contain#0 ======================================================
+
+list            -> [1,2,3,4,5]
+list.contain(2) -> 1
+list.contain(4) -> 1
+list.contain(6) -> 0
+list            -> [1,2,3,4,5]
+
 === Difference of to_string#0 and to_string#1 ==================================
 
 list.to_string()        -> [1,2,3,4,5]

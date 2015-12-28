@@ -71,6 +71,14 @@ tree             -> [1,2,2,3,3,4]
 tree.get_idxs(2) -> [2,5]
 tree.get_idxs(3) -> [3,4]
 
+=== Tree method contain#0 ======================================================
+
+tree            -> [1,2,3,4,5]
+tree.contain(2) -> 1
+tree.contain(4) -> 1
+tree.contain(6) -> 0
+tree            -> [1,2,3,4,5]
+
 === Difference of to_string#0 and to_string#1 ==================================
 
 tree.to_string()        -> [1,2,3,4,5]

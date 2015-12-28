@@ -90,6 +90,14 @@ key  -> Four
 key  -> Two
 key  -> One
 
+=== Dict method contain#0 ======================================================
+
+dict                 -> [One:1,Two:2,Four:4,Three:3]
+dict.contain("One")  -> 1
+dict.contain("Two")  -> 1
+dict.contain("Five") -> 0
+dict                 -> [One:1,Two:2,Four:4,Three:3]
+
 === Difference of to_string#0 and to_string#1 ==================================
 
 dict.to_string()        -> [One:1,Two:2,Three:3]

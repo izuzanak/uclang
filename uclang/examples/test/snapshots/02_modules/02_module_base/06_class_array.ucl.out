@@ -98,6 +98,14 @@ array.get_idx(5) -> 1
 array             -> [1,5,5,2,5]
 array.get_idxs(5) -> [1,2,4]
 
+=== Array method contain =======================================================
+
+array            -> [1,2,3,4,5]
+array.contain(2) -> 1
+array.contain(4) -> 1
+array.contain(6) -> 0
+array            -> [1,2,3,4,5]
+
 === Difference of to_string#0 and to_string#1 ==================================
 
 array.to_string()        -> [1,2,3,4,5]

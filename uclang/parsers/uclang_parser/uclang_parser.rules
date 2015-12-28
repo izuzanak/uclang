@@ -2092,6 +2092,7 @@ rules:
       end
    }
 
+    $ -- convert to string --
    <A> -> dollar <A> ->>
    {
       if gen_parse_tree == 1 then

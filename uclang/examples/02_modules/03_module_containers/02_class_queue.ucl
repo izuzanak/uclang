@@ -22,6 +22,7 @@ class Main
     // public final insert#1
     // public final insert_ref#1
     // public final next#0
+    // public final contain#1
     // public final compare#1
     // public final item#1
     // public final first_idx#0
@@ -105,6 +106,14 @@ class Main
     ("queue.next() -> %s\n" % queue.next().to_string()).print();
     ("queue.next() -> %s\n" % queue.next().to_string()).print();
     ("queue        -> %s\n" % queue.to_string()).print();
+
+    Tutorial.note("Queue method contain");
+    queue = new Queue([1,2,3,4,5]);
+    ("queue            -> %s\n" % queue.to_string()).print();
+    ("queue.contain(2) -> %d\n" % queue.contain(2)).print();
+    ("queue.contain(4) -> %d\n" % queue.contain(4)).print();
+    ("queue.contain(6) -> %d\n" % queue.contain(6)).print();
+    ("queue            -> %s\n" % queue.to_string()).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl

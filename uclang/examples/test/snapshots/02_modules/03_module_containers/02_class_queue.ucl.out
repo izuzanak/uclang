@@ -65,6 +65,14 @@ queue.next() -> 2
 queue.next() -> 3
 queue        -> [4,5]
 
+=== Queue method contain =======================================================
+
+queue            -> [1,2,3,4,5]
+queue.contain(2) -> 1
+queue.contain(4) -> 1
+queue.contain(6) -> 0
+queue            -> [1,2,3,4,5]
+
 === Difference of to_string#0 and to_string#1 ==================================
 
 queue.to_string()        -> [1,2,3,4,5]

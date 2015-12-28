@@ -26,6 +26,7 @@ class Main
     // public final last_key#0
     // public final next_key#1
     // public final prev_key#1
+    // public final contain#1
     // public final compare#1
     // public final item#1
     // public final first_idx#0
@@ -138,6 +139,14 @@ class Main
       ("key  -> %s\n" % key.to_string()).print();
       key = dict.prev_key(key);
     }
+
+    Tutorial.note("Dict method contain#0");
+    dict = new Dict(["One",1,"Two",2,"Three",3,"Four",4]);
+    ("dict                 -> %s\n" % dict.to_string()).print();
+    ("dict.contain(\"One\")  -> %d\n" % dict.contain("One")).print();
+    ("dict.contain(\"Two\")  -> %d\n" % dict.contain("Two")).print();
+    ("dict.contain(\"Five\") -> %d\n" % dict.contain("Five")).print();
+    ("dict                 -> %s\n" % dict.to_string()).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl

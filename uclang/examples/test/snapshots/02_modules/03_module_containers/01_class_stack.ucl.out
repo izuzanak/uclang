@@ -65,6 +65,14 @@ stack.pop() -> 4
 stack.pop() -> 3
 stack       -> [1,2]
 
+=== Stack method contain =======================================================
+
+stack            -> [1,2,3,4,5]
+stack.contain(2) -> 1
+stack.contain(4) -> 1
+stack.contain(6) -> 0
+stack            -> [1,2,3,4,5]
+
 === Difference of to_string#0 and to_string#1 ==================================
 
 stack.to_string()        -> [1,2,3,4,5]

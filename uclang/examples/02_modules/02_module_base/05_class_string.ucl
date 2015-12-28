@@ -30,6 +30,7 @@ class Main
     // public final get_idx#1
     // public final get_idxs#1
     // public final replace#2
+    // public final contain#1
     // public final compare#1
     // public final item#1
     // public final first_idx#0
@@ -193,6 +194,14 @@ string";
     ("string.replace(\"new\",\"old\") -> %s\n" % string.replace("new","old")).print();
     ("string.replace(\"ll\",\"xx\")   -> %s\n" % string.replace("ll","xx")).print();
     ("string                      -> %s\n" % string).print();
+
+    Tutorial.note("String method contain");
+    string = "Hello world!";
+    ("string                  -> %s\n" % string).print();
+    ("string.contain(\"Hello\") -> %d\n" % string.contain("Hello")).print();
+    ("string.contain(\"world\") -> %d\n" % string.contain("world")).print();
+    ("string.contain(\"Hi\")    -> %d\n" % string.contain("Hi")).print();
+    ("string                  -> %s\n" % string).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl

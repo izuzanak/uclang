@@ -34,6 +34,7 @@ Class describing strings of one byte characters.
   * Method [`get_idx#1`](#get_idx%231)
   * Method [`get_idxs#1`](#get_idxs%231)
   * Method [`replace#2`](#replace%232)
+  * Method [`contain#1`](#contain%231)
   * Method [`compare#1`](#compare%231)
   * Method [`item#1`](#item%231)
   * Method [`first_idx#0`](#first_idx%230)
@@ -48,7 +49,7 @@ Class describing strings of one byte characters.
 
 <a name="String#0" />
 
-### Constructor [`String#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5074)
+### Constructor [`String#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5079)
 
 Creates default object of class `String`.
 
@@ -64,7 +65,7 @@ obj:
 
 <a name="String#1" />
 
-### Constructor [`String#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5079)
+### Constructor [`String#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5084)
 
 Creates object of class `String` from method parameter.
 
@@ -97,7 +98,7 @@ obj: Hi world!
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4417)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4422)
 
 Assignment operator `=`. Object of class `String` is replaced by method parameter.
 
@@ -124,7 +125,7 @@ obj: New value
 
 <a name="operator_binary_plus_equal#1" />
 
-### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4431)
+### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4436)
 
 Append and assign operator `+=`. Operator appends value of method parameter to value of object of class `String`.
 
@@ -151,7 +152,7 @@ obj: Hi world! How are you?
 
 <a name="operator_binary_asterisk_equal#1" />
 
-### Operator [`operator_binary_asterisk_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4470)
+### Operator [`operator_binary_asterisk_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4475)
 
 Repeat and assign operator `*=`. Repeat value of object of class `String` `x` times, where `x` is given by method parameter.
 
@@ -178,7 +179,7 @@ obj: Hi world!Hi world!Hi world!Hi world!Hi world!
 
 <a name="operator_binary_double_equal#1" />
 
-### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4507)
+### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4512)
 
 Comparison operator `==`. Compares object of class `String` with method parameter and return `1` if objects has same value or `0` otherwise.
 
@@ -208,7 +209,7 @@ obj_0 == obj_2: 1
 
 <a name="operator_binary_exclamation_equal#1" />
 
-### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4529)
+### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4534)
 
 Comparison operator `!=`. Compares object of class `String` with method parameter and return `0` if objects has same value or `1` otherwise.
 
@@ -238,7 +239,7 @@ obj_0 != obj_2: 0
 
 <a name="operator_binary_plus#1" />
 
-### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4551)
+### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4556)
 
 Append operator `+`. Append value of method parameter to value of object of class `String`.
 
@@ -264,7 +265,7 @@ res: Hi world! How are you?
 
 <a name="operator_binary_asterisk#1" />
 
-### Operator [`operator_binary_asterisk#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4588)
+### Operator [`operator_binary_asterisk#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4593)
 
 Repeat operator `*`. Repeat value of object of class `String` `x` times, where `x` is given by method parameter.
 
@@ -290,7 +291,7 @@ res: Hi world!Hi world!Hi world!Hi world!Hi world!
 
 <a name="operator_binary_percent#1" />
 
-### Operator [`operator_binary_percent#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4623)
+### Operator [`operator_binary_percent#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4628)
 
 String format operator `%`. Value of class `String` is formatted according to formating characters contained in it.
 
@@ -321,7 +322,7 @@ res: array:   1,2,3
 
 <a name="operator_binary_le_br_re_br#1" />
 
-### Operator [`operator_binary_le_br_re_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5067)
+### Operator [`operator_binary_le_br_re_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5072)
 
 Item selection operator `[]`.
 Retrieve element from object of class `String` stored at requested index position.
@@ -360,7 +361,7 @@ obj[4]: o
 
 <a name="create#1" />
 
-### Method `static` [`create#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5149)
+### Method `static` [`create#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5154)
 
 Create new object of class `String` which size is given by method parameter.
 
@@ -390,7 +391,7 @@ obj.length(): 12
 
 <a name="split#1" />
 
-### Method [`split#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5175)
+### Method [`split#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5180)
 
 Split object of class `String` to object of class ``Array`` containing one or more objects of class `String`.
 
@@ -416,7 +417,7 @@ res: [Hi,world!]
 
 <a name="join#1" />
 
-### Method [`join#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5238)
+### Method [`join#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5243)
 
 Objects of iterable which is given as method parameter are converted to
 strings by call of its to_string#0 method.  Result strings are then
@@ -448,7 +449,7 @@ res: numbers: 1 2 3 4 end
 
 <a name="head#1" />
 
-### Method [`head#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5353)
+### Method [`head#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5358)
 
 Retrieve substring of object of class `String` containing first `n` characters, where `n` is given by method parameter.
 
@@ -476,7 +477,7 @@ obj.head(-1): Hi world
 
 <a name="tail#1" />
 
-### Method [`tail#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5400)
+### Method [`tail#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5405)
 
 Retrieve substring of object of class `String` containing last `n` characters, where `n` is given by method parameter.
 
@@ -504,7 +505,7 @@ obj.tail(-3): world!
 
 <a name="range#2" />
 
-### Method [`range#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5447)
+### Method [`range#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5452)
 
 From object of class `String` retrieve substring identified by indexes of first and last character in source string.
 
@@ -533,7 +534,7 @@ obj.range(-1,-1): !
 
 <a name="get_idx#1" />
 
-### Method [`get_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5519)
+### Method [`get_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5524)
 
 Retrieve index of substring given by method parameter in object of class `String`.
 
@@ -562,7 +563,7 @@ obj.get_idx("Test"): <blank>
 
 <a name="get_idxs#1" />
 
-### Method [`get_idxs#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5547)
+### Method [`get_idxs#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5552)
 
 Retrieve all indexes of substring given by method parameter in object of class `String`.
 
@@ -590,7 +591,7 @@ obj.get_idxs("e"): [6,9,12,25,34,43,47]
 
 <a name="replace#2" />
 
-### Method [`replace#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5601)
+### Method [`replace#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5606)
 
 In object of class `String` replace all substrings given as first method parameter by string given as second method parameter.
 
@@ -615,9 +616,39 @@ res: Hello world!
 res: Hi universe!
 ```
 
+<a name="contain#1" />
+
+### Method [`contain#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5678)
+
+Test if object of class `String` contains substring equal to method parameter.
+
+**Parameters:**
+
+1. Object of class ``String``.
+
+**Return:**
+
+Object of class ``Integer``.
+  * `0` - object of class `String` does not contain substring equal to method parameter.
+  * `1` - object of class `String` does contain substring equal to method parameter.
+
+**Example:**
+
+```cpp
+obj = "Hi world!";
+("obj.contain(\"Hi\"): %d\n" % obj.contain("Hi")).print();
+("obj.contain(\"world\"): %d\n" % obj.contain("world")).print();
+("obj.contain(\"Hello\"): %d\n" % obj.contain("Hello")).print();
+```
+```
+obj.contain("Hi"): 1
+obj.contain("world"): 1
+obj.contain("Hello"): 0
+```
+
 <a name="compare#1" />
 
-### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5673)
+### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5707)
 
 Compare object of class `String` with method parameter.
 
@@ -648,7 +679,7 @@ obj_0.compare(obj_0): 0
 
 <a name="item#1" />
 
-### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5705)
+### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5739)
 
 Retrieve character from object of class `String` stored at requested index position.
 
@@ -687,7 +718,7 @@ obj.item(8): !
 
 <a name="first_idx#0" />
 
-### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5712)
+### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5746)
 
 Retrieve index of first character in object of class `String`.
 
@@ -711,7 +742,7 @@ obj.first_idx: <blank>
 
 <a name="next_idx#1" />
 
-### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5731)
+### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5765)
 
 From object of class `String` retrieve index of character following character identified by method parameter.
 
@@ -750,7 +781,7 @@ idx: 8
 
 <a name="length#0" />
 
-### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5764)
+### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5798)
 
 Retrieve count of characters in object of class `String`.
 
@@ -773,7 +804,7 @@ obj.length(): 0
 
 <a name="to_string#0" />
 
-### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5776)
+### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5810)
 
 Convert object of class `String` to object of class `String`.
 Reference counter of object is increased.
@@ -794,7 +825,7 @@ obj.to_string(): Hi world!
 
 <a name="print#0" />
 
-### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5788)
+### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L5822)
 
 Print object of class `String` to standard output.
 

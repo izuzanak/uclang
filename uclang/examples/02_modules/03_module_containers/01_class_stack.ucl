@@ -22,6 +22,7 @@ class Main
     // public final push#1
     // public final push_ref#1
     // public final pop#0
+    // public final contain#1
     // public final compare#1
     // public final item#1
     // public final first_idx#0
@@ -105,6 +106,14 @@ class Main
     ("stack.pop() -> %s\n" % stack.pop().to_string()).print();
     ("stack.pop() -> %s\n" % stack.pop().to_string()).print();
     ("stack       -> %s\n" % stack.to_string()).print();
+
+    Tutorial.note("Stack method contain");
+    stack = new Stack([1,2,3,4,5]);
+    ("stack            -> %s\n" % stack.to_string()).print();
+    ("stack.contain(2) -> %d\n" % stack.contain(2)).print();
+    ("stack.contain(4) -> %d\n" % stack.contain(4)).print();
+    ("stack.contain(6) -> %d\n" % stack.contain(6)).print();
+    ("stack            -> %s\n" % stack.to_string()).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl

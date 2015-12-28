@@ -24,6 +24,7 @@ class Main
     // public final remove#1
     // public final get_idx#1
     // public final get_idxs#1
+    // public final contain#1
     // public final compare#1
     // public final item#1
     // public final first_idx#0
@@ -115,6 +116,14 @@ class Main
     ("tree             -> %s\n" % tree.to_string()).print();
     ("tree.get_idxs(2) -> %s\n" % tree.get_idxs(2).to_string()).print();
     ("tree.get_idxs(3) -> %s\n" % tree.get_idxs(3).to_string()).print();
+
+    Tutorial.note("Tree method contain#0");
+    tree = new Tree([1,2,3,4,5]);
+    ("tree            -> %s\n" % tree.to_string()).print();
+    ("tree.contain(2) -> %d\n" % tree.contain(2)).print();
+    ("tree.contain(4) -> %d\n" % tree.contain(4)).print();
+    ("tree.contain(6) -> %d\n" % tree.contain(6)).print();
+    ("tree            -> %s\n" % tree.to_string()).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl
