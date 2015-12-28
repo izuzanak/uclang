@@ -36,6 +36,7 @@ Container class implementing abstract data type list.
   * Method [`has_idx#1`](#has_idx%231)
   * Method [`get_idx#1`](#get_idx%231)
   * Method [`get_idxs#1`](#get_idxs%231)
+  * Method [`contain#1`](#contain%231)
   * Method [`compare#1`](#compare%231)
   * Method [`item#1`](#item%231)
   * Method [`first_idx#0`](#first_idx%230)
@@ -53,7 +54,7 @@ Container class implementing abstract data type list.
 
 <a name="List#0" />
 
-### Constructor [`List#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L645)
+### Constructor [`List#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L650)
 
 Creates default object of class `List`.
 
@@ -69,7 +70,7 @@ obj: []
 
 <a name="List#1" />
 
-### Constructor [`List#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L650)
+### Constructor [`List#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L655)
 
 Creates object of class `List` containing elements retrieved from method parameter.
 
@@ -93,7 +94,7 @@ obj: [1,2,3,4,5]
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L527)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L532)
 
 Assignment operator `=`. Object of class `List` is replaced by method parameter.
 
@@ -120,7 +121,7 @@ obj: New value
 
 <a name="operator_binary_plus_equal#1" />
 
-### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L543)
+### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L548)
 
 Append operator `+=`. Append elements retrieved from method parameter to object of class `List`.
 
@@ -147,7 +148,7 @@ obj: [1,2,3,4,5,1,2,6,7,8]
 
 <a name="operator_binary_double_equal#1" />
 
-### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L571)
+### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L576)
 
 Comparison operator `==`. Compares object of class `List` with method parameter and return `1` if objects has same value or `0` otherwise.
 
@@ -177,7 +178,7 @@ obj_0 == obj_2: 1
 
 <a name="operator_binary_exclamation_equal#1" />
 
-### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L588)
+### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L593)
 
 Comparison operator `!=`. Compares object of class `List` with method parameter and return `0` if objects has same value or `1` otherwise.
 
@@ -207,7 +208,7 @@ obj_0 != obj_2: 0
 
 <a name="operator_binary_plus#1" />
 
-### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L605)
+### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L610)
 
 Concatenation operator `+`. Creates object of class `List` containing elements of original object of class `List` concatenated with elements retrieved from method parameter.
 
@@ -234,7 +235,7 @@ res: [1,2,3,4,5,1,2,3,4,5]
 
 <a name="operator_binary_le_br_re_br#1" />
 
-### Operator [`operator_binary_le_br_re_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L638)
+### Operator [`operator_binary_le_br_re_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L643)
 
 Item selection operator `[]`.
 Retrieve element from object of class `List` stored at requested index position.
@@ -269,7 +270,7 @@ obj[2]: 3
 
 <a name="clear#0" />
 
-### Method [`clear#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L672)
+### Method [`clear#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L677)
 
 Release all elements stored in object of class `List`.
 
@@ -292,7 +293,7 @@ obj: []
 
 <a name="items#0" />
 
-### Method [`items#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L698)
+### Method [`items#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L703)
 
 Retrieve list of elements contained in object of class `List`. Elements are returned as object of class `Array`.
 
@@ -317,7 +318,7 @@ items: [1,2,3,4,5]
 
 <a name="append#1" />
 
-### Method [`append#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L729)
+### Method [`append#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L734)
 
 Append method parameter to end of object of class `List`.
 
@@ -349,7 +350,7 @@ obj: [1,2,3,4,5,1,2,3]
 
 <a name="append_ref#1" />
 
-### Method [`append_ref#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L747)
+### Method [`append_ref#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L752)
 
 Append reference to method parameter to end of object of class `List`.
 
@@ -379,7 +380,7 @@ obj: [1,2,3,4,5,Hello world!]
 
 <a name="prepend#1" />
 
-### Method [`prepend#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L765)
+### Method [`prepend#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L770)
 
 Prepend method parameter before begining of object of class `List`.
 
@@ -411,7 +412,7 @@ obj: [3,2,1,1,2,3,4,5]
 
 <a name="prepend_ref#1" />
 
-### Method [`prepend_ref#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L783)
+### Method [`prepend_ref#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L788)
 
 Prepend reference to method parameter before begining of object of class `List`.
 
@@ -441,7 +442,7 @@ obj: [Hello world!,1,2,3,4,5]
 
 <a name="insert_before#2" />
 
-### Method [`insert_before#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L801)
+### Method [`insert_before#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L806)
 
 Insert second method parameter before element identified by first method parameter to object of class `List`.
 
@@ -472,7 +473,7 @@ obj: [1,4,5,6,2,3,4,5]
 
 <a name="insert_before_ref#2" />
 
-### Method [`insert_before_ref#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L834)
+### Method [`insert_before_ref#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L839)
 
 Insert reference to second method parameter before element identified by first method parameter to object of class `List`.
 
@@ -505,7 +506,7 @@ obj: [1,Hello world!,2,3,4,5]
 
 <a name="insert_after#2" />
 
-### Method [`insert_after#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L867)
+### Method [`insert_after#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L872)
 
 Insert second method parameter after element identified by first method parameter to object of class `List`.
 
@@ -536,7 +537,7 @@ obj: [1,2,6,5,4,3,4,5]
 
 <a name="insert_after_ref#2" />
 
-### Method [`insert_after_ref#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L900)
+### Method [`insert_after_ref#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L905)
 
 Insert reference to second method parameter after element identified by first method parameter to object of class `List`.
 
@@ -569,7 +570,7 @@ obj: [1,2,Hello world!,3,4,5]
 
 <a name="remove#1" />
 
-### Method [`remove#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L933)
+### Method [`remove#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L938)
 
 Remove element from object of class `List` stored at position given by method parameter.
 
@@ -597,7 +598,7 @@ obj: [3,4,5]
 
 <a name="has_idx#1" />
 
-### Method [`has_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L963)
+### Method [`has_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L968)
 
 Test if object of class `List` contains element with index given by method parameter.
 
@@ -628,7 +629,7 @@ obj.has_idx(100): 0
 
 <a name="get_idx#1" />
 
-### Method [`get_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1000)
+### Method [`get_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1005)
 
 From object of class `List`, retrieve index of first element equal to method parameter.
 
@@ -657,7 +658,7 @@ obj.get_idx(100): <blank>
 
 <a name="get_idxs#1" />
 
-### Method [`get_idxs#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1034)
+### Method [`get_idxs#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1039)
 
 From object of class `List`, retrieve indexes of elements that are equal to method parameter. Element indexes are returned as object of class ``Array``.
 
@@ -683,9 +684,41 @@ obj.get_idxs(2): [1,2,4]
 obj.get_idxs(100): []
 ```
 
+<a name="contain#1" />
+
+### Method [`contain#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1087)
+
+Test if object of class `List` contains element with same value as object given by method parameter.
+
+**Parameters:**
+
+1. Any type.
+
+**Return:**
+
+Object of class ``Integer``.
+  * `0` - object of class `List` does not contain element equal to method parameter.
+  * `1` - object of class `List` does contain element equal to method parameter.
+
+**Example:**
+
+```cpp
+obj = new List([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+("obj.contain(1): %d\n" % obj.contain(1)).print();
+("obj.contain(2): %d\n" % obj.contain(2)).print();
+("obj.contain(100): %d\n" % obj.contain(100)).print();
+```
+```
+obj: [1,2,3,4,5]
+obj.contain(1): 1
+obj.contain(2): 1
+obj.contain(100): 0
+```
+
 <a name="compare#1" />
 
-### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1082)
+### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1121)
 
 Compare object of class `List` with method parameter.
 
@@ -716,7 +749,7 @@ obj_0.compare(obj_0): 0
 
 <a name="item#1" />
 
-### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1098)
+### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1137)
 
 Retrieve element from object of class `List` stored at requested index position.
 
@@ -751,7 +784,7 @@ obj.item(4): 5
 
 <a name="first_idx#0" />
 
-### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1105)
+### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1144)
 
 Retrieve index of first element in object of class `List`.
 
@@ -775,7 +808,7 @@ obj.first_idx: <blank>
 
 <a name="last_idx#0" />
 
-### Method `spec` [`last_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1118)
+### Method `spec` [`last_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1157)
 
 Retrieve index of last element in object of class `List`.
 
@@ -799,7 +832,7 @@ obj.last_idx: <blank>
 
 <a name="next_idx#1" />
 
-### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1131)
+### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1170)
 
 From object of class `List` retrieve index of element following element identified by method parameter.
 
@@ -834,7 +867,7 @@ idx: 4
 
 <a name="prev_idx#1" />
 
-### Method `spec` [`prev_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1160)
+### Method `spec` [`prev_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1199)
 
 From object of class `List` retrieve index of element preceding element identified by method parameter.
 
@@ -869,7 +902,7 @@ idx: 0
 
 <a name="length#0" />
 
-### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1189)
+### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1228)
 
 Retrieve count of elements in object of class `List`.
 
@@ -892,7 +925,7 @@ obj.length(): 0
 
 <a name="to_string#0" />
 
-### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1202)
+### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1241)
 
 Convert object of class `List` to object of class `String`.
 Each element of object of class `List` is converted to string by call of its
@@ -914,7 +947,7 @@ obj.to_string(): [1,2,3,4,5]
 
 <a name="to_string#1" />
 
-### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1244)
+### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1283)
 
 Convert object of class `List` to object of class `String`.
 Each element of object of class `List` is converted to string by call of its
@@ -942,7 +975,7 @@ obj.to_string("<->"): 1<->2<->3<->4<->5
 
 <a name="print#0" />
 
-### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1299)
+### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_list.cc#L1338)
 
 Print string representation of object of class `List` to standard output.
 Each element of object of class `List` is printed by call of its `print#0`

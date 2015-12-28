@@ -258,6 +258,7 @@ pi = 3.1415926535897932384626433;
       "create_compare","\"How are you?\"",
       "create_repeated","\"This sentence contain more than one character 'e'.\"",
       "iter_indexes",[0,1,2,3,4],
+      "contain_values",["Hi","world","Hello"],
       "iter_index_name","index",
       "iter_element_name","character",
       "iter_first_idx", "%s.first_idx()",
@@ -374,6 +375,7 @@ class Main
       "create_example","new Dict([\"One\",1,\"Two\",2,\"Three\",3])",
       "create_compare","new Dict([\"One\",1,\"Two\",2,\"Three\",3,\"Four\",4])",
       "iter_indexes",["One","Two"],
+      "contain_values",["One","Two","Seven"],
       "iter_index_name","key",
       "iter_element_name","key",
       "iter_first_idx", "%s.first_idx()",
@@ -1481,6 +1483,18 @@ processed by parser.",
         if (class_is_container(a_class))
         {
           return [0,1,2];
+        }
+      }/*}}}*/
+      case "contain_values":
+      {/*{{{*/
+        if (Blank != (contain_values = get_property(class_name,"contain_values")))
+        {
+          return contain_values;
+        }
+
+        if (class_is_container(a_class))
+        {
+          return [1,2,100];
         }
       }/*}}}*/
       case "check_print":
@@ -3318,31 +3332,6 @@ obj.remove(%d);
                 }
               }
             }/*}}}*/
-            case "contain#1":
-            {/*{{{*/
-              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
-
-              if (class_is_container(a_class))
-              {
-                m_meth_descr_lst.push("Test if object of class `%s` contains element with same value as object given by method parameter." % class_name);
-                m_meth_param_lsts[0].push("Any type.");
-                m_meth_return_lst.push("Object of class `%s`.
-  * `0` - object of class `%s` does not contain method parameter.
-  * `1` - object of class `%s` does contain method parameter." % [doc_class_ref("Integer"),class_name,class_name]);
-
-                obj_code = get_code(a_class,"obj","create_example");
-
-                if (Blank != obj_code)
-                {
-                  m_meth_ex_code = ("
-%s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-(\"obj.contain(1): %%d\\n\" %% obj.contain(1)).print();
-(\"obj.contain(100): %%d\\n\" %% obj.contain(100)).print();
-" % obj_code);
-                }
-              }
-            }/*}}}*/
             case "fill#1":
             {/*{{{*/
               if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
@@ -3677,6 +3666,39 @@ obj = new Dict([1.0,\"One\",2.0,\"Two\",3.0,\"Three\"]);
 (\"obj.gre_key(2.1): %s\\n\" % obj.gre_key(2.1).to_string()).print();
 (\"obj.gre_key(3.2): %s\\n\" % obj.gre_key(3.2).to_string()).print();
 ");
+              }
+            }/*}}}*/
+            case "contain#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+              if (Blank == (elm_name = get_property(class_name,"iter_element_name")))
+                new Exception("Property \"iter_element_name\" of class \"%s\" is not defined" % class_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                m_meth_descr_lst.push("Test if object of class `%s` contains %s with same value as object given by method parameter." % [class_name,elm_name]);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("Object of class `%s`.
+  * `0` - object of class `%s` does not contain %s equal to method parameter.
+  * `1` - object of class `%s` does contain %s equal to method parameter." % [doc_class_ref("Integer"),class_name,elm_name,class_name,elm_name]);
+
+                obj_code = get_code(a_class,"obj","create_example");
+                contain_values = get_code(a_class,0,"contain_values");
+
+                if (Blank != obj_code && Blank != contain_values)
+                {
+                  m_meth_ex_code = ("
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % obj_code);
+
+                  for (value <- contain_values)
+                  {
+                    val_str = type String == type value ? "\"%s\"" % value : $value;
+                    m_meth_ex_code += ("(\"obj.contain(%s): %%d\\n\" %% obj.contain(%s)).print();
+" % [val_str.replace("\"","\\\""),val_str]);
+                  }
+                }
               }
             }/*}}}*/
             case "compare#1":

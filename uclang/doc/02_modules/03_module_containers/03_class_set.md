@@ -679,8 +679,8 @@ Test if object of class `Set` contains element with same value as object given b
 **Return:**
 
 Object of class ``Integer``.
-  * `0` - object of class `Set` does not contain method parameter.
-  * `1` - object of class `Set` does contain method parameter.
+  * `0` - object of class `Set` does not contain element equal to method parameter.
+  * `1` - object of class `Set` does contain element equal to method parameter.
 
 **Example:**
 
@@ -688,11 +688,13 @@ Object of class ``Integer``.
 obj = new Set([1,2,3,4,5]);
 ("obj: %s\n" % obj.to_string()).print();
 ("obj.contain(1): %d\n" % obj.contain(1)).print();
+("obj.contain(2): %d\n" % obj.contain(2)).print();
 ("obj.contain(100): %d\n" % obj.contain(100)).print();
 ```
 ```
 obj: [1,2,3,4,5]
 obj.contain(1): 1
+obj.contain(2): 1
 obj.contain(100): 0
 ```
 

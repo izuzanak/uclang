@@ -26,6 +26,7 @@ Container class implementing abstract data type stack.
   * Method [`push#1`](#push%231)
   * Method [`push_ref#1`](#push_ref%231)
   * Method [`pop#0`](#pop%230)
+  * Method [`contain#1`](#contain%231)
   * Method [`compare#1`](#compare%231)
   * Method [`item#1`](#item%231)
   * Method [`first_idx#0`](#first_idx%230)
@@ -43,7 +44,7 @@ Container class implementing abstract data type stack.
 
 <a name="Stack#0" />
 
-### Constructor [`Stack#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L523)
+### Constructor [`Stack#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L528)
 
 Creates default object of class `Stack`.
 
@@ -59,7 +60,7 @@ obj: []
 
 <a name="Stack#1" />
 
-### Constructor [`Stack#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L528)
+### Constructor [`Stack#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L533)
 
 Creates object of class `Stack` containing elements retrieved from method parameter.
 
@@ -83,7 +84,7 @@ obj: [1,2,3,4,5]
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L412)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L417)
 
 Assignment operator `=`. Object of class `Stack` is replaced by method parameter.
 
@@ -110,7 +111,7 @@ obj: New value
 
 <a name="operator_binary_plus_equal#1" />
 
-### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L428)
+### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L433)
 
 Append operator `+=`. Append elements retrieved from method parameter to object of class `Stack`.
 
@@ -137,7 +138,7 @@ obj: [1,2,3,4,5,1,2,6,7,8]
 
 <a name="operator_binary_double_equal#1" />
 
-### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L456)
+### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L461)
 
 Comparison operator `==`. Compares object of class `Stack` with method parameter and return `1` if objects has same value or `0` otherwise.
 
@@ -167,7 +168,7 @@ obj_0 == obj_2: 1
 
 <a name="operator_binary_exclamation_equal#1" />
 
-### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L473)
+### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L478)
 
 Comparison operator `!=`. Compares object of class `Stack` with method parameter and return `0` if objects has same value or `1` otherwise.
 
@@ -197,7 +198,7 @@ obj_0 != obj_2: 0
 
 <a name="operator_binary_plus#1" />
 
-### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L490)
+### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L495)
 
 Concatenation operator `+`. Creates object of class `Stack` containing elements of original object of class `Stack` concatenated with elements retrieved from method parameter.
 
@@ -228,7 +229,7 @@ res: [1,2,3,4,5,1,2,3,4,5]
 
 <a name="clear#0" />
 
-### Method [`clear#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L550)
+### Method [`clear#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L555)
 
 Release all elements stored in object of class `Stack`.
 
@@ -251,7 +252,7 @@ obj: []
 
 <a name="items#0" />
 
-### Method [`items#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L577)
+### Method [`items#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L582)
 
 Retrieve list of elements contained in object of class `Stack`. Elements are returned as object of class `Array`.
 
@@ -276,7 +277,7 @@ items: [1,2,3,4,5]
 
 <a name="push#1" />
 
-### Method [`push#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L607)
+### Method [`push#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L612)
 
 Insert method parameter to end of object of class `Stack`.
 
@@ -304,7 +305,7 @@ obj: [1,2,3,4,5,6,7]
 
 <a name="push_ref#1" />
 
-### Method [`push_ref#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L624)
+### Method [`push_ref#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L629)
 
 Insert reference to method parameter to end of object of class `Stack`.
 
@@ -333,7 +334,7 @@ obj: [1,2,3,4,5,Hello world!]
 
 <a name="pop#0" />
 
-### Method [`pop#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L641)
+### Method [`pop#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L646)
 
 Remove and return last element from object of class `Stack`.
 
@@ -357,9 +358,41 @@ obj.pop(): 4
 obj: [1,2,3]
 ```
 
+<a name="contain#1" />
+
+### Method [`contain#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L669)
+
+Test if object of class `Stack` contains element with same value as object given by method parameter.
+
+**Parameters:**
+
+1. Any type.
+
+**Return:**
+
+Object of class ``Integer``.
+  * `0` - object of class `Stack` does not contain element equal to method parameter.
+  * `1` - object of class `Stack` does contain element equal to method parameter.
+
+**Example:**
+
+```cpp
+obj = new Stack([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+("obj.contain(1): %d\n" % obj.contain(1)).print();
+("obj.contain(2): %d\n" % obj.contain(2)).print();
+("obj.contain(100): %d\n" % obj.contain(100)).print();
+```
+```
+obj: [1,2,3,4,5]
+obj.contain(1): 1
+obj.contain(2): 1
+obj.contain(100): 0
+```
+
 <a name="compare#1" />
 
-### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L664)
+### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L704)
 
 Compare object of class `Stack` with method parameter.
 
@@ -390,7 +423,7 @@ obj_0.compare(obj_0): 0
 
 <a name="item#1" />
 
-### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L680)
+### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L720)
 
 Retrieve element from object of class `Stack` stored at requested index position.
 
@@ -425,7 +458,7 @@ obj.item(4): 5
 
 <a name="first_idx#0" />
 
-### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L710)
+### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L750)
 
 Retrieve index of first element in object of class `Stack`.
 
@@ -449,7 +482,7 @@ obj.first_idx: <blank>
 
 <a name="last_idx#0" />
 
-### Method `spec` [`last_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L731)
+### Method `spec` [`last_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L771)
 
 Retrieve index of last element in object of class `Stack`.
 
@@ -476,7 +509,7 @@ obj.last_idx: <blank>
 
 <a name="next_idx#1" />
 
-### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L754)
+### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L794)
 
 From object of class `Stack` retrieve index of element following element identified by method parameter.
 
@@ -511,7 +544,7 @@ idx: 4
 
 <a name="prev_idx#1" />
 
-### Method `spec` [`prev_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L789)
+### Method `spec` [`prev_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L829)
 
 From object of class `Stack` retrieve index of element preceding element identified by method parameter.
 
@@ -546,7 +579,7 @@ idx: 0
 
 <a name="length#0" />
 
-### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L826)
+### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L866)
 
 Retrieve count of elements in object of class `Stack`.
 
@@ -569,7 +602,7 @@ obj.length(): 0
 
 <a name="to_string#0" />
 
-### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L839)
+### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L879)
 
 Convert object of class `Stack` to object of class `String`.
 Each element of object of class `Stack` is converted to string by call of its
@@ -591,7 +624,7 @@ obj.to_string(): [1,2,3,4,5]
 
 <a name="to_string#1" />
 
-### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L881)
+### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L921)
 
 Convert object of class `Stack` to object of class `String`.
 Each element of object of class `Stack` is converted to string by call of its
@@ -619,7 +652,7 @@ obj.to_string("<->"): 1<->2<->3<->4<->5
 
 <a name="print#0" />
 
-### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L936)
+### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_stack.cc#L976)
 
 Print string representation of object of class `Stack` to standard output.
 Each element of object of class `Stack` is printed by call of its `print#0`

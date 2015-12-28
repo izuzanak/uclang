@@ -26,6 +26,7 @@ Container class implementing abstract data type queue.
   * Method [`insert#1`](#insert%231)
   * Method [`insert_ref#1`](#insert_ref%231)
   * Method [`next#0`](#next%230)
+  * Method [`contain#1`](#contain%231)
   * Method [`compare#1`](#compare%231)
   * Method [`item#1`](#item%231)
   * Method [`first_idx#0`](#first_idx%230)
@@ -43,7 +44,7 @@ Container class implementing abstract data type queue.
 
 <a name="Queue#0" />
 
-### Constructor [`Queue#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L636)
+### Constructor [`Queue#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L641)
 
 Creates default object of class `Queue`.
 
@@ -59,7 +60,7 @@ obj: []
 
 <a name="Queue#1" />
 
-### Constructor [`Queue#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L641)
+### Constructor [`Queue#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L646)
 
 Creates object of class `Queue` containing elements retrieved from method parameter.
 
@@ -83,7 +84,7 @@ obj: [1,2,3,4,5]
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L525)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L530)
 
 Assignment operator `=`. Object of class `Queue` is replaced by method parameter.
 
@@ -110,7 +111,7 @@ obj: New value
 
 <a name="operator_binary_plus_equal#1" />
 
-### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L541)
+### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L546)
 
 Append operator `+=`. Append elements retrieved from method parameter to object of class `Queue`.
 
@@ -137,7 +138,7 @@ obj: [1,2,3,4,5,1,2,6,7,8]
 
 <a name="operator_binary_double_equal#1" />
 
-### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L569)
+### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L574)
 
 Comparison operator `==`. Compares object of class `Queue` with method parameter and return `1` if objects has same value or `0` otherwise.
 
@@ -167,7 +168,7 @@ obj_0 == obj_2: 1
 
 <a name="operator_binary_exclamation_equal#1" />
 
-### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L586)
+### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L591)
 
 Comparison operator `!=`. Compares object of class `Queue` with method parameter and return `0` if objects has same value or `1` otherwise.
 
@@ -197,7 +198,7 @@ obj_0 != obj_2: 0
 
 <a name="operator_binary_plus#1" />
 
-### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L603)
+### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L608)
 
 Concatenation operator `+`. Creates object of class `Queue` containing elements of original object of class `Queue` concatenated with elements retrieved from method parameter.
 
@@ -228,7 +229,7 @@ res: [1,2,3,4,5,1,2,3,4,5]
 
 <a name="clear#0" />
 
-### Method [`clear#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L663)
+### Method [`clear#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L668)
 
 Release all elements stored in object of class `Queue`.
 
@@ -251,7 +252,7 @@ obj: []
 
 <a name="items#0" />
 
-### Method [`items#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L687)
+### Method [`items#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L692)
 
 Retrieve list of elements contained in object of class `Queue`. Elements are returned as object of class `Array`.
 
@@ -276,7 +277,7 @@ items: [1,2,3,4,5]
 
 <a name="insert#1" />
 
-### Method [`insert#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L745)
+### Method [`insert#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L750)
 
 Insert method parameter to object of class `Queue`.
 
@@ -305,7 +306,7 @@ obj: [1,2,3,4,5,5,6,7]
 
 <a name="insert_ref#1" />
 
-### Method [`insert_ref#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L762)
+### Method [`insert_ref#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L767)
 
 Insert reference to method parameter to object of class `Queue`.
 
@@ -334,7 +335,7 @@ obj: [1,2,3,4,5,Hello world!]
 
 <a name="next#0" />
 
-### Method [`next#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L779)
+### Method [`next#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L784)
 
 Remove and return first element from object of class `Queue`.
 
@@ -358,9 +359,41 @@ obj.next(): 2
 obj: [3,4,5]
 ```
 
+<a name="contain#1" />
+
+### Method [`contain#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L807)
+
+Test if object of class `Queue` contains element with same value as object given by method parameter.
+
+**Parameters:**
+
+1. Any type.
+
+**Return:**
+
+Object of class ``Integer``.
+  * `0` - object of class `Queue` does not contain element equal to method parameter.
+  * `1` - object of class `Queue` does contain element equal to method parameter.
+
+**Example:**
+
+```cpp
+obj = new Queue([1,2,3,4,5]);
+("obj: %s\n" % obj.to_string()).print();
+("obj.contain(1): %d\n" % obj.contain(1)).print();
+("obj.contain(2): %d\n" % obj.contain(2)).print();
+("obj.contain(100): %d\n" % obj.contain(100)).print();
+```
+```
+obj: [1,2,3,4,5]
+obj.contain(1): 1
+obj.contain(2): 1
+obj.contain(100): 0
+```
+
 <a name="compare#1" />
 
-### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L802)
+### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L874)
 
 Compare object of class `Queue` with method parameter.
 
@@ -391,7 +424,7 @@ obj_0.compare(obj_0): 0
 
 <a name="item#1" />
 
-### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L818)
+### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L890)
 
 Retrieve element from object of class `Queue` stored at requested index position.
 
@@ -426,7 +459,7 @@ obj.item(4): 5
 
 <a name="first_idx#0" />
 
-### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L848)
+### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L920)
 
 Retrieve index of first element in object of class `Queue`.
 
@@ -453,7 +486,7 @@ obj.first_idx: <blank>
 
 <a name="last_idx#0" />
 
-### Method `spec` [`last_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L871)
+### Method `spec` [`last_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L943)
 
 Retrieve index of last element in object of class `Queue`.
 
@@ -477,7 +510,7 @@ obj.last_idx: <blank>
 
 <a name="next_idx#1" />
 
-### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L894)
+### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L966)
 
 From object of class `Queue` retrieve index of element following element identified by method parameter.
 
@@ -512,7 +545,7 @@ idx: 4
 
 <a name="prev_idx#1" />
 
-### Method `spec` [`prev_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L935)
+### Method `spec` [`prev_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L1007)
 
 From object of class `Queue` retrieve index of element preceding element identified by method parameter.
 
@@ -547,7 +580,7 @@ idx: 0
 
 <a name="length#0" />
 
-### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L972)
+### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L1044)
 
 Retrieve count of elements in object of class `Queue`.
 
@@ -570,7 +603,7 @@ obj.length(): 0
 
 <a name="to_string#0" />
 
-### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L985)
+### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L1057)
 
 Convert object of class `Queue` to object of class `String`.
 Each element of object of class `Queue` is converted to string by call of its
@@ -592,7 +625,7 @@ obj.to_string(): [1,2,3,4,5]
 
 <a name="to_string#1" />
 
-### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L1056)
+### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L1128)
 
 Convert object of class `Queue` to object of class `String`.
 Each element of object of class `Queue` is converted to string by call of its
@@ -620,7 +653,7 @@ obj.to_string("<->"): 1<->2<->3<->4<->5
 
 <a name="print#0" />
 
-### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L1140)
+### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_queue.cc#L1212)
 
 Print string representation of object of class `Queue` to standard output.
 Each element of object of class `Queue` is printed by call of its `print#0`
