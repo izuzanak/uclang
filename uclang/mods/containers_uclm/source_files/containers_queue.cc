@@ -8,7 +8,7 @@ built_in_class_s queue_class =
 {/*{{{*/
   "Queue",
   c_modifier_public | c_modifier_final,
-  22, queue_methods,
+  23, queue_methods,
   0, queue_variables,
   bic_queue_consts,
   bic_queue_init,
@@ -86,6 +86,11 @@ built_in_method_s queue_methods[] =
     "next#0",
     c_modifier_public | c_modifier_final,
     bic_queue_method_next_0
+  },
+  {
+    "contain#1",
+    c_modifier_public | c_modifier_final,
+    bic_queue_method_contain_1
   },
   {
     "compare#1",
@@ -795,6 +800,73 @@ bool bic_queue_method_next_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 
   pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(location_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_queue_method_contain_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  pointer_queue_s *queue_ptr = (pointer_queue_s *)dst_location->v_data_ptr;
+
+  long long int found = 0;
+  long long int result;
+
+  if (queue_ptr->used != 0)
+  {
+    unsigned fir_cnt;
+    unsigned sec_cnt;
+
+    if (queue_ptr->begin + queue_ptr->used > queue_ptr->size)
+    {
+      sec_cnt = queue_ptr->begin + queue_ptr->used - queue_ptr->size;
+      fir_cnt = queue_ptr->used - sec_cnt;
+    }
+    else
+    {
+      fir_cnt = queue_ptr->used;
+      sec_cnt = 0;
+    }
+
+    pointer *e_ptr = queue_ptr->data + queue_ptr->begin;
+    pointer *e_ptr_end = e_ptr + fir_cnt;
+
+    do
+    {
+      BIC_CALL_COMPARE(it,*e_ptr,src_0_location,operands[c_source_pos_idx],return false);
+
+      if (result == 0)
+      {
+        found = 1;
+        break;
+      }
+    }
+    while(++e_ptr < e_ptr_end);
+
+    if (sec_cnt != 0)
+    {
+      e_ptr = queue_ptr->data;
+      e_ptr_end = e_ptr + sec_cnt;
+
+      do
+      {
+        BIC_CALL_COMPARE(it,*e_ptr,src_0_location,operands[c_source_pos_idx],return false);
+
+        if (result == 0)
+        {
+          found = 1;
+          break;
+        }
+      }
+      while(++e_ptr < e_ptr_end);
+    }
+  }
+
+  pointer &res_location = it.data_stack[res_loc_idx];
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,found);
 
   return true;
 }/*}}}*/

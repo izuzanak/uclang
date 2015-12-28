@@ -8,7 +8,7 @@ built_in_class_s dict_class =
 {/*{{{*/
   "Dict",
   c_modifier_public | c_modifier_final,
-  28, dict_methods,
+  29, dict_methods,
   0, dict_variables,
   bic_dict_consts,
   bic_dict_init,
@@ -116,6 +116,11 @@ built_in_method_s dict_methods[] =
     "gre_key#1",
     c_modifier_public | c_modifier_final,
     bic_dict_method_gre_key_1
+  },
+  {
+    "contain#1",
+    c_modifier_public | c_modifier_final,
+    bic_dict_method_has_key_1
   },
   {
     "compare#1",

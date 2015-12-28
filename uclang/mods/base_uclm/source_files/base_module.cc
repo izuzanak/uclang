@@ -5803,7 +5803,7 @@ built_in_class_s array_class =
 {/*{{{*/
   "Array",
   c_modifier_public | c_modifier_final,
-  28, array_methods,
+  29, array_methods,
   0, array_variables,
   bic_array_consts,
   bic_array_init,
@@ -5911,6 +5911,11 @@ built_in_method_s array_methods[] =
     "get_idxs#1",
     c_modifier_public | c_modifier_final,
     bic_array_method_get_idxs_1
+  },
+  {
+    "contain#1",
+    c_modifier_public | c_modifier_final,
+    bic_array_method_contain_1
   },
   {
     "compare#1",
@@ -6800,6 +6805,41 @@ bool bic_array_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_base,ul
 
   pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_array_method_contain_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  pointer_array_s *array_ptr = (pointer_array_s *)dst_location->v_data_ptr;
+
+  long long int found = 0;
+  long long int result;
+
+  if (array_ptr->used != 0)
+  {
+    pointer *l_ptr = array_ptr->data;
+    pointer *l_ptr_end = l_ptr + array_ptr->used;
+
+    do
+    {
+      BIC_CALL_COMPARE(it,*l_ptr,src_0_location,operands[c_source_pos_idx],return false);
+
+      if (result == 0)
+      {
+        found = 1;
+        break;
+      }
+    }
+    while(++l_ptr < l_ptr_end);
+  }
+
+  pointer &res_location = it.data_stack[res_loc_idx];
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,found);
 
   return true;
 }/*}}}*/

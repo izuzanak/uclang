@@ -10,7 +10,7 @@ include "script_parser.h"
 const unsigned max_number_string_length = 12;
 
 // - callers of parse action functions -
-const unsigned c_script_parse_action_cnt = 180;
+const unsigned c_script_parse_action_cnt = 181;
 bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,script_parser_s &_this) =
 {/*{{{*/
 
@@ -171,6 +171,8 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
   pa_operator_binary_ls_br,
   pa_operator_binary_rs_br_equal,
   pa_operator_binary_ls_br_equal,
+
+  pa_presence_test,
   pa_null,
 
   pa_operator_binary_ampersand,
@@ -3077,6 +3079,44 @@ bool pa_operator_binary_ls_br_equal(string_s &source_string,script_parser_s &_th
   PA_OPERATOR_BINARY(operator_binary_ls_br_equal);
 
   debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_operator_binary_ls_br_equal\n"));
+
+  return true;
+}/*}}}*/
+
+bool pa_presence_test(string_s &source_string,script_parser_s &_this)
+{/*{{{*/
+  expression_descr_s &ed = _this.expression_descr;
+
+  // *****
+
+  // - position of created expression node -
+  unsigned tmp_node_idx = ed.tmp_expression.used;
+
+  ed.tmp_expression.push(c_node_type_object_method_call);
+  ed.tmp_expression.push(SET_SRC_POS(_this.source_idx,_this.old_input_idx));
+  ed.tmp_expression.push(c_built_in_method_idxs[c_built_in_method_contain_1]);
+  ed.tmp_expression.push(1);
+
+  idx_size_s *tei_ptr = ed.tmp_exp_info.data + ed.tmp_exp_info.used;
+  idx_size_s *tei_ptr_end = ed.tmp_exp_info.data + ed.tmp_exp_info.used - 2;
+
+  unsigned exp_size = 4;
+
+  do {
+    ed.tmp_expression.push((--tei_ptr)->ui_first);
+    exp_size += 1 + tei_ptr->ui_second;
+  } while(tei_ptr > tei_ptr_end);
+
+  ed.tmp_exp_info.used -= 2;
+
+  // - create expression info node -
+  ed.tmp_exp_info.push_blank();
+  idx_size_s &tmp_exp_info = ed.tmp_exp_info.last();
+
+  tmp_exp_info.ui_first = tmp_node_idx;
+  tmp_exp_info.ui_second = exp_size;
+
+  debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_presence_test\n"));
 
   return true;
 }/*}}}*/

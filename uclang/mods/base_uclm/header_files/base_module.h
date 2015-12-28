@@ -287,6 +287,7 @@ bool bic_array_method_last_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 bool bic_array_method_fill_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_array_method_get_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_array_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_array_method_contain_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_array_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_array_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_array_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

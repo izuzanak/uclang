@@ -8,7 +8,7 @@ built_in_class_s list_class =
 {/*{{{*/
   "List",
   c_modifier_public | c_modifier_final,
-  32, list_methods,
+  33, list_methods,
   0, list_variables,
   bic_list_consts,
   bic_list_init,
@@ -136,6 +136,11 @@ built_in_method_s list_methods[] =
     "get_idxs#1",
     c_modifier_public | c_modifier_final,
     bic_list_method_get_idxs_1
+  },
+  {
+    "contain#1",
+    c_modifier_public | c_modifier_final,
+    bic_list_method_contain_1
   },
   {
     "compare#1",
@@ -1075,6 +1080,40 @@ bool bic_list_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_base,uli
 
   pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_list_method_contain_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  pointer_list_s *list_ptr = (pointer_list_s *)dst_location->v_data_ptr;
+
+  long long int found = 0;
+  long long int result;
+
+  if (list_ptr->count != 0)
+  {
+    unsigned l_idx = list_ptr->first_idx;
+    do
+    {
+      BIC_CALL_COMPARE(it,list_ptr->data[l_idx].object,src_0_location,operands[c_source_pos_idx],return false);
+      if (result == 0)
+      {
+        found = 1;
+        break;
+      }
+
+      l_idx = list_ptr->next_idx(l_idx);
+    }
+    while(l_idx != c_idx_not_exist);
+  }
+
+  pointer &res_location = it.data_stack[res_loc_idx];
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,found);
 
   return true;
 }/*}}}*/

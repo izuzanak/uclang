@@ -46,6 +46,7 @@ const char *c_built_in_method_symbol_names[c_built_in_method_cnt] =
   "operator_unary_pre_tilde#0",
   "operator_binary_le_br_re_br#1",
 
+  "contain#1",
   "compare#1",
   "item#1",
   "first_idx#0",

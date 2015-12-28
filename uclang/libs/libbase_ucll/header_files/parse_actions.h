@@ -79,6 +79,7 @@ bool pa_operator_binary_rs_br(string_s &source_string,script_parser_s &_this);
 bool pa_operator_binary_ls_br(string_s &source_string,script_parser_s &_this);
 bool pa_operator_binary_rs_br_equal(string_s &source_string,script_parser_s &_this);
 bool pa_operator_binary_ls_br_equal(string_s &source_string,script_parser_s &_this);
+bool pa_presence_test(string_s &source_string,script_parser_s &_this);
 bool pa_operator_binary_ampersand(string_s &source_string,script_parser_s &_this);
 bool pa_operator_binary_pipe(string_s &source_string,script_parser_s &_this);
 bool pa_operator_binary_circumflex(string_s &source_string,script_parser_s &_this);

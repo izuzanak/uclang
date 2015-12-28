@@ -35,6 +35,7 @@ bool bic_tree_method_insert_1(interpreter_thread_s &it,unsigned stack_base,uli *
 bool bic_tree_method_remove_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_tree_method_get_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_tree_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tree_method_contain_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_tree_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_tree_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_tree_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

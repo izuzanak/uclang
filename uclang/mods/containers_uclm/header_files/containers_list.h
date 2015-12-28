@@ -43,6 +43,7 @@ bool bic_list_method_remove_1(interpreter_thread_s &it,unsigned stack_base,uli *
 bool bic_list_method_has_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_list_method_get_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_list_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_list_method_contain_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_list_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_list_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_list_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

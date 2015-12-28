@@ -3,7 +3,7 @@
 #define __BUILD_IN_H
 
 // - count of built in method names -
-const unsigned c_built_in_method_cnt = 48;
+const unsigned c_built_in_method_cnt = 49;
 
 // - indexes of built in methods -
 enum
@@ -48,6 +48,7 @@ enum
   c_operator_unary_pre_tilde,
   c_operator_binary_le_br_re_br,
 
+  c_built_in_method_contain_1,
   c_built_in_method_compare_1,
   c_built_in_method_item_1,
   c_built_in_method_first_idx_0,
