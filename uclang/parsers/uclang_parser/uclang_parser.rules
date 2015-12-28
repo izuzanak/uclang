@@ -127,6 +127,7 @@ terminals:
    question {'?'}
    colon {':'}
    tilde {'~'}
+   dollar {'$'}
 
    _SKIP_ {w.w*}
    _SKIP__ {'#'.!'\n'*.'\n'}
@@ -2075,6 +2076,19 @@ rules:
          table.insert(node_stack,this_idx);
       else
          print(table.concat(tabs,"").."type identification");
+      end
+   }
+
+   <A> -> dollar <A> ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"$ <exp>\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      else
+         print(table.concat(tabs,"").."convert to string");
       end
    }
 

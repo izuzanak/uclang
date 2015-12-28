@@ -106,6 +106,7 @@ bool pa_new_object(string_s &source_string,script_parser_s &_this);
 bool pa_new_objects_array(string_s &source_string,script_parser_s &_this);
 bool pa_free_object(string_s &source_string,script_parser_s &_this);
 bool pa_type_identification(string_s &source_string,script_parser_s &_this);
+bool pa_convert_to_string(string_s &source_string,script_parser_s &_this);
 bool pa_object_reference_copy(string_s &source_string,script_parser_s &_this);
 bool pa_conditional_expression(string_s &source_string,script_parser_s &_this);
 bool pa_class_access(string_s &source_string,script_parser_s &_this);

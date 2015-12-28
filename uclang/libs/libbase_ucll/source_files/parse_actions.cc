@@ -10,7 +10,7 @@ include "script_parser.h"
 const unsigned max_number_string_length = 12;
 
 // - callers of parse action functions -
-const unsigned c_script_parse_action_cnt = 179;
+const unsigned c_script_parse_action_cnt = 180;
 bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,script_parser_s &_this) =
 {/*{{{*/
 
@@ -223,6 +223,7 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
   pa_free_object,
 
   pa_type_identification,
+  pa_convert_to_string,
   pa_object_reference_copy,
 
   pa_conditional_expression,
@@ -3529,6 +3530,19 @@ bool pa_type_identification(string_s &source_string,script_parser_s &_this)
   tmp_exp_info.ui_second = exp_info.ui_second + 2;
 
   debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_type_identification\n"));
+
+  return true;
+}/*}}}*/
+
+bool pa_convert_to_string(string_s &source_string,script_parser_s &_this)
+{/*{{{*/
+  expression_descr_s &ed = _this.expression_descr;
+
+  // *****
+
+  PA_OBJECT_METHOD_CALL(c_built_in_method_idxs[c_built_in_method_to_string_0],0,_this.old_input_idx);
+
+  debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_convert_to_string\n"));
 
   return true;
 }/*}}}*/
