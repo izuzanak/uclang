@@ -136,7 +136,6 @@ int inst_call(inst_params_s *params)
   }
   else
   {
-
     // - proper call of method -
     if (!it.call_method(code,stack_base))
     {

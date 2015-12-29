@@ -6,7 +6,7 @@ include "base_module.h"
 // - BASE module -
 built_in_module_s module =
 {/*{{{*/
-  13,                   // Class count
+  14,                   // Class count
   base_classes,         // Classes
 
   0,                    // Error base index
@@ -33,6 +33,7 @@ built_in_class_s *base_classes[] =
   &thread_class,
   &delegate_class,
   &buffer_class,
+  &range_class,
 };/*}}}*/
 
 // - BASE error strings -
@@ -1727,10 +1728,10 @@ bool bic_char_operator_binary_percent(interpreter_thread_s &it,unsigned stack_ba
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  
+
   unsigned v_type;
   basic_64b v_data_ptr;
-  
+
   switch (src_0_location->v_type) {
   case c_bi_class_char:
     v_type = c_bi_class_char;
@@ -1741,17 +1742,17 @@ bool bic_char_operator_binary_percent(interpreter_thread_s &it,unsigned stack_ba
     v_data_ptr = (basic_64b)((char)dst_location->v_data_ptr % (long long int)src_0_location->v_data_ptr);
     break;
   break;
-  
+
   /* - ERROR - */
   default:
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_percent#1");
     new_exception->params.push(1);
     new_exception->params.push(src_0_location->v_type);
-    
+
     return false;
   }
-  
+
   BIC_SIMPLE_SET_RES(v_type,v_data_ptr);
 
   return true;
@@ -8931,6 +8932,332 @@ bool bic_buffer_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli 
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
   printf("Buffer");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class RANGE -
+built_in_class_s range_class =
+{/*{{{*/
+  "Range",
+  c_modifier_public | c_modifier_final,
+  6, range_methods,
+  0, range_variables,
+  bic_range_consts,
+  bic_range_init,
+  bic_range_clear,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};/*}}}*/
+
+built_in_method_s range_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_range_operator_binary_equal
+  },
+  {
+    "Range#2",
+    c_modifier_public | c_modifier_final,
+    bic_range_method_Range_2
+  },
+  {
+    "Range#3",
+    c_modifier_public | c_modifier_final,
+    bic_range_method_Range_3
+  },
+  {
+    "next_item#0",
+    c_modifier_public | c_modifier_final,
+    bic_range_method_next_item_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_range_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_range_method_print_0
+  }
+};/*}}}*/
+
+built_in_variable_s range_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_range_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_range_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (basic_64b)NULL;
+}/*}}}*/
+
+void bic_range_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  range_s *range_ptr = (range_s *)location_ptr->v_data_ptr;
+
+  // - if range exist -
+  if (range_ptr != NULL)
+  {
+    range_ptr->clear(it);
+    cfree(range_ptr);
+  }
+}/*}}}*/
+
+bool bic_range_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_range_method_Range_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != src_1_location->v_type)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  long long int result;
+  BIC_CALL_COMPARE(it,src_0_location,src_1_location,operands[c_source_pos_idx],return false);
+
+  // - create range object -
+  range_s *range_ptr = (range_s *)cmalloc(sizeof(range_s));
+  range_ptr->init();
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+  range_ptr->start_location = src_0_location;
+  range_ptr->actual_location = src_0_location;
+
+  src_1_location->v_reference_cnt.atomic_inc();
+  range_ptr->end_location = src_1_location;
+
+  uli *tmp_code = range_ptr->tmp_code;
+  tmp_code[0] = i_call;
+  tmp_code[1] = 1;
+
+  if (result <= 0)
+  {
+    range_ptr->type = c_range_type_ascending;
+    tmp_code[2] = c_built_in_method_idxs[c_operator_unary_post_double_plus];
+  }
+  else
+  {
+    range_ptr->type = c_range_type_descending;
+    tmp_code[2] = c_built_in_method_idxs[c_operator_unary_post_double_minus];
+  }
+
+  tmp_code[3] = c_idx_not_exist;
+  tmp_code[4] = c_idx_not_exist;
+  tmp_code[5] = 0;
+  tmp_code[6] = 0;
+  tmp_code[7] = 1;
+
+  // - set object pointer to result -
+  dst_location->v_data_ptr = (basic_64b)range_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_range_method_Range_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != src_1_location->v_type)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  long long int result;
+  BIC_CALL_COMPARE(it,src_0_location,src_1_location,operands[c_source_pos_idx],return false);
+
+  // - create range object -
+  range_s *range_ptr = (range_s *)cmalloc(sizeof(range_s));
+  range_ptr->init();
+
+  range_ptr->type = result <= 0 ? c_range_type_ascending : c_range_type_descending;
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+  range_ptr->start_location = src_0_location;
+  range_ptr->actual_location = src_0_location;
+
+  src_1_location->v_reference_cnt.atomic_inc();
+  range_ptr->end_location = src_1_location;
+
+  src_2_location->v_reference_cnt.atomic_inc();
+  range_ptr->step_location = src_2_location;
+
+  uli *tmp_code = range_ptr->tmp_code;
+  tmp_code[0] = i_call;
+  tmp_code[1] = 2;
+  tmp_code[2] = c_built_in_method_idxs[c_operator_binary_plus];
+  tmp_code[3] = c_idx_not_exist;
+  tmp_code[4] = c_idx_not_exist;
+  tmp_code[5] = 0;
+  tmp_code[6] = 0;
+  tmp_code[7] = 1;
+  tmp_code[8] = 2;
+
+  // - set object pointer to result -
+  dst_location->v_data_ptr = (basic_64b)range_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_range_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  range_s *range_ptr = (range_s *)dst_location->v_data_ptr;
+
+  if (range_ptr->actual_location == NULL)
+  {
+    pointer &res_location = it.data_stack[res_loc_idx];
+    BIC_SET_RESULT_BLANK();
+  }
+  else
+  {
+    uli *tmp_code = range_ptr->tmp_code;
+
+    // - retrieve next value -
+    {/*{{{*/
+      unsigned new_stack_base = it.data_stack.used;
+
+      // - push this location on stack -
+      ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
+      it.data_stack.push(it.blank_location);
+      
+      // - push first parameter on stack -
+      location_s *location = (location_s *)(range_ptr->actual_location);
+      location->v_reference_cnt.atomic_inc();
+      it.data_stack.push((pointer)location);
+      
+      if (range_ptr->step_location != NULL)
+      {
+        // - push second parameter on stack -
+        location_s *src_location = (location_s *)(range_ptr->step_location);
+        src_location->v_reference_cnt.atomic_inc();
+        it.data_stack.push((pointer)src_location);
+      }
+
+      // - set source position in temporary code -
+      tmp_code[icl_source_pos] = operands[c_source_pos_idx];
+
+      // - test if caller address for built in class is stored -
+      if (tmp_code[icl_last_class] == range_ptr->actual_location->v_type)
+      {
+        // - call built in method -
+        if (!((bi_method_caller_dt)(tmp_code[icl_last_bi_mc]))(it,new_stack_base,tmp_code + icl_source_pos))
+        {
+          it.release_stack_from(new_stack_base);
+
+          return false;
+        }
+      }
+      else
+      {
+        // - proper call of method -
+        if (!it.call_method(tmp_code,new_stack_base))
+        {
+          it.release_stack_from(new_stack_base);
+
+          return false;
+        }
+      }
+
+      // - get result value -
+      location_s *ret_location = (location_s *)it.data_stack[new_stack_base];
+      ret_location->v_reference_cnt.atomic_inc();
+
+      // - get original value -
+      location_s *this_location = (location_s *)it.data_stack[new_stack_base + 1];
+      this_location->v_reference_cnt.atomic_inc();
+
+      pointer &res_location = it.data_stack[res_loc_idx];
+
+      if (range_ptr->step_location == NULL)
+      {
+        it.release_location_ptr(range_ptr->actual_location);
+        range_ptr->actual_location = this_location;
+
+        BIC_SET_RESULT(ret_location);
+      }
+      else
+      {
+        it.release_location_ptr(range_ptr->actual_location);
+        range_ptr->actual_location = ret_location;
+
+        BIC_SET_RESULT(this_location);
+      }
+
+      it.release_stack_from(new_stack_base);
+    }/*}}}*/
+
+    // - compare actual value with end value -
+    long long int result;
+    BIC_CALL_COMPARE(it,range_ptr->actual_location,range_ptr->end_location,operands[c_source_pos_idx],return false);
+
+    // - if actual value is greater than end value -
+    if ((range_ptr->type == c_range_type_ascending) ? result > 0 : result < 0)
+    {
+      it.release_location_ptr(range_ptr->actual_location);
+      range_ptr->actual_location = NULL;
+    }
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_range_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("Range"),"Range")
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_range_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  printf("Range");
 
   BIC_SET_RESULT_BLANK();
 
