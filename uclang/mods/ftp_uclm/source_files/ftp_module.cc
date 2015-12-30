@@ -1095,18 +1095,28 @@ void bic_ftp_handle_clear(interpreter_thread_s &it,location_s *location_ptr)
   }
 }/*}}}*/
 
-location_s *bic_ftp_handle_next_item(interpreter_thread_s &it,location_s *location_ptr)
+location_s *bic_ftp_handle_next_item(interpreter_thread_s &it,location_s *location_ptr,unsigned source_pos)
 {/*{{{*/
   // - retrieve ftp handle -
   ftp_handle_s *ftph_ptr = (ftp_handle_s *)location_ptr->v_data_ptr;
 
-  // FIXME TODO check ...
-  cassert(ftph_ptr != NULL);
+  // - ERROR -
+  if (ftph_ptr == NULL)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_FTP_HANDLE_NOT_OPENED,source_pos,(location_s *)it.blank_location);
+    return NULL;
+  }
 
   BIC_FTP_HANDLE_READLN();
 
-  // FIXME TODO check ...
-  cassert(read_cnt >= 0);
+  // - ERROR -
+  if (read_cnt < 0)
+  {
+    line_buffer.clear();
+
+    exception_s::throw_exception(it,module.error_base + c_error_FTP_HANDLE_READ_ERROR,source_pos,(location_s *)it.blank_location);
+    return NULL;
+  }
 
   // - was any data read from file -
   if (read_cnt == 0 && line_buffer.used == 0)

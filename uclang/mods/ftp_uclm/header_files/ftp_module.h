@@ -80,7 +80,7 @@ extern built_in_class_s ftp_handle_class;
 void bic_ftp_handle_consts(location_array_s &const_locations);
 void bic_ftp_handle_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_ftp_handle_clear(interpreter_thread_s &it,location_s *location_ptr);
-location_s *bic_ftp_handle_next_item(interpreter_thread_s &it,location_s *location_ptr);
+location_s *bic_ftp_handle_next_item(interpreter_thread_s &it,location_s *location_ptr,unsigned source_pos);
 
 bool bic_ftp_handle_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ftp_handle_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

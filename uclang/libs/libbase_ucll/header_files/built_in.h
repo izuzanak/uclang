@@ -708,7 +708,12 @@ enum
     /* - test if location type is built in class, and if it has defined built in next_item function - */\
     if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->next_item_caller != NULL)\
     {\
-      TRG_LOCATION_PTR = class_record.bi_class_ptr->next_item_caller(IT,location);\
+      TRG_LOCATION_PTR = class_record.bi_class_ptr->next_item_caller(IT,location,SOURCE_POS);\
+      \
+      if (TRG_LOCATION_PTR == NULL)\
+      {\
+        ERR_CODE;\
+      }\
     }\
     else {\
       unsigned new_stack_base = IT.data_stack.used;\

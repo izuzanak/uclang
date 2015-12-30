@@ -8953,7 +8953,7 @@ built_in_class_s range_class =
   NULL,
   NULL,
   NULL,
-  NULL,
+  bic_range_next_item,
   NULL,
   NULL,
   NULL,
@@ -8998,6 +8998,92 @@ built_in_variable_s range_variables[] =
 {/*{{{*/
 };/*}}}*/
 
+#define BIC_RANGE_NEXT_ITEM(SET_RESULT,SOURCE_POS,ERROR_CODE) \
+{/*{{{*/\
+  uli *tmp_code = range_ptr->tmp_code;\
+\
+  /* - retrieve next value - */\
+  {\
+    unsigned new_stack_base = it.data_stack.used;\
+\
+    /* - push this location on stack - */\
+    ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();\
+    it.data_stack.push(it.blank_location);\
+    \
+    /* - push first parameter on stack - */\
+    location_s *location = (location_s *)(range_ptr->actual_location);\
+    location->v_reference_cnt.atomic_inc();\
+    it.data_stack.push((pointer)location);\
+    \
+    if (range_ptr->step_location != NULL)\
+    {\
+      /* - push second parameter on stack - */\
+      location_s *src_location = (location_s *)(range_ptr->step_location);\
+      src_location->v_reference_cnt.atomic_inc();\
+      it.data_stack.push((pointer)src_location);\
+    }\
+\
+    /* - set source position in temporary code - */\
+    tmp_code[icl_source_pos] = SOURCE_POS;\
+\
+    /* - test if caller address for built in class is stored - */\
+    if (tmp_code[icl_last_class] == range_ptr->actual_location->v_type)\
+    {\
+      /* - call built in method - */\
+      if (!((bi_method_caller_dt)(tmp_code[icl_last_bi_mc]))(it,new_stack_base,tmp_code + icl_source_pos))\
+      {\
+        it.release_stack_from(new_stack_base);\
+        ERROR_CODE;\
+      }\
+    }\
+    else\
+    {\
+      /* - proper call of method - */\
+      if (!it.call_method(tmp_code,new_stack_base))\
+      {\
+        it.release_stack_from(new_stack_base);\
+        ERROR_CODE;\
+      }\
+    }\
+\
+    /* - get result value - */\
+    location_s *ret_location = (location_s *)it.data_stack[new_stack_base];\
+    ret_location->v_reference_cnt.atomic_inc();\
+\
+    /* - get original value - */\
+    location_s *this_location = (location_s *)it.data_stack[new_stack_base + 1];\
+    this_location->v_reference_cnt.atomic_inc();\
+\
+    if (range_ptr->step_location == NULL)\
+    {\
+      it.release_location_ptr(range_ptr->actual_location);\
+      range_ptr->actual_location = this_location;\
+\
+      SET_RESULT ret_location;\
+    }\
+    else\
+    {\
+      it.release_location_ptr(range_ptr->actual_location);\
+      range_ptr->actual_location = ret_location;\
+\
+      SET_RESULT this_location;\
+    }\
+\
+    it.release_stack_from(new_stack_base);\
+  }\
+\
+  /* - compare actual value with end value - */\
+  long long int result;\
+  BIC_CALL_COMPARE(it,range_ptr->actual_location,range_ptr->end_location,SOURCE_POS,ERROR_CODE);\
+\
+  /* - if actual value is greater than end value - */\
+  if ((range_ptr->type == c_range_type_ascending) ? result > 0 : result < 0)\
+  {\
+    it.release_location_ptr(range_ptr->actual_location);\
+    range_ptr->actual_location = NULL;\
+  }\
+}/*}}}*/
+
 void bic_range_consts(location_array_s &const_locations)
 {/*{{{*/
 }/*}}}*/
@@ -9016,6 +9102,24 @@ void bic_range_clear(interpreter_thread_s &it,location_s *location_ptr)
   {
     range_ptr->clear(it);
     cfree(range_ptr);
+  }
+}/*}}}*/
+
+location_s *bic_range_next_item(interpreter_thread_s &it,location_s *location_ptr,unsigned source_pos)
+{/*{{{*/
+  range_s *range_ptr = (range_s *)location_ptr->v_data_ptr;
+
+  if (range_ptr->actual_location == NULL)
+  {
+    ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
+    return ((location_s *)it.blank_location);
+  }
+  else
+  {
+    location_s *return_location;
+    BIC_RANGE_NEXT_ITEM(return_location = ,source_pos,return NULL);
+
+    return return_location;
   }
 }/*}}}*/
 
@@ -9153,92 +9257,11 @@ bool bic_range_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,u
   }
   else
   {
-    uli *tmp_code = range_ptr->tmp_code;
-
-    // - retrieve next value -
-    {/*{{{*/
-      unsigned new_stack_base = it.data_stack.used;
-
-      // - push this location on stack -
-      ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
-      it.data_stack.push(it.blank_location);
-      
-      // - push first parameter on stack -
-      location_s *location = (location_s *)(range_ptr->actual_location);
-      location->v_reference_cnt.atomic_inc();
-      it.data_stack.push((pointer)location);
-      
-      if (range_ptr->step_location != NULL)
-      {
-        // - push second parameter on stack -
-        location_s *src_location = (location_s *)(range_ptr->step_location);
-        src_location->v_reference_cnt.atomic_inc();
-        it.data_stack.push((pointer)src_location);
-      }
-
-      // - set source position in temporary code -
-      tmp_code[icl_source_pos] = operands[c_source_pos_idx];
-
-      // - test if caller address for built in class is stored -
-      if (tmp_code[icl_last_class] == range_ptr->actual_location->v_type)
-      {
-        // - call built in method -
-        if (!((bi_method_caller_dt)(tmp_code[icl_last_bi_mc]))(it,new_stack_base,tmp_code + icl_source_pos))
-        {
-          it.release_stack_from(new_stack_base);
-
-          return false;
-        }
-      }
-      else
-      {
-        // - proper call of method -
-        if (!it.call_method(tmp_code,new_stack_base))
-        {
-          it.release_stack_from(new_stack_base);
-
-          return false;
-        }
-      }
-
-      // - get result value -
-      location_s *ret_location = (location_s *)it.data_stack[new_stack_base];
-      ret_location->v_reference_cnt.atomic_inc();
-
-      // - get original value -
-      location_s *this_location = (location_s *)it.data_stack[new_stack_base + 1];
-      this_location->v_reference_cnt.atomic_inc();
-
+    BIC_RANGE_NEXT_ITEM(
       pointer &res_location = it.data_stack[res_loc_idx];
-
-      if (range_ptr->step_location == NULL)
-      {
-        it.release_location_ptr(range_ptr->actual_location);
-        range_ptr->actual_location = this_location;
-
-        BIC_SET_RESULT(ret_location);
-      }
-      else
-      {
-        it.release_location_ptr(range_ptr->actual_location);
-        range_ptr->actual_location = ret_location;
-
-        BIC_SET_RESULT(this_location);
-      }
-
-      it.release_stack_from(new_stack_base);
-    }/*}}}*/
-
-    // - compare actual value with end value -
-    long long int result;
-    BIC_CALL_COMPARE(it,range_ptr->actual_location,range_ptr->end_location,operands[c_source_pos_idx],return false);
-
-    // - if actual value is greater than end value -
-    if ((range_ptr->type == c_range_type_ascending) ? result > 0 : result < 0)
-    {
-      it.release_location_ptr(range_ptr->actual_location);
-      range_ptr->actual_location = NULL;
-    }
+      it.release_location_ptr((location_s *)res_location);
+      res_location = 
+    ,operands[c_source_pos_idx],return false);
   }
 
   return true;

@@ -3718,14 +3718,18 @@ bool bic_socket_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli 
     return true;\
   }/*}}}*/
 
-location_s *bic_stream_next_item(interpreter_thread_s &it,location_s *location_ptr)
+location_s *bic_stream_next_item(interpreter_thread_s &it,location_s *location_ptr,unsigned source_pos)
 {/*{{{*/
 
   // - retrieve pointer to stream -
   FILE *f = (FILE *)location_ptr->v_data_ptr;
 
-  // FIXME TODO check ...
-  cassert(f != NULL);
+  // - ERROR -
+  if (f == NULL)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_STREAM_NOT_OPENED,source_pos,(location_s *)it.blank_location);
+    return NULL;
+  }
 
   BIC_STREAM_READLN();
 
@@ -3978,19 +3982,29 @@ bool bic_stream_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,
   return true;\
 }/*}}}*/
 
-location_s *bic_fd_next_item(interpreter_thread_s &it,location_s *location_ptr)
+location_s *bic_fd_next_item(interpreter_thread_s &it,location_s *location_ptr,unsigned source_pos)
 {/*{{{*/
 
   // - retrieve fd -
   int fd = (int)location_ptr->v_data_ptr;
 
-  // FIXME TODO check ...
-  cassert(fd != -1);
+  // - ERROR -
+  if (fd == -1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_FD_NOT_OPENED,source_pos,(location_s *)it.blank_location);
+    return NULL;
+  }
 
   BIC_FD_READLN();
 
-  // FIXME TODO check ...
-  cassert(read_cnt != -1);
+  // - ERROR -
+  if (read_cnt == -1)
+  {
+    line_buffer.clear();
+
+    exception_s::throw_exception(it,module.error_base + c_error_FD_READ_ERROR,source_pos,(location_s *)it.blank_location);
+    return NULL;
+  }
 
   if (read_cnt == 0 && line_buffer.used == 0)
   {

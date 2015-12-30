@@ -1535,19 +1535,29 @@ void bic_sftp_handle_clear(interpreter_thread_s &it,location_s *location_ptr)
   }
 }/*}}}*/
 
-location_s *bic_sftp_handle_next_item(interpreter_thread_s &it,location_s *location_ptr)
+location_s *bic_sftp_handle_next_item(interpreter_thread_s &it,location_s *location_ptr,unsigned source_pos)
 {/*{{{*/
 
   /* - retrieve sftp handle - */
   sftp_handle_s *sftph_ptr = (sftp_handle_s *)location_ptr->v_data_ptr;
 
-  // FIXME TODO check ...
-  cassert(sftph_ptr != NULL);
+  // - ERROR -
+  if (sftph_ptr == NULL)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_SFTP_HANDLE_NOT_OPENED,source_pos,(location_s *)it.blank_location);
+    return NULL;
+  }
 
   BIC_SFTP_HANDLE_READLN();
 
-  // FIXME TODO check ...
-  cassert(read_cnt >= 0);
+  // - ERROR -
+  if (read_cnt < 0)
+  {
+    line_buffer.clear();
+
+    exception_s::throw_exception(it,module.error_base + c_error_SFTP_HANDLE_READ_ERROR,source_pos,(location_s *)it.blank_location);
+    return NULL;
+  }
 
   if (read_cnt == 0 && line_buffer.used == 0)
   {

@@ -249,7 +249,7 @@ bool bic_socket_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli 
 #endif
 
 // - class dummy STREAM -
-location_s *bic_stream_next_item(interpreter_thread_s &it,location_s *location_ptr);
+location_s *bic_stream_next_item(interpreter_thread_s &it,location_s *location_ptr,unsigned source_pos);
 
 bool bic_stream_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_stream_method_flush_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

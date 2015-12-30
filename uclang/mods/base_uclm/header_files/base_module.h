@@ -430,6 +430,7 @@ extern built_in_class_s range_class;
 void bic_range_consts(location_array_s &const_locations);
 void bic_range_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_range_clear(interpreter_thread_s &it,location_s *location_ptr);
+location_s *bic_range_next_item(interpreter_thread_s &it,location_s *location_ptr,unsigned source_pos);
 
 bool bic_range_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_range_method_Range_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
