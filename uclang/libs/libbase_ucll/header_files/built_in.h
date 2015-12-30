@@ -85,7 +85,6 @@ enum
   c_bi_class_thread,
   c_bi_class_delegate,
   c_bi_class_buffer,
-  c_bi_class_range,
 
   c_bi_reference = 0xffffffff
 };/*}}}*/

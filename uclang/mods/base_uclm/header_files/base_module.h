@@ -422,22 +422,5 @@ bool bic_buffer_method_size_0(interpreter_thread_s &it,unsigned stack_base,uli *
 bool bic_buffer_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_buffer_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
-// - class RANGE -
-extern built_in_variable_s range_variables[];
-extern built_in_method_s range_methods[];
-extern built_in_class_s range_class;
-
-void bic_range_consts(location_array_s &const_locations);
-void bic_range_init(interpreter_thread_s &it,location_s *location_ptr);
-void bic_range_clear(interpreter_thread_s &it,location_s *location_ptr);
-location_s *bic_range_next_item(interpreter_thread_s &it,location_s *location_ptr,unsigned source_pos);
-
-bool bic_range_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_range_method_Range_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_range_method_Range_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_range_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_range_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_range_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-
 #endif
 
