@@ -124,8 +124,8 @@ built_in_class_s bin_array_class =
   bic_bin_array_first_idx,
   bic_bin_array_next_idx,
   NULL,
-  NULL,
-  NULL,
+  bic_bin_array_pack,
+  bic_bin_array_unpack,
   NULL,
   NULL
 };/*}}}*/
@@ -449,6 +449,96 @@ unsigned bic_bin_array_next_idx(location_s *location_ptr,unsigned index)
   cassert(index < used);
 
   return (index + 1 < used) ? index + 1 : c_idx_not_exist;
+}/*}}}*/
+
+bool bic_bin_array_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack)
+{/*{{{*/
+  bin_array_s *ba_ptr = (bin_array_s *)location_ptr->v_data_ptr;
+
+#define BIC_BIN_ARRAY_PACK(ARRAY_TYPE,TYPE) \
+{/*{{{*/\
+  ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)ba_ptr->cont;\
+\
+  if (array_ptr->used != 0)\
+  {\
+    TYPE *e_ptr = array_ptr->data + array_ptr->used;\
+    TYPE *e_ptr_end = array_ptr->data;\
+\
+    do\
+    {\
+      stream.append(sizeof(TYPE),(const char *)(--e_ptr));\
+    }\
+    while(e_ptr > e_ptr_end);\
+  }\
+\
+  stream.append(sizeof(unsigned),(const char *)&array_ptr->used);\
+}/*}}}*/
+
+  switch (ba_ptr->type)
+  {
+  case c_bin_array_type_int32:
+    BIC_BIN_ARRAY_PACK(bi_array_s,int);
+    break;
+  case c_bin_array_type_uint32:
+    BIC_BIN_ARRAY_PACK(ui_array_s,unsigned);
+    break;
+  default:
+    cassert(0);
+  }
+
+  stream.append(sizeof(unsigned),(const char *)&ba_ptr->type);
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_array_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack,bool order_bytes,unsigned source_pos)
+{/*{{{*/
+  unsigned type;
+  stream.from_end(sizeof(unsigned),(char *)&type,order_bytes);
+
+  // - binary array container pointer -
+  void *cont = NULL;
+
+#define BIC_BIN_ARRAY_UNPACK(ARRAY_TYPE,TYPE) \
+{/*{{{*/\
+  unsigned length;\
+  stream.from_end(sizeof(unsigned),(char *)&length,order_bytes);\
+\
+  ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)cmalloc(sizeof(ARRAY_TYPE));\
+  array_ptr->init_size(length);\
+\
+  TYPE *e_ptr = array_ptr->data;\
+  TYPE *e_ptr_end = e_ptr + length;\
+  do {\
+    stream.from_end(sizeof(TYPE),(char *)e_ptr,order_bytes);\
+  } while(++e_ptr < e_ptr_end);\
+\
+  array_ptr->used = length;\
+  cont = array_ptr;\
+}/*}}}*/
+
+  switch (type)
+  {
+  case c_bin_array_type_int32:
+    BIC_BIN_ARRAY_UNPACK(bi_array_s,int);
+    break;
+  case c_bin_array_type_uint32:
+    BIC_BIN_ARRAY_UNPACK(ui_array_s,unsigned);
+    break;
+  default:
+    cassert(0);
+  }
+
+  // - create binary array object -
+  bin_array_s *ba_ptr = (bin_array_s *)cmalloc(sizeof(bin_array_s));
+  ba_ptr->init();
+
+  ba_ptr->type = type;
+  ba_ptr->cont = cont;
+
+  location_ptr->v_data_ptr = (basic_64b)ba_ptr;
+
+  return true;
 }/*}}}*/
 
 bool bic_bin_array_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
