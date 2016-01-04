@@ -94,77 +94,77 @@ bool lua_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while creating new LUA state\n");
+    fprintf(stderr,"\nError while creating new Lua state\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_LUA_STATE_DO_STRING_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nLUA error: %s\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr,"\nLua error: %s\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_LUA_VALUE_WRONG_VALUE_REFERENCE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nWrong reference to LUA value\n");
+    fprintf(stderr,"\nWrong reference to Lua value\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_LUA_VALUE_INVOKE_FUNCTION_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while invoking LUA function\n");
+    fprintf(stderr,"\nError while invoking Lua function\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_LUA_VALUE_INVOKE_FUNCTION_WRONG_PARAMETER:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nCannot process parameter %" HOST_LL_FORMAT "d of LUA function\n",exception.params[0]);
+    fprintf(stderr,"\nCannot process parameter %" HOST_LL_FORMAT "d of Lua function\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_LUA_VALUE_INVOKE_FUNCTION_RUN_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nLUA error: %s\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr,"\nLua error: %s\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_LUA_VALUE_MEMBER_SELECT_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while selecting member of LUA value\n");
+    fprintf(stderr,"\nError while selecting member of Lua value\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_LUA_VALUE_CREATE_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while creating LUA value\n");
+    fprintf(stderr,"\nError while creating Lua value\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_LUA_VALUE_VALUE_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while retrieving value of LUA value\n");
+    fprintf(stderr,"\nError while retrieving value of Lua value\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_LUA_VALUE_VALUE_IS_NOT_TABLE_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nValue of LUA variable is not of type table\n");
+    fprintf(stderr,"\nValue of Lua variable is not of type table\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_LUA_REFERENCE_SET_PROP_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nCannot set property of LUA value\n");
+    fprintf(stderr,"\nCannot set property of Lua value\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
