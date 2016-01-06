@@ -23,6 +23,7 @@ enum
   c_error_BIN_ARRAY_INDEX_EXCEEDS_RANGE,
   c_error_BIN_ARRAY_CANNOT_RESIZE_TO_SMALLER_SIZE,
   c_error_BIN_ARRAY_NO_ELEMENTS,
+  c_error_BIN_ARRAY_UNSUPPORTED_TYPE_OF_SOURCE_ITERABLE_ITEM,
   c_error_BIN_ARRAY_REF_INVALID_REFERENCE,
 };
 
@@ -51,8 +52,10 @@ bool bic_bin_array_pack(location_s *location_ptr,bc_array_s &stream,pointer_arra
 bool bic_bin_array_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack,bool order_bytes,unsigned source_pos);
 
 bool bic_bin_array_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_array_operator_binary_plus_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_array_operator_binary_plus(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_BinArray_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -63,6 +66,7 @@ bool bic_bin_array_method_last_0(interpreter_thread_s &it,unsigned stack_base,ul
 bool bic_bin_array_method_fill_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_get_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_array_method_contain_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

@@ -14,7 +14,7 @@ built_in_module_s module =
   binbits_classes,         // Classes
 
   0,                       // Error base index
-  5,                       // Error count
+  6,                       // Error count
   binbits_error_strings,   // Error strings
 
   binbits_initialize,      // Initialize function
@@ -35,6 +35,7 @@ const char *binbits_error_strings[] =
   "error_BIN_ARRAY_INDEX_EXCEEDS_RANGE",
   "error_BIN_ARRAY_CANNOT_RESIZE_TO_SMALLER_SIZE",
   "error_BIN_ARRAY_NO_ELEMENTS",
+  "error_BIN_ARRAY_UNSUPPORTED_TYPE_OF_SOURCE_ITERABLE_ITEM",
   "error_BIN_ARRAY_REF_INVALID_REFERENCE",
 };/*}}}*/
 
@@ -91,6 +92,19 @@ bool binbits_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nBinary array does not contain any elements\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_BIN_ARRAY_UNSUPPORTED_TYPE_OF_SOURCE_ITERABLE_ITEM:
+    {
+      class_record_s &class_record = it.class_records[exception.params[0]];
+
+      fprintf(stderr," ---------------------------------------- \n");
+      fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+      print_error_line(source.source_string,source_pos);
+      fprintf(stderr,"\nUnsupported type ");
+      print_class_sequence(it.class_symbol_names,it.class_records,class_stack,class_record.parent_record);
+      fprintf(stderr,"%s of source iterable item\n",it.class_symbol_names[class_record.name_idx].data);
+      fprintf(stderr," ---------------------------------------- \n");
+    }
+    break;
   case c_error_BIN_ARRAY_REF_INVALID_REFERENCE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -113,7 +127,7 @@ built_in_class_s bin_array_class =
 {/*{{{*/
   "BinArray",
   c_modifier_public | c_modifier_final,
-  23, bin_array_methods,
+  26, bin_array_methods,
   2, bin_array_variables,
   bic_bin_array_consts,
   bic_bin_array_init,
@@ -138,6 +152,11 @@ built_in_method_s bin_array_methods[] =
     bic_bin_array_operator_binary_equal
   },
   {
+    "operator_binary_plus_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_array_operator_binary_plus_equal
+  },
+  {
     "operator_binary_double_equal#1",
     c_modifier_public | c_modifier_final,
     bic_bin_array_operator_binary_double_equal
@@ -146,6 +165,11 @@ built_in_method_s bin_array_methods[] =
     "operator_binary_exclamation_equal#1",
     c_modifier_public | c_modifier_final,
     bic_bin_array_operator_binary_exclamation_equal
+  },
+  {
+    "operator_binary_plus#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_array_operator_binary_plus
   },
   {
     "operator_binary_le_br_re_br#1",
@@ -196,6 +220,11 @@ built_in_method_s bin_array_methods[] =
     "get_idxs#1",
     c_modifier_public | c_modifier_final,
     bic_bin_array_method_get_idxs_1
+  },
+  {
+    "contain#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_array_method_contain_1
   },
   {
     "compare#1",
@@ -336,6 +365,121 @@ built_in_variable_s bin_array_variables[] =
     cassert(0);\
   }\
   /*}}}*/
+
+#define BIC_BIN_ARRAY_APPEND_INTEGER_ARRAY(SRC_LOCATION,TARGET_PTR) \
+  {/*{{{*/\
+    pointer_array_s *source_ptr = (pointer_array_s *)SRC_LOCATION->v_data_ptr;\
+    \
+    if (source_ptr->used != 0)\
+    {\
+      pointer *ptr = source_ptr->data;\
+      pointer *ptr_end = ptr + source_ptr->used;\
+      \
+      do\
+      {\
+        location_s *item_location = it.get_location_value(*ptr);\
+        long long int value;\
+        \
+        /* - ERROR - */\
+        if (!it.retrieve_integer(item_location,value))\
+        {\
+          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_UNSUPPORTED_TYPE_OF_SOURCE_ITERABLE_ITEM,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+          new_exception->params.push(item_location->v_type);\
+          \
+          return false;\
+        }\
+        \
+        /* - push value to binary array - */\
+        (TARGET_PTR)->push(value);\
+      }\
+      while(++ptr < ptr_end);\
+    }\
+  }/*}}}*/
+
+#define BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE_BODY(TARGET_PTR) \
+  {/*{{{*/\
+    long long int value;\
+    \
+    /* - ERROR - */\
+    if (!it.retrieve_integer(item_location,value))\
+    {\
+      it.release_location_ptr(item_reference);\
+      \
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_UNSUPPORTED_TYPE_OF_SOURCE_ITERABLE_ITEM,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      new_exception->params.push(item_location->v_type);\
+      \
+      return false;\
+    }\
+    \
+    it.release_location_ptr(item_reference);\
+    \
+    /* - push value to binary array - */\
+    (TARGET_PTR)->push(value);\
+  }/*}}}*/
+
+#define BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE(SRC_LOCATION,TARGET_PTR) \
+  {/*{{{*/\
+    \
+    /* - retrieve iterable type - */\
+    unsigned iter_type = it.get_iterable_type(SRC_LOCATION);\
+    \
+    /* - ERROR - */\
+    if (iter_type == c_idx_not_exist)\
+    {\
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_OBJECT_OF_CLASS_IS_NOT_ITERABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      new_exception->params.push(SRC_LOCATION->v_type);\
+      \
+      return false;\
+    }\
+    \
+    if (iter_type == c_iter_first_idx_next_idx_item)\
+    {\
+      long long index;\
+      location_s *item_reference;\
+      location_s *item_location;\
+      \
+      /* - retrieve first index - */\
+      BIC_CALL_FIRST_IDX(it,SRC_LOCATION,index,operands[c_source_pos_idx],return false;);\
+      \
+      while (index != c_idx_not_exist)\
+      {\
+        /* - retrieve item location - */\
+        BIC_CALL_ITEM(it,SRC_LOCATION,index,item_reference,operands[c_source_pos_idx],return false;);\
+        item_location = it.get_location_value(item_reference);\
+        \
+        BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE_BODY(TARGET_PTR);\
+        \
+        /* - retrieve next index - */\
+        BIC_CALL_NEXT_IDX(it,SRC_LOCATION,index,index,operands[c_source_pos_idx],return false;);\
+      }\
+    }\
+    else if (iter_type == c_iter_next_item)\
+    {\
+      location_s *item_reference;\
+      location_s *item_location;\
+      \
+      do\
+      {\
+        /* - retrieve next item location - */\
+        BIC_CALL_NEXT_ITEM(it,SRC_LOCATION,item_reference,operands[c_source_pos_idx],return false;);\
+        item_location = it.get_location_value(item_reference);\
+        \
+        if (item_location->v_type == c_bi_class_blank)\
+        {\
+          it.release_location_ptr(item_reference);\
+          break;\
+        }\
+        \
+        BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE_BODY(TARGET_PTR);\
+        \
+      }\
+      while(true);\
+    }\
+    else\
+    {\
+      cassert(0);\
+    }\
+  }/*}}}*/
 
 #define BIC_BIN_ARRAY_CHECK_INDEX() \
   /*{{{*/\
@@ -555,6 +699,54 @@ bool bic_bin_array_operator_binary_equal(interpreter_thread_s &it,unsigned stack
   return true;
 }/*}}}*/
 
+bool bic_bin_array_operator_binary_plus_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
+
+  // - construct container from array -
+  if (src_0_location->v_type == c_bi_class_array)
+  {
+    switch (ba_ptr->type)
+    {
+    case c_bin_array_type_int32:
+      BIC_BIN_ARRAY_APPEND_INTEGER_ARRAY(src_0_location,(bi_array_s *)ba_ptr->cont);
+      break;
+    case c_bin_array_type_uint32:
+      BIC_BIN_ARRAY_APPEND_INTEGER_ARRAY(src_0_location,(ui_array_s *)ba_ptr->cont);
+      break;
+    default:
+      cassert(0);
+    }
+  }
+
+  // - construct container from iterable -
+  else
+  {
+    switch (ba_ptr->type)
+    {
+    case c_bin_array_type_int32:
+      BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE(src_0_location,(bi_array_s *)ba_ptr->cont);
+      break;
+    case c_bin_array_type_uint32:
+      BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE(src_0_location,(ui_array_s *)ba_ptr->cont);
+      break;
+    default:
+      cassert(0);
+    }
+  }
+
+  dst_location->v_reference_cnt.atomic_inc();
+
+  pointer &res_location = it.data_stack[res_loc_idx];
+  BIC_SET_RESULT(dst_location);
+
+  return true;
+}/*}}}*/
+
 bool bic_bin_array_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
@@ -583,6 +775,83 @@ bool bic_bin_array_operator_binary_exclamation_equal(interpreter_thread_s &it,un
   result = result != 0;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_array_operator_binary_plus(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
+
+  // - create new binary array object -
+  bin_array_s *new_ba_ptr = (bin_array_s *)cmalloc(sizeof(bin_array_s));
+  new_ba_ptr->init();
+
+#define BIC_BIN_ARRAY_OPERATOR_BINARY_PLUS(ARRAY_TYPE) \
+{/*{{{*/\
+  ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)cmalloc(sizeof(ARRAY_TYPE));\
+  array_ptr->init();\
+  \
+  /* - copy binary array content - */\
+  *array_ptr = *((ARRAY_TYPE *)ba_ptr->cont);\
+  \
+  new_ba_ptr->type = ba_ptr->type;\
+  new_ba_ptr->cont = array_ptr;\
+}/*}}}*/
+
+  switch (ba_ptr->type)
+  {
+  case c_bin_array_type_int32:
+    BIC_BIN_ARRAY_OPERATOR_BINARY_PLUS(bi_array_s);
+    break;
+  case c_bin_array_type_uint32:
+    BIC_BIN_ARRAY_OPERATOR_BINARY_PLUS(ui_array_s);
+    break;
+  default:
+    cassert(0);
+  }
+
+  // - create target location -
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_bin_array,new_ba_ptr);
+
+  pointer &res_location = it.data_stack[res_loc_idx];
+  BIC_SET_RESULT(new_location);
+
+  // - construct container from array -
+  if (src_0_location->v_type == c_bi_class_array)
+  {
+    switch (new_ba_ptr->type)
+    {
+    case c_bin_array_type_int32:
+      BIC_BIN_ARRAY_APPEND_INTEGER_ARRAY(src_0_location,(bi_array_s *)new_ba_ptr->cont);
+      break;
+    case c_bin_array_type_uint32:
+      BIC_BIN_ARRAY_APPEND_INTEGER_ARRAY(src_0_location,(ui_array_s *)new_ba_ptr->cont);
+      break;
+    default:
+      cassert(0);
+    }
+  }
+
+  // - construct container from iterable -
+  else
+  {
+    switch (new_ba_ptr->type)
+    {
+    case c_bin_array_type_int32:
+      BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE(src_0_location,(bi_array_s *)new_ba_ptr->cont);
+      break;
+    case c_bin_array_type_uint32:
+      BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE(src_0_location,(ui_array_s *)new_ba_ptr->cont);
+      break;
+    default:
+      cassert(0);
+    }
+  }
 
   return true;
 }/*}}}*/
@@ -1053,6 +1322,54 @@ bool bic_bin_array_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_bas
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,res_array_ptr);
   BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_array_method_contain_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
+
+  long long int found = 0;
+
+  switch (ba_ptr->type)
+  {
+  case c_bin_array_type_int32:
+  case c_bin_array_type_uint32:
+    {
+      long long int value;
+
+      // - ERROR -
+      if (!it.retrieve_integer(src_0_location,value))
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("contain#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
+        return false;
+      }
+
+      switch (ba_ptr->type)
+      {
+      case c_bin_array_type_int32:
+        found = ((bi_array_s *)ba_ptr->cont)->get_idx(value) != c_idx_not_exist;
+        break;
+      case c_bin_array_type_uint32:
+        found = ((ui_array_s *)ba_ptr->cont)->get_idx(value) != c_idx_not_exist;
+        break;
+      }
+    }
+    break;
+  default:
+    cassert(0);
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,found);
 
   return true;
 }/*}}}*/
