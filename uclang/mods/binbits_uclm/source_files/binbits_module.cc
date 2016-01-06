@@ -127,7 +127,7 @@ built_in_class_s bin_array_class =
 {/*{{{*/
   "BinArray",
   c_modifier_public | c_modifier_final,
-  26, bin_array_methods,
+  27, bin_array_methods,
   2, bin_array_variables,
   bic_bin_array_consts,
   bic_bin_array_init,
@@ -180,6 +180,11 @@ built_in_method_s bin_array_methods[] =
     "BinArray#1",
     c_modifier_public | c_modifier_final,
     bic_bin_array_method_BinArray_1
+  },
+  {
+    "BinArray#2",
+    c_modifier_public | c_modifier_final,
+    bic_bin_array_method_BinArray_2
   },
   {
     "clear#0",
@@ -916,6 +921,97 @@ bool bic_bin_array_method_BinArray_1(interpreter_thread_s &it,unsigned stack_bas
   ba_ptr->cont = cont;
 
   dst_location->v_data_ptr = (basic_64b)ba_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_array_method_BinArray_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  long long int type;
+
+  if (!it.retrieve_integer(src_0_location,type))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("BinArray#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  // - binary array container pointer -
+  void *cont = NULL;
+
+  switch (type)
+  {
+  case c_bin_array_type_int32:
+    {/*{{{*/
+      bi_array_s *array_ptr = (bi_array_s *)cmalloc(sizeof(bi_array_s));
+      array_ptr->init();
+
+      cont = array_ptr;
+    }/*}}}*/
+    break;
+  case c_bin_array_type_uint32:
+    {/*{{{*/
+      ui_array_s *array_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));
+      array_ptr->init();
+
+      cont = array_ptr;
+    }/*}}}*/
+    break;
+
+  // - ERROR -
+  default:
+    exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_UNKNOWN_DATA_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - create binary array object -
+  bin_array_s *ba_ptr = (bin_array_s *)cmalloc(sizeof(bin_array_s));
+  ba_ptr->init();
+
+  ba_ptr->type = type;
+  ba_ptr->cont = cont;
+
+  dst_location->v_data_ptr = (basic_64b)ba_ptr;
+
+  // - construct container from array -
+  if (src_1_location->v_type == c_bi_class_array)
+  {
+    switch (ba_ptr->type)
+    {
+    case c_bin_array_type_int32:
+      BIC_BIN_ARRAY_APPEND_INTEGER_ARRAY(src_1_location,(bi_array_s *)ba_ptr->cont);
+      break;
+    case c_bin_array_type_uint32:
+      BIC_BIN_ARRAY_APPEND_INTEGER_ARRAY(src_1_location,(ui_array_s *)ba_ptr->cont);
+      break;
+    default:
+      cassert(0);
+    }
+  }
+
+  // - construct container from iterable -
+  else
+  {
+    switch (ba_ptr->type)
+    {
+    case c_bin_array_type_int32:
+      BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE(src_1_location,(bi_array_s *)ba_ptr->cont);
+      break;
+    case c_bin_array_type_uint32:
+      BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE(src_1_location,(ui_array_s *)ba_ptr->cont);
+      break;
+    default:
+      cassert(0);
+    }
+  }
 
   return true;
 }/*}}}*/

@@ -58,6 +58,7 @@ bool bic_bin_array_operator_binary_exclamation_equal(interpreter_thread_s &it,un
 bool bic_bin_array_operator_binary_plus(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_BinArray_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_array_method_BinArray_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_resize_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_push_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
