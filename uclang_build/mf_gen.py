@@ -2433,7 +2433,7 @@ if cfg_ref[CFG_TARGET]:
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
       opt_build + "-I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include -I/usr/include/mono-2.0 ", # CXX options
-      opt_link + "-lmono-2.0 ", # CXX link options
+      opt_link + "-lmonosgen-2.0 ", # CXX link options
       "", # CXX defines
       [],
       [],

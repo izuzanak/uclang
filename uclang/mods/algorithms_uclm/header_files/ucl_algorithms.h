@@ -10,6 +10,13 @@ include "script_parser.h"
  * basic definitions and constants
  */
 
+// - filter type identifiers -
+enum
+{
+  c_filter_type_map = 0,
+  c_filter_type_filter,
+};
+
 // - range type identifiers -
 enum
 {
@@ -28,6 +35,20 @@ struct iterable_s
   unsigned index;
   location_s *item_reference;
   location_s *item_location;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
+ * definition of structure filter_s
+ */
+
+struct filter_s
+{
+  unsigned type;
+  location_s *delegate_loc;
+  iterable_s iterable;
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
@@ -72,6 +93,37 @@ inline void iterable_s::clear(interpreter_thread_s &it)
   {
     it.release_location_ptr(item_reference);
   }
+
+  init();
+}/*}}}*/
+
+/*
+ * inline methods of structure filter_s
+ */
+
+inline void filter_s::init()
+{/*{{{*/
+  type = c_idx_not_exist;
+  delegate_loc = NULL;
+  iterable.init();
+}/*}}}*/
+
+inline void filter_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+
+  // - release iterable location -
+  if (iterable.location != NULL)
+  {
+    it.release_location_ptr(iterable.location);
+  }
+
+  // - release delegate location -
+  if (delegate_loc != NULL)
+  {
+    it.release_location_ptr(delegate_loc);
+  }
+
+  iterable.clear(it);
 
   init();
 }/*}}}*/

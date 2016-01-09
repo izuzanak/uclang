@@ -5,12 +5,13 @@ include "algorithms_module.h"
 
 // - ALGORITHMS indexes of built in classes -
 unsigned c_bi_class_algo = c_idx_not_exist;
+unsigned c_bi_class_filter = c_idx_not_exist;
 unsigned c_bi_class_range = c_idx_not_exist;
 
 // - ALGORITHMS module -
 built_in_module_s module =
 {/*{{{*/
-  2,                          // Class count
+  3,                          // Class count
   algorithms_classes,         // Classes
 
   0,                          // Error base index
@@ -25,13 +26,14 @@ built_in_module_s module =
 built_in_class_s *algorithms_classes[] =
 {/*{{{*/
   &algo_class,
+  &filter_class,
   &range_class,
 };/*}}}*/
 
 // - ALGORITHMS error strings -
 const char *algorithms_error_strings[] =
 {/*{{{*/
-  "error_ALGO_WRONG_DELEGATE",
+  "error_ALGO_FILTER_WRONG_DELEGATE",
   "error_RANGE_START_END_TYPES_DIFFERS",
 };/*}}}*/
 
@@ -42,6 +44,9 @@ bool algorithms_initialize(script_parser_s &sp)
 
   // - initialize algo class identifier -
   c_bi_class_algo = class_base_idx++;
+
+  // - initialize filter class identifier -
+  c_bi_class_filter = class_base_idx++;
 
   // - initialize range class identifier -
   c_bi_class_range = class_base_idx++;
@@ -60,7 +65,7 @@ bool algorithms_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_ALGO_WRONG_DELEGATE:
+  case c_error_ALGO_FILTER_WRONG_DELEGATE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
@@ -157,16 +162,16 @@ built_in_variable_s algo_variables[] =
 #define BIC_ALGO_PROCESS_ARRAY(SRC_LOCATION,ALGO_CODE) \
   {/*{{{*/\
     pointer_array_s *source_ptr = (pointer_array_s *)SRC_LOCATION->v_data_ptr;\
-    \
+\
     if (source_ptr->used != 0)\
     {\
       pointer *ptr = source_ptr->data;\
       pointer *ptr_end = ptr + source_ptr->used;\
-      \
+\
       do\
       {\
         location_s *item_location = it.get_location_value(*ptr);\
-        \
+\
         ALGO_CODE;\
       }\
       while(++ptr < ptr_end);\
@@ -175,36 +180,36 @@ built_in_variable_s algo_variables[] =
 
 #define BIC_ALGO_PROCESS_ITERABLE(SRC_LOCATION,ALGO_CODE,ERR_CODE) \
   {/*{{{*/\
-    \
+\
     /* - retrieve iterable type - */\
     unsigned iter_type = it.get_iterable_type(SRC_LOCATION);\
-    \
+\
     /* - ERROR - */\
     if (iter_type == c_idx_not_exist)\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_OBJECT_OF_CLASS_IS_NOT_ITERABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       new_exception->params.push(SRC_LOCATION->v_type);\
-      \
+\
       ERR_CODE;\
     }\
-    \
+\
     if (iter_type == c_iter_first_idx_next_idx_item)\
     {\
       long long index;\
       location_s *item_reference;\
       location_s *item_location;\
-      \
+\
       /* - retrieve first index - */\
       BIC_CALL_FIRST_IDX(it,SRC_LOCATION,index,operands[c_source_pos_idx],ERR_CODE;);\
-      \
+\
       while (index != c_idx_not_exist)\
       {\
         /* - retrieve item location - */\
         BIC_CALL_ITEM(it,SRC_LOCATION,index,item_reference,operands[c_source_pos_idx],ERR_CODE;);\
         item_location = it.get_location_value(item_reference);\
-        \
+\
         ALGO_CODE;\
-        \
+\
         /* - retrieve next index - */\
         BIC_CALL_NEXT_IDX(it,SRC_LOCATION,index,index,operands[c_source_pos_idx],ERR_CODE;);\
       }\
@@ -213,20 +218,20 @@ built_in_variable_s algo_variables[] =
     {\
       location_s *item_reference;\
       location_s *item_location;\
-      \
+\
       do\
       {\
-        \
+\
         /* - retrieve next item location - */\
         BIC_CALL_NEXT_ITEM(it,SRC_LOCATION,item_reference,operands[c_source_pos_idx],ERR_CODE;);\
         item_location = it.get_location_value(item_reference);\
-        \
+\
         if (item_location->v_type == c_bi_class_blank)\
         {\
           it.release_location_ptr(item_reference);\
           break;\
         }\
-        \
+\
         ALGO_CODE;\
       }\
       while(true);\
@@ -384,7 +389,7 @@ bool bic_algo_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
   // - ERROR -
   if (delegate_ptr->param_cnt != 1)
   {
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_WRONG_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_WRONG_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(1);
 
     return false;
@@ -464,7 +469,7 @@ bool bic_algo_method_reduce_3(interpreter_thread_s &it,unsigned stack_base,uli *
   // - ERROR -
   if (delegate_ptr->param_cnt != 2)
   {
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_WRONG_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_WRONG_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(2);
 
     return false;
@@ -544,7 +549,7 @@ bool bic_algo_method_filter_2(interpreter_thread_s &it,unsigned stack_base,uli *
   // - ERROR -
   if (delegate_ptr->param_cnt != 1)
   {
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_WRONG_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_WRONG_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(1);
 
     return false;
@@ -755,7 +760,7 @@ bool bic_algo_method_zip_1(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
         case c_iter_next_item:
           {
-            /* - retrieve next item location - */
+            // - retrieve next item location -
             BIC_CALL_NEXT_ITEM(it,i_ptr->location,i_ptr->item_reference,operands[c_source_pos_idx],
               BIC_ALGO_ZIP_RELEASE();
               return false;
@@ -825,6 +830,360 @@ bool bic_algo_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *o
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
   printf("Algo");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class FILTER -
+built_in_class_s filter_class =
+{/*{{{*/
+  "Filter",
+  c_modifier_public | c_modifier_final,
+  6, filter_methods,
+  0, filter_variables,
+  bic_filter_consts,
+  bic_filter_init,
+  bic_filter_clear,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  bic_filter_next_item,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};/*}}}*/
+
+built_in_method_s filter_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_filter_operator_binary_equal
+  },
+  {
+    "map#2",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_filter_method_map_2
+  },
+  {
+    "filter#2",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_filter_method_filter_2
+  },
+  {
+    "next_item#0",
+    c_modifier_public | c_modifier_final,
+    bic_filter_method_next_item_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_filter_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_filter_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s filter_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+#define BIC_FILTER_NEXT_ITEM(SET_RESULT,SOURCE_POS,ERROR_CODE) \
+{/*{{{*/\
+  delegate_s *delegate_ptr = (delegate_s *)filter_ptr->delegate_loc->v_data_ptr;\
+  iterable_s &iter = filter_ptr->iterable;\
+\
+  bool iter_empty = false;\
+  bool done = false;\
+\
+  do {\
+\
+    /* - retrieve next value from iterable - */\
+    switch (iter.type)\
+    {\
+      case c_iter_first_idx_next_idx_item:\
+        {\
+          if (iter.index == c_idx_not_exist)\
+          {\
+            /* - iterable is empty - */\
+            iter_empty = true;\
+            break;\
+          }\
+\
+          /* - retrieve item location - */\
+          BIC_CALL_ITEM(it,iter.location,iter.index,iter.item_reference,SOURCE_POS,ERROR_CODE);\
+\
+          iter.item_location = it.get_location_value(iter.item_reference);\
+\
+          /* - retrieve next index - */\
+          BIC_CALL_NEXT_IDX(it,iter.location,iter.index,iter.index,SOURCE_POS,ERROR_CODE);\
+        }\
+        break;\
+      case c_iter_next_item:\
+        {\
+          /* - retrieve next item location - */\
+          BIC_CALL_NEXT_ITEM(it,iter.location,iter.item_reference,SOURCE_POS,ERROR_CODE);\
+\
+          iter.item_location = it.get_location_value(iter.item_reference);\
+\
+          if (iter.item_location->v_type == c_bi_class_blank)\
+          {\
+            /* - release item reference - */\
+            it.release_location_ptr(iter.item_reference);\
+            iter.item_reference = NULL;\
+\
+            /* - iterable is empty - */\
+            iter_empty = true;\
+            break;\
+          }\
+        }\
+        break;\
+    }\
+\
+    /* - if there are no data in iterable- */\
+    if (iter_empty)\
+    {\
+      /* - set blank result - */\
+      ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();\
+      SET_RESULT (location_s *)it.blank_location;\
+\
+      /* - stop iteration - */\
+      done = true;\
+    }\
+    else\
+    {\
+      /* - call delegate method - */\
+      location_s *trg_location = NULL;\
+      BIC_CALL_DELEGATE(it,delegate_ptr,(pointer *)&iter.item_location,1,trg_location,SOURCE_POS,\
+\
+        /* - release item reference - */\
+        it.release_location_ptr(iter.item_reference);\
+        iter.item_reference = NULL;\
+\
+        ERROR_CODE;\
+      );\
+\
+      switch (filter_ptr->type)\
+      {\
+        case c_filter_type_map:\
+          {\
+            /* - set result - */\
+            SET_RESULT trg_location;\
+\
+            /* - stop iteration - */\
+            done = true;\
+          }\
+          break;\
+        case c_filter_type_filter:\
+          {\
+            /* - test value - */\
+            bool result;\
+            if (!it.test_value(trg_location,result))\
+            {\
+              it.release_location_ptr(trg_location);\
+\
+              /* - release item reference - */\
+              it.release_location_ptr(iter.item_reference);\
+              iter.item_reference = NULL;\
+\
+              exception_s *new_exception = exception_s::throw_exception(it,c_error_CANNOT_TEST_TYPE_VALUE,SOURCE_POS,(location_s *)it.blank_location);\
+              new_exception->params.push(trg_location->v_type);\
+\
+              ERROR_CODE;\
+            }\
+\
+            it.release_location_ptr(trg_location);\
+\
+            /* - if test was successfull - */\
+            if (result)\
+            {\
+              iter.item_location->v_reference_cnt.atomic_inc();\
+\
+              /* - set result - */\
+              SET_RESULT iter.item_location;\
+\
+              /* - stop iteration - */\
+              done = true;\
+            }\
+          }\
+          break;\
+        default:\
+          cassert(0);\
+      }\
+\
+      /* - release item reference - */\
+      it.release_location_ptr(iter.item_reference);\
+      iter.item_reference = NULL;\
+    }\
+  } while(!done);\
+}/*}}}*/
+
+#define BIC_FILTER_METHOD_MAP_FILTER(TYPE) \
+{/*{{{*/\
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);\
+\
+  if (src_1_location->v_type != c_bi_class_delegate)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_filter,#TYPE "#2");\
+    new_exception->params.push(2);\
+    new_exception->params.push(src_0_location->v_type);\
+    new_exception->params.push(src_1_location->v_type);\
+\
+    return false;\
+  }\
+\
+  /* - retrieve delegate pointer - */\
+  delegate_s *delegate_ptr = (delegate_s *)src_1_location->v_data_ptr;\
+\
+  /* - ERROR - */\
+  if (delegate_ptr->param_cnt != 1)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_WRONG_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(1);\
+\
+    return false;\
+  }\
+\
+  /* - retrieve iterable type - */\
+  unsigned iter_type = it.get_iterable_type(src_0_location);\
+\
+  /* - ERROR - */\
+  if (iter_type == c_idx_not_exist)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_OBJECT_OF_CLASS_IS_NOT_ITERABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(src_0_location->v_type);\
+\
+    return false;\
+  }\
+\
+  /* - create new filter object - */\
+  filter_s *filter_ptr = (filter_s *)cmalloc(sizeof(filter_s));\
+  filter_ptr->init();\
+\
+  /* - set filter type - */\
+  filter_ptr->type = c_filter_type_ ## TYPE;\
+\
+  /* - set delegate location - */\
+  src_1_location->v_reference_cnt.atomic_inc();\
+  filter_ptr->delegate_loc = src_1_location;\
+\
+  /* - retrieve iterable location - */\
+  iterable_s &iter = filter_ptr->iterable;\
+  iter.location = it.get_location_value(src_0_location);\
+  iter.location->v_reference_cnt.atomic_inc();\
+\
+  /* - set iterable type - */\
+  iter.type = iter_type;\
+\
+  /* - create result location - */\
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_filter,filter_ptr);\
+  BIC_SET_RESULT(new_location);\
+\
+  if (iter_type == c_iter_first_idx_next_idx_item)\
+  {\
+    /* - retrieve first index - */\
+    BIC_CALL_FIRST_IDX(it,iter.location,iter.index,operands[c_source_pos_idx],return false;);\
+  }\
+\
+  return true;\
+}/*}}}*/
+
+void bic_filter_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_filter_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (basic_64b)NULL;
+}/*}}}*/
+
+void bic_filter_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  filter_s *filter_ptr = (filter_s *)location_ptr->v_data_ptr;
+
+  // - if filter exist -
+  if (filter_ptr != NULL)
+  {
+    filter_ptr->clear(it);
+    cfree(filter_ptr);
+  }
+}/*}}}*/
+
+location_s *bic_filter_next_item(interpreter_thread_s &it,location_s *location_ptr,unsigned source_pos)
+{/*{{{*/
+  filter_s *filter_ptr = (filter_s *)location_ptr->v_data_ptr;
+
+  location_s *return_location;
+  BIC_FILTER_NEXT_ITEM(return_location = ,source_pos,return NULL);
+
+  return return_location;
+}/*}}}*/
+
+bool bic_filter_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_filter_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_FILTER_METHOD_MAP_FILTER(map);
+}/*}}}*/
+
+bool bic_filter_method_filter_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_FILTER_METHOD_MAP_FILTER(filter);
+}/*}}}*/
+
+bool bic_filter_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  filter_s *filter_ptr = (filter_s *)dst_location->v_data_ptr;
+
+  BIC_FILTER_NEXT_ITEM(
+    pointer &res_location = it.data_stack[res_loc_idx];
+    it.release_location_ptr((location_s *)res_location);
+    res_location = 
+  ,operands[c_source_pos_idx],return false;);
+
+  return true;
+}/*}}}*/
+
+bool bic_filter_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("Filter"),"Filter");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_filter_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  printf("Filter");
 
   BIC_SET_RESULT_BLANK();
 
@@ -902,12 +1261,12 @@ built_in_variable_s range_variables[] =
     /* - push this location on stack - */\
     ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();\
     it.data_stack.push(it.blank_location);\
-    \
+\
     /* - push first parameter on stack - */\
     location_s *location = (location_s *)(range_ptr->actual_location);\
     location->v_reference_cnt.atomic_inc();\
     it.data_stack.push((pointer)location);\
-    \
+\
     if (range_ptr->step_location != NULL)\
     {\
       /* - push second parameter on stack - */\
