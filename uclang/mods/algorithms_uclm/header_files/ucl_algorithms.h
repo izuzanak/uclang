@@ -15,8 +15,12 @@ extern unsigned c_rm_class_dict;
 // - filter type identifiers -
 enum
 {
-  c_filter_type_map = 0,
-  c_filter_type_filter,
+  c_filter_type_array_map = 0,
+  c_filter_type_array_filter,
+  c_filter_type_dict_map,
+  c_filter_type_dict_filter,
+  c_filter_type_dlg_map,
+  c_filter_type_dlg_filter,
 };
 
 // - range type identifiers -
@@ -49,7 +53,7 @@ struct iterable_s
 struct filter_s
 {
   unsigned type;
-  location_s *delegate_loc;
+  location_s *map_loc;
   iterable_s iterable;
 
   inline void init();
@@ -106,7 +110,7 @@ inline void iterable_s::clear(interpreter_thread_s &it)
 inline void filter_s::init()
 {/*{{{*/
   type = c_idx_not_exist;
-  delegate_loc = NULL;
+  map_loc = NULL;
   iterable.init();
 }/*}}}*/
 
@@ -119,10 +123,10 @@ inline void filter_s::clear(interpreter_thread_s &it)
     it.release_location_ptr(iterable.location);
   }
 
-  // - release delegate location -
-  if (delegate_loc != NULL)
+  // - release map location -
+  if (map_loc != NULL)
   {
-    it.release_location_ptr(delegate_loc);
+    it.release_location_ptr(map_loc);
   }
 
   iterable.clear(it);
