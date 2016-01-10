@@ -21,6 +21,9 @@ extern built_in_class_s *algorithms_classes[];
 enum
 {
   c_error_ALGO_FILTER_WRONG_DELEGATE = 0,
+  c_error_ALGO_FILTER_EXPECTED_INTEGER_AS_ARRAY_INDEX,
+  c_error_ALGO_FILTER_INDEX_EXCEEDS_ARRAY_RANGE,
+  c_error_ALGO_FILTER_UNDEFINED_DICTIONARY_KEY,
   c_error_RANGE_START_END_TYPES_DIFFERS,
 };
 

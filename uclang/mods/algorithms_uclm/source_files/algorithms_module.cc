@@ -8,6 +8,9 @@ unsigned c_bi_class_algo = c_idx_not_exist;
 unsigned c_bi_class_filter = c_idx_not_exist;
 unsigned c_bi_class_range = c_idx_not_exist;
 
+// - ALGORITHMS indexes of remote classes -
+unsigned c_rm_class_dict = c_idx_not_exist;
+
 // - ALGORITHMS module -
 built_in_module_s module =
 {/*{{{*/
@@ -15,7 +18,7 @@ built_in_module_s module =
   algorithms_classes,         // Classes
 
   0,                          // Error base index
-  2,                          // Error count
+  5,                          // Error count
   algorithms_error_strings,   // Error strings
 
   algorithms_initialize,      // Initialize function
@@ -34,6 +37,9 @@ built_in_class_s *algorithms_classes[] =
 const char *algorithms_error_strings[] =
 {/*{{{*/
   "error_ALGO_FILTER_WRONG_DELEGATE",
+  "error_ALGO_FILTER_EXPECTED_INTEGER_AS_ARRAY_INDEX",
+  "error_ALGO_FILTER_INDEX_EXCEEDS_ARRAY_RANGE",
+  "error_ALGO_FILTER_UNDEFINED_DICTIONARY_KEY",
   "error_RANGE_START_END_TYPES_DIFFERS",
 };/*}}}*/
 
@@ -50,6 +56,19 @@ bool algorithms_initialize(script_parser_s &sp)
 
   // - initialize range class identifier -
   c_bi_class_range = class_base_idx++;
+
+  // - retrieve remote dict class index -
+  c_rm_class_dict = sp.resolve_class_idx_by_name("Dict",c_idx_not_exist);
+
+  // - ERROR -
+  if (c_rm_class_dict == c_idx_not_exist)
+  {
+    sp.error_code.push(ei_module_cannot_find_remote_class);
+    sp.error_code.push(sp.module_names_positions[sp.module_idx].ui_first);
+    sp.error_code.push(sp.module_idx);
+
+    return false;
+  }
 
   return true;
 }/*}}}*/
@@ -70,6 +89,33 @@ bool algorithms_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nWrong delegate for algorithm, expected %" HOST_LL_FORMAT "d parameter/s\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_ALGO_FILTER_EXPECTED_INTEGER_AS_ARRAY_INDEX:
+    {
+      class_record_s &class_record = it.class_records[exception.params[0]];
+
+      fprintf(stderr," ---------------------------------------- \n");
+      fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+      print_error_line(source.source_string,source_pos);
+      fprintf(stderr,"\nReceived ");
+      print_class_sequence(it.class_symbol_names,it.class_records,class_stack,class_record.parent_record);
+      fprintf(stderr,"%s while expecting Integer as map array index\n",it.class_symbol_names[class_record.name_idx].data);
+      fprintf(stderr," ---------------------------------------- \n");
+    }
+    break;
+  case c_error_ALGO_FILTER_INDEX_EXCEEDS_ARRAY_RANGE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nReceived index %" HOST_LL_FORMAT "d exceeds map array range\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_ALGO_FILTER_UNDEFINED_DICTIONARY_KEY:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nReceived key is undefined in map dictionary\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_RANGE_START_END_TYPES_DIFFERS:
@@ -372,70 +418,242 @@ bool bic_algo_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
-  if (src_1_location->v_type != c_bi_class_delegate)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_algo,"map#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
-
-  // - retrieve delegate pointer -
-  delegate_s *delegate_ptr = (delegate_s *)src_1_location->v_data_ptr;
-
-  // - ERROR -
-  if (delegate_ptr->param_cnt != 1)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_WRONG_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    new_exception->params.push(1);
-
-    return false;
-  }
-
   // - create result array -
   pointer_array_s *array_ptr = it.get_new_array_ptr();
 
   // - create result array location -
   BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);
 
-  // - process array -
-  if (src_0_location->v_type == c_bi_class_array)
-  {
-    BIC_ALGO_PROCESS_ARRAY(src_0_location,
+  if (src_1_location->v_type == c_rm_class_dict)
+  {/*{{{*/
 
-      // - call delegate method -
-      location_s *trg_location = NULL;
-      BIC_CALL_DELEGATE(it,delegate_ptr,(pointer *)&item_location,1,trg_location,operands[c_source_pos_idx],
+    // - retrieve map dict -
+    pointer_map_tree_s *map_tree_ptr = (pointer_map_tree_s *)src_1_location->v_data_ptr;
+
+    map_tree_ptr->it_ptr = &it;
+    map_tree_ptr->source_pos = operands[c_source_pos_idx];
+
+    // - process array -
+    if (src_0_location->v_type == c_bi_class_array)
+    {/*{{{*/
+      BIC_ALGO_PROCESS_ARRAY(src_0_location,
+        pointer_map_s search_map = {(pointer)item_location MP_COMMA NULL};
+        unsigned index = map_tree_ptr->get_idx(search_map);
+
+        if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+        {
+          it.release_location_ptr(array_location);
+          return false;
+        }
+
+        // - ERROR -
+        if (index == c_idx_not_exist)
+        {
+          it.release_location_ptr(array_location);
+
+          exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_UNDEFINED_DICTIONARY_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          return false;
+        }
+
+        location_s *trg_location = it.get_location_value(map_tree_ptr->data[index].object.value);
+        trg_location->v_reference_cnt.atomic_inc();
+
+        array_ptr->push(trg_location);
+      );
+    }/*}}}*/
+
+    // - process iterable -
+    else
+    {/*{{{*/
+      BIC_ALGO_PROCESS_ITERABLE(src_0_location,
+        pointer_map_s search_map = {(pointer)item_location MP_COMMA NULL};
+        unsigned index = map_tree_ptr->get_idx(search_map);
+
+        if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+        {
+          it.release_location_ptr(item_reference);
+          it.release_location_ptr(array_location);
+          return false;
+        }
+
+        // - ERROR -
+        if (index == c_idx_not_exist)
+        {
+          it.release_location_ptr(item_reference);
+          it.release_location_ptr(array_location);
+
+          exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_UNDEFINED_DICTIONARY_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          return false;
+        }
+
+        location_s *trg_location = it.get_location_value(map_tree_ptr->data[index].object.value);
+        trg_location->v_reference_cnt.atomic_inc();
+
+        it.release_location_ptr(item_reference);
+        array_ptr->push(trg_location);
+      ,
         it.release_location_ptr(array_location);
         return false;
       );
-
-      array_ptr->push(trg_location);
-    );
-  }
-
-  // - process iterable -
+    }/*}}}*/
+  }/*}}}*/
   else
   {
-    BIC_ALGO_PROCESS_ITERABLE(src_0_location,
+    switch (src_1_location->v_type)
+    {
+    case c_bi_class_array:
+      {/*{{{*/
 
-      // - call delegate method -
-      location_s *trg_location = NULL;
-      BIC_CALL_DELEGATE(it,delegate_ptr,(pointer *)&item_location,1,trg_location,operands[c_source_pos_idx],
-        it.release_location_ptr(item_reference);
+        // - retrieve map array -
+        pointer_array_s *map_arr_ptr = (pointer_array_s *)src_1_location->v_data_ptr;
+
+        // - process array -
+        if (src_0_location->v_type == c_bi_class_array)
+        {/*{{{*/
+          BIC_ALGO_PROCESS_ARRAY(src_0_location,
+            long long int map_index;
+
+            // - ERROR -
+            if (!it.retrieve_integer(item_location,map_index))
+            {
+              it.release_location_ptr(array_location);
+
+              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_EXPECTED_INTEGER_AS_ARRAY_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+              new_exception->params.push(item_location->v_type);
+
+              return false;
+            }
+
+            // - ERROR -
+            if (map_index < 0 || map_index >= map_arr_ptr->used)
+            {
+              it.release_location_ptr(array_location);
+
+              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_INDEX_EXCEEDS_ARRAY_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+              new_exception->params.push(map_index);
+
+              return false;
+            }
+
+            location_s *trg_location = it.get_location_value(map_arr_ptr->data[map_index]);
+            trg_location->v_reference_cnt.atomic_inc();
+
+            array_ptr->push(trg_location);
+          );
+        }/*}}}*/
+
+        // - process iterable -
+        else
+        {/*{{{*/
+          BIC_ALGO_PROCESS_ITERABLE(src_0_location,
+            long long int map_index;
+
+            // - ERROR -
+            if (!it.retrieve_integer(item_location,map_index))
+            {
+              it.release_location_ptr(item_reference);
+              it.release_location_ptr(array_location);
+
+              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_EXPECTED_INTEGER_AS_ARRAY_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+              new_exception->params.push(item_location->v_type);
+
+              return false;
+            }
+
+            // - ERROR -
+            if (map_index < 0 || map_index >= map_arr_ptr->used)
+            {
+              it.release_location_ptr(item_reference);
+              it.release_location_ptr(array_location);
+
+              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_INDEX_EXCEEDS_ARRAY_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+              new_exception->params.push(map_index);
+
+              return false;
+            }
+
+            location_s *trg_location = it.get_location_value(map_arr_ptr->data[map_index]);
+            trg_location->v_reference_cnt.atomic_inc();
+
+            it.release_location_ptr(item_reference);
+            array_ptr->push(trg_location);
+          ,
+            it.release_location_ptr(array_location);
+            return false;
+          );
+        }/*}}}*/
+      }/*}}}*/
+      break;
+    case c_bi_class_delegate:
+      {/*{{{*/
+
+        // - retrieve delegate pointer -
+        delegate_s *delegate_ptr = (delegate_s *)src_1_location->v_data_ptr;
+
+        // - ERROR -
+        if (delegate_ptr->param_cnt != 1)
+        {
+          it.release_location_ptr(array_location);
+
+          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_WRONG_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          new_exception->params.push(1);
+
+          return false;
+        }
+
+        // - process array -
+        if (src_0_location->v_type == c_bi_class_array)
+        {/*{{{*/
+          BIC_ALGO_PROCESS_ARRAY(src_0_location,
+
+            // - call delegate method -
+            location_s *trg_location = NULL;
+            BIC_CALL_DELEGATE(it,delegate_ptr,(pointer *)&item_location,1,trg_location,operands[c_source_pos_idx],
+              it.release_location_ptr(array_location);
+              return false;
+            );
+
+            array_ptr->push(trg_location);
+          );
+        }/*}}}*/
+
+        // - process iterable -
+        else
+        {/*{{{*/
+          BIC_ALGO_PROCESS_ITERABLE(src_0_location,
+
+            // - call delegate method -
+            location_s *trg_location = NULL;
+            BIC_CALL_DELEGATE(it,delegate_ptr,(pointer *)&item_location,1,trg_location,operands[c_source_pos_idx],
+              it.release_location_ptr(item_reference);
+              it.release_location_ptr(array_location);
+              return false;
+            );
+
+            it.release_location_ptr(item_reference);
+            array_ptr->push(trg_location);
+          ,
+            it.release_location_ptr(array_location);
+            return false;
+          );
+        }/*}}}*/
+      }/*}}}*/
+      break;
+
+    // - ERROR -
+    default:
+      {
         it.release_location_ptr(array_location);
-        return false;
-      );
 
-      it.release_location_ptr(item_reference);
-      array_ptr->push(trg_location);
-    ,
-      it.release_location_ptr(array_location);
-      return false;
-    );
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_algo,"map#2");
+        new_exception->params.push(2);
+        new_exception->params.push(src_0_location->v_type);
+        new_exception->params.push(src_1_location->v_type);
+
+        return false;
+      }
+    }
   }
 
   pointer &res_location = it.data_stack[res_loc_idx];

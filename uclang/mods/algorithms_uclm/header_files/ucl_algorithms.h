@@ -10,6 +10,8 @@ include "script_parser.h"
  * basic definitions and constants
  */
 
+extern unsigned c_rm_class_dict;
+
 // - filter type identifiers -
 enum
 {
