@@ -424,6 +424,85 @@ bool bic_algo_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
   // - create result array location -
   BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);
 
+#define BIC_ALGO_METHOD_MAP_MAP_ARRAY(RELEASE_REFERENCE) \
+/*{{{*/\
+  long long int map_index;\
+\
+  /* - ERROR - */\
+  if (!it.retrieve_integer(item_location,map_index))\
+  {\
+    RELEASE_REFERENCE;\
+    it.release_location_ptr(array_location);\
+\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_EXPECTED_INTEGER_AS_ARRAY_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(item_location->v_type);\
+\
+    return false;\
+  }\
+\
+  /* - ERROR - */\
+  if (map_index < 0 || map_index >= map_arr_ptr->used)\
+  {\
+    RELEASE_REFERENCE;\
+    it.release_location_ptr(array_location);\
+\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_INDEX_EXCEEDS_ARRAY_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(map_index);\
+\
+    return false;\
+  }\
+\
+  location_s *trg_location = it.get_location_value(map_arr_ptr->data[map_index]);\
+  trg_location->v_reference_cnt.atomic_inc();\
+\
+  RELEASE_REFERENCE;\
+/*}}}*/
+
+#define BIC_ALGO_METHOD_MAP_MAP_DICT(RELEASE_REFERENCE) \
+/*{{{*/\
+  map_tree_ptr->it_ptr = &it;\
+  map_tree_ptr->source_pos = operands[c_source_pos_idx];\
+\
+  pointer_map_s search_map = {(pointer)item_location MP_COMMA NULL};\
+  unsigned index = map_tree_ptr->get_idx(search_map);\
+\
+  if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)\
+  {\
+    RELEASE_REFERENCE;\
+    it.release_location_ptr(array_location);\
+    return false;\
+  }\
+\
+  /* - ERROR - */\
+  if (index == c_idx_not_exist)\
+  {\
+    RELEASE_REFERENCE;\
+    it.release_location_ptr(array_location);\
+\
+    exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_UNDEFINED_DICTIONARY_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  location_s *trg_location = it.get_location_value(map_tree_ptr->data[index].object.value);\
+  trg_location->v_reference_cnt.atomic_inc();\
+\
+  RELEASE_REFERENCE;\
+/*}}}*/
+
+#define BIC_ALGO_METHOD_MAP_MAP_DLG(RELEASE_REFERENCE) \
+/*{{{*/\
+\
+  /* - call delegate method - */\
+  location_s *trg_location = NULL;\
+  BIC_CALL_DELEGATE(it,delegate_ptr,(pointer *)&item_location,1,trg_location,operands[c_source_pos_idx],\
+    RELEASE_REFERENCE;\
+    it.release_location_ptr(array_location);\
+    return false;\
+  );\
+\
+  RELEASE_REFERENCE;\
+/*}}}*/
+
   if (src_1_location->v_type == c_rm_class_dict)
   {/*{{{*/
 
@@ -432,73 +511,24 @@ bool bic_algo_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
     // - process array -
     if (src_0_location->v_type == c_bi_class_array)
-    {/*{{{*/
+    {
       BIC_ALGO_PROCESS_ARRAY(src_0_location,
-        map_tree_ptr->it_ptr = &it;
-        map_tree_ptr->source_pos = operands[c_source_pos_idx];
-
-        pointer_map_s search_map = {(pointer)item_location MP_COMMA NULL};
-        unsigned index = map_tree_ptr->get_idx(search_map);
-
-        if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
-        {
-          it.release_location_ptr(array_location);
-          return false;
-        }
-
-        // - ERROR -
-        if (index == c_idx_not_exist)
-        {
-          it.release_location_ptr(array_location);
-
-          exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_UNDEFINED_DICTIONARY_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);
-          return false;
-        }
-
-        location_s *trg_location = it.get_location_value(map_tree_ptr->data[index].object.value);
-        trg_location->v_reference_cnt.atomic_inc();
-
+        BIC_ALGO_METHOD_MAP_MAP_DICT();
         array_ptr->push(trg_location);
       );
-    }/*}}}*/
+    }
 
     // - process iterable -
     else
-    {/*{{{*/
+    {
       BIC_ALGO_PROCESS_ITERABLE(src_0_location,
-        map_tree_ptr->it_ptr = &it;
-        map_tree_ptr->source_pos = operands[c_source_pos_idx];
-
-        pointer_map_s search_map = {(pointer)item_location MP_COMMA NULL};
-        unsigned index = map_tree_ptr->get_idx(search_map);
-
-        if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
-        {
-          it.release_location_ptr(item_reference);
-          it.release_location_ptr(array_location);
-          return false;
-        }
-
-        // - ERROR -
-        if (index == c_idx_not_exist)
-        {
-          it.release_location_ptr(item_reference);
-          it.release_location_ptr(array_location);
-
-          exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_UNDEFINED_DICTIONARY_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);
-          return false;
-        }
-
-        location_s *trg_location = it.get_location_value(map_tree_ptr->data[index].object.value);
-        trg_location->v_reference_cnt.atomic_inc();
-
-        it.release_location_ptr(item_reference);
+        BIC_ALGO_METHOD_MAP_MAP_DICT(it.release_location_ptr(item_reference););
         array_ptr->push(trg_location);
       ,
         it.release_location_ptr(array_location);
         return false;
       );
-    }/*}}}*/
+    }
   }/*}}}*/
   else
   {
@@ -512,79 +542,24 @@ bool bic_algo_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
         // - process array -
         if (src_0_location->v_type == c_bi_class_array)
-        {/*{{{*/
+        {
           BIC_ALGO_PROCESS_ARRAY(src_0_location,
-            long long int map_index;
-
-            // - ERROR -
-            if (!it.retrieve_integer(item_location,map_index))
-            {
-              it.release_location_ptr(array_location);
-
-              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_EXPECTED_INTEGER_AS_ARRAY_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(item_location->v_type);
-
-              return false;
-            }
-
-            // - ERROR -
-            if (map_index < 0 || map_index >= map_arr_ptr->used)
-            {
-              it.release_location_ptr(array_location);
-
-              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_INDEX_EXCEEDS_ARRAY_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(map_index);
-
-              return false;
-            }
-
-            location_s *trg_location = it.get_location_value(map_arr_ptr->data[map_index]);
-            trg_location->v_reference_cnt.atomic_inc();
-
+            BIC_ALGO_METHOD_MAP_MAP_ARRAY();
             array_ptr->push(trg_location);
           );
-        }/*}}}*/
+        }
 
         // - process iterable -
         else
-        {/*{{{*/
+        {
           BIC_ALGO_PROCESS_ITERABLE(src_0_location,
-            long long int map_index;
-
-            // - ERROR -
-            if (!it.retrieve_integer(item_location,map_index))
-            {
-              it.release_location_ptr(item_reference);
-              it.release_location_ptr(array_location);
-
-              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_EXPECTED_INTEGER_AS_ARRAY_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(item_location->v_type);
-
-              return false;
-            }
-
-            // - ERROR -
-            if (map_index < 0 || map_index >= map_arr_ptr->used)
-            {
-              it.release_location_ptr(item_reference);
-              it.release_location_ptr(array_location);
-
-              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_INDEX_EXCEEDS_ARRAY_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(map_index);
-
-              return false;
-            }
-
-            location_s *trg_location = it.get_location_value(map_arr_ptr->data[map_index]);
-            trg_location->v_reference_cnt.atomic_inc();
-
-            it.release_location_ptr(item_reference);
+            BIC_ALGO_METHOD_MAP_MAP_ARRAY(it.release_location_ptr(item_reference););
             array_ptr->push(trg_location);
           ,
             it.release_location_ptr(array_location);
             return false;
           );
-        }/*}}}*/
+        }
       }/*}}}*/
       break;
     case c_bi_class_delegate:
@@ -606,40 +581,24 @@ bool bic_algo_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
         // - process array -
         if (src_0_location->v_type == c_bi_class_array)
-        {/*{{{*/
+        {
           BIC_ALGO_PROCESS_ARRAY(src_0_location,
-
-            // - call delegate method -
-            location_s *trg_location = NULL;
-            BIC_CALL_DELEGATE(it,delegate_ptr,(pointer *)&item_location,1,trg_location,operands[c_source_pos_idx],
-              it.release_location_ptr(array_location);
-              return false;
-            );
-
+            BIC_ALGO_METHOD_MAP_MAP_DLG();
             array_ptr->push(trg_location);
           );
-        }/*}}}*/
+        }
 
         // - process iterable -
         else
-        {/*{{{*/
+        {
           BIC_ALGO_PROCESS_ITERABLE(src_0_location,
-
-            // - call delegate method -
-            location_s *trg_location = NULL;
-            BIC_CALL_DELEGATE(it,delegate_ptr,(pointer *)&item_location,1,trg_location,operands[c_source_pos_idx],
-              it.release_location_ptr(item_reference);
-              it.release_location_ptr(array_location);
-              return false;
-            );
-
-            it.release_location_ptr(item_reference);
+            BIC_ALGO_METHOD_MAP_MAP_DLG(it.release_location_ptr(item_reference););
             array_ptr->push(trg_location);
           ,
             it.release_location_ptr(array_location);
             return false;
           );
-        }/*}}}*/
+        }
       }/*}}}*/
       break;
 
@@ -753,112 +712,227 @@ bool bic_algo_method_filter_2(interpreter_thread_s &it,unsigned stack_base,uli *
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
-  if (src_1_location->v_type != c_bi_class_delegate)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_algo,"filter#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
-
-  // - retrieve delegate pointer -
-  delegate_s *delegate_ptr = (delegate_s *)src_1_location->v_data_ptr;
-
-  // - ERROR -
-  if (delegate_ptr->param_cnt != 1)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_WRONG_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    new_exception->params.push(1);
-
-    return false;
-  }
-
   // - create result array -
   pointer_array_s *array_ptr = it.get_new_array_ptr();
 
   // - create result array location -
   BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);
 
-  // - process array -
-  if (src_0_location->v_type == c_bi_class_array)
-  {
-    BIC_ALGO_PROCESS_ARRAY(src_0_location,
+#define BIC_ALGO_METHOD_FILTER_MAP_ARRAY(RELEASE_REFERENCE) \
+/*{{{*/\
+  long long int map_index;\
+\
+  /* - ERROR - */\
+  if (!it.retrieve_integer(item_location,map_index))\
+  {\
+    RELEASE_REFERENCE;\
+    it.release_location_ptr(array_location);\
+\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_EXPECTED_INTEGER_AS_ARRAY_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(item_location->v_type);\
+\
+    return false;\
+  }\
+\
+  /* - ERROR - */\
+  if (map_index < 0 || map_index >= map_arr_ptr->used)\
+  {\
+    RELEASE_REFERENCE;\
+    it.release_location_ptr(array_location);\
+\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_INDEX_EXCEEDS_ARRAY_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(map_index);\
+\
+    return false;\
+  }\
+\
+  location_s *trg_location = it.get_location_value(map_arr_ptr->data[map_index]);\
+  trg_location->v_reference_cnt.atomic_inc();\
+/*}}}*/
 
-      // - call delegate method -
-      location_s *trg_location = NULL;
-      BIC_CALL_DELEGATE(it,delegate_ptr,(pointer *)&item_location,1,trg_location,operands[c_source_pos_idx],
+#define BIC_ALGO_METHOD_FILTER_MAP_DICT(RELEASE_REFERENCE) \
+/*{{{*/\
+  map_tree_ptr->it_ptr = &it;\
+  map_tree_ptr->source_pos = operands[c_source_pos_idx];\
+\
+  pointer_map_s search_map = {(pointer)item_location MP_COMMA NULL};\
+  unsigned index = map_tree_ptr->get_idx(search_map);\
+\
+  if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)\
+  {\
+    RELEASE_REFERENCE;\
+    it.release_location_ptr(array_location);\
+    return false;\
+  }\
+\
+  /* - ERROR - */\
+  if (index == c_idx_not_exist)\
+  {\
+    RELEASE_REFERENCE;\
+    it.release_location_ptr(array_location);\
+\
+    exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_UNDEFINED_DICTIONARY_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  location_s *trg_location = it.get_location_value(map_tree_ptr->data[index].object.value);\
+  trg_location->v_reference_cnt.atomic_inc();\
+/*}}}*/
+
+#define BIC_ALGO_METHOD_FILTER_MAP_DLG(RELEASE_REFERENCE) \
+/*{{{*/\
+\
+  /* - call delegate method - */\
+  location_s *trg_location = NULL;\
+  BIC_CALL_DELEGATE(it,delegate_ptr,(pointer *)&item_location,1,trg_location,operands[c_source_pos_idx],\
+    RELEASE_REFERENCE;\
+    it.release_location_ptr(array_location);\
+    return false;\
+  );\
+/*}}}*/
+
+#define BIC_ALGO_METHOD_FILTER_OUT_FILTER(RELEASE_REFERENCE) \
+/*{{{*/\
+\
+  /* - test value - */\
+  bool result;\
+  if (!it.test_value(trg_location,result))\
+  {\
+    RELEASE_REFERENCE;\
+    it.release_location_ptr(trg_location);\
+    it.release_location_ptr(array_location);\
+\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_CANNOT_TEST_TYPE_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(trg_location->v_type);\
+\
+    return false;\
+  }\
+\
+  it.release_location_ptr(trg_location);\
+\
+  /* - if test was successfull - */\
+  if (result)\
+  {\
+    item_location->v_reference_cnt.atomic_inc();\
+    array_ptr->push(item_location);\
+  }\
+\
+  RELEASE_REFERENCE;\
+/*}}}*/
+
+  if (src_1_location->v_type == c_rm_class_dict)
+  {/*{{{*/
+
+    // - retrieve map dict -
+    pointer_map_tree_s *map_tree_ptr = (pointer_map_tree_s *)src_1_location->v_data_ptr;
+
+    // - process array -
+    if (src_0_location->v_type == c_bi_class_array)
+    {
+      BIC_ALGO_PROCESS_ARRAY(src_0_location,
+        BIC_ALGO_METHOD_FILTER_MAP_DICT();
+        BIC_ALGO_METHOD_FILTER_OUT_FILTER();
+      );
+    }
+
+    // - process iterable -
+    else
+    {
+      BIC_ALGO_PROCESS_ITERABLE(src_0_location,
+        BIC_ALGO_METHOD_FILTER_MAP_DICT(it.release_location_ptr(item_reference););
+        BIC_ALGO_METHOD_FILTER_OUT_FILTER(it.release_location_ptr(item_reference););
+      ,
         it.release_location_ptr(array_location);
         return false;
       );
-
-      // - test value -
-      bool result;
-      if (!it.test_value(trg_location,result))
-      {
-        it.release_location_ptr(trg_location);
-        it.release_location_ptr(array_location);
-
-        exception_s *new_exception = exception_s::throw_exception(it,c_error_CANNOT_TEST_TYPE_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        new_exception->params.push(trg_location->v_type);
-
-        return false;
-      }
-
-      it.release_location_ptr(trg_location);
-
-      // - if test was successfull -
-      if (result)
-      {
-        item_location->v_reference_cnt.atomic_inc();
-        array_ptr->push(item_location);
-      }
-    );
-  }
-
-  // - process iterable -
+    }
+  }/*}}}*/
   else
   {
-    BIC_ALGO_PROCESS_ITERABLE(src_0_location,
+    switch (src_1_location->v_type)
+    {
+    case c_bi_class_array:
+      {/*{{{*/
 
-      // - call delegate method -
-      location_s *trg_location = NULL;
-      BIC_CALL_DELEGATE(it,delegate_ptr,(pointer *)&item_location,1,trg_location,operands[c_source_pos_idx],
-        it.release_location_ptr(item_reference);
-        it.release_location_ptr(array_location);
-        return false;
-      );
+        // - retrieve map array -
+        pointer_array_s *map_arr_ptr = (pointer_array_s *)src_1_location->v_data_ptr;
 
-      // - test value -
-      bool result;
-      if (!it.test_value(trg_location,result))
+        // - process array -
+        if (src_0_location->v_type == c_bi_class_array)
+        {
+          BIC_ALGO_PROCESS_ARRAY(src_0_location,
+            BIC_ALGO_METHOD_FILTER_MAP_ARRAY();
+            BIC_ALGO_METHOD_FILTER_OUT_FILTER();
+          );
+        }
+
+        // - process iterable -
+        else
+        {
+          BIC_ALGO_PROCESS_ITERABLE(src_0_location,
+            BIC_ALGO_METHOD_FILTER_MAP_ARRAY(it.release_location_ptr(item_reference););
+            BIC_ALGO_METHOD_FILTER_OUT_FILTER(it.release_location_ptr(item_reference););
+          ,
+            it.release_location_ptr(array_location);
+            return false;
+          );
+        }
+      }/*}}}*/
+      break;
+    case c_bi_class_delegate:
+      {/*{{{*/
+
+        // - retrieve delegate pointer -
+        delegate_s *delegate_ptr = (delegate_s *)src_1_location->v_data_ptr;
+
+        // - ERROR -
+        if (delegate_ptr->param_cnt != 1)
+        {
+          it.release_location_ptr(array_location);
+
+          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_WRONG_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          new_exception->params.push(1);
+
+          return false;
+        }
+
+        // - process array -
+        if (src_0_location->v_type == c_bi_class_array)
+        {
+          BIC_ALGO_PROCESS_ARRAY(src_0_location,
+            BIC_ALGO_METHOD_FILTER_MAP_DLG();
+            BIC_ALGO_METHOD_FILTER_OUT_FILTER();
+          );
+        }
+
+        // - process iterable -
+        else
+        {
+          BIC_ALGO_PROCESS_ITERABLE(src_0_location,
+            BIC_ALGO_METHOD_FILTER_MAP_DLG(it.release_location_ptr(item_reference););
+            BIC_ALGO_METHOD_FILTER_OUT_FILTER(it.release_location_ptr(item_reference););
+          ,
+            it.release_location_ptr(array_location);
+            return false;
+          );
+        }
+      }/*}}}*/
+      break;
+
+      // - ERROR -
+      default:
       {
-        it.release_location_ptr(item_reference);
-        it.release_location_ptr(trg_location);
         it.release_location_ptr(array_location);
 
-        exception_s *new_exception = exception_s::throw_exception(it,c_error_CANNOT_TEST_TYPE_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        new_exception->params.push(trg_location->v_type);
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_algo,"filter#2");
+        new_exception->params.push(2);
+        new_exception->params.push(src_0_location->v_type);
+        new_exception->params.push(src_1_location->v_type);
 
         return false;
       }
-
-      it.release_location_ptr(trg_location);
-
-      // - if test was successfull -
-      if (result)
-      {
-        item_location->v_reference_cnt.atomic_inc();
-        array_ptr->push(item_location);
-      }
-
-      it.release_location_ptr(item_reference);
-    ,
-      it.release_location_ptr(array_location);
-      return false;
-    );
+    }
   }
 
   pointer &res_location = it.data_stack[res_loc_idx];
@@ -1117,6 +1191,40 @@ built_in_variable_s filter_variables[] =
 {/*{{{*/
 };/*}}}*/
 
+#define BIC_FILTER_NEXT_ITEM_MAP_ARRAY(SOURCE_POS,ERROR_CODE) \
+/*{{{*/\
+  long long int map_index;\
+\
+  /* - ERROR - */\
+  if (!it.retrieve_integer(iter.item_location,map_index))\
+  {\
+    /* - release item reference - */\
+    it.release_location_ptr(iter.item_reference);\
+    iter.item_reference = NULL;\
+\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_EXPECTED_INTEGER_AS_ARRAY_INDEX,SOURCE_POS,(location_s *)it.blank_location);\
+    new_exception->params.push(iter.item_location->v_type);\
+\
+    ERROR_CODE;\
+  }\
+\
+  /* - ERROR - */\
+  if (map_index < 0 || map_index >= ((pointer_array_s *)map_ptr)->used)\
+  {\
+    /* - release item reference - */\
+    it.release_location_ptr(iter.item_reference);\
+    iter.item_reference = NULL;\
+\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_INDEX_EXCEEDS_ARRAY_RANGE,SOURCE_POS,(location_s *)it.blank_location);\
+    new_exception->params.push(map_index);\
+\
+    ERROR_CODE;\
+  }\
+\
+  location_s *trg_location = it.get_location_value(((pointer_array_s *)map_ptr)->data[map_index]);\
+  trg_location->v_reference_cnt.atomic_inc();\
+/*}}}*/
+
 #define BIC_FILTER_NEXT_ITEM_MAP_DICT(SOURCE_POS,ERROR_CODE) \
 /*{{{*/\
   pointer_map_tree_s *map_tree_ptr = (pointer_map_tree_s *)map_ptr;\
@@ -1149,40 +1257,6 @@ built_in_variable_s filter_variables[] =
   }\
 \
   location_s *trg_location = it.get_location_value(map_tree_ptr->data[index].object.value);\
-  trg_location->v_reference_cnt.atomic_inc();\
-/*}}}*/
-
-#define BIC_FILTER_NEXT_ITEM_MAP_ARRAY(SOURCE_POS,ERROR_CODE) \
-/*{{{*/\
-  long long int map_index;\
-\
-  /* - ERROR - */\
-  if (!it.retrieve_integer(iter.item_location,map_index))\
-  {\
-    /* - release item reference - */\
-    it.release_location_ptr(iter.item_reference);\
-    iter.item_reference = NULL;\
-\
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_EXPECTED_INTEGER_AS_ARRAY_INDEX,SOURCE_POS,(location_s *)it.blank_location);\
-    new_exception->params.push(iter.item_location->v_type);\
-\
-    ERROR_CODE;\
-  }\
-\
-  /* - ERROR - */\
-  if (map_index < 0 || map_index >= ((pointer_array_s *)map_ptr)->used)\
-  {\
-    /* - release item reference - */\
-    it.release_location_ptr(iter.item_reference);\
-    iter.item_reference = NULL;\
-\
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_INDEX_EXCEEDS_ARRAY_RANGE,SOURCE_POS,(location_s *)it.blank_location);\
-    new_exception->params.push(map_index);\
-\
-    ERROR_CODE;\
-  }\
-\
-  location_s *trg_location = it.get_location_value(((pointer_array_s *)map_ptr)->data[map_index]);\
   trg_location->v_reference_cnt.atomic_inc();\
 /*}}}*/
 
@@ -1358,7 +1432,7 @@ built_in_variable_s filter_variables[] =
   } while(!done);\
 }/*}}}*/
 
-#define BIC_FILTER_METHOD_MAP_FILTER(TYPE) \
+#define BIC_FILTER_METHODS_MAP_FILTER(TYPE) \
 {/*{{{*/\
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
@@ -1504,12 +1578,12 @@ bool bic_filter_operator_binary_equal(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_filter_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  BIC_FILTER_METHOD_MAP_FILTER(map);
+  BIC_FILTER_METHODS_MAP_FILTER(map);
 }/*}}}*/
 
 bool bic_filter_method_filter_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  BIC_FILTER_METHOD_MAP_FILTER(filter);
+  BIC_FILTER_METHODS_MAP_FILTER(filter);
 }/*}}}*/
 
 bool bic_filter_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
