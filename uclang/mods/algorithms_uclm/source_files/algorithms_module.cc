@@ -1371,7 +1371,7 @@ built_in_variable_s filter_variables[] =
         break;\
     }\
 \
-    /* - if there are no data in iterable- */\
+    /* - if there are no data in iterable - */\
     if (iter_empty)\
     {\
       /* - set blank result - */\

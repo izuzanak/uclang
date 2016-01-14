@@ -1,6 +1,7 @@
 # uclang - programming language
 
-Dynamic, object-oriented, general-purpose, high-level programming language.
+Interpreted, dynamically typed, object-oriented, general purpose programming
+language.
 
 ## Language features
 
@@ -13,7 +14,7 @@ Follows list of uclang features, that are supported by its interpreter.
 * Strong object oriented approach.
   * Everything is object. 
   * No global functions at all.
-  * All actions are performed by execution of methods.
+  * Almost all actions are performed by execution of methods.
 * Support for inheritance.
 * Support for exceptions.
 * Support for native threads, no GIL (Global Interpreter Lock).
@@ -24,12 +25,12 @@ Follows list of uclang features, that are supported by its interpreter.
 ## Motivation
 
 C/C++ are excellent programming languages, but they are quite heavy-footed when
-it comes to scripting, rapid development or code prototyping.
+it comes to scripting, rapid development, code prototyping or qluing of
+existing code.
 
 As programmer who started programming in Pascal programming language I was
 surprised by simplicity of C. If you keep in mind few basic concepts (data
-types, memory, pointers), all higher level features derives from it
-intuitively.
+types, memory, pointers), all high level features derives from it intuitively.
 
 It would be nice (at least fro me) to have high-level programming language for
 fast prototyping and rapid development, that would be: simple, expressive and
@@ -44,12 +45,13 @@ programming language:
 * Language based on few simple principles.
 * Threading support without constraints (no GIL).
 * Implicit comparison by type and value, no `===` or `!==` and alike operators.
-* Module system, no difference between binary and uclang modules.
+* Module system, importing binary (C/C++) and uclang modules.
 * Lightweight interpreter, deployable on embedded devices.
 
 ## Documentation
 
-Documentation of uclang components is placed in directory: [`uclang/doc`](https://github.com/izuzanak/uclang/tree/master/uclang/doc)
+Documentation of uclang components is placed in directory:
+[`uclang/doc`](https://github.com/izuzanak/uclang/tree/master/uclang/doc)
 
 ## Language modules
 
@@ -108,7 +110,8 @@ Some of implemented modules are:
 
 ## Examples
 
-Examples of uclang usage are placed in directory: [`uclang/examples`](https://github.com/izuzanak/uclang/tree/master/uclang/examples)
+Examples of uclang usage are placed in directory:
+[`uclang/examples`](https://github.com/izuzanak/uclang/tree/master/uclang/examples)
 
 ### Inline examples
 
@@ -277,8 +280,8 @@ wget https://raw.githubusercontent.com/izuzanak/uclang/master/uclang_try/try_ucl
 bash try_uclang.sh
 ```
 
-It will clone two repositories `cont` and `uclang`, and subsequently compile
-container generator and interpreter of uclang.
+It will clone two repositories `cont` and `uclang`, and then compile container
+generator and interpreter of uclang.
 
 ### Linux example scripts
 

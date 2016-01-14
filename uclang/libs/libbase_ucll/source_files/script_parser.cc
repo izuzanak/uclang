@@ -1491,7 +1491,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
     "// ## DOT EXPRESSION TREE ##\n"
     "digraph G {\n"
     "   rankdir=TD;\n"
-    "   node [shape = ellipse];\n"
+    "   node [shape=ellipse];\n"
   );
 
   ui_array_s exp_stack;
@@ -2074,8 +2074,14 @@ void script_parser_s::DEBUG_show_dot_format_flow_graph(exp_flow_graph_s &fg)
   printf(
     "// ## DOT FLOW GRAPH ##\n"
     "digraph G {\n"
-    "   rankdir=LR;\n"
-    "   node [shape = ellipse];\n"
+    "   rankdir=LR\n"
+    "   ordering=in\n"
+    "\n"
+    "   overlap=false\n"
+    "   graph [fontsize=12]\n"
+    "   edge [fontsize=12]\n"
+    "   node [shape=plaintext fontsize=12]\n"
+    "\n"
   );
 
   unsigned *fg_data = fg_nodes.data;
@@ -2103,7 +2109,7 @@ void script_parser_s::DEBUG_show_dot_format_flow_graph(exp_flow_graph_s &fg)
 
       if (fg_ptr[c_fg_condition_first_out] != c_idx_not_exist)
       {
-        printf("   node_%u -> node_%u [ label = \"true\" ]\n",fg_idx,fg_ptr[c_fg_condition_first_out]);
+        printf("   node_%u -> node_%u [ label = \"true\" color = green ]\n",fg_idx,fg_ptr[c_fg_condition_first_out]);
       }
 
       if (fg_ptr[c_fg_condition_second_out] != c_idx_not_exist)
@@ -2228,7 +2234,7 @@ void script_parser_s::DEBUG_show_dot_format_class_inheritance()
     "// ## DOT CLASS INHERITANCE TREE ##\n"
     "digraph G {\n"
     "   rankdir=TD;\n"
-    "   node [shape = ellipse];\n"
+    "   node [shape=ellipse];\n"
   );
 
   if (class_records.used != 0)
