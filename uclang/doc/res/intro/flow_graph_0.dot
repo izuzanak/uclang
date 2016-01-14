@@ -1,0 +1,25 @@
+digraph G {
+   rankdir = LR
+   ordering = in
+
+   overlap = false
+   graph [fontsize = 12]
+   edge [fontsize = 12]
+   node [shape = plaintext fontsize = 12]
+
+   node_0 [ label = "Expression" ]
+   node_0 -> node_3
+   node_3 [ label = "Expression" ]
+   node_3 -> node_6
+   node_6 [ label = "Condition" ]
+   node_6 -> node_3 [ label = "true" color = green ]
+   node_6 -> node_11 [ label = "false" ]
+   node_11 [ label = "Condition" ]
+   node_11 -> node_16 [ label = "true" color = green ]
+   node_11 -> node_19 [ label = "false" ]
+   node_16 [ label = "Expression" ]
+   node_16 -> node_11 [ label = " " ]
+   node_19 [ label = "Expression" ]
+   node_19 -> node_22
+   node_22 [ label = "Exp. join" ]
+}

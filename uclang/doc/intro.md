@@ -1,7 +1,6 @@
 
 # Uclang - programming language
 
-<!-- {{{ -->
 Uclang is interpreted, dynamically typed, object-oriented, general purpose
 programming language defined mainly by its interpreter. Language and its
 interpreter are based on set of simple rules.
@@ -28,18 +27,14 @@ language Uclang can be found
 This text contains mainly examples and brief description of language principles
 and features, divided to few categories.
 
-<!-- }}} -->
-
 ## Syntax of language
 
-<!-- {{{ -->
 Syntax of Uclang is mainly derived from programming language C/C++ with
 influence of programming language Java.  Syntax of Java language influenced
 syntax of class inheritance and inheritance related constructs.
 
 ### Basic syntax
 
-<!-- {{{ -->
 Classes can be defined on top level or can be nested in parent class. Member
 variables and methods must be declared inside some parent class.  Executed
 script and all its imported modules should contain one class of name `Main`,
@@ -61,11 +56,9 @@ class Main
 ```
 Hello world!!!
 ```
-<!-- }}} -->
 
 ### Syntax of operators
 
-<!-- {{{ -->
 Operators of language are mainly derived from language C/C++. Precedence of
 operators is also preserved. Operators are translated to equivalent method
 calls. For example entry `a += b` is translated to call of method
@@ -113,11 +106,8 @@ i_expression_end
 i_expression_end
 ```
 
-<!-- }}} -->
-
 ### Syntax of branches and loops
 
-<!-- {{{ -->
 Language syntax supports various forms of flow branching and looping
 constructs.  Significant subset of flow branching and looping syntax is derived
 from C like languages. Details about [flow
@@ -162,13 +152,11 @@ lesser:  250
 
 Program flow graph of method `Main.main#1`.
 
-![Example flow graph](res/intro/flow_graph.svg)
-
-<!-- }}} -->
+![Example flow graph](res/intro/flow_graph_0.png)
+![Example flow graph](res/intro/flow_graph_1.png)
 
 ### Syntax of classes and inheritance
 
-<!-- {{{ -->
 Classes can inherit properties from other classes by use of keyword `extends`
 and name of super class in their declaration.
 
@@ -216,18 +204,15 @@ class Main
 Class StorageNull cannot override final method StorageBase.dummy#0
  ---------------------------------------- 
 ```
-<!-- }}} -->
 
 Language syntax is in more details described in
 [documentation](https://github.com/izuzanak/uclang/tree/master/uclang/doc/01_syntax).
 Syntax constructions concerning declaration of classes, methods and member
 variables can be found in
 [examples](https://github.com/izuzanak/uclang/tree/master/uclang/examples/01_syntax).
-<!-- }}} -->
 
 ## Interpreter of language
 
-<!-- {{{ -->
 Language interpreter was designed and implemented  as lightweight utility,
 which does not depend on any third party code, and can be deployed and executed
 on embedded devices, without any additional requirements. Interpreter and its
@@ -236,7 +221,6 @@ android (arm), raspberry pi (arm) and win (xp,7).
 
 ### Module system
 
-<!-- {{{ -->
 Module system of language differentiate between two types of modules: native
 C/C++ modules, and modules implemented in language Uclang.  Modules of first
 type are implemented in C/C++ language and are represented by dynamic library
@@ -280,11 +264,9 @@ class Main
 ```
 Info: Imported [One:1,Two:2,Three:3]
 ```
-<!-- }}} -->
 
 ### Multithreading
 
-<!-- {{{ -->
 Interpreter supports multithreading, but does not use any Global Interpreter
 Lock (GIL) mechanism. Control over process and its threads is left to
 programmer.
@@ -321,11 +303,9 @@ class Main
 ```
 result: 4950
 ```
-<!-- }}} -->
 
 ### Runtime exceptions
 
-<!-- {{{ -->
 Unexpected results and invalid operations throws runtime exceptions. Each
 imported module declares exceptions related to all errors it can produce and
 detect.  Object describing exception contain information about source of
@@ -351,11 +331,9 @@ Exception: ERROR: in file: "_modules/docu.ucl" on line: 5
 Not all arguments converted during string formatting
  ---------------------------------------- 
 ```
-<!-- }}} -->
 
 ### Build in operations
 
-<!-- {{{ -->
 There are few build-in operations, that are not implemented by methods of
 objects. This operations are triggered by keywords: `new`, `free` and `type`.
 Keyword `new` is used for construction of new object of given class, or
@@ -399,13 +377,9 @@ variable: 10
 variable: <blank>
 types: Integer Float String Array
 ```
-<!-- }}} -->
-
-<!-- }}} -->
 
 ## Object properties
 
-<!-- {{{ -->
 All variables of language Uclang are represented by objects.  Build in objects
 (objects that are implemented in C/C++ modules) does not have other than static
 member variables. Properties of built in objects are accessed by methods
@@ -439,7 +413,6 @@ len: 3
 
 ### Dynamic type of variables
 
-<!-- {{{ -->
 Type of Uclang variables is dynamic.  When method which is called receives
 parameter of type that cannot be handled properly, exception describing
 parameter error is thrown.  Most type checking takes place in runtime, except
@@ -477,11 +450,8 @@ class Main
 Class String does not contain method create#2
  ---------------------------------------- 
 ```
-<!-- }}} -->
 
 ### Object ordering
-
-<!-- {{{ -->
 
 All objects, as long as they implement method `compare#1` are comparable.
 Uclang containers `Set`, `Tree` and `Dict` uses red-black trees as their base
@@ -534,11 +504,9 @@ Key(7):*******
 Key(8):********
 Key(9):*********
 ```
-<!-- }}} -->
 
 ### Object comparison
 
-<!-- {{{ -->
 Uclang does not have operators `===` and `!==`. All comparisons are performed
 by type of object first, and then by its value. Containers are compared by rich
 comparison method. Count of container elements is compared first, and then all
@@ -579,11 +547,8 @@ comparisons:
  [1,2,3,4,5].compare(   [1,2,3,4]): 1
 ```
 
-<!-- }}} -->
-
 ### Iterable objects
 
-<!-- {{{ -->
 Some of objects are recognized as iterable. Iterable object are capable to
 provide access to its members, or it can produce sequence of objects as its
 output.  Algorithms processing iterable objects (like `for` loops, or `Filter`
@@ -646,13 +611,8 @@ slice: [[1,1],[1,1,1,1],[1,1,1,1,1,1]]
 slice: [5,4,3,2]
 ```
 
-<!-- }}} -->
-
-<!-- }}} -->
-
 ## Additional informations
 
-<!-- {{{ -->
 At beginning language was designed just from curiosity, but lately, when
 solving some real world tasks, language proved itself as practical tool for
 gluing of C/C++ libraries together.
@@ -669,5 +629,4 @@ Some links to GitHub repository:
   [Yapgen](https://github.com/izuzanak/yapgen) from description of its syntax
   [grammar
   rules](https://github.com/izuzanak/uclang/blob/master/uclang/parsers/uclang_parser/uclang_parser.rules).
-<!-- }}} -->
 
