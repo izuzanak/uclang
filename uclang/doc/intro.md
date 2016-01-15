@@ -6,7 +6,7 @@ programming language defined mainly by its interpreter. Language and its
 interpreter are based on set of simple rules.
 
   * All values are objects.
-  * There are no any global functions.
+  * There are no global functions.
   * All actions are performed by methods of objects.
 
 Uclang was designed as fully interpreted language, so its performance falls to
@@ -14,11 +14,11 @@ class of interpreted languages like Lua or Python. Intermediate code
 generated from source strings is not translated to machine code by any sort of
 JIT compilation.
 
-Basic data types such are Integers, Floats and Strings are implemented as
-standard language module, which is treated same way as any C/C++ user modules.
+Basic data types such are Integers, Floats and Strings are implemented in
+standard module, which is treated same way as any user modules.
 
-For computationally expensive tasks author of Uclang language prefers C/C++
-implementation of algorithms as set of functions or library, and then its
+For computationally expensive tasks author of Uclang language prefers
+implementation of algorithms as set of C/C++ functions or library, and then its
 integration to Uclang as standalone module. Such modules can be then
 effectively glued to each other.  List of modules so far implemented for
 language Uclang can be found
@@ -157,16 +157,16 @@ Program flow graph of method `Main.main#1`.
 
 ### Syntax of classes and inheritance
 
-Classes can inherit properties from other classes by use of keyword `extends`
+Classes can inherit properties from other classes by usage of keyword `extends`
 and name of super class in their declaration.
 
-Interface classes can be declared by modifier `abstract`.  Methods of abstract
+Interface classes can be declared with modifier `abstract`.  Methods of abstract
 classes can be defined as `abstract` too.  Abstract methods does not have
 attached body, and must be implemented in some class that inherits from
-abstract class.  Methods, that should not be overloaded must be declared with
+abstract class.  Methods that should not be overloaded must be declared with
 modified `final`. 
 
-There is no possibility to inherit from classes that are declared and
+It is not possible to inherit from classes that are declared and
 implemented in C/C++ modules. Only classes implemented in Uclang code can be
 extended by inheritance.
 
@@ -213,25 +213,25 @@ variables can be found in
 
 ## Interpreter of language
 
-Language interpreter was designed and implemented  as lightweight utility,
+Interpreter of language was designed and implemented  as lightweight utility,
 which does not depend on any third party code, and can be deployed and executed
-on embedded devices, without any additional requirements. Interpreter and its
-base libraries are multi-platform, so far tested on: linux (x86, arm, mpc5200),
-android (arm), raspberry pi (arm) and win (xp,7).
+on embedded devices. Interpreter and its base libraries are multi-platform, so
+far tested on: linux (x86, arm, mpc5200), android (arm), raspberry pi (arm) and
+win (xp,7).
 
 ### Module system
 
-Module system of language differentiate between two types of modules: native
+Module system of language distinguish between two types of modules: native
 C/C++ modules, and modules implemented in language Uclang.  Modules of first
 type are implemented in C/C++ language and are represented by dynamic library
-of host operating system. Modules of second type are represented by Uclang
+of operating system. Modules of second type are represented by Uclang
 scripts, that are loaded and parsed by interpreter process.
 
 Modules are imported recursively, and each of them is imported exactly once.
 
 **Example:**
 
-Script named `imported.ucl` which will be imported by main script.
+Script `imported.ucl` which will be imported by main script.
 
 ```cpp
 import containers;
@@ -308,7 +308,7 @@ result: 4950
 
 Unexpected results and invalid operations throws runtime exceptions. Each
 imported module declares exceptions related to all errors it can produce and
-detect.  Object describing exception contain information about source of
+detect.  Object of exception contains information about source of
 exception, and its identification.
 
 **Example:**
@@ -511,7 +511,7 @@ Uclang does not have operators `===` and `!==`. All comparisons are performed
 by type of object first, and then by its value. Containers are compared by rich
 comparison method. Count of container elements is compared first, and then all
 elements are compared one by one. For all interpreter objects method
-`compare#1` is called when comparison to another object is needed.
+`compare#1` is called when comparison to another object is required.
 
 **Example:**
 
@@ -558,8 +558,8 @@ iterable interfaces:
 1. Objects with methods `first_idx#0`, `next_idx#1` and `item#1`.
 2. Objects with method `next_item#0`.
 
-First iterable interface can be used to iterate objects by integer index.
-Second iterable interface retrieve value of next member of iterable object.
+First iterable interface can be used to iterate objects by integer indexes.
+Second iterable interface retrieve value of next member from iterable object.
 
 **Example:**
 
