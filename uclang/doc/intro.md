@@ -532,7 +532,7 @@ class Main
     "comparisons:\n".print();
     for (first <- conts)
     {
-      ("%12.12s.compare(%12.12s): %d\n" %
+      ("%12.12s.compare(%s): %d\n" %
         [$first,$conts[1],first.compare(conts[1])]).print();
     }
   }
@@ -542,9 +542,9 @@ class Main
 ```
 conts: [[1,2,3],[1,2,3,4],[1,2,3,4,5]]
 comparisons:
-     [1,2,3].compare(   [1,2,3,4]): -1
-   [1,2,3,4].compare(   [1,2,3,4]): 0
- [1,2,3,4,5].compare(   [1,2,3,4]): 1
+     [1,2,3].compare([1,2,3,4]): -1
+   [1,2,3,4].compare([1,2,3,4]): 0
+ [1,2,3,4,5].compare([1,2,3,4]): 1
 ```
 
 ### Iterable objects
