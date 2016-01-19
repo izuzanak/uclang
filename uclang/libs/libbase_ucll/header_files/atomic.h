@@ -24,16 +24,16 @@ struct atomic_s
 
   inline void init() {}
   inline void clear() {}
-  inline void swap(atomic_s &second)
+  inline void swap(atomic_s &a_second)
   {
     cassert(0);
   }
-  inline atomic_s &operator=(atomic_s &src)
+  inline atomic_s &operator=(atomic_s &a_src)
   {
     cassert(0);
     return *this;
   }
-  inline bool operator==(atomic_s &second)
+  inline bool operator==(atomic_s &a_second)
   {
     cassert(0);
     return false;
@@ -51,9 +51,9 @@ struct atomic_s
 
   /*!
    * \brief set atomic variable to given value
-   * \param value - new value of atomic variable
+   * \param a_value - new value of atomic variable
    */
-  inline void atomic_set(int value);
+  inline void atomic_set(int a_value);
 
   /*!
    * \brief increase atomic variable by one
@@ -67,9 +67,9 @@ struct atomic_s
 
   /*!
    * \brief add value to atomic variable
-   * \param value - added value
+   * \param a_value - added value
    */
-  inline void atomic_add(int value);
+  inline void atomic_add(int a_value);
 
   /*!
    * \brief decrease atomic variable by one and return 1 if new value is equal to 0
@@ -108,12 +108,12 @@ inline int atomic_s::value()
 #endif
 }/*}}}*/
 
-inline void atomic_s::atomic_set(int value)
+inline void atomic_s::atomic_set(int a_value)
 {/*{{{*/
 #if ATOMIC_TYPE == ATOMIC_TYPE_GCC
-  counter = value;
+  counter = a_value;
 #elif ATOMIC_TYPE == ATOMIC_TYPE_WINDOWS
-  InterlockedExchange(&counter,value);
+  InterlockedExchange(&counter,a_value);
 #else
   cassert(0);
 #endif
@@ -141,12 +141,12 @@ inline void atomic_s::atomic_dec()
 #endif
 }/*}}}*/
 
-inline void atomic_s::atomic_add(int value)
+inline void atomic_s::atomic_add(int a_value)
 {/*{{{*/
 #if ATOMIC_TYPE == ATOMIC_TYPE_GCC
-  __sync_add_and_fetch(&counter,value);
+  __sync_add_and_fetch(&counter,a_value);
 #elif ATOMIC_TYPE == ATOMIC_TYPE_WINDOWS
-  InterlockedExchangeAdd(&counter,value);
+  InterlockedExchangeAdd(&counter,a_value);
 #else
   cassert(0);
 #endif

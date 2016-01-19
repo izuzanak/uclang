@@ -31,16 +31,16 @@ struct thread_s
     debug_message_2(fprintf(stderr,"thread_s::clear()\n"););
   }
   inline void flush_all() {}
-  inline void swap(thread_s &second)
+  inline void swap(thread_s &a_second)
   {
     cassert(0);
   }
-  inline thread_s &operator=(thread_s &src)
+  inline thread_s &operator=(thread_s &a_src)
   {
     cassert(0);
     return *this;
   }
-  inline bool operator==(thread_s &second)
+  inline bool operator==(thread_s &a_second)
   {
     cassert(0);
     return false;
@@ -48,11 +48,11 @@ struct thread_s
 
   /*!
    * \brief execute new thread at function with given parameters
-   * \param thread_function - pointer to function at which will be new thread executed
-   * \param parameters - pointer to void given as parameter to new thread
+   * \param a_thread_function - pointer to function at which will be new thread executed
+   * \param a_parameters - pointer to void given as parameter to new thread
    * \return error code
    */
-  inline unsigned create(void *thread_function,void *parameters);
+  inline unsigned create(void *a_thread_function,void *a_parameters);
 
   /*!
    * \brief create thread_s for existing thread
@@ -66,15 +66,15 @@ struct thread_s
 
   /*!
    * \brief join thread to actual thread
-   * \param return_ptr - pointer to pointer to void at which will be stored return value of thread
+   * \param a_return_ptr - pointer to pointer to void at which will be stored return value of thread
    */
-  inline unsigned join(void **return_ptr);
+  inline unsigned join(void **a_return_ptr);
 
   /*!
    * \brief try join thread to actual thread
-   * \param return_ptr - pointer to pointer to void at which will be stored return value of thread
+   * \param a_return_ptr - pointer to pointer to void at which will be stored return value of thread
    */
-  inline unsigned try_join(void **return_ptr);
+  inline unsigned try_join(void **a_return_ptr);
 
   /*!
    * \brief detach thread
@@ -93,10 +93,10 @@ struct thread_s
  * inline methods of structure thread_s
  */
 
-inline unsigned thread_s::create(void *thread_function,void *parameters)
+inline unsigned thread_s::create(void *a_thread_function,void *a_parameters)
 {/*{{{*/
 #if THREAD_LIB == THREAD_LIB_PTHREAD
-  int ret = pthread_create(&thread,NULL,(void *(*)(void *))thread_function,parameters);
+  int ret = pthread_create(&thread,NULL,(void *(*)(void *))a_thread_function,a_parameters);
   switch (ret)
   {
   case 0:
@@ -109,7 +109,7 @@ inline unsigned thread_s::create(void *thread_function,void *parameters)
     return c_error_UNKNOWN;
   }
 #elif THREAD_LIB == THREAD_LIB_DSP_TSK
-  tsk_handle = TSK_create((Fxn)thread_function,NULL,parameters);
+  tsk_handle = TSK_create((Fxn)a_thread_function,NULL,a_parameters);
   if (tsk_handle != NULL)
   {
     return c_error_OK;
@@ -137,10 +137,10 @@ inline void thread_s::create_from_actual(TSK_Handle a_tsk_handle)
 #else
 #endif
 
-inline unsigned thread_s::join(void **return_ptr)
+inline unsigned thread_s::join(void **a_return_ptr)
 {/*{{{*/
 #if THREAD_LIB == THREAD_LIB_PTHREAD
-  int ret = pthread_join(thread,return_ptr);
+  int ret = pthread_join(thread,a_return_ptr);
   switch (ret)
   {
   case 0:
@@ -163,11 +163,11 @@ inline unsigned thread_s::join(void **return_ptr)
 #endif
 }/*}}}*/
 
-inline unsigned thread_s::try_join(void **return_ptr)
+inline unsigned thread_s::try_join(void **a_return_ptr)
 {/*{{{*/
 #if THREAD_LIB == THREAD_LIB_PTHREAD
 #if defined(_GNU_SOURCE) && !defined(ANDROID)
-  int ret = pthread_tryjoin_np(thread,return_ptr);
+  int ret = pthread_tryjoin_np(thread,a_return_ptr);
   switch (ret)
   {
   case 0:

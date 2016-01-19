@@ -7938,7 +7938,7 @@ void script_parser_s::process_modules()
             // - parse module source string -
             parse_script(sources.used - 1);
 
-            // - test if errors were occurred while parsing modulesource string -
+            // - test if errors were occurred while parsing module source string -
             if (error_code.used != 0)
             {
               return;

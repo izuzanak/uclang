@@ -417,17 +417,17 @@ inline void cfree(void *a_location)
 }/*}}}*/
 
 // - memcpy with byte order change on request -
-inline void memcpy_bo(void *dst,const void *src,size_t n,bool ob)
+inline void memcpy_bo(void *a_dst,const void *a_src,size_t a_cnt,bool a_ob)
 {/*{{{*/
-  if (n <= 0) return;
+  if (a_cnt <= 0) return;
 
-  if (ob)
+  if (a_ob)
   {
-    char *d_ptr = (char *)dst;
-    char *d_ptr_end = d_ptr + n;
-    const char *s_ptr = ((const char *)src) + n - 1;
+    char *d_ptr = (char *)a_dst;
+    char *d_ptr_end = d_ptr + a_cnt;
+    const char *s_ptr = ((const char *)a_src) + a_cnt - 1;
 
-    switch (n)
+    switch (a_cnt)
     {
     case 8: *d_ptr++ = *s_ptr--;
     case 7: *d_ptr++ = *s_ptr--;
@@ -446,7 +446,7 @@ inline void memcpy_bo(void *dst,const void *src,size_t n,bool ob)
   }
   else
   {
-    memcpy(dst,src,n);
+    memcpy(a_dst,a_src,a_cnt);
   }
 }/*}}}*/
 

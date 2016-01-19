@@ -7,7 +7,7 @@ include "basic.h"
 @end
 
 /*
- * definition of structure thread_s
+ * definition of structure mutex_s
  */
 
 @begin
@@ -28,16 +28,16 @@ struct mutex_s
   inline unsigned init();
   inline unsigned clear();
   inline void flush_all() {}
-  inline void swap(mutex_s &second)
+  inline void swap(mutex_s &a_second)
   {
     cassert(0);
   }
-  inline mutex_s &operator=(mutex_s &src)
+  inline mutex_s &operator=(mutex_s &a_src)
   {
     cassert(0);
     return *this;
   }
-  inline bool operator==(mutex_s &second)
+  inline bool operator==(mutex_s &a_second)
   {
     cassert(0);
     return false;
