@@ -1,7 +1,6 @@
 # uclang - programming language
 
-Interpreted, dynamically typed, object-oriented, general purpose programming
-language.
+Interpreted, dynamically typed, object-oriented programming language.
 
 ## Language features
 

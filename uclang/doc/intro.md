@@ -1,45 +1,43 @@
 
 # Uclang - programming language
 
-Uclang is interpreted, dynamically typed, object-oriented, general purpose
-programming language defined mainly by its interpreter. Language and its
-interpreter are based on set of simple rules.
+Uclang is interpreted, dynamically typed, object-oriented programming language
+defined mainly by its interpreter. Language and its interpreter are based on
+set of few simple rules.
 
   * All values are objects.
-  * There are no global functions.
-  * All actions are performed by methods of objects.
+  * There are no global functions, all actions are performed by methods of objects.
+  * Subsets of methods defines various interfaces.
 
 Uclang was designed as fully interpreted language, so its performance falls to
 class of interpreted languages like Lua or Python. Intermediate code
 generated from source strings is not translated to machine code by any sort of
-JIT compilation.
+JIT compilation.  Basic data types such are Integers, Floats and Strings are
+implemented in standard module, which is treated same way as any user modules.
+Only difference is that identifiers of classes of fundamental data types are
+known by interpreter in advance.
 
-Basic data types such are Integers, Floats and Strings are implemented in
-standard module, which is treated same way as any user modules.
-
-For computationally expensive tasks author of Uclang language prefers
-implementation of algorithms as set of C/C++ functions or library, and then its
-integration to Uclang as standalone module. Such modules can be then
-effectively glued to each other.  List of modules so far implemented for
-language Uclang can be found
-[here](https://github.com/izuzanak/uclang#language-modules).
-
-This text contains mainly examples and brief description of language principles
-and features, divided to few categories.
+This document contains mainly examples and brief descriptions of language
+principles and features, divided to few categories.
 
 ## Syntax of language
 
-Syntax of Uclang is mainly derived from programming language C/C++ with
-influence of programming language Java.  Syntax of Java language influenced
-syntax of class inheritance and inheritance related constructs.
+Syntax of language Uclang is derived from syntax of programming languages C/C++
+with some differences:
+
+  * Classes and inheritance related syntax is derived from programming language
+    Java.
+  * Syntax constructs related to dynamic nature of language are derived from
+    various interpreted languages (Python, JavaScript).
+  * Switch syntax was modified to be more appropriate for dynamic language.
 
 ### Basic syntax
 
-Classes can be defined on top level or can be nested in parent class. Member
-variables and methods must be declared inside some parent class.  Executed
-script and all its imported modules should contain one class of name `Main`,
-with `static` and `public` method `main#1`, this method will be executed as
-program entry point.
+Classes can be defined on top level or can be nested in some parent class.
+Member variables and methods must be declared inside some parent class.
+Executed script and all imported modules should contain exactly one class of
+name `Main`, with `static` and `public` method `main#1`. This method will be
+executed as program entry point.
 
 **Example:**
 
@@ -617,6 +615,13 @@ At beginning language was designed just from curiosity, but lately, when
 solving some real world tasks, language proved itself as practical tool for
 gluing of C/C++ libraries together.
 
+For computationally expensive tasks author of Uclang language prefers
+implementation of algorithms as set of C/C++ functions or library, and then its
+integration to Uclang as standalone module. Such modules can be then
+effectively glued to each other.  List of modules so far implemented for
+language Uclang can be found
+[here](https://github.com/izuzanak/uclang#language-modules).
+
 Some links to GitHub repository:
 
 * [Documentation](https://github.com/izuzanak/uclang/tree/master/uclang/doc)
@@ -629,4 +634,5 @@ Some links to GitHub repository:
   [Yapgen](https://github.com/izuzanak/yapgen) from description of its syntax
   [grammar
   rules](https://github.com/izuzanak/uclang/blob/master/uclang/parsers/uclang_parser/uclang_parser.rules).
+
 

@@ -450,7 +450,7 @@ built_in_variable_s set_variables[] =
     {\
       pointer_tree_s *first_ptr;\
       pointer_tree_s *second_ptr;\
-\
+      \
       /* - order sets by size - */\
       if (first.count <= second.count)\
       {\
@@ -462,7 +462,7 @@ built_in_variable_s set_variables[] =
         first_ptr = &second;\
         second_ptr = &first;\
       }\
-\
+      \
       /* - traverse through first - */\
       unsigned stack[first_ptr->get_descent_stack_size()];\
       unsigned *stack_ptr = stack;\
