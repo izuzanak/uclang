@@ -11,27 +11,27 @@ Follows list of uclang features, that are supported by its interpreter.
 * Language syntax is derived mainly from C/C++.
   * Some syntax is derived from Java programming language.
 * Strong object oriented approach.
-  * Everything is object. 
+  * Everything is an object. 
   * No global functions at all.
   * Almost all actions are performed by execution of methods.
 * Support for inheritance.
 * Support for exceptions.
 * Support for native threads, no GIL (Global Interpreter Lock).
 * Module system designed for straightforward creation of binary modules in C/C++.
-  * Language built in data types are implemented as binary module.
+  * A language built in data types are implemented as binary module.
 * Fast and lightweight interpreter.
 
 ## Motivation
 
 C/C++ are excellent programming languages, but they are quite heavy-footed when
-it comes to scripting, rapid development, code prototyping or qluing of
+it comes to scripting, rapid development, code prototyping or gluing of
 existing code.
 
-As programmer who started programming in Pascal programming language I was
-surprised by simplicity of C. If you keep in mind few basic concepts (data
-types, memory, pointers), all high level features derives from it intuitively.
+As a programmer who started programming in Pascal programming language I was
+surprised by simplicity of C. If you keep in mind a few basic concepts (data
+types, memory, pointers), all high level features derive from it intuitively.
 
-It would be nice (at least fro me) to have high-level programming language for
+It would be nice (at least for me) to have high-level programming language for
 fast prototyping and rapid development, that would be: simple, expressive and
 unrestricted like C/C++ among compiled languages.
 
@@ -41,7 +41,7 @@ Here are some point, that motivated/motivates me to develop new high-level
 programming language:
 
 * C/C++ like syntax.
-* Language based on few simple principles.
+* A language based on a few simple principles.
 * Threading support without constraints (no GIL).
 * Implicit comparison by type and value, no `===` or `!==` and alike operators.
 * Module system, importing binary (C/C++) and uclang modules.
@@ -49,13 +49,13 @@ programming language:
 
 ## Documentation
 
-Documentation of uclang components is placed in directory:
+Documentation of uclang components is placed in the directory:
 [`uclang/doc`](https://github.com/izuzanak/uclang/tree/master/uclang/doc)
 
 ## Language modules
 
-Set of modules was created in order to use uclang in production.
-Implementation of these modules is placed in directory:
+A set of modules was created in order to use uclang in production.
+Implementation of these modules is placed in the directory:
 [`uclang/mods`](https://github.com/izuzanak/uclang/tree/master/uclang/mods)
 
 Some of implemented modules are:
@@ -109,7 +109,7 @@ Some of implemented modules are:
 
 ## Examples
 
-Examples of uclang usage are placed in directory:
+Examples of uclang usage are placed in the directory:
 [`uclang/examples`](https://github.com/izuzanak/uclang/tree/master/uclang/examples)
 
 ### Inline examples
@@ -163,7 +163,7 @@ Value is of type Blank.
 
 #### Operators known from C/C++
 
-All standard operators known from C/C++ are supported, and have same intuitive
+All standard operators, known from C/C++ are supported, and have same intuitive
 functionality.
 
 ```cpp
@@ -188,7 +188,7 @@ class Main
 #### Dictionary and objects comparisons
 
 Objects of all classes can be compared as long as they implement method
-`compare#1`.  Implementation of dictionary using red-black tree accepts any
+`compare#1`.  Implementation of a dictionary using red-black tree accepts any
 comparable value as key, even objects of user defined classes.
 
 ```cpp
@@ -258,13 +258,13 @@ even_cnt: 55
 
 ## Building interpreter
 
-Container generator [`cont`](https://github.com/izuzanak/cont) is needed for
-compilation of interpreter. It will be automatically compiled in following
-compilation steps.
+The container generator [`cont`](https://github.com/izuzanak/cont) is needed
+for compilation of the interpreter. It will be automatically compiled in
+following compilation steps.
 
 ### Linux compilation
 
-For compilation of interpreter on Linux OS perform following steps:
+For compilation of a interpreter on Linux OS perform following steps:
 
   * Download script [`try_uclang.sh`](https://raw.githubusercontent.com/izuzanak/uclang/master/uclang_try/try_uclang.sh).
 
@@ -272,7 +272,7 @@ For compilation of interpreter on Linux OS perform following steps:
 wget https://raw.githubusercontent.com/izuzanak/uclang/master/uclang_try/try_uclang.sh
 ```
 
-  * Check prerequisites mentioned in script.
+  * Check prerequisites mentioned in the script.
   * Execute script `try_uclang.sh`.
 
 ```

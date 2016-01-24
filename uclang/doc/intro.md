@@ -7,30 +7,30 @@ set of few simple rules.
 
   * All values are objects.
   * There are no global functions, all actions are performed by methods of objects.
-  * Subsets of methods defines various interfaces.
+  * Subsets of methods define various interfaces.
 
-Uclang was designed as fully interpreted language, so its performance falls to
-class of interpreted languages like Lua or Python. Intermediate code
-generated from source strings is not translated to machine code by any sort of
-JIT compilation.
+Uclang, was designed as a fully interpreted language, so its performance falls
+into the class of interpreted languages like Lua or Python. The intermediate
+code generated from source strings is not translated to machine code by any
+sort of JIT compilation.
 
 This document contains mainly examples and brief descriptions of language
-principles and features, divided to few categories.
+principles and features, divided into few categories.
 
 ## Syntax of language
 
-Syntax of language Uclang is derived from syntax of programming languages C/C++
-with some differences:
+Syntax of language Uclang is derived from the syntax of programming languages
+C/C++ with some differences:
 
   * Classes and inheritance related syntax is derived from programming language
     Java.
-  * Syntax constructs related to dynamic nature of language are derived from
-    various interpreted languages (Python, JavaScript).
-  * Switch syntax was modified to be more appropriate for dynamic language.
+  * Syntax constructs related to the dynamic nature of language are derived
+    from various interpreted languages (Python, JavaScript).
+  * Switch syntax was modified to be more appropriate for the dynamic language.
 
 ### Basic syntax
 
-Classes can be defined on top level or can be nested in some parent class.
+Classes can be defined at top level or can be nested in some parent class.
 Member variables and methods must be declared inside some parent class.
 Executed script and all imported modules should contain exactly one class of
 name `Main`, with `static` and `public` method `main#1`. This method will be
@@ -56,7 +56,7 @@ Hello world!!!
 
 Operators of language are mainly derived from language C/C++. Precedence of
 operators is also preserved. Operators are translated to equivalent method
-calls. For example entry `a += b` is translated to call of method
+calls. For example, entry `a += b` is translated to call of method
 `a.operator_binary_plus_equal(b)`.
 
 **Example:**
@@ -77,7 +77,7 @@ class Main
 a: 11, b: 12
 ```
 
-Intermediate code generated from example code.
+The intermediate code generated from example code.
 
 ```
 -- begin_code --
@@ -104,12 +104,12 @@ i_expression_end
 ### Syntax of branches and loops
 
 Language syntax supports various forms of flow branching and looping
-constructs.  Significant subset of flow branching and looping syntax is derived
+constructs.  A significant subset of flow branching and looping syntax is derived
 from C like languages. Details about [flow
 branching](https://github.com/izuzanak/uclang/blob/master/uclang/doc/01_syntax/06_flow_branching.md)
 and [flow looping
 syntax](https://github.com/izuzanak/uclang/blob/master/uclang/doc/01_syntax/07_flow_loops.md)
-can be found in documentation.
+can be found in the documentation.
 
 **Example**
 
@@ -152,14 +152,14 @@ Program flow graph of method `Main.main#1`.
 
 ### Syntax of classes and inheritance
 
-Classes can inherit properties from other classes by usage of keyword `extends`
-and name of super class in their declaration.
+Classes can inherit properties from other classes by the usage of keyword
+`extends` and name of the super class in their declaration.
 
 Interface classes can be declared with modifier `abstract`.  Methods of abstract
-classes can be defined as `abstract` too.  Abstract methods does not have
-attached body, and must be implemented in some class that inherits from
-abstract class.  Methods that should not be overloaded must be declared with
-modified `final`. 
+classes can be defined as `abstract` too.  Abstract methods have not attached
+body, and must be implemented in some class that inherits from abstract
+classes.  Methods that should not be overloaded must be declared with modified
+`final`. 
 
 It is not possible to inherit from classes that are declared and
 implemented in C/C++ modules. Only classes implemented in Uclang code can be
@@ -200,10 +200,10 @@ Class StorageNull cannot override final method StorageBase.dummy#0
  ---------------------------------------- 
 ```
 
-Language syntax is in more details described in
+Language syntax is in more details described in the
 [documentation](https://github.com/izuzanak/uclang/tree/master/uclang/doc/01_syntax).
 Syntax constructions concerning declaration of classes, methods and member
-variables can be found in
+variables can be found in the
 [examples](https://github.com/izuzanak/uclang/tree/master/uclang/examples/01_syntax).
 
 ## Interpreter of language
@@ -216,16 +216,16 @@ win (xp,7).
 
 ### Module system
 
-Module system of language distinguish between two types of modules: native
-C/C++ modules, and modules implemented in language Uclang.  Modules of first
-type are implemented in C/C++ language and are represented by dynamic library
-of operating system. Modules of second type are represented by Uclang
-scripts, that are loaded and parsed by interpreter process.
+The module system of language distinguishes between two types of modules:
+native C/C++ modules, and modules implemented in language Uclang.  Modules of
+the first type are implemented in the C/C++ language and are represented by a
+dynamic library of operating system. Modules of the second type are represented
+by Uclang scripts, that are loaded and parsed by interpreter process.
 
-Basic data types such are Integers, Floats and Strings are implemented in
-standard module, which is treated same way as any user modules.  Only
-difference is that identifiers of classes of fundamental data types are known
-by interpreter in advance.
+Basic data types such are Integers, Floats and Strings are implemented in a
+standard module, which is treated the same way as any user modules.  The only
+difference is that the identifiers of classes of fundamental data types are
+known by interpreter in advance.
 
 Modules are imported recursively, and each of them is imported exactly once.
 
@@ -267,8 +267,8 @@ Info: Imported [One:1,Two:2,Three:3]
 
 ### Multithreading
 
-Interpreter supports multithreading, but does not use any Global Interpreter
-Lock (GIL) mechanism. Control over process and its threads is left to
+Interpreter support multithreading, but does not use any Global Interpreter
+Lock (GIL) mechanism. Control over the process and its threads is left to the
 programmer.
 
 **Example:**
@@ -308,8 +308,8 @@ result: 4950
 
 Unexpected results and invalid operations throws runtime exceptions. Each
 imported module declares exceptions related to all errors it can produce and
-detect.  Object of exception contains information about source of
-exception, and its identification.
+detect.  Object of exception contains information about the source of
+the exception, and its identification.
 
 **Example:**
 
@@ -335,10 +335,10 @@ Not all arguments converted during string formatting
 ### Build in operations
 
 There are few build-in operations, that are not implemented by methods of
-objects. This operations are triggered by keywords: `new`, `free` and `type`.
-Keyword `new` is used for construction of new object of given class, or
-construction of array of such objects. Keyword `free` releases reference to
-object independently of its class. Keyword `type` creates object of class
+objects. These operations are triggered by keywords: `new`, `free` and `type`.
+Keyword `new` is used for construction of new object of a given class, or
+construction of an array of such objects. Keyword `free` releases reference to
+object independently of its class. Keyword `type` creates an object of class
 `Type` identifying class of object.
 
 **Example:**
@@ -413,11 +413,11 @@ len: 3
 
 ### Dynamic type of variables
 
-Type of Uclang variables is dynamic.  When method which is called receives
+Type of Uclang variables is dynamic.  When method which is called receives a
 parameter of type that cannot be handled properly, exception describing
-parameter error is thrown.  Most type checking takes place in runtime, except
-of some static checks preformed in compilation time (access to static methods
-or members).  Language interpreter do not perform any implicit data
+parameter error is thrown.  Most type checking takes place at runtime, except
+of some static checks performed at compilation time (access to static methods
+or members).  Language interpreter does not perform any implicit data
 conversions, e.g.: strings to numbers and vice versa.
 
 **Example:**
@@ -456,7 +456,7 @@ Class String does not contain method create#2
 All objects, as long as they implement method `compare#1` are comparable.
 Uclang containers `Set`, `Tree` and `Dict` uses red-black trees as their base
 implementation structures.  These two properties imply, that object of any type
-can be used for example as key of dictionary.
+can be used for example as a key of the dictionary.
 
 **Example:**
 
@@ -549,8 +549,8 @@ comparisons:
 
 ### Iterable objects
 
-Some of objects are recognized as iterable. Iterable object are capable to
-provide access to its members, or it can produce sequence of objects as its
+Some of the objects are recognized as iterable. Iterable object is capable to
+provide access to its members, or it can produce sequences of objects as its
 output.  Algorithms processing iterable objects (like `for` loops, or `Filter`
 class) access this objects by iterable interfaces. There are two types of
 iterable interfaces:
@@ -558,8 +558,9 @@ iterable interfaces:
 1. Objects with methods `first_idx#0`, `next_idx#1` and `item#1`.
 2. Objects with method `next_item#0`.
 
-First iterable interface can be used to iterate objects by integer indexes.
-Second iterable interface retrieve value of next member from iterable object.
+First iterable interface can be used to iterate the objects by integer indexes.
+Second iterable interface retrieve the value of the next member from iterable
+object.
 
 **Example:**
 
@@ -614,12 +615,12 @@ slice: [5,4,3,2]
 ## Additional informations
 
 At beginning language was designed just from curiosity, but lately, when
-solving some real world tasks, language proved itself as practical tool for
+solving some real world tasks, language proved itself as a practical tool for
 gluing of C/C++ libraries together.
 
 For computationally expensive tasks author of Uclang language prefers
 implementation of algorithms as set of C/C++ functions or library, and then its
-integration to Uclang as standalone module. Such modules can be then
+integration to Uclang as a standalone module. Such modules can be then
 effectively glued to each other.  List of modules so far implemented for
 language Uclang can be found
 [here](https://github.com/izuzanak/uclang#language-modules).
@@ -629,15 +630,14 @@ when needed.
 
 Some links to GitHub repository:
 
-* [Documentation](https://github.com/izuzanak/uclang/tree/master/uclang/doc)
+* The [documentation](https://github.com/izuzanak/uclang/tree/master/uclang/doc)
   describing some of Uclang properties and individual classes.
 * [Documentation](https://github.com/izuzanak/uclang/tree/master/uclang/examples)
-  by examples, which are also used as simple test suite.
+  with examples, which are also used as a simple test suite.
 * [Examples](https://github.com/izuzanak/uclang/tree/master/uclang_build/scripts/examples)
   of demo scripts using interesting modules.
 * Parser of language Uclang was generated by program
-  [Yapgen](https://github.com/izuzanak/yapgen) from description of its syntax
-  [grammar
-  rules](https://github.com/izuzanak/uclang/blob/master/uclang/parsers/uclang_parser/uclang_parser.rules).
+  [Yapgen](https://github.com/izuzanak/yapgen) from the description of its
+  syntax [grammar rules](https://github.com/izuzanak/uclang/blob/master/uclang/parsers/uclang_parser/uclang_parser.rules).
 
 
