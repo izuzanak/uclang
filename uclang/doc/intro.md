@@ -12,10 +12,7 @@ set of few simple rules.
 Uclang was designed as fully interpreted language, so its performance falls to
 class of interpreted languages like Lua or Python. Intermediate code
 generated from source strings is not translated to machine code by any sort of
-JIT compilation.  Basic data types such are Integers, Floats and Strings are
-implemented in standard module, which is treated same way as any user modules.
-Only difference is that identifiers of classes of fundamental data types are
-known by interpreter in advance.
+JIT compilation.
 
 This document contains mainly examples and brief descriptions of language
 principles and features, divided to few categories.
@@ -224,6 +221,11 @@ C/C++ modules, and modules implemented in language Uclang.  Modules of first
 type are implemented in C/C++ language and are represented by dynamic library
 of operating system. Modules of second type are represented by Uclang
 scripts, that are loaded and parsed by interpreter process.
+
+Basic data types such are Integers, Floats and Strings are implemented in
+standard module, which is treated same way as any user modules.  Only
+difference is that identifiers of classes of fundamental data types are known
+by interpreter in advance.
 
 Modules are imported recursively, and each of them is imported exactly once.
 
@@ -621,6 +623,9 @@ integration to Uclang as standalone module. Such modules can be then
 effectively glued to each other.  List of modules so far implemented for
 language Uclang can be found
 [here](https://github.com/izuzanak/uclang#language-modules).
+
+Language is used mainly by its author, and new features and modules are created
+when needed.
 
 Some links to GitHub repository:
 
