@@ -163,10 +163,7 @@ struct
     vertex_rb_tree_s:vertices
     edge_rb_tree_s:edges
     >
-
-    not_generate: init clear swap operator=
-    options: strict_dynamic
-
+    options ( no_init no_clear no_swap no_copy strict_dynamic )
     additions
 {
 
