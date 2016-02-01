@@ -153,86 +153,26 @@ void string_s::setf(const char *a_format,...)
 {/*{{{*/
   clear();
 
-  const int init_size = 256;
-  int alloc_size = init_size;
-
+  const size_t init_size = 128;
   va_list ap;
 
-  do
+  data = (char *)cmalloc(init_size*sizeof(char));
+
+  va_start(ap,a_format);
+  int length = vsnprintf(data,init_size,a_format,ap);
+  va_end(ap);
+
+  size = length + 1;
+
+  if (size > init_size)
   {
-    data = (char *)cmalloc(alloc_size*sizeof(char));
-
-    va_start(ap,a_format);
-
-#if SYSTEM_TYPE == SYSTEM_TYPE_DSP
-    // DSP FIXME
-    int cnt = vsprintf(data,a_format,ap);
-#else
-    int cnt = vsnprintf(data,alloc_size,a_format,ap);
-#endif
-    va_end(ap);
-
-    if (cnt < alloc_size)
-    {
-      size = cnt + 1;
-      break;
-    }
-
     cfree(data);
-    alloc_size <<= 1;
-
-  }
-  while(1);
-}/*}}}*/
-
-void string_s::concf(const char *a_format,...)
-{/*{{{*/
-  const int init_size = 256;
-  int alloc_size = init_size;
-
-  // - creation of formated string -
-  string_s fmt_str;
-  fmt_str.init();
-
-  va_list ap;
-
-  do
-  {
-    fmt_str.data = (char *)cmalloc(alloc_size*sizeof(char));
+    data = (char *)cmalloc(size*sizeof(char));
 
     va_start(ap,a_format);
-
-#if SYSTEM_TYPE == SYSTEM_TYPE_DSP
-    // DSP FIXME
-    int cnt = vsprintf(fmt_str.data,a_format,ap);
-#else
-    int cnt = vsnprintf(fmt_str.data,alloc_size,a_format,ap);
-#endif
+    vsnprintf(data,size,a_format,ap);
     va_end(ap);
-
-    if (cnt < alloc_size)
-    {
-      fmt_str.size = cnt + 1;
-      break;
-    }
-
-    cfree(fmt_str.data);
-    alloc_size <<= 1;
-
   }
-  while(1);
-
-  // - concatenation to result string -
-  string_s res_str;
-  res_str.init();
-  res_str.conc_set(size - 1,data,fmt_str.size - 1,fmt_str.data);
-
-  // - swap this string with result string -
-  swap(res_str);
-
-  // - clear temporary strings -
-  res_str.clear();
-  fmt_str.clear();
 }/*}}}*/
 
 unsigned string_s::get_idx(unsigned a_idx,unsigned a_length,const char *a_data)

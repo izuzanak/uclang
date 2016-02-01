@@ -156,13 +156,6 @@ struct string_s
   void setf(const char *a_format,...);
 
   /*!
-   * \brief concatenate string of desired format
-   * \param a_format - format as in printf functions family
-   * \param ... - list of parameters demanded in format
-   */
-  void concf(const char *a_format,...);
-
-  /*!
    * \brief find position of given string in string from given index
    * \param a_idx - position from which is substring searched
    * \param a_length - length of searched string
