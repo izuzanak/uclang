@@ -253,7 +253,7 @@ built_in_variable_s set_variables[] =
         location_s *item_location = it.get_location_value(*ptr);\
         \
         /* - push item location to set - */\
-        if (TARGET_PTR->unique_insert(item_location))\
+        if (TARGET_PTR->set_unique_insert(item_location))\
         {\
           item_location->v_reference_cnt.atomic_inc();\
         }\
@@ -284,7 +284,7 @@ built_in_variable_s set_variables[] =
         location_s *item_location = it.get_location_value(source_ptr->data[t_idx].object);\
         \
         /* - push item location to set - */\
-        if (TARGET_PTR->unique_insert(item_location))\
+        if (TARGET_PTR->set_unique_insert(item_location))\
         {\
           item_location->v_reference_cnt.atomic_inc();\
         }\
@@ -304,7 +304,7 @@ built_in_variable_s set_variables[] =
   {/*{{{*/\
     \
     /* - insert item location to set - */\
-    if (TARGET_PTR->unique_insert(item_location)) {\
+    if (TARGET_PTR->set_unique_insert(item_location)) {\
       item_location->v_reference_cnt.atomic_inc();\
     }\
     \
@@ -533,7 +533,7 @@ built_in_variable_s set_variables[] =
         location_s *elm_location = (location_s *)second.data[s_idx].object;\
         \
         /* - unique insert element to target - */\
-        if (target_ptr->unique_insert((pointer)elm_location)) {\
+        if (target_ptr->set_unique_insert((pointer)elm_location)) {\
           elm_location->v_reference_cnt.atomic_inc();\
         }\
         \
@@ -832,7 +832,7 @@ bool bic_set_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_s
     pointer *l_ptr_end = loc_stack.data + loc_stack.used;
     do
     {
-      cassert(tree_ptr->unique_insert(*l_ptr));
+      cassert(tree_ptr->set_unique_insert(*l_ptr));
 
       if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
       {
@@ -1446,7 +1446,7 @@ bool bic_set_method_insert_1(interpreter_thread_s &it,unsigned stack_base,uli *o
   tree_ptr->it_ptr = &it;
   tree_ptr->source_pos = operands[c_source_pos_idx];
 
-  if (tree_ptr->unique_insert((pointer)src_0_location))
+  if (tree_ptr->set_unique_insert((pointer)src_0_location))
   {
     src_0_location->v_reference_cnt.atomic_inc();
   }

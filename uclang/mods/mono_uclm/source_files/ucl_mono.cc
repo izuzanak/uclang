@@ -633,7 +633,7 @@ location_s *mono_c::mono_object_value(interpreter_thread_s &it,MonoObject *mono_
         }
 
         // - insert item to set -
-        if (!tree_ptr->unique_insert((pointer)item_location))
+        if (!tree_ptr->set_unique_insert((pointer)item_location))
         {
           it.release_location_ptr(item_location);
           it.release_location_ptr(set_location);

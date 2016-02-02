@@ -1132,7 +1132,7 @@ unsigned:source_pos
 
 additions
 {
-  inline bool unique_insert(pointer a_value);
+  inline bool set_unique_insert(pointer a_value);
 }
 
 pointer_tree_s;
@@ -1652,7 +1652,7 @@ inlines pointer_list_s
 inlines pointer_tree_s
 @end
 
-inline bool pointer_tree_s::unique_insert(pointer a_value)
+inline bool pointer_tree_s::set_unique_insert(pointer a_value)
 {/*{{{*/
   unsigned new_node_idx = __get_new_index();
 

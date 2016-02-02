@@ -403,7 +403,7 @@ location_s *python_c::py_object_value(interpreter_thread_s &it,PyObject *pyo_obj
         }
 
         // - insert key to set -
-        if (!tree_ptr->unique_insert((pointer)key_location))
+        if (!tree_ptr->set_unique_insert((pointer)key_location))
         {
           it.release_location_ptr(key_location);
         }
