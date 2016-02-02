@@ -182,29 +182,57 @@ unsigned string_s::get_idx(unsigned a_idx,unsigned a_length,const char *a_data)
     return c_idx_not_exist;
   }
 
-  char *s_ptr = data + a_idx;
-  char *s_ptr_end = data + (size - a_length);
-  do
+  // - single character search -
+  if (a_length == 1)
   {
-    char *ss_ptr = s_ptr;
-    char *ss_ptr_end = ss_ptr + a_length;
-    const char *a_ptr = a_data;
-    do
-    {
-      if (*ss_ptr != *a_ptr)
-      {
-        break;
-      }
-
-      if (++a_ptr,++ss_ptr >= ss_ptr_end)
+    char *s_ptr = data + a_idx;
+    char *s_ptr_end = data + (size - a_length);
+    do {
+      if (*s_ptr == *a_data)
       {
         return s_ptr - data;
       }
-    }
-    while(1);
-
+    } while(++s_ptr < s_ptr_end);
   }
-  while(++s_ptr < s_ptr_end);
+
+  // - multiple characters search -
+  else
+  {
+    // - compute search sum -
+    unsigned search_sum = 0;
+    const unsigned char *ss_ptr = (const unsigned char *)a_data;
+    const unsigned char *ss_ptr_end = ss_ptr + a_length;
+    do {
+      search_sum += *ss_ptr;
+    } while(++ss_ptr < ss_ptr_end);
+
+    // - compute text sum -
+    unsigned text_sum = 0;
+    unsigned char *s_ptr = (unsigned char *)data + a_idx;
+    unsigned char *s_ptr_end = s_ptr + a_length;
+    do {
+      text_sum += *s_ptr;
+    } while(++s_ptr < s_ptr_end);
+
+    s_ptr = (unsigned char *)data + a_idx;
+    s_ptr_end = (unsigned char *)data + (size - a_length);
+    do {
+
+      // - if search sum was found -
+      if (text_sum == search_sum)
+      {
+        if (memcmp(a_data,s_ptr,a_length) == 0)
+        {
+          return s_ptr - (unsigned char *)data;
+        }
+      }
+
+      // - update text sum -
+      text_sum -= *s_ptr;
+      text_sum += s_ptr[a_length];
+
+    } while(++s_ptr < s_ptr_end);
+  }
 
   return c_idx_not_exist;
 }/*}}}*/
