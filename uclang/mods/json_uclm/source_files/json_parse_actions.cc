@@ -196,11 +196,10 @@ bool pa_json_val_integer(json_parser_s &_this)
   int_num_data[int_num_end] = tmp_char;
 
   // - get constant position in array -
-  unsigned cd_idx = const_integers.get_idx(const_int);
-  if (cd_idx == c_idx_not_exist)
-  {
-    cd_idx = const_integers.insert(const_int);
+  unsigned cd_idx = const_integers.unique_insert(const_int);
 
+  if (cd_idx >= integer_locations.used)
+  {
     // - skip rb_tree indexes gap -
     while (cd_idx > integer_locations.used)
     {
@@ -249,11 +248,10 @@ bool pa_json_val_float(json_parser_s &_this)
   float_num_data[float_num_end] = tmp_char;
 
   // - get constant position in array -
-  unsigned cd_idx = const_floats.get_idx(const_float);
-  if (cd_idx == c_idx_not_exist)
-  {
-    cd_idx = const_floats.insert(const_float);
+  unsigned cd_idx = const_floats.unique_insert(const_float);
 
+  if (cd_idx >= float_locations.used)
+  {
     // - skip rb_tree indexes gap -
     while (cd_idx > float_locations.used)
     {
@@ -481,37 +479,32 @@ bool pa_json_string(json_parser_s &_this)
     while(ptr < ptr_end);
   }
 
+  // - modification of character buffer -
+  char_buffer.data[char_buffer.used] = '\0';
+
+  string_s const_str;
+  const_str.size = char_buffer.used + 1;
+  const_str.data = char_buffer.data;
+
   // - get constant position in array -
-  unsigned cs_idx = const_strings.get_idx_char_ptr(char_buffer.used,char_buffer.data);
-  if (cs_idx == c_idx_not_exist)
+  unsigned cs_idx = const_strings.unique_swap_insert(const_str);
+  const_str.clear();
+
+  if (cs_idx >= string_locations.used)
   {
-    // - modification of character buffer -
-    char_buffer.data[char_buffer.used] = '\0';
-
-    string_s const_str;
-    const_str.size = char_buffer.used + 1;
-    const_str.data = char_buffer.data;
-
-    // - create location string copy -
-    string_s *string_ptr = it.get_new_string_ptr();
-    *string_ptr = const_str;
-
-    cs_idx = const_strings.swap_insert(const_str);
-    const_str.clear();
-
     // - skip rb_tree indexes gap -
     while (cs_idx > string_locations.used)
     {
       string_locations.push(NULL);
     }
 
+    // - create location string copy -
+    string_s *string_ptr = it.get_new_string_ptr();
+    *string_ptr = const_strings[cs_idx];
+
     // - create new string location -
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
     string_locations.push(new_location);
-  }
-  else
-  {
-    char_buffer.clear();
   }
 
   // - store string index -

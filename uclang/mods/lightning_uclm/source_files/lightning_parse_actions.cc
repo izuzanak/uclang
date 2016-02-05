@@ -257,8 +257,11 @@ bool ltg_pa_fun_parameter(ltg_parser_s &_this)
   unsigned name_length = lse.terminal_end - lse.terminal_start;
   char *name_data = source_string.data + lse.terminal_start;
 
+  // - create value name -
+  unsigned val_idx = val_names.get_idx_char_ptr_insert(name_length,name_data);
+
   // - ERROR -
-  if (val_names.get_idx_char_ptr(name_length,name_data) != c_idx_not_exist)
+  if (val_idx < val_records.used)
   {
     // FIXME TODO throw proper exception
     cassert(0);
@@ -269,9 +272,6 @@ bool ltg_pa_fun_parameter(ltg_parser_s &_this)
 
     return false;
   }
-
-  // - create value name -
-  unsigned val_idx = val_names.insert_char_ptr(name_length,name_data);
 
   // - create value record -
   do {
@@ -425,8 +425,11 @@ bool ltg_pa_variable(ltg_parser_s &_this)
   unsigned name_length = lse.terminal_end - lse.terminal_start;
   char *name_data = source_string.data + lse.terminal_start;
 
+  // - create value name -
+  unsigned val_idx = val_names.get_idx_char_ptr_insert(name_length,name_data);
+
   // - ERROR -
-  if (val_names.get_idx_char_ptr(name_length,name_data) != c_idx_not_exist)
+  if (val_idx < val_records.used)
   {
     // FIXME TODO throw proper exception
     cassert(0);
@@ -438,16 +441,13 @@ bool ltg_pa_variable(ltg_parser_s &_this)
     return false;
   }
 
-  // - retrieve value type -
-  val_type_s &val_type = tmp_val_types.last();
-
-  // - create value name -
-  unsigned val_idx = val_names.insert_char_ptr(name_length,name_data);
-
   // - create value record -
   do {
     val_records.push_blank();
   } while(val_records.used <= val_idx);
+
+  // - retrieve value type -
+  val_type_s &val_type = tmp_val_types.last();
 
   // - fill value record -
   val_records.last().set(val_type,0,c_idx_not_exist,c_idx_not_exist);

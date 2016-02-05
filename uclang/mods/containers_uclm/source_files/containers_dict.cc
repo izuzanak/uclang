@@ -249,27 +249,28 @@ built_in_variable_s dict_variables[] =
         location_s *val_location = it.get_location_value(ptr[1]);\
         \
         /* - push key and value locations to dictionary - */\
-        pointer_map_s map = {key_location,val_location};\
-        unsigned index = TARGET_PTR->get_idx(map);\
+        pointer_map_s insert_map = {key_location,NULL};\
+        unsigned index = TARGET_PTR->unique_insert(insert_map);\
         \
+        /* - ERROR - */\
         if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)\
         {\
           return false;\
         }\
         \
-        if (index == c_idx_not_exist)\
+        pointer_map_s &map = TARGET_PTR->data[index].object;\
+        \
+        if (map.value)\
+        {\
+          it.release_location_ptr((location_s *)map.value);\
+        }\
+        else\
         {\
           key_location->v_reference_cnt.atomic_inc();\
-          val_location->v_reference_cnt.atomic_inc();\
-          \
-          TARGET_PTR->insert(map);\
-          \
-          if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)\
-          {\
-            return false;\
-          }\
         }\
         \
+        val_location->v_reference_cnt.atomic_inc();\
+        map.value = (pointer)val_location;\
       }\
       while((ptr += 2) < ptr_end);\
     }\
@@ -284,9 +285,10 @@ built_in_variable_s dict_variables[] =
     it.release_location_ptr(val_reference);\
     \
     /* - push key and value locations to dictionary - */\
-    pointer_map_s map = {key_location,val_location};\
-    unsigned map_idx = TARGET_PTR->get_idx(map);\
+    pointer_map_s insert_map = {key_location,NULL};\
+    unsigned map_idx = TARGET_PTR->unique_insert(insert_map);\
     \
+    /* - ERROR - */\
     if (((location_s *)it.exception_location)->v_type != c_bi_class_blank) {\
       it.release_location_ptr(key_location);\
       it.release_location_ptr(val_location);\
@@ -294,17 +296,15 @@ built_in_variable_s dict_variables[] =
       return false;\
     }\
     \
-    if (map_idx == c_idx_not_exist) {\
-      TARGET_PTR->insert(map);\
-      \
-      if (((location_s *)it.exception_location)->v_type != c_bi_class_blank) {\
-        return false;\
-      }\
-    }\
-    else {\
+    pointer_map_s &map = TARGET_PTR->data[map_idx].object;\
+    \
+    if (map.value)\
+    {\
       it.release_location_ptr(key_location);\
-      it.release_location_ptr(val_location);\
+      it.release_location_ptr((location_s *)map.value);\
     }\
+    \
+    map.value = (pointer)val_location;\
   }/*}}}*/
 
 #define BIC_DICT_APPEND_ITERABLE(SRC_LOCATION,TARGET_PTR) \

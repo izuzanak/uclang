@@ -282,8 +282,11 @@ bool jit_pa_fun_parameter(jit_parser_s &_this)
   unsigned name_length = lse.terminal_end - lse.terminal_start;
   char *name_data = source_string.data + lse.terminal_start;
 
+  // - create variable name -
+  unsigned var_idx = var_names.get_idx_char_ptr_insert(name_length,name_data);
+
   // - ERROR -
-  if (var_names.get_idx_char_ptr(name_length,name_data) != c_idx_not_exist)
+  if (var_idx < var_records.used)
   {
     interpreter_thread_s &it = *((interpreter_thread_s *)_this.it_ptr);
     exception_s *new_exception = exception_s::throw_exception(it,c_error_JIT_PARSER_DUPLICIT_PARAMETER_IDENTIFIER,0,(location_s *)it.blank_location);
@@ -291,9 +294,6 @@ bool jit_pa_fun_parameter(jit_parser_s &_this)
 
     return false;
   }
-
-  // - create variable name -
-  unsigned var_idx = var_names.insert_char_ptr(name_length,name_data);
 
   // - create variable record -
   do {
@@ -501,8 +501,11 @@ bool jit_pa_variable(jit_parser_s &_this)
   unsigned name_length = lse.terminal_end - lse.terminal_start;
   char *name_data = source_string.data + lse.terminal_start;
 
+  // - create variable name -
+  unsigned var_idx = var_names.get_idx_char_ptr_insert(name_length,name_data);
+
   // - ERROR -
-  if (var_names.get_idx_char_ptr(name_length,name_data) != c_idx_not_exist)
+  if (var_idx < var_records.used)
   {
     interpreter_thread_s &it = *((interpreter_thread_s *)_this.it_ptr);
     exception_s *new_exception = exception_s::throw_exception(it,c_error_JIT_PARSER_DUPLICIT_VAR_PARAM_IDENTIFIER,0,(location_s *)it.blank_location);
@@ -511,16 +514,13 @@ bool jit_pa_variable(jit_parser_s &_this)
     return false;
   }
 
-  // - retrieve variable type -
-  var_type_s &var_type = tmp_var_types.last();
-
-  // - create variable name -
-  unsigned var_idx = var_names.insert_char_ptr(name_length,name_data);
-
   // - create variable record -
   do {
     var_records.push_blank();
   } while(var_records.used <= var_idx);
+
+  // - retrieve variable type -
+  var_type_s &var_type = tmp_var_types.last();
 
   // - fill variable record -
   var_records.last().set(var_type,NULL);

@@ -1599,14 +1599,7 @@ inlines script_parser_s
 
 inline unsigned script_parser_s::get_method_name_idx_swap(string_s &a_name)
 {/*{{{*/
-  unsigned name_idx = method_symbol_names.get_idx(a_name);
-
-  if (name_idx == c_idx_not_exist)
-  {
-    return method_symbol_names.swap_insert(a_name);
-  }
-
-  return name_idx;
+  return method_symbol_names.unique_swap_insert(a_name);
 }/*}}}*/
 
 inline unsigned script_parser_s::resolve_class_idx_by_name(const char *a_name,unsigned a_class_idx)

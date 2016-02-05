@@ -114,7 +114,6 @@ additions
    * \return index of string
    */
   unsigned get_idx_char_ptr(unsigned a_length,const char *a_data);
-  inline unsigned get_idx_char_ptr_insert(unsigned a_length,const char *a_data);
 
   /*
    * \brief join all strings in array to one string
@@ -148,7 +147,6 @@ additions
    */
   inline unsigned get_idx_char_ptr(unsigned a_length,const char *a_data);
   inline void get_idxs_char_ptr(unsigned a_length,const char *a_data,ui_array_s &a_idxs_array);
-  inline unsigned insert_char_ptr(unsigned a_length,const char *a_data);
   inline unsigned get_idx_char_ptr_insert(unsigned a_length,const char *a_data);
 }
 
@@ -351,20 +349,6 @@ inline int bd_rb_tree_s::__compare_value(double &a_first,double &a_second)
 inlines string_array_s
 @end
 
-inline unsigned string_array_s::get_idx_char_ptr_insert(unsigned a_length,const char *a_data)
-{/*{{{*/
-  unsigned idx = get_idx_char_ptr(a_length,a_data);
-
-  if (idx == c_idx_not_exist)
-  {
-    push_blank();
-    data[used - 1].set(a_length,a_data);
-    return used - 1;
-  }
-
-  return idx;
-}/*}}}*/
-
 // -- string_rb_tree_s --
 @begin
 inlines string_rb_tree_s
@@ -395,25 +379,13 @@ inline void string_rb_tree_s::get_idxs_char_ptr(unsigned a_length,const char *a_
   get_idxs(tmp_str,a_idxs_array);
 }/*}}}*/
 
-inline unsigned string_rb_tree_s::insert_char_ptr(unsigned a_length,const char *a_data)
+inline unsigned string_rb_tree_s::get_idx_char_ptr_insert(unsigned a_length,const char *a_data)
 {/*{{{*/
   string_s tmp_str;
   tmp_str.data = (char *)a_data;
   tmp_str.size = a_length + 1;
 
-  return insert(tmp_str);
-}/*}}}*/
-
-inline unsigned string_rb_tree_s::get_idx_char_ptr_insert(unsigned a_length,const char *a_data)
-{/*{{{*/
-  unsigned idx = get_idx_char_ptr(a_length,a_data);
-
-  if (idx == c_idx_not_exist)
-  {
-    return insert_char_ptr(a_length,a_data);
-  }
-
-  return idx;
+  return unique_insert(tmp_str);
 }/*}}}*/
 
 // -- dynlib_array_s --

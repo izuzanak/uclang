@@ -23,27 +23,25 @@ xml_c g_xml;
 location_s *sax_parser_s::get_string_location(unsigned a_length,const char *a_data)
 {/*{{{*/
   interpreter_thread_s &it = *((interpreter_thread_s *)it_ptr);
- 
+
+  string_s tmp_string;
+  tmp_string.size = a_length + 1;
+  tmp_string.data = (char *)a_data;
+
   // - get constant position in tree -
-  unsigned cs_idx = const_strings.get_idx_char_ptr(a_length,a_data);
-  if (cs_idx == c_idx_not_exist)
+  unsigned cs_idx = const_strings.unique_insert(tmp_string);
+
+  if (cs_idx >= string_locations.used)
   {
-    string_s string;
-    string.init();
-    string.set(a_length,a_data);
-
-    // - create location string copy -
-    string_s *string_ptr = it.get_new_string_ptr();
-    *string_ptr = string;
-
-    cs_idx = const_strings.swap_insert(string);
-    string.clear();
-
     // - skip rb_tree indexes gap -
     while (cs_idx > string_locations.used)
     {
       string_locations.push(NULL);
     }
+
+    // - create location string copy -
+    string_s *string_ptr = it.get_new_string_ptr();
+    *string_ptr = const_strings[cs_idx];
 
     // - create new string location -
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);

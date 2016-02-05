@@ -1380,11 +1380,7 @@ bool pa_method_body_empty(string_s &source_string,script_parser_s &_this)
   // - creation of expression defining constant 0 -
 
   // - search constant in constant array -
-  unsigned ci_idx = const_ints.get_idx(0);
-  if (ci_idx == c_idx_not_exist)
-  {
-    ci_idx = const_ints.insert(0);
-  }
+  unsigned ci_idx = const_ints.unique_insert(0);
 
   // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
@@ -3371,11 +3367,7 @@ bool pa_slice_blank_value(string_s &source_string,script_parser_s &_this)
   // *****
 
   // - search constant in constant array -
-  unsigned ci_idx = const_ints.get_idx(LLONG_MAX);
-  if (ci_idx == c_idx_not_exist)
-  {
-    ci_idx = const_ints.insert(LLONG_MAX);
-  }
+  unsigned ci_idx = const_ints.unique_insert(LLONG_MAX);
 
   // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
@@ -4105,11 +4097,7 @@ bool pa_const_oct_int(string_s &source_string,script_parser_s &_this)
   num_data[num_end] = tmp_char;
 
   // - get constant position in array -
-  unsigned ci_idx = const_ints.get_idx(const_int);
-  if (ci_idx == c_idx_not_exist)
-  {
-    ci_idx = const_ints.insert(const_int);
-  }
+  unsigned ci_idx = const_ints.unique_insert(const_int);
 
   // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
@@ -4152,11 +4140,7 @@ bool pa_const_dec_int(string_s &source_string,script_parser_s &_this)
   num_data[num_end] = tmp_char;
 
   // - get constant position in array -
-  unsigned ci_idx = const_ints.get_idx(const_int);
-  if (ci_idx == c_idx_not_exist)
-  {
-    ci_idx = const_ints.insert(const_int);
-  }
+  unsigned ci_idx = const_ints.unique_insert(const_int);
 
   // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
@@ -4199,11 +4183,7 @@ bool pa_const_hex_int(string_s &source_string,script_parser_s &_this)
   num_data[num_end] = tmp_char;
 
   // - get constant position in array -
-  unsigned ci_idx = const_ints.get_idx(const_int);
-  if (ci_idx == c_idx_not_exist)
-  {
-    ci_idx = const_ints.insert(const_int);
-  }
+  unsigned ci_idx = const_ints.unique_insert(const_int);
 
   // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
@@ -4246,11 +4226,7 @@ bool pa_const_float(string_s &source_string,script_parser_s &_this)
   float_num_data[float_num_end] = tmp_char;
 
   // - get constant position in array -
-  unsigned cd_idx = const_floats.get_idx(const_float);
-  if (cd_idx == c_idx_not_exist)
-  {
-    cd_idx = const_floats.insert(const_float);
-  }
+  unsigned cd_idx = const_floats.unique_insert(const_float);
 
   // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
@@ -4405,25 +4381,16 @@ bool pa_const_string(string_s &source_string,script_parser_s &_this)
     while(ptr < ptr_end);
   }
 
+  // - modification of character buffer -
+  char_buffer.data[char_buffer.used] = '\0';
+
+  string_s const_str;
+  const_str.size = char_buffer.used + 1;
+  const_str.data = char_buffer.data;
+
   // - get constant position in array -
-  unsigned cs_idx = const_strings.get_idx_char_ptr(char_buffer.used,char_buffer.data);
-  if (cs_idx == c_idx_not_exist)
-  {
-
-    // - modification of character buffer -
-    char_buffer.data[char_buffer.used] = '\0';
-
-    string_s const_str;
-    const_str.size = char_buffer.used + 1;
-    const_str.data = char_buffer.data;
-
-    cs_idx = const_strings.swap_insert(const_str);
-    const_str.clear();
-  }
-  else
-  {
-    char_buffer.clear();
-  }
+  unsigned cs_idx = const_strings.unique_swap_insert(const_str);
+  const_str.clear();
 
   // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;
