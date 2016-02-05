@@ -2187,12 +2187,8 @@ bool bic_bin_dict_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned 
 #define BIC_BIN_DICT_OPERATOR_BINARY_LE_BR_RE_BR_INTEGER(MAP_NAME,DEFAULT_VALUE) \
 {/*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
-  MAP_NAME ## _s search_map = {key,DEFAULT_VALUE};\
-\
-  if ((index = tree_ptr->get_idx(search_map)) == c_idx_not_exist)\
-  {\
-    index = tree_ptr->insert(search_map);\
-  }\
+  MAP_NAME ## _s insert_map = {key,DEFAULT_VALUE};\
+  index = tree_ptr->unique_insert(insert_map);\
 }/*}}}*/
 
       switch (bd_ptr->type)

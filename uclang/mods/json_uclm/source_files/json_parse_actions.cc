@@ -97,27 +97,24 @@ bool pa_json_object_pair(json_parser_s &_this)
   tree_ptr->source_pos = 0;
 
   // - search index of key location -
-  pointer_map_s search_map = {(pointer)key_location,NULL};
-  unsigned index = tree_ptr->get_idx(search_map);
+  pointer_map_s insert_map = {(pointer)key_location,NULL};
+  unsigned index = tree_ptr->unique_insert(insert_map);
   cassert(((location_s *)it.exception_location)->v_type == c_bi_class_blank);
 
-  if (index == c_idx_not_exist)
-  {
-    key_location->v_reference_cnt.atomic_inc();
+  pointer_map_s &map = tree_ptr->data[index].object;
 
-    // - key does not exists, insert new value -
-    pointer_map_s insert_map = {(pointer)key_location,(pointer)value_location};
-    tree_ptr->insert(insert_map);
-    cassert(((location_s *)it.exception_location)->v_type == c_bi_class_blank);
+  if (map.value)
+  {
+    // - release existing value -
+    it.release_location_ptr((location_s *)map.value);
   }
   else
   {
-    // - key exists, update its value -
-    pointer *tval_ptr = &tree_ptr->data[index].object.value;
-
-    it.release_location_ptr((location_s *)*tval_ptr);
-    *tval_ptr = (pointer)value_location;
+    // - new key was inserted -
+    key_location->v_reference_cnt.atomic_inc();
   }
+
+  map.value = (pointer)value_location;
 
   debug_message_6(fprintf(stderr,"json_parser: parse_action: pa_json_object_pair\n"));
 

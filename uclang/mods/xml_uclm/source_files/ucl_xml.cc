@@ -184,27 +184,24 @@ void xml_start_element(void *user,const xmlChar *name,const xmlChar **attrs)
       attr_value->v_reference_cnt.atomic_inc();
 
       // - search index of key location -
-      pointer_map_s search_map = {(pointer)attr_name,NULL};
-      unsigned index = tree_ptr->get_idx(search_map);
+      pointer_map_s insert_map = {(pointer)attr_name,NULL};
+      unsigned index = tree_ptr->unique_insert(insert_map);
       cassert(((location_s *)it.exception_location)->v_type == c_bi_class_blank);
 
-      if (index == c_idx_not_exist)
-      {
-        attr_name->v_reference_cnt.atomic_inc();
+      pointer_map_s &map = tree_ptr->data[index].object;
 
-        // - key does not exists, insert new value -
-        pointer_map_s insert_map = {(pointer)attr_name,(pointer)attr_value};
-        tree_ptr->insert(insert_map);
-        cassert(((location_s *)it.exception_location)->v_type == c_bi_class_blank);
+      if (map.value)
+      {
+        // - release old value -
+        it.release_location_ptr((location_s *)map.value);
       }
       else
       {
-        // - key exists, update its value -
-        pointer *tval_ptr = &tree_ptr->data[index].object.value;
-
-        it.release_location_ptr((location_s *)*tval_ptr);
-        *tval_ptr = (pointer)attr_value;
+        // - key was used -
+        attr_name->v_reference_cnt.atomic_inc();
       }
+
+      map.value = (pointer)attr_value;
 
       attr_ptr += 2;
     }

@@ -266,23 +266,10 @@ location_s *lua_s::lua_object_value(interpreter_thread_s &it,lua_State *L,uli so
               return NULL;
             }
 
-            pointer_map_s map = {key_location,value_location};
-            unsigned index = tree_ptr->get_idx(map);
+            pointer_map_s insert_map = {key_location,NULL};
+            unsigned index = tree_ptr->unique_insert(insert_map);
 
-            if (((location_s *)it.exception_location)->v_type != c_bi_class_blank ||
-                index != c_idx_not_exist)
-            {
-              it.release_location_ptr(key_location);
-              it.release_location_ptr(value_location);
-              it.release_location_ptr(dict_location);
-
-              lua_pop(L,2);
-              return NULL;
-            }
-
-            // - insert map to dictionary -
-            tree_ptr->insert(map);
-
+            // - ERROR -
             if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
             {
               it.release_location_ptr(key_location);
@@ -292,6 +279,21 @@ location_s *lua_s::lua_object_value(interpreter_thread_s &it,lua_State *L,uli so
               lua_pop(L,2);
               return NULL;
             }
+
+            pointer_map_s &map = tree_ptr->data[index].object;
+
+            // - ERROR -
+            if (map.value != NULL)
+            {
+              it.release_location_ptr(key_location);
+              it.release_location_ptr(value_location);
+              it.release_location_ptr(dict_location);
+
+              lua_pop(L,2);
+              return NULL;
+            }
+
+            map.value = (pointer)value_location;
           }
 
           lua_pop(L,1);

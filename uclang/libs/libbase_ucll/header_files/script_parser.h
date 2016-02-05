@@ -1656,7 +1656,7 @@ inline bool pointer_tree_s::set_unique_insert(pointer a_value)
 {/*{{{*/
   unsigned new_node_idx = __get_new_index();
 
-  if (!__binary_tree_insert(new_node_idx,a_value,true))
+  if (__binary_tree_insert(new_node_idx,a_value,true) != c_idx_not_exist)
   {
     pointer_tree_s_node &new_node = data[new_node_idx];
 
