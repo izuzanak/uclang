@@ -171,6 +171,7 @@ class UclVar
   static unsigned c_bi_mni_get_idx_1;
   static unsigned c_bi_mni_get_idxs_1;
   static unsigned c_bi_mni_replace_2;
+  static unsigned c_bi_mni_contain_1;
   static unsigned c_bi_mni_item_1;
   static unsigned c_bi_mni_first_idx_0;
   static unsigned c_bi_mni_next_idx_1;
@@ -294,7 +295,6 @@ class UclVar
   static unsigned c_bi_mni_next_0;
   static unsigned c_bi_mni_Set_0;
   static unsigned c_bi_mni_Set_1;
-  static unsigned c_bi_mni_contain_1;
   static unsigned c_bi_mni_List_0;
   static unsigned c_bi_mni_List_1;
   static unsigned c_bi_mni_append_1;
@@ -2157,6 +2157,11 @@ class UclVar
     return __call_2(c_bi_mni_replace_2,op_0,op_1);
   }/*}}}*/
 
+  inline UclVar contain(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_contain_1,op_0);
+  }/*}}}*/
+
   inline UclVar item(UclVar op_0)
   {/*{{{*/
     return __call_1(c_bi_mni_item_1,op_0);
@@ -2637,11 +2642,6 @@ class UclVar
   inline UclVar next()
   {/*{{{*/
     return __call_0(c_bi_mni_next_0);
-  }/*}}}*/
-
-  inline UclVar contain(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_contain_1,op_0);
   }/*}}}*/
 
   inline UclVar append(UclVar op_0)

@@ -121,6 +121,7 @@ unsigned UclVar::c_bi_mni_range_2;
 unsigned UclVar::c_bi_mni_get_idx_1;
 unsigned UclVar::c_bi_mni_get_idxs_1;
 unsigned UclVar::c_bi_mni_replace_2;
+unsigned UclVar::c_bi_mni_contain_1;
 unsigned UclVar::c_bi_mni_item_1;
 unsigned UclVar::c_bi_mni_first_idx_0;
 unsigned UclVar::c_bi_mni_next_idx_1;
@@ -244,7 +245,6 @@ unsigned UclVar::c_bi_mni_insert_ref_1;
 unsigned UclVar::c_bi_mni_next_0;
 unsigned UclVar::c_bi_mni_Set_0;
 unsigned UclVar::c_bi_mni_Set_1;
-unsigned UclVar::c_bi_mni_contain_1;
 unsigned UclVar::c_bi_mni_List_0;
 unsigned UclVar::c_bi_mni_List_1;
 unsigned UclVar::c_bi_mni_append_1;
@@ -927,6 +927,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_idx_1,"get_idx#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_idxs_1,"get_idxs#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_replace_2,"replace#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_contain_1,"contain#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_compare_1,"compare#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_item_1,"item#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_first_idx_0,"first_idx#0");
@@ -945,6 +946,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_fill_1,"fill#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_idx_1,"get_idx#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_idxs_1,"get_idxs#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_contain_1,"contain#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_compare_1,"compare#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_item_1,"item#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_first_idx_0,"first_idx#0");
@@ -1138,6 +1140,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_push_1,"push#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_push_ref_1,"push_ref#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_pop_0,"pop#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_contain_1,"contain#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_compare_1,"compare#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_item_1,"item#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_first_idx_0,"first_idx#0");
@@ -1155,6 +1158,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_insert_1,"insert#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_insert_ref_1,"insert_ref#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_next_0,"next#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_contain_1,"contain#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_compare_1,"compare#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_item_1,"item#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_first_idx_0,"first_idx#0");
@@ -1198,6 +1202,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_has_idx_1,"has_idx#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_idx_1,"get_idx#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_idxs_1,"get_idxs#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_contain_1,"contain#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_compare_1,"compare#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_item_1,"item#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_first_idx_0,"first_idx#0");
@@ -1216,6 +1221,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_remove_1,"remove#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_idx_1,"get_idx#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_idxs_1,"get_idxs#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_contain_1,"contain#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_compare_1,"compare#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_item_1,"item#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_first_idx_0,"first_idx#0");
@@ -1240,6 +1246,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_prev_key_1,"prev_key#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_lee_key_1,"lee_key#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_gre_key_1,"gre_key#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_contain_1,"contain#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_compare_1,"compare#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_item_1,"item#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_first_idx_0,"first_idx#0");
