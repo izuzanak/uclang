@@ -68,14 +68,14 @@ class Main
   static m_modules = 
   [/*{{{*/
     "base",
-    "node",
     "sys",
-    "containers",
-    "json",
+    "http",
     "websocket",
-    "jit",
     "ucf",
-    "http"
+    "jit",
+    "node",
+    "containers",
+    "json"
   ];/*}}}*/
 
   static m_module_classes = new Dict(
@@ -96,10 +96,6 @@ class Main
       "Delegate",
       "Buffer"
     ],/*}}}*/
-    "node",
-    [/*{{{*/
-      "NodeCallback"
-    ],/*}}}*/
     "sys",
     [/*{{{*/
       "Sys",
@@ -113,18 +109,11 @@ class Main
       "Timer",
       "Clock"
     ],/*}}}*/
-    "containers",
+    "http",
     [/*{{{*/
-      "Stack",
-      "Queue",
-      "Set",
-      "List",
-      "Tree",
-      "Dict"
-    ],/*}}}*/
-    "json",
-    [/*{{{*/
-      "Json"
+      "HttpServer",
+      "HttpConn",
+      "HttpResp"
     ],/*}}}*/
     "websocket",
     [/*{{{*/
@@ -132,11 +121,6 @@ class Main
       "WsConn",
       "WsClient",
       "WsBase64"
-    ],/*}}}*/
-    "jit",
-    [/*{{{*/
-      "JitContext",
-      "JitFunction"
     ],/*}}}*/
     "ucf",
     [/*{{{*/
@@ -154,11 +138,27 @@ class Main
       "Bcc",
       "Crc"
     ],/*}}}*/
-    "http",
+    "jit",
     [/*{{{*/
-      "HttpServer",
-      "HttpConn",
-      "HttpResp"
+      "JitContext",
+      "JitFunction"
+    ],/*}}}*/
+    "node",
+    [/*{{{*/
+      "NodeCallback"
+    ],/*}}}*/
+    "containers",
+    [/*{{{*/
+      "Stack",
+      "Queue",
+      "Set",
+      "List",
+      "Tree",
+      "Dict"
+    ],/*}}}*/
+    "json",
+    [/*{{{*/
+      "Json"
     ]/*}}}*/
   ]);/*}}}*/
 
@@ -173,6 +173,9 @@ class Main
     "stdin",
     "stdout",
     "stderr",
+    "SEEK_SET",
+    "SEEK_CUR",
+    "SEEK_END",
     "SIGINT",
     "SIGTERM",
     "SIGHUP",

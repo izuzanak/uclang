@@ -34,14 +34,14 @@ typedef UclVar (*t_node_callback_2)(UclVar,UclVar);
 enum
 {/*{{{*/
   c_uclvar_module_base = 0,
-  c_uclvar_module_node,
   c_uclvar_module_sys,
+  c_uclvar_module_http,
+  c_uclvar_module_websocket,
+  c_uclvar_module_ucf,
+  c_uclvar_module_jit,
+  c_uclvar_module_node,
   c_uclvar_module_containers,
   c_uclvar_module_json,
-  c_uclvar_module_websocket,
-  c_uclvar_module_jit,
-  c_uclvar_module_ucf,
-  c_uclvar_module_http,
   c_uclvar_module_count
 };/*}}}*/
 
@@ -74,7 +74,6 @@ class UclVar
   static unsigned c_bi_class_Thread;
   static unsigned c_bi_class_Delegate;
   static unsigned c_bi_class_Buffer;
-  static unsigned c_bi_class_NodeCallback;
   static unsigned c_bi_class_Sys;
   static unsigned c_bi_class_Pipe;
   static unsigned c_bi_class_File;
@@ -85,19 +84,13 @@ class UclVar
   static unsigned c_bi_class_Poll;
   static unsigned c_bi_class_Timer;
   static unsigned c_bi_class_Clock;
-  static unsigned c_bi_class_Stack;
-  static unsigned c_bi_class_Queue;
-  static unsigned c_bi_class_Set;
-  static unsigned c_bi_class_List;
-  static unsigned c_bi_class_Tree;
-  static unsigned c_bi_class_Dict;
-  static unsigned c_bi_class_Json;
+  static unsigned c_bi_class_HttpServer;
+  static unsigned c_bi_class_HttpConn;
+  static unsigned c_bi_class_HttpResp;
   static unsigned c_bi_class_WsContext;
   static unsigned c_bi_class_WsConn;
   static unsigned c_bi_class_WsClient;
   static unsigned c_bi_class_WsBase64;
-  static unsigned c_bi_class_JitContext;
-  static unsigned c_bi_class_JitFunction;
   static unsigned c_bi_class_System;
   static unsigned c_bi_class_Time;
   static unsigned c_bi_class_CfgFile;
@@ -111,9 +104,16 @@ class UclVar
   static unsigned c_bi_class_MsgQueue;
   static unsigned c_bi_class_Bcc;
   static unsigned c_bi_class_Crc;
-  static unsigned c_bi_class_HttpServer;
-  static unsigned c_bi_class_HttpConn;
-  static unsigned c_bi_class_HttpResp;
+  static unsigned c_bi_class_JitContext;
+  static unsigned c_bi_class_JitFunction;
+  static unsigned c_bi_class_NodeCallback;
+  static unsigned c_bi_class_Stack;
+  static unsigned c_bi_class_Queue;
+  static unsigned c_bi_class_Set;
+  static unsigned c_bi_class_List;
+  static unsigned c_bi_class_Tree;
+  static unsigned c_bi_class_Dict;
+  static unsigned c_bi_class_Json;
 
   // - built in method name indexes declaration -
   static unsigned c_bi_mni_operator_binary_equal_1;
@@ -228,9 +228,6 @@ class UclVar
   static unsigned c_bi_mni_Delegate_3;
   static unsigned c_bi_mni_call_1;
   static unsigned c_bi_mni_size_0;
-  static unsigned c_bi_mni_NodeCallback_2;
-  static unsigned c_bi_mni_call_0;
-  static unsigned c_bi_mni_call_2;
   static unsigned c_bi_mni_sleep_1;
   static unsigned c_bi_mni_srand_1;
   static unsigned c_bi_mni_rand_0;
@@ -303,49 +300,24 @@ class UclVar
   static unsigned c_bi_mni_getres_1;
   static unsigned c_bi_mni_gettime_1;
   static unsigned c_bi_mni_settime_2;
-  static unsigned c_bi_mni_Stack_0;
-  static unsigned c_bi_mni_Stack_1;
-  static unsigned c_bi_mni_items_0;
-  static unsigned c_bi_mni_Queue_0;
-  static unsigned c_bi_mni_Queue_1;
-  static unsigned c_bi_mni_insert_1;
-  static unsigned c_bi_mni_insert_ref_1;
-  static unsigned c_bi_mni_next_0;
-  static unsigned c_bi_mni_Set_0;
-  static unsigned c_bi_mni_Set_1;
-  static unsigned c_bi_mni_List_0;
-  static unsigned c_bi_mni_List_1;
-  static unsigned c_bi_mni_append_1;
-  static unsigned c_bi_mni_append_ref_1;
-  static unsigned c_bi_mni_prepend_1;
-  static unsigned c_bi_mni_prepend_ref_1;
-  static unsigned c_bi_mni_insert_before_2;
-  static unsigned c_bi_mni_insert_before_ref_2;
-  static unsigned c_bi_mni_insert_after_2;
-  static unsigned c_bi_mni_insert_after_ref_2;
-  static unsigned c_bi_mni_has_idx_1;
-  static unsigned c_bi_mni_Tree_0;
-  static unsigned c_bi_mni_Tree_1;
-  static unsigned c_bi_mni_Dict_0;
-  static unsigned c_bi_mni_Dict_1;
-  static unsigned c_bi_mni_keys_0;
-  static unsigned c_bi_mni_store_ref_2;
-  static unsigned c_bi_mni_has_key_1;
-  static unsigned c_bi_mni_remove_key_1;
-  static unsigned c_bi_mni_first_key_0;
-  static unsigned c_bi_mni_last_key_0;
-  static unsigned c_bi_mni_next_key_1;
-  static unsigned c_bi_mni_prev_key_1;
-  static unsigned c_bi_mni_lee_key_1;
-  static unsigned c_bi_mni_gre_key_1;
-  static unsigned c_bi_mni_create_nice_2;
-  static unsigned c_bi_mni_parse_1;
-  static unsigned c_bi_mni_WsContext_2;
-  static unsigned c_bi_mni_version_0;
-  static unsigned c_bi_mni_user_data_0;
-  static unsigned c_bi_mni_client_4;
+  static unsigned c_bi_mni_HttpServer_2;
   static unsigned c_bi_mni_get_fds_0;
+  static unsigned c_bi_mni_timeout_0;
   static unsigned c_bi_mni_process_1;
+  static unsigned c_bi_mni_id_0;
+  static unsigned c_bi_mni_url_0;
+  static unsigned c_bi_mni_method_0;
+  static unsigned c_bi_mni_version_0;
+  static unsigned c_bi_mni_upload_data_0;
+  static unsigned c_bi_mni_user_data_0;
+  static unsigned c_bi_mni_values_1;
+  static unsigned c_bi_mni_queue_response_2;
+  static unsigned c_bi_mni_HttpResp_1;
+  static unsigned c_bi_mni_HttpResp_2;
+  static unsigned c_bi_mni_add_header_2;
+  static unsigned c_bi_mni_add_footer_2;
+  static unsigned c_bi_mni_WsContext_2;
+  static unsigned c_bi_mni_client_4;
   static unsigned c_bi_mni_protocol_idx_1;
   static unsigned c_bi_mni_callback_on_writable_1;
   static unsigned c_bi_mni_reason_0;
@@ -357,9 +329,6 @@ class UclVar
   static unsigned c_bi_mni_connected_0;
   static unsigned c_bi_mni_encode_1;
   static unsigned c_bi_mni_decode_1;
-  static unsigned c_bi_mni_JitContext_0;
-  static unsigned c_bi_mni_create_fun_1;
-  static unsigned c_bi_mni_signature_0;
   static unsigned c_bi_mni_GetProcessId_0;
   static unsigned c_bi_mni_GetProcessName_0;
   static unsigned c_bi_mni_GetWorkingDirectory_0;
@@ -425,20 +394,51 @@ class UclVar
   static unsigned c_bi_mni_read_pid_0;
   static unsigned c_bi_mni_peek_msg_0;
   static unsigned c_bi_mni_Bcc_0;
+  static unsigned c_bi_mni_append_1;
   static unsigned c_bi_mni_value_0;
   static unsigned c_bi_mni_Crc_2;
-  static unsigned c_bi_mni_HttpServer_2;
-  static unsigned c_bi_mni_timeout_0;
-  static unsigned c_bi_mni_id_0;
-  static unsigned c_bi_mni_url_0;
-  static unsigned c_bi_mni_method_0;
-  static unsigned c_bi_mni_upload_data_0;
-  static unsigned c_bi_mni_values_1;
-  static unsigned c_bi_mni_queue_response_2;
-  static unsigned c_bi_mni_HttpResp_1;
-  static unsigned c_bi_mni_HttpResp_2;
-  static unsigned c_bi_mni_add_header_2;
-  static unsigned c_bi_mni_add_footer_2;
+  static unsigned c_bi_mni_JitContext_0;
+  static unsigned c_bi_mni_create_fun_1;
+  static unsigned c_bi_mni_signature_0;
+  static unsigned c_bi_mni_NodeCallback_2;
+  static unsigned c_bi_mni_call_0;
+  static unsigned c_bi_mni_call_2;
+  static unsigned c_bi_mni_Stack_0;
+  static unsigned c_bi_mni_Stack_1;
+  static unsigned c_bi_mni_items_0;
+  static unsigned c_bi_mni_Queue_0;
+  static unsigned c_bi_mni_Queue_1;
+  static unsigned c_bi_mni_insert_1;
+  static unsigned c_bi_mni_insert_ref_1;
+  static unsigned c_bi_mni_next_0;
+  static unsigned c_bi_mni_Set_0;
+  static unsigned c_bi_mni_Set_1;
+  static unsigned c_bi_mni_List_0;
+  static unsigned c_bi_mni_List_1;
+  static unsigned c_bi_mni_append_ref_1;
+  static unsigned c_bi_mni_prepend_1;
+  static unsigned c_bi_mni_prepend_ref_1;
+  static unsigned c_bi_mni_insert_before_2;
+  static unsigned c_bi_mni_insert_before_ref_2;
+  static unsigned c_bi_mni_insert_after_2;
+  static unsigned c_bi_mni_insert_after_ref_2;
+  static unsigned c_bi_mni_has_idx_1;
+  static unsigned c_bi_mni_Tree_0;
+  static unsigned c_bi_mni_Tree_1;
+  static unsigned c_bi_mni_Dict_0;
+  static unsigned c_bi_mni_Dict_1;
+  static unsigned c_bi_mni_keys_0;
+  static unsigned c_bi_mni_store_ref_2;
+  static unsigned c_bi_mni_has_key_1;
+  static unsigned c_bi_mni_remove_key_1;
+  static unsigned c_bi_mni_first_key_0;
+  static unsigned c_bi_mni_last_key_0;
+  static unsigned c_bi_mni_next_key_1;
+  static unsigned c_bi_mni_prev_key_1;
+  static unsigned c_bi_mni_lee_key_1;
+  static unsigned c_bi_mni_gre_key_1;
+  static unsigned c_bi_mni_create_nice_2;
+  static unsigned c_bi_mni_parse_1;
 
   // - built in variable name indexes declaration -
   static unsigned c_bi_vni_USER_EXCEPTION;
@@ -554,84 +554,6 @@ class UclVar
   static unsigned c_bi_vni__CLOCK_MONOTONIC;
   static unsigned c_bi_vni__CLOCK_PROCESS_CPUTIME_ID;
   static unsigned c_bi_vni__CLOCK_THREAD_CPUTIME_ID;
-  static unsigned c_bi_vni_PORT_NO_LISTEN;
-  static unsigned c_bi_vni_WRITE_TEXT;
-  static unsigned c_bi_vni_WRITE_BINARY;
-  static unsigned c_bi_vni_WRITE_CONTINUATION;
-  static unsigned c_bi_vni_WRITE_HTTP;
-  static unsigned c_bi_vni_WRITE_CLOSE;
-  static unsigned c_bi_vni_WRITE_PING;
-  static unsigned c_bi_vni_WRITE_PONG;
-  static unsigned c_bi_vni_CB_ESTABLISHED;
-  static unsigned c_bi_vni_CB_CLIENT_CONNECTION_ERROR;
-  static unsigned c_bi_vni_CB_CLIENT_FILTER_PRE_ESTABLISH;
-  static unsigned c_bi_vni_CB_CLIENT_ESTABLISHED;
-  static unsigned c_bi_vni_CB_CLOSED;
-  static unsigned c_bi_vni_CB_RECEIVE;
-  static unsigned c_bi_vni_CB_CLIENT_RECEIVE;
-  static unsigned c_bi_vni_CB_CLIENT_RECEIVE_PONG;
-  static unsigned c_bi_vni_CB_CLIENT_WRITEABLE;
-  static unsigned c_bi_vni_CB_SERVER_WRITEABLE;
-  static unsigned c_bi_vni_CB_HTTP;
-  static unsigned c_bi_vni_CB_HTTP_FILE_COMPLETION;
-  static unsigned c_bi_vni_CB_FILTER_NETWORK_CONNECTION;
-  static unsigned c_bi_vni_CB_FILTER_PROTOCOL_CONNECTION;
-  static unsigned c_bi_vni_CB_OPENSSL_LOAD_EXTRA_CLIENT_VERIFY_CERTS;
-  static unsigned c_bi_vni_CB_OPENSSL_LOAD_EXTRA_SERVER_VERIFY_CERTS;
-  static unsigned c_bi_vni_CB_OPENSSL_PERFORM_CLIENT_CERT_VERIFICATION;
-  static unsigned c_bi_vni_CB_CLIENT_APPEND_HANDSHAKE_HEADER;
-  static unsigned c_bi_vni_CB_CONFIRM_EXTENSION_OKAY;
-  static unsigned c_bi_vni_CB_CLIENT_CONFIRM_EXTENSION_SUPPORTED;
-  static unsigned c_bi_vni_CB_PROTOCOL_INIT;
-  static unsigned c_bi_vni_CB_PROTOCOL_DESTROY;
-  static unsigned c_bi_vni_CB_ADD_POLL_FD;
-  static unsigned c_bi_vni_CB_DEL_POLL_FD;
-  static unsigned c_bi_vni_CB_CHANGE_MODE_POLL_FD;
-  static unsigned c_bi_vni_TIMEOUT_NO_PENDING;
-  static unsigned c_bi_vni_TIMEOUT_AWAITING_PROXY_RESPONSE;
-  static unsigned c_bi_vni_TIMEOUT_AWAITING_CONNECT_RESPONSE;
-  static unsigned c_bi_vni_TIMEOUT_ESTABLISH_WITH_SERVER;
-  static unsigned c_bi_vni_TIMEOUT_AWAITING_SERVER_RESPONSE;
-  static unsigned c_bi_vni_TIMEOUT_AWAITING_PING;
-  static unsigned c_bi_vni_TIMEOUT_CLOSE_ACK;
-  static unsigned c_bi_vni_TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE;
-  static unsigned c_bi_vni_TIMEOUT_SENT_CLIENT_HANDSHAKE;
-  static unsigned c_bi_vni_TIMEOUT_SSL_ACCEPT;
-  static unsigned c_bi_vni_TYPE_I8;
-  static unsigned c_bi_vni_TYPE_U8;
-  static unsigned c_bi_vni_TYPE_I16;
-  static unsigned c_bi_vni_TYPE_U16;
-  static unsigned c_bi_vni_TYPE_I32;
-  static unsigned c_bi_vni_TYPE_U32;
-  static unsigned c_bi_vni_TYPE_I64;
-  static unsigned c_bi_vni_TYPE_U64;
-  static unsigned c_bi_vni_TYPE_F32;
-  static unsigned c_bi_vni_TYPE_F64;
-  static unsigned c_bi_vni_FC_NONE;
-  static unsigned c_bi_vni_FC_RTS_CTS;
-  static unsigned c_bi_vni_FC_RS_485;
-  static unsigned c_bi_vni_PAR_NONE;
-  static unsigned c_bi_vni_PAR_EVEN;
-  static unsigned c_bi_vni_PAR_ODD;
-  static unsigned c_bi_vni_TBOOL;
-  static unsigned c_bi_vni_TSINT;
-  static unsigned c_bi_vni_TINT;
-  static unsigned c_bi_vni_TDINT;
-  static unsigned c_bi_vni_TLINT;
-  static unsigned c_bi_vni_TUSINT;
-  static unsigned c_bi_vni_TUINT;
-  static unsigned c_bi_vni_TUDINT;
-  static unsigned c_bi_vni_TULINT;
-  static unsigned c_bi_vni_TREAL;
-  static unsigned c_bi_vni_TLREAL;
-  static unsigned c_bi_vni_TTIME;
-  static unsigned c_bi_vni_TDATE;
-  static unsigned c_bi_vni_TTOD;
-  static unsigned c_bi_vni_TDT;
-  static unsigned c_bi_vni_TSTRING;
-  static unsigned c_bi_vni_CRC8;
-  static unsigned c_bi_vni_CRC16;
-  static unsigned c_bi_vni_CRC32;
   static unsigned c_bi_vni_TYPE_CONNECT;
   static unsigned c_bi_vni_TYPE_DELETE;
   static unsigned c_bi_vni_TYPE_GET;
@@ -704,6 +626,84 @@ class UclVar
   static unsigned c_bi_vni_HTTP_INSUFFICIENT_STORAGE;
   static unsigned c_bi_vni_HTTP_BANDWIDTH_LIMIT_EXCEEDED;
   static unsigned c_bi_vni_HTTP_NOT_EXTENDED;
+  static unsigned c_bi_vni_PORT_NO_LISTEN;
+  static unsigned c_bi_vni_WRITE_TEXT;
+  static unsigned c_bi_vni_WRITE_BINARY;
+  static unsigned c_bi_vni_WRITE_CONTINUATION;
+  static unsigned c_bi_vni_WRITE_HTTP;
+  static unsigned c_bi_vni_WRITE_CLOSE;
+  static unsigned c_bi_vni_WRITE_PING;
+  static unsigned c_bi_vni_WRITE_PONG;
+  static unsigned c_bi_vni_CB_ESTABLISHED;
+  static unsigned c_bi_vni_CB_CLIENT_CONNECTION_ERROR;
+  static unsigned c_bi_vni_CB_CLIENT_FILTER_PRE_ESTABLISH;
+  static unsigned c_bi_vni_CB_CLIENT_ESTABLISHED;
+  static unsigned c_bi_vni_CB_CLOSED;
+  static unsigned c_bi_vni_CB_RECEIVE;
+  static unsigned c_bi_vni_CB_CLIENT_RECEIVE;
+  static unsigned c_bi_vni_CB_CLIENT_RECEIVE_PONG;
+  static unsigned c_bi_vni_CB_CLIENT_WRITEABLE;
+  static unsigned c_bi_vni_CB_SERVER_WRITEABLE;
+  static unsigned c_bi_vni_CB_HTTP;
+  static unsigned c_bi_vni_CB_HTTP_FILE_COMPLETION;
+  static unsigned c_bi_vni_CB_FILTER_NETWORK_CONNECTION;
+  static unsigned c_bi_vni_CB_FILTER_PROTOCOL_CONNECTION;
+  static unsigned c_bi_vni_CB_OPENSSL_LOAD_EXTRA_CLIENT_VERIFY_CERTS;
+  static unsigned c_bi_vni_CB_OPENSSL_LOAD_EXTRA_SERVER_VERIFY_CERTS;
+  static unsigned c_bi_vni_CB_OPENSSL_PERFORM_CLIENT_CERT_VERIFICATION;
+  static unsigned c_bi_vni_CB_CLIENT_APPEND_HANDSHAKE_HEADER;
+  static unsigned c_bi_vni_CB_CONFIRM_EXTENSION_OKAY;
+  static unsigned c_bi_vni_CB_CLIENT_CONFIRM_EXTENSION_SUPPORTED;
+  static unsigned c_bi_vni_CB_PROTOCOL_INIT;
+  static unsigned c_bi_vni_CB_PROTOCOL_DESTROY;
+  static unsigned c_bi_vni_CB_ADD_POLL_FD;
+  static unsigned c_bi_vni_CB_DEL_POLL_FD;
+  static unsigned c_bi_vni_CB_CHANGE_MODE_POLL_FD;
+  static unsigned c_bi_vni_TIMEOUT_NO_PENDING;
+  static unsigned c_bi_vni_TIMEOUT_AWAITING_PROXY_RESPONSE;
+  static unsigned c_bi_vni_TIMEOUT_AWAITING_CONNECT_RESPONSE;
+  static unsigned c_bi_vni_TIMEOUT_ESTABLISH_WITH_SERVER;
+  static unsigned c_bi_vni_TIMEOUT_AWAITING_SERVER_RESPONSE;
+  static unsigned c_bi_vni_TIMEOUT_AWAITING_PING;
+  static unsigned c_bi_vni_TIMEOUT_CLOSE_ACK;
+  static unsigned c_bi_vni_TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE;
+  static unsigned c_bi_vni_TIMEOUT_SENT_CLIENT_HANDSHAKE;
+  static unsigned c_bi_vni_TIMEOUT_SSL_ACCEPT;
+  static unsigned c_bi_vni_FC_NONE;
+  static unsigned c_bi_vni_FC_RTS_CTS;
+  static unsigned c_bi_vni_FC_RS_485;
+  static unsigned c_bi_vni_PAR_NONE;
+  static unsigned c_bi_vni_PAR_EVEN;
+  static unsigned c_bi_vni_PAR_ODD;
+  static unsigned c_bi_vni_TBOOL;
+  static unsigned c_bi_vni_TSINT;
+  static unsigned c_bi_vni_TINT;
+  static unsigned c_bi_vni_TDINT;
+  static unsigned c_bi_vni_TLINT;
+  static unsigned c_bi_vni_TUSINT;
+  static unsigned c_bi_vni_TUINT;
+  static unsigned c_bi_vni_TUDINT;
+  static unsigned c_bi_vni_TULINT;
+  static unsigned c_bi_vni_TREAL;
+  static unsigned c_bi_vni_TLREAL;
+  static unsigned c_bi_vni_TTIME;
+  static unsigned c_bi_vni_TDATE;
+  static unsigned c_bi_vni_TTOD;
+  static unsigned c_bi_vni_TDT;
+  static unsigned c_bi_vni_TSTRING;
+  static unsigned c_bi_vni_CRC8;
+  static unsigned c_bi_vni_CRC16;
+  static unsigned c_bi_vni_CRC32;
+  static unsigned c_bi_vni_TYPE_I8;
+  static unsigned c_bi_vni_TYPE_U8;
+  static unsigned c_bi_vni_TYPE_I16;
+  static unsigned c_bi_vni_TYPE_U16;
+  static unsigned c_bi_vni_TYPE_I32;
+  static unsigned c_bi_vni_TYPE_U32;
+  static unsigned c_bi_vni_TYPE_I64;
+  static unsigned c_bi_vni_TYPE_U64;
+  static unsigned c_bi_vni_TYPE_F32;
+  static unsigned c_bi_vni_TYPE_F64;
 
   private:
   inline void BLANK();
@@ -1139,33 +1139,6 @@ class UclVar
   {/*{{{*/
     friend class UclVar;
     protected:
-    static unsigned c_bi_mi_size_0;
-    static unsigned c_bi_mi_to_string_0;
-    static unsigned c_bi_mi_print_0;
-
-    public:
-    inline static UclVar size()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_size_0);
-    }/*}}}*/
-
-    inline static UclVar to_string()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_to_string_0);
-    }/*}}}*/
-
-    inline static UclVar print()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_print_0);
-    }/*}}}*/
-
-  };/*}}}*/
-
-  // - class NodeCallback -
-  class NodeCallback
-  {/*{{{*/
-    friend class UclVar;
-    protected:
     static unsigned c_bi_mi_to_string_0;
     static unsigned c_bi_mi_print_0;
 
@@ -1181,11 +1154,6 @@ class UclVar
     }/*}}}*/
 
   };/*}}}*/
-
-  inline static UclVar NodeCallback(UclVar op_0,UclVar op_1)
-  {/*{{{*/
-    return __new_object_2(c_bi_class_NodeCallback,c_bi_mni_NodeCallback_2,op_0,op_1);
-  }/*}}}*/
 
   // - class Sys -
   class Sys
@@ -1716,99 +1684,15 @@ class UclVar
   };/*}}}*/
 #endif
 
-  // - class Stack -
-  inline static UclVar Stack()
-  {/*{{{*/
-    return __new_object_0(c_bi_class_Stack,c_bi_mni_Stack_0);
-  }/*}}}*/
-
-  inline static UclVar Stack(UclVar op_0)
-  {/*{{{*/
-    return __new_object_1(c_bi_class_Stack,c_bi_mni_Stack_1,op_0);
-  }/*}}}*/
-
-  // - class Queue -
-  inline static UclVar Queue()
-  {/*{{{*/
-    return __new_object_0(c_bi_class_Queue,c_bi_mni_Queue_0);
-  }/*}}}*/
-
-  inline static UclVar Queue(UclVar op_0)
-  {/*{{{*/
-    return __new_object_1(c_bi_class_Queue,c_bi_mni_Queue_1,op_0);
-  }/*}}}*/
-
-  // - class Set -
-  inline static UclVar Set()
-  {/*{{{*/
-    return __new_object_0(c_bi_class_Set,c_bi_mni_Set_0);
-  }/*}}}*/
-
-  inline static UclVar Set(UclVar op_0)
-  {/*{{{*/
-    return __new_object_1(c_bi_class_Set,c_bi_mni_Set_1,op_0);
-  }/*}}}*/
-
-  // - class List -
-  inline static UclVar List()
-  {/*{{{*/
-    return __new_object_0(c_bi_class_List,c_bi_mni_List_0);
-  }/*}}}*/
-
-  inline static UclVar List(UclVar op_0)
-  {/*{{{*/
-    return __new_object_1(c_bi_class_List,c_bi_mni_List_1,op_0);
-  }/*}}}*/
-
-  // - class Tree -
-  inline static UclVar Tree()
-  {/*{{{*/
-    return __new_object_0(c_bi_class_Tree,c_bi_mni_Tree_0);
-  }/*}}}*/
-
-  inline static UclVar Tree(UclVar op_0)
-  {/*{{{*/
-    return __new_object_1(c_bi_class_Tree,c_bi_mni_Tree_1,op_0);
-  }/*}}}*/
-
-  // - class Dict -
-  inline static UclVar Dict()
-  {/*{{{*/
-    return __new_object_0(c_bi_class_Dict,c_bi_mni_Dict_0);
-  }/*}}}*/
-
-  inline static UclVar Dict(UclVar op_0)
-  {/*{{{*/
-    return __new_object_1(c_bi_class_Dict,c_bi_mni_Dict_1,op_0);
-  }/*}}}*/
-
-  // - class Json -
-  class Json
+  // - class HttpServer -
+  class HttpServer
   {/*{{{*/
     friend class UclVar;
     protected:
-    static unsigned c_bi_mi_create_1;
-    static unsigned c_bi_mi_create_nice_2;
-    static unsigned c_bi_mi_parse_1;
     static unsigned c_bi_mi_to_string_0;
     static unsigned c_bi_mi_print_0;
 
     public:
-    inline static UclVar create(UclVar op_0)
-    {/*{{{*/
-      return __static_call_1(c_bi_mi_create_1,op_0);
-    }/*}}}*/
-
-    inline static UclVar create_nice(UclVar op_0,UclVar op_1)
-    {/*{{{*/
-      return __static_call_2(c_bi_mi_create_nice_2,op_0,op_1);
-    }/*}}}*/
-
-    inline static UclVar parse(UclVar op_0)
-    {/*{{{*/
-      return __static_call_1(c_bi_mi_parse_1,op_0);
-    }/*}}}*/
-
     inline static UclVar to_string()
     {/*{{{*/
       return __static_call_0(c_bi_mi_to_string_0);
@@ -1820,6 +1704,139 @@ class UclVar
     }/*}}}*/
 
   };/*}}}*/
+
+  inline static UclVar HttpServer(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __new_object_2(c_bi_class_HttpServer,c_bi_mni_HttpServer_2,op_0,op_1);
+  }/*}}}*/
+
+  // - class HttpConn -
+  class HttpConn
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    static UclVar TYPE_CONNECT;
+    static UclVar TYPE_DELETE;
+    static UclVar TYPE_GET;
+    static UclVar TYPE_HEAD;
+    static UclVar TYPE_OPTIONS;
+    static UclVar TYPE_POST;
+    static UclVar TYPE_PUT;
+    static UclVar TYPE_TRACE;
+    static UclVar VALS_RESPONSE_HEADER;
+    static UclVar VALS_HEADER;
+    static UclVar VALS_COOKIE;
+    static UclVar VALS_POSTDATA;
+    static UclVar VALS_GET_ARGUMENT;
+    static UclVar VALS_FOOTER;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  // - class HttpResp -
+  class HttpResp
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    static UclVar FROM_STRING;
+    static UclVar FROM_FILE;
+    static UclVar HTTP_CONTINUE;
+    static UclVar HTTP_SWITCHING_PROTOCOLS;
+    static UclVar HTTP_PROCESSING;
+    static UclVar HTTP_OK;
+    static UclVar HTTP_CREATED;
+    static UclVar HTTP_ACCEPTED;
+    static UclVar HTTP_NON_AUTHORITATIVE_INFORMATION;
+    static UclVar HTTP_NO_CONTENT;
+    static UclVar HTTP_RESET_CONTENT;
+    static UclVar HTTP_PARTIAL_CONTENT;
+    static UclVar HTTP_MULTI_STATUS;
+    static UclVar HTTP_MULTIPLE_CHOICES;
+    static UclVar HTTP_MOVED_PERMANENTLY;
+    static UclVar HTTP_FOUND;
+    static UclVar HTTP_SEE_OTHER;
+    static UclVar HTTP_NOT_MODIFIED;
+    static UclVar HTTP_USE_PROXY;
+    static UclVar HTTP_SWITCH_PROXY;
+    static UclVar HTTP_TEMPORARY_REDIRECT;
+    static UclVar HTTP_BAD_REQUEST;
+    static UclVar HTTP_UNAUTHORIZED;
+    static UclVar HTTP_PAYMENT_REQUIRED;
+    static UclVar HTTP_FORBIDDEN;
+    static UclVar HTTP_NOT_FOUND;
+    static UclVar HTTP_METHOD_NOT_ALLOWED;
+    static UclVar HTTP_METHOD_NOT_ACCEPTABLE;
+    static UclVar HTTP_PROXY_AUTHENTICATION_REQUIRED;
+    static UclVar HTTP_REQUEST_TIMEOUT;
+    static UclVar HTTP_CONFLICT;
+    static UclVar HTTP_GONE;
+    static UclVar HTTP_LENGTH_REQUIRED;
+    static UclVar HTTP_PRECONDITION_FAILED;
+    static UclVar HTTP_REQUEST_ENTITY_TOO_LARGE;
+    static UclVar HTTP_REQUEST_URI_TOO_LONG;
+    static UclVar HTTP_UNSUPPORTED_MEDIA_TYPE;
+    static UclVar HTTP_REQUESTED_RANGE_NOT_SATISFIABLE;
+    static UclVar HTTP_EXPECTATION_FAILED;
+    static UclVar HTTP_UNPROCESSABLE_ENTITY;
+    static UclVar HTTP_LOCKED;
+    static UclVar HTTP_FAILED_DEPENDENCY;
+    static UclVar HTTP_UNORDERED_COLLECTION;
+    static UclVar HTTP_UPGRADE_REQUIRED;
+    static UclVar HTTP_NO_RESPONSE;
+    static UclVar HTTP_RETRY_WITH;
+    static UclVar HTTP_BLOCKED_BY_WINDOWS_PARENTAL_CONTROLS;
+    static UclVar HTTP_UNAVAILABLE_FOR_LEGAL_REASONS;
+    static UclVar HTTP_INTERNAL_SERVER_ERROR;
+    static UclVar HTTP_NOT_IMPLEMENTED;
+    static UclVar HTTP_BAD_GATEWAY;
+    static UclVar HTTP_SERVICE_UNAVAILABLE;
+    static UclVar HTTP_GATEWAY_TIMEOUT;
+    static UclVar HTTP_HTTP_VERSION_NOT_SUPPORTED;
+    static UclVar HTTP_VARIANT_ALSO_NEGOTIATES;
+    static UclVar HTTP_INSUFFICIENT_STORAGE;
+    static UclVar HTTP_BANDWIDTH_LIMIT_EXCEEDED;
+    static UclVar HTTP_NOT_EXTENDED;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar HttpResp(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_HttpResp,c_bi_mni_HttpResp_1,op_0);
+  }/*}}}*/
+
+  inline static UclVar HttpResp(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __new_object_2(c_bi_class_HttpResp,c_bi_mni_HttpResp_2,op_0,op_1);
+  }/*}}}*/
 
   // - class WsContext -
   class WsContext
@@ -1963,65 +1980,6 @@ class UclVar
       return __static_call_1(c_bi_mi_decode_1,op_0);
     }/*}}}*/
 
-    inline static UclVar to_string()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_to_string_0);
-    }/*}}}*/
-
-    inline static UclVar print()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_print_0);
-    }/*}}}*/
-
-  };/*}}}*/
-
-  // - class JitContext -
-  class JitContext
-  {/*{{{*/
-    friend class UclVar;
-    protected:
-    static unsigned c_bi_mi_to_string_0;
-    static unsigned c_bi_mi_print_0;
-
-    public:
-    static UclVar TYPE_I8;
-    static UclVar TYPE_U8;
-    static UclVar TYPE_I16;
-    static UclVar TYPE_U16;
-    static UclVar TYPE_I32;
-    static UclVar TYPE_U32;
-    static UclVar TYPE_I64;
-    static UclVar TYPE_U64;
-    static UclVar TYPE_F32;
-    static UclVar TYPE_F64;
-
-    public:
-    inline static UclVar to_string()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_to_string_0);
-    }/*}}}*/
-
-    inline static UclVar print()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_print_0);
-    }/*}}}*/
-
-  };/*}}}*/
-
-  inline static UclVar JitContext()
-  {/*{{{*/
-    return __new_object_0(c_bi_class_JitContext,c_bi_mni_JitContext_0);
-  }/*}}}*/
-
-  // - class JitFunction -
-  class JitFunction
-  {/*{{{*/
-    friend class UclVar;
-    protected:
-    static unsigned c_bi_mi_to_string_0;
-    static unsigned c_bi_mi_print_0;
-
-    public:
     inline static UclVar to_string()
     {/*{{{*/
       return __static_call_0(c_bi_mi_to_string_0);
@@ -2458,8 +2416,46 @@ class UclVar
     return __new_object_2(c_bi_class_Crc,c_bi_mni_Crc_2,op_0,op_1);
   }/*}}}*/
 
-  // - class HttpServer -
-  class HttpServer
+  // - class JitContext -
+  class JitContext
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    static UclVar TYPE_I8;
+    static UclVar TYPE_U8;
+    static UclVar TYPE_I16;
+    static UclVar TYPE_U16;
+    static UclVar TYPE_I32;
+    static UclVar TYPE_U32;
+    static UclVar TYPE_I64;
+    static UclVar TYPE_U64;
+    static UclVar TYPE_F32;
+    static UclVar TYPE_F64;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar JitContext()
+  {/*{{{*/
+    return __new_object_0(c_bi_class_JitContext,c_bi_mni_JitContext_0);
+  }/*}}}*/
+
+  // - class JitFunction -
+  class JitFunction
   {/*{{{*/
     friend class UclVar;
     protected:
@@ -2479,34 +2475,13 @@ class UclVar
 
   };/*}}}*/
 
-  inline static UclVar HttpServer(UclVar op_0,UclVar op_1)
-  {/*{{{*/
-    return __new_object_2(c_bi_class_HttpServer,c_bi_mni_HttpServer_2,op_0,op_1);
-  }/*}}}*/
-
-  // - class HttpConn -
-  class HttpConn
+  // - class NodeCallback -
+  class NodeCallback
   {/*{{{*/
     friend class UclVar;
     protected:
     static unsigned c_bi_mi_to_string_0;
     static unsigned c_bi_mi_print_0;
-
-    public:
-    static UclVar TYPE_CONNECT;
-    static UclVar TYPE_DELETE;
-    static UclVar TYPE_GET;
-    static UclVar TYPE_HEAD;
-    static UclVar TYPE_OPTIONS;
-    static UclVar TYPE_POST;
-    static UclVar TYPE_PUT;
-    static UclVar TYPE_TRACE;
-    static UclVar VALS_RESPONSE_HEADER;
-    static UclVar VALS_HEADER;
-    static UclVar VALS_COOKIE;
-    static UclVar VALS_POSTDATA;
-    static UclVar VALS_GET_ARGUMENT;
-    static UclVar VALS_FOOTER;
 
     public:
     inline static UclVar to_string()
@@ -2521,75 +2496,104 @@ class UclVar
 
   };/*}}}*/
 
-  // - class HttpResp -
-  class HttpResp
+  inline static UclVar NodeCallback(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __new_object_2(c_bi_class_NodeCallback,c_bi_mni_NodeCallback_2,op_0,op_1);
+  }/*}}}*/
+
+  // - class Stack -
+  inline static UclVar Stack()
+  {/*{{{*/
+    return __new_object_0(c_bi_class_Stack,c_bi_mni_Stack_0);
+  }/*}}}*/
+
+  inline static UclVar Stack(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_Stack,c_bi_mni_Stack_1,op_0);
+  }/*}}}*/
+
+  // - class Queue -
+  inline static UclVar Queue()
+  {/*{{{*/
+    return __new_object_0(c_bi_class_Queue,c_bi_mni_Queue_0);
+  }/*}}}*/
+
+  inline static UclVar Queue(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_Queue,c_bi_mni_Queue_1,op_0);
+  }/*}}}*/
+
+  // - class Set -
+  inline static UclVar Set()
+  {/*{{{*/
+    return __new_object_0(c_bi_class_Set,c_bi_mni_Set_0);
+  }/*}}}*/
+
+  inline static UclVar Set(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_Set,c_bi_mni_Set_1,op_0);
+  }/*}}}*/
+
+  // - class List -
+  inline static UclVar List()
+  {/*{{{*/
+    return __new_object_0(c_bi_class_List,c_bi_mni_List_0);
+  }/*}}}*/
+
+  inline static UclVar List(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_List,c_bi_mni_List_1,op_0);
+  }/*}}}*/
+
+  // - class Tree -
+  inline static UclVar Tree()
+  {/*{{{*/
+    return __new_object_0(c_bi_class_Tree,c_bi_mni_Tree_0);
+  }/*}}}*/
+
+  inline static UclVar Tree(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_Tree,c_bi_mni_Tree_1,op_0);
+  }/*}}}*/
+
+  // - class Dict -
+  inline static UclVar Dict()
+  {/*{{{*/
+    return __new_object_0(c_bi_class_Dict,c_bi_mni_Dict_0);
+  }/*}}}*/
+
+  inline static UclVar Dict(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_Dict,c_bi_mni_Dict_1,op_0);
+  }/*}}}*/
+
+  // - class Json -
+  class Json
   {/*{{{*/
     friend class UclVar;
     protected:
+    static unsigned c_bi_mi_create_1;
+    static unsigned c_bi_mi_create_nice_2;
+    static unsigned c_bi_mi_parse_1;
     static unsigned c_bi_mi_to_string_0;
     static unsigned c_bi_mi_print_0;
 
     public:
-    static UclVar FROM_STRING;
-    static UclVar FROM_FILE;
-    static UclVar HTTP_CONTINUE;
-    static UclVar HTTP_SWITCHING_PROTOCOLS;
-    static UclVar HTTP_PROCESSING;
-    static UclVar HTTP_OK;
-    static UclVar HTTP_CREATED;
-    static UclVar HTTP_ACCEPTED;
-    static UclVar HTTP_NON_AUTHORITATIVE_INFORMATION;
-    static UclVar HTTP_NO_CONTENT;
-    static UclVar HTTP_RESET_CONTENT;
-    static UclVar HTTP_PARTIAL_CONTENT;
-    static UclVar HTTP_MULTI_STATUS;
-    static UclVar HTTP_MULTIPLE_CHOICES;
-    static UclVar HTTP_MOVED_PERMANENTLY;
-    static UclVar HTTP_FOUND;
-    static UclVar HTTP_SEE_OTHER;
-    static UclVar HTTP_NOT_MODIFIED;
-    static UclVar HTTP_USE_PROXY;
-    static UclVar HTTP_SWITCH_PROXY;
-    static UclVar HTTP_TEMPORARY_REDIRECT;
-    static UclVar HTTP_BAD_REQUEST;
-    static UclVar HTTP_UNAUTHORIZED;
-    static UclVar HTTP_PAYMENT_REQUIRED;
-    static UclVar HTTP_FORBIDDEN;
-    static UclVar HTTP_NOT_FOUND;
-    static UclVar HTTP_METHOD_NOT_ALLOWED;
-    static UclVar HTTP_METHOD_NOT_ACCEPTABLE;
-    static UclVar HTTP_PROXY_AUTHENTICATION_REQUIRED;
-    static UclVar HTTP_REQUEST_TIMEOUT;
-    static UclVar HTTP_CONFLICT;
-    static UclVar HTTP_GONE;
-    static UclVar HTTP_LENGTH_REQUIRED;
-    static UclVar HTTP_PRECONDITION_FAILED;
-    static UclVar HTTP_REQUEST_ENTITY_TOO_LARGE;
-    static UclVar HTTP_REQUEST_URI_TOO_LONG;
-    static UclVar HTTP_UNSUPPORTED_MEDIA_TYPE;
-    static UclVar HTTP_REQUESTED_RANGE_NOT_SATISFIABLE;
-    static UclVar HTTP_EXPECTATION_FAILED;
-    static UclVar HTTP_UNPROCESSABLE_ENTITY;
-    static UclVar HTTP_LOCKED;
-    static UclVar HTTP_FAILED_DEPENDENCY;
-    static UclVar HTTP_UNORDERED_COLLECTION;
-    static UclVar HTTP_UPGRADE_REQUIRED;
-    static UclVar HTTP_NO_RESPONSE;
-    static UclVar HTTP_RETRY_WITH;
-    static UclVar HTTP_BLOCKED_BY_WINDOWS_PARENTAL_CONTROLS;
-    static UclVar HTTP_UNAVAILABLE_FOR_LEGAL_REASONS;
-    static UclVar HTTP_INTERNAL_SERVER_ERROR;
-    static UclVar HTTP_NOT_IMPLEMENTED;
-    static UclVar HTTP_BAD_GATEWAY;
-    static UclVar HTTP_SERVICE_UNAVAILABLE;
-    static UclVar HTTP_GATEWAY_TIMEOUT;
-    static UclVar HTTP_HTTP_VERSION_NOT_SUPPORTED;
-    static UclVar HTTP_VARIANT_ALSO_NEGOTIATES;
-    static UclVar HTTP_INSUFFICIENT_STORAGE;
-    static UclVar HTTP_BANDWIDTH_LIMIT_EXCEEDED;
-    static UclVar HTTP_NOT_EXTENDED;
+    inline static UclVar create(UclVar op_0)
+    {/*{{{*/
+      return __static_call_1(c_bi_mi_create_1,op_0);
+    }/*}}}*/
 
-    public:
+    inline static UclVar create_nice(UclVar op_0,UclVar op_1)
+    {/*{{{*/
+      return __static_call_2(c_bi_mi_create_nice_2,op_0,op_1);
+    }/*}}}*/
+
+    inline static UclVar parse(UclVar op_0)
+    {/*{{{*/
+      return __static_call_1(c_bi_mi_parse_1,op_0);
+    }/*}}}*/
+
     inline static UclVar to_string()
     {/*{{{*/
       return __static_call_0(c_bi_mi_to_string_0);
@@ -2601,16 +2605,6 @@ class UclVar
     }/*}}}*/
 
   };/*}}}*/
-
-  inline static UclVar HttpResp(UclVar op_0)
-  {/*{{{*/
-    return __new_object_1(c_bi_class_HttpResp,c_bi_mni_HttpResp_1,op_0);
-  }/*}}}*/
-
-  inline static UclVar HttpResp(UclVar op_0,UclVar op_1)
-  {/*{{{*/
-    return __new_object_2(c_bi_class_HttpResp,c_bi_mni_HttpResp_2,op_0,op_1);
-  }/*}}}*/
 
   /*}}}*/
 
@@ -3087,16 +3081,6 @@ class UclVar
     return __call_0(c_bi_mni_size_0);
   }/*}}}*/
 
-  inline UclVar call()
-  {/*{{{*/
-    return __call_0(c_bi_mni_call_0);
-  }/*}}}*/
-
-  inline UclVar call(UclVar op_0,UclVar op_1)
-  {/*{{{*/
-    return __call_2(c_bi_mni_call_2,op_0,op_1);
-  }/*}}}*/
-
   inline UclVar sleep(UclVar op_0)
   {/*{{{*/
     return __call_1(c_bi_mni_sleep_1,op_0);
@@ -3402,129 +3386,34 @@ class UclVar
     return __call_2(c_bi_mni_settime_2,op_0,op_1);
   }/*}}}*/
 
-  inline UclVar items()
+  inline UclVar get_fds()
   {/*{{{*/
-    return __call_0(c_bi_mni_items_0);
+    return __call_0(c_bi_mni_get_fds_0);
   }/*}}}*/
 
-  inline UclVar insert(UclVar op_0)
+  inline UclVar timeout()
   {/*{{{*/
-    return __call_1(c_bi_mni_insert_1,op_0);
+    return __call_0(c_bi_mni_timeout_0);
   }/*}}}*/
 
-  inline UclVar insert_ref(UclVar op_0)
+  inline UclVar process(UclVar op_0)
   {/*{{{*/
-    return __call_1(c_bi_mni_insert_ref_1,op_0);
+    return __call_1(c_bi_mni_process_1,op_0);
   }/*}}}*/
 
-  inline UclVar next()
+  inline UclVar id()
   {/*{{{*/
-    return __call_0(c_bi_mni_next_0);
+    return __call_0(c_bi_mni_id_0);
   }/*}}}*/
 
-  inline UclVar append(UclVar op_0)
+  inline UclVar url()
   {/*{{{*/
-    return __call_1(c_bi_mni_append_1,op_0);
+    return __call_0(c_bi_mni_url_0);
   }/*}}}*/
 
-  inline UclVar append_ref(UclVar op_0)
+  inline UclVar method()
   {/*{{{*/
-    return __call_1(c_bi_mni_append_ref_1,op_0);
-  }/*}}}*/
-
-  inline UclVar prepend(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_prepend_1,op_0);
-  }/*}}}*/
-
-  inline UclVar prepend_ref(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_prepend_ref_1,op_0);
-  }/*}}}*/
-
-  inline UclVar insert_before(UclVar op_0,UclVar op_1)
-  {/*{{{*/
-    return __call_2(c_bi_mni_insert_before_2,op_0,op_1);
-  }/*}}}*/
-
-  inline UclVar insert_before_ref(UclVar op_0,UclVar op_1)
-  {/*{{{*/
-    return __call_2(c_bi_mni_insert_before_ref_2,op_0,op_1);
-  }/*}}}*/
-
-  inline UclVar insert_after(UclVar op_0,UclVar op_1)
-  {/*{{{*/
-    return __call_2(c_bi_mni_insert_after_2,op_0,op_1);
-  }/*}}}*/
-
-  inline UclVar insert_after_ref(UclVar op_0,UclVar op_1)
-  {/*{{{*/
-    return __call_2(c_bi_mni_insert_after_ref_2,op_0,op_1);
-  }/*}}}*/
-
-  inline UclVar has_idx(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_has_idx_1,op_0);
-  }/*}}}*/
-
-  inline UclVar keys()
-  {/*{{{*/
-    return __call_0(c_bi_mni_keys_0);
-  }/*}}}*/
-
-  inline UclVar store_ref(UclVar op_0,UclVar op_1)
-  {/*{{{*/
-    return __call_2(c_bi_mni_store_ref_2,op_0,op_1);
-  }/*}}}*/
-
-  inline UclVar has_key(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_has_key_1,op_0);
-  }/*}}}*/
-
-  inline UclVar remove_key(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_remove_key_1,op_0);
-  }/*}}}*/
-
-  inline UclVar first_key()
-  {/*{{{*/
-    return __call_0(c_bi_mni_first_key_0);
-  }/*}}}*/
-
-  inline UclVar last_key()
-  {/*{{{*/
-    return __call_0(c_bi_mni_last_key_0);
-  }/*}}}*/
-
-  inline UclVar next_key(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_next_key_1,op_0);
-  }/*}}}*/
-
-  inline UclVar prev_key(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_prev_key_1,op_0);
-  }/*}}}*/
-
-  inline UclVar lee_key(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_lee_key_1,op_0);
-  }/*}}}*/
-
-  inline UclVar gre_key(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_gre_key_1,op_0);
-  }/*}}}*/
-
-  inline UclVar create_nice(UclVar op_0,UclVar op_1)
-  {/*{{{*/
-    return __call_2(c_bi_mni_create_nice_2,op_0,op_1);
-  }/*}}}*/
-
-  inline UclVar parse(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_parse_1,op_0);
+    return __call_0(c_bi_mni_method_0);
   }/*}}}*/
 
   inline UclVar version()
@@ -3532,24 +3421,39 @@ class UclVar
     return __call_0(c_bi_mni_version_0);
   }/*}}}*/
 
+  inline UclVar upload_data()
+  {/*{{{*/
+    return __call_0(c_bi_mni_upload_data_0);
+  }/*}}}*/
+
   inline UclVar user_data()
   {/*{{{*/
     return __call_0(c_bi_mni_user_data_0);
   }/*}}}*/
 
+  inline UclVar values(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_values_1,op_0);
+  }/*}}}*/
+
+  inline UclVar queue_response(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_queue_response_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar add_header(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_add_header_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar add_footer(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_add_footer_2,op_0,op_1);
+  }/*}}}*/
+
   inline UclVar client(UclVar op_0,UclVar op_1,UclVar op_2,UclVar op_3)
   {/*{{{*/
     return __call_4(c_bi_mni_client_4,op_0,op_1,op_2,op_3);
-  }/*}}}*/
-
-  inline UclVar get_fds()
-  {/*{{{*/
-    return __call_0(c_bi_mni_get_fds_0);
-  }/*}}}*/
-
-  inline UclVar process(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_process_1,op_0);
   }/*}}}*/
 
   inline UclVar protocol_idx(UclVar op_0)
@@ -3605,16 +3509,6 @@ class UclVar
   inline UclVar decode(UclVar op_0)
   {/*{{{*/
     return __call_1(c_bi_mni_decode_1,op_0);
-  }/*}}}*/
-
-  inline UclVar create_fun(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_create_fun_1,op_0);
-  }/*}}}*/
-
-  inline UclVar signature()
-  {/*{{{*/
-    return __call_0(c_bi_mni_signature_0);
   }/*}}}*/
 
   inline UclVar GetProcessId()
@@ -3857,54 +3751,154 @@ class UclVar
     return __call_0(c_bi_mni_peek_msg_0);
   }/*}}}*/
 
+  inline UclVar append(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_append_1,op_0);
+  }/*}}}*/
+
   inline UclVar value()
   {/*{{{*/
     return __call_0(c_bi_mni_value_0);
   }/*}}}*/
 
-  inline UclVar timeout()
+  inline UclVar create_fun(UclVar op_0)
   {/*{{{*/
-    return __call_0(c_bi_mni_timeout_0);
+    return __call_1(c_bi_mni_create_fun_1,op_0);
   }/*}}}*/
 
-  inline UclVar id()
+  inline UclVar signature()
   {/*{{{*/
-    return __call_0(c_bi_mni_id_0);
+    return __call_0(c_bi_mni_signature_0);
   }/*}}}*/
 
-  inline UclVar url()
+  inline UclVar call()
   {/*{{{*/
-    return __call_0(c_bi_mni_url_0);
+    return __call_0(c_bi_mni_call_0);
   }/*}}}*/
 
-  inline UclVar method()
+  inline UclVar call(UclVar op_0,UclVar op_1)
   {/*{{{*/
-    return __call_0(c_bi_mni_method_0);
+    return __call_2(c_bi_mni_call_2,op_0,op_1);
   }/*}}}*/
 
-  inline UclVar upload_data()
+  inline UclVar items()
   {/*{{{*/
-    return __call_0(c_bi_mni_upload_data_0);
+    return __call_0(c_bi_mni_items_0);
   }/*}}}*/
 
-  inline UclVar values(UclVar op_0)
+  inline UclVar insert(UclVar op_0)
   {/*{{{*/
-    return __call_1(c_bi_mni_values_1,op_0);
+    return __call_1(c_bi_mni_insert_1,op_0);
   }/*}}}*/
 
-  inline UclVar queue_response(UclVar op_0,UclVar op_1)
+  inline UclVar insert_ref(UclVar op_0)
   {/*{{{*/
-    return __call_2(c_bi_mni_queue_response_2,op_0,op_1);
+    return __call_1(c_bi_mni_insert_ref_1,op_0);
   }/*}}}*/
 
-  inline UclVar add_header(UclVar op_0,UclVar op_1)
+  inline UclVar next()
   {/*{{{*/
-    return __call_2(c_bi_mni_add_header_2,op_0,op_1);
+    return __call_0(c_bi_mni_next_0);
   }/*}}}*/
 
-  inline UclVar add_footer(UclVar op_0,UclVar op_1)
+  inline UclVar append_ref(UclVar op_0)
   {/*{{{*/
-    return __call_2(c_bi_mni_add_footer_2,op_0,op_1);
+    return __call_1(c_bi_mni_append_ref_1,op_0);
+  }/*}}}*/
+
+  inline UclVar prepend(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_prepend_1,op_0);
+  }/*}}}*/
+
+  inline UclVar prepend_ref(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_prepend_ref_1,op_0);
+  }/*}}}*/
+
+  inline UclVar insert_before(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_insert_before_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar insert_before_ref(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_insert_before_ref_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar insert_after(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_insert_after_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar insert_after_ref(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_insert_after_ref_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar has_idx(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_has_idx_1,op_0);
+  }/*}}}*/
+
+  inline UclVar keys()
+  {/*{{{*/
+    return __call_0(c_bi_mni_keys_0);
+  }/*}}}*/
+
+  inline UclVar store_ref(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_store_ref_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar has_key(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_has_key_1,op_0);
+  }/*}}}*/
+
+  inline UclVar remove_key(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_remove_key_1,op_0);
+  }/*}}}*/
+
+  inline UclVar first_key()
+  {/*{{{*/
+    return __call_0(c_bi_mni_first_key_0);
+  }/*}}}*/
+
+  inline UclVar last_key()
+  {/*{{{*/
+    return __call_0(c_bi_mni_last_key_0);
+  }/*}}}*/
+
+  inline UclVar next_key(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_next_key_1,op_0);
+  }/*}}}*/
+
+  inline UclVar prev_key(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_prev_key_1,op_0);
+  }/*}}}*/
+
+  inline UclVar lee_key(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_lee_key_1,op_0);
+  }/*}}}*/
+
+  inline UclVar gre_key(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_gre_key_1,op_0);
+  }/*}}}*/
+
+  inline UclVar create_nice(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_create_nice_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar parse(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_parse_1,op_0);
   }/*}}}*/
 
   /*}}}*/

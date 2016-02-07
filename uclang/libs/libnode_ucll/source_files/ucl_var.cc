@@ -22,7 +22,6 @@ unsigned UclVar::c_bi_class_Mutex;
 unsigned UclVar::c_bi_class_Thread;
 unsigned UclVar::c_bi_class_Delegate;
 unsigned UclVar::c_bi_class_Buffer;
-unsigned UclVar::c_bi_class_NodeCallback;
 unsigned UclVar::c_bi_class_Sys;
 unsigned UclVar::c_bi_class_Pipe;
 unsigned UclVar::c_bi_class_File;
@@ -33,19 +32,13 @@ unsigned UclVar::c_bi_class_Signal;
 unsigned UclVar::c_bi_class_Poll;
 unsigned UclVar::c_bi_class_Timer;
 unsigned UclVar::c_bi_class_Clock;
-unsigned UclVar::c_bi_class_Stack;
-unsigned UclVar::c_bi_class_Queue;
-unsigned UclVar::c_bi_class_Set;
-unsigned UclVar::c_bi_class_List;
-unsigned UclVar::c_bi_class_Tree;
-unsigned UclVar::c_bi_class_Dict;
-unsigned UclVar::c_bi_class_Json;
+unsigned UclVar::c_bi_class_HttpServer;
+unsigned UclVar::c_bi_class_HttpConn;
+unsigned UclVar::c_bi_class_HttpResp;
 unsigned UclVar::c_bi_class_WsContext;
 unsigned UclVar::c_bi_class_WsConn;
 unsigned UclVar::c_bi_class_WsClient;
 unsigned UclVar::c_bi_class_WsBase64;
-unsigned UclVar::c_bi_class_JitContext;
-unsigned UclVar::c_bi_class_JitFunction;
 unsigned UclVar::c_bi_class_System;
 unsigned UclVar::c_bi_class_Time;
 unsigned UclVar::c_bi_class_CfgFile;
@@ -59,9 +52,16 @@ unsigned UclVar::c_bi_class_NvmSegment;
 unsigned UclVar::c_bi_class_MsgQueue;
 unsigned UclVar::c_bi_class_Bcc;
 unsigned UclVar::c_bi_class_Crc;
-unsigned UclVar::c_bi_class_HttpServer;
-unsigned UclVar::c_bi_class_HttpConn;
-unsigned UclVar::c_bi_class_HttpResp;
+unsigned UclVar::c_bi_class_JitContext;
+unsigned UclVar::c_bi_class_JitFunction;
+unsigned UclVar::c_bi_class_NodeCallback;
+unsigned UclVar::c_bi_class_Stack;
+unsigned UclVar::c_bi_class_Queue;
+unsigned UclVar::c_bi_class_Set;
+unsigned UclVar::c_bi_class_List;
+unsigned UclVar::c_bi_class_Tree;
+unsigned UclVar::c_bi_class_Dict;
+unsigned UclVar::c_bi_class_Json;
 
 // - built in method name indexes -
 unsigned UclVar::c_bi_mni_operator_binary_equal_1;
@@ -176,9 +176,6 @@ unsigned UclVar::c_bi_mni_yield_0;
 unsigned UclVar::c_bi_mni_Delegate_3;
 unsigned UclVar::c_bi_mni_call_1;
 unsigned UclVar::c_bi_mni_size_0;
-unsigned UclVar::c_bi_mni_NodeCallback_2;
-unsigned UclVar::c_bi_mni_call_0;
-unsigned UclVar::c_bi_mni_call_2;
 unsigned UclVar::c_bi_mni_sleep_1;
 unsigned UclVar::c_bi_mni_srand_1;
 unsigned UclVar::c_bi_mni_rand_0;
@@ -251,49 +248,24 @@ unsigned UclVar::c_bi_mni_remain_0;
 unsigned UclVar::c_bi_mni_getres_1;
 unsigned UclVar::c_bi_mni_gettime_1;
 unsigned UclVar::c_bi_mni_settime_2;
-unsigned UclVar::c_bi_mni_Stack_0;
-unsigned UclVar::c_bi_mni_Stack_1;
-unsigned UclVar::c_bi_mni_items_0;
-unsigned UclVar::c_bi_mni_Queue_0;
-unsigned UclVar::c_bi_mni_Queue_1;
-unsigned UclVar::c_bi_mni_insert_1;
-unsigned UclVar::c_bi_mni_insert_ref_1;
-unsigned UclVar::c_bi_mni_next_0;
-unsigned UclVar::c_bi_mni_Set_0;
-unsigned UclVar::c_bi_mni_Set_1;
-unsigned UclVar::c_bi_mni_List_0;
-unsigned UclVar::c_bi_mni_List_1;
-unsigned UclVar::c_bi_mni_append_1;
-unsigned UclVar::c_bi_mni_append_ref_1;
-unsigned UclVar::c_bi_mni_prepend_1;
-unsigned UclVar::c_bi_mni_prepend_ref_1;
-unsigned UclVar::c_bi_mni_insert_before_2;
-unsigned UclVar::c_bi_mni_insert_before_ref_2;
-unsigned UclVar::c_bi_mni_insert_after_2;
-unsigned UclVar::c_bi_mni_insert_after_ref_2;
-unsigned UclVar::c_bi_mni_has_idx_1;
-unsigned UclVar::c_bi_mni_Tree_0;
-unsigned UclVar::c_bi_mni_Tree_1;
-unsigned UclVar::c_bi_mni_Dict_0;
-unsigned UclVar::c_bi_mni_Dict_1;
-unsigned UclVar::c_bi_mni_keys_0;
-unsigned UclVar::c_bi_mni_store_ref_2;
-unsigned UclVar::c_bi_mni_has_key_1;
-unsigned UclVar::c_bi_mni_remove_key_1;
-unsigned UclVar::c_bi_mni_first_key_0;
-unsigned UclVar::c_bi_mni_last_key_0;
-unsigned UclVar::c_bi_mni_next_key_1;
-unsigned UclVar::c_bi_mni_prev_key_1;
-unsigned UclVar::c_bi_mni_lee_key_1;
-unsigned UclVar::c_bi_mni_gre_key_1;
-unsigned UclVar::c_bi_mni_create_nice_2;
-unsigned UclVar::c_bi_mni_parse_1;
-unsigned UclVar::c_bi_mni_WsContext_2;
-unsigned UclVar::c_bi_mni_version_0;
-unsigned UclVar::c_bi_mni_user_data_0;
-unsigned UclVar::c_bi_mni_client_4;
+unsigned UclVar::c_bi_mni_HttpServer_2;
 unsigned UclVar::c_bi_mni_get_fds_0;
+unsigned UclVar::c_bi_mni_timeout_0;
 unsigned UclVar::c_bi_mni_process_1;
+unsigned UclVar::c_bi_mni_id_0;
+unsigned UclVar::c_bi_mni_url_0;
+unsigned UclVar::c_bi_mni_method_0;
+unsigned UclVar::c_bi_mni_version_0;
+unsigned UclVar::c_bi_mni_upload_data_0;
+unsigned UclVar::c_bi_mni_user_data_0;
+unsigned UclVar::c_bi_mni_values_1;
+unsigned UclVar::c_bi_mni_queue_response_2;
+unsigned UclVar::c_bi_mni_HttpResp_1;
+unsigned UclVar::c_bi_mni_HttpResp_2;
+unsigned UclVar::c_bi_mni_add_header_2;
+unsigned UclVar::c_bi_mni_add_footer_2;
+unsigned UclVar::c_bi_mni_WsContext_2;
+unsigned UclVar::c_bi_mni_client_4;
 unsigned UclVar::c_bi_mni_protocol_idx_1;
 unsigned UclVar::c_bi_mni_callback_on_writable_1;
 unsigned UclVar::c_bi_mni_reason_0;
@@ -305,9 +277,6 @@ unsigned UclVar::c_bi_mni_write_2;
 unsigned UclVar::c_bi_mni_connected_0;
 unsigned UclVar::c_bi_mni_encode_1;
 unsigned UclVar::c_bi_mni_decode_1;
-unsigned UclVar::c_bi_mni_JitContext_0;
-unsigned UclVar::c_bi_mni_create_fun_1;
-unsigned UclVar::c_bi_mni_signature_0;
 unsigned UclVar::c_bi_mni_GetProcessId_0;
 unsigned UclVar::c_bi_mni_GetProcessName_0;
 unsigned UclVar::c_bi_mni_GetWorkingDirectory_0;
@@ -373,20 +342,51 @@ unsigned UclVar::c_bi_mni_MsgQueue_3;
 unsigned UclVar::c_bi_mni_read_pid_0;
 unsigned UclVar::c_bi_mni_peek_msg_0;
 unsigned UclVar::c_bi_mni_Bcc_0;
+unsigned UclVar::c_bi_mni_append_1;
 unsigned UclVar::c_bi_mni_value_0;
 unsigned UclVar::c_bi_mni_Crc_2;
-unsigned UclVar::c_bi_mni_HttpServer_2;
-unsigned UclVar::c_bi_mni_timeout_0;
-unsigned UclVar::c_bi_mni_id_0;
-unsigned UclVar::c_bi_mni_url_0;
-unsigned UclVar::c_bi_mni_method_0;
-unsigned UclVar::c_bi_mni_upload_data_0;
-unsigned UclVar::c_bi_mni_values_1;
-unsigned UclVar::c_bi_mni_queue_response_2;
-unsigned UclVar::c_bi_mni_HttpResp_1;
-unsigned UclVar::c_bi_mni_HttpResp_2;
-unsigned UclVar::c_bi_mni_add_header_2;
-unsigned UclVar::c_bi_mni_add_footer_2;
+unsigned UclVar::c_bi_mni_JitContext_0;
+unsigned UclVar::c_bi_mni_create_fun_1;
+unsigned UclVar::c_bi_mni_signature_0;
+unsigned UclVar::c_bi_mni_NodeCallback_2;
+unsigned UclVar::c_bi_mni_call_0;
+unsigned UclVar::c_bi_mni_call_2;
+unsigned UclVar::c_bi_mni_Stack_0;
+unsigned UclVar::c_bi_mni_Stack_1;
+unsigned UclVar::c_bi_mni_items_0;
+unsigned UclVar::c_bi_mni_Queue_0;
+unsigned UclVar::c_bi_mni_Queue_1;
+unsigned UclVar::c_bi_mni_insert_1;
+unsigned UclVar::c_bi_mni_insert_ref_1;
+unsigned UclVar::c_bi_mni_next_0;
+unsigned UclVar::c_bi_mni_Set_0;
+unsigned UclVar::c_bi_mni_Set_1;
+unsigned UclVar::c_bi_mni_List_0;
+unsigned UclVar::c_bi_mni_List_1;
+unsigned UclVar::c_bi_mni_append_ref_1;
+unsigned UclVar::c_bi_mni_prepend_1;
+unsigned UclVar::c_bi_mni_prepend_ref_1;
+unsigned UclVar::c_bi_mni_insert_before_2;
+unsigned UclVar::c_bi_mni_insert_before_ref_2;
+unsigned UclVar::c_bi_mni_insert_after_2;
+unsigned UclVar::c_bi_mni_insert_after_ref_2;
+unsigned UclVar::c_bi_mni_has_idx_1;
+unsigned UclVar::c_bi_mni_Tree_0;
+unsigned UclVar::c_bi_mni_Tree_1;
+unsigned UclVar::c_bi_mni_Dict_0;
+unsigned UclVar::c_bi_mni_Dict_1;
+unsigned UclVar::c_bi_mni_keys_0;
+unsigned UclVar::c_bi_mni_store_ref_2;
+unsigned UclVar::c_bi_mni_has_key_1;
+unsigned UclVar::c_bi_mni_remove_key_1;
+unsigned UclVar::c_bi_mni_first_key_0;
+unsigned UclVar::c_bi_mni_last_key_0;
+unsigned UclVar::c_bi_mni_next_key_1;
+unsigned UclVar::c_bi_mni_prev_key_1;
+unsigned UclVar::c_bi_mni_lee_key_1;
+unsigned UclVar::c_bi_mni_gre_key_1;
+unsigned UclVar::c_bi_mni_create_nice_2;
+unsigned UclVar::c_bi_mni_parse_1;
 
 // - built in variable name indexes -
 unsigned UclVar::c_bi_vni_USER_EXCEPTION;
@@ -502,84 +502,6 @@ unsigned UclVar::c_bi_vni__CLOCK_REALTIME;
 unsigned UclVar::c_bi_vni__CLOCK_MONOTONIC;
 unsigned UclVar::c_bi_vni__CLOCK_PROCESS_CPUTIME_ID;
 unsigned UclVar::c_bi_vni__CLOCK_THREAD_CPUTIME_ID;
-unsigned UclVar::c_bi_vni_PORT_NO_LISTEN;
-unsigned UclVar::c_bi_vni_WRITE_TEXT;
-unsigned UclVar::c_bi_vni_WRITE_BINARY;
-unsigned UclVar::c_bi_vni_WRITE_CONTINUATION;
-unsigned UclVar::c_bi_vni_WRITE_HTTP;
-unsigned UclVar::c_bi_vni_WRITE_CLOSE;
-unsigned UclVar::c_bi_vni_WRITE_PING;
-unsigned UclVar::c_bi_vni_WRITE_PONG;
-unsigned UclVar::c_bi_vni_CB_ESTABLISHED;
-unsigned UclVar::c_bi_vni_CB_CLIENT_CONNECTION_ERROR;
-unsigned UclVar::c_bi_vni_CB_CLIENT_FILTER_PRE_ESTABLISH;
-unsigned UclVar::c_bi_vni_CB_CLIENT_ESTABLISHED;
-unsigned UclVar::c_bi_vni_CB_CLOSED;
-unsigned UclVar::c_bi_vni_CB_RECEIVE;
-unsigned UclVar::c_bi_vni_CB_CLIENT_RECEIVE;
-unsigned UclVar::c_bi_vni_CB_CLIENT_RECEIVE_PONG;
-unsigned UclVar::c_bi_vni_CB_CLIENT_WRITEABLE;
-unsigned UclVar::c_bi_vni_CB_SERVER_WRITEABLE;
-unsigned UclVar::c_bi_vni_CB_HTTP;
-unsigned UclVar::c_bi_vni_CB_HTTP_FILE_COMPLETION;
-unsigned UclVar::c_bi_vni_CB_FILTER_NETWORK_CONNECTION;
-unsigned UclVar::c_bi_vni_CB_FILTER_PROTOCOL_CONNECTION;
-unsigned UclVar::c_bi_vni_CB_OPENSSL_LOAD_EXTRA_CLIENT_VERIFY_CERTS;
-unsigned UclVar::c_bi_vni_CB_OPENSSL_LOAD_EXTRA_SERVER_VERIFY_CERTS;
-unsigned UclVar::c_bi_vni_CB_OPENSSL_PERFORM_CLIENT_CERT_VERIFICATION;
-unsigned UclVar::c_bi_vni_CB_CLIENT_APPEND_HANDSHAKE_HEADER;
-unsigned UclVar::c_bi_vni_CB_CONFIRM_EXTENSION_OKAY;
-unsigned UclVar::c_bi_vni_CB_CLIENT_CONFIRM_EXTENSION_SUPPORTED;
-unsigned UclVar::c_bi_vni_CB_PROTOCOL_INIT;
-unsigned UclVar::c_bi_vni_CB_PROTOCOL_DESTROY;
-unsigned UclVar::c_bi_vni_CB_ADD_POLL_FD;
-unsigned UclVar::c_bi_vni_CB_DEL_POLL_FD;
-unsigned UclVar::c_bi_vni_CB_CHANGE_MODE_POLL_FD;
-unsigned UclVar::c_bi_vni_TIMEOUT_NO_PENDING;
-unsigned UclVar::c_bi_vni_TIMEOUT_AWAITING_PROXY_RESPONSE;
-unsigned UclVar::c_bi_vni_TIMEOUT_AWAITING_CONNECT_RESPONSE;
-unsigned UclVar::c_bi_vni_TIMEOUT_ESTABLISH_WITH_SERVER;
-unsigned UclVar::c_bi_vni_TIMEOUT_AWAITING_SERVER_RESPONSE;
-unsigned UclVar::c_bi_vni_TIMEOUT_AWAITING_PING;
-unsigned UclVar::c_bi_vni_TIMEOUT_CLOSE_ACK;
-unsigned UclVar::c_bi_vni_TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE;
-unsigned UclVar::c_bi_vni_TIMEOUT_SENT_CLIENT_HANDSHAKE;
-unsigned UclVar::c_bi_vni_TIMEOUT_SSL_ACCEPT;
-unsigned UclVar::c_bi_vni_TYPE_I8;
-unsigned UclVar::c_bi_vni_TYPE_U8;
-unsigned UclVar::c_bi_vni_TYPE_I16;
-unsigned UclVar::c_bi_vni_TYPE_U16;
-unsigned UclVar::c_bi_vni_TYPE_I32;
-unsigned UclVar::c_bi_vni_TYPE_U32;
-unsigned UclVar::c_bi_vni_TYPE_I64;
-unsigned UclVar::c_bi_vni_TYPE_U64;
-unsigned UclVar::c_bi_vni_TYPE_F32;
-unsigned UclVar::c_bi_vni_TYPE_F64;
-unsigned UclVar::c_bi_vni_FC_NONE;
-unsigned UclVar::c_bi_vni_FC_RTS_CTS;
-unsigned UclVar::c_bi_vni_FC_RS_485;
-unsigned UclVar::c_bi_vni_PAR_NONE;
-unsigned UclVar::c_bi_vni_PAR_EVEN;
-unsigned UclVar::c_bi_vni_PAR_ODD;
-unsigned UclVar::c_bi_vni_TBOOL;
-unsigned UclVar::c_bi_vni_TSINT;
-unsigned UclVar::c_bi_vni_TINT;
-unsigned UclVar::c_bi_vni_TDINT;
-unsigned UclVar::c_bi_vni_TLINT;
-unsigned UclVar::c_bi_vni_TUSINT;
-unsigned UclVar::c_bi_vni_TUINT;
-unsigned UclVar::c_bi_vni_TUDINT;
-unsigned UclVar::c_bi_vni_TULINT;
-unsigned UclVar::c_bi_vni_TREAL;
-unsigned UclVar::c_bi_vni_TLREAL;
-unsigned UclVar::c_bi_vni_TTIME;
-unsigned UclVar::c_bi_vni_TDATE;
-unsigned UclVar::c_bi_vni_TTOD;
-unsigned UclVar::c_bi_vni_TDT;
-unsigned UclVar::c_bi_vni_TSTRING;
-unsigned UclVar::c_bi_vni_CRC8;
-unsigned UclVar::c_bi_vni_CRC16;
-unsigned UclVar::c_bi_vni_CRC32;
 unsigned UclVar::c_bi_vni_TYPE_CONNECT;
 unsigned UclVar::c_bi_vni_TYPE_DELETE;
 unsigned UclVar::c_bi_vni_TYPE_GET;
@@ -652,6 +574,84 @@ unsigned UclVar::c_bi_vni_HTTP_VARIANT_ALSO_NEGOTIATES;
 unsigned UclVar::c_bi_vni_HTTP_INSUFFICIENT_STORAGE;
 unsigned UclVar::c_bi_vni_HTTP_BANDWIDTH_LIMIT_EXCEEDED;
 unsigned UclVar::c_bi_vni_HTTP_NOT_EXTENDED;
+unsigned UclVar::c_bi_vni_PORT_NO_LISTEN;
+unsigned UclVar::c_bi_vni_WRITE_TEXT;
+unsigned UclVar::c_bi_vni_WRITE_BINARY;
+unsigned UclVar::c_bi_vni_WRITE_CONTINUATION;
+unsigned UclVar::c_bi_vni_WRITE_HTTP;
+unsigned UclVar::c_bi_vni_WRITE_CLOSE;
+unsigned UclVar::c_bi_vni_WRITE_PING;
+unsigned UclVar::c_bi_vni_WRITE_PONG;
+unsigned UclVar::c_bi_vni_CB_ESTABLISHED;
+unsigned UclVar::c_bi_vni_CB_CLIENT_CONNECTION_ERROR;
+unsigned UclVar::c_bi_vni_CB_CLIENT_FILTER_PRE_ESTABLISH;
+unsigned UclVar::c_bi_vni_CB_CLIENT_ESTABLISHED;
+unsigned UclVar::c_bi_vni_CB_CLOSED;
+unsigned UclVar::c_bi_vni_CB_RECEIVE;
+unsigned UclVar::c_bi_vni_CB_CLIENT_RECEIVE;
+unsigned UclVar::c_bi_vni_CB_CLIENT_RECEIVE_PONG;
+unsigned UclVar::c_bi_vni_CB_CLIENT_WRITEABLE;
+unsigned UclVar::c_bi_vni_CB_SERVER_WRITEABLE;
+unsigned UclVar::c_bi_vni_CB_HTTP;
+unsigned UclVar::c_bi_vni_CB_HTTP_FILE_COMPLETION;
+unsigned UclVar::c_bi_vni_CB_FILTER_NETWORK_CONNECTION;
+unsigned UclVar::c_bi_vni_CB_FILTER_PROTOCOL_CONNECTION;
+unsigned UclVar::c_bi_vni_CB_OPENSSL_LOAD_EXTRA_CLIENT_VERIFY_CERTS;
+unsigned UclVar::c_bi_vni_CB_OPENSSL_LOAD_EXTRA_SERVER_VERIFY_CERTS;
+unsigned UclVar::c_bi_vni_CB_OPENSSL_PERFORM_CLIENT_CERT_VERIFICATION;
+unsigned UclVar::c_bi_vni_CB_CLIENT_APPEND_HANDSHAKE_HEADER;
+unsigned UclVar::c_bi_vni_CB_CONFIRM_EXTENSION_OKAY;
+unsigned UclVar::c_bi_vni_CB_CLIENT_CONFIRM_EXTENSION_SUPPORTED;
+unsigned UclVar::c_bi_vni_CB_PROTOCOL_INIT;
+unsigned UclVar::c_bi_vni_CB_PROTOCOL_DESTROY;
+unsigned UclVar::c_bi_vni_CB_ADD_POLL_FD;
+unsigned UclVar::c_bi_vni_CB_DEL_POLL_FD;
+unsigned UclVar::c_bi_vni_CB_CHANGE_MODE_POLL_FD;
+unsigned UclVar::c_bi_vni_TIMEOUT_NO_PENDING;
+unsigned UclVar::c_bi_vni_TIMEOUT_AWAITING_PROXY_RESPONSE;
+unsigned UclVar::c_bi_vni_TIMEOUT_AWAITING_CONNECT_RESPONSE;
+unsigned UclVar::c_bi_vni_TIMEOUT_ESTABLISH_WITH_SERVER;
+unsigned UclVar::c_bi_vni_TIMEOUT_AWAITING_SERVER_RESPONSE;
+unsigned UclVar::c_bi_vni_TIMEOUT_AWAITING_PING;
+unsigned UclVar::c_bi_vni_TIMEOUT_CLOSE_ACK;
+unsigned UclVar::c_bi_vni_TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE;
+unsigned UclVar::c_bi_vni_TIMEOUT_SENT_CLIENT_HANDSHAKE;
+unsigned UclVar::c_bi_vni_TIMEOUT_SSL_ACCEPT;
+unsigned UclVar::c_bi_vni_FC_NONE;
+unsigned UclVar::c_bi_vni_FC_RTS_CTS;
+unsigned UclVar::c_bi_vni_FC_RS_485;
+unsigned UclVar::c_bi_vni_PAR_NONE;
+unsigned UclVar::c_bi_vni_PAR_EVEN;
+unsigned UclVar::c_bi_vni_PAR_ODD;
+unsigned UclVar::c_bi_vni_TBOOL;
+unsigned UclVar::c_bi_vni_TSINT;
+unsigned UclVar::c_bi_vni_TINT;
+unsigned UclVar::c_bi_vni_TDINT;
+unsigned UclVar::c_bi_vni_TLINT;
+unsigned UclVar::c_bi_vni_TUSINT;
+unsigned UclVar::c_bi_vni_TUINT;
+unsigned UclVar::c_bi_vni_TUDINT;
+unsigned UclVar::c_bi_vni_TULINT;
+unsigned UclVar::c_bi_vni_TREAL;
+unsigned UclVar::c_bi_vni_TLREAL;
+unsigned UclVar::c_bi_vni_TTIME;
+unsigned UclVar::c_bi_vni_TDATE;
+unsigned UclVar::c_bi_vni_TTOD;
+unsigned UclVar::c_bi_vni_TDT;
+unsigned UclVar::c_bi_vni_TSTRING;
+unsigned UclVar::c_bi_vni_CRC8;
+unsigned UclVar::c_bi_vni_CRC16;
+unsigned UclVar::c_bi_vni_CRC32;
+unsigned UclVar::c_bi_vni_TYPE_I8;
+unsigned UclVar::c_bi_vni_TYPE_U8;
+unsigned UclVar::c_bi_vni_TYPE_I16;
+unsigned UclVar::c_bi_vni_TYPE_U16;
+unsigned UclVar::c_bi_vni_TYPE_I32;
+unsigned UclVar::c_bi_vni_TYPE_U32;
+unsigned UclVar::c_bi_vni_TYPE_I64;
+unsigned UclVar::c_bi_vni_TYPE_U64;
+unsigned UclVar::c_bi_vni_TYPE_F32;
+unsigned UclVar::c_bi_vni_TYPE_F64;
 
 // - built in static method indexes -
 unsigned UclVar::Blank::c_bi_mi_operator_binary_double_equal_1;
@@ -669,11 +669,8 @@ unsigned UclVar::Thread::c_bi_mi_to_string_0;
 unsigned UclVar::Thread::c_bi_mi_print_0;
 unsigned UclVar::Delegate::c_bi_mi_to_string_0;
 unsigned UclVar::Delegate::c_bi_mi_print_0;
-unsigned UclVar::Buffer::c_bi_mi_size_0;
 unsigned UclVar::Buffer::c_bi_mi_to_string_0;
 unsigned UclVar::Buffer::c_bi_mi_print_0;
-unsigned UclVar::NodeCallback::c_bi_mi_to_string_0;
-unsigned UclVar::NodeCallback::c_bi_mi_print_0;
 unsigned UclVar::Sys::c_bi_mi_sleep_1;
 unsigned UclVar::Sys::c_bi_mi_srand_1;
 unsigned UclVar::Sys::c_bi_mi_rand_0;
@@ -732,11 +729,12 @@ unsigned UclVar::Clock::c_bi_mi_settime_2;
 unsigned UclVar::Clock::c_bi_mi_to_string_0;
 unsigned UclVar::Clock::c_bi_mi_print_0;
 #endif
-unsigned UclVar::Json::c_bi_mi_create_1;
-unsigned UclVar::Json::c_bi_mi_create_nice_2;
-unsigned UclVar::Json::c_bi_mi_parse_1;
-unsigned UclVar::Json::c_bi_mi_to_string_0;
-unsigned UclVar::Json::c_bi_mi_print_0;
+unsigned UclVar::HttpServer::c_bi_mi_to_string_0;
+unsigned UclVar::HttpServer::c_bi_mi_print_0;
+unsigned UclVar::HttpConn::c_bi_mi_to_string_0;
+unsigned UclVar::HttpConn::c_bi_mi_print_0;
+unsigned UclVar::HttpResp::c_bi_mi_to_string_0;
+unsigned UclVar::HttpResp::c_bi_mi_print_0;
 unsigned UclVar::WsContext::c_bi_mi_version_0;
 unsigned UclVar::WsContext::c_bi_mi_to_string_0;
 unsigned UclVar::WsContext::c_bi_mi_print_0;
@@ -748,10 +746,6 @@ unsigned UclVar::WsBase64::c_bi_mi_encode_1;
 unsigned UclVar::WsBase64::c_bi_mi_decode_1;
 unsigned UclVar::WsBase64::c_bi_mi_to_string_0;
 unsigned UclVar::WsBase64::c_bi_mi_print_0;
-unsigned UclVar::JitContext::c_bi_mi_to_string_0;
-unsigned UclVar::JitContext::c_bi_mi_print_0;
-unsigned UclVar::JitFunction::c_bi_mi_to_string_0;
-unsigned UclVar::JitFunction::c_bi_mi_print_0;
 unsigned UclVar::System::c_bi_mi_GetProcessId_0;
 unsigned UclVar::System::c_bi_mi_GetProcessName_0;
 unsigned UclVar::System::c_bi_mi_GetWorkingDirectory_0;
@@ -783,12 +777,17 @@ unsigned UclVar::Bcc::c_bi_mi_to_string_0;
 unsigned UclVar::Bcc::c_bi_mi_print_0;
 unsigned UclVar::Crc::c_bi_mi_to_string_0;
 unsigned UclVar::Crc::c_bi_mi_print_0;
-unsigned UclVar::HttpServer::c_bi_mi_to_string_0;
-unsigned UclVar::HttpServer::c_bi_mi_print_0;
-unsigned UclVar::HttpConn::c_bi_mi_to_string_0;
-unsigned UclVar::HttpConn::c_bi_mi_print_0;
-unsigned UclVar::HttpResp::c_bi_mi_to_string_0;
-unsigned UclVar::HttpResp::c_bi_mi_print_0;
+unsigned UclVar::JitContext::c_bi_mi_to_string_0;
+unsigned UclVar::JitContext::c_bi_mi_print_0;
+unsigned UclVar::JitFunction::c_bi_mi_to_string_0;
+unsigned UclVar::JitFunction::c_bi_mi_print_0;
+unsigned UclVar::NodeCallback::c_bi_mi_to_string_0;
+unsigned UclVar::NodeCallback::c_bi_mi_print_0;
+unsigned UclVar::Json::c_bi_mi_create_1;
+unsigned UclVar::Json::c_bi_mi_create_nice_2;
+unsigned UclVar::Json::c_bi_mi_parse_1;
+unsigned UclVar::Json::c_bi_mi_to_string_0;
+unsigned UclVar::Json::c_bi_mi_print_0;
 
 // - built in variable values -
 UclVar UclVar::Exception::USER_EXCEPTION = UclVar(NO_INIT());
@@ -915,84 +914,6 @@ UclVar UclVar::Clock::_CLOCK_MONOTONIC = UclVar(NO_INIT());
 UclVar UclVar::Clock::_CLOCK_PROCESS_CPUTIME_ID = UclVar(NO_INIT());
 UclVar UclVar::Clock::_CLOCK_THREAD_CPUTIME_ID = UclVar(NO_INIT());
 #endif
-UclVar UclVar::WsContext::PORT_NO_LISTEN = UclVar(NO_INIT());
-UclVar UclVar::WsConn::WRITE_TEXT = UclVar(NO_INIT());
-UclVar UclVar::WsConn::WRITE_BINARY = UclVar(NO_INIT());
-UclVar UclVar::WsConn::WRITE_CONTINUATION = UclVar(NO_INIT());
-UclVar UclVar::WsConn::WRITE_HTTP = UclVar(NO_INIT());
-UclVar UclVar::WsConn::WRITE_CLOSE = UclVar(NO_INIT());
-UclVar UclVar::WsConn::WRITE_PING = UclVar(NO_INIT());
-UclVar UclVar::WsConn::WRITE_PONG = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_ESTABLISHED = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_CLIENT_CONNECTION_ERROR = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_CLIENT_FILTER_PRE_ESTABLISH = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_CLIENT_ESTABLISHED = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_CLOSED = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_RECEIVE = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_CLIENT_RECEIVE = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_CLIENT_RECEIVE_PONG = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_CLIENT_WRITEABLE = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_SERVER_WRITEABLE = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_HTTP = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_HTTP_FILE_COMPLETION = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_FILTER_NETWORK_CONNECTION = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_FILTER_PROTOCOL_CONNECTION = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_OPENSSL_LOAD_EXTRA_CLIENT_VERIFY_CERTS = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_OPENSSL_LOAD_EXTRA_SERVER_VERIFY_CERTS = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_OPENSSL_PERFORM_CLIENT_CERT_VERIFICATION = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_CLIENT_APPEND_HANDSHAKE_HEADER = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_CONFIRM_EXTENSION_OKAY = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_CLIENT_CONFIRM_EXTENSION_SUPPORTED = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_PROTOCOL_INIT = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_PROTOCOL_DESTROY = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_ADD_POLL_FD = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_DEL_POLL_FD = UclVar(NO_INIT());
-UclVar UclVar::WsConn::CB_CHANGE_MODE_POLL_FD = UclVar(NO_INIT());
-UclVar UclVar::WsConn::TIMEOUT_NO_PENDING = UclVar(NO_INIT());
-UclVar UclVar::WsConn::TIMEOUT_AWAITING_PROXY_RESPONSE = UclVar(NO_INIT());
-UclVar UclVar::WsConn::TIMEOUT_AWAITING_CONNECT_RESPONSE = UclVar(NO_INIT());
-UclVar UclVar::WsConn::TIMEOUT_ESTABLISH_WITH_SERVER = UclVar(NO_INIT());
-UclVar UclVar::WsConn::TIMEOUT_AWAITING_SERVER_RESPONSE = UclVar(NO_INIT());
-UclVar UclVar::WsConn::TIMEOUT_AWAITING_PING = UclVar(NO_INIT());
-UclVar UclVar::WsConn::TIMEOUT_CLOSE_ACK = UclVar(NO_INIT());
-UclVar UclVar::WsConn::TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE = UclVar(NO_INIT());
-UclVar UclVar::WsConn::TIMEOUT_SENT_CLIENT_HANDSHAKE = UclVar(NO_INIT());
-UclVar UclVar::WsConn::TIMEOUT_SSL_ACCEPT = UclVar(NO_INIT());
-UclVar UclVar::JitContext::TYPE_I8 = UclVar(NO_INIT());
-UclVar UclVar::JitContext::TYPE_U8 = UclVar(NO_INIT());
-UclVar UclVar::JitContext::TYPE_I16 = UclVar(NO_INIT());
-UclVar UclVar::JitContext::TYPE_U16 = UclVar(NO_INIT());
-UclVar UclVar::JitContext::TYPE_I32 = UclVar(NO_INIT());
-UclVar UclVar::JitContext::TYPE_U32 = UclVar(NO_INIT());
-UclVar UclVar::JitContext::TYPE_I64 = UclVar(NO_INIT());
-UclVar UclVar::JitContext::TYPE_U64 = UclVar(NO_INIT());
-UclVar UclVar::JitContext::TYPE_F32 = UclVar(NO_INIT());
-UclVar UclVar::JitContext::TYPE_F64 = UclVar(NO_INIT());
-UclVar UclVar::Serial::FC_NONE = UclVar(NO_INIT());
-UclVar UclVar::Serial::FC_RTS_CTS = UclVar(NO_INIT());
-UclVar UclVar::Serial::FC_RS_485 = UclVar(NO_INIT());
-UclVar UclVar::Serial::PAR_NONE = UclVar(NO_INIT());
-UclVar UclVar::Serial::PAR_EVEN = UclVar(NO_INIT());
-UclVar UclVar::Serial::PAR_ODD = UclVar(NO_INIT());
-UclVar UclVar::VarStore::TBOOL = UclVar(NO_INIT());
-UclVar UclVar::VarStore::TSINT = UclVar(NO_INIT());
-UclVar UclVar::VarStore::TINT = UclVar(NO_INIT());
-UclVar UclVar::VarStore::TDINT = UclVar(NO_INIT());
-UclVar UclVar::VarStore::TLINT = UclVar(NO_INIT());
-UclVar UclVar::VarStore::TUSINT = UclVar(NO_INIT());
-UclVar UclVar::VarStore::TUINT = UclVar(NO_INIT());
-UclVar UclVar::VarStore::TUDINT = UclVar(NO_INIT());
-UclVar UclVar::VarStore::TULINT = UclVar(NO_INIT());
-UclVar UclVar::VarStore::TREAL = UclVar(NO_INIT());
-UclVar UclVar::VarStore::TLREAL = UclVar(NO_INIT());
-UclVar UclVar::VarStore::TTIME = UclVar(NO_INIT());
-UclVar UclVar::VarStore::TDATE = UclVar(NO_INIT());
-UclVar UclVar::VarStore::TTOD = UclVar(NO_INIT());
-UclVar UclVar::VarStore::TDT = UclVar(NO_INIT());
-UclVar UclVar::VarStore::TSTRING = UclVar(NO_INIT());
-UclVar UclVar::Crc::CRC8 = UclVar(NO_INIT());
-UclVar UclVar::Crc::CRC16 = UclVar(NO_INIT());
-UclVar UclVar::Crc::CRC32 = UclVar(NO_INIT());
 UclVar UclVar::HttpConn::TYPE_CONNECT = UclVar(NO_INIT());
 UclVar UclVar::HttpConn::TYPE_DELETE = UclVar(NO_INIT());
 UclVar UclVar::HttpConn::TYPE_GET = UclVar(NO_INIT());
@@ -1065,6 +986,84 @@ UclVar UclVar::HttpResp::HTTP_VARIANT_ALSO_NEGOTIATES = UclVar(NO_INIT());
 UclVar UclVar::HttpResp::HTTP_INSUFFICIENT_STORAGE = UclVar(NO_INIT());
 UclVar UclVar::HttpResp::HTTP_BANDWIDTH_LIMIT_EXCEEDED = UclVar(NO_INIT());
 UclVar UclVar::HttpResp::HTTP_NOT_EXTENDED = UclVar(NO_INIT());
+UclVar UclVar::WsContext::PORT_NO_LISTEN = UclVar(NO_INIT());
+UclVar UclVar::WsConn::WRITE_TEXT = UclVar(NO_INIT());
+UclVar UclVar::WsConn::WRITE_BINARY = UclVar(NO_INIT());
+UclVar UclVar::WsConn::WRITE_CONTINUATION = UclVar(NO_INIT());
+UclVar UclVar::WsConn::WRITE_HTTP = UclVar(NO_INIT());
+UclVar UclVar::WsConn::WRITE_CLOSE = UclVar(NO_INIT());
+UclVar UclVar::WsConn::WRITE_PING = UclVar(NO_INIT());
+UclVar UclVar::WsConn::WRITE_PONG = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_ESTABLISHED = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_CLIENT_CONNECTION_ERROR = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_CLIENT_FILTER_PRE_ESTABLISH = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_CLIENT_ESTABLISHED = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_CLOSED = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_RECEIVE = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_CLIENT_RECEIVE = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_CLIENT_RECEIVE_PONG = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_CLIENT_WRITEABLE = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_SERVER_WRITEABLE = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_HTTP = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_HTTP_FILE_COMPLETION = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_FILTER_NETWORK_CONNECTION = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_FILTER_PROTOCOL_CONNECTION = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_OPENSSL_LOAD_EXTRA_CLIENT_VERIFY_CERTS = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_OPENSSL_LOAD_EXTRA_SERVER_VERIFY_CERTS = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_OPENSSL_PERFORM_CLIENT_CERT_VERIFICATION = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_CLIENT_APPEND_HANDSHAKE_HEADER = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_CONFIRM_EXTENSION_OKAY = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_CLIENT_CONFIRM_EXTENSION_SUPPORTED = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_PROTOCOL_INIT = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_PROTOCOL_DESTROY = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_ADD_POLL_FD = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_DEL_POLL_FD = UclVar(NO_INIT());
+UclVar UclVar::WsConn::CB_CHANGE_MODE_POLL_FD = UclVar(NO_INIT());
+UclVar UclVar::WsConn::TIMEOUT_NO_PENDING = UclVar(NO_INIT());
+UclVar UclVar::WsConn::TIMEOUT_AWAITING_PROXY_RESPONSE = UclVar(NO_INIT());
+UclVar UclVar::WsConn::TIMEOUT_AWAITING_CONNECT_RESPONSE = UclVar(NO_INIT());
+UclVar UclVar::WsConn::TIMEOUT_ESTABLISH_WITH_SERVER = UclVar(NO_INIT());
+UclVar UclVar::WsConn::TIMEOUT_AWAITING_SERVER_RESPONSE = UclVar(NO_INIT());
+UclVar UclVar::WsConn::TIMEOUT_AWAITING_PING = UclVar(NO_INIT());
+UclVar UclVar::WsConn::TIMEOUT_CLOSE_ACK = UclVar(NO_INIT());
+UclVar UclVar::WsConn::TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE = UclVar(NO_INIT());
+UclVar UclVar::WsConn::TIMEOUT_SENT_CLIENT_HANDSHAKE = UclVar(NO_INIT());
+UclVar UclVar::WsConn::TIMEOUT_SSL_ACCEPT = UclVar(NO_INIT());
+UclVar UclVar::Serial::FC_NONE = UclVar(NO_INIT());
+UclVar UclVar::Serial::FC_RTS_CTS = UclVar(NO_INIT());
+UclVar UclVar::Serial::FC_RS_485 = UclVar(NO_INIT());
+UclVar UclVar::Serial::PAR_NONE = UclVar(NO_INIT());
+UclVar UclVar::Serial::PAR_EVEN = UclVar(NO_INIT());
+UclVar UclVar::Serial::PAR_ODD = UclVar(NO_INIT());
+UclVar UclVar::VarStore::TBOOL = UclVar(NO_INIT());
+UclVar UclVar::VarStore::TSINT = UclVar(NO_INIT());
+UclVar UclVar::VarStore::TINT = UclVar(NO_INIT());
+UclVar UclVar::VarStore::TDINT = UclVar(NO_INIT());
+UclVar UclVar::VarStore::TLINT = UclVar(NO_INIT());
+UclVar UclVar::VarStore::TUSINT = UclVar(NO_INIT());
+UclVar UclVar::VarStore::TUINT = UclVar(NO_INIT());
+UclVar UclVar::VarStore::TUDINT = UclVar(NO_INIT());
+UclVar UclVar::VarStore::TULINT = UclVar(NO_INIT());
+UclVar UclVar::VarStore::TREAL = UclVar(NO_INIT());
+UclVar UclVar::VarStore::TLREAL = UclVar(NO_INIT());
+UclVar UclVar::VarStore::TTIME = UclVar(NO_INIT());
+UclVar UclVar::VarStore::TDATE = UclVar(NO_INIT());
+UclVar UclVar::VarStore::TTOD = UclVar(NO_INIT());
+UclVar UclVar::VarStore::TDT = UclVar(NO_INIT());
+UclVar UclVar::VarStore::TSTRING = UclVar(NO_INIT());
+UclVar UclVar::Crc::CRC8 = UclVar(NO_INIT());
+UclVar UclVar::Crc::CRC16 = UclVar(NO_INIT());
+UclVar UclVar::Crc::CRC32 = UclVar(NO_INIT());
+UclVar UclVar::JitContext::TYPE_I8 = UclVar(NO_INIT());
+UclVar UclVar::JitContext::TYPE_U8 = UclVar(NO_INIT());
+UclVar UclVar::JitContext::TYPE_I16 = UclVar(NO_INIT());
+UclVar UclVar::JitContext::TYPE_U16 = UclVar(NO_INIT());
+UclVar UclVar::JitContext::TYPE_I32 = UclVar(NO_INIT());
+UclVar UclVar::JitContext::TYPE_U32 = UclVar(NO_INIT());
+UclVar UclVar::JitContext::TYPE_I64 = UclVar(NO_INIT());
+UclVar UclVar::JitContext::TYPE_U64 = UclVar(NO_INIT());
+UclVar UclVar::JitContext::TYPE_F32 = UclVar(NO_INIT());
+UclVar UclVar::JitContext::TYPE_F64 = UclVar(NO_INIT());
 
 // - methods of class UclVar -
 
@@ -1096,12 +1095,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Buffer,"Buffer");
   }
 
-  // - module node -
-  if (a_modules[c_uclvar_module_node])
-  {
-    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_NodeCallback,"NodeCallback");
-  }
-
   // - module sys -
   if (a_modules[c_uclvar_module_sys])
   {
@@ -1125,21 +1118,12 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
 #endif
   }
 
-  // - module containers -
-  if (a_modules[c_uclvar_module_containers])
+  // - module http -
+  if (a_modules[c_uclvar_module_http])
   {
-    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Stack,"Stack");
-    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Queue,"Queue");
-    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Set,"Set");
-    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_List,"List");
-    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Tree,"Tree");
-    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Dict,"Dict");
-  }
-
-  // - module json -
-  if (a_modules[c_uclvar_module_json])
-  {
-    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Json,"Json");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_HttpServer,"HttpServer");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_HttpConn,"HttpConn");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_HttpResp,"HttpResp");
   }
 
   // - module websocket -
@@ -1149,13 +1133,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_WsConn,"WsConn");
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_WsClient,"WsClient");
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_WsBase64,"WsBase64");
-  }
-
-  // - module jit -
-  if (a_modules[c_uclvar_module_jit])
-  {
-    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_JitContext,"JitContext");
-    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_JitFunction,"JitFunction");
   }
 
   // - module ucf -
@@ -1176,12 +1153,34 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Crc,"Crc");
   }
 
-  // - module http -
-  if (a_modules[c_uclvar_module_http])
+  // - module jit -
+  if (a_modules[c_uclvar_module_jit])
   {
-    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_HttpServer,"HttpServer");
-    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_HttpConn,"HttpConn");
-    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_HttpResp,"HttpResp");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_JitContext,"JitContext");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_JitFunction,"JitFunction");
+  }
+
+  // - module node -
+  if (a_modules[c_uclvar_module_node])
+  {
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_NodeCallback,"NodeCallback");
+  }
+
+  // - module containers -
+  if (a_modules[c_uclvar_module_containers])
+  {
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Stack,"Stack");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Queue,"Queue");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Set,"Set");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_List,"List");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Tree,"Tree");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Dict,"Dict");
+  }
+
+  // - module json -
+  if (a_modules[c_uclvar_module_json])
+  {
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Json,"Json");
   }
 
   /*}}}*/
@@ -1351,17 +1350,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
   }
 
-  // - module node -
-  if (a_modules[c_uclvar_module_node])
-  {
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_NodeCallback_2,"NodeCallback#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_call_0,"call#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_call_1,"call#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_call_2,"call#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-  }
-
   // - module sys -
   if (a_modules[c_uclvar_module_sys])
   {
@@ -1480,6 +1468,217 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
 #endif
+  }
+
+  // - module http -
+  if (a_modules[c_uclvar_module_http])
+  {
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_HttpServer_2,"HttpServer#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_fds_0,"get_fds#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_timeout_0,"timeout#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_process_0,"process#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_process_1,"process#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_id_0,"id#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_type_0,"get_type#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_url_0,"url#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_method_0,"method#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_version_0,"version#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_upload_data_0,"upload_data#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_user_data_0,"user_data#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_values_1,"values#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_queue_response_2,"queue_response#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_HttpResp_1,"HttpResp#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_HttpResp_2,"HttpResp#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_add_header_2,"add_header#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_add_footer_2,"add_footer#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+  }
+
+  // - module websocket -
+  if (a_modules[c_uclvar_module_websocket])
+  {
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_WsContext_2,"WsContext#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_version_0,"version#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_user_data_0,"user_data#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_client_4,"client#4");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_fds_0,"get_fds#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_process_1,"process#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_protocol_idx_1,"protocol_idx#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_callback_on_writable_1,"callback_on_writable#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_reason_0,"reason#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_received_data_0,"received_data#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_user_data_0,"user_data#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_ctx_user_data_0,"ctx_user_data#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_protocol_name_0,"protocol_name#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_callback_on_writable_0,"callback_on_writable#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_set_timeout_2,"set_timeout#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_1,"write#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_2,"write#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_connected_0,"connected#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_callback_on_writable_0,"callback_on_writable#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_encode_1,"encode#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_decode_1,"decode#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+  }
+
+  // - module ucf -
+  if (a_modules[c_uclvar_module_ucf])
+  {
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetProcessId_0,"GetProcessId#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetProcessName_0,"GetProcessName#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetWorkingDirectory_0,"GetWorkingDirectory#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Sleep_1,"Sleep#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Time_0,"Time#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Time_1,"Time#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetNanosec_0,"GetNanosec#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetMicrosec_0,"GetMicrosec#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetMillisec_0,"GetMillisec#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetSeconds_0,"GetSeconds#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetMinutes_0,"GetMinutes#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetHours_0,"GetHours#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetDays_0,"GetDays#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_IsLeapYear_1,"IsLeapYear#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_DaysTillYear_1,"DaysTillYear#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetSystemTime_0,"GetSystemTime#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_SetSystemTime_0,"SetSystemTime#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_ToSystemTime_0,"ToSystemTime#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_ToLocalTime_0,"ToLocalTime#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_compare_1,"compare#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_CfgFile_0,"CfgFile#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_CfgFile_1,"CfgFile#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Open_1,"Open#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_EnumSections_0,"EnumSections#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_OpenSection_1,"OpenSection#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetSection_0,"GetSection#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_EnumEntries_0,"EnumEntries#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetValue_1,"GetValue#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetValue_2,"GetValue#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetValueArray_1,"GetValueArray#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_UcfLog_0,"UcfLog#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_UcfLog_1,"UcfLog#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_add_file_4,"add_file#4");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_add_file_5,"add_file#5");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_add_stdout_1,"add_stdout#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_add_stderr_1,"add_stderr#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_add_nvm_2,"add_nvm#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_2,"write#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_3,"write#3");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_UcfMutex_1,"UcfMutex#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_UcfMutex_2,"UcfMutex#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Reserve_0,"Reserve#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Reserve_1,"Reserve#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Release_0,"Release#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_UcfLed_1,"UcfLed#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_LightOn_0,"LightOn#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_LightOff_0,"LightOff#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Toggle_0,"Toggle#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Serial_1,"Serial#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_SetFormat_5,"SetFormat#5");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Write_1,"Write#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_WriteAll_1,"WriteAll#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Read_0,"Read#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_VarStore_2,"VarStore#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_VarStore_5,"VarStore#5");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_clear_slots_0,"clear_slots#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_item_1,"item#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_first_idx_0,"first_idx#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_next_idx_1,"next_idx#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_length_0,"length#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_index_0,"index#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_name_0,"name#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_varType_0,"varType#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_varSize_0,"varSize#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_clear_0,"clear#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_1,"write#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_2,"write#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_0,"read#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_1,"read#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_item_1,"item#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_first_idx_0,"first_idx#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_next_idx_1,"next_idx#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_length_0,"length#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_NvmSegment_1,"NvmSegment#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_NvmSegment_2,"NvmSegment#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_size_0,"size#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_name_0,"name#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_2,"write#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_2,"read#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_MsgQueue_1,"MsgQueue#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_MsgQueue_3,"MsgQueue#3");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_name_0,"name#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_1,"write#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_0,"read#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_pid_0,"read_pid#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_peek_msg_0,"peek_msg#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Bcc_0,"Bcc#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_append_1,"append#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_value_0,"value#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Crc_2,"Crc#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_append_1,"append#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_size_0,"size#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_value_0,"value#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+  }
+
+  // - module jit -
+  if (a_modules[c_uclvar_module_jit])
+  {
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_JitContext_0,"JitContext#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_create_fun_1,"create_fun#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_signature_0,"signature#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_call_1,"call#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+  }
+
+  // - module node -
+  if (a_modules[c_uclvar_module_node])
+  {
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_NodeCallback_2,"NodeCallback#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_call_0,"call#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_call_1,"call#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_call_2,"call#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
   }
 
   // - module containers -
@@ -1621,206 +1820,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
   }
 
-  // - module websocket -
-  if (a_modules[c_uclvar_module_websocket])
-  {
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_WsContext_2,"WsContext#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_version_0,"version#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_user_data_0,"user_data#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_client_4,"client#4");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_fds_0,"get_fds#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_process_1,"process#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_protocol_idx_1,"protocol_idx#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_callback_on_writable_1,"callback_on_writable#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_reason_0,"reason#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_received_data_0,"received_data#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_user_data_0,"user_data#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_ctx_user_data_0,"ctx_user_data#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_protocol_name_0,"protocol_name#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_callback_on_writable_0,"callback_on_writable#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_set_timeout_2,"set_timeout#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_1,"write#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_2,"write#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_connected_0,"connected#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_callback_on_writable_0,"callback_on_writable#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_encode_1,"encode#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_decode_1,"decode#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-  }
-
-  // - module jit -
-  if (a_modules[c_uclvar_module_jit])
-  {
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_JitContext_0,"JitContext#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_create_fun_1,"create_fun#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_signature_0,"signature#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_call_1,"call#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-  }
-
-  // - module ucf -
-  if (a_modules[c_uclvar_module_ucf])
-  {
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetProcessId_0,"GetProcessId#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetProcessName_0,"GetProcessName#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetWorkingDirectory_0,"GetWorkingDirectory#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Sleep_1,"Sleep#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Time_0,"Time#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Time_1,"Time#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetNanosec_0,"GetNanosec#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetMicrosec_0,"GetMicrosec#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetMillisec_0,"GetMillisec#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetSeconds_0,"GetSeconds#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetMinutes_0,"GetMinutes#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetHours_0,"GetHours#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetDays_0,"GetDays#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_IsLeapYear_1,"IsLeapYear#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_DaysTillYear_1,"DaysTillYear#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetSystemTime_0,"GetSystemTime#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_SetSystemTime_0,"SetSystemTime#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_ToSystemTime_0,"ToSystemTime#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_ToLocalTime_0,"ToLocalTime#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_compare_1,"compare#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_CfgFile_0,"CfgFile#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_CfgFile_1,"CfgFile#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Open_1,"Open#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_EnumSections_0,"EnumSections#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_OpenSection_1,"OpenSection#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetSection_0,"GetSection#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_EnumEntries_0,"EnumEntries#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetValue_1,"GetValue#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetValue_2,"GetValue#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GetValueArray_1,"GetValueArray#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_UcfLog_0,"UcfLog#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_UcfLog_1,"UcfLog#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_add_file_4,"add_file#4");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_add_file_5,"add_file#5");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_add_stdout_1,"add_stdout#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_add_stderr_1,"add_stderr#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_add_nvm_2,"add_nvm#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_2,"write#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_3,"write#3");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_UcfMutex_1,"UcfMutex#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_UcfMutex_2,"UcfMutex#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Reserve_0,"Reserve#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Reserve_1,"Reserve#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Release_0,"Release#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_UcfLed_1,"UcfLed#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_LightOn_0,"LightOn#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_LightOff_0,"LightOff#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Toggle_0,"Toggle#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Serial_1,"Serial#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_SetFormat_5,"SetFormat#5");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Write_1,"Write#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_WriteAll_1,"WriteAll#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Read_0,"Read#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_VarStore_2,"VarStore#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_VarStore_5,"VarStore#5");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_clear_slots_0,"clear_slots#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_item_1,"item#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_first_idx_0,"first_idx#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_next_idx_1,"next_idx#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_length_0,"length#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_index_0,"index#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_name_0,"name#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_varType_0,"varType#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_varSize_0,"varSize#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_clear_0,"clear#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_1,"write#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_2,"write#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_0,"read#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_1,"read#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_item_1,"item#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_first_idx_0,"first_idx#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_next_idx_1,"next_idx#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_length_0,"length#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_NvmSegment_1,"NvmSegment#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_NvmSegment_2,"NvmSegment#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_size_0,"size#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_name_0,"name#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_2,"write#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_2,"read#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_MsgQueue_1,"MsgQueue#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_MsgQueue_3,"MsgQueue#3");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_name_0,"name#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_1,"write#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_0,"read#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_pid_0,"read_pid#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_peek_msg_0,"peek_msg#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Bcc_0,"Bcc#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_append_1,"append#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_value_0,"value#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Crc_2,"Crc#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_append_1,"append#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_size_0,"size#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_value_0,"value#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-  }
-
-  // - module http -
-  if (a_modules[c_uclvar_module_http])
-  {
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_HttpServer_2,"HttpServer#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_fds_0,"get_fds#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_timeout_0,"timeout#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_process_0,"process#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_process_1,"process#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_id_0,"id#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_type_0,"get_type#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_url_0,"url#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_method_0,"method#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_version_0,"version#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_upload_data_0,"upload_data#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_user_data_0,"user_data#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_values_1,"values#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_queue_response_2,"queue_response#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_HttpResp_1,"HttpResp#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_HttpResp_2,"HttpResp#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_add_header_2,"add_header#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_add_footer_2,"add_footer#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-  }
-
   /*}}}*/
 
   // - retrieve variable name indexes -
@@ -1884,11 +1883,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__ERROR_PERMISSION,"ERROR_PERMISSION");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__ERROR_AGAIN,"ERROR_AGAIN");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__ERROR_SEARCH,"ERROR_SEARCH");
-  }
-
-  // - module node -
-  if (a_modules[c_uclvar_module_node])
-  {
   }
 
   // - module sys -
@@ -1964,109 +1958,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__CLOCK_PROCESS_CPUTIME_ID,"CLOCK_PROCESS_CPUTIME_ID");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__CLOCK_THREAD_CPUTIME_ID,"CLOCK_THREAD_CPUTIME_ID");
 #endif
-  }
-
-  // - module containers -
-  if (a_modules[c_uclvar_module_containers])
-  {
-  }
-
-  // - module json -
-  if (a_modules[c_uclvar_module_json])
-  {
-  }
-
-  // - module websocket -
-  if (a_modules[c_uclvar_module_websocket])
-  {
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_PORT_NO_LISTEN,"PORT_NO_LISTEN");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_WRITE_TEXT,"WRITE_TEXT");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_WRITE_BINARY,"WRITE_BINARY");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_WRITE_CONTINUATION,"WRITE_CONTINUATION");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_WRITE_HTTP,"WRITE_HTTP");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_WRITE_CLOSE,"WRITE_CLOSE");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_WRITE_PING,"WRITE_PING");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_WRITE_PONG,"WRITE_PONG");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_ESTABLISHED,"CB_ESTABLISHED");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CLIENT_CONNECTION_ERROR,"CB_CLIENT_CONNECTION_ERROR");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CLIENT_FILTER_PRE_ESTABLISH,"CB_CLIENT_FILTER_PRE_ESTABLISH");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CLIENT_ESTABLISHED,"CB_CLIENT_ESTABLISHED");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CLOSED,"CB_CLOSED");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_RECEIVE,"CB_RECEIVE");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CLIENT_RECEIVE,"CB_CLIENT_RECEIVE");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CLIENT_RECEIVE_PONG,"CB_CLIENT_RECEIVE_PONG");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CLIENT_WRITEABLE,"CB_CLIENT_WRITEABLE");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_SERVER_WRITEABLE,"CB_SERVER_WRITEABLE");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_HTTP,"CB_HTTP");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_HTTP_FILE_COMPLETION,"CB_HTTP_FILE_COMPLETION");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_FILTER_NETWORK_CONNECTION,"CB_FILTER_NETWORK_CONNECTION");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_FILTER_PROTOCOL_CONNECTION,"CB_FILTER_PROTOCOL_CONNECTION");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_OPENSSL_LOAD_EXTRA_CLIENT_VERIFY_CERTS,"CB_OPENSSL_LOAD_EXTRA_CLIENT_VERIFY_CERTS");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_OPENSSL_LOAD_EXTRA_SERVER_VERIFY_CERTS,"CB_OPENSSL_LOAD_EXTRA_SERVER_VERIFY_CERTS");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_OPENSSL_PERFORM_CLIENT_CERT_VERIFICATION,"CB_OPENSSL_PERFORM_CLIENT_CERT_VERIFICATION");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CLIENT_APPEND_HANDSHAKE_HEADER,"CB_CLIENT_APPEND_HANDSHAKE_HEADER");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CONFIRM_EXTENSION_OKAY,"CB_CONFIRM_EXTENSION_OKAY");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CLIENT_CONFIRM_EXTENSION_SUPPORTED,"CB_CLIENT_CONFIRM_EXTENSION_SUPPORTED");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_PROTOCOL_INIT,"CB_PROTOCOL_INIT");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_PROTOCOL_DESTROY,"CB_PROTOCOL_DESTROY");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_ADD_POLL_FD,"CB_ADD_POLL_FD");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_DEL_POLL_FD,"CB_DEL_POLL_FD");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CHANGE_MODE_POLL_FD,"CB_CHANGE_MODE_POLL_FD");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_NO_PENDING,"TIMEOUT_NO_PENDING");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_AWAITING_PROXY_RESPONSE,"TIMEOUT_AWAITING_PROXY_RESPONSE");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_AWAITING_CONNECT_RESPONSE,"TIMEOUT_AWAITING_CONNECT_RESPONSE");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_ESTABLISH_WITH_SERVER,"TIMEOUT_ESTABLISH_WITH_SERVER");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_AWAITING_SERVER_RESPONSE,"TIMEOUT_AWAITING_SERVER_RESPONSE");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_AWAITING_PING,"TIMEOUT_AWAITING_PING");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_CLOSE_ACK,"TIMEOUT_CLOSE_ACK");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE,"TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_SENT_CLIENT_HANDSHAKE,"TIMEOUT_SENT_CLIENT_HANDSHAKE");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_SSL_ACCEPT,"TIMEOUT_SSL_ACCEPT");
-  }
-
-  // - module jit -
-  if (a_modules[c_uclvar_module_jit])
-  {
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_I8,"TYPE_I8");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_U8,"TYPE_U8");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_I16,"TYPE_I16");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_U16,"TYPE_U16");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_I32,"TYPE_I32");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_U32,"TYPE_U32");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_I64,"TYPE_I64");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_U64,"TYPE_U64");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_F32,"TYPE_F32");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_F64,"TYPE_F64");
-  }
-
-  // - module ucf -
-  if (a_modules[c_uclvar_module_ucf])
-  {
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_FC_NONE,"FC_NONE");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_FC_RTS_CTS,"FC_RTS_CTS");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_FC_RS_485,"FC_RS_485");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_PAR_NONE,"PAR_NONE");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_PAR_EVEN,"PAR_EVEN");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_PAR_ODD,"PAR_ODD");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TBOOL,"TBOOL");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TSINT,"TSINT");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TINT,"TINT");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TDINT,"TDINT");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TLINT,"TLINT");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TUSINT,"TUSINT");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TUINT,"TUINT");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TUDINT,"TUDINT");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TULINT,"TULINT");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TREAL,"TREAL");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TLREAL,"TLREAL");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TTIME,"TTIME");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TDATE,"TDATE");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TTOD,"TTOD");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TDT,"TDT");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TSTRING,"TSTRING");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CRC8,"CRC8");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CRC16,"CRC16");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CRC32,"CRC32");
   }
 
   // - module http -
@@ -2146,6 +2037,114 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_HTTP_NOT_EXTENDED,"HTTP_NOT_EXTENDED");
   }
 
+  // - module websocket -
+  if (a_modules[c_uclvar_module_websocket])
+  {
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_PORT_NO_LISTEN,"PORT_NO_LISTEN");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_WRITE_TEXT,"WRITE_TEXT");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_WRITE_BINARY,"WRITE_BINARY");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_WRITE_CONTINUATION,"WRITE_CONTINUATION");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_WRITE_HTTP,"WRITE_HTTP");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_WRITE_CLOSE,"WRITE_CLOSE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_WRITE_PING,"WRITE_PING");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_WRITE_PONG,"WRITE_PONG");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_ESTABLISHED,"CB_ESTABLISHED");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CLIENT_CONNECTION_ERROR,"CB_CLIENT_CONNECTION_ERROR");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CLIENT_FILTER_PRE_ESTABLISH,"CB_CLIENT_FILTER_PRE_ESTABLISH");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CLIENT_ESTABLISHED,"CB_CLIENT_ESTABLISHED");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CLOSED,"CB_CLOSED");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_RECEIVE,"CB_RECEIVE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CLIENT_RECEIVE,"CB_CLIENT_RECEIVE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CLIENT_RECEIVE_PONG,"CB_CLIENT_RECEIVE_PONG");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CLIENT_WRITEABLE,"CB_CLIENT_WRITEABLE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_SERVER_WRITEABLE,"CB_SERVER_WRITEABLE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_HTTP,"CB_HTTP");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_HTTP_FILE_COMPLETION,"CB_HTTP_FILE_COMPLETION");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_FILTER_NETWORK_CONNECTION,"CB_FILTER_NETWORK_CONNECTION");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_FILTER_PROTOCOL_CONNECTION,"CB_FILTER_PROTOCOL_CONNECTION");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_OPENSSL_LOAD_EXTRA_CLIENT_VERIFY_CERTS,"CB_OPENSSL_LOAD_EXTRA_CLIENT_VERIFY_CERTS");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_OPENSSL_LOAD_EXTRA_SERVER_VERIFY_CERTS,"CB_OPENSSL_LOAD_EXTRA_SERVER_VERIFY_CERTS");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_OPENSSL_PERFORM_CLIENT_CERT_VERIFICATION,"CB_OPENSSL_PERFORM_CLIENT_CERT_VERIFICATION");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CLIENT_APPEND_HANDSHAKE_HEADER,"CB_CLIENT_APPEND_HANDSHAKE_HEADER");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CONFIRM_EXTENSION_OKAY,"CB_CONFIRM_EXTENSION_OKAY");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CLIENT_CONFIRM_EXTENSION_SUPPORTED,"CB_CLIENT_CONFIRM_EXTENSION_SUPPORTED");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_PROTOCOL_INIT,"CB_PROTOCOL_INIT");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_PROTOCOL_DESTROY,"CB_PROTOCOL_DESTROY");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_ADD_POLL_FD,"CB_ADD_POLL_FD");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_DEL_POLL_FD,"CB_DEL_POLL_FD");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CB_CHANGE_MODE_POLL_FD,"CB_CHANGE_MODE_POLL_FD");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_NO_PENDING,"TIMEOUT_NO_PENDING");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_AWAITING_PROXY_RESPONSE,"TIMEOUT_AWAITING_PROXY_RESPONSE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_AWAITING_CONNECT_RESPONSE,"TIMEOUT_AWAITING_CONNECT_RESPONSE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_ESTABLISH_WITH_SERVER,"TIMEOUT_ESTABLISH_WITH_SERVER");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_AWAITING_SERVER_RESPONSE,"TIMEOUT_AWAITING_SERVER_RESPONSE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_AWAITING_PING,"TIMEOUT_AWAITING_PING");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_CLOSE_ACK,"TIMEOUT_CLOSE_ACK");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE,"TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_SENT_CLIENT_HANDSHAKE,"TIMEOUT_SENT_CLIENT_HANDSHAKE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_SSL_ACCEPT,"TIMEOUT_SSL_ACCEPT");
+  }
+
+  // - module ucf -
+  if (a_modules[c_uclvar_module_ucf])
+  {
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_FC_NONE,"FC_NONE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_FC_RTS_CTS,"FC_RTS_CTS");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_FC_RS_485,"FC_RS_485");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_PAR_NONE,"PAR_NONE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_PAR_EVEN,"PAR_EVEN");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_PAR_ODD,"PAR_ODD");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TBOOL,"TBOOL");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TSINT,"TSINT");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TINT,"TINT");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TDINT,"TDINT");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TLINT,"TLINT");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TUSINT,"TUSINT");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TUINT,"TUINT");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TUDINT,"TUDINT");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TULINT,"TULINT");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TREAL,"TREAL");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TLREAL,"TLREAL");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TTIME,"TTIME");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TDATE,"TDATE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TTOD,"TTOD");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TDT,"TDT");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TSTRING,"TSTRING");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CRC8,"CRC8");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CRC16,"CRC16");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CRC32,"CRC32");
+  }
+
+  // - module jit -
+  if (a_modules[c_uclvar_module_jit])
+  {
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_I8,"TYPE_I8");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_U8,"TYPE_U8");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_I16,"TYPE_I16");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_U16,"TYPE_U16");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_I32,"TYPE_I32");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_U32,"TYPE_U32");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_I64,"TYPE_I64");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_U64,"TYPE_U64");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_F32,"TYPE_F32");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_F64,"TYPE_F64");
+  }
+
+  // - module node -
+  if (a_modules[c_uclvar_module_node])
+  {
+  }
+
+  // - module containers -
+  if (a_modules[c_uclvar_module_containers])
+  {
+  }
+
+  // - module json -
+  if (a_modules[c_uclvar_module_json])
+  {
+  }
+
   /*}}}*/
 
   // - retrieve static method indexes -
@@ -2173,16 +2172,8 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Thread,c_bi_class_Thread,c_bi_mi_print_0,c_bi_mni_print_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Delegate,c_bi_class_Delegate,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Delegate,c_bi_class_Delegate,c_bi_mi_print_0,c_bi_mni_print_0);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Buffer,c_bi_class_Buffer,c_bi_mi_size_0,c_bi_mni_size_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Buffer,c_bi_class_Buffer,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Buffer,c_bi_class_Buffer,c_bi_mi_print_0,c_bi_mni_print_0);
-  }
-
-  // - module node -
-  if (a_modules[c_uclvar_module_node])
-  {
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(NodeCallback,c_bi_class_NodeCallback,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(NodeCallback,c_bi_class_NodeCallback,c_bi_mi_print_0,c_bi_mni_print_0);
   }
 
   // - module sys -
@@ -2248,19 +2239,15 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
 #endif
   }
 
-  // - module containers -
-  if (a_modules[c_uclvar_module_containers])
+  // - module http -
+  if (a_modules[c_uclvar_module_http])
   {
-  }
-
-  // - module json -
-  if (a_modules[c_uclvar_module_json])
-  {
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Json,c_bi_class_Json,c_bi_mi_create_1,c_bi_mni_create_1);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Json,c_bi_class_Json,c_bi_mi_create_nice_2,c_bi_mni_create_nice_2);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Json,c_bi_class_Json,c_bi_mi_parse_1,c_bi_mni_parse_1);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Json,c_bi_class_Json,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Json,c_bi_class_Json,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(HttpServer,c_bi_class_HttpServer,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(HttpServer,c_bi_class_HttpServer,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(HttpConn,c_bi_class_HttpConn,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(HttpConn,c_bi_class_HttpConn,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(HttpResp,c_bi_class_HttpResp,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(HttpResp,c_bi_class_HttpResp,c_bi_mi_print_0,c_bi_mni_print_0);
   }
 
   // - module websocket -
@@ -2277,15 +2264,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(WsBase64,c_bi_class_WsBase64,c_bi_mi_decode_1,c_bi_mni_decode_1);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(WsBase64,c_bi_class_WsBase64,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(WsBase64,c_bi_class_WsBase64,c_bi_mi_print_0,c_bi_mni_print_0);
-  }
-
-  // - module jit -
-  if (a_modules[c_uclvar_module_jit])
-  {
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(JitContext,c_bi_class_JitContext,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(JitContext,c_bi_class_JitContext,c_bi_mi_print_0,c_bi_mni_print_0);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(JitFunction,c_bi_class_JitFunction,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(JitFunction,c_bi_class_JitFunction,c_bi_mi_print_0,c_bi_mni_print_0);
   }
 
   // - module ucf -
@@ -2324,15 +2302,35 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Crc,c_bi_class_Crc,c_bi_mi_print_0,c_bi_mni_print_0);
   }
 
-  // - module http -
-  if (a_modules[c_uclvar_module_http])
+  // - module jit -
+  if (a_modules[c_uclvar_module_jit])
   {
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(HttpServer,c_bi_class_HttpServer,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(HttpServer,c_bi_class_HttpServer,c_bi_mi_print_0,c_bi_mni_print_0);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(HttpConn,c_bi_class_HttpConn,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(HttpConn,c_bi_class_HttpConn,c_bi_mi_print_0,c_bi_mni_print_0);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(HttpResp,c_bi_class_HttpResp,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(HttpResp,c_bi_class_HttpResp,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(JitContext,c_bi_class_JitContext,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(JitContext,c_bi_class_JitContext,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(JitFunction,c_bi_class_JitFunction,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(JitFunction,c_bi_class_JitFunction,c_bi_mi_print_0,c_bi_mni_print_0);
+  }
+
+  // - module node -
+  if (a_modules[c_uclvar_module_node])
+  {
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(NodeCallback,c_bi_class_NodeCallback,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(NodeCallback,c_bi_class_NodeCallback,c_bi_mi_print_0,c_bi_mni_print_0);
+  }
+
+  // - module containers -
+  if (a_modules[c_uclvar_module_containers])
+  {
+  }
+
+  // - module json -
+  if (a_modules[c_uclvar_module_json])
+  {
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Json,c_bi_class_Json,c_bi_mi_create_1,c_bi_mni_create_1);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Json,c_bi_class_Json,c_bi_mi_create_nice_2,c_bi_mni_create_nice_2);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Json,c_bi_class_Json,c_bi_mi_parse_1,c_bi_mni_parse_1);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Json,c_bi_class_Json,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Json,c_bi_class_Json,c_bi_mi_print_0,c_bi_mni_print_0);
   }
 
   /*}}}*/
@@ -2420,11 +2418,6 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(Thread,c_bi_class_Thread,_ERROR_BUSY);
   }
 
-  // - module node -
-  if (a_modules[c_uclvar_module_node])
-  {
-  }
-
   // - module sys -
   if (a_modules[c_uclvar_module_sys])
   {
@@ -2498,109 +2491,6 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(Clock,c_bi_class_Clock,_CLOCK_PROCESS_CPUTIME_ID);
     UCLVAR_RETRIEVE_STATIC_CONST(Clock,c_bi_class_Clock,_CLOCK_THREAD_CPUTIME_ID);
 #endif
-  }
-
-  // - module containers -
-  if (a_modules[c_uclvar_module_containers])
-  {
-  }
-
-  // - module json -
-  if (a_modules[c_uclvar_module_json])
-  {
-  }
-
-  // - module websocket -
-  if (a_modules[c_uclvar_module_websocket])
-  {
-    UCLVAR_RETRIEVE_STATIC_CONST(WsContext,c_bi_class_WsContext,PORT_NO_LISTEN);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,WRITE_TEXT);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,WRITE_BINARY);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,WRITE_CONTINUATION);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,WRITE_HTTP);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,WRITE_CLOSE);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,WRITE_PING);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,WRITE_PONG);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_ESTABLISHED);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CLIENT_CONNECTION_ERROR);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CLIENT_FILTER_PRE_ESTABLISH);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CLIENT_ESTABLISHED);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CLOSED);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_RECEIVE);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CLIENT_RECEIVE);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CLIENT_RECEIVE_PONG);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CLIENT_WRITEABLE);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_SERVER_WRITEABLE);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_HTTP);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_HTTP_FILE_COMPLETION);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_FILTER_NETWORK_CONNECTION);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_FILTER_PROTOCOL_CONNECTION);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_OPENSSL_LOAD_EXTRA_CLIENT_VERIFY_CERTS);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_OPENSSL_LOAD_EXTRA_SERVER_VERIFY_CERTS);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_OPENSSL_PERFORM_CLIENT_CERT_VERIFICATION);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CLIENT_APPEND_HANDSHAKE_HEADER);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CONFIRM_EXTENSION_OKAY);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CLIENT_CONFIRM_EXTENSION_SUPPORTED);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_PROTOCOL_INIT);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_PROTOCOL_DESTROY);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_ADD_POLL_FD);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_DEL_POLL_FD);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CHANGE_MODE_POLL_FD);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_NO_PENDING);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_AWAITING_PROXY_RESPONSE);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_AWAITING_CONNECT_RESPONSE);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_ESTABLISH_WITH_SERVER);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_AWAITING_SERVER_RESPONSE);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_AWAITING_PING);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_CLOSE_ACK);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_SENT_CLIENT_HANDSHAKE);
-    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_SSL_ACCEPT);
-  }
-
-  // - module jit -
-  if (a_modules[c_uclvar_module_jit])
-  {
-    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_I8);
-    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_U8);
-    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_I16);
-    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_U16);
-    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_I32);
-    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_U32);
-    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_I64);
-    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_U64);
-    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_F32);
-    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_F64);
-  }
-
-  // - module ucf -
-  if (a_modules[c_uclvar_module_ucf])
-  {
-    UCLVAR_RETRIEVE_STATIC_CONST(Serial,c_bi_class_Serial,FC_NONE);
-    UCLVAR_RETRIEVE_STATIC_CONST(Serial,c_bi_class_Serial,FC_RTS_CTS);
-    UCLVAR_RETRIEVE_STATIC_CONST(Serial,c_bi_class_Serial,FC_RS_485);
-    UCLVAR_RETRIEVE_STATIC_CONST(Serial,c_bi_class_Serial,PAR_NONE);
-    UCLVAR_RETRIEVE_STATIC_CONST(Serial,c_bi_class_Serial,PAR_EVEN);
-    UCLVAR_RETRIEVE_STATIC_CONST(Serial,c_bi_class_Serial,PAR_ODD);
-    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TBOOL);
-    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TSINT);
-    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TINT);
-    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TDINT);
-    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TLINT);
-    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TUSINT);
-    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TUINT);
-    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TUDINT);
-    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TULINT);
-    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TREAL);
-    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TLREAL);
-    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TTIME);
-    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TDATE);
-    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TTOD);
-    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TDT);
-    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TSTRING);
-    UCLVAR_RETRIEVE_STATIC_CONST(Crc,c_bi_class_Crc,CRC8);
-    UCLVAR_RETRIEVE_STATIC_CONST(Crc,c_bi_class_Crc,CRC16);
-    UCLVAR_RETRIEVE_STATIC_CONST(Crc,c_bi_class_Crc,CRC32);
   }
 
   // - module http -
@@ -2678,6 +2568,114 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,HTTP_INSUFFICIENT_STORAGE);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,HTTP_BANDWIDTH_LIMIT_EXCEEDED);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,HTTP_NOT_EXTENDED);
+  }
+
+  // - module websocket -
+  if (a_modules[c_uclvar_module_websocket])
+  {
+    UCLVAR_RETRIEVE_STATIC_CONST(WsContext,c_bi_class_WsContext,PORT_NO_LISTEN);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,WRITE_TEXT);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,WRITE_BINARY);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,WRITE_CONTINUATION);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,WRITE_HTTP);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,WRITE_CLOSE);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,WRITE_PING);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,WRITE_PONG);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_ESTABLISHED);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CLIENT_CONNECTION_ERROR);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CLIENT_FILTER_PRE_ESTABLISH);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CLIENT_ESTABLISHED);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CLOSED);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_RECEIVE);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CLIENT_RECEIVE);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CLIENT_RECEIVE_PONG);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CLIENT_WRITEABLE);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_SERVER_WRITEABLE);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_HTTP);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_HTTP_FILE_COMPLETION);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_FILTER_NETWORK_CONNECTION);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_FILTER_PROTOCOL_CONNECTION);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_OPENSSL_LOAD_EXTRA_CLIENT_VERIFY_CERTS);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_OPENSSL_LOAD_EXTRA_SERVER_VERIFY_CERTS);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_OPENSSL_PERFORM_CLIENT_CERT_VERIFICATION);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CLIENT_APPEND_HANDSHAKE_HEADER);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CONFIRM_EXTENSION_OKAY);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CLIENT_CONFIRM_EXTENSION_SUPPORTED);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_PROTOCOL_INIT);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_PROTOCOL_DESTROY);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_ADD_POLL_FD);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_DEL_POLL_FD);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,CB_CHANGE_MODE_POLL_FD);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_NO_PENDING);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_AWAITING_PROXY_RESPONSE);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_AWAITING_CONNECT_RESPONSE);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_ESTABLISH_WITH_SERVER);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_AWAITING_SERVER_RESPONSE);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_AWAITING_PING);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_CLOSE_ACK);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_SENT_CLIENT_HANDSHAKE);
+    UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_SSL_ACCEPT);
+  }
+
+  // - module ucf -
+  if (a_modules[c_uclvar_module_ucf])
+  {
+    UCLVAR_RETRIEVE_STATIC_CONST(Serial,c_bi_class_Serial,FC_NONE);
+    UCLVAR_RETRIEVE_STATIC_CONST(Serial,c_bi_class_Serial,FC_RTS_CTS);
+    UCLVAR_RETRIEVE_STATIC_CONST(Serial,c_bi_class_Serial,FC_RS_485);
+    UCLVAR_RETRIEVE_STATIC_CONST(Serial,c_bi_class_Serial,PAR_NONE);
+    UCLVAR_RETRIEVE_STATIC_CONST(Serial,c_bi_class_Serial,PAR_EVEN);
+    UCLVAR_RETRIEVE_STATIC_CONST(Serial,c_bi_class_Serial,PAR_ODD);
+    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TBOOL);
+    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TSINT);
+    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TINT);
+    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TDINT);
+    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TLINT);
+    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TUSINT);
+    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TUINT);
+    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TUDINT);
+    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TULINT);
+    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TREAL);
+    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TLREAL);
+    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TTIME);
+    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TDATE);
+    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TTOD);
+    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TDT);
+    UCLVAR_RETRIEVE_STATIC_CONST(VarStore,c_bi_class_VarStore,TSTRING);
+    UCLVAR_RETRIEVE_STATIC_CONST(Crc,c_bi_class_Crc,CRC8);
+    UCLVAR_RETRIEVE_STATIC_CONST(Crc,c_bi_class_Crc,CRC16);
+    UCLVAR_RETRIEVE_STATIC_CONST(Crc,c_bi_class_Crc,CRC32);
+  }
+
+  // - module jit -
+  if (a_modules[c_uclvar_module_jit])
+  {
+    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_I8);
+    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_U8);
+    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_I16);
+    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_U16);
+    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_I32);
+    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_U32);
+    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_I64);
+    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_U64);
+    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_F32);
+    UCLVAR_RETRIEVE_STATIC_CONST(JitContext,c_bi_class_JitContext,TYPE_F64);
+  }
+
+  // - module node -
+  if (a_modules[c_uclvar_module_node])
+  {
+  }
+
+  // - module containers -
+  if (a_modules[c_uclvar_module_containers])
+  {
+  }
+
+  // - module json -
+  if (a_modules[c_uclvar_module_json])
+  {
   }
 
   /*}}}*/
