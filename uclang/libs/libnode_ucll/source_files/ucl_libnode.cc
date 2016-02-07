@@ -148,6 +148,8 @@ bool UclNode::Initialize(const char **a_modules)
   UCL_NODE_CHECK_MODULE_PRESENCE(json);
   UCL_NODE_CHECK_MODULE_PRESENCE(websocket);
   UCL_NODE_CHECK_MODULE_PRESENCE(jit);
+  UCL_NODE_CHECK_MODULE_PRESENCE(ucf);
+  UCL_NODE_CHECK_MODULE_PRESENCE(http);
 
   // - initialize ucl variables (parser) -
   UclVar::Initialize(parser,modules);

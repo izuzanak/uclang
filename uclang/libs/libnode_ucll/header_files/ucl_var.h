@@ -40,6 +40,8 @@ enum
   c_uclvar_module_json,
   c_uclvar_module_websocket,
   c_uclvar_module_jit,
+  c_uclvar_module_ucf,
+  c_uclvar_module_http,
   c_uclvar_module_count
 };/*}}}*/
 
@@ -96,6 +98,22 @@ class UclVar
   static unsigned c_bi_class_WsBase64;
   static unsigned c_bi_class_JitContext;
   static unsigned c_bi_class_JitFunction;
+  static unsigned c_bi_class_System;
+  static unsigned c_bi_class_Time;
+  static unsigned c_bi_class_CfgFile;
+  static unsigned c_bi_class_UcfLog;
+  static unsigned c_bi_class_UcfMutex;
+  static unsigned c_bi_class_UcfLed;
+  static unsigned c_bi_class_Serial;
+  static unsigned c_bi_class_VarStore;
+  static unsigned c_bi_class_VarSlot;
+  static unsigned c_bi_class_NvmSegment;
+  static unsigned c_bi_class_MsgQueue;
+  static unsigned c_bi_class_Bcc;
+  static unsigned c_bi_class_Crc;
+  static unsigned c_bi_class_HttpServer;
+  static unsigned c_bi_class_HttpConn;
+  static unsigned c_bi_class_HttpResp;
 
   // - built in method name indexes declaration -
   static unsigned c_bi_mni_operator_binary_equal_1;
@@ -342,6 +360,85 @@ class UclVar
   static unsigned c_bi_mni_JitContext_0;
   static unsigned c_bi_mni_create_fun_1;
   static unsigned c_bi_mni_signature_0;
+  static unsigned c_bi_mni_GetProcessId_0;
+  static unsigned c_bi_mni_GetProcessName_0;
+  static unsigned c_bi_mni_GetWorkingDirectory_0;
+  static unsigned c_bi_mni_Sleep_1;
+  static unsigned c_bi_mni_Time_0;
+  static unsigned c_bi_mni_Time_1;
+  static unsigned c_bi_mni_GetNanosec_0;
+  static unsigned c_bi_mni_GetMicrosec_0;
+  static unsigned c_bi_mni_GetMillisec_0;
+  static unsigned c_bi_mni_GetSeconds_0;
+  static unsigned c_bi_mni_GetMinutes_0;
+  static unsigned c_bi_mni_GetHours_0;
+  static unsigned c_bi_mni_GetDays_0;
+  static unsigned c_bi_mni_IsLeapYear_1;
+  static unsigned c_bi_mni_DaysTillYear_1;
+  static unsigned c_bi_mni_GetSystemTime_0;
+  static unsigned c_bi_mni_SetSystemTime_0;
+  static unsigned c_bi_mni_ToSystemTime_0;
+  static unsigned c_bi_mni_ToLocalTime_0;
+  static unsigned c_bi_mni_CfgFile_0;
+  static unsigned c_bi_mni_CfgFile_1;
+  static unsigned c_bi_mni_Open_1;
+  static unsigned c_bi_mni_EnumSections_0;
+  static unsigned c_bi_mni_OpenSection_1;
+  static unsigned c_bi_mni_GetSection_0;
+  static unsigned c_bi_mni_EnumEntries_0;
+  static unsigned c_bi_mni_GetValue_1;
+  static unsigned c_bi_mni_GetValue_2;
+  static unsigned c_bi_mni_GetValueArray_1;
+  static unsigned c_bi_mni_UcfLog_0;
+  static unsigned c_bi_mni_UcfLog_1;
+  static unsigned c_bi_mni_add_file_4;
+  static unsigned c_bi_mni_add_file_5;
+  static unsigned c_bi_mni_add_stdout_1;
+  static unsigned c_bi_mni_add_stderr_1;
+  static unsigned c_bi_mni_add_nvm_2;
+  static unsigned c_bi_mni_write_3;
+  static unsigned c_bi_mni_UcfMutex_1;
+  static unsigned c_bi_mni_UcfMutex_2;
+  static unsigned c_bi_mni_Reserve_0;
+  static unsigned c_bi_mni_Reserve_1;
+  static unsigned c_bi_mni_Release_0;
+  static unsigned c_bi_mni_UcfLed_1;
+  static unsigned c_bi_mni_LightOn_0;
+  static unsigned c_bi_mni_LightOff_0;
+  static unsigned c_bi_mni_Toggle_0;
+  static unsigned c_bi_mni_Serial_1;
+  static unsigned c_bi_mni_SetFormat_5;
+  static unsigned c_bi_mni_Write_1;
+  static unsigned c_bi_mni_WriteAll_1;
+  static unsigned c_bi_mni_Read_0;
+  static unsigned c_bi_mni_VarStore_2;
+  static unsigned c_bi_mni_VarStore_5;
+  static unsigned c_bi_mni_clear_slots_0;
+  static unsigned c_bi_mni_index_0;
+  static unsigned c_bi_mni_varType_0;
+  static unsigned c_bi_mni_varSize_0;
+  static unsigned c_bi_mni_NvmSegment_1;
+  static unsigned c_bi_mni_NvmSegment_2;
+  static unsigned c_bi_mni_read_2;
+  static unsigned c_bi_mni_MsgQueue_1;
+  static unsigned c_bi_mni_MsgQueue_3;
+  static unsigned c_bi_mni_read_pid_0;
+  static unsigned c_bi_mni_peek_msg_0;
+  static unsigned c_bi_mni_Bcc_0;
+  static unsigned c_bi_mni_value_0;
+  static unsigned c_bi_mni_Crc_2;
+  static unsigned c_bi_mni_HttpServer_2;
+  static unsigned c_bi_mni_timeout_0;
+  static unsigned c_bi_mni_id_0;
+  static unsigned c_bi_mni_url_0;
+  static unsigned c_bi_mni_method_0;
+  static unsigned c_bi_mni_upload_data_0;
+  static unsigned c_bi_mni_values_1;
+  static unsigned c_bi_mni_queue_response_2;
+  static unsigned c_bi_mni_HttpResp_1;
+  static unsigned c_bi_mni_HttpResp_2;
+  static unsigned c_bi_mni_add_header_2;
+  static unsigned c_bi_mni_add_footer_2;
 
   // - built in variable name indexes declaration -
   static unsigned c_bi_vni_USER_EXCEPTION;
@@ -510,6 +607,103 @@ class UclVar
   static unsigned c_bi_vni_TYPE_U64;
   static unsigned c_bi_vni_TYPE_F32;
   static unsigned c_bi_vni_TYPE_F64;
+  static unsigned c_bi_vni_FC_NONE;
+  static unsigned c_bi_vni_FC_RTS_CTS;
+  static unsigned c_bi_vni_FC_RS_485;
+  static unsigned c_bi_vni_PAR_NONE;
+  static unsigned c_bi_vni_PAR_EVEN;
+  static unsigned c_bi_vni_PAR_ODD;
+  static unsigned c_bi_vni_TBOOL;
+  static unsigned c_bi_vni_TSINT;
+  static unsigned c_bi_vni_TINT;
+  static unsigned c_bi_vni_TDINT;
+  static unsigned c_bi_vni_TLINT;
+  static unsigned c_bi_vni_TUSINT;
+  static unsigned c_bi_vni_TUINT;
+  static unsigned c_bi_vni_TUDINT;
+  static unsigned c_bi_vni_TULINT;
+  static unsigned c_bi_vni_TREAL;
+  static unsigned c_bi_vni_TLREAL;
+  static unsigned c_bi_vni_TTIME;
+  static unsigned c_bi_vni_TDATE;
+  static unsigned c_bi_vni_TTOD;
+  static unsigned c_bi_vni_TDT;
+  static unsigned c_bi_vni_TSTRING;
+  static unsigned c_bi_vni_CRC8;
+  static unsigned c_bi_vni_CRC16;
+  static unsigned c_bi_vni_CRC32;
+  static unsigned c_bi_vni_TYPE_CONNECT;
+  static unsigned c_bi_vni_TYPE_DELETE;
+  static unsigned c_bi_vni_TYPE_GET;
+  static unsigned c_bi_vni_TYPE_HEAD;
+  static unsigned c_bi_vni_TYPE_OPTIONS;
+  static unsigned c_bi_vni_TYPE_POST;
+  static unsigned c_bi_vni_TYPE_PUT;
+  static unsigned c_bi_vni_TYPE_TRACE;
+  static unsigned c_bi_vni_VALS_RESPONSE_HEADER;
+  static unsigned c_bi_vni_VALS_HEADER;
+  static unsigned c_bi_vni_VALS_COOKIE;
+  static unsigned c_bi_vni_VALS_POSTDATA;
+  static unsigned c_bi_vni_VALS_GET_ARGUMENT;
+  static unsigned c_bi_vni_VALS_FOOTER;
+  static unsigned c_bi_vni_FROM_STRING;
+  static unsigned c_bi_vni_FROM_FILE;
+  static unsigned c_bi_vni_HTTP_CONTINUE;
+  static unsigned c_bi_vni_HTTP_SWITCHING_PROTOCOLS;
+  static unsigned c_bi_vni_HTTP_PROCESSING;
+  static unsigned c_bi_vni_HTTP_OK;
+  static unsigned c_bi_vni_HTTP_CREATED;
+  static unsigned c_bi_vni_HTTP_ACCEPTED;
+  static unsigned c_bi_vni_HTTP_NON_AUTHORITATIVE_INFORMATION;
+  static unsigned c_bi_vni_HTTP_NO_CONTENT;
+  static unsigned c_bi_vni_HTTP_RESET_CONTENT;
+  static unsigned c_bi_vni_HTTP_PARTIAL_CONTENT;
+  static unsigned c_bi_vni_HTTP_MULTI_STATUS;
+  static unsigned c_bi_vni_HTTP_MULTIPLE_CHOICES;
+  static unsigned c_bi_vni_HTTP_MOVED_PERMANENTLY;
+  static unsigned c_bi_vni_HTTP_FOUND;
+  static unsigned c_bi_vni_HTTP_SEE_OTHER;
+  static unsigned c_bi_vni_HTTP_NOT_MODIFIED;
+  static unsigned c_bi_vni_HTTP_USE_PROXY;
+  static unsigned c_bi_vni_HTTP_SWITCH_PROXY;
+  static unsigned c_bi_vni_HTTP_TEMPORARY_REDIRECT;
+  static unsigned c_bi_vni_HTTP_BAD_REQUEST;
+  static unsigned c_bi_vni_HTTP_UNAUTHORIZED;
+  static unsigned c_bi_vni_HTTP_PAYMENT_REQUIRED;
+  static unsigned c_bi_vni_HTTP_FORBIDDEN;
+  static unsigned c_bi_vni_HTTP_NOT_FOUND;
+  static unsigned c_bi_vni_HTTP_METHOD_NOT_ALLOWED;
+  static unsigned c_bi_vni_HTTP_METHOD_NOT_ACCEPTABLE;
+  static unsigned c_bi_vni_HTTP_PROXY_AUTHENTICATION_REQUIRED;
+  static unsigned c_bi_vni_HTTP_REQUEST_TIMEOUT;
+  static unsigned c_bi_vni_HTTP_CONFLICT;
+  static unsigned c_bi_vni_HTTP_GONE;
+  static unsigned c_bi_vni_HTTP_LENGTH_REQUIRED;
+  static unsigned c_bi_vni_HTTP_PRECONDITION_FAILED;
+  static unsigned c_bi_vni_HTTP_REQUEST_ENTITY_TOO_LARGE;
+  static unsigned c_bi_vni_HTTP_REQUEST_URI_TOO_LONG;
+  static unsigned c_bi_vni_HTTP_UNSUPPORTED_MEDIA_TYPE;
+  static unsigned c_bi_vni_HTTP_REQUESTED_RANGE_NOT_SATISFIABLE;
+  static unsigned c_bi_vni_HTTP_EXPECTATION_FAILED;
+  static unsigned c_bi_vni_HTTP_UNPROCESSABLE_ENTITY;
+  static unsigned c_bi_vni_HTTP_LOCKED;
+  static unsigned c_bi_vni_HTTP_FAILED_DEPENDENCY;
+  static unsigned c_bi_vni_HTTP_UNORDERED_COLLECTION;
+  static unsigned c_bi_vni_HTTP_UPGRADE_REQUIRED;
+  static unsigned c_bi_vni_HTTP_NO_RESPONSE;
+  static unsigned c_bi_vni_HTTP_RETRY_WITH;
+  static unsigned c_bi_vni_HTTP_BLOCKED_BY_WINDOWS_PARENTAL_CONTROLS;
+  static unsigned c_bi_vni_HTTP_UNAVAILABLE_FOR_LEGAL_REASONS;
+  static unsigned c_bi_vni_HTTP_INTERNAL_SERVER_ERROR;
+  static unsigned c_bi_vni_HTTP_NOT_IMPLEMENTED;
+  static unsigned c_bi_vni_HTTP_BAD_GATEWAY;
+  static unsigned c_bi_vni_HTTP_SERVICE_UNAVAILABLE;
+  static unsigned c_bi_vni_HTTP_GATEWAY_TIMEOUT;
+  static unsigned c_bi_vni_HTTP_HTTP_VERSION_NOT_SUPPORTED;
+  static unsigned c_bi_vni_HTTP_VARIANT_ALSO_NEGOTIATES;
+  static unsigned c_bi_vni_HTTP_INSUFFICIENT_STORAGE;
+  static unsigned c_bi_vni_HTTP_BANDWIDTH_LIMIT_EXCEEDED;
+  static unsigned c_bi_vni_HTTP_NOT_EXTENDED;
 
   private:
   inline void BLANK();
@@ -524,6 +718,7 @@ class UclVar
   UclVar __call_2(unsigned a_method_idx,UclVar a_op,UclVar a_op_1);
   UclVar __call_3(unsigned a_method_idx,UclVar a_op,UclVar a_op_1,UclVar a_op_2);
   UclVar __call_4(unsigned a_method_idx,UclVar a_op,UclVar a_op_1,UclVar a_op_2,UclVar a_op_3);
+  UclVar __call_5(unsigned a_method_idx,UclVar a_op,UclVar a_op_1,UclVar a_op_2,UclVar a_op_3,UclVar a_op_4);
 
   static UclVar __static_call_0(unsigned a_method_idx);
   static UclVar __static_call_1(unsigned a_method_idx,UclVar a_op);
@@ -533,6 +728,8 @@ class UclVar
   static UclVar __new_object_1(unsigned a_class_idx,unsigned a_name_idx,UclVar a_op);
   static UclVar __new_object_2(unsigned a_class_idx,unsigned a_name_idx,UclVar a_op,UclVar a_op_1);
   static UclVar __new_object_3(unsigned a_class_idx,unsigned a_name_idx,UclVar a_op,UclVar a_op_1,UclVar a_op_2);
+  static UclVar __new_object_4(unsigned a_class_idx,unsigned a_name_idx,UclVar a_op,UclVar a_op_1,UclVar a_op_2,UclVar a_op_3);
+  static UclVar __new_object_5(unsigned a_class_idx,unsigned a_name_idx,UclVar a_op,UclVar a_op_1,UclVar a_op_2,UclVar a_op_3,UclVar a_op_4);
 
   public:
   UclVar __call(std::string a_method_name);
@@ -540,6 +737,7 @@ class UclVar
   UclVar __call(std::string a_method_name,UclVar a_op,UclVar a_op_1);
   UclVar __call(std::string a_method_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2);
   UclVar __call(std::string a_method_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2,UclVar a_op_3);
+  UclVar __call(std::string a_method_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2,UclVar a_op_3,UclVar a_op_4);
 
   static UclVar __static_call(std::string a_class_name,std::string a_method_name);
   static UclVar __static_call(std::string a_class_name,std::string a_method_name,UclVar a_op);
@@ -549,6 +747,8 @@ class UclVar
   static UclVar __new(std::string a_name,UclVar a_op);
   static UclVar __new(std::string a_name,UclVar a_op,UclVar a_op_1);
   static UclVar __new(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2);
+  static UclVar __new(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2,UclVar a_op_3);
+  static UclVar __new(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2,UclVar a_op_3,UclVar a_op_4);
 
   UclVar __member(std::string a_name);
 
@@ -1834,6 +2034,584 @@ class UclVar
 
   };/*}}}*/
 
+  // - class System -
+  class System
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_GetProcessId_0;
+    static unsigned c_bi_mi_GetProcessName_0;
+    static unsigned c_bi_mi_GetWorkingDirectory_0;
+    static unsigned c_bi_mi_Sleep_1;
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar GetProcessId()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_GetProcessId_0);
+    }/*}}}*/
+
+    inline static UclVar GetProcessName()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_GetProcessName_0);
+    }/*}}}*/
+
+    inline static UclVar GetWorkingDirectory()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_GetWorkingDirectory_0);
+    }/*}}}*/
+
+    inline static UclVar Sleep(UclVar op_0)
+    {/*{{{*/
+      return __static_call_1(c_bi_mi_Sleep_1,op_0);
+    }/*}}}*/
+
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  // - class Time -
+  class Time
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_IsLeapYear_1;
+    static unsigned c_bi_mi_DaysTillYear_1;
+    static unsigned c_bi_mi_GetSystemTime_0;
+
+    public:
+    inline static UclVar IsLeapYear(UclVar op_0)
+    {/*{{{*/
+      return __static_call_1(c_bi_mi_IsLeapYear_1,op_0);
+    }/*}}}*/
+
+    inline static UclVar DaysTillYear(UclVar op_0)
+    {/*{{{*/
+      return __static_call_1(c_bi_mi_DaysTillYear_1,op_0);
+    }/*}}}*/
+
+    inline static UclVar GetSystemTime()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_GetSystemTime_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar Time()
+  {/*{{{*/
+    return __new_object_0(c_bi_class_Time,c_bi_mni_Time_0);
+  }/*}}}*/
+
+  inline static UclVar Time(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_Time,c_bi_mni_Time_1,op_0);
+  }/*}}}*/
+
+  // - class CfgFile -
+  class CfgFile
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar CfgFile()
+  {/*{{{*/
+    return __new_object_0(c_bi_class_CfgFile,c_bi_mni_CfgFile_0);
+  }/*}}}*/
+
+  inline static UclVar CfgFile(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_CfgFile,c_bi_mni_CfgFile_1,op_0);
+  }/*}}}*/
+
+  // - class UcfLog -
+  class UcfLog
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar UcfLog()
+  {/*{{{*/
+    return __new_object_0(c_bi_class_UcfLog,c_bi_mni_UcfLog_0);
+  }/*}}}*/
+
+  inline static UclVar UcfLog(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_UcfLog,c_bi_mni_UcfLog_1,op_0);
+  }/*}}}*/
+
+  // - class UcfMutex -
+  class UcfMutex
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar UcfMutex(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_UcfMutex,c_bi_mni_UcfMutex_1,op_0);
+  }/*}}}*/
+
+  inline static UclVar UcfMutex(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __new_object_2(c_bi_class_UcfMutex,c_bi_mni_UcfMutex_2,op_0,op_1);
+  }/*}}}*/
+
+  // - class UcfLed -
+  class UcfLed
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar UcfLed(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_UcfLed,c_bi_mni_UcfLed_1,op_0);
+  }/*}}}*/
+
+  // - class Serial -
+  class Serial
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    static UclVar FC_NONE;
+    static UclVar FC_RTS_CTS;
+    static UclVar FC_RS_485;
+    static UclVar PAR_NONE;
+    static UclVar PAR_EVEN;
+    static UclVar PAR_ODD;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar Serial(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_Serial,c_bi_mni_Serial_1,op_0);
+  }/*}}}*/
+
+  // - class VarStore -
+  class VarStore
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    static UclVar TBOOL;
+    static UclVar TSINT;
+    static UclVar TINT;
+    static UclVar TDINT;
+    static UclVar TLINT;
+    static UclVar TUSINT;
+    static UclVar TUINT;
+    static UclVar TUDINT;
+    static UclVar TULINT;
+    static UclVar TREAL;
+    static UclVar TLREAL;
+    static UclVar TTIME;
+    static UclVar TDATE;
+    static UclVar TTOD;
+    static UclVar TDT;
+    static UclVar TSTRING;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar VarStore(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __new_object_2(c_bi_class_VarStore,c_bi_mni_VarStore_2,op_0,op_1);
+  }/*}}}*/
+
+  inline static UclVar VarStore(UclVar op_0,UclVar op_1,UclVar op_2,UclVar op_3,UclVar op_4)
+  {/*{{{*/
+    return __new_object_5(c_bi_class_VarStore,c_bi_mni_VarStore_5,op_0,op_1,op_2,op_3,op_4);
+  }/*}}}*/
+
+  // - class VarSlot -
+  class VarSlot
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  // - class NvmSegment -
+  class NvmSegment
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar NvmSegment(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_NvmSegment,c_bi_mni_NvmSegment_1,op_0);
+  }/*}}}*/
+
+  inline static UclVar NvmSegment(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __new_object_2(c_bi_class_NvmSegment,c_bi_mni_NvmSegment_2,op_0,op_1);
+  }/*}}}*/
+
+  // - class MsgQueue -
+  class MsgQueue
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar MsgQueue(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_MsgQueue,c_bi_mni_MsgQueue_1,op_0);
+  }/*}}}*/
+
+  inline static UclVar MsgQueue(UclVar op_0,UclVar op_1,UclVar op_2)
+  {/*{{{*/
+    return __new_object_3(c_bi_class_MsgQueue,c_bi_mni_MsgQueue_3,op_0,op_1,op_2);
+  }/*}}}*/
+
+  // - class Bcc -
+  class Bcc
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar Bcc()
+  {/*{{{*/
+    return __new_object_0(c_bi_class_Bcc,c_bi_mni_Bcc_0);
+  }/*}}}*/
+
+  // - class Crc -
+  class Crc
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    static UclVar CRC8;
+    static UclVar CRC16;
+    static UclVar CRC32;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar Crc(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __new_object_2(c_bi_class_Crc,c_bi_mni_Crc_2,op_0,op_1);
+  }/*}}}*/
+
+  // - class HttpServer -
+  class HttpServer
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar HttpServer(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __new_object_2(c_bi_class_HttpServer,c_bi_mni_HttpServer_2,op_0,op_1);
+  }/*}}}*/
+
+  // - class HttpConn -
+  class HttpConn
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    static UclVar TYPE_CONNECT;
+    static UclVar TYPE_DELETE;
+    static UclVar TYPE_GET;
+    static UclVar TYPE_HEAD;
+    static UclVar TYPE_OPTIONS;
+    static UclVar TYPE_POST;
+    static UclVar TYPE_PUT;
+    static UclVar TYPE_TRACE;
+    static UclVar VALS_RESPONSE_HEADER;
+    static UclVar VALS_HEADER;
+    static UclVar VALS_COOKIE;
+    static UclVar VALS_POSTDATA;
+    static UclVar VALS_GET_ARGUMENT;
+    static UclVar VALS_FOOTER;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  // - class HttpResp -
+  class HttpResp
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    static UclVar FROM_STRING;
+    static UclVar FROM_FILE;
+    static UclVar HTTP_CONTINUE;
+    static UclVar HTTP_SWITCHING_PROTOCOLS;
+    static UclVar HTTP_PROCESSING;
+    static UclVar HTTP_OK;
+    static UclVar HTTP_CREATED;
+    static UclVar HTTP_ACCEPTED;
+    static UclVar HTTP_NON_AUTHORITATIVE_INFORMATION;
+    static UclVar HTTP_NO_CONTENT;
+    static UclVar HTTP_RESET_CONTENT;
+    static UclVar HTTP_PARTIAL_CONTENT;
+    static UclVar HTTP_MULTI_STATUS;
+    static UclVar HTTP_MULTIPLE_CHOICES;
+    static UclVar HTTP_MOVED_PERMANENTLY;
+    static UclVar HTTP_FOUND;
+    static UclVar HTTP_SEE_OTHER;
+    static UclVar HTTP_NOT_MODIFIED;
+    static UclVar HTTP_USE_PROXY;
+    static UclVar HTTP_SWITCH_PROXY;
+    static UclVar HTTP_TEMPORARY_REDIRECT;
+    static UclVar HTTP_BAD_REQUEST;
+    static UclVar HTTP_UNAUTHORIZED;
+    static UclVar HTTP_PAYMENT_REQUIRED;
+    static UclVar HTTP_FORBIDDEN;
+    static UclVar HTTP_NOT_FOUND;
+    static UclVar HTTP_METHOD_NOT_ALLOWED;
+    static UclVar HTTP_METHOD_NOT_ACCEPTABLE;
+    static UclVar HTTP_PROXY_AUTHENTICATION_REQUIRED;
+    static UclVar HTTP_REQUEST_TIMEOUT;
+    static UclVar HTTP_CONFLICT;
+    static UclVar HTTP_GONE;
+    static UclVar HTTP_LENGTH_REQUIRED;
+    static UclVar HTTP_PRECONDITION_FAILED;
+    static UclVar HTTP_REQUEST_ENTITY_TOO_LARGE;
+    static UclVar HTTP_REQUEST_URI_TOO_LONG;
+    static UclVar HTTP_UNSUPPORTED_MEDIA_TYPE;
+    static UclVar HTTP_REQUESTED_RANGE_NOT_SATISFIABLE;
+    static UclVar HTTP_EXPECTATION_FAILED;
+    static UclVar HTTP_UNPROCESSABLE_ENTITY;
+    static UclVar HTTP_LOCKED;
+    static UclVar HTTP_FAILED_DEPENDENCY;
+    static UclVar HTTP_UNORDERED_COLLECTION;
+    static UclVar HTTP_UPGRADE_REQUIRED;
+    static UclVar HTTP_NO_RESPONSE;
+    static UclVar HTTP_RETRY_WITH;
+    static UclVar HTTP_BLOCKED_BY_WINDOWS_PARENTAL_CONTROLS;
+    static UclVar HTTP_UNAVAILABLE_FOR_LEGAL_REASONS;
+    static UclVar HTTP_INTERNAL_SERVER_ERROR;
+    static UclVar HTTP_NOT_IMPLEMENTED;
+    static UclVar HTTP_BAD_GATEWAY;
+    static UclVar HTTP_SERVICE_UNAVAILABLE;
+    static UclVar HTTP_GATEWAY_TIMEOUT;
+    static UclVar HTTP_HTTP_VERSION_NOT_SUPPORTED;
+    static UclVar HTTP_VARIANT_ALSO_NEGOTIATES;
+    static UclVar HTTP_INSUFFICIENT_STORAGE;
+    static UclVar HTTP_BANDWIDTH_LIMIT_EXCEEDED;
+    static UclVar HTTP_NOT_EXTENDED;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar HttpResp(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_HttpResp,c_bi_mni_HttpResp_1,op_0);
+  }/*}}}*/
+
+  inline static UclVar HttpResp(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __new_object_2(c_bi_class_HttpResp,c_bi_mni_HttpResp_2,op_0,op_1);
+  }/*}}}*/
+
   /*}}}*/
 
   // - operator methods -
@@ -2837,6 +3615,296 @@ class UclVar
   inline UclVar signature()
   {/*{{{*/
     return __call_0(c_bi_mni_signature_0);
+  }/*}}}*/
+
+  inline UclVar GetProcessId()
+  {/*{{{*/
+    return __call_0(c_bi_mni_GetProcessId_0);
+  }/*}}}*/
+
+  inline UclVar GetProcessName()
+  {/*{{{*/
+    return __call_0(c_bi_mni_GetProcessName_0);
+  }/*}}}*/
+
+  inline UclVar GetWorkingDirectory()
+  {/*{{{*/
+    return __call_0(c_bi_mni_GetWorkingDirectory_0);
+  }/*}}}*/
+
+  inline UclVar Sleep(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_Sleep_1,op_0);
+  }/*}}}*/
+
+  inline UclVar GetNanosec()
+  {/*{{{*/
+    return __call_0(c_bi_mni_GetNanosec_0);
+  }/*}}}*/
+
+  inline UclVar GetMicrosec()
+  {/*{{{*/
+    return __call_0(c_bi_mni_GetMicrosec_0);
+  }/*}}}*/
+
+  inline UclVar GetMillisec()
+  {/*{{{*/
+    return __call_0(c_bi_mni_GetMillisec_0);
+  }/*}}}*/
+
+  inline UclVar GetSeconds()
+  {/*{{{*/
+    return __call_0(c_bi_mni_GetSeconds_0);
+  }/*}}}*/
+
+  inline UclVar GetMinutes()
+  {/*{{{*/
+    return __call_0(c_bi_mni_GetMinutes_0);
+  }/*}}}*/
+
+  inline UclVar GetHours()
+  {/*{{{*/
+    return __call_0(c_bi_mni_GetHours_0);
+  }/*}}}*/
+
+  inline UclVar GetDays()
+  {/*{{{*/
+    return __call_0(c_bi_mni_GetDays_0);
+  }/*}}}*/
+
+  inline UclVar IsLeapYear(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_IsLeapYear_1,op_0);
+  }/*}}}*/
+
+  inline UclVar DaysTillYear(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_DaysTillYear_1,op_0);
+  }/*}}}*/
+
+  inline UclVar GetSystemTime()
+  {/*{{{*/
+    return __call_0(c_bi_mni_GetSystemTime_0);
+  }/*}}}*/
+
+  inline UclVar SetSystemTime()
+  {/*{{{*/
+    return __call_0(c_bi_mni_SetSystemTime_0);
+  }/*}}}*/
+
+  inline UclVar ToSystemTime()
+  {/*{{{*/
+    return __call_0(c_bi_mni_ToSystemTime_0);
+  }/*}}}*/
+
+  inline UclVar ToLocalTime()
+  {/*{{{*/
+    return __call_0(c_bi_mni_ToLocalTime_0);
+  }/*}}}*/
+
+  inline UclVar Open(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_Open_1,op_0);
+  }/*}}}*/
+
+  inline UclVar EnumSections()
+  {/*{{{*/
+    return __call_0(c_bi_mni_EnumSections_0);
+  }/*}}}*/
+
+  inline UclVar OpenSection(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_OpenSection_1,op_0);
+  }/*}}}*/
+
+  inline UclVar GetSection()
+  {/*{{{*/
+    return __call_0(c_bi_mni_GetSection_0);
+  }/*}}}*/
+
+  inline UclVar EnumEntries()
+  {/*{{{*/
+    return __call_0(c_bi_mni_EnumEntries_0);
+  }/*}}}*/
+
+  inline UclVar GetValue(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_GetValue_1,op_0);
+  }/*}}}*/
+
+  inline UclVar GetValue(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_GetValue_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar GetValueArray(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_GetValueArray_1,op_0);
+  }/*}}}*/
+
+  inline UclVar add_file(UclVar op_0,UclVar op_1,UclVar op_2,UclVar op_3)
+  {/*{{{*/
+    return __call_4(c_bi_mni_add_file_4,op_0,op_1,op_2,op_3);
+  }/*}}}*/
+
+  inline UclVar add_file(UclVar op_0,UclVar op_1,UclVar op_2,UclVar op_3,UclVar op_4)
+  {/*{{{*/
+    return __call_5(c_bi_mni_add_file_5,op_0,op_1,op_2,op_3,op_4);
+  }/*}}}*/
+
+  inline UclVar add_stdout(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_add_stdout_1,op_0);
+  }/*}}}*/
+
+  inline UclVar add_stderr(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_add_stderr_1,op_0);
+  }/*}}}*/
+
+  inline UclVar add_nvm(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_add_nvm_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar write(UclVar op_0,UclVar op_1,UclVar op_2)
+  {/*{{{*/
+    return __call_3(c_bi_mni_write_3,op_0,op_1,op_2);
+  }/*}}}*/
+
+  inline UclVar Reserve()
+  {/*{{{*/
+    return __call_0(c_bi_mni_Reserve_0);
+  }/*}}}*/
+
+  inline UclVar Reserve(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_Reserve_1,op_0);
+  }/*}}}*/
+
+  inline UclVar Release()
+  {/*{{{*/
+    return __call_0(c_bi_mni_Release_0);
+  }/*}}}*/
+
+  inline UclVar LightOn()
+  {/*{{{*/
+    return __call_0(c_bi_mni_LightOn_0);
+  }/*}}}*/
+
+  inline UclVar LightOff()
+  {/*{{{*/
+    return __call_0(c_bi_mni_LightOff_0);
+  }/*}}}*/
+
+  inline UclVar Toggle()
+  {/*{{{*/
+    return __call_0(c_bi_mni_Toggle_0);
+  }/*}}}*/
+
+  inline UclVar SetFormat(UclVar op_0,UclVar op_1,UclVar op_2,UclVar op_3,UclVar op_4)
+  {/*{{{*/
+    return __call_5(c_bi_mni_SetFormat_5,op_0,op_1,op_2,op_3,op_4);
+  }/*}}}*/
+
+  inline UclVar Write(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_Write_1,op_0);
+  }/*}}}*/
+
+  inline UclVar WriteAll(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_WriteAll_1,op_0);
+  }/*}}}*/
+
+  inline UclVar Read()
+  {/*{{{*/
+    return __call_0(c_bi_mni_Read_0);
+  }/*}}}*/
+
+  inline UclVar clear_slots()
+  {/*{{{*/
+    return __call_0(c_bi_mni_clear_slots_0);
+  }/*}}}*/
+
+  inline UclVar index()
+  {/*{{{*/
+    return __call_0(c_bi_mni_index_0);
+  }/*}}}*/
+
+  inline UclVar varType()
+  {/*{{{*/
+    return __call_0(c_bi_mni_varType_0);
+  }/*}}}*/
+
+  inline UclVar varSize()
+  {/*{{{*/
+    return __call_0(c_bi_mni_varSize_0);
+  }/*}}}*/
+
+  inline UclVar read(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_read_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar read_pid()
+  {/*{{{*/
+    return __call_0(c_bi_mni_read_pid_0);
+  }/*}}}*/
+
+  inline UclVar peek_msg()
+  {/*{{{*/
+    return __call_0(c_bi_mni_peek_msg_0);
+  }/*}}}*/
+
+  inline UclVar value()
+  {/*{{{*/
+    return __call_0(c_bi_mni_value_0);
+  }/*}}}*/
+
+  inline UclVar timeout()
+  {/*{{{*/
+    return __call_0(c_bi_mni_timeout_0);
+  }/*}}}*/
+
+  inline UclVar id()
+  {/*{{{*/
+    return __call_0(c_bi_mni_id_0);
+  }/*}}}*/
+
+  inline UclVar url()
+  {/*{{{*/
+    return __call_0(c_bi_mni_url_0);
+  }/*}}}*/
+
+  inline UclVar method()
+  {/*{{{*/
+    return __call_0(c_bi_mni_method_0);
+  }/*}}}*/
+
+  inline UclVar upload_data()
+  {/*{{{*/
+    return __call_0(c_bi_mni_upload_data_0);
+  }/*}}}*/
+
+  inline UclVar values(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_values_1,op_0);
+  }/*}}}*/
+
+  inline UclVar queue_response(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_queue_response_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar add_header(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_add_header_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar add_footer(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_add_footer_2,op_0,op_1);
   }/*}}}*/
 
   /*}}}*/

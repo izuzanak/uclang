@@ -5,6 +5,8 @@ import containers;
 import json;
 import websocket;
 import jit;
+import ucf;
+import http;
 import lang;
 
 class Main
@@ -71,7 +73,9 @@ class Main
     "containers",
     "json",
     "websocket",
-    "jit"
+    "jit",
+    "ucf",
+    "http"
   ];/*}}}*/
 
   static m_module_classes = new Dict(
@@ -133,6 +137,28 @@ class Main
     [/*{{{*/
       "JitContext",
       "JitFunction"
+    ],/*}}}*/
+    "ucf",
+    [/*{{{*/
+      "System",
+      "Time",
+      "CfgFile",
+      "UcfLog",
+      "UcfMutex",
+      "UcfLed",
+      "Serial",
+      "VarStore",
+      "VarSlot",
+      "NvmSegment",
+      "MsgQueue",
+      "Bcc",
+      "Crc"
+    ],/*}}}*/
+    "http",
+    [/*{{{*/
+      "HttpServer",
+      "HttpConn",
+      "HttpResp"
     ]/*}}}*/
   ]);/*}}}*/
 
