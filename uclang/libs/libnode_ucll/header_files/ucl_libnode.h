@@ -22,8 +22,7 @@ catch (std::string reason)\
 {\
   if (reason == "Exception")\
   {\
-    UclVar e = g_UclNode.RetrieveException();\
-    e.error_print();\
+    g_UclNode.PrintExceptionMessage();\
   }\
   else\
   {\
@@ -53,6 +52,7 @@ class UclNode
   bool Clear();
 
   inline UclVar RetrieveException();
+  inline void PrintExceptionMessage();
 };
 
 // - UclNode global init object -
@@ -87,6 +87,17 @@ inline UclVar UclNode::RetrieveException()
   thread->exception_location = thread->blank_location;
 
   return exception;
+}/*}}}*/
+
+inline void UclNode::PrintExceptionMessage()
+{/*{{{*/
+  exception_s *exception_ptr = (exception_s *)((location_s *)thread->exception_location)->v_data_ptr;
+  interpreter.print_exception_message(*exception_ptr);
+  thread->release_location_ptr((location_s *)thread->exception_location);
+
+  // - set exception_location to blank_location -
+  ((location_s *)thread->blank_location)->v_reference_cnt.atomic_inc();
+  thread->exception_location = thread->blank_location;
 }/*}}}*/
 
 #endif
