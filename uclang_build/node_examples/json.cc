@@ -12,53 +12,40 @@ int main(int argc,char **argv)
   // - initialize uclang node -
   if (g_UclNode.Initialize(modules))
   {
-    try {
+    UCL_NODE_TRY
 
-      // - create persons array -
-      UclVar persons = UclVar::Array();
+    // - create persons array -
+    UclVar persons = UclVar::Array();
 
-      UclVar person = UclVar::Dict();
-      person["name"] = "Avone";
-      person["surname"] = "Barksdale";
-      persons.push(person);
+    UclVar person = UclVar::Dict();
+    person["name"] = "Avone";
+    person["surname"] = "Barksdale";
+    persons.push(person);
 
-      person = UclVar::Dict();
-      person["name"] = "Omar";
-      person["surname"] = "Little";
-      persons.push(person);
+    person = UclVar::Dict();
+    person["name"] = "Omar";
+    person["surname"] = "Little";
+    persons.push(person);
 
-      person = UclVar::Dict();
-      person["name"] = "Frank";
-      person["surname"] = "Sobotka";
-      persons.push(person);
+    person = UclVar::Dict();
+    person["name"] = "Frank";
+    person["surname"] = "Sobotka";
+    persons.push(person);
 
-      // - create object dictionary -
-      UclVar data = UclVar::Dict();
-      data["count"] = persons.length();
-      data["persons"] = persons;
+    // - create object dictionary -
+    UclVar data = UclVar::Dict();
+    data["count"] = persons.length();
+    data["persons"] = persons;
 
-      // - create json string from data -
-      UclVar json_str = UclVar::Json::create(data);
-      printf("json_str: %s\n",json_str.__str());
+    // - create json string from data -
+    UclVar json_str = UclVar::Json::create(data);
+    printf("json_str: %s\n",json_str.__str());
 
-      // - parse json string -
-      UclVar json_data = UclVar::Json::parse(json_str);
-      printf("json_data: %s\n",json_data.to_string().__str());
+    // - parse json string -
+    UclVar json_data = UclVar::Json::parse(json_str);
+    printf("json_data: %s\n",json_data.to_string().__str());
 
-    }
-    catch (std::string reason)
-    {
-      if (reason == "Exception")
-      {
-        g_UclNode.PrintExceptionMessage();
-      }
-      else
-      {
-        fprintf(stderr," ---------------------------------------- \n");
-        fprintf(stderr,"Error: %s\n",reason.data());
-        fprintf(stderr," ---------------------------------------- \n");
-      }
-    }
+    UCL_NODE_CATCH
 
     g_UclNode.Clear();
   }
