@@ -751,6 +751,7 @@ class UclVar
   static UclVar __new(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2,UclVar a_op_3,UclVar a_op_4);
 
   UclVar __member(std::string a_name);
+  UclVar __slice(UclVar a_start,UclVar a_stop,UclVar a_step);
 
   static void Initialize(script_parser_s &a_parser,bool *a_modules);
   static void Initialize(interpreter_s &a_interpreter,bool *a_modules);

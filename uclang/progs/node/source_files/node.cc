@@ -55,6 +55,18 @@ int main(int argc,char **argv)
       printf("array: %s\n",array.to_string().__str());
     }
 
+    // - slice range test -
+    //{/*{{{*/
+    //  UclVar array = {0,1,2,3,4,5,6,7,8,9};
+    //  printf("array: %s\n",array.to_string().__str());
+
+    //  UclVar slice = array.__slice(7,LLONG_MAX,-2);
+    //  UCL_FOR_LOOP(var,slice,
+    //  {
+    //    printf("val: %s\n",var.to_string().__str());
+    //  })
+    //}/*}}}*/
+
     // - for loop test -
     //{/*{{{*/
     //  UclVar dict = UclVar::Dict({1,2,3,4,5,6});

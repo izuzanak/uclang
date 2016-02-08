@@ -3415,3 +3415,54 @@ UclVar UclVar::__member(std::string a_name)
   return ret_value;
 }/*}}}*/
 
+UclVar UclVar::__slice(UclVar a_start,UclVar a_stop,UclVar a_step)
+{/*{{{*/
+  unsigned new_stack_base = it_ptr->data_stack.used;
+
+  ((location_s *)it_ptr->blank_location)->v_reference_cnt.atomic_inc();
+  it_ptr->data_stack.push(it_ptr->blank_location);
+
+  location_ptr->v_reference_cnt.atomic_inc();
+  it_ptr->data_stack.push((pointer)location_ptr);
+
+  a_start.location_ptr->v_reference_cnt.atomic_inc();
+  it_ptr->data_stack.push((pointer)a_start.location_ptr);
+
+  a_stop.location_ptr->v_reference_cnt.atomic_inc();
+  it_ptr->data_stack.push((pointer)a_stop.location_ptr);
+
+  a_step.location_ptr->v_reference_cnt.atomic_inc();
+  it_ptr->data_stack.push((pointer)a_step.location_ptr);
+
+  /* - create dummy code - */
+  uli tmp_code[7] = {
+    i_slice_range,
+    0,
+    0,
+    1,
+    2,
+    3,
+    4
+  };
+
+  uli *tmp_code_ptr = tmp_code;
+  unsigned return_value;
+
+  inst_params_s params = {it_ptr,&tmp_code_ptr,new_stack_base,&return_value};
+
+  /* - ERROR - */
+  if (inst_slice_range(&params) == c_run_return_code_EXCEPTION)
+  {
+    it_ptr->release_stack_from(new_stack_base);
+
+    throw std::string("Exception");
+  }
+
+  /* - create return ucl variable - */
+  UclVar ret_value((location_s **)&it_ptr->data_stack[new_stack_base]);
+
+  it_ptr->release_stack_from(new_stack_base);
+
+  return ret_value;
+}/*}}}*/
+
