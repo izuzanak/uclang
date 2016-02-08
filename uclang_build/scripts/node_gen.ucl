@@ -1,12 +1,17 @@
 
 import sys;
-import node;
-import containers;
-import json;
-import websocket;
-import jit;
-import ucf;
 import http;
+import pack;
+import websocket;
+import curl;
+import ucf;
+import jit;
+import containers;
+import algorithms;
+import json;
+import xml;
+
+import node;
 import lang;
 
 class Main
@@ -70,12 +75,16 @@ class Main
     "base",
     "sys",
     "http",
+    "pack",
     "websocket",
+    "curl",
     "ucf",
     "jit",
     "node",
     "containers",
-    "json"
+    "algorithms",
+    "json",
+    "xml"
   ];/*}}}*/
 
   static m_module_classes = new Dict(
@@ -115,12 +124,21 @@ class Main
       "HttpConn",
       "HttpResp"
     ],/*}}}*/
+    "pack",
+    [/*{{{*/
+      "Pack"
+    ],/*}}}*/
     "websocket",
     [/*{{{*/
       "WsContext",
       "WsConn",
       "WsClient",
       "WsBase64"
+    ],/*}}}*/
+    "curl",
+    [/*{{{*/
+      "CurlResult",
+      "Curl"
     ],/*}}}*/
     "ucf",
     [/*{{{*/
@@ -156,9 +174,20 @@ class Main
       "Tree",
       "Dict"
     ],/*}}}*/
+    "algorithms",
+    [/*{{{*/
+      "Algo",
+      "Filter",
+      "Range"
+    ],/*}}}*/
     "json",
     [/*{{{*/
       "Json"
+    ],/*}}}*/
+    "xml",
+    [/*{{{*/
+      "Xml",
+      "XmlNode"
     ]/*}}}*/
   ]);/*}}}*/
 

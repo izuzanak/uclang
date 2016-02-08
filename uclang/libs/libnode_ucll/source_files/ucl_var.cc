@@ -35,10 +35,13 @@ unsigned UclVar::c_bi_class_Clock;
 unsigned UclVar::c_bi_class_HttpServer;
 unsigned UclVar::c_bi_class_HttpConn;
 unsigned UclVar::c_bi_class_HttpResp;
+unsigned UclVar::c_bi_class_Pack;
 unsigned UclVar::c_bi_class_WsContext;
 unsigned UclVar::c_bi_class_WsConn;
 unsigned UclVar::c_bi_class_WsClient;
 unsigned UclVar::c_bi_class_WsBase64;
+unsigned UclVar::c_bi_class_CurlResult;
+unsigned UclVar::c_bi_class_Curl;
 unsigned UclVar::c_bi_class_System;
 unsigned UclVar::c_bi_class_Time;
 unsigned UclVar::c_bi_class_CfgFile;
@@ -61,7 +64,12 @@ unsigned UclVar::c_bi_class_Set;
 unsigned UclVar::c_bi_class_List;
 unsigned UclVar::c_bi_class_Tree;
 unsigned UclVar::c_bi_class_Dict;
+unsigned UclVar::c_bi_class_Algo;
+unsigned UclVar::c_bi_class_Filter;
+unsigned UclVar::c_bi_class_Range;
 unsigned UclVar::c_bi_class_Json;
+unsigned UclVar::c_bi_class_Xml;
+unsigned UclVar::c_bi_class_XmlNode;
 
 // - built in method name indexes -
 unsigned UclVar::c_bi_mni_operator_binary_equal_1;
@@ -264,6 +272,10 @@ unsigned UclVar::c_bi_mni_HttpResp_1;
 unsigned UclVar::c_bi_mni_HttpResp_2;
 unsigned UclVar::c_bi_mni_add_header_2;
 unsigned UclVar::c_bi_mni_add_footer_2;
+unsigned UclVar::c_bi_mni_pack_1;
+unsigned UclVar::c_bi_mni_unpack_1;
+unsigned UclVar::c_bi_mni_code_2;
+unsigned UclVar::c_bi_mni_decode_2;
 unsigned UclVar::c_bi_mni_WsContext_2;
 unsigned UclVar::c_bi_mni_client_4;
 unsigned UclVar::c_bi_mni_protocol_idx_1;
@@ -277,6 +289,12 @@ unsigned UclVar::c_bi_mni_write_2;
 unsigned UclVar::c_bi_mni_connected_0;
 unsigned UclVar::c_bi_mni_encode_1;
 unsigned UclVar::c_bi_mni_decode_1;
+unsigned UclVar::c_bi_mni_data_0;
+unsigned UclVar::c_bi_mni_info_1;
+unsigned UclVar::c_bi_mni_GET_1;
+unsigned UclVar::c_bi_mni_PUT_2;
+unsigned UclVar::c_bi_mni_DELETE_1;
+unsigned UclVar::c_bi_mni_HEAD_1;
 unsigned UclVar::c_bi_mni_GetProcessId_0;
 unsigned UclVar::c_bi_mni_GetProcessName_0;
 unsigned UclVar::c_bi_mni_GetWorkingDirectory_0;
@@ -385,8 +403,21 @@ unsigned UclVar::c_bi_mni_next_key_1;
 unsigned UclVar::c_bi_mni_prev_key_1;
 unsigned UclVar::c_bi_mni_lee_key_1;
 unsigned UclVar::c_bi_mni_gre_key_1;
+unsigned UclVar::c_bi_mni_all_true_1;
+unsigned UclVar::c_bi_mni_any_true_1;
+unsigned UclVar::c_bi_mni_map_2;
+unsigned UclVar::c_bi_mni_reduce_3;
+unsigned UclVar::c_bi_mni_filter_2;
+unsigned UclVar::c_bi_mni_zip_1;
+unsigned UclVar::c_bi_mni_Range_2;
+unsigned UclVar::c_bi_mni_Range_3;
 unsigned UclVar::c_bi_mni_create_nice_2;
 unsigned UclVar::c_bi_mni_parse_1;
+unsigned UclVar::c_bi_mni_text_0;
+unsigned UclVar::c_bi_mni_attributes_0;
+unsigned UclVar::c_bi_mni_nodes_0;
+unsigned UclVar::c_bi_mni_texts_0;
+unsigned UclVar::c_bi_mni_content_0;
 
 // - built in variable name indexes -
 unsigned UclVar::c_bi_vni_USER_EXCEPTION;
@@ -617,6 +648,49 @@ unsigned UclVar::c_bi_vni_TIMEOUT_CLOSE_ACK;
 unsigned UclVar::c_bi_vni_TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE;
 unsigned UclVar::c_bi_vni_TIMEOUT_SENT_CLIENT_HANDSHAKE;
 unsigned UclVar::c_bi_vni_TIMEOUT_SSL_ACCEPT;
+unsigned UclVar::c_bi_vni_INFO_EFFECTIVE_URL;
+unsigned UclVar::c_bi_vni_INFO_RESPONSE_CODE;
+unsigned UclVar::c_bi_vni_INFO_TOTAL_TIME;
+unsigned UclVar::c_bi_vni_INFO_NAMELOOKUP_TIME;
+unsigned UclVar::c_bi_vni_INFO_CONNECT_TIME;
+unsigned UclVar::c_bi_vni_INFO_PRETRANSFER_TIME;
+unsigned UclVar::c_bi_vni_INFO_SIZE_UPLOAD;
+unsigned UclVar::c_bi_vni_INFO_SIZE_DOWNLOAD;
+unsigned UclVar::c_bi_vni_INFO_SPEED_DOWNLOAD;
+unsigned UclVar::c_bi_vni_INFO_SPEED_UPLOAD;
+unsigned UclVar::c_bi_vni_INFO_HEADER_SIZE;
+unsigned UclVar::c_bi_vni_INFO_REQUEST_SIZE;
+unsigned UclVar::c_bi_vni_INFO_SSL_VERIFYRESULT;
+unsigned UclVar::c_bi_vni_INFO_FILETIME;
+unsigned UclVar::c_bi_vni_INFO_CONTENT_LENGTH_DOWNLOAD;
+unsigned UclVar::c_bi_vni_INFO_CONTENT_LENGTH_UPLOAD;
+unsigned UclVar::c_bi_vni_INFO_STARTTRANSFER_TIME;
+unsigned UclVar::c_bi_vni_INFO_CONTENT_TYPE;
+unsigned UclVar::c_bi_vni_INFO_REDIRECT_TIME;
+unsigned UclVar::c_bi_vni_INFO_REDIRECT_COUNT;
+unsigned UclVar::c_bi_vni_INFO_PRIVATE;
+unsigned UclVar::c_bi_vni_INFO_HTTP_CONNECTCODE;
+unsigned UclVar::c_bi_vni_INFO_HTTPAUTH_AVAIL;
+unsigned UclVar::c_bi_vni_INFO_PROXYAUTH_AVAIL;
+unsigned UclVar::c_bi_vni_INFO_OS_ERRNO;
+unsigned UclVar::c_bi_vni_INFO_NUM_CONNECTS;
+unsigned UclVar::c_bi_vni_INFO_SSL_ENGINES;
+unsigned UclVar::c_bi_vni_INFO_COOKIELIST;
+unsigned UclVar::c_bi_vni_INFO_LASTSOCKET;
+unsigned UclVar::c_bi_vni_INFO_FTP_ENTRY_PATH;
+unsigned UclVar::c_bi_vni_INFO_REDIRECT_URL;
+unsigned UclVar::c_bi_vni_INFO_PRIMARY_IP;
+unsigned UclVar::c_bi_vni_INFO_APPCONNECT_TIME;
+unsigned UclVar::c_bi_vni_INFO_CERTINFO;
+unsigned UclVar::c_bi_vni_INFO_CONDITION_UNMET;
+unsigned UclVar::c_bi_vni_INFO_RTSP_SESSION_ID;
+unsigned UclVar::c_bi_vni_INFO_RTSP_CLIENT_CSEQ;
+unsigned UclVar::c_bi_vni_INFO_RTSP_SERVER_CSEQ;
+unsigned UclVar::c_bi_vni_INFO_RTSP_CSEQ_RECV;
+unsigned UclVar::c_bi_vni_INFO_PRIMARY_PORT;
+unsigned UclVar::c_bi_vni_INFO_LOCAL_IP;
+unsigned UclVar::c_bi_vni_INFO_LOCAL_PORT;
+unsigned UclVar::c_bi_vni_INFO_TLS_SESSION;
 unsigned UclVar::c_bi_vni_FC_NONE;
 unsigned UclVar::c_bi_vni_FC_RTS_CTS;
 unsigned UclVar::c_bi_vni_FC_RS_485;
@@ -735,6 +809,12 @@ unsigned UclVar::HttpConn::c_bi_mi_to_string_0;
 unsigned UclVar::HttpConn::c_bi_mi_print_0;
 unsigned UclVar::HttpResp::c_bi_mi_to_string_0;
 unsigned UclVar::HttpResp::c_bi_mi_print_0;
+unsigned UclVar::Pack::c_bi_mi_pack_1;
+unsigned UclVar::Pack::c_bi_mi_unpack_1;
+unsigned UclVar::Pack::c_bi_mi_code_2;
+unsigned UclVar::Pack::c_bi_mi_decode_2;
+unsigned UclVar::Pack::c_bi_mi_to_string_0;
+unsigned UclVar::Pack::c_bi_mi_print_0;
 unsigned UclVar::WsContext::c_bi_mi_version_0;
 unsigned UclVar::WsContext::c_bi_mi_to_string_0;
 unsigned UclVar::WsContext::c_bi_mi_print_0;
@@ -746,6 +826,14 @@ unsigned UclVar::WsBase64::c_bi_mi_encode_1;
 unsigned UclVar::WsBase64::c_bi_mi_decode_1;
 unsigned UclVar::WsBase64::c_bi_mi_to_string_0;
 unsigned UclVar::WsBase64::c_bi_mi_print_0;
+unsigned UclVar::CurlResult::c_bi_mi_to_string_0;
+unsigned UclVar::CurlResult::c_bi_mi_print_0;
+unsigned UclVar::Curl::c_bi_mi_GET_1;
+unsigned UclVar::Curl::c_bi_mi_PUT_2;
+unsigned UclVar::Curl::c_bi_mi_DELETE_1;
+unsigned UclVar::Curl::c_bi_mi_HEAD_1;
+unsigned UclVar::Curl::c_bi_mi_to_string_0;
+unsigned UclVar::Curl::c_bi_mi_print_0;
 unsigned UclVar::System::c_bi_mi_GetProcessId_0;
 unsigned UclVar::System::c_bi_mi_GetProcessName_0;
 unsigned UclVar::System::c_bi_mi_GetWorkingDirectory_0;
@@ -783,11 +871,30 @@ unsigned UclVar::JitFunction::c_bi_mi_to_string_0;
 unsigned UclVar::JitFunction::c_bi_mi_print_0;
 unsigned UclVar::NodeCallback::c_bi_mi_to_string_0;
 unsigned UclVar::NodeCallback::c_bi_mi_print_0;
+unsigned UclVar::Algo::c_bi_mi_all_true_1;
+unsigned UclVar::Algo::c_bi_mi_any_true_1;
+unsigned UclVar::Algo::c_bi_mi_map_2;
+unsigned UclVar::Algo::c_bi_mi_reduce_3;
+unsigned UclVar::Algo::c_bi_mi_filter_2;
+unsigned UclVar::Algo::c_bi_mi_zip_1;
+unsigned UclVar::Algo::c_bi_mi_to_string_0;
+unsigned UclVar::Algo::c_bi_mi_print_0;
+unsigned UclVar::Filter::c_bi_mi_map_2;
+unsigned UclVar::Filter::c_bi_mi_filter_2;
+unsigned UclVar::Filter::c_bi_mi_to_string_0;
+unsigned UclVar::Filter::c_bi_mi_print_0;
+unsigned UclVar::Range::c_bi_mi_to_string_0;
+unsigned UclVar::Range::c_bi_mi_print_0;
 unsigned UclVar::Json::c_bi_mi_create_1;
 unsigned UclVar::Json::c_bi_mi_create_nice_2;
 unsigned UclVar::Json::c_bi_mi_parse_1;
 unsigned UclVar::Json::c_bi_mi_to_string_0;
 unsigned UclVar::Json::c_bi_mi_print_0;
+unsigned UclVar::Xml::c_bi_mi_parse_1;
+unsigned UclVar::Xml::c_bi_mi_to_string_0;
+unsigned UclVar::Xml::c_bi_mi_print_0;
+unsigned UclVar::XmlNode::c_bi_mi_to_string_0;
+unsigned UclVar::XmlNode::c_bi_mi_print_0;
 
 // - built in variable values -
 UclVar UclVar::Exception::USER_EXCEPTION = UclVar(NO_INIT());
@@ -1029,6 +1136,49 @@ UclVar UclVar::WsConn::TIMEOUT_CLOSE_ACK = UclVar(NO_INIT());
 UclVar UclVar::WsConn::TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE = UclVar(NO_INIT());
 UclVar UclVar::WsConn::TIMEOUT_SENT_CLIENT_HANDSHAKE = UclVar(NO_INIT());
 UclVar UclVar::WsConn::TIMEOUT_SSL_ACCEPT = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_EFFECTIVE_URL = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_RESPONSE_CODE = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_TOTAL_TIME = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_NAMELOOKUP_TIME = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_CONNECT_TIME = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_PRETRANSFER_TIME = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_SIZE_UPLOAD = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_SIZE_DOWNLOAD = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_SPEED_DOWNLOAD = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_SPEED_UPLOAD = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_HEADER_SIZE = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_REQUEST_SIZE = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_SSL_VERIFYRESULT = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_FILETIME = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_CONTENT_LENGTH_DOWNLOAD = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_CONTENT_LENGTH_UPLOAD = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_STARTTRANSFER_TIME = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_CONTENT_TYPE = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_REDIRECT_TIME = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_REDIRECT_COUNT = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_PRIVATE = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_HTTP_CONNECTCODE = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_HTTPAUTH_AVAIL = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_PROXYAUTH_AVAIL = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_OS_ERRNO = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_NUM_CONNECTS = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_SSL_ENGINES = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_COOKIELIST = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_LASTSOCKET = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_FTP_ENTRY_PATH = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_REDIRECT_URL = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_PRIMARY_IP = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_APPCONNECT_TIME = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_CERTINFO = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_CONDITION_UNMET = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_RTSP_SESSION_ID = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_RTSP_CLIENT_CSEQ = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_RTSP_SERVER_CSEQ = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_RTSP_CSEQ_RECV = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_PRIMARY_PORT = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_LOCAL_IP = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_LOCAL_PORT = UclVar(NO_INIT());
+UclVar UclVar::CurlResult::INFO_TLS_SESSION = UclVar(NO_INIT());
 UclVar UclVar::Serial::FC_NONE = UclVar(NO_INIT());
 UclVar UclVar::Serial::FC_RTS_CTS = UclVar(NO_INIT());
 UclVar UclVar::Serial::FC_RS_485 = UclVar(NO_INIT());
@@ -1126,6 +1276,12 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_HttpResp,"HttpResp");
   }
 
+  // - module pack -
+  if (a_modules[c_uclvar_module_pack])
+  {
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Pack,"Pack");
+  }
+
   // - module websocket -
   if (a_modules[c_uclvar_module_websocket])
   {
@@ -1133,6 +1289,13 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_WsConn,"WsConn");
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_WsClient,"WsClient");
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_WsBase64,"WsBase64");
+  }
+
+  // - module curl -
+  if (a_modules[c_uclvar_module_curl])
+  {
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_CurlResult,"CurlResult");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Curl,"Curl");
   }
 
   // - module ucf -
@@ -1177,10 +1340,25 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Dict,"Dict");
   }
 
+  // - module algorithms -
+  if (a_modules[c_uclvar_module_algorithms])
+  {
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Algo,"Algo");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Filter,"Filter");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Range,"Range");
+  }
+
   // - module json -
   if (a_modules[c_uclvar_module_json])
   {
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Json,"Json");
+  }
+
+  // - module xml -
+  if (a_modules[c_uclvar_module_xml])
+  {
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Xml,"Xml");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_XmlNode,"XmlNode");
   }
 
   /*}}}*/
@@ -1499,6 +1677,17 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
   }
 
+  // - module pack -
+  if (a_modules[c_uclvar_module_pack])
+  {
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_pack_1,"pack#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_unpack_1,"unpack#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_code_2,"code#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_decode_2,"decode#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+  }
+
   // - module websocket -
   if (a_modules[c_uclvar_module_websocket])
   {
@@ -1529,6 +1718,21 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_encode_1,"encode#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_decode_1,"decode#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+  }
+
+  // - module curl -
+  if (a_modules[c_uclvar_module_curl])
+  {
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_data_0,"data#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_info_1,"info#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GET_1,"GET#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_PUT_2,"PUT#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_DELETE_1,"DELETE#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_HEAD_1,"HEAD#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
   }
@@ -1810,12 +2014,51 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
   }
 
+  // - module algorithms -
+  if (a_modules[c_uclvar_module_algorithms])
+  {
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_all_true_1,"all_true#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_any_true_1,"any_true#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_map_2,"map#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_reduce_3,"reduce#3");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_filter_2,"filter#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_zip_1,"zip#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_map_2,"map#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_filter_2,"filter#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_next_item_0,"next_item#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Range_2,"Range#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Range_3,"Range#3");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_next_item_0,"next_item#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+  }
+
   // - module json -
   if (a_modules[c_uclvar_module_json])
   {
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_create_1,"create#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_create_nice_2,"create_nice#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_parse_1,"parse#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+  }
+
+  // - module xml -
+  if (a_modules[c_uclvar_module_xml])
+  {
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_parse_1,"parse#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_name_0,"name#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_text_0,"text#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_attributes_0,"attributes#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_nodes_0,"nodes#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_texts_0,"texts#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_content_0,"content#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
   }
@@ -2037,6 +2280,11 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_HTTP_NOT_EXTENDED,"HTTP_NOT_EXTENDED");
   }
 
+  // - module pack -
+  if (a_modules[c_uclvar_module_pack])
+  {
+  }
+
   // - module websocket -
   if (a_modules[c_uclvar_module_websocket])
   {
@@ -2083,6 +2331,54 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE,"TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_SENT_CLIENT_HANDSHAKE,"TIMEOUT_SENT_CLIENT_HANDSHAKE");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TIMEOUT_SSL_ACCEPT,"TIMEOUT_SSL_ACCEPT");
+  }
+
+  // - module curl -
+  if (a_modules[c_uclvar_module_curl])
+  {
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_EFFECTIVE_URL,"INFO_EFFECTIVE_URL");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_RESPONSE_CODE,"INFO_RESPONSE_CODE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_TOTAL_TIME,"INFO_TOTAL_TIME");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_NAMELOOKUP_TIME,"INFO_NAMELOOKUP_TIME");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_CONNECT_TIME,"INFO_CONNECT_TIME");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_PRETRANSFER_TIME,"INFO_PRETRANSFER_TIME");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_SIZE_UPLOAD,"INFO_SIZE_UPLOAD");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_SIZE_DOWNLOAD,"INFO_SIZE_DOWNLOAD");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_SPEED_DOWNLOAD,"INFO_SPEED_DOWNLOAD");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_SPEED_UPLOAD,"INFO_SPEED_UPLOAD");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_HEADER_SIZE,"INFO_HEADER_SIZE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_REQUEST_SIZE,"INFO_REQUEST_SIZE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_SSL_VERIFYRESULT,"INFO_SSL_VERIFYRESULT");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_FILETIME,"INFO_FILETIME");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_CONTENT_LENGTH_DOWNLOAD,"INFO_CONTENT_LENGTH_DOWNLOAD");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_CONTENT_LENGTH_UPLOAD,"INFO_CONTENT_LENGTH_UPLOAD");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_STARTTRANSFER_TIME,"INFO_STARTTRANSFER_TIME");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_CONTENT_TYPE,"INFO_CONTENT_TYPE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_REDIRECT_TIME,"INFO_REDIRECT_TIME");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_REDIRECT_COUNT,"INFO_REDIRECT_COUNT");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_PRIVATE,"INFO_PRIVATE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_HTTP_CONNECTCODE,"INFO_HTTP_CONNECTCODE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_HTTPAUTH_AVAIL,"INFO_HTTPAUTH_AVAIL");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_PROXYAUTH_AVAIL,"INFO_PROXYAUTH_AVAIL");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_OS_ERRNO,"INFO_OS_ERRNO");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_NUM_CONNECTS,"INFO_NUM_CONNECTS");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_SSL_ENGINES,"INFO_SSL_ENGINES");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_COOKIELIST,"INFO_COOKIELIST");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_LASTSOCKET,"INFO_LASTSOCKET");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_FTP_ENTRY_PATH,"INFO_FTP_ENTRY_PATH");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_REDIRECT_URL,"INFO_REDIRECT_URL");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_PRIMARY_IP,"INFO_PRIMARY_IP");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_APPCONNECT_TIME,"INFO_APPCONNECT_TIME");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_CERTINFO,"INFO_CERTINFO");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_CONDITION_UNMET,"INFO_CONDITION_UNMET");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_RTSP_SESSION_ID,"INFO_RTSP_SESSION_ID");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_RTSP_CLIENT_CSEQ,"INFO_RTSP_CLIENT_CSEQ");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_RTSP_SERVER_CSEQ,"INFO_RTSP_SERVER_CSEQ");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_RTSP_CSEQ_RECV,"INFO_RTSP_CSEQ_RECV");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_PRIMARY_PORT,"INFO_PRIMARY_PORT");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_LOCAL_IP,"INFO_LOCAL_IP");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_LOCAL_PORT,"INFO_LOCAL_PORT");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_TLS_SESSION,"INFO_TLS_SESSION");
   }
 
   // - module ucf -
@@ -2140,8 +2436,18 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
   {
   }
 
+  // - module algorithms -
+  if (a_modules[c_uclvar_module_algorithms])
+  {
+  }
+
   // - module json -
   if (a_modules[c_uclvar_module_json])
+  {
+  }
+
+  // - module xml -
+  if (a_modules[c_uclvar_module_xml])
   {
   }
 
@@ -2250,6 +2556,17 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(HttpResp,c_bi_class_HttpResp,c_bi_mi_print_0,c_bi_mni_print_0);
   }
 
+  // - module pack -
+  if (a_modules[c_uclvar_module_pack])
+  {
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Pack,c_bi_class_Pack,c_bi_mi_pack_1,c_bi_mni_pack_1);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Pack,c_bi_class_Pack,c_bi_mi_unpack_1,c_bi_mni_unpack_1);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Pack,c_bi_class_Pack,c_bi_mi_code_2,c_bi_mni_code_2);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Pack,c_bi_class_Pack,c_bi_mi_decode_2,c_bi_mni_decode_2);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Pack,c_bi_class_Pack,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Pack,c_bi_class_Pack,c_bi_mi_print_0,c_bi_mni_print_0);
+  }
+
   // - module websocket -
   if (a_modules[c_uclvar_module_websocket])
   {
@@ -2264,6 +2581,19 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(WsBase64,c_bi_class_WsBase64,c_bi_mi_decode_1,c_bi_mni_decode_1);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(WsBase64,c_bi_class_WsBase64,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(WsBase64,c_bi_class_WsBase64,c_bi_mi_print_0,c_bi_mni_print_0);
+  }
+
+  // - module curl -
+  if (a_modules[c_uclvar_module_curl])
+  {
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(CurlResult,c_bi_class_CurlResult,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(CurlResult,c_bi_class_CurlResult,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi_GET_1,c_bi_mni_GET_1);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi_PUT_2,c_bi_mni_PUT_2);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi_DELETE_1,c_bi_mni_DELETE_1);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi_HEAD_1,c_bi_mni_HEAD_1);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi_print_0,c_bi_mni_print_0);
   }
 
   // - module ucf -
@@ -2323,6 +2653,25 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
   {
   }
 
+  // - module algorithms -
+  if (a_modules[c_uclvar_module_algorithms])
+  {
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Algo,c_bi_class_Algo,c_bi_mi_all_true_1,c_bi_mni_all_true_1);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Algo,c_bi_class_Algo,c_bi_mi_any_true_1,c_bi_mni_any_true_1);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Algo,c_bi_class_Algo,c_bi_mi_map_2,c_bi_mni_map_2);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Algo,c_bi_class_Algo,c_bi_mi_reduce_3,c_bi_mni_reduce_3);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Algo,c_bi_class_Algo,c_bi_mi_filter_2,c_bi_mni_filter_2);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Algo,c_bi_class_Algo,c_bi_mi_zip_1,c_bi_mni_zip_1);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Algo,c_bi_class_Algo,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Algo,c_bi_class_Algo,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Filter,c_bi_class_Filter,c_bi_mi_map_2,c_bi_mni_map_2);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Filter,c_bi_class_Filter,c_bi_mi_filter_2,c_bi_mni_filter_2);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Filter,c_bi_class_Filter,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Filter,c_bi_class_Filter,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Range,c_bi_class_Range,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Range,c_bi_class_Range,c_bi_mi_print_0,c_bi_mni_print_0);
+  }
+
   // - module json -
   if (a_modules[c_uclvar_module_json])
   {
@@ -2331,6 +2680,16 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Json,c_bi_class_Json,c_bi_mi_parse_1,c_bi_mni_parse_1);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Json,c_bi_class_Json,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Json,c_bi_class_Json,c_bi_mi_print_0,c_bi_mni_print_0);
+  }
+
+  // - module xml -
+  if (a_modules[c_uclvar_module_xml])
+  {
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Xml,c_bi_class_Xml,c_bi_mi_parse_1,c_bi_mni_parse_1);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Xml,c_bi_class_Xml,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Xml,c_bi_class_Xml,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(XmlNode,c_bi_class_XmlNode,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(XmlNode,c_bi_class_XmlNode,c_bi_mi_print_0,c_bi_mni_print_0);
   }
 
   /*}}}*/
@@ -2570,6 +2929,11 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,HTTP_NOT_EXTENDED);
   }
 
+  // - module pack -
+  if (a_modules[c_uclvar_module_pack])
+  {
+  }
+
   // - module websocket -
   if (a_modules[c_uclvar_module_websocket])
   {
@@ -2616,6 +2980,54 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE);
     UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_SENT_CLIENT_HANDSHAKE);
     UCLVAR_RETRIEVE_STATIC_CONST(WsConn,c_bi_class_WsConn,TIMEOUT_SSL_ACCEPT);
+  }
+
+  // - module curl -
+  if (a_modules[c_uclvar_module_curl])
+  {
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_EFFECTIVE_URL);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_RESPONSE_CODE);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_TOTAL_TIME);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_NAMELOOKUP_TIME);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_CONNECT_TIME);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_PRETRANSFER_TIME);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_SIZE_UPLOAD);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_SIZE_DOWNLOAD);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_SPEED_DOWNLOAD);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_SPEED_UPLOAD);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_HEADER_SIZE);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_REQUEST_SIZE);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_SSL_VERIFYRESULT);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_FILETIME);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_CONTENT_LENGTH_DOWNLOAD);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_CONTENT_LENGTH_UPLOAD);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_STARTTRANSFER_TIME);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_CONTENT_TYPE);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_REDIRECT_TIME);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_REDIRECT_COUNT);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_PRIVATE);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_HTTP_CONNECTCODE);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_HTTPAUTH_AVAIL);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_PROXYAUTH_AVAIL);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_OS_ERRNO);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_NUM_CONNECTS);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_SSL_ENGINES);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_COOKIELIST);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_LASTSOCKET);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_FTP_ENTRY_PATH);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_REDIRECT_URL);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_PRIMARY_IP);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_APPCONNECT_TIME);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_CERTINFO);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_CONDITION_UNMET);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_RTSP_SESSION_ID);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_RTSP_CLIENT_CSEQ);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_RTSP_SERVER_CSEQ);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_RTSP_CSEQ_RECV);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_PRIMARY_PORT);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_LOCAL_IP);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_LOCAL_PORT);
+    UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_TLS_SESSION);
   }
 
   // - module ucf -
@@ -2673,8 +3085,18 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
   {
   }
 
+  // - module algorithms -
+  if (a_modules[c_uclvar_module_algorithms])
+  {
+  }
+
   // - module json -
   if (a_modules[c_uclvar_module_json])
+  {
+  }
+
+  // - module xml -
+  if (a_modules[c_uclvar_module_xml])
   {
   }
 
@@ -2980,6 +3402,31 @@ UclVar UclVar::__static_call_2(unsigned a_method_idx,UclVar a_op,UclVar a_op_1)
       a_method_idx MP_COMMA
       1 MP_COMMA
       2
+    };
+  );
+}/*}}}*/
+
+UclVar UclVar::__static_call_3(unsigned a_method_idx,UclVar a_op,UclVar a_op_1,UclVar a_op_2)
+{/*{{{*/
+  UCLVAR_STATIC_CALL(
+    a_op.location_ptr->v_reference_cnt.atomic_inc();
+    it_ptr->data_stack.push((pointer)a_op.location_ptr);
+
+    a_op_1.location_ptr->v_reference_cnt.atomic_inc();
+    it_ptr->data_stack.push((pointer)a_op_1.location_ptr);
+
+    a_op_2.location_ptr->v_reference_cnt.atomic_inc();
+    it_ptr->data_stack.push((pointer)a_op_2.location_ptr);
+  ,
+    uli tmp_code[8] = {
+      i_static_call MP_COMMA
+      3 MP_COMMA
+      0 MP_COMMA
+      0 MP_COMMA
+      a_method_idx MP_COMMA
+      1 MP_COMMA
+      2 MP_COMMA
+      3
     };
   );
 }/*}}}*/
@@ -3385,7 +3832,7 @@ UclVar UclVar::__member(std::string a_name)
   location_ptr->v_reference_cnt.atomic_inc();
   it_ptr->data_stack.push((pointer)location_ptr);
 
-  /* - create dummy code - */
+  // - create dummy code -
   uli tmp_code[5] = {
     i_object_member_select,
     0,
@@ -3399,7 +3846,7 @@ UclVar UclVar::__member(std::string a_name)
 
   inst_params_s params = {it_ptr,&tmp_code_ptr,new_stack_base,&return_value};
 
-  /* - ERROR - */
+  // - ERROR -
   if (inst_object_member_select(&params) == c_run_return_code_EXCEPTION)
   {
     it_ptr->release_stack_from(new_stack_base);
@@ -3407,7 +3854,7 @@ UclVar UclVar::__member(std::string a_name)
     throw std::string("Exception");
   }
 
-  /* - create return ucl variable - */
+  // - create return ucl variable -
   UclVar ret_value((location_s **)&it_ptr->data_stack[new_stack_base]);
 
   it_ptr->release_stack_from(new_stack_base);
@@ -3434,7 +3881,7 @@ UclVar UclVar::__slice(UclVar a_start,UclVar a_stop,UclVar a_step)
   a_step.location_ptr->v_reference_cnt.atomic_inc();
   it_ptr->data_stack.push((pointer)a_step.location_ptr);
 
-  /* - create dummy code - */
+  // - create dummy code -
   uli tmp_code[7] = {
     i_slice_range,
     0,
@@ -3450,7 +3897,7 @@ UclVar UclVar::__slice(UclVar a_start,UclVar a_stop,UclVar a_step)
 
   inst_params_s params = {it_ptr,&tmp_code_ptr,new_stack_base,&return_value};
 
-  /* - ERROR - */
+  // - ERROR -
   if (inst_slice_range(&params) == c_run_return_code_EXCEPTION)
   {
     it_ptr->release_stack_from(new_stack_base);
@@ -3458,7 +3905,7 @@ UclVar UclVar::__slice(UclVar a_start,UclVar a_stop,UclVar a_step)
     throw std::string("Exception");
   }
 
-  /* - create return ucl variable - */
+  // - create return ucl variable -
   UclVar ret_value((location_s **)&it_ptr->data_stack[new_stack_base]);
 
   it_ptr->release_stack_from(new_stack_base);

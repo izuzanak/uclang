@@ -144,12 +144,16 @@ bool UclNode::Initialize(const char **a_modules)
 
   // - check modules presence -
   UCL_NODE_CHECK_MODULE_PRESENCE(sys);
-  UCL_NODE_CHECK_MODULE_PRESENCE(containers);
-  UCL_NODE_CHECK_MODULE_PRESENCE(json);
-  UCL_NODE_CHECK_MODULE_PRESENCE(websocket);
-  UCL_NODE_CHECK_MODULE_PRESENCE(jit);
-  UCL_NODE_CHECK_MODULE_PRESENCE(ucf);
   UCL_NODE_CHECK_MODULE_PRESENCE(http);
+  UCL_NODE_CHECK_MODULE_PRESENCE(pack);
+  UCL_NODE_CHECK_MODULE_PRESENCE(websocket);
+  UCL_NODE_CHECK_MODULE_PRESENCE(curl);
+  UCL_NODE_CHECK_MODULE_PRESENCE(ucf);
+  UCL_NODE_CHECK_MODULE_PRESENCE(jit);
+  UCL_NODE_CHECK_MODULE_PRESENCE(containers);
+  UCL_NODE_CHECK_MODULE_PRESENCE(algorithms);
+  UCL_NODE_CHECK_MODULE_PRESENCE(json);
+  UCL_NODE_CHECK_MODULE_PRESENCE(xml);
 
   // - initialize ucl variables (parser) -
   UclVar::Initialize(parser,modules);
