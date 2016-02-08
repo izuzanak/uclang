@@ -33,6 +33,66 @@ catch (std::string reason)\
 }
 /*}}}*/
 
+#define UCL_FOR_LOOP(ITEM,ITER,CODE) \
+{/*{{{*/\
+  interpreter_thread_s &it = *UclVar::__it_ptr();\
+  location_s *__iter_loc = it.get_location_value((ITER).__loc());\
+\
+  switch (it.get_iterable_type(__iter_loc))\
+  {\
+  case c_iter_first_idx_next_idx_item:\
+    {/*{{{*/\
+      unsigned __index;\
+\
+      /* - retrieve first index - */\
+      BIC_CALL_FIRST_IDX(it,__iter_loc,__index,0,throw std::string("Exception"));\
+\
+      /* - while index is not blank - */\
+      while (__index != c_idx_not_exist)\
+      {\
+        /* - retrieve item - */\
+        location_s *trg_location;\
+        BIC_CALL_ITEM(it,__iter_loc,__index,trg_location,0,throw std::string("Exception"));\
+\
+        UclVar ITEM(&trg_location);\
+        it.release_location_ptr(trg_location);\
+\
+        CODE;\
+\
+        /* - retrieve next index - */\
+        BIC_CALL_NEXT_IDX(it,__iter_loc,__index,__index,0,throw std::string("Exception"));\
+      }\
+    }/*}}}*/\
+    break;\
+  case c_iter_next_item:\
+    {/*{{{*/\
+      do {\
+\
+        /* - retrieve item - */\
+        location_s *trg_location;\
+        BIC_CALL_NEXT_ITEM(it,__iter_loc,trg_location,0,throw std::string("Exception"));\
+\
+        if (it.get_location_value(trg_location)->v_type == c_bi_class_blank)\
+        {\
+          it.release_location_ptr(trg_location);\
+          break;\
+        }\
+\
+        UclVar ITEM(&trg_location);\
+        it.release_location_ptr(trg_location);\
+\
+        CODE;\
+\
+      } while(1);\
+    }/*}}}*/\
+    break;\
+\
+  /* - ERROR - */\
+  default:\
+    throw std::string("Not iterable object error");\
+  }\
+}/*}}}*/
+
 /*
  * definition of class UclNode
  */

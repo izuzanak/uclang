@@ -34,7 +34,7 @@ int main(int argc,char **argv)
 
   // - select modules to import -
   const char *modules[] = {
-    "containers","sys","http",NULL
+    "containers","sys",NULL
     //"sys","containers","json","websocket","jit","ucf",NULL
   };
 
@@ -54,6 +54,29 @@ int main(int argc,char **argv)
 
       printf("array: %s\n",array.to_string().__str());
     }
+
+    // - for loop test -
+    //{/*{{{*/
+    //  UclVar dict = UclVar::Dict({1,2,3,4,5,6});
+    //  UCL_FOR_LOOP(item,dict,
+    //  {
+    //    printf("key/val: %lld:%lld\n",item.__int(),dict[item].__int());
+    //  })
+
+    //  // - file loop test -
+    //  UclVar file = UclVar::File("node.log","r");
+    //  UCL_FOR_LOOP(item,file,
+    //  {
+    //    printf("item: %s\n",item.__str());
+    //  })
+
+    //  // - array loop test -
+    //  UclVar array = {0,1,2,3,4,5,6,7,8,9};
+    //  UCL_FOR_LOOP(item,array,
+    //  {
+    //    printf("item: %lld\n",item.__int());
+    //  })
+    //}/*}}}*/
 
     // - http server example -
     //{/*{{{*/

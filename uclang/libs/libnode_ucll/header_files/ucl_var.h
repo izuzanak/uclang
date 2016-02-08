@@ -802,6 +802,9 @@ class UclVar
   inline double __float();
   inline const char *__str();
 
+  inline static interpreter_thread_s *__it_ptr();
+  inline location_s *__loc();
+
   inline void __free();
   inline UclVar __type();
 
@@ -4039,6 +4042,16 @@ inline const char *UclVar::__str()
   }
 
   return ((string_s *)tmp_location->v_data_ptr)->data;
+}/*}}}*/
+
+inline interpreter_thread_s *UclVar::__it_ptr()
+{/*{{{*/
+  return it_ptr;
+}/*}}}*/
+
+inline location_s *UclVar::__loc()
+{/*{{{*/
+  return location_ptr;
 }/*}}}*/
 
 inline void UclVar::__free()
