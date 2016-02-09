@@ -228,9 +228,62 @@ int main(int argc,char **argv)
     //  })
     //}/*}}}*/
 
-    // FIXME write_close, read_close test
-    UclVar data = UclVar::File("node.log","r").read_close();
-    UclVar::File("test.log","w").write_close(data);
+    // - module fpt test -
+    //{/*{{{*/
+    //  UclVar server = "127.0.0.1";
+    //  UclVar user = "<user>";
+    //  UclVar pass = "<pass>";
+
+    //  UclVar ftp_session = UclVar::FtpSession(server);
+    //  ftp_session.login(user,pass);
+
+    //  ftp_session.chdir("folder/work");
+    //  
+    //  //UclVar list = ftp_session.listdir(".");
+    //  //printf("LIST: %s\n",list.to_string().__str());
+
+    //  UCL_FOR_LOOP(file,ftp_session.listdir("."),
+    //  {
+    //    printf("FILE: %s\n",file.__str());
+    //  });
+    //}/*}}}*/
+
+    // - module ssh2 test -
+    //{/*{{{*/
+    //  UclVar server = "192.168.2.2";
+    //  UclVar user = "<user>";
+    //  UclVar password = "<pass>";
+
+    //  UclVar socket = UclVar::Socket(UclVar::Socket::AF_INET,UclVar::Socket::SOCK_STREAM);
+    //  socket.connect(UclVar::SocketAddr(server,22));
+
+    //  UclVar ssh_session = UclVar::Ssh2Session(socket);
+    //  UclVar auth_list = ssh_session.userauth_list(user);
+    //  printf("auth_list: %s\n",auth_list.to_string().__str());
+
+    //  ssh_session.userauth_password(user,password);
+    //  UclVar channel = ssh_session.shell();
+
+    //  channel.write("ls\n");
+    //  channel.flush();
+    //  printf("DATA: %s\n",channel.read().__str());
+
+    //  channel.send_eof();
+    //}/*}}}*/
+
+    // - module sqlite test -
+    //{/*{{{*/
+    //  UclVar conn = UclVar::SQLiteConn("gtrip.sqlite",
+    //    UclVar::SQLiteConn::OPEN_CREATE |
+    //    UclVar::SQLiteConn::OPEN_READWRITE |
+    //    UclVar::SQLiteConn::OPEN_FULLMUTEX);
+
+    //  UclVar res = conn.prepare("select * from STATION;");
+    //  UCL_FOR_LOOP(station,res,
+    //  {
+    //    printf("station: %s\n",station.to_string().__str());
+    //  });
+    //}/*}}}*/
 
 #if __cplusplus >= 201103
 

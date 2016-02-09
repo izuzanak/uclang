@@ -36,7 +36,9 @@ catch (std::string reason)\
 #define UCL_FOR_LOOP(ITEM,ITER,CODE) \
 {/*{{{*/\
   interpreter_thread_s &it = *UclVar::__it_ptr();\
-  location_s *__iter_loc = it.get_location_value((ITER).__loc());\
+\
+  UclVar __iter_val(ITER);\
+  location_s *__iter_loc = it.get_location_value(__iter_val.__loc());\
 \
   switch (it.get_iterable_type(__iter_loc))\
   {\

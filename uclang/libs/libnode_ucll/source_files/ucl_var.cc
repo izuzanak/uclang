@@ -32,6 +32,8 @@ unsigned UclVar::c_bi_class_Signal;
 unsigned UclVar::c_bi_class_Poll;
 unsigned UclVar::c_bi_class_Timer;
 unsigned UclVar::c_bi_class_Clock;
+unsigned UclVar::c_bi_class_SQLiteConn;
+unsigned UclVar::c_bi_class_SQLiteStatement;
 unsigned UclVar::c_bi_class_HttpServer;
 unsigned UclVar::c_bi_class_HttpConn;
 unsigned UclVar::c_bi_class_HttpResp;
@@ -55,6 +57,13 @@ unsigned UclVar::c_bi_class_NvmSegment;
 unsigned UclVar::c_bi_class_MsgQueue;
 unsigned UclVar::c_bi_class_Bcc;
 unsigned UclVar::c_bi_class_Crc;
+unsigned UclVar::c_bi_class_Md5;
+unsigned UclVar::c_bi_class_FtpSession;
+unsigned UclVar::c_bi_class_FtpHandle;
+unsigned UclVar::c_bi_class_Ssh2Session;
+unsigned UclVar::c_bi_class_SftpSession;
+unsigned UclVar::c_bi_class_SftpHandle;
+unsigned UclVar::c_bi_class_Ssh2Channel;
 unsigned UclVar::c_bi_class_JitContext;
 unsigned UclVar::c_bi_class_JitFunction;
 unsigned UclVar::c_bi_class_NodeCallback;
@@ -256,6 +265,16 @@ unsigned UclVar::c_bi_mni_remain_0;
 unsigned UclVar::c_bi_mni_getres_1;
 unsigned UclVar::c_bi_mni_gettime_1;
 unsigned UclVar::c_bi_mni_settime_2;
+unsigned UclVar::c_bi_mni_SQLiteConn_1;
+unsigned UclVar::c_bi_mni_SQLiteConn_2;
+unsigned UclVar::c_bi_mni_threadsafe_0;
+unsigned UclVar::c_bi_mni_execute_1;
+unsigned UclVar::c_bi_mni_prepare_1;
+unsigned UclVar::c_bi_mni_errmsg_0;
+unsigned UclVar::c_bi_mni_bind_blob_2;
+unsigned UclVar::c_bi_mni_step_0;
+unsigned UclVar::c_bi_mni_reset_0;
+unsigned UclVar::c_bi_mni_reset_clear_0;
 unsigned UclVar::c_bi_mni_HttpServer_2;
 unsigned UclVar::c_bi_mni_get_fds_0;
 unsigned UclVar::c_bi_mni_timeout_0;
@@ -363,6 +382,24 @@ unsigned UclVar::c_bi_mni_Bcc_0;
 unsigned UclVar::c_bi_mni_append_1;
 unsigned UclVar::c_bi_mni_value_0;
 unsigned UclVar::c_bi_mni_Crc_2;
+unsigned UclVar::c_bi_mni_Md5_0;
+unsigned UclVar::c_bi_mni_FtpSession_1;
+unsigned UclVar::c_bi_mni_login_2;
+unsigned UclVar::c_bi_mni_get_file_2;
+unsigned UclVar::c_bi_mni_put_file_2;
+unsigned UclVar::c_bi_mni_Ssh2Session_1;
+unsigned UclVar::c_bi_mni_hostkey_hash_1;
+unsigned UclVar::c_bi_mni_userauth_list_1;
+unsigned UclVar::c_bi_mni_userauth_password_2;
+unsigned UclVar::c_bi_mni_userauth_fake_interactive_2;
+unsigned UclVar::c_bi_mni_userauth_publickey_fromfile_4;
+unsigned UclVar::c_bi_mni_sftp_session_0;
+unsigned UclVar::c_bi_mni_exec_1;
+unsigned UclVar::c_bi_mni_shell_0;
+unsigned UclVar::c_bi_mni_mkdir_2;
+unsigned UclVar::c_bi_mni_open_3;
+unsigned UclVar::c_bi_mni_send_eof_0;
+unsigned UclVar::c_bi_mni_read_stderr_0;
 unsigned UclVar::c_bi_mni_JitContext_0;
 unsigned UclVar::c_bi_mni_create_fun_1;
 unsigned UclVar::c_bi_mni_signature_0;
@@ -533,6 +570,26 @@ unsigned UclVar::c_bi_vni__CLOCK_REALTIME;
 unsigned UclVar::c_bi_vni__CLOCK_MONOTONIC;
 unsigned UclVar::c_bi_vni__CLOCK_PROCESS_CPUTIME_ID;
 unsigned UclVar::c_bi_vni__CLOCK_THREAD_CPUTIME_ID;
+unsigned UclVar::c_bi_vni_OPEN_READONLY;
+unsigned UclVar::c_bi_vni_OPEN_READWRITE;
+unsigned UclVar::c_bi_vni_OPEN_CREATE;
+unsigned UclVar::c_bi_vni_OPEN_DELETEONCLOSE;
+unsigned UclVar::c_bi_vni_OPEN_EXCLUSIVE;
+unsigned UclVar::c_bi_vni_OPEN_AUTOPROXY;
+unsigned UclVar::c_bi_vni_OPEN_URI;
+unsigned UclVar::c_bi_vni_OPEN_MEMORY;
+unsigned UclVar::c_bi_vni_OPEN_MAIN_DB;
+unsigned UclVar::c_bi_vni_OPEN_TEMP_DB;
+unsigned UclVar::c_bi_vni_OPEN_TRANSIENT_DB;
+unsigned UclVar::c_bi_vni_OPEN_MAIN_JOURNAL;
+unsigned UclVar::c_bi_vni_OPEN_TEMP_JOURNAL;
+unsigned UclVar::c_bi_vni_OPEN_SUBJOURNAL;
+unsigned UclVar::c_bi_vni_OPEN_MASTER_JOURNAL;
+unsigned UclVar::c_bi_vni_OPEN_NOMUTEX;
+unsigned UclVar::c_bi_vni_OPEN_FULLMUTEX;
+unsigned UclVar::c_bi_vni_OPEN_SHAREDCACHE;
+unsigned UclVar::c_bi_vni_OPEN_PRIVATECACHE;
+unsigned UclVar::c_bi_vni_OPEN_WAL;
 unsigned UclVar::c_bi_vni_TYPE_CONNECT;
 unsigned UclVar::c_bi_vni_TYPE_DELETE;
 unsigned UclVar::c_bi_vni_TYPE_GET;
@@ -716,6 +773,20 @@ unsigned UclVar::c_bi_vni_TSTRING;
 unsigned UclVar::c_bi_vni_CRC8;
 unsigned UclVar::c_bi_vni_CRC16;
 unsigned UclVar::c_bi_vni_CRC32;
+unsigned UclVar::c_bi_vni_TYPE_DIR;
+unsigned UclVar::c_bi_vni_TYPE_DIR_VERBOSE;
+unsigned UclVar::c_bi_vni_TYPE_FILE_READ;
+unsigned UclVar::c_bi_vni_TYPE_FILE_WRITE;
+unsigned UclVar::c_bi_vni_MODE_ASCII;
+unsigned UclVar::c_bi_vni_MODE_IMAGE;
+unsigned UclVar::c_bi_vni_HOSTKEY_HASH_MD5;
+unsigned UclVar::c_bi_vni_HOSTKEY_HASH_SHA1;
+unsigned UclVar::c_bi_vni_MODE_READ;
+unsigned UclVar::c_bi_vni_MODE_WRITE;
+unsigned UclVar::c_bi_vni_MODE_APPEND;
+unsigned UclVar::c_bi_vni_MODE_CREAT;
+unsigned UclVar::c_bi_vni_MODE_TRUNC;
+unsigned UclVar::c_bi_vni_MODE_EXCL;
 unsigned UclVar::c_bi_vni_TYPE_I8;
 unsigned UclVar::c_bi_vni_TYPE_U8;
 unsigned UclVar::c_bi_vni_TYPE_I16;
@@ -803,6 +874,11 @@ unsigned UclVar::Clock::c_bi_mi_settime_2;
 unsigned UclVar::Clock::c_bi_mi_to_string_0;
 unsigned UclVar::Clock::c_bi_mi_print_0;
 #endif
+unsigned UclVar::SQLiteConn::c_bi_mi_threadsafe_0;
+unsigned UclVar::SQLiteConn::c_bi_mi_to_string_0;
+unsigned UclVar::SQLiteConn::c_bi_mi_print_0;
+unsigned UclVar::SQLiteStatement::c_bi_mi_to_string_0;
+unsigned UclVar::SQLiteStatement::c_bi_mi_print_0;
 unsigned UclVar::HttpServer::c_bi_mi_to_string_0;
 unsigned UclVar::HttpServer::c_bi_mi_print_0;
 unsigned UclVar::HttpConn::c_bi_mi_to_string_0;
@@ -865,6 +941,20 @@ unsigned UclVar::Bcc::c_bi_mi_to_string_0;
 unsigned UclVar::Bcc::c_bi_mi_print_0;
 unsigned UclVar::Crc::c_bi_mi_to_string_0;
 unsigned UclVar::Crc::c_bi_mi_print_0;
+unsigned UclVar::Md5::c_bi_mi_to_string_0;
+unsigned UclVar::Md5::c_bi_mi_print_0;
+unsigned UclVar::FtpSession::c_bi_mi_to_string_0;
+unsigned UclVar::FtpSession::c_bi_mi_print_0;
+unsigned UclVar::FtpHandle::c_bi_mi_to_string_0;
+unsigned UclVar::FtpHandle::c_bi_mi_print_0;
+unsigned UclVar::Ssh2Session::c_bi_mi_to_string_0;
+unsigned UclVar::Ssh2Session::c_bi_mi_print_0;
+unsigned UclVar::SftpSession::c_bi_mi_to_string_0;
+unsigned UclVar::SftpSession::c_bi_mi_print_0;
+unsigned UclVar::SftpHandle::c_bi_mi_to_string_0;
+unsigned UclVar::SftpHandle::c_bi_mi_print_0;
+unsigned UclVar::Ssh2Channel::c_bi_mi_to_string_0;
+unsigned UclVar::Ssh2Channel::c_bi_mi_print_0;
 unsigned UclVar::JitContext::c_bi_mi_to_string_0;
 unsigned UclVar::JitContext::c_bi_mi_print_0;
 unsigned UclVar::JitFunction::c_bi_mi_to_string_0;
@@ -1021,6 +1111,26 @@ UclVar UclVar::Clock::_CLOCK_MONOTONIC = UclVar(NO_INIT());
 UclVar UclVar::Clock::_CLOCK_PROCESS_CPUTIME_ID = UclVar(NO_INIT());
 UclVar UclVar::Clock::_CLOCK_THREAD_CPUTIME_ID = UclVar(NO_INIT());
 #endif
+UclVar UclVar::SQLiteConn::OPEN_READONLY = UclVar(NO_INIT());
+UclVar UclVar::SQLiteConn::OPEN_READWRITE = UclVar(NO_INIT());
+UclVar UclVar::SQLiteConn::OPEN_CREATE = UclVar(NO_INIT());
+UclVar UclVar::SQLiteConn::OPEN_DELETEONCLOSE = UclVar(NO_INIT());
+UclVar UclVar::SQLiteConn::OPEN_EXCLUSIVE = UclVar(NO_INIT());
+UclVar UclVar::SQLiteConn::OPEN_AUTOPROXY = UclVar(NO_INIT());
+UclVar UclVar::SQLiteConn::OPEN_URI = UclVar(NO_INIT());
+UclVar UclVar::SQLiteConn::OPEN_MEMORY = UclVar(NO_INIT());
+UclVar UclVar::SQLiteConn::OPEN_MAIN_DB = UclVar(NO_INIT());
+UclVar UclVar::SQLiteConn::OPEN_TEMP_DB = UclVar(NO_INIT());
+UclVar UclVar::SQLiteConn::OPEN_TRANSIENT_DB = UclVar(NO_INIT());
+UclVar UclVar::SQLiteConn::OPEN_MAIN_JOURNAL = UclVar(NO_INIT());
+UclVar UclVar::SQLiteConn::OPEN_TEMP_JOURNAL = UclVar(NO_INIT());
+UclVar UclVar::SQLiteConn::OPEN_SUBJOURNAL = UclVar(NO_INIT());
+UclVar UclVar::SQLiteConn::OPEN_MASTER_JOURNAL = UclVar(NO_INIT());
+UclVar UclVar::SQLiteConn::OPEN_NOMUTEX = UclVar(NO_INIT());
+UclVar UclVar::SQLiteConn::OPEN_FULLMUTEX = UclVar(NO_INIT());
+UclVar UclVar::SQLiteConn::OPEN_SHAREDCACHE = UclVar(NO_INIT());
+UclVar UclVar::SQLiteConn::OPEN_PRIVATECACHE = UclVar(NO_INIT());
+UclVar UclVar::SQLiteConn::OPEN_WAL = UclVar(NO_INIT());
 UclVar UclVar::HttpConn::TYPE_CONNECT = UclVar(NO_INIT());
 UclVar UclVar::HttpConn::TYPE_DELETE = UclVar(NO_INIT());
 UclVar UclVar::HttpConn::TYPE_GET = UclVar(NO_INIT());
@@ -1204,6 +1314,20 @@ UclVar UclVar::VarStore::TSTRING = UclVar(NO_INIT());
 UclVar UclVar::Crc::CRC8 = UclVar(NO_INIT());
 UclVar UclVar::Crc::CRC16 = UclVar(NO_INIT());
 UclVar UclVar::Crc::CRC32 = UclVar(NO_INIT());
+UclVar UclVar::FtpSession::TYPE_DIR = UclVar(NO_INIT());
+UclVar UclVar::FtpSession::TYPE_DIR_VERBOSE = UclVar(NO_INIT());
+UclVar UclVar::FtpSession::TYPE_FILE_READ = UclVar(NO_INIT());
+UclVar UclVar::FtpSession::TYPE_FILE_WRITE = UclVar(NO_INIT());
+UclVar UclVar::FtpSession::MODE_ASCII = UclVar(NO_INIT());
+UclVar UclVar::FtpSession::MODE_IMAGE = UclVar(NO_INIT());
+UclVar UclVar::Ssh2Session::HOSTKEY_HASH_MD5 = UclVar(NO_INIT());
+UclVar UclVar::Ssh2Session::HOSTKEY_HASH_SHA1 = UclVar(NO_INIT());
+UclVar UclVar::SftpSession::MODE_READ = UclVar(NO_INIT());
+UclVar UclVar::SftpSession::MODE_WRITE = UclVar(NO_INIT());
+UclVar UclVar::SftpSession::MODE_APPEND = UclVar(NO_INIT());
+UclVar UclVar::SftpSession::MODE_CREAT = UclVar(NO_INIT());
+UclVar UclVar::SftpSession::MODE_TRUNC = UclVar(NO_INIT());
+UclVar UclVar::SftpSession::MODE_EXCL = UclVar(NO_INIT());
 UclVar UclVar::JitContext::TYPE_I8 = UclVar(NO_INIT());
 UclVar UclVar::JitContext::TYPE_U8 = UclVar(NO_INIT());
 UclVar UclVar::JitContext::TYPE_I16 = UclVar(NO_INIT());
@@ -1268,6 +1392,13 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
 #endif
   }
 
+  // - module sqlite -
+  if (a_modules[c_uclvar_module_sqlite])
+  {
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_SQLiteConn,"SQLiteConn");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_SQLiteStatement,"SQLiteStatement");
+  }
+
   // - module http -
   if (a_modules[c_uclvar_module_http])
   {
@@ -1314,6 +1445,23 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_MsgQueue,"MsgQueue");
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Bcc,"Bcc");
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Crc,"Crc");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Md5,"Md5");
+  }
+
+  // - module ftp -
+  if (a_modules[c_uclvar_module_ftp])
+  {
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_FtpSession,"FtpSession");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_FtpHandle,"FtpHandle");
+  }
+
+  // - module ssh2 -
+  if (a_modules[c_uclvar_module_ssh2])
+  {
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Ssh2Session,"Ssh2Session");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_SftpSession,"SftpSession");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_SftpHandle,"SftpHandle");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Ssh2Channel,"Ssh2Channel");
   }
 
   // - module jit -
@@ -1648,6 +1796,27 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
 #endif
   }
 
+  // - module sqlite -
+  if (a_modules[c_uclvar_module_sqlite])
+  {
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_SQLiteConn_1,"SQLiteConn#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_SQLiteConn_2,"SQLiteConn#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_threadsafe_0,"threadsafe#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_execute_1,"execute#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_prepare_1,"prepare#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_errmsg_0,"errmsg#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_bind_2,"bind#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_bind_blob_2,"bind_blob#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_step_0,"step#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_reset_0,"reset#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_reset_clear_0,"reset_clear#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_next_item_0,"next_item#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+  }
+
   // - module http -
   if (a_modules[c_uclvar_module_http])
   {
@@ -1857,6 +2026,76 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_append_1,"append#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_size_0,"size#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_value_0,"value#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Md5_0,"Md5#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_append_1,"append#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_value_0,"value#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+  }
+
+  // - module ftp -
+  if (a_modules[c_uclvar_module_ftp])
+  {
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_FtpSession_1,"FtpSession#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_login_2,"login#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_mkdir_1,"mkdir#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_rmdir_1,"rmdir#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_listdir_1,"listdir#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_chdir_1,"chdir#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_getcwd_0,"getcwd#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_file_2,"get_file#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_put_file_2,"put_file#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_remove_1,"remove#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_rename_2,"rename#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_open_2,"open#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_close_0,"close#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_1,"write#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_0,"read#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_readln_0,"readln#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_1,"read#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_next_item_0,"next_item#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+  }
+
+  // - module ssh2 -
+  if (a_modules[c_uclvar_module_ssh2])
+  {
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Ssh2Session_1,"Ssh2Session#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_hostkey_hash_1,"hostkey_hash#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_userauth_list_1,"userauth_list#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_userauth_password_2,"userauth_password#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_userauth_fake_interactive_2,"userauth_fake_interactive#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_userauth_publickey_fromfile_4,"userauth_publickey_fromfile#4");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_sftp_session_0,"sftp_session#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_exec_1,"exec#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_shell_0,"shell#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_mkdir_2,"mkdir#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_rmdir_1,"rmdir#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_listdir_1,"listdir#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_remove_1,"remove#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_open_3,"open#3");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_close_0,"close#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_1,"write#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_0,"read#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_readln_0,"readln#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_1,"read#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_next_item_0,"next_item#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_write_1,"write#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_flush_0,"flush#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_send_eof_0,"send_eof#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_0,"read#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_stderr_0,"read_stderr#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
   }
@@ -2203,6 +2442,31 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
 #endif
   }
 
+  // - module sqlite -
+  if (a_modules[c_uclvar_module_sqlite])
+  {
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_READONLY,"OPEN_READONLY");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_READWRITE,"OPEN_READWRITE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_CREATE,"OPEN_CREATE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_DELETEONCLOSE,"OPEN_DELETEONCLOSE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_EXCLUSIVE,"OPEN_EXCLUSIVE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_AUTOPROXY,"OPEN_AUTOPROXY");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_URI,"OPEN_URI");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_MEMORY,"OPEN_MEMORY");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_MAIN_DB,"OPEN_MAIN_DB");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_TEMP_DB,"OPEN_TEMP_DB");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_TRANSIENT_DB,"OPEN_TRANSIENT_DB");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_MAIN_JOURNAL,"OPEN_MAIN_JOURNAL");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_TEMP_JOURNAL,"OPEN_TEMP_JOURNAL");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_SUBJOURNAL,"OPEN_SUBJOURNAL");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_MASTER_JOURNAL,"OPEN_MASTER_JOURNAL");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_NOMUTEX,"OPEN_NOMUTEX");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_FULLMUTEX,"OPEN_FULLMUTEX");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_SHAREDCACHE,"OPEN_SHAREDCACHE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_PRIVATECACHE,"OPEN_PRIVATECACHE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPEN_WAL,"OPEN_WAL");
+  }
+
   // - module http -
   if (a_modules[c_uclvar_module_http])
   {
@@ -2411,6 +2675,30 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CRC32,"CRC32");
   }
 
+  // - module ftp -
+  if (a_modules[c_uclvar_module_ftp])
+  {
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_DIR,"TYPE_DIR");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_DIR_VERBOSE,"TYPE_DIR_VERBOSE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_FILE_READ,"TYPE_FILE_READ");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_FILE_WRITE,"TYPE_FILE_WRITE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_MODE_ASCII,"MODE_ASCII");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_MODE_IMAGE,"MODE_IMAGE");
+  }
+
+  // - module ssh2 -
+  if (a_modules[c_uclvar_module_ssh2])
+  {
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_HOSTKEY_HASH_MD5,"HOSTKEY_HASH_MD5");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_HOSTKEY_HASH_SHA1,"HOSTKEY_HASH_SHA1");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_MODE_READ,"MODE_READ");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_MODE_WRITE,"MODE_WRITE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_MODE_APPEND,"MODE_APPEND");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_MODE_CREAT,"MODE_CREAT");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_MODE_TRUNC,"MODE_TRUNC");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_MODE_EXCL,"MODE_EXCL");
+  }
+
   // - module jit -
   if (a_modules[c_uclvar_module_jit])
   {
@@ -2545,6 +2833,16 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
 #endif
   }
 
+  // - module sqlite -
+  if (a_modules[c_uclvar_module_sqlite])
+  {
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(SQLiteConn,c_bi_class_SQLiteConn,c_bi_mi_threadsafe_0,c_bi_mni_threadsafe_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(SQLiteConn,c_bi_class_SQLiteConn,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(SQLiteConn,c_bi_class_SQLiteConn,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(SQLiteStatement,c_bi_class_SQLiteStatement,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(SQLiteStatement,c_bi_class_SQLiteStatement,c_bi_mi_print_0,c_bi_mni_print_0);
+  }
+
   // - module http -
   if (a_modules[c_uclvar_module_http])
   {
@@ -2630,6 +2928,30 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Bcc,c_bi_class_Bcc,c_bi_mi_print_0,c_bi_mni_print_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Crc,c_bi_class_Crc,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Crc,c_bi_class_Crc,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Md5,c_bi_class_Md5,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Md5,c_bi_class_Md5,c_bi_mi_print_0,c_bi_mni_print_0);
+  }
+
+  // - module ftp -
+  if (a_modules[c_uclvar_module_ftp])
+  {
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(FtpSession,c_bi_class_FtpSession,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(FtpSession,c_bi_class_FtpSession,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(FtpHandle,c_bi_class_FtpHandle,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(FtpHandle,c_bi_class_FtpHandle,c_bi_mi_print_0,c_bi_mni_print_0);
+  }
+
+  // - module ssh2 -
+  if (a_modules[c_uclvar_module_ssh2])
+  {
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Ssh2Session,c_bi_class_Ssh2Session,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Ssh2Session,c_bi_class_Ssh2Session,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(SftpSession,c_bi_class_SftpSession,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(SftpSession,c_bi_class_SftpSession,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(SftpHandle,c_bi_class_SftpHandle,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(SftpHandle,c_bi_class_SftpHandle,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Ssh2Channel,c_bi_class_Ssh2Channel,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Ssh2Channel,c_bi_class_Ssh2Channel,c_bi_mi_print_0,c_bi_mni_print_0);
   }
 
   // - module jit -
@@ -2852,6 +3174,31 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
 #endif
   }
 
+  // - module sqlite -
+  if (a_modules[c_uclvar_module_sqlite])
+  {
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_READONLY);
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_READWRITE);
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_CREATE);
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_DELETEONCLOSE);
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_EXCLUSIVE);
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_AUTOPROXY);
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_URI);
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_MEMORY);
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_MAIN_DB);
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_TEMP_DB);
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_TRANSIENT_DB);
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_MAIN_JOURNAL);
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_TEMP_JOURNAL);
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_SUBJOURNAL);
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_MASTER_JOURNAL);
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_NOMUTEX);
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_FULLMUTEX);
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_SHAREDCACHE);
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_PRIVATECACHE);
+    UCLVAR_RETRIEVE_STATIC_CONST(SQLiteConn,c_bi_class_SQLiteConn,OPEN_WAL);
+  }
+
   // - module http -
   if (a_modules[c_uclvar_module_http])
   {
@@ -3058,6 +3405,30 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(Crc,c_bi_class_Crc,CRC8);
     UCLVAR_RETRIEVE_STATIC_CONST(Crc,c_bi_class_Crc,CRC16);
     UCLVAR_RETRIEVE_STATIC_CONST(Crc,c_bi_class_Crc,CRC32);
+  }
+
+  // - module ftp -
+  if (a_modules[c_uclvar_module_ftp])
+  {
+    UCLVAR_RETRIEVE_STATIC_CONST(FtpSession,c_bi_class_FtpSession,TYPE_DIR);
+    UCLVAR_RETRIEVE_STATIC_CONST(FtpSession,c_bi_class_FtpSession,TYPE_DIR_VERBOSE);
+    UCLVAR_RETRIEVE_STATIC_CONST(FtpSession,c_bi_class_FtpSession,TYPE_FILE_READ);
+    UCLVAR_RETRIEVE_STATIC_CONST(FtpSession,c_bi_class_FtpSession,TYPE_FILE_WRITE);
+    UCLVAR_RETRIEVE_STATIC_CONST(FtpSession,c_bi_class_FtpSession,MODE_ASCII);
+    UCLVAR_RETRIEVE_STATIC_CONST(FtpSession,c_bi_class_FtpSession,MODE_IMAGE);
+  }
+
+  // - module ssh2 -
+  if (a_modules[c_uclvar_module_ssh2])
+  {
+    UCLVAR_RETRIEVE_STATIC_CONST(Ssh2Session,c_bi_class_Ssh2Session,HOSTKEY_HASH_MD5);
+    UCLVAR_RETRIEVE_STATIC_CONST(Ssh2Session,c_bi_class_Ssh2Session,HOSTKEY_HASH_SHA1);
+    UCLVAR_RETRIEVE_STATIC_CONST(SftpSession,c_bi_class_SftpSession,MODE_READ);
+    UCLVAR_RETRIEVE_STATIC_CONST(SftpSession,c_bi_class_SftpSession,MODE_WRITE);
+    UCLVAR_RETRIEVE_STATIC_CONST(SftpSession,c_bi_class_SftpSession,MODE_APPEND);
+    UCLVAR_RETRIEVE_STATIC_CONST(SftpSession,c_bi_class_SftpSession,MODE_CREAT);
+    UCLVAR_RETRIEVE_STATIC_CONST(SftpSession,c_bi_class_SftpSession,MODE_TRUNC);
+    UCLVAR_RETRIEVE_STATIC_CONST(SftpSession,c_bi_class_SftpSession,MODE_EXCL);
   }
 
   // - module jit -

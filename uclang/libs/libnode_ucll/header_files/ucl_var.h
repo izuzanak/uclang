@@ -35,11 +35,14 @@ enum
 {/*{{{*/
   c_uclvar_module_base = 0,
   c_uclvar_module_sys,
+  c_uclvar_module_sqlite,
   c_uclvar_module_http,
   c_uclvar_module_pack,
   c_uclvar_module_websocket,
   c_uclvar_module_curl,
   c_uclvar_module_ucf,
+  c_uclvar_module_ftp,
+  c_uclvar_module_ssh2,
   c_uclvar_module_jit,
   c_uclvar_module_node,
   c_uclvar_module_containers,
@@ -88,6 +91,8 @@ class UclVar
   static unsigned c_bi_class_Poll;
   static unsigned c_bi_class_Timer;
   static unsigned c_bi_class_Clock;
+  static unsigned c_bi_class_SQLiteConn;
+  static unsigned c_bi_class_SQLiteStatement;
   static unsigned c_bi_class_HttpServer;
   static unsigned c_bi_class_HttpConn;
   static unsigned c_bi_class_HttpResp;
@@ -111,6 +116,13 @@ class UclVar
   static unsigned c_bi_class_MsgQueue;
   static unsigned c_bi_class_Bcc;
   static unsigned c_bi_class_Crc;
+  static unsigned c_bi_class_Md5;
+  static unsigned c_bi_class_FtpSession;
+  static unsigned c_bi_class_FtpHandle;
+  static unsigned c_bi_class_Ssh2Session;
+  static unsigned c_bi_class_SftpSession;
+  static unsigned c_bi_class_SftpHandle;
+  static unsigned c_bi_class_Ssh2Channel;
   static unsigned c_bi_class_JitContext;
   static unsigned c_bi_class_JitFunction;
   static unsigned c_bi_class_NodeCallback;
@@ -312,6 +324,16 @@ class UclVar
   static unsigned c_bi_mni_getres_1;
   static unsigned c_bi_mni_gettime_1;
   static unsigned c_bi_mni_settime_2;
+  static unsigned c_bi_mni_SQLiteConn_1;
+  static unsigned c_bi_mni_SQLiteConn_2;
+  static unsigned c_bi_mni_threadsafe_0;
+  static unsigned c_bi_mni_execute_1;
+  static unsigned c_bi_mni_prepare_1;
+  static unsigned c_bi_mni_errmsg_0;
+  static unsigned c_bi_mni_bind_blob_2;
+  static unsigned c_bi_mni_step_0;
+  static unsigned c_bi_mni_reset_0;
+  static unsigned c_bi_mni_reset_clear_0;
   static unsigned c_bi_mni_HttpServer_2;
   static unsigned c_bi_mni_get_fds_0;
   static unsigned c_bi_mni_timeout_0;
@@ -419,6 +441,24 @@ class UclVar
   static unsigned c_bi_mni_append_1;
   static unsigned c_bi_mni_value_0;
   static unsigned c_bi_mni_Crc_2;
+  static unsigned c_bi_mni_Md5_0;
+  static unsigned c_bi_mni_FtpSession_1;
+  static unsigned c_bi_mni_login_2;
+  static unsigned c_bi_mni_get_file_2;
+  static unsigned c_bi_mni_put_file_2;
+  static unsigned c_bi_mni_Ssh2Session_1;
+  static unsigned c_bi_mni_hostkey_hash_1;
+  static unsigned c_bi_mni_userauth_list_1;
+  static unsigned c_bi_mni_userauth_password_2;
+  static unsigned c_bi_mni_userauth_fake_interactive_2;
+  static unsigned c_bi_mni_userauth_publickey_fromfile_4;
+  static unsigned c_bi_mni_sftp_session_0;
+  static unsigned c_bi_mni_exec_1;
+  static unsigned c_bi_mni_shell_0;
+  static unsigned c_bi_mni_mkdir_2;
+  static unsigned c_bi_mni_open_3;
+  static unsigned c_bi_mni_send_eof_0;
+  static unsigned c_bi_mni_read_stderr_0;
   static unsigned c_bi_mni_JitContext_0;
   static unsigned c_bi_mni_create_fun_1;
   static unsigned c_bi_mni_signature_0;
@@ -589,6 +629,26 @@ class UclVar
   static unsigned c_bi_vni__CLOCK_MONOTONIC;
   static unsigned c_bi_vni__CLOCK_PROCESS_CPUTIME_ID;
   static unsigned c_bi_vni__CLOCK_THREAD_CPUTIME_ID;
+  static unsigned c_bi_vni_OPEN_READONLY;
+  static unsigned c_bi_vni_OPEN_READWRITE;
+  static unsigned c_bi_vni_OPEN_CREATE;
+  static unsigned c_bi_vni_OPEN_DELETEONCLOSE;
+  static unsigned c_bi_vni_OPEN_EXCLUSIVE;
+  static unsigned c_bi_vni_OPEN_AUTOPROXY;
+  static unsigned c_bi_vni_OPEN_URI;
+  static unsigned c_bi_vni_OPEN_MEMORY;
+  static unsigned c_bi_vni_OPEN_MAIN_DB;
+  static unsigned c_bi_vni_OPEN_TEMP_DB;
+  static unsigned c_bi_vni_OPEN_TRANSIENT_DB;
+  static unsigned c_bi_vni_OPEN_MAIN_JOURNAL;
+  static unsigned c_bi_vni_OPEN_TEMP_JOURNAL;
+  static unsigned c_bi_vni_OPEN_SUBJOURNAL;
+  static unsigned c_bi_vni_OPEN_MASTER_JOURNAL;
+  static unsigned c_bi_vni_OPEN_NOMUTEX;
+  static unsigned c_bi_vni_OPEN_FULLMUTEX;
+  static unsigned c_bi_vni_OPEN_SHAREDCACHE;
+  static unsigned c_bi_vni_OPEN_PRIVATECACHE;
+  static unsigned c_bi_vni_OPEN_WAL;
   static unsigned c_bi_vni_TYPE_CONNECT;
   static unsigned c_bi_vni_TYPE_DELETE;
   static unsigned c_bi_vni_TYPE_GET;
@@ -772,6 +832,20 @@ class UclVar
   static unsigned c_bi_vni_CRC8;
   static unsigned c_bi_vni_CRC16;
   static unsigned c_bi_vni_CRC32;
+  static unsigned c_bi_vni_TYPE_DIR;
+  static unsigned c_bi_vni_TYPE_DIR_VERBOSE;
+  static unsigned c_bi_vni_TYPE_FILE_READ;
+  static unsigned c_bi_vni_TYPE_FILE_WRITE;
+  static unsigned c_bi_vni_MODE_ASCII;
+  static unsigned c_bi_vni_MODE_IMAGE;
+  static unsigned c_bi_vni_HOSTKEY_HASH_MD5;
+  static unsigned c_bi_vni_HOSTKEY_HASH_SHA1;
+  static unsigned c_bi_vni_MODE_READ;
+  static unsigned c_bi_vni_MODE_WRITE;
+  static unsigned c_bi_vni_MODE_APPEND;
+  static unsigned c_bi_vni_MODE_CREAT;
+  static unsigned c_bi_vni_MODE_TRUNC;
+  static unsigned c_bi_vni_MODE_EXCL;
   static unsigned c_bi_vni_TYPE_I8;
   static unsigned c_bi_vni_TYPE_U8;
   static unsigned c_bi_vni_TYPE_I16;
@@ -1767,6 +1841,86 @@ class UclVar
   };/*}}}*/
 #endif
 
+  // - class SQLiteConn -
+  class SQLiteConn
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_threadsafe_0;
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    static UclVar OPEN_READONLY;
+    static UclVar OPEN_READWRITE;
+    static UclVar OPEN_CREATE;
+    static UclVar OPEN_DELETEONCLOSE;
+    static UclVar OPEN_EXCLUSIVE;
+    static UclVar OPEN_AUTOPROXY;
+    static UclVar OPEN_URI;
+    static UclVar OPEN_MEMORY;
+    static UclVar OPEN_MAIN_DB;
+    static UclVar OPEN_TEMP_DB;
+    static UclVar OPEN_TRANSIENT_DB;
+    static UclVar OPEN_MAIN_JOURNAL;
+    static UclVar OPEN_TEMP_JOURNAL;
+    static UclVar OPEN_SUBJOURNAL;
+    static UclVar OPEN_MASTER_JOURNAL;
+    static UclVar OPEN_NOMUTEX;
+    static UclVar OPEN_FULLMUTEX;
+    static UclVar OPEN_SHAREDCACHE;
+    static UclVar OPEN_PRIVATECACHE;
+    static UclVar OPEN_WAL;
+
+    public:
+    inline static UclVar threadsafe()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_threadsafe_0);
+    }/*}}}*/
+
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar SQLiteConn(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_SQLiteConn,c_bi_mni_SQLiteConn_1,op_0);
+  }/*}}}*/
+
+  inline static UclVar SQLiteConn(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __new_object_2(c_bi_class_SQLiteConn,c_bi_mni_SQLiteConn_2,op_0,op_1);
+  }/*}}}*/
+
+  // - class SQLiteStatement -
+  class SQLiteStatement
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
   // - class HttpServer -
   class HttpServer
   {/*{{{*/
@@ -2654,6 +2808,188 @@ class UclVar
   {/*{{{*/
     return __new_object_2(c_bi_class_Crc,c_bi_mni_Crc_2,op_0,op_1);
   }/*}}}*/
+
+  // - class Md5 -
+  class Md5
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar Md5()
+  {/*{{{*/
+    return __new_object_0(c_bi_class_Md5,c_bi_mni_Md5_0);
+  }/*}}}*/
+
+  // - class FtpSession -
+  class FtpSession
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    static UclVar TYPE_DIR;
+    static UclVar TYPE_DIR_VERBOSE;
+    static UclVar TYPE_FILE_READ;
+    static UclVar TYPE_FILE_WRITE;
+    static UclVar MODE_ASCII;
+    static UclVar MODE_IMAGE;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar FtpSession(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_FtpSession,c_bi_mni_FtpSession_1,op_0);
+  }/*}}}*/
+
+  // - class FtpHandle -
+  class FtpHandle
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  // - class Ssh2Session -
+  class Ssh2Session
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    static UclVar HOSTKEY_HASH_MD5;
+    static UclVar HOSTKEY_HASH_SHA1;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar Ssh2Session(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_Ssh2Session,c_bi_mni_Ssh2Session_1,op_0);
+  }/*}}}*/
+
+  // - class SftpSession -
+  class SftpSession
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    static UclVar MODE_READ;
+    static UclVar MODE_WRITE;
+    static UclVar MODE_APPEND;
+    static UclVar MODE_CREAT;
+    static UclVar MODE_TRUNC;
+    static UclVar MODE_EXCL;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  // - class SftpHandle -
+  class SftpHandle
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  // - class Ssh2Channel -
+  class Ssh2Channel
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
 
   // - class JitContext -
   class JitContext
@@ -3794,6 +4130,46 @@ class UclVar
     return __call_2(c_bi_mni_settime_2,op_0,op_1);
   }/*}}}*/
 
+  inline UclVar threadsafe()
+  {/*{{{*/
+    return __call_0(c_bi_mni_threadsafe_0);
+  }/*}}}*/
+
+  inline UclVar execute(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_execute_1,op_0);
+  }/*}}}*/
+
+  inline UclVar prepare(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_prepare_1,op_0);
+  }/*}}}*/
+
+  inline UclVar errmsg()
+  {/*{{{*/
+    return __call_0(c_bi_mni_errmsg_0);
+  }/*}}}*/
+
+  inline UclVar bind_blob(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_bind_blob_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar step()
+  {/*{{{*/
+    return __call_0(c_bi_mni_step_0);
+  }/*}}}*/
+
+  inline UclVar reset()
+  {/*{{{*/
+    return __call_0(c_bi_mni_reset_0);
+  }/*}}}*/
+
+  inline UclVar reset_clear()
+  {/*{{{*/
+    return __call_0(c_bi_mni_reset_clear_0);
+  }/*}}}*/
+
   inline UclVar get_fds()
   {/*{{{*/
     return __call_0(c_bi_mni_get_fds_0);
@@ -4217,6 +4593,81 @@ class UclVar
   inline UclVar value()
   {/*{{{*/
     return __call_0(c_bi_mni_value_0);
+  }/*}}}*/
+
+  inline UclVar login(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_login_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar get_file(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_get_file_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar put_file(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_put_file_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar hostkey_hash(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_hostkey_hash_1,op_0);
+  }/*}}}*/
+
+  inline UclVar userauth_list(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_userauth_list_1,op_0);
+  }/*}}}*/
+
+  inline UclVar userauth_password(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_userauth_password_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar userauth_fake_interactive(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_userauth_fake_interactive_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar userauth_publickey_fromfile(UclVar op_0,UclVar op_1,UclVar op_2,UclVar op_3)
+  {/*{{{*/
+    return __call_4(c_bi_mni_userauth_publickey_fromfile_4,op_0,op_1,op_2,op_3);
+  }/*}}}*/
+
+  inline UclVar sftp_session()
+  {/*{{{*/
+    return __call_0(c_bi_mni_sftp_session_0);
+  }/*}}}*/
+
+  inline UclVar exec(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_exec_1,op_0);
+  }/*}}}*/
+
+  inline UclVar shell()
+  {/*{{{*/
+    return __call_0(c_bi_mni_shell_0);
+  }/*}}}*/
+
+  inline UclVar mkdir(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_mkdir_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar open(UclVar op_0,UclVar op_1,UclVar op_2)
+  {/*{{{*/
+    return __call_3(c_bi_mni_open_3,op_0,op_1,op_2);
+  }/*}}}*/
+
+  inline UclVar send_eof()
+  {/*{{{*/
+    return __call_0(c_bi_mni_send_eof_0);
+  }/*}}}*/
+
+  inline UclVar read_stderr()
+  {/*{{{*/
+    return __call_0(c_bi_mni_read_stderr_0);
   }/*}}}*/
 
   inline UclVar create_fun(UclVar op_0)

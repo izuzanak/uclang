@@ -1,10 +1,13 @@
 
 import sys;
+import sqlite;
 import http;
 import pack;
 import websocket;
 import curl;
 import ucf;
+import ftp;
+import ssh2;
 import jit;
 import containers;
 import algorithms;
@@ -74,17 +77,26 @@ class Main
   [/*{{{*/
     "base",
     "sys",
+    "sqlite",
     "http",
     "pack",
     "websocket",
     "curl",
     "ucf",
+    "ftp",
+    "ssh2",
     "jit",
     "node",
     "containers",
     "algorithms",
     "json",
     "xml"
+
+    // FIXME TODO modules
+    // parser
+    // inotify
+    // uctcn
+
   ];/*}}}*/
 
   static m_module_classes = new Dict(
@@ -117,6 +129,11 @@ class Main
       "Poll",
       "Timer",
       "Clock"
+    ],/*}}}*/
+    "sqlite",
+    [/*{{{*/
+      "SQLiteConn",
+      "SQLiteStatement"
     ],/*}}}*/
     "http",
     [/*{{{*/
@@ -154,7 +171,20 @@ class Main
       "NvmSegment",
       "MsgQueue",
       "Bcc",
-      "Crc"
+      "Crc",
+      "Md5"
+    ],/*}}}*/
+    "ftp",
+    [/*{{{*/
+      "FtpSession",
+      "FtpHandle"
+    ],/*}}}*/
+    "ssh2",
+    [/*{{{*/
+      "Ssh2Session",
+      "SftpSession",
+      "SftpHandle",
+      "Ssh2Channel"
     ],/*}}}*/
     "jit",
     [/*{{{*/
