@@ -40,6 +40,17 @@ UclVar node_to_dict(UclVar a_node)
   return dict;
 }/*}}}*/
 
+UclVar parse_cb(UclVar a_state)
+{/*{{{*/
+  if (a_state.rule_idx().__int() == 1)
+  {
+    printf("rule_body: '%s' , '%s' , '%s'\n",
+      a_state.rule_body(0).__str(),a_state.rule_body(1).__str(),a_state.rule_body(2).__str());
+  }
+
+  return UclVar();
+}/*}}}*/
+
 #if SYSTEM_TYPE_UNIX_CHROME_NACL != ENABLED
 int main(int argc,char **argv)
 {/*{{{*/
@@ -283,6 +294,20 @@ int main(int argc,char **argv)
     //  {
     //    printf("station: %s\n",station.to_string().__str());
     //  });
+    //}/*}}}*/
+
+    // - module parser test -
+    //{/*{{{*/
+    //  UclVar fa = UclVar::FinalAutomata({"\"xxx\"","'y'.'y'*","\"zzz\""});
+    //  UclVar src = fa.get_source("xxxyyyyyyyyzzz");
+
+    //  UCL_FOR_LOOP(term,src,
+    //  {
+    //    printf("terminal: %" HOST_LL_FORMAT "d\n",term.__int());
+    //  });
+
+    //  UclVar parser = UclVar::Parser(UclVar::File("new_reg.rules","r").read_close());
+    //  parser.parse("('\\xff' + <\\nz>.d + \"Hello\\n\" + '\\n' + '\\\\' + 'X' + |0123| + |abc\\||)\0",UclVar::Delegate(parse_cb));
     //}/*}}}*/
 
 #if __cplusplus >= 201103

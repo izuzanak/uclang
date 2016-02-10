@@ -32,12 +32,16 @@ unsigned UclVar::c_bi_class_Signal;
 unsigned UclVar::c_bi_class_Poll;
 unsigned UclVar::c_bi_class_Timer;
 unsigned UclVar::c_bi_class_Clock;
+unsigned UclVar::c_bi_class_Pack;
+unsigned UclVar::c_bi_class_FinalAutomata;
+unsigned UclVar::c_bi_class_FaSource;
+unsigned UclVar::c_bi_class_Parser;
+unsigned UclVar::c_bi_class_ParseState;
 unsigned UclVar::c_bi_class_SQLiteConn;
 unsigned UclVar::c_bi_class_SQLiteStatement;
 unsigned UclVar::c_bi_class_HttpServer;
 unsigned UclVar::c_bi_class_HttpConn;
 unsigned UclVar::c_bi_class_HttpResp;
-unsigned UclVar::c_bi_class_Pack;
 unsigned UclVar::c_bi_class_WsContext;
 unsigned UclVar::c_bi_class_WsConn;
 unsigned UclVar::c_bi_class_WsClient;
@@ -265,6 +269,19 @@ unsigned UclVar::c_bi_mni_remain_0;
 unsigned UclVar::c_bi_mni_getres_1;
 unsigned UclVar::c_bi_mni_gettime_1;
 unsigned UclVar::c_bi_mni_settime_2;
+unsigned UclVar::c_bi_mni_pack_1;
+unsigned UclVar::c_bi_mni_unpack_1;
+unsigned UclVar::c_bi_mni_code_2;
+unsigned UclVar::c_bi_mni_decode_2;
+unsigned UclVar::c_bi_mni_FinalAutomata_1;
+unsigned UclVar::c_bi_mni_get_source_1;
+unsigned UclVar::c_bi_mni_next_terminal_0;
+unsigned UclVar::c_bi_mni_old_input_idx_0;
+unsigned UclVar::c_bi_mni_input_idx_0;
+unsigned UclVar::c_bi_mni_Parser_1;
+unsigned UclVar::c_bi_mni_parse_2;
+unsigned UclVar::c_bi_mni_rule_idx_0;
+unsigned UclVar::c_bi_mni_rule_body_1;
 unsigned UclVar::c_bi_mni_SQLiteConn_1;
 unsigned UclVar::c_bi_mni_SQLiteConn_2;
 unsigned UclVar::c_bi_mni_threadsafe_0;
@@ -291,10 +308,6 @@ unsigned UclVar::c_bi_mni_HttpResp_1;
 unsigned UclVar::c_bi_mni_HttpResp_2;
 unsigned UclVar::c_bi_mni_add_header_2;
 unsigned UclVar::c_bi_mni_add_footer_2;
-unsigned UclVar::c_bi_mni_pack_1;
-unsigned UclVar::c_bi_mni_unpack_1;
-unsigned UclVar::c_bi_mni_code_2;
-unsigned UclVar::c_bi_mni_decode_2;
 unsigned UclVar::c_bi_mni_WsContext_2;
 unsigned UclVar::c_bi_mni_client_4;
 unsigned UclVar::c_bi_mni_protocol_idx_1;
@@ -874,6 +887,20 @@ unsigned UclVar::Clock::c_bi_mi_settime_2;
 unsigned UclVar::Clock::c_bi_mi_to_string_0;
 unsigned UclVar::Clock::c_bi_mi_print_0;
 #endif
+unsigned UclVar::Pack::c_bi_mi_pack_1;
+unsigned UclVar::Pack::c_bi_mi_unpack_1;
+unsigned UclVar::Pack::c_bi_mi_code_2;
+unsigned UclVar::Pack::c_bi_mi_decode_2;
+unsigned UclVar::Pack::c_bi_mi_to_string_0;
+unsigned UclVar::Pack::c_bi_mi_print_0;
+unsigned UclVar::FinalAutomata::c_bi_mi_to_string_0;
+unsigned UclVar::FinalAutomata::c_bi_mi_print_0;
+unsigned UclVar::FaSource::c_bi_mi_to_string_0;
+unsigned UclVar::FaSource::c_bi_mi_print_0;
+unsigned UclVar::Parser::c_bi_mi_to_string_0;
+unsigned UclVar::Parser::c_bi_mi_print_0;
+unsigned UclVar::ParseState::c_bi_mi_to_string_0;
+unsigned UclVar::ParseState::c_bi_mi_print_0;
 unsigned UclVar::SQLiteConn::c_bi_mi_threadsafe_0;
 unsigned UclVar::SQLiteConn::c_bi_mi_to_string_0;
 unsigned UclVar::SQLiteConn::c_bi_mi_print_0;
@@ -885,12 +912,6 @@ unsigned UclVar::HttpConn::c_bi_mi_to_string_0;
 unsigned UclVar::HttpConn::c_bi_mi_print_0;
 unsigned UclVar::HttpResp::c_bi_mi_to_string_0;
 unsigned UclVar::HttpResp::c_bi_mi_print_0;
-unsigned UclVar::Pack::c_bi_mi_pack_1;
-unsigned UclVar::Pack::c_bi_mi_unpack_1;
-unsigned UclVar::Pack::c_bi_mi_code_2;
-unsigned UclVar::Pack::c_bi_mi_decode_2;
-unsigned UclVar::Pack::c_bi_mi_to_string_0;
-unsigned UclVar::Pack::c_bi_mi_print_0;
 unsigned UclVar::WsContext::c_bi_mi_version_0;
 unsigned UclVar::WsContext::c_bi_mi_to_string_0;
 unsigned UclVar::WsContext::c_bi_mi_print_0;
@@ -1392,6 +1413,21 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
 #endif
   }
 
+  // - module pack -
+  if (a_modules[c_uclvar_module_pack])
+  {
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Pack,"Pack");
+  }
+
+  // - module parser -
+  if (a_modules[c_uclvar_module_parser])
+  {
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_FinalAutomata,"FinalAutomata");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_FaSource,"FaSource");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Parser,"Parser");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_ParseState,"ParseState");
+  }
+
   // - module sqlite -
   if (a_modules[c_uclvar_module_sqlite])
   {
@@ -1405,12 +1441,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_HttpServer,"HttpServer");
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_HttpConn,"HttpConn");
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_HttpResp,"HttpResp");
-  }
-
-  // - module pack -
-  if (a_modules[c_uclvar_module_pack])
-  {
-    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Pack,"Pack");
   }
 
   // - module websocket -
@@ -1796,6 +1826,42 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
 #endif
   }
 
+  // - module pack -
+  if (a_modules[c_uclvar_module_pack])
+  {
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_pack_1,"pack#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_unpack_1,"unpack#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_code_2,"code#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_decode_2,"decode#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+  }
+
+  // - module parser -
+  if (a_modules[c_uclvar_module_parser])
+  {
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_FinalAutomata_1,"FinalAutomata#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_source_1,"get_source#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_next_terminal_0,"next_terminal#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_old_input_idx_0,"old_input_idx#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_input_idx_0,"input_idx#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_next_item_0,"next_item#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Parser_1,"Parser#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_parse_2,"parse#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_rule_idx_0,"rule_idx#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_rule_body_1,"rule_body#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_old_input_idx_0,"old_input_idx#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_input_idx_0,"input_idx#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+  }
+
   // - module sqlite -
   if (a_modules[c_uclvar_module_sqlite])
   {
@@ -1842,17 +1908,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_HttpResp_2,"HttpResp#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_add_header_2,"add_header#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_add_footer_2,"add_footer#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-  }
-
-  // - module pack -
-  if (a_modules[c_uclvar_module_pack])
-  {
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_pack_1,"pack#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_unpack_1,"unpack#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_code_2,"code#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_decode_2,"decode#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
   }
@@ -2442,6 +2497,16 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
 #endif
   }
 
+  // - module pack -
+  if (a_modules[c_uclvar_module_pack])
+  {
+  }
+
+  // - module parser -
+  if (a_modules[c_uclvar_module_parser])
+  {
+  }
+
   // - module sqlite -
   if (a_modules[c_uclvar_module_sqlite])
   {
@@ -2542,11 +2607,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_HTTP_INSUFFICIENT_STORAGE,"HTTP_INSUFFICIENT_STORAGE");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_HTTP_BANDWIDTH_LIMIT_EXCEEDED,"HTTP_BANDWIDTH_LIMIT_EXCEEDED");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_HTTP_NOT_EXTENDED,"HTTP_NOT_EXTENDED");
-  }
-
-  // - module pack -
-  if (a_modules[c_uclvar_module_pack])
-  {
   }
 
   // - module websocket -
@@ -2833,6 +2893,30 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
 #endif
   }
 
+  // - module pack -
+  if (a_modules[c_uclvar_module_pack])
+  {
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Pack,c_bi_class_Pack,c_bi_mi_pack_1,c_bi_mni_pack_1);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Pack,c_bi_class_Pack,c_bi_mi_unpack_1,c_bi_mni_unpack_1);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Pack,c_bi_class_Pack,c_bi_mi_code_2,c_bi_mni_code_2);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Pack,c_bi_class_Pack,c_bi_mi_decode_2,c_bi_mni_decode_2);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Pack,c_bi_class_Pack,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Pack,c_bi_class_Pack,c_bi_mi_print_0,c_bi_mni_print_0);
+  }
+
+  // - module parser -
+  if (a_modules[c_uclvar_module_parser])
+  {
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(FinalAutomata,c_bi_class_FinalAutomata,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(FinalAutomata,c_bi_class_FinalAutomata,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(FaSource,c_bi_class_FaSource,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(FaSource,c_bi_class_FaSource,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Parser,c_bi_class_Parser,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Parser,c_bi_class_Parser,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(ParseState,c_bi_class_ParseState,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(ParseState,c_bi_class_ParseState,c_bi_mi_print_0,c_bi_mni_print_0);
+  }
+
   // - module sqlite -
   if (a_modules[c_uclvar_module_sqlite])
   {
@@ -2852,17 +2936,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(HttpConn,c_bi_class_HttpConn,c_bi_mi_print_0,c_bi_mni_print_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(HttpResp,c_bi_class_HttpResp,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(HttpResp,c_bi_class_HttpResp,c_bi_mi_print_0,c_bi_mni_print_0);
-  }
-
-  // - module pack -
-  if (a_modules[c_uclvar_module_pack])
-  {
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Pack,c_bi_class_Pack,c_bi_mi_pack_1,c_bi_mni_pack_1);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Pack,c_bi_class_Pack,c_bi_mi_unpack_1,c_bi_mni_unpack_1);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Pack,c_bi_class_Pack,c_bi_mi_code_2,c_bi_mni_code_2);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Pack,c_bi_class_Pack,c_bi_mi_decode_2,c_bi_mni_decode_2);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Pack,c_bi_class_Pack,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Pack,c_bi_class_Pack,c_bi_mi_print_0,c_bi_mni_print_0);
   }
 
   // - module websocket -
@@ -3174,6 +3247,16 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
 #endif
   }
 
+  // - module pack -
+  if (a_modules[c_uclvar_module_pack])
+  {
+  }
+
+  // - module parser -
+  if (a_modules[c_uclvar_module_parser])
+  {
+  }
+
   // - module sqlite -
   if (a_modules[c_uclvar_module_sqlite])
   {
@@ -3274,11 +3357,6 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,HTTP_INSUFFICIENT_STORAGE);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,HTTP_BANDWIDTH_LIMIT_EXCEEDED);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,HTTP_NOT_EXTENDED);
-  }
-
-  // - module pack -
-  if (a_modules[c_uclvar_module_pack])
-  {
   }
 
   // - module websocket -

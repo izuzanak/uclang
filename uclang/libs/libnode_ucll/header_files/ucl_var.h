@@ -35,9 +35,10 @@ enum
 {/*{{{*/
   c_uclvar_module_base = 0,
   c_uclvar_module_sys,
+  c_uclvar_module_pack,
+  c_uclvar_module_parser,
   c_uclvar_module_sqlite,
   c_uclvar_module_http,
-  c_uclvar_module_pack,
   c_uclvar_module_websocket,
   c_uclvar_module_curl,
   c_uclvar_module_ucf,
@@ -91,12 +92,16 @@ class UclVar
   static unsigned c_bi_class_Poll;
   static unsigned c_bi_class_Timer;
   static unsigned c_bi_class_Clock;
+  static unsigned c_bi_class_Pack;
+  static unsigned c_bi_class_FinalAutomata;
+  static unsigned c_bi_class_FaSource;
+  static unsigned c_bi_class_Parser;
+  static unsigned c_bi_class_ParseState;
   static unsigned c_bi_class_SQLiteConn;
   static unsigned c_bi_class_SQLiteStatement;
   static unsigned c_bi_class_HttpServer;
   static unsigned c_bi_class_HttpConn;
   static unsigned c_bi_class_HttpResp;
-  static unsigned c_bi_class_Pack;
   static unsigned c_bi_class_WsContext;
   static unsigned c_bi_class_WsConn;
   static unsigned c_bi_class_WsClient;
@@ -324,6 +329,19 @@ class UclVar
   static unsigned c_bi_mni_getres_1;
   static unsigned c_bi_mni_gettime_1;
   static unsigned c_bi_mni_settime_2;
+  static unsigned c_bi_mni_pack_1;
+  static unsigned c_bi_mni_unpack_1;
+  static unsigned c_bi_mni_code_2;
+  static unsigned c_bi_mni_decode_2;
+  static unsigned c_bi_mni_FinalAutomata_1;
+  static unsigned c_bi_mni_get_source_1;
+  static unsigned c_bi_mni_next_terminal_0;
+  static unsigned c_bi_mni_old_input_idx_0;
+  static unsigned c_bi_mni_input_idx_0;
+  static unsigned c_bi_mni_Parser_1;
+  static unsigned c_bi_mni_parse_2;
+  static unsigned c_bi_mni_rule_idx_0;
+  static unsigned c_bi_mni_rule_body_1;
   static unsigned c_bi_mni_SQLiteConn_1;
   static unsigned c_bi_mni_SQLiteConn_2;
   static unsigned c_bi_mni_threadsafe_0;
@@ -350,10 +368,6 @@ class UclVar
   static unsigned c_bi_mni_HttpResp_2;
   static unsigned c_bi_mni_add_header_2;
   static unsigned c_bi_mni_add_footer_2;
-  static unsigned c_bi_mni_pack_1;
-  static unsigned c_bi_mni_unpack_1;
-  static unsigned c_bi_mni_code_2;
-  static unsigned c_bi_mni_decode_2;
   static unsigned c_bi_mni_WsContext_2;
   static unsigned c_bi_mni_client_4;
   static unsigned c_bi_mni_protocol_idx_1;
@@ -1841,6 +1855,145 @@ class UclVar
   };/*}}}*/
 #endif
 
+  // - class Pack -
+  class Pack
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_pack_1;
+    static unsigned c_bi_mi_unpack_1;
+    static unsigned c_bi_mi_code_2;
+    static unsigned c_bi_mi_decode_2;
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar pack(UclVar op_0)
+    {/*{{{*/
+      return __static_call_1(c_bi_mi_pack_1,op_0);
+    }/*}}}*/
+
+    inline static UclVar unpack(UclVar op_0)
+    {/*{{{*/
+      return __static_call_1(c_bi_mi_unpack_1,op_0);
+    }/*}}}*/
+
+    inline static UclVar code(UclVar op_0,UclVar op_1)
+    {/*{{{*/
+      return __static_call_2(c_bi_mi_code_2,op_0,op_1);
+    }/*}}}*/
+
+    inline static UclVar decode(UclVar op_0,UclVar op_1)
+    {/*{{{*/
+      return __static_call_2(c_bi_mi_decode_2,op_0,op_1);
+    }/*}}}*/
+
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  // - class FinalAutomata -
+  class FinalAutomata
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar FinalAutomata(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_FinalAutomata,c_bi_mni_FinalAutomata_1,op_0);
+  }/*}}}*/
+
+  // - class FaSource -
+  class FaSource
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  // - class Parser -
+  class Parser
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar Parser(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_Parser,c_bi_mni_Parser_1,op_0);
+  }/*}}}*/
+
+  // - class ParseState -
+  class ParseState
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
   // - class SQLiteConn -
   class SQLiteConn
   {/*{{{*/
@@ -2074,51 +2227,6 @@ class UclVar
   {/*{{{*/
     return __new_object_2(c_bi_class_HttpResp,c_bi_mni_HttpResp_2,op_0,op_1);
   }/*}}}*/
-
-  // - class Pack -
-  class Pack
-  {/*{{{*/
-    friend class UclVar;
-    protected:
-    static unsigned c_bi_mi_pack_1;
-    static unsigned c_bi_mi_unpack_1;
-    static unsigned c_bi_mi_code_2;
-    static unsigned c_bi_mi_decode_2;
-    static unsigned c_bi_mi_to_string_0;
-    static unsigned c_bi_mi_print_0;
-
-    public:
-    inline static UclVar pack(UclVar op_0)
-    {/*{{{*/
-      return __static_call_1(c_bi_mi_pack_1,op_0);
-    }/*}}}*/
-
-    inline static UclVar unpack(UclVar op_0)
-    {/*{{{*/
-      return __static_call_1(c_bi_mi_unpack_1,op_0);
-    }/*}}}*/
-
-    inline static UclVar code(UclVar op_0,UclVar op_1)
-    {/*{{{*/
-      return __static_call_2(c_bi_mi_code_2,op_0,op_1);
-    }/*}}}*/
-
-    inline static UclVar decode(UclVar op_0,UclVar op_1)
-    {/*{{{*/
-      return __static_call_2(c_bi_mi_decode_2,op_0,op_1);
-    }/*}}}*/
-
-    inline static UclVar to_string()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_to_string_0);
-    }/*}}}*/
-
-    inline static UclVar print()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_print_0);
-    }/*}}}*/
-
-  };/*}}}*/
 
   // - class WsContext -
   class WsContext
@@ -4130,6 +4238,61 @@ class UclVar
     return __call_2(c_bi_mni_settime_2,op_0,op_1);
   }/*}}}*/
 
+  inline UclVar pack(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_pack_1,op_0);
+  }/*}}}*/
+
+  inline UclVar unpack(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_unpack_1,op_0);
+  }/*}}}*/
+
+  inline UclVar code(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_code_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar decode(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_decode_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar get_source(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_get_source_1,op_0);
+  }/*}}}*/
+
+  inline UclVar next_terminal()
+  {/*{{{*/
+    return __call_0(c_bi_mni_next_terminal_0);
+  }/*}}}*/
+
+  inline UclVar old_input_idx()
+  {/*{{{*/
+    return __call_0(c_bi_mni_old_input_idx_0);
+  }/*}}}*/
+
+  inline UclVar input_idx()
+  {/*{{{*/
+    return __call_0(c_bi_mni_input_idx_0);
+  }/*}}}*/
+
+  inline UclVar parse(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_parse_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar rule_idx()
+  {/*{{{*/
+    return __call_0(c_bi_mni_rule_idx_0);
+  }/*}}}*/
+
+  inline UclVar rule_body(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_rule_body_1,op_0);
+  }/*}}}*/
+
   inline UclVar threadsafe()
   {/*{{{*/
     return __call_0(c_bi_mni_threadsafe_0);
@@ -4233,26 +4396,6 @@ class UclVar
   inline UclVar add_footer(UclVar op_0,UclVar op_1)
   {/*{{{*/
     return __call_2(c_bi_mni_add_footer_2,op_0,op_1);
-  }/*}}}*/
-
-  inline UclVar pack(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_pack_1,op_0);
-  }/*}}}*/
-
-  inline UclVar unpack(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_unpack_1,op_0);
-  }/*}}}*/
-
-  inline UclVar code(UclVar op_0,UclVar op_1)
-  {/*{{{*/
-    return __call_2(c_bi_mni_code_2,op_0,op_1);
-  }/*}}}*/
-
-  inline UclVar decode(UclVar op_0,UclVar op_1)
-  {/*{{{*/
-    return __call_2(c_bi_mni_decode_2,op_0,op_1);
   }/*}}}*/
 
   inline UclVar client(UclVar op_0,UclVar op_1,UclVar op_2,UclVar op_3)
