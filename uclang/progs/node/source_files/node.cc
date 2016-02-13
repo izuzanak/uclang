@@ -310,6 +310,33 @@ int main(int argc,char **argv)
     //  parser.parse("('\\xff' + <\\nz>.d + \"Hello\\n\" + '\\n' + '\\\\' + 'X' + |0123| + |abc\\||)\0",UclVar::Delegate(parse_cb));
     //}/*}}}*/
 
+    // - module inotify test -
+    //{/*{{{*/
+    //  UclVar intf = UclVar::Inotify();
+    //  UclVar inw = intf.add_watch("/tmp",UclVar::Inotify::IN_CREATE | UclVar::Inotify::IN_DELETE);
+
+    //  UclVar poll = UclVar::Poll({intf.get_fd(),UclVar::Poll::POLLIN});
+    //  bool exit = false;
+    //  do {
+    //    if (poll.ready(1000).__int())
+    //    {
+    //      UCL_FOR_LOOP(event,intf.read(),
+    //      {
+    //        if ((event.watch_id() == inw.watch_id()).__int())
+    //        {
+    //          UclVar values({event.watch_id(),event.mask(),event.cookie(),inw.name(),event.name()});
+    //          printf((UclVar("event: %d, %d, %d, %s/%s\n") % values).__str());
+    //        }
+
+    //        if ((event.name() == "exit").__int())
+    //        {
+    //          exit = true;
+    //        }
+    //      })
+    //    }
+    //  } while(!exit);
+    //}/*}}}*/
+
 #if __cplusplus >= 201103
 
     // - c++11 initializer_list -

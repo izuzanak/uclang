@@ -35,6 +35,7 @@ enum
 {/*{{{*/
   c_uclvar_module_base = 0,
   c_uclvar_module_sys,
+  c_uclvar_module_inotify,
   c_uclvar_module_pack,
   c_uclvar_module_parser,
   c_uclvar_module_sqlite,
@@ -92,6 +93,9 @@ class UclVar
   static unsigned c_bi_class_Poll;
   static unsigned c_bi_class_Timer;
   static unsigned c_bi_class_Clock;
+  static unsigned c_bi_class_Inotify;
+  static unsigned c_bi_class_InotifyWatch;
+  static unsigned c_bi_class_InotifyEvent;
   static unsigned c_bi_class_Pack;
   static unsigned c_bi_class_FinalAutomata;
   static unsigned c_bi_class_FaSource;
@@ -329,6 +333,11 @@ class UclVar
   static unsigned c_bi_mni_getres_1;
   static unsigned c_bi_mni_gettime_1;
   static unsigned c_bi_mni_settime_2;
+  static unsigned c_bi_mni_Inotify_0;
+  static unsigned c_bi_mni_add_watch_2;
+  static unsigned c_bi_mni_watch_id_0;
+  static unsigned c_bi_mni_mask_0;
+  static unsigned c_bi_mni_cookie_0;
   static unsigned c_bi_mni_pack_1;
   static unsigned c_bi_mni_unpack_1;
   static unsigned c_bi_mni_code_2;
@@ -643,6 +652,29 @@ class UclVar
   static unsigned c_bi_vni__CLOCK_MONOTONIC;
   static unsigned c_bi_vni__CLOCK_PROCESS_CPUTIME_ID;
   static unsigned c_bi_vni__CLOCK_THREAD_CPUTIME_ID;
+  static unsigned c_bi_vni_IN_ACCESS;
+  static unsigned c_bi_vni_IN_MODIFY;
+  static unsigned c_bi_vni_IN_ATTRIB;
+  static unsigned c_bi_vni_IN_CLOSE_WRITE;
+  static unsigned c_bi_vni_IN_CLOSE_NOWRITE;
+  static unsigned c_bi_vni_IN_CLOSE;
+  static unsigned c_bi_vni_IN_OPEN;
+  static unsigned c_bi_vni_IN_MOVED_FROM;
+  static unsigned c_bi_vni_IN_MOVED_TO;
+  static unsigned c_bi_vni_IN_MOVE;
+  static unsigned c_bi_vni_IN_CREATE;
+  static unsigned c_bi_vni_IN_DELETE;
+  static unsigned c_bi_vni_IN_DELETE_SELF;
+  static unsigned c_bi_vni_IN_MOVE_SELF;
+  static unsigned c_bi_vni_IN_UNMOUNT;
+  static unsigned c_bi_vni_IN_Q_OVERFLOW;
+  static unsigned c_bi_vni_IN_IGNORED;
+  static unsigned c_bi_vni_IN_ONLYDIR;
+  static unsigned c_bi_vni_IN_DONT_FOLLOW;
+  static unsigned c_bi_vni_IN_MASK_ADD;
+  static unsigned c_bi_vni_IN_ISDIR;
+  static unsigned c_bi_vni_IN_ONESHOT;
+  static unsigned c_bi_vni_IN_ALL_EVENTS;
   static unsigned c_bi_vni_OPEN_READONLY;
   static unsigned c_bi_vni_OPEN_READWRITE;
   static unsigned c_bi_vni_OPEN_CREATE;
@@ -1854,6 +1886,99 @@ class UclVar
 
   };/*}}}*/
 #endif
+
+  // - class Inotify -
+  class Inotify
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    static UclVar IN_ACCESS;
+    static UclVar IN_MODIFY;
+    static UclVar IN_ATTRIB;
+    static UclVar IN_CLOSE_WRITE;
+    static UclVar IN_CLOSE_NOWRITE;
+    static UclVar IN_CLOSE;
+    static UclVar IN_OPEN;
+    static UclVar IN_MOVED_FROM;
+    static UclVar IN_MOVED_TO;
+    static UclVar IN_MOVE;
+    static UclVar IN_CREATE;
+    static UclVar IN_DELETE;
+    static UclVar IN_DELETE_SELF;
+    static UclVar IN_MOVE_SELF;
+    static UclVar IN_UNMOUNT;
+    static UclVar IN_Q_OVERFLOW;
+    static UclVar IN_IGNORED;
+    static UclVar IN_ONLYDIR;
+    static UclVar IN_DONT_FOLLOW;
+    static UclVar IN_MASK_ADD;
+    static UclVar IN_ISDIR;
+    static UclVar IN_ONESHOT;
+    static UclVar IN_ALL_EVENTS;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar Inotify()
+  {/*{{{*/
+    return __new_object_0(c_bi_class_Inotify,c_bi_mni_Inotify_0);
+  }/*}}}*/
+
+  // - class InotifyWatch -
+  class InotifyWatch
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  // - class InotifyEvent -
+  class InotifyEvent
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
 
   // - class Pack -
   class Pack
@@ -4236,6 +4361,26 @@ class UclVar
   inline UclVar settime(UclVar op_0,UclVar op_1)
   {/*{{{*/
     return __call_2(c_bi_mni_settime_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar add_watch(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_add_watch_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar watch_id()
+  {/*{{{*/
+    return __call_0(c_bi_mni_watch_id_0);
+  }/*}}}*/
+
+  inline UclVar mask()
+  {/*{{{*/
+    return __call_0(c_bi_mni_mask_0);
+  }/*}}}*/
+
+  inline UclVar cookie()
+  {/*{{{*/
+    return __call_0(c_bi_mni_cookie_0);
   }/*}}}*/
 
   inline UclVar pack(UclVar op_0)

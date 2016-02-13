@@ -1,5 +1,6 @@
 
 import sys;
+import inotify;
 import pack;
 import parser;
 import sqlite;
@@ -78,6 +79,7 @@ class Main
   [/*{{{*/
     "base",
     "sys",
+    "inotify",
     "pack",
     "parser",
     "sqlite",
@@ -95,7 +97,7 @@ class Main
     "xml"
 
     // FIXME TODO modules
-    // inotify
+    // time
     // uctcn
 
   ];/*}}}*/
@@ -130,6 +132,12 @@ class Main
       "Poll",
       "Timer",
       "Clock"
+    ],/*}}}*/
+    "inotify",
+    [/*{{{*/
+      "Inotify",
+      "InotifyWatch",
+      "InotifyEvent"
     ],/*}}}*/
     "pack",
     [/*{{{*/

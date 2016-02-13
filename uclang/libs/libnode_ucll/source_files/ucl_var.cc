@@ -32,6 +32,9 @@ unsigned UclVar::c_bi_class_Signal;
 unsigned UclVar::c_bi_class_Poll;
 unsigned UclVar::c_bi_class_Timer;
 unsigned UclVar::c_bi_class_Clock;
+unsigned UclVar::c_bi_class_Inotify;
+unsigned UclVar::c_bi_class_InotifyWatch;
+unsigned UclVar::c_bi_class_InotifyEvent;
 unsigned UclVar::c_bi_class_Pack;
 unsigned UclVar::c_bi_class_FinalAutomata;
 unsigned UclVar::c_bi_class_FaSource;
@@ -269,6 +272,11 @@ unsigned UclVar::c_bi_mni_remain_0;
 unsigned UclVar::c_bi_mni_getres_1;
 unsigned UclVar::c_bi_mni_gettime_1;
 unsigned UclVar::c_bi_mni_settime_2;
+unsigned UclVar::c_bi_mni_Inotify_0;
+unsigned UclVar::c_bi_mni_add_watch_2;
+unsigned UclVar::c_bi_mni_watch_id_0;
+unsigned UclVar::c_bi_mni_mask_0;
+unsigned UclVar::c_bi_mni_cookie_0;
 unsigned UclVar::c_bi_mni_pack_1;
 unsigned UclVar::c_bi_mni_unpack_1;
 unsigned UclVar::c_bi_mni_code_2;
@@ -583,6 +591,29 @@ unsigned UclVar::c_bi_vni__CLOCK_REALTIME;
 unsigned UclVar::c_bi_vni__CLOCK_MONOTONIC;
 unsigned UclVar::c_bi_vni__CLOCK_PROCESS_CPUTIME_ID;
 unsigned UclVar::c_bi_vni__CLOCK_THREAD_CPUTIME_ID;
+unsigned UclVar::c_bi_vni_IN_ACCESS;
+unsigned UclVar::c_bi_vni_IN_MODIFY;
+unsigned UclVar::c_bi_vni_IN_ATTRIB;
+unsigned UclVar::c_bi_vni_IN_CLOSE_WRITE;
+unsigned UclVar::c_bi_vni_IN_CLOSE_NOWRITE;
+unsigned UclVar::c_bi_vni_IN_CLOSE;
+unsigned UclVar::c_bi_vni_IN_OPEN;
+unsigned UclVar::c_bi_vni_IN_MOVED_FROM;
+unsigned UclVar::c_bi_vni_IN_MOVED_TO;
+unsigned UclVar::c_bi_vni_IN_MOVE;
+unsigned UclVar::c_bi_vni_IN_CREATE;
+unsigned UclVar::c_bi_vni_IN_DELETE;
+unsigned UclVar::c_bi_vni_IN_DELETE_SELF;
+unsigned UclVar::c_bi_vni_IN_MOVE_SELF;
+unsigned UclVar::c_bi_vni_IN_UNMOUNT;
+unsigned UclVar::c_bi_vni_IN_Q_OVERFLOW;
+unsigned UclVar::c_bi_vni_IN_IGNORED;
+unsigned UclVar::c_bi_vni_IN_ONLYDIR;
+unsigned UclVar::c_bi_vni_IN_DONT_FOLLOW;
+unsigned UclVar::c_bi_vni_IN_MASK_ADD;
+unsigned UclVar::c_bi_vni_IN_ISDIR;
+unsigned UclVar::c_bi_vni_IN_ONESHOT;
+unsigned UclVar::c_bi_vni_IN_ALL_EVENTS;
 unsigned UclVar::c_bi_vni_OPEN_READONLY;
 unsigned UclVar::c_bi_vni_OPEN_READWRITE;
 unsigned UclVar::c_bi_vni_OPEN_CREATE;
@@ -887,6 +918,12 @@ unsigned UclVar::Clock::c_bi_mi_settime_2;
 unsigned UclVar::Clock::c_bi_mi_to_string_0;
 unsigned UclVar::Clock::c_bi_mi_print_0;
 #endif
+unsigned UclVar::Inotify::c_bi_mi_to_string_0;
+unsigned UclVar::Inotify::c_bi_mi_print_0;
+unsigned UclVar::InotifyWatch::c_bi_mi_to_string_0;
+unsigned UclVar::InotifyWatch::c_bi_mi_print_0;
+unsigned UclVar::InotifyEvent::c_bi_mi_to_string_0;
+unsigned UclVar::InotifyEvent::c_bi_mi_print_0;
 unsigned UclVar::Pack::c_bi_mi_pack_1;
 unsigned UclVar::Pack::c_bi_mi_unpack_1;
 unsigned UclVar::Pack::c_bi_mi_code_2;
@@ -1132,6 +1169,29 @@ UclVar UclVar::Clock::_CLOCK_MONOTONIC = UclVar(NO_INIT());
 UclVar UclVar::Clock::_CLOCK_PROCESS_CPUTIME_ID = UclVar(NO_INIT());
 UclVar UclVar::Clock::_CLOCK_THREAD_CPUTIME_ID = UclVar(NO_INIT());
 #endif
+UclVar UclVar::Inotify::IN_ACCESS = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_MODIFY = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_ATTRIB = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_CLOSE_WRITE = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_CLOSE_NOWRITE = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_CLOSE = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_OPEN = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_MOVED_FROM = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_MOVED_TO = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_MOVE = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_CREATE = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_DELETE = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_DELETE_SELF = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_MOVE_SELF = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_UNMOUNT = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_Q_OVERFLOW = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_IGNORED = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_ONLYDIR = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_DONT_FOLLOW = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_MASK_ADD = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_ISDIR = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_ONESHOT = UclVar(NO_INIT());
+UclVar UclVar::Inotify::IN_ALL_EVENTS = UclVar(NO_INIT());
 UclVar UclVar::SQLiteConn::OPEN_READONLY = UclVar(NO_INIT());
 UclVar UclVar::SQLiteConn::OPEN_READWRITE = UclVar(NO_INIT());
 UclVar UclVar::SQLiteConn::OPEN_CREATE = UclVar(NO_INIT());
@@ -1411,6 +1471,14 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
 #ifdef ENABLE_CLASS_CLOCK
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Clock,"Clock");
 #endif
+  }
+
+  // - module inotify -
+  if (a_modules[c_uclvar_module_inotify])
+  {
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Inotify,"Inotify");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_InotifyWatch,"InotifyWatch");
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_InotifyEvent,"InotifyEvent");
   }
 
   // - module pack -
@@ -1824,6 +1892,28 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
 #endif
+  }
+
+  // - module inotify -
+  if (a_modules[c_uclvar_module_inotify])
+  {
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Inotify_0,"Inotify#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_add_watch_2,"add_watch#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_0,"read#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_fd_0,"get_fd#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_watch_id_0,"watch_id#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_mask_0,"mask#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_name_0,"name#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_watch_id_0,"watch_id#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_mask_0,"mask#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_cookie_0,"cookie#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_name_0,"name#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
   }
 
   // - module pack -
@@ -2497,6 +2587,34 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
 #endif
   }
 
+  // - module inotify -
+  if (a_modules[c_uclvar_module_inotify])
+  {
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_ACCESS,"IN_ACCESS");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_MODIFY,"IN_MODIFY");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_ATTRIB,"IN_ATTRIB");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_CLOSE_WRITE,"IN_CLOSE_WRITE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_CLOSE_NOWRITE,"IN_CLOSE_NOWRITE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_CLOSE,"IN_CLOSE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_OPEN,"IN_OPEN");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_MOVED_FROM,"IN_MOVED_FROM");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_MOVED_TO,"IN_MOVED_TO");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_MOVE,"IN_MOVE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_CREATE,"IN_CREATE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_DELETE,"IN_DELETE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_DELETE_SELF,"IN_DELETE_SELF");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_MOVE_SELF,"IN_MOVE_SELF");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_UNMOUNT,"IN_UNMOUNT");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_Q_OVERFLOW,"IN_Q_OVERFLOW");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_IGNORED,"IN_IGNORED");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_ONLYDIR,"IN_ONLYDIR");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_DONT_FOLLOW,"IN_DONT_FOLLOW");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_MASK_ADD,"IN_MASK_ADD");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_ISDIR,"IN_ISDIR");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_ONESHOT,"IN_ONESHOT");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_ALL_EVENTS,"IN_ALL_EVENTS");
+  }
+
   // - module pack -
   if (a_modules[c_uclvar_module_pack])
   {
@@ -2893,6 +3011,17 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
 #endif
   }
 
+  // - module inotify -
+  if (a_modules[c_uclvar_module_inotify])
+  {
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Inotify,c_bi_class_Inotify,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Inotify,c_bi_class_Inotify,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(InotifyWatch,c_bi_class_InotifyWatch,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(InotifyWatch,c_bi_class_InotifyWatch,c_bi_mi_print_0,c_bi_mni_print_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(InotifyEvent,c_bi_class_InotifyEvent,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(InotifyEvent,c_bi_class_InotifyEvent,c_bi_mi_print_0,c_bi_mni_print_0);
+  }
+
   // - module pack -
   if (a_modules[c_uclvar_module_pack])
   {
@@ -3245,6 +3374,34 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(Clock,c_bi_class_Clock,_CLOCK_PROCESS_CPUTIME_ID);
     UCLVAR_RETRIEVE_STATIC_CONST(Clock,c_bi_class_Clock,_CLOCK_THREAD_CPUTIME_ID);
 #endif
+  }
+
+  // - module inotify -
+  if (a_modules[c_uclvar_module_inotify])
+  {
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_ACCESS);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_MODIFY);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_ATTRIB);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_CLOSE_WRITE);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_CLOSE_NOWRITE);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_CLOSE);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_OPEN);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_MOVED_FROM);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_MOVED_TO);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_MOVE);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_CREATE);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_DELETE);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_DELETE_SELF);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_MOVE_SELF);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_UNMOUNT);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_Q_OVERFLOW);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_IGNORED);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_ONLYDIR);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_DONT_FOLLOW);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_MASK_ADD);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_ISDIR);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_ONESHOT);
+    UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_ALL_EVENTS);
   }
 
   // - module pack -
