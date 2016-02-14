@@ -337,6 +337,27 @@ int main(int argc,char **argv)
     //  } while(!exit);
     //}/*}}}*/
 
+    // - module time test -
+    //{/*{{{*/
+    //  UclVar time = UclVar::Time();
+
+    //  printf("time.value(): %" HOST_LL_FORMAT "d\n",time.value().__int());
+    //  printf("time.nano_sec(): %" HOST_LL_FORMAT "d\n",time.nano_sec().__int());
+    //  printf("time.micro_sec(): %" HOST_LL_FORMAT "d\n",time.micro_sec().__int());
+    //  printf("time.milli_sec(): %" HOST_LL_FORMAT "d\n",time.milli_sec().__int());
+    //  printf("time.seconds(): %" HOST_LL_FORMAT "d\n",time.seconds().__int());
+    //  printf("time.minutes(): %" HOST_LL_FORMAT "d\n",time.minutes().__int());
+    //  printf("time.hours(): %" HOST_LL_FORMAT "d\n",time.hours().__int());
+    //  printf("time.days(): %" HOST_LL_FORMAT "d\n",time.days().__int());
+    //  printf("time.datetime(): %s\n",time.datetime().to_string().__str());
+
+    //  UclVar time_ref = UclVar::Time("20140101010000");
+    //  (UclVar("Compare: %d\n") % (time_ref.compare(time))).print();
+
+    //  time.print();
+    //  (UclVar("\n%s\n") % time.to_string()).print();
+    //}/*}}}*/
+
 #if __cplusplus >= 201103
 
     // - c++11 initializer_list -

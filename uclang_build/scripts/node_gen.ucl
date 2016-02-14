@@ -1,6 +1,7 @@
 
 import sys;
 import inotify;
+//import time;
 import pack;
 import parser;
 import sqlite;
@@ -80,6 +81,7 @@ class Main
     "base",
     "sys",
     "inotify",
+    //"time",
     "pack",
     "parser",
     "sqlite",
@@ -95,11 +97,6 @@ class Main
     "algorithms",
     "json",
     "xml"
-
-    // FIXME TODO modules
-    // time
-    // uctcn
-
   ];/*}}}*/
 
   static m_module_classes = new Dict(
@@ -138,6 +135,10 @@ class Main
       "Inotify",
       "InotifyWatch",
       "InotifyEvent"
+    ],/*}}}*/
+    "time",
+    [/*{{{*/
+      "Time"
     ],/*}}}*/
     "pack",
     [/*{{{*/

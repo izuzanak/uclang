@@ -277,6 +277,14 @@ unsigned UclVar::c_bi_mni_add_watch_2;
 unsigned UclVar::c_bi_mni_watch_id_0;
 unsigned UclVar::c_bi_mni_mask_0;
 unsigned UclVar::c_bi_mni_cookie_0;
+unsigned UclVar::c_bi_mni_nano_sec_0;
+unsigned UclVar::c_bi_mni_micro_sec_0;
+unsigned UclVar::c_bi_mni_milli_sec_0;
+unsigned UclVar::c_bi_mni_seconds_0;
+unsigned UclVar::c_bi_mni_minutes_0;
+unsigned UclVar::c_bi_mni_hours_0;
+unsigned UclVar::c_bi_mni_days_0;
+unsigned UclVar::c_bi_mni_datetime_0;
 unsigned UclVar::c_bi_mni_pack_1;
 unsigned UclVar::c_bi_mni_unpack_1;
 unsigned UclVar::c_bi_mni_code_2;
@@ -1481,6 +1489,12 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_InotifyEvent,"InotifyEvent");
   }
 
+  // - module time -
+  if (a_modules[c_uclvar_module_time])
+  {
+    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Time,"Time");
+  }
+
   // - module pack -
   if (a_modules[c_uclvar_module_pack])
   {
@@ -1912,6 +1926,25 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_mask_0,"mask#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_cookie_0,"cookie#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_name_0,"name#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+  }
+
+  // - module time -
+  if (a_modules[c_uclvar_module_time])
+  {
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Time_0,"Time#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Time_1,"Time#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_value_0,"value#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_nano_sec_0,"nano_sec#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_micro_sec_0,"micro_sec#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_milli_sec_0,"milli_sec#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_seconds_0,"seconds#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_minutes_0,"minutes#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_hours_0,"hours#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_days_0,"days#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_datetime_0,"datetime#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_compare_1,"compare#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
   }
@@ -2615,6 +2648,11 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_IN_ALL_EVENTS,"IN_ALL_EVENTS");
   }
 
+  // - module time -
+  if (a_modules[c_uclvar_module_time])
+  {
+  }
+
   // - module pack -
   if (a_modules[c_uclvar_module_pack])
   {
@@ -3022,6 +3060,11 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(InotifyEvent,c_bi_class_InotifyEvent,c_bi_mi_print_0,c_bi_mni_print_0);
   }
 
+  // - module time -
+  if (a_modules[c_uclvar_module_time])
+  {
+  }
+
   // - module pack -
   if (a_modules[c_uclvar_module_pack])
   {
@@ -3402,6 +3445,11 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_ISDIR);
     UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_ONESHOT);
     UCLVAR_RETRIEVE_STATIC_CONST(Inotify,c_bi_class_Inotify,IN_ALL_EVENTS);
+  }
+
+  // - module time -
+  if (a_modules[c_uclvar_module_time])
+  {
   }
 
   // - module pack -

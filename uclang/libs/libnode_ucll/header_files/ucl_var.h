@@ -36,6 +36,7 @@ enum
   c_uclvar_module_base = 0,
   c_uclvar_module_sys,
   c_uclvar_module_inotify,
+  c_uclvar_module_time,
   c_uclvar_module_pack,
   c_uclvar_module_parser,
   c_uclvar_module_sqlite,
@@ -338,6 +339,14 @@ class UclVar
   static unsigned c_bi_mni_watch_id_0;
   static unsigned c_bi_mni_mask_0;
   static unsigned c_bi_mni_cookie_0;
+  static unsigned c_bi_mni_nano_sec_0;
+  static unsigned c_bi_mni_micro_sec_0;
+  static unsigned c_bi_mni_milli_sec_0;
+  static unsigned c_bi_mni_seconds_0;
+  static unsigned c_bi_mni_minutes_0;
+  static unsigned c_bi_mni_hours_0;
+  static unsigned c_bi_mni_days_0;
+  static unsigned c_bi_mni_datetime_0;
   static unsigned c_bi_mni_pack_1;
   static unsigned c_bi_mni_unpack_1;
   static unsigned c_bi_mni_code_2;
@@ -4381,6 +4390,46 @@ class UclVar
   inline UclVar cookie()
   {/*{{{*/
     return __call_0(c_bi_mni_cookie_0);
+  }/*}}}*/
+
+  inline UclVar nano_sec()
+  {/*{{{*/
+    return __call_0(c_bi_mni_nano_sec_0);
+  }/*}}}*/
+
+  inline UclVar micro_sec()
+  {/*{{{*/
+    return __call_0(c_bi_mni_micro_sec_0);
+  }/*}}}*/
+
+  inline UclVar milli_sec()
+  {/*{{{*/
+    return __call_0(c_bi_mni_milli_sec_0);
+  }/*}}}*/
+
+  inline UclVar seconds()
+  {/*{{{*/
+    return __call_0(c_bi_mni_seconds_0);
+  }/*}}}*/
+
+  inline UclVar minutes()
+  {/*{{{*/
+    return __call_0(c_bi_mni_minutes_0);
+  }/*}}}*/
+
+  inline UclVar hours()
+  {/*{{{*/
+    return __call_0(c_bi_mni_hours_0);
+  }/*}}}*/
+
+  inline UclVar days()
+  {/*{{{*/
+    return __call_0(c_bi_mni_days_0);
+  }/*}}}*/
+
+  inline UclVar datetime()
+  {/*{{{*/
+    return __call_0(c_bi_mni_datetime_0);
   }/*}}}*/
 
   inline UclVar pack(UclVar op_0)

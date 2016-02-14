@@ -145,6 +145,7 @@ bool UclNode::Initialize(const char **a_modules)
   // - check modules presence -
   UCL_NODE_CHECK_MODULE_PRESENCE(sys);
   UCL_NODE_CHECK_MODULE_PRESENCE(inotify);
+  UCL_NODE_CHECK_MODULE_PRESENCE(time);
   UCL_NODE_CHECK_MODULE_PRESENCE(pack);
   UCL_NODE_CHECK_MODULE_PRESENCE(parser);
   UCL_NODE_CHECK_MODULE_PRESENCE(sqlite);
