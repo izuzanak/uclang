@@ -12,7 +12,7 @@
 ./uclang scripts/docu_gen.ucl Type ../uclang/doc/02_modules/02_module_base/09_class_type.md
 ./uclang scripts/docu_gen.ucl Mutex ../uclang/doc/02_modules/02_module_base/10_class_mutex.md
 ./uclang scripts/docu_gen.ucl Thread ../uclang/doc/02_modules/02_module_base/11_class_thread.md sys
-#./uclang scripts/docu_gen.ucl Delegate ../uclang/doc/02_modules/02_module_base/12_class_delegate.md
+./uclang scripts/docu_gen.ucl Delegate ../uclang/doc/02_modules/02_module_base/12_class_delegate.md
 #./uclang scripts/docu_gen.ucl Buffer ../uclang/doc/02_modules/02_module_base/13_class_buffer.md
 
 # Generate containers documentation
@@ -22,6 +22,17 @@
 ./uclang scripts/docu_gen.ucl List ../uclang/doc/02_modules/03_module_containers/04_class_list.md containers
 ./uclang scripts/docu_gen.ucl Tree ../uclang/doc/02_modules/03_module_containers/05_class_tree.md containers
 ./uclang scripts/docu_gen.ucl Dict ../uclang/doc/02_modules/03_module_containers/06_class_dict.md containers
+
+# Generate sys documentation
+#./uclang scripts/docu_gen.ucl Sys ../uclang/doc/02_modules/04_module_sys/01_class_sys.md sys:time
+#./uclang scripts/docu_gen.ucl Pipe ../uclang/doc/02_modules/04_module_sys/02_class_pipe.md sys
+#./uclang scripts/docu_gen.ucl File ../uclang/doc/02_modules/04_module_sys/03_class_file.md sys
+#./uclang scripts/docu_gen.ucl Socket ../uclang/doc/02_modules/04_module_sys/04_class_socket.md sys
+#./uclang scripts/docu_gen.ucl Regex ../uclang/doc/02_modules/04_module_sys/05_class_regex.md sys
+#./uclang scripts/docu_gen.ucl Signal ../uclang/doc/02_modules/04_module_sys/06_class_signal.md sys
+#./uclang scripts/docu_gen.ucl Poll ../uclang/doc/02_modules/04_module_sys/007_class_poll.md sys
+#./uclang scripts/docu_gen.ucl Timer ../uclang/doc/02_modules/04_module_sys/008_class_timer.md sys
+#./uclang scripts/docu_gen.ucl Cloc ../uclang/doc/02_modules/04_module_sys/009_class_cloc.md sys
 
 # Generate parser documentation
 ./uclang scripts/docu_gen.ucl FinalAutomata ../uclang/doc/02_modules/05_module_parser/01_class_final_automata.md parser

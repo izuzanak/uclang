@@ -317,6 +317,31 @@ class Main
 ",
       "create_example","thread_fun(\"Data\")"
     ]);/*}}}*/
+    CLASS_PROPERTIES["Delegate"] = class_Delegate = new Dict(
+    [/*{{{*/
+      "description","Class representing delegate referring to method of particular object.",
+      "extra_code","
+class Main
+{
+  public method(a_p0,a_p1)
+  {
+    (\"method: %%s\\n\" %% [a_p0,a_p1].to_string()).print();
+    return a_p0 + a_p1;
+  }
+
+  public Main()
+  {
+%s
+  }
+
+  public static main(argv)
+  {
+    new Main();
+  }
+}
+",
+      "create_example","new Delegate(this,\"method\",2)"
+    ]);/*}}}*/
     CLASS_PROPERTIES["Stack"] = new Dict(
     [/*{{{*/
       "description","Container class implementing abstract data type stack.",
@@ -385,6 +410,10 @@ class Main
       "iter_last_key", "%s.last_key()",
       "iter_remove_key", "%s.remove_key(%s)",
       "cont_clear", "%s.clear()"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Sys"] = class_Sys = new Dict(
+    [/*{{{*/
+      "description","Class providing access to system specific parameters and functions."
     ]);/*}}}*/
     CLASS_PROPERTIES["File"] = class_File = new Dict(
     [/*{{{*/
@@ -1061,6 +1090,30 @@ joining." % m_target_name,
       ]);/*}}}*/
     }
 
+    if (m_target_name == "Delegate")
+    {
+      class_Delegate["methods"] = new Dict(
+      [/*{{{*/
+        "Delegate#3", new MethodDescr(
+"Creates object of class `%s` referring to method
+of object given as first parameter, with name given by second parameter,
+and accepting count of parameters given by third parameter." % m_target_name,
+["Any type.","Object of class %s" % doc_class_ref("String"),"Type convertible to integer."],"* Value returned by called method.","
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % get_code(m_target_class,"obj","create_example")),
+        "call#1", new MethodDescr(
+"Calls method identified by object of class `%s`. Parameters 
+of called method are retrieved from object of class %s, which is given as
+method parameter." % [m_target_name,doc_class_ref("Array")],
+["Object of class %s." % doc_class_ref("Array")],"* Value returned by called method.","
+%s
+res = obj.call([1,2]);
+(\"res: %%s\\n\" %% res.to_string()).print();
+" % get_code(m_target_class,"obj","create_example"))
+      ]);/*}}}*/
+    }
+
     if (m_target_name == "Set")
     {
       class_Set["methods"] = new Dict(
@@ -1206,6 +1259,37 @@ of new object of class `%s`." % [m_target_name,m_target_name],
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 " % get_code(m_target_class,"obj","create_example"))
+      ]);/*}}}*/
+    }
+
+    if (m_target_name == "Sys")
+    {
+      class_Sys["var_classes"] = new Dict(
+      [/*{{{*/
+        "os",new VarClassDescr("Operating system related constants")
+      ]);/*}}}*/
+      class_Sys["variables"] = new Dict(
+      [/*{{{*/
+        "NAME",new VariableDescr("Identification of operating system type.","os"),
+        "SEP",new VariableDescr("Character used to separate pathname components.","os")
+      ]);/*}}}*/
+      class_Sys["methods"] = new Dict(
+      [/*{{{*/
+        "sleep#1", new MethodDescr(
+"Suspends execution for the given number of milliseconds.",
+["Type convertible to integer."],new Blank(),"
+(\"time: %d ms\\n\" % new Time().milli_sec()).print();
+Sys.sleep(250);
+(\"time: %d ms\\n\" % new Time().milli_sec()).print();
+"),
+        "remove#1", new MethodDescr(
+"Deletes file or directory from file system.",
+["Object of class %s." % doc_class_ref("String")],new Blank(),"
+new File(\"temporary\",\"w\").write_close(\"Hello world\\n\");
+(\"Sys.is_file(): %d\\n\" % Sys.is_file(\"temporary\")).print();
+Sys.remove(\"temporary\");
+(\"Sys.is_file(): %d\\n\" % Sys.is_file(\"temporary\")).print();
+")
       ]);/*}}}*/
     }
 
