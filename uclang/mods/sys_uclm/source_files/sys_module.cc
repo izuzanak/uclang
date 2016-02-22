@@ -3444,7 +3444,7 @@ bool bic_socket_method_sendto_2(interpreter_thread_s &it,unsigned stack_base,uli
     do
     {
       // - ERROR -
-      if ((cnt = sendto(fd,string_ptr->data,length - writed,0,(sockaddr *)addr_ptr,sizeof(sockaddr_in))) == -1)
+      if ((cnt = sendto(fd,string_ptr->data + writed,length - writed,0,(sockaddr *)addr_ptr,sizeof(sockaddr_in))) == -1)
       {
         exception_s::throw_exception(it,module.error_base + c_error_SOCKET_SENDTO_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
