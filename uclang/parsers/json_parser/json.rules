@@ -30,8 +30,6 @@ nonterminals:
    <start>
    <end_check>
 
-   <main_object>
-
    <object>
    <pairs>
    <pairs_begin>
@@ -48,11 +46,7 @@ nonterminals:
 
 rules:
    <start> -> <end_check> ->> {}
-
-   <end_check> -> <main_object> _END_ ->> {}
-   <end_check> -> _END_ ->> {}
-
-   <main_object> -> <object> ->> {}
+   <end_check> -> <object> _END_ ->> {}
 
    <object> -> <pairs> rc_br ->>
    {

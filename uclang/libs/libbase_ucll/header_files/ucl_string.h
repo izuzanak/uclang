@@ -318,6 +318,8 @@ inline bool string_s::load_text_file(const char *a_file)
   data = (char *)cmalloc((file_size + 1)*sizeof(char));
   if (fread(data,file_size,1,f) != 1)
   {
+    clear();
+
     fclose(f);
     return false;
   }

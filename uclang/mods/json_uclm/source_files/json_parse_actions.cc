@@ -9,11 +9,9 @@ include "json_parse_actions.h"
  */
 
 // - callers of parse action functions -
-const unsigned c_json_parse_action_cnt = 26;
+const unsigned c_json_parse_action_cnt = 24;
 bool(*json_pa_callers[c_json_parse_action_cnt])(json_parser_s &_this) =
 {/*{{{*/
-  pa_json_null,
-  pa_json_null,
   pa_json_null,
   pa_json_null,
   pa_json_null,

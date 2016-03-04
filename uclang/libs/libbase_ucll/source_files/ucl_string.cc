@@ -177,7 +177,7 @@ void string_s::setf(const char *a_format,...)
 
 unsigned string_s::get_idx(unsigned a_idx,unsigned a_length,const char *a_data)
 {/*{{{*/
-  if (a_idx >= (size - 1) || a_length >= (size - a_idx))
+  if (a_idx >= (size - 1) || a_length == 0 || a_length >= (size - a_idx))
   {
     return c_idx_not_exist;
   }
