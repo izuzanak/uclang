@@ -270,7 +270,7 @@ built_in_class_s ato_aru_class =
 {/*{{{*/
   "AtoAru",
   c_modifier_public | c_modifier_final,
-  13, ato_aru_methods,
+  15, ato_aru_methods,
   20, ato_aru_variables,
   bic_ato_aru_consts,
   bic_ato_aru_init,
@@ -308,6 +308,16 @@ built_in_method_s ato_aru_methods[] =
     "create#5",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_ato_aru_method_create_5
+  },
+  {
+    "pack#0",
+    c_modifier_public | c_modifier_final,
+    bic_ato_aru_method_pack_0
+  },
+  {
+    "unpack#1",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_ato_aru_method_unpack_1
   },
   {
     "primary_key#0",
@@ -380,6 +390,229 @@ built_in_variable_s ato_aru_variables[] =
   { "TLWORD", c_modifier_public | c_modifier_static | c_modifier_static_const },
 };/*}}}*/
 
+#define BIC_ATO_ARU_FILEARCH_HEAD_COPY(NAME,TYPE) \
+{/*{{{*/\
+  memcpy_bo(&head.NAME,&src_head.NAME,sizeof(TYPE),c_little_endian);\
+}/*}}}*/
+
+#define BIC_ATO_ARU_EVTARCH_HEAD_COPY(NAME,TYPE) \
+{/*{{{*/\
+  memcpy_bo(&std_head.NAME,&src_std_head.NAME,sizeof(TYPE),c_little_endian);\
+}/*}}}*/
+
+#define BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(NAME,TYPE) \
+{/*{{{*/\
+    memcpy_bo(&t_ptr->NAME,&s_ptr->NAME,sizeof(TYPE),c_little_endian);\
+}/*}}}*/
+
+#define BIC_ATO_ARU_EVTARCH_RECORD_COPY(NAME,TYPE) \
+{/*{{{*/\
+    memcpy_bo(&t_ptr->NAME,&s_ptr->NAME,sizeof(TYPE),false);\
+}/*}}}*/
+
+#define BIC_ATO_ARU_HEADERS_COPY() \
+{/*{{{*/\
+\
+  /* - copy sFILEARCH_HEAD - */\
+  memcpy(&head,&src_head,sizeof(sFILEARCH_HEAD) - sizeof(sEVTARCH_HEAD));\
+\
+  BIC_ATO_ARU_FILEARCH_HEAD_COPY(RepreCode,U16);\
+  BIC_ATO_ARU_FILEARCH_HEAD_COPY(MultConst,float);\
+\
+  /* - copy sEVTARCH_HEAD - */\
+  BIC_ATO_ARU_EVTARCH_HEAD_COPY(i32PK_Variable,I32);\
+  BIC_ATO_ARU_EVTARCH_HEAD_COPY(u16Year,U16);\
+  BIC_ATO_ARU_EVTARCH_HEAD_COPY(u16DataType,U16);\
+  BIC_ATO_ARU_EVTARCH_HEAD_COPY(VarAdr,U16);\
+  BIC_ATO_ARU_EVTARCH_HEAD_COPY(VarIndx,U16);\
+  BIC_ATO_ARU_EVTARCH_HEAD_COPY(i32ArchiveLen,I32);\
+  BIC_ATO_ARU_EVTARCH_HEAD_COPY(i32TotalEvents,I32);\
+  BIC_ATO_ARU_EVTARCH_HEAD_COPY(i32EventIndx,I32);\
+  BIC_ATO_ARU_EVTARCH_HEAD_COPY(r32FXValue,R32);\
+  BIC_ATO_ARU_EVTARCH_HEAD_COPY(r32LXValue,R32);\
+  BIC_ATO_ARU_EVTARCH_HEAD_COPY(u8Version,U8);\
+  BIC_ATO_ARU_EVTARCH_HEAD_COPY(u8FTimeStampms,U8);\
+  BIC_ATO_ARU_EVTARCH_HEAD_COPY(u8LTimeStampms,U8);\
+  BIC_ATO_ARU_EVTARCH_HEAD_COPY(u8VarLength,U8);\
+}/*}}}*/
+
+#define BIC_ATO_ARU_RECORDS_COPY(REC_COUNT,DATA_TYPE,SRC_POINTER,TRG_POINTER,ERROR_CODE) \
+{/*{{{*/\
+\
+  /* - process archive records - */\
+  switch (DATA_TYPE)\
+  {\
+    case TUDINT:\
+      {/*{{{*/\
+        sEVTARCH_RECORD_U32 *s_ptr = (sEVTARCH_RECORD_U32 *)(SRC_POINTER);\
+        sEVTARCH_RECORD_U32 *s_ptr_end = s_ptr + REC_COUNT;\
+        sEVTARCH_RECORD_U32 *t_ptr = (sEVTARCH_RECORD_U32 *)(TRG_POINTER);\
+        do {\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(r32XValue,R32);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(u8TimeStampms,U8);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(u8Status,U8);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(u32Value,U32);\
+        } while(++t_ptr,++s_ptr < s_ptr_end);\
+      }/*}}}*/\
+      break;\
+    case TREAL:\
+      {/*{{{*/\
+        sEVTARCH_RECORD_R32 *s_ptr = (sEVTARCH_RECORD_R32 *)(SRC_POINTER);\
+        sEVTARCH_RECORD_R32 *s_ptr_end = s_ptr + REC_COUNT;\
+        sEVTARCH_RECORD_R32 *t_ptr = (sEVTARCH_RECORD_R32 *)(TRG_POINTER);\
+        do {\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(r32XValue,R32);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(u8TimeStampms,U8);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(u8Status,U8);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(r32Value,R32);\
+        } while(++t_ptr,++s_ptr < s_ptr_end);\
+      }/*}}}*/\
+      break;\
+    case TTDticks:\
+      {/*{{{*/\
+        sEVTARCH_RECORD_U16 *s_ptr = (sEVTARCH_RECORD_U16 *)(SRC_POINTER);\
+        sEVTARCH_RECORD_U16 *s_ptr_end = s_ptr + REC_COUNT;\
+        sEVTARCH_RECORD_U16 *t_ptr = (sEVTARCH_RECORD_U16 *)(TRG_POINTER);\
+        do {\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(r32XValue,R32);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(u8TimeStampms,U8);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(u8Status,U8);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(u16Value,U16);\
+        } while(++t_ptr,++s_ptr < s_ptr_end);\
+      }/*}}}*/\
+      break;\
+    case TWORD:\
+      {/*{{{*/\
+        sEVTARCH_RECORD_U16 *s_ptr = (sEVTARCH_RECORD_U16 *)(SRC_POINTER);\
+        sEVTARCH_RECORD_U16 *s_ptr_end = s_ptr + REC_COUNT;\
+        sEVTARCH_RECORD_U16 *t_ptr = (sEVTARCH_RECORD_U16 *)(TRG_POINTER);\
+        do {\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(r32XValue,R32);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(u8TimeStampms,U8);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(u8Status,U8);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY(u16Value,U16);\
+        } while(++t_ptr,++s_ptr < s_ptr_end);\
+      }/*}}}*/\
+      break;\
+    case TDWORD:\
+      {/*{{{*/\
+        sEVTARCH_RECORD_U32 *s_ptr = (sEVTARCH_RECORD_U32 *)(SRC_POINTER);\
+        sEVTARCH_RECORD_U32 *s_ptr_end = s_ptr + REC_COUNT;\
+        sEVTARCH_RECORD_U32 *t_ptr = (sEVTARCH_RECORD_U32 *)(TRG_POINTER);\
+        do {\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(r32XValue,R32);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(u8TimeStampms,U8);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(u8Status,U8);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY(u32Value,U32);\
+        } while(++t_ptr,++s_ptr < s_ptr_end);\
+      }/*}}}*/\
+      break;\
+\
+    /* - ERROR - */\
+    default:\
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_UNSUPPORTED_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      new_exception->params.push(DATA_TYPE);\
+\
+      ERROR_CODE;\
+\
+      return false;\
+  }\
+}/*}}}*/
+
+#define BIC_ATO_ARU_UNPACK() \
+/*{{{*/\
+\
+  /* - create ato aru object - */\
+  ato_aru_s *aa_ptr = (ato_aru_s *)cmalloc(sizeof(ato_aru_s));\
+  aa_ptr->init();\
+\
+  /* - ERROR - */\
+  if (string_ptr->size - 1 < sizeof(sFILEARCH_HEAD))\
+  {\
+    aa_ptr->clear(it);\
+    cfree(aa_ptr);\
+\
+    exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_WRONG_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  /* - process sFILEARCH_HEAD structure - */\
+  sFILEARCH_HEAD &src_head = *((sFILEARCH_HEAD *)string_ptr->data);\
+  sFILEARCH_HEAD &head = aa_ptr->head;\
+\
+  /* - ERROR - */\
+  if (memcmp(c_ato_aru_cookie,src_head.cookie,sizeof(c_ato_aru_cookie)) != 0)\
+  {\
+    aa_ptr->clear(it);\
+    cfree(aa_ptr);\
+\
+    exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_WRONG_COOKIE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  /* - process sEVTARCH_HEAD structure - */\
+  sEVTARCH_HEAD &src_std_head = src_head.stdHead;\
+  sEVTARCH_HEAD &std_head = head.stdHead;\
+\
+  /* - copy aru headers - */\
+  BIC_ATO_ARU_HEADERS_COPY();\
+\
+  /* - retrieve record size - */\
+  unsigned record_size;\
+  switch (std_head.u16DataType)\
+  {\
+    case TUDINT:\
+    case TDWORD:\
+      record_size = sizeof(sEVTARCH_RECORD_U32);\
+      break;\
+    case TREAL:\
+      record_size = sizeof(sEVTARCH_RECORD_R32);\
+      break;\
+    case TWORD:\
+    case TTDticks:\
+      record_size = sizeof(sEVTARCH_RECORD_U16);\
+      break;\
+\
+    /* - ERROR - */\
+    default:\
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_UNSUPPORTED_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      new_exception->params.push(std_head.u16DataType);\
+\
+      aa_ptr->clear(it);\
+      cfree(aa_ptr);\
+\
+      return false;\
+  }\
+\
+  /* - compute record memory size - */\
+  unsigned records_mem_size = std_head.i32TotalEvents*record_size;\
+\
+  /* - ERROR - */\
+  if (std_head.i32TotalEvents < 0 || string_ptr->size - 1 < sizeof(sFILEARCH_HEAD) + records_mem_size)\
+  {\
+    aa_ptr->clear(it);\
+    cfree(aa_ptr);\
+\
+    exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_WRONG_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  /* - set record count - */\
+  aa_ptr->record_count = std_head.i32TotalEvents;\
+\
+  if (std_head.i32TotalEvents > 0)\
+  {\
+    /* - allocate records memory - */\
+    aa_ptr->records = cmalloc(records_mem_size);\
+\
+    /* - copy aru records - */\
+    BIC_ATO_ARU_RECORDS_COPY(std_head.i32TotalEvents,std_head.u16DataType,string_ptr->data + sizeof(sFILEARCH_HEAD),aa_ptr->records,\
+      aa_ptr->clear(it);\
+      cfree(aa_ptr);\
+    );\
+  }\
+/*}}}*/
+
 #define BIC_ATO_ARU_CHECK_INDEX() \
 /*{{{*/\
 ato_aru_s *aa_ptr = (ato_aru_s *)dst_location->v_data_ptr;\
@@ -388,7 +621,7 @@ ato_aru_s *aa_ptr = (ato_aru_s *)dst_location->v_data_ptr;\
 if (index < 0 || index >= aa_ptr->record_count) {\
   exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
   new_exception->params.push(index);\
-  \
+\
   return false;\
 }\
 /*}}}*/\
@@ -398,9 +631,9 @@ if (index < 0 || index >= aa_ptr->record_count) {\
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  \
+\
   long long int index;\
-  \
+\
   /* - ERROR - */\
   if (!it.retrieve_integer(src_0_location,index))\
   {\
@@ -408,12 +641,12 @@ if (index < 0 || index >= aa_ptr->record_count) {\
     BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
     new_exception->params.push(1);\
     new_exception->params.push(src_0_location->v_type);\
-    \
+\
     return false;\
   }\
-  \
+\
   BIC_ATO_ARU_CHECK_INDEX();\
-  \
+\
   /* - create ato aru record object - */\
   ato_aru_record_s *aar_ptr = (ato_aru_record_s *)cmalloc(sizeof(ato_aru_record_s));\
   aar_ptr->init();\
@@ -561,206 +794,7 @@ bool bic_ato_aru_method_AtoAru_1(interpreter_thread_s &it,unsigned stack_base,ul
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
-  // - create ato aru object -
-  ato_aru_s *aa_ptr = (ato_aru_s *)cmalloc(sizeof(ato_aru_s));
-  aa_ptr->init();
-
-  // - ERROR -
-  if (string_ptr->size - 1 < sizeof(sFILEARCH_HEAD))
-  {
-    aa_ptr->clear(it);
-    cfree(aa_ptr);
-
-    exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_WRONG_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - process sFILEARCH_HEAD structure -
-  sFILEARCH_HEAD &src_head = *((sFILEARCH_HEAD *)string_ptr->data);
-  sFILEARCH_HEAD &head = aa_ptr->head;
-
-  // - ERROR -
-  if (memcmp(c_ato_aru_cookie,src_head.cookie,sizeof(c_ato_aru_cookie)) != 0)
-  {
-    aa_ptr->clear(it);
-    cfree(aa_ptr);
-
-    exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_WRONG_COOKIE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  memcpy(&head,&src_head,sizeof(sFILEARCH_HEAD) - sizeof(sEVTARCH_HEAD));
-
-#define FILEARCH_HEAD_COPY(NAME,TYPE) \
-{/*{{{*/\
-  memcpy_bo(&head.NAME,&src_head.NAME,sizeof(TYPE),c_little_endian);\
-}/*}}}*/
-
-  FILEARCH_HEAD_COPY(RepreCode,U16);
-  FILEARCH_HEAD_COPY(MultConst,float);
-
-  // - process sEVTARCH_HEAD structure -
-  sEVTARCH_HEAD &src_std_head = src_head.stdHead;
-  sEVTARCH_HEAD &std_head = head.stdHead;
-
-#define EVTARCH_HEAD_COPY(NAME,TYPE) \
-{/*{{{*/\
-  memcpy_bo(&std_head.NAME,&src_std_head.NAME,sizeof(TYPE),c_little_endian);\
-}/*}}}*/
-
-  EVTARCH_HEAD_COPY(i32PK_Variable,I32);
-  EVTARCH_HEAD_COPY(u16Year,U16);
-  EVTARCH_HEAD_COPY(u16DataType,U16);
-  EVTARCH_HEAD_COPY(VarAdr,U16);
-  EVTARCH_HEAD_COPY(VarIndx,U16);
-  EVTARCH_HEAD_COPY(i32ArchiveLen,I32);
-  EVTARCH_HEAD_COPY(i32TotalEvents,I32);
-  EVTARCH_HEAD_COPY(i32EventIndx,I32);
-  EVTARCH_HEAD_COPY(r32FXValue,R32);
-  EVTARCH_HEAD_COPY(r32LXValue,R32);
-  EVTARCH_HEAD_COPY(u8Version,U8);
-  EVTARCH_HEAD_COPY(u8FTimeStampms,U8);
-  EVTARCH_HEAD_COPY(u8LTimeStampms,U8);
-  EVTARCH_HEAD_COPY(u8VarLength,U8);
-
-  // - retrieve record size -
-  unsigned record_size;
-  switch (std_head.u16DataType)
-  {
-    case TUDINT:
-    case TDWORD:
-      record_size = sizeof(sEVTARCH_RECORD_U32);
-      break;
-    case TREAL:
-      record_size = sizeof(sEVTARCH_RECORD_R32);
-      break;
-    case TWORD:
-    case TTDticks:
-      record_size = sizeof(sEVTARCH_RECORD_U16);
-      break;
-
-    // - ERROR -
-    default:
-      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_UNSUPPORTED_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-      new_exception->params.push(std_head.u16DataType);
-
-      aa_ptr->clear(it);
-      cfree(aa_ptr);
-
-      return false;
-  }
-  
-  // - compute record memory size -
-  unsigned records_mem_size = std_head.i32TotalEvents*record_size;
-
-  // - ERROR -
-  if (std_head.i32TotalEvents < 0 || string_ptr->size - 1 < sizeof(sFILEARCH_HEAD) + records_mem_size)
-  {
-    aa_ptr->clear(it);
-    cfree(aa_ptr);
-
-    exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_WRONG_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - set record count -
-  aa_ptr->record_count = std_head.i32TotalEvents;
-
-  if (std_head.i32TotalEvents > 0)
-  {
-    // - allocate records memory -
-    aa_ptr->records = cmalloc(records_mem_size);
-
-#define EVTARCH_RECORD_COPY_BSWP(NAME,TYPE) \
-{/*{{{*/\
-    memcpy_bo(&t_ptr->NAME,&s_ptr->NAME,sizeof(TYPE),c_little_endian);\
-}/*}}}*/
-
-#define EVTARCH_RECORD_COPY(NAME,TYPE) \
-{/*{{{*/\
-    memcpy_bo(&t_ptr->NAME,&s_ptr->NAME,sizeof(TYPE),false);\
-}/*}}}*/
-
-    // - process archive records -
-    switch (std_head.u16DataType)
-    {
-      case TUDINT:
-        {/*{{{*/
-          sEVTARCH_RECORD_U32 *s_ptr = (sEVTARCH_RECORD_U32 *)(string_ptr->data + sizeof(sFILEARCH_HEAD));
-          sEVTARCH_RECORD_U32 *s_ptr_end = s_ptr + std_head.i32TotalEvents;
-          sEVTARCH_RECORD_U32 *t_ptr = (sEVTARCH_RECORD_U32 *)aa_ptr->records;
-          do {
-            EVTARCH_RECORD_COPY_BSWP(r32XValue,R32);
-            EVTARCH_RECORD_COPY_BSWP(u8TimeStampms,U8);
-            EVTARCH_RECORD_COPY_BSWP(u8Status,U8);
-            EVTARCH_RECORD_COPY_BSWP(u32Value,U32);
-          } while(++t_ptr,++s_ptr < s_ptr_end);
-        }/*}}}*/
-        break;
-      case TREAL:
-        {/*{{{*/
-          sEVTARCH_RECORD_R32 *s_ptr = (sEVTARCH_RECORD_R32 *)(string_ptr->data + sizeof(sFILEARCH_HEAD));
-          sEVTARCH_RECORD_R32 *s_ptr_end = s_ptr + std_head.i32TotalEvents;
-          sEVTARCH_RECORD_R32 *t_ptr = (sEVTARCH_RECORD_R32 *)aa_ptr->records;
-          do {
-            EVTARCH_RECORD_COPY_BSWP(r32XValue,R32);
-            EVTARCH_RECORD_COPY_BSWP(u8TimeStampms,U8);
-            EVTARCH_RECORD_COPY_BSWP(u8Status,U8);
-            EVTARCH_RECORD_COPY_BSWP(r32Value,R32);
-          } while(++t_ptr,++s_ptr < s_ptr_end);
-        }/*}}}*/
-        break;
-      case TTDticks:
-        {/*{{{*/
-          sEVTARCH_RECORD_U16 *s_ptr = (sEVTARCH_RECORD_U16 *)(string_ptr->data + sizeof(sFILEARCH_HEAD));
-          sEVTARCH_RECORD_U16 *s_ptr_end = s_ptr + std_head.i32TotalEvents;
-          sEVTARCH_RECORD_U16 *t_ptr = (sEVTARCH_RECORD_U16 *)aa_ptr->records;
-          do {
-            EVTARCH_RECORD_COPY_BSWP(r32XValue,R32);
-            EVTARCH_RECORD_COPY_BSWP(u8TimeStampms,U8);
-            EVTARCH_RECORD_COPY_BSWP(u8Status,U8);
-            EVTARCH_RECORD_COPY_BSWP(u16Value,U16);
-          } while(++t_ptr,++s_ptr < s_ptr_end);
-        }/*}}}*/
-        break;
-      case TWORD:
-        {/*{{{*/
-          sEVTARCH_RECORD_U16 *s_ptr = (sEVTARCH_RECORD_U16 *)(string_ptr->data + sizeof(sFILEARCH_HEAD));
-          sEVTARCH_RECORD_U16 *s_ptr_end = s_ptr + std_head.i32TotalEvents;
-          sEVTARCH_RECORD_U16 *t_ptr = (sEVTARCH_RECORD_U16 *)aa_ptr->records;
-          do {
-            EVTARCH_RECORD_COPY_BSWP(r32XValue,R32);
-            EVTARCH_RECORD_COPY_BSWP(u8TimeStampms,U8);
-            EVTARCH_RECORD_COPY_BSWP(u8Status,U8);
-            EVTARCH_RECORD_COPY(u16Value,U16);
-          } while(++t_ptr,++s_ptr < s_ptr_end);
-        }/*}}}*/
-        break;
-      case TDWORD:
-        {/*{{{*/
-          sEVTARCH_RECORD_U32 *s_ptr = (sEVTARCH_RECORD_U32 *)(string_ptr->data + sizeof(sFILEARCH_HEAD));
-          sEVTARCH_RECORD_U32 *s_ptr_end = s_ptr + std_head.i32TotalEvents;
-          sEVTARCH_RECORD_U32 *t_ptr = (sEVTARCH_RECORD_U32 *)aa_ptr->records;
-          do {
-            EVTARCH_RECORD_COPY_BSWP(r32XValue,R32);
-            EVTARCH_RECORD_COPY_BSWP(u8TimeStampms,U8);
-            EVTARCH_RECORD_COPY_BSWP(u8Status,U8);
-            EVTARCH_RECORD_COPY(u32Value,U32);
-          } while(++t_ptr,++s_ptr < s_ptr_end);
-        }/*}}}*/
-        break;
-
-      // - ERROR -
-      default:
-        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_UNSUPPORTED_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        new_exception->params.push(std_head.u16DataType);
-
-        aa_ptr->clear(it);
-        cfree(aa_ptr);
-
-        return false;
-    }
-  }
+  BIC_ATO_ARU_UNPACK();
 
   dst_location->v_data_ptr = (basic_64b)aa_ptr;
 
@@ -956,6 +990,98 @@ bool bic_ato_aru_method_create_5(interpreter_thread_s &it,unsigned stack_base,ul
 
     } while(++r_idx < aa_ptr->record_count);
   }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_ato_aru,aa_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_ato_aru_method_pack_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  ato_aru_s *aa_ptr = (ato_aru_s *)dst_location->v_data_ptr;
+
+  // - retrieve source head structures -
+  sFILEARCH_HEAD &src_head = aa_ptr->head;
+  sEVTARCH_HEAD &src_std_head = src_head.stdHead;
+
+  // - retrieve record size -
+  unsigned record_size;
+  switch (src_std_head.u16DataType)
+  {
+    case TUDINT:
+    case TDWORD:
+      record_size = sizeof(sEVTARCH_RECORD_U32);
+      break;
+    case TREAL:
+      record_size = sizeof(sEVTARCH_RECORD_R32);
+      break;
+    case TWORD:
+    case TTDticks:
+      record_size = sizeof(sEVTARCH_RECORD_U16);
+      break;
+
+    // - ERROR -
+    default:
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_UNSUPPORTED_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      new_exception->params.push(src_std_head.u16DataType);
+
+      return false;
+  }
+
+  // - compute record memory size -
+  unsigned records_mem_size = src_std_head.i32TotalEvents*record_size;
+
+  // - create target string -
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->create(sizeof(sFILEARCH_HEAD) + records_mem_size);
+
+  // - retrieve target head structures -
+  sFILEARCH_HEAD &head = *((sFILEARCH_HEAD *)string_ptr->data);
+  sEVTARCH_HEAD &std_head = head.stdHead;
+
+  // - copy aru headers -
+  BIC_ATO_ARU_HEADERS_COPY();
+
+  // - clear records memory -
+  memset(string_ptr->data + sizeof(sFILEARCH_HEAD),0,records_mem_size);
+
+  if (aa_ptr->record_count > 0)
+  {
+    // - copy aru records -
+    BIC_ATO_ARU_RECORDS_COPY(aa_ptr->record_count,src_std_head.u16DataType,aa_ptr->records,string_ptr->data + sizeof(sFILEARCH_HEAD),
+      string_ptr->clear();
+      cfree(string_ptr);
+    )
+  }
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_ato_aru_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_ato_aru,"unpack#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  BIC_ATO_ARU_UNPACK();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_ato_aru,aa_ptr);
   BIC_SET_RESULT(new_location);
@@ -1737,7 +1863,7 @@ optim_line_section_s *ols_ptr = (optim_line_section_s *)dst_location->v_data_ptr
 if (index < 0 || index >= ols_ptr->ols.NofLineSegments) {\
   exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_OPTIM_LINE_SECTION_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
   new_exception->params.push(index);\
-  \
+\
   return false;\
 }\
 /*}}}*/\
@@ -1747,9 +1873,9 @@ if (index < 0 || index >= ols_ptr->ols.NofLineSegments) {\
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  \
+\
   long long int index;\
-  \
+\
   /* - ERROR - */\
   if (!it.retrieve_integer(src_0_location,index))\
   {\
@@ -1757,12 +1883,12 @@ if (index < 0 || index >= ols_ptr->ols.NofLineSegments) {\
     BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
     new_exception->params.push(1);\
     new_exception->params.push(src_0_location->v_type);\
-    \
+\
     return false;\
   }\
-  \
+\
   BIC_OPTIM_LINE_SECTION_CHECK_INDEX();\
-  \
+\
   /* - create optim line segment object - */\
   optim_line_segment_s *olseg_ptr = (optim_line_segment_s *)cmalloc(sizeof(optim_line_segment_s));\
   olseg_ptr->init();\
@@ -3237,7 +3363,7 @@ ato_trip_s *trip_ptr = (ato_trip_s *)dst_location->v_data_ptr;\
 if (index < 0 || index >= trip_ptr->trip.NofLineSections) {\
   exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ATO_TRIP_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
   new_exception->params.push(index);\
-  \
+\
   return false;\
 }\
 /*}}}*/\
@@ -3247,9 +3373,9 @@ if (index < 0 || index >= trip_ptr->trip.NofLineSections) {\
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  \
+\
   long long int index;\
-  \
+\
   /* - ERROR - */\
   if (!it.retrieve_integer(src_0_location,index))\
   {\
@@ -3257,12 +3383,12 @@ if (index < 0 || index >= trip_ptr->trip.NofLineSections) {\
     BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
     new_exception->params.push(1);\
     new_exception->params.push(src_0_location->v_type);\
-    \
+\
     return false;\
   }\
-  \
+\
   BIC_ATO_TRIP_CHECK_INDEX();\
-  \
+\
   /* - create ato trip section object - */\
   ato_trip_sec_s *ats_ptr = (ato_trip_sec_s *)cmalloc(sizeof(ato_trip_sec_s));\
   ats_ptr->init();\
@@ -4065,7 +4191,7 @@ ato_line_sec_s *als_ptr = (ato_line_sec_s *)dst_location->v_data_ptr;\
 if (index < 0 || index >= als_ptr->line_sec.NofLinePoints) {\
   exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ATO_LINE_SEC_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
   new_exception->params.push(index);\
-  \
+\
   return false;\
 }\
 /*}}}*/\
@@ -4075,9 +4201,9 @@ if (index < 0 || index >= als_ptr->line_sec.NofLinePoints) {\
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  \
+\
   long long int index;\
-  \
+\
   /* - ERROR - */\
   if (!it.retrieve_integer(src_0_location,index))\
   {\
@@ -4085,12 +4211,12 @@ if (index < 0 || index >= als_ptr->line_sec.NofLinePoints) {\
     BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
     new_exception->params.push(1);\
     new_exception->params.push(src_0_location->v_type);\
-    \
+\
     return false;\
   }\
-  \
+\
   BIC_ATO_LINE_SEC_CHECK_INDEX();\
-  \
+\
   /* - create ato line section point object - */\
   ato_line_sec_point_s *alsp_ptr = (ato_line_sec_point_s *)cmalloc(sizeof(ato_line_sec_point_s));\
   alsp_ptr->init();\

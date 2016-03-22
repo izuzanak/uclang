@@ -75,6 +75,8 @@ bool bic_ato_aru_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
 bool bic_ato_aru_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ato_aru_method_AtoAru_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ato_aru_method_create_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ato_aru_method_pack_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ato_aru_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ato_aru_method_primary_key_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ato_aru_method_first_x_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ato_aru_method_last_x_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
