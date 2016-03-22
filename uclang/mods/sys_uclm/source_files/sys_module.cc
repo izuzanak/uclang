@@ -3186,7 +3186,7 @@ bool bic_socket_method_accept_0(interpreter_thread_s &it,unsigned stack_base,uli
     socklen_t addr_len = sizeof(sockaddr_in);
 
     // - ERROR -
-    int acc_fd = accept(fd,(sockaddr*)addr_ptr,&addr_len);
+    int acc_fd = accept(fd,(sockaddr *)addr_ptr,&addr_len);
     if (acc_fd < 0)
     {
       cfree(addr_ptr);

@@ -32,6 +32,9 @@ enum
   c_error_ATO_ARU_ARCHIVE_WRONG_COOKIE,
   c_error_ATO_ARU_ARCHIVE_UNSUPPORTED_VALUE_TYPE,
   c_error_ATO_ARU_ARCHIVE_INDEX_EXCEEDS_RANGE,
+  c_error_ATO_ARU_ARCHIVE_DIFFERENT_X_VALUES_AND_VALUES_SIZES,
+  c_error_ATO_ARU_ARCHIVE_X_VALUE_WRONG_TYPE,
+  c_error_ATO_ARU_ARCHIVE_VALUE_WRONG_TYPE,
   c_error_ATO_ARU_RECORD_UNSUPPORTED_VALUE_TYPE,
   c_error_OPTIM_SPEED_PROFILE_WRONG_DATA,
   c_error_OPTIM_LINE_SECTION_WRONG_DATA,
@@ -71,6 +74,7 @@ unsigned bic_ato_aru_next_idx(location_s *location_ptr,unsigned index);
 bool bic_ato_aru_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ato_aru_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ato_aru_method_AtoAru_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ato_aru_method_create_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ato_aru_method_primary_key_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ato_aru_method_first_x_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ato_aru_method_last_x_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

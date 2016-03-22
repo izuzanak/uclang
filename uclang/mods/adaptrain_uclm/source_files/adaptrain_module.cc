@@ -23,7 +23,7 @@ built_in_module_s module =
   adaptrain_classes,         // Classes
 
   0,                         // Error base index
-  16,                        // Error count
+  19,                        // Error count
   adaptrain_error_strings,   // Error strings
 
   adaptrain_initialize,      // Initialize function
@@ -53,6 +53,9 @@ const char *adaptrain_error_strings[] =
   "error_ATO_ARU_ARCHIVE_WRONG_COOKIE",
   "error_ATO_ARU_ARCHIVE_UNSUPPORTED_VALUE_TYPE",
   "error_ATO_ARU_ARCHIVE_INDEX_EXCEEDS_RANGE",
+  "error_ATO_ARU_ARCHIVE_DIFFERENT_X_VALUES_AND_VALUES_SIZES",
+  "error_ATO_ARU_ARCHIVE_X_VALUE_WRONG_TYPE",
+  "error_ATO_ARU_ARCHIVE_VALUE_WRONG_TYPE",
   "error_ATO_ARU_RECORD_UNSUPPORTED_VALUE_TYPE",
   "error_OPTIM_SPEED_PROFILE_WRONG_DATA",
   "error_OPTIM_LINE_SECTION_WRONG_DATA",
@@ -145,6 +148,27 @@ bool adaptrain_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nIndex %" HOST_LL_FORMAT "d exceeds ATO ARU archive range\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_ATO_ARU_ARCHIVE_DIFFERENT_X_VALUES_AND_VALUES_SIZES:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nDifferent sizes of X values and values arrays\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_ATO_ARU_ARCHIVE_X_VALUE_WRONG_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong type of X value, expected %s\n",it.class_symbol_names[it.class_records[exception.params[0]].name_idx].data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_ATO_ARU_ARCHIVE_VALUE_WRONG_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong type of value, expected %s\n",it.class_symbol_names[it.class_records[exception.params[0]].name_idx].data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_ATO_ARU_RECORD_UNSUPPORTED_VALUE_TYPE:
@@ -246,8 +270,8 @@ built_in_class_s ato_aru_class =
 {/*{{{*/
   "AtoAru",
   c_modifier_public | c_modifier_final,
-  12, ato_aru_methods,
-  0, ato_aru_variables,
+  13, ato_aru_methods,
+  20, ato_aru_variables,
   bic_ato_aru_consts,
   bic_ato_aru_init,
   bic_ato_aru_clear,
@@ -279,6 +303,11 @@ built_in_method_s ato_aru_methods[] =
     "AtoAru#1",
     c_modifier_public | c_modifier_final,
     bic_ato_aru_method_AtoAru_1
+  },
+  {
+    "create#5",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_ato_aru_method_create_5
   },
   {
     "primary_key#0",
@@ -329,6 +358,26 @@ built_in_method_s ato_aru_methods[] =
 
 built_in_variable_s ato_aru_variables[] =
 {/*{{{*/
+  { "TBOOL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TSINT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TINT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TDINT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TLINT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TUSINT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TUINT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TUDINT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TULINT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TREAL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TLREAL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TTIME", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TDATE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TTOD", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TDT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TSTRING", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TBYTE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TWORD", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TDWORD", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TLWORD", c_modifier_public | c_modifier_static | c_modifier_static_const },
 };/*}}}*/
 
 #define BIC_ATO_ARU_CHECK_INDEX() \
@@ -381,6 +430,40 @@ if (index < 0 || index >= aa_ptr->record_count) {\
 
 void bic_ato_aru_consts(location_array_s &const_locations)
 {/*{{{*/
+
+  // - insert optim line segment driving mode identifiers -
+  {
+    const_locations.push_blanks(20);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 20);
+
+#define CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr++;
+
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TBOOL);
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TSINT);
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TINT);
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TDINT);
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TLINT);
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TUSINT);
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TUINT);
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TUDINT);
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TULINT);
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TREAL);
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TLREAL);
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TTIME);
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TDATE);
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TTOD);
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TDT);
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TSTRING);
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TBYTE);
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TWORD);
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TDWORD);
+    CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TLWORD);
+  }
+
 }/*}}}*/
 
 void bic_ato_aru_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -680,6 +763,202 @@ bool bic_ato_aru_method_AtoAru_1(interpreter_thread_s &it,unsigned stack_base,ul
   }
 
   dst_location->v_data_ptr = (basic_64b)aa_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_ato_aru_method_create_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
+  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
+  location_s *src_4_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_4_op_idx]);
+
+  long long int primary_key;
+  long long int data_type;
+  long long int version;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,primary_key) ||
+      !it.retrieve_integer(src_1_location,data_type) ||
+      !it.retrieve_integer(src_2_location,version) ||
+      src_3_location->v_type != c_bi_class_array ||
+      src_4_location->v_type != c_bi_class_array)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_ato_aru,"create#5");
+    new_exception->params.push(5);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+    new_exception->params.push(src_2_location->v_type);
+    new_exception->params.push(src_3_location->v_type);
+    new_exception->params.push(src_4_location->v_type);
+
+    return false;
+  }
+
+  pointer_array_s *x_val_array = (pointer_array_s *)src_3_location->v_data_ptr;
+  pointer_array_s *value_array = (pointer_array_s *)src_4_location->v_data_ptr;
+
+  // - ERROR -
+  if (x_val_array->used != value_array->used)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_DIFFERENT_X_VALUES_AND_VALUES_SIZES,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - retrieve event count -
+  unsigned record_count = x_val_array->used;
+
+  // - retrieve data type properties -
+  U8 var_length;
+  unsigned record_size;
+
+  switch (data_type)
+  {
+    case TUDINT:
+      var_length = sizeof(U32);
+      record_size = sizeof(sEVTARCH_RECORD_U32);
+      break;
+    case TREAL:
+      var_length = sizeof(float);
+      record_size = sizeof(sEVTARCH_RECORD_R32);
+      break;
+
+    // - ERROR -
+    default:
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_UNSUPPORTED_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      new_exception->params.push(data_type);
+
+      return false;
+  }
+
+  // - create ato aru object -
+  ato_aru_s *aa_ptr = (ato_aru_s *)cmalloc(sizeof(ato_aru_s));
+  aa_ptr->init();
+
+  // - initialize record variables -
+  aa_ptr->record_count = 0;
+  aa_ptr->records = NULL;
+
+  // - fill sFILEARCH_HEAD structure -
+  sFILEARCH_HEAD &head = aa_ptr->head;
+  memcpy(head.cookie,c_ato_aru_cookie,sizeof(c_ato_aru_cookie));
+  memset(head.VarName,0,EA_LEN_VARNAME);
+  memset(head.DataTypeName,0,EA_LEN_DTNAME);
+  memset(head.RepreName,0,EA_LEN_REPRENAME);
+  head.RepreCode = 0;
+  head.MultConst = 1.0f;
+  memset(head.FSymbolName,0,EA_LEN_FSYMNAME);
+  memset(head.Comment,0,EA_LEN_COMMENT);
+
+  // - fill sEVTARCH_HEAD structure -
+  sEVTARCH_HEAD &std_head = head.stdHead;
+  std_head.i32PK_Variable = primary_key;
+
+  // - retrieve actual year -
+  time_t t = time(NULL);
+  struct tm tm = *localtime(&t);
+  std_head.u16Year = tm.tm_year + 1900;
+
+  std_head.u16DataType = data_type;
+  std_head.VarAdr = 0;
+  std_head.VarIndx = 0;
+  std_head.i32ArchiveLen = record_count;
+  std_head.i32TotalEvents = record_count;
+  std_head.i32EventIndx = record_count;
+  std_head.r32FXValue = 0.0;
+  std_head.r32LXValue = 0.0;
+  std_head.u8Version = version;
+  std_head.u8FTimeStampms = 0;
+  std_head.u8LTimeStampms = 0;
+  std_head.u8VarLength = var_length;
+
+  // - if there are events to write -
+  if (record_count != 0)
+  {
+    // - compute record memory size -
+    unsigned records_mem_size = record_count*record_size;
+
+    // - set record count -
+    aa_ptr->record_count = record_count;
+
+    // - allocate records memory -
+    aa_ptr->records = cmalloc(records_mem_size);
+
+    unsigned r_idx = 0;
+    do {
+      location_s *x_location = (location_s *)it.get_location_value(x_val_array->data[r_idx]);
+      location_s *v_location = (location_s *)it.get_location_value(value_array->data[r_idx]);
+
+      // - ERROR -
+      if (x_location->v_type != c_bi_class_float)
+      {
+        aa_ptr->clear(it);
+        cfree(aa_ptr);
+
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_X_VALUE_WRONG_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(c_bi_class_float);
+
+        return false;
+      }
+
+      // - process archive records -
+      switch (std_head.u16DataType)
+      {
+        case TUDINT:
+          {/*{{{*/
+            sEVTARCH_RECORD_U32 *record = (sEVTARCH_RECORD_U32 *)aa_ptr->records + r_idx;
+
+            // - ERROR -
+            if (v_location->v_type != c_bi_class_integer)
+            {
+              aa_ptr->clear(it);
+              cfree(aa_ptr);
+
+              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_VALUE_WRONG_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+              new_exception->params.push(c_bi_class_integer);
+
+              return false;
+            }
+
+            record->r32XValue = *((double *)&x_location->v_data_ptr);
+            record->u8TimeStampms = 0;
+            record->u8Status = 0x80;
+            record->u32Value = (long long int)v_location->v_data_ptr;
+          }/*}}}*/
+          break;
+        case TREAL:
+          {/*{{{*/
+            sEVTARCH_RECORD_R32 *record = (sEVTARCH_RECORD_R32 *)aa_ptr->records + r_idx;
+
+            // - ERROR -
+            if (v_location->v_type != c_bi_class_float)
+            {
+              aa_ptr->clear(it);
+              cfree(aa_ptr);
+
+              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_VALUE_WRONG_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+              new_exception->params.push(c_bi_class_float);
+
+              return false;
+            }
+
+            record->r32XValue = *((double *)&x_location->v_data_ptr);
+            record->u8TimeStampms = 0;
+            record->u8Status = 0x80;
+            record->r32Value = *((double *)&v_location->v_data_ptr);
+          }/*}}}*/
+          break;
+      }
+
+    } while(++r_idx < aa_ptr->record_count);
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_ato_aru,aa_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
