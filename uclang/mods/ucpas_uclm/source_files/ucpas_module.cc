@@ -14,7 +14,7 @@ built_in_module_s module =
   ucpas_classes,          // Classes
 
   0,                      // Error base index
-  6,                      // Error count
+  9,                      // Error count
   ucpas_error_strings,    // Error strings
 
   ucpas_initialize,       // Initialize function
@@ -35,6 +35,9 @@ const char *ucpas_error_strings[] =
   "error_PAS_LIB_INITIALIZE_ERROR",
   "error_PAS_LIB_WRONG_IP_ADDRESS_FORMAT",
   "error_PAS_LIB_WRONG_SAMPLES_DATA_LENGTH",
+  "error_PAS_LIB_WRONG_SINE_SAMPLE_COUNT",
+  "error_PAS_LIB_WRONG_SINE_COUNT",
+  "error_PAS_LIB_WRONG_SINE_AMPLITUDE",
   "error_PAS_LIB_WRONG_VOLUME_VALUE",
   "error_PAS_DEVICE_VERSION_STRING_TOO_LONG",
 };/*}}}*/
@@ -92,6 +95,27 @@ bool ucpas_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nWrong length of samples data\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_PAS_LIB_WRONG_SINE_SAMPLE_COUNT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong count of generated sine samples\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PAS_LIB_WRONG_SINE_COUNT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong count of generated sines\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PAS_LIB_WRONG_SINE_AMPLITUDE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong amplitude of generated sines\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_PAS_LIB_WRONG_VOLUME_VALUE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -121,7 +145,7 @@ built_in_class_s pas_class =
 {/*{{{*/
   "Pas",
   c_modifier_public | c_modifier_final,
-  25, pas_methods,
+  26, pas_methods,
   1, pas_variables,
   bic_pas_consts,
   bic_pas_init,
@@ -179,6 +203,11 @@ built_in_method_s pas_methods[] =
     "samples_append#1",
     c_modifier_public | c_modifier_final,
     bic_pas_method_samples_append_1
+  },
+  {
+    "samples_append_sine#3",
+    c_modifier_public | c_modifier_final,
+    bic_pas_method_samples_append_sine_3
   },
   {
     "samples_append_silence#1",
@@ -653,6 +682,103 @@ bool bic_pas_method_samples_append_1(interpreter_thread_s &it,unsigned stack_bas
         pas_s::sample_queue.insert(sample_value);
       } while((sc_ptr += 2) < sc_ptr_end);
     }
+
+    // - unlock pas data mutex -
+    pas_s::mutex.unlock();
+  }
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_pas_method_samples_append_sine_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
+
+  long long int sine_sample_cnt;
+  long long int sine_cnt;
+  long long int amplitude;
+
+  if (!it.retrieve_integer(src_0_location,sine_sample_cnt) ||
+      !it.retrieve_integer(src_1_location,sine_cnt) ||
+      !it.retrieve_integer(src_2_location,amplitude))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("samples_append_sine#3");
+    new_exception->params.push(3);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+    new_exception->params.push(src_2_location->v_type);
+
+    return false;
+  }
+
+  // - ERROR -
+  if (sine_sample_cnt <= 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_PAS_LIB_WRONG_SINE_SAMPLE_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (sine_cnt < 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_PAS_LIB_WRONG_SINE_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (amplitude < 0 || amplitude > 0x7fff)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_PAS_LIB_WRONG_SINE_AMPLITUDE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  if (sine_cnt > 0)
+  {
+    short sine_buff[sine_sample_cnt];
+
+    // - compute sine buffer -
+    unsigned sample_idx = 0;
+    do {
+      sine_buff[sample_idx] = amplitude*sin(((double)c_2pi_number*sample_idx)/sine_sample_cnt);
+    } while(++sample_idx < sine_sample_cnt);
+
+    // - fix data endianity -
+    if (!c_little_endian)
+    {
+      char *sc_ptr = (char *)sine_buff;
+      char *sc_ptr_end = sc_ptr + sine_sample_cnt;
+      char tmp;
+      do {
+        tmp = sc_ptr[0];
+        sc_ptr[0] = sc_ptr[1];
+        sc_ptr[1] = tmp;
+      } while((sc_ptr += 2) < sc_ptr_end);
+    }
+
+    // - lock pas data mutex -
+    pas_s::mutex.lock();
+
+    // - reset hold counter -
+    pas_s::hold_counter = 0;
+
+    unsigned sine_idx = 0;
+    do {
+
+      // - insert sine samples to sample queue -
+      short *sample_ptr = sine_buff;
+      short *sample_ptr_end = sample_ptr + sine_sample_cnt;
+      do {
+        pas_s::sample_queue.insert(*sample_ptr);
+      } while(++sample_ptr < sample_ptr_end);
+
+    } while(++sine_idx < sine_cnt);
 
     // - unlock pas data mutex -
     pas_s::mutex.unlock();

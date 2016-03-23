@@ -23,6 +23,9 @@ enum
   c_error_PAS_LIB_INITIALIZE_ERROR,
   c_error_PAS_LIB_WRONG_IP_ADDRESS_FORMAT,
   c_error_PAS_LIB_WRONG_SAMPLES_DATA_LENGTH,
+  c_error_PAS_LIB_WRONG_SINE_SAMPLE_COUNT,
+  c_error_PAS_LIB_WRONG_SINE_COUNT,
+  c_error_PAS_LIB_WRONG_SINE_AMPLITUDE,
   c_error_PAS_LIB_WRONG_VOLUME_VALUE,
   c_error_PAS_DEVICE_VERSION_STRING_TOO_LONG,
 };
@@ -53,6 +56,7 @@ bool bic_pas_method_device_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 bool bic_pas_method_device_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pas_method_update_device_status_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pas_method_samples_append_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_pas_method_samples_append_sine_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pas_method_samples_append_silence_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pas_method_samples_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pas_method_samples_count_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
