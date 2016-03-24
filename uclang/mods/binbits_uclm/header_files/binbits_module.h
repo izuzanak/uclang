@@ -108,6 +108,10 @@ extern built_in_class_s bin_dict_class;
 void bic_bin_dict_consts(location_array_s &const_locations);
 void bic_bin_dict_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_bin_dict_clear(interpreter_thread_s &it,location_s *location_ptr);
+unsigned bic_bin_dict_length(location_s *location_ptr);
+location_s *bic_bin_dict_item(interpreter_thread_s &it,location_s *location_ptr,unsigned index);
+unsigned bic_bin_dict_first_idx(location_s *location_ptr);
+unsigned bic_bin_dict_next_idx(location_s *location_ptr,unsigned index);
 
 bool bic_bin_dict_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_dict_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -125,6 +129,11 @@ bool bic_bin_dict_method_lee_key_1(interpreter_thread_s &it,unsigned stack_base,
 bool bic_bin_dict_method_gre_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_dict_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_dict_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_dict_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_dict_method_last_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_dict_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_dict_method_prev_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_dict_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_dict_method_to_string_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_dict_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

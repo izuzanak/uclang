@@ -339,18 +339,7 @@ built_in_variable_s tree_variables[] =
   pointer_tree_s *tree_ptr = (pointer_tree_s *)((location_s *)dst_location)->v_data_ptr;\
   \
   /* - ERROR - */\
-  if (index < 0 || index >= tree_ptr->used)\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TREE_INDEX_DOES_NOT_REFER_TO_VALID_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    new_exception->params.push(index);\
-    \
-    return false;\
-  }\
-  \
-  pointer_tree_s_node &node = tree_ptr->data[index];\
-  \
-  /* - ERROR - */\
-  if (!node.valid)\
+  if (index < 0 || index >= tree_ptr->used || !tree_ptr->data[index].valid)\
   {\
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TREE_INDEX_DOES_NOT_REFER_TO_VALID_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(index);\
@@ -465,11 +454,7 @@ unsigned bic_tree_next_idx(location_s *location_ptr,unsigned index)
   pointer_tree_s *tree_ptr = (pointer_tree_s *)((location_s *)location_ptr)->v_data_ptr;
 
   // FIXME TODO check index ...
-  cassert(index < tree_ptr->used);
-
-  // FIXME TODO check index ...
-  pointer_tree_s_node &node = tree_ptr->data[index];
-  cassert(node.valid);
+  cassert(index < tree_ptr->used && tree_ptr->data[index].valid);
 
   return tree_ptr->get_next_idx(index);
 }/*}}}*/
@@ -805,7 +790,7 @@ bool bic_tree_method_remove_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
   BIC_TREE_CHECK_INDEX();
 
-  it.release_location_ptr((location_s *)node.object);
+  it.release_location_ptr((location_s *)tree_ptr->data[index].object);
   tree_ptr->remove(index);
 
   pointer &res_location = it.data_stack[res_loc_idx];

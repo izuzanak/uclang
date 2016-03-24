@@ -2063,16 +2063,16 @@ built_in_class_s bin_dict_class =
 {/*{{{*/
   "BinDict",
   c_modifier_public | c_modifier_final,
-  19, bin_dict_methods,
+  24, bin_dict_methods,
   2, bin_dict_variables,
   bic_bin_dict_consts,
   bic_bin_dict_init,
   bic_bin_dict_clear,
   NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  bic_bin_dict_length,
+  bic_bin_dict_item,
+  bic_bin_dict_first_idx,
+  bic_bin_dict_next_idx,
   NULL,
   NULL,
   NULL,
@@ -2163,6 +2163,31 @@ built_in_method_s bin_dict_methods[] =
     bic_bin_dict_method_item_1
   },
   {
+    "first_idx#0",
+    c_modifier_public | c_modifier_final,
+    bic_bin_dict_method_first_idx_0
+  },
+  {
+    "last_idx#0",
+    c_modifier_public | c_modifier_final,
+    bic_bin_dict_method_last_idx_0
+  },
+  {
+    "next_idx#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_dict_method_next_idx_1
+  },
+  {
+    "prev_idx#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_dict_method_prev_idx_1
+  },
+  {
+    "length#0",
+    c_modifier_public | c_modifier_final,
+    bic_bin_dict_method_length_0
+  },
+  {
     "to_string#0",
     c_modifier_public | c_modifier_final,
     bic_bin_dict_method_to_string_0
@@ -2187,6 +2212,20 @@ built_in_variable_s bin_dict_variables[] =
   { "TYPE_INT64_FLOAT64", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
+
+#define BIC_BIN_DICT_METHOD_CHECK_IDX(MAP_NAME) \
+/*{{{*/\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
+\
+  /* - ERROR - */\
+  if (index < 0 || index >= tree_ptr->used || !tree_ptr->data[index].valid)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_BIN_DICT_INDEX_DOES_NOT_REFER_TO_VALID_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(index);\
+    \
+    return false;\
+  }\
+/*}}}*/
 
 #define BIC_BIN_DICT_COMPARE_ELEMENTS(MAP_NAME) \
 {/*{{{*/\
@@ -2299,6 +2338,111 @@ void bic_bin_dict_clear(interpreter_thread_s &it,location_s *location_ptr)
   {
     bd_ptr->clear(it);
     cfree(bd_ptr);
+  }
+}/*}}}*/
+
+unsigned bic_bin_dict_length(location_s *location_ptr)
+{/*{{{*/
+  bin_dict_s *bd_ptr = (bin_dict_s *)location_ptr->v_data_ptr;
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+    return ((lli_lli_map_tree_s *)bd_ptr->cont)->count;
+  case c_bin_dict_type_int64_float64:
+    return ((lli_bd_map_tree_s *)bd_ptr->cont)->count;
+  default:
+    cassert(0);
+  }
+}/*}}}*/
+
+location_s *bic_bin_dict_item(interpreter_thread_s &it,location_s *location_ptr,unsigned index)
+{/*{{{*/
+  bin_dict_s *bd_ptr = (bin_dict_s *)location_ptr->v_data_ptr;
+
+#define BIC_BIN_DICT_ITEM(MAP_NAME) \
+{/*{{{*/\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
+\
+  /* - ERROR - */\
+  cassert(index < tree_ptr->used && tree_ptr->data[index].valid);\
+}/*}}}*/
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+    BIC_BIN_DICT_ITEM(lli_lli_map);
+    break;
+  case c_bin_dict_type_int64_float64:
+    BIC_BIN_DICT_ITEM(lli_bd_map);
+    break;
+  default:
+    cassert(0);
+  }
+
+  // - create bin dict reference -
+  bin_dict_ref_s *bdr_ptr = bd_ptr->create_reference(location_ptr,index);
+  
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_bin_dict_ref,bdr_ptr);
+
+  return new_location;
+}/*}}}*/
+
+unsigned bic_bin_dict_first_idx(location_s *location_ptr)
+{/*{{{*/
+  bin_dict_s *bd_ptr = (bin_dict_s *)location_ptr->v_data_ptr;
+
+#define BIC_BIN_DICT_FIRST_IDX(MAP_NAME) \
+{/*{{{*/\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
+\
+  if (tree_ptr->root_idx != c_idx_not_exist)\
+  {\
+    return tree_ptr->get_min_value_idx(tree_ptr->root_idx);\
+  }\
+  else\
+  {\
+    return c_idx_not_exist;\
+  }\
+}/*}}}*/
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+    BIC_BIN_DICT_FIRST_IDX(lli_lli_map);
+    break;
+  case c_bin_dict_type_int64_float64:
+    BIC_BIN_DICT_FIRST_IDX(lli_bd_map);
+    break;
+  default:
+    cassert(0);
+  }
+}/*}}}*/
+
+unsigned bic_bin_dict_next_idx(location_s *location_ptr,unsigned index)
+{/*{{{*/
+  bin_dict_s *bd_ptr = (bin_dict_s *)location_ptr->v_data_ptr;
+
+#define BIC_BIN_DICT_NEXT_IDX(MAP_NAME) \
+{/*{{{*/\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
+\
+  /* - ERROR - */\
+  cassert(index < tree_ptr->used && tree_ptr->data[index].valid);\
+\
+  return tree_ptr->get_next_idx(index);\
+}/*}}}*/
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+    BIC_BIN_DICT_NEXT_IDX(lli_lli_map);
+    break;
+  case c_bin_dict_type_int64_float64:
+    BIC_BIN_DICT_NEXT_IDX(lli_bd_map);
+    break;
+  default:
+    cassert(0);
   }
 }/*}}}*/
 
@@ -2466,7 +2610,7 @@ bool bic_bin_dict_method_keys_0(interpreter_thread_s &it,unsigned stack_base,uli
   bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
   pointer_array_s *target_array = it.get_new_array_ptr();
 
-#define BIC_BIN_DICT_KEYS_INTEGER(MAP_NAME) \
+#define BIC_BIN_DICT_METHOD_KEYS_INTEGER(MAP_NAME) \
 {/*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
   \
@@ -2490,10 +2634,10 @@ bool bic_bin_dict_method_keys_0(interpreter_thread_s &it,unsigned stack_base,uli
   switch (bd_ptr->type)
   {
   case c_bin_dict_type_int64_int64:
-    BIC_BIN_DICT_KEYS_INTEGER(lli_lli_map);
+    BIC_BIN_DICT_METHOD_KEYS_INTEGER(lli_lli_map);
     break;
   case c_bin_dict_type_int64_float64:
-    BIC_BIN_DICT_KEYS_INTEGER(lli_bd_map);
+    BIC_BIN_DICT_METHOD_KEYS_INTEGER(lli_bd_map);
     break;
   default:
     cassert(0);
@@ -2513,7 +2657,7 @@ bool bic_bin_dict_method_items_0(interpreter_thread_s &it,unsigned stack_base,ul
   bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
   pointer_array_s *target_array = it.get_new_array_ptr();
 
-#define BIC_BIN_DICT_ITEMS_INTEGER(MAP_NAME) \
+#define BIC_BIN_DICT_METHOD_ITEMS_INTEGER(MAP_NAME) \
 {/*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
   \
@@ -2534,7 +2678,7 @@ bool bic_bin_dict_method_items_0(interpreter_thread_s &it,unsigned stack_base,ul
   }\
 }/*}}}*/
 
-#define BIC_BIN_DICT_ITEMS_FLOAT(MAP_NAME) \
+#define BIC_BIN_DICT_METHOD_ITEMS_FLOAT(MAP_NAME) \
 {/*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
   \
@@ -2559,10 +2703,10 @@ bool bic_bin_dict_method_items_0(interpreter_thread_s &it,unsigned stack_base,ul
   switch (bd_ptr->type)
   {
   case c_bin_dict_type_int64_int64:
-    BIC_BIN_DICT_ITEMS_INTEGER(lli_lli_map);
+    BIC_BIN_DICT_METHOD_ITEMS_INTEGER(lli_lli_map);
     break;
   case c_bin_dict_type_int64_float64:
-    BIC_BIN_DICT_ITEMS_FLOAT(lli_bd_map);
+    BIC_BIN_DICT_METHOD_ITEMS_FLOAT(lli_bd_map);
     break;
   default:
     cassert(0);
@@ -2581,16 +2725,15 @@ bool bic_bin_dict_method_has_key_1(interpreter_thread_s &it,unsigned stack_base,
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
+  long long int result;
 
-#define BIC_BIN_DICT_HAS_KEY(MAP_NAME) \
+#define BIC_BIN_DICT_METHOD_HAS_KEY(MAP_NAME) \
 {/*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
   MAP_NAME ## _s search_map;\
   search_map.key = key;\
   \
-  long long int result = tree_ptr->get_idx(search_map) != c_idx_not_exist;\
-  \
-  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
+  result = tree_ptr->get_idx(search_map) != c_idx_not_exist;\
 }/*}}}*/
 
   switch (bd_ptr->type)
@@ -2614,10 +2757,10 @@ bool bic_bin_dict_method_has_key_1(interpreter_thread_s &it,unsigned stack_base,
       switch (bd_ptr->type)
       {
       case c_bin_dict_type_int64_int64:
-        BIC_BIN_DICT_HAS_KEY(lli_lli_map);
+        BIC_BIN_DICT_METHOD_HAS_KEY(lli_lli_map);
         break;
       case c_bin_dict_type_int64_float64:
-        BIC_BIN_DICT_HAS_KEY(lli_bd_map);
+        BIC_BIN_DICT_METHOD_HAS_KEY(lli_bd_map);
         break;
       }
     }
@@ -2625,6 +2768,8 @@ bool bic_bin_dict_method_has_key_1(interpreter_thread_s &it,unsigned stack_base,
   default:
     cassert(0);
   }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
@@ -2637,7 +2782,7 @@ bool bic_bin_dict_method_remove_key_1(interpreter_thread_s &it,unsigned stack_ba
 
   bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
 
-#define BIC_BIN_DICT_REMOVE_KEY(MAP_NAME) \
+#define BIC_BIN_DICT_METHOD_REMOVE_KEY(MAP_NAME) \
 {/*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
   MAP_NAME ## _s search_map;\
@@ -2653,8 +2798,6 @@ bool bic_bin_dict_method_remove_key_1(interpreter_thread_s &it,unsigned stack_ba
   }\
   \
   tree_ptr->remove(index);\
-  \
-  BIC_SET_RESULT_BLANK();\
 }/*}}}*/
 
   switch (bd_ptr->type)
@@ -2678,10 +2821,10 @@ bool bic_bin_dict_method_remove_key_1(interpreter_thread_s &it,unsigned stack_ba
       switch (bd_ptr->type)
       {
       case c_bin_dict_type_int64_int64:
-        BIC_BIN_DICT_REMOVE_KEY(lli_lli_map);
+        BIC_BIN_DICT_METHOD_REMOVE_KEY(lli_lli_map);
         break;
       case c_bin_dict_type_int64_float64:
-        BIC_BIN_DICT_REMOVE_KEY(lli_bd_map);
+        BIC_BIN_DICT_METHOD_REMOVE_KEY(lli_bd_map);
         break;
       }
     }
@@ -2689,6 +2832,8 @@ bool bic_bin_dict_method_remove_key_1(interpreter_thread_s &it,unsigned stack_ba
   default:
     cassert(0);
   }
+
+  BIC_SET_RESULT_BLANK();
 
   return true;
 }/*}}}*/
@@ -2700,7 +2845,7 @@ bool bic_bin_dict_method_first_key_0(interpreter_thread_s &it,unsigned stack_bas
 
   bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
 
-#define BIC_BIN_DICT_FIRST_KEY_INTEGER(MAP_NAME) \
+#define BIC_BIN_DICT_METHOD_FIRST_KEY_INTEGER(MAP_NAME) \
 {/*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
   \
@@ -2720,10 +2865,10 @@ bool bic_bin_dict_method_first_key_0(interpreter_thread_s &it,unsigned stack_bas
   switch (bd_ptr->type)
   {
   case c_bin_dict_type_int64_int64:
-    BIC_BIN_DICT_FIRST_KEY_INTEGER(lli_lli_map);
+    BIC_BIN_DICT_METHOD_FIRST_KEY_INTEGER(lli_lli_map);
     break;
   case c_bin_dict_type_int64_float64:
-    BIC_BIN_DICT_FIRST_KEY_INTEGER(lli_bd_map);
+    BIC_BIN_DICT_METHOD_FIRST_KEY_INTEGER(lli_bd_map);
     break;
   default:
     cassert(0);
@@ -2739,7 +2884,7 @@ bool bic_bin_dict_method_last_key_0(interpreter_thread_s &it,unsigned stack_base
 
   bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
 
-#define BIC_BIN_DICT_LAST_KEY_INTEGER(MAP_NAME) \
+#define BIC_BIN_DICT_METHOD_LAST_KEY_INTEGER(MAP_NAME) \
 {/*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
   \
@@ -2759,10 +2904,10 @@ bool bic_bin_dict_method_last_key_0(interpreter_thread_s &it,unsigned stack_base
   switch (bd_ptr->type)
   {
   case c_bin_dict_type_int64_int64:
-    BIC_BIN_DICT_LAST_KEY_INTEGER(lli_lli_map);
+    BIC_BIN_DICT_METHOD_LAST_KEY_INTEGER(lli_lli_map);
     break;
   case c_bin_dict_type_int64_float64:
-    BIC_BIN_DICT_LAST_KEY_INTEGER(lli_bd_map);
+    BIC_BIN_DICT_METHOD_LAST_KEY_INTEGER(lli_bd_map);
     break;
   default:
     cassert(0);
@@ -2779,7 +2924,7 @@ bool bic_bin_dict_method_next_key_1(interpreter_thread_s &it,unsigned stack_base
 
   bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
 
-#define BIC_BIN_DICT_NEXT_KEY_INTEGER(MAP_NAME) \
+#define BIC_BIN_DICT_METHOD_NEXT_KEY_INTEGER(MAP_NAME) \
 {/*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
   MAP_NAME ## _s search_map;\
@@ -2830,10 +2975,10 @@ bool bic_bin_dict_method_next_key_1(interpreter_thread_s &it,unsigned stack_base
       switch (bd_ptr->type)
       {
       case c_bin_dict_type_int64_int64:
-        BIC_BIN_DICT_NEXT_KEY_INTEGER(lli_lli_map);
+        BIC_BIN_DICT_METHOD_NEXT_KEY_INTEGER(lli_lli_map);
         break;
       case c_bin_dict_type_int64_float64:
-        BIC_BIN_DICT_NEXT_KEY_INTEGER(lli_bd_map);
+        BIC_BIN_DICT_METHOD_NEXT_KEY_INTEGER(lli_bd_map);
         break;
       }
     }
@@ -2853,7 +2998,7 @@ bool bic_bin_dict_method_prev_key_1(interpreter_thread_s &it,unsigned stack_base
 
   bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
 
-#define BIC_BIN_DICT_PREV_KEY_INTEGER(MAP_NAME) \
+#define BIC_BIN_DICT_METHOD_PREV_KEY_INTEGER(MAP_NAME) \
 {/*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
   MAP_NAME ## _s search_map;\
@@ -2904,10 +3049,10 @@ bool bic_bin_dict_method_prev_key_1(interpreter_thread_s &it,unsigned stack_base
       switch (bd_ptr->type)
       {
       case c_bin_dict_type_int64_int64:
-        BIC_BIN_DICT_PREV_KEY_INTEGER(lli_lli_map);
+        BIC_BIN_DICT_METHOD_PREV_KEY_INTEGER(lli_lli_map);
         break;
       case c_bin_dict_type_int64_float64:
-        BIC_BIN_DICT_PREV_KEY_INTEGER(lli_bd_map);
+        BIC_BIN_DICT_METHOD_PREV_KEY_INTEGER(lli_bd_map);
         break;
       }
     }
@@ -2927,7 +3072,7 @@ bool bic_bin_dict_method_lee_key_1(interpreter_thread_s &it,unsigned stack_base,
 
   bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
 
-#define BIC_BIN_DICT_LEE_KEY_INTEGER(MAP_NAME) \
+#define BIC_BIN_DICT_METHOD_LEE_KEY_INTEGER(MAP_NAME) \
 {/*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
   MAP_NAME ## _s search_map;\
@@ -2968,10 +3113,10 @@ bool bic_bin_dict_method_lee_key_1(interpreter_thread_s &it,unsigned stack_base,
       switch (bd_ptr->type)
       {
       case c_bin_dict_type_int64_int64:
-        BIC_BIN_DICT_LEE_KEY_INTEGER(lli_lli_map);
+        BIC_BIN_DICT_METHOD_LEE_KEY_INTEGER(lli_lli_map);
         break;
       case c_bin_dict_type_int64_float64:
-        BIC_BIN_DICT_LEE_KEY_INTEGER(lli_bd_map);
+        BIC_BIN_DICT_METHOD_LEE_KEY_INTEGER(lli_bd_map);
         break;
       }
     }
@@ -2991,7 +3136,7 @@ bool bic_bin_dict_method_gre_key_1(interpreter_thread_s &it,unsigned stack_base,
 
   bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
 
-#define BIC_BIN_DICT_GRE_KEY_INTEGER(MAP_NAME) \
+#define BIC_BIN_DICT_METHOD_GRE_KEY_INTEGER(MAP_NAME) \
 {/*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
   MAP_NAME ## _s search_map;\
@@ -3032,10 +3177,10 @@ bool bic_bin_dict_method_gre_key_1(interpreter_thread_s &it,unsigned stack_base,
       switch (bd_ptr->type)
       {
       case c_bin_dict_type_int64_int64:
-        BIC_BIN_DICT_GRE_KEY_INTEGER(lli_lli_map);
+        BIC_BIN_DICT_METHOD_GRE_KEY_INTEGER(lli_lli_map);
         break;
       case c_bin_dict_type_int64_float64:
-        BIC_BIN_DICT_GRE_KEY_INTEGER(lli_bd_map);
+        BIC_BIN_DICT_METHOD_GRE_KEY_INTEGER(lli_bd_map);
         break;
       }
     }
@@ -3083,27 +3228,17 @@ bool bic_bin_dict_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli
   
   bin_dict_s *bd_ptr = (bin_dict_s *)((location_s *)dst_location)->v_data_ptr;
 
-#define BIC_BIN_DICT_ITEM_CHECK_IDX(MAP_NAME) \
-{/*{{{*/\
-  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
-\
-  /* - ERROR - */\
-  if (index < 0 || index >= tree_ptr->used || !tree_ptr->data[index].valid)\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_BIN_DICT_INDEX_DOES_NOT_REFER_TO_VALID_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    new_exception->params.push(index);\
-    \
-    return false;\
-  }\
-}/*}}}*/
-
   switch (bd_ptr->type)
   {
   case c_bin_dict_type_int64_int64:
-    BIC_BIN_DICT_ITEM_CHECK_IDX(lli_lli_map);
+    {
+      BIC_BIN_DICT_METHOD_CHECK_IDX(lli_lli_map);
+    }
     break;
   case c_bin_dict_type_int64_float64:
-    BIC_BIN_DICT_ITEM_CHECK_IDX(lli_bd_map);
+    {
+      BIC_BIN_DICT_METHOD_CHECK_IDX(lli_bd_map);
+    }
     break;
   default:
     cassert(0);
@@ -3114,6 +3249,199 @@ bool bic_bin_dict_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli
   
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_bin_dict_ref,bdr_ptr);
   BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_dict_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
+
+#define BIC_BIN_DICT_METHOD_FIRST_IDX(MAP_NAME) \
+{/*{{{*/\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
+  \
+  if (tree_ptr->root_idx != c_idx_not_exist)\
+  {\
+    long long int index = tree_ptr->get_min_value_idx(tree_ptr->root_idx);\
+    \
+    BIC_SIMPLE_SET_RES(c_bi_class_integer,index);\
+  }\
+  else\
+  {\
+    BIC_SET_RESULT_BLANK();\
+  }\
+}/*}}}*/
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+    BIC_BIN_DICT_METHOD_FIRST_IDX(lli_lli_map);
+    break;
+  case c_bin_dict_type_int64_float64:
+    BIC_BIN_DICT_METHOD_FIRST_IDX(lli_bd_map);
+    break;
+  default:
+    cassert(0);
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_dict_method_last_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
+
+#define BIC_BIN_DICT_METHOD_LAST_IDX(MAP_NAME) \
+{/*{{{*/\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
+  \
+  if (tree_ptr->root_idx != c_idx_not_exist)\
+  {\
+    long long int index = tree_ptr->get_max_value_idx(tree_ptr->root_idx);\
+    \
+    BIC_SIMPLE_SET_RES(c_bi_class_integer,index);\
+  }\
+  else\
+  {\
+    BIC_SET_RESULT_BLANK();\
+  }\
+}/*}}}*/
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+    BIC_BIN_DICT_METHOD_LAST_IDX(lli_lli_map);
+    break;
+  case c_bin_dict_type_int64_float64:
+    BIC_BIN_DICT_METHOD_LAST_IDX(lli_bd_map);
+    break;
+  default:
+    cassert(0);
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_dict_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int index;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,index))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("next_idx#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
+  long long int result;
+
+#define BIC_BIN_DICT_METHOD_NEXT_IDX(MAP_NAME) \
+{/*{{{*/\
+  BIC_BIN_DICT_METHOD_CHECK_IDX(MAP_NAME);\
+\
+  result = tree_ptr->get_next_idx(index);\
+}/*}}}*/
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+    BIC_BIN_DICT_METHOD_NEXT_IDX(lli_lli_map);
+    break;
+  case c_bin_dict_type_int64_float64:
+    BIC_BIN_DICT_METHOD_NEXT_IDX(lli_bd_map);
+    break;
+  default:
+    cassert(0);
+  }
+
+  BIC_SET_RESULT_CONT_INDEX(result);
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_dict_method_prev_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int index;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,index))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("prev_idx#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
+  long long int result;
+
+#define BIC_BIN_DICT_METHOD_PREV_IDX(MAP_NAME) \
+{/*{{{*/\
+  BIC_BIN_DICT_METHOD_CHECK_IDX(MAP_NAME);\
+\
+  result = tree_ptr->get_prev_idx(index);\
+}/*}}}*/
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+    BIC_BIN_DICT_METHOD_PREV_IDX(lli_lli_map);
+    break;
+  case c_bin_dict_type_int64_float64:
+    BIC_BIN_DICT_METHOD_PREV_IDX(lli_bd_map);
+    break;
+  default:
+    cassert(0);
+  }
+
+  BIC_SET_RESULT_CONT_INDEX(result);
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_dict_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
+  long long int result;
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+    result = ((lli_lli_map_tree_s *)bd_ptr->cont)->count;
+    break;
+  case c_bin_dict_type_int64_float64:
+    result = ((lli_bd_map_tree_s *)bd_ptr->cont)->count;
+    break;
+  default:
+    cassert(0);
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
@@ -3130,7 +3458,7 @@ bool bic_bin_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_bas
 
   unsigned strings_size = 0;
 
-#define BIC_BIN_DICT_TO_STRING(MAP_NAME,FORMAT) \
+#define BIC_BIN_DICT_METHOD_TO_STRING(MAP_NAME,FORMAT) \
 {/*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
   \
@@ -3159,10 +3487,10 @@ bool bic_bin_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_bas
   switch (bd_ptr->type)
   {
   case c_bin_dict_type_int64_int64:
-    BIC_BIN_DICT_TO_STRING(lli_lli_map,"%" HOST_LL_FORMAT "d:%" HOST_LL_FORMAT "d");
+    BIC_BIN_DICT_METHOD_TO_STRING(lli_lli_map,"%" HOST_LL_FORMAT "d:%" HOST_LL_FORMAT "d");
     break;
   case c_bin_dict_type_int64_float64:
-    BIC_BIN_DICT_TO_STRING(lli_bd_map,"%" HOST_LL_FORMAT "d:%f");
+    BIC_BIN_DICT_METHOD_TO_STRING(lli_bd_map,"%" HOST_LL_FORMAT "d:%f");
     break;
   default:
     cassert(0);
@@ -3208,10 +3536,10 @@ bool bic_bin_dict_method_to_string_1(interpreter_thread_s &it,unsigned stack_bas
   switch (bd_ptr->type)
   {
   case c_bin_dict_type_int64_int64:
-    BIC_BIN_DICT_TO_STRING(lli_lli_map,"%" HOST_LL_FORMAT "d:%" HOST_LL_FORMAT "d");
+    BIC_BIN_DICT_METHOD_TO_STRING(lli_lli_map,"%" HOST_LL_FORMAT "d:%" HOST_LL_FORMAT "d");
     break;
   case c_bin_dict_type_int64_float64:
-    BIC_BIN_DICT_TO_STRING(lli_bd_map,"%" HOST_LL_FORMAT "d:%f");
+    BIC_BIN_DICT_METHOD_TO_STRING(lli_bd_map,"%" HOST_LL_FORMAT "d:%f");
     break;
   default:
     cassert(0);
@@ -3238,7 +3566,7 @@ bool bic_bin_dict_method_print_0(interpreter_thread_s &it,unsigned stack_base,ul
 
   putchar('[');
 
-#define BIC_BIN_DICT_PRINT(MAP_NAME,FORMAT) \
+#define BIC_BIN_DICT_METHOD_PRINT(MAP_NAME,FORMAT) \
 {/*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
   \
@@ -3264,10 +3592,10 @@ bool bic_bin_dict_method_print_0(interpreter_thread_s &it,unsigned stack_base,ul
   switch (bd_ptr->type)
   {
   case c_bin_dict_type_int64_int64:
-    BIC_BIN_DICT_PRINT(lli_lli_map,"%" HOST_LL_FORMAT "d:%" HOST_LL_FORMAT "d");
+    BIC_BIN_DICT_METHOD_PRINT(lli_lli_map,"%" HOST_LL_FORMAT "d:%" HOST_LL_FORMAT "d");
     break;
   case c_bin_dict_type_int64_float64:
-    BIC_BIN_DICT_PRINT(lli_bd_map,"%" HOST_LL_FORMAT "d:%f");
+    BIC_BIN_DICT_METHOD_PRINT(lli_bd_map,"%" HOST_LL_FORMAT "d:%f");
     break;
   default:
     cassert(0);

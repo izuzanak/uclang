@@ -46,7 +46,7 @@ Container class implementing abstract data type tree.
 
 <a name="Tree#0" />
 
-### Constructor [`Tree#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L669)
+### Constructor [`Tree#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L654)
 
 Creates default object of class `Tree`.
 
@@ -62,7 +62,7 @@ obj: []
 
 <a name="Tree#1" />
 
-### Constructor [`Tree#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L674)
+### Constructor [`Tree#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L659)
 
 Creates object of class `Tree` containing elements retrieved from method parameter.
 
@@ -86,7 +86,7 @@ obj: [1,2,3,4,5]
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L546)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L531)
 
 Assignment operator `=`. Object of class `Tree` is replaced by method parameter.
 
@@ -113,7 +113,7 @@ obj: New value
 
 <a name="operator_binary_plus_equal#1" />
 
-### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L562)
+### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L547)
 
 Append operator `+=`. Append elements retrieved from method parameter to object of class `Tree`.
 
@@ -140,7 +140,7 @@ obj: [1,1,2,2,3,4,5,6,7,8]
 
 <a name="operator_binary_double_equal#1" />
 
-### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L592)
+### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L577)
 
 Comparison operator `==`. Compares object of class `Tree` with method parameter and return `1` if objects has same value or `0` otherwise.
 
@@ -170,7 +170,7 @@ obj_0 == obj_2: 1
 
 <a name="operator_binary_exclamation_equal#1" />
 
-### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L609)
+### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L594)
 
 Comparison operator `!=`. Compares object of class `Tree` with method parameter and return `0` if objects has same value or `1` otherwise.
 
@@ -200,7 +200,7 @@ obj_0 != obj_2: 0
 
 <a name="operator_binary_plus#1" />
 
-### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L626)
+### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L611)
 
 Concatenation operator `+`. Creates object of class `Tree` containing elements of original object of class `Tree` concatenated with elements retrieved from method parameter.
 
@@ -227,7 +227,7 @@ res: [1,1,2,2,3,3,4,4,5,5]
 
 <a name="operator_binary_le_br_re_br#1" />
 
-### Operator [`operator_binary_le_br_re_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L662)
+### Operator [`operator_binary_le_br_re_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L647)
 
 Item selection operator `[]`.
 Retrieve element from object of class `Tree` stored at requested index position.
@@ -262,7 +262,7 @@ obj[3]: 3
 
 <a name="clear#0" />
 
-### Method [`clear#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L698)
+### Method [`clear#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L683)
 
 Release all elements stored in object of class `Tree`.
 
@@ -285,7 +285,7 @@ obj: []
 
 <a name="items#0" />
 
-### Method [`items#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L728)
+### Method [`items#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L713)
 
 Retrieve list of elements contained in object of class `Tree`. Elements are returned as object of class `Array`.
 
@@ -310,7 +310,7 @@ items: [1,2,3,4,5]
 
 <a name="insert#1" />
 
-### Method [`insert#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L762)
+### Method [`insert#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L747)
 
 Insert method parameter to object of class `Tree`.
 
@@ -339,7 +339,7 @@ obj: [1,2,3,4,5,5,6,7]
 
 <a name="remove#1" />
 
-### Method [`remove#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L787)
+### Method [`remove#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L772)
 
 Remove element from object of class `Tree` stored at position given by method parameter.
 
@@ -367,7 +367,7 @@ obj: [3,4,5]
 
 <a name="get_idx#1" />
 
-### Method [`get_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L817)
+### Method [`get_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L802)
 
 From object of class `Tree`, retrieve index of first element equal to method parameter.
 
@@ -396,7 +396,7 @@ obj.get_idx(100): <blank>
 
 <a name="get_idxs#1" />
 
-### Method [`get_idxs#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L841)
+### Method [`get_idxs#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L826)
 
 From object of class `Tree`, retrieve indexes of elements that are equal to method parameter. Element indexes are returned as object of class ``Array``.
 
@@ -424,7 +424,7 @@ obj.get_idxs(100): []
 
 <a name="contain#1" />
 
-### Method [`contain#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L881)
+### Method [`contain#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L866)
 
 Test if object of class `Tree` contains element with same value as object given by method parameter.
 
@@ -454,7 +454,7 @@ obj.contain(100): 0
 
 <a name="compare#1" />
 
-### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L907)
+### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L892)
 
 Compare object of class `Tree` with method parameter.
 
@@ -485,7 +485,7 @@ obj_0.compare(obj_0): 0
 
 <a name="item#1" />
 
-### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L923)
+### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L908)
 
 Retrieve element from object of class `Tree` stored at requested index position.
 
@@ -520,7 +520,7 @@ obj.item(5): 5
 
 <a name="first_idx#0" />
 
-### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L930)
+### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L915)
 
 Retrieve index of first element in object of class `Tree`.
 
@@ -544,7 +544,7 @@ obj.first_idx: <blank>
 
 <a name="last_idx#0" />
 
-### Method `spec` [`last_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L953)
+### Method `spec` [`last_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L938)
 
 Retrieve index of last element in object of class `Tree`.
 
@@ -568,7 +568,7 @@ obj.last_idx: <blank>
 
 <a name="next_idx#1" />
 
-### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L976)
+### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L961)
 
 From object of class `Tree` retrieve index of element following element identified by method parameter.
 
@@ -603,7 +603,7 @@ idx: 5
 
 <a name="prev_idx#1" />
 
-### Method `spec` [`prev_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L1005)
+### Method `spec` [`prev_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L990)
 
 From object of class `Tree` retrieve index of element preceding element identified by method parameter.
 
@@ -638,7 +638,7 @@ idx: 0
 
 <a name="length#0" />
 
-### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L1034)
+### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L1019)
 
 Retrieve count of elements in object of class `Tree`.
 
@@ -661,7 +661,7 @@ obj.length(): 0
 
 <a name="to_string#0" />
 
-### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L1047)
+### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L1032)
 
 Convert object of class `Tree` to object of class `String`.
 Each element of object of class `Tree` is converted to string by call of its
@@ -683,7 +683,7 @@ obj.to_string(): [1,2,3,4,5]
 
 <a name="to_string#1" />
 
-### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L1092)
+### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L1077)
 
 Convert object of class `Tree` to object of class `String`.
 Each element of object of class `Tree` is converted to string by call of its
@@ -711,7 +711,7 @@ obj.to_string("<->"): 1<->2<->3<->4<->5
 
 <a name="print#0" />
 
-### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L1150)
+### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_tree.cc#L1135)
 
 Print string representation of object of class `Tree` to standard output.
 Each element of object of class `Tree` is printed by call of its `print#0`
