@@ -689,6 +689,11 @@ bool bic_bin_array_pack(location_s *location_ptr,bc_array_s &stream,pointer_arra
 
 bool bic_bin_array_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack,bool order_bytes,unsigned source_pos)
 {/*{{{*/
+  if (stream.used < sizeof(unsigned))
+  {
+    return false;
+  }
+
   unsigned type;
   stream.from_end(sizeof(unsigned),(char *)&type,order_bytes);
 
@@ -697,9 +702,19 @@ bool bic_bin_array_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_a
 
 #define BIC_BIN_ARRAY_UNPACK(ARRAY_TYPE,TYPE) \
 {/*{{{*/\
+  if (stream.used < sizeof(unsigned))\
+  {\
+    return false;\
+  }\
+\
   unsigned length;\
   stream.from_end(sizeof(unsigned),(char *)&length,order_bytes);\
-  \
+\
+  if (stream.used < length*sizeof(TYPE))\
+  {\
+    return false;\
+  }\
+\
   ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)cmalloc(sizeof(ARRAY_TYPE));\
   array_ptr->init_size(length);\
   \
@@ -2074,8 +2089,8 @@ built_in_class_s bin_dict_class =
   bic_bin_dict_first_idx,
   bic_bin_dict_next_idx,
   NULL,
-  NULL,
-  NULL,
+  bic_bin_dict_pack,
+  bic_bin_dict_unpack,
   NULL,
   NULL
 };/*}}}*/
@@ -2444,6 +2459,117 @@ unsigned bic_bin_dict_next_idx(location_s *location_ptr,unsigned index)
   default:
     cassert(0);
   }
+}/*}}}*/
+
+bool bic_bin_dict_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack)
+{/*{{{*/
+  bin_dict_s *bd_ptr = (bin_dict_s *)location_ptr->v_data_ptr;
+
+#define BIC_BIN_DICT_PACK(MAP_NAME,KEY_TYPE,VALUE_TYPE) \
+{/*{{{*/\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
+  \
+  if (tree_ptr->root_idx != c_idx_not_exist)\
+  {\
+    unsigned stack[tree_ptr->get_descent_stack_size()];\
+    unsigned *stack_ptr = stack;\
+    \
+    unsigned kv_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);\
+    do {\
+      MAP_NAME ## _s &key_value = tree_ptr->data[kv_idx].object;\
+      \
+      stream.append(sizeof(KEY_TYPE),(const char *)&key_value.key);\
+      stream.append(sizeof(VALUE_TYPE),(const char *)&key_value.value);\
+      \
+      kv_idx = tree_ptr->get_stack_next_idx(kv_idx,&stack_ptr,stack);\
+    } while(kv_idx != c_idx_not_exist);\
+  }\
+  \
+  stream.append(sizeof(unsigned),(const char *)&tree_ptr->count);\
+}/*}}}*/
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+    BIC_BIN_DICT_PACK(lli_lli_map,long long int,long long int);
+    break;
+  case c_bin_dict_type_int64_float64:
+    BIC_BIN_DICT_PACK(lli_bd_map,long long int,double);
+    break;
+  default:
+    cassert(0);
+  }
+
+  stream.append(sizeof(unsigned),(const char *)&bd_ptr->type);
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_dict_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack,bool order_bytes,unsigned source_pos)
+{/*{{{*/
+  if (stream.used < sizeof(unsigned))
+  {
+    return false;
+  }
+
+  unsigned type;
+  stream.from_end(sizeof(unsigned),(char *)&type,order_bytes);
+
+  // - binary array container pointer -
+  void *cont = NULL;
+
+#define BIC_BIN_DICT_UNPACK(MAP_NAME,KEY_TYPE,VALUE_TYPE) \
+{/*{{{*/\
+  if (stream.used < sizeof(unsigned))\
+  {\
+    return false;\
+  }\
+\
+  unsigned count;\
+  stream.from_end(sizeof(unsigned),(char *)&count,order_bytes);\
+  \
+  if (stream.used < count*(sizeof(KEY_TYPE) + sizeof(VALUE_TYPE)))\
+  {\
+    return false;\
+  }\
+\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)cmalloc(sizeof(MAP_NAME ## _tree_s));\
+  tree_ptr->init();\
+\
+  do {\
+    MAP_NAME ## _s key_value;\
+\
+    stream.from_end(sizeof(VALUE_TYPE),(char *)&key_value.value,order_bytes);\
+    stream.from_end(sizeof(KEY_TYPE),(char *)&key_value.key,order_bytes);\
+\
+    tree_ptr->insert(key_value);\
+  } while(--count > 0);\
+\
+  cont = tree_ptr;\
+}/*}}}*/
+
+  switch (type)
+  {
+  case c_bin_dict_type_int64_int64:
+    BIC_BIN_DICT_UNPACK(lli_lli_map,long long int,long long int);
+    break;
+  case c_bin_dict_type_int64_float64:
+    BIC_BIN_DICT_UNPACK(lli_bd_map,long long int,double);
+    break;
+  default:
+    cassert(0);
+  }
+
+  // - create binary dict object -
+  bin_dict_s *bd_ptr = (bin_dict_s *)cmalloc(sizeof(bin_dict_s));
+  bd_ptr->init();
+
+  bd_ptr->type = type;
+  bd_ptr->cont = cont;
+
+  location_ptr->v_data_ptr = (basic_64b)bd_ptr;
+
+  return true;
 }/*}}}*/
 
 bool bic_bin_dict_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -3771,7 +3897,7 @@ bool bic_bin_dict_ref_method_key_0(interpreter_thread_s &it,unsigned stack_base,
   bin_dict_ref_s *bdr_ptr = (bin_dict_ref_s *)dst_location->v_data_ptr;
   bin_dict_s *bd_ptr = (bin_dict_s *)bdr_ptr->bd_location->v_data_ptr;
 
-#define BIC_BIN_DICT_REF_METHOD_KEY_INTEGER(MAP_NAME) \
+#define BIC_BIN_DICT_REF_KEY_INTEGER(MAP_NAME) \
 {/*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
   MAP_NAME ## _tree_s_node *key_value_node;\
@@ -3791,10 +3917,10 @@ bool bic_bin_dict_ref_method_key_0(interpreter_thread_s &it,unsigned stack_base,
   switch (bd_ptr->type)
   {
   case c_bin_dict_type_int64_int64:
-    BIC_BIN_DICT_REF_METHOD_KEY_INTEGER(lli_lli_map);
+    BIC_BIN_DICT_REF_KEY_INTEGER(lli_lli_map);
     break;
   case c_bin_dict_type_int64_float64:
-    BIC_BIN_DICT_REF_METHOD_KEY_INTEGER(lli_bd_map);
+    BIC_BIN_DICT_REF_KEY_INTEGER(lli_bd_map);
     break;
   default:
     cassert(0);

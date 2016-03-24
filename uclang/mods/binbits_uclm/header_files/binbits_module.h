@@ -112,6 +112,8 @@ unsigned bic_bin_dict_length(location_s *location_ptr);
 location_s *bic_bin_dict_item(interpreter_thread_s &it,location_s *location_ptr,unsigned index);
 unsigned bic_bin_dict_first_idx(location_s *location_ptr);
 unsigned bic_bin_dict_next_idx(location_s *location_ptr,unsigned index);
+bool bic_bin_dict_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack);
+bool bic_bin_dict_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack,bool order_bytes,unsigned source_pos);
 
 bool bic_bin_dict_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_dict_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
