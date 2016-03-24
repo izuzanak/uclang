@@ -28,6 +28,8 @@ enum
   c_error_BIN_ARRAY_UNSUPPORTED_TYPE_OF_SOURCE_ITERABLE_ITEM,
   c_error_BIN_ARRAY_REF_INVALID_REFERENCE,
   c_error_BIN_DICT_UNKNOWN_DATA_TYPE,
+  c_error_BIN_DICT_INDEX_DOES_NOT_REFER_TO_VALID_VALUE,
+  c_error_BIN_DICT_INVALID_KEY,
   c_error_BIN_DICT_REF_INVALID_REFERENCE,
 };
 
@@ -110,6 +112,19 @@ void bic_bin_dict_clear(interpreter_thread_s &it,location_s *location_ptr);
 bool bic_bin_dict_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_dict_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_dict_method_BinDict_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_dict_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_dict_method_keys_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_dict_method_items_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_dict_method_has_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_dict_method_remove_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_dict_method_first_key_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_dict_method_last_key_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_dict_method_next_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_dict_method_prev_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_dict_method_lee_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_dict_method_gre_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_dict_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_dict_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_dict_method_to_string_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_dict_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

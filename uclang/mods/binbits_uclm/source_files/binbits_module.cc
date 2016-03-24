@@ -16,7 +16,7 @@ built_in_module_s module =
   binbits_classes,         // Classes
 
   0,                       // Error base index
-  8,                       // Error count
+  10,                      // Error count
   binbits_error_strings,   // Error strings
 
   binbits_initialize,      // Initialize function
@@ -42,6 +42,8 @@ const char *binbits_error_strings[] =
   "error_BIN_ARRAY_UNSUPPORTED_TYPE_OF_SOURCE_ITERABLE_ITEM",
   "error_BIN_ARRAY_REF_INVALID_REFERENCE",
   "error_BIN_DICT_UNKNOWN_DATA_TYPE",
+  "error_BIN_DICT_INDEX_DOES_NOT_REFER_TO_VALID_VALUE",
+  "error_BIN_DICT_INVALID_KEY",
   "error_BIN_DICT_REF_INVALID_REFERENCE",
 };/*}}}*/
 
@@ -129,6 +131,20 @@ bool binbits_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nData type not supported by binary dictionary\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_BIN_DICT_INDEX_DOES_NOT_REFER_TO_VALID_VALUE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nIndex %" HOST_LL_FORMAT "d does not refer to valid binary dictionary element\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_BIN_DICT_INVALID_KEY:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid binary dictionary key value\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_BIN_DICT_REF_INVALID_REFERENCE:
@@ -327,7 +343,7 @@ built_in_variable_s bin_array_variables[] =
 {/*{{{*/\
   ARRAY_TYPE *f_array_ptr = (ARRAY_TYPE *)f_ba_ptr->cont;\
   ARRAY_TYPE *s_array_ptr = (ARRAY_TYPE *)s_ba_ptr->cont;\
-\
+  \
   if (f_array_ptr->used != s_array_ptr->used)\
   {\
     result = f_array_ptr->used < s_array_ptr->used ? -1 : 1;\
@@ -335,7 +351,7 @@ built_in_variable_s bin_array_variables[] =
   else\
   {\
     result = 0;\
-\
+    \
     if (f_array_ptr->used > 0)\
     {\
       TYPE *f_ptr = f_array_ptr->data;\
@@ -358,7 +374,7 @@ built_in_variable_s bin_array_variables[] =
     {\
       bin_array_s *f_ba_ptr = (bin_array_s *)(FIRST_LOC_PTR)->v_data_ptr;\
       bin_array_s *s_ba_ptr = (bin_array_s *)(SECOND_LOC_PTR)->v_data_ptr;\
-\
+      \
       if (f_ba_ptr->type == s_ba_ptr->type)\
       {\
         switch (f_ba_ptr->type)\
@@ -385,10 +401,10 @@ built_in_variable_s bin_array_variables[] =
   }/*}}}*/
 
 #define BIC_BIN_ARRAY_GET_USED(LOCATION) \
-  /*{{{*/\
+/*{{{*/\
   bin_array_s *ba_ptr = (bin_array_s *)((location_s *)(LOCATION))->v_data_ptr;\
   unsigned used;\
-\
+  \
   switch (ba_ptr->type)\
   {\
   case c_bin_array_type_int32:\
@@ -400,125 +416,125 @@ built_in_variable_s bin_array_variables[] =
   default:\
     cassert(0);\
   }\
-  /*}}}*/
+/*}}}*/
 
 #define BIC_BIN_ARRAY_APPEND_INTEGER_ARRAY(SRC_LOCATION,TARGET_PTR) \
-  {/*{{{*/\
-    pointer_array_s *source_ptr = (pointer_array_s *)SRC_LOCATION->v_data_ptr;\
+{/*{{{*/\
+  pointer_array_s *source_ptr = (pointer_array_s *)SRC_LOCATION->v_data_ptr;\
+  \
+  if (source_ptr->used != 0)\
+  {\
+    pointer *ptr = source_ptr->data;\
+    pointer *ptr_end = ptr + source_ptr->used;\
     \
-    if (source_ptr->used != 0)\
+    do\
     {\
-      pointer *ptr = source_ptr->data;\
-      pointer *ptr_end = ptr + source_ptr->used;\
+      location_s *item_location = it.get_location_value(*ptr);\
+      long long int value;\
       \
-      do\
+      /* - ERROR - */\
+      if (!it.retrieve_integer(item_location,value))\
       {\
-        location_s *item_location = it.get_location_value(*ptr);\
-        long long int value;\
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_UNSUPPORTED_TYPE_OF_SOURCE_ITERABLE_ITEM,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+        new_exception->params.push(item_location->v_type);\
         \
-        /* - ERROR - */\
-        if (!it.retrieve_integer(item_location,value))\
-        {\
-          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_UNSUPPORTED_TYPE_OF_SOURCE_ITERABLE_ITEM,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-          new_exception->params.push(item_location->v_type);\
-          \
-          return false;\
-        }\
-        \
-        /* - push value to binary array - */\
-        (TARGET_PTR)->push(value);\
+        return false;\
       }\
-      while(++ptr < ptr_end);\
+      \
+      /* - push value to binary array - */\
+      (TARGET_PTR)->push(value);\
     }\
-  }/*}}}*/
+    while(++ptr < ptr_end);\
+  }\
+}/*}}}*/
 
 #define BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE_BODY(TARGET_PTR) \
-  {/*{{{*/\
-    long long int value;\
-    \
-    /* - ERROR - */\
-    if (!it.retrieve_integer(item_location,value))\
-    {\
-      it.release_location_ptr(item_reference);\
-      \
-      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_UNSUPPORTED_TYPE_OF_SOURCE_ITERABLE_ITEM,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-      new_exception->params.push(item_location->v_type);\
-      \
-      return false;\
-    }\
-    \
+{/*{{{*/\
+  long long int value;\
+  \
+  /* - ERROR - */\
+  if (!it.retrieve_integer(item_location,value))\
+  {\
     it.release_location_ptr(item_reference);\
     \
-    /* - push value to binary array - */\
-    (TARGET_PTR)->push(value);\
-  }/*}}}*/
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_UNSUPPORTED_TYPE_OF_SOURCE_ITERABLE_ITEM,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(item_location->v_type);\
+    \
+    return false;\
+  }\
+  \
+  it.release_location_ptr(item_reference);\
+  \
+  /* - push value to binary array - */\
+  (TARGET_PTR)->push(value);\
+}/*}}}*/
 
 #define BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE(SRC_LOCATION,TARGET_PTR) \
-  {/*{{{*/\
+{/*{{{*/\
+  \
+  /* - retrieve iterable type - */\
+  unsigned iter_type = it.get_iterable_type(SRC_LOCATION);\
+  \
+  /* - ERROR - */\
+  if (iter_type == c_idx_not_exist)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_OBJECT_OF_CLASS_IS_NOT_ITERABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(SRC_LOCATION->v_type);\
     \
-    /* - retrieve iterable type - */\
-    unsigned iter_type = it.get_iterable_type(SRC_LOCATION);\
+    return false;\
+  }\
+  \
+  if (iter_type == c_iter_first_idx_next_idx_item)\
+  {\
+    long long index;\
+    location_s *item_reference;\
+    location_s *item_location;\
     \
-    /* - ERROR - */\
-    if (iter_type == c_idx_not_exist)\
+    /* - retrieve first index - */\
+    BIC_CALL_FIRST_IDX(it,SRC_LOCATION,index,operands[c_source_pos_idx],return false;);\
+    \
+    while (index != c_idx_not_exist)\
     {\
-      exception_s *new_exception = exception_s::throw_exception(it,c_error_OBJECT_OF_CLASS_IS_NOT_ITERABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-      new_exception->params.push(SRC_LOCATION->v_type);\
+      /* - retrieve item location - */\
+      BIC_CALL_ITEM(it,SRC_LOCATION,index,item_reference,operands[c_source_pos_idx],return false;);\
+      item_location = it.get_location_value(item_reference);\
       \
-      return false;\
+      BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE_BODY(TARGET_PTR);\
+      \
+      /* - retrieve next index - */\
+      BIC_CALL_NEXT_IDX(it,SRC_LOCATION,index,index,operands[c_source_pos_idx],return false;);\
     }\
+  }\
+  else if (iter_type == c_iter_next_item)\
+  {\
+    location_s *item_reference;\
+    location_s *item_location;\
     \
-    if (iter_type == c_iter_first_idx_next_idx_item)\
+    do\
     {\
-      long long index;\
-      location_s *item_reference;\
-      location_s *item_location;\
+      /* - retrieve next item location - */\
+      BIC_CALL_NEXT_ITEM(it,SRC_LOCATION,item_reference,operands[c_source_pos_idx],return false;);\
+      item_location = it.get_location_value(item_reference);\
       \
-      /* - retrieve first index - */\
-      BIC_CALL_FIRST_IDX(it,SRC_LOCATION,index,operands[c_source_pos_idx],return false;);\
-      \
-      while (index != c_idx_not_exist)\
+      if (item_location->v_type == c_bi_class_blank)\
       {\
-        /* - retrieve item location - */\
-        BIC_CALL_ITEM(it,SRC_LOCATION,index,item_reference,operands[c_source_pos_idx],return false;);\
-        item_location = it.get_location_value(item_reference);\
-        \
-        BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE_BODY(TARGET_PTR);\
-        \
-        /* - retrieve next index - */\
-        BIC_CALL_NEXT_IDX(it,SRC_LOCATION,index,index,operands[c_source_pos_idx],return false;);\
+        it.release_location_ptr(item_reference);\
+        break;\
       }\
-    }\
-    else if (iter_type == c_iter_next_item)\
-    {\
-      location_s *item_reference;\
-      location_s *item_location;\
       \
-      do\
-      {\
-        /* - retrieve next item location - */\
-        BIC_CALL_NEXT_ITEM(it,SRC_LOCATION,item_reference,operands[c_source_pos_idx],return false;);\
-        item_location = it.get_location_value(item_reference);\
-        \
-        if (item_location->v_type == c_bi_class_blank)\
-        {\
-          it.release_location_ptr(item_reference);\
-          break;\
-        }\
-        \
-        BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE_BODY(TARGET_PTR);\
-        \
-      }\
-      while(true);\
+      BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE_BODY(TARGET_PTR);\
+      \
     }\
-    else\
-    {\
-      cassert(0);\
-    }\
-  }/*}}}*/
+    while(true);\
+  }\
+  else\
+  {\
+    cassert(0);\
+  }\
+}/*}}}*/
 
 #define BIC_BIN_ARRAY_CHECK_INDEX() \
-  /*{{{*/\
+/*{{{*/\
   BIC_BIN_ARRAY_GET_USED(dst_location);\
   \
   /* - ERROR - */\
@@ -529,35 +545,35 @@ built_in_variable_s bin_array_variables[] =
     \
     return false;\
   }\
-  /*}}}*/
+/*}}}*/
 
 #define BIC_BIN_ARRAY_ITEM(NAME) \
-  {/*{{{*/\
-    pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-    pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+{/*{{{*/\
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+  \
+  long long int index;\
+  \
+  /* - ERROR - */\
+  if (!it.retrieve_integer(src_0_location,index))\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
+    new_exception->params.push(1);\
+    new_exception->params.push(src_0_location->v_type);\
     \
-    long long int index;\
-    \
-    /* - ERROR - */\
-    if (!it.retrieve_integer(src_0_location,index))\
-    {\
-      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-      BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-      new_exception->params.push(1);\
-      new_exception->params.push(src_0_location->v_type);\
-      \
-      return false;\
-    }\
-    \
-    BIC_BIN_ARRAY_CHECK_INDEX();\
-    \
-    /* - create bin array reference - */\
-    bin_array_ref_s *bar_ptr = ba_ptr->create_reference((location_s *)dst_location,index);\
-    \
-    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_bin_array_ref,bar_ptr);\
-    BIC_SET_RESULT(new_location);\
-  }/*}}}*/
+    return false;\
+  }\
+  \
+  BIC_BIN_ARRAY_CHECK_INDEX();\
+  \
+  /* - create bin array reference - */\
+  bin_array_ref_s *bar_ptr = ba_ptr->create_reference((location_s *)dst_location,index);\
+  \
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_bin_array_ref,bar_ptr);\
+  BIC_SET_RESULT(new_location);\
+}/*}}}*/
 
 void bic_bin_array_consts(location_array_s &const_locations)
 {/*{{{*/
@@ -638,19 +654,19 @@ bool bic_bin_array_pack(location_s *location_ptr,bc_array_s &stream,pointer_arra
 #define BIC_BIN_ARRAY_PACK(ARRAY_TYPE,TYPE) \
 {/*{{{*/\
   ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)ba_ptr->cont;\
-\
+  \
   if (array_ptr->used != 0)\
   {\
     TYPE *e_ptr = array_ptr->data + array_ptr->used;\
     TYPE *e_ptr_end = array_ptr->data;\
-\
+    \
     do\
     {\
       stream.append(sizeof(TYPE),(const char *)(--e_ptr));\
     }\
     while(e_ptr > e_ptr_end);\
   }\
-\
+  \
   stream.append(sizeof(unsigned),(const char *)&array_ptr->used);\
 }/*}}}*/
 
@@ -683,16 +699,16 @@ bool bic_bin_array_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_a
 {/*{{{*/\
   unsigned length;\
   stream.from_end(sizeof(unsigned),(char *)&length,order_bytes);\
-\
+  \
   ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)cmalloc(sizeof(ARRAY_TYPE));\
   array_ptr->init_size(length);\
-\
+  \
   TYPE *e_ptr = array_ptr->data;\
   TYPE *e_ptr_end = e_ptr + length;\
   do {\
     stream.from_end(sizeof(TYPE),(char *)e_ptr,order_bytes);\
   } while(++e_ptr < e_ptr_end);\
-\
+  \
   array_ptr->used = length;\
   cont = array_ptr;\
 }/*}}}*/
@@ -1095,17 +1111,17 @@ bool bic_bin_array_method_resize_1(interpreter_thread_s &it,unsigned stack_base,
 #define BIC_BIN_ARRAY_RESIZE(ARRAY_TYPE,TYPE) \
 {/*{{{*/\
   ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)ba_ptr->cont;\
-\
+  \
   /* - ERROR - */\
   if (array_ptr->used > new_size)\
   {\
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_CANNOT_RESIZE_TO_SMALLER_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(new_size);\
     new_exception->params.push(array_ptr->used);\
-\
+    \
     return false;\
   }\
-\
+  \
   /* - resize array - */\
   array_ptr->copy_resize(new_size);\
   memset(array_ptr->data + array_ptr->used,0,(new_size - array_ptr->used)*sizeof(TYPE));\
@@ -1142,17 +1158,17 @@ bool bic_bin_array_method_items_0(interpreter_thread_s &it,unsigned stack_base,u
 #define BIC_BIN_ARRAY_ITEMS_INTEGER(ARR_TYPE,TYPE) \
 {/*{{{*/\
   ARR_TYPE *array_ptr = (ARR_TYPE *)ba_ptr->cont;\
-\
+  \
   if (array_ptr->used != 0)\
   {\
     TYPE *ptr = array_ptr->data;\
     TYPE *ptr_end = ptr + array_ptr->used;\
     do {\
       long long int value = *ptr;\
-\
+      \
       BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);\
       target_array->push(new_location);\
-\
+      \
     } while(++ptr < ptr_end);\
   }\
 }/*}}}*/
@@ -1715,16 +1731,16 @@ bool bic_bin_array_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 #define BIC_BIN_ARRAY_TO_STRING(ARRAY_TYPE,TYPE,FORMAT) \
 {/*{{{*/\
   ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)ba_ptr->cont;\
-\
+  \
   strings.copy_resize(array_ptr->used);\
   strings.used = strings.size;\
-\
+  \
   if (array_ptr->used != 0)\
   {\
     TYPE *e_ptr = array_ptr->data;\
     TYPE *e_ptr_end = e_ptr + array_ptr->used;\
     string_s *s_ptr = strings.data;\
-\
+    \
     do {\
       s_ptr->setf(FORMAT,*e_ptr);\
       strings_size += s_ptr->size - 1;\
@@ -1818,12 +1834,12 @@ bool bic_bin_array_method_print_0(interpreter_thread_s &it,unsigned stack_base,u
 #define BIC_BIN_ARRAY_PRINT(ARRAY_TYPE,TYPE,FORMAT) \
 {/*{{{*/\
   ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)ba_ptr->cont;\
-\
+  \
   if (array_ptr->used != 0)\
   {\
     TYPE *e_ptr = array_ptr->data;\
     TYPE *e_ptr_end = e_ptr + array_ptr->used;\
-\
+    \
     do {\
       printf(FORMAT,*e_ptr);\
       if (++e_ptr >= e_ptr_end) break;\
@@ -1951,14 +1967,14 @@ bool bic_bin_array_ref_operator_binary_equal(interpreter_thread_s &it,unsigned s
 #define BIC_BIN_ARRAY_REF_OPERATOR_BINARY_EQUAL_INTEGER(ARR_TYPE,TYPE) \
 {/*{{{*/\
   ARR_TYPE *array_ptr = (ARR_TYPE *)ba_ptr->cont;\
-\
+  \
   /* - ERROR - */\
   if (bar_ptr->index >= array_ptr->used)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_REF_INVALID_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-\
+  \
   TYPE &value_ref = array_ptr->data[bar_ptr->index];\
   value_ref = value;\
   value = value_ref;\
@@ -1995,14 +2011,14 @@ bool bic_bin_array_ref_method_value_0(interpreter_thread_s &it,unsigned stack_ba
 #define BIC_BIN_ARRAY_REF_INTEGER_VALUE(ARR_TYPE) \
 {/*{{{*/\
   ARR_TYPE *array_ptr = (ARR_TYPE *)ba_ptr->cont;\
-\
+  \
   /* - ERROR - */\
   if (bar_ptr->index >= array_ptr->used)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_REF_INVALID_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-\
+  \
   long long int result = array_ptr->data[bar_ptr->index];\
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
 }/*}}}*/
@@ -2047,7 +2063,7 @@ built_in_class_s bin_dict_class =
 {/*{{{*/
   "BinDict",
   c_modifier_public | c_modifier_final,
-  6, bin_dict_methods,
+  19, bin_dict_methods,
   2, bin_dict_variables,
   bic_bin_dict_consts,
   bic_bin_dict_init,
@@ -2082,6 +2098,71 @@ built_in_method_s bin_dict_methods[] =
     bic_bin_dict_method_BinDict_1
   },
   {
+    "clear#0",
+    c_modifier_public | c_modifier_final,
+    bic_bin_dict_method_clear_0
+  },
+  {
+    "keys#0",
+    c_modifier_public | c_modifier_final,
+    bic_bin_dict_method_keys_0
+  },
+  {
+    "items#0",
+    c_modifier_public | c_modifier_final,
+    bic_bin_dict_method_items_0
+  },
+  {
+    "has_key#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_dict_method_has_key_1
+  },
+  {
+    "remove_key#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_dict_method_remove_key_1
+  },
+  {
+    "first_key#0",
+    c_modifier_public | c_modifier_final,
+    bic_bin_dict_method_first_key_0
+  },
+  {
+    "last_key#0",
+    c_modifier_public | c_modifier_final,
+    bic_bin_dict_method_last_key_0
+  },
+  {
+    "next_key#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_dict_method_next_key_1
+  },
+  {
+    "prev_key#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_dict_method_prev_key_1
+  },
+  {
+    "lee_key#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_dict_method_lee_key_1
+  },
+  {
+    "gre_key#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_dict_method_gre_key_1
+  },
+  {
+    "compare#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_dict_method_compare_1
+  },
+  {
+    "item#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_dict_method_item_1
+  },
+  {
     "to_string#0",
     c_modifier_public | c_modifier_final,
     bic_bin_dict_method_to_string_0
@@ -2106,6 +2187,84 @@ built_in_variable_s bin_dict_variables[] =
   { "TYPE_INT64_FLOAT64", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
+
+#define BIC_BIN_DICT_COMPARE_ELEMENTS(MAP_NAME) \
+{/*{{{*/\
+  MAP_NAME ## _tree_s *f_tree_ptr = (MAP_NAME ## _tree_s *)f_bd_ptr->cont;\
+  MAP_NAME ## _tree_s *s_tree_ptr = (MAP_NAME ## _tree_s *)s_bd_ptr->cont;\
+  \
+  if (f_tree_ptr->count != s_tree_ptr->count)\
+  {\
+    result = f_tree_ptr->count < s_tree_ptr->count ? -1 : 1;\
+  }\
+  else {\
+    result = 0;\
+    \
+    if (f_tree_ptr->count != 0)\
+    {\
+      unsigned f_stack[f_tree_ptr->get_descent_stack_size()];\
+      unsigned s_stack[s_tree_ptr->get_descent_stack_size()];\
+      \
+      unsigned *f_stack_ptr = f_stack;\
+      unsigned *s_stack_ptr = s_stack;\
+      \
+      unsigned ft_idx = f_tree_ptr->get_stack_min_value_idx(f_tree_ptr->root_idx,&f_stack_ptr);\
+      unsigned st_idx = s_tree_ptr->get_stack_min_value_idx(s_tree_ptr->root_idx,&s_stack_ptr);\
+      \
+      do {\
+        MAP_NAME ## _s &f_map = f_tree_ptr->data[ft_idx].object;\
+        MAP_NAME ## _s &s_map = s_tree_ptr->data[st_idx].object;\
+        \
+        if (f_map.key != s_map.key)\
+        {\
+          result = f_map.key < s_map.key ? -1 : 1;\
+          break;\
+        }\
+        \
+        if (f_map.value != s_map.value)\
+        {\
+          result = f_map.value < s_map.value ? -1 : 1;\
+          break;\
+        }\
+        \
+        ft_idx = f_tree_ptr->get_stack_next_idx(ft_idx,&f_stack_ptr,f_stack);\
+        st_idx = s_tree_ptr->get_stack_next_idx(st_idx,&s_stack_ptr,s_stack);\
+      } while(ft_idx != c_idx_not_exist);\
+    }\
+  }\
+}/*}}}*/
+
+#define BIC_BIN_DICT_COMPARE(FIRST_LOC_PTR,SECOND_LOC_PTR,SOURCE_POS) \
+{/*{{{*/\
+  if ((SECOND_LOC_PTR)->v_type == c_bi_class_bin_dict)\
+  {\
+    bin_dict_s *f_bd_ptr = (bin_dict_s *)(FIRST_LOC_PTR)->v_data_ptr;\
+    bin_dict_s *s_bd_ptr = (bin_dict_s *)(SECOND_LOC_PTR)->v_data_ptr;\
+    \
+    if (f_bd_ptr->type == s_bd_ptr->type)\
+    {\
+      switch (f_bd_ptr->type)\
+      {\
+      case c_bin_dict_type_int64_int64:\
+        BIC_BIN_DICT_COMPARE_ELEMENTS(lli_lli_map);\
+        break;\
+      case c_bin_dict_type_int64_float64:\
+        BIC_BIN_DICT_COMPARE_ELEMENTS(lli_bd_map);\
+        break;\
+      default:\
+        cassert(0);\
+      }\
+    }\
+    else\
+    {\
+      result = f_bd_ptr->type < s_bd_ptr->type ? -1 : 1;\
+    }\
+  }\
+  else\
+  {\
+    result = c_bi_class_bin_dict < (SECOND_LOC_PTR)->v_type ? -1 : 1;\
+  }\
+}/*}}}*/
 
 void bic_bin_dict_consts(location_array_s &const_locations)
 {/*{{{*/
@@ -2275,7 +2434,691 @@ bool bic_bin_dict_method_BinDict_1(interpreter_thread_s &it,unsigned stack_base,
   return true;
 }/*}}}*/
 
-bool bic_bin_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)\
+bool bic_bin_dict_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+    ((lli_lli_map_tree_s *)bd_ptr->cont)->clear();
+    break;
+  case c_bin_dict_type_int64_float64:
+    ((lli_bd_map_tree_s *)bd_ptr->cont)->clear();
+    break;
+  default:
+    cassert(0);
+  }
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_dict_method_keys_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
+  pointer_array_s *target_array = it.get_new_array_ptr();
+
+#define BIC_BIN_DICT_KEYS_INTEGER(MAP_NAME) \
+{/*{{{*/\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
+  \
+  if (tree_ptr->root_idx != c_idx_not_exist)\
+  {\
+    unsigned stack[tree_ptr->get_descent_stack_size()];\
+    unsigned *stack_ptr = stack;\
+    \
+    unsigned kv_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);\
+    do {\
+      long long int value = tree_ptr->data[kv_idx].object.key;\
+      \
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);\
+      target_array->push(new_location);\
+      \
+      kv_idx = tree_ptr->get_stack_next_idx(kv_idx,&stack_ptr,stack);\
+    } while(kv_idx != c_idx_not_exist);\
+  }\
+}/*}}}*/
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+    BIC_BIN_DICT_KEYS_INTEGER(lli_lli_map);
+    break;
+  case c_bin_dict_type_int64_float64:
+    BIC_BIN_DICT_KEYS_INTEGER(lli_bd_map);
+    break;
+  default:
+    cassert(0);
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,target_array);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_dict_method_items_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
+  pointer_array_s *target_array = it.get_new_array_ptr();
+
+#define BIC_BIN_DICT_ITEMS_INTEGER(MAP_NAME) \
+{/*{{{*/\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
+  \
+  if (tree_ptr->root_idx != c_idx_not_exist)\
+  {\
+    unsigned stack[tree_ptr->get_descent_stack_size()];\
+    unsigned *stack_ptr = stack;\
+    \
+    unsigned kv_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);\
+    do {\
+      long long int value = tree_ptr->data[kv_idx].object.value;\
+      \
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);\
+      target_array->push(new_location);\
+      \
+      kv_idx = tree_ptr->get_stack_next_idx(kv_idx,&stack_ptr,stack);\
+    } while(kv_idx != c_idx_not_exist);\
+  }\
+}/*}}}*/
+
+#define BIC_BIN_DICT_ITEMS_FLOAT(MAP_NAME) \
+{/*{{{*/\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
+  \
+  if (tree_ptr->root_idx != c_idx_not_exist)\
+  {\
+    unsigned stack[tree_ptr->get_descent_stack_size()];\
+    unsigned *stack_ptr = stack;\
+    \
+    unsigned kv_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);\
+    do {\
+      double value = tree_ptr->data[kv_idx].object.value;\
+      \
+      basic_64b &v_data_ptr = *((basic_64b *)&value);\
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);\
+      target_array->push(new_location);\
+      \
+      kv_idx = tree_ptr->get_stack_next_idx(kv_idx,&stack_ptr,stack);\
+    } while(kv_idx != c_idx_not_exist);\
+  }\
+}/*}}}*/
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+    BIC_BIN_DICT_ITEMS_INTEGER(lli_lli_map);
+    break;
+  case c_bin_dict_type_int64_float64:
+    BIC_BIN_DICT_ITEMS_FLOAT(lli_bd_map);
+    break;
+  default:
+    cassert(0);
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,target_array);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_dict_method_has_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
+
+#define BIC_BIN_DICT_HAS_KEY(MAP_NAME) \
+{/*{{{*/\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
+  MAP_NAME ## _s search_map;\
+  search_map.key = key;\
+  \
+  long long int result = tree_ptr->get_idx(search_map) != c_idx_not_exist;\
+  \
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
+}/*}}}*/
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+  case c_bin_dict_type_int64_float64:
+    {
+      long long int key;
+
+      // - ERROR -
+      if (!it.retrieve_integer(src_0_location,key))
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("has_key#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
+        return false;
+      }
+
+      switch (bd_ptr->type)
+      {
+      case c_bin_dict_type_int64_int64:
+        BIC_BIN_DICT_HAS_KEY(lli_lli_map);
+        break;
+      case c_bin_dict_type_int64_float64:
+        BIC_BIN_DICT_HAS_KEY(lli_bd_map);
+        break;
+      }
+    }
+    break;
+  default:
+    cassert(0);
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_dict_method_remove_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
+
+#define BIC_BIN_DICT_REMOVE_KEY(MAP_NAME) \
+{/*{{{*/\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
+  MAP_NAME ## _s search_map;\
+  search_map.key = key;\
+  \
+  unsigned index = tree_ptr->get_idx(search_map);\
+  \
+  /* - ERROR - */\
+  if (index == c_idx_not_exist)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_BIN_DICT_INVALID_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  tree_ptr->remove(index);\
+  \
+  BIC_SET_RESULT_BLANK();\
+}/*}}}*/
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+  case c_bin_dict_type_int64_float64:
+    {
+      long long int key;
+
+      // - ERROR -
+      if (!it.retrieve_integer(src_0_location,key))
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("remove_key#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
+        return false;
+      }
+
+      switch (bd_ptr->type)
+      {
+      case c_bin_dict_type_int64_int64:
+        BIC_BIN_DICT_REMOVE_KEY(lli_lli_map);
+        break;
+      case c_bin_dict_type_int64_float64:
+        BIC_BIN_DICT_REMOVE_KEY(lli_bd_map);
+        break;
+      }
+    }
+    break;
+  default:
+    cassert(0);
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_dict_method_first_key_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
+
+#define BIC_BIN_DICT_FIRST_KEY_INTEGER(MAP_NAME) \
+{/*{{{*/\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
+  \
+  if (tree_ptr->root_idx != c_idx_not_exist)\
+  {\
+    unsigned min_value_idx = tree_ptr->get_min_value_idx(tree_ptr->root_idx);\
+    long long int key = tree_ptr->data[min_value_idx].object.key;\
+    \
+    BIC_SIMPLE_SET_RES(c_bi_class_integer,key);\
+  }\
+  else\
+  {\
+    BIC_SET_RESULT_BLANK();\
+  }\
+}/*}}}*/
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+    BIC_BIN_DICT_FIRST_KEY_INTEGER(lli_lli_map);
+    break;
+  case c_bin_dict_type_int64_float64:
+    BIC_BIN_DICT_FIRST_KEY_INTEGER(lli_bd_map);
+    break;
+  default:
+    cassert(0);
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_dict_method_last_key_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
+
+#define BIC_BIN_DICT_LAST_KEY_INTEGER(MAP_NAME) \
+{/*{{{*/\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
+  \
+  if (tree_ptr->root_idx != c_idx_not_exist)\
+  {\
+    unsigned max_value_idx = tree_ptr->get_max_value_idx(tree_ptr->root_idx);\
+    long long int key = tree_ptr->data[max_value_idx].object.key;\
+    \
+    BIC_SIMPLE_SET_RES(c_bi_class_integer,key);\
+  }\
+  else\
+  {\
+    BIC_SET_RESULT_BLANK();\
+  }\
+}/*}}}*/
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+    BIC_BIN_DICT_LAST_KEY_INTEGER(lli_lli_map);
+    break;
+  case c_bin_dict_type_int64_float64:
+    BIC_BIN_DICT_LAST_KEY_INTEGER(lli_bd_map);
+    break;
+  default:
+    cassert(0);
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_dict_method_next_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
+
+#define BIC_BIN_DICT_NEXT_KEY_INTEGER(MAP_NAME) \
+{/*{{{*/\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
+  MAP_NAME ## _s search_map;\
+  search_map.key = key;\
+  \
+  unsigned index = tree_ptr->get_idx(search_map);\
+  \
+  if (index != c_idx_not_exist)\
+  {\
+    unsigned next_value_idx = tree_ptr->get_next_idx(index);\
+    \
+    if (next_value_idx != c_idx_not_exist)\
+    {\
+      long long int next_key = tree_ptr->data[next_value_idx].object.key;\
+      \
+      BIC_SIMPLE_SET_RES(c_bi_class_integer,next_key);\
+    }\
+    else\
+    {\
+      BIC_SET_RESULT_BLANK();\
+    }\
+  }\
+  else\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_BIN_DICT_INVALID_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+}/*}}}*/
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+  case c_bin_dict_type_int64_float64:
+    {
+      long long int key;
+
+      // - ERROR -
+      if (!it.retrieve_integer(src_0_location,key))
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("next_key#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
+        return false;
+      }
+
+      switch (bd_ptr->type)
+      {
+      case c_bin_dict_type_int64_int64:
+        BIC_BIN_DICT_NEXT_KEY_INTEGER(lli_lli_map);
+        break;
+      case c_bin_dict_type_int64_float64:
+        BIC_BIN_DICT_NEXT_KEY_INTEGER(lli_bd_map);
+        break;
+      }
+    }
+    break;
+  default:
+    cassert(0);
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_dict_method_prev_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
+
+#define BIC_BIN_DICT_PREV_KEY_INTEGER(MAP_NAME) \
+{/*{{{*/\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
+  MAP_NAME ## _s search_map;\
+  search_map.key = key;\
+  \
+  unsigned index = tree_ptr->get_idx(search_map);\
+  \
+  if (index != c_idx_not_exist)\
+  {\
+    unsigned prev_value_idx = tree_ptr->get_prev_idx(index);\
+    \
+    if (prev_value_idx != c_idx_not_exist)\
+    {\
+      long long int prev_key = tree_ptr->data[prev_value_idx].object.key;\
+      \
+      BIC_SIMPLE_SET_RES(c_bi_class_integer,prev_key);\
+    }\
+    else\
+    {\
+      BIC_SET_RESULT_BLANK();\
+    }\
+  }\
+  else\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_BIN_DICT_INVALID_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+}/*}}}*/
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+  case c_bin_dict_type_int64_float64:
+    {
+      long long int key;
+
+      // - ERROR -
+      if (!it.retrieve_integer(src_0_location,key))
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("prev_key#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
+        return false;
+      }
+
+      switch (bd_ptr->type)
+      {
+      case c_bin_dict_type_int64_int64:
+        BIC_BIN_DICT_PREV_KEY_INTEGER(lli_lli_map);
+        break;
+      case c_bin_dict_type_int64_float64:
+        BIC_BIN_DICT_PREV_KEY_INTEGER(lli_bd_map);
+        break;
+      }
+    }
+    break;
+  default:
+    cassert(0);
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_dict_method_lee_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
+
+#define BIC_BIN_DICT_LEE_KEY_INTEGER(MAP_NAME) \
+{/*{{{*/\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
+  MAP_NAME ## _s search_map;\
+  search_map.key = key;\
+  \
+  unsigned index = tree_ptr->get_lee_idx(search_map);\
+  \
+  if (index != c_idx_not_exist)\
+  {\
+    long long int key = tree_ptr->data[index].object.key;\
+    \
+    BIC_SIMPLE_SET_RES(c_bi_class_integer,key);\
+  }\
+  else\
+  {\
+    BIC_SET_RESULT_BLANK();\
+  }\
+}/*}}}*/
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+  case c_bin_dict_type_int64_float64:
+    {
+      long long int key;
+
+      // - ERROR -
+      if (!it.retrieve_integer(src_0_location,key))
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("lee_key#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
+        return false;
+      }
+
+      switch (bd_ptr->type)
+      {
+      case c_bin_dict_type_int64_int64:
+        BIC_BIN_DICT_LEE_KEY_INTEGER(lli_lli_map);
+        break;
+      case c_bin_dict_type_int64_float64:
+        BIC_BIN_DICT_LEE_KEY_INTEGER(lli_bd_map);
+        break;
+      }
+    }
+    break;
+  default:
+    cassert(0);
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_dict_method_gre_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
+
+#define BIC_BIN_DICT_GRE_KEY_INTEGER(MAP_NAME) \
+{/*{{{*/\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
+  MAP_NAME ## _s search_map;\
+  search_map.key = key;\
+  \
+  unsigned index = tree_ptr->get_gre_idx(search_map);\
+  \
+  if (index != c_idx_not_exist)\
+  {\
+    long long int key = tree_ptr->data[index].object.key;\
+    \
+    BIC_SIMPLE_SET_RES(c_bi_class_integer,key);\
+  }\
+  else\
+  {\
+    BIC_SET_RESULT_BLANK();\
+  }\
+}/*}}}*/
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+  case c_bin_dict_type_int64_float64:
+    {
+      long long int key;
+
+      // - ERROR -
+      if (!it.retrieve_integer(src_0_location,key))
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("gre_key#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
+        return false;
+      }
+
+      switch (bd_ptr->type)
+      {
+      case c_bin_dict_type_int64_int64:
+        BIC_BIN_DICT_GRE_KEY_INTEGER(lli_lli_map);
+        break;
+      case c_bin_dict_type_int64_float64:
+        BIC_BIN_DICT_GRE_KEY_INTEGER(lli_bd_map);
+        break;
+      }
+    }
+    break;
+  default:
+    cassert(0);
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_dict_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result;
+
+  BIC_BIN_DICT_COMPARE(dst_location,src_0_location,operands[c_source_pos_idx]);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_dict_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  
+  long long int index;
+  
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,index))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("item#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+    
+    return false;
+  }
+  
+  bin_dict_s *bd_ptr = (bin_dict_s *)((location_s *)dst_location)->v_data_ptr;
+
+#define BIC_BIN_DICT_ITEM_CHECK_IDX(MAP_NAME) \
+{/*{{{*/\
+  MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
+\
+  /* - ERROR - */\
+  if (index < 0 || index >= tree_ptr->used || !tree_ptr->data[index].valid)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_BIN_DICT_INDEX_DOES_NOT_REFER_TO_VALID_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(index);\
+    \
+    return false;\
+  }\
+}/*}}}*/
+
+  switch (bd_ptr->type)
+  {
+  case c_bin_dict_type_int64_int64:
+    BIC_BIN_DICT_ITEM_CHECK_IDX(lli_lli_map);
+    break;
+  case c_bin_dict_type_int64_float64:
+    BIC_BIN_DICT_ITEM_CHECK_IDX(lli_bd_map);
+    break;
+  default:
+    cassert(0);
+  }
+  
+  // - create bin dict reference -
+  bin_dict_ref_s *bdr_ptr = bd_ptr->create_reference((location_s *)dst_location,index);
+  
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_bin_dict_ref,bdr_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -2290,24 +3133,24 @@ bool bic_bin_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_bas
 #define BIC_BIN_DICT_TO_STRING(MAP_NAME,FORMAT) \
 {/*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
-\
+  \
   if (tree_ptr->root_idx != c_idx_not_exist)\
   {\
     strings.copy_resize(tree_ptr->count);\
     strings.used = strings.size;\
-\
+    \
     unsigned stack[tree_ptr->get_descent_stack_size()];\
     unsigned *stack_ptr = stack;\
-\
+    \
     unsigned kv_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);\
     string_s *s_ptr = strings.data;\
-\
+    \
     do {\
       MAP_NAME ## _s &key_value = tree_ptr->data[kv_idx].object;\
-\
+      \
       s_ptr->setf(FORMAT,key_value.key,key_value.value);\
       strings_size += s_ptr->size - 1;\
-\
+      \
       kv_idx = tree_ptr->get_stack_next_idx(kv_idx,&stack_ptr,stack);\
     } while(++s_ptr,kv_idx != c_idx_not_exist);\
   }\
@@ -2398,21 +3241,21 @@ bool bic_bin_dict_method_print_0(interpreter_thread_s &it,unsigned stack_base,ul
 #define BIC_BIN_DICT_PRINT(MAP_NAME,FORMAT) \
 {/*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
-\
+  \
   if (tree_ptr->root_idx != c_idx_not_exist)\
   {\
     unsigned stack[tree_ptr->get_descent_stack_size()];\
     unsigned *stack_ptr = stack;\
-\
+    \
     unsigned kv_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);\
     do {\
       MAP_NAME ## _s &key_value = tree_ptr->data[kv_idx].object;\
-\
+      \
       printf(FORMAT,key_value.key,key_value.value);\
-\
+      \
       kv_idx = tree_ptr->get_stack_next_idx(kv_idx,&stack_ptr,stack);\
       if (kv_idx == c_idx_not_exist) break;\
-\
+      \
       putchar(',');\
     } while(true);\
   }\
@@ -2604,7 +3447,7 @@ bool bic_bin_dict_ref_method_key_0(interpreter_thread_s &it,unsigned stack_base,
 {/*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
   MAP_NAME ## _tree_s_node *key_value_node;\
-\
+  \
   /* - ERROR - */\
   if (bdr_ptr->index >= tree_ptr->used ||\
       !((key_value_node = tree_ptr->data + bdr_ptr->index)->valid))\
@@ -2612,7 +3455,7 @@ bool bic_bin_dict_ref_method_key_0(interpreter_thread_s &it,unsigned stack_base,
     exception_s::throw_exception(it,module.error_base + c_error_BIN_DICT_REF_INVALID_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-\
+  \
   long long int &key = key_value_node->object.key;\
   BIC_SIMPLE_SET_RES(c_bi_class_integer,key);\
 }/*}}}*/

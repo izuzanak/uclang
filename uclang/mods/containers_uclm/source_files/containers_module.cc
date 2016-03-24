@@ -156,7 +156,7 @@ bool containers_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nIndex %" HOST_LL_FORMAT "d does not refer to valid dict element\n",exception.params[0]);
+    fprintf(stderr,"\nIndex %" HOST_LL_FORMAT "d does not refer to valid dictionary element\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_DICT_INVALID_KEY:
