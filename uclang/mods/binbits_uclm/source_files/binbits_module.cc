@@ -1123,7 +1123,7 @@ bool bic_bin_array_method_resize_1(interpreter_thread_s &it,unsigned stack_base,
 
   bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
 
-#define BIC_BIN_ARRAY_RESIZE(ARRAY_TYPE,TYPE) \
+#define BIC_BIN_ARRAY_METHOD_RESIZE(ARRAY_TYPE,TYPE) \
 {/*{{{*/\
   ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)ba_ptr->cont;\
   \
@@ -1147,12 +1147,12 @@ bool bic_bin_array_method_resize_1(interpreter_thread_s &it,unsigned stack_base,
   {
   case c_bin_array_type_int32:
     {/*{{{*/
-      BIC_BIN_ARRAY_RESIZE(bi_array_s,int);
+      BIC_BIN_ARRAY_METHOD_RESIZE(bi_array_s,int);
     }/*}}}*/
     break;
   case c_bin_array_type_uint32:
     {/*{{{*/
-      BIC_BIN_ARRAY_RESIZE(ui_array_s,unsigned);
+      BIC_BIN_ARRAY_METHOD_RESIZE(ui_array_s,unsigned);
     }/*}}}*/
     break;
   }
@@ -1170,7 +1170,7 @@ bool bic_bin_array_method_items_0(interpreter_thread_s &it,unsigned stack_base,u
   bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
   pointer_array_s *target_array = it.get_new_array_ptr();
 
-#define BIC_BIN_ARRAY_ITEMS_INTEGER(ARR_TYPE,TYPE) \
+#define BIC_BIN_ARRAY_METHOD_ITEMS_INTEGER(ARR_TYPE,TYPE) \
 {/*{{{*/\
   ARR_TYPE *array_ptr = (ARR_TYPE *)ba_ptr->cont;\
   \
@@ -1191,10 +1191,10 @@ bool bic_bin_array_method_items_0(interpreter_thread_s &it,unsigned stack_base,u
   switch (ba_ptr->type)
   {
   case c_bin_array_type_int32:
-    BIC_BIN_ARRAY_ITEMS_INTEGER(bi_array_s,int);
+    BIC_BIN_ARRAY_METHOD_ITEMS_INTEGER(bi_array_s,int);
     break;
   case c_bin_array_type_uint32:
-    BIC_BIN_ARRAY_ITEMS_INTEGER(ui_array_s,unsigned);
+    BIC_BIN_ARRAY_METHOD_ITEMS_INTEGER(ui_array_s,unsigned);
     break;
   default:
     cassert(0);
@@ -1463,7 +1463,7 @@ bool bic_bin_array_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_bas
   ui_array_s idxs_array;
   idxs_array.init();
 
-#define BIC_BIN_ARRAY_GET_IDXS(ARRAY_TYPE,TYPE) \
+#define BIC_BIN_ARRAY_METHOD_GET_IDXS(ARRAY_TYPE,TYPE) \
 {/*{{{*/\
   ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)ba_ptr->cont;\
   \
@@ -1503,10 +1503,10 @@ bool bic_bin_array_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_bas
       switch (ba_ptr->type)
       {
       case c_bin_array_type_int32:
-        BIC_BIN_ARRAY_GET_IDXS(bi_array_s,int);
+        BIC_BIN_ARRAY_METHOD_GET_IDXS(bi_array_s,int);
         break;
       case c_bin_array_type_uint32:
-        BIC_BIN_ARRAY_GET_IDXS(ui_array_s,unsigned);
+        BIC_BIN_ARRAY_METHOD_GET_IDXS(ui_array_s,unsigned);
         break;
       }
     }
@@ -1743,7 +1743,7 @@ bool bic_bin_array_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
   unsigned strings_size = 0;
 
-#define BIC_BIN_ARRAY_TO_STRING(ARRAY_TYPE,TYPE,FORMAT) \
+#define BIC_BIN_ARRAY_METHOD_TO_STRING(ARRAY_TYPE,TYPE,FORMAT) \
 {/*{{{*/\
   ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)ba_ptr->cont;\
   \
@@ -1767,10 +1767,10 @@ bool bic_bin_array_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
   switch (ba_ptr->type)
   {
   case c_bin_array_type_int32:
-    BIC_BIN_ARRAY_TO_STRING(bi_array_s,int,"%d")
+    BIC_BIN_ARRAY_METHOD_TO_STRING(bi_array_s,int,"%d")
     break;
   case c_bin_array_type_uint32:
-    BIC_BIN_ARRAY_TO_STRING(ui_array_s,unsigned,"%u")
+    BIC_BIN_ARRAY_METHOD_TO_STRING(ui_array_s,unsigned,"%u")
     break;
   default:
     cassert(0);
@@ -1816,10 +1816,10 @@ bool bic_bin_array_method_to_string_1(interpreter_thread_s &it,unsigned stack_ba
   switch (ba_ptr->type)
   {
   case c_bin_array_type_int32:
-    BIC_BIN_ARRAY_TO_STRING(bi_array_s,int,"%d")
+    BIC_BIN_ARRAY_METHOD_TO_STRING(bi_array_s,int,"%d")
     break;
   case c_bin_array_type_uint32:
-    BIC_BIN_ARRAY_TO_STRING(ui_array_s,unsigned,"%u")
+    BIC_BIN_ARRAY_METHOD_TO_STRING(ui_array_s,unsigned,"%u")
     break;
   default:
     cassert(0);
@@ -1846,7 +1846,7 @@ bool bic_bin_array_method_print_0(interpreter_thread_s &it,unsigned stack_base,u
 
   putchar('[');
 
-#define BIC_BIN_ARRAY_PRINT(ARRAY_TYPE,TYPE,FORMAT) \
+#define BIC_BIN_ARRAY_METHOD_PRINT(ARRAY_TYPE,TYPE,FORMAT) \
 {/*{{{*/\
   ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)ba_ptr->cont;\
   \
@@ -1867,10 +1867,10 @@ bool bic_bin_array_method_print_0(interpreter_thread_s &it,unsigned stack_base,u
   switch (ba_ptr->type)
   {
   case c_bin_array_type_int32:
-    BIC_BIN_ARRAY_PRINT(bi_array_s,int,"%d")
+    BIC_BIN_ARRAY_METHOD_PRINT(bi_array_s,int,"%d")
     break;
   case c_bin_array_type_uint32:
-    BIC_BIN_ARRAY_PRINT(ui_array_s,unsigned,"%u")
+    BIC_BIN_ARRAY_METHOD_PRINT(ui_array_s,unsigned,"%u")
     break;
   default:
     cassert(0);
@@ -2023,7 +2023,7 @@ bool bic_bin_array_ref_method_value_0(interpreter_thread_s &it,unsigned stack_ba
   bin_array_ref_s *bar_ptr = (bin_array_ref_s *)dst_location->v_data_ptr;
   bin_array_s *ba_ptr = (bin_array_s *)bar_ptr->ba_location->v_data_ptr;
 
-#define BIC_BIN_ARRAY_REF_INTEGER_VALUE(ARR_TYPE) \
+#define BIC_BIN_ARRAY_REF_METHOD_VALUE_INTEGER(ARR_TYPE) \
 {/*{{{*/\
   ARR_TYPE *array_ptr = (ARR_TYPE *)ba_ptr->cont;\
   \
@@ -2041,10 +2041,10 @@ bool bic_bin_array_ref_method_value_0(interpreter_thread_s &it,unsigned stack_ba
   switch (ba_ptr->type)
   {
   case c_bin_array_type_int32:
-    BIC_BIN_ARRAY_REF_INTEGER_VALUE(bi_array_s);
+    BIC_BIN_ARRAY_REF_METHOD_VALUE_INTEGER(bi_array_s);
     break;
   case c_bin_array_type_uint32:
-    BIC_BIN_ARRAY_REF_INTEGER_VALUE(ui_array_s);
+    BIC_BIN_ARRAY_REF_METHOD_VALUE_INTEGER(ui_array_s);
     break;
   default:
     cassert(0);
@@ -2228,7 +2228,7 @@ built_in_variable_s bin_dict_variables[] =
 
 };/*}}}*/
 
-#define BIC_BIN_DICT_METHOD_CHECK_IDX(MAP_NAME) \
+#define BIC_BIN_DICT_CHECK_IDX(MAP_NAME) \
 /*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
 \
@@ -3358,12 +3358,12 @@ bool bic_bin_dict_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli
   {
   case c_bin_dict_type_int64_int64:
     {
-      BIC_BIN_DICT_METHOD_CHECK_IDX(lli_lli_map);
+      BIC_BIN_DICT_CHECK_IDX(lli_lli_map);
     }
     break;
   case c_bin_dict_type_int64_float64:
     {
-      BIC_BIN_DICT_METHOD_CHECK_IDX(lli_bd_map);
+      BIC_BIN_DICT_CHECK_IDX(lli_bd_map);
     }
     break;
   default:
@@ -3479,7 +3479,7 @@ bool bic_bin_dict_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base
 
 #define BIC_BIN_DICT_METHOD_NEXT_IDX(MAP_NAME) \
 {/*{{{*/\
-  BIC_BIN_DICT_METHOD_CHECK_IDX(MAP_NAME);\
+  BIC_BIN_DICT_CHECK_IDX(MAP_NAME);\
 \
   result = tree_ptr->get_next_idx(index);\
 }/*}}}*/
@@ -3525,7 +3525,7 @@ bool bic_bin_dict_method_prev_idx_1(interpreter_thread_s &it,unsigned stack_base
 
 #define BIC_BIN_DICT_METHOD_PREV_IDX(MAP_NAME) \
 {/*{{{*/\
-  BIC_BIN_DICT_METHOD_CHECK_IDX(MAP_NAME);\
+  BIC_BIN_DICT_CHECK_IDX(MAP_NAME);\
 \
   result = tree_ptr->get_prev_idx(index);\
 }/*}}}*/
@@ -3897,7 +3897,7 @@ bool bic_bin_dict_ref_method_key_0(interpreter_thread_s &it,unsigned stack_base,
   bin_dict_ref_s *bdr_ptr = (bin_dict_ref_s *)dst_location->v_data_ptr;
   bin_dict_s *bd_ptr = (bin_dict_s *)bdr_ptr->bd_location->v_data_ptr;
 
-#define BIC_BIN_DICT_REF_KEY_INTEGER(MAP_NAME) \
+#define BIC_BIN_DICT_REF_METHOD_KEY_INTEGER(MAP_NAME) \
 {/*{{{*/\
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)bd_ptr->cont;\
   MAP_NAME ## _tree_s_node *key_value_node;\
@@ -3917,10 +3917,10 @@ bool bic_bin_dict_ref_method_key_0(interpreter_thread_s &it,unsigned stack_base,
   switch (bd_ptr->type)
   {
   case c_bin_dict_type_int64_int64:
-    BIC_BIN_DICT_REF_KEY_INTEGER(lli_lli_map);
+    BIC_BIN_DICT_REF_METHOD_KEY_INTEGER(lli_lli_map);
     break;
   case c_bin_dict_type_int64_float64:
-    BIC_BIN_DICT_REF_KEY_INTEGER(lli_bd_map);
+    BIC_BIN_DICT_REF_METHOD_KEY_INTEGER(lli_bd_map);
     break;
   default:
     cassert(0);
