@@ -71,6 +71,7 @@ C_MODULE_V8         = index; index += 1
 C_MODULE_LUA        = index; index += 1
 C_MODULE_MONO       = index; index += 1
 C_MODULE_UV         = index; index += 1
+C_MODULE_ZLIB       = index; index += 1
 C_MODULE_FUSE       = index; index += 1
 C_MODULE_ANDROID    = index; index += 1
 C_MODULE_NACL       = index; index += 1
@@ -148,6 +149,7 @@ c_cfg = [
     ["MOD_LUA"       ,c_enabled[C_MODULE_LUA]       ,C_UCLANG_DIR + "mods/lua_uclm"         ,None],
     ["MOD_MONO"      ,c_enabled[C_MODULE_MONO]      ,C_UCLANG_DIR + "mods/mono_uclm"        ,None],
     ["MOD_UV"        ,c_enabled[C_MODULE_UV]        ,C_UCLANG_DIR + "mods/uv_uclm"          ,None],
+    ["MOD_ZLIB"      ,c_enabled[C_MODULE_ZLIB]      ,C_UCLANG_DIR + "mods/zlib_uclm"        ,None],
     ["MOD_FUSE"      ,c_enabled[C_MODULE_FUSE]      ,C_UCLANG_DIR + "mods/fuse_uclm"        ,None],
     ["MOD_ANDROID"   ,c_enabled[C_MODULE_ANDROID]   ,C_UCLANG_DIR + "mods/android_uclm"     ,None],
     ["MOD_NACL"      ,c_enabled[C_MODULE_NACL]      ,C_UCLANG_DIR + "mods/nacl_uclm"        ,None],
