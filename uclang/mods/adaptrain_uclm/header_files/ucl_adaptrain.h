@@ -91,6 +91,16 @@ struct sEVTARCH_RECORD_R32
 };
 #pragma pack()
 
+#pragma pack(8)
+struct sEVTARCH_RECORD_R64
+{
+  R32 r32XValue;
+  U8 u8TimeStampms;
+  U8 u8Status;
+  R64 r64Value;
+};
+#pragma pack()
+
 /*
  * archive MD5 sum check
  */

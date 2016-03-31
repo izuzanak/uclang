@@ -442,6 +442,19 @@ built_in_variable_s ato_aru_variables[] =
   /* - process archive records - */\
   switch (DATA_TYPE)\
   {\
+    case TUINT:\
+      {/*{{{*/\
+        sEVTARCH_RECORD_U16 *s_ptr = (sEVTARCH_RECORD_U16 *)(SRC_POINTER);\
+        sEVTARCH_RECORD_U16 *s_ptr_end = s_ptr + REC_COUNT;\
+        sEVTARCH_RECORD_U16 *t_ptr = (sEVTARCH_RECORD_U16 *)(TRG_POINTER);\
+        do {\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(r32XValue,R32);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(u8TimeStampms,U8);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(u8Status,U8);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(u16Value,U16);\
+        } while(++t_ptr,++s_ptr < s_ptr_end);\
+      }/*}}}*/\
+      break;\
     case TUDINT:\
       {/*{{{*/\
         sEVTARCH_RECORD_U32 *s_ptr = (sEVTARCH_RECORD_U32 *)(SRC_POINTER);\
@@ -465,6 +478,19 @@ built_in_variable_s ato_aru_variables[] =
           BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(u8TimeStampms,U8);\
           BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(u8Status,U8);\
           BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(r32Value,R32);\
+        } while(++t_ptr,++s_ptr < s_ptr_end);\
+      }/*}}}*/\
+      break;\
+    case TLREAL:\
+      {/*{{{*/\
+        sEVTARCH_RECORD_R64 *s_ptr = (sEVTARCH_RECORD_R64 *)(SRC_POINTER);\
+        sEVTARCH_RECORD_R64 *s_ptr_end = s_ptr + REC_COUNT;\
+        sEVTARCH_RECORD_R64 *t_ptr = (sEVTARCH_RECORD_R64 *)(TRG_POINTER);\
+        do {\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(r32XValue,R32);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(u8TimeStampms,U8);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(u8Status,U8);\
+          BIC_ATO_ARU_EVTARCH_RECORD_COPY_BSWP(r64Value,R64);\
         } while(++t_ptr,++s_ptr < s_ptr_end);\
       }/*}}}*/\
       break;\
@@ -561,6 +587,11 @@ built_in_variable_s ato_aru_variables[] =
   unsigned record_size;\
   switch (std_head.u16DataType)\
   {\
+    case TUINT:\
+    case TWORD:\
+    case TTDticks:\
+      record_size = sizeof(sEVTARCH_RECORD_U16);\
+      break;\
     case TUDINT:\
     case TDWORD:\
       record_size = sizeof(sEVTARCH_RECORD_U32);\
@@ -568,9 +599,8 @@ built_in_variable_s ato_aru_variables[] =
     case TREAL:\
       record_size = sizeof(sEVTARCH_RECORD_R32);\
       break;\
-    case TWORD:\
-    case TTDticks:\
-      record_size = sizeof(sEVTARCH_RECORD_U16);\
+    case TLREAL:\
+      record_size = sizeof(sEVTARCH_RECORD_R64);\
       break;\
 \
     /* - ERROR - */\
@@ -852,6 +882,10 @@ bool bic_ato_aru_method_create_5(interpreter_thread_s &it,unsigned stack_base,ul
 
   switch (data_type)
   {
+    case TUINT:
+      var_length = sizeof(U16);
+      record_size = sizeof(sEVTARCH_RECORD_U16);
+      break;
     case TUDINT:
       var_length = sizeof(U32);
       record_size = sizeof(sEVTARCH_RECORD_U32);
@@ -859,6 +893,10 @@ bool bic_ato_aru_method_create_5(interpreter_thread_s &it,unsigned stack_base,ul
     case TREAL:
       var_length = sizeof(float);
       record_size = sizeof(sEVTARCH_RECORD_R32);
+      break;
+    case TLREAL:
+      var_length = sizeof(double);
+      record_size = sizeof(sEVTARCH_RECORD_R64);
       break;
 
     // - ERROR -
@@ -942,21 +980,37 @@ bool bic_ato_aru_method_create_5(interpreter_thread_s &it,unsigned stack_base,ul
       // - process archive records -
       switch (std_head.u16DataType)
       {
+      case TUINT:
+      case TUDINT:
+      {/*{{{*/
+
+        // - ERROR -
+        if (v_location->v_type != c_bi_class_integer)
+        {
+          aa_ptr->clear(it);
+          cfree(aa_ptr);
+
+          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_VALUE_WRONG_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          new_exception->params.push(c_bi_class_integer);
+
+          return false;
+        }
+
+        switch (std_head.u16DataType)
+        {
+        case TUINT:
+          {/*{{{*/
+            sEVTARCH_RECORD_U16 *record = (sEVTARCH_RECORD_U16 *)aa_ptr->records + r_idx;
+
+            record->r32XValue = *((double *)&x_location->v_data_ptr);
+            record->u8TimeStampms = 0;
+            record->u8Status = 0x80;
+            record->u16Value = (long long int)v_location->v_data_ptr;
+          }/*}}}*/
+          break;
         case TUDINT:
           {/*{{{*/
             sEVTARCH_RECORD_U32 *record = (sEVTARCH_RECORD_U32 *)aa_ptr->records + r_idx;
-
-            // - ERROR -
-            if (v_location->v_type != c_bi_class_integer)
-            {
-              aa_ptr->clear(it);
-              cfree(aa_ptr);
-
-              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_VALUE_WRONG_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(c_bi_class_integer);
-
-              return false;
-            }
 
             record->r32XValue = *((double *)&x_location->v_data_ptr);
             record->u8TimeStampms = 0;
@@ -964,28 +1018,54 @@ bool bic_ato_aru_method_create_5(interpreter_thread_s &it,unsigned stack_base,ul
             record->u32Value = (long long int)v_location->v_data_ptr;
           }/*}}}*/
           break;
-        case TREAL:
-          {/*{{{*/
-            sEVTARCH_RECORD_R32 *record = (sEVTARCH_RECORD_R32 *)aa_ptr->records + r_idx;
+        default:
+          cassert(0);
+        }
+      }/*}}}*/
+        break;
+      case TREAL:
+      case TLREAL:
+        {/*{{{*/
 
-            // - ERROR -
-            if (v_location->v_type != c_bi_class_float)
-            {
-              aa_ptr->clear(it);
-              cfree(aa_ptr);
+          // - ERROR -
+          if (v_location->v_type != c_bi_class_float)
+          {
+            aa_ptr->clear(it);
+            cfree(aa_ptr);
 
-              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_VALUE_WRONG_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(c_bi_class_float);
+            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_VALUE_WRONG_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            new_exception->params.push(c_bi_class_float);
 
-              return false;
-            }
+            return false;
+          }
 
-            record->r32XValue = *((double *)&x_location->v_data_ptr);
-            record->u8TimeStampms = 0;
-            record->u8Status = 0x80;
-            record->r32Value = *((double *)&v_location->v_data_ptr);
-          }/*}}}*/
-          break;
+          switch (std_head.u16DataType)
+          {
+          case TREAL:
+            {/*{{{*/
+              sEVTARCH_RECORD_R32 *record = (sEVTARCH_RECORD_R32 *)aa_ptr->records + r_idx;
+
+              record->r32XValue = *((double *)&x_location->v_data_ptr);
+              record->u8TimeStampms = 0;
+              record->u8Status = 0x80;
+              record->r32Value = *((double *)&v_location->v_data_ptr);
+            }/*}}}*/
+            break;
+          case TLREAL:
+            {/*{{{*/
+              sEVTARCH_RECORD_R64 *record = (sEVTARCH_RECORD_R64 *)aa_ptr->records + r_idx;
+
+              record->r32XValue = *((double *)&x_location->v_data_ptr);
+              record->u8TimeStampms = 0;
+              record->u8Status = 0x80;
+              record->r64Value = *((double *)&v_location->v_data_ptr);
+            }/*}}}*/
+            break;
+          }
+        }/*}}}*/
+        break;
+      default:
+        cassert(0);
       }
 
     } while(++r_idx < aa_ptr->record_count);
@@ -1012,6 +1092,11 @@ bool bic_ato_aru_method_pack_0(interpreter_thread_s &it,unsigned stack_base,uli 
   unsigned record_size;
   switch (src_std_head.u16DataType)
   {
+    case TUINT:
+    case TWORD:
+    case TTDticks:
+      record_size = sizeof(sEVTARCH_RECORD_U16);
+      break;
     case TUDINT:
     case TDWORD:
       record_size = sizeof(sEVTARCH_RECORD_U32);
@@ -1019,9 +1104,8 @@ bool bic_ato_aru_method_pack_0(interpreter_thread_s &it,unsigned stack_base,uli 
     case TREAL:
       record_size = sizeof(sEVTARCH_RECORD_R32);
       break;
-    case TWORD:
-    case TTDticks:
-      record_size = sizeof(sEVTARCH_RECORD_U16);
+    case TLREAL:
+      record_size = sizeof(sEVTARCH_RECORD_R64);
       break;
 
     // - ERROR -
@@ -1329,6 +1413,11 @@ bool bic_ato_aru_record_method_status_0(interpreter_thread_s &it,unsigned stack_
 
   switch (aa_ptr->head.stdHead.u16DataType)
   {
+    case TUINT:
+    case TWORD:
+    case TTDticks:
+      result = ((sEVTARCH_RECORD_U16 *)aa_ptr->records)[aar_ptr->index].u8Status;
+      break;
     case TUDINT:
     case TDWORD:
       result = ((sEVTARCH_RECORD_U32 *)aa_ptr->records)[aar_ptr->index].u8Status;
@@ -1336,9 +1425,8 @@ bool bic_ato_aru_record_method_status_0(interpreter_thread_s &it,unsigned stack_
     case TREAL:
       result = ((sEVTARCH_RECORD_R32 *)aa_ptr->records)[aar_ptr->index].u8Status;
       break;
-    case TWORD:
-    case TTDticks:
-      result = ((sEVTARCH_RECORD_U16 *)aa_ptr->records)[aar_ptr->index].u8Status;
+    case TLREAL:
+      result = ((sEVTARCH_RECORD_R64 *)aa_ptr->records)[aar_ptr->index].u8Status;
       break;
 
     // - ERROR -
@@ -1366,6 +1454,11 @@ bool bic_ato_aru_record_method_x_value_0(interpreter_thread_s &it,unsigned stack
 
   switch (aa_ptr->head.stdHead.u16DataType)
   {
+    case TUINT:
+    case TWORD:
+    case TTDticks:
+      result = ((sEVTARCH_RECORD_U16 *)aa_ptr->records)[aar_ptr->index].r32XValue;
+      break;
     case TUDINT:
     case TDWORD:
       result = ((sEVTARCH_RECORD_U32 *)aa_ptr->records)[aar_ptr->index].r32XValue;
@@ -1373,9 +1466,8 @@ bool bic_ato_aru_record_method_x_value_0(interpreter_thread_s &it,unsigned stack
     case TREAL:
       result = ((sEVTARCH_RECORD_R32 *)aa_ptr->records)[aar_ptr->index].r32XValue;
       break;
-    case TWORD:
-    case TTDticks:
-      result = ((sEVTARCH_RECORD_U16 *)aa_ptr->records)[aar_ptr->index].r32XValue;
+    case TLREAL:
+      result = ((sEVTARCH_RECORD_R64 *)aa_ptr->records)[aar_ptr->index].r32XValue;
       break;
 
     // - ERROR -
@@ -1402,6 +1494,7 @@ bool bic_ato_aru_record_method_value_0(interpreter_thread_s &it,unsigned stack_b
 
   switch (aa_ptr->head.stdHead.u16DataType)
   {
+    case TUINT:
     case TUDINT:
     case TWORD:
     case TDWORD:
@@ -1411,13 +1504,14 @@ bool bic_ato_aru_record_method_value_0(interpreter_thread_s &it,unsigned stack_b
         
         switch (aa_ptr->head.stdHead.u16DataType)
         {
-          case TUDINT:
-          case TDWORD:
-            result = ((sEVTARCH_RECORD_U32 *)aa_ptr->records)[aar_ptr->index].u32Value;
-            break;
+          case TUINT:
           case TWORD:
           case TTDticks:
             result = ((sEVTARCH_RECORD_U16 *)aa_ptr->records)[aar_ptr->index].u16Value;
+            break;
+          case TUDINT:
+          case TDWORD:
+            result = ((sEVTARCH_RECORD_U32 *)aa_ptr->records)[aar_ptr->index].u32Value;
             break;
           default:
             cassert(0);
@@ -1427,8 +1521,21 @@ bool bic_ato_aru_record_method_value_0(interpreter_thread_s &it,unsigned stack_b
       }
       break;
     case TREAL:
+    case TLREAL:
       {
-        double result = ((sEVTARCH_RECORD_R32 *)aa_ptr->records)[aar_ptr->index].r32Value;
+        double result;
+
+        switch (aa_ptr->head.stdHead.u16DataType)
+        {
+          case TREAL:
+            result = ((sEVTARCH_RECORD_R32 *)aa_ptr->records)[aar_ptr->index].r32Value;
+            break;
+          case TLREAL:
+            result = ((sEVTARCH_RECORD_R64 *)aa_ptr->records)[aar_ptr->index].r64Value;
+            break;
+          default:
+            cassert(0);
+        }
 
         basic_64b &v_data_ptr = *((basic_64b *)&result);
         BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
