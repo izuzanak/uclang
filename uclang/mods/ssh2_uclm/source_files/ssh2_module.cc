@@ -1483,6 +1483,7 @@ built_in_variable_s sftp_handle_variables[] =
     \
     BIC_SFTP_HANDLE_READLN();\
     \
+    /* - ERROR - */\
     if (read_cnt < 0)\
     {\
       line_buffer.clear();\

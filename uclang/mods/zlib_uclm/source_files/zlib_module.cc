@@ -5,6 +5,7 @@ include "zlib_module.h"
 
 // - ZLIB indexes of built in classes -
 unsigned c_bi_class_zlib = c_idx_not_exist;
+unsigned c_bi_class_gz_file = c_idx_not_exist;
 
 // - ZLIB indexes of remote classes -
 unsigned c_rm_class_socket = c_idx_not_exist;
@@ -12,11 +13,11 @@ unsigned c_rm_class_socket = c_idx_not_exist;
 // - ZLIB module -
 built_in_module_s module =
 {/*{{{*/
-  1,                    // Class count
+  2,                    // Class count
   zlib_classes,         // Classes
 
   0,                    // Error base index
-  4,                    // Error count
+  10,                   // Error count
   zlib_error_strings,   // Error strings
 
   zlib_initialize,      // Initialize function
@@ -27,6 +28,7 @@ built_in_module_s module =
 built_in_class_s *zlib_classes[] =
 {/*{{{*/
   &zlib_class,
+  &gz_file_class,
 };/*}}}*/
 
 // - ZLIB error strings -
@@ -36,6 +38,12 @@ const char *zlib_error_strings[] =
   "error_ZLIB_NOT_ENOUGHT_SPACE_IN_BUFFER",
   "error_ZLIB_COMPRESS_ERROR",
   "error_ZLIB_UNCOMPRESS_ERROR",
+  "error_GZ_FILE_OPEN_ERROR",
+  "error_GZ_FILE_CLOSE_ERROR",
+  "error_GZ_FILE_WRITE_ERROR",
+  "error_GZ_FILE_READ_ERROR",
+  "error_GZ_FILE_READ_NEGATIVE_BYTE_COUNT",
+  "error_GZ_FILE_NOT_OPENED",
 };/*}}}*/
 
 // - ZLIB initialize -
@@ -45,6 +53,9 @@ bool zlib_initialize(script_parser_s &sp)
 
   // - initialize zlib class identifier -
   c_bi_class_zlib = class_base_idx++;
+
+  // - initialize gz_file class identifier -
+  c_bi_class_gz_file = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -86,6 +97,48 @@ bool zlib_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nZLib uncompress error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GZ_FILE_OPEN_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot open gz file \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GZ_FILE_CLOSE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot close gz file\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GZ_FILE_WRITE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while writing to gz file\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GZ_FILE_READ_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while reading from gz file\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GZ_FILE_READ_NEGATIVE_BYTE_COUNT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot read %" HOST_LL_FORMAT "d bytes from gz file\n", exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GZ_FILE_NOT_OPENED:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nGz file is not opened\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -301,6 +354,564 @@ bool bic_zlib_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *o
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
   printf("ZLib");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class GZ_FILE -
+built_in_class_s gz_file_class =
+{/*{{{*/
+  "GzFile",
+  c_modifier_public | c_modifier_final,
+  12, gz_file_methods,
+  0, gz_file_variables,
+  bic_gz_file_consts,
+  bic_gz_file_init,
+  bic_gz_file_clear,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  bic_gz_file_next_item,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};/*}}}*/
+
+built_in_method_s gz_file_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_gz_file_operator_binary_equal
+  },
+  {
+    "GzFile#2",
+    c_modifier_public | c_modifier_final,
+    bic_gz_file_method_GzFile_2
+  },
+  {
+    "close#0",
+    c_modifier_public | c_modifier_final,
+    bic_gz_file_method_close_0
+  },
+  {
+    "write#1",
+    c_modifier_public | c_modifier_final,
+    bic_gz_file_method_write_1
+  },
+  {
+    "write_close#1",
+    c_modifier_public | c_modifier_final,
+    bic_gz_file_method_write_close_1
+  },
+  {
+    "read#0",
+    c_modifier_public | c_modifier_final,
+    bic_gz_file_method_read_0
+  },
+  {
+    "readln#0",
+    c_modifier_public | c_modifier_final,
+    bic_gz_file_method_readln_0
+  },
+  {
+    "read#1",
+    c_modifier_public | c_modifier_final,
+    bic_gz_file_method_read_1
+  },
+  {
+    "read_close#0",
+    c_modifier_public | c_modifier_final,
+    bic_gz_file_method_read_close_0
+  },
+  {
+    "next_item#0",
+    c_modifier_public | c_modifier_final,
+    bic_gz_file_method_next_item_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_gz_file_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_gz_file_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s gz_file_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+#define BIC_GZ_FILE_METHOD_WRITE_1() \
+/*{{{*/\
+\
+  /* - retrieve pointer to gz file - */\
+  gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;\
+\
+  /* - ERROR - */\
+  if (gzf_ptr == NULL)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;\
+  unsigned string_length = string_ptr->size - 1;\
+\
+  /* - ERROR - */\
+  if (gzwrite(gzf_ptr,string_ptr->data,string_length) != (int)string_length)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  BIC_SET_RESULT_BLANK();\
+/*}}}*/
+
+#define BIC_GZ_FILE_METHOD_READ_0() \
+/*{{{*/\
+\
+  /* - retrieve pointer to gz file - */\
+  gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;\
+\
+  /* - ERROR - */\
+  if (gzf_ptr == NULL)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  const int c_buffer_add = 1024;\
+\
+  /* - target data buffer - */\
+  bc_array_s data_buffer;\
+  data_buffer.init();\
+\
+  int read_cnt;\
+  do\
+  {\
+    unsigned old_used = data_buffer.used;\
+    data_buffer.push_blanks(c_buffer_add);\
+    read_cnt = gzread(gzf_ptr,data_buffer.data + old_used,c_buffer_add);\
+  }\
+  while(read_cnt >= c_buffer_add);\
+\
+  if (read_cnt < 0)\
+  {\
+    data_buffer.clear();\
+\
+    exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  data_buffer.used = (data_buffer.used - c_buffer_add) + read_cnt;\
+\
+  /* - was any data read from file - */\
+  if (data_buffer.used == 0)\
+  {\
+    data_buffer.clear();\
+\
+    BIC_SET_RESULT_BLANK();\
+  }\
+  else\
+  {\
+    data_buffer.push('\0');\
+\
+    /* - return data string - */\
+    string_s *string_ptr = it.get_new_string_ptr();\
+    string_ptr->data = data_buffer.data;\
+    string_ptr->size = data_buffer.used;\
+\
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);\
+    BIC_SET_RESULT(new_location);\
+  }\
+/*}}}*/
+
+#define BIC_GZ_FILE_METHOD_CLOSE_0() \
+/*{{{*/\
+\
+  /* - ERROR - */\
+  if (gzclose(gzf_ptr) != Z_OK)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_CLOSE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  dst_location->v_data_ptr = (basic_64b)NULL;\
+/*}}}*/
+
+#define BIC_GZ_FILE_READLN() \
+/*{{{*/\
+  const unsigned c_init_buffer_size = 1024;\
+  \
+  /* - target data buffer - */\
+  bc_array_s line_buffer;\
+  line_buffer.init_size(c_init_buffer_size);\
+  \
+  int ch;\
+  do {\
+    /* - read next character from gz file - */\
+    ch = gzgetc(gzf_ptr);\
+    \
+    /* - test end of line - */\
+    if (ch == '\n' || ch == -1)\
+      break;\
+    \
+    /* - insert character to line buffer - */\
+    line_buffer.push(ch);\
+    \
+  } while(true);\
+/*}}}*/
+
+#define BIC_FD_NEXT_ITEM() \
+{/*{{{*/\
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  \
+  /* - retrieve pointer to gz file - */\
+  gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;\
+  \
+  /* - ERROR - */\
+  if (gzf_ptr == NULL)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+ \
+  BIC_GZ_FILE_READLN();\
+\
+  /* - ERROR - */\
+  if (ch == -1 && !gzeof(gzf_ptr))\
+  {\
+    line_buffer.clear();\
+    \
+    exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  if (gzeof(gzf_ptr) && line_buffer.used == 0)\
+  {\
+    line_buffer.clear();\
+    \
+    BIC_SET_RESULT_BLANK();\
+  }\
+  else {\
+    line_buffer.push('\0');\
+    \
+    /* - return data string - */\
+    string_s *string_ptr = it.get_new_string_ptr();\
+    string_ptr->data = line_buffer.data;\
+    string_ptr->size = line_buffer.used;\
+    \
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);\
+    BIC_SET_RESULT(new_location)\
+  }\
+  \
+  return true;\
+}/*}}}*/
+
+void bic_gz_file_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_gz_file_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (basic_64b)NULL;
+}/*}}}*/
+
+void bic_gz_file_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  gzFile_s *gzf_ptr = (gzFile_s *)location_ptr->v_data_ptr;
+
+  if (gzf_ptr != NULL)
+  {
+    gzclose(gzf_ptr);
+  }
+}/*}}}*/
+
+location_s *bic_gz_file_next_item(interpreter_thread_s &it,location_s *location_ptr,unsigned source_pos)
+{/*{{{*/
+
+  // - retrieve pointer to gz file -
+  gzFile_s *gzf_ptr = (gzFile_s *)location_ptr->v_data_ptr;
+
+  // - ERROR -
+  if (gzf_ptr == NULL)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_NOT_OPENED,source_pos,(location_s *)it.blank_location);
+    return NULL;
+  }
+
+  BIC_GZ_FILE_READLN();
+
+  // - ERROR -
+  if (ch == -1 && !gzeof(gzf_ptr))
+  {
+    line_buffer.clear();
+
+    exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_READ_ERROR,source_pos,(location_s *)it.blank_location);
+    return NULL;
+  }
+  
+  if (gzeof(gzf_ptr) && line_buffer.used == 0)
+  {
+    line_buffer.clear();
+
+    ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
+    return ((location_s *)it.blank_location);
+  }
+  else {
+    line_buffer.push('\0');
+    
+    // - return data string -
+    string_s *string_ptr = it.get_new_string_ptr();
+    string_ptr->data = line_buffer.data;
+    string_ptr->size = line_buffer.used;
+    
+    // - create result location -
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+
+    return new_location;
+  }
+}/*}}}*/
+
+bool bic_gz_file_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_gz_file_method_GzFile_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string ||
+      src_1_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("GzFile#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  string_s *file_name = (string_s *)src_0_location->v_data_ptr;
+  string_s *file_mode = (string_s *)src_1_location->v_data_ptr;
+
+  gzFile_s *gzf_ptr = gzopen(file_name->data,file_mode->data);
+
+  // - ERROR -
+  if (gzf_ptr == NULL)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_OPEN_ERROR,operands[c_source_pos_idx],src_0_location);
+    return false;
+  }
+
+  dst_location->v_data_ptr = (basic_64b)gzf_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_gz_file_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  // - retrieve pointer to file -
+  gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (gzf_ptr == NULL)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_GZ_FILE_METHOD_CLOSE_0();
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_gz_file_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("write#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  BIC_GZ_FILE_METHOD_WRITE_1();
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_gz_file_method_write_close_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("write_close#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  BIC_GZ_FILE_METHOD_WRITE_1();
+  BIC_GZ_FILE_METHOD_CLOSE_0();
+
+  return true;
+}/*}}}*/
+
+bool bic_gz_file_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  BIC_GZ_FILE_METHOD_READ_0();
+
+  return true;
+}/*}}}*/
+
+bool bic_gz_file_method_readln_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_FD_NEXT_ITEM();
+}/*}}}*/
+
+bool bic_gz_file_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int byte_cnt;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,byte_cnt))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("read#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  // - retrieve pointer to gz file -
+  gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (gzf_ptr == NULL)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (byte_cnt < 0)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_READ_NEGATIVE_BYTE_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(byte_cnt);
+
+    return false;
+  }
+
+  // - target data string -
+  string_s data_string;
+  data_string.init();
+  data_string.create(byte_cnt);
+
+  int read_cnt = gzread(gzf_ptr,data_string.data,byte_cnt);
+
+  // - ERROR -
+  if (read_cnt < byte_cnt)
+  {
+    data_string.clear();
+
+    exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - return data string -
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->swap(data_string);
+  data_string.clear();
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_gz_file_method_read_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  BIC_GZ_FILE_METHOD_READ_0();
+  BIC_GZ_FILE_METHOD_CLOSE_0();
+
+  return true;
+}/*}}}*/
+
+bool bic_gz_file_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_FD_NEXT_ITEM();
+}/*}}}*/
+
+bool bic_gz_file_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("GzFile"),"GzFile");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_gz_file_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  printf("GzFile");
 
   BIC_SET_RESULT_BLANK();
 

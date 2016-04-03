@@ -270,7 +270,7 @@ built_in_class_s ato_aru_class =
 {/*{{{*/
   "AtoAru",
   c_modifier_public | c_modifier_final,
-  15, ato_aru_methods,
+  16, ato_aru_methods,
   20, ato_aru_variables,
   bic_ato_aru_consts,
   bic_ato_aru_init,
@@ -323,6 +323,11 @@ built_in_method_s ato_aru_methods[] =
     "primary_key#0",
     c_modifier_public | c_modifier_final,
     bic_ato_aru_method_primary_key_0
+  },
+  {
+    "version#0",
+    c_modifier_public | c_modifier_final,
+    bic_ato_aru_method_version_0
   },
   {
     "first_x_value#0",
@@ -1181,6 +1186,20 @@ bool bic_ato_aru_method_primary_key_0(interpreter_thread_s &it,unsigned stack_ba
   ato_aru_s *aa_ptr = (ato_aru_s *)dst_location->v_data_ptr;
 
   long long int result = aa_ptr->head.stdHead.i32PK_Variable;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_ato_aru_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  ato_aru_s *aa_ptr = (ato_aru_s *)dst_location->v_data_ptr;
+
+  long long int result = aa_ptr->head.stdHead.u8Version;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 

@@ -3689,6 +3689,7 @@ bool bic_socket_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli 
     \
     BIC_STREAM_READLN();\
     \
+    /* - ERROR - */\
     if (ferror(f))\
     {\
       line_buffer.clear();\
