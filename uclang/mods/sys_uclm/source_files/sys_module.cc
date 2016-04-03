@@ -3734,7 +3734,16 @@ location_s *bic_stream_next_item(interpreter_thread_s &it,location_s *location_p
 
   BIC_STREAM_READLN();
 
-  if ((feof(f) && line_buffer.used == 0) || ferror(f))
+  // - ERROR -
+  if (ferror(f))
+  {
+    line_buffer.clear();
+    
+    exception_s::throw_exception(it,module.error_base + c_error_STREAM_READ_ERROR,source_pos,(location_s *)it.blank_location);
+    return NULL;
+  }
+
+  if ((feof(f) && line_buffer.used == 0))
   {
     line_buffer.clear();
 
