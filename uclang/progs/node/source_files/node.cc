@@ -57,7 +57,7 @@ int main(int argc,char **argv)
 
   // - select modules to import -
   const char *modules[] = {
-    "sys","containers",NULL
+    "sys","containers","node_test",NULL
     //"sys","containers","json","websocket","jit","ucf",NULL
   };
 
@@ -134,62 +134,62 @@ int main(int argc,char **argv)
     //}/*}}}*/
 
     // - test ucl module -
-    //{/*{{{*/
+    {/*{{{*/
 
-    //  // FIXME object construction test
-    //  UclVar test = UclVar::__new("NodeTest");
-    //  printf("test: %s\n",test.to_string().__str());
-    //  test.__free();
+      // FIXME object construction test
+      UclVar test = UclVar::__new("NodeTest");
+      printf("test: %s\n",test.to_string().__str());
+      test.__free();
 
-    //  test = UclVar::__new("NodeTest","a");
-    //  printf("test: %s\n",test.to_string().__str());
-    //  test.__free();
+      test = UclVar::__new("NodeTest","a");
+      printf("test: %s\n",test.to_string().__str());
+      test.__free();
 
-    //  test = UclVar::__new("NodeTest","a","b");
-    //  printf("test: %s\n",test.to_string().__str());
-    //  test.__free();
+      test = UclVar::__new("NodeTest","a","b");
+      printf("test: %s\n",test.to_string().__str());
+      test.__free();
 
-    //  test = UclVar::__new("NodeTest","a","b","c");
-    //  printf("test: %s\n",test.to_string().__str());
-    //  test.__free();
+      test = UclVar::__new("NodeTest","a","b","c");
+      printf("test: %s\n",test.to_string().__str());
+      test.__free();
 
-    //  // FIXME method call test
-    //  test = UclVar::__new("NodeTest");
-    //  test.__call("print");
-    //  putchar('\n');
-    //  test.__call("print","a");
-    //  putchar('\n');
-    //  test.__call("print","a","b");
-    //  putchar('\n');
-    //  test.__call("print","a","b","c");
-    //  putchar('\n');
-    //  test.__call("print","a","b","c","d");
-    //  putchar('\n');
-    //  test.__free();
+      // FIXME method call test
+      test = UclVar::__new("NodeTest");
+      test.__call("print");
+      putchar('\n');
+      test.__call("print","a");
+      putchar('\n');
+      test.__call("print","a","b");
+      putchar('\n');
+      test.__call("print","a","b","c");
+      putchar('\n');
+      test.__call("print","a","b","c","d");
+      putchar('\n');
+      test.__free();
 
-    //  // FIXME method call return value test
-    //  test = UclVar::__new("NodeTest");
-    //  UclVar val = test.__call("to_string");
-    //  printf("val: %s\n",val.to_string().__str());
-    //  test.__free();
+      // FIXME method call return value test
+      test = UclVar::__new("NodeTest");
+      UclVar val = test.__call("to_string");
+      printf("val: %s\n",val.to_string().__str());
+      test.__free();
 
-    //  // FIXME static method call test
-    //  UclVar value;
+      // FIXME static method call test
+      UclVar value;
 
-    //  value = UclVar::__static_call("NodeTest","static_method");
-    //  printf("value: %" HOST_LL_FORMAT "d\n",value.__int());
+      value = UclVar::__static_call("NodeTest","static_method");
+      printf("value: %" HOST_LL_FORMAT "d\n",value.__int());
 
-    //  value = UclVar::__static_call("NodeTest","static_method",1);
-    //  printf("value: %" HOST_LL_FORMAT "d\n",value.__int());
+      value = UclVar::__static_call("NodeTest","static_method",1);
+      printf("value: %" HOST_LL_FORMAT "d\n",value.__int());
 
-    //  value = UclVar::__static_call("NodeTest","static_method",1,2);
-    //  printf("value: %" HOST_LL_FORMAT "d\n",value.__int());
+      value = UclVar::__static_call("NodeTest","static_method",1,2);
+      printf("value: %" HOST_LL_FORMAT "d\n",value.__int());
 
-    //  // FIXME member select test
-    //  test = UclVar::__new("NodeTest","a","b");
-    //  printf("test.m_value: %s\n",test.__member("m_value").__str());
-    //  test.__free();
-    //}/*}}}*/
+      // FIXME member select test
+      test = UclVar::__new("NodeTest","a","b");
+      printf("test.m_value: %s\n",test.__member("m_value").__str());
+      test.__free();
+    }/*}}}*/
 
     // - module pack test -
     //{/*{{{*/
@@ -359,7 +359,6 @@ int main(int argc,char **argv)
     //}/*}}}*/
 
 #if __cplusplus >= 201103
-
     // - c++11 initializer_list -
     {
       UclVar array = {1,2,3,4,UclVar::Dict({1,2,3,4}),"Hello World!!!"};

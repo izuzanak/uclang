@@ -972,6 +972,14 @@ class UclVar
     location_ptr = a_src.location_ptr;
   }/*}}}*/
 
+#if __cplusplus >= 201103
+  inline UclVar(UclVar &&a_src)
+  {/*{{{*/
+    location_ptr = a_src.location_ptr;
+    a_src.location_ptr = NULL;
+  }/*}}}*/
+#endif
+
   inline UclVar(location_s **a_location_ptr)
   {/*{{{*/
     location_ptr = it_ptr->get_new_reference(a_location_ptr);

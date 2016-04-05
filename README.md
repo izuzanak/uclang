@@ -104,6 +104,7 @@ Some of implemented modules are:
 [`v8`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/v8_uclm),
 [`lua`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/lua_uclm),
 [`mono`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/mono_uclm),
+[`zlib`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/zlib_uclm),
 [`fuse`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/fuse_uclm),
 [`android`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/android_uclm)
 
