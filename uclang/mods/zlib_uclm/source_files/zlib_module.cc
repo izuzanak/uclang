@@ -17,7 +17,7 @@ built_in_module_s module =
   zlib_classes,         // Classes
 
   0,                    // Error base index
-  10,                   // Error count
+  11,                   // Error count
   zlib_error_strings,   // Error strings
 
   zlib_initialize,      // Initialize function
@@ -39,6 +39,7 @@ const char *zlib_error_strings[] =
   "error_ZLIB_COMPRESS_ERROR",
   "error_ZLIB_UNCOMPRESS_ERROR",
   "error_GZ_FILE_OPEN_ERROR",
+  "error_GZ_FILE_SEEK_ERROR",
   "error_GZ_FILE_CLOSE_ERROR",
   "error_GZ_FILE_WRITE_ERROR",
   "error_GZ_FILE_READ_ERROR",
@@ -104,6 +105,13 @@ bool zlib_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nCannot open gz file \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GZ_FILE_SEEK_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot set position (seek) in gz file\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_GZ_FILE_CLOSE_ERROR:
@@ -365,8 +373,8 @@ built_in_class_s gz_file_class =
 {/*{{{*/
   "GzFile",
   c_modifier_public | c_modifier_final,
-  12, gz_file_methods,
-  0, gz_file_variables,
+  14, gz_file_methods,
+  2, gz_file_variables,
   bic_gz_file_consts,
   bic_gz_file_init,
   bic_gz_file_clear,
@@ -393,6 +401,16 @@ built_in_method_s gz_file_methods[] =
     "GzFile#2",
     c_modifier_public | c_modifier_final,
     bic_gz_file_method_GzFile_2
+  },
+  {
+    "seek#2",
+    c_modifier_public | c_modifier_final,
+    bic_gz_file_method_seek_2
+  },
+  {
+    "tell#0",
+    c_modifier_public | c_modifier_final,
+    bic_gz_file_method_tell_0
   },
   {
     "close#0",
@@ -448,6 +466,11 @@ built_in_method_s gz_file_methods[] =
 
 built_in_variable_s gz_file_variables[] =
 {/*{{{*/
+
+  // - seek whence values -
+  { "SEEK_SET", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SEEK_CUR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 #define BIC_GZ_FILE_METHOD_WRITE_1() \
@@ -620,6 +643,22 @@ built_in_variable_s gz_file_variables[] =
 
 void bic_gz_file_consts(location_array_s &const_locations)
 {/*{{{*/
+
+  // - insert seek whence values -
+  {
+    const_locations.push_blanks(2);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 2);
+
+#define CREATE_GZ_FILE_SEEK_WHENCE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr++;
+
+    CREATE_GZ_FILE_SEEK_WHENCE_BIC_STATIC(SEEK_SET);
+    CREATE_GZ_FILE_SEEK_WHENCE_BIC_STATIC(SEEK_CUR);
+  }
+
 }/*}}}*/
 
 void bic_gz_file_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -729,6 +768,75 @@ bool bic_gz_file_method_GzFile_2(interpreter_thread_s &it,unsigned stack_base,ul
   }
 
   dst_location->v_data_ptr = (basic_64b)gzf_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_gz_file_method_seek_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  long long int offset;
+  long long int whence;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,offset) ||
+      !it.retrieve_integer(src_1_location,whence))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("seek#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  // - retrieve pointer to gz file -
+  gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (gzf_ptr == NULL)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  long long int result = gzseek(gzf_ptr,offset,whence);
+
+  // - ERROR -
+  if (result <= 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_SEEK_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_gz_file_method_tell_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  // - retrieve pointer to gz file -
+  gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (gzf_ptr == NULL)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  long long int result = gztell(gzf_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/

@@ -24,6 +24,7 @@ enum
   c_error_ZLIB_COMPRESS_ERROR,
   c_error_ZLIB_UNCOMPRESS_ERROR,
   c_error_GZ_FILE_OPEN_ERROR,
+  c_error_GZ_FILE_SEEK_ERROR,
   c_error_GZ_FILE_CLOSE_ERROR,
   c_error_GZ_FILE_WRITE_ERROR,
   c_error_GZ_FILE_READ_ERROR,
@@ -66,6 +67,8 @@ location_s *bic_gz_file_next_item(interpreter_thread_s &it,location_s *location_
 
 bool bic_gz_file_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gz_file_method_GzFile_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gz_file_method_seek_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gz_file_method_tell_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gz_file_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gz_file_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gz_file_method_write_close_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
