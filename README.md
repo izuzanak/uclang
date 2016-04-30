@@ -8,7 +8,7 @@ Follows list of uclang features, that are supported by its interpreter.
 
 ### Feature list
 
-* Language syntax is derived mainly from C/C++.
+* Language syntax is derived from C/C++ programming languages.
   * Some syntax is derived from Java programming language.
 * Strong object oriented approach.
   * Everything is an object. 
@@ -19,38 +19,14 @@ Follows list of uclang features, that are supported by its interpreter.
 * Support for native threads, no GIL (Global Interpreter Lock).
 * Module system designed for straightforward creation of binary modules in C/C++.
   * A language built in data types are implemented as binary module.
-* Fast and lightweight interpreter.
-
-## Motivation
-
-C/C++ are excellent programming languages, but they are quite heavy-footed when
-it comes to scripting, rapid development, code prototyping or gluing of
-existing code.
-
-As a programmer who started programming in Pascal programming language I was
-surprised by simplicity of C. If you keep in mind a few basic concepts (data
-types, memory, pointers), all high level features derive from it intuitively.
-
-It would be nice (at least for me) to have high-level programming language for
-fast prototyping and rapid development, that would be: simple, expressive and
-unrestricted like C/C++ among compiled languages.
-
-### Motivation points
-
-Here are some point, that motivated/motivates me to develop new high-level
-programming language:
-
-* C/C++ like syntax.
-* A language based on a few simple principles.
-* Threading support without constraints (no GIL).
-* Implicit comparison by type and value, no `===` or `!==` and alike operators.
-* Module system, importing binary (C/C++) and uclang modules.
 * Lightweight interpreter, deployable on embedded devices.
 
 ## Documentation
 
-Documentation of uclang components is placed in the directory:
-[`uclang/doc`](https://github.com/izuzanak/uclang/tree/master/uclang/doc)
+Documentation of uclang components is located in the directory:
+[`uclang/doc`](https://github.com/izuzanak/uclang/tree/master/uclang/doc).
+Short introduction to language syntax and features can be found at
+[`uclang/doc/intro.md`](https://github.com/izuzanak/uclang/blob/master/uclang/doc/intro.md).
 
 ## Language modules
 

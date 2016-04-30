@@ -7,7 +7,7 @@ set of few simple rules.
 
   * All values are objects.
   * There are no global functions, all actions are performed by methods of objects.
-  * Subsets of methods define various interfaces.
+  * Subsets of methods defines various interfaces.
 
 Uclang, was designed as a fully interpreted language, so its performance falls
 into the class of interpreted languages like Lua or Python. The intermediate
