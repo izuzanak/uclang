@@ -174,7 +174,6 @@ int inst_static_call(inst_params_s *params)
 
   if (method_record.modifiers & c_modifier_built_in)
   {
-
     // - calling of built in method -
     if (!method_record.bi_method_caller(it,stack_base,code + iscl_source_pos))
     {
@@ -183,7 +182,6 @@ int inst_static_call(inst_params_s *params)
   }
   else
   {
-
     // - creation of new thread -
     if (method_record.modifiers & c_modifier_parallel)
     {
@@ -191,24 +189,20 @@ int inst_static_call(inst_params_s *params)
     }
     else
     {
-
       // - new stack base -
       unsigned new_stack_base = it.data_stack.used;
 
       unsigned parm_cnt = code[iscl_parm_cnt];
       if (parm_cnt != 0)
       {
-
         ui_array_s &parm_record_idxs = method_record.parameter_record_idxs;
         uli *c_ptr = code + iscl_parm_first;
         unsigned p_idx = 0;
 
         do
         {
-
           if (IT_INTERPRETER->variable_records[parm_record_idxs[p_idx]].modifiers & c_variable_modifier_reference)
           {
-
             // - passing of parameters by reference -
             pointer *parameter = &it.data_stack[stack_base + c_ptr[p_idx]];
             location_s *new_ref_location = it.get_new_reference((location_s **)parameter);
@@ -217,7 +211,6 @@ int inst_static_call(inst_params_s *params)
           }
           else
           {
-
             // - passing of parameter by "value" -
             location_s *parameter = (location_s *)it.get_stack_value(stack_base + c_ptr[p_idx]);
             parameter->v_reference_cnt.atomic_inc();
@@ -230,7 +223,6 @@ int inst_static_call(inst_params_s *params)
       // - creation of stack for local variables of method -
       if (method_record.stack_size > (it.data_stack.used - new_stack_base))
       {
-
         unsigned stack_size_cnt = method_record.stack_size - (it.data_stack.used - new_stack_base);
         ((location_s *)it.blank_location)->v_reference_cnt.atomic_add(stack_size_cnt);
 
@@ -360,13 +352,11 @@ int inst_new_object(inst_params_s *params)
 
   if (class_record.modifiers & c_modifier_built_in)
   {
-
     // - call built in class initializer function -
     class_record.bi_class_ptr->init_caller(it, new_location);
   }
   else
   {
-
     // - creation of new object -
     pointer_array_s *object_ptr = it.get_new_object_ptr();
 
@@ -400,7 +390,6 @@ int inst_new_object(inst_params_s *params)
 
       if (e_class_record.stack_size > (it.data_stack.used - new_stack_base))
       {
-
         unsigned stack_size_cnt = e_class_record.stack_size - (it.data_stack.used - new_stack_base);
         ((location_s *)it.blank_location)->v_reference_cnt.atomic_add(stack_size_cnt);
 
@@ -451,7 +440,6 @@ int inst_new_object(inst_params_s *params)
 
   if (method_record.modifiers & c_modifier_built_in)
   {
-
     // - call built in class constructor -
     if (!method_record.bi_method_caller(it,stack_base,code + ino_source_pos))
     {
@@ -469,17 +457,14 @@ int inst_new_object(inst_params_s *params)
     unsigned parm_cnt = code[ino_parm_cnt];
     if (parm_cnt != 0)
     {
-
       ui_array_s &parm_record_idxs = method_record.parameter_record_idxs;
       uli *c_ptr = code + ino_parm_first;
       unsigned p_idx = 0;
 
       do
       {
-
         if (IT_INTERPRETER->variable_records[parm_record_idxs[p_idx]].modifiers & c_variable_modifier_reference)
         {
-
           // - passing of parameters by reference -
           pointer *parameter = &it.data_stack[stack_base + c_ptr[p_idx]];
           location_s *new_ref_location = it.get_new_reference((location_s **)parameter);
@@ -488,7 +473,6 @@ int inst_new_object(inst_params_s *params)
         }
         else
         {
-
           // - passing of parameter by "value" -
           location_s *parameter = (location_s *)it.get_stack_value(stack_base + c_ptr[p_idx]);
           parameter->v_reference_cnt.atomic_inc();
@@ -501,7 +485,6 @@ int inst_new_object(inst_params_s *params)
     // - creation of stack for local variables of method -
     if (method_record.stack_size > (it.data_stack.used - new_stack_base))
     {
-
       unsigned stack_size_cnt = method_record.stack_size - (it.data_stack.used - new_stack_base);
       ((location_s *)it.blank_location)->v_reference_cnt.atomic_add(stack_size_cnt);
 
@@ -583,7 +566,6 @@ int inst_new_object_array(inst_params_s *params)
 
       if (!it.create_new_object_blank_constructor((location_s *)*o_ptr,code))
       {
-
         // - remove so far created array elements -
         if (o_ptr >= object_array->data)
         {
@@ -796,7 +778,6 @@ int inst_object_member_select(inst_params_s *params)
     // - if member is private, test correctness of access -
     if (variable_record.modifiers & c_modifier_private)
     {
-
       // - ERROR -
       if (((location_s *)it.data_stack[stack_base])->v_type != variable_record.parent_record)
       {
@@ -812,11 +793,9 @@ int inst_object_member_select(inst_params_s *params)
 
     if (variable_record.modifiers & c_modifier_static)
     {
-
       // - test if static reference is not built in static variable -
       if (variable_record.modifiers & c_modifier_static_const)
       {
-
         // - process built in static variable -
         location_s *location = IT_INTERPRETER->const_locations.data + element_ri_ep.element_position;
         location->v_reference_cnt.atomic_inc();
@@ -1040,7 +1019,6 @@ int inst_slice_range(inst_params_s *params)
   }
   else
   {
-
     // - adjust start value -
     start = start == LLONG_MAX ? 0 : start;
   }

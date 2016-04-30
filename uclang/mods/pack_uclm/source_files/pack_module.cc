@@ -311,7 +311,6 @@ bool bic_pack_method_pack_1(interpreter_thread_s &it,unsigned stack_base,uli *op
     }
     else
     {
-
       // - ERROR -
       if (!bi_object_pack(location,value_stream,loc_stack))
       {
@@ -460,7 +459,6 @@ bool bic_pack_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
   do
   {
-
     // - ERROR -
     UNPACK_ERROR_TEST(value_stream.used < sizeof(unsigned));
 
@@ -511,7 +509,6 @@ bool bic_pack_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,uli *
     }
     else
     {
-
       // - construct new location -
       BIC_CREATE_NEW_LOCATION(new_location,class_idx,0);
 
@@ -573,7 +570,6 @@ bool bic_pack_method_code_2(interpreter_thread_s &it,unsigned stack_base,uli *op
 
   if (src_1_location->v_type != c_bi_class_array)
   {
-
     dummy_array.data = (pointer *)&src_1_location;
     dummy_array.used = 1;
     dummy_array.size = 1;
@@ -582,7 +578,6 @@ bool bic_pack_method_code_2(interpreter_thread_s &it,unsigned stack_base,uli *op
   }
   else
   {
-
     // - retrieve argument array pointer -
     array_ptr = (pointer_array_s *)src_1_location->v_data_ptr;
   }
@@ -792,7 +787,6 @@ bool bic_pack_method_code_2(interpreter_thread_s &it,unsigned stack_base,uli *op
             unsigned val_idx = 0;
             do
             {
-
               // - ERROR -
               if (array_ptr->used <= element_idx)
               {
@@ -1168,7 +1162,6 @@ bool bic_pack_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *
             unsigned val_idx = 0;
             do
             {
-
               // - ERROR -
               if ((unsigned)(ds_ptr_end - ds_ptr) < sizeof(unsigned))
               {

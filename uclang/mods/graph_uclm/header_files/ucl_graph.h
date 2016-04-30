@@ -166,7 +166,6 @@ struct
     options ( no_init no_clear no_swap no_copy strict_dynamic )
     additions
 {
-
   inline void init();
   inline void init(unsigned a_type);
   void clear();

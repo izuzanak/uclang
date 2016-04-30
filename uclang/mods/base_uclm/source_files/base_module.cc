@@ -4644,7 +4644,6 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
   }
   else
   {
-
     // - retrieve argument array pointer -
     array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
   }
@@ -5317,7 +5316,6 @@ bool bic_string_method_join_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
     do
     {
-
       // - retrieve next item location -
       BIC_CALL_NEXT_ITEM(it,src_0_location,item_location,operands[c_source_pos_idx],
                          strings.clear();
@@ -6438,7 +6436,6 @@ bool bic_array_operator_binary_ls_br_equal(interpreter_thread_s &it,unsigned sta
 
   if (length > 0)
   {
-
 #define BIC_ARRAY_OPERATOR_BINARY_LS_BR_EQUAL_BODY() \
   {/*{{{*/\
     \
@@ -6471,7 +6468,6 @@ bool bic_array_operator_binary_ls_br_equal(interpreter_thread_s &it,unsigned sta
       pointer *p_ptr_end = p_ptr + array_ptr->used;
       do
       {
-
         // - retrieve item location -
         BIC_CALL_ITEM(it,src_0_location,index,item_location,operands[c_source_pos_idx],
                       return false;
@@ -6507,7 +6503,6 @@ bool bic_array_operator_binary_ls_br_equal(interpreter_thread_s &it,unsigned sta
       pointer *p_ptr_end = p_ptr + array_ptr->used;
       do
       {
-
         // - retrieve next item location -
         BIC_CALL_NEXT_ITEM(it,src_0_location,item_location,operands[c_source_pos_idx],
                            return false;
@@ -6633,7 +6628,6 @@ bool bic_array_method_resize_1(interpreter_thread_s &it,unsigned stack_base,uli 
   // - increase array size -
   if (new_size > (int)array_ptr->used)
   {
-
     // - increase reference count on blank location -
     ((location_s *)it.blank_location)->v_reference_cnt.atomic_add(new_size - array_ptr->used);
 

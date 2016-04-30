@@ -1417,7 +1417,6 @@ bool bic_cfg_file_method_CfgFile_1(interpreter_thread_s &it,unsigned stack_base,
 
   try
   {
-
     // - construct config file object -
     dst_location->v_data_ptr = (basic_64b)new CfgFile(filename);
   }
@@ -1455,7 +1454,6 @@ bool bic_cfg_file_method_Open_1(interpreter_thread_s &it,unsigned stack_base,uli
 
   try
   {
-
     // - open configuration file -
     cfg_file_ptr->Open(filename);
   }
@@ -1672,7 +1670,6 @@ bool bic_cfg_file_method_GetValue_1(interpreter_thread_s &it,unsigned stack_base
 
   try
   {
-
     // - retrieve entry value -
     String value = cfg_file_ptr->GetString(entry);
 
@@ -1719,7 +1716,6 @@ bool bic_cfg_file_method_GetValue_2(interpreter_thread_s &it,unsigned stack_base
 
   try
   {
-
     // - retrieve entry value -
     String value = cfg_file_ptr->GetString(entry);
 
@@ -1769,7 +1765,6 @@ bool bic_cfg_file_method_GetValueArray_1(interpreter_thread_s &it,unsigned stack
 
   try
   {
-
     // - retrieve entry values -
     cfg_file_ptr->GetMultiple(entry,values);
   }
@@ -3111,7 +3106,6 @@ bool bic_serial_method_Write_1(interpreter_thread_s &it,unsigned stack_base,uli 
   long long int writed = 0;
   try
   {
-
     // - try to write string to serial port -
     int length = string_ptr->size - 1;
     if (length > 0)
@@ -3157,7 +3151,6 @@ bool bic_serial_method_WriteAll_1(interpreter_thread_s &it,unsigned stack_base,u
 
   try
   {
-
     // - write whole string to serial port -
     int length = string_ptr->size - 1;
     if (length > 0)

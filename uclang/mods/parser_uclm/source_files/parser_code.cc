@@ -353,7 +353,6 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
   // - loop while queue of news states is not empty -
   do
   {
-
     // - retrieve description of next state from queue -
     fa_state_descr_s q_state_descr;
     q_state_descr.init();
@@ -363,7 +362,6 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
     unsigned state_descr_idx = state_descrs.get_idx(q_state_descr.reg_states);
     if (state_descr_idx != c_idx_not_exist)
     {
-
       /*
        * if yes, retrieve source state for this state, retrieve move index in
        * source state that matches move character, and in source state for this
@@ -397,7 +395,6 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
     // - if source state exists -
     if (q_state_descr.from_state_id != c_idx_not_exist)
     {
-
       // - set move from source state to this state -
       fa_state_s &from_state = states[q_state_descr.from_state_id];
 
@@ -494,7 +491,6 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
           {
             if (move_ptr->idx != 0xffff)
             {
-
               unsigned short ptr_char = move_ptr->idx;
               bool match = false;
               bool eq_match = false;
@@ -2351,7 +2347,6 @@ bool reg_parser_s::parse_reg_exp(string_s &source_string)
 
   do
   {
-
     while (ret_term == c_idx_not_exist)
     {
       old_input_idx = input_idx;
@@ -2388,7 +2383,6 @@ bool reg_parser_s::parse_reg_exp(string_s &source_string)
     // - akce SHIFT -
     if (parse_action < c_reg_lalr_table_reduce_base)
     {
-
       if (ret_term == 16)
       {
         break;
@@ -2834,11 +2828,9 @@ bool reg_parser_s::NKA_to_DKA()
         }
         else
         {
-
           // - if state at position ss_idx is not contained in closure  -
           if (!processed_states[ss_idx])
           {
-
             // - push states which are target of epsilon move from inserted state 
             // to stack -
             unsigned have_no_eps_move = false;
@@ -2905,7 +2897,6 @@ bool reg_parser_s::NKA_to_DKA()
     unsigned mul_state_idx = ms_map_array.get_idx_by_mul_state(mul_state_move.mul_state);
     if (mul_state_idx == c_idx_not_exist)
     {
-
       // - create new state -
       states.push_blank();
       fa_state_s &state = states.last();
@@ -2949,7 +2940,6 @@ bool reg_parser_s::NKA_to_DKA()
               // - id move is not epsilon move -
               if (move.idx != 0xffff)
               {
-
                 // - generate new candidates for DFA states -
                 unsigned mc_idx = new_mul_state_moves.get_idx_by_move_char(move.idx);
                 if (mc_idx == c_idx_not_exist)
@@ -3461,7 +3451,6 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
         // - read rule head -
         if (rule_state == 0)
         {
-
           // - ERROR -
           if (ret_term != rt_nonterm_id)
           {
@@ -3492,7 +3481,6 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
         // - read separator of rule head and its body -
         else
         {
-
           // - ERROR -
           if (ret_term != rt_div_0)
           {
@@ -3550,7 +3538,6 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
           // - separator of rule body and its semantic code -
           else
           {
-
             // - ERROR -
             if (new_rule.body.used <= 0)
             {
@@ -3573,7 +3560,6 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
         // - read semantic code of rule -
         else
         {
-
           // - ERROR -
           if (ret_term != rt_code)
           {
@@ -3810,7 +3796,6 @@ bool p_creat_descr_s::compute_follows_of_nonterminal(unsigned nonterm_idx,bb_arr
       // - if watched nonterminal was found -
       if (nonterm_idx == rule.body[rb_idx])
       {
-
         // - if nonterminal is inside rule body -
         if (rb_idx < rule.body.used - 1)
         {
@@ -3835,11 +3820,9 @@ bool p_creat_descr_s::compute_follows_of_nonterminal(unsigned nonterm_idx,bb_arr
         // - if nonterminal is at end of rule body -
         else
         {
-
           // - if rule head was not used yet, use it -
           if (nonterm_used.get_idx(rule.head) == c_idx_not_exist)
           {
-
             // - if set follow of rule head was not computed yet -
             if (!follows_created[rule.head - terminals.used])
             {
@@ -4109,7 +4092,6 @@ bool p_creat_descr_s::create_lalr_table(p_lalr_table_s &lalr_table)
 
     do
     {
-
       p_kernel_rule_dots_s &rule_dots = kernels[k_idx].rule_dots;
       unsigned rd_idx = 0;
 
@@ -4121,7 +4103,6 @@ bool p_creat_descr_s::create_lalr_table(p_lalr_table_s &lalr_table)
         // - if iterator is at end of rule body -
         if (rules[rule_dot.ui_first].body.used == rule_dot.ui_second)
         {
-
           p_follow_set_s &head_follow = follows[rules[rule_dot.ui_first].head - terminals.used];
 
           // - if set follow of rule head is not empty -

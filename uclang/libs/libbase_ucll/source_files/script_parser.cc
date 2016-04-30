@@ -575,7 +575,6 @@ unsigned script_parser_s::resolve_class_idx_by_name_idx(unsigned a_name_idx,unsi
   // - if exist base (main) class -
   if (a_class_idx != c_idx_not_exist)
   {
-
     // - cycle through nested classes -
     do
     {
@@ -2481,7 +2480,6 @@ void script_parser_s::DEBUG_show_method_im_codes()
 
     if (!(method_record.modifiers & c_modifier_abstract))
     {
-
       printf(" XXXXXXXXXXXXXXXXXX METHOD: %s::%s XXXXXXXXXXXXXXXXXX \n",class_symbol_names[class_records[method_record.parent_record].name_idx].data,
              method_symbol_names[method_record.name_idx].data);
 
@@ -2928,7 +2926,6 @@ char *VAR_NAME;\
     exp_flow_graph_s *fg_ptr = method_flow_graphs.data;
     exp_flow_graph_s *fg_ptr_end = fg_ptr + method_flow_graphs.used;
     do {
-      
       fprintf(a_file,
 "    new FlowGraph(%u,["
       ,fg_ptr->start_node_idx);
@@ -2945,7 +2942,6 @@ char *VAR_NAME;\
         expression_s *e_ptr = fg_ptr->expressions.data;
         expression_s *e_ptr_end = e_ptr + fg_ptr->expressions.used;
         do {
-          
           fprintf(a_file,
 "      new Expression(%u,["
           ,e_ptr->start_node_idx);
@@ -3066,7 +3062,6 @@ bool script_parser_s::import_module(built_in_module_s *a_module_ptr)
 
             do
             {
-
               // - MODULE LOAD ERROR -
               if (method_records[*mri_ptr].name_idx == method_name_idx)
               {
@@ -3127,7 +3122,6 @@ bool script_parser_s::import_module(built_in_module_s *a_module_ptr)
             // - test variable name uniqueness in class -
             do
             {
-
               // - MODULE LOAD ERROR -
               if (variable_records[*vri_ptr].name_idx == variable_name_idx)
               {
@@ -7798,7 +7792,6 @@ void script_parser_s::parse_script(unsigned a_source_idx)
 
   do
   {
-
     // - retrieve next terminal symbol -
     while (ret_term == c_idx_not_exist)
     {
@@ -7838,7 +7831,6 @@ void script_parser_s::parse_script(unsigned a_source_idx)
     // - action SHIFT -
     if (parse_action < c_lalr_table_reduce_base)
     {
-
       if (ret_term == 91)
       {
         break;
@@ -7980,7 +7972,6 @@ void script_parser_s::extended_classes_search()
 
   if (extending_idxs.used != 0)
   {
-
     unsigned *ep_ptr = extending_idxs.data;
     unsigned *ep_ptr_end = ep_ptr + extending_idxs.used;
 
@@ -8023,8 +8014,8 @@ void script_parser_s::extended_classes_search()
           if (name_cnt > 2)
           {
             unsigned *name_ptr_end = name_ptr + extend_array.used - 4;
-            do {
-
+            do
+            {
               // - retrieve next namespace record index -
               namespace_ri = get_parent_namespace_namespace_idx_by_name_idx(*name_ptr,namespace_ri);
 
@@ -8117,7 +8108,6 @@ void script_parser_s::element_search()
   // - if there are any class records -
   if (class_records.used != 0)
   {
-
     // - cycle through all classes, initialize mnri_map and vn_ri_ep_map functions -
     {
       unsigned cl_idx = 0;
@@ -8130,7 +8120,6 @@ void script_parser_s::element_search()
         // - if class is not defined as abstract -
         if (!(class_record.modifiers & c_modifier_abstract))
         {
-
           // - clear function mapping method names to classes methods -
           ui_array_s &mnri_map = class_record.mnri_map;
           mnri_map.used = 0;
@@ -8182,7 +8171,6 @@ void script_parser_s::element_search()
         // - if extended class contain some methods, and class is not defined as abstract -
         if (method_record_idxs.used != 0 && !(class_record.modifiers & c_modifier_abstract))
         {
-
           unsigned *mri_ptr = method_record_idxs.data;
           unsigned *mri_ptr_end = mri_ptr + method_record_idxs.used;
 
@@ -8194,7 +8182,6 @@ void script_parser_s::element_search()
 
             if (method_record.modifiers & c_modifier_abstract)
             {
-
               // - SEMANTIC ERROR if method is defined as abstract assure that it was defined in some extending class -
               if (mnri_map[method_record.name_idx] == c_idx_not_exist)
               {
@@ -8206,17 +8193,14 @@ void script_parser_s::element_search()
             }
             else
             {
-
               // - if method has not been defined so far, save index of its record to mapping function -
               unsigned &method_identifier = mnri_map[method_record.name_idx];
 
               if (method_record.modifiers & c_modifier_final)
               {
-
                 // - SEMANTIC ERROR -
                 if (method_identifier != c_idx_not_exist)
                 {
-
                   error_code.push(ei_cannot_override_final_method);
                   error_code.push(method_records[method_identifier].name_position.ui_first);
                   error_code.push(method_identifier);
@@ -8256,16 +8240,13 @@ void script_parser_s::element_search()
 
               if (variable_record.modifiers & c_modifier_static)
               {
-
                 if (variable_record.modifiers & c_modifier_static_const)
                 {
-
                   // - if variable is static constant save to element position index of constant -
                   ri_ep.element_position = constant_cnt + static_const_element_cnt++;
                 }
                 else
                 {
-
                   // - retrieve reference to static variable base class variable name, record index, element position map -
                   ri_ep_s &ec_ri_ep = extended_class.vn_ri_ep_map[variable_record.name_idx];
 
@@ -8280,7 +8261,6 @@ void script_parser_s::element_search()
               }
               else
               {
-
                 // - if variable is not static save to its element next position in class -
                 ri_ep.element_position = class_element_cnt++;
               }
@@ -8326,7 +8306,6 @@ bool script_parser_s::generate_expression_intermediate_code(uli_array_s &begin_c
 
   do
   {
-
     // - launching of action which generates intermediate code  -
     if (!(script_im_callers[exp.nodes[im_descr.exp_node_stack.last()]](exp,begin_code,code,*this)))
     {
@@ -8420,7 +8399,6 @@ void script_parser_s::generate_intermediate_code()
         ui_array_s &variable_record_idxs = class_record.variable_record_idxs;
         if (variable_record_idxs.used != 0)
         {
-
           unsigned *vri_ptr = variable_record_idxs.data;
           unsigned *vri_ptr_end = vri_ptr + variable_record_idxs.used;
 
@@ -8432,7 +8410,6 @@ void script_parser_s::generate_intermediate_code()
             // - if variable has initializing expression and is static, then generate intermediate code -
             if ((variable_record.init_expression_idx != c_idx_not_exist) && (variable_record.modifiers & c_modifier_static))
             {
-
               debug_message_3(fprintf(stderr,"script_parser: intermediate generate: variable initialize expression: %u\n",variable_record.init_expression_idx));
 
               im_descr.exp_idx = variable_record.init_expression_idx;
@@ -8512,7 +8489,6 @@ void script_parser_s::generate_intermediate_code()
       ui_array_s &variable_record_idxs = class_record.variable_record_idxs;
       if (variable_record_idxs.used != 0)
       {
-
         im_descr.method_idx = c_idx_not_exist;
         im_descr.free_stack_idxs.used = 0;
 
@@ -8533,7 +8509,6 @@ void script_parser_s::generate_intermediate_code()
           // - if variable contain initializing expression, then generate its intermediate code -
           if ((variable_record.init_expression_idx != c_idx_not_exist) && !(variable_record.modifiers & c_modifier_static))
           {
-
             debug_message_3(fprintf(stderr,"script_parser: intermediate generate: variable initialize expression: %u\n",variable_record.init_expression_idx));
 
             im_descr.exp_idx = variable_record.init_expression_idx;
@@ -8578,17 +8553,14 @@ void script_parser_s::generate_intermediate_code()
 
           if (!(method_record.modifiers & c_modifier_abstract))
           {
-
             exp_flow_graph_s &fg = method_flow_graphs[method_record.flow_graph_idx];
 
             if (fg.expressions.used != 0)
             {
-
               im_descr.method_idx = *mri_ptr;
 
               if (method_record.modifiers & c_modifier_static)
               {
-
                 // - set modifier of generated code -
                 im_descr.code_modifiers = c_code_modifier_run_time | c_code_modifier_static;
 
@@ -8597,7 +8569,6 @@ void script_parser_s::generate_intermediate_code()
               }
               else
               {
-
                 // - set modifiers of generated code -
                 im_descr.code_modifiers = c_code_modifier_run_time;
 
@@ -8778,7 +8749,6 @@ void script_parser_s::process_errors()
 
   if (error_code.used != 0)
   {
-
     unsigned *ei_ptr = error_code.data;
     unsigned *ei_ptr_end = ei_ptr + error_code.used;
     unsigned error_idx = 1;

@@ -2612,7 +2612,6 @@ bool bic_primes_method_prime_factors_1(interpreter_thread_s &it,unsigned stack_b
   unsigned prime_idx = 0;
   do
   {
-
     // - retrieve next prime -
     long long int prime = primes_ptr->get_prime(prime_idx);
 

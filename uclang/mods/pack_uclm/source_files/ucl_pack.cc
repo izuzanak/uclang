@@ -69,7 +69,6 @@ unsigned class_pack_s::pack_class_name(interpreter_thread_s &a_it,unsigned a_cla
       }
       else
       {
-
         // - if class has parent class -
         if (class_record.parent_record != c_idx_not_exist)
         {
@@ -77,7 +76,6 @@ unsigned class_pack_s::pack_class_name(interpreter_thread_s &a_it,unsigned a_cla
         }
         else
         {
-
           // - write class to stream -
           write_class_to_stream(a_it,c_idx,c_idx_not_exist);
 
@@ -92,7 +90,6 @@ unsigned class_pack_s::pack_class_name(interpreter_thread_s &a_it,unsigned a_cla
     }
     else
     {
-
       // - write class to stream -
       write_class_to_stream(a_it,c_idx,p_idx);
 
@@ -142,7 +139,6 @@ bool class_unpack_s::unpack_from_stream(interpreter_thread_s &a_it,const char *a
   const char *s_ptr_end = s_ptr + a_length;
   do
   {
-
     STREAM_LENGTH_TEST(sizeof(unsigned));
 
     // - read class name size -

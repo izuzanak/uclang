@@ -575,7 +575,6 @@ bool im_elements_array(expression_s &exp,uli_array_s &begin_code,uli_array_s &co
 
   if (im.done_exp_nodes[exp_node_idx] == c_idx_not_exist)
   {
-
     // - process object inserted to array -
     if (element_cnt != 0)
     {
@@ -594,7 +593,6 @@ bool im_elements_array(expression_s &exp,uli_array_s &begin_code,uli_array_s &co
   }
   else
   {
-
     // - get temporary location of array at stack -
     unsigned tmp_local_idx = im.free_stack_idxs.used != 0?im.free_stack_idxs.pop():im.stack_idx_max++;
 
@@ -657,7 +655,6 @@ bool im_switch_test(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,
 
   if (im.done_exp_nodes[exp_node_idx] == c_idx_not_exist)
   {
-
     // - process values to be tested -
     if (value_cnt != 0)
     {
@@ -676,7 +673,6 @@ bool im_switch_test(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,
   }
   else
   {
-
     // - get temporary location of result at stack -
     unsigned tmp_local_idx = im.free_stack_idxs.used != 0?im.free_stack_idxs.pop():im.stack_idx_max++;
 
@@ -739,7 +735,6 @@ bool im_slice_range(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,
 
   if (im.done_exp_nodes[exp_node_idx] == c_idx_not_exist)
   {
-
     // - process slice range parameters -
     unsigned param_idx = exp_node_idx + 1 + param_cnt;
 
@@ -753,7 +748,6 @@ bool im_slice_range(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,
   }
   else
   {
-
     // - get temporary location of slice at stack -
     unsigned tmp_local_idx = im.free_stack_idxs.used != 0?im.free_stack_idxs.pop():im.stack_idx_max++;
 
@@ -1353,7 +1347,6 @@ bool im_new_objects_array(expression_s &exp,uli_array_s &begin_code,uli_array_s 
 
   if (im.done_exp_nodes[exp_node_idx] == c_idx_not_exist)
   {
-
     // - process class access and size of object array -
     im.exp_node_stack.push(exp.nodes[exp_node_idx + 2]);
     im.exp_node_stack.push(exp.nodes[exp_node_idx + 3]);
@@ -1361,7 +1354,6 @@ bool im_new_objects_array(expression_s &exp,uli_array_s &begin_code,uli_array_s 
   }
   else
   {
-
     // - get temporary location for store of location of reference to object array -
     unsigned tmp_local_idx = im.free_stack_idxs.used != 0?im.free_stack_idxs.pop():im.stack_idx_max++;
 
@@ -1454,14 +1446,12 @@ bool im_free_object(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,
   // - set up object -
   if (im.done_exp_nodes[exp_node_idx] == c_idx_not_exist)
   {
-
     // - process expression nodes describing tested object -
     im.exp_node_stack.push(exp.nodes[exp_node_idx + 2]);
     im.done_exp_nodes[exp_node_idx] = 1;
   }
   else
   {
-
     // - process freed object -
     unsigned *op_ptr = im.operands.data + im.operand_stack.pop();
 
@@ -1511,27 +1501,23 @@ bool im_type_identification(expression_s &exp,uli_array_s &begin_code,uli_array_
   // - set up of object -
   if (im.done_exp_nodes[exp_node_idx] == c_idx_not_exist)
   {
-
     // - process expression nodes describing tested object -
     im.exp_node_stack.push(exp.nodes[exp_node_idx + 1]);
     im.done_exp_nodes[exp_node_idx] = 1;
   }
   else
   {
-
     // - process tested object -
     unsigned *op_ptr = im.operands.data + im.operand_stack.pop();
 
     if (*op_ptr & c_op_modifier_static_class)
     {
-
       // - access to constant type value -
       unsigned const_idx = im.cv_type_base + op_ptr[1];
       unsigned &cv_operand = im.const_idx_fo_map[const_idx];
 
       if (cv_operand == c_idx_not_exist)
       {
-
         // - get position for reference to constant -
         unsigned local_idx = im.stack_idx_max++;
 
@@ -1558,7 +1544,6 @@ bool im_type_identification(expression_s &exp,uli_array_s &begin_code,uli_array_
     }
     else
     {
-
       // - get temporary position of result location -
       unsigned tmp_local_idx = im.free_stack_idxs.used != 0?im.free_stack_idxs.pop():im.stack_idx_max++;
 
@@ -1615,7 +1600,6 @@ bool im_object_reference_copy(expression_s &exp,uli_array_s &begin_code,uli_arra
   }
   else
   {
-
     // - get temporary location position -
     unsigned tmp_local_idx = im.free_stack_idxs.used != 0?im.free_stack_idxs.pop():im.stack_idx_max++;
 
@@ -1846,8 +1830,8 @@ bool im_class_access(expression_s &exp,uli_array_s &begin_code,uli_array_s &code
     if (name_cnt > 2)
     {
       unsigned *name_ptr_end = name_ptr + name_cnt - 2;
-      do {
-
+      do
+      {
         // - retrieve next namespace record index -
         namespace_ri = _this.get_parent_namespace_namespace_idx_by_name_idx(*name_ptr,namespace_ri);
 
@@ -1907,20 +1891,17 @@ bool im_object_member_select(expression_s &exp,uli_array_s &begin_code,uli_array
 
   if (im.done_exp_nodes[exp_node_idx] == c_idx_not_exist)
   {
-
     // - process object location -
     im.exp_node_stack.push(exp.nodes[exp_node_idx + 3]);
     im.done_exp_nodes[exp_node_idx] = 2;
   }
   else
   {
-
     // - process position of object reference -
     unsigned *op_ptr = im.operands.data + im.operand_stack.pop();
 
     if (*op_ptr & c_op_modifier_static_class)
     {
-
       // - process static variable -
       class_record_s &class_record = _this.class_records[op_ptr[1]];
 
@@ -1963,14 +1944,12 @@ bool im_object_member_select(expression_s &exp,uli_array_s &begin_code,uli_array
       // - test if static variable is built in variable -
       if (variable_record.modifiers & c_modifier_static_const)
       {
-
         // - access to built in static constant -
         unsigned const_idx = element_ri_ep.element_position;
         unsigned &cv_operand = im.const_idx_fo_map[const_idx];
 
         if (cv_operand == c_idx_not_exist)
         {
-
           // - creation of position for reference to constant -
           unsigned local_idx = im.stack_idx_max++;
 
@@ -1997,7 +1976,6 @@ bool im_object_member_select(expression_s &exp,uli_array_s &begin_code,uli_array
       }
       else
       {
-
         // - process static variable -
         unsigned fo_idx = im.static_vi_fo_map[element_ri_ep.element_position];
         if (fo_idx != c_idx_not_exist)
@@ -2010,7 +1988,6 @@ bool im_object_member_select(expression_s &exp,uli_array_s &begin_code,uli_array
         }
         else
         {
-
           // - get temporary location for store of static variable -
           unsigned local_idx = im.stack_idx_max++;
 
@@ -2081,7 +2058,6 @@ bool im_this_method_call(expression_s &exp,uli_array_s &begin_code,uli_array_s &
 
   if (im.done_exp_nodes[exp_node_idx] == c_idx_not_exist)
   {
-
     // - process expression node describing method parameters -
     if (parm_cnt != 0)
     {
@@ -2099,7 +2075,6 @@ bool im_this_method_call(expression_s &exp,uli_array_s &begin_code,uli_array_s &
   }
   else
   {
-
     // - get temporary position for store of method return value -
     unsigned tmp_local_idx = im.free_stack_idxs.used != 0?im.free_stack_idxs.pop():im.stack_idx_max++;
 
@@ -2132,7 +2107,6 @@ bool im_this_method_call(expression_s &exp,uli_array_s &begin_code,uli_array_s &
     // - test if called method is static -
     if (method_record.modifiers & c_modifier_static)
     {
-
       // - calling of static method -
       code.push(i_static_call);
       code.push(parm_cnt);
@@ -2142,7 +2116,6 @@ bool im_this_method_call(expression_s &exp,uli_array_s &begin_code,uli_array_s &
     }
     else
     {
-
       // - calling of ordinary method -
       code.push(i_call);
       code.push(parm_cnt + 1);
@@ -2209,7 +2182,6 @@ bool im_object_method_call(expression_s &exp,uli_array_s &begin_code,uli_array_s
 
   if (im.done_exp_nodes[exp_node_idx] == c_idx_not_exist)
   {
-
     // - process expression nodes of each parameter of called method -
     unsigned *m_ptr_end = exp.nodes.data + exp_node_idx + 3;
     unsigned *m_ptr = m_ptr_end + parm_cnt;
@@ -2224,7 +2196,6 @@ bool im_object_method_call(expression_s &exp,uli_array_s &begin_code,uli_array_s
   }
   else
   {
-
     // - get temporary position of location of method return value -
     unsigned tmp_local_idx = im.free_stack_idxs.used != 0?im.free_stack_idxs.pop():im.stack_idx_max++;
 
@@ -2236,7 +2207,6 @@ bool im_object_method_call(expression_s &exp,uli_array_s &begin_code,uli_array_s
 
     if (*op_ptr & c_op_modifier_static_class)
     {
-
       // - call static class method -
       class_record_s &class_record = _this.class_records[op_ptr[1]];
 
@@ -2283,7 +2253,6 @@ bool im_object_method_call(expression_s &exp,uli_array_s &begin_code,uli_array_s
     }
     else
     {
-
       // - calling of object method -
       code.push(i_call);
       code.push(parm_cnt);
@@ -2360,7 +2329,6 @@ bool im_const_char(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,s
 
   if (cv_operand == c_idx_not_exist)
   {
-
     // - creation of position for reference to constant -
     unsigned local_idx = im.stack_idx_max++;
 
@@ -2401,7 +2369,6 @@ bool im_const_int(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,sc
 
   if (cv_operand == c_idx_not_exist)
   {
-
     // - creation of position for reference to constant -
     unsigned local_idx = im.stack_idx_max++;
 
@@ -2442,7 +2409,6 @@ bool im_const_float(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,
 
   if (cv_operand == c_idx_not_exist)
   {
-
     // - creation of position for reference to constant -
     unsigned local_idx = im.stack_idx_max++;
 
@@ -2483,7 +2449,6 @@ bool im_const_string(expression_s &exp,uli_array_s &begin_code,uli_array_s &code
 
   if (cv_operand == c_idx_not_exist)
   {
-
     // - creation of position for reference to constant -
     unsigned local_idx = im.stack_idx_max++;
 

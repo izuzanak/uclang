@@ -91,7 +91,6 @@ enum
 // - identifiers of expression graph nodes -
 enum
 {
-
   c_node_type_elements_array,
   c_node_type_switch_test,
   c_node_type_slice_range,
@@ -307,7 +306,6 @@ enum
 // - identifiers of error codes -
 enum
 {
-
   // - parse_script errors -
   ei_unrecognizable_terminal,
   ei_wrong_program_syntax,

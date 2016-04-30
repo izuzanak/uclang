@@ -92,10 +92,8 @@ void interpreter_thread_s::_release_location_ptr(location_s *location_ptr)
   // - if location is not reference -
   if (location_ptr->v_type != c_bi_reference)
   {
-
     if (!(INTERPRETER->class_records[location_ptr->v_type].modifiers & c_modifier_built_in))
     {
-
       // - store pointers to objects -
       pointer_array_s *object_ptr = (pointer_array_s *)location_ptr->v_data_ptr;
 
@@ -116,7 +114,6 @@ void interpreter_thread_s::_release_location_ptr(location_s *location_ptr)
     }
     else
     {
-
       // - call built in class clear function -
       INTERPRETER->class_records[location_ptr->v_type].bi_class_ptr->clear_caller(*this, location_ptr);
     }
@@ -141,13 +138,11 @@ bool interpreter_thread_s::create_new_object_blank_constructor(location_s *new_l
 
   if (class_record.modifiers & c_modifier_built_in)
   {
-
     // - call built in class initializer function -
     class_record.bi_class_ptr->init_caller(*this, new_location);
   }
   else
   {
-
     // - creation of new object -
     pointer_array_s *object_ptr = get_new_object_ptr();
 
@@ -181,7 +176,6 @@ bool interpreter_thread_s::create_new_object_blank_constructor(location_s *new_l
 
       if (e_class_record.stack_size > (data_stack.used - new_stack_base))
       {
-
         unsigned stack_size_cnt = e_class_record.stack_size - (data_stack.used - new_stack_base);
         ((location_s *)blank_location)->v_reference_cnt.atomic_add(stack_size_cnt);
 
@@ -239,7 +233,6 @@ bool interpreter_thread_s::create_new_object_blank_constructor(location_s *new_l
 
   if (method_record.modifiers & c_modifier_built_in)
   {
-
     // - call function implementing built in constructor -
     uli tmp_code[3] = {inoa_source_pos,c_idx_not_exist,0};
     if (!method_record.bi_method_caller(*this,new_stack_base,tmp_code))
@@ -251,11 +244,9 @@ bool interpreter_thread_s::create_new_object_blank_constructor(location_s *new_l
   }
   else
   {
-
     // - creation of stack for method local variable -
     if (method_record.stack_size > 1)
     {
-
       unsigned stack_size_cnt = method_record.stack_size - 1;
       ((location_s *)blank_location)->v_reference_cnt.atomic_add(stack_size_cnt);
 
@@ -302,7 +293,6 @@ unsigned interpreter_thread_s::catch_exception(method_record_s &method_record,un
       {
         if (fg_idx >= tfg_ptr->tfgm_first_fg_node && fg_idx < tfg_ptr->tfgm_last_fg_node)
         {
-
           // - test if block is defined deeper as its predecessor (if any predecessor exist) -
           if (try_fg_map_idx != c_idx_not_exist)
           {
@@ -323,7 +313,6 @@ unsigned interpreter_thread_s::catch_exception(method_record_s &method_record,un
     // - if exception handler was found -
     if (try_fg_map_idx != c_idx_not_exist)
     {
-
       // - retrieve exception handler -
       try_fg_map_s &try_fg_map = try_fg_maps[try_fg_map_idx];
 
@@ -386,7 +375,6 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
   do
   {
 #if THREAD_LIB == THREAD_LIB_DSP_TSK
-
     // - release DSP processor for another thread, after constant instruction count -
     if (instruction_counter.atomic_inc_and_test(c_DSP_yield_cycle_const))
     {
@@ -399,7 +387,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
     switch (*fg_ptr)
     {
 
-      // - process expression -
+    // - process expression -
     case c_fg_type_expression:
     {/*{{{*/
       if (!run_expression_code(code + fg_ptr[c_fg_expression_idx],stack_base,NULL))
@@ -614,7 +602,6 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
 
         while (loop_run)
         {
-
           location_s *new_location;
 
           // - retrieve item variable location -
@@ -653,7 +640,6 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
       {
         while (loop_run)
         {
-
           location_s *new_location;
 
           // - retrieve item variable location -
@@ -795,7 +781,6 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
 
         while (loop_run)
         {
-
           // - retrieve index of code to be executed -
           unsigned code_idx = fg_ptr[c_fg_switch_defaults + default_cnt + *ei_ptr];
 
@@ -839,7 +824,6 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
       // - else process default cases -
       else
       {
-
         // - if any default cases are defined -
         if (default_cnt != 0)
         {
@@ -852,7 +836,6 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
 
           while (loop_run)
           {
-
             // - if code index is not empty -
             if (*ci_ptr != c_idx_not_exist)
             {
@@ -888,7 +871,6 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
         }
         else
         {
-
           // - continue to next instruction -
           fg_idx = fg_ptr[c_fg_expression_first_out];
         }
@@ -916,7 +898,6 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
 
 bool interpreter_thread_s::call_method(uli *code,unsigned stack_base)
 {/*{{{*/
-
   location_s *call_location = (location_s *)get_stack_value(stack_base + code[icl_parm_this]);
 
   unsigned method_ri = INTERPRETER->class_records[call_location->v_type].mnri_map.map_name(code[icl_name_idx]);
@@ -952,7 +933,6 @@ bool interpreter_thread_s::call_method(uli *code,unsigned stack_base)
     // - if method is private, then test calling -
     if (method_record.modifiers & c_modifier_private)
     {
-
       // - ERROR -
       if (((location_s *)data_stack[stack_base])->v_type != method_record.parent_record)
       {
@@ -965,7 +945,6 @@ bool interpreter_thread_s::call_method(uli *code,unsigned stack_base)
 
     if (method_record.modifiers & c_modifier_built_in)
     {
-
       // - store address of caller for build in class -
       code[icl_last_class] = call_location->v_type;
       code[icl_last_bi_mc] = (uli)method_record.bi_method_caller;
@@ -978,17 +957,14 @@ bool interpreter_thread_s::call_method(uli *code,unsigned stack_base)
     }
     else
     {
-
       // - creation of new thread -
       if (method_record.modifiers & c_modifier_parallel)
       {
-
         // - parallel method must be always static -
         INTERPRETER->run_new_thread(*this,stack_base,code[icl_stack_trg],method_record,code[icl_parm_cnt] - 1,code + icl_parm_this + 1);
       }
       else
       {
-
         // - new stack base -
         unsigned new_stack_base = data_stack.used;
 
@@ -1004,17 +980,14 @@ bool interpreter_thread_s::call_method(uli *code,unsigned stack_base)
         unsigned parm_cnt = code[icl_parm_cnt] - 1;
         if (parm_cnt != 0)
         {
-
           ui_array_s &parm_record_idxs = method_record.parameter_record_idxs;
           uli *c_ptr = code + icl_parm_this + 1;
           unsigned p_idx = 0;
 
           do
           {
-
             if (INTERPRETER->variable_records[parm_record_idxs[p_idx]].modifiers & c_variable_modifier_reference)
             {
-
               // - passing of parameters by reference -
               pointer *parameter = &data_stack[stack_base + c_ptr[p_idx]];
               location_s *new_ref_location = get_new_reference((location_s **)parameter);
@@ -1023,7 +996,6 @@ bool interpreter_thread_s::call_method(uli *code,unsigned stack_base)
             }
             else
             {
-
               // - passing of parameter by its value -
               location_s *parameter = (location_s *)get_stack_value(stack_base + c_ptr[p_idx]);
               parameter->v_reference_cnt.atomic_inc();
@@ -1036,7 +1008,6 @@ bool interpreter_thread_s::call_method(uli *code,unsigned stack_base)
         // - creation of stack for local variables of method -
         if (method_record.stack_size > (data_stack.used - new_stack_base))
         {
-
           unsigned stack_size_cnt = method_record.stack_size - (data_stack.used - new_stack_base);
           ((location_s *)blank_location)->v_reference_cnt.atomic_add(stack_size_cnt);
 
@@ -1310,7 +1281,6 @@ void interpreter_s::create_constant_and_static_locations()
   // - creation of static variable locations of interpreter -
   if (static_element_cnt > 0)
   {
-
     location_s *blank_location = (location_s *)cmalloc(sizeof(location_s));
     blank_location->v_type = c_bi_class_blank;
     blank_location->v_reference_cnt.atomic_set(static_element_cnt);
@@ -1522,7 +1492,6 @@ bool interpreter_s::run_new_thread(interpreter_thread_s &p_thread,unsigned p_sta
   {
     if (param_cnt != 0)
     {
-
       ui_array_s &parm_record_idxs = method_record.parameter_record_idxs;
       unsigned p_idx = 0;
 
@@ -1530,7 +1499,6 @@ bool interpreter_s::run_new_thread(interpreter_thread_s &p_thread,unsigned p_sta
       {
         if (variable_records[parm_record_idxs[p_idx]].modifiers & c_variable_modifier_reference)
         {
-
           // - passing of parameter by reference -
           pointer *parameter = &p_thread.data_stack[p_stack_base + parms[p_idx]];
           location_s *new_ref_location = thread->get_new_reference((location_s **)parameter);
@@ -1539,7 +1507,6 @@ bool interpreter_s::run_new_thread(interpreter_thread_s &p_thread,unsigned p_sta
         }
         else
         {
-
           // - passing of parameter by its value -
           location_s *parameter = (location_s *)p_thread.get_stack_value(p_stack_base + parms[p_idx]);
           parameter->v_reference_cnt.atomic_inc();
@@ -1577,7 +1544,6 @@ bool interpreter_s::run_new_thread(interpreter_thread_s &p_thread,unsigned p_sta
 
   if (ret != c_error_OK)
   {
-
     // - decrease interpreter thread count -
     thread_cnt.atomic_dec();
 
@@ -1713,7 +1679,6 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
 
   try
   {
-
     // - setting of stack for static code -
     if (stack_size != 0)
     {
@@ -1731,26 +1696,22 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
     thread->run_expression_code(static_begin_code.data,0,NULL);
     if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
     {
-
       // - print exception message -
       exception_s *exception_ptr = (exception_s *)((location_s *)thread->exception_location)->v_data_ptr;
       print_exception_message(*exception_ptr);
     }
     else
     {
-
       // - launch static run time code -
       thread->run_expression_code(static_run_time_code.data,0,NULL);
       if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
       {
-
         // - print exception message -
         exception_s *exception_ptr = (exception_s *)((location_s *)thread->exception_location)->v_data_ptr;
         print_exception_message(*exception_ptr);
       }
       else
       {
-
         thread->release_stack_from(0);
 
         // - set pointer to interpreter main thread -
@@ -1772,7 +1733,6 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
 
             do
             {
-
               // - argument string -
               string_s *string_ptr = thread->get_new_string_ptr();
               string_ptr->set(strlen(*a_ptr),*a_ptr);
@@ -1819,19 +1779,16 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
         thread->run_expression_code(method_record.begin_code.data,1,NULL);
         if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
         {
-
           // - print exception message -
           exception_s *exception_ptr = (exception_s *)((location_s *)thread->exception_location)->v_data_ptr;
           print_exception_message(*exception_ptr);
         }
         else
         {
-
           // - launch method run time code -
           thread->run_method_code(method_record,1,0);
           if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
           {
-
             // - print exception message -
             exception_s *exception_ptr = (exception_s *)((location_s *)thread->exception_location)->v_data_ptr;
             print_exception_message(*exception_ptr);
@@ -1840,7 +1797,6 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
           }
           else
           {
-
             // - acquire location of return value -
             return_location = (location_s *)thread->get_stack_value(0);
             return_location->v_reference_cnt.atomic_inc();
@@ -1917,24 +1873,20 @@ void *new_thread_function(void *nt_start_info)
 
   try
   {
-
     // - launch method begin code -
     thread->run_expression_code(method_record_ptr->begin_code.data,1,NULL);
     if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
     {
-
       // - print exception message -
       exception_s *exception_ptr = (exception_s *)((location_s *)thread->exception_location)->v_data_ptr;
       ((interpreter_s *)thread->interpreter_ptr)->print_exception_message(*exception_ptr);
     }
     else
     {
-
       // - launch method run time code -
       thread->run_method_code(*method_record_ptr,1,0);
       if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
       {
-
         // - print exception message -
         exception_s *exception_ptr = (exception_s *)((location_s *)thread->exception_location)->v_data_ptr;
         ((interpreter_s *)thread->interpreter_ptr)->print_exception_message(*exception_ptr);

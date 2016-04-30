@@ -2931,7 +2931,6 @@ bool jit_parser_s::parse_source()
     // - action SHIFT -
     if (parse_action < c_jit_lalr_table_reduce_base)
     {
-
       if (ret_term == 71)
       {
         break;

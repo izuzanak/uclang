@@ -295,7 +295,6 @@ bool bic_ddb_method_DDB_2(interpreter_thread_s &it,unsigned stack_base,uli *oper
 
   try
   {
-
     // - try to open diagnostic database -
     ddb_ptr->Open(ddb_name->data,load_dtd);
   }

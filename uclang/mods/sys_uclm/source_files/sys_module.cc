@@ -1521,7 +1521,6 @@ bool bic_sys_method_rename_2(interpreter_thread_s &it,unsigned stack_base,uli *o
 
   if (!result)
   {
-
     // - construct array containing old and new file names -
     pointer_array_s *array_ptr = it.get_new_array_ptr();
 
@@ -1651,7 +1650,6 @@ bool bic_sys_method_getenv_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 
   if (result != NULL)
   {
-
     // - create result string location -
     string_s *new_string_ptr = it.get_new_string_ptr();
     new_string_ptr->set(strlen(result),result);
@@ -4636,7 +4634,6 @@ bool bic_regex_method_match_2(interpreter_thread_s &it,unsigned stack_base,uli *
     regmatch_t *rm_ptr_end = rm_ptr + nmatch;
     do
     {
-
       pointer_array_s *sub_array_ptr = it.get_new_array_ptr();
 
       // - resize result sub array -

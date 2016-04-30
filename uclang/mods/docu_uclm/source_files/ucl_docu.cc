@@ -209,7 +209,6 @@ void docu_source_s::find_comments()
 
   do
   {
-
     // - store old input index -
     old_input_idx = input_idx;
 
@@ -1413,7 +1412,6 @@ bool docu_parsed_s::parse(interpreter_thread_s &it,string_s &a_source)
     // - akce SHIFT -
     if (parse_action < c_dp_lalr_table_reduce_base)
     {
-
       if (ret_term == 15)
       {
         break;

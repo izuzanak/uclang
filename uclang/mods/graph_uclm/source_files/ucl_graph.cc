@@ -1079,7 +1079,6 @@ bool graph_s::is_weakly_connected_graph()
       // - if edge source vertex was not processed -
       if (!v_map[edge.src_vertex_idx])
       {
-
         // - traverse throught its incident edges -
         edge_idxs_s &edge_idxs = vertices[edge.src_vertex_idx].edge_idxs;
         if (edge_idxs.root_idx != c_idx_not_exist)
@@ -1109,7 +1108,6 @@ bool graph_s::is_weakly_connected_graph()
       // - if edge target vertex was not processed -
       if (!v_map[edge.trg_vertex_idx])
       {
-
         // - traverse throught its incident edges -
         edge_idxs_s &edge_idxs = vertices[edge.trg_vertex_idx].edge_idxs;
         if (edge_idxs.root_idx != c_idx_not_exist)

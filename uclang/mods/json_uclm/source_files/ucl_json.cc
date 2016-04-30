@@ -597,7 +597,6 @@ bool json_parser_s::parse_source(interpreter_thread_s &a_it,string_s &a_string)
     // - action JSON_SHIFT -
     if (parse_action < c_json_lalr_table_reduce_base)
     {
-
       if (ret_term == 13)
       {
         break;

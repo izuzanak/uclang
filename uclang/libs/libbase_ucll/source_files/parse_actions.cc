@@ -1103,7 +1103,6 @@ bool pa_method_name(string_s &source_string,script_parser_s &_this)
   // - if method is defined as abstract, then parent class must be abstract too -
   if (modifiers & c_modifier_abstract)
   {
-
     // - PARSE ERROR -
     if (!(class_record.modifiers & c_modifier_abstract))
     {
@@ -1192,7 +1191,6 @@ bool pa_method_parameters_done(string_s &source_string,script_parser_s &_this)
 
     do
     {
-
       // - PARSE ERROR -
       if (method_records[*mri_ptr].name_idx == name_idx)
       {
@@ -1241,7 +1239,6 @@ bool pa_method_parameter(string_s &source_string,script_parser_s &_this)
 
     do
     {
-
       // - PARSE ERROR -
       if (variable_records[*mpri_ptr].name_idx == name_idx)
       {
@@ -1304,7 +1301,6 @@ bool pa_method_reference_parameter(string_s &source_string,script_parser_s &_thi
 
     do
     {
-
       // - PARSE ERROR -
       if (variable_records[*mpri_ptr].name_idx == name_idx)
       {
@@ -1495,7 +1491,7 @@ bool pa_try_catch_done(string_s &source_string,script_parser_s &_this)
   switch (fgd.fgts_type.pop())
   {
 
-    // - FGTS_BLANK -
+  // - FGTS_BLANK -
   case c_fgts_type_blank:
     switch (fgd.fgts_type.last())
     {
@@ -1511,7 +1507,7 @@ bool pa_try_catch_done(string_s &source_string,script_parser_s &_this)
     }
     break;
 
-    // - FGTS_THREAD -
+  // - FGTS_THREAD -
   case c_fgts_type_thread:
     switch (fgd.fgts_type.last())
     {
@@ -1538,7 +1534,6 @@ bool pa_try_catch_done(string_s &source_string,script_parser_s &_this)
 
       if (second_end_cnt != 0)
       {
-
         // - adding ends of second thread to ends of first thread -
         unsigned *tse_ptr = ts_ptr + 1 + first_end_cnt;
         unsigned *tse_ptr_end = tse_ptr + second_end_cnt;
@@ -1668,7 +1663,7 @@ bool pa_if_statement(string_s &source_string,script_parser_s &_this)
   switch (fgd.fgts_type.pop())
   {
 
-    // - FGTS_BLANK -
+  // - FGTS_BLANK -
   case c_fgts_type_blank:
 
     // - convert c_fg_type_condition to c_fg_type_expression -
@@ -1679,7 +1674,7 @@ bool pa_if_statement(string_s &source_string,script_parser_s &_this)
     fgd.fgts_cnt.last() = 1;
     break;
 
-    // - FGTS_THREAD -
+  // - FGTS_THREAD -
   case c_fgts_type_thread:
   {
     unsigned body_end_cnt = fgd.fgts_cnt.pop();
@@ -1731,7 +1726,7 @@ bool pa_if_else_statement(string_s &source_string,script_parser_s &_this)
   switch (fgd.fgts_type.pop())
   {
 
-    // - FGTS_BLANK -
+  // - FGTS_BLANK -
   case c_fgts_type_blank:
     switch (fgd.fgts_type.pop())
     {
@@ -1781,7 +1776,7 @@ bool pa_if_else_statement(string_s &source_string,script_parser_s &_this)
     }
     break;
 
-    // - FGTS_THREAD -
+  // - FGTS_THREAD -
   case c_fgts_type_thread:
     switch (fgd.fgts_type.pop())
     {
@@ -1890,7 +1885,7 @@ bool pa_while_statement(string_s &source_string,script_parser_s &_this)
   switch (fgd.fgts_type.pop())
   {
 
-    // - FGTS_BLANK -
+  // - FGTS_BLANK -
   case c_fgts_type_blank:
   {
     unsigned *ts_ptr = fgd.fg_thread_stack.data + fgd.fg_thread_stack.used - 3;
@@ -1940,7 +1935,6 @@ bool pa_while_statement(string_s &source_string,script_parser_s &_this)
     ui_array_s &break_ends = fgd.fgts_bc_ends_array.last()[c_fgts_value_break - c_fgts_bc_value_base];
     if (break_ends.used != 0)
     {
-
       unsigned *be_ptr = break_ends.data;
       unsigned *be_ptr_end = be_ptr + break_ends.used;
 
@@ -1957,7 +1951,6 @@ bool pa_while_statement(string_s &source_string,script_parser_s &_this)
     ui_array_s &continue_ends = fgd.fgts_bc_ends_array.last()[c_fgts_value_continue - c_fgts_bc_value_base];
     if (continue_ends.used != 0)
     {
-
       unsigned *ce_ptr = continue_ends.data;
       unsigned *ce_ptr_end = ce_ptr + continue_ends.used;
 
@@ -2012,7 +2005,7 @@ bool pa_do_while_statement(string_s &source_string,script_parser_s &_this)
   switch (fgd.fgts_type[fgd.fgts_type.used - 2])
   {
 
-    // - FGTS_BLANK -
+  // - FGTS_BLANK -
   case c_fgts_type_blank:
   {
     unsigned *ts_ptr = fgd.fg_thread_stack.data + fgd.fg_thread_stack.used - 3;
@@ -2061,7 +2054,6 @@ bool pa_do_while_statement(string_s &source_string,script_parser_s &_this)
     ui_array_s &continue_ends = fgd.fgts_bc_ends_array.last()[c_fgts_value_continue - c_fgts_bc_value_base];
     if (continue_ends.used != 0)
     {
-
       unsigned *ce_ptr = continue_ends.data;
       unsigned *ce_ptr_end = ce_ptr + continue_ends.used;
       unsigned condition_start = body_end_cnt + 1;
@@ -2088,7 +2080,6 @@ bool pa_do_while_statement(string_s &source_string,script_parser_s &_this)
     ui_array_s &break_ends = fgd.fgts_bc_ends_array.last()[c_fgts_value_break - c_fgts_bc_value_base];
     if (break_ends.used != 0)
     {
-
       unsigned *be_ptr = break_ends.data;
       unsigned *be_ptr_end = be_ptr + break_ends.used;
 
@@ -2145,7 +2136,7 @@ bool pa_for_statement(string_s &source_string,script_parser_s &_this)
   switch (fgd.fgts_type.pop())
   {
 
-    // - FGTS_BLANK -
+  // - FGTS_BLANK -
   case c_fgts_type_blank:
 
     // - leave store body index set to c_idx_not_exist -
@@ -2153,7 +2144,7 @@ bool pa_for_statement(string_s &source_string,script_parser_s &_this)
     fgd.fgts_cnt.last() = 1;
     break;
 
-    // - FGTS_THREAD -
+  // - FGTS_THREAD -
   case c_fgts_type_thread:
   {
     unsigned body_end_cnt = fgd.fgts_cnt.pop();
@@ -2514,14 +2505,14 @@ bool pa_switch_item(string_s &source_string,script_parser_s &_this)
   switch (fgd.fgts_type.pop())
   {
 
-    // - FGTS_BLANK -
+  // - FGTS_BLANK -
   case c_fgts_type_blank:
 
     // - push code index to switch description -
     sd.push(c_idx_not_exist);
     break;
 
-    // - FGTS_THREAD -
+  // - FGTS_THREAD -
   case c_fgts_type_thread:
   {
     unsigned body_end_cnt = fgd.fgts_cnt.pop();
