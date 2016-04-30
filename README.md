@@ -4,9 +4,7 @@ Interpreted, dynamically typed, object-oriented programming language.
 
 ## Language features
 
-Follows list of uclang features, that are supported by its interpreter.
-
-### Feature list
+Follows list of uclang features, that are supported by its interpreter:
 
 * Language syntax is derived from C/C++ programming languages.
   * Some syntax is derived from Java programming language.
@@ -23,15 +21,15 @@ Follows list of uclang features, that are supported by its interpreter.
 
 ## Documentation
 
-Documentation of uclang components is located in the directory:
+Documentation of uclang components is located in 
 [`uclang/doc`](https://github.com/izuzanak/uclang/tree/master/uclang/doc).
-Short introduction to language syntax and features can be found at
+Short introduction to language syntax and features can be found in
 [`uclang/doc/intro.md`](https://github.com/izuzanak/uclang/blob/master/uclang/doc/intro.md).
 
 ## Language modules
 
 A set of modules was created in order to use uclang in production.
-Implementation of these modules is placed in the directory:
+Implementation of these modules is located in
 [`uclang/mods`](https://github.com/izuzanak/uclang/tree/master/uclang/mods)
 
 Some of implemented modules are:
@@ -86,152 +84,8 @@ Some of implemented modules are:
 
 ## Examples
 
-Examples of uclang usage are placed in the directory:
-[`uclang/examples`](https://github.com/izuzanak/uclang/tree/master/uclang/examples)
-
-### Inline examples
-
-Follows few simple examples demonstrating uclang possibilities.
-
-#### Hello world
-
-Simple program printing greetings on standard output.
-
-```cpp
-class Main
-{
-  static public main(argv)
-  {
-    "Hello world!!!\n".print();
-  }
-}
-```
-```
-Hello world!!!
-```
-
-#### Dynamic variable types
-
-Type of variable can be changed any time by assign operator.
-
-```cpp
-class Main
-{
-  static what_type(a_value)
-  {
-    ("Value is of type %s.\n" % $(type a_value)).print();
-  }
-
-  static public main(argv)
-  {
-    what_type(4);
-    what_type("4");
-    what_type([4]);
-    what_type(_4);
-  }
-}
-```
-```
-Value is of type Integer.
-Value is of type String.
-Value is of type Array.
-Value is of type Blank.
-```
-
-#### Operators known from C/C++
-
-All standard operators, known from C/C++ are supported, and have same intuitive
-functionality.
-
-```cpp
-class Main
-{
-  static public main(argv)
-  {
-    ("%d," % (a = 10)).print();
-    ("%d," % (b = 10)).print();
-    ("%d," % a++).print();
-    ("%d," % ++a).print();
-    ("%d," % (a += b)).print();
-    ("%d," % (a + b)).print();
-    ("%d\n" % (a / b)).print();
-  }
-}
-```
-```
-10,10,10,12,22,32,2
-```
-
-#### Dictionary and objects comparisons
-
-Objects of all classes can be compared as long as they implement method
-`compare#1`.  Implementation of a dictionary using red-black tree accepts any
-comparable value as key, even objects of user defined classes.
-
-```cpp
-import containers;
-
-class Main
-{
-  static public main(argv)
-  {
-    dict = new Dict();
-
-    dict[1] = "Number";
-    dict["Hello"] = "String";
-    dict[[1,2,3,4]] = "Array";
-    dict[new Dict([1,2,3,4])] = "Dict";
-
-    ("%s\n" % dict[1]).print();
-    ("%s\n" % dict["Hello"]).print();
-    ("%s\n" % dict[[1,2,3,4]]).print();
-    ("%s\n" % dict[new Dict([1,2,3,4])]).print();
-  }
-}
-```
-```
-Number
-String
-Array
-Dict
-```
-
-#### Program flow branching and looping
-
-Various program flow
-[branching](https://github.com/izuzanak/uclang/blob/master/uclang/doc/01_syntax/06_flow_branching.md)
-and
-[looping](https://github.com/izuzanak/uclang/blob/master/uclang/doc/01_syntax/07_flow_loops.md)
-statements are supported.
-
-```cpp
-import containers;
-import algorithms;
-
-class Main
-{
-  static public main(argv)
-  {
-    odd_cnt = 0;
-    even_cnt = 0;
-
-    for (value in new Range(0,1000))
-    {
-      if (($value).head(1) == "5")
-      {
-        value & 0x01 ? ++odd_cnt : ++even_cnt;
-      }
-    }
-
-    ("odd_cnt: %d\n" % odd_cnt).print();
-    ("even_cnt: %d\n" % even_cnt).print();
-  }
-}
-```
-```
-odd_cnt: 56
-even_cnt: 55
-```
+Some examples are introduced in
+[`uclang/doc/intro.md`](https://github.com/izuzanak/uclang/blob/master/uclang/doc/intro.md).
 
 ## Building interpreter
 
