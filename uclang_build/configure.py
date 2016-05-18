@@ -75,6 +75,7 @@ c_packages = [
   ["MOD_MONO"      ,"pkg-config",["mono-2 >= 3.2.8"]],
   ["MOD_UV"        ,"false"     ,[]],
   ["MOD_ZLIB"      ,"pkg-config",["zlib >= 1.2.8"]],
+  ["MOD_PIGPIO"    ,"files"     ,["/usr/include/pigpio.h"]],
   ["MOD_FUSE"      ,"pkg-config",["fuse >= 2.9.3"]],
   ["MOD_ANDROID"   ,"false"     ,[]],
   ["MOD_NACL"      ,"false"     ,[]],
