@@ -530,7 +530,7 @@ bool bic_av_format_method_next_frame_0(interpreter_thread_s &it,unsigned stack_b
   AVFrame *frame = av_frame_alloc();
 
 #define BIC_AV_FORMAT_FREE_PACKET() \
-  av_free_packet(&packet);\
+  av_packet_unref(&packet);\
   packet.size = 0;
   
 #define BIC_AV_FORMAT_FREE_FRAME() \
@@ -1269,10 +1269,15 @@ bool bic_av_picture_method_AvPicture_3(interpreter_thread_s &it,unsigned stack_b
   avp_ptr->init();
 
   // - pointer to picture -
-  AVPicture *picture = &avp_ptr->picture;
+  AVFrame *picture = &avp_ptr->picture;
+
+  memset(picture,0,sizeof(AVFrame));
+  picture->format = format;
+  picture->width = width;
+  picture->height = height;
 
   // - ERROR -
-  if (avpicture_alloc(picture,format,width,height) != 0)
+  if (av_frame_get_buffer(picture,1) != 0)
   {
     avp_ptr->clear(it);
     cfree(avp_ptr);
@@ -1377,7 +1382,7 @@ bool bic_av_picture_method_bmp_data_0(interpreter_thread_s &it,unsigned stack_ba
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   av_picture_s *avp_ptr = (av_picture_s *)dst_location->v_data_ptr;
-  AVPicture &pic = avp_ptr->picture;
+  AVFrame &pic = avp_ptr->picture;
 
   // - create result location -
   string_s *string_ptr = it.get_new_string_ptr();
@@ -1559,7 +1564,7 @@ bool bic_av_converter_method_scale_2(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - source picture variables -
-  AVPicture *src_pic;
+  AVFrame *src_pic;
   int src_width;
   int src_height;
   AVPixelFormat src_format;
@@ -1570,7 +1575,7 @@ bool bic_av_converter_method_scale_2(interpreter_thread_s &it,unsigned stack_bas
     av_frame_s *avfr_ptr = (av_frame_s *)src_0_location->v_data_ptr;
     AVFrame *frame = avfr_ptr->frame;
 
-    src_pic = (AVPicture *)frame;
+    src_pic = frame;
     src_width = frame->width;
     src_height = frame->height;
     src_format = (AVPixelFormat)frame->format;
@@ -1602,7 +1607,7 @@ bool bic_av_converter_method_scale_2(interpreter_thread_s &it,unsigned stack_bas
   av_picture_s *avtp_ptr = (av_picture_s *)src_1_location->v_data_ptr;
 
   // - target picture variables -
-  AVPicture *trg_pic = &avtp_ptr->picture;
+  AVFrame *trg_pic = &avtp_ptr->picture;
   long long int trg_width = avtp_ptr->width;
   long long int trg_height = avtp_ptr->height;
   AVPixelFormat trg_format = avtp_ptr->format;
@@ -1648,7 +1653,7 @@ bool bic_av_converter_method_scale_4(interpreter_thread_s &it,unsigned stack_bas
   location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
 
   // - target picture variables -
-  AVPicture *trg_pic;
+  AVFrame *trg_pic;
   long long int trg_width;
   long long int trg_height;
   AVPixelFormat trg_format;
@@ -1674,7 +1679,7 @@ bool bic_av_converter_method_scale_4(interpreter_thread_s &it,unsigned stack_bas
   trg_format = (AVPixelFormat)int_format;
 
   // - source picture variables -
-  AVPicture *src_pic;
+  AVFrame *src_pic;
   int src_width;
   int src_height;
   AVPixelFormat src_format;
@@ -1685,7 +1690,7 @@ bool bic_av_converter_method_scale_4(interpreter_thread_s &it,unsigned stack_bas
     av_frame_s *avfr_ptr = (av_frame_s *)src_0_location->v_data_ptr;
     AVFrame *frame = avfr_ptr->frame;
 
-    src_pic = (AVPicture *)frame;
+    src_pic = frame;
     src_width = frame->width;
     src_height = frame->height;
     src_format = (AVPixelFormat)frame->format;
@@ -1740,8 +1745,13 @@ bool bic_av_converter_method_scale_4(interpreter_thread_s &it,unsigned stack_bas
   // - pointer to target picture -
   trg_pic = &avp_ptr->picture;
 
+  memset(trg_pic,0,sizeof(AVFrame));
+  trg_pic->format = trg_format;
+  trg_pic->width = trg_width;
+  trg_pic->height = trg_height;
+
   // - ERROR -
-  if (avpicture_alloc(trg_pic,trg_format,trg_width,trg_height) != 0)
+  if (av_frame_get_buffer(trg_pic,1) != 0)
   {
     avp_ptr->clear(it);
     cfree(avp_ptr);

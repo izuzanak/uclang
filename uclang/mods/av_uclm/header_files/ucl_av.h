@@ -70,7 +70,7 @@ struct av_frame_s
 
 struct av_picture_s
 {
-  AVPicture picture;
+  AVFrame picture;
   int width;
   int height;
   AVPixelFormat format;
@@ -107,7 +107,7 @@ inline void av_format_s::clear(interpreter_thread_s &it)
   // - if packet is not empty -
   if (packet.size != 0)
   {
-    av_free_packet(&packet);
+    av_packet_unref(&packet);
   }
 
   // - if format context exists -
@@ -202,7 +202,7 @@ inline void av_picture_s::clear(interpreter_thread_s &it)
 {/*{{{*/
   if (format != AV_PIX_FMT_NONE)
   {
-    avpicture_free(&picture);
+    av_frame_unref(&picture);
   }
 
   init();
