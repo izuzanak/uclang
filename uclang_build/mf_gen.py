@@ -1115,6 +1115,32 @@ if cfg_ref[CFG_TARGET]:
     )
 # }}}
 
+# gsl module
+cfg_ref = c_cfg[C_MODULE_GSL]
+# {{{
+if cfg_ref[CFG_TARGET]:
+    cfg_ref[CFG_MODULE] = module_c(
+      configuration,
+      cfg_ref[CFG_DIR],
+      cfg_ref[CFG_NAME],
+      [ 
+        "header_files",
+        os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
+      ],
+      [ 
+        "source_files",
+      ],
+      [
+        os.sep.join(["..","..","libs","libbase_ucll"])
+      ],
+      opt_build, # CXX options
+      opt_link + "-lgsl ", # CXX link options
+      "", # CXX defines
+      [],
+      [],
+    )
+# }}}
+
 # psql module
 cfg_ref = c_cfg[C_MODULE_PSQL]
 # {{{

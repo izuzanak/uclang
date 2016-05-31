@@ -20,6 +20,7 @@ C_MODULE_PACK       = index; index += 1
 C_MODULE_CIPHER     = index; index += 1
 C_MODULE_PARSER     = index; index += 1
 C_MODULE_MATH       = index; index += 1
+C_MODULE_GSL        = index; index += 1
 C_MODULE_PSQL       = index; index += 1
 C_MODULE_SQLITE     = index; index += 1
 C_MODULE_HTTP       = index; index += 1
@@ -99,6 +100,7 @@ c_cfg = [
     ["MOD_CIPHER"    ,c_enabled[C_MODULE_CIPHER]    ,C_UCLANG_DIR + "mods/cipher_uclm"      ,None],
     ["MOD_PARSER"    ,c_enabled[C_MODULE_PARSER]    ,C_UCLANG_DIR + "mods/parser_uclm"      ,None],
     ["MOD_MATH"      ,c_enabled[C_MODULE_MATH]      ,C_UCLANG_DIR + "mods/math_uclm"        ,None],
+    ["MOD_GSL"       ,c_enabled[C_MODULE_GSL]       ,C_UCLANG_DIR + "mods/gsl_uclm"         ,None],
     ["MOD_PSQL"      ,c_enabled[C_MODULE_PSQL]      ,C_UCLANG_DIR + "mods/psql_uclm"        ,None],
     ["MOD_SQLITE"    ,c_enabled[C_MODULE_SQLITE]    ,C_UCLANG_DIR + "mods/sqlite_uclm"      ,None],
     ["MOD_HTTP"      ,c_enabled[C_MODULE_HTTP]      ,C_UCLANG_DIR + "mods/http_uclm"        ,None],
