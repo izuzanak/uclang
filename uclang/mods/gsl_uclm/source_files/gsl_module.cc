@@ -366,12 +366,28 @@ bool bic_gsl_spline_method_eval_1(interpreter_thread_s &it,unsigned stack_base,u
 
   double result;
 
-  // - ERROR -
-  if (gsl_interp_eval_e(spline_ptr->interp,spline_ptr->xa,spline_ptr->ya,
-                        x_value,spline_ptr->accel,&result) != GSL_SUCCESS)
+  // - check lower bound -
+  if (x_value <= spline_ptr->xa[0])
   {
-    exception_s::throw_exception(it,module.error_base + c_error_GSL_SPLINE_EVAL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
+    result = spline_ptr->ya[0];
+  }
+
+  // - check upper bound -
+  else if (x_value >= spline_ptr->xa[spline_ptr->size - 1])
+  {
+    result = spline_ptr->ya[spline_ptr->size - 1];
+  }
+
+  // - retrieve interpolated value -
+  else
+  {
+    // - ERROR -
+    if (gsl_interp_eval_e(spline_ptr->interp,spline_ptr->xa,spline_ptr->ya,
+                          x_value,spline_ptr->accel,&result) != GSL_SUCCESS)
+    {
+      exception_s::throw_exception(it,module.error_base + c_error_GSL_SPLINE_EVAL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
   }
 
   basic_64b &v_data_ptr = *((basic_64b *)&result);
