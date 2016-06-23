@@ -146,12 +146,12 @@ struct pv_list_s : public SPvList
 
 // -- ui_rb_tree_s --
 @begin
-   rb_tree<unsigned> ui_rb_tree_s;
+rb_tree<unsigned> ui_rb_tree_s;
 @end
 
 // -- pv_list_array_s --
 @begin
-   array<pv_list_s> pv_list_array_s;
+array<pv_list_s> pv_list_array_s;
 @end
 
 /*
@@ -257,7 +257,7 @@ inline void pv_list_s::clear()
 
 // -- ui_rb_tree_s --
 @begin
-   inlines ui_rb_tree_s
+inlines ui_rb_tree_s
 @end
 
 inline int ui_rb_tree_s::__compare_value(unsigned &a_first,unsigned &a_second)
@@ -267,7 +267,7 @@ inline int ui_rb_tree_s::__compare_value(unsigned &a_first,unsigned &a_second)
 
 // -- pv_list_array_s --
 @begin
-   inlines pv_list_array_s
+inlines pv_list_array_s
 @end
 
 /*

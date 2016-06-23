@@ -46,7 +46,7 @@ const unsigned c_type_str_lengths[] =
 
 // -- llvm_parser_s --
 @begin
-   methods llvm_parser_s
+methods llvm_parser_s
 @end
 
 unsigned llvm_parser_s::recognize_type(unsigned a_length,const char *a_data)

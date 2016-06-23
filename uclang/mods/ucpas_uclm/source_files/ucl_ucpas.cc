@@ -33,7 +33,7 @@ bool pas_s::paused;
 
 // -- si_queue_s --
 @begin
-   methods si_queue_s
+methods si_queue_s
 @end
 
 /*

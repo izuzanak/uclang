@@ -57,26 +57,26 @@ array<bool> bb_array_s;
 // -- gg_vertex_map_s --
 @begin
 struct
-    <
-    unsigned:sv_idx
-    unsigned:mv_idx
-    unsigned:prev_map_idx
-    unsigned:reference_cnt
-    unsigned:next_edge_idx
-    unsigned:length
-    >
-    gg_vertex_map_s;
+<
+unsigned:sv_idx
+unsigned:mv_idx
+unsigned:prev_map_idx
+unsigned:reference_cnt
+unsigned:next_edge_idx
+unsigned:length
+>
+gg_vertex_map_s;
 @end
 
 // -- edge_s --
 @begin
 struct
-    <
-    pointer:value
-    unsigned:src_vertex_idx
-    unsigned:trg_vertex_idx
-    >
-    edge_s;
+<
+pointer:value
+unsigned:src_vertex_idx
+unsigned:trg_vertex_idx
+>
+edge_s;
 @end
 
 // -- edge_rb_tree_s --
@@ -119,14 +119,14 @@ edge_idxs_s;
 // -- vertex_s --
 @begin
 struct
-    <
-    pointer:value
-    unsigned:input_degree
-    unsigned:output_degree
-    edge_idxs_s:edge_idxs
-    >
+<
+pointer:value
+unsigned:input_degree
+unsigned:output_degree
+edge_idxs_s:edge_idxs
+>
 
-    additions
+additions
 {
   inline unsigned get_degree();
 }
@@ -158,13 +158,13 @@ vertex_rb_tree_s;
 // -- graph_s --
 @begin
 struct
-    <
-    unsigned:type
-    vertex_rb_tree_s:vertices
-    edge_rb_tree_s:edges
-    >
-    options ( no_init no_clear no_swap no_copy strict_dynamic )
-    additions
+<
+unsigned:type
+vertex_rb_tree_s:vertices
+edge_rb_tree_s:edges
+>
+options ( no_init no_clear no_swap no_copy strict_dynamic )
+additions
 {
   inline void init();
   inline void init(unsigned a_type);
@@ -216,23 +216,23 @@ graph_s;
 
 // -- value_idx_s --
 @begin
-   struct
-   <
-   pointer:value
-   unsigned:idx
-   >
-   value_idx_s;
+struct
+<
+pointer:value
+unsigned:idx
+>
+value_idx_s;
 @end
 
 // -- value_idx_rb_tree_s --
 @begin
-  rb_tree<
-  value_idx_s
-  pointer:it_ptr
-  unsigned:source_pos
-  >
+rb_tree<
+value_idx_s
+pointer:it_ptr
+unsigned:source_pos
+>
 
-  additions
+additions
 {
   inline void ucl_prepare(interpreter_thread_s &a_it,unsigned a_source_pos);
 }
@@ -671,12 +671,12 @@ inline void graph_s::remove_edge(unsigned a_idx,bool a_free_eval = true)
 
 // -- value_idx_s --
 @begin
-   inlines value_idx_s
+inlines value_idx_s
 @end
 
 // -- value_idx_rb_tree_s --
 @begin
-   inlines value_idx_rb_tree_s
+inlines value_idx_rb_tree_s
 @end
 
 inline int value_idx_rb_tree_s::__compare_value(value_idx_s &a_first,value_idx_s &a_second)

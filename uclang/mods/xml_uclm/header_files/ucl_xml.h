@@ -55,25 +55,25 @@ class xml_c
 
 // -- pointer_arrays_s --
 @begin
-   array<pointer_array_s> pointer_arrays_s;
+array<pointer_array_s> pointer_arrays_s;
 @end
 
 // -- sax_parser_s --
 @begin
-  struct
-  <
-  pointer:it_ptr
+struct
+<
+pointer:it_ptr
 
-  string_rb_tree_s:const_strings
-  pointer_array_s:string_locations
+string_rb_tree_s:const_strings
+pointer_array_s:string_locations
 
-  pointer_array_s:attrs_stack
-  pointer_arrays_s:node_array_stack
-  pointer_arrays_s:text_array_stack
-  pointer_arrays_s:cont_array_stack
-  >
+pointer_array_s:attrs_stack
+pointer_arrays_s:node_array_stack
+pointer_arrays_s:text_array_stack
+pointer_arrays_s:cont_array_stack
+>
 
-  additions
+additions
 {
   // - retrieve or create string location -
   location_s *get_string_location(unsigned a_length,const char *a_data);
@@ -155,12 +155,12 @@ inline xml_c::~xml_c()
 
 // -- pointer_arrays_s --
 @begin
-   inlines pointer_arrays_s
+inlines pointer_arrays_s
 @end
 
 // -- sax_parser_s --
 @begin
-  inlines sax_parser_s
+inlines sax_parser_s
 @end
 
 #endif

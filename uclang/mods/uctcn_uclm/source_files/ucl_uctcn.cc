@@ -12,12 +12,12 @@ uctcn_c g_uctcn;
 
 // -- ui_rb_tree_s --
 @begin
-   methods ui_rb_tree_s
+methods ui_rb_tree_s
 @end
 
 // -- pv_list_array_s --
 @begin
-   methods pv_list_array_s
+methods pv_list_array_s
 @end
 
 /*

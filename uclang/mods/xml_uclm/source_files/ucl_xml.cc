@@ -12,12 +12,12 @@ xml_c g_xml;
 
 // -- pointer_arrays_s --
 @begin
-   methods pointer_arrays_s
+methods pointer_arrays_s
 @end
 
 // -- sax_parser_s --
 @begin
-  methods sax_parser_s
+methods sax_parser_s
 @end
 
 location_s *sax_parser_s::get_string_location(unsigned a_length,const char *a_data)

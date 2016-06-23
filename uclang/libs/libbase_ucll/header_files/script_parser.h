@@ -608,13 +608,13 @@ idx_size_array_s;
 // -- try_fg_map_s --
 @begin
 struct
-    <
-    unsigned:tfgm_first_fg_node
-    unsigned:tfgm_last_fg_node
-    unsigned:tfgm_fg_idx
-    unsigned:tfgm_var_idx
-    >
-    try_fg_map_s;
+<
+unsigned:tfgm_first_fg_node
+unsigned:tfgm_last_fg_node
+unsigned:tfgm_fg_idx
+unsigned:tfgm_var_idx
+>
+try_fg_map_s;
 @end
 
 // -- try_fg_maps_s --
@@ -624,49 +624,49 @@ array<try_fg_map_s> try_fg_maps_s;
 
 // -- namespace_record_s --
 @begin
-    struct
-    <
-    unsigned:name_idx
-    ui_array_s:namespace_record_idxs
-    ui_array_s:class_record_idxs
-    >
-    namespace_record_s;
+struct
+<
+unsigned:name_idx
+ui_array_s:namespace_record_idxs
+ui_array_s:class_record_idxs
+>
+namespace_record_s;
 @end
 
 // -- namespace_records_s --
 @begin
-   array<namespace_record_s> namespace_records_s;
+array<namespace_record_s> namespace_records_s;
 @end
 
 // -- class_record_s --
 @begin
 struct
-    <
-    unsigned:name_idx
-    unsigned:modifiers
-    unsigned:parent_record
-    unsigned:extend_class_idx
+<
+unsigned:name_idx
+unsigned:modifiers
+unsigned:parent_record
+unsigned:extend_class_idx
 
-    ui_array_s:using_namespace_idxs
-    ui_array_s:class_record_idxs
-    ui_array_s:method_record_idxs
-    ui_array_s:variable_record_idxs
+ui_array_s:using_namespace_idxs
+ui_array_s:class_record_idxs
+ui_array_s:method_record_idxs
+ui_array_s:variable_record_idxs
 
-    unsigned:element_cnt
-    ui_array_s:extend_array
+unsigned:element_cnt
+ui_array_s:extend_array
 
-    ui_array_s:mnri_map
-    ri_ep_array_s:vn_ri_ep_map
+ui_array_s:mnri_map
+ri_ep_array_s:vn_ri_ep_map
 
-    name_pos_s:name_position
+name_pos_s:name_position
 
-    built_in_class_ptr:bi_class_ptr
+built_in_class_ptr:bi_class_ptr
 
-    unsigned:stack_size
-    uli_array_s:init_begin_code
-    uli_array_s:init_run_time_code
-    >
-    class_record_s;
+unsigned:stack_size
+uli_array_s:init_begin_code
+uli_array_s:init_run_time_code
+>
+class_record_s;
 @end
 
 // -- class_records_s --
@@ -677,22 +677,22 @@ array<class_record_s> class_records_s;
 // -- method_record_s --
 @begin
 struct
-    <
-    unsigned:name_idx
-    unsigned:modifiers
-    unsigned:parent_record
-    ui_array_s:parameter_record_idxs
-    unsigned:flow_graph_idx
-    name_pos_s:name_position
-    bi_method_caller_dt:bi_method_caller
+<
+unsigned:name_idx
+unsigned:modifiers
+unsigned:parent_record
+ui_array_s:parameter_record_idxs
+unsigned:flow_graph_idx
+name_pos_s:name_position
+bi_method_caller_dt:bi_method_caller
 
-    try_fg_maps_s:try_fg_maps
+try_fg_maps_s:try_fg_maps
 
-    unsigned:stack_size
-    uli_array_s:begin_code
-    uli_array_s:run_time_code
-    >
-    method_record_s;
+unsigned:stack_size
+uli_array_s:begin_code
+uli_array_s:run_time_code
+>
+method_record_s;
 @end
 
 // -- method_records_s --
@@ -703,15 +703,15 @@ array<method_record_s> method_records_s;
 // -- variable_record_s --
 @begin
 struct
-    <
-    unsigned:name_idx
-    unsigned:modifiers
-    unsigned:parent_record
-    unsigned:init_expression_idx
+<
+unsigned:name_idx
+unsigned:modifiers
+unsigned:parent_record
+unsigned:init_expression_idx
 
-    name_pos_s:name_position
-    >
-    variable_record_s;
+name_pos_s:name_position
+>
+variable_record_s;
 @end
 
 // -- variable_records_s --
@@ -723,12 +723,12 @@ array<variable_record_s> variable_records_s;
 // -- flow_graph_s --
 @begin
 struct
-    <
-    unsigned:start_node_idx
-    ui_array_s:nodes
-    >
-    expression_s
-    flow_graph_s;
+<
+unsigned:start_node_idx
+ui_array_s:nodes
+>
+expression_s
+flow_graph_s;
 @end
 
 // -- expressions_s --
@@ -742,12 +742,12 @@ flow_graphs_s;
 // -- exp_flow_graph_s --
 @begin
 struct
-    <
-    unsigned:start_node_idx
-    ui_array_s:nodes
-    expressions_s:expressions
-    >
-    exp_flow_graph_s;
+<
+unsigned:start_node_idx
+ui_array_s:nodes
+expressions_s:expressions
+>
+exp_flow_graph_s;
 @end
 
 // -- exp_flow_graphs_s --
@@ -758,11 +758,11 @@ array<exp_flow_graph_s> exp_flow_graphs_s;
 // -- expression_descr_s --
 @begin
 struct
-    <
-    ui_array_s:tmp_expression
-    idx_size_array_s:tmp_exp_info
-    >
-    expression_descr_s;
+<
+ui_array_s:tmp_expression
+idx_size_array_s:tmp_exp_info
+>
+expression_descr_s;
 @end
 
 // -- expression_descrs_s --
@@ -773,172 +773,172 @@ array<expression_descr_s> expression_descrs_s;
 // -- flow_graph_descr_s --
 @begin
 struct
-    <
-    ui_array_s:fg_thread_stack
-    ui_array_s:fgts_type
-    ui_array_s:fgts_cnt
-    ui_arrays_array_s:fgts_bc_ends_array
-    >
-    flow_graph_descr_s;
+<
+ui_array_s:fg_thread_stack
+ui_array_s:fgts_type
+ui_array_s:fgts_cnt
+ui_arrays_array_s:fgts_bc_ends_array
+>
+flow_graph_descr_s;
 @end
 
 // -- im_descr_s --
 @begin
 struct
-    <
-    unsigned:cv_char_base
-    unsigned:cv_integer_base
-    unsigned:cv_float_base
-    unsigned:cv_string_base
-    unsigned:cv_type_base
-    unsigned:cv_count
+<
+unsigned:cv_char_base
+unsigned:cv_integer_base
+unsigned:cv_float_base
+unsigned:cv_string_base
+unsigned:cv_type_base
+unsigned:cv_count
 
-    unsigned:code_modifiers
-    unsigned:class_idx
-    unsigned:method_idx
-    unsigned:exp_idx
+unsigned:code_modifiers
+unsigned:class_idx
+unsigned:method_idx
+unsigned:exp_idx
 
-    unsigned:stack_idx_max
-    ui_array_s:free_stack_idxs
+unsigned:stack_idx_max
+ui_array_s:free_stack_idxs
 
-    ui_array_s:exp_node_stack
-    ui_array_s:done_exp_nodes
+ui_array_s:exp_node_stack
+ui_array_s:done_exp_nodes
 
-    ui_array_s:found_operands
-    ui_array_s:operands
-    ui_array_s:operand_stack
+ui_array_s:found_operands
+ui_array_s:operands
+ui_array_s:operand_stack
 
-    ui_array_s:var_name_fo_map
-    ui_array_s:const_idx_fo_map
-    ui_array_s:static_vi_fo_map
+ui_array_s:var_name_fo_map
+ui_array_s:const_idx_fo_map
+ui_array_s:static_vi_fo_map
 
-    ui_array_s:cond_exp_code_idxs
-    >
-    im_descr_s;
+ui_array_s:cond_exp_code_idxs
+>
+im_descr_s;
 @end
 
 // -- script_parser_s --
 @begin
 struct
-    <
-    $// - module search dirs -
-    string_array_s:module_dirs
+<
+$// - module search dirs -
+string_array_s:module_dirs
 
-    $// - code sources -
-    source_array_s:sources
+$// - code sources -
+source_array_s:sources
 
-    $// - module names -
-    unsigned:module_idx
-    string_array_s:module_names
-    name_pos_array_s:module_names_positions
+$// - module names -
+unsigned:module_idx
+string_array_s:module_names
+name_pos_array_s:module_names_positions
 
-    $// - module libraries and pointers -
-    dynlib_array_s:bi_module_libs
-    pointer_array_s:bi_module_pointers
+$// - module libraries and pointers -
+dynlib_array_s:bi_module_libs
+pointer_array_s:bi_module_pointers
 
-    $// - error, exception strings -
-    string_array_s:error_strings
+$// - error, exception strings -
+string_array_s:error_strings
 
-    $// - symbol names -
-    string_rb_tree_s:class_symbol_names
-    string_rb_tree_s:method_symbol_names
-    string_rb_tree_s:variable_symbol_names
+$// - symbol names -
+string_rb_tree_s:class_symbol_names
+string_rb_tree_s:method_symbol_names
+string_rb_tree_s:variable_symbol_names
 
-    $// - namespaces, classes, methods and variables records -
-    namespace_records_s:namespace_records
-    class_records_s:class_records
-    method_records_s:method_records
-    variable_records_s:variable_records
+$// - namespaces, classes, methods and variables records -
+namespace_records_s:namespace_records
+class_records_s:class_records
+method_records_s:method_records
+variable_records_s:variable_records
 
-    $// - parse variables BEGIN -
+$// - parse variables BEGIN -
 
-    $// - parse, index of source code -
-    unsigned:source_idx
+$// - parse, index of source code -
+unsigned:source_idx
 
-    $// - parse, old index of lexical analyzer -
-    unsigned:old_input_idx
+$// - parse, old index of lexical analyzer -
+unsigned:old_input_idx
 
-    $// - parse, modifiers of element, method, class, ... -
-    unsigned:modifiers
+$// - parse, modifiers of element, method, class, ... -
+unsigned:modifiers
 
-    $// - parse, list of namespace identifiers -
-    ui_array_s:namespace_name_idxs
+$// - parse, list of namespace identifiers -
+ui_array_s:namespace_name_idxs
 
-    $// - parse, stack of parent namespace indexes -
-    ui_array_s:parent_namespace_idxs
+$// - parse, stack of parent namespace indexes -
+ui_array_s:parent_namespace_idxs
 
-    $// - parse, stack of parent namespace indexes -
-    ui_array_s:using_namespace_idxs
+$// - parse, stack of parent namespace indexes -
+ui_array_s:using_namespace_idxs
 
-    $// - parse, stack of parent class indexes -
-    ui_array_s:parent_class_idxs
+$// - parse, stack of parent class indexes -
+ui_array_s:parent_class_idxs
 
-    $// - parse, stack of try flow graph map indexes -
-    ui_array_s:try_fg_map_idxs
+$// - parse, stack of try flow graph map indexes -
+ui_array_s:try_fg_map_idxs
 
-    $// - parse, temporary storage of name of element, method, class -
-    name_pos_array_s:tmp_name_pos_array
+$// - parse, temporary storage of name of element, method, class -
+name_pos_array_s:tmp_name_pos_array
 
-    $// - parse, count of object members in objects, arrays, ... -
-    ui_array_s:member_cnt
+$// - parse, count of object members in objects, arrays, ... -
+ui_array_s:member_cnt
 
-    $// - parse, list of errors constructed while parsing source code -
-    ui_array_s:error_code
+$// - parse, list of errors constructed while parsing source code -
+ui_array_s:error_code
 
-    $// - parse, switch statement description -
-    ui_arrays_s:switch_descrs
+$// - parse, switch statement description -
+ui_arrays_s:switch_descrs
 
-    $// - parse, temporary expression variables -
-    expression_descrs_s:switch_expression_descrs
+$// - parse, temporary expression variables -
+expression_descrs_s:switch_expression_descrs
 
-    $// - parse, temporary flow graph storage -
-    ui_array_s:tmp_flow_graph
+$// - parse, temporary flow graph storage -
+ui_array_s:tmp_flow_graph
 
-    $// - parse, temporary expression storage -
-    expressions_s:tmp_expressions
+$// - parse, temporary expression storage -
+expressions_s:tmp_expressions
 
-    $// - parse, temporary expression variables -
-    expression_descr_s:expression_descr
+$// - parse, temporary expression variables -
+expression_descr_s:expression_descr
 
-    $// - parse, temporary flow graph variables -
-    flow_graph_descr_s:flow_graph_descr
+$// - parse, temporary flow graph variables -
+flow_graph_descr_s:flow_graph_descr
 
-    $// - parse, LALR stack -
-    lalr_stack_s:lalr_stack
+$// - parse, LALR stack -
+lalr_stack_s:lalr_stack
 
-    $// - parse variables END -
+$// - parse variables END -
 
-    $// - parsed information -
-    bc_array_s:const_chars
-    lli_rb_tree_s:const_ints
-    bd_rb_tree_s:const_floats
-    string_rb_tree_s:const_strings
+$// - parsed information -
+bc_array_s:const_chars
+lli_rb_tree_s:const_ints
+bd_rb_tree_s:const_floats
+string_rb_tree_s:const_strings
 
-    expressions_s:init_expressions
+expressions_s:init_expressions
 
-    $// - graphs of program flow -
-    exp_flow_graphs_s:method_flow_graphs
+$// - graphs of program flow -
+exp_flow_graphs_s:method_flow_graphs
 
-    unsigned:static_const_element_cnt
-    unsigned:static_element_cnt
+unsigned:static_const_element_cnt
+unsigned:static_element_cnt
 
-    $// - intermediate variables BEGIN -
+$// - intermediate variables BEGIN -
 
-    $// - intermediate generation variable -
-    im_descr_s:im_descr
+$// - intermediate generation variable -
+im_descr_s:im_descr
 
-    $// - intermediate variables END -
+$// - intermediate variables END -
 
-    $// - static code description -
-    unsigned:stack_size
-    uli_array_s:static_begin_code
-    uli_array_s:static_run_time_code
+$// - static code description -
+unsigned:stack_size
+uli_array_s:static_begin_code
+uli_array_s:static_run_time_code
 
-    $// - indexes of classes extending some class -
-    ui_array_s:extending_idxs
-    >
+$// - indexes of classes extending some class -
+ui_array_s:extending_idxs
+>
 
-    additions
+additions
 {
   /*!
    * \brief return method name index, if name not exist use parameter string as name
@@ -1094,14 +1094,14 @@ script_parser_s;
 // -- exception_s --
 @begin
 struct
-    <
-    unsigned:type
-    unsigned:position
-    pointer:obj_location
-    lli_array_s:params
-    >
+<
+unsigned:type
+unsigned:position
+pointer:obj_location
+lli_array_s:params
+>
 
-    additions
+additions
 {
   static exception_s *throw_exception(interpreter_thread_s &it,unsigned a_type,unsigned a_pos,location_s *obj_location_ptr);
 
@@ -1139,20 +1139,18 @@ pointer_tree_s;
 // -- pointer_map_s --
 @begin
 struct
-    <
-    pointer:key
-    pointer:value
-    >
-    pointer_map_s;
+<
+pointer:key
+pointer:value
+>
+pointer_map_s;
 @end
 
 // -- pointer_map_tree_s --
 @begin
 safe_rb_tree<pointer_map_s
-pointer:
-it_ptr
-unsigned:
-source_pos
+pointer:it_ptr
+unsigned:source_pos
 >
 pointer_map_tree_s;
 @end
@@ -1160,19 +1158,19 @@ pointer_map_tree_s;
 // -- interpreter_thread_s --
 @begin
 struct
-    <
-    pointer_array_s:free_location_ptrs
-    pointer_array_s:free_reference_ptrs
+<
+pointer_array_s:free_location_ptrs
+pointer_array_s:free_reference_ptrs
 
-    pointer:interpreter_ptr
-    pointer_array_s:data_stack
+pointer:interpreter_ptr
+pointer_array_s:data_stack
 
-    pointer:thread_location
-    pointer:blank_location
-    pointer:exception_location
-    >
+pointer:thread_location
+pointer:blank_location
+pointer:exception_location
+>
 
-    additions
+additions
 {
   /*!
    * \brief return new location of interpreter_thread
@@ -1327,63 +1325,63 @@ interpreter_thread_s;
 // -- interpreter_s --
 @begin
 struct
-    <
-    $// - code sources -
-    source_array_s:sources
+<
+$// - code sources -
+source_array_s:sources
 
-    $// - module libraries and pointers -
-    dynlib_array_s:bi_module_libs
-    pointer_array_s:bi_module_pointers
+$// - module libraries and pointers -
+dynlib_array_s:bi_module_libs
+pointer_array_s:bi_module_pointers
 
-    $// - error, exception strings -
-    string_array_s:error_strings
+$// - error, exception strings -
+string_array_s:error_strings
 
-    $// - symbol names -
-    string_rb_tree_s:class_symbol_names
-    string_rb_tree_s:method_symbol_names
-    string_rb_tree_s:variable_symbol_names
+$// - symbol names -
+string_rb_tree_s:class_symbol_names
+string_rb_tree_s:method_symbol_names
+string_rb_tree_s:variable_symbol_names
 
-    $// - namespaces, classes, methods and variables records -
-    namespace_records_s:namespace_records
-    class_records_s:class_records
-    method_records_s:method_records
-    variable_records_s:variable_records
+$// - namespaces, classes, methods and variables records -
+namespace_records_s:namespace_records
+class_records_s:class_records
+method_records_s:method_records
+variable_records_s:variable_records
 
-    $// - parsed information -
-    bc_array_s:const_chars
-    lli_rb_tree_s:const_ints
-    bd_rb_tree_s:const_floats
-    string_rb_tree_s:const_strings
+$// - parsed information -
+bc_array_s:const_chars
+lli_rb_tree_s:const_ints
+bd_rb_tree_s:const_floats
+string_rb_tree_s:const_strings
 
-    $// - graphs of program flow -
-    flow_graphs_s:method_flow_graphs
+$// - graphs of program flow -
+flow_graphs_s:method_flow_graphs
 
-    $// - count of static elements -
-    unsigned:static_element_cnt
+$// - count of static elements -
+unsigned:static_element_cnt
 
-    $// - static code description -
-    unsigned:stack_size
-    uli_array_s:static_begin_code
-    uli_array_s:static_run_time_code
+$// - static code description -
+unsigned:stack_size
+uli_array_s:static_begin_code
+uli_array_s:static_run_time_code
 
-    $// - constant and static variables -
-    location_array_s:const_locations
-    pointer_array_s:static_location_ptrs
+$// - constant and static variables -
+location_array_s:const_locations
+pointer_array_s:static_location_ptrs
 
-    $// - signal handlers locations -
-    pointer_array_s:signal_handler_locations
+$// - signal handlers locations -
+pointer_array_s:signal_handler_locations
 
-    $// - pointer to main interpreter thread -
-    pointer:main_thread_ptr
+$// - pointer to main interpreter thread -
+pointer:main_thread_ptr
 
-    $// - count of running threads -
-    atomic_s:thread_cnt
+$// - count of running threads -
+atomic_s:thread_cnt
 
-    $// - interpreter terminate flasg -
-    atomic_s:terminate
-    >
+$// - interpreter terminate flasg -
+atomic_s:terminate
+>
 
-    additions
+additions
 {
   /*!
    * \brief creates interpreter structures from script_parser
@@ -1515,12 +1513,12 @@ inlines try_fg_maps_s
 
 // -- namespace_record_s --
 @begin
-   inlines namespace_record_s
+inlines namespace_record_s
 @end
 
 // -- namespace_records_s --
 @begin
-   inlines namespace_records_s
+inlines namespace_records_s
 @end
 
 // -- class_record_s --

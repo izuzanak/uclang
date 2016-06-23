@@ -37,18 +37,18 @@ enum
 
 // -- snmp_object_s --
 @begin
-   struct
-   <
-   string_s:name
-   unsigned:type
-   pointer:data
-   >
-   snmp_object_s;
+struct
+<
+string_s:name
+unsigned:type
+pointer:data
+>
+snmp_object_s;
 @end
 
 // -- snmp_object_rb_tree_s --
 @begin
-   safe_rb_tree<snmp_object_s> snmp_object_rb_tree_s;
+safe_rb_tree<snmp_object_s> snmp_object_rb_tree_s;
 @end
 
 /*
@@ -114,12 +114,12 @@ struct snmp_oid_s
 
 // -- snmp_object_s --
 @begin
-   inlines snmp_object_s
+inlines snmp_object_s
 @end
 
 // -- snmp_object_rb_tree_s --
 @begin
-   inlines snmp_object_rb_tree_s
+inlines snmp_object_rb_tree_s
 @end
 
 inline int snmp_object_rb_tree_s::__compare_value(snmp_object_s &a_first,snmp_object_s &a_second)

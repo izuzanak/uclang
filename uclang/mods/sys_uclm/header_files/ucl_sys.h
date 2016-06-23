@@ -45,18 +45,18 @@ const int value_off = 0;
 
 // -- timer_record_s --
 @begin
-   struct
-   <
-   lli:target_stamp
-   pointer:callback_dlg
-   pointer:parameter
-   >
-   timer_record_s;
+struct
+<
+lli:target_stamp
+pointer:callback_dlg
+pointer:parameter
+>
+timer_record_s;
 @end
 
 // -- timer_record_rb_tree_s --
 @begin
-   rb_tree<timer_record_s> timer_record_rb_tree_s;
+rb_tree<timer_record_s> timer_record_rb_tree_s;
 @end
 
 #ifdef ENABLE_CLASS_POLL
@@ -94,12 +94,12 @@ struct timer_s
 
 // -- timer_record_s --
 @begin
-   inlines timer_record_s
+inlines timer_record_s
 @end
 
 // -- timer_record_rb_tree_s --
 @begin
-   inlines timer_record_rb_tree_s
+inlines timer_record_rb_tree_s
 @end
 
 inline int timer_record_rb_tree_s::__compare_value(timer_record_s &a_first,timer_record_s &a_second)

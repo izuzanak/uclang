@@ -33,17 +33,17 @@ extern unsigned c_bi_class_ws_conn;
 
 // -- fd_flags_s --
 @begin
-   struct
-   <
-   int:fd
-   int:flags
-   >
-   fd_flags_s;
+struct
+<
+int:fd
+int:flags
+>
+fd_flags_s;
 @end
 
 // -- fd_flags_rb_tree_s --
 @begin
-   rb_tree<fd_flags_s> fd_flags_rb_tree_s;
+rb_tree<fd_flags_s> fd_flags_rb_tree_s;
 @end
 
 /*
@@ -153,12 +153,12 @@ int base64_decode_block(const char* code_in, const int length_in, char* plaintex
 
 // -- fd_flags_s --
 @begin
-   inlines fd_flags_s
+inlines fd_flags_s
 @end
 
 // -- fd_flags_rb_tree_s --
 @begin
-   inlines fd_flags_rb_tree_s
+inlines fd_flags_rb_tree_s
 @end
 
 inline int fd_flags_rb_tree_s::__compare_value(fd_flags_s &a_first,fd_flags_s &a_second)

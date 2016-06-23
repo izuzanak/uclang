@@ -163,13 +163,13 @@ array<dynlib_s> dynlib_array_s;
 // -- idx_size_s --
 @begin
 struct
-    <                    $//tmp_name_pos      ri_ep_s            idx_size_s
-    unsigned:ui_first    $//ui_first          record_idx         ui_first
-    unsigned:ui_second   $//ui_second         element_position   ui_second
-    >
-    name_pos_s
-    ri_ep_s
-    idx_size_s;
+<                    $//tmp_name_pos      ri_ep_s            idx_size_s
+unsigned:ui_first    $//ui_first          record_idx         ui_first
+unsigned:ui_second   $//ui_second         element_position   ui_second
+>
+name_pos_s
+ri_ep_s
+idx_size_s;
 @end
 
 const ri_ep_s c_blank_ri_ep = {c_idx_not_exist,c_idx_not_exist};
@@ -180,12 +180,12 @@ const ri_ep_s c_blank_ri_ep = {c_idx_not_exist,c_idx_not_exist};
 // -- lalr_stack_element_s --
 @begin
 struct
-    <
-    unsigned:lalr_state
-    unsigned:terminal_start
-    unsigned:terminal_end
-    >
-    lalr_stack_element_s;
+<
+unsigned:lalr_state
+unsigned:terminal_start
+unsigned:terminal_end
+>
+lalr_stack_element_s;
 @end
 
 // -- lalr_stack_s --
@@ -215,12 +215,12 @@ lalr_stack_s;
 // -- location_s --
 @begin
 struct
-    <
-    unsigned:v_type
-    atomic_s:v_reference_cnt
-    basic_64b:v_data_ptr
-    >
-    location_s;
+<
+unsigned:v_type
+atomic_s:v_reference_cnt
+basic_64b:v_data_ptr
+>
+location_s;
 @end
 
 // -- location_array_s --
@@ -231,11 +231,11 @@ array<location_s> location_array_s;
 // -- source_s --
 @begin
 struct
-    <
-    string_s:file_name
-    string_s:source_string
-    >
-    source_s;
+<
+string_s:file_name
+string_s:source_string
+>
+source_s;
 @end
 
 // -- source_array_s --
@@ -291,7 +291,7 @@ inlines lli_array_s
 
 // -- uli_array_s --
 @begin
-   inlines uli_array_s
+inlines uli_array_s
 @end
 
 // -- lli_rb_tree_s --

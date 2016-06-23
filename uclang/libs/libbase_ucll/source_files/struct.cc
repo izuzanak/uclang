@@ -29,7 +29,7 @@ methods lli_array_s
 
 // -- uli_array_s --
 @begin
-   methods uli_array_s
+methods uli_array_s
 @end
 
 // -- lli_rb_tree_s --

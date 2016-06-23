@@ -356,12 +356,12 @@ methods try_fg_maps_s
 
 // -- namespace_record_s --
 @begin
-   methods namespace_record_s
+methods namespace_record_s
 @end
 
 // -- namespace_records_s --
 @begin
-   methods namespace_records_s
+methods namespace_records_s
 @end
 
 // -- class_record_s --

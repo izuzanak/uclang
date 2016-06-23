@@ -50,13 +50,13 @@ safe_rb_tree<name_pos_s> name_pos_tree_s;
 // -- class_pack_s --
 @begin
 struct
-    <
-    name_pos_tree_s:name_pos_tree
-    bc_array_s:class_stream
-    ui_array_s:class_stack
-    >
+<
+name_pos_tree_s:name_pos_tree
+bc_array_s:class_stream
+ui_array_s:class_stack
+>
 
-    additions
+additions
 {
   void write_class_to_stream(interpreter_thread_s &a_it,unsigned a_class_idx,unsigned a_parent_idx);
   unsigned pack_class_name(interpreter_thread_s &a_it,unsigned a_class_idx);
@@ -68,11 +68,11 @@ class_pack_s;
 // -- class_unpack_s --
 @begin
 struct
-    <
-    ui_array_s:class_idxs
-    >
+<
+ui_array_s:class_idxs
+>
 
-    additions
+additions
 {
   inline unsigned get_class_idx(unsigned a_class_pos);
   bool unpack_from_stream(interpreter_thread_s &a_it,const char *a_stream,unsigned a_length,bool a_order_bytes);

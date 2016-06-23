@@ -15,11 +15,11 @@ bool snmp_agent_s::exists = false;
 
 // -- snmp_object_s --
 @begin
-   methods snmp_object_s
+methods snmp_object_s
 @end
 
 // -- snmp_object_rb_tree_s --
 @begin
-   methods snmp_object_rb_tree_s
+methods snmp_object_rb_tree_s
 @end
 

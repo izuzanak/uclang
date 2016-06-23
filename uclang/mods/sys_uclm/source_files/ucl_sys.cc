@@ -9,12 +9,12 @@ include "ucl_sys.h"
 
 // -- timer_record_s --
 @begin
-   methods timer_record_s
+methods timer_record_s
 @end
 
 // -- timer_record_rb_tree_s --
 @begin
-   methods timer_record_rb_tree_s
+methods timer_record_rb_tree_s
 @end
 
 /*

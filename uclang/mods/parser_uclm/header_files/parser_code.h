@@ -152,12 +152,12 @@ p_first_rules_sets_s;
 // -- reg_mul_state_move_s --
 @begin
 struct
-    <
-    usi:move_char
-    unsigned:from_state
-    ui_array_set_s:mul_state
-    >
-    reg_mul_state_move_s;
+<
+usi:move_char
+unsigned:from_state
+ui_array_set_s:mul_state
+>
+reg_mul_state_move_s;
 @end
 
 // -- reg_mul_state_move_array_s --
@@ -180,11 +180,11 @@ queue<reg_mul_state_move_s> reg_mul_state_move_queue_s;
 // -- reg_mul_state_map_s --
 @begin
 struct
-    <
-    ui_array_set_s:mul_state
-    unsigned:dka_state_idx
-    >
-    reg_mul_state_map_s;
+<
+ui_array_set_s:mul_state
+unsigned:dka_state_idx
+>
+reg_mul_state_map_s;
 @end
 
 // -- reg_mul_state_map_array_s --
@@ -202,12 +202,12 @@ reg_mul_state_map_array_s;
 // -- fa_state_move_s --
 @begin
 struct
-    <
-    usi:idx
-    unsigned:value
-    >
-    fa_state_move_s
-    reg_state_move_s;
+<
+usi:idx
+unsigned:value
+>
+fa_state_move_s
+reg_state_move_s;
 @end
 
 // -- fa_state_moves_s --
@@ -236,11 +236,11 @@ array<usi> us_array_s;
 // -- fa_state_s --
 @begin
 struct
-    <
-    unsigned:final
-    fa_state_moves_s:moves
-    >
-    fa_state_s;
+<
+unsigned:final
+fa_state_moves_s:moves
+>
+fa_state_s;
 @end
 
 // -- fa_states_s --
@@ -256,14 +256,14 @@ array<fa_states_s> fa_states_array_s;
 // -- reg_state_s --
 @begin
 struct
-    <
-    unsigned:ui_first
-    unsigned:ui_second
-    >
-    reg_state_s
-    p_kernel_rule_dot_s
-    p_kernel_goto_s
-    pcs_state_position_s;
+<
+unsigned:ui_first
+unsigned:ui_second
+>
+reg_state_s
+p_kernel_rule_dot_s
+p_kernel_goto_s
+pcs_state_position_s;
 @end
 
 // -- reg_states_s --
@@ -278,12 +278,12 @@ pcs_state_positions_s;
 // -- fa_state_descr_s --
 @begin
 struct
-    <
-    unsigned:from_state_id
-    usi:with_char
-    reg_states_s:reg_states
-    >
-    fa_state_descr_s;
+<
+unsigned:from_state_id
+usi:with_char
+reg_states_s:reg_states
+>
+fa_state_descr_s;
 @end
 
 // -- fa_state_reg_states_s --
@@ -299,16 +299,16 @@ queue<fa_state_descr_s> fa_state_descr_queue_s;
 // -- final_automata_s --
 @begin
 struct
-    <
-    unsigned:state_idx
-    fa_states_s:states
-    ui_arrays_s:state_moves
-    >
+<
+unsigned:state_idx
+fa_states_s:states
+ui_arrays_s:state_moves
+>
 
-    additions
+additions
 {
-  void create_new(fa_states_array_s &states_array);
-  unsigned recognize(char *input,unsigned &input_idx,unsigned input_length);
+void create_new(fa_states_array_s &states_array);
+unsigned recognize(char *input,unsigned &input_idx,unsigned input_length);
 }
 
 final_automata_s;
@@ -317,13 +317,13 @@ final_automata_s;
 // -- reg_parser_s --
 @begin
 struct
-    <
-    lalr_stack_s:lalr_stack
-    unsigned:fas_idx
-    fa_states_s:states
-    >
+<
+lalr_stack_s:lalr_stack
+unsigned:fas_idx
+fa_states_s:states
+>
 
-    additions
+additions
 {
   inline unsigned short process_char(char *&c_ptr);
   unsigned recognize_terminal(string_s &source_string,unsigned &input_idx);
@@ -339,12 +339,12 @@ reg_parser_s;
 // -- p_terminal_s --
 @begin
 struct
-    <
-    string_s:idx
-    string_s:value
-    unsigned:source_pos
-    >
-    p_terminal_s;
+<
+string_s:idx
+string_s:value
+unsigned:source_pos
+>
+p_terminal_s;
 @end
 
 // -- p_terminals_s --
@@ -363,10 +363,10 @@ p_terminals_s;
 // -- p_nonterminal_s --
 @begin
 struct
-    <
-    string_s:name
-    >
-    p_nonterminal_s;
+<
+string_s:name
+>
+p_nonterminal_s;
 @end
 
 // -- p_nonterminals_s --
@@ -384,11 +384,11 @@ p_nonterminals_s;
 // -- p_rule_s --
 @begin
 struct
-    <
-    unsigned:head
-    ui_array_s:body
-    >
-    p_rule_s;
+<
+unsigned:head
+ui_array_s:body
+>
+p_rule_s;
 @end
 
 // -- p_rules_s --
@@ -399,11 +399,11 @@ array<p_rule_s> p_rules_s;
 // -- p_kernel_s --
 @begin
 struct
-    <
-    p_kernel_rule_dots_s:rule_dots
-    p_kernel_gotos_s:gotos
-    >
-    p_kernel_s;
+<
+p_kernel_rule_dots_s:rule_dots
+p_kernel_gotos_s:gotos
+>
+p_kernel_s;
 @end
 
 // -- p_kernels_s --
@@ -421,13 +421,13 @@ p_kernels_s;
 // -- p_lalr_table_s --
 @begin
 struct
-    <
-    unsigned:x_size
-    unsigned:y_size
-    ui_array_s:table
-    >
+<
+unsigned:x_size
+unsigned:y_size
+ui_array_s:table
+>
 
-    additions
+additions
 {
   inline unsigned &value(unsigned a_x_idx,unsigned a_y_idx);
   inline void resize(unsigned a_x_size,unsigned a_y_size);
@@ -440,20 +440,20 @@ p_lalr_table_s;
 // -- p_creat_descr_s --
 @begin
 struct
-    <
-    pointer:it_ptr
-    final_automata_s:rule_file_fa
-    final_automata_s:key_terminals_fa
-    p_terminals_s:terminals
-    p_nonterminals_s:nonterminals
-    p_rules_s:rules
-    p_first_sets_s:firsts
-    p_first_rules_sets_s:first_rules
-    p_follow_sets_s:follows
-    p_kernels_s:kernels
-    >
+<
+pointer:it_ptr
+final_automata_s:rule_file_fa
+final_automata_s:key_terminals_fa
+p_terminals_s:terminals
+p_nonterminals_s:nonterminals
+p_rules_s:rules
+p_first_sets_s:firsts
+p_first_rules_sets_s:first_rules
+p_follow_sets_s:follows
+p_kernels_s:kernels
+>
 
-    additions
+additions
 {
   bool load_final_automata_set_new();
   bool load_from_rule_char_ptr(unsigned a_length,char *a_data);
@@ -493,11 +493,11 @@ p_creat_descr_s;
 // -- p_rule_descr_s --
 @begin
 struct
-    <
-    unsigned:head
-    unsigned:body_size
-    >
-    p_rule_descr_s;
+<
+unsigned:head
+unsigned:body_size
+>
+p_rule_descr_s;
 @end
 
 // -- p_rule_descrs_s --
@@ -508,17 +508,17 @@ array<p_rule_descr_s> p_rule_descrs_s;
 // -- parser_s --
 @begin
 struct
-    <
-    pointer:it_ptr
-    unsigned:terminal_cnt
-    unsigned:end_terminal
-    ui_array_s:skip_terminals
-    p_rule_descrs_s:rule_descrs
-    final_automata_s:final_automata
-    p_lalr_table_s:lalr_table
-    >
+<
+pointer:it_ptr
+unsigned:terminal_cnt
+unsigned:end_terminal
+ui_array_s:skip_terminals
+p_rule_descrs_s:rule_descrs
+final_automata_s:final_automata
+p_lalr_table_s:lalr_table
+>
 
-    additions
+additions
 {
   bool create_from_rule_string(string_s &rule_string);
 }

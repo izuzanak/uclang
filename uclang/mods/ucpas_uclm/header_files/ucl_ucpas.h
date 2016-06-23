@@ -35,7 +35,7 @@ enum
 
 // -- si_queue_s --
 @begin
-   queue<si> si_queue_s;
+queue<si> si_queue_s;
 @end
 
 /*
@@ -86,7 +86,7 @@ struct  pas_s
 
 // -- si_queue_s --
 @begin
-   inlines si_queue_s
+inlines si_queue_s
 @end
 
 /*

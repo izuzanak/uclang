@@ -315,174 +315,174 @@ define jit_label_t basic
 
 // -- label_array_s --
 @begin
-   array<jit_label_t> label_array_s;
+array<jit_label_t> label_array_s;
 @end
 
 // -- var_type_s --
 @begin
-   struct
-   <
-   unsigned:type_id
-   unsigned:pointer_level
-   unsigned:modifiers
-   >
-   
-   additions
-   {
-     inline bool are_comparable(var_type_s &a_src);
-     inline bool are_assignable(var_type_s &a_src);
-     inline bool is_temp_const();
-     inline bool is_pointer();
-     inline jit_type_t jit_type();
-     inline jit_type_t jit_pointed_type();
-   }
+struct
+<
+unsigned:type_id
+unsigned:pointer_level
+unsigned:modifiers
+>
 
-   var_type_s;
+additions
+{
+  inline bool are_comparable(var_type_s &a_src);
+  inline bool are_assignable(var_type_s &a_src);
+  inline bool is_temp_const();
+  inline bool is_pointer();
+  inline jit_type_t jit_type();
+  inline jit_type_t jit_pointed_type();
+}
+
+var_type_s;
 @end
 
 // -- var_types_s --
 @begin
-   array<var_type_s> var_types_s;
+array<var_type_s> var_types_s;
 @end
 
 // -- var_record_s --
 @begin
-   struct
-   <
-   var_type_s:type
-   pointer:value
-   >
-   var_record_s;
+struct
+<
+var_type_s:type
+pointer:value
+>
+var_record_s;
 @end
 
 // -- var_records_s --
 @begin
-   array<var_record_s> var_records_s;
+array<var_record_s> var_records_s;
 @end
 
 // -- fun_record_s --
 @begin
-   struct
-   <
-   string_s:name
-   var_type_s:ret_type
-   var_types_s:param_types
-   pointer:jit_function
-   >
-   fun_record_s;
+struct
+<
+string_s:name
+var_type_s:ret_type
+var_types_s:param_types
+pointer:jit_function
+>
+fun_record_s;
 @end
 
 // -- fun_records_s --
 @begin
-   array<fun_record_s> fun_records_s;
+array<fun_record_s> fun_records_s;
 @end
 
 // -- exp_node_s --
 @begin
-   struct
-   <
-   var_type_s:type
-   pointer:value
-   >
+struct
+<
+var_type_s:type
+pointer:value
+>
 
-   additions
-   {
-     inline bool are_comparable(exp_node_s &a_src);
-     inline bool are_assignable(exp_node_s &a_src);
-     inline bool is_temp_const();
-     inline bool is_integer();
-     inline bool is_pointer();
-     inline jit_type_t jit_type();
-     inline jit_type_t jit_pointed_type();
-     inline int pointed_size_power();
+additions
+{
+  inline bool are_comparable(exp_node_s &a_src);
+  inline bool are_assignable(exp_node_s &a_src);
+  inline bool is_temp_const();
+  inline bool is_integer();
+  inline bool is_pointer();
+  inline jit_type_t jit_type();
+  inline jit_type_t jit_pointed_type();
+  inline int pointed_size_power();
 
-     inline unsigned res_type_id(exp_node_s &a_second);
-     inline jit_value_t load_value(jit_function_t jit_function);
-     inline void store_value(jit_function_t jit_function,jit_value_t a_value);
-   }
+  inline unsigned res_type_id(exp_node_s &a_second);
+  inline jit_value_t load_value(jit_function_t jit_function);
+  inline void store_value(jit_function_t jit_function,jit_value_t a_value);
+}
 
-   exp_node_s;
+exp_node_s;
 @end
 
 // -- exp_nodes_s --
 @begin
-   array<exp_node_s> exp_nodes_s;
+array<exp_node_s> exp_nodes_s;
 @end
 
 // -- jit_parser_s --
 @begin
-  struct
-  <
-  $// - interpreter thread pointer -
-  pointer:it_ptr
+struct
+<
+$// - interpreter thread pointer -
+pointer:it_ptr
 
-  $// - context ucl pointer -
-  pointer:ucl_context
+$// - context ucl pointer -
+pointer:ucl_context
 
-  $// - function jit pointer -
-  pointer:jit_function
+$// - function jit pointer -
+pointer:jit_function
 
-  $// - function ucl signature -
-  string_s:ucl_signature
+$// - function ucl signature -
+string_s:ucl_signature
 
-  $// - code source string -
-  string_s:source_string
+$// - code source string -
+string_s:source_string
 
-  $// - variable names -
-  string_rb_tree_s:var_names
+$// - variable names -
+string_rb_tree_s:var_names
 
-  $// - variable records -
-  var_records_s:var_records
+$// - variable records -
+var_records_s:var_records
 
-  $// - function record -
-  fun_record_s:fun_record
+$// - function record -
+fun_record_s:fun_record
 
-  $// - variable modifier -
-  unsigned:tmp_modifiers
+$// - variable modifier -
+unsigned:tmp_modifiers
 
-  $// - variable types stack -
-  var_types_s:tmp_var_types
+$// - variable types stack -
+var_types_s:tmp_var_types
 
-  $// - parameter record indexes -
-  ui_array_s:fun_param_idxs
-  name_pos_s:fun_name_pos
+$// - parameter record indexes -
+ui_array_s:fun_param_idxs
+name_pos_s:fun_name_pos
 
-  $// - fun call parameter count -
-  ui_array_s:param_cnt
-  ui_array_s:function_idxs
+$// - fun call parameter count -
+ui_array_s:param_cnt
+ui_array_s:function_idxs
 
-  $// - expression stack -
-  exp_nodes_s:exp_node_stack
+$// - expression stack -
+exp_nodes_s:exp_node_stack
 
-  $// - label names -
-  string_rb_tree_s:label_names
-  ui_array_s:named_label_idxs
+$// - label names -
+string_rb_tree_s:label_names
+ui_array_s:named_label_idxs
 
-  $// - label stack -
-  label_array_s:labels
-  ui_array_s:label_idxs
-  ui_array_s:cb_label_idxs
+$// - label stack -
+label_array_s:labels
+ui_array_s:label_idxs
+ui_array_s:cb_label_idxs
 
-  $// - block variables -
-  ui_array_s:variable_idxs
-  ui_array_s:block_var_bases
+$// - block variables -
+ui_array_s:variable_idxs
+ui_array_s:block_var_bases
 
-  $// - parse, old index of lexical analyzer -
-  unsigned:old_input_idx
+$// - parse, old index of lexical analyzer -
+unsigned:old_input_idx
 
-  $// - parse, LALR stack -
-  lalr_stack_s:lalr_stack
-  >
-  
-  additions
-  {
-  static unsigned recognize_type(unsigned a_length,const char *a_data);
-  static void create_signature(unsigned a_name_length,char *a_name_data,unsigned a_param_cnt,var_type_s **a_param_types,string_s &a_target);
-  unsigned recognize_terminal(unsigned &input_idx);
-  bool parse_source();
-  }
-  
-  jit_parser_s;
+$// - parse, LALR stack -
+lalr_stack_s:lalr_stack
+>
+
+additions
+{
+static unsigned recognize_type(unsigned a_length,const char *a_data);
+static void create_signature(unsigned a_name_length,char *a_name_data,unsigned a_param_cnt,var_type_s **a_param_types,string_s &a_target);
+unsigned recognize_terminal(unsigned &input_idx);
+bool parse_source();
+}
+
+jit_parser_s;
 @end
 
 /*
@@ -491,12 +491,12 @@ define jit_label_t basic
 
 // -- label_array_s --
 @begin
-   inlines label_array_s
+inlines label_array_s
 @end
 
 // -- var_type_s --
 @begin
-   inlines var_type_s
+inlines var_type_s
 @end
 
 inline bool var_type_s::are_comparable(var_type_s &a_second)
@@ -550,32 +550,32 @@ inline jit_type_t var_type_s::jit_pointed_type()
 
 // -- var_types_s --
 @begin
-   inlines var_types_s
+inlines var_types_s
 @end
 
 // -- var_record_s --
 @begin
-   inlines var_record_s
+inlines var_record_s
 @end
 
 // -- var_records_s --
 @begin
-   inlines var_records_s
+inlines var_records_s
 @end
 
 // -- fun_record_s --
 @begin
-   inlines fun_record_s
+inlines fun_record_s
 @end
 
 // -- fun_records_s --
 @begin
-   inlines fun_records_s
+inlines fun_records_s
 @end
 
 // -- exp_node_s --
 @begin
-   inlines exp_node_s
+inlines exp_node_s
 @end
 
 inline bool exp_node_s::are_comparable(exp_node_s &a_second)
@@ -665,12 +665,12 @@ inline void exp_node_s::store_value(jit_function_t jit_function,jit_value_t a_va
 
 // -- exp_nodes_s --
 @begin
-   inlines exp_nodes_s
+inlines exp_nodes_s
 @end
 
 // -- jit_parser_s --
 @begin
-   inlines jit_parser_s
+inlines jit_parser_s
 @end
 
 @begin

@@ -111,52 +111,52 @@ extern const bool c_type_is_int[] =
 
 // -- label_array_s --
 @begin
-   methods label_array_s
+methods label_array_s
 @end
 
 // -- var_type_s --
 @begin
-   methods var_type_s
+methods var_type_s
 @end
 
 // -- var_types_s --
 @begin
-   methods var_types_s
+methods var_types_s
 @end
 
 // -- var_record_s --
 @begin
-   methods var_record_s
+methods var_record_s
 @end
 
 // -- var_records_s --
 @begin
-   methods var_records_s
+methods var_records_s
 @end
 
 // -- fun_record_s --
 @begin
-   methods fun_record_s
+methods fun_record_s
 @end
 
 // -- fun_records_s --
 @begin
-   methods fun_records_s
+methods fun_records_s
 @end
 
 // -- exp_node_s --
 @begin
-   methods exp_node_s
+methods exp_node_s
 @end
 
 // -- exp_nodes_s --
 @begin
-   methods exp_nodes_s
+methods exp_nodes_s
 @end
 
 // -- jit_parser_s --
 @begin
-   methods jit_parser_s
+methods jit_parser_s
 @end
 
 unsigned jit_parser_s::recognize_type(unsigned a_length,const char *a_data)

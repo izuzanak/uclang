@@ -60,17 +60,17 @@ void json_creator_s::append_string(string_s &a_string,bc_array_s &a_buffer)
 
 // -- cs_element_s --
 @begin
-   methods cs_element_s
+methods cs_element_s
 @end
 
 // -- create_stack_s --
 @begin
-   methods create_stack_s
+methods create_stack_s
 @end
 
 // -- json_parser_s --
 @begin
-  methods json_parser_s
+methods json_parser_s
 @end
 
 unsigned json_parser_s::recognize_terminal(unsigned &a_input_idx)

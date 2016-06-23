@@ -81,49 +81,49 @@ struct json_creator_s
 
 // -- cs_element_s --
 @begin
-   struct
-   <
-   pointer:location_ptr
-   bool:initialize
-   unsigned:index
-   >
-   cs_element_s;
+struct
+<
+pointer:location_ptr
+bool:initialize
+unsigned:index
+>
+cs_element_s;
 @end
 
 // -- create_stack_s --
 @begin
-   array<cs_element_s> create_stack_s;
+array<cs_element_s> create_stack_s;
 @end
 
 // -- json_parser_s --
 @begin
-  struct
-  <
-  pointer:it_ptr
-  string_s:source_string
+struct
+<
+pointer:it_ptr
+string_s:source_string
 
-  unsigned:old_input_idx
+unsigned:old_input_idx
 
-  lli_rb_tree_s:const_integers
-  bd_rb_tree_s:const_floats
-  string_rb_tree_s:const_strings
+lli_rb_tree_s:const_integers
+bd_rb_tree_s:const_floats
+string_rb_tree_s:const_strings
 
-  pointer:true_location
-  pointer:false_location
-  pointer_array_s:integer_locations
-  pointer_array_s:float_locations
-  pointer_array_s:string_locations
+pointer:true_location
+pointer:false_location
+pointer_array_s:integer_locations
+pointer_array_s:float_locations
+pointer_array_s:string_locations
 
-  ui_array_s:string_idxs
+ui_array_s:string_idxs
 
-  pointer_array_s:values
-  pointer_array_s:arrays
-  pointer_array_s:objects
+pointer_array_s:values
+pointer_array_s:arrays
+pointer_array_s:objects
 
-  lalr_stack_s:lalr_stack
-  >
+lalr_stack_s:lalr_stack
+>
 
-  additions
+additions
 {
   // - return index of next terminal symbol (token) in input source -
   unsigned recognize_terminal(unsigned &a_input_idx);
@@ -144,17 +144,17 @@ struct json_creator_s
 
 // -- cs_element_s --
 @begin
-   inlines cs_element_s
+inlines cs_element_s
 @end
 
 // -- create_stack_s --
 @begin
-   inlines create_stack_s
+inlines create_stack_s
 @end
 
 // -- json_parser_s --
 @begin
-  inlines json_parser_s
+inlines json_parser_s
 @end
 
 #endif

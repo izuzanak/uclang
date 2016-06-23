@@ -297,29 +297,29 @@ const unsigned llvm_lalr_table[llvm_lalr_state_cnt*c_llvm_terminal_plus_nontermi
 
 // -- llvm_parser_s --
 @begin
-  struct
-  <
-  $// - interpreter thread pointer -
-  pointer:it_ptr
+struct
+<
+$// - interpreter thread pointer -
+pointer:it_ptr
 
-  $// - code source string -
-  string_s:source_string
+$// - code source string -
+string_s:source_string
 
-  $// - parse, old index of lexical analyzer -
-  unsigned:old_input_idx
+$// - parse, old index of lexical analyzer -
+unsigned:old_input_idx
 
-  $// - parse, LALR stack -
-  lalr_stack_s:lalr_stack
-  >
-  
-  additions
-  {
+$// - parse, LALR stack -
+lalr_stack_s:lalr_stack
+>
+
+additions
+{
   static unsigned recognize_type(unsigned a_length,const char *a_data);
   unsigned recognize_terminal(unsigned &input_idx);
   bool parse_source();
-  }
-  
-  llvm_parser_s;
+}
+
+llvm_parser_s;
 @end
 
 /*
@@ -328,7 +328,7 @@ const unsigned llvm_lalr_table[llvm_lalr_state_cnt*c_llvm_terminal_plus_nontermi
 
 // -- llvm_parser_s --
 @begin
-   inlines llvm_parser_s
+inlines llvm_parser_s
 @end
 
 @begin

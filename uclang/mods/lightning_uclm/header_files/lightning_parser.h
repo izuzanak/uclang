@@ -351,139 +351,139 @@ const unsigned ltg_lalr_table[ltg_lalr_state_cnt*c_ltg_terminal_plus_nonterminal
 
 // -- val_type_s --
 @begin
-   struct
-   <
-   unsigned:type_id
-   unsigned:pointer_level
-   unsigned:modifiers
-   >
-   
-   additions
-   {
-     inline bool are_comparable(val_type_s &a_src);
-     inline bool are_assignable(val_type_s &a_src);
-     inline bool is_temp_const();
-     inline bool is_integer();
-     inline bool is_pointer();
-     inline unsigned jit_type();
-     inline unsigned jit_pointed_type();
-   }
+struct
+<
+unsigned:type_id
+unsigned:pointer_level
+unsigned:modifiers
+>
 
-   val_type_s;
+additions
+{
+  inline bool are_comparable(val_type_s &a_src);
+  inline bool are_assignable(val_type_s &a_src);
+  inline bool is_temp_const();
+  inline bool is_integer();
+  inline bool is_pointer();
+  inline unsigned jit_type();
+  inline unsigned jit_pointed_type();
+}
+
+val_type_s;
 @end
 
 // -- val_types_s --
 @begin
-   array<val_type_s> val_types_s;
+array<val_type_s> val_types_s;
 @end
 
 // -- val_record_s --
 @begin
-   struct
-   <
-   val_type_s:type
-   basic_64b:value
-   unsigned:live_start
-   unsigned:live_end
-   >
+struct
+<
+val_type_s:type
+basic_64b:value
+unsigned:live_start
+unsigned:live_end
+>
 
-   additions
-   {
-     inline bool are_comparable(val_record_s &a_src);
-     inline bool are_assignable(val_record_s &a_src);
-     inline bool is_temp_const();
-     inline bool is_integer();
-     inline bool is_pointer();
-     inline unsigned jit_type();
-     inline unsigned jit_pointed_type();
-     inline void update_live(unsigned a_position);
+additions
+{
+  inline bool are_comparable(val_record_s &a_src);
+  inline bool are_assignable(val_record_s &a_src);
+  inline bool is_temp_const();
+  inline bool is_integer();
+  inline bool is_pointer();
+  inline unsigned jit_type();
+  inline unsigned jit_pointed_type();
+  inline void update_live(unsigned a_position);
 
-     inline unsigned res_type_id(val_record_s &a_second);
-   }
+  inline unsigned res_type_id(val_record_s &a_second);
+}
 
-   val_record_s;
+val_record_s;
 @end
 
 // -- val_records_s --
 @begin
-   array<val_record_s> val_records_s;
+array<val_record_s> val_records_s;
 @end
 
 // -- fun_record_s --
 @begin
-   struct
-   <
-   string_s:name
-   val_type_s:ret_type
-   val_types_s:param_types
-   >
-   fun_record_s;
+struct
+<
+string_s:name
+val_type_s:ret_type
+val_types_s:param_types
+>
+fun_record_s;
 @end
 
 // -- fun_records_s --
 @begin
-   array<fun_record_s> fun_records_s;
+array<fun_record_s> fun_records_s;
 @end
 
 // -- ltg_parser_s --
 @begin
-  struct
-  <
-  $// - interpreter thread pointer -
-  pointer:it_ptr
+struct
+<
+$// - interpreter thread pointer -
+pointer:it_ptr
 
-  $// - ucl jit state pointer -
-  pointer:ucl_jit_state
+$// - ucl jit state pointer -
+pointer:ucl_jit_state
 
-  $// - jit state pointer -
-  jit_state_t_ptr:_jit
+$// - jit state pointer -
+jit_state_t_ptr:_jit
 
-  $// - function ucl signature -
-  string_s:ucl_signature
+$// - function ucl signature -
+string_s:ucl_signature
 
-  $// - code source string -
-  string_s:source_string
+$// - code source string -
+string_s:source_string
 
-  $// - variable names -
-  string_rb_tree_s:val_names
+$// - variable names -
+string_rb_tree_s:val_names
 
-  $// - value records -
-  val_records_s:val_records
+$// - value records -
+val_records_s:val_records
 
-  $// - function record -
-  fun_record_s:fun_record
+$// - function record -
+fun_record_s:fun_record
 
-  $// - expression stack -
-  ui_array_s:exp_values
+$// - expression stack -
+ui_array_s:exp_values
 
-  $// - intermediate code -
-  ui_array_s:intermediate_code
+$// - intermediate code -
+ui_array_s:intermediate_code
 
-  $// - TEMPORARY PARSE VARIABLES -
+$// - TEMPORARY PARSE VARIABLES -
 
-  $// - value modifier -
-  unsigned:tmp_modifiers
+$// - value modifier -
+unsigned:tmp_modifiers
 
-  $// - value types stack -
-  val_types_s:tmp_val_types
+$// - value types stack -
+val_types_s:tmp_val_types
 
-  $// - parameter record indexes -
-  ui_array_s:fun_param_idxs
-  name_pos_s:fun_name_pos
+$// - parameter record indexes -
+ui_array_s:fun_param_idxs
+name_pos_s:fun_name_pos
 
-  $// - block variables -
-  ui_array_s:block_var_idxs
-  ui_array_s:block_var_bases
+$// - block variables -
+ui_array_s:block_var_idxs
+ui_array_s:block_var_bases
 
-  $// - parse, old index of lexical analyzer -
-  unsigned:old_input_idx
+$// - parse, old index of lexical analyzer -
+unsigned:old_input_idx
 
-  $// - parse, LALR stack -
-  lalr_stack_s:lalr_stack
-  >
-  
-  additions
-  {
+$// - parse, LALR stack -
+lalr_stack_s:lalr_stack
+>
+
+additions
+{
   static unsigned recognize_type(unsigned a_length,const char *a_data);
   static void create_signature(unsigned a_name_length,char *a_name_data,unsigned a_param_cnt,val_type_s **a_param_types,string_s &a_target);
   unsigned recognize_terminal(unsigned &input_idx);
@@ -494,9 +494,9 @@ const unsigned ltg_lalr_table[ltg_lalr_state_cnt*c_ltg_terminal_plus_nonterminal
   void instr_ldxi(unsigned a_type,int a_reg_trg,int a_reg_base,int a_offset);
   void instr_movr(unsigned a_type_trg,unsigned a_type_src,int a_reg_trg,int a_reg_src);
   void instr_movi(unsigned a_type_trg,unsigned a_type_src,int a_reg_trg,basic_64b a_value);
-  }
-  
-  ltg_parser_s;
+}
+
+ltg_parser_s;
 @end
 
 /*
@@ -505,7 +505,7 @@ const unsigned ltg_lalr_table[ltg_lalr_state_cnt*c_ltg_terminal_plus_nonterminal
 
 // -- val_type_s --
 @begin
-   inlines val_type_s
+inlines val_type_s
 @end
 
 inline bool val_type_s::are_comparable(val_type_s &a_second)
@@ -564,12 +564,12 @@ inline unsigned val_type_s::jit_pointed_type()
 
 // -- val_types_s --
 @begin
-   inlines val_types_s
+inlines val_types_s
 @end
 
 // -- val_record_s --
 @begin
-   inlines val_record_s
+inlines val_record_s
 @end
 
 inline bool val_record_s::are_comparable(val_record_s &a_second)
@@ -627,22 +627,22 @@ inline unsigned val_record_s::res_type_id(val_record_s &a_second)
 
 // -- val_records_s --
 @begin
-   inlines val_records_s
+inlines val_records_s
 @end
 
 // -- fun_record_s --
 @begin
-   inlines fun_record_s
+inlines fun_record_s
 @end
 
 // -- fun_records_s --
 @begin
-   inlines fun_records_s
+inlines fun_records_s
 @end
 
 // -- ltg_parser_s --
 @begin
-   inlines ltg_parser_s
+inlines ltg_parser_s
 @end
 
 @begin

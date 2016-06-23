@@ -95,37 +95,37 @@ extern const bool c_type_is_int[] =
 
 // -- val_type_s --
 @begin
-   methods val_type_s
+methods val_type_s
 @end
 
 // -- val_types_s --
 @begin
-   methods val_types_s
+methods val_types_s
 @end
 
 // -- val_record_s --
 @begin
-   methods val_record_s
+methods val_record_s
 @end
 
 // -- val_records_s --
 @begin
-   methods val_records_s
+methods val_records_s
 @end
 
 // -- fun_record_s --
 @begin
-   methods fun_record_s
+methods fun_record_s
 @end
 
 // -- fun_records_s --
 @begin
-   methods fun_records_s
+methods fun_records_s
 @end
 
 // -- ltg_parser_s --
 @begin
-   methods ltg_parser_s
+methods ltg_parser_s
 @end
 
 unsigned ltg_parser_s::recognize_type(unsigned a_length,const char *a_data)

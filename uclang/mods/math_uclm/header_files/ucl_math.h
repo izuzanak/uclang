@@ -24,11 +24,11 @@ array<bool> bb_array_s;
 // -- primes_s --
 @begin
 struct
-    <
-    bb_array_s:sieve
-    >
+<
+bb_array_s:sieve
+>
 
-    additions
+additions
 {
   void create_sieve(unsigned a_size);
   unsigned next_idx(unsigned a_idx);

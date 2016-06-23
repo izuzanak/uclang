@@ -1509,11 +1509,11 @@ void graph_s::get_dot_code(string_s &a_string)
 
 // -- value_idx_s --
 @begin
-   methods value_idx_s
+methods value_idx_s
 @end
 
 // -- value_idx_rb_tree_s --
 @begin
-   methods value_idx_rb_tree_s
+methods value_idx_rb_tree_s
 @end
 
