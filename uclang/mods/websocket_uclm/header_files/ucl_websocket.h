@@ -82,6 +82,7 @@ struct ws_conn_s
   libwebsocket *ws_ptr;
   location_s *user_data_ptr;
   libwebsocket_callback_reasons reason;
+  bc_array_s data_buffer;
   void *data_in;
   size_t data_len;
 
@@ -244,6 +245,7 @@ inline void ws_conn_s::init()
   prot_idx = c_idx_not_exist;
   ws_ptr = NULL;
   user_data_ptr = NULL;
+  data_buffer.init();
   data_in = NULL;
   data_len = 0;
 }/*}}}*/
@@ -256,6 +258,8 @@ inline void ws_conn_s::clear(interpreter_thread_s &it)
   {
     it.release_location_ptr(user_data_ptr);
   }
+
+  data_buffer.clear();
 
   init();
 }/*}}}*/

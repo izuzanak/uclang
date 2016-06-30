@@ -147,32 +147,55 @@ int protocol_func(libwebsocket_context *ctx,libwebsocket *wsi,
           location_s *conn_location = (location_s *)*((pointer *)user);
           ws_conn_s *wscn_ptr = (ws_conn_s *)conn_location->v_data_ptr;
 
-          // - retrieve delegate pointer -
-          location_s *dlg_location = (location_s *)wsc_ptr->prot_dlgs[wscn_ptr->prot_idx];
-          delegate_s *delegate_ptr = (delegate_s *)dlg_location->v_data_ptr;
+          // - retrieve count of remaining bytes of message -
+          size_t remaining = libwebsockets_remaining_packet_payload(wsi);
+          bc_array_s &data_buffer = wscn_ptr->data_buffer;
 
-          // - set callback reason -
-          wscn_ptr->reason = reason;
+          // - message is not complete or buffered data exists -
+          if (remaining != 0 || data_buffer.used != 0)
+          {
+            data_buffer.reserve(len + remaining);
+            data_buffer.append(len,(const char *)in);
+          }
 
-          // - set callback input data -
-          wscn_ptr->data_in = in;
-          wscn_ptr->data_len = len;
+          if (remaining == 0)
+          {
+            // - retrieve delegate pointer -
+            location_s *dlg_location = (location_s *)wsc_ptr->prot_dlgs[wscn_ptr->prot_idx];
+            delegate_s *delegate_ptr = (delegate_s *)dlg_location->v_data_ptr;
 
-          // - callback parameters -
-          const unsigned param_cnt = 1;
-          pointer *param_data = (pointer *)&conn_location;
+            // - set callback reason -
+            wscn_ptr->reason = reason;
 
-          // - call delegate method -
-          location_s *trg_location = NULL;
-          BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,wsc_ptr->source_pos,
-              wsc_ptr->ret_code = c_run_return_code_EXCEPTION;
+            // - set callback input data -
+            if (data_buffer.used != 0)
+            {
+              wscn_ptr->data_in = data_buffer.data;
+              wscn_ptr->data_len = data_buffer.used;
+              data_buffer.used = 0;
+            }
+            else
+            {
+              wscn_ptr->data_in = in;
+              wscn_ptr->data_len = len;
+            }
 
-              // - release connection location -
-              it.release_location_ptr(conn_location);
+            // - callback parameters -
+            const unsigned param_cnt = 1;
+            pointer *param_data = (pointer *)&conn_location;
 
-              return 1;
-              );
-          it.release_location_ptr(trg_location);
+            // - call delegate method -
+            location_s *trg_location = NULL;
+            BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,wsc_ptr->source_pos,
+                wsc_ptr->ret_code = c_run_return_code_EXCEPTION;
+
+                // - release connection location -
+                it.release_location_ptr(conn_location);
+
+                return 1;
+                );
+            it.release_location_ptr(trg_location);
+          }
 
           // - if connection closed -
           if (reason == LWS_CALLBACK_CLOSED)
