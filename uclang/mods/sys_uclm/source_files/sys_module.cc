@@ -60,7 +60,7 @@ built_in_module_s module =
 #endif
 
 #ifdef ENABLE_CLASS_REGEX
-  + 4
+  + 5
 #endif
 
 #ifdef ENABLE_CLASS_POLL
@@ -163,6 +163,7 @@ const char *sys_error_strings[] =
   "error_REGEX_NOT_COMPILED",
   "error_REGEX_WRONG_MATCH_COUNT",
   "error_REGEX_WRONG_MATCH_OFFSET",
+  "error_REGEX_STRING_SPLIT_EMPTY_MATCH",
 #endif
 
   "error_SIGNAL_WRONG_SIGNAL_NUMBER",
@@ -576,6 +577,13 @@ bool sys_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nMatch offset %" HOST_LL_FORMAT "d, is greater than string size\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_REGEX_STRING_SPLIT_EMPTY_MATCH:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nEmpty match found while splitting string\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
 #endif
@@ -4366,7 +4374,7 @@ built_in_class_s regex_class =
 {/*{{{*/
   "Regex",
   c_modifier_public | c_modifier_final,
-  8, regex_methods,
+  9, regex_methods,
   0, regex_variables,
   bic_regex_consts,
   bic_regex_init,
@@ -4414,6 +4422,11 @@ built_in_method_s regex_methods[] =
     "match_from#2",
     c_modifier_public | c_modifier_final,
     bic_regex_method_match_from_2
+  },
+  {
+    "split#1",
+    c_modifier_public | c_modifier_final,
+    bic_regex_method_split_1
   },
   {
     "to_string#0",
@@ -4744,6 +4757,100 @@ bool bic_regex_method_match_from_2(interpreter_thread_s &it,unsigned stack_base,
   {
     BIC_SET_RESULT_BLANK();
   }
+
+  return true;
+}/*}}}*/
+
+bool bic_regex_method_split_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("split#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  regex_t *re = (regex_t *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (re == NULL)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_REGEX_NOT_COMPILED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - retrieve string pointers -
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  // - create new array pointer -
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+  // - create new array location -
+  BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);
+
+  // - create match target structure -
+  regmatch_t match;
+
+  // - split string to array -
+  {
+    unsigned idx = 0;
+    do
+    {
+      unsigned old_idx = idx;
+
+      // - execute regular expression -
+      int res = regexec(re,string_ptr->data + idx,1,&match,0);
+
+      // - if match was found -
+      if (res == 0)
+      {
+        // - ERROR -
+        if (match.rm_so == match.rm_eo)
+        {
+          it.release_location_ptr(array_location);
+
+          exception_s::throw_exception(it,module.error_base + c_error_REGEX_STRING_SPLIT_EMPTY_MATCH,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          return false;
+        }
+
+        idx += match.rm_so;
+      }
+
+      // - if match was not found -
+      else
+      {
+        idx = string_ptr->size - 1;
+      }
+
+      // - create new string pointer -
+      string_s *new_string_ptr = it.get_new_string_ptr();
+      new_string_ptr->set(idx - old_idx,string_ptr->data + old_idx);
+
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,new_string_ptr);
+
+      // - insert string location to pointer array -
+      array_ptr->push((pointer)new_location);
+
+      if (idx >= string_ptr->size - 1)
+      {
+        break;
+      }
+
+      // - jump over matched string -
+      idx += match.rm_eo - match.rm_so;
+    }
+    while(true);
+  }
+
+  BIC_SET_RESULT(array_location);
 
   return true;
 }/*}}}*/

@@ -99,6 +99,7 @@ enum
   c_error_REGEX_NOT_COMPILED,
   c_error_REGEX_WRONG_MATCH_COUNT,
   c_error_REGEX_WRONG_MATCH_OFFSET,
+  c_error_REGEX_STRING_SPLIT_EMPTY_MATCH,
 #endif
 
   c_error_SIGNAL_WRONG_SIGNAL_NUMBER,
@@ -286,6 +287,7 @@ bool bic_regex_method_Regex_1(interpreter_thread_s &it,unsigned stack_base,uli *
 bool bic_regex_method_match_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_regex_method_match_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_regex_method_match_from_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_regex_method_split_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_regex_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_regex_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 #endif
