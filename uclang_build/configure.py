@@ -29,7 +29,7 @@ c_packages = [
   ["MOD_HTTP"      ,"pkg-config",["libmicrohttpd >= 0.9.37"]],
   ["MOD_WEBSOCKET" ,"pkg-config",["libwebsockets = 1.3"]],
   ["MOD_CURL"      ,"pkg-config",["libcurl >= 7.38.0"]],
-  ["MOD_UCF"       ,"dirs"      ,["../ext_libs/ucframework/2.9"]],
+  ["MOD_UCF"       ,"dirs"      ,["../ext_libs/ucframework/2.12"]],
   ["MOD_UCTCN"     ,"dirs"      ,["../ext_libs/ucframework/1.60","../ext_libs/uctcn/2.27"]],
   ["MOD_UCMM"      ,"dirs"      ,["../ext_libs/ucmm/trunk"]],
   ["MOD_ADAPTRAIN" ,"dirs"      ,["../ext_libs/ucframework/1.60","../ext_libs/unicon","../ext_libs/adaptrain"]],

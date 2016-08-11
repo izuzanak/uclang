@@ -1282,14 +1282,14 @@ if cfg_ref[CFG_TARGET]:
       [ 
         "header_files",
         os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
-        os.sep.join(["..","..","..","ext_libs","ucframework","2.9","build","include"]),
+        os.sep.join(["..","..","..","ext_libs","ucframework","2.12","build","include"]),
       ],
       [ 
         "source_files",
       ],
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
-        os.sep.join(["..","..","..","ext_libs","ucframework","2.9","build","lib"]),
+        os.sep.join(["..","..","..","ext_libs","ucframework","2.12","build","lib"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
