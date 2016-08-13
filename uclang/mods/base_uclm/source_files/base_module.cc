@@ -3127,8 +3127,8 @@ built_in_class_s float_class =
 {/*{{{*/
   "Float",
   c_modifier_public | c_modifier_final,
-  42, float_methods,
-  0, float_variables,
+  43, float_methods,
+  1 + 5, float_variables,
   bic_float_consts,
   bic_float_init,
   bic_float_clear,
@@ -3337,6 +3337,11 @@ built_in_method_s float_methods[] =
     bic_float_method_hypot_1
   },
   {
+    "classify#0",
+    c_modifier_public | c_modifier_final,
+    bic_float_method_classify_0
+  },
+  {
     "isnan#0",
     c_modifier_public | c_modifier_final,
     bic_float_method_isnan_0
@@ -3360,10 +3365,54 @@ built_in_method_s float_methods[] =
 
 built_in_variable_s float_variables[] =
 {/*{{{*/
+
+  // - float constants -
+  { "INFINITY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - float classes constants -
+  { "CLASS_NAN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "CLASS_INFINITE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "CLASS_ZERO", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "CLASS_SUBNORMAL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "CLASS_NORMAL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_float_consts(location_array_s &const_locations)
 {/*{{{*/
+
+  // - insert float constants -
+  {
+    const_locations.push_blanks(1);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 1);
+
+#define CREATE_FLOAT_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_float;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (basic_64b)*((basic_64b *)&VALUE);\
+  cv_ptr++;
+
+    double value = INFINITY;
+    CREATE_FLOAT_BIC_STATIC(value);
+  }
+
+  // - insert float classes constants -
+  {
+    const_locations.push_blanks(5);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 5);
+
+#define CREATE_FLOAT_CLASS_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr++;
+
+    CREATE_FLOAT_CLASS_BIC_STATIC(FP_NAN);
+    CREATE_FLOAT_CLASS_BIC_STATIC(FP_INFINITE);
+    CREATE_FLOAT_CLASS_BIC_STATIC(FP_ZERO);
+    CREATE_FLOAT_CLASS_BIC_STATIC(FP_SUBNORMAL);
+    CREATE_FLOAT_CLASS_BIC_STATIC(FP_NORMAL);
+  }
 }/*}}}*/
 
 void bic_float_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -4049,6 +4098,18 @@ bool bic_float_method_cbrt_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 bool bic_float_method_hypot_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_FLOAT_FUNCTION_BINARY_OPS_CHAR_INTEGER_FLOAT(hypot,"hypot#1");
+
+  return true;
+}/*}}}*/
+
+bool bic_float_method_classify_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = fpclassify(*((double *)&dst_location->v_data_ptr));
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
