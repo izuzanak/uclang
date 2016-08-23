@@ -50,7 +50,7 @@ Container class implementing abstract data type dynamic array (vector).
 
 <a name="Array#0" />
 
-### Constructor [`Array#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6544)
+### Constructor [`Array#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6605)
 
 Creates default object of class `Array`.
 
@@ -66,7 +66,7 @@ obj: []
 
 <a name="Array#1" />
 
-### Constructor [`Array#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6549)
+### Constructor [`Array#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6610)
 
 Creates object of class `Array` containing elements retrieved from method parameter.
 
@@ -90,7 +90,7 @@ obj: [1,2,3,4,5]
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6296)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6357)
 
 Assignment operator `=`. Object of class `Array` is replaced by method parameter.
 
@@ -117,7 +117,7 @@ obj: New value
 
 <a name="operator_binary_plus_equal#1" />
 
-### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6310)
+### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6371)
 
 Append operator `+=`. Append elements retrieved from method parameter to object of class `Array`.
 
@@ -144,7 +144,7 @@ obj: [1,2,3,4,5,1,2,6,7,8]
 
 <a name="operator_binary_double_equal#1" />
 
-### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6338)
+### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6399)
 
 Comparison operator `==`. Compares object of class `Array` with method parameter and return `1` if objects has same value or `0` otherwise.
 
@@ -174,7 +174,7 @@ obj_0 == obj_2: 1
 
 <a name="operator_binary_exclamation_equal#1" />
 
-### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6355)
+### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6416)
 
 Comparison operator `!=`. Compares object of class `Array` with method parameter and return `0` if objects has same value or `1` otherwise.
 
@@ -204,7 +204,7 @@ obj_0 != obj_2: 0
 
 <a name="operator_binary_plus#1" />
 
-### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6372)
+### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6433)
 
 Concatenation operator `+`. Creates object of class `Array` containing elements of original object of class `Array` concatenated with elements retrieved from method parameter.
 
@@ -231,7 +231,7 @@ res: [1,2,3,4,5,1,2,3,4,5]
 
 <a name="operator_binary_ls_br_equal#1" />
 
-### Operator [`operator_binary_ls_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6404)
+### Operator [`operator_binary_ls_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6465)
 
 Copy values of elements retrieved from method parameter to values of elements
 of object of class `Array`.
@@ -263,7 +263,7 @@ a,b,c: [1,2,3]
 
 <a name="operator_binary_le_br_re_br#1" />
 
-### Operator [`operator_binary_le_br_re_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6537)
+### Operator [`operator_binary_le_br_re_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6598)
 
 Item selection operator `[]`.
 Retrieve element from object of class `Array` stored at requested index position.
@@ -298,7 +298,7 @@ obj[2]: 3
 
 <a name="clear#0" />
 
-### Method [`clear#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6571)
+### Method [`clear#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6632)
 
 Release all elements stored in object of class `Array`.
 
@@ -321,7 +321,7 @@ obj: []
 
 <a name="resize#1" />
 
-### Method [`resize#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6597)
+### Method [`resize#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6658)
 
 Resize object of class `Array` to size given by method parameter. New
 elements are initialized to objects of class `Blank`.
@@ -349,7 +349,7 @@ obj: [1,2,3,4,5,<blank>,<blank>,<blank>]
 
 <a name="push#1" />
 
-### Method [`push#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6653)
+### Method [`push#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6714)
 
 Insert method parameter to end of object of class `Array`.
 
@@ -377,7 +377,7 @@ obj: [1,2,3,4,5,6,7]
 
 <a name="push_ref#1" />
 
-### Method [`push_ref#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6669)
+### Method [`push_ref#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6730)
 
 Insert reference to method parameter to end of object of class `Array`.
 
@@ -406,7 +406,7 @@ obj: [1,2,3,4,5,Hello world!]
 
 <a name="pop#0" />
 
-### Method [`pop#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6685)
+### Method [`pop#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6746)
 
 Remove and return last element from object of class `Array`.
 
@@ -432,7 +432,7 @@ obj: [1,2,3]
 
 <a name="last#0" />
 
-### Method [`last#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6709)
+### Method [`last#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6770)
 
 Retrieve and return last element of object of class `Array`.
 
@@ -456,7 +456,7 @@ obj: [1,2,3,4,5]
 
 <a name="fill#1" />
 
-### Method [`fill#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6733)
+### Method [`fill#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6794)
 
 Replace all elements of object of class `Array` by method parameter.
 
@@ -483,7 +483,7 @@ obj: [0,0,0,0,0]
 
 <a name="get_idx#1" />
 
-### Method [`get_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6760)
+### Method [`get_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6821)
 
 From object of class `Array`, retrieve index of first element equal to method parameter.
 
@@ -512,7 +512,7 @@ obj.get_idx(100): <blank>
 
 <a name="get_idxs#1" />
 
-### Method [`get_idxs#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6795)
+### Method [`get_idxs#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6856)
 
 From object of class `Array`, retrieve indexes of elements that are equal to method parameter. Element indexes are returned as object of class ``Array``.
 
@@ -540,7 +540,7 @@ obj.get_idxs(100): []
 
 <a name="contain#1" />
 
-### Method [`contain#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6840)
+### Method [`contain#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6901)
 
 Test if object of class `Array` contains element with same value as object given by method parameter.
 
@@ -570,7 +570,7 @@ obj.contain(100): 0
 
 <a name="compare#1" />
 
-### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6875)
+### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6936)
 
 Compare object of class `Array` with method parameter.
 
@@ -601,7 +601,7 @@ obj_0.compare(obj_0): 0
 
 <a name="item#1" />
 
-### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6891)
+### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6952)
 
 Retrieve element from object of class `Array` stored at requested index position.
 
@@ -636,7 +636,7 @@ obj.item(4): 5
 
 <a name="first_idx#0" />
 
-### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6898)
+### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6959)
 
 Retrieve index of first element in object of class `Array`.
 
@@ -660,7 +660,7 @@ obj.first_idx: <blank>
 
 <a name="last_idx#0" />
 
-### Method `spec` [`last_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6917)
+### Method `spec` [`last_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6978)
 
 Retrieve index of last element in object of class `Array`.
 
@@ -687,7 +687,7 @@ obj.last_idx: <blank>
 
 <a name="next_idx#1" />
 
-### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6938)
+### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6999)
 
 From object of class `Array` retrieve index of element following element identified by method parameter.
 
@@ -722,7 +722,7 @@ idx: 4
 
 <a name="prev_idx#1" />
 
-### Method `spec` [`prev_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L6971)
+### Method `spec` [`prev_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7032)
 
 From object of class `Array` retrieve index of element preceding element identified by method parameter.
 
@@ -757,7 +757,7 @@ idx: 0
 
 <a name="length#0" />
 
-### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7006)
+### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7067)
 
 Retrieve count of elements in object of class `Array`.
 
@@ -780,7 +780,7 @@ obj.length(): 0
 
 <a name="to_string#0" />
 
-### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7018)
+### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7079)
 
 Convert object of class `Array` to object of class `String`.
 Each element of object of class `Array` is converted to string by call of its
@@ -802,7 +802,7 @@ obj.to_string(): [1,2,3,4,5]
 
 <a name="to_string#1" />
 
-### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7060)
+### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7121)
 
 Convert object of class `Array` to object of class `String`.
 Each element of object of class `Array` is converted to string by call of its
@@ -830,7 +830,7 @@ obj.to_string("<->"): 1<->2<->3<->4<->5
 
 <a name="print#0" />
 
-### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7115)
+### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7176)
 
 Print string representation of object of class `Array` to standard output.
 Each element of object of class `Array` is printed by call of its `print#0`

@@ -569,6 +569,20 @@ new Blank(),"
 
     if (m_target_name == "Float")
     {
+      class_Float["var_classes"] = new Dict(
+      [/*{{{*/
+        "constant",new VarClassDescr("Constant values"),
+        "class",new VarClassDescr("Real number classes")
+      ]);/*}}}*/
+      class_Float["variables"] = new Dict(
+      [/*{{{*/
+        "INFINITY",new VariableDescr("Positive infinity value.","constant"),
+        "CLASS_NAN",new VariableDescr("Value is \"Not a Number\".","class"),
+        "CLASS_INFINITE",new VariableDescr("Value is positive infinity or negative infinity.","class"),
+        "CLASS_ZERO",new VariableDescr("Value is zero.","class"),
+        "CLASS_SUBNORMAL",new VariableDescr("Value is too small to be represented in normalized format.","class"),
+        "CLASS_NORMAL",new VariableDescr("Value is a normal floating-point number.","class")
+      ]);/*}}}*/
       class_Float["methods"] = new Dict(
       [/*{{{*/
         "Float#1", new MethodDescr(
@@ -648,9 +662,18 @@ determined by value of object of class `%s` and method parameter." % m_target_na
      get_property("Char","create_example"),
      get_property("Integer","create_example"),
      get_property("Float","create_example")]),
+        "classify#0", new MethodDescr(
+"Return `%s` identifying float number class." % doc_class_ref("Integer"),
+[],"Object of class %s." % doc_class_ref("Integer"),"
+(\"res: %%d\\n\" %% (Float.INFINITY / Float.INFINITY).classify()).print();
+(\"res: %%d\\n\" %% (Float.INFINITY).classify()).print();
+(\"res: %%d\\n\" %% %s.classify()).print();
+(\"res: %%d\\n\" %% %s.classify()).print();
+" % [get_property("Float","create_zero"),
+     get_property("Float","create_example")]),
         "isnan#0", new MethodDescr(
 "Test if value of object of class `%s` is not an number." % m_target_name,
-[],"Object of class %s." % doc_class_ref(m_target_name),"
+[],"Object of class %s." % doc_class_ref("Integer"),"
 (\"res: %d\\n\" % 1000.0.isnan()).print();
 (\"res: %d\\n\" % ((-1.0).sqrt()).isnan()).print();
 ")
