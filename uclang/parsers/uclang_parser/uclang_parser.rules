@@ -90,6 +90,9 @@ terminals:
    try {"try"}
    catch {"catch"}
 
+   and {"and"}
+   or {"or"}
+
    equal {'='}
    plus_equal {"+="}
    minus_equal {"-="}
@@ -2134,6 +2137,35 @@ rules:
          table.insert(node_stack,this_idx);
       else
          print(table.concat(tabs,"").."conditional expression");
+      end
+   }
+
+   $ -- logical operators --
+   <H> -> <H> and <exp> ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"<exp> and <exp>\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      else
+         print(table.concat(tabs,"").."logical and");
+      end
+   }
+
+   <H> -> <H> or <exp> ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"<exp> or <exp>\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      else
+         print(table.concat(tabs,"").."logical or");
       end
    }
 
