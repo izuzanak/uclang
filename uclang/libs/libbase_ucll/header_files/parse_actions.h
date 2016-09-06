@@ -110,6 +110,8 @@ bool pa_type_identification(string_s &source_string,script_parser_s &_this);
 bool pa_convert_to_string(string_s &source_string,script_parser_s &_this);
 bool pa_object_reference_copy(string_s &source_string,script_parser_s &_this);
 bool pa_conditional_expression(string_s &source_string,script_parser_s &_this);
+bool pa_logical_and(string_s &source_string,script_parser_s &_this);
+bool pa_logical_or(string_s &source_string,script_parser_s &_this);
 bool pa_class_access(string_s &source_string,script_parser_s &_this);
 bool pa_object_member_select(string_s &source_string,script_parser_s &_this);
 bool pa_this_method_call(string_s &source_string,script_parser_s &_this);

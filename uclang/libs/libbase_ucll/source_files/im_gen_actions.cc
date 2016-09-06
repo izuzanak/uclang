@@ -10,7 +10,7 @@ include "script_parser.h"
 const unsigned max_number_string_length = 12;
 
 // - callers of intermediate code generating functions -
-const unsigned c_script_im_gen_action_cnt = 58;
+const unsigned c_script_im_gen_action_cnt = 60;
 bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,script_parser_s &_this) =
 {/*{{{*/
   im_elements_array,
@@ -63,6 +63,8 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
   im_type_identification,
   im_object_reference_copy,
   im_conditional_expression,
+  im_logical_and,
+  im_logical_or,
   im_class_access,
   im_object_member_select,
   im_this_method_call,
@@ -1772,7 +1774,7 @@ bool im_conditional_expression(expression_s &exp,uli_array_s &begin_code,uli_arr
       // - store second expression offset -
       code[code_idx + ice_end] = code.used - code_idx;
 
-      // - get temporary location for store of object member location -
+      // - get temporary location to store result -
       unsigned tmp_local_idx = im.free_stack_idxs.used != 0?im.free_stack_idxs.pop():im.stack_idx_max++;
       code[code_idx + ice_stack_trg] = tmp_local_idx;
 
@@ -1791,6 +1793,220 @@ bool im_conditional_expression(expression_s &exp,uli_array_s &begin_code,uli_arr
   }
 
   debug_message_4(fprintf(stderr,"script_parser: intermediate generate: im_conditional_expression\n"));
+
+  return true;
+}/*}}}*/
+
+bool im_logical_and(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,script_parser_s &_this)
+{/*{{{*/
+  im_descr_s &im = _this.im_descr;
+
+  // *****
+
+  unsigned exp_node_idx = im.exp_node_stack.last();
+  unsigned &exp_node_done = im.done_exp_nodes[exp_node_idx];
+
+  // - set up tested value -
+  if (exp_node_done == c_idx_not_exist)
+  {
+    // - process expression nodes describing tested value -
+    im.exp_node_stack.push(exp.nodes[exp_node_idx + 2]);
+    exp_node_done = 1;
+  }
+  else
+  {
+    switch (exp_node_done)
+    {
+    case 1:
+    {
+      // - store test code index -
+      im.cond_exp_code_idxs.push(code.used);
+
+      // - process tested value -
+      unsigned *op_ptr = im.operands.data + im.operand_stack.pop();
+
+      code.push(i_logical_and);
+      code.push(exp.nodes[exp_node_idx + 1]);
+      code.push(c_idx_not_exist);
+
+      // - ERROR -
+      if (!(*op_ptr & c_op_modifier_object))
+      {
+        _this.error_code.push(ei_expected_object_as_operand);
+        _this.error_code.push(exp.nodes[exp_node_idx + 1]);
+
+        return false;
+      }
+
+      code.push(op_ptr[1]);
+      if (*op_ptr & c_op_modifier_tmp)
+      {
+        im.free_stack_idxs.push(op_ptr[1]);
+      }
+
+      // - generated index of expression code -
+      code.push(c_idx_not_exist);
+
+      // - process expression nodes describing expression -
+      im.exp_node_stack.push(exp.nodes[exp_node_idx + 3]);
+      exp_node_done = 2;
+    }
+    break;
+
+    case 2:
+    {
+      // - process expression return value -
+      unsigned *op_ptr = im.operands.data + im.operand_stack.pop();
+
+      // - ERROR -
+      if (!(*op_ptr & c_op_modifier_object))
+      {
+        _this.error_code.push(ei_expected_object_as_operand);
+        _this.error_code.push(exp.nodes[exp_node_idx + 1]);
+
+        return false;
+      }
+
+      // - generate return code -
+      code.push(i_return);
+      code.push(op_ptr[1]);
+      if (*op_ptr & c_op_modifier_tmp)
+      {
+        im.free_stack_idxs.push(op_ptr[1]);
+      }
+
+      // - retrieve and remove test code index -
+      unsigned code_idx = im.cond_exp_code_idxs.pop();
+
+      // - store expression offset -
+      code[code_idx + ila_end] = code.used - code_idx;
+
+      // - get temporary location to store result -
+      unsigned tmp_local_idx = im.free_stack_idxs.used != 0?im.free_stack_idxs.pop():im.stack_idx_max++;
+      code[code_idx + ila_stack_trg] = tmp_local_idx;
+
+      // - store position of logical and result reference -
+      im.operand_stack.push(im.operands.used);
+      im.operands.push(c_op_modifier_object | c_op_modifier_tmp);
+      im.operands.push(tmp_local_idx);
+
+      im.exp_node_stack.used--;
+    }
+    break;
+
+    default:
+      cassert(0);
+    }
+  }
+
+  debug_message_4(fprintf(stderr,"script_parser: intermediate generate: im_logical_and\n"));
+
+  return true;
+}/*}}}*/
+
+bool im_logical_or(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,script_parser_s &_this)
+{/*{{{*/
+  im_descr_s &im = _this.im_descr;
+
+  // *****
+
+  unsigned exp_node_idx = im.exp_node_stack.last();
+  unsigned &exp_node_done = im.done_exp_nodes[exp_node_idx];
+
+  // - set up tested value -
+  if (exp_node_done == c_idx_not_exist)
+  {
+    // - process expression nodes describing tested value -
+    im.exp_node_stack.push(exp.nodes[exp_node_idx + 2]);
+    exp_node_done = 1;
+  }
+  else
+  {
+    switch (exp_node_done)
+    {
+    case 1:
+    {
+      // - store test code index -
+      im.cond_exp_code_idxs.push(code.used);
+
+      // - process tested value -
+      unsigned *op_ptr = im.operands.data + im.operand_stack.pop();
+
+      code.push(i_logical_or);
+      code.push(exp.nodes[exp_node_idx + 1]);
+      code.push(c_idx_not_exist);
+
+      // - ERROR -
+      if (!(*op_ptr & c_op_modifier_object))
+      {
+        _this.error_code.push(ei_expected_object_as_operand);
+        _this.error_code.push(exp.nodes[exp_node_idx + 1]);
+
+        return false;
+      }
+
+      code.push(op_ptr[1]);
+      if (*op_ptr & c_op_modifier_tmp)
+      {
+        im.free_stack_idxs.push(op_ptr[1]);
+      }
+
+      // - generated index of expression code -
+      code.push(c_idx_not_exist);
+
+      // - process expression nodes describing expression -
+      im.exp_node_stack.push(exp.nodes[exp_node_idx + 3]);
+      exp_node_done = 2;
+    }
+    break;
+
+    case 2:
+    {
+      // - process expression return value -
+      unsigned *op_ptr = im.operands.data + im.operand_stack.pop();
+
+      // - ERROR -
+      if (!(*op_ptr & c_op_modifier_object))
+      {
+        _this.error_code.push(ei_expected_object_as_operand);
+        _this.error_code.push(exp.nodes[exp_node_idx + 1]);
+
+        return false;
+      }
+
+      // - generate return code -
+      code.push(i_return);
+      code.push(op_ptr[1]);
+      if (*op_ptr & c_op_modifier_tmp)
+      {
+        im.free_stack_idxs.push(op_ptr[1]);
+      }
+
+      // - retrieve and remove test code index -
+      unsigned code_idx = im.cond_exp_code_idxs.pop();
+
+      // - store expression offset -
+      code[code_idx + ilo_end] = code.used - code_idx;
+
+      // - get temporary location to store result -
+      unsigned tmp_local_idx = im.free_stack_idxs.used != 0?im.free_stack_idxs.pop():im.stack_idx_max++;
+      code[code_idx + ilo_stack_trg] = tmp_local_idx;
+
+      // - store position of logical and result reference -
+      im.operand_stack.push(im.operands.used);
+      im.operands.push(c_op_modifier_object | c_op_modifier_tmp);
+      im.operands.push(tmp_local_idx);
+
+      im.exp_node_stack.used--;
+    }
+    break;
+
+    default:
+      cassert(0);
+    }
+  }
+
+  debug_message_4(fprintf(stderr,"script_parser: intermediate generate: im_logical_or\n"));
 
   return true;
 }/*}}}*/

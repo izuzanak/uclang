@@ -10,7 +10,7 @@ include "script_parser.h"
 #define IT_INTERPRETER ((interpreter_s *)it.interpreter_ptr)
 
 // - callers of interpreter instruction functions -
-const unsigned c_instruction_cnt = 17;
+const unsigned c_instruction_cnt = 19;
 int(*instruction_callers[c_instruction_cnt])(inst_params_s *params) =
 {/*{{{*/
   inst_this_element,
@@ -25,6 +25,8 @@ int(*instruction_callers[c_instruction_cnt])(inst_params_s *params) =
   inst_type_identification,
   inst_object_reference_copy,
   inst_conditional_expression,
+  inst_logical_and,
+  inst_logical_or,
   inst_object_member_select,
   inst_switch_test,
   inst_slice_range,
@@ -717,7 +719,7 @@ int inst_conditional_expression(inst_params_s *params)
     }
   }
 
-  // - copy location to target location -
+  // - copy result location to target location -
   {
     location_s *res_location = (location_s *)it.data_stack[stack_base + result_idx];
     pointer &trg_location = it.data_stack[stack_base + code[ice_stack_trg]];
@@ -728,6 +730,122 @@ int inst_conditional_expression(inst_params_s *params)
   }
 
   code += code[ice_end];
+
+  return c_run_return_code_OK;
+}/*}}}*/
+
+int inst_logical_and(inst_params_s *params)
+{/*{{{*/
+  interpreter_thread_s &it = *params->it_ptr;
+  uli *&code = *params->code_ptr;
+  unsigned stack_base = params->stack_base;
+
+  // -----
+
+  debug_message_5(fprintf(stderr,"interpreter: instruction: i_logical_and: %lu <- %lu\n",stack_base + code[ila_stack_trg],stack_base + code[ila_stack_src]));
+
+  // - location containing tested value -
+  location_s *location_ptr = (location_s *)it.get_stack_value(stack_base + code[ila_stack_src]);
+
+  bool result;
+  if (!it.test_value(location_ptr,result))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_CANNOT_TEST_TYPE_VALUE,code[ila_source_pos],(location_s *)it.blank_location);
+    new_exception->params.push(location_ptr->v_type);
+
+    return c_run_return_code_EXCEPTION;
+  }
+
+  if (result)
+  {
+    // - execute expression -
+    unsigned result_idx;
+    if (!it.run_expression_code(code + ila_size,stack_base,&result_idx))
+    {
+      return c_run_return_code_EXCEPTION;
+    }
+
+    // - copy result location to target location -
+    {
+      location_s *res_location = (location_s *)it.data_stack[stack_base + result_idx];
+      pointer &trg_location = it.data_stack[stack_base + code[ila_stack_trg]];
+
+      res_location->v_reference_cnt.atomic_inc();
+      it.release_location_ptr((location_s *)trg_location);
+      trg_location = (pointer)res_location;
+    }
+  }
+  else
+  {
+    // - copy location to target location -
+    {
+      pointer &trg_location = it.data_stack[stack_base + code[ila_stack_trg]];
+
+      location_ptr->v_reference_cnt.atomic_inc();
+      it.release_location_ptr((location_s *)trg_location);
+      trg_location = (pointer)location_ptr;
+    }
+  }
+
+  code += code[ila_end];
+
+  return c_run_return_code_OK;
+}/*}}}*/
+
+int inst_logical_or(inst_params_s *params)
+{/*{{{*/
+  interpreter_thread_s &it = *params->it_ptr;
+  uli *&code = *params->code_ptr;
+  unsigned stack_base = params->stack_base;
+
+  // -----
+
+  debug_message_5(fprintf(stderr,"interpreter: instruction: i_logical_or: %lu <- %lu\n",stack_base + code[ilo_stack_trg],stack_base + code[ilo_stack_src]));
+
+  // - location containing tested value -
+  location_s *location_ptr = (location_s *)it.get_stack_value(stack_base + code[ilo_stack_src]);
+
+  bool result;
+  if (!it.test_value(location_ptr,result))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_CANNOT_TEST_TYPE_VALUE,code[ilo_source_pos],(location_s *)it.blank_location);
+    new_exception->params.push(location_ptr->v_type);
+
+    return c_run_return_code_EXCEPTION;
+  }
+
+  if (!result)
+  {
+    // - execute expression -
+    unsigned result_idx;
+    if (!it.run_expression_code(code + ilo_size,stack_base,&result_idx))
+    {
+      return c_run_return_code_EXCEPTION;
+    }
+
+    // - copy result location to target location -
+    {
+      location_s *res_location = (location_s *)it.data_stack[stack_base + result_idx];
+      pointer &trg_location = it.data_stack[stack_base + code[ilo_stack_trg]];
+
+      res_location->v_reference_cnt.atomic_inc();
+      it.release_location_ptr((location_s *)trg_location);
+      trg_location = (pointer)res_location;
+    }
+  }
+  else
+  {
+    // - copy location to target location -
+    {
+      pointer &trg_location = it.data_stack[stack_base + code[ilo_stack_trg]];
+
+      location_ptr->v_reference_cnt.atomic_inc();
+      it.release_location_ptr((location_s *)trg_location);
+      trg_location = (pointer)location_ptr;
+    }
+  }
+
+  code += code[ilo_end];
 
   return c_run_return_code_OK;
 }/*}}}*/

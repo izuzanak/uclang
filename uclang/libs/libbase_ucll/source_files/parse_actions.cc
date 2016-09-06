@@ -10,7 +10,7 @@ include "script_parser.h"
 const unsigned max_number_string_length = 12;
 
 // - callers of parse action functions -
-const unsigned c_script_parse_action_cnt = 181;
+const unsigned c_script_parse_action_cnt = 183;
 bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,script_parser_s &_this) =
 {/*{{{*/
 
@@ -229,6 +229,8 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
   pa_object_reference_copy,
 
   pa_conditional_expression,
+  pa_logical_and,
+  pa_logical_or,
 
   pa_null,
   pa_class_access,
@@ -3628,6 +3630,68 @@ bool pa_conditional_expression(string_s &source_string,script_parser_s &_this)
   tmp_exp_info.ui_second = tei_ptr[0].ui_second + tei_ptr[1].ui_second + tei_ptr[2].ui_second + 5;
 
   debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_conditional_expression\n"));
+
+  return true;
+}/*}}}*/
+
+bool pa_logical_and(string_s &source_string,script_parser_s &_this)
+{/*{{{*/
+  expression_descr_s &ed = _this.expression_descr;
+
+  // *****
+
+  // - store node position -
+  unsigned tmp_node_idx = ed.tmp_expression.used;
+  idx_size_s *tei_ptr = ed.tmp_exp_info.data + ed.tmp_exp_info.used - 2;
+
+  // - store node to expression -
+  ed.tmp_expression.push(c_node_type_logical_and);
+  ed.tmp_expression.push(SET_SRC_POS(_this.source_idx,_this.old_input_idx));
+  ed.tmp_expression.push(tei_ptr[0].ui_first);
+  ed.tmp_expression.push(tei_ptr[1].ui_first);
+
+  // - remove old nodes from stack -
+  ed.tmp_exp_info.used -= 2;
+
+  // - create expression info node -
+  ed.tmp_exp_info.push_blank();
+  idx_size_s &tmp_exp_info = ed.tmp_exp_info.last();
+
+  tmp_exp_info.ui_first = tmp_node_idx;
+  tmp_exp_info.ui_second = tei_ptr[0].ui_second + tei_ptr[1].ui_second + 4;
+
+  debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_logical_and\n"));
+
+  return true;
+}/*}}}*/
+
+bool pa_logical_or(string_s &source_string,script_parser_s &_this)
+{/*{{{*/
+  expression_descr_s &ed = _this.expression_descr;
+
+  // *****
+
+  // - store node position -
+  unsigned tmp_node_idx = ed.tmp_expression.used;
+  idx_size_s *tei_ptr = ed.tmp_exp_info.data + ed.tmp_exp_info.used - 2;
+
+  // - store node to expression -
+  ed.tmp_expression.push(c_node_type_logical_or);
+  ed.tmp_expression.push(SET_SRC_POS(_this.source_idx,_this.old_input_idx));
+  ed.tmp_expression.push(tei_ptr[0].ui_first);
+  ed.tmp_expression.push(tei_ptr[1].ui_first);
+
+  // - remove old nodes from stack -
+  ed.tmp_exp_info.used -= 2;
+
+  // - create expression info node -
+  ed.tmp_exp_info.push_blank();
+  idx_size_s &tmp_exp_info = ed.tmp_exp_info.last();
+
+  tmp_exp_info.ui_first = tmp_node_idx;
+  tmp_exp_info.ui_second = tei_ptr[0].ui_second + tei_ptr[1].ui_second + 4;
+
+  debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_logical_or\n"));
 
   return true;
 }/*}}}*/
