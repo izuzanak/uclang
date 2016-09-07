@@ -26,6 +26,25 @@ type obj: Blank, obj: <blank>
 
 type this: Main, this: Main
 
+=== Logical operators "and" and "or" evaluates from left to right ==============
+
+0 and 0 and 0 : 0
+0  or 0  or 0 : 0
+1 and 0 and 0 : 0
+1  or 0  or 0 : 1
+0 and 1 and 0 : 0
+0  or 1  or 0 : 1
+1 and 1 and 0 : 0
+1  or 1  or 0 : 1
+0 and 0 and 1 : 0
+0  or 0  or 1 : 1
+1 and 0 and 1 : 0
+1  or 0  or 1 : 1
+0 and 1 and 1 : 0
+0  or 1  or 1 : 1
+1 and 1 and 1 : 1
+1  or 1  or 1 : 1
+
 === Operator/keyword "=@" create reference to value ============================
 
 type value: Integer, value: 10

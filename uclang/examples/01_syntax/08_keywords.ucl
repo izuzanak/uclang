@@ -19,7 +19,7 @@ class Main
     // List of language keywords:
     // import, namespace, using, class, extends, public, private, static, abstract,
     // final, parallel, new, free, this, type, if, else, do, while, for, switch, case,
-    // default, break, continue, return, try, catch
+    // default, break, continue, return, try, catch, and, or
 
     // List of language special keyword/operators
     // @, =@, <-, ?, :
@@ -63,6 +63,21 @@ class Main
 
     // Keyword "this" refers to object instance
     new Main();
+
+    // Left to right evaluated logical operators
+    Tutorial.note("Logical operators \"and\" and \"or\" evaluates from left to right");
+    num = 0;
+    do {
+      a = (num & 1);
+      b = (num & 2) >> 1;
+      c = (num & 4) >> 2;
+
+      res_and = a and b and c;
+      res_or = a or b or c;
+
+      ("%d and %d and %d : %d\n" % [a,b,c,res_and]).print();
+      ("%d  or %d  or %d : %d\n" % [a,b,c,res_or]).print();
+    } while(++num < 8);
 
     // Operator/keyword "=@" creates reference to right-hand value, and stores
     // it to left-hand variable
