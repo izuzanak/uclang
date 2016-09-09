@@ -11,7 +11,7 @@ include "script_parser.h"
 #endif
 
 #include <glib.h>
-#include <mono/jit/jit.h>
+#include <mono/mini/jit.h>
 #include <mono/metadata/assembly.h>
 
 #ifdef __cplusplus
