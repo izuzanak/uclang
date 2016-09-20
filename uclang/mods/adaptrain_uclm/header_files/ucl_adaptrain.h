@@ -507,5 +507,11 @@ inline long long int time_stamp_to_nanosec(sTIMEDATE48 &a_time_stamp)
   return a_time_stamp.seconds*1000000000LL + (a_time_stamp.ticks*1000000000LL)/0x10000;
 }/*}}}*/
 
+inline void nanosec_to_time_stamp(long long int a_nanosec,sTIMEDATE48 &a_time_stamp)
+{/*{{{*/
+  a_time_stamp.seconds = a_nanosec/1000000000LL;
+  a_time_stamp.ticks = ((a_nanosec%1000000000LL)*0x10000)/1000000000LL;
+}/*}}}*/
+
 #endif
 

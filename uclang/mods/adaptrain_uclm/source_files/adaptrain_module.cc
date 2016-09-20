@@ -3340,7 +3340,7 @@ built_in_class_s ato_trip_class =
 {/*{{{*/
   "AtoTrip",
   c_modifier_public | c_modifier_final,
-  17, ato_trip_methods,
+  21, ato_trip_methods,
   0, ato_trip_variables,
   bic_ato_trip_consts,
   bic_ato_trip_init,
@@ -3375,6 +3375,16 @@ built_in_method_s ato_trip_methods[] =
     bic_ato_trip_method_AtoTrip_1
   },
   { 
+    "pack#0",
+    c_modifier_public | c_modifier_final,
+    bic_ato_trip_method_pack_0
+  },
+  { 
+    "unpack#1",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_ato_trip_method_unpack_1
+  },
+  { 
     "TripId#0",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_method_TripId_0
@@ -3405,9 +3415,19 @@ built_in_method_s ato_trip_methods[] =
     bic_ato_trip_method_DepartTime_0
   },
   { 
+    "DepartTime#1",
+    c_modifier_public | c_modifier_final,
+    bic_ato_trip_method_DepartTime_1
+  },
+  { 
     "ArrivalTime#0",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_method_ArrivalTime_0
+  },
+  { 
+    "ArrivalTime#1",
+    c_modifier_public | c_modifier_final,
+    bic_ato_trip_method_ArrivalTime_1
   },
   { 
     "Version#0",
@@ -3450,7 +3470,99 @@ built_in_variable_s ato_trip_variables[] =
 {/*{{{*/
 };/*}}}*/
 
-#define BIC_ATO_TRIP_STRING_VALUE(NAME)\
+#define ATO_TRIP_COPY(NAME,TYPE) \
+{/*{{{*/\
+  memcpy_bo(&NAME,&src_ ## NAME,sizeof(TYPE),c_little_endian);\
+}/*}}}*/
+
+#define ATO_TRIP_DATETIME48_COPY(NAME) \
+{/*{{{*/\
+  ATO_TRIP_COPY(trip.NAME.seconds,U32);\
+  ATO_TRIP_COPY(trip.NAME.ticks,U16);\
+}/*}}}*/
+
+#define ATO_TRIP_SEC_COPY(NAME,TYPE) \
+{/*{{{*/\
+  memcpy_bo(&t_ptr->NAME,&s_ptr->NAME,sizeof(TYPE),c_little_endian);\
+}/*}}}*/
+
+#define ATO_TRIP_SEC_DATETIME48_COPY(NAME) \
+{/*{{{*/\
+  ATO_TRIP_SEC_COPY(NAME.seconds,U32);\
+  ATO_TRIP_SEC_COPY(NAME.ticks,U16);\
+}/*}}}*/
+
+#define BIC_ATO_TRIP_UNPACK() \
+/*{{{*/\
+\
+  /* - check MD5 digest - */\
+  BIC_CHECK_MD5_DIGEST(ATO_TRIP_WRONG_MD5_CHECKSUM);\
+\
+  /* - create ato trip object - */\
+  ato_trip_s *trip_ptr = (ato_trip_s *)cmalloc(sizeof(ato_trip_s));\
+  trip_ptr->init();\
+\
+  /* - compute trip header size - */\
+  const unsigned c_trip_head_size = sizeof(sTRIP) - sizeof(sLINE_SEC_DESC);\
+\
+  /* - ERROR - */\
+  if (string_ptr->size - 1 < c_trip_head_size)\
+  {\
+    trip_ptr->clear(it);\
+    cfree(trip_ptr);\
+\
+    exception_s::throw_exception(it,module.error_base + c_error_ATO_TRIP_WRONG_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  /* - process sTRIP structure - */\
+  sTRIP &src_trip = *((sTRIP *)string_ptr->data);\
+  sTRIP &trip = trip_ptr->trip;\
+\
+  memcpy(&trip,&src_trip,c_trip_head_size);\
+\
+  ATO_TRIP_DATETIME48_COPY(TimeStamp);\
+  ATO_TRIP_DATETIME48_COPY(DepartTime);\
+  ATO_TRIP_DATETIME48_COPY(ArrivalTime);\
+\
+  ATO_TRIP_COPY(trip.Version,U16);\
+  ATO_TRIP_COPY(trip.HeadingSize,U16);\
+  ATO_TRIP_COPY(trip.LineSectSize,U16);\
+  ATO_TRIP_COPY(trip.NofLineSections,U16);\
+\
+  if (trip.NofLineSections > 0)\
+  {\
+    /* - compute trip sections memory size - */\
+    unsigned sections_mem_size = trip.NofLineSections*sizeof(sLINE_SEC_DESC);\
+\
+    /* - ERROR - */\
+    if (string_ptr->size - 1 < c_trip_head_size + sections_mem_size)\
+    {\
+      trip_ptr->clear(it);\
+      cfree(trip_ptr);\
+\
+      exception_s::throw_exception(it,module.error_base + c_error_ATO_TRIP_WRONG_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      return false;\
+    }\
+\
+    /* - allocate trip sections memory - */\
+    trip_ptr->sec_descrs = (sLINE_SEC_DESC *)cmalloc(sections_mem_size);\
+\
+    sLINE_SEC_DESC *s_ptr = (sLINE_SEC_DESC *)(string_ptr->data + c_trip_head_size);\
+    sLINE_SEC_DESC *s_ptr_end = s_ptr + trip.NofLineSections;\
+    sLINE_SEC_DESC *t_ptr = trip_ptr->sec_descrs;\
+\
+    do {\
+      memcpy(t_ptr,s_ptr,sizeof(sLINE_SEC_DESC));\
+\
+      ATO_TRIP_SEC_DATETIME48_COPY(TimeStamp);\
+      ATO_TRIP_SEC_DATETIME48_COPY(ArrivalTime);\
+      ATO_TRIP_SEC_DATETIME48_COPY(DepartTime);\
+    } while(++t_ptr,++s_ptr < s_ptr_end);\
+  }\
+/*}}}*/
+
+#define BIC_ATO_TRIP_STRING_VALUE(NAME) \
 {/*{{{*/\
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
@@ -3467,7 +3579,7 @@ built_in_variable_s ato_trip_variables[] =
   return true;\
 }/*}}}*/
 
-#define BIC_ATO_TRIP_TIME_STAMP_VALUE(NAME)\
+#define BIC_ATO_TRIP_TIME_STAMP_VALUE(NAME) \
 {/*{{{*/\
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
@@ -3477,6 +3589,34 @@ built_in_variable_s ato_trip_variables[] =
   long long int result = time_stamp_to_nanosec(trip_ptr->trip.NAME);\
 \
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
+\
+  return true;\
+}/*}}}*/
+
+#define BIC_ATO_TRIP_TIME_STAMP_VALUE_SET(NAME) \
+{/*{{{*/\
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+\
+  long long int nanosec;\
+\
+  /* - ERROR - */\
+  if (!it.retrieve_integer(src_0_location,nanosec))\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    BIC_EXCEPTION_PUSH_METHOD_RI(#NAME "#1");\
+    new_exception->params.push(1);\
+    new_exception->params.push(src_0_location->v_type);\
+\
+    return false;\
+  }\
+\
+  ato_trip_s *trip_ptr = (ato_trip_s *)dst_location->v_data_ptr;\
+\
+  nanosec_to_time_stamp(nanosec,trip_ptr->trip.NAME);\
+\
+  BIC_SET_RESULT_BLANK();\
 \
   return true;\
 }/*}}}*/
@@ -3628,42 +3768,37 @@ bool bic_ato_trip_method_AtoTrip_1(interpreter_thread_s &it,unsigned stack_base,
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
-  // - check MD5 digest -
-  BIC_CHECK_MD5_DIGEST(ATO_TRIP_WRONG_MD5_CHECKSUM);
+  BIC_ATO_TRIP_UNPACK();
 
-  // - create ato trip object -
-  ato_trip_s *trip_ptr = (ato_trip_s *)cmalloc(sizeof(ato_trip_s));
-  trip_ptr->init();
+  dst_location->v_data_ptr = (basic_64b)trip_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_ato_trip_method_pack_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  ato_trip_s *trip_ptr = (ato_trip_s *)dst_location->v_data_ptr;
+
+  // - retrieve source sTRIP structure -
+  sTRIP &src_trip = trip_ptr->trip;
 
   // - compute trip header size -
   const unsigned c_trip_head_size = sizeof(sTRIP) - sizeof(sLINE_SEC_DESC);
 
-  // - ERROR -
-  if (string_ptr->size - 1 < c_trip_head_size)
-  {
-    trip_ptr->clear(it);
-    cfree(trip_ptr);
+  // - compute trip sections memory size -
+  unsigned sections_mem_size = src_trip.NofLineSections*sizeof(sLINE_SEC_DESC);
 
-    exception_s::throw_exception(it,module.error_base + c_error_ATO_TRIP_WRONG_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
+  // - create target string -
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->create(c_trip_head_size + sections_mem_size);
 
   // - process sTRIP structure -
-  sTRIP &src_trip = *((sTRIP *)string_ptr->data);
-  sTRIP &trip = trip_ptr->trip;
+  sTRIP &trip = *((sTRIP *)string_ptr->data);
 
   memcpy(&trip,&src_trip,c_trip_head_size);
-
-#define ATO_TRIP_COPY(NAME,TYPE) \
-{/*{{{*/\
-  memcpy_bo(&NAME,&src_ ## NAME,sizeof(TYPE),c_little_endian);\
-}/*}}}*/
-
-#define ATO_TRIP_DATETIME48_COPY(NAME) \
-{/*{{{*/\
-  ATO_TRIP_COPY(trip.NAME.seconds,U32);\
-  ATO_TRIP_COPY(trip.NAME.ticks,U16);\
-}/*}}}*/
 
   ATO_TRIP_DATETIME48_COPY(TimeStamp);
   ATO_TRIP_DATETIME48_COPY(DepartTime);
@@ -3674,38 +3809,11 @@ bool bic_ato_trip_method_AtoTrip_1(interpreter_thread_s &it,unsigned stack_base,
   ATO_TRIP_COPY(trip.LineSectSize,U16);
   ATO_TRIP_COPY(trip.NofLineSections,U16);
 
-  if (trip.NofLineSections > 0)
+  if (src_trip.NofLineSections > 0)
   {
-    // - compute trip sections memory size -
-    unsigned sections_mem_size = trip.NofLineSections*sizeof(sLINE_SEC_DESC);
-
-    // - ERROR -
-    if (string_ptr->size - 1 < c_trip_head_size + sections_mem_size)
-    {
-      trip_ptr->clear(it);
-      cfree(trip_ptr);
-
-      exception_s::throw_exception(it,module.error_base + c_error_ATO_TRIP_WRONG_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);
-      return false;
-    }
-
-    // - allocate trip sections memory -
-    trip_ptr->sec_descrs = (sLINE_SEC_DESC *)cmalloc(sections_mem_size);
-
-    sLINE_SEC_DESC *s_ptr = (sLINE_SEC_DESC *)(string_ptr->data + c_trip_head_size);
-    sLINE_SEC_DESC *s_ptr_end = s_ptr + trip.NofLineSections;
-    sLINE_SEC_DESC *t_ptr = trip_ptr->sec_descrs;
-
-#define ATO_TRIP_SEC_COPY(NAME,TYPE) \
-{/*{{{*/\
-  memcpy_bo(&t_ptr->NAME,&s_ptr->NAME,sizeof(TYPE),c_little_endian);\
-}/*}}}*/
-
-#define ATO_TRIP_SEC_DATETIME48_COPY(NAME) \
-{/*{{{*/\
-  ATO_TRIP_SEC_COPY(NAME.seconds,U32);\
-  ATO_TRIP_SEC_COPY(NAME.ticks,U16);\
-}/*}}}*/
+    sLINE_SEC_DESC *s_ptr = trip_ptr->sec_descrs;
+    sLINE_SEC_DESC *s_ptr_end = s_ptr + src_trip.NofLineSections;
+    sLINE_SEC_DESC *t_ptr = (sLINE_SEC_DESC *)(string_ptr->data + c_trip_head_size);
 
     do {
       memcpy(t_ptr,s_ptr,sizeof(sLINE_SEC_DESC));
@@ -3716,7 +3824,38 @@ bool bic_ato_trip_method_AtoTrip_1(interpreter_thread_s &it,unsigned stack_base,
     } while(++t_ptr,++s_ptr < s_ptr_end);
   }
 
-  dst_location->v_data_ptr = (basic_64b)trip_ptr;
+  // - compute MD5 digest -
+  Ucf::MD5Digest md5;
+  md5.Append((U8 *)string_ptr->data + 16,string_ptr->size - 17);
+  md5.Finish(trip.MD5digest);
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_ato_trip_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_ato_aru,"unpack#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  BIC_ATO_TRIP_UNPACK();
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_ato_trip,trip_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
@@ -3751,9 +3890,19 @@ bool bic_ato_trip_method_DepartTime_0(interpreter_thread_s &it,unsigned stack_ba
   BIC_ATO_TRIP_TIME_STAMP_VALUE(DepartTime);
 }/*}}}*/
 
+bool bic_ato_trip_method_DepartTime_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_ATO_TRIP_TIME_STAMP_VALUE_SET(DepartTime);
+}/*}}}*/
+
 bool bic_ato_trip_method_ArrivalTime_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_ATO_TRIP_TIME_STAMP_VALUE(ArrivalTime);
+}/*}}}*/
+
+bool bic_ato_trip_method_ArrivalTime_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_ATO_TRIP_TIME_STAMP_VALUE_SET(ArrivalTime);
 }/*}}}*/
 
 bool bic_ato_trip_method_Version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
