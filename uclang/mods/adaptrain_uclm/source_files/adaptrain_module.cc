@@ -956,6 +956,28 @@ bool bic_ato_aru_method_create_5(interpreter_thread_s &it,unsigned stack_base,ul
   // - if there are events to write -
   if (record_count != 0)
   {
+    // - retrieve first and last x values -
+    {/*{{{*/
+      location_s *first_x_location = (location_s *)it.get_location_value(x_val_array->data[0]);
+      location_s *last_x_location = (location_s *)it.get_location_value(x_val_array->data[record_count - 1]);
+
+      // - ERROR -
+      if (first_x_location->v_type != c_bi_class_float ||
+          last_x_location->v_type != c_bi_class_float)
+      {
+        aa_ptr->clear(it);
+        cfree(aa_ptr);
+
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ATO_ARU_ARCHIVE_X_VALUE_WRONG_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(c_bi_class_float);
+
+        return false;
+      }
+      
+      std_head.r32FXValue = *((double *)&first_x_location->v_data_ptr);
+      std_head.r32LXValue = *((double *)&last_x_location->v_data_ptr);
+    }/*}}}*/
+
     // - compute record memory size -
     unsigned records_mem_size = record_count*record_size;
 
