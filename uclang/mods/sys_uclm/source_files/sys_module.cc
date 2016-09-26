@@ -709,7 +709,7 @@ built_in_class_s sys_class =
   "Sys",
   c_modifier_public | c_modifier_final,
   26, sys_methods,
-  2, sys_variables,
+  3, sys_variables,
   bic_sys_consts,
   bic_sys_init,
   bic_sys_clear,
@@ -869,6 +869,10 @@ built_in_variable_s sys_variables[] =
     "SEP",
     c_modifier_public | c_modifier_static | c_modifier_static_const
   },
+  {
+    "RAND_MAX",
+    c_modifier_public | c_modifier_static | c_modifier_static_const
+  },
 };/*}}}*/
 
 #define SYS_FILE_OPEN(CLASS_IDX,NAME) \
@@ -961,6 +965,19 @@ void bic_sys_consts(location_array_s &const_locations)
   CREATE_SYS_BIC_STATIC_STRING("/");
 #endif
 
+  // - insert sys rand values -
+  {
+    const_locations.push_blanks(1);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 1);
+
+#define CREATE_SYS_RAND_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr++;
+
+    CREATE_SYS_RAND_BIC_STATIC(RAND_MAX);
+  }
 }/*}}}*/
 
 void bic_sys_init(interpreter_thread_s &it,location_s *location_ptr)
