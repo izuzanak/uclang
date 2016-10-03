@@ -77,6 +77,7 @@ bool bic_ato_aru_method_AtoAru_1(interpreter_thread_s &it,unsigned stack_base,ul
 bool bic_ato_aru_method_create_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ato_aru_method_pack_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ato_aru_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ato_aru_method_data_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ato_aru_method_primary_key_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ato_aru_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ato_aru_method_first_x_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
