@@ -1393,7 +1393,7 @@ pointer:main_thread_ptr
 $// - count of running threads -
 atomic_s:thread_cnt
 
-$// - interpreter terminate flasg -
+$// - interpreter terminate flag -
 atomic_s:terminate
 >
 
