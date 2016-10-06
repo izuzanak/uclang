@@ -74,6 +74,7 @@ c_packages = [
   ["MOD_V8"        ,"files"     ,["/usr/include/v8.h"]],
   ["MOD_LUA"       ,"pkg-config",["lua5.2 >= 5.2.0"]],
   ["MOD_MONO"      ,"pkg-config",["mono-2 >= 3.2.8"]],
+  ["MOD_PERL"      ,"false",     []],
   ["MOD_UV"        ,"false"     ,[]],
   ["MOD_ZLIB"      ,"pkg-config",["zlib >= 1.2.8"]],
   ["MOD_PIGPIO"    ,"files"     ,["/usr/include/pigpio.h"]],

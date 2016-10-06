@@ -2467,6 +2467,32 @@ if cfg_ref[CFG_TARGET]:
     )
 # }}}
 
+# perl module
+cfg_ref = c_cfg[C_MODULE_PERL]
+# {{{
+if cfg_ref[CFG_TARGET]:
+    cfg_ref[CFG_MODULE] = module_c(
+      configuration,
+      cfg_ref[CFG_DIR],
+      cfg_ref[CFG_NAME],
+      [ 
+        "header_files",
+        os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
+      ],
+      [ 
+        "source_files",
+      ],
+      [
+        os.sep.join(["..","..","libs","libbase_ucll"])
+      ],
+      opt_build + "-I/usr/lib/i386-linux-gnu/perl/5.24.1/CORE ", # CXX options
+      opt_link + "-L/usr/lib/i386-linux-gnu -lperl ", # CXX link options
+      "", # CXX defines
+      [],
+      [],
+    )
+# }}}
+
 # uv module
 cfg_ref = c_cfg[C_MODULE_UV]
 # {{{
