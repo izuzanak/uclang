@@ -378,7 +378,8 @@ bool bic_lua_state_method_new_value_1(interpreter_thread_s &it,unsigned stack_ba
   lv_ptr->lua_state_loc = dst_location;
   lv_ptr->ref = luaL_ref(L,LUA_REGISTRYINDEX);
 
-  BIC_SIMPLE_SET_RES(c_bi_class_lua_value,lv_ptr);
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_lua_value,lv_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
@@ -400,7 +401,8 @@ bool bic_lua_state_method_get_global_0(interpreter_thread_s &it,unsigned stack_b
   lua_getglobal(L,"_G");
   lv_ptr->ref = luaL_ref(L,LUA_REGISTRYINDEX);
 
-  BIC_SIMPLE_SET_RES(c_bi_class_lua_value,lv_ptr);
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_lua_value,lv_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
@@ -435,7 +437,8 @@ bool bic_lua_state_method_get_global_1(interpreter_thread_s &it,unsigned stack_b
   lua_getglobal(L,string_ptr->data);
   lv_ptr->ref = luaL_ref(L,LUA_REGISTRYINDEX);
 
-  BIC_SIMPLE_SET_RES(c_bi_class_lua_value,lv_ptr);
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_lua_value,lv_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
@@ -898,7 +901,8 @@ bool bic_lua_value_method_keys_0(interpreter_thread_s &it,unsigned stack_base,ul
 
   lua_pop(L,1);
 
-  BIC_SIMPLE_SET_RES(c_bi_class_lua_value,lv_ptr);
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_lua_value,lv_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
@@ -946,7 +950,8 @@ bool bic_lua_value_method_items_0(interpreter_thread_s &it,unsigned stack_base,u
 
   lua_pop(L,1);
 
-  BIC_SIMPLE_SET_RES(c_bi_class_lua_value,lv_ptr);
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_lua_value,lv_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
@@ -1115,7 +1120,8 @@ bool bic_lua_reference_operator_binary_equal(interpreter_thread_s &it,unsigned s
   lv_ptr->lua_state_loc = lua_state_loc;
   lv_ptr->ref = luaL_ref(L,LUA_REGISTRYINDEX);
 
-  BIC_SIMPLE_SET_RES(c_bi_class_lua_value,lv_ptr);
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_lua_value,lv_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/

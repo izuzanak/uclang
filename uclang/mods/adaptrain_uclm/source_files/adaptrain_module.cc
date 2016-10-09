@@ -4874,7 +4874,8 @@ bool bic_ato_line_sec_method_TargDisplac_0(interpreter_thread_s &it,unsigned sta
     array_ptr->push(new_location);
   } while(++ptr < ptr_end);
 
-  BIC_SIMPLE_SET_RES(c_bi_class_array,array_ptr);
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
