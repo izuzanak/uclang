@@ -97,7 +97,6 @@ location_s *perl_c::perl_sv_value(interpreter_thread_s &it,PerlInterpreter *my_p
     case SVt_NULL:
       ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
       return (location_s *)it.blank_location;
-
     case SVt_IV:
     case SVt_PVIV:
       {
@@ -106,7 +105,6 @@ location_s *perl_c::perl_sv_value(interpreter_thread_s &it,PerlInterpreter *my_p
         BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
         return new_location;
       }
-
     case SVt_NV:
     case SVt_PVNV:
       {
@@ -116,7 +114,6 @@ location_s *perl_c::perl_sv_value(interpreter_thread_s &it,PerlInterpreter *my_p
         BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);
         return new_location;
       }
-
     case SVt_PV:
       {
         STRLEN length;
@@ -128,7 +125,6 @@ location_s *perl_c::perl_sv_value(interpreter_thread_s &it,PerlInterpreter *my_p
         BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
         return new_location;
       }
-
     case SVt_PVAV:
     {/*{{{*/
       pointer_array_s *array_ptr = it.get_new_array_ptr();
@@ -167,7 +163,6 @@ location_s *perl_c::perl_sv_value(interpreter_thread_s &it,PerlInterpreter *my_p
 
       return arr_location;
     }/*}}}*/
-
     case SVt_PVHV:
     {/*{{{*/
       pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)cmalloc(sizeof(pointer_map_tree_s));
@@ -239,7 +234,6 @@ location_s *perl_c::perl_sv_value(interpreter_thread_s &it,PerlInterpreter *my_p
 
       return dict_location;
     }/*}}}*/
-
     case SVt_PVMG:
     case SVt_INVLIST:
     case SVt_REGEXP:

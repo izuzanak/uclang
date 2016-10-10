@@ -69,7 +69,7 @@ bool comelm_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError received while creating connection to energy meter\n");
+    fprintf(stderr,"\nError while creating connection to energy meter\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_ELM_COMM_WRONG_MAX_TIME_DIFF_VALUE:
@@ -111,7 +111,7 @@ bool comelm_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError received while communicating with energy meter\n");
+    fprintf(stderr,"\nError while communicating with energy meter\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:

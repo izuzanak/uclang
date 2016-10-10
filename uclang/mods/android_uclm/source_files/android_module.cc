@@ -150,14 +150,14 @@ bool android_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError received while enabling sensor\n");
+    fprintf(stderr,"\nError while enabling sensor\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_SENSOR_EVENT_QUEUE_CANNOT_DISABLE_SENSOR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError received while disabling sensor\n");
+    fprintf(stderr,"\nError while disabling sensor\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_SENSOR_EVENT_QUEUE_SET_EVENT_RATE_ERROR:

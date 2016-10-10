@@ -626,7 +626,7 @@ bool sys_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError received while sending signal\n");
+    fprintf(stderr,"\nError while sending signal\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
 
@@ -649,7 +649,7 @@ bool sys_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError received while polling file descriptors\n");
+    fprintf(stderr,"\nError while polling file descriptors\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
 #endif

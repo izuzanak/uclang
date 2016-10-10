@@ -72,35 +72,35 @@ bool ucmm_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError received while opening slot %" HOST_LL_FORMAT "d for modem manager\n",exception.params[0]);
+    fprintf(stderr,"\nError while opening slot %" HOST_LL_FORMAT "d for modem manager\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_MODEM_MANAGER_DEVICE_INFO_READ_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError received while reading information about device\n");
+    fprintf(stderr,"\nError while reading information about device\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_MODEM_MANAGER_NETWORK_INFO_READ_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError received while reading information about network\n");
+    fprintf(stderr,"\nError while reading information about network\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_MODEM_MANAGER_SUBSCRIBER_ID_READ_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError received while reading subscriber id\n");
+    fprintf(stderr,"\nError while reading subscriber id\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_MODEM_MANAGER_AT_COMMAND_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError received while executing AT command\n");
+    fprintf(stderr,"\nError while executing AT command\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:

@@ -17,7 +17,7 @@ built_in_module_s module =
   perl_classes,          // Classes
 
   0,                     // Error base index
-  5,                     // Error count
+  8,                     // Error count
   perl_error_strings,    // Error strings
 
   perl_initialize,       // Initialize function
@@ -38,6 +38,9 @@ const char *perl_error_strings[] =
   "error_PERL_INTERPRETER_NO_STRING_ARGUMENT",
   "error_PERL_INTERPRETER_PARSE_ERROR",
   "error_PERL_INTERPRETER_RUN_ERROR",
+  "error_PERL_VALUE_WRONG_VALUE_REFERENCE",
+  "error_PERL_VALUE_CREATE_ERROR",
+  "error_PERL_VALUE_VALUE_ERROR",
   "error_PERL_VALUE_GET_VARIABLE_DOES_NOT_EXIST",
 };/*}}}*/
 
@@ -97,14 +100,35 @@ bool perl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError received while parsing perl script\n");
+    fprintf(stderr,"\nError while parsing perl script\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_PERL_INTERPRETER_RUN_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError received while running perl script\n");
+    fprintf(stderr,"\nError while running perl script\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PERL_VALUE_WRONG_VALUE_REFERENCE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong reference to Perl value\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PERL_VALUE_CREATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while creating Perl value\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PERL_VALUE_VALUE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while retrieving value of Perl value\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_PERL_VALUE_GET_VARIABLE_DOES_NOT_EXIST:
@@ -385,8 +409,7 @@ bool bic_perl_interpreter_method_new_value_1(interpreter_thread_s &it,unsigned s
   // - ERROR -
   if (sv == NULL)
   {
-    // FIXME TODO throw proper exception (PERL_VALUE_CREATE_ERROR)
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_PERL_VALUE_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -540,8 +563,7 @@ bool bic_perl_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,
   // - ERROR -
   if (sv == NULL)
   {
-    // FIXME TODO throw proper exception (PERL_VALUE_WRONG_VALUE_REFERENCE)
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_PERL_VALUE_WRONG_VALUE_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -557,8 +579,7 @@ bool bic_perl_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,
       return false;
     }
 
-    // FIXME TODO throw proper exception (PERL_VALUE_VALUE_ERROR)
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_PERL_VALUE_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 

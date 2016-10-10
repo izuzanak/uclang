@@ -107,7 +107,7 @@ bool parser_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError received while parsing regular expression at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr,"\nError while parsing regular expression at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_PARSER_CREATE_UNSPECIFIED_ERROR:
@@ -161,7 +161,7 @@ bool parser_print_exception(interpreter_s &it,exception_s &exception)
         break;
       case c_error_PARSER_CREATE_TERMINAL_REGULAR_EXPRESSION_PARSE_ERROR:
         print_error_show_line(rules_source,rules_source_pos);
-        fprintf(stderr,"Error received while parsing regular expression of terminal symbol\n");
+        fprintf(stderr,"Error while parsing regular expression of terminal symbol\n");
         fprintf(stderr," ---------------------------------------- \n");
         break;
       case c_error_PARSER_CREATE_RULES_DUPLICATE_RULE:

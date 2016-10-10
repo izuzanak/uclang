@@ -79,7 +79,7 @@ bool mpg_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError received while creating new mpg handle\n");
+    fprintf(stderr,"\nError while creating new mpg handle\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_MPG_HANDLE_ALREADY_OPENED:
@@ -163,7 +163,7 @@ bool mpg_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nMpg handle, error received while feeding data\n");
+    fprintf(stderr,"\nMpg handle, error while feeding data\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_MPG_HANDLE_READ_WRONG_BUFFER_SIZE:
@@ -177,21 +177,21 @@ bool mpg_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nMpg handle, error received while adjusting output format\n");
+    fprintf(stderr,"\nMpg handle, error while adjusting output format\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_MPG_HANDLE_READ_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nMpg handle, error received while reading data\n");
+    fprintf(stderr,"\nMpg handle, error while reading data\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_MPG_HANDLE_CLOSE_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError received while closing mpg handle\n");
+    fprintf(stderr,"\nError while closing mpg handle\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
