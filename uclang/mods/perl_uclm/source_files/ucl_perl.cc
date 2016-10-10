@@ -21,7 +21,61 @@ SV *perl_c::create_perl_sv(interpreter_thread_s &it,PerlInterpreter *my_perl,loc
   }
   else if (location_ptr->v_type == c_rm_class_dict)
   {/*{{{*/
-    return NULL;
+    pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)location_ptr->v_data_ptr;
+    HV *hv = newHV();
+
+    if (tree_ptr->root_idx != c_idx_not_exist)
+    {
+      unsigned stack[tree_ptr->get_descent_stack_size()];
+      unsigned *stack_ptr = stack;
+
+      unsigned t_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);
+
+      do
+      {
+        pointer_map_tree_s_node &node = tree_ptr->data[t_idx];
+
+        location_s *key_location = it.get_location_value(node.object.key);
+        SV *sv_key = create_perl_sv(it,my_perl,key_location);
+
+        // - ERROR -
+        if (sv_key == NULL)
+        {
+          SvREFCNT_dec(hv);
+
+          return NULL;
+        }
+
+        location_s *value_location = it.get_location_value(node.object.value);
+        SV *sv_value = create_perl_sv(it,my_perl,value_location);
+
+        // - ERROR -
+        if (sv_value == NULL)
+        {
+          SvREFCNT_dec(sv_key);
+          SvREFCNT_dec(hv);
+
+          return NULL;
+        }
+
+        // - ERROR -
+        if (hv_store_ent(hv,sv_key,sv_value,0) == NULL)
+        {
+          SvREFCNT_dec(sv_key);
+          SvREFCNT_dec(sv_value);
+          SvREFCNT_dec(hv);
+
+          return NULL;
+        }
+
+        SvREFCNT_dec(sv_key);
+
+        t_idx = tree_ptr->get_stack_next_idx(t_idx,&stack_ptr,stack);
+      }
+      while(t_idx != c_idx_not_exist);
+    }
+
+    return (SV *)hv;
   }/*}}}*/
   else
   {
@@ -33,23 +87,48 @@ SV *perl_c::create_perl_sv(interpreter_thread_s &it,PerlInterpreter *my_perl,loc
       }
     case c_bi_class_char:
       {
-        return NULL;
+        return newSViv((char)location_ptr->v_data_ptr);
       }
     case c_bi_class_integer:
-      {/*{{{*/
-        return NULL;
-      }/*}}}*/
+      {
+        return newSViv((long long int)location_ptr->v_data_ptr);
+      }
     case c_bi_class_float:
       {
-        return NULL;
+        return newSVnv(*((double *)&location_ptr->v_data_ptr));
       }
     case c_bi_class_string:
       {
-        return NULL;
+        string_s *string_ptr = (string_s *)location_ptr->v_data_ptr;
+        return newSVpvn(string_ptr->data,string_ptr->size - 1);
       }
     case c_bi_class_array:
       {/*{{{*/
-        return NULL;
+        pointer_array_s *array_ptr = (pointer_array_s *)location_ptr->v_data_ptr;
+        AV *av = newAV();
+
+        if (array_ptr->used != 0)
+        {
+          pointer *a_ptr = array_ptr->data;
+          pointer *a_ptr_end = a_ptr + array_ptr->used;
+          do {
+            SV *sv_item = create_perl_sv(it,my_perl,it.get_location_value(*a_ptr));
+        
+            // - ERROR -
+            if (sv_item == NULL)
+            {
+              SvREFCNT_dec(av);
+
+              return NULL;
+            }
+
+            // - push item to perl array -
+            av_push(av,sv_item);
+
+          } while(++a_ptr < a_ptr_end);
+        }
+
+        return (SV *)av;
       }/*}}}*/
 
     // - ERROR -
