@@ -132,7 +132,7 @@ bool lua_s::create_lua_object(interpreter_thread_s &it,lua_State *L,location_s *
           do {
 
             // - ERROR -
-            if (!create_lua_object(it,L,(location_s *)array_ptr->data[idx]))
+            if (!create_lua_object(it,L,it.get_location_value(array_ptr->data[idx])))
             {
               lua_pop(L,1);
               return false;

@@ -99,7 +99,7 @@ Handle<Value> v8_c::create_v8_object(interpreter_thread_s &it,location_s *locati
         {
           unsigned idx = 0;
           do {
-            Handle<Value> hnd_item = create_v8_object(it,(location_s *)array_ptr->data[idx]);
+            Handle<Value> hnd_item = create_v8_object(it,it.get_location_value(array_ptr->data[idx]));
 
             // - ERROR -
             if (hnd_item->IsUndefined())

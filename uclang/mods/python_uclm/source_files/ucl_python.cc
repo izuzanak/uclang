@@ -189,7 +189,7 @@ PyObject *python_c::create_py_object(interpreter_thread_s &it,location_s *locati
         {
           unsigned idx = 0;
           do {
-            PyObject *pyo_item = create_py_object(it,(location_s *)array_ptr->data[idx]);
+            PyObject *pyo_item = create_py_object(it,it.get_location_value(array_ptr->data[idx]));
 
             // - ERROR -
             if (pyo_item == NULL)
@@ -245,12 +245,13 @@ PyObject *python_c::create_py_tuple(interpreter_thread_s &it,location_s *locatio
     {
       unsigned idx = 0;
       do {
-        PyObject *pyo_item = create_py_object(it,(location_s *)array_ptr->data[idx]);
+        PyObject *pyo_item = create_py_object(it,it.get_location_value(array_ptr->data[idx]));
 
         // - ERROR -
         if (pyo_item == NULL)
         {
           Py_DECREF(pyo_tuple);
+
           return NULL;
         }
 
@@ -280,6 +281,7 @@ PyObject *python_c::create_py_tuple(interpreter_thread_s &it,location_s *locatio
     if (pyo_obj == NULL)
     {
       Py_DECREF(pyo_tuple);
+
       return NULL;
     }
     
