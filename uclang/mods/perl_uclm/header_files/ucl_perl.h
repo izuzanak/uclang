@@ -11,12 +11,14 @@ include "script_parser.h"
 
 // FIXME TODO remove ...
 // int sv_isobject(SV* sv) - determine if sv is object
+// HV* SvSTASH(SvRV(SV*)); - retrieve blessed object stash pointer
 
 /*
  * constants and definitions
  */
 
 extern unsigned c_bi_class_perl_value;
+extern unsigned c_bi_class_perl_reference;
 extern unsigned c_rm_class_dict;
 
 // - max method name length -
@@ -45,6 +47,23 @@ struct perl_value_s
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
+};
+
+/*
+ * definition of structure perl_reference_s
+ */
+
+struct perl_reference_s
+{
+  location_s *pi_loc;
+  SV *sv;
+  basic_64b v_key_ptr;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+
+  inline SV *get(PerlInterpreter *my_perl);
+  inline bool set(PerlInterpreter *my_perl,SV *sv_value);
 };
 
 /*
@@ -119,6 +138,125 @@ inline void perl_value_s::clear(interpreter_thread_s &it)
   }
 
   init();
+}/*}}}*/
+
+/*
+ * inline methods of structure perl_reference_s
+ */
+
+inline void perl_reference_s::init()
+{/*{{{*/
+  pi_loc = NULL;
+  sv = NULL;
+}/*}}}*/
+
+inline void perl_reference_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+
+  // - release value -
+  if (sv != NULL)
+  {
+    perl_interpreter_s *pi_ptr = (perl_interpreter_s *)pi_loc->v_data_ptr;
+
+    // - set perl context -
+    PerlInterpreter *my_perl = pi_ptr->interpreter;
+    PERL_SET_CONTEXT(pi_ptr->interpreter);
+
+    switch (SvTYPE(sv))
+    {
+    case SVt_PVAV:
+      break;
+    case SVt_PVHV:
+      SvREFCNT_dec((SV *)v_key_ptr);
+      break;
+    default:
+      cassert(0);
+    }
+
+    // - decrement reference counter -
+    SvREFCNT_dec(sv);
+  }
+
+  // - release perl interpreter location -
+  if (pi_loc != NULL)
+  {
+    it.release_location_ptr(pi_loc);
+  }
+
+  init();
+}/*}}}*/
+
+inline SV *perl_reference_s::get(PerlInterpreter *my_perl)
+{/*{{{*/
+  switch (SvTYPE(sv))
+  {
+  case SVt_PVAV:
+    {/*{{{*/
+      SV **sv_ptr = av_fetch((AV *)sv,(long long int)v_key_ptr,0);
+
+      // - ERROR -
+      if (sv_ptr == NULL)
+      {
+        return NULL;
+      }
+
+      SvREFCNT_inc(*sv_ptr);
+      return *sv_ptr;
+    }/*}}}*/
+  case SVt_PVHV:
+    {/*{{{*/
+      HE *he = hv_fetch_ent((HV *)sv,(SV *)v_key_ptr,0,0);
+
+      if (he == NULL)
+      {
+        return NULL;
+      }
+
+      SV *sv_value = HeVAL(he);
+
+      SvREFCNT_inc(sv_value);
+      return sv_value;
+    }/*}}}*/
+  default:
+    cassert(0);
+  }
+}/*}}}*/
+
+inline bool perl_reference_s::set(PerlInterpreter *my_perl,SV *sv_value)
+{/*{{{*/
+  switch (SvTYPE(sv))
+  {
+  case SVt_PVAV:
+    {/*{{{*/
+      SvREFCNT_inc(sv_value);
+      SV **sv_res = av_store((AV *)sv,(long long int)v_key_ptr,sv_value);
+
+      // - ERROR -
+      if (sv_res == NULL)
+      {
+        SvREFCNT_dec(sv_value);
+        return false;
+      }
+
+      return true;
+    }/*}}}*/
+  case SVt_PVHV:
+    {/*{{{*/
+      SvREFCNT_inc(sv_value);
+      HE *he_res = hv_store_ent((HV *)sv,(SV *)v_key_ptr,sv_value,0);
+
+      // - ERROR -
+      if (he_res == NULL)
+      {
+        SvREFCNT_dec(sv_value);
+        return false;
+      }
+
+      return true;
+    }/*}}}*/
+  default:
+    cassert(0);
+  }
 }/*}}}*/
 
 /*

@@ -13,12 +13,40 @@ perl_c g_perl;
 SV *perl_c::create_perl_sv(interpreter_thread_s &it,PerlInterpreter *my_perl,location_s *location_ptr)
 {/*{{{*/
   if (location_ptr->v_type == c_bi_class_perl_value)
-  {
+  {/*{{{*/
     perl_value_s *pv_ptr = (perl_value_s *)location_ptr->v_data_ptr;
-    SvREFCNT_inc(pv_ptr->sv);
 
-    return pv_ptr->sv;
-  }
+    // - ERROR -
+    if (((perl_interpreter_s *)pv_ptr->pi_loc->v_data_ptr)->interpreter != my_perl)
+    {
+      return NULL;
+    }
+
+    // - dereference perl reference values -
+    SV *sv = SvROK(pv_ptr->sv) ? SvRV(pv_ptr->sv) : pv_ptr->sv;
+
+    SvREFCNT_inc(sv);
+    return sv;
+  }/*}}}*/
+  else if (location_ptr->v_type == c_bi_class_perl_reference)
+  {/*{{{*/
+    perl_reference_s *pr_ptr = (perl_reference_s *)location_ptr->v_data_ptr;
+
+    // - ERROR -
+    if (((perl_interpreter_s *)pr_ptr->pi_loc->v_data_ptr)->interpreter != my_perl)
+    {
+      return NULL;
+    }
+
+    // - retrieve reference value -
+    SV *sv = pr_ptr->get(my_perl);
+
+    // - dereference perl reference values -
+    sv = SvROK(sv) ? SvRV(sv) : sv;
+
+    SvREFCNT_inc(sv);
+    return sv;
+  }/*}}}*/
   else if (location_ptr->v_type == c_rm_class_dict)
   {/*{{{*/
     pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)location_ptr->v_data_ptr;
@@ -143,7 +171,7 @@ SV *perl_c::create_perl_sv(interpreter_thread_s &it,PerlInterpreter *my_perl,loc
 location_s *perl_c::perl_sv_value(interpreter_thread_s &it,PerlInterpreter *my_perl,SV *sv,uli source_pos)
 {/*{{{*/
 
-  // FIXME debug output
+  //// FIXME debug output
   //switch (SvTYPE(sv))
   //{
   //  case SVt_NULL: fprintf(stderr,"SVt_NULL\n"); break;
@@ -162,7 +190,9 @@ location_s *perl_c::perl_sv_value(interpreter_thread_s &it,PerlInterpreter *my_p
   //  case SVt_PVCV: fprintf(stderr,"SVt_PVCV\n"); break;
   //  case SVt_PVFM: fprintf(stderr,"SVt_PVFM\n"); break;
   //  case SVt_PVIO: fprintf(stderr,"SVt_PVIO\n"); break;
-  //  default: break;
+  //  default:
+  //    fprintf(stderr,"UNKNOWN");
+  //    break;
   //}
 
   // - if value is reference -
@@ -216,16 +246,20 @@ location_s *perl_c::perl_sv_value(interpreter_thread_s &it,PerlInterpreter *my_p
       {
         SSize_t idx = 0;
         do {
+          location_s *item_location;
+
           SV **sv_ptr = av_fetch(av,idx,0);
 
-          // - ERROR -
+          // - undefined array element interpreted as blank -
           if (sv_ptr == NULL)
           {
-            it.release_location_ptr(arr_location);
-            return NULL;
+            ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
+            item_location = (location_s *)it.blank_location;
           }
-
-          location_s *item_location = perl_sv_value(it,my_perl,*sv_ptr,source_pos);
+          else
+          {
+            item_location = perl_sv_value(it,my_perl,*sv_ptr,source_pos);
+          }
 
           // - ERROR -
           if (item_location == NULL)
