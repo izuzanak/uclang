@@ -143,17 +143,6 @@ enum
     BIC_SET_RESULT(new_location);\
   }/*}}}*/
 
-#define BIC_SET_RESULT_CONT_INDEX(INDEX) \
-  {/*{{{*/\
-    if (INDEX != c_idx_not_exist)\
-    {\
-      BIC_SIMPLE_SET_RES(c_bi_class_integer,INDEX);\
-    }\
-    else {\
-      BIC_SET_RESULT_BLANK();\
-    }\
-  }/*}}}*/
-
 #define BIC_SIMPLE_SET_RES(CLASS_IDX,VALUE) \
   {/*{{{*/\
     if (((location_s *)res_location)->v_type == CLASS_IDX &&\
@@ -164,6 +153,17 @@ enum
     else {\
       BIC_CREATE_NEW_LOCATION(new_location,CLASS_IDX,VALUE);\
       BIC_SET_RESULT(new_location);\
+    }\
+  }/*}}}*/
+
+#define BIC_SET_RESULT_CONT_INDEX(INDEX) \
+  {/*{{{*/\
+    if (INDEX != c_idx_not_exist)\
+    {\
+      BIC_SIMPLE_SET_RES(c_bi_class_integer,INDEX);\
+    }\
+    else {\
+      BIC_SET_RESULT_BLANK();\
     }\
   }/*}}}*/
 
