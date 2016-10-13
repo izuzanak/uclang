@@ -9,9 +9,24 @@ include "script_parser.h"
 #include <EXTERN.h>
 #include <perl.h>
 
-// FIXME TODO remove ...
-// int sv_isobject(SV* sv) - determine if sv is object
-// HV* SvSTASH(SvRV(SV*)); - retrieve blessed object stash pointer
+// C perl functions
+// eval_pv(a,b) - evaluate individual perl string
+
+// C call function - http://perldoc.perl.org/perlcall.html#THE-CALL_-FUNCTIONS
+// C call flags - http://perldoc.perl.org/perlcall.html#G_ARRAY
+// C call stack - http://perldoc.perl.org/perlcall.html#Returning-a-List-of-Values
+
+//#undef SvREFCNT_inc
+//#define SvREFCNT_inc(sv) (fprintf(stderr,"+"),S_SvREFCNT_inc(MUTABLE_SV(sv)))
+
+//#undef SvREFCNT_inc_NN
+//#define SvREFCNT_inc_NN(sv) (fprintf(stderr,"+"),S_SvREFCNT_inc_NN(MUTABLE_SV(sv)))
+
+//#undef SvREFCNT_dec
+//#define SvREFCNT_dec(sv) (fprintf(stderr,"-"),S_SvREFCNT_dec(aTHX_ MUTABLE_SV(sv)))
+
+//#undef SvREFCNT_dec_NN
+//#define SvREFCNT_dec_NN(sv) (fprintf(stderr,"-"),S_SvREFCNT_dec_NN(aTHX_ MUTABLE_SV(sv)))
 
 /*
  * constants and definitions
@@ -20,9 +35,6 @@ include "script_parser.h"
 extern unsigned c_bi_class_perl_value;
 extern unsigned c_bi_class_perl_reference;
 extern unsigned c_rm_class_dict;
-
-// - max method name length -
-const unsigned c_max_method_name_length = 256;
 
 /*
  * definition of structure perl_interpreter_s
@@ -167,6 +179,7 @@ inline void perl_reference_s::clear(interpreter_thread_s &it)
     case SVt_PVAV:
       break;
     case SVt_PVHV:
+
       SvREFCNT_dec((SV *)v_key_ptr);
       break;
     default:
@@ -205,17 +218,14 @@ inline SV *perl_reference_s::get(PerlInterpreter *my_perl)
     }/*}}}*/
   case SVt_PVHV:
     {/*{{{*/
-      HE *he = hv_fetch_ent((HV *)sv,(SV *)v_key_ptr,0,0);
+      HE *he = hv_fetch_ent((HV *)sv,(SV *)v_key_ptr,1,0);
 
       if (he == NULL)
       {
         return NULL;
       }
 
-      SV *sv_value = HeVAL(he);
-
-      SvREFCNT_inc(sv_value);
-      return sv_value;
+      return HeVAL(he);
     }/*}}}*/
   default:
     cassert(0);

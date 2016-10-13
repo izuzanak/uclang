@@ -27,6 +27,9 @@ enum
   c_error_PERL_INTERPRETER_GET_VARIABLE_DOES_NOT_EXIST,
   c_error_PERL_VALUE_WRONG_VALUE_REFERENCE,
   c_error_PERL_VALUE_ARRAY_INDEX_EXPECTED_INTEGER,
+  c_error_PERL_VALUE_INVOKE_FUNCTION_UNKNOWN_NAME,
+  c_error_PERL_VALUE_INVOKE_FUNCTION_WRONG_PARAMETER,
+  c_error_PERL_VALUE_INVOKE_FUNCTION_RESULT_ARRAY_ERROR,
   c_error_PERL_VALUE_MEMBER_SELECT_ERROR,
   c_error_PERL_VALUE_CREATE_ERROR,
   c_error_PERL_VALUE_VALUE_ERROR,
@@ -57,6 +60,11 @@ bool bic_perl_interpreter_method_new_value_1(interpreter_thread_s &it,unsigned s
 bool bic_perl_interpreter_method_get_sv_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_perl_interpreter_method_get_av_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_perl_interpreter_method_get_hv_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// FIXME TODO continue ...
+//bool bic_perl_interpreter_method_call_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_perl_interpreter_method_eval_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
 bool bic_perl_interpreter_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_perl_interpreter_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -68,8 +76,8 @@ extern built_in_class_s perl_value_class;
 void bic_perl_value_consts(location_array_s &const_locations);
 void bic_perl_value_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_perl_value_clear(interpreter_thread_s &it,location_s *location_ptr);
-//bool bic_perl_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base,uli *operands);
-//bool bic_perl_value_member(interpreter_thread_s &it,uli *code,unsigned stack_base);
+bool bic_perl_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base,uli *operands);
+bool bic_perl_value_member(interpreter_thread_s &it,uli *code,unsigned stack_base);
 
 bool bic_perl_value_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_perl_value_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);

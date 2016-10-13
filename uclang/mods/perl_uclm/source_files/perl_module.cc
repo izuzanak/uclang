@@ -18,7 +18,7 @@ built_in_module_s module =
   perl_classes,          // Classes
 
   0,                     // Error base index
-  11,                    // Error count
+  14,                    // Error count
   perl_error_strings,    // Error strings
 
   perl_initialize,       // Initialize function
@@ -42,6 +42,9 @@ const char *perl_error_strings[] =
   "error_PERL_INTERPRETER_RUN_ERROR",
   "error_PERL_VALUE_WRONG_VALUE_REFERENCE",
   "error_PERL_VALUE_ARRAY_INDEX_EXPECTED_INTEGER",
+  "error_PERL_VALUE_INVOKE_FUNCTION_UNKNOWN_NAME",
+  "error_PERL_VALUE_INVOKE_FUNCTION_WRONG_PARAMETER",
+  "error_PERL_VALUE_INVOKE_FUNCTION_RESULT_ARRAY_ERROR",
   "error_PERL_VALUE_MEMBER_SELECT_ERROR",
   "error_PERL_VALUE_CREATE_ERROR",
   "error_PERL_VALUE_VALUE_ERROR",
@@ -137,6 +140,27 @@ bool perl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nExpected Integer as Perl array index\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PERL_VALUE_INVOKE_FUNCTION_UNKNOWN_NAME:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nUnknown name of perl function to invoke\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PERL_VALUE_INVOKE_FUNCTION_WRONG_PARAMETER:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot process parameter %" HOST_LL_FORMAT "d of Perl function\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PERL_VALUE_INVOKE_FUNCTION_RESULT_ARRAY_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while constructing result array after invoke of Perl function\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_PERL_VALUE_MEMBER_SELECT_ERROR:
@@ -509,8 +533,8 @@ built_in_class_s perl_value_class =
   NULL,
   NULL,
   NULL,
-  NULL,//bic_perl_value_invoke,
-  NULL //bic_perl_value_member
+  bic_perl_value_invoke,
+  bic_perl_value_member
 };/*}}}*/
 
 built_in_method_s perl_value_methods[] =
@@ -564,6 +588,251 @@ void bic_perl_value_clear(interpreter_thread_s &it,location_s *location_ptr)
     pv_ptr->clear(it);
     cfree(pv_ptr);
   }
+}/*}}}*/
+
+#define BIC_PERL_VALUE_RETRIEVE_OBJECT(SOURCE_POS_IDX) \
+{/*{{{*/\
+\
+  /* - retrieve object - */\
+  if (dst_location->v_type == c_bi_class_perl_value)\
+  {\
+    perl_value_s *pv_ptr = (perl_value_s *)dst_location->v_data_ptr;\
+    sv_dst = pv_ptr->sv;\
+    SvREFCNT_inc(sv_dst);\
+  }\
+\
+  /* - retrieve object from reference - */\
+  else if (dst_location->v_type == c_bi_class_perl_reference)\
+  {\
+    perl_reference_s *pr_ptr = (perl_reference_s *)dst_location->v_data_ptr;\
+    sv_dst = pr_ptr->get(my_perl);\
+\
+    /* - ERROR - */\
+    if (sv_dst == NULL)\
+    {\
+      exception_s::throw_exception(it,module.error_base + c_error_PERL_VALUE_WRONG_VALUE_REFERENCE,code[SOURCE_POS_IDX],(location_s *)it.blank_location);\
+      return false;\
+    }\
+  }\
+\
+  /* - ERROR - */\
+  else\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_PERL_VALUE_WRONG_VALUE_REFERENCE,code[SOURCE_POS_IDX],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  /* - ERROR - */\
+  if (!sv_isobject(sv_dst))\
+  {\
+    SvREFCNT_dec(sv_dst);\
+\
+    exception_s::throw_exception(it,module.error_base + c_error_PERL_VALUE_MEMBER_SELECT_ERROR,code[SOURCE_POS_IDX],(location_s *)it.blank_location);\
+    return false;\
+  }\
+}/*}}}*/
+
+bool bic_perl_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  location_s *pi_loc = ((perl_value_s *)dst_location->v_data_ptr)->pi_loc;
+  perl_interpreter_s *pi_ptr = (perl_interpreter_s *)pi_loc->v_data_ptr;
+
+  // - set perl context -
+  PerlInterpreter *my_perl = pi_ptr->interpreter;
+  PERL_SET_CONTEXT(pi_ptr->interpreter);
+
+  SV *sv_dst;
+
+  // - retrieve object -
+  BIC_PERL_VALUE_RETRIEVE_OBJECT(c_source_pos_idx);
+
+  // - retrieve blessed object stash pointer -
+  HV *hv_stash = SvSTASH(SvRV(sv_dst));
+
+  // - method name reference -
+  string_s &name_ref = ((interpreter_s *)it.interpreter_ptr)->method_symbol_names[code[icl_name_idx]];
+
+  // - parameter count and method name length -
+  unsigned param_cnt = (unsigned)code[icl_parm_cnt];
+  unsigned name_length = name_ref.size - (3 + (unsigned)(logf(param_cnt)/logf(10)));
+
+  SV** sv_fun_ptr = hv_fetch(hv_stash,name_ref.data,name_length,0);
+
+  // - ERROR -
+  if (sv_fun_ptr == NULL)
+  {
+    SvREFCNT_dec(sv_dst);
+
+    exception_s::throw_exception(it,module.error_base + c_error_PERL_VALUE_INVOKE_FUNCTION_UNKNOWN_NAME,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  dSP;
+  ENTER;
+  SAVETMPS;
+  PUSHMARK(SP);
+
+  int stack_param_cnt = param_cnt;
+  EXTEND(SP,stack_param_cnt);
+
+  // - push object sv -
+  PUSHs(sv_2mortal(sv_dst));
+
+  // - if there are any parameters except object itself -
+  if (param_cnt > 1)
+  {
+    unsigned param_idx = 0;
+    do {
+      location_s *param_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx + param_idx]);
+      SV *sv_param = perl_c::create_perl_sv(it,my_perl,param_location);
+
+      // - ERROR -
+      if (sv_param == NULL)
+      {
+        PUTBACK;
+        FREETMPS;
+        LEAVE;
+
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PERL_VALUE_INVOKE_FUNCTION_WRONG_PARAMETER,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(param_idx);
+
+        return false;
+      }
+
+      PUSHs(sv_2mortal(sv_param));
+
+    } while(++param_idx < param_cnt);
+  }
+
+  PUTBACK;
+
+  int result_cnt = call_sv(*sv_fun_ptr,G_ARRAY);
+  cassert(result_cnt >= 0);
+
+  SPAGAIN;
+
+  // - retrieve result location -
+  pointer &res_location = it.data_stack[res_loc_idx];
+
+  switch (result_cnt)
+  {
+  case 0:
+    BIC_SET_RESULT_BLANK();
+    break;
+  case 1:
+    {
+      // - retrieve result from stack -
+      SV *sv_res = POPs;
+      SvREFCNT_inc(sv_res);
+
+      // - create perl value object -
+      perl_value_s *pv_ptr = (perl_value_s *)cmalloc(sizeof(perl_value_s));
+      pv_ptr->init();
+
+      pi_loc->v_reference_cnt.atomic_inc();
+      pv_ptr->pi_loc = pi_loc;
+      pv_ptr->sv = sv_res;
+
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_perl_value,pv_ptr);
+      BIC_SET_RESULT(new_location);
+    }
+    break;
+  default:
+    {
+      AV *av = newAV();
+
+      // - create av containing results -
+      SSize_t result_idx = result_cnt;
+      do {
+        
+        // - retrieve result from stack -
+        SV *sv_param = POPs;
+
+        SvREFCNT_inc(sv_param);
+        SV **sv_res = av_store(av,--result_idx,sv_param);
+
+        // - ERROR -
+        if (sv_res == NULL)
+        {
+          SvREFCNT_dec(sv_param);
+          SvREFCNT_dec(av);
+
+          PUTBACK;
+          FREETMPS;
+          LEAVE;
+
+          exception_s::throw_exception(it,module.error_base + c_error_PERL_VALUE_INVOKE_FUNCTION_RESULT_ARRAY_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          return false;
+        }
+      } while(result_idx > 0);
+
+      // - create perl value object -
+      perl_value_s *pv_ptr = (perl_value_s *)cmalloc(sizeof(perl_value_s));
+      pv_ptr->init();
+
+      pi_loc->v_reference_cnt.atomic_inc();
+      pv_ptr->pi_loc = pi_loc;
+      pv_ptr->sv = (SV *)av;
+
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_perl_value,pv_ptr);
+      BIC_SET_RESULT(new_location);
+    }
+  }
+
+  PUTBACK;
+  FREETMPS;
+  LEAVE;
+
+  return true;
+}/*}}}*/
+
+bool bic_perl_value_member(interpreter_thread_s &it,uli *code,unsigned stack_base)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + code[ioms_stack_object]);
+
+  location_s *pi_loc = ((perl_value_s *)dst_location->v_data_ptr)->pi_loc;
+  perl_interpreter_s *pi_ptr = (perl_interpreter_s *)pi_loc->v_data_ptr;
+
+  // - set perl context -
+  PerlInterpreter *my_perl = pi_ptr->interpreter;
+  PERL_SET_CONTEXT(pi_ptr->interpreter);
+
+  SV *sv_dst;
+
+  // - retrieve object -
+  BIC_PERL_VALUE_RETRIEVE_OBJECT(ioms_source_pos);
+
+  // - retrieve object hash map -
+  SV *sv_stash = SvRV(sv_dst);
+  SvREFCNT_inc(sv_stash);
+  SvREFCNT_dec(sv_dst);
+
+  // - retrieve member name -
+  string_s &name_ref = ((interpreter_s *)it.interpreter_ptr)->variable_symbol_names[code[ioms_var_name]];
+
+  // - create key object -
+  SV *sv_key = newSVpvn(name_ref.data,name_ref.size - 1);
+
+  // - create perl reference object -
+  perl_reference_s *pr_ptr = (perl_reference_s *)cmalloc(sizeof(perl_reference_s));
+  pr_ptr->init();
+
+  pi_loc->v_reference_cnt.atomic_inc();
+  pr_ptr->pi_loc = pi_loc;
+  pr_ptr->sv = sv_stash;
+  pr_ptr->v_key_ptr = (basic_64b)sv_key;
+
+  // - create target location -
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_perl_reference,pr_ptr);
+
+  pointer &trg_location = it.data_stack[stack_base + code[ioms_stack_trg]];
+  it.release_location_ptr((location_s *)trg_location);
+  trg_location = (pointer)new_location;
+
+  return true;
 }/*}}}*/
 
 bool bic_perl_value_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -638,6 +907,8 @@ bool bic_perl_value_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigne
       // - ERROR -
       if (sv_key == NULL)
       {
+        SvREFCNT_dec(sv);
+
         exception_s::throw_exception(it,module.error_base + c_error_PERL_VALUE_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
@@ -748,8 +1019,8 @@ built_in_class_s perl_reference_class =
   NULL,
   NULL,
   NULL,
-  NULL,
-  NULL
+  bic_perl_value_invoke,
+  bic_perl_value_member
 };/*}}}*/
 
 built_in_method_s perl_reference_methods[] =

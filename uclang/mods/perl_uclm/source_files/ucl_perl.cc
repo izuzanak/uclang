@@ -192,7 +192,6 @@ location_s *perl_c::perl_sv_value(interpreter_thread_s &it,PerlInterpreter *my_p
   //  case SVt_PVIO: fprintf(stderr,"SVt_PVIO\n"); break;
   //  default:
   //    fprintf(stderr,"UNKNOWN");
-  //    break;
   //}
 
   // - if value is reference -
