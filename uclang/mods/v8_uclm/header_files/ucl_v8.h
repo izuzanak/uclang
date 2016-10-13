@@ -18,9 +18,6 @@ extern unsigned c_bi_class_v8_object;
 extern unsigned c_bi_class_v8_reference;
 extern unsigned c_rm_class_dict;
 
-// - max method name length -
-const unsigned c_max_method_name_length = 256;
-
 // - max method parameter count -
 const unsigned c_max_method_param_cnt = 32;
 

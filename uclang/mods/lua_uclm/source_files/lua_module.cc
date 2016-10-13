@@ -591,12 +591,8 @@ bool bic_lua_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base
   unsigned param_cnt = (unsigned)code[icl_parm_cnt] - 1;
   unsigned name_length = name_ref.size - (3 + (unsigned)(logf(param_cnt)/logf(10)));
 
-  char name[c_max_method_name_length];
-  memcpy(name,name_ref.data,name_length);
-  name[name_length] = '\0';
-
   // - retrieve function -
-  lua_pushlstring(L,name,name_length);
+  lua_pushlstring(L,name_ref.data,name_length);
   lua_rawget(L,-2);
   lua_replace(L,-2);
 
