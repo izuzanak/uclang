@@ -225,7 +225,10 @@ inline SV *perl_reference_s::get(PerlInterpreter *my_perl)
         return NULL;
       }
 
-      return HeVAL(he);
+      SV *sv = HeVAL(he);
+      SvREFCNT_inc(sv);
+
+      return sv;
     }/*}}}*/
   default:
     cassert(0);
