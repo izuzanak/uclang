@@ -37,6 +37,7 @@ c_packages = [
   ["MOD_SSH2"      ,"pkg-config",["libssh2 >= 1.4.3"]],
   ["MOD_GCRYPT"    ,"files"     ,["/usr/include/gcrypt.h"]],
   ["MOD_ICONV"     ,"files"     ,["/usr/include/iconv.h"]],
+  ["MOD_UTF8PROC"  ,"files"     ,["/usr/include/utf8proc.h"]],
   ["MOD_JIT"       ,"dirs"      ,["../ext_libs/libjit"]],
   ["MOD_LIGHTNING" ,"false"     ,[]],
   ["MOD_LLVM"      ,"false"     ,[]],
