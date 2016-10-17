@@ -6,9 +6,6 @@ include "gsl_module.h"
 // - GSL indexes of built in classes -
 unsigned c_bi_class_gsl_spline = c_idx_not_exist;
 
-// - GSL indexes of remote classes -
-unsigned c_rm_class_socket = c_idx_not_exist;
-
 // - GSL module -
 built_in_module_s module =
 {/*{{{*/

@@ -7,9 +7,6 @@ include "jit_module.h"
 unsigned c_bi_class_jit_context = c_idx_not_exist;
 unsigned c_bi_class_jit_function = c_idx_not_exist;
 
-// - JIT indexes of remote classes -
-unsigned c_rm_class_socket = c_idx_not_exist;
-
 // - JIT module -
 built_in_module_s module =
 {/*{{{*/

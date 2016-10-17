@@ -7,9 +7,6 @@ include "llvm_module.h"
 unsigned c_bi_class_llvm_context = c_idx_not_exist;
 unsigned c_bi_class_llvm_module = c_idx_not_exist;
 
-// - LLVM indexes of remote classes -
-unsigned c_rm_class_socket = c_idx_not_exist;
-
 // - LLVM module -
 built_in_module_s module =
 {/*{{{*/

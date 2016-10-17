@@ -6,9 +6,6 @@ include "soapcl_module.h"
 // - SOAPCL indexes of built in classes -
 unsigned c_bi_class_calc_client = c_idx_not_exist;
 
-// - SOAPCL indexes of remote classes -
-unsigned c_rm_class_socket = c_idx_not_exist;
-
 // - SOAPCL module -
 built_in_module_s module =
 {/*{{{*/

@@ -6,9 +6,6 @@ include "iconv_module.h"
 // - ICONV indexes of built in classes -
 unsigned c_bi_class_iconv = c_idx_not_exist;
 
-// - ICONV indexes of remote classes -
-unsigned c_rm_class_socket = c_idx_not_exist;
-
 // - ICONV module -
 built_in_module_s module =
 {/*{{{*/

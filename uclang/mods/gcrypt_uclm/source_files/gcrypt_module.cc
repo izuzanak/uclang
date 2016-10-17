@@ -6,9 +6,6 @@ include "gcrypt_module.h"
 // - GCRYPT indexes of built in classes -
 unsigned c_bi_class_gcrypt_cipher = c_idx_not_exist;
 
-// - GCRYPT indexes of remote classes -
-unsigned c_rm_class_socket = c_idx_not_exist;
-
 // - GCRYPT module -
 built_in_module_s module =
 {/*{{{*/

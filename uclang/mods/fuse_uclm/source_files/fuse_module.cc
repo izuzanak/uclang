@@ -12,9 +12,6 @@ unsigned c_bi_class_fuse_file_info = c_idx_not_exist;
 unsigned c_bi_class_fuse_dir_filler = c_idx_not_exist;
 unsigned c_bi_class_fuse_file_filler = c_idx_not_exist;
 
-// - FUSE indexes of remote classes -
-unsigned c_rm_class_socket = c_idx_not_exist;
-
 // - FUSE module -
 built_in_module_s module =
 {/*{{{*/

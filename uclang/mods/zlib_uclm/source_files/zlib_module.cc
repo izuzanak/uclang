@@ -7,9 +7,6 @@ include "zlib_module.h"
 unsigned c_bi_class_zlib = c_idx_not_exist;
 unsigned c_bi_class_gz_file = c_idx_not_exist;
 
-// - ZLIB indexes of remote classes -
-unsigned c_rm_class_socket = c_idx_not_exist;
-
 // - ZLIB module -
 built_in_module_s module =
 {/*{{{*/

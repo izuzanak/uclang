@@ -6,9 +6,6 @@ include "uv_module.h"
 // - UV indexes of built in classes -
 unsigned c_bi_class_uv_loop = c_idx_not_exist;
 
-// - UV indexes of remote classes -
-unsigned c_rm_class_socket = c_idx_not_exist;
-
 // - UV module -
 built_in_module_s module =
 {/*{{{*/

@@ -10,9 +10,6 @@ unsigned c_bi_class_cv_window = c_idx_not_exist;
 unsigned c_bi_class_cv_capture = c_idx_not_exist;
 unsigned c_bi_class_cv_writer = c_idx_not_exist;
 
-// - OPENCV indexes of remote classes -
-unsigned c_rm_class_socket = c_idx_not_exist;
-
 // - OPENCV module -
 built_in_module_s module =
 {/*{{{*/
