@@ -19,8 +19,9 @@ extern built_in_class_s *utf8proc_classes[];
 // - UTF8PROC error identifiers -
 enum
 {
-  c_error_UTF8PROC_DECOMPOSE_ERROR = 0,
-  c_error_UTF8PROC_UTF8_SEQUENCE_INVALID_CODE_POINT,
+  c_error_UTF8PROC_UTF8_SEQUENCE_INVALID_CODE_POINT = 0,
+  c_error_UNICODE_STRING_UTF8_DECOMPOSE_ERROR,
+  c_error_UNICODE_STRING_UTF8_CREATE_ERROR,
 };
 
 // - UTF8PROC error strings -
@@ -42,7 +43,6 @@ void bic_utf8proc_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_utf8proc_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_utf8proc_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_utf8proc_method_decompose_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_utf8proc_method_to_lower_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_utf8proc_method_to_upper_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_utf8proc_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -60,6 +60,8 @@ void bic_unicode_str_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_unicode_str_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_unicode_str_method_UnicodeStr_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_unicode_str_method_to_lower_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_unicode_str_method_to_upper_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_unicode_str_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_unicode_str_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

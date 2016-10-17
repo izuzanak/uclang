@@ -14,24 +14,8 @@ include "script_parser.h"
 
 struct utf8proc_s
 {
-  int dummy;
-
-  inline void init();
-  inline void clear(interpreter_thread_s &it);
+  static bool unicode_to_utf8(ui_array_s &a_ustring,bc_array_s &a_buffer);
 };
-
-/*
- * inline methods of structure utf8proc_s
- */
-
-inline void utf8proc_s::init()
-{/*{{{*/
-}/*}}}*/
-
-inline void utf8proc_s::clear(interpreter_thread_s &it)
-{/*{{{*/
-  init();
-}/*}}}*/
 
 #endif
 

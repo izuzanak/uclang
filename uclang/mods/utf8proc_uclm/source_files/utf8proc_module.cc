@@ -14,7 +14,7 @@ built_in_module_s module =
   utf8proc_classes,         // Classes
 
   0,                        // Error base index
-  2,                        // Error count
+  3,                        // Error count
   utf8proc_error_strings,   // Error strings
 
   utf8proc_initialize,      // Initialize function
@@ -31,8 +31,9 @@ built_in_class_s *utf8proc_classes[] =
 // - UTF8PROC error strings -
 const char *utf8proc_error_strings[] =
 {/*{{{*/
-  "error_UTF8PROC_DECOMPOSE_ERROR",
   "error_UTF8PROC_UTF8_SEQUENCE_INVALID_CODE_POINT",
+  "error_UNICODE_STRING_UTF8_DECOMPOSE_ERROR",
+  "error_UNICODE_STRING_UTF8_CREATE_ERROR",
 };/*}}}*/
 
 // - UTF8PROC initialize -
@@ -60,18 +61,25 @@ bool utf8proc_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_UTF8PROC_DECOMPOSE_ERROR:
-    fprintf(stderr," ---------------------------------------- \n");
-    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
-    print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while decomposing UTF-8 to code points\n");
-    fprintf(stderr," ---------------------------------------- \n");
-    break;
   case c_error_UTF8PROC_UTF8_SEQUENCE_INVALID_CODE_POINT:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nCannot read valid code point from UTF-8 sequence\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_UNICODE_STRING_UTF8_DECOMPOSE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while decomposing UTF-8 sequence to code points\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_UNICODE_STRING_UTF8_CREATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while creating UTF-8 sequence from code points\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -89,7 +97,7 @@ built_in_class_s utf8proc_class =
 {/*{{{*/
   "Utf8Proc",
   c_modifier_public | c_modifier_final,
-  7, utf8proc_methods,
+  6, utf8proc_methods,
   0, utf8proc_variables,
   bic_utf8proc_consts,
   bic_utf8proc_init,
@@ -112,11 +120,6 @@ built_in_method_s utf8proc_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_utf8proc_operator_binary_equal
-  },
-  {
-    "decompose#1",
-    c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_utf8proc_method_decompose_1
   },
   {
     "to_lower#1",
@@ -218,58 +221,6 @@ bool bic_utf8proc_operator_binary_equal(interpreter_thread_s &it,unsigned stack_
 
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
-
-  return true;
-}/*}}}*/
-
-bool bic_utf8proc_method_decompose_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_utf8proc,"decompose#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
-  string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
-  utf8proc_ssize_t source_length = source_ptr->size - 1;
-
-  // - create target buffer -
-  unsigned target_size = source_length*sizeof(utf8proc_int32_t) + 1;
-  char *target_data = (char *)cmalloc(target_size);
-
-  utf8proc_ssize_t cp_count = utf8proc_decompose(
-      (const utf8proc_uint8_t *)source_ptr->data,source_length,
-      (utf8proc_int32_t *)target_data,source_length,
-      (utf8proc_option_t)0);
-
-  // - ERROR -
-  if (cp_count < 0 || cp_count > source_length)
-  {
-    cfree(target_data);
-
-    exception_s::throw_exception(it,module.error_base + c_error_UTF8PROC_DECOMPOSE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - compute target length -
-  utf8proc_ssize_t target_length = cp_count*sizeof(utf8proc_ssize_t);
-
-  // - set target terminating zero -
-  target_data[target_length] = '\0';
-
-  // - create target string -
-  string_s *target_ptr = it.get_new_string_ptr();
-  target_ptr->data = target_data;
-  target_ptr->size = target_length + 1;
-
-  BIC_SET_RESULT_STRING(target_ptr);
 
   return true;
 }/*}}}*/
@@ -400,12 +351,12 @@ built_in_method_s unicode_str_methods[] =
   },
   {
     "to_string#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_unicode_str_method_to_string_0
   },
   {
     "print#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_unicode_str_method_print_0
   },
 };/*}}}*/
@@ -420,16 +371,19 @@ void bic_unicode_str_consts(location_array_s &const_locations)
 
 void bic_unicode_str_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-
-  // FIXME TODO continue ...
-  cassert(0);
+  location_ptr->v_data_ptr = (basic_64b)NULL;
 }/*}}}*/
 
 void bic_unicode_str_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
+  ui_array_s *ustring_ptr = (ui_array_s *)location_ptr->v_data_ptr;
 
-  // FIXME TODO continue ...
-  cassert(0);
+  // - if websocket context exists -
+  if (ustring_ptr != NULL)
+  {
+    ustring_ptr->clear();
+    cfree(ustring_ptr);
+  }
 }/*}}}*/
 
 bool bic_unicode_str_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -448,17 +402,76 @@ bool bic_unicode_str_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_unicode_str_method_UnicodeStr_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  
-  // FIXME TODO continue ...
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("UnicodeStr#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
+  utf8proc_ssize_t source_length = source_ptr->size - 1;
+
+  // - create unicode string -
+  ui_array_s *ustring_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));
+  ustring_ptr->init_size(source_length);
+
+  utf8proc_ssize_t cp_count = utf8proc_decompose(
+      (const utf8proc_uint8_t *)source_ptr->data,source_length,
+      (utf8proc_int32_t *)ustring_ptr->data,source_length,
+      (utf8proc_option_t)0);
+
+  // - ERROR -
+  if (cp_count < 0 || cp_count > source_length)
+  {
+    ustring_ptr->clear();
+    cfree(ustring_ptr);
+
+    exception_s::throw_exception(it,module.error_base + c_error_UNICODE_STRING_UTF8_DECOMPOSE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - set count of code points -
+  ustring_ptr->used = cp_count;
+
+  dst_location->v_data_ptr = (basic_64b)ustring_ptr;
+
+  return true;
 }/*}}}*/
 
 bool bic_unicode_str_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  BIC_TO_STRING_WITHOUT_DEST(
-    string_ptr->set(strlen("UnicodeStr"),"UnicodeStr");
-  );
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  ui_array_s *ustring_ptr = (ui_array_s *)dst_location->v_data_ptr;
+
+  bc_array_s buffer;
+  buffer.init();
+
+  // - ERROR -
+  if (!utf8proc_s::unicode_to_utf8(*ustring_ptr,buffer))
+  {
+    buffer.clear();
+
+    exception_s::throw_exception(it,module.error_base + c_error_UNICODE_STRING_UTF8_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  buffer.push('\0');
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->data = buffer.data;
+  string_ptr->size = buffer.used;
+
+  BIC_SET_RESULT_STRING(string_ptr);
 
   return true;
 }/*}}}*/
@@ -466,8 +479,25 @@ bool bic_unicode_str_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 bool bic_unicode_str_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  printf("UnicodeStr");
+  ui_array_s *ustring_ptr = (ui_array_s *)dst_location->v_data_ptr;
+
+  bc_array_s buffer;
+  buffer.init();
+
+  // - ERROR -
+  if (!utf8proc_s::unicode_to_utf8(*ustring_ptr,buffer))
+  {
+    buffer.clear();
+
+    exception_s::throw_exception(it,module.error_base + c_error_UNICODE_STRING_UTF8_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  fwrite(buffer.data,buffer.used,1,stdout);
+
+  buffer.clear();
 
   BIC_SET_RESULT_BLANK();
 
