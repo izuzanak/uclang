@@ -60,8 +60,16 @@ void bic_unicode_str_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_unicode_str_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_unicode_str_method_UnicodeStr_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_unicode_str_method_to_lower_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_unicode_str_method_to_upper_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_str_method_to_lower_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_str_method_to_upper_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_string_method_head_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_string_method_tail_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_string_method_range_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_string_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_string_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_string_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_string_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_string_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_unicode_str_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_unicode_str_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

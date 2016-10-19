@@ -272,7 +272,7 @@ bool bic_utf8proc_method_to_upper_1(interpreter_thread_s &it,unsigned stack_base
 
   BIC_UTF8PROC_TRANSFORM_STRING(
 
-    // - code point to lower -
+    // - code point to upper -
     code_point = utf8proc_toupper(code_point);
   );
 
@@ -320,7 +320,7 @@ built_in_class_s unicode_str_class =
 {/*{{{*/
   "UnicodeStr",
   c_modifier_public | c_modifier_final,
-  4, unicode_str_methods,
+  6, unicode_str_methods,
   0, unicode_str_variables,
   bic_unicode_str_consts,
   bic_unicode_str_init,
@@ -348,6 +348,16 @@ built_in_method_s unicode_str_methods[] =
     "UnicodeStr#1",
     c_modifier_public | c_modifier_final,
     bic_unicode_str_method_UnicodeStr_1
+  },
+  {
+    "to_lower#0",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_str_method_to_lower_0
+  },
+  {
+    "to_upper#0",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_str_method_to_upper_0
   },
   {
     "to_string#0",
@@ -442,6 +452,64 @@ bool bic_unicode_str_method_UnicodeStr_1(interpreter_thread_s &it,unsigned stack
   ustring_ptr->used = cp_count;
 
   dst_location->v_data_ptr = (basic_64b)ustring_ptr;
+
+  return true;
+}/*}}}*/
+
+#define BIC_UNICODE_STR_TRANSFORM_STRING(CODE_POINT_CODE) \
+/*{{{*/\
+\
+  /* - create target unicode string - */\
+  ui_array_s *target_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));\
+  target_ptr->init_size(source_ptr->used);\
+\
+  if (source_ptr->used != 0)\
+  {\
+    utf8proc_int32_t *s_ptr = (utf8proc_int32_t *)source_ptr->data;\
+    utf8proc_int32_t *s_ptr_end = s_ptr + source_ptr->used;\
+    utf8proc_int32_t *t_ptr = (utf8proc_int32_t *)target_ptr->data;\
+    do {\
+      CODE_POINT_CODE;\
+    } while(++t_ptr,++s_ptr < s_ptr_end);\
+  }\
+\
+  target_ptr->used = source_ptr->used;\
+/*}}}*/
+
+bool bic_unicode_str_method_to_lower_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  ui_array_s *source_ptr = (ui_array_s *)dst_location->v_data_ptr;
+
+  BIC_UNICODE_STR_TRANSFORM_STRING(
+
+    // - code point to lower -
+    *t_ptr = utf8proc_tolower(*s_ptr);
+  )
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_str,target_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_str_method_to_upper_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  ui_array_s *source_ptr = (ui_array_s *)dst_location->v_data_ptr;
+
+  BIC_UNICODE_STR_TRANSFORM_STRING(
+
+    // - code point to upper -
+    *t_ptr = utf8proc_toupper(*s_ptr);
+  )
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_str,target_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
