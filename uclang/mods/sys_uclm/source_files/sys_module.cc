@@ -722,6 +722,7 @@ built_in_class_s sys_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1892,6 +1893,7 @@ built_in_class_s pipe_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -2289,6 +2291,7 @@ built_in_class_s file_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -2665,6 +2668,7 @@ built_in_class_s socket_addr_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -2856,6 +2860,7 @@ built_in_class_s socket_class =
   bic_socket_consts,
   bic_socket_init,
   bic_socket_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -4405,6 +4410,7 @@ built_in_class_s regex_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -4918,6 +4924,7 @@ built_in_class_s signal_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -5304,6 +5311,7 @@ built_in_class_s poll_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -5613,6 +5621,7 @@ built_in_class_s timer_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -5888,6 +5897,7 @@ built_in_class_s clock_class =
   bic_clock_consts,
   bic_clock_init,
   bic_clock_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

@@ -265,6 +265,7 @@ built_in_class_s snmp_session_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -720,6 +721,7 @@ built_in_class_s snmp_agent_class =
   bic_snmp_agent_consts,
   bic_snmp_agent_init,
   bic_snmp_agent_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1327,6 +1329,7 @@ built_in_class_s snmp_obj_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1571,6 +1574,7 @@ built_in_class_s snmp_oid_class =
   bic_snmp_oid_consts,
   bic_snmp_oid_init,
   bic_snmp_oid_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

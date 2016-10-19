@@ -393,6 +393,7 @@ built_in_class_s math_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -504,6 +505,7 @@ built_in_class_s vec2_class =
   bic_vec2_consts,
   bic_vec2_init,
   bic_vec2_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -843,6 +845,7 @@ built_in_class_s vec3_class =
   bic_vec3_consts,
   bic_vec3_init,
   bic_vec3_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1235,6 +1238,7 @@ built_in_class_s vec4_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   bic_vec4_pack,
   bic_vec4_unpack,
   NULL,
@@ -1594,6 +1598,7 @@ built_in_class_s mat4_class =
   bic_mat4_consts,
   bic_mat4_init,
   bic_mat4_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -2369,6 +2374,7 @@ built_in_class_s primes_class =
   bic_primes_item,
   bic_primes_first_idx,
   bic_primes_next_idx,
+  NULL,
   NULL,
   NULL,
   NULL,

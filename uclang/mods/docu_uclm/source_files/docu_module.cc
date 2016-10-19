@@ -113,6 +113,7 @@ built_in_class_s docu_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -202,6 +203,7 @@ built_in_class_s docu_source_class =
   NULL,
   bic_docu_source_first_idx,
   bic_docu_source_next_idx,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -515,6 +517,7 @@ built_in_class_s docu_comment_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -668,6 +671,7 @@ built_in_class_s docu_parsed_class =
   bic_docu_parsed_consts,
   bic_docu_parsed_init,
   bic_docu_parsed_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

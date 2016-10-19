@@ -94,6 +94,7 @@ built_in_class_s calc_client_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 

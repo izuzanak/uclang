@@ -127,6 +127,7 @@ built_in_class_s gst_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -376,6 +377,7 @@ built_in_class_s gst_pipeline_class =
   bic_gst_pipeline_consts,
   bic_gst_pipeline_init,
   bic_gst_pipeline_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

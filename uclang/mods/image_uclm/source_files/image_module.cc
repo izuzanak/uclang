@@ -194,6 +194,7 @@ built_in_class_s image_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 

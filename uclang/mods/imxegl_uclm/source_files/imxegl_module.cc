@@ -220,6 +220,7 @@ built_in_class_s imx_egl_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -899,6 +900,7 @@ built_in_class_s imx_fb_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1124,6 +1126,7 @@ built_in_class_s imx_ipu_class =
   bic_imx_ipu_consts,
   bic_imx_ipu_init,
   bic_imx_ipu_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

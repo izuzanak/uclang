@@ -98,6 +98,7 @@ built_in_class_s iconv_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 

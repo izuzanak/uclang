@@ -243,6 +243,7 @@ built_in_class_s gl_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -581,6 +582,7 @@ built_in_class_s gl_shader_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -839,6 +841,7 @@ built_in_class_s gl_program_class =
   bic_gl_program_consts,
   bic_gl_program_init,
   bic_gl_program_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1203,6 +1206,7 @@ built_in_class_s gl_attribute_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1371,6 +1375,7 @@ built_in_class_s gl_uniform_class =
   bic_gl_uniform_consts,
   bic_gl_uniform_init,
   bic_gl_uniform_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1666,6 +1671,7 @@ built_in_class_s gl_texture_class =
   bic_gl_texture_consts,
   bic_gl_texture_init,
   bic_gl_texture_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

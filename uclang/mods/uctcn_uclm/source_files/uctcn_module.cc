@@ -406,6 +406,7 @@ built_in_class_s traffic_store_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -818,6 +819,7 @@ built_in_class_s tcn_port_config_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1060,6 +1062,7 @@ built_in_class_s traffic_port_class =
   bic_traffic_port_consts,
   bic_traffic_port_init,
   bic_traffic_port_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1601,6 +1604,7 @@ built_in_class_s proc_var_set_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -2033,6 +2037,7 @@ built_in_class_s proc_variable_class =
   bic_proc_variable_consts,
   bic_proc_variable_init,
   bic_proc_variable_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

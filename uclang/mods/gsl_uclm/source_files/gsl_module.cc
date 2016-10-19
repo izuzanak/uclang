@@ -122,6 +122,7 @@ built_in_class_s gsl_spline_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 

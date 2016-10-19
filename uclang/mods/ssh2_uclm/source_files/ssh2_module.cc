@@ -329,6 +329,7 @@ built_in_class_s ssh2_session_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -952,6 +953,7 @@ built_in_class_s sftp_session_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1380,6 +1382,7 @@ built_in_class_s sftp_handle_class =
   NULL,
   NULL,
   bic_sftp_handle_next_item,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1869,6 +1872,7 @@ built_in_class_s ssh2_channel_class =
   bic_ssh2_channel_consts,
   bic_ssh2_channel_init,
   bic_ssh2_channel_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

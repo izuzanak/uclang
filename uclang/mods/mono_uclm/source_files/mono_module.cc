@@ -329,6 +329,7 @@ built_in_class_s mono_assembly_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -690,6 +691,7 @@ built_in_class_s mono_class_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -975,6 +977,7 @@ built_in_class_s mono_object_class =
   bic_mono_object_consts,
   bic_mono_object_init,
   bic_mono_object_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1445,6 +1448,7 @@ built_in_class_s mono_property_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   bic_mono_object_invoke,
   bic_mono_object_member
 };/*}}}*/
@@ -1565,6 +1569,7 @@ built_in_class_s mono_item_ref_class =
   bic_mono_item_ref_consts,
   bic_mono_item_ref_init,
   bic_mono_item_ref_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

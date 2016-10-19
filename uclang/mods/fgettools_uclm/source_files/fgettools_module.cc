@@ -146,6 +146,7 @@ built_in_class_s fget_target_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 

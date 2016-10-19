@@ -19,6 +19,7 @@ built_in_class_s queue_class =
   bic_queue_first_idx,
   bic_queue_next_idx,
   NULL,
+  NULL,
   bic_queue_pack,
   bic_queue_unpack,
   NULL,

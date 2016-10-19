@@ -282,6 +282,7 @@ built_in_class_s final_automata_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -502,6 +503,7 @@ built_in_class_s fa_source_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -681,6 +683,7 @@ built_in_class_s parser_class =
   bic_parser_consts,
   bic_parser_init,
   bic_parser_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -913,6 +916,7 @@ built_in_class_s parse_state_class =
   bic_parse_state_consts,
   bic_parse_state_init,
   bic_parse_state_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

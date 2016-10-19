@@ -222,6 +222,7 @@ built_in_class_s cv_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -394,6 +395,7 @@ built_in_class_s cv_mat_class =
   bic_cv_mat_consts,
   bic_cv_mat_init,
   bic_cv_mat_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -759,6 +761,7 @@ built_in_class_s cv_window_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -948,6 +951,7 @@ built_in_class_s cv_capture_class =
   bic_cv_capture_consts,
   bic_cv_capture_init,
   bic_cv_capture_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1551,6 +1555,7 @@ built_in_class_s cv_writer_class =
   bic_cv_writer_consts,
   bic_cv_writer_init,
   bic_cv_writer_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

@@ -175,6 +175,7 @@ built_in_class_s zlib_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -381,6 +382,7 @@ built_in_class_s gz_file_class =
   NULL,
   NULL,
   bic_gz_file_next_item,
+  NULL,
   NULL,
   NULL,
   NULL,

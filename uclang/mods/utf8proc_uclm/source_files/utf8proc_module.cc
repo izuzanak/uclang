@@ -111,6 +111,7 @@ built_in_class_s utf8proc_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -325,6 +326,7 @@ built_in_class_s unicode_str_class =
   bic_unicode_str_consts,
   bic_unicode_str_init,
   bic_unicode_str_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

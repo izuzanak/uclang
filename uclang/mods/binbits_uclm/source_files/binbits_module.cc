@@ -180,6 +180,7 @@ built_in_class_s bin_array_class =
   bic_bin_array_first_idx,
   bic_bin_array_next_idx,
   NULL,
+  NULL,
   bic_bin_array_pack,
   bic_bin_array_unpack,
   NULL,
@@ -1902,6 +1903,7 @@ built_in_class_s bin_array_ref_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -2088,6 +2090,7 @@ built_in_class_s bin_dict_class =
   bic_bin_dict_item,
   bic_bin_dict_first_idx,
   bic_bin_dict_next_idx,
+  NULL,
   NULL,
   bic_bin_dict_pack,
   bic_bin_dict_unpack,
@@ -3744,6 +3747,7 @@ built_in_class_s bin_dict_ref_class =
   bic_bin_dict_ref_consts,
   bic_bin_dict_ref_init,
   bic_bin_dict_ref_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

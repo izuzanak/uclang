@@ -220,6 +220,7 @@ built_in_class_s perl_interpreter_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -525,6 +526,7 @@ built_in_class_s perl_value_class =
   bic_perl_value_consts,
   bic_perl_value_init,
   bic_perl_value_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1011,6 +1013,7 @@ built_in_class_s perl_reference_class =
   bic_perl_reference_consts,
   bic_perl_reference_init,
   bic_perl_reference_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

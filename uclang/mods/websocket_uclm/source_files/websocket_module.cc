@@ -209,6 +209,7 @@ built_in_class_s ws_context_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -759,6 +760,7 @@ built_in_class_s ws_conn_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1270,6 +1272,7 @@ built_in_class_s ws_client_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1407,6 +1410,7 @@ built_in_class_s ws_base64_class =
   bic_ws_base64_consts,
   bic_ws_base64_init,
   bic_ws_base64_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

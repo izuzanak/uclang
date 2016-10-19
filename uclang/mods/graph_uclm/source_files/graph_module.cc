@@ -227,6 +227,7 @@ built_in_class_s graph_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   bic_graph_pack,
   bic_graph_unpack,
   NULL,
@@ -2297,6 +2298,7 @@ built_in_class_s graph_vertex_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -2735,6 +2737,7 @@ built_in_class_s graph_edge_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -3000,6 +3003,7 @@ built_in_class_s subgraph_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -3093,6 +3097,7 @@ built_in_class_s graph_paths_class =
   bic_graph_paths_consts,
   bic_graph_paths_init,
   bic_graph_paths_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

@@ -197,6 +197,7 @@ built_in_class_s lang_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -400,6 +401,7 @@ built_in_class_s class_ref_class =
   bic_class_ref_consts,
   bic_class_ref_init,
   bic_class_ref_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -937,6 +939,7 @@ built_in_class_s namespace_ref_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1300,6 +1303,7 @@ built_in_class_s method_ref_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1580,6 +1584,7 @@ built_in_class_s var_ref_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1714,6 +1719,7 @@ built_in_class_s param_ref_class =
   bic_param_ref_consts,
   bic_param_ref_init,
   bic_param_ref_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

@@ -123,6 +123,7 @@ built_in_class_s calc_service_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -473,6 +474,7 @@ built_in_class_s soap_fault_class =
   bic_soap_fault_consts,
   bic_soap_fault_init,
   bic_soap_fault_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

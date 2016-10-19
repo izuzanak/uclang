@@ -284,6 +284,7 @@ built_in_class_s ato_aru_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1392,6 +1393,7 @@ built_in_class_s ato_aru_record_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1649,6 +1651,7 @@ built_in_class_s optim_speed_profile_class =
   bic_optim_speed_profile_consts,
   bic_optim_speed_profile_init,
   bic_optim_speed_profile_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1953,6 +1956,7 @@ built_in_class_s optim_line_section_class =
   bic_optim_line_section_item,
   bic_optim_line_section_first_idx,
   bic_optim_line_section_next_idx,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -2423,6 +2427,7 @@ built_in_class_s optim_line_segment_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -2775,6 +2780,7 @@ built_in_class_s ato_loco_class =
   bic_ato_loco_consts,
   bic_ato_loco_init,
   bic_ato_loco_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -3139,6 +3145,7 @@ built_in_class_s ato_train_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -3397,6 +3404,7 @@ built_in_class_s ato_trip_class =
   bic_ato_trip_item,
   bic_ato_trip_first_idx,
   bic_ato_trip_next_idx,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -4075,6 +4083,7 @@ built_in_class_s ato_trip_sec_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -4255,6 +4264,7 @@ built_in_class_s ato_line_sec_class =
   bic_ato_line_sec_item,
   bic_ato_line_sec_first_idx,
   bic_ato_line_sec_next_idx,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -5015,6 +5025,7 @@ built_in_class_s ato_line_sec_point_class =
   bic_ato_line_sec_point_consts,
   bic_ato_line_sec_point_init,
   bic_ato_line_sec_point_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

@@ -180,6 +180,7 @@ built_in_class_s gl_vertex_buffer_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -611,6 +612,7 @@ built_in_class_s gl_font_class =
   bic_gl_font_consts,
   bic_gl_font_init,
   bic_gl_font_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1091,6 +1093,7 @@ built_in_class_s gl_font_buffer_class =
   bic_gl_font_buffer_consts,
   bic_gl_font_buffer_init,
   bic_gl_font_buffer_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

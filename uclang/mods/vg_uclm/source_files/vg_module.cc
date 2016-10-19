@@ -171,6 +171,7 @@ built_in_class_s vg_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1131,6 +1132,7 @@ built_in_class_s vg_paint_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1439,6 +1441,7 @@ built_in_class_s vg_path_class =
   bic_vg_path_consts,
   bic_vg_path_init,
   bic_vg_path_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

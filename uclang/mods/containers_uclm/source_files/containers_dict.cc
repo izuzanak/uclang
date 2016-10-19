@@ -19,6 +19,7 @@ built_in_class_s dict_class =
   bic_dict_first_idx,
   bic_dict_next_idx,
   NULL,
+  NULL,
   bic_dict_pack,
   bic_dict_unpack,
   NULL,

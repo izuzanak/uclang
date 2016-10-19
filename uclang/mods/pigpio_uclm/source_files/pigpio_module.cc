@@ -90,6 +90,7 @@ built_in_class_s pigpio_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 

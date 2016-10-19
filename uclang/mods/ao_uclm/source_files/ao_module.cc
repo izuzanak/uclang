@@ -135,6 +135,7 @@ built_in_class_s ao_format_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -310,6 +311,7 @@ built_in_class_s ao_device_class =
   bic_ao_device_consts,
   bic_ao_device_init,
   bic_ao_device_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

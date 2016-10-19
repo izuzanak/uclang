@@ -615,6 +615,7 @@ built_in_class_s blank_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   bic_blank_pack,
   bic_blank_unpack,
   NULL,
@@ -786,6 +787,7 @@ built_in_class_s char_class =
   bic_char_init,
   bic_char_clear,
   bic_char_compare,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1909,6 +1911,7 @@ built_in_class_s integer_class =
   bic_integer_init,
   bic_integer_clear,
   bic_integer_compare,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -3138,6 +3141,7 @@ built_in_class_s float_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   bic_float_pack,
   bic_float_unpack,
   NULL,
@@ -4189,6 +4193,7 @@ built_in_class_s string_class =
   bic_string_first_idx,
   bic_string_next_idx,
   NULL,
+  bic_string_from_slice,
   bic_string_pack,
   bic_string_unpack,
   NULL,
@@ -4442,6 +4447,30 @@ unsigned bic_string_next_idx(location_s *location_ptr,unsigned index)
   cassert(index < length);
 
   return (index + 1 < length) ? index + 1 : c_idx_not_exist;
+}/*}}}*/
+
+location_s *bic_string_from_slice(interpreter_thread_s &it,pointer_array_s &slice_array)
+{/*{{{*/
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->create(slice_array.used);
+
+  // - join slice array to string -
+  if (slice_array.used > 0)
+  {
+    pointer *l_ptr = slice_array.data;
+    pointer *l_ptr_end = l_ptr + slice_array.used;
+    char *s_ptr = string_ptr->data;
+    do
+    {
+      *s_ptr = (char)((location_s *)*l_ptr)->v_data_ptr;
+    }
+    while(++s_ptr,++l_ptr < l_ptr_end);
+  }
+
+  // - create new string location -
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+
+  return new_location;
 }/*}}}*/
 
 bool bic_string_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack)
@@ -5907,6 +5936,7 @@ built_in_class_s array_class =
   bic_array_first_idx,
   bic_array_next_idx,
   NULL,
+  NULL,
   bic_array_pack,
   bic_array_unpack,
   NULL,
@@ -7223,6 +7253,7 @@ built_in_class_s error_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -7410,6 +7441,7 @@ built_in_class_s exception_class =
   bic_exception_consts,
   bic_exception_init,
   bic_exception_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -7946,6 +7978,7 @@ built_in_class_s type_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -8151,6 +8184,7 @@ built_in_class_s mutex_class =
   bic_mutex_consts,
   bic_mutex_init,
   bic_mutex_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -8377,6 +8411,7 @@ built_in_class_s thread_class =
   bic_thread_consts,
   bic_thread_init,
   bic_thread_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -8643,6 +8678,7 @@ built_in_class_s delegate_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -8870,6 +8906,7 @@ built_in_class_s buffer_class =
   bic_buffer_consts,
   bic_buffer_init,
   bic_buffer_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

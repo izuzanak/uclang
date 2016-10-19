@@ -130,6 +130,7 @@ built_in_class_s glut_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 

@@ -253,6 +253,7 @@ built_in_class_s v8_engine_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -401,6 +402,7 @@ built_in_class_s v8_context_class =
   bic_v8_context_consts,
   bic_v8_context_init,
   bic_v8_context_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -597,6 +599,7 @@ built_in_class_s v8_script_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -765,6 +768,7 @@ built_in_class_s v8_heap_stat_class =
   bic_v8_heap_stat_consts,
   bic_v8_heap_stat_init,
   bic_v8_heap_stat_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -975,6 +979,7 @@ built_in_class_s v8_object_class =
   bic_v8_object_consts,
   bic_v8_object_init,
   bic_v8_object_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1740,6 +1745,7 @@ built_in_class_s v8_reference_class =
   bic_v8_reference_consts,
   bic_v8_reference_init,
   bic_v8_reference_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

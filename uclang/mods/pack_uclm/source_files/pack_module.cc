@@ -195,6 +195,7 @@ built_in_class_s pack_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 

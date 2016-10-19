@@ -90,6 +90,7 @@ built_in_class_s uv_loop_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 

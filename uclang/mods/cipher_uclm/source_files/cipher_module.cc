@@ -82,6 +82,7 @@ built_in_class_s cipher_rc4_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 

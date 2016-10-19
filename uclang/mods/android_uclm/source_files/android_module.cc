@@ -196,6 +196,7 @@ built_in_class_s sys_prop_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -463,6 +464,7 @@ built_in_class_s log_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -715,6 +717,7 @@ built_in_class_s activity_class =
   bic_activity_consts,
   bic_activity_init,
   bic_activity_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1117,6 +1120,7 @@ built_in_class_s event_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1233,6 +1237,7 @@ built_in_class_s sensor_manager_class =
   bic_sensor_manager_consts,
   bic_sensor_manager_init,
   bic_sensor_manager_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1422,6 +1427,7 @@ built_in_class_s sensor_class =
   bic_sensor_consts,
   bic_sensor_init,
   bic_sensor_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1629,6 +1635,7 @@ built_in_class_s sensor_event_queue_class =
   bic_sensor_event_queue_consts,
   bic_sensor_event_queue_init,
   bic_sensor_event_queue_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1892,6 +1899,7 @@ built_in_class_s sensor_event_class =
   bic_sensor_event_consts,
   bic_sensor_event_init,
   bic_sensor_event_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

@@ -19,6 +19,7 @@ built_in_class_s list_class =
   bic_list_first_idx,
   bic_list_next_idx,
   NULL,
+  NULL,
   bic_list_pack,
   bic_list_unpack,
   NULL,

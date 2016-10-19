@@ -164,6 +164,7 @@ built_in_class_s http_server_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -575,6 +576,7 @@ built_in_class_s http_conn_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -959,6 +961,7 @@ built_in_class_s http_resp_class =
   bic_http_resp_consts,
   bic_http_resp_init,
   bic_http_resp_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

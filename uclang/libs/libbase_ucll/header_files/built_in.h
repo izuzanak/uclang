@@ -362,7 +362,7 @@ enum
     else {\
       class_record_s &class_record = ((interpreter_s *)IT.interpreter_ptr)->class_records[first_loc->v_type];\
       \
-      /* - test if location type is built in class, and if it has defined built in compare function - */\
+      /* - test if location type is built in class, and if it has defined built in function - */\
       if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->compare_caller != NULL)\
       {\
         result = (long long int)class_record.bi_class_ptr->compare_caller(first_loc,second_loc);\
@@ -479,7 +479,7 @@ enum
     \
     class_record_s &class_record = ((interpreter_s *)IT.interpreter_ptr)->class_records[location->v_type];\
     \
-    /* - test if location type is built in class, and if it has defined built in length function - */\
+    /* - test if location type is built in class, and if it has defined built in function - */\
     if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->length_caller != NULL)\
     {\
       TRG_LENGTH = (long long int)class_record.bi_class_ptr->length_caller(location);\
@@ -531,7 +531,7 @@ enum
     \
     class_record_s &class_record = ((interpreter_s *)IT.interpreter_ptr)->class_records[location->v_type];\
     \
-    /* - test if location type is built in class, and if it has defined built in item function - */\
+    /* - test if location type is built in class, and if it has defined built in function - */\
     if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->item_caller != NULL)\
     {\
       TRG_LOCATION_PTR = class_record.bi_class_ptr->item_caller(IT,location,SRC_INDEX);\
@@ -576,7 +576,7 @@ enum
     \
     class_record_s &class_record = ((interpreter_s *)IT.interpreter_ptr)->class_records[location->v_type];\
     \
-    /* - test if location type is built in class, and if it has defined built in item function - */\
+    /* - test if location type is built in class, and if it has defined built in function - */\
     if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->first_idx_caller != NULL)\
     {\
       TRG_INDEX = (long long int)class_record.bi_class_ptr->first_idx_caller(location);\
@@ -637,7 +637,7 @@ enum
     \
     class_record_s &class_record = ((interpreter_s *)IT.interpreter_ptr)->class_records[location->v_type];\
     \
-    /* - test if location type is built in class, and if it has defined built in item function - */\
+    /* - test if location type is built in class, and if it has defined built in function - */\
     if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->next_idx_caller != NULL)\
     {\
       TRG_INDEX = (long long int)class_record.bi_class_ptr->next_idx_caller(location,SRC_INDEX);\
@@ -704,7 +704,7 @@ enum
     \
     class_record_s &class_record = ((interpreter_s *)IT.interpreter_ptr)->class_records[location->v_type];\
     \
-    /* - test if location type is built in class, and if it has defined built in next_item function - */\
+    /* - test if location type is built in class, and if it has defined built in function - */\
     if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->next_item_caller != NULL)\
     {\
       TRG_LOCATION_PTR = class_record.bi_class_ptr->next_item_caller(IT,location,SOURCE_POS);\

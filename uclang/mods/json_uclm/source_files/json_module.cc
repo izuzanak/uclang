@@ -133,6 +133,7 @@ built_in_class_s json_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 

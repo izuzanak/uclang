@@ -176,6 +176,7 @@ built_in_class_s ddb_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -483,6 +484,7 @@ built_in_class_s trace_storage_class =
   bic_trace_storage_consts,
   bic_trace_storage_init,
   bic_trace_storage_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1203,6 +1205,7 @@ built_in_class_s trace_record_class =
   bic_trace_record_consts,
   bic_trace_record_init,
   bic_trace_record_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

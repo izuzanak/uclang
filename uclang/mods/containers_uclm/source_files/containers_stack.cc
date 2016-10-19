@@ -19,6 +19,7 @@ built_in_class_s stack_class =
   bic_stack_first_idx,
   bic_stack_next_idx,
   NULL,
+  NULL,
   bic_stack_pack,
   bic_stack_unpack,
   NULL,

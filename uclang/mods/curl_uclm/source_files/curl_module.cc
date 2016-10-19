@@ -143,6 +143,7 @@ built_in_class_s curl_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -551,6 +552,7 @@ built_in_class_s curl_result_class =
   bic_curl_result_consts,
   bic_curl_result_init,
   bic_curl_result_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

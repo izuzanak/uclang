@@ -19,6 +19,7 @@ built_in_class_s set_class =
   bic_set_first_idx,
   bic_set_next_idx,
   NULL,
+  NULL,
   bic_set_pack,
   bic_set_unpack,
   NULL,

@@ -175,6 +175,7 @@ built_in_class_s dlms_server_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -692,6 +693,7 @@ built_in_class_s dlms_object_class =
   bic_dlms_object_consts,
   bic_dlms_object_init,
   bic_dlms_object_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

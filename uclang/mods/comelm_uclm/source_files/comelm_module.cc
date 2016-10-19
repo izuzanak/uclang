@@ -143,6 +143,7 @@ built_in_class_s elm_comm_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -563,6 +564,7 @@ built_in_class_s elm_packet_class =
   bic_elm_packet_consts,
   bic_elm_packet_init,
   bic_elm_packet_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

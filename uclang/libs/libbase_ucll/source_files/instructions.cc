@@ -1265,29 +1265,15 @@ int inst_slice_range(inst_params_s *params)
     reverse_array.clear();
   }
 
-  // - if source location is string -
-  if (src_location->v_type == c_bi_class_string)
+  class_record_s &class_record = IT_INTERPRETER->class_records[src_location->v_type];
+
+  // - test if location type is built in class, and if it has defined built in function -
+  if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->from_slice_caller != NULL)
   {
-    string_s *string_ptr = it.get_new_string_ptr();
-    string_ptr->create(array_ptr->used);
+    // - convert slice array to object -
+    location_s *new_location = class_record.bi_class_ptr->from_slice_caller(it,*array_ptr);
 
-    // - join slice array to string -
-    if (array_ptr->used > 0)
-    {
-      pointer *l_ptr = array_ptr->data;
-      pointer *l_ptr_end = l_ptr + array_ptr->used;
-      char *s_ptr = string_ptr->data;
-      do
-      {
-        *s_ptr = (char)((location_s *)*l_ptr)->v_data_ptr;
-      }
-      while(++s_ptr,++l_ptr < l_ptr_end);
-    }
-
-    // - create new string location -
-    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
-
-    // - assign string location to target location -
+    // - assign object location to target location -
     pointer &trg_location = it.data_stack[trg_loc_idx];
     it.release_location_ptr((location_s *)trg_location);
     trg_location = (pointer)new_location;

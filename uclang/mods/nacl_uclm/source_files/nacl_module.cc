@@ -176,6 +176,7 @@ built_in_class_s nacl_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -507,6 +508,7 @@ built_in_class_s nacl_3d_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -647,6 +649,7 @@ built_in_class_s core_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -747,6 +750,7 @@ built_in_class_s time_class =
   bic_time_init,
   bic_time_clear,
   bic_time_compare,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1167,6 +1171,7 @@ built_in_class_s console_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1394,6 +1399,7 @@ built_in_class_s message_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1508,6 +1514,7 @@ built_in_class_s net_address_class =
   bic_net_address_consts,
   bic_net_address_init,
   bic_net_address_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

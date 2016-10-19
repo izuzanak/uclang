@@ -98,6 +98,7 @@ built_in_class_s node_callback_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 

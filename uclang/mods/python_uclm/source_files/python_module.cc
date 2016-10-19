@@ -281,6 +281,7 @@ built_in_class_s py_object_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   bic_py_object_invoke,
   bic_py_object_member
 };/*}}}*/
@@ -1281,6 +1282,7 @@ built_in_class_s py_attr_ref_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   bic_py_object_invoke,
   bic_py_object_member
 };/*}}}*/
@@ -1496,6 +1498,7 @@ built_in_class_s py_item_ref_class =
   bic_py_item_ref_consts,
   bic_py_item_ref_init,
   bic_py_item_ref_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

@@ -229,6 +229,7 @@ built_in_class_s fuse_channel_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -406,6 +407,7 @@ built_in_class_s fuse_ops_class =
   bic_fuse_ops_consts,
   bic_fuse_ops_init,
   bic_fuse_ops_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -752,6 +754,7 @@ built_in_class_s fuse_handle_class =
   bic_fuse_handle_consts,
   bic_fuse_handle_init,
   bic_fuse_handle_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1157,6 +1160,7 @@ built_in_class_s fuse_stat_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1384,6 +1388,7 @@ built_in_class_s fuse_file_info_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1467,6 +1472,7 @@ built_in_class_s fuse_dir_filler_class =
   bic_fuse_dir_filler_consts,
   bic_fuse_dir_filler_init,
   bic_fuse_dir_filler_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1621,6 +1627,7 @@ built_in_class_s fuse_file_filler_class =
   bic_fuse_file_filler_consts,
   bic_fuse_file_filler_init,
   bic_fuse_file_filler_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

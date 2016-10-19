@@ -116,6 +116,7 @@ built_in_class_s inotify_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -439,6 +440,7 @@ built_in_class_s inotify_watch_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -581,6 +583,7 @@ built_in_class_s inotify_event_class =
   bic_inotify_event_consts,
   bic_inotify_event_init,
   bic_inotify_event_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

@@ -19,6 +19,7 @@ built_in_class_s tree_class =
   bic_tree_first_idx,
   bic_tree_next_idx,
   NULL,
+  NULL,
   bic_tree_pack,
   bic_tree_unpack,
   NULL,

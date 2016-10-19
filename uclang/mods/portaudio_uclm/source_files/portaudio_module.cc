@@ -238,6 +238,7 @@ built_in_class_s port_audio_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -562,6 +563,7 @@ built_in_class_s pa_host_api_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -799,6 +801,7 @@ built_in_class_s pa_device_class =
   bic_pa_device_consts,
   bic_pa_device_init,
   bic_pa_device_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1071,6 +1074,7 @@ built_in_class_s pa_parameters_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1209,6 +1213,7 @@ built_in_class_s pa_stream_class =
   bic_pa_stream_consts,
   bic_pa_stream_init,
   bic_pa_stream_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

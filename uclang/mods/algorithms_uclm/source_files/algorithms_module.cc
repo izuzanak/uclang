@@ -154,6 +154,7 @@ built_in_class_s algo_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1150,6 +1151,7 @@ built_in_class_s filter_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1638,6 +1640,7 @@ built_in_class_s range_class =
   NULL,
   NULL,
   bic_range_next_item,
+  NULL,
   NULL,
   NULL,
   NULL,

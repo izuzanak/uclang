@@ -119,6 +119,7 @@ built_in_class_s xml_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -275,6 +276,7 @@ built_in_class_s xml_node_class =
   bic_xml_node_consts,
   bic_xml_node_init,
   bic_xml_node_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

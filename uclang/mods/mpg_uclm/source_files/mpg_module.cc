@@ -223,6 +223,7 @@ built_in_class_s mpg_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -438,6 +439,7 @@ built_in_class_s mpg_handle_class =
   bic_mpg_handle_consts,
   bic_mpg_handle_init,
   bic_mpg_handle_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

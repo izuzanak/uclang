@@ -159,6 +159,7 @@ built_in_class_s pas_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1194,6 +1195,7 @@ built_in_class_s pas_device_class =
   bic_pas_device_consts,
   bic_pas_device_init,
   bic_pas_device_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

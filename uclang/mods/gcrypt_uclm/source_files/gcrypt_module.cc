@@ -94,6 +94,7 @@ built_in_class_s gcrypt_cipher_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 

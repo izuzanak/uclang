@@ -109,6 +109,7 @@ built_in_class_s ltg_jit_state_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 

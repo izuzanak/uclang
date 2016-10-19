@@ -132,6 +132,7 @@ built_in_class_s modem_manager_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -461,6 +462,7 @@ built_in_class_s mm_device_info_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -604,6 +606,7 @@ built_in_class_s mm_network_info_class =
   bic_mm_network_info_consts,
   bic_mm_network_info_init,
   bic_mm_network_info_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

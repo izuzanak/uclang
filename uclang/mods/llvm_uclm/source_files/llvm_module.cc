@@ -116,6 +116,7 @@ built_in_class_s llvm_context_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -295,6 +296,7 @@ built_in_class_s llvm_module_class =
   bic_llvm_module_consts,
   bic_llvm_module_init,
   bic_llvm_module_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

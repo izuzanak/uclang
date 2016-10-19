@@ -161,6 +161,7 @@ built_in_class_s ga_real_genome_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -624,6 +625,7 @@ built_in_class_s ga_tmp_real_genome_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -759,6 +761,7 @@ built_in_class_s ga_steady_state_class =
   bic_ga_steady_state_consts,
   bic_ga_steady_state_init,
   bic_ga_steady_state_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

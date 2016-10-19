@@ -117,6 +117,7 @@ built_in_class_s psql_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -182,6 +183,7 @@ built_in_class_s psql_conn_class =
   bic_psql_conn_consts,
   bic_psql_conn_init,
   bic_psql_conn_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

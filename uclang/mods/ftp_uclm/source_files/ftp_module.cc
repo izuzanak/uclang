@@ -223,6 +223,7 @@ built_in_class_s ftp_session_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -943,6 +944,7 @@ built_in_class_s ftp_handle_class =
   NULL,
   NULL,
   bic_ftp_handle_next_item,
+  NULL,
   NULL,
   NULL,
   NULL,

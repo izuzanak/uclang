@@ -220,6 +220,7 @@ built_in_class_s jit_context_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -513,6 +514,7 @@ built_in_class_s jit_function_class =
   bic_jit_function_consts,
   bic_jit_function_init,
   bic_jit_function_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

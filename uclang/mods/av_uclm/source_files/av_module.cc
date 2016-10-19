@@ -195,6 +195,7 @@ built_in_class_s av_format_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -667,6 +668,7 @@ built_in_class_s av_stream_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -798,6 +800,7 @@ built_in_class_s av_video_frame_class =
   bic_av_video_frame_consts,
   bic_av_video_frame_init,
   bic_av_video_frame_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1011,6 +1014,7 @@ built_in_class_s av_audio_frame_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1102,6 +1106,7 @@ built_in_class_s av_picture_class =
   bic_av_picture_consts,
   bic_av_picture_init,
   bic_av_picture_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1456,6 +1461,7 @@ built_in_class_s av_converter_class =
   bic_av_converter_consts,
   bic_av_converter_init,
   bic_av_converter_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

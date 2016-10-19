@@ -158,6 +158,7 @@ built_in_class_s sqlite_conn_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -595,6 +596,7 @@ built_in_class_s sqlite_statement_class =
   bic_sqlite_statement_consts,
   bic_sqlite_statement_init,
   bic_sqlite_statement_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

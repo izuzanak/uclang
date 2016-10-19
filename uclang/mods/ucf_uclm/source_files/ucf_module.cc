@@ -539,6 +539,7 @@ built_in_class_s system_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -689,6 +690,7 @@ built_in_class_s time_class =
   bic_time_init,
   bic_time_clear,
   bic_time_compare,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1274,6 +1276,7 @@ built_in_class_s cfg_file_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -1845,6 +1848,7 @@ built_in_class_s ucf_log_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -2370,6 +2374,7 @@ built_in_class_s ucf_mutex_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -2643,6 +2648,7 @@ built_in_class_s ucf_led_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -2843,6 +2849,7 @@ built_in_class_s serial_class =
   bic_serial_consts,
   bic_serial_init,
   bic_serial_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -3256,6 +3263,7 @@ built_in_class_s var_store_class =
   bic_var_store_consts,
   bic_var_store_init,
   bic_var_store_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -3991,6 +3999,7 @@ built_in_class_s var_slot_class =
   bic_var_slot_consts,
   bic_var_slot_init,
   bic_var_slot_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -5136,6 +5145,7 @@ built_in_class_s nvm_segment_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -5508,6 +5518,7 @@ built_in_class_s msg_queue_class =
   bic_msg_queue_consts,
   bic_msg_queue_init,
   bic_msg_queue_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -5897,6 +5908,7 @@ built_in_class_s bcc_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -6057,6 +6069,7 @@ built_in_class_s crc_class =
   bic_crc_consts,
   bic_crc_init,
   bic_crc_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -6364,6 +6377,7 @@ built_in_class_s md5_class =
   bic_md5_consts,
   bic_md5_init,
   bic_md5_clear,
+  NULL,
   NULL,
   NULL,
   NULL,

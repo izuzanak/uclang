@@ -488,6 +488,7 @@ typedef location_s *(*bi_class_item_caller_dt)(interpreter_thread_s &,location_s
 typedef unsigned (*bi_class_first_idx_caller_dt)(location_s *);
 typedef unsigned (*bi_class_next_idx_caller_dt)(location_s *,unsigned);
 typedef location_s *(*bi_class_next_item_caller_dt)(interpreter_thread_s &,location_s *,unsigned);
+typedef location_s *(*bi_class_from_slice_caller_dt)(interpreter_thread_s &,pointer_array_s &);
 typedef bool (*bi_class_pack_caller_dt)(location_s *,bc_array_s &,pointer_array_s &);
 typedef bool (*bi_class_unpack_caller_dt)(interpreter_thread_s &,location_s *,bc_array_s &,pointer_array_s &,bool,unsigned);
 typedef bool (*bi_class_invoke_caller_dt)(interpreter_thread_s &,uli *,unsigned,uli *);
@@ -507,6 +508,7 @@ define bi_class_item_caller_dt basic
 define bi_class_first_idx_caller_dt basic
 define bi_class_next_idx_caller_dt basic
 define bi_class_next_item_caller_dt basic
+define bi_class_from_slice_caller_dt basic
 define bi_class_pack_caller_dt basic
 define bi_class_unpack_caller_dt basic
 define bi_class_invoke_caller_dt basic
@@ -554,6 +556,7 @@ struct built_in_class_s
   bi_class_first_idx_caller_dt first_idx_caller;
   bi_class_next_idx_caller_dt next_idx_caller;
   bi_class_next_item_caller_dt next_item_caller;
+  bi_class_from_slice_caller_dt from_slice_caller;
   bi_class_pack_caller_dt pack_caller;
   bi_class_unpack_caller_dt unpack_caller;
   bi_class_invoke_caller_dt invoke_caller;

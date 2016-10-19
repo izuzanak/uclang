@@ -196,6 +196,7 @@ built_in_class_s lua_state_class =
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };/*}}}*/
 
@@ -485,6 +486,7 @@ built_in_class_s lua_value_class =
   bic_lua_value_consts,
   bic_lua_value_init,
   bic_lua_value_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -1013,6 +1015,7 @@ built_in_class_s lua_reference_class =
   bic_lua_reference_consts,
   bic_lua_reference_init,
   bic_lua_reference_clear,
+  NULL,
   NULL,
   NULL,
   NULL,
