@@ -5,16 +5,17 @@ include "utf8proc_module.h"
 
 // - UTF8PROC indexes of built in classes -
 unsigned c_bi_class_utf8proc = c_idx_not_exist;
-unsigned c_bi_class_unicode_str = c_idx_not_exist;
+unsigned c_bi_class_unicode_char = c_idx_not_exist;
+unsigned c_bi_class_unicode_string = c_idx_not_exist;
 
 // - UTF8PROC module -
 built_in_module_s module =
 {/*{{{*/
-  2,                        // Class count
+  3,                        // Class count
   utf8proc_classes,         // Classes
 
   0,                        // Error base index
-  3,                        // Error count
+  5,                        // Error count
   utf8proc_error_strings,   // Error strings
 
   utf8proc_initialize,      // Initialize function
@@ -25,15 +26,18 @@ built_in_module_s module =
 built_in_class_s *utf8proc_classes[] =
 {/*{{{*/
   &utf8proc_class,
-  &unicode_str_class,
+  &unicode_char_class,
+  &unicode_string_class,
 };/*}}}*/
 
 // - UTF8PROC error strings -
 const char *utf8proc_error_strings[] =
 {/*{{{*/
   "error_UTF8PROC_UTF8_SEQUENCE_INVALID_CODE_POINT",
+  "error_UNICODE_CHAR_INVALID_CODE_POINT",
   "error_UNICODE_STRING_UTF8_DECOMPOSE_ERROR",
   "error_UNICODE_STRING_UTF8_CREATE_ERROR",
+  "error_UNICODE_STRING_INDEX_EXCEEDS_RANGE",
 };/*}}}*/
 
 // - UTF8PROC initialize -
@@ -44,8 +48,11 @@ bool utf8proc_initialize(script_parser_s &sp)
   // - initialize utf8proc class identifier -
   c_bi_class_utf8proc = class_base_idx++;
 
-  // - initialize unicode_str class identifier -
-  c_bi_class_unicode_str = class_base_idx++;
+  // - initialize unicode_char class identifier -
+  c_bi_class_unicode_char = class_base_idx++;
+
+  // - initialize unicode_string class identifier -
+  c_bi_class_unicode_string = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -68,6 +75,13 @@ bool utf8proc_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nCannot read valid code point from UTF-8 sequence\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_UNICODE_CHAR_INVALID_CODE_POINT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid unicode character code point %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_UNICODE_STRING_UTF8_DECOMPOSE_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -80,6 +94,13 @@ bool utf8proc_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nError while creating UTF-8 sequence from code points\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_UNICODE_STRING_INDEX_EXCEEDS_RANGE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nIndex %" HOST_LL_FORMAT "d exceeds unicode string range\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -316,17 +337,17 @@ bool bic_utf8proc_method_print_0(interpreter_thread_s &it,unsigned stack_base,ul
   return true;
 }/*}}}*/
 
-// - class UNICODE_STR -
-built_in_class_s unicode_str_class =
+// - class UNICODE_CHAR -
+built_in_class_s unicode_char_class =
 {/*{{{*/
-  "UnicodeStr",
+  "UnicodeChar",
   c_modifier_public | c_modifier_final,
-  6, unicode_str_methods,
-  0, unicode_str_variables,
-  bic_unicode_str_consts,
-  bic_unicode_str_init,
-  bic_unicode_str_clear,
-  NULL,
+  11, unicode_char_methods,
+  0, unicode_char_variables,
+  bic_unicode_char_consts,
+  bic_unicode_char_init,
+  bic_unicode_char_clear,
+  bic_unicode_char_compare,
   NULL,
   NULL,
   NULL,
@@ -339,66 +360,91 @@ built_in_class_s unicode_str_class =
   NULL
 };/*}}}*/
 
-built_in_method_s unicode_str_methods[] =
+built_in_method_s unicode_char_methods[] =
 {/*{{{*/
   {
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
-    bic_unicode_str_operator_binary_equal
+    bic_unicode_char_operator_binary_equal
   },
   {
-    "UnicodeStr#1",
+    "operator_binary_double_equal#1",
     c_modifier_public | c_modifier_final,
-    bic_unicode_str_method_UnicodeStr_1
+    bic_unicode_char_operator_binary_double_equal
+  },
+  {
+    "operator_binary_exclamation_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_char_operator_binary_exclamation_equal
+  },
+  {
+    "UnicodeChar#0",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_char_method_UnicodeChar_0
+  },
+  {
+    "UnicodeChar#1",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_char_method_UnicodeChar_1
   },
   {
     "to_lower#0",
     c_modifier_public | c_modifier_final,
-    bic_unicode_str_method_to_lower_0
+    bic_unicode_char_method_to_lower_0
   },
   {
     "to_upper#0",
     c_modifier_public | c_modifier_final,
-    bic_unicode_str_method_to_upper_0
+    bic_unicode_char_method_to_upper_0
+  },
+  {
+    "value#0",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_char_method_value_0
+  },
+  {
+    "compare#1",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_char_method_compare_1
   },
   {
     "to_string#0",
     c_modifier_public | c_modifier_final,
-    bic_unicode_str_method_to_string_0
+    bic_unicode_char_method_to_string_0
   },
   {
     "print#0",
     c_modifier_public | c_modifier_final,
-    bic_unicode_str_method_print_0
+    bic_unicode_char_method_print_0
   },
 };/*}}}*/
 
-built_in_variable_s unicode_str_variables[] =
+built_in_variable_s unicode_char_variables[] =
 {/*{{{*/
 };/*}}}*/
 
-void bic_unicode_str_consts(location_array_s &const_locations)
+void bic_unicode_char_consts(location_array_s &const_locations)
 {/*{{{*/
 }/*}}}*/
 
-void bic_unicode_str_init(interpreter_thread_s &it,location_s *location_ptr)
+void bic_unicode_char_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = 0;
 }/*}}}*/
 
-void bic_unicode_str_clear(interpreter_thread_s &it,location_s *location_ptr)
+void bic_unicode_char_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  ui_array_s *ustring_ptr = (ui_array_s *)location_ptr->v_data_ptr;
-
-  // - if websocket context exists -
-  if (ustring_ptr != NULL)
-  {
-    ustring_ptr->clear();
-    cfree(ustring_ptr);
-  }
 }/*}}}*/
 
-bool bic_unicode_str_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+int bic_unicode_char_compare(location_s *first_loc,location_s *second_loc)
+{/*{{{*/
+  utf8proc_int32_t first = (utf8proc_int32_t)first_loc->v_data_ptr;
+  utf8proc_int32_t second = (utf8proc_int32_t)second_loc->v_data_ptr;
+
+  return first < second ? -1 : (first > second ? 1 : 0);
+}/*}}}*/
+
+bool bic_unicode_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -412,7 +458,524 @@ bool bic_unicode_str_operator_binary_equal(interpreter_thread_s &it,unsigned sta
   return true;
 }/*}}}*/
 
-bool bic_unicode_str_method_UnicodeStr_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+#define BIC_UNICODE_CHAR_COMPARE_WITH_TYPE_BOOL() \
+  {/*{{{*/\
+    switch (src_0_location->v_type) {\
+    case c_bi_class_char:\
+      result = (utf8proc_int32_t)dst_location->v_data_ptr == (char)src_0_location->v_data_ptr;\
+      break;\
+    case c_bi_class_integer:\
+      result = (utf8proc_int32_t)dst_location->v_data_ptr == (long long int)src_0_location->v_data_ptr;\
+      break;\
+    case c_bi_class_float:\
+      result = (utf8proc_int32_t)dst_location->v_data_ptr == *((double *)&src_0_location->v_data_ptr);\
+      break;\
+    default:\
+      if (src_0_location->v_type == c_bi_class_unicode_char)\
+      {\
+        result = (utf8proc_int32_t)dst_location->v_data_ptr == (utf8proc_int32_t)src_0_location->v_data_ptr;\
+      }\
+      else\
+      {\
+        result = 0;\
+      }\
+      break;\
+    }\
+  }/*}}}*/
+
+bool bic_unicode_char_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result;
+
+  BIC_UNICODE_CHAR_COMPARE_WITH_TYPE_BOOL();
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_char_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result;
+
+  BIC_UNICODE_CHAR_COMPARE_WITH_TYPE_BOOL();
+  result = !result;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_char_method_UnicodeChar_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  return true;
+}/*}}}*/
+
+bool bic_unicode_char_method_UnicodeChar_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  utf8proc_int32_t result;
+
+  switch (src_0_location->v_type)
+  {
+  case c_bi_class_char:
+    result = (char)src_0_location->v_data_ptr;
+    break;
+  case c_bi_class_integer:
+    result = (long long int)src_0_location->v_data_ptr;
+    break;
+  default:
+    {
+      if (src_0_location->v_type == c_bi_class_unicode_char)
+      {
+        result = (utf8proc_int32_t)src_0_location->v_data_ptr;
+      }
+
+      // - ERROR -
+      else
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("UnicodeChar#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
+        return false;
+      }
+    }
+  }
+
+  // - ERROR -
+  if (!utf8proc_codepoint_valid(result))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_UNICODE_CHAR_INVALID_CODE_POINT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(result);
+
+    return false;
+  }
+
+  dst_location->v_data_ptr = result;
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_char_method_to_lower_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  utf8proc_int32_t result =
+    utf8proc_tolower((utf8proc_int32_t)dst_location->v_data_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_unicode_char,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_char_method_to_upper_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  utf8proc_int32_t result =
+    utf8proc_toupper((utf8proc_int32_t)dst_location->v_data_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_unicode_char,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_char_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = (utf8proc_int32_t)dst_location->v_data_ptr;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_char_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result;
+
+  if (src_0_location->v_type == c_bi_class_unicode_char)
+  {
+    utf8proc_int32_t first = (utf8proc_int32_t)dst_location->v_data_ptr;
+    utf8proc_int32_t second = (utf8proc_int32_t)src_0_location->v_data_ptr;
+
+    result = first < second ? -1 : (first > second ? 1 : 0);
+  }
+  else
+  {
+    result = c_bi_class_unicode_char < src_0_location->v_type ? -1 : 1;
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_char_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING(
+    string_ptr->data = (char *)cmalloc(4*sizeof(char));
+
+    utf8proc_ssize_t count = utf8proc_encode_char(
+      (utf8proc_int32_t)dst_location->v_data_ptr,
+      (utf8proc_uint8_t *)string_ptr->data);
+
+    string_ptr->data[count] = '\0';
+    string_ptr->size = count + 1;
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_char_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  utf8proc_uint8_t buffer[4];
+  utf8proc_ssize_t count = utf8proc_encode_char(
+    (utf8proc_int32_t)dst_location->v_data_ptr,buffer);
+
+  fwrite(buffer,count,1,stdout);
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class UNICODE_STRING -
+built_in_class_s unicode_string_class =
+{/*{{{*/
+  "UnicodeString",
+  c_modifier_public | c_modifier_final,
+  14, unicode_string_methods,
+  0, unicode_string_variables,
+  bic_unicode_string_consts,
+  bic_unicode_string_init,
+  bic_unicode_string_clear,
+  bic_unicode_string_compare,
+  bic_unicode_string_length,
+  bic_unicode_string_item,
+  bic_unicode_string_first_idx,
+  bic_unicode_string_next_idx,
+  NULL,
+  bic_unicode_string_from_slice,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};/*}}}*/
+
+built_in_method_s unicode_string_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_operator_binary_equal
+  },
+  {
+    "operator_binary_double_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_operator_binary_double_equal
+  },
+  {
+    "operator_binary_exclamation_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_operator_binary_exclamation_equal
+  },
+  {
+    "operator_binary_le_br_re_br#1",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_operator_binary_le_br_re_br
+  },
+  {
+    "UnicodeString#1",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_method_UnicodeString_1
+  },
+  {
+    "to_lower#0",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_method_to_lower_0
+  },
+  {
+    "to_upper#0",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_method_to_upper_0
+  },
+  {
+    "compare#1",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_method_compare_1
+  },
+  {
+    "item#1",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_method_item_1
+  },
+  {
+    "first_idx#0",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_method_first_idx_0
+  },
+  {
+    "next_idx#1",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_method_next_idx_1
+  },
+  {
+    "length#0",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_method_length_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s unicode_string_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+#define BIC_UNICODE_STRING_CHECK_INDEX() \
+  /*{{{*/\
+  ui_array_s *ustring_ptr = (ui_array_s *)((location_s *)dst_location)->v_data_ptr;\
+  \
+  /* - ERROR - */\
+  if (index < 0 || index >= (ustring_ptr->used)) {\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_UNICODE_STRING_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(index);\
+    \
+    return false;\
+  }\
+  /*}}}*/
+
+#define BIC_UNICODE_STRING_ITEM(NAME) \
+  {/*{{{*/\
+    pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
+    pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+    location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+    \
+    long long int index;\
+    \
+    /* - ERROR - */\
+    if (!it.retrieve_integer(src_0_location,index))\
+    {\
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
+      new_exception->params.push(1);\
+      new_exception->params.push(src_0_location->v_type);\
+      \
+      return false;\
+    }\
+    \
+    BIC_UNICODE_STRING_CHECK_INDEX();\
+    \
+    utf8proc_int32_t result = (utf8proc_int32_t)ustring_ptr->data[index];\
+    \
+    BIC_SIMPLE_SET_RES(c_bi_class_unicode_char,result);\
+  }/*}}}*/
+
+void bic_unicode_string_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_unicode_string_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (basic_64b)NULL;
+}/*}}}*/
+
+void bic_unicode_string_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  ui_array_s *ustring_ptr = (ui_array_s *)location_ptr->v_data_ptr;
+
+  // - if websocket context exists -
+  if (ustring_ptr != NULL)
+  {
+    ustring_ptr->clear();
+    cfree(ustring_ptr);
+  }
+}/*}}}*/
+
+int bic_unicode_string_compare(location_s *first_loc,location_s *second_loc)
+{/*{{{*/
+  ui_array_s *first = (ui_array_s *)first_loc->v_data_ptr;
+  ui_array_s *second = (ui_array_s *)second_loc->v_data_ptr;
+
+  if (first->used < second->used) return -1;
+  if (first->used > second->used) return 1;
+
+  if (first->used != 0)
+  {
+    utf8proc_int32_t *f_ptr = (utf8proc_int32_t *)first->data;
+    utf8proc_int32_t *f_ptr_end = f_ptr + first->used;
+    utf8proc_int32_t *s_ptr = (utf8proc_int32_t *)second->data;
+
+    do {
+      
+      // - if code points differs -
+      if (*f_ptr != *s_ptr)
+      {
+        return (*f_ptr < *s_ptr) ? -1 : 1;
+      }
+
+    } while(++s_ptr,++f_ptr < f_ptr_end);
+  }
+
+  return 0;
+}/*}}}*/
+
+unsigned bic_unicode_string_length(location_s *location_ptr)
+{/*{{{*/
+  ui_array_s *ustring_ptr = (ui_array_s *)location_ptr->v_data_ptr;
+  return ustring_ptr->used;
+}/*}}}*/
+
+location_s *bic_unicode_string_item(interpreter_thread_s &it,location_s *location_ptr,unsigned index)
+{/*{{{*/
+  ui_array_s *ustring_ptr = (ui_array_s *)location_ptr->v_data_ptr;
+
+  // FIXME TODO check index ...
+  cassert(index < ustring_ptr->used);
+
+  utf8proc_int32_t result = (utf8proc_int32_t)ustring_ptr->data[index];
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_char,result);
+
+  return new_location;
+}/*}}}*/
+
+unsigned bic_unicode_string_first_idx(location_s *location_ptr)
+{/*{{{*/
+  ui_array_s *ustring_ptr = (ui_array_s *)location_ptr->v_data_ptr;
+  return ustring_ptr->used != 0 ? 0 : c_idx_not_exist;
+}/*}}}*/
+
+unsigned bic_unicode_string_next_idx(location_s *location_ptr,unsigned index)
+{/*{{{*/
+  ui_array_s *ustring_ptr = (ui_array_s *)location_ptr->v_data_ptr;
+
+  // FIXME TODO check index ...
+  cassert(index < ustring_ptr->used);
+
+  return (index + 1 < ustring_ptr->used) ? index + 1 : c_idx_not_exist;
+}/*}}}*/
+
+location_s *bic_unicode_string_from_slice(interpreter_thread_s &it,pointer_array_s &slice_array)
+{/*{{{*/
+  ui_array_s *ustring_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));
+  ustring_ptr->init_size(slice_array.used);
+  ustring_ptr->used = slice_array.used;
+
+  if (slice_array.used != 0)
+  {
+    pointer *l_ptr = slice_array.data;
+    pointer *l_ptr_end = l_ptr + slice_array.used;
+    utf8proc_int32_t *c_ptr = (utf8proc_int32_t *)ustring_ptr->data;
+    do
+    {
+      *c_ptr = (utf8proc_int32_t)((location_s *)*l_ptr)->v_data_ptr;
+    }
+    while(++c_ptr,++l_ptr < l_ptr_end);
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_string,ustring_ptr);
+
+  return new_location;
+}/*}}}*/
+
+bool bic_unicode_string_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_string_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result;
+
+  if (src_0_location->v_type == c_bi_class_unicode_string)
+  {
+    result = *((ui_array_s *)dst_location->v_data_ptr) == *((ui_array_s *)src_0_location->v_data_ptr);
+  }
+  else
+  {
+    result = 0;
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_string_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result;
+
+  if (src_0_location->v_type == c_bi_class_unicode_string)
+  {
+    result = !(*((ui_array_s *)dst_location->v_data_ptr) == *((ui_array_s *)src_0_location->v_data_ptr));
+  }
+  else
+  {
+    result = 1;
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_string_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_UNICODE_STRING_ITEM("operator_binary_le_br_re_br#1");
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_string_method_UnicodeString_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
@@ -421,7 +984,7 @@ bool bic_unicode_str_method_UnicodeStr_1(interpreter_thread_s &it,unsigned stack
   if (src_0_location->v_type != c_bi_class_string)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("UnicodeStr#1");
+    BIC_EXCEPTION_PUSH_METHOD_RI("UnicodeString#1");
     new_exception->params.push(1);
     new_exception->params.push(src_0_location->v_type);
 
@@ -458,7 +1021,7 @@ bool bic_unicode_str_method_UnicodeStr_1(interpreter_thread_s &it,unsigned stack
   return true;
 }/*}}}*/
 
-#define BIC_UNICODE_STR_TRANSFORM_STRING(CODE_POINT_CODE) \
+#define BIC_UNICODE_STRING_TRANSFORM_STRING(CODE_POINT_CODE) \
 /*{{{*/\
 \
   /* - create target unicode string - */\
@@ -478,45 +1041,166 @@ bool bic_unicode_str_method_UnicodeStr_1(interpreter_thread_s &it,unsigned stack
   target_ptr->used = source_ptr->used;\
 /*}}}*/
 
-bool bic_unicode_str_method_to_lower_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_unicode_string_method_to_lower_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ui_array_s *source_ptr = (ui_array_s *)dst_location->v_data_ptr;
 
-  BIC_UNICODE_STR_TRANSFORM_STRING(
+  BIC_UNICODE_STRING_TRANSFORM_STRING(
 
     // - code point to lower -
     *t_ptr = utf8proc_tolower(*s_ptr);
   )
 
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_str,target_ptr);
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_string,target_ptr);
   BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
 
-bool bic_unicode_str_method_to_upper_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_unicode_string_method_to_upper_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ui_array_s *source_ptr = (ui_array_s *)dst_location->v_data_ptr;
 
-  BIC_UNICODE_STR_TRANSFORM_STRING(
+  BIC_UNICODE_STRING_TRANSFORM_STRING(
 
     // - code point to upper -
     *t_ptr = utf8proc_toupper(*s_ptr);
   )
 
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_str,target_ptr);
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_string,target_ptr);
   BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
 
-bool bic_unicode_str_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_unicode_string_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result;
+
+  if (src_0_location->v_type == c_bi_class_unicode_string)
+  {
+    ui_array_s *first = (ui_array_s *)dst_location->v_data_ptr;
+    ui_array_s *second = (ui_array_s *)src_0_location->v_data_ptr;
+
+    if (first->used == second->used)
+    {
+      result = 0;
+
+      if (first->used != 0)
+      {
+        utf8proc_int32_t *f_ptr = (utf8proc_int32_t *)first->data;
+        utf8proc_int32_t *f_ptr_end = f_ptr + first->used;
+        utf8proc_int32_t *s_ptr = (utf8proc_int32_t *)second->data;
+
+        do {
+          
+          // - if code points differs -
+          if (*f_ptr != *s_ptr)
+          {
+            result = (*f_ptr < *s_ptr) ? -1 : 1;
+            break;
+          }
+
+        } while(++s_ptr,++f_ptr < f_ptr_end);
+      }
+    }
+    else
+    {
+      result = (first->used < second->used) ? -1 : 1;
+    }
+  }
+  else
+  {
+    result = c_bi_class_unicode_string < src_0_location->v_type ? -1 : 1;
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_string_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_UNICODE_STRING_ITEM("item#1");
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_string_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  ui_array_s *ustring_ptr = (ui_array_s *)((location_s *)dst_location)->v_data_ptr;
+
+  if (ustring_ptr->used != 0)
+  {
+    BIC_SIMPLE_SET_RES(c_bi_class_integer,0);
+  }
+  else
+  {
+    BIC_SET_RESULT_BLANK();
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_string_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int index;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,index))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("next_idx#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  BIC_UNICODE_STRING_CHECK_INDEX();
+
+  if (++index < ustring_ptr->used)
+  {
+    BIC_SIMPLE_SET_RES(c_bi_class_integer,index);
+  }
+  else
+  {
+    BIC_SET_RESULT_BLANK();
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_string_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = ((ui_array_s *)dst_location->v_data_ptr)->used;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_string_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -546,28 +1230,12 @@ bool bic_unicode_str_method_to_string_0(interpreter_thread_s &it,unsigned stack_
   return true;
 }/*}}}*/
 
-bool bic_unicode_str_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_unicode_string_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  ui_array_s *ustring_ptr = (ui_array_s *)dst_location->v_data_ptr;
-
-  bc_array_s buffer;
-  buffer.init();
-
-  // - ERROR -
-  if (!utf8proc_s::unicode_to_utf8(*ustring_ptr,buffer))
-  {
-    buffer.clear();
-
-    exception_s::throw_exception(it,module.error_base + c_error_UNICODE_STRING_UTF8_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  fwrite(buffer.data,buffer.used,1,stdout);
-
-  buffer.clear();
+  utf8proc_s::unicode_print(*((ui_array_s *)dst_location->v_data_ptr));
 
   BIC_SET_RESULT_BLANK();
 

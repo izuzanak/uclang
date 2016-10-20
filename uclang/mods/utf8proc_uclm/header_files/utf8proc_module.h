@@ -8,7 +8,8 @@ include "ucl_utf8proc.h"
 
 // - UTF8PROC indexes of built in classes -
 extern unsigned c_bi_class_utf8proc;
-extern unsigned c_bi_class_unicode_str;
+extern unsigned c_bi_class_unicode_char;
+extern unsigned c_bi_class_unicode_string;
 
 // - UTF8PROC module -
 extern built_in_module_s module;
@@ -20,8 +21,10 @@ extern built_in_class_s *utf8proc_classes[];
 enum
 {
   c_error_UTF8PROC_UTF8_SEQUENCE_INVALID_CODE_POINT = 0,
+  c_error_UNICODE_CHAR_INVALID_CODE_POINT,
   c_error_UNICODE_STRING_UTF8_DECOMPOSE_ERROR,
   c_error_UNICODE_STRING_UTF8_CREATE_ERROR,
+  c_error_UNICODE_STRING_INDEX_EXCEEDS_RANGE,
 };
 
 // - UTF8PROC error strings -
@@ -49,29 +52,64 @@ bool bic_utf8proc_method_version_0(interpreter_thread_s &it,unsigned stack_base,
 bool bic_utf8proc_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_utf8proc_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
-// - class UNICODE_STR -
-extern built_in_variable_s unicode_str_variables[];
-extern built_in_method_s unicode_str_methods[];
-extern built_in_class_s unicode_str_class;
+// - class UNICODE_CHAR -
+extern built_in_variable_s unicode_char_variables[];
+extern built_in_method_s unicode_char_methods[];
+extern built_in_class_s unicode_char_class;
 
-void bic_unicode_str_consts(location_array_s &const_locations);
-void bic_unicode_str_init(interpreter_thread_s &it,location_s *location_ptr);
-void bic_unicode_str_clear(interpreter_thread_s &it,location_s *location_ptr);
+void bic_unicode_char_consts(location_array_s &const_locations);
+void bic_unicode_char_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_unicode_char_clear(interpreter_thread_s &it,location_s *location_ptr);
+int bic_unicode_char_compare(location_s *first_loc,location_s *second_loc);
 
-bool bic_unicode_str_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_unicode_str_method_UnicodeStr_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_unicode_str_method_to_lower_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_unicode_str_method_to_upper_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_string_method_head_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_string_method_tail_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_string_method_range_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_string_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_string_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_string_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_string_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_string_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_unicode_str_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_unicode_str_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_char_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_char_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_char_method_UnicodeChar_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_char_method_UnicodeChar_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_char_method_to_lower_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_char_method_to_upper_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_char_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_char_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_char_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_char_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class UNICODE_STRING -
+extern built_in_variable_s unicode_string_variables[];
+extern built_in_method_s unicode_string_methods[];
+extern built_in_class_s unicode_string_class;
+
+void bic_unicode_string_consts(location_array_s &const_locations);
+void bic_unicode_string_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_unicode_string_clear(interpreter_thread_s &it,location_s *location_ptr);
+int bic_unicode_string_compare(location_s *first_loc,location_s *second_loc);
+unsigned bic_unicode_string_length(location_s *location_ptr);
+location_s *bic_unicode_string_item(interpreter_thread_s &it,location_s *location_ptr,unsigned index);
+unsigned bic_unicode_string_first_idx(location_s *location_ptr);
+unsigned bic_unicode_string_next_idx(location_s *location_ptr,unsigned index);
+location_s *bic_unicode_string_from_slice(interpreter_thread_s &it,pointer_array_s &slice_array);
+
+bool bic_unicode_string_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_unicode_string_operator_binary_plus_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_unicode_string_operator_binary_asterisk_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_string_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_string_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_unicode_string_operator_binary_plus(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_unicode_string_operator_binary_asterisk(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_string_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_string_method_UnicodeString_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_string_method_to_lower_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_string_method_to_upper_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_unicode_string_method_head_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_unicode_string_method_tail_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_unicode_string_method_range_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_string_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_string_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_string_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_string_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_string_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_string_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_string_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 

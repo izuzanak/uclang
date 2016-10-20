@@ -15,6 +15,7 @@ include "script_parser.h"
 struct utf8proc_s
 {
   static bool unicode_to_utf8(ui_array_s &a_ustring,bc_array_s &a_buffer);
+  static void unicode_print(ui_array_s &a_ustring);
 };
 
 #endif
