@@ -4454,8 +4454,7 @@ location_s *bic_string_from_slice(interpreter_thread_s &it,pointer_array_s &slic
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->create(slice_array.used);
 
-  // - join slice array to string -
-  if (slice_array.used > 0)
+  if (slice_array.used != 0)
   {
     pointer *l_ptr = slice_array.data;
     pointer *l_ptr_end = l_ptr + slice_array.used;
@@ -4467,7 +4466,6 @@ location_s *bic_string_from_slice(interpreter_thread_s &it,pointer_array_s &slic
     while(++s_ptr,++l_ptr < l_ptr_end);
   }
 
-  // - create new string location -
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
 
   return new_location;
@@ -5826,7 +5824,7 @@ bool bic_string_method_compare_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_string_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  BIC_STRING_ITEM("operator_binary_le_br_re_br#1");
+  BIC_STRING_ITEM("item#1");
 
   return true;
 }/*}}}*/
@@ -6993,7 +6991,7 @@ bool bic_array_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,u
 
   pointer_array_s *array_ptr = (pointer_array_s *)dst_location->v_data_ptr;
 
-  if (array_ptr->used > 0)
+  if (array_ptr->used != 0)
   {
     BIC_SIMPLE_SET_RES(c_bi_class_integer,0);
   }
@@ -7012,7 +7010,7 @@ bool bic_array_method_last_idx_0(interpreter_thread_s &it,unsigned stack_base,ul
 
   pointer_array_s *array_ptr = (pointer_array_s *)((location_s *)dst_location)->v_data_ptr;
 
-  if (array_ptr->used > 0)
+  if (array_ptr->used != 0)
   {
     long long int result = array_ptr->used - 1;
 
