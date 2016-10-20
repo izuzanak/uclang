@@ -25,6 +25,7 @@ enum
   c_error_UNICODE_STRING_UTF8_DECOMPOSE_ERROR,
   c_error_UNICODE_STRING_UTF8_CREATE_ERROR,
   c_error_UNICODE_STRING_INDEX_EXCEEDS_RANGE,
+  c_error_UNICODE_STRING_WRONG_RANGE_INDEXES,
 };
 
 // - UTF8PROC error strings -
@@ -100,9 +101,9 @@ bool bic_unicode_string_operator_binary_le_br_re_br(interpreter_thread_s &it,uns
 bool bic_unicode_string_method_UnicodeString_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_unicode_string_method_to_lower_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_unicode_string_method_to_upper_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_unicode_string_method_head_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_unicode_string_method_tail_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_unicode_string_method_range_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_string_method_head_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_string_method_tail_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_unicode_string_method_range_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_unicode_string_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_unicode_string_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_unicode_string_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

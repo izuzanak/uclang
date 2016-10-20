@@ -15,7 +15,7 @@ built_in_module_s module =
   utf8proc_classes,         // Classes
 
   0,                        // Error base index
-  5,                        // Error count
+  6,                        // Error count
   utf8proc_error_strings,   // Error strings
 
   utf8proc_initialize,      // Initialize function
@@ -38,6 +38,7 @@ const char *utf8proc_error_strings[] =
   "error_UNICODE_STRING_UTF8_DECOMPOSE_ERROR",
   "error_UNICODE_STRING_UTF8_CREATE_ERROR",
   "error_UNICODE_STRING_INDEX_EXCEEDS_RANGE",
+  "error_UNICODE_STRING_WRONG_RANGE_INDEXES",
 };/*}}}*/
 
 // - UTF8PROC initialize -
@@ -101,6 +102,13 @@ bool utf8proc_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nIndex %" HOST_LL_FORMAT "d exceeds unicode string range\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_UNICODE_STRING_WRONG_RANGE_INDEXES:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong range indexes %" HOST_LL_FORMAT "d, %" HOST_LL_FORMAT "d for unicode string\n",exception.params[0],exception.params[1]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -668,7 +676,7 @@ built_in_class_s unicode_string_class =
 {/*{{{*/
   "UnicodeString",
   c_modifier_public | c_modifier_final,
-  14, unicode_string_methods,
+  17, unicode_string_methods,
   0, unicode_string_variables,
   bic_unicode_string_consts,
   bic_unicode_string_init,
@@ -722,6 +730,21 @@ built_in_method_s unicode_string_methods[] =
     "to_upper#0",
     c_modifier_public | c_modifier_final,
     bic_unicode_string_method_to_upper_0
+  },
+  {
+    "head#1",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_method_head_1
+  },
+  {
+    "tail#1",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_method_tail_1
+  },
+  {
+    "range#2",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_method_range_2
   },
   {
     "compare#1",
@@ -1074,6 +1097,176 @@ bool bic_unicode_string_method_to_upper_0(interpreter_thread_s &it,unsigned stac
   )
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_string,target_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_string_method_head_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int original_length;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,original_length))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("head#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  ui_array_s *ustring_ptr = (ui_array_s *)((location_s *)dst_location)->v_data_ptr;
+
+  // - adjust length parameter -
+  long long int length = original_length;
+
+  if (length < 0)
+  {
+    length = ustring_ptr->used + length;
+  }
+
+  if (length < 0 || length > ustring_ptr->used)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_UNICODE_STRING_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(original_length);
+
+    return false;
+  }
+
+  // - create unicode string -
+  ui_array_s *new_ustring_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));
+  new_ustring_ptr->init_size(length);
+
+  // - copy unicode string head -
+  memcpy(new_ustring_ptr->data,ustring_ptr->data,length*sizeof(unsigned));
+  new_ustring_ptr->used = length;
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_string,new_ustring_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_string_method_tail_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int original_length;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,original_length))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("tail#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  ui_array_s *ustring_ptr = (ui_array_s *)((location_s *)dst_location)->v_data_ptr;
+
+  // - adjust length parameter -
+  long long int length = original_length;
+
+  if (length < 0)
+  {
+    length = ustring_ptr->used + length;
+  }
+
+  if (length < 0 || length > ustring_ptr->used)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_UNICODE_STRING_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(original_length);
+
+    return false;
+  }
+
+  // - create unicode string -
+  ui_array_s *new_ustring_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));
+  new_ustring_ptr->init_size(length);
+
+  // - copy unicode string tail -
+  memcpy(new_ustring_ptr->data,ustring_ptr->data + (ustring_ptr->used - length),length*sizeof(unsigned));
+  new_ustring_ptr->used = length;
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_string,new_ustring_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_string_method_range_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  long long int original_first_index;
+  long long int original_second_index;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,original_first_index) ||
+      !it.retrieve_integer(src_1_location,original_second_index))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("range#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  ui_array_s *ustring_ptr = (ui_array_s *)((location_s *)dst_location)->v_data_ptr;
+
+  // - adjust first_index parameter -
+  long long int first_index = original_first_index;
+  if (first_index < 0)
+  {
+    first_index = ustring_ptr->used + first_index;
+  }
+
+  // - adjust second_index parameter -
+  long long int second_index = original_second_index;
+  if (second_index < 0)
+  {
+    second_index = ustring_ptr->used + second_index;
+  }
+
+  // - ERROR -
+  if (first_index > second_index ||
+      first_index < 0 || first_index >= ustring_ptr->used ||
+      second_index < 0 || second_index >= ustring_ptr->used)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_UNICODE_STRING_WRONG_RANGE_INDEXES,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(original_first_index);
+    new_exception->params.push(original_second_index);
+
+    return false;
+  }
+
+  // - new unicode string length -
+  unsigned length = second_index - first_index + 1;
+
+  // - create unicode string -
+  ui_array_s *new_ustring_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));
+  new_ustring_ptr->init_size(length);
+
+  // - copy unicode string range -
+  memcpy(new_ustring_ptr->data,ustring_ptr->data + first_index,length*sizeof(unsigned));
+  new_ustring_ptr->used = length;
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_string,new_ustring_ptr);
   BIC_SET_RESULT(new_location);
 
   return true;
