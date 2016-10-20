@@ -60,11 +60,8 @@ bool bic_perl_interpreter_method_new_value_1(interpreter_thread_s &it,unsigned s
 bool bic_perl_interpreter_method_get_sv_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_perl_interpreter_method_get_av_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_perl_interpreter_method_get_hv_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-
-// FIXME TODO continue ...
 //bool bic_perl_interpreter_method_call_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 //bool bic_perl_interpreter_method_eval_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-
 bool bic_perl_interpreter_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_perl_interpreter_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
