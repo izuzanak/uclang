@@ -5737,7 +5737,7 @@ bool bic_string_method_replace_2(interpreter_thread_s &it,unsigned stack_base,ul
     while(true);
   }
 
-  // - insert terminate character to buffer -
+  // - insert terminating character to buffer -
   buffer.push('\0');
 
   // - create result string -

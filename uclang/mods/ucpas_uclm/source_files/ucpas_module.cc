@@ -478,7 +478,7 @@ bool bic_pas_method_master_ip_0(interpreter_thread_s &it,unsigned stack_base,uli
           (master_ip >>  0) & 0xff);
     }
 
-    // - write terminate character -
+    // - set result string size -
     string_ptr->size = char_cnt + 1;
 
     BIC_SET_RESULT_STRING(string_ptr);

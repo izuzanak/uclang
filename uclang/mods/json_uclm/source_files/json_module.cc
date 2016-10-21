@@ -395,7 +395,7 @@ bool bic_json_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *
   // - release create stack -
   create_stack.clear();
 
-  // - push terminate symbol to buffer -
+  // - push terminating character to buffer -
   buffer.push('\0');
 
   // - create result string from buffer -
@@ -687,7 +687,7 @@ bool bic_json_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,
   // - release indent buffer -
   indent_buffer.clear();
 
-  // - push terminate symbol to buffer -
+  // - push terminating character to buffer -
   buffer.push('\0');
 
   // - create result string from buffer -
