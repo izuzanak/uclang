@@ -676,7 +676,7 @@ built_in_class_s unicode_string_class =
 {/*{{{*/
   "UnicodeString",
   c_modifier_public | c_modifier_final,
-  17, unicode_string_methods,
+  21, unicode_string_methods,
   0, unicode_string_variables,
   bic_unicode_string_consts,
   bic_unicode_string_init,
@@ -702,6 +702,16 @@ built_in_method_s unicode_string_methods[] =
     bic_unicode_string_operator_binary_equal
   },
   {
+    "operator_binary_plus_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_operator_binary_plus_equal
+  },
+  {
+    "operator_binary_asterisk_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_operator_binary_asterisk_equal
+  },
+  {
     "operator_binary_double_equal#1",
     c_modifier_public | c_modifier_final,
     bic_unicode_string_operator_binary_double_equal
@@ -710,6 +720,16 @@ built_in_method_s unicode_string_methods[] =
     "operator_binary_exclamation_equal#1",
     c_modifier_public | c_modifier_final,
     bic_unicode_string_operator_binary_exclamation_equal
+  },
+  {
+    "operator_binary_plus#1",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_operator_binary_plus
+  },
+  {
+    "operator_binary_asterisk#1",
+    c_modifier_public | c_modifier_final,
+    bic_unicode_string_operator_binary_asterisk
   },
   {
     "operator_binary_le_br_re_br#1",
@@ -825,6 +845,101 @@ built_in_variable_s unicode_string_variables[] =
     \
     BIC_SIMPLE_SET_RES(c_bi_class_unicode_char,result);\
   }/*}}}*/
+
+#define BIC_UNICODE_STRING_OPERATOR_BINARY_PLUS(NAME) \
+/*{{{*/\
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+\
+  /* - ERROR - */\
+  if (src_0_location->v_type != c_bi_class_unicode_string &&\
+      src_0_location->v_type != c_bi_class_string)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
+    new_exception->params.push(1);\
+    new_exception->params.push(src_0_location->v_type);\
+\
+    return false;\
+  }\
+\
+  ui_array_s *first_ptr = (ui_array_s *)((location_s *)dst_location)->v_data_ptr;\
+  unsigned f_length = first_ptr->used;\
+\
+  ui_array_s *result_ptr;\
+\
+  if (src_0_location->v_type == c_bi_class_unicode_string)\
+  {\
+    ui_array_s *second_ptr = (ui_array_s *)src_0_location->v_data_ptr;\
+    unsigned s_length = second_ptr->used;\
+\
+    /* - create unicode string - */\
+    result_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));\
+    result_ptr->init_size(f_length + s_length);\
+\
+    /* - construct result unicode string - */\
+    memcpy(result_ptr->data,first_ptr->data,f_length*sizeof(unsigned));\
+    memcpy(result_ptr->data + f_length,second_ptr->data,s_length*sizeof(unsigned));\
+    result_ptr->used = result_ptr->size;\
+  }\
+  else\
+  {\
+    string_s *second_ptr = (string_s *)src_0_location->v_data_ptr;\
+    unsigned s_length = second_ptr->size - 1;\
+\
+    /* - create unicode string - */\
+    result_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));\
+    result_ptr->init_size(f_length + s_length);\
+\
+    /* - construct result unicode string - */\
+    memcpy(result_ptr->data,first_ptr->data,f_length*sizeof(unsigned));\
+\
+    utf8proc_ssize_t cp_count = utf8proc_decompose(\
+        (const utf8proc_uint8_t *)second_ptr->data,s_length,\
+        (utf8proc_int32_t *)result_ptr->data + f_length,s_length,\
+        (utf8proc_option_t)0);\
+\
+    result_ptr->used = f_length + cp_count;\
+  }\
+/*}}}*/
+
+#define BIC_UNICODE_STRING_OPERATOR_BINARY_ASTERISK(NAME) \
+/*{{{*/\
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+\
+  long long int mult;\
+\
+  /* - ERROR - */\
+  if (!it.retrieve_integer(src_0_location,mult))\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
+    new_exception->params.push(1);\
+    new_exception->params.push(src_0_location->v_type);\
+\
+    return false;\
+  }\
+\
+  ui_array_s *source_ptr = (ui_array_s *)((location_s *)dst_location)->v_data_ptr;\
+  unsigned s_length = source_ptr->used;\
+\
+  /* - create unicode string - */\
+  ui_array_s *result_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));\
+  result_ptr->init();\
+\
+  if (s_length != 0 && mult > 0)\
+  {\
+    result_ptr->copy_resize(s_length*mult);\
+\
+    /* - construct result unicode string - */\
+    do {\
+      memcpy(result_ptr->data + result_ptr->used,source_ptr->data,s_length*sizeof(unsigned));\
+    } while((result_ptr->used += s_length) < result_ptr->size);\
+  }\
+/*}}}*/
 
 void bic_unicode_string_consts(location_array_s &const_locations)
 {/*{{{*/
@@ -947,6 +1062,30 @@ bool bic_unicode_string_operator_binary_equal(interpreter_thread_s &it,unsigned 
   return true;
 }/*}}}*/
 
+bool bic_unicode_string_operator_binary_plus_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_UNICODE_STRING_OPERATOR_BINARY_PLUS("operator_binary_plus_equal#1");
+
+  BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_unicode_string,result_ptr,2);
+
+  BIC_SET_DESTINATION(new_location);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_string_operator_binary_asterisk_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_UNICODE_STRING_OPERATOR_BINARY_ASTERISK("operator_binary_asterisk_equal#1");
+
+  BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_unicode_string,result_ptr,2);
+
+  BIC_SET_DESTINATION(new_location);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
 bool bic_unicode_string_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
@@ -987,6 +1126,26 @@ bool bic_unicode_string_operator_binary_exclamation_equal(interpreter_thread_s &
   }
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_string_operator_binary_plus(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_UNICODE_STRING_OPERATOR_BINARY_PLUS("operator_binary_plus#1");
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_string,result_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_unicode_string_operator_binary_asterisk(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_UNICODE_STRING_OPERATOR_BINARY_ASTERISK("operator_binary_asterisk#1")
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_string,result_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
