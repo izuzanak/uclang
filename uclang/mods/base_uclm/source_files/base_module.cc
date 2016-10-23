@@ -4387,6 +4387,68 @@ built_in_variable_s string_variables[] =
     BIC_SIMPLE_SET_RES(c_bi_class_char,result);\
   }/*}}}*/
 
+#define BIC_STRING_OPERATOR_BINARY_PLUS(NAME) \
+  /*{{{*/\
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+  \
+  /* - ERROR - */\
+  if (src_0_location->v_type != c_bi_class_string)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
+    new_exception->params.push(1);\
+    new_exception->params.push(src_0_location->v_type);\
+  \
+    return false;\
+  }\
+  \
+  string_s *first_ptr = (string_s *)((location_s *)dst_location)->v_data_ptr;\
+  string_s *second_ptr = (string_s *)src_0_location->v_data_ptr;\
+  \
+  unsigned f_length = first_ptr->size - 1;\
+  unsigned s_length = second_ptr->size - 1;\
+  \
+  /* - create result string - */\
+  string_s *result_ptr = it.get_new_string_ptr();\
+  result_ptr->create(f_length + s_length);\
+  \
+  /* - construct result string - */\
+  memcpy(result_ptr->data,first_ptr->data,f_length);\
+  memcpy(result_ptr->data + f_length,second_ptr->data,s_length);\
+  /*}}}*/
+
+#define BIC_STRING_OPERATOR_BINARY_ASTERISK(NAME) \
+/*{{{*/\
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+\
+  long long int mult;\
+\
+  /* - ERROR - */\
+  if (!it.retrieve_integer(src_0_location,mult))\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
+    new_exception->params.push(1);\
+    new_exception->params.push(src_0_location->v_type);\
+\
+    return false;\
+  }\
+\
+  /* - retrieve source string - */\
+  string_s *source_ptr = (string_s *)((location_s *)dst_location)->v_data_ptr;\
+\
+  string_s *result_ptr = it.get_new_string_ptr();\
+\
+  if (mult >= 0)\
+  {\
+    result_ptr->mult_char_ptr(source_ptr->size - 1,source_ptr->data,mult);\
+  }\
+/*}}}*/
+
 void bic_string_consts(location_array_s &const_locations)
 {/*{{{*/
 }/*}}}*/
@@ -4523,34 +4585,7 @@ bool bic_string_operator_binary_equal(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_string_operator_binary_plus_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_plus_equal#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
-  string_s *first_ptr = (string_s *)((location_s *)dst_location)->v_data_ptr;
-  string_s *second_ptr = (string_s *)src_0_location->v_data_ptr;
-
-  unsigned f_length = first_ptr->size - 1;
-  unsigned s_length = second_ptr->size - 1;
-
-  // - create result string -
-  string_s *result_ptr = it.get_new_string_ptr();
-  result_ptr->create(f_length + s_length);
-
-  // - construct result string -
-  memcpy(result_ptr->data,first_ptr->data,f_length);
-  memcpy(result_ptr->data + f_length,second_ptr->data,s_length);
+  BIC_STRING_OPERATOR_BINARY_PLUS("operator_binary_plus_equal#1");
 
   BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_string,result_ptr,2);
 
@@ -4562,32 +4597,7 @@ bool bic_string_operator_binary_plus_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_string_operator_binary_asterisk_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int mult;
-
-  /* - ERROR - */
-  if (!it.retrieve_integer(src_0_location,mult))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_asterisk_equal#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
-  // - retrieve source string -
-  string_s *source_ptr = (string_s *)((location_s *)dst_location)->v_data_ptr;
-
-  string_s *result_ptr = it.get_new_string_ptr();
-
-  if (mult >= 0)
-  {
-    result_ptr->mult_char_ptr(source_ptr->size - 1,source_ptr->data,mult);
-  }
+  BIC_STRING_OPERATOR_BINARY_ASTERISK("operator_binary_asterisk_equal#1");
 
   BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_string,result_ptr,2);
 
@@ -4643,34 +4653,7 @@ bool bic_string_operator_binary_exclamation_equal(interpreter_thread_s &it,unsig
 
 bool bic_string_operator_binary_plus(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_plus#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
-  string_s *first_ptr = (string_s *)((location_s *)dst_location)->v_data_ptr;
-  string_s *second_ptr = (string_s *)src_0_location->v_data_ptr;
-
-  unsigned f_length = first_ptr->size - 1;
-  unsigned s_length = second_ptr->size - 1;
-
-  // - create result string -
-  string_s *result_ptr = it.get_new_string_ptr();
-  result_ptr->create(f_length + s_length);
-
-  // - construct result string -
-  memcpy(result_ptr->data,first_ptr->data,f_length);
-  memcpy(result_ptr->data + f_length,second_ptr->data,s_length);
+  BIC_STRING_OPERATOR_BINARY_PLUS("operator_binary_plus#1");
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,result_ptr);
   BIC_SET_RESULT(new_location);
@@ -4680,32 +4663,7 @@ bool bic_string_operator_binary_plus(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_string_operator_binary_asterisk(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int mult;
-
-  /* - ERROR - */
-  if (!it.retrieve_integer(src_0_location,mult))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_asterisk#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
-  // - retrieve source string -
-  string_s *source_ptr = (string_s *)((location_s *)dst_location)->v_data_ptr;
-
-  string_s *result_ptr = it.get_new_string_ptr();
-
-  if (mult >= 0)
-  {
-    result_ptr->mult_char_ptr(source_ptr->size - 1,source_ptr->data,mult);
-  }
+  BIC_STRING_OPERATOR_BINARY_ASTERISK("operator_binary_asterisk#1");
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,result_ptr);
   BIC_SET_RESULT(new_location);
