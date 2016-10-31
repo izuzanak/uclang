@@ -1025,7 +1025,7 @@ unsigned bic_unicode_string_next_idx(location_s *location_ptr,unsigned index)
   return (index + 1 < ustring_ptr->used) ? index + 1 : c_idx_not_exist;
 }/*}}}*/
 
-location_s *bic_unicode_string_from_slice(interpreter_thread_s &it,pointer_array_s &slice_array)
+location_s *bic_unicode_string_from_slice(interpreter_thread_s &it,location_s *location_ptr,pointer_array_s &slice_array)
 {/*{{{*/
   ui_array_s *ustring_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));
   ustring_ptr->init_size(slice_array.used);

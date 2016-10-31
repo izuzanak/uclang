@@ -88,7 +88,7 @@ unsigned bic_unicode_string_length(location_s *location_ptr);
 location_s *bic_unicode_string_item(interpreter_thread_s &it,location_s *location_ptr,unsigned index);
 unsigned bic_unicode_string_first_idx(location_s *location_ptr);
 unsigned bic_unicode_string_next_idx(location_s *location_ptr,unsigned index);
-location_s *bic_unicode_string_from_slice(interpreter_thread_s &it,pointer_array_s &slice_array);
+location_s *bic_unicode_string_from_slice(interpreter_thread_s &it,location_s *location_ptr,pointer_array_s &slice_array);
 
 bool bic_unicode_string_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_unicode_string_operator_binary_plus_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);

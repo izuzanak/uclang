@@ -1271,7 +1271,7 @@ int inst_slice_range(inst_params_s *params)
   if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->from_slice_caller != NULL)
   {
     // - convert slice array to object -
-    location_s *new_location = class_record.bi_class_ptr->from_slice_caller(it,*array_ptr);
+    location_s *new_location = class_record.bi_class_ptr->from_slice_caller(it,src_location,*array_ptr);
 
     // - assign object location to target location -
     pointer &trg_location = it.data_stack[trg_loc_idx];

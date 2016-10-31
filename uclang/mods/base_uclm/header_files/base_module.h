@@ -224,7 +224,7 @@ unsigned bic_string_length(location_s *location_ptr);
 location_s *bic_string_item(interpreter_thread_s &it,location_s *location_ptr,unsigned index);
 unsigned bic_string_first_idx(location_s *location_ptr);
 unsigned bic_string_next_idx(location_s *location_ptr,unsigned index);
-location_s *bic_string_from_slice(interpreter_thread_s &it,pointer_array_s &slice_array);
+location_s *bic_string_from_slice(interpreter_thread_s &it,location_s *location_ptr,pointer_array_s &slice_array);
 bool bic_string_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack);
 bool bic_string_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack,bool order_bytes,unsigned source_pos);
 

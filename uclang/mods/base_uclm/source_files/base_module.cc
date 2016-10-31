@@ -4511,7 +4511,7 @@ unsigned bic_string_next_idx(location_s *location_ptr,unsigned index)
   return (index + 1 < length) ? index + 1 : c_idx_not_exist;
 }/*}}}*/
 
-location_s *bic_string_from_slice(interpreter_thread_s &it,pointer_array_s &slice_array)
+location_s *bic_string_from_slice(interpreter_thread_s &it,location_s *location_ptr,pointer_array_s &slice_array)
 {/*{{{*/
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->create(slice_array.used);
