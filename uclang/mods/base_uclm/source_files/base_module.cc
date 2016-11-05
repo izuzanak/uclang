@@ -5429,6 +5429,7 @@ bool bic_string_method_head_1(interpreter_thread_s &it,unsigned stack_base,uli *
     length = string_length + length;
   }
 
+  // - ERROR -
   if (length < 0 || length > string_length)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -5476,6 +5477,7 @@ bool bic_string_method_tail_1(interpreter_thread_s &it,unsigned stack_base,uli *
     length = string_length + length;
   }
 
+  // - ERROR -
   if (length < 0 || length > string_length)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);

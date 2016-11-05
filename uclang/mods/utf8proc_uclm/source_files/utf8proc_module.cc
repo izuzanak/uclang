@@ -1290,6 +1290,7 @@ bool bic_unicode_string_method_head_1(interpreter_thread_s &it,unsigned stack_ba
     length = ustring_ptr->used + length;
   }
 
+  // - ERROR -
   if (length < 0 || length > ustring_ptr->used)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_UNICODE_STRING_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -1341,6 +1342,7 @@ bool bic_unicode_string_method_tail_1(interpreter_thread_s &it,unsigned stack_ba
     length = ustring_ptr->used + length;
   }
 
+  // - ERROR -
   if (length < 0 || length > ustring_ptr->used)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_UNICODE_STRING_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);

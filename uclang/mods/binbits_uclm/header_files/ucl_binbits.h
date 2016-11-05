@@ -11,6 +11,8 @@ enum
 {
   c_bin_array_type_int32,
   c_bin_array_type_uint32,
+  //c_bin_array_type_float,
+  //c_bin_array_type_double,
 };
 
 // - bin dict types -

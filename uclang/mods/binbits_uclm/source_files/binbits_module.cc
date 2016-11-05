@@ -16,7 +16,7 @@ built_in_module_s module =
   binbits_classes,         // Classes
 
   0,                       // Error base index
-  10,                      // Error count
+  11,                      // Error count
   binbits_error_strings,   // Error strings
 
   binbits_initialize,      // Initialize function
@@ -37,6 +37,7 @@ const char *binbits_error_strings[] =
 {/*{{{*/
   "error_BIN_ARRAY_UNKNOWN_DATA_TYPE",
   "error_BIN_ARRAY_INDEX_EXCEEDS_RANGE",
+  "error_BIN_ARRAY_WRONG_RANGE_INDEXES",
   "error_BIN_ARRAY_CANNOT_RESIZE_TO_SMALLER_SIZE",
   "error_BIN_ARRAY_NO_ELEMENTS",
   "error_BIN_ARRAY_UNSUPPORTED_TYPE_OF_SOURCE_ITERABLE_ITEM",
@@ -90,6 +91,13 @@ bool binbits_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nIndex %" HOST_LL_FORMAT "d exceeds binary array range\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_BIN_ARRAY_WRONG_RANGE_INDEXES:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong range indexes %" HOST_LL_FORMAT "d, %" HOST_LL_FORMAT "d for binary array\n",exception.params[0],exception.params[1]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_BIN_ARRAY_CANNOT_RESIZE_TO_SMALLER_SIZE:
@@ -169,7 +177,7 @@ built_in_class_s bin_array_class =
 {/*{{{*/
   "BinArray",
   c_modifier_public | c_modifier_final,
-  28, bin_array_methods,
+  31, bin_array_methods,
   2, bin_array_variables,
   bic_bin_array_consts,
   bic_bin_array_init,
@@ -263,6 +271,21 @@ built_in_method_s bin_array_methods[] =
     "fill#1",
     c_modifier_public | c_modifier_final,
     bic_bin_array_method_fill_1
+  },
+  {
+    "head#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_array_method_head_1
+  },
+  {
+    "tail#1",
+    c_modifier_public | c_modifier_final,
+    bic_bin_array_method_tail_1
+  },
+  {
+    "range#2",
+    c_modifier_public | c_modifier_final,
+    bic_bin_array_method_range_2
   },
   {
     "get_idx#1",
@@ -1401,6 +1424,250 @@ bool bic_bin_array_method_fill_1(interpreter_thread_s &it,unsigned stack_base,ul
   }
 
   BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_array_method_head_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int original_length;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,original_length))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("head#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
+
+  // - binary array container pointer -
+  void *cont = NULL;
+
+#define BIC_BIN_ARRAY_METHOD_HEAD(ARRAY_TYPE) \
+{/*{{{*/\
+  ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)ba_ptr->cont;\
+\
+  /* - adjust length parameter - */\
+  long long int length = original_length;\
+\
+  if (length < 0)\
+  {\
+    length = array_ptr->used + length;\
+  }\
+\
+  /* - ERROR - */\
+  if (length < 0 || length > array_ptr->used)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(original_length);\
+\
+    return false;\
+  }\
+\
+  ARRAY_TYPE *new_array_ptr = (ARRAY_TYPE *)cmalloc(sizeof(ARRAY_TYPE));\
+  new_array_ptr->init();\
+  new_array_ptr->set(length,array_ptr->data);\
+\
+  cont = new_array_ptr;\
+}/*}}}*/
+
+  switch (ba_ptr->type)
+  {
+  case c_bin_array_type_int32:
+    BIC_BIN_ARRAY_METHOD_HEAD(bi_array_s);
+    break;
+  case c_bin_array_type_uint32:
+    BIC_BIN_ARRAY_METHOD_HEAD(ui_array_s);
+    break;
+  default:
+    cassert(0);
+  }
+
+  // - create binary array object -
+  bin_array_s *new_ba_ptr = (bin_array_s *)cmalloc(sizeof(bin_array_s));
+  new_ba_ptr->init();
+
+  new_ba_ptr->type = ba_ptr->type;
+  new_ba_ptr->cont = cont;
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_bin_array,new_ba_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_array_method_tail_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int original_length;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,original_length))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("tail#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
+
+  // - binary array container pointer -
+  void *cont = NULL;
+
+#define BIC_BIN_ARRAY_METHOD_TAIL(ARRAY_TYPE) \
+{/*{{{*/\
+  ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)ba_ptr->cont;\
+\
+  /* - adjust length parameter - */\
+  long long int length = original_length;\
+\
+  if (length < 0)\
+  {\
+    length = array_ptr->used + length;\
+  }\
+\
+  /* - ERROR - */\
+  if (length < 0 || length > array_ptr->used)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(original_length);\
+\
+    return false;\
+  }\
+\
+  ARRAY_TYPE *new_array_ptr = (ARRAY_TYPE *)cmalloc(sizeof(ARRAY_TYPE));\
+  new_array_ptr->init();\
+  new_array_ptr->set(length,array_ptr->data + (array_ptr->used - length));\
+\
+  cont = new_array_ptr;\
+}/*}}}*/
+
+  switch (ba_ptr->type)
+  {
+  case c_bin_array_type_int32:
+    BIC_BIN_ARRAY_METHOD_TAIL(bi_array_s);
+    break;
+  case c_bin_array_type_uint32:
+    BIC_BIN_ARRAY_METHOD_TAIL(ui_array_s);
+    break;
+  default:
+    cassert(0);
+  }
+
+  // - create binary array object -
+  bin_array_s *new_ba_ptr = (bin_array_s *)cmalloc(sizeof(bin_array_s));
+  new_ba_ptr->init();
+
+  new_ba_ptr->type = ba_ptr->type;
+  new_ba_ptr->cont = cont;
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_bin_array,new_ba_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_bin_array_method_range_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  long long int original_first_index;
+  long long int original_second_index;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,original_first_index) ||
+      !it.retrieve_integer(src_1_location,original_second_index))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("range#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
+
+  // - binary array container pointer -
+  void *cont = NULL;
+
+#define BIC_BIN_ARRAY_METHOD_RANGE(ARRAY_TYPE) \
+{/*{{{*/\
+  ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)ba_ptr->cont;\
+\
+  /* - adjust first_index parameter - */\
+  long long int first_index = original_first_index;\
+  if (first_index < 0)\
+  {\
+    first_index = array_ptr->used + first_index;\
+  }\
+\
+  /* - adjust second_index parameter - */\
+  long long int second_index = original_second_index;\
+  if (second_index < 0)\
+  {\
+    second_index = array_ptr->used + second_index;\
+  }\
+\
+  /* - ERROR - */\
+  if (first_index > second_index ||\
+      first_index < 0 || first_index >= array_ptr->used ||\
+      second_index < 0 || second_index >= array_ptr->used)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_WRONG_RANGE_INDEXES,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(original_first_index);\
+    new_exception->params.push(original_second_index);\
+\
+    return false;\
+  }\
+\
+  ARRAY_TYPE *new_array_ptr = (ARRAY_TYPE *)cmalloc(sizeof(ARRAY_TYPE));\
+  new_array_ptr->init();\
+  new_array_ptr->set(second_index - first_index + 1,array_ptr->data + first_index);\
+\
+  cont = new_array_ptr;\
+}/*}}}*/
+
+  switch (ba_ptr->type)
+  {
+  case c_bin_array_type_int32:
+    BIC_BIN_ARRAY_METHOD_RANGE(bi_array_s);
+    break;
+  case c_bin_array_type_uint32:
+    BIC_BIN_ARRAY_METHOD_RANGE(ui_array_s);
+    break;
+  default:
+    cassert(0);
+  }
+
+  // - create binary array object -
+  bin_array_s *new_ba_ptr = (bin_array_s *)cmalloc(sizeof(bin_array_s));
+  new_ba_ptr->init();
+
+  new_ba_ptr->type = ba_ptr->type;
+  new_ba_ptr->cont = cont;
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_bin_array,new_ba_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/

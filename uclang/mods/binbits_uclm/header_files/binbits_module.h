@@ -23,6 +23,7 @@ enum
 {
   c_error_BIN_ARRAY_UNKNOWN_DATA_TYPE = 0,
   c_error_BIN_ARRAY_INDEX_EXCEEDS_RANGE,
+  c_error_BIN_ARRAY_WRONG_RANGE_INDEXES,
   c_error_BIN_ARRAY_CANNOT_RESIZE_TO_SMALLER_SIZE,
   c_error_BIN_ARRAY_NO_ELEMENTS,
   c_error_BIN_ARRAY_UNSUPPORTED_TYPE_OF_SOURCE_ITERABLE_ITEM,
@@ -72,6 +73,9 @@ bool bic_bin_array_method_push_1(interpreter_thread_s &it,unsigned stack_base,ul
 bool bic_bin_array_method_pop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_last_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_fill_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_array_method_head_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_array_method_tail_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_bin_array_method_range_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_get_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_bin_array_method_contain_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
