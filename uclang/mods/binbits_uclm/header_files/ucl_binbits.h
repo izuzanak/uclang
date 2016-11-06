@@ -11,7 +11,7 @@ enum
 {
   c_bin_array_type_int32,
   c_bin_array_type_uint32,
-  //c_bin_array_type_float,
+  c_bin_array_type_float,
   c_bin_array_type_double,
 };
 
@@ -132,6 +132,9 @@ inline void bin_array_s::clear(interpreter_thread_s &it)
       break;
     case c_bin_array_type_uint32:
       ((ui_array_s *)cont)->clear();
+      break;
+    case c_bin_array_type_float:
+      ((bf_array_s *)cont)->clear();
       break;
     case c_bin_array_type_double:
       ((bd_array_s *)cont)->clear();
