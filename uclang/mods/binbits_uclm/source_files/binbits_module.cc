@@ -178,7 +178,7 @@ built_in_class_s bin_array_class =
   "BinArray",
   c_modifier_public | c_modifier_final,
   31, bin_array_methods,
-  2, bin_array_variables,
+  3, bin_array_variables,
   bic_bin_array_consts,
   bic_bin_array_init,
   bic_bin_array_clear,
@@ -360,6 +360,7 @@ built_in_variable_s bin_array_variables[] =
   // - insert binary array type constants -
   { "TYPE_INT32", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "TYPE_UINT32", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_DOUBLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
 
@@ -409,6 +410,9 @@ built_in_variable_s bin_array_variables[] =
         case c_bin_array_type_uint32:\
           BIC_BIN_ARRAY_COMPARE_ELEMENTS(ui_array_s,unsigned);\
           break;\
+        case c_bin_array_type_double:\
+          BIC_BIN_ARRAY_COMPARE_ELEMENTS(bd_array_s,double);\
+          break;\
         default:\
           cassert(0);\
         }\
@@ -436,6 +440,9 @@ built_in_variable_s bin_array_variables[] =
     break;\
   case c_bin_array_type_uint32:\
     used = ((ui_array_s *)ba_ptr->cont)->used;\
+    break;\
+  case c_bin_array_type_double:\
+    used = ((bd_array_s *)ba_ptr->cont)->used;\
     break;\
   default:\
     cassert(0);\
@@ -472,6 +479,36 @@ built_in_variable_s bin_array_variables[] =
   }\
 }/*}}}*/
 
+#define BIC_BIN_ARRAY_APPEND_FLOAT_ARRAY(SRC_LOCATION,TARGET_PTR) \
+{/*{{{*/\
+  pointer_array_s *source_ptr = (pointer_array_s *)SRC_LOCATION->v_data_ptr;\
+  \
+  if (source_ptr->used != 0)\
+  {\
+    pointer *ptr = source_ptr->data;\
+    pointer *ptr_end = ptr + source_ptr->used;\
+    \
+    do\
+    {\
+      location_s *item_location = it.get_location_value(*ptr);\
+      double value;\
+      \
+      /* - ERROR - */\
+      if (!it.retrieve_float(item_location,value))\
+      {\
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_UNSUPPORTED_TYPE_OF_SOURCE_ITERABLE_ITEM,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+        new_exception->params.push(item_location->v_type);\
+        \
+        return false;\
+      }\
+      \
+      /* - push value to binary array - */\
+      (TARGET_PTR)->push(value);\
+    }\
+    while(++ptr < ptr_end);\
+  }\
+}/*}}}*/
+
 #define BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE_BODY(TARGET_PTR) \
 {/*{{{*/\
   long long int value;\
@@ -493,7 +530,28 @@ built_in_variable_s bin_array_variables[] =
   (TARGET_PTR)->push(value);\
 }/*}}}*/
 
-#define BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE(SRC_LOCATION,TARGET_PTR) \
+#define BIC_BIN_ARRAY_APPEND_FLOAT_ITERABLE_BODY(TARGET_PTR) \
+{/*{{{*/\
+  double value;\
+  \
+  /* - ERROR - */\
+  if (!it.retrieve_float(item_location,value))\
+  {\
+    it.release_location_ptr(item_reference);\
+    \
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_UNSUPPORTED_TYPE_OF_SOURCE_ITERABLE_ITEM,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(item_location->v_type);\
+    \
+    return false;\
+  }\
+  \
+  it.release_location_ptr(item_reference);\
+  \
+  /* - push value to binary array - */\
+  (TARGET_PTR)->push(value);\
+}/*}}}*/
+
+#define BIC_BIN_ARRAY_APPEND_ITERABLE(SRC_LOCATION,TARGET_PTR,BODY_TYPE) \
 {/*{{{*/\
   \
   /* - retrieve iterable type - */\
@@ -523,7 +581,7 @@ built_in_variable_s bin_array_variables[] =
       BIC_CALL_ITEM(it,SRC_LOCATION,index,item_reference,operands[c_source_pos_idx],return false;);\
       item_location = it.get_location_value(item_reference);\
       \
-      BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE_BODY(TARGET_PTR);\
+      BIC_BIN_ARRAY_APPEND_ ## BODY_TYPE ## _ITERABLE_BODY(TARGET_PTR);\
       \
       /* - retrieve next index - */\
       BIC_CALL_NEXT_IDX(it,SRC_LOCATION,index,index,operands[c_source_pos_idx],return false;);\
@@ -546,7 +604,7 @@ built_in_variable_s bin_array_variables[] =
         break;\
       }\
       \
-      BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE_BODY(TARGET_PTR);\
+      BIC_BIN_ARRAY_APPEND_ ## BODY_TYPE ## _ITERABLE_BODY(TARGET_PTR);\
       \
     }\
     while(true);\
@@ -604,8 +662,8 @@ void bic_bin_array_consts(location_array_s &const_locations)
 
   // - insert binary array type constants -
   {
-    const_locations.push_blanks(2);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 2);
+    const_locations.push_blanks(3);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 3);
 
 #define CREATE_BIN_ARRAY_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -615,6 +673,7 @@ void bic_bin_array_consts(location_array_s &const_locations)
 
     CREATE_BIN_ARRAY_TYPE_BIC_STATIC(c_bin_array_type_int32);
     CREATE_BIN_ARRAY_TYPE_BIC_STATIC(c_bin_array_type_uint32);
+    CREATE_BIN_ARRAY_TYPE_BIC_STATIC(c_bin_array_type_double);
   }
 
 }/*}}}*/
@@ -702,6 +761,9 @@ bool bic_bin_array_pack(location_s *location_ptr,bc_array_s &stream,pointer_arra
   case c_bin_array_type_uint32:
     BIC_BIN_ARRAY_PACK(ui_array_s,unsigned);
     break;
+  case c_bin_array_type_double:
+    BIC_BIN_ARRAY_PACK(bd_array_s,double);
+    break;
   default:
     cassert(0);
   }
@@ -760,6 +822,9 @@ bool bic_bin_array_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_a
   case c_bin_array_type_uint32:
     BIC_BIN_ARRAY_UNPACK(ui_array_s,unsigned);
     break;
+  case c_bin_array_type_double:
+    BIC_BIN_ARRAY_UNPACK(bd_array_s,double);
+    break;
   default:
     cassert(0);
   }
@@ -809,6 +874,9 @@ bool bic_bin_array_operator_binary_plus_equal(interpreter_thread_s &it,unsigned 
     case c_bin_array_type_uint32:
       BIC_BIN_ARRAY_APPEND_INTEGER_ARRAY(src_0_location,(ui_array_s *)ba_ptr->cont);
       break;
+    case c_bin_array_type_double:
+      BIC_BIN_ARRAY_APPEND_FLOAT_ARRAY(src_0_location,(bd_array_s *)ba_ptr->cont);
+      break;
     default:
       cassert(0);
     }
@@ -820,10 +888,13 @@ bool bic_bin_array_operator_binary_plus_equal(interpreter_thread_s &it,unsigned 
     switch (ba_ptr->type)
     {
     case c_bin_array_type_int32:
-      BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE(src_0_location,(bi_array_s *)ba_ptr->cont);
+      BIC_BIN_ARRAY_APPEND_ITERABLE(src_0_location,(bi_array_s *)ba_ptr->cont,INTEGER);
       break;
     case c_bin_array_type_uint32:
-      BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE(src_0_location,(ui_array_s *)ba_ptr->cont);
+      BIC_BIN_ARRAY_APPEND_ITERABLE(src_0_location,(ui_array_s *)ba_ptr->cont,INTEGER);
+      break;
+    case c_bin_array_type_double:
+      BIC_BIN_ARRAY_APPEND_ITERABLE(src_0_location,(bd_array_s *)ba_ptr->cont,FLOAT);
       break;
     default:
       cassert(0);
@@ -902,6 +973,9 @@ bool bic_bin_array_operator_binary_plus(interpreter_thread_s &it,unsigned stack_
   case c_bin_array_type_uint32:
     BIC_BIN_ARRAY_OPERATOR_BINARY_PLUS(ui_array_s);
     break;
+  case c_bin_array_type_double:
+    BIC_BIN_ARRAY_OPERATOR_BINARY_PLUS(bd_array_s);
+    break;
   default:
     cassert(0);
   }
@@ -923,6 +997,9 @@ bool bic_bin_array_operator_binary_plus(interpreter_thread_s &it,unsigned stack_
     case c_bin_array_type_uint32:
       BIC_BIN_ARRAY_APPEND_INTEGER_ARRAY(src_0_location,(ui_array_s *)new_ba_ptr->cont);
       break;
+    case c_bin_array_type_double:
+      BIC_BIN_ARRAY_APPEND_FLOAT_ARRAY(src_0_location,(bd_array_s *)new_ba_ptr->cont);
+      break;
     default:
       cassert(0);
     }
@@ -934,10 +1011,13 @@ bool bic_bin_array_operator_binary_plus(interpreter_thread_s &it,unsigned stack_
     switch (new_ba_ptr->type)
     {
     case c_bin_array_type_int32:
-      BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE(src_0_location,(bi_array_s *)new_ba_ptr->cont);
+      BIC_BIN_ARRAY_APPEND_ITERABLE(src_0_location,(bi_array_s *)new_ba_ptr->cont,INTEGER);
       break;
     case c_bin_array_type_uint32:
-      BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE(src_0_location,(ui_array_s *)new_ba_ptr->cont);
+      BIC_BIN_ARRAY_APPEND_ITERABLE(src_0_location,(ui_array_s *)new_ba_ptr->cont,INTEGER);
+      break;
+    case c_bin_array_type_double:
+      BIC_BIN_ARRAY_APPEND_ITERABLE(src_0_location,(bd_array_s *)new_ba_ptr->cont,FLOAT);
       break;
     default:
       cassert(0);
@@ -987,6 +1067,14 @@ bool bic_bin_array_method_BinArray_1(interpreter_thread_s &it,unsigned stack_bas
   case c_bin_array_type_uint32:
     {/*{{{*/
       ui_array_s *array_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));
+      array_ptr->init();
+
+      cont = array_ptr;
+    }/*}}}*/
+    break;
+  case c_bin_array_type_double:
+    {/*{{{*/
+      bd_array_s *array_ptr = (bd_array_s *)cmalloc(sizeof(bd_array_s));
       array_ptr->init();
 
       cont = array_ptr;
@@ -1051,6 +1139,14 @@ bool bic_bin_array_method_BinArray_2(interpreter_thread_s &it,unsigned stack_bas
       cont = array_ptr;
     }/*}}}*/
     break;
+  case c_bin_array_type_double:
+    {/*{{{*/
+      bd_array_s *array_ptr = (bd_array_s *)cmalloc(sizeof(bd_array_s));
+      array_ptr->init();
+
+      cont = array_ptr;
+    }/*}}}*/
+    break;
 
   // - ERROR -
   default:
@@ -1078,6 +1174,9 @@ bool bic_bin_array_method_BinArray_2(interpreter_thread_s &it,unsigned stack_bas
     case c_bin_array_type_uint32:
       BIC_BIN_ARRAY_APPEND_INTEGER_ARRAY(src_1_location,(ui_array_s *)ba_ptr->cont);
       break;
+    case c_bin_array_type_double:
+      BIC_BIN_ARRAY_APPEND_FLOAT_ARRAY(src_1_location,(bd_array_s *)ba_ptr->cont);
+      break;
     default:
       cassert(0);
     }
@@ -1089,10 +1188,13 @@ bool bic_bin_array_method_BinArray_2(interpreter_thread_s &it,unsigned stack_bas
     switch (ba_ptr->type)
     {
     case c_bin_array_type_int32:
-      BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE(src_1_location,(bi_array_s *)ba_ptr->cont);
+      BIC_BIN_ARRAY_APPEND_ITERABLE(src_1_location,(bi_array_s *)ba_ptr->cont,INTEGER);
       break;
     case c_bin_array_type_uint32:
-      BIC_BIN_ARRAY_APPEND_INTEGER_ITERABLE(src_1_location,(ui_array_s *)ba_ptr->cont);
+      BIC_BIN_ARRAY_APPEND_ITERABLE(src_1_location,(ui_array_s *)ba_ptr->cont,INTEGER);
+      break;
+    case c_bin_array_type_double:
+      BIC_BIN_ARRAY_APPEND_ITERABLE(src_1_location,(bd_array_s *)ba_ptr->cont,FLOAT);
       break;
     default:
       cassert(0);
@@ -1116,6 +1218,9 @@ bool bic_bin_array_method_clear_0(interpreter_thread_s &it,unsigned stack_base,u
     break;
   case c_bin_array_type_uint32:
     ((ui_array_s *)ba_ptr->cont)->clear();
+    break;
+  case c_bin_array_type_double:
+    ((bd_array_s *)ba_ptr->cont)->clear();
     break;
   default:
     cassert(0);
@@ -1179,6 +1284,11 @@ bool bic_bin_array_method_resize_1(interpreter_thread_s &it,unsigned stack_base,
       BIC_BIN_ARRAY_METHOD_RESIZE(ui_array_s,unsigned);
     }/*}}}*/
     break;
+  case c_bin_array_type_double:
+    {/*{{{*/
+      BIC_BIN_ARRAY_METHOD_RESIZE(bd_array_s,double);
+    }/*}}}*/
+    break;
   }
 
   BIC_SET_RESULT_BLANK();
@@ -1212,6 +1322,25 @@ bool bic_bin_array_method_items_0(interpreter_thread_s &it,unsigned stack_base,u
   }\
 }/*}}}*/
 
+#define BIC_BIN_ARRAY_METHOD_ITEMS_FLOAT(ARR_TYPE,TYPE) \
+{/*{{{*/\
+  ARR_TYPE *array_ptr = (ARR_TYPE *)ba_ptr->cont;\
+  \
+  if (array_ptr->used != 0)\
+  {\
+    TYPE *ptr = array_ptr->data;\
+    TYPE *ptr_end = ptr + array_ptr->used;\
+    do {\
+      double value = *ptr;\
+      \
+      basic_64b &v_data_ptr = *((basic_64b *)&value);\
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);\
+      target_array->push(new_location);\
+      \
+    } while(++ptr < ptr_end);\
+  }\
+}/*}}}*/
+
   switch (ba_ptr->type)
   {
   case c_bin_array_type_int32:
@@ -1219,6 +1348,9 @@ bool bic_bin_array_method_items_0(interpreter_thread_s &it,unsigned stack_base,u
     break;
   case c_bin_array_type_uint32:
     BIC_BIN_ARRAY_METHOD_ITEMS_INTEGER(ui_array_s,unsigned);
+    break;
+  case c_bin_array_type_double:
+    BIC_BIN_ARRAY_METHOD_ITEMS_FLOAT(bd_array_s,double);
     break;
   default:
     cassert(0);
@@ -1242,7 +1374,7 @@ bool bic_bin_array_method_push_1(interpreter_thread_s &it,unsigned stack_base,ul
   {
   case c_bin_array_type_int32:
   case c_bin_array_type_uint32:
-    {
+    {/*{{{*/
       long long int value;
 
       // - ERROR -
@@ -1265,7 +1397,30 @@ bool bic_bin_array_method_push_1(interpreter_thread_s &it,unsigned stack_base,ul
         ((ui_array_s *)ba_ptr->cont)->push(value);
         break;
       }
-    }
+    }/*}}}*/
+    break;
+  case c_bin_array_type_double:
+    {/*{{{*/
+      double value;
+
+      // - ERROR -
+      if (!it.retrieve_float(src_0_location,value))
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("push#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
+        return false;
+      }
+
+      switch (ba_ptr->type)
+      {
+      case c_bin_array_type_double:
+        ((bd_array_s *)ba_ptr->cont)->push(value);
+        break;
+      }
+    }/*}}}*/
     break;
   default:
     cassert(0);
@@ -1283,37 +1438,48 @@ bool bic_bin_array_method_pop_0(interpreter_thread_s &it,unsigned stack_base,uli
 
   bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
 
+#define BIC_BIN_ARRAY_METHOD_POP_INTEGER(ARRAY_TYPE) \
+{/*{{{*/\
+  ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)ba_ptr->cont;\
+\
+  /* - ERROR - */\
+  if (array_ptr->used == 0)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_NO_ELEMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  long long int result = array_ptr->pop();\
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
+}/*}}}*/
+
+#define BIC_BIN_ARRAY_METHOD_POP_FLOAT(ARRAY_TYPE) \
+{/*{{{*/\
+  ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)ba_ptr->cont;\
+\
+  /* - ERROR - */\
+  if (array_ptr->used == 0)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_NO_ELEMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  double result = array_ptr->pop();\
+\
+  basic_64b &v_data_ptr = *((basic_64b *)&result);\
+  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);\
+}/*}}}*/
+
   switch (ba_ptr->type)
   {
   case c_bin_array_type_int32:
-    {/*{{{*/
-      bi_array_s *array_ptr = (bi_array_s *)ba_ptr->cont;
-
-      // - ERROR -
-      if (array_ptr->used == 0)
-      {
-        exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_NO_ELEMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        return false;
-      }
-
-      long long int result = array_ptr->pop();
-      BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
-    }/*}}}*/
+    BIC_BIN_ARRAY_METHOD_POP_INTEGER(bi_array_s);
     break;
   case c_bin_array_type_uint32:
-    {/*{{{*/
-      ui_array_s *array_ptr = (ui_array_s *)ba_ptr->cont;
-
-      // - ERROR -
-      if (array_ptr->used == 0)
-      {
-        exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_NO_ELEMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        return false;
-      }
-
-      long long int result = array_ptr->pop();
-      BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
-    }/*}}}*/
+    BIC_BIN_ARRAY_METHOD_POP_INTEGER(ui_array_s);
+    break;
+  case c_bin_array_type_double:
+    BIC_BIN_ARRAY_METHOD_POP_FLOAT(bd_array_s);
     break;
   default:
     cassert(0);
@@ -1329,37 +1495,48 @@ bool bic_bin_array_method_last_0(interpreter_thread_s &it,unsigned stack_base,ul
 
   bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
 
+#define BIC_BIN_ARRAY_METHOD_LAST_INTEGER(ARRAY_TYPE) \
+{/*{{{*/\
+  ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)ba_ptr->cont;\
+\
+  /* - ERROR - */\
+  if (array_ptr->used == 0)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_NO_ELEMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  long long int result = array_ptr->last();\
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
+}/*}}}*/
+
+#define BIC_BIN_ARRAY_METHOD_LAST_FLOAT(ARRAY_TYPE) \
+{/*{{{*/\
+  ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)ba_ptr->cont;\
+\
+  /* - ERROR - */\
+  if (array_ptr->used == 0)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_NO_ELEMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  double result = array_ptr->last();\
+\
+  basic_64b &v_data_ptr = *((basic_64b *)&result);\
+  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);\
+}/*}}}*/
+
   switch (ba_ptr->type)
   {
   case c_bin_array_type_int32:
-    {/*{{{*/
-      bi_array_s *array_ptr = (bi_array_s *)ba_ptr->cont;
-
-      // - ERROR -
-      if (array_ptr->used == 0)
-      {
-        exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_NO_ELEMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        return false;
-      }
-
-      long long int result = array_ptr->last();
-      BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
-    }/*}}}*/
+    BIC_BIN_ARRAY_METHOD_LAST_INTEGER(bi_array_s);
     break;
   case c_bin_array_type_uint32:
-    {/*{{{*/
-      ui_array_s *array_ptr = (ui_array_s *)ba_ptr->cont;
-
-      // - ERROR -
-      if (array_ptr->used == 0)
-      {
-        exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_NO_ELEMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        return false;
-      }
-
-      long long int result = array_ptr->last();
-      BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
-    }/*}}}*/
+    BIC_BIN_ARRAY_METHOD_LAST_INTEGER(ui_array_s);
+    break;
+  case c_bin_array_type_double:
+    BIC_BIN_ARRAY_METHOD_LAST_FLOAT(bd_array_s);
     break;
   default:
     cassert(0);
@@ -1380,7 +1557,7 @@ bool bic_bin_array_method_fill_1(interpreter_thread_s &it,unsigned stack_base,ul
   {
   case c_bin_array_type_int32:
   case c_bin_array_type_uint32:
-    {
+    {/*{{{*/
       long long int value;
 
       // - ERROR -
@@ -1417,7 +1594,37 @@ bool bic_bin_array_method_fill_1(interpreter_thread_s &it,unsigned stack_base,ul
         }/*}}}*/
         break;
       }
-    }
+    }/*}}}*/
+    break;
+  case c_bin_array_type_double:
+    {/*{{{*/
+      double value;
+
+      // - ERROR -
+      if (!it.retrieve_float(src_0_location,value))
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("fill#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
+        return false;
+      }
+
+      switch (ba_ptr->type)
+      {
+      case c_bin_array_type_double:
+        {/*{{{*/
+          bd_array_s *array_ptr = (bd_array_s *)ba_ptr->cont;
+          unsigned size = array_ptr->size;
+
+          array_ptr->size = array_ptr->used;
+          array_ptr->fill(value);
+          array_ptr->size = size;
+        }/*}}}*/
+        break;
+      }
+    }/*}}}*/
     break;
   default:
     cassert(0);
@@ -1487,6 +1694,9 @@ bool bic_bin_array_method_head_1(interpreter_thread_s &it,unsigned stack_base,ul
     break;
   case c_bin_array_type_uint32:
     BIC_BIN_ARRAY_METHOD_HEAD(ui_array_s);
+    break;
+  case c_bin_array_type_double:
+    BIC_BIN_ARRAY_METHOD_HEAD(bd_array_s);
     break;
   default:
     cassert(0);
@@ -1564,6 +1774,9 @@ bool bic_bin_array_method_tail_1(interpreter_thread_s &it,unsigned stack_base,ul
     break;
   case c_bin_array_type_uint32:
     BIC_BIN_ARRAY_METHOD_TAIL(ui_array_s);
+    break;
+  case c_bin_array_type_double:
+    BIC_BIN_ARRAY_METHOD_TAIL(bd_array_s);
     break;
   default:
     cassert(0);
@@ -1655,6 +1868,9 @@ bool bic_bin_array_method_range_2(interpreter_thread_s &it,unsigned stack_base,u
   case c_bin_array_type_uint32:
     BIC_BIN_ARRAY_METHOD_RANGE(ui_array_s);
     break;
+  case c_bin_array_type_double:
+    BIC_BIN_ARRAY_METHOD_RANGE(bd_array_s);
+    break;
   default:
     cassert(0);
   }
@@ -1686,7 +1902,7 @@ bool bic_bin_array_method_get_idx_1(interpreter_thread_s &it,unsigned stack_base
   {
   case c_bin_array_type_int32:
   case c_bin_array_type_uint32:
-    {
+    {/*{{{*/
       long long int value;
 
       // - ERROR -
@@ -1709,7 +1925,30 @@ bool bic_bin_array_method_get_idx_1(interpreter_thread_s &it,unsigned stack_base
         index = ((ui_array_s *)ba_ptr->cont)->get_idx(value);
         break;
       }
-    }
+    }/*}}}*/
+    break;
+  case c_bin_array_type_double:
+    {/*{{{*/
+      double value;
+
+      // - ERROR -
+      if (!it.retrieve_float(src_0_location,value))
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("get_idx#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
+        return false;
+      }
+
+      switch (ba_ptr->type)
+      {
+      case c_bin_array_type_double:
+        index = ((bd_array_s *)ba_ptr->cont)->get_idx(value);
+        break;
+      }
+    }/*}}}*/
     break;
   default:
     cassert(0);
@@ -1752,7 +1991,7 @@ bool bic_bin_array_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_bas
   {
   case c_bin_array_type_int32:
   case c_bin_array_type_uint32:
-    {
+    {/*{{{*/
       long long int value;
 
       // - ERROR -
@@ -1777,7 +2016,32 @@ bool bic_bin_array_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_bas
         BIC_BIN_ARRAY_METHOD_GET_IDXS(ui_array_s,unsigned);
         break;
       }
-    }
+    }/*}}}*/
+    break;
+  case c_bin_array_type_double:
+    {/*{{{*/
+      double value;
+
+      // - ERROR -
+      if (!it.retrieve_float(src_0_location,value))
+      {
+        idxs_array.clear();
+
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("get_idxs#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
+        return false;
+      }
+
+      switch (ba_ptr->type)
+      {
+      case c_bin_array_type_double:
+        BIC_BIN_ARRAY_METHOD_GET_IDXS(bd_array_s,double);
+        break;
+      }
+    }/*}}}*/
     break;
   default:
     cassert(0);
@@ -1810,7 +2074,7 @@ bool bic_bin_array_method_contain_1(interpreter_thread_s &it,unsigned stack_base
   {
   case c_bin_array_type_int32:
   case c_bin_array_type_uint32:
-    {
+    {/*{{{*/
       long long int value;
 
       // - ERROR -
@@ -1833,7 +2097,30 @@ bool bic_bin_array_method_contain_1(interpreter_thread_s &it,unsigned stack_base
         found = ((ui_array_s *)ba_ptr->cont)->get_idx(value) != c_idx_not_exist;
         break;
       }
-    }
+    }/*}}}*/
+    break;
+  case c_bin_array_type_double:
+    {/*{{{*/
+      double value;
+
+      // - ERROR -
+      if (!it.retrieve_float(src_0_location,value))
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("contain#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
+        return false;
+      }
+
+      switch (ba_ptr->type)
+      {
+      case c_bin_array_type_double:
+        found = ((bd_array_s *)ba_ptr->cont)->get_idx(value) != c_idx_not_exist;
+        break;
+      }
+    }/*}}}*/
     break;
   default:
     cassert(0);
@@ -1990,6 +2277,9 @@ bool bic_bin_array_method_length_0(interpreter_thread_s &it,unsigned stack_base,
   case c_bin_array_type_uint32:
     result = ((ui_array_s *)ba_ptr->cont)->used;
     break;
+  case c_bin_array_type_double:
+    result = ((bd_array_s *)ba_ptr->cont)->used;
+    break;
   default:
     cassert(0);
   }
@@ -2040,6 +2330,9 @@ bool bic_bin_array_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
   case c_bin_array_type_uint32:
     BIC_BIN_ARRAY_METHOD_TO_STRING(ui_array_s,unsigned,"%u")
     break;
+  case c_bin_array_type_double:
+    BIC_BIN_ARRAY_METHOD_TO_STRING(bd_array_s,double,"%f")
+    break;
   default:
     cassert(0);
   }
@@ -2088,6 +2381,9 @@ bool bic_bin_array_method_to_string_1(interpreter_thread_s &it,unsigned stack_ba
     break;
   case c_bin_array_type_uint32:
     BIC_BIN_ARRAY_METHOD_TO_STRING(ui_array_s,unsigned,"%u")
+    break;
+  case c_bin_array_type_double:
+    BIC_BIN_ARRAY_METHOD_TO_STRING(bd_array_s,double,"%f")
     break;
   default:
     cassert(0);
@@ -2139,6 +2435,9 @@ bool bic_bin_array_method_print_0(interpreter_thread_s &it,unsigned stack_base,u
     break;
   case c_bin_array_type_uint32:
     BIC_BIN_ARRAY_METHOD_PRINT(ui_array_s,unsigned,"%u")
+    break;
+  case c_bin_array_type_double:
+    BIC_BIN_ARRAY_METHOD_PRINT(bd_array_s,double,"%f")
     break;
   default:
     cassert(0);
@@ -2230,25 +2529,7 @@ bool bic_bin_array_ref_operator_binary_equal(interpreter_thread_s &it,unsigned s
   bin_array_ref_s *bar_ptr = (bin_array_ref_s *)dst_location->v_data_ptr;
   bin_array_s *ba_ptr = (bin_array_s *)bar_ptr->ba_location->v_data_ptr;
 
-  switch (ba_ptr->type)
-  {
-  case c_bin_array_type_int32:
-  case c_bin_array_type_uint32:
-    {
-      long long int value;
-
-      // - ERROR -
-      if (!it.retrieve_integer(src_0_location,value))
-      {
-        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_equal#1");
-        new_exception->params.push(1);
-        new_exception->params.push(src_0_location->v_type);
-
-        return false;
-      }
-
-#define BIC_BIN_ARRAY_REF_OPERATOR_BINARY_EQUAL_INTEGER(ARR_TYPE,TYPE) \
+#define BIC_BIN_ARRAY_REF_OPERATOR_BINARY_EQUAL(ARR_TYPE,TYPE) \
 {/*{{{*/\
   ARR_TYPE *array_ptr = (ARR_TYPE *)ba_ptr->cont;\
   \
@@ -2264,18 +2545,62 @@ bool bic_bin_array_ref_operator_binary_equal(interpreter_thread_s &it,unsigned s
   value = value_ref;\
 }/*}}}*/
 
+  switch (ba_ptr->type)
+  {
+  case c_bin_array_type_int32:
+  case c_bin_array_type_uint32:
+    {/*{{{*/
+      long long int value;
+
+      // - ERROR -
+      if (!it.retrieve_integer(src_0_location,value))
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_equal#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
+        return false;
+      }
+
       switch (ba_ptr->type)
       {
       case c_bin_array_type_int32:
-        BIC_BIN_ARRAY_REF_OPERATOR_BINARY_EQUAL_INTEGER(bi_array_s,int);
+        BIC_BIN_ARRAY_REF_OPERATOR_BINARY_EQUAL(bi_array_s,int);
         break;
       case c_bin_array_type_uint32:
-        BIC_BIN_ARRAY_REF_OPERATOR_BINARY_EQUAL_INTEGER(ui_array_s,unsigned);
+        BIC_BIN_ARRAY_REF_OPERATOR_BINARY_EQUAL(ui_array_s,unsigned);
         break;
       }
 
       BIC_SIMPLE_SET_RES(c_bi_class_integer,value);
-    }
+    }/*}}}*/
+    break;
+  case c_bin_array_type_double:
+    {/*{{{*/
+      double value;
+
+      // - ERROR -
+      if (!it.retrieve_float(src_0_location,value))
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_equal#1");
+        new_exception->params.push(1);
+        new_exception->params.push(src_0_location->v_type);
+
+        return false;
+      }
+
+      switch (ba_ptr->type)
+      {
+      case c_bin_array_type_double:
+        BIC_BIN_ARRAY_REF_OPERATOR_BINARY_EQUAL(bd_array_s,double);
+        break;
+      }
+
+      basic_64b &v_data_ptr = *((basic_64b *)&value);
+      BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+    }/*}}}*/
     break;
   default:
     cassert(0);
@@ -2307,6 +2632,23 @@ bool bic_bin_array_ref_method_value_0(interpreter_thread_s &it,unsigned stack_ba
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
 }/*}}}*/
 
+#define BIC_BIN_ARRAY_REF_METHOD_VALUE_FLOAT(ARR_TYPE) \
+{/*{{{*/\
+  ARR_TYPE *array_ptr = (ARR_TYPE *)ba_ptr->cont;\
+  \
+  /* - ERROR - */\
+  if (bar_ptr->index >= array_ptr->used)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_BIN_ARRAY_REF_INVALID_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  double result = array_ptr->data[bar_ptr->index];\
+  \
+  basic_64b &v_data_ptr = *((basic_64b *)&result);\
+  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);\
+}/*}}}*/
+
   switch (ba_ptr->type)
   {
   case c_bin_array_type_int32:
@@ -2314,6 +2656,9 @@ bool bic_bin_array_ref_method_value_0(interpreter_thread_s &it,unsigned stack_ba
     break;
   case c_bin_array_type_uint32:
     BIC_BIN_ARRAY_REF_METHOD_VALUE_INTEGER(ui_array_s);
+    break;
+  case c_bin_array_type_double:
+    BIC_BIN_ARRAY_REF_METHOD_VALUE_FLOAT(bd_array_s);
     break;
   default:
     cassert(0);
