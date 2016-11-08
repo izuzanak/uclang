@@ -234,7 +234,7 @@ built_in_variable_s stack_variables[] =
     \
     if (iter_type == c_iter_first_idx_next_idx_item)\
     {\
-      long long index;\
+      long long int index;\
       location_s *item_reference;\
       location_s *item_location;\
       \

@@ -325,7 +325,7 @@ built_in_variable_s dict_variables[] =
     \
     if (iter_type == c_iter_first_idx_next_idx_item)\
     {\
-      long long index;\
+      long long int index;\
       location_s *key_reference;\
       location_s *key_location;\
       location_s *val_reference;\

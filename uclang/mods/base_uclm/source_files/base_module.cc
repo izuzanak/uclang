@@ -5330,7 +5330,7 @@ bool bic_string_method_join_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
   if (iter_type == c_iter_first_idx_next_idx_item)
   {
-    long long index;
+    long long int index;
     location_s *item_location;
 
     // - retrieve first index -
@@ -6124,7 +6124,7 @@ built_in_variable_s array_variables[] =
     \
     if (iter_type == c_iter_first_idx_next_idx_item)\
     {\
-      long long index;\
+      long long int index;\
       location_s *item_reference;\
       location_s *item_location;\
       \
