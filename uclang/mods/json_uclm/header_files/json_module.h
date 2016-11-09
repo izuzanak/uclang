@@ -44,7 +44,6 @@ void bic_json_clear(interpreter_thread_s &it,location_s *location_ptr);
 bool bic_json_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack);
 bool bic_json_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack,bool order_bytes,unsigned source_pos);
 
-bool bic_json_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_json_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_json_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_json_method_parse_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);

@@ -126,7 +126,7 @@ built_in_class_s utf8proc_class =
 {/*{{{*/
   "Utf8Proc",
   c_modifier_public | c_modifier_final,
-  6, utf8proc_methods,
+  5, utf8proc_methods,
   0, utf8proc_variables,
   bic_utf8proc_consts,
   bic_utf8proc_init,
@@ -146,11 +146,6 @@ built_in_class_s utf8proc_class =
 
 built_in_method_s utf8proc_methods[] =
 {/*{{{*/
-  {
-    "operator_binary_equal#1",
-    c_modifier_public | c_modifier_final,
-    bic_utf8proc_operator_binary_equal
-  },
   {
     "to_lower#1",
     c_modifier_public | c_modifier_final | c_modifier_static,
@@ -239,20 +234,6 @@ void bic_utf8proc_init(interpreter_thread_s &it,location_s *location_ptr)
 void bic_utf8proc_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   cassert(0);
-}/*}}}*/
-
-bool bic_utf8proc_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  src_0_location->v_reference_cnt.atomic_add(2);
-
-  BIC_SET_DESTINATION(src_0_location);
-  BIC_SET_RESULT(src_0_location);
-
-  return true;
 }/*}}}*/
 
 bool bic_utf8proc_method_to_lower_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)

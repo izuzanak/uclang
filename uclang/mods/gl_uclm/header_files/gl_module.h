@@ -55,7 +55,6 @@ void bic_gl_consts(location_array_s &const_locations);
 void bic_gl_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_gl_clear(interpreter_thread_s &it,location_s *location_ptr);
 
-bool bic_gl_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gl_method_ClearColor_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gl_method_Clear_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gl_method_BlendFunc_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);

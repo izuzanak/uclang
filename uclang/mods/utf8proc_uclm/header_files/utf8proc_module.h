@@ -46,7 +46,6 @@ void bic_utf8proc_consts(location_array_s &const_locations);
 void bic_utf8proc_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_utf8proc_clear(interpreter_thread_s &it,location_s *location_ptr);
 
-bool bic_utf8proc_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_utf8proc_method_to_lower_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_utf8proc_method_to_upper_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_utf8proc_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

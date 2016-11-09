@@ -46,7 +46,6 @@ void bic_vg_consts(location_array_s &const_locations);
 void bic_vg_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_vg_clear(interpreter_thread_s &it,location_s *location_ptr);
 
-bool bic_vg_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vg_method_Clear_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vg_method_ClearColor_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vg_method_StrokeLineWidth_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);

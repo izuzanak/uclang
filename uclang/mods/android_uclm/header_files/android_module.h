@@ -114,7 +114,6 @@ void bic_event_consts(location_array_s &const_locations);
 void bic_event_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_event_clear(interpreter_thread_s &it,location_s *location_ptr);
 
-bool bic_event_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_event_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_event_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_event_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -128,7 +127,6 @@ void bic_sensor_manager_consts(location_array_s &const_locations);
 void bic_sensor_manager_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_sensor_manager_clear(interpreter_thread_s &it,location_s *location_ptr);
 
-bool bic_sensor_manager_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sensor_manager_method_sensor_list_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sensor_manager_method_default_sensor_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sensor_manager_method_create_event_queue_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

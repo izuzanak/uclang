@@ -59,7 +59,6 @@ void bic_port_audio_consts(location_array_s &const_locations);
 void bic_port_audio_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_port_audio_clear(interpreter_thread_s &it,location_s *location_ptr);
 
-bool bic_port_audio_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_port_audio_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_port_audio_method_version_text_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_port_audio_method_host_api_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

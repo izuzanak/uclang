@@ -1106,7 +1106,7 @@ built_in_class_s event_class =
 {/*{{{*/
   "Event",
   c_modifier_public | c_modifier_final,
-  4, event_methods,
+  3, event_methods,
   2, event_variables,
   bic_event_consts,
   bic_event_init,
@@ -1126,11 +1126,6 @@ built_in_class_s event_class =
 
 built_in_method_s event_methods[] =
 {/*{{{*/
-  {
-    "operator_binary_equal#1",
-    c_modifier_public | c_modifier_final,
-    bic_event_operator_binary_equal
-  },
   {
     "get_type#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
@@ -1183,20 +1178,6 @@ void bic_event_clear(interpreter_thread_s &it,location_s *location_ptr)
   cassert(0);
 }/*}}}*/
 
-bool bic_event_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  src_0_location->v_reference_cnt.atomic_add(2);
-
-  BIC_SET_DESTINATION(src_0_location);
-  BIC_SET_RESULT(src_0_location);
-
-  return true;
-}/*}}}*/
-
 bool bic_event_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
@@ -1233,7 +1214,7 @@ built_in_class_s sensor_manager_class =
 {/*{{{*/
   "SensorManager",
   c_modifier_public | c_modifier_final,
-  6, sensor_manager_methods,
+  5, sensor_manager_methods,
   0, sensor_manager_variables,
   bic_sensor_manager_consts,
   bic_sensor_manager_init,
@@ -1253,11 +1234,6 @@ built_in_class_s sensor_manager_class =
 
 built_in_method_s sensor_manager_methods[] =
 {/*{{{*/
-  {
-    "operator_binary_equal#1",
-    c_modifier_public | c_modifier_final,
-    bic_sensor_manager_operator_binary_equal
-  },
   {
     "sensor_list#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
@@ -1301,20 +1277,6 @@ void bic_sensor_manager_init(interpreter_thread_s &it,location_s *location_ptr)
 void bic_sensor_manager_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   cassert(0);
-}/*}}}*/
-
-bool bic_sensor_manager_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  src_0_location->v_reference_cnt.atomic_add(2);
-
-  BIC_SET_DESTINATION(src_0_location);
-  BIC_SET_RESULT(src_0_location);
-
-  return true;
 }/*}}}*/
 
 bool bic_sensor_manager_method_sensor_list_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)

@@ -352,7 +352,6 @@ void bic_clock_consts(location_array_s &const_locations);
 void bic_clock_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_clock_clear(interpreter_thread_s &it,location_s *location_ptr);
 
-bool bic_clock_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_clock_method_getres_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_clock_method_gettime_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_clock_method_settime_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
