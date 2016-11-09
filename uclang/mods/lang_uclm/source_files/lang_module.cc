@@ -493,7 +493,7 @@ void bic_class_ref_consts(location_array_s &const_locations)
 
 void bic_class_ref_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)0;
+  location_ptr->v_data_ptr = (long long int)0;
 }/*}}}*/
 
 void bic_class_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -519,7 +519,7 @@ bool bic_class_ref_method_ClassRef_1(interpreter_thread_s &it,unsigned stack_bas
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
-  dst_location->v_data_ptr = (basic_64b)src_0_location->v_type;
+  dst_location->v_data_ptr = (long long int)src_0_location->v_type;
 
   return true;
 }/*}}}*/
@@ -1002,7 +1002,7 @@ void bic_namespace_ref_consts(location_array_s &const_locations)
 
 void bic_namespace_ref_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)0;
+  location_ptr->v_data_ptr = (long long int)0;
 }/*}}}*/
 
 void bic_namespace_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1361,7 +1361,7 @@ void bic_method_ref_consts(location_array_s &const_locations)
 
 void bic_method_ref_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)0;
+  location_ptr->v_data_ptr = (long long int)0;
 }/*}}}*/
 
 void bic_method_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1627,7 +1627,7 @@ void bic_var_ref_consts(location_array_s &const_locations)
 
 void bic_var_ref_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)0;
+  location_ptr->v_data_ptr = (long long int)0;
 }/*}}}*/
 
 void bic_var_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1771,7 +1771,7 @@ void bic_param_ref_consts(location_array_s &const_locations)
 
 void bic_param_ref_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)0;
+  location_ptr->v_data_ptr = (long long int)0;
 }/*}}}*/
 
 void bic_param_ref_clear(interpreter_thread_s &it,location_s *location_ptr)

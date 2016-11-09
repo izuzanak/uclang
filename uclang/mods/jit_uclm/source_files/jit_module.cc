@@ -281,7 +281,7 @@ void bic_jit_context_consts(location_array_s &const_locations)
 #define CREATE_JIT_CONTEXT_DATA_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_JIT_CONTEXT_DATA_TYPE_BIC_STATIC(c_var_type_i8);
@@ -300,7 +300,7 @@ void bic_jit_context_consts(location_array_s &const_locations)
 
 void bic_jit_context_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (jit_context_s *)NULL;
 }/*}}}*/
 
 void bic_jit_context_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -347,7 +347,7 @@ bool bic_jit_context_method_JitContext_0(interpreter_thread_s &it,unsigned stack
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)jc_ptr;
+  dst_location->v_data_ptr = (jit_context_s *)jc_ptr;
 
   return true;
 }/*}}}*/
@@ -566,7 +566,7 @@ void bic_jit_function_consts(location_array_s &const_locations)
 
 void bic_jit_function_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (jit_function_s *)NULL;
 }/*}}}*/
 
 void bic_jit_function_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -833,7 +833,8 @@ bool bic_jit_function_method_call_1(interpreter_thread_s &it,unsigned stack_base
   }
 
   // - call jit function -
-  char ret_val[8];
+  long long int ret_value;
+  char *ret_val = (char *)&ret_value;
   jit_function_apply((jit_function_t)fun_record.jit_function,params,ret_val);
 
   // - process return value -
@@ -855,7 +856,7 @@ bool bic_jit_function_method_call_1(interpreter_thread_s &it,unsigned stack_base
     case c_var_type_i64:
     case c_var_type_u64:
       {/*{{{*/
-        long long int result;
+        long long int result = 0;
 
         switch (ret_type.type_id)
         {
@@ -905,8 +906,7 @@ bool bic_jit_function_method_call_1(interpreter_thread_s &it,unsigned stack_base
             break;
         }
 
-        basic_64b &v_data_ptr = *((basic_64b *)&result);
-        BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+        BIC_SIMPLE_SET_RES(c_bi_class_float,result);
       }/*}}}*/
       break;
 

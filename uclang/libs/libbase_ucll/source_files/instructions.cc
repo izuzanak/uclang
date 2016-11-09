@@ -308,7 +308,7 @@ int inst_element_array(inst_params_s *params)
   location_s *new_location = it.get_new_location_ptr();
   new_location->v_type = c_bi_class_array;
   new_location->v_reference_cnt.atomic_set(1);
-  new_location->v_data_ptr = (basic_64b)object_array;
+  new_location->v_data_ptr = (pointer_array_s *)object_array;
 
   pointer &trg_location = it.data_stack[stack_base + code[iea_stack_trg]];
   it.release_location_ptr((location_s *)trg_location);
@@ -375,7 +375,7 @@ int inst_new_object(inst_params_s *params)
       while(object_ptr->used < class_record.element_cnt);
     }
 
-    new_location->v_data_ptr = (basic_64b)object_ptr;
+    new_location->v_data_ptr = (pointer_array_s *)object_ptr;
 
     // - traverse through all initializing codes -
     unsigned new_stack_base = it.data_stack.used;
@@ -593,7 +593,7 @@ int inst_new_object_array(inst_params_s *params)
   location_s *new_location = it.get_new_location_ptr();
   new_location->v_type = c_bi_class_array;
   new_location->v_reference_cnt.atomic_set(1);
-  new_location->v_data_ptr = (basic_64b)object_array;
+  new_location->v_data_ptr = (pointer_array_s *)object_array;
 
   pointer &trg_location = it.data_stack[stack_base + code[inoa_stack_trg]];
   it.release_location_ptr((location_s *)trg_location);
@@ -640,7 +640,7 @@ int inst_type_identification(inst_params_s *params)
   location_s *new_location = it.get_new_location_ptr();
   new_location->v_type = c_bi_class_type;
   new_location->v_reference_cnt.atomic_set(1);
-  new_location->v_data_ptr = (basic_64b)object_location->v_type;
+  new_location->v_data_ptr = (unsigned)object_location->v_type;
 
   pointer &trg_location = it.data_stack[stack_base + code[iti_stack_trg]];
   it.release_location_ptr((location_s *)trg_location);
@@ -980,7 +980,7 @@ int inst_switch_test(inst_params_s *params)
   location_s *blank_location = it.get_new_location_ptr();
   blank_location->v_type = c_bi_class_blank;
   blank_location->v_reference_cnt.atomic_set(1);
-  blank_location->v_data_ptr = (basic_64b)index_array;
+  blank_location->v_data_ptr = (ui_array_s *)index_array;
 
   unsigned value_cnt = code[ist_value_cnt];
   if (value_cnt > 1)

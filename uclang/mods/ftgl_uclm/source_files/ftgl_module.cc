@@ -238,7 +238,7 @@ void bic_gl_vertex_buffer_consts(location_array_s &const_locations)
 
 void bic_gl_vertex_buffer_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (gl_vertex_buffer_s *)NULL;
 }/*}}}*/
 
 void bic_gl_vertex_buffer_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -359,7 +359,7 @@ bool bic_gl_vertex_buffer_method_GlVertexBuffer_1(interpreter_thread_s &it,unsig
 
   vb_ptr->vert_size = vert_size;
 
-  dst_location->v_data_ptr = (basic_64b)vb_ptr;
+  dst_location->v_data_ptr = (gl_vertex_buffer_s *)vb_ptr;
 
   return true;
 }/*}}}*/
@@ -762,7 +762,7 @@ void bic_gl_font_consts(location_array_s &const_locations)
 
 void bic_gl_font_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (gl_font_s *)NULL;
 }/*}}}*/
 
 void bic_gl_font_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -850,7 +850,7 @@ bool bic_gl_font_method_GlFont_4(interpreter_thread_s &it,unsigned stack_base,ul
   glf_ptr->atlas_ptr = atlas_ptr;
   glf_ptr->font_ptr = font_ptr;
 
-  dst_location->v_data_ptr = (basic_64b)glf_ptr;
+  dst_location->v_data_ptr = (gl_font_s *)glf_ptr;
 
   return true;
 }/*}}}*/
@@ -864,9 +864,8 @@ bool bic_gl_font_method_height_0(interpreter_thread_s &it,unsigned stack_base,ul
   texture_font_t *font_ptr = glf_ptr->font_ptr;
 
   double result = font_ptr->height;
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
 
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/
@@ -880,9 +879,8 @@ bool bic_gl_font_method_linegap_0(interpreter_thread_s &it,unsigned stack_base,u
   texture_font_t *font_ptr = glf_ptr->font_ptr;
 
   double result = font_ptr->linegap;
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
 
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/
@@ -896,9 +894,8 @@ bool bic_gl_font_method_ascender_0(interpreter_thread_s &it,unsigned stack_base,
   texture_font_t *font_ptr = glf_ptr->font_ptr;
 
   double result = font_ptr->ascender;
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
 
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/
@@ -912,9 +909,8 @@ bool bic_gl_font_method_descender_0(interpreter_thread_s &it,unsigned stack_base
   texture_font_t *font_ptr = glf_ptr->font_ptr;
 
   double result = font_ptr->descender;
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
 
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/
@@ -1160,7 +1156,7 @@ void bic_gl_font_buffer_consts(location_array_s &const_locations)
 
 void bic_gl_font_buffer_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (gl_font_buffer_s *)NULL;
 }/*}}}*/
 
 void bic_gl_font_buffer_clear(interpreter_thread_s &it,location_s *location_ptr)

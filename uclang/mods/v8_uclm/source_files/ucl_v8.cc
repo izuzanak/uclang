@@ -83,7 +83,7 @@ Handle<Value> v8_c::create_v8_object(interpreter_thread_s &it,location_s *locati
       }
     case c_bi_class_float:
       {
-        return Number::New(*((double *)&location_ptr->v_data_ptr));
+        return Number::New((double)location_ptr->v_data_ptr);
       }
     case c_bi_class_string:
       {
@@ -141,8 +141,7 @@ location_s *v8_c::v8_object_value(interpreter_thread_s &it,Handle<Value> hnd_val
   {
     double value = hnd_value->NumberValue();
 
-    basic_64b &v_data_ptr = *((basic_64b *)&value);
-    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);
     return new_location;
   }
   else if (hnd_value->IsString())

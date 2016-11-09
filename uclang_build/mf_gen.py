@@ -701,8 +701,8 @@ class module_c:
 configuration = configuration_c()
 
 # set build and link compiler options
-opt_build = "-std=c++11 -O2 -DNDEBUG -fPIC " # -DNDEBUG
-#opt_build = "-O2 -DNDEBUG -fPIC " # -DNDEBUG
+opt_build = "-std=c++11 -O3 -DNDEBUG -fPIC " # -DNDEBUG
+#opt_build = "-std=c++11 -O3 -msse4.2 -DNDEBUG -fPIC " # -DNDEBUG
 opt_link = ""
 
 if configuration.shell_type == configuration.C_SHELL_TYPE_BASH:
@@ -713,7 +713,7 @@ else:
   assert False
 
 if configuration.compiler_type == configuration.C_COMPILER_GCC:
-  opt_build += "$(OPT) -Wall -fno-strict-aliasing "
+  opt_build += "$(OPT) -Wall "
 
   if configuration.shell_type == configuration.C_SHELL_TYPE_BASH:
     opt_link += "$(OPT) -ldl -lpthread "
@@ -1589,8 +1589,8 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build + "-std=c++11 `llvm-config --cppflags` ", # CXX options
-      opt_link + "`llvm-config --ldflags --libs core jit native` -lz -ltinfo ", # CXX link options
+      opt_build + "-std=c++11 `llvm-config-3.5 --cppflags` ", # CXX options
+      opt_link + "`llvm-config-3.5 --ldflags --libs core jit native` -lz -ltinfo ", # CXX link options
       "", # CXX defines
       [],
       [],

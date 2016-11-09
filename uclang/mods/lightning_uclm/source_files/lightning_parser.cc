@@ -3046,7 +3046,7 @@ void ltg_parser_s::instr_movr(unsigned a_type_trg,unsigned a_type_src,int a_reg_
   }
 }/*}}}*/
 
-void ltg_parser_s::instr_movi(unsigned a_type_trg,unsigned a_type_src,int a_reg_trg,basic_64b a_value)
+void ltg_parser_s::instr_movi(unsigned a_type_trg,unsigned a_type_src,int a_reg_trg,v_data_type a_value)
 {/*{{{*/
   switch (a_type_trg)
   {

@@ -192,7 +192,7 @@ bool UclNode::Initialize(const char **a_modules)
       location_s *new_location = thread->get_new_location_ptr();
       new_location->v_type = c_bi_class_thread;
       new_location->v_reference_cnt.atomic_set(1);
-      new_location->v_data_ptr = (basic_64b)new_thread;
+      new_location->v_data_ptr = (thread_s *)new_thread;
 
       thread->thread_location = (pointer)new_location;
     }

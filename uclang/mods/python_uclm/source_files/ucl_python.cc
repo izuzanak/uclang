@@ -167,7 +167,7 @@ PyObject *python_c::create_py_object(interpreter_thread_s &it,location_s *locati
       }/*}}}*/
     case c_bi_class_float:
       {
-        return PyFloat_FromDouble(*((double *)&location_ptr->v_data_ptr));
+        return PyFloat_FromDouble((double)location_ptr->v_data_ptr);
       }
     case c_bi_class_string:
       {
@@ -317,8 +317,7 @@ location_s *python_c::py_object_value(interpreter_thread_s &it,PyObject *pyo_obj
   {
     double value = PyFloat_AsDouble(pyo_obj);
 
-    basic_64b &v_data_ptr = *((basic_64b *)&value);
-    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);
     return new_location;
   }
   else if (PyString_Check(pyo_obj))

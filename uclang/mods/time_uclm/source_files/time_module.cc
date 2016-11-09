@@ -183,7 +183,7 @@ void bic_time_consts(location_array_s &const_locations)
 
 void bic_time_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)0;
+  location_ptr->v_data_ptr = (long long unsigned)0;
 }/*}}}*/
 
 void bic_time_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -220,13 +220,13 @@ bool bic_time_method_Time_0(interpreter_thread_s &it,unsigned stack_base,uli *op
   timeval tv;
   gettimeofday(&tv,NULL);
 
-  ((location_s *)dst_location)->v_data_ptr = (basic_64b)(tv.tv_sec*1000000000LLU + tv.tv_usec*1000LLU);
+  ((location_s *)dst_location)->v_data_ptr = (long long unsigned)(tv.tv_sec*1000000000LLU + tv.tv_usec*1000LLU);
 #elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
   FILETIME ft;
   GetSystemTimeAsFileTime(&ft);
 
   ULARGE_INTEGER ularge_int = { ft.dwLowDateTime,ft.dwHighDateTime };
-  ((location_s *)dst_location)->v_data_ptr = (basic_64b)((ularge_int.QuadPart - 116444736000000000ULL)*100LLU);
+  ((location_s *)dst_location)->v_data_ptr = (long long unsigned)((ularge_int.QuadPart - 116444736000000000ULL)*100LLU);
 #else
   exception_s *new_exception = exception_s::throw_exception(it,c_error_BUILT_IN_NOT_IMPLEMENTED_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
   BIC_EXCEPTION_PUSH_METHOD_RI("Time#0");
@@ -253,7 +253,7 @@ bool bic_time_method_Time_1(interpreter_thread_s &it,unsigned stack_base,uli *op
     break;
 
     case c_bi_class_float:
-      time = (long long unsigned)*((double *)&src_0_location->v_data_ptr);
+      time = (long long unsigned)(double)src_0_location->v_data_ptr;
       break;
 
     case c_bi_class_string:
@@ -319,7 +319,7 @@ bool bic_time_method_Time_1(interpreter_thread_s &it,unsigned stack_base,uli *op
       // - process time value -
       if (src_0_location->v_type == c_bi_class_time)
       {
-        time = *((long long unsigned *)&src_0_location->v_data_ptr);
+        time = (long long unsigned)src_0_location->v_data_ptr;
       }
 
       // - ERROR -
@@ -335,7 +335,7 @@ bool bic_time_method_Time_1(interpreter_thread_s &it,unsigned stack_base,uli *op
     }
   }
 
-  ((location_s *)dst_location)->v_data_ptr = (basic_64b)time;
+  ((location_s *)dst_location)->v_data_ptr = (long long unsigned)time;
 
   return true;
 }/*}}}*/
@@ -462,16 +462,16 @@ bool bic_time_method_datetime_0(interpreter_thread_s &it,unsigned stack_base,uli
   } while(++l_ptr < l_ptr_end);
   
   // - set system time values -
-  ((location_s *)array_ptr->data[0])->v_data_ptr = (basic_64b)datetime.year;
-  ((location_s *)array_ptr->data[1])->v_data_ptr = (basic_64b)datetime.month;
-  ((location_s *)array_ptr->data[2])->v_data_ptr = (basic_64b)datetime.day;
-  ((location_s *)array_ptr->data[3])->v_data_ptr = (basic_64b)datetime.wday;
-  ((location_s *)array_ptr->data[4])->v_data_ptr = (basic_64b)datetime.hour;
-  ((location_s *)array_ptr->data[5])->v_data_ptr = (basic_64b)datetime.min;
-  ((location_s *)array_ptr->data[6])->v_data_ptr = (basic_64b)datetime.sec;
-  ((location_s *)array_ptr->data[7])->v_data_ptr = (basic_64b)datetime.msec;
-  ((location_s *)array_ptr->data[8])->v_data_ptr = (basic_64b)datetime.usec;
-  ((location_s *)array_ptr->data[9])->v_data_ptr = (basic_64b)datetime.nsec;
+  ((location_s *)array_ptr->data[0])->v_data_ptr = (long long int)datetime.year;
+  ((location_s *)array_ptr->data[1])->v_data_ptr = (long long int)datetime.month;
+  ((location_s *)array_ptr->data[2])->v_data_ptr = (long long int)datetime.day;
+  ((location_s *)array_ptr->data[3])->v_data_ptr = (long long int)datetime.wday;
+  ((location_s *)array_ptr->data[4])->v_data_ptr = (long long int)datetime.hour;
+  ((location_s *)array_ptr->data[5])->v_data_ptr = (long long int)datetime.min;
+  ((location_s *)array_ptr->data[6])->v_data_ptr = (long long int)datetime.sec;
+  ((location_s *)array_ptr->data[7])->v_data_ptr = (long long int)datetime.msec;
+  ((location_s *)array_ptr->data[8])->v_data_ptr = (long long int)datetime.usec;
+  ((location_s *)array_ptr->data[9])->v_data_ptr = (long long int)datetime.nsec;
   
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
   BIC_SET_RESULT(new_location);

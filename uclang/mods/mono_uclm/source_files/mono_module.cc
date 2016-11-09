@@ -372,7 +372,7 @@ void bic_mono_assembly_consts(location_array_s &const_locations)
 
 void bic_mono_assembly_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (pointer)NULL;
 }/*}}}*/
 
 void bic_mono_assembly_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -754,7 +754,7 @@ void bic_mono_class_consts(location_array_s &const_locations)
 
 void bic_mono_class_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (MonoClass *)NULL;
 }/*}}}*/
 
 void bic_mono_class_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1044,7 +1044,7 @@ void bic_mono_object_consts(location_array_s &const_locations)
 
 void bic_mono_object_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)0;
+  location_ptr->v_data_ptr = (guint32)0;
 }/*}}}*/
 
 void bic_mono_object_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1258,7 +1258,7 @@ bool bic_mono_object_method_MonoObject_1(interpreter_thread_s &it,unsigned stack
   guint32 gchandle = mono_c::gchandle_new(mono_obj);
 
   // - set mono object handle -
-  dst_location->v_data_ptr = (basic_64b)gchandle;
+  dst_location->v_data_ptr = (guint32)gchandle;
 
   return true;
 }/*}}}*/
@@ -1497,7 +1497,7 @@ void bic_mono_property_consts(location_array_s &const_locations)
 
 void bic_mono_property_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (mono_property_s *)NULL;
 }/*}}}*/
 
 void bic_mono_property_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1626,7 +1626,7 @@ void bic_mono_item_ref_consts(location_array_s &const_locations)
 
 void bic_mono_item_ref_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (mono_reference_s *)NULL;
 }/*}}}*/
 
 void bic_mono_item_ref_clear(interpreter_thread_s &it,location_s *location_ptr)

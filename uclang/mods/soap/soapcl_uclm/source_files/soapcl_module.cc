@@ -186,7 +186,7 @@ void bic_calc_client_consts(location_array_s &const_locations)
 
 void bic_calc_client_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (soap_env_s *)NULL;
 }/*}}}*/
 
 void bic_calc_client_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -225,7 +225,7 @@ bool bic_calc_client_method_CalcClient_0(interpreter_thread_s &it,unsigned stack
   se_ptr->soap_ptr = soap_new();
   se_ptr->endpoint_ptr = NULL;
 
-  dst_location->v_data_ptr = (basic_64b)se_ptr;
+  dst_location->v_data_ptr = (soap_env_s *)se_ptr;
 
   return true;
 }/*}}}*/
@@ -256,7 +256,7 @@ bool bic_calc_client_method_CalcClient_1(interpreter_thread_s &it,unsigned stack
   src_0_location->v_reference_cnt.atomic_inc();
   se_ptr->endpoint_ptr = src_0_location;
 
-  dst_location->v_data_ptr = (basic_64b)se_ptr;
+  dst_location->v_data_ptr = (soap_env_s *)se_ptr;
 
   return true;
 }/*}}}*/
@@ -320,8 +320,7 @@ bool bic_calc_client_method_add_2(interpreter_thread_s &it,unsigned stack_base,u
   // - clean deserialized data -
   soap_end(se_ptr->soap_ptr);
 
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/
@@ -363,8 +362,7 @@ bool bic_calc_client_method_sub_2(interpreter_thread_s &it,unsigned stack_base,u
   // - clean deserialized data -
   soap_end(se_ptr->soap_ptr);
 
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/
@@ -402,8 +400,7 @@ bool bic_calc_client_method_sqrt_1(interpreter_thread_s &it,unsigned stack_base,
   // - clean deserialized data -
   soap_end(se_ptr->soap_ptr);
 
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/

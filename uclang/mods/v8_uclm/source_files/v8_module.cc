@@ -464,7 +464,7 @@ void bic_v8_context_consts(location_array_s &const_locations)
 
 void bic_v8_context_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (v8_htype)NULL;
 }/*}}}*/
 
 void bic_v8_context_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -503,7 +503,7 @@ bool bic_v8_context_method_V8Context_0(interpreter_thread_s &it,unsigned stack_b
   // - create new context -
   Persistent<Context> per_context = Context::New();
 
-  dst_location->v_data_ptr = (basic_64b)*((v8_htype *)&per_context);
+  dst_location->v_data_ptr = (v8_htype)*((v8_htype *)&per_context);
 
   return true;
 }/*}}}*/
@@ -554,7 +554,7 @@ bool bic_v8_context_method_global_object_0(interpreter_thread_s &it,unsigned sta
   Handle<v8::Object> hnd_value = per_context->Global();
   Persistent<Value> per_value = Persistent<Value>::New(hnd_value);
 
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_v8_object,(basic_64b)*((v8_htype *)&per_value));
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_v8_object,(v8_htype)*((v8_htype *)&per_value));
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -642,7 +642,7 @@ void bic_v8_script_consts(location_array_s &const_locations)
 
 void bic_v8_script_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (v8_htype)NULL;
 }/*}}}*/
 
 void bic_v8_script_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -702,7 +702,7 @@ bool bic_v8_script_method_compile_1(interpreter_thread_s &it,unsigned stack_base
 
   Persistent<Script> per_script = Persistent<Script>::New(hnd_script);
 
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_v8_script,(basic_64b)*((v8_htype *)&per_script));
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_v8_script,(v8_htype)*((v8_htype *)&per_script));
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -732,7 +732,7 @@ bool bic_v8_script_method_run_0(interpreter_thread_s &it,unsigned stack_base,uli
 
   Persistent<Value> per_result = Persistent<Value>::New(hnd_result);
 
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_v8_object,(basic_64b)*((v8_htype *)&per_result));
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_v8_object,(v8_htype)*((v8_htype *)&per_result));
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -840,7 +840,7 @@ void bic_v8_heap_stat_consts(location_array_s &const_locations)
 
 void bic_v8_heap_stat_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (HeapStatistics *)NULL;
 }/*}}}*/
 
 void bic_v8_heap_stat_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -877,7 +877,7 @@ bool bic_v8_heap_stat_method_V8HeapStat_0(interpreter_thread_s &it,unsigned stac
   // - retrieve v8 heap statistics -
   V8::GetHeapStatistics(hs_ptr);
 
-  dst_location->v_data_ptr = (basic_64b)hs_ptr;
+  dst_location->v_data_ptr = (HeapStatistics *)hs_ptr;
 
   return true;
 }/*}}}*/
@@ -1081,7 +1081,7 @@ void bic_v8_object_consts(location_array_s &const_locations)
 
 void bic_v8_object_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (v8_htype)NULL;
 }/*}}}*/
 
 void bic_v8_object_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1167,7 +1167,7 @@ bool bic_v8_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base
   Handle<Value> hnd_result = Handle<Function>::Cast(hnd_fun)->Call(hnd_obj,param_cnt,hnd_params);
   Persistent<Value> per_result = Persistent<Value>::New(hnd_result);
 
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_v8_object,(basic_64b)*((v8_htype *)&per_result));
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_v8_object,(v8_htype)*((v8_htype *)&per_result));
 
   pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
@@ -1299,7 +1299,7 @@ bool bic_v8_object_method_V8Object_1(interpreter_thread_s &it,unsigned stack_bas
   }
 
   Persistent<Value> per_value = Persistent<Value>::New(hnd_value);
-  dst_location->v_data_ptr = (basic_64b)*((v8_htype *)&per_value);
+  dst_location->v_data_ptr = (v8_htype)*((v8_htype *)&per_value);
 
   return true;
 }/*}}}*/
@@ -1426,7 +1426,7 @@ bool bic_v8_object_method_get_prop_1(interpreter_thread_s &it,unsigned stack_bas
   Handle<Value> hnd_result = Handle<Object>::Cast(hnd_dst)->Get(hnd_src_0);
   Persistent<Value> per_result = Persistent<Value>::New(hnd_result);
 
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_v8_object,(basic_64b)*((v8_htype *)&per_result));
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_v8_object,(v8_htype)*((v8_htype *)&per_result));
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -1549,7 +1549,7 @@ bool bic_v8_object_method_del_prop_1(interpreter_thread_s &it,unsigned stack_bas
   Handle<Value> hnd_result = Handle<Object>::Cast(hnd_dst)->FUNCTION();\
   Persistent<Value> per_result = Persistent<Value>::New(hnd_result);\
 \
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_v8_object,(basic_64b)*((v8_htype *)&per_result));\
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_v8_object,(v8_htype)*((v8_htype *)&per_result));\
   BIC_SET_RESULT(new_location);\
 \
   return true;\
@@ -1632,7 +1632,7 @@ bool bic_v8_object_method_construct_1(interpreter_thread_s &it,unsigned stack_ba
   Handle<Value> hnd_result = Handle<Object>::Cast(hnd_dst)->CallAsConstructor(param_cnt,hnd_params);
   Persistent<Value> per_result = Persistent<Value>::New(hnd_result);
 
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_v8_object,(basic_64b)*((v8_htype *)&per_result));
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_v8_object,(v8_htype)*((v8_htype *)&per_result));
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -1852,7 +1852,7 @@ void bic_v8_reference_consts(location_array_s &const_locations)
 
 void bic_v8_reference_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (v8_reference_s *)NULL;
 }/*}}}*/
 
 void bic_v8_reference_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1894,7 +1894,7 @@ bool bic_v8_reference_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
   Persistent<Value> per_src_0 = Persistent<Value>::New(hnd_src_0);
 
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_v8_object,(basic_64b)*((v8_htype *)&per_src_0));
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_v8_object,(v8_htype)*((v8_htype *)&per_src_0));
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -1910,7 +1910,7 @@ bool bic_v8_reference_method_get_0(interpreter_thread_s &it,unsigned stack_base,
   Handle<Value> hnd_result = ((v8_reference_s *)dst_location->v_data_ptr)->get();
   Persistent<Value> per_result = Persistent<Value>::New(hnd_result);
 
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_v8_object,(basic_64b)*((v8_htype *)&per_result));
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_v8_object,(v8_htype)*((v8_htype *)&per_result));
   BIC_SET_RESULT(new_location);
 
   return true;

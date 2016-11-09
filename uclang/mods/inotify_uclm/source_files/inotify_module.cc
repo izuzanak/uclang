@@ -200,7 +200,7 @@ void bic_inotify_consts(location_array_s &const_locations)
 #define CREATE_INOTIFY_WATCH_FLAG_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_INOTIFY_WATCH_FLAG_BIC_STATIC(IN_ACCESS);
@@ -232,7 +232,7 @@ void bic_inotify_consts(location_array_s &const_locations)
 
 void bic_inotify_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)-1;
+  location_ptr->v_data_ptr = (int)-1;
 }/*}}}*/
 
 void bic_inotify_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -274,7 +274,7 @@ bool bic_inotify_method_Inotify_0(interpreter_thread_s &it,unsigned stack_base,u
   }
 
   // - set destination data pointer -
-  dst_location->v_data_ptr = (basic_64b)ntfy_fd;
+  dst_location->v_data_ptr = (int)ntfy_fd;
 
   return true;
 }/*}}}*/
@@ -502,7 +502,7 @@ void bic_inotify_watch_consts(location_array_s &const_locations)
 
 void bic_inotify_watch_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (inotify_watch_s *)NULL;
 }/*}}}*/
 
 void bic_inotify_watch_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -659,7 +659,7 @@ void bic_inotify_event_consts(location_array_s &const_locations)
 
 void bic_inotify_event_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (inotify_event_s *)NULL;
 }/*}}}*/
 
 void bic_inotify_event_clear(interpreter_thread_s &it,location_s *location_ptr)

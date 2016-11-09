@@ -206,7 +206,7 @@ bool ltg_pa_function(ltg_parser_s &_this)
       val_record_s &val_record = val_records[*pi_ptr];
 
       // - retrieve parameter value -
-      val_record.value = (basic_64b)jit_arg();
+      val_record.value = jit_arg();
 
     } while(++param_idx,++pi_ptr < pi_ptr_end);
   }
@@ -1366,7 +1366,7 @@ bool ltg_pa_const_f32(ltg_parser_s &_this)
 
   val_record_s &val_record = val_records.last();
   val_record.type.set(c_val_type_f32,0,c_val_modifier_constant);
-  val_record.value = *((basic_64b *)&const_float);
+  val_record.value = const_float;
   val_record.live_start = c_idx_not_exist;
 
   // - push value to expression stack -
@@ -1399,7 +1399,7 @@ bool ltg_pa_const_f64(ltg_parser_s &_this)
 
   val_record_s &val_record = val_records.last();
   val_record.type.set(c_val_type_f64,0,c_val_modifier_constant);
-  val_record.value = *((basic_64b *)&const_float);
+  val_record.value = const_float;
   val_record.live_start = c_idx_not_exist;
 
   // - push value to expression stack -

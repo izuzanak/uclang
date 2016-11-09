@@ -231,8 +231,7 @@ built_in_variable_s ga_real_genome_variables[] =
 \
       /* - retrieve gene value - */\
       double value = genome_ptr->gene(idx);\
-      basic_64b &v_data_ptr = *((basic_64b *)&value);\
-      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);\
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);\
       array_ptr->push(new_location);\
 \
     } while(++idx < genome_size);\
@@ -273,7 +272,7 @@ void bic_ga_real_genome_consts(location_array_s &const_locations)
 
 void bic_ga_real_genome_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ga_real_genome_s *)NULL;
 }/*}}}*/
 
 void bic_ga_real_genome_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -364,7 +363,7 @@ bool bic_ga_real_genome_method_GaRealGenome_4(interpreter_thread_s &it,unsigned 
   src_3_location->v_reference_cnt.atomic_inc();
   grg_ptr->objective_dlg = src_3_location;
 
-  dst_location->v_data_ptr = (basic_64b)grg_ptr;
+  dst_location->v_data_ptr = (ga_real_genome_s *)grg_ptr;
 
   return true;
 }/*}}}*/
@@ -673,7 +672,7 @@ void bic_ga_tmp_real_genome_consts(location_array_s &const_locations)
 
 void bic_ga_tmp_real_genome_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (GARealGenome *)NULL;
 }/*}}}*/
 
 void bic_ga_tmp_real_genome_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -818,7 +817,7 @@ void bic_ga_steady_state_consts(location_array_s &const_locations)
 
 void bic_ga_steady_state_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ga_steady_state_s *)NULL;
 }/*}}}*/
 
 void bic_ga_steady_state_clear(interpreter_thread_s &it,location_s *location_ptr)

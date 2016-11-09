@@ -286,7 +286,7 @@ void bic_av_format_consts(location_array_s &const_locations)
 #define CREATE_AVMEDIA_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_AVMEDIA_TYPE_BIC_STATIC(AVMEDIA_TYPE_UNKNOWN);
@@ -301,7 +301,7 @@ void bic_av_format_consts(location_array_s &const_locations)
 
 void bic_av_format_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (av_format_s *)NULL;
 }/*}}}*/
 
 void bic_av_format_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -379,7 +379,7 @@ bool bic_av_format_method_AvFormat_1(interpreter_thread_s &it,unsigned stack_bas
   avf_ptr->codec_ctxs = (AVCodecContext **)cmalloc(format_ctx->nb_streams*sizeof(AVCodecContext *));
   memset(avf_ptr->codec_ctxs,0,format_ctx->nb_streams*sizeof(AVCodecContext *));
 
-  dst_location->v_data_ptr = (basic_64b)avf_ptr;
+  dst_location->v_data_ptr = (av_format_s *)avf_ptr;
 
   return true;
 }/*}}}*/
@@ -711,7 +711,7 @@ void bic_av_stream_consts(location_array_s &const_locations)
 
 void bic_av_stream_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (av_stream_s *)NULL;
 }/*}}}*/
 
 void bic_av_stream_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -862,7 +862,7 @@ void bic_av_video_frame_consts(location_array_s &const_locations)
 
 void bic_av_video_frame_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (av_frame_s *)NULL;
 }/*}}}*/
 
 void bic_av_video_frame_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1047,7 +1047,7 @@ void bic_av_audio_frame_consts(location_array_s &const_locations)
 
 void bic_av_audio_frame_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (av_frame_s *)NULL;
 }/*}}}*/
 
 void bic_av_audio_frame_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1199,7 +1199,7 @@ void bic_av_picture_consts(location_array_s &const_locations)
 #define CREATE_AV_PICTURE_AV_PIX_FMT_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_AV_PICTURE_AV_PIX_FMT_BIC_STATIC(AV_PIX_FMT_RGB24);
@@ -1211,7 +1211,7 @@ void bic_av_picture_consts(location_array_s &const_locations)
 
 void bic_av_picture_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (av_picture_s *)NULL;
 }/*}}}*/
 
 void bic_av_picture_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1296,7 +1296,7 @@ bool bic_av_picture_method_AvPicture_3(interpreter_thread_s &it,unsigned stack_b
   avp_ptr->height = height;
   avp_ptr->format = format;
 
-  dst_location->v_data_ptr = (basic_64b)avp_ptr;
+  dst_location->v_data_ptr = (av_picture_s *)avp_ptr;
 
   return true;
 }/*}}}*/
@@ -1518,7 +1518,7 @@ void bic_av_converter_consts(location_array_s &const_locations)
 
 void bic_av_converter_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (SwsContext *)NULL;
 }/*}}}*/
 
 void bic_av_converter_clear(interpreter_thread_s &it,location_s *location_ptr)

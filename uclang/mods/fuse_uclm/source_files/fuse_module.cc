@@ -301,7 +301,7 @@ void bic_fuse_channel_consts(location_array_s &const_locations)
 
 void bic_fuse_channel_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (fuse_channel_s *)NULL;
 }/*}}}*/
 
 void bic_fuse_channel_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -372,7 +372,7 @@ bool bic_fuse_channel_method_FuseChannel_2(interpreter_thread_s &it,unsigned sta
   // - copy fuse channel mountpoint -
   fch_ptr->mountpoint = *mountpoint;
 
-  dst_location->v_data_ptr = (basic_64b)fch_ptr;
+  dst_location->v_data_ptr = (fuse_channel_s *)fch_ptr;
 
   return true;
 }/*}}}*/
@@ -503,7 +503,7 @@ void bic_fuse_ops_consts(location_array_s &const_locations)
 #define CREATE_FUSE_OPS_OPERATION_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_FUSE_OPS_OPERATION_TYPE_BIC_STATIC(c_fuse_getattr);
@@ -555,7 +555,7 @@ void bic_fuse_ops_consts(location_array_s &const_locations)
 
 void bic_fuse_ops_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (fuse_operations_s *)NULL;
 }/*}}}*/
 
 void bic_fuse_ops_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -719,7 +719,7 @@ bool bic_fuse_ops_method_FuseOps_1(interpreter_thread_s &it,unsigned stack_base,
     } while((p_ptr += 2) < p_ptr_end);
   }
 
-  dst_location->v_data_ptr = (basic_64b)fops_ptr;
+  dst_location->v_data_ptr = (fuse_operations_s *)fops_ptr;
 
   return true;
 }/*}}}*/
@@ -878,7 +878,7 @@ void bic_fuse_handle_consts(location_array_s &const_locations)
 #define CREATE_FUSE_HANDLE_ERROR_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_FUSE_HANDLE_ERROR_TYPE_BIC_STATIC(EPERM);        /* Operation not permitted */
@@ -943,7 +943,7 @@ void bic_fuse_handle_consts(location_array_s &const_locations)
 
 void bic_fuse_handle_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (fuse_handle_s *)NULL;
 }/*}}}*/
 
 void bic_fuse_handle_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1037,7 +1037,7 @@ bool bic_fuse_handle_method_FuseHandle_3(interpreter_thread_s &it,unsigned stack
   ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
   fhnd_ptr->private_data_ptr = (location_s *)it.blank_location;
 
-  dst_location->v_data_ptr = (basic_64b)fhnd_ptr;
+  dst_location->v_data_ptr = (fuse_handle_s *)fhnd_ptr;
 
   return true;
 }/*}}}*/
@@ -1272,7 +1272,7 @@ void bic_fuse_stat_consts(location_array_s &const_locations)
 #define CREATE_FUSE_STAT_FILE_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_FUSE_STAT_FILE_TYPE_BIC_STATIC(S_IFMT);

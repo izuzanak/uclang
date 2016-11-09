@@ -5221,7 +5221,7 @@ inline void UclVar::BLANK()
   location_s *tmp_location = it_ptr->get_new_location_ptr();
   tmp_location->v_type = c_bi_class_blank;
   tmp_location->v_reference_cnt.atomic_set(1);
-  tmp_location->v_data_ptr = 0;
+  tmp_location->v_data_ptr = (int)0;
 
   location_ptr = it_ptr->get_new_reference(&tmp_location);
   it_ptr->release_location_ptr(tmp_location);
@@ -5232,7 +5232,7 @@ inline void UclVar::CHAR(char a_value)
   location_s *tmp_location = it_ptr->get_new_location_ptr();
   tmp_location->v_type = c_bi_class_char;
   tmp_location->v_reference_cnt.atomic_set(1);
-  tmp_location->v_data_ptr = (basic_64b)a_value;
+  tmp_location->v_data_ptr = (char)a_value;
 
   location_ptr = it_ptr->get_new_reference(&tmp_location);
   it_ptr->release_location_ptr(tmp_location);
@@ -5243,7 +5243,7 @@ inline void UclVar::INTEGER(long long int a_value)
   location_s *tmp_location = it_ptr->get_new_location_ptr();
   tmp_location->v_type = c_bi_class_integer;
   tmp_location->v_reference_cnt.atomic_set(1);
-  tmp_location->v_data_ptr = (basic_64b)a_value;
+  tmp_location->v_data_ptr = (long long int)a_value;
 
   location_ptr = it_ptr->get_new_reference(&tmp_location);
   it_ptr->release_location_ptr(tmp_location);
@@ -5254,7 +5254,7 @@ inline void UclVar::FLOAT(double a_value)
   location_s *tmp_location = it_ptr->get_new_location_ptr();
   tmp_location->v_type = c_bi_class_float;
   tmp_location->v_reference_cnt.atomic_set(1);
-  tmp_location->v_data_ptr = *((basic_64b *)&a_value);
+  tmp_location->v_data_ptr = (double)a_value;
 
   location_ptr = it_ptr->get_new_reference(&tmp_location);
   it_ptr->release_location_ptr(tmp_location);
@@ -5268,7 +5268,7 @@ inline void UclVar::STRING(unsigned a_length,const char *a_data)
   location_s *tmp_location = it_ptr->get_new_location_ptr();
   tmp_location->v_type = c_bi_class_string;
   tmp_location->v_reference_cnt.atomic_set(1);
-  tmp_location->v_data_ptr = (basic_64b)string_ptr;
+  tmp_location->v_data_ptr = (string_s *)string_ptr;
 
   location_ptr = it_ptr->get_new_reference(&tmp_location);
   it_ptr->release_location_ptr(tmp_location);
@@ -5292,7 +5292,7 @@ inline void UclVar::ARRAY(unsigned a_size,const UclVar *a_array)
   location_s *tmp_location = it_ptr->get_new_location_ptr();
   tmp_location->v_type = c_bi_class_array;
   tmp_location->v_reference_cnt.atomic_set(1);
-  tmp_location->v_data_ptr = (basic_64b)array_ptr;
+  tmp_location->v_data_ptr = (pointer_array_s *)array_ptr;
 
   location_ptr = it_ptr->get_new_reference(&tmp_location);
   it_ptr->release_location_ptr(tmp_location);
@@ -5372,7 +5372,7 @@ inline UclVar UclVar::__type()
   location_s *tmp_location = it_ptr->get_new_location_ptr();
   tmp_location->v_type = c_bi_class_type;
   tmp_location->v_reference_cnt.atomic_set(1);
-  tmp_location->v_data_ptr = (basic_64b)it_ptr->get_location_value(location_ptr)->v_type;
+  tmp_location->v_data_ptr = (unsigned)it_ptr->get_location_value(location_ptr)->v_type;
 
   UclVar ret_value(&tmp_location);
   it_ptr->release_location_ptr(tmp_location);

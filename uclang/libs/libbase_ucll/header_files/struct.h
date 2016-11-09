@@ -212,13 +212,49 @@ additions
 lalr_stack_s;
 @end
 
+// - v_data_type typedef -
+union v_data_type
+{
+  char bc;
+  int bi;
+  unsigned ui;
+  long long int lli;
+  long long unsigned llu;
+  double bd;
+  pointer ptr;
+
+  v_data_type() {}
+  v_data_type(char a_bc) { bc = a_bc; }
+  v_data_type(int a_bi) { bi = a_bi; }
+  v_data_type(unsigned a_ui) { ui = a_ui; }
+  v_data_type(long long int a_lli) { lli = a_lli; }
+  v_data_type(long long unsigned a_llu) { llu = a_llu; }
+  v_data_type(double a_bd) { bd = a_bd; }
+  template <class T> v_data_type(T* a_ptr) { ptr = (pointer)a_ptr; }
+
+  operator char () const { return bc; }
+  operator int () const { return bi; }
+  operator unsigned () const { return ui; }
+  operator long long int () const { return lli; }
+  operator long long unsigned () const { return llu; }
+  operator double () const { return bd; }
+  template <class T> operator T* () const { return (T *)ptr; }
+
+  v_data_type& operator=(const v_data_type &a_src) { lli = a_src.lli; return *this; }
+  bool operator==(const v_data_type &a_second) { return lli == a_second.lli; }
+};
+
+@begin
+define v_data_type basic
+@end
+
 // -- location_s --
 @begin
 struct
 <
 unsigned:v_type
 atomic_s:v_reference_cnt
-basic_64b:v_data_ptr
+v_data_type:v_data_ptr
 >
 location_s;
 @end

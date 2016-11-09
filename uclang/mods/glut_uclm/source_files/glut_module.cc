@@ -513,7 +513,7 @@ void bic_glut_consts(location_array_s &const_locations)
 #define CREATE_GLUT_BASIC_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_GLUT_BASIC_BIC_STATIC(GLUT_KEY_F1);
@@ -683,7 +683,7 @@ void bic_glut_consts(location_array_s &const_locations)
 
 void bic_glut_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (glut_s *)NULL;
 }/*}}}*/
 
 void bic_glut_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -741,7 +741,7 @@ bool bic_glut_method_Glut_0(interpreter_thread_s &it,unsigned stack_base,uli *op
   // - set interpreter thread pointer -
   glut_s::it_ptr = &it;
 
-  dst_location->v_data_ptr = (basic_64b)glut_ptr;
+  dst_location->v_data_ptr = (glut_s *)glut_ptr;
 
   return true;
 }/*}}}*/

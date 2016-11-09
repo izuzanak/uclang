@@ -133,7 +133,6 @@ void bic_glew_consts(location_array_s &const_locations)
 
 void bic_glew_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
 }/*}}}*/
 
 void bic_glew_clear(interpreter_thread_s &it,location_s *location_ptr)

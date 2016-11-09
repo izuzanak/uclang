@@ -179,7 +179,7 @@ void bic_gsl_spline_consts(location_array_s &const_locations)
 #define CREATE_INTERPOLATION_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_INTERPOLATION_TYPE_BIC_STATIC(c_gsl_interp_type_linear);
@@ -195,7 +195,7 @@ void bic_gsl_spline_consts(location_array_s &const_locations)
 
 void bic_gsl_spline_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (gsl_spline_s *)NULL;
 }/*}}}*/
 
 void bic_gsl_spline_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -337,7 +337,7 @@ bool bic_gsl_spline_method_GslSpline_3(interpreter_thread_s &it,unsigned stack_b
   spline_ptr->size = size;
 
   // - set gsl_spline destination location -
-  dst_location->v_data_ptr = (basic_64b)spline_ptr;
+  dst_location->v_data_ptr = (gsl_spline_s *)spline_ptr;
 
   return true;
 }/*}}}*/
@@ -388,8 +388,7 @@ bool bic_gsl_spline_method_eval_1(interpreter_thread_s &it,unsigned stack_base,u
     }
   }
 
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/

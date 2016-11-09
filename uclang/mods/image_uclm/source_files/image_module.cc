@@ -488,7 +488,7 @@ void bic_image_consts(location_array_s &const_locations)
 #define CREATE_IMAGE_PIXEL_FORMAT_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_IMAGE_PIXEL_FORMAT_BIC_STATIC(c_image_pixel_format_GRAY8);
@@ -499,7 +499,7 @@ void bic_image_consts(location_array_s &const_locations)
 
 void bic_image_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (image_s *)NULL;
 }/*}}}*/
 
 void bic_image_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -580,7 +580,7 @@ bool bic_image_method_Image_3(interpreter_thread_s &it,unsigned stack_base,uli *
   // - create image content -
   cassert(img_ptr->create(width,height,format));
 
-  dst_location->v_data_ptr = (basic_64b)img_ptr;
+  dst_location->v_data_ptr = (image_s *)img_ptr;
 
   return true;
 }/*}}}*/

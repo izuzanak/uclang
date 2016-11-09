@@ -301,7 +301,7 @@ void bic_stack_consts(location_array_s &const_locations)
 
 void bic_stack_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)it.get_new_array_ptr();
+  location_ptr->v_data_ptr = (pointer_array_s *)it.get_new_array_ptr();
 }/*}}}*/
 
 void bic_stack_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -382,7 +382,7 @@ bool bic_stack_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array
 {/*{{{*/
   pointer_array_s *array_ptr = it.get_new_array_ptr();
 
-  location_ptr->v_data_ptr = (basic_64b)array_ptr;
+  location_ptr->v_data_ptr = (pointer_array_s *)array_ptr;
 
   if (stream.used < sizeof(unsigned))
   {

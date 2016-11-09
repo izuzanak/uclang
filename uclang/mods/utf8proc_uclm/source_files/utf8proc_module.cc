@@ -437,7 +437,7 @@ void bic_unicode_char_consts(location_array_s &const_locations)
 
 void bic_unicode_char_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = 0;
+  location_ptr->v_data_ptr = (utf8proc_int32_t)0;
 }/*}}}*/
 
 void bic_unicode_char_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -476,7 +476,7 @@ bool bic_unicode_char_operator_binary_equal(interpreter_thread_s &it,unsigned st
       result = (utf8proc_int32_t)dst_location->v_data_ptr == (long long int)src_0_location->v_data_ptr;\
       break;\
     case c_bi_class_float:\
-      result = (utf8proc_int32_t)dst_location->v_data_ptr == *((double *)&src_0_location->v_data_ptr);\
+      result = (utf8proc_int32_t)dst_location->v_data_ptr == (double)src_0_location->v_data_ptr;\
       break;\
     default:\
       if (src_0_location->v_type == c_bi_class_unicode_char)\
@@ -571,7 +571,7 @@ bool bic_unicode_char_method_UnicodeChar_1(interpreter_thread_s &it,unsigned sta
     return false;
   }
 
-  dst_location->v_data_ptr = result;
+  dst_location->v_data_ptr = (utf8proc_int32_t)result;
 
   return true;
 }/*}}}*/
@@ -947,7 +947,7 @@ void bic_unicode_string_consts(location_array_s &const_locations)
 
 void bic_unicode_string_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ui_array_s *)NULL;
 }/*}}}*/
 
 void bic_unicode_string_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1198,7 +1198,7 @@ bool bic_unicode_string_method_UnicodeString_1(interpreter_thread_s &it,unsigned
   // - set count of code points -
   ustring_ptr->used = cp_count;
 
-  dst_location->v_data_ptr = (basic_64b)ustring_ptr;
+  dst_location->v_data_ptr = (ui_array_s *)ustring_ptr;
 
   return true;
 }/*}}}*/

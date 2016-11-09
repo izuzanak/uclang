@@ -151,7 +151,7 @@ void bic_node_callback_consts(location_array_s &const_locations)
 
 void bic_node_callback_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (node_callback_s *)NULL;
 }/*}}}*/
 
 void bic_node_callback_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -215,7 +215,7 @@ bool bic_node_callback_method_NodeCallback_2(interpreter_thread_s &it,unsigned s
   nc_ptr->callback_ptr = (void *)src_0_location->v_data_ptr;
   nc_ptr->param_cnt = param_cnt;
 
-  dst_location->v_data_ptr = (basic_64b)nc_ptr;
+  dst_location->v_data_ptr = (node_callback_s *)nc_ptr;
 
   return true;
 }/*}}}*/

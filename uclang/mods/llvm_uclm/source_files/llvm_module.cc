@@ -177,7 +177,7 @@ void bic_llvm_context_consts(location_array_s &const_locations)
 #define CREATE_LLVM_CONTEXT_DATA_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_LLVM_CONTEXT_DATA_TYPE_BIC_STATIC(c_var_type_i8);
@@ -196,7 +196,7 @@ void bic_llvm_context_consts(location_array_s &const_locations)
 
 void bic_llvm_context_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (llvm_context_s *)NULL;
 }/*}}}*/
 
 void bic_llvm_context_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -237,7 +237,7 @@ bool bic_llvm_context_method_LlvmContext_0(interpreter_thread_s &it,unsigned sta
 
   llvmc_ptr->context = context;
 
-  dst_location->v_data_ptr = (basic_64b)llvmc_ptr;
+  dst_location->v_data_ptr = (llvm_context_s *)llvmc_ptr;
 
   return true;
 }/*}}}*/
@@ -343,7 +343,7 @@ void bic_llvm_module_consts(location_array_s &const_locations)
 
 void bic_llvm_module_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (llvm_module_s *)NULL;
 }/*}}}*/
 
 void bic_llvm_module_clear(interpreter_thread_s &it,location_s *location_ptr)

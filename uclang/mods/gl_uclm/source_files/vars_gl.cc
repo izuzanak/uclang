@@ -5204,7 +5204,7 @@ void bic_gl_consts(location_array_s &const_locations)
 #define CREATE_GL_BASIC_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_GL_BASIC_BIC_STATIC(GL_ES_VERSION_2_0);
@@ -5520,7 +5520,7 @@ void bic_gl_consts(location_array_s &const_locations)
 #define CREATE_GL_BASIC_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_GL_BASIC_BIC_STATIC(GL_VERSION_1_1);

@@ -363,7 +363,7 @@ void bic_xml_node_consts(location_array_s &const_locations)
 
 void bic_xml_node_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (xml_node_s *)NULL;
 }/*}}}*/
 
 void bic_xml_node_clear(interpreter_thread_s &it,location_s *location_ptr)

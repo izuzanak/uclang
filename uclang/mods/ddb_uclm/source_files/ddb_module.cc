@@ -239,7 +239,7 @@ void bic_ddb_consts(location_array_s &const_locations)
 
 void bic_ddb_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (DDB *)NULL;
 }/*}}}*/
 
 void bic_ddb_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -309,7 +309,7 @@ bool bic_ddb_method_DDB_2(interpreter_thread_s &it,unsigned stack_base,uli *oper
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)ddb_ptr;
+  dst_location->v_data_ptr = (DDB *)ddb_ptr;
 
   return true;
 }/*}}}*/
@@ -697,7 +697,7 @@ void bic_trace_storage_consts(location_array_s &const_locations)
 
 void bic_trace_storage_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (trace_storage_s *)NULL;
 }/*}}}*/
 
 void bic_trace_storage_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1262,7 +1262,7 @@ void bic_trace_record_consts(location_array_s &const_locations)
 
 void bic_trace_record_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (trace_record_s *)NULL;
 }/*}}}*/
 
 void bic_trace_record_clear(interpreter_thread_s &it,location_s *location_ptr)

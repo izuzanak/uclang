@@ -106,7 +106,7 @@ enum
   location_s *NAME = it.get_new_location_ptr();\
   NAME->v_type = CLASS_IDX;\
   NAME->v_reference_cnt.atomic_set(1);\
-  NAME->v_data_ptr = (basic_64b)(VALUE);\
+  NAME->v_data_ptr = (VALUE);\
   /*}}}*/
 
 #define BIC_CREATE_NEW_LOCATION_REFS(NAME,CLASS_IDX,VALUE,REF_COUNT) \
@@ -114,7 +114,7 @@ enum
   location_s *NAME = it.get_new_location_ptr();\
   NAME->v_type = CLASS_IDX;\
   NAME->v_reference_cnt.atomic_set(REF_COUNT);\
-  NAME->v_data_ptr = (basic_64b)(VALUE);\
+  NAME->v_data_ptr = (VALUE);\
   /*}}}*/
 
 // - set destination macros -
@@ -148,7 +148,7 @@ enum
     if (((location_s *)res_location)->v_type == CLASS_IDX &&\
         ((location_s *)res_location)->v_reference_cnt.value() == 1)\
     {\
-      ((location_s *)res_location)->v_data_ptr = (basic_64b)(VALUE);\
+      ((location_s *)res_location)->v_data_ptr = (VALUE);\
     }\
     else {\
       BIC_CREATE_NEW_LOCATION(new_location,CLASS_IDX,VALUE);\
@@ -171,7 +171,7 @@ enum
   {/*{{{*/\
     if (((location_s *)dst_location)->v_reference_cnt.value() == 1)\
     {\
-      ((location_s *)dst_location)->v_data_ptr = (basic_64b)(VALUE);\
+      ((location_s *)dst_location)->v_data_ptr = (VALUE);\
     }\
     else {\
       BIC_CREATE_NEW_LOCATION(new_location,CLASS_IDX,VALUE);\
@@ -184,7 +184,7 @@ enum
     {\
       if (((location_s *)res_location)->v_reference_cnt.value() == 1)\
       {\
-        ((location_s *)res_location)->v_data_ptr = (basic_64b)(VALUE);\
+        ((location_s *)res_location)->v_data_ptr = (VALUE);\
       }\
       else\
       {\
@@ -232,7 +232,7 @@ enum
     location_s *new_location = it.get_new_location_ptr();\
     new_location->v_type = c_bi_class_string;\
     new_location->v_reference_cnt.atomic_set(1);\
-    new_location->v_data_ptr = (basic_64b)string_ptr;\
+    new_location->v_data_ptr = (string_s *)string_ptr;\
     \
     it.release_location_ptr((location_s *)res_location);\
     res_location = (pointer)new_location;\
@@ -248,7 +248,7 @@ enum
     location_s *new_location = it.get_new_location_ptr();\
     new_location->v_type = c_bi_class_string;\
     new_location->v_reference_cnt.atomic_set(1);\
-    new_location->v_data_ptr = (basic_64b)string_ptr;\
+    new_location->v_data_ptr = (string_s *)string_ptr;\
     \
     it.release_location_ptr((location_s *)res_location);\
     res_location = (pointer)new_location;\
@@ -548,7 +548,7 @@ enum
       location_s *idx_location = IT.get_new_location_ptr();\
       idx_location->v_type = c_bi_class_integer;\
       idx_location->v_reference_cnt.atomic_set(1);\
-      idx_location->v_data_ptr = (basic_64b)(SRC_INDEX);\
+      idx_location->v_data_ptr = (SRC_INDEX);\
       IT.data_stack.push((pointer)idx_location);\
       \
       uli tmp_code[9] = {i_call,2,c_built_in_method_idxs[c_built_in_method_item_1],c_idx_not_exist,c_idx_not_exist,SOURCE_POS,0,1,2};\
@@ -655,7 +655,7 @@ enum
       location_s *idx_location = IT.get_new_location_ptr();\
       idx_location->v_type = c_bi_class_integer;\
       idx_location->v_reference_cnt.atomic_set(1);\
-      idx_location->v_data_ptr = (basic_64b)(SRC_INDEX);\
+      idx_location->v_data_ptr = (SRC_INDEX);\
       IT.data_stack.push((pointer)idx_location);\
       \
       uli tmp_code[9] = {i_call,2,c_built_in_method_idxs[c_built_in_method_next_idx_1],c_idx_not_exist,c_idx_not_exist,SOURCE_POS,0,1,2};\

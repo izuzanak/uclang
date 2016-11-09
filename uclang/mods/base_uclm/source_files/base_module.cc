@@ -1023,7 +1023,7 @@ void bic_char_consts(location_array_s &const_locations)
 
 void bic_char_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)'\0';
+  location_ptr->v_data_ptr = (char)'\0';
 }/*}}}*/
 
 void bic_char_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1040,7 +1040,8 @@ int bic_char_compare(location_s *first_loc,location_s *second_loc)
 
 bool bic_char_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack)
 {/*{{{*/
-  stream.append(sizeof(char),(const char *)&location_ptr->v_data_ptr);
+  char value = (char)location_ptr->v_data_ptr;
+  stream.append(sizeof(char),&value);
 
   return true;
 }/*}}}*/
@@ -1052,10 +1053,10 @@ bool bic_char_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_
     return false;
   }
 
-  char character;
-  stream.from_end(sizeof(char),&character,order_bytes);
+  char value;
+  stream.from_end(sizeof(char),&value,order_bytes);
 
-  location_ptr->v_data_ptr = (basic_64b)character;
+  location_ptr->v_data_ptr = (char)value;
 
   return true;
 }/*}}}*/
@@ -1090,7 +1091,7 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
       result OPERATOR ## = (long long int)src_0_location->v_data_ptr;\
       break;\
     case c_bi_class_float:\
-      result  = (char)(result OPERATOR *((double *)&src_0_location->v_data_ptr));\
+      result  = (char)(result OPERATOR (double)src_0_location->v_data_ptr);\
       break;\
       \
       /* - ERROR - */\
@@ -1202,7 +1203,7 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
       result = (char)dst_location->v_data_ptr OPERATOR (long long int)src_0_location->v_data_ptr;\
       break;\
     case c_bi_class_float:\
-      result = (char)dst_location->v_data_ptr OPERATOR *((double *)&src_0_location->v_data_ptr);\
+      result = (char)dst_location->v_data_ptr OPERATOR (double)src_0_location->v_data_ptr;\
       break;\
       \
       /* - ERROR - */\
@@ -1305,24 +1306,20 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
     \
     unsigned v_type;\
-    basic_64b v_data_ptr;\
+    v_data_type v_data_ptr;\
     \
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
       v_type = c_bi_class_char;\
-      v_data_ptr = (basic_64b)((char)dst_location->v_data_ptr OPERATOR (char)src_0_location->v_data_ptr);\
+      v_data_ptr = (char)((char)dst_location->v_data_ptr OPERATOR (char)src_0_location->v_data_ptr);\
       break;\
     case c_bi_class_integer:\
       v_type = c_bi_class_integer;\
-      v_data_ptr = (basic_64b)((char)dst_location->v_data_ptr OPERATOR (long long int)src_0_location->v_data_ptr);\
+      v_data_ptr = (long long int)((char)dst_location->v_data_ptr OPERATOR (long long int)src_0_location->v_data_ptr);\
       break;\
     case c_bi_class_float:\
-    {\
-      double result = (char)dst_location->v_data_ptr OPERATOR *((double *)&src_0_location->v_data_ptr);\
-      \
       v_type = c_bi_class_float;\
-      v_data_ptr = *((basic_64b *)&result);\
-    }\
+      v_data_ptr = (double)((char)dst_location->v_data_ptr OPERATOR (double)src_0_location->v_data_ptr);\
     break;\
     \
     /* - ERROR - */\
@@ -1382,7 +1379,7 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
       result = (char)dst_location->v_data_ptr == (long long int)src_0_location->v_data_ptr;\
       break;\
     case c_bi_class_float:\
-      result = (char)dst_location->v_data_ptr == *((double *)&src_0_location->v_data_ptr);\
+      result = (char)dst_location->v_data_ptr == (double)src_0_location->v_data_ptr;\
       break;\
     default:\
       result = 0;\
@@ -1451,7 +1448,7 @@ bool bic_char_operator_binary_slash_equal(interpreter_thread_s &it,unsigned stac
   break;
   case c_bi_class_float:
   {
-    double divider = *((double *)&src_0_location->v_data_ptr);
+    double divider = (double)src_0_location->v_data_ptr;
 
     // - ERROR -
     if (divider == 0.0)
@@ -1657,7 +1654,7 @@ bool bic_char_operator_binary_slash(interpreter_thread_s &it,unsigned stack_base
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   unsigned v_type;
-  basic_64b v_data_ptr;
+  v_data_type v_data_ptr;
 
   switch (src_0_location->v_type)
   {
@@ -1673,7 +1670,7 @@ bool bic_char_operator_binary_slash(interpreter_thread_s &it,unsigned stack_base
     }
 
     v_type = c_bi_class_char;
-    v_data_ptr = (basic_64b)((char)dst_location->v_data_ptr / divider) ;
+    v_data_ptr = (char)((char)dst_location->v_data_ptr / divider) ;
   }
   break;
   case c_bi_class_integer:
@@ -1688,12 +1685,12 @@ bool bic_char_operator_binary_slash(interpreter_thread_s &it,unsigned stack_base
     }
 
     v_type = c_bi_class_integer;
-    v_data_ptr = (basic_64b)((char)dst_location->v_data_ptr / divider);
+    v_data_ptr = (long long int)((char)dst_location->v_data_ptr / divider);
   }
   break;
   case c_bi_class_float:
   {
-    double divider = *((double *)&src_0_location->v_data_ptr);
+    double divider = (double)src_0_location->v_data_ptr;
 
     // - ERROR -
     if (divider == 0.0)
@@ -1702,10 +1699,8 @@ bool bic_char_operator_binary_slash(interpreter_thread_s &it,unsigned stack_base
       return false;
     }
 
-    double result = (char)dst_location->v_data_ptr / divider;
-
     v_type = c_bi_class_float;
-    v_data_ptr = *((basic_64b *)&result);
+    v_data_ptr = (double)((char)dst_location->v_data_ptr / divider);
   }
   break;
 
@@ -1731,16 +1726,16 @@ bool bic_char_operator_binary_percent(interpreter_thread_s &it,unsigned stack_ba
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   unsigned v_type;
-  basic_64b v_data_ptr;
+  v_data_type v_data_ptr;
 
   switch (src_0_location->v_type) {
   case c_bi_class_char:
     v_type = c_bi_class_char;
-    v_data_ptr = (basic_64b)((char)dst_location->v_data_ptr % (char)src_0_location->v_data_ptr);
+    v_data_ptr = (char)((char)dst_location->v_data_ptr % (char)src_0_location->v_data_ptr);
     break;
   case c_bi_class_integer:
     v_type = c_bi_class_integer;
-    v_data_ptr = (basic_64b)((char)dst_location->v_data_ptr % (long long int)src_0_location->v_data_ptr);
+    v_data_ptr = (long long int)((char)dst_location->v_data_ptr % (long long int)src_0_location->v_data_ptr);
     break;
   break;
 
@@ -2152,7 +2147,7 @@ void bic_integer_consts(location_array_s &const_locations)
 
 void bic_integer_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)0;
+  location_ptr->v_data_ptr = (long long int)0LL;
 }/*}}}*/
 
 void bic_integer_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2169,7 +2164,8 @@ int bic_integer_compare(location_s *first_loc,location_s *second_loc)
 
 bool bic_integer_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack)
 {/*{{{*/
-  stream.append(sizeof(long long int),(const char *)&location_ptr->v_data_ptr);
+  long long int value = (long long int)location_ptr->v_data_ptr;
+  stream.append(sizeof(long long int),(const char *)&value);
 
   return true;
 }/*}}}*/
@@ -2181,7 +2177,10 @@ bool bic_integer_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_arr
     return false;
   }
 
-  stream.from_end(sizeof(long long int),(char *)&location_ptr->v_data_ptr,order_bytes);
+  long long int value;
+  stream.from_end(sizeof(long long int),(char *)&value,order_bytes);
+
+  location_ptr->v_data_ptr = (long long int)value;
 
   return true;
 }/*}}}*/
@@ -2216,7 +2215,7 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
       result OPERATOR ## = (long long int)src_0_location->v_data_ptr;\
       break;\
     case c_bi_class_float:\
-      result = (long long int)(result OPERATOR *((double *)&src_0_location->v_data_ptr));\
+      result = (long long int)(result OPERATOR (double)src_0_location->v_data_ptr);\
       break;\
       \
       /* - ERROR - */\
@@ -2328,7 +2327,7 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
       result = (long long int)dst_location->v_data_ptr OPERATOR (long long int)src_0_location->v_data_ptr;\
       break;\
     case c_bi_class_float:\
-      result = (long long int)dst_location->v_data_ptr OPERATOR *((double *)&src_0_location->v_data_ptr);\
+      result = (long long int)dst_location->v_data_ptr OPERATOR (double)src_0_location->v_data_ptr;\
       break;\
       \
       /* - ERROR - */\
@@ -2431,24 +2430,20 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
     \
     unsigned v_type;\
-    basic_64b v_data_ptr;\
+    v_data_type v_data_ptr;\
     \
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
       v_type = c_bi_class_integer;\
-      v_data_ptr = (basic_64b)((long long int)dst_location->v_data_ptr OPERATOR (char)src_0_location->v_data_ptr);\
+      v_data_ptr = (long long int)((long long int)dst_location->v_data_ptr OPERATOR (char)src_0_location->v_data_ptr);\
       break;\
     case c_bi_class_integer:\
       v_type = c_bi_class_integer;\
-      v_data_ptr = (basic_64b)((long long int)dst_location->v_data_ptr OPERATOR (long long int)src_0_location->v_data_ptr);\
+      v_data_ptr = (long long int)((long long int)dst_location->v_data_ptr OPERATOR (long long int)src_0_location->v_data_ptr);\
       break;\
     case c_bi_class_float:\
-    {\
-      double result = (long long int)dst_location->v_data_ptr OPERATOR *((double *)&src_0_location->v_data_ptr);\
-      \
       v_type = c_bi_class_float;\
-      v_data_ptr = *((basic_64b *)&result);\
-    }\
+      v_data_ptr = (double)((long long int)dst_location->v_data_ptr OPERATOR (double)src_0_location->v_data_ptr);\
     break;\
     \
     /* - ERROR - */\
@@ -2508,7 +2503,7 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
       result = (long long int)dst_location->v_data_ptr == (long long int)src_0_location->v_data_ptr;\
       break;\
     case c_bi_class_float:\
-      result = (long long int)dst_location->v_data_ptr == *((double *)&src_0_location->v_data_ptr);\
+      result = (long long int)dst_location->v_data_ptr == (double)src_0_location->v_data_ptr;\
       break;\
     default:\
       result = 0;\
@@ -2577,7 +2572,7 @@ bool bic_integer_operator_binary_slash_equal(interpreter_thread_s &it,unsigned s
   break;
   case c_bi_class_float:
   {
-    double divider = *((double *)&src_0_location->v_data_ptr);
+    double divider = (double)src_0_location->v_data_ptr;
 
     // - ERROR -
     if (divider == 0.0)
@@ -2776,25 +2771,21 @@ bool bic_integer_operator_binary_asterisk(interpreter_thread_s &it,unsigned stac
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   unsigned v_type;
-  basic_64b v_data_ptr;
+  v_data_type v_data_ptr;
 
   switch (src_0_location->v_type)
   {
   case c_bi_class_char:
     v_type = c_bi_class_integer;
-    v_data_ptr = (basic_64b)((long long int)dst_location->v_data_ptr * (char)src_0_location->v_data_ptr);
+    v_data_ptr = (long long int)((long long int)dst_location->v_data_ptr * (char)src_0_location->v_data_ptr);
     break;
   case c_bi_class_integer:
     v_type = c_bi_class_integer;
-    v_data_ptr = (basic_64b)((long long int)dst_location->v_data_ptr * (long long int)src_0_location->v_data_ptr);
+    v_data_ptr = (long long int)((long long int)dst_location->v_data_ptr * (long long int)src_0_location->v_data_ptr);
     break;
   case c_bi_class_float:
-  {
-    double result = (long long int)dst_location->v_data_ptr **((double *)&src_0_location->v_data_ptr);
-
     v_type = c_bi_class_float;
-    v_data_ptr = *((basic_64b *)&result);
-  }
+    v_data_ptr = (double)((long long int)dst_location->v_data_ptr * (double)src_0_location->v_data_ptr);
   break;
   case c_bi_class_string:
   {
@@ -2838,7 +2829,7 @@ bool bic_integer_operator_binary_slash(interpreter_thread_s &it,unsigned stack_b
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   unsigned v_type;
-  basic_64b v_data_ptr;
+  v_data_type v_data_ptr;
 
   switch (src_0_location->v_type)
   {
@@ -2854,7 +2845,7 @@ bool bic_integer_operator_binary_slash(interpreter_thread_s &it,unsigned stack_b
     }
 
     v_type = c_bi_class_integer;
-    v_data_ptr = (basic_64b)((long long int)dst_location->v_data_ptr / divider);
+    v_data_ptr = (long long int)((long long int)dst_location->v_data_ptr / divider);
   }
   break;
   case c_bi_class_integer:
@@ -2869,12 +2860,12 @@ bool bic_integer_operator_binary_slash(interpreter_thread_s &it,unsigned stack_b
     }
 
     v_type = c_bi_class_integer;
-    v_data_ptr = (basic_64b)((long long int)dst_location->v_data_ptr / divider);
+    v_data_ptr = (long long int)((long long int)dst_location->v_data_ptr / divider);
   }
   break;
   case c_bi_class_float:
   {
-    double divider = *((double *)&src_0_location->v_data_ptr);
+    double divider = (double)src_0_location->v_data_ptr;
 
     // - ERROR -
     if (divider == 0.0)
@@ -2883,10 +2874,8 @@ bool bic_integer_operator_binary_slash(interpreter_thread_s &it,unsigned stack_b
       return false;
     }
 
-    double result = (long long int)dst_location->v_data_ptr / divider;
-
     v_type = c_bi_class_float;
-    v_data_ptr = *((basic_64b *)&result);
+    v_data_ptr = (double)((long long int)dst_location->v_data_ptr / divider);
   }
   break;
 
@@ -2987,14 +2976,14 @@ bool bic_integer_method_Integer_1(interpreter_thread_s &it,unsigned stack_base,u
     dst_location->v_data_ptr = (long long int)src_0_location->v_data_ptr;
     break;
   case c_bi_class_float:
-    dst_location->v_data_ptr = (long long int)*((double *)&src_0_location->v_data_ptr);
+    dst_location->v_data_ptr = (long long int)(double)src_0_location->v_data_ptr;
     break;
   case c_bi_class_string:
   {
     string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
     char *end_ptr = NULL;
-    dst_location->v_data_ptr = strtoll(string_ptr->data,&end_ptr,0);
+    dst_location->v_data_ptr = (long long int)strtoll(string_ptr->data,&end_ptr,0);
 
     if (string_ptr->size <= 1 || (string_ptr->data + string_ptr->size - 1) != end_ptr)
     {
@@ -3052,7 +3041,7 @@ bool bic_integer_method_Integer_2(interpreter_thread_s &it,unsigned stack_base,u
     }
 
     char *end_ptr = NULL;
-    dst_location->v_data_ptr = strtoll(string_ptr->data,&end_ptr,base);
+    dst_location->v_data_ptr = (long long int)strtoll(string_ptr->data,&end_ptr,base);
 
     if (string_ptr->size <= 1 || (string_ptr->data + string_ptr->size - 1) != end_ptr)
     {
@@ -3393,7 +3382,7 @@ void bic_float_consts(location_array_s &const_locations)
 #define CREATE_FLOAT_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_float;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)*((basic_64b *)&VALUE);\
+  cv_ptr->v_data_ptr = (double)VALUE;\
   cv_ptr++;
 
     double value = INFINITY;
@@ -3408,7 +3397,7 @@ void bic_float_consts(location_array_s &const_locations)
 #define CREATE_FLOAT_CLASS_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_FLOAT_CLASS_BIC_STATIC(FP_NAN);
@@ -3421,7 +3410,7 @@ void bic_float_consts(location_array_s &const_locations)
 
 void bic_float_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  *((double *)&location_ptr->v_data_ptr) = 0.0;
+  location_ptr->v_data_ptr = (double)0.0;
 }/*}}}*/
 
 void bic_float_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -3430,15 +3419,16 @@ void bic_float_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 int bic_float_compare(location_s *first_loc,location_s *second_loc)
 {/*{{{*/
-  double first = *((double *)&first_loc->v_data_ptr);
-  double second = *((double *)&second_loc->v_data_ptr);
+  double first = (double)first_loc->v_data_ptr;
+  double second = (double)second_loc->v_data_ptr;
 
   return first < second ? -1 : (first > second ? 1 : 0);
 }/*}}}*/
 
 bool bic_float_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack)
 {/*{{{*/
-  stream.append(sizeof(double),(const char *)&location_ptr->v_data_ptr);
+  double value = (double)location_ptr->v_data_ptr;
+  stream.append(sizeof(double),(const char *)&value);
 
   return true;
 }/*}}}*/
@@ -3450,7 +3440,10 @@ bool bic_float_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array
     return false;
   }
 
-  stream.from_end(sizeof(double),(char *)&location_ptr->v_data_ptr,order_bytes);
+  double value;
+  stream.from_end(sizeof(double),(char *)&value,order_bytes);
+
+  location_ptr->v_data_ptr = (double)value;
 
   return true;
 }/*}}}*/
@@ -3475,7 +3468,7 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
     pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
     \
-    double result = *((double *)&((location_s *)dst_location)->v_data_ptr);\
+    double result = (double)((location_s *)dst_location)->v_data_ptr;\
     \
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
@@ -3485,7 +3478,7 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
       result OPERATOR ## = (long long int)src_0_location->v_data_ptr;\
       break;\
     case c_bi_class_float:\
-      result OPERATOR ## = *((double *)&src_0_location->v_data_ptr);\
+      result OPERATOR ## = (double)src_0_location->v_data_ptr;\
       break;\
       \
       /* - ERROR - */\
@@ -3498,8 +3491,7 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
       return false;\
     }\
     \
-    basic_64b &v_data_ptr = *((basic_64b *)&result);\
-    BIC_SIMPLE_SET_DST_AND_RES(c_bi_class_float,v_data_ptr);\
+    BIC_SIMPLE_SET_DST_AND_RES(c_bi_class_float,result);\
   }/*}}}*/
 
 #define BIC_FLOAT_BINARY_OPS_CHAR_INTEGER_FLOAT_RESULT_INTEGER(OPERATOR,NAME) \
@@ -3512,13 +3504,13 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
     \
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
-      result = *((double *)&dst_location->v_data_ptr) OPERATOR (char)src_0_location->v_data_ptr;\
+      result = (double)dst_location->v_data_ptr OPERATOR (char)src_0_location->v_data_ptr;\
       break;\
     case c_bi_class_integer:\
-      result = *((double *)&dst_location->v_data_ptr) OPERATOR (long long int)src_0_location->v_data_ptr;\
+      result = (double)dst_location->v_data_ptr OPERATOR (long long int)src_0_location->v_data_ptr;\
       break;\
     case c_bi_class_float:\
-      result = *((double *)&dst_location->v_data_ptr) OPERATOR *((double *)&src_0_location->v_data_ptr);\
+      result = (double)dst_location->v_data_ptr OPERATOR (double)src_0_location->v_data_ptr;\
       break;\
       \
       /* - ERROR - */\
@@ -3544,13 +3536,13 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
     \
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
-      result = *((double *)&dst_location->v_data_ptr) OPERATOR (char)src_0_location->v_data_ptr;\
+      result = (double)dst_location->v_data_ptr OPERATOR (char)src_0_location->v_data_ptr;\
       break;\
     case c_bi_class_integer:\
-      result = *((double *)&dst_location->v_data_ptr) OPERATOR (long long int)src_0_location->v_data_ptr;\
+      result = (double)dst_location->v_data_ptr OPERATOR (long long int)src_0_location->v_data_ptr;\
       break;\
     case c_bi_class_float:\
-      result = *((double *)&dst_location->v_data_ptr) OPERATOR *((double *)&src_0_location->v_data_ptr);\
+      result = (double)dst_location->v_data_ptr OPERATOR (double)src_0_location->v_data_ptr;\
       break;\
       \
       /* - ERROR - */\
@@ -3563,8 +3555,7 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
       return false;\
     }\
     \
-    basic_64b &v_data_ptr = *((basic_64b *)&result);\
-    BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);\
+    BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
   }/*}}}*/
 
 #define BIC_FLOAT_POST_UNARY(OPERATOR) \
@@ -3572,10 +3563,9 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
     pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
     pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     \
-    double result = *((double *)&((location_s *)dst_location)->v_data_ptr) OPERATOR;\
+    double result = (double)((location_s *)dst_location)->v_data_ptr OPERATOR;\
     \
-    basic_64b &v_data_ptr = *((basic_64b *)&result);\
-    BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);\
+    BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
     \
     pointer tmp_location = res_location;\
     res_location = dst_location;\
@@ -3587,10 +3577,9 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
     pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
     pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     \
-    double result = *((double *)&((location_s *)dst_location)->v_data_ptr) OPERATOR;\
+    double result = (double)((location_s *)dst_location)->v_data_ptr OPERATOR;\
     \
-    basic_64b &v_data_ptr = *((basic_64b *)&result);\
-    BIC_SIMPLE_SET_DST_AND_RES(c_bi_class_float,v_data_ptr);\
+    BIC_SIMPLE_SET_DST_AND_RES(c_bi_class_float,result);\
   }/*}}}*/
 
 #define BIC_FLOAT_PRE_UNARY_TMP_RESULT(OPERATOR) \
@@ -3598,23 +3587,22 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
     pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     \
-    double result = OPERATOR *((double *)&dst_location->v_data_ptr);\
+    double result = OPERATOR (double)dst_location->v_data_ptr;\
     \
-    basic_64b &v_data_ptr = *((basic_64b *)&result);\
-    BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);\
+    BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
   }/*}}}*/
 
 #define BIC_FLOAT_COMPARE_WITH_TYPE_BOOL() \
   {/*{{{*/\
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
-      result = *((double *)&dst_location->v_data_ptr) == (char)src_0_location->v_data_ptr;\
+      result = (double)dst_location->v_data_ptr == (char)src_0_location->v_data_ptr;\
       break;\
     case c_bi_class_integer:\
-      result = *((double *)&dst_location->v_data_ptr) == (long long int)src_0_location->v_data_ptr;\
+      result = (double)dst_location->v_data_ptr == (long long int)src_0_location->v_data_ptr;\
       break;\
     case c_bi_class_float:\
-      result = *((double *)&dst_location->v_data_ptr) == *((double *)&src_0_location->v_data_ptr);\
+      result = (double)dst_location->v_data_ptr == (double)src_0_location->v_data_ptr;\
       break;\
     default:\
       result = 0;\
@@ -3632,13 +3620,13 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
     \
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
-      result = FNAME(*((double *)&dst_location->v_data_ptr), (char)src_0_location->v_data_ptr);\
+      result = FNAME((double)dst_location->v_data_ptr, (char)src_0_location->v_data_ptr);\
       break;\
     case c_bi_class_integer:\
-      result = FNAME(*((double *)&dst_location->v_data_ptr), (long long int)src_0_location->v_data_ptr);\
+      result = FNAME((double)dst_location->v_data_ptr, (long long int)src_0_location->v_data_ptr);\
       break;\
     case c_bi_class_float:\
-      result = FNAME(*((double *)&dst_location->v_data_ptr), *((double *)&src_0_location->v_data_ptr));\
+      result = FNAME((double)dst_location->v_data_ptr, (double)src_0_location->v_data_ptr);\
       break;\
       \
       /* - ERROR - */\
@@ -3651,8 +3639,7 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
       return false;\
     }\
     \
-    basic_64b &v_data_ptr = *((basic_64b *)&result);\
-    BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);\
+    BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
   }/*}}}*/
 
 #define BIC_FLOAT_FUNCTION_UNARY(FNAME) \
@@ -3660,10 +3647,9 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
     pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     \
-    double result = FNAME(*((double *)&dst_location->v_data_ptr));\
+    double result = FNAME((double)dst_location->v_data_ptr);\
     \
-    basic_64b &v_data_ptr = *((basic_64b *)&result);\
-    BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);\
+    BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
   }/*}}}*/
 
 bool bic_float_operator_binary_plus_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -3693,7 +3679,7 @@ bool bic_float_operator_binary_slash_equal(interpreter_thread_s &it,unsigned sta
   pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
-  double result = *((double *)&((location_s *)dst_location)->v_data_ptr);
+  double result = (double)((location_s *)dst_location)->v_data_ptr;
 
   switch (src_0_location->v_type)
   {
@@ -3727,7 +3713,7 @@ bool bic_float_operator_binary_slash_equal(interpreter_thread_s &it,unsigned sta
   break;
   case c_bi_class_float:
   {
-    double divider = *((double *)&src_0_location->v_data_ptr);
+    double divider = (double)src_0_location->v_data_ptr;
 
     // - ERROR -
     if (divider == 0.0)
@@ -3750,8 +3736,7 @@ bool bic_float_operator_binary_slash_equal(interpreter_thread_s &it,unsigned sta
     return false;
   }
 
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
-  BIC_SIMPLE_SET_DST_AND_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_DST_AND_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/
@@ -3871,7 +3856,7 @@ bool bic_float_operator_binary_slash(interpreter_thread_s &it,unsigned stack_bas
       return false;
     }
 
-    result = *((double *)&dst_location->v_data_ptr) / divider;
+    result = (double)dst_location->v_data_ptr / divider;
   }
   break;
   case c_bi_class_integer:
@@ -3885,12 +3870,12 @@ bool bic_float_operator_binary_slash(interpreter_thread_s &it,unsigned stack_bas
       return false;
     }
 
-    result = *((double *)&dst_location->v_data_ptr) / divider;
+    result = (double)dst_location->v_data_ptr / divider;
   }
   break;
   case c_bi_class_float:
   {
-    double divider = *((double *)&src_0_location->v_data_ptr);
+    double divider = (double)src_0_location->v_data_ptr;
 
     // - ERROR -
     if (divider == 0)
@@ -3899,7 +3884,7 @@ bool bic_float_operator_binary_slash(interpreter_thread_s &it,unsigned stack_bas
       return false;
     }
 
-    result = *((double *)&dst_location->v_data_ptr) / divider;
+    result = (double)dst_location->v_data_ptr / divider;
   }
   break;
 
@@ -3913,8 +3898,7 @@ bool bic_float_operator_binary_slash(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/
@@ -3966,7 +3950,7 @@ bool bic_float_operator_unary_pre_exclamation(interpreter_thread_s &it,unsigned 
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  long long int result = ! *((double *)&dst_location->v_data_ptr);
+  long long int result = ! (double)dst_location->v_data_ptr;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
@@ -3986,20 +3970,20 @@ bool bic_float_method_Float_1(interpreter_thread_s &it,unsigned stack_base,uli *
   switch (src_0_location->v_type)
   {
   case c_bi_class_char:
-    *((double *)&dst_location->v_data_ptr) = (char)src_0_location->v_data_ptr;
+    dst_location->v_data_ptr = (double)(char)src_0_location->v_data_ptr;
     break;
   case c_bi_class_integer:
-    *((double *)&dst_location->v_data_ptr) = (long long int)src_0_location->v_data_ptr;
+    dst_location->v_data_ptr = (double)(long long int)src_0_location->v_data_ptr;
     break;
   case c_bi_class_float:
-    *((double *)&dst_location->v_data_ptr) = *((double *)&src_0_location->v_data_ptr);
+    dst_location->v_data_ptr = (double)src_0_location->v_data_ptr;
     break;
   case c_bi_class_string:
   {
     string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
     char *end_ptr = NULL;
-    *((double *)&dst_location->v_data_ptr) = strtod(string_ptr->data,&end_ptr);
+    dst_location->v_data_ptr = (double)strtod(string_ptr->data,&end_ptr);
 
     if (string_ptr->size <= 1 || (string_ptr->data + string_ptr->size - 1) != end_ptr)
     {
@@ -4111,7 +4095,7 @@ bool bic_float_method_classify_0(interpreter_thread_s &it,unsigned stack_base,ul
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  long long int result = fpclassify(*((double *)&dst_location->v_data_ptr));
+  long long int result = fpclassify((double)dst_location->v_data_ptr);
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
@@ -4123,7 +4107,7 @@ bool bic_float_method_isnan_0(interpreter_thread_s &it,unsigned stack_base,uli *
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  long long int result = isnan(*((double *)&dst_location->v_data_ptr));
+  long long int result = isnan((double)dst_location->v_data_ptr);
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
@@ -4140,8 +4124,8 @@ bool bic_float_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli
 
   if (src_0_location->v_type == c_bi_class_float)
   {
-    double first = *((double *)&dst_location->v_data_ptr);
-    double second = *((double *)&src_0_location->v_data_ptr);
+    double first = (double)dst_location->v_data_ptr;
+    double second = (double)src_0_location->v_data_ptr;
 
     result = first < second ? -1 : (first > second ? 1 : 0);
   }
@@ -4158,7 +4142,7 @@ bool bic_float_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli
 bool bic_float_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING(
-    string_ptr->setf("%f",*((double *)&dst_location->v_data_ptr))
+    string_ptr->setf("%f",(double)dst_location->v_data_ptr)
   );
 
   return true;
@@ -4170,7 +4154,7 @@ bool bic_float_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - print value to standard output -
-  printf("%f",*((double *)&dst_location->v_data_ptr));
+  printf("%f",(double)dst_location->v_data_ptr);
 
   BIC_SET_RESULT_BLANK();
 
@@ -4455,7 +4439,7 @@ void bic_string_consts(location_array_s &const_locations)
 
 void bic_string_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)it.get_new_string_ptr();
+  location_ptr->v_data_ptr = (string_s *)it.get_new_string_ptr();
 }/*}}}*/
 
 void bic_string_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -4548,7 +4532,7 @@ bool bic_string_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_arra
 {/*{{{*/
   string_s *string_ptr = it.get_new_string_ptr();
 
-  location_ptr->v_data_ptr = (basic_64b)string_ptr;
+  location_ptr->v_data_ptr = (string_s *)string_ptr;
 
   if (stream.used < sizeof(unsigned))
   {
@@ -4984,7 +4968,7 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
               return false;
             }
 
-            double argument = *((double *)&element_location->v_data_ptr);
+            double argument = (double)element_location->v_data_ptr;
 
             unsigned old_used = buffer.used;
 
@@ -5165,7 +5149,7 @@ bool bic_string_method_String_1(interpreter_thread_s &it,unsigned stack_base,uli
   {
     string_ptr->create(c_number_format_size);
 
-    int char_cnt = snprintf(string_ptr->data,c_number_format_size,"%f",*((double *)&src_0_location->v_data_ptr));
+    int char_cnt = snprintf(string_ptr->data,c_number_format_size,"%f",(double)src_0_location->v_data_ptr);
     if (char_cnt < 0 || char_cnt >= c_number_format_size)
     {
       exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_CONVERT_FROM_FLOAT,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -6217,7 +6201,7 @@ void bic_array_consts(location_array_s &const_locations)
 
 void bic_array_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)it.get_new_array_ptr();
+  location_ptr->v_data_ptr = (pointer_array_s *)it.get_new_array_ptr();
 }/*}}}*/
 
 void bic_array_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -6298,7 +6282,7 @@ bool bic_array_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array
 {/*{{{*/
   pointer_array_s *array_ptr = it.get_new_array_ptr();
 
-  location_ptr->v_data_ptr = (basic_64b)array_ptr;
+  location_ptr->v_data_ptr = (pointer_array_s *)array_ptr;
 
   if (stream.used < sizeof(unsigned))
   {
@@ -7253,7 +7237,7 @@ void bic_error_consts(location_array_s &const_locations)
 
 void bic_error_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)c_error_OK;
+  location_ptr->v_data_ptr = (unsigned)c_error_OK;
 }/*}}}*/
 
 void bic_error_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -7647,7 +7631,7 @@ void bic_exception_consts(location_array_s &const_locations)
 #define CREATE_EXCEPTION_TYPE_BIC_STATIC(EXCEPTION_TYPE)\
   cv_ptr->v_type = c_bi_class_error;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)EXCEPTION_TYPE;\
+  cv_ptr->v_data_ptr = (unsigned)EXCEPTION_TYPE;\
   cv_ptr++;
 
   CREATE_EXCEPTION_TYPE_BIC_STATIC(c_error_USER_EXCEPTION);
@@ -7705,7 +7689,7 @@ void bic_exception_init(interpreter_thread_s &it,location_s *location_ptr)
   ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
   exception_ptr->obj_location = it.blank_location;
 
-  location_ptr->v_data_ptr = (basic_64b)exception_ptr;
+  location_ptr->v_data_ptr = (exception_s *)exception_ptr;
 }/*}}}*/
 
 void bic_exception_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -7983,7 +7967,7 @@ void bic_type_consts(location_array_s &const_locations)
 
 void bic_type_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)c_bi_class_blank;
+  location_ptr->v_data_ptr = (unsigned)c_bi_class_blank;
 }/*}}}*/
 
 void bic_type_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -8066,7 +8050,7 @@ bool bic_type_method_Type_1(interpreter_thread_s &it,unsigned stack_base,uli *op
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
-  dst_location->v_data_ptr = (basic_64b)src_0_location->v_type;
+  dst_location->v_data_ptr = (unsigned)src_0_location->v_type;
 
   return true;
 }/*}}}*/
@@ -8211,7 +8195,7 @@ void bic_mutex_consts(location_array_s &const_locations)
 #define CREATE_MUTEX_ERROR_BIC_STATIC(ERROR_CODE)\
   cv_ptr->v_type = c_bi_class_error;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)ERROR_CODE;\
+  cv_ptr->v_data_ptr = (unsigned)ERROR_CODE;\
   cv_ptr++;
 
   CREATE_MUTEX_ERROR_BIC_STATIC(c_error_EINVAL);
@@ -8225,7 +8209,7 @@ void bic_mutex_init(interpreter_thread_s &it,location_s *location_ptr)
   mutex_s *mutex_ptr = (mutex_s *)cmalloc(sizeof(mutex_s));
   cassert(mutex_ptr->init() == c_error_OK);
 
-  location_ptr->v_data_ptr = (basic_64b)mutex_ptr;
+  location_ptr->v_data_ptr = (mutex_s *)mutex_ptr;
 }/*}}}*/
 
 void bic_mutex_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -8444,7 +8428,7 @@ void bic_thread_consts(location_array_s &const_locations)
 #define CREATE_THREAD_ERROR_BIC_STATIC(ERROR_CODE)\
   cv_ptr->v_type = c_bi_class_error;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)ERROR_CODE;\
+  cv_ptr->v_data_ptr = (unsigned)ERROR_CODE;\
   cv_ptr++;
 
   CREATE_THREAD_ERROR_BIC_STATIC(c_error_EAGAIN);
@@ -8668,7 +8652,7 @@ void bic_delegate_consts(location_array_s &const_locations)
 
 void bic_delegate_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (delegate_s *)NULL;
 }/*}}}*/
 
 void bic_delegate_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -8775,7 +8759,7 @@ bool bic_delegate_method_Delegate_3(interpreter_thread_s &it,unsigned stack_base
   delegate_ptr->param_cnt = param_cnt;
 
   // - set object pointer to result -
-  dst_location->v_data_ptr = (basic_64b)delegate_ptr;
+  dst_location->v_data_ptr = (delegate_s *)delegate_ptr;
 
   return true;
 }/*}}}*/
@@ -8900,7 +8884,7 @@ void bic_buffer_consts(location_array_s &const_locations)
 
 void bic_buffer_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (buffer_s *)NULL;
 }/*}}}*/
 
 void bic_buffer_clear(interpreter_thread_s &it,location_s *location_ptr)

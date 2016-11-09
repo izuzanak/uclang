@@ -230,7 +230,7 @@ void bic_psql_conn_consts(location_array_s &const_locations)
 
 void bic_psql_conn_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (PGconn *)NULL;
 }/*}}}*/
 
 void bic_psql_conn_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -274,7 +274,7 @@ bool bic_psql_conn_method_PSqlConn_1(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - retrieve psql connection pointer -
-  dst_location->v_data_ptr = (basic_64b)conn_ptr;
+  dst_location->v_data_ptr = (PGconn *)conn_ptr;
 
   return true;
 }/*}}}*/

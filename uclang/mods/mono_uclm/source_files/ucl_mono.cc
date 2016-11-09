@@ -304,7 +304,7 @@ MonoObject *mono_c::create_mono_object(interpreter_thread_s &it,location_s *loca
       }
     case c_bi_class_float:
       {
-        double value = *((double *)&location_ptr->v_data_ptr);
+        double value = (double)location_ptr->v_data_ptr;
         return mono_value_box(domain,mono_get_double_class(),&value);
       }
     case c_bi_class_string:
@@ -438,8 +438,7 @@ location_s *mono_c::mono_object_value(interpreter_thread_s &it,MonoObject *mono_
 {/*{{{*/\
   double value = *((TYPE *)mono_object_unbox(mono_obj));\
 \
-  basic_64b &v_data_ptr = *((basic_64b *)&value);\
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);\
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);\
   return new_location;\
 }/*}}}*/
 

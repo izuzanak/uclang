@@ -286,7 +286,7 @@ void bic_ws_context_consts(location_array_s &const_locations)
 #define CREATE_WS_PORT_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
   CREATE_WS_PORT_TYPE_BIC_STATIC(CONTEXT_PORT_NO_LISTEN);
@@ -294,7 +294,7 @@ void bic_ws_context_consts(location_array_s &const_locations)
 
 void bic_ws_context_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ws_context_s *)NULL;
 }/*}}}*/
 
 void bic_ws_context_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -465,7 +465,7 @@ bool bic_ws_context_method_WsContext_2(interpreter_thread_s &it,unsigned stack_b
   ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
   wsc_ptr->user_data_ptr = (location_s *)it.blank_location;
 
-  dst_location->v_data_ptr = (basic_64b)wsc_ptr;
+  dst_location->v_data_ptr = (ws_context_s *)wsc_ptr;
 
   return true;
 }/*}}}*/
@@ -929,7 +929,7 @@ void bic_ws_conn_consts(location_array_s &const_locations)
 #define CREATE_WS_CONN_WRITE_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_WS_CONN_WRITE_TYPE_BIC_STATIC(LWS_WRITE_TEXT);
@@ -949,7 +949,7 @@ void bic_ws_conn_consts(location_array_s &const_locations)
 #define CREATE_WS_CONN_CB_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_WS_CONN_CB_TYPE_BIC_STATIC(LWS_CALLBACK_ESTABLISHED);
@@ -987,7 +987,7 @@ void bic_ws_conn_consts(location_array_s &const_locations)
 #define CREATE_WS_CONN_TIMEOUT_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_WS_CONN_CB_TYPE_BIC_STATIC(NO_PENDING_TIMEOUT);
@@ -1005,7 +1005,7 @@ void bic_ws_conn_consts(location_array_s &const_locations)
 
 void bic_ws_conn_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ws_conn_s *)NULL;
 }/*}}}*/
 
 void bic_ws_conn_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1315,7 +1315,7 @@ void bic_ws_client_consts(location_array_s &const_locations)
 
 void bic_ws_client_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ws_client_s *)NULL;
 }/*}}}*/
 
 void bic_ws_client_clear(interpreter_thread_s &it,location_s *location_ptr)

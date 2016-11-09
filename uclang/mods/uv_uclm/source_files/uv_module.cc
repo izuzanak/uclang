@@ -128,7 +128,7 @@ void bic_uv_loop_consts(location_array_s &const_locations)
 
 void bic_uv_loop_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (uv_loop_t *)NULL;
 }/*}}}*/
 
 void bic_uv_loop_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -163,7 +163,7 @@ bool bic_uv_loop_method_UvLoop_0(interpreter_thread_s &it,unsigned stack_base,ul
   // - create uv loop object -
   uv_loop_t *uvl_ptr = uv_loop_new();
 
-  dst_location->v_data_ptr = (basic_64b)uvl_ptr;
+  dst_location->v_data_ptr = (uv_loop_t *)uvl_ptr;
 
   return true;
 }/*}}}*/

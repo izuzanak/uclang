@@ -329,7 +329,7 @@ void bic_perl_interpreter_consts(location_array_s &const_locations)
 
 void bic_perl_interpreter_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (perl_interpreter_s *)NULL;
 }/*}}}*/
 
 void bic_perl_interpreter_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -440,7 +440,7 @@ bool bic_perl_interpreter_method_PerlInterpreter_1(interpreter_thread_s &it,unsi
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)pi_ptr;
+  dst_location->v_data_ptr = (perl_interpreter_s *)pi_ptr;
 
   return true;
 }/*}}}*/
@@ -578,7 +578,7 @@ void bic_perl_value_consts(location_array_s &const_locations)
 
 void bic_perl_value_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (perl_value_s *)NULL;
 }/*}}}*/
 
 void bic_perl_value_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -825,7 +825,7 @@ bool bic_perl_value_member(interpreter_thread_s &it,uli *code,unsigned stack_bas
   pi_loc->v_reference_cnt.atomic_inc();
   pr_ptr->pi_loc = pi_loc;
   pr_ptr->sv = sv_stash;
-  pr_ptr->v_key_ptr = (basic_64b)sv_key;
+  pr_ptr->v_key_ptr = (SV *)sv_key;
 
   // - create target location -
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_perl_reference,pr_ptr);
@@ -895,7 +895,7 @@ bool bic_perl_value_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigne
       pi_loc->v_reference_cnt.atomic_inc();
       pv_ptr->pi_loc = pi_loc;
       pv_ptr->sv = sv;
-      pv_ptr->v_key_ptr = (basic_64b)index;
+      pv_ptr->v_key_ptr = (long long int)index;
 
       BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_perl_reference,pv_ptr);
       BIC_SET_RESULT(new_location);
@@ -922,7 +922,7 @@ bool bic_perl_value_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigne
       pi_loc->v_reference_cnt.atomic_inc();
       pv_ptr->pi_loc = pi_loc;
       pv_ptr->sv = sv;
-      pv_ptr->v_key_ptr = (basic_64b)sv_key;
+      pv_ptr->v_key_ptr = (SV *)sv_key;
 
       BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_perl_reference,pv_ptr);
       BIC_SET_RESULT(new_location);
@@ -1065,7 +1065,7 @@ void bic_perl_reference_consts(location_array_s &const_locations)
 
 void bic_perl_reference_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (perl_reference_s *)NULL;
 }/*}}}*/
 
 void bic_perl_reference_clear(interpreter_thread_s &it,location_s *location_ptr)

@@ -282,7 +282,7 @@ void bic_nacl_consts(location_array_s &const_locations)
 
 void bic_nacl_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (void *)NULL;
 }/*}}}*/
 
 void bic_nacl_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -546,7 +546,7 @@ void bic_nacl_3d_consts(location_array_s &const_locations)
 
 void bic_nacl_3d_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (void *)NULL;
 }/*}}}*/
 
 void bic_nacl_3d_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -701,8 +701,7 @@ bool bic_core_method_time_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
   PP_Time time = ppb_core_iface->GetTime();
 
-  basic_64b &v_data_ptr = *((basic_64b *)&time);
-  BIC_SIMPLE_SET_RES(c_bi_class_time,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_time,time);
 
   return true;
 }/*}}}*/
@@ -713,8 +712,7 @@ bool bic_core_method_time_ticks_0(interpreter_thread_s &it,unsigned stack_base,u
 
   double ticks = ppb_core_iface->GetTimeTicks();
 
-  basic_64b &v_data_ptr = *((basic_64b *)&ticks);
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,ticks);
 
   return true;
 }/*}}}*/
@@ -836,7 +834,7 @@ void bic_time_consts(location_array_s &const_locations)
 
 void bic_time_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  *((PP_Time *)&location_ptr->v_data_ptr) = 0.0;
+  location_ptr->v_data_ptr = (PP_Time)0.0;
 }/*}}}*/
 
 void bic_time_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -845,8 +843,8 @@ void bic_time_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 int bic_time_compare(location_s *first_loc,location_s *second_loc)
 {/*{{{*/
-  PP_Time first = *((PP_Time *)&first_loc->v_data_ptr);
-  PP_Time second = *((PP_Time *)&second_loc->v_data_ptr);
+  PP_Time first = (PP_Time)first_loc->v_data_ptr;
+  PP_Time second = (PP_Time)second_loc->v_data_ptr;
 
   return first < second ? -1 : (first > second ? 1 : 0);
 }/*}}}*/
@@ -869,7 +867,7 @@ bool bic_time_method_Time_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 {/*{{{*/
   pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  *((PP_Time *)&((location_s *)dst_location)->v_data_ptr) = ppb_core_iface->GetTime();
+  ((location_s *)dst_location)->v_data_ptr = (PP_Time)ppb_core_iface->GetTime();
 
   return true;
 }/*}}}*/
@@ -891,7 +889,7 @@ bool bic_time_method_Time_1(interpreter_thread_s &it,unsigned stack_base,uli *op
     break;
 
     case c_bi_class_float:
-      time = *((double *)&src_0_location->v_data_ptr);
+      time = (double)src_0_location->v_data_ptr;
       break;
 
     case c_bi_class_string:
@@ -959,7 +957,7 @@ bool bic_time_method_Time_1(interpreter_thread_s &it,unsigned stack_base,uli *op
       // - process time value -
       if (src_0_location->v_type == c_bi_class_time)
       {
-        time = *((PP_Time *)&src_0_location->v_data_ptr);
+        time = (PP_Time)src_0_location->v_data_ptr;
       }
 
       // - ERROR -
@@ -975,7 +973,7 @@ bool bic_time_method_Time_1(interpreter_thread_s &it,unsigned stack_base,uli *op
     }
   }
 
-  *((PP_Time *)&((location_s *)dst_location)->v_data_ptr) = time;
+  ((location_s *)dst_location)->v_data_ptr = (PP_Time)time;
 
   return true;
 }/*}}}*/
@@ -985,10 +983,9 @@ bool bic_time_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *o
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  PP_Time time = *((PP_Time *)&dst_location->v_data_ptr);
+  PP_Time time = (PP_Time)dst_location->v_data_ptr;
 
-  basic_64b &v_data_ptr = *((basic_64b *)&time);
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,time);
 
   return true;
 }/*}}}*/
@@ -998,7 +995,7 @@ bool bic_time_method_seconds_0(interpreter_thread_s &it,unsigned stack_base,uli 
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  PP_Time time = *((PP_Time *)&dst_location->v_data_ptr);
+  PP_Time time = (PP_Time)dst_location->v_data_ptr;
   long long int result = (long long int)time;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
@@ -1011,7 +1008,7 @@ bool bic_time_method_minutes_0(interpreter_thread_s &it,unsigned stack_base,uli 
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  PP_Time time = *((PP_Time *)&dst_location->v_data_ptr);
+  PP_Time time = (PP_Time)dst_location->v_data_ptr;
   long long int result = ((long long int)time)/60;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
@@ -1024,7 +1021,7 @@ bool bic_time_method_hours_0(interpreter_thread_s &it,unsigned stack_base,uli *o
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  PP_Time time = *((PP_Time *)&dst_location->v_data_ptr);
+  PP_Time time = (PP_Time)dst_location->v_data_ptr;
   long long int result = ((long long int)time)/3600;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
@@ -1037,7 +1034,7 @@ bool bic_time_method_days_0(interpreter_thread_s &it,unsigned stack_base,uli *op
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  PP_Time time = *((PP_Time *)&dst_location->v_data_ptr);
+  PP_Time time = (PP_Time)dst_location->v_data_ptr;
   long long int result = ((long long int)time)/86400;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
@@ -1050,7 +1047,7 @@ bool bic_time_method_datetime_0(interpreter_thread_s &it,unsigned stack_base,uli
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   
-  PP_Time time = *((PP_Time *)&dst_location->v_data_ptr);
+  PP_Time time = (PP_Time)dst_location->v_data_ptr;
 
   long long unsigned nanosec;
   TIME_DOUBLE_TO_NANOSEC(time,nanosec);
@@ -1074,16 +1071,16 @@ bool bic_time_method_datetime_0(interpreter_thread_s &it,unsigned stack_base,uli
   } while(++l_ptr < l_ptr_end);
   
   // - set system time values -
-  ((location_s *)array_ptr->data[0])->v_data_ptr = (basic_64b)datetime.year;
-  ((location_s *)array_ptr->data[1])->v_data_ptr = (basic_64b)datetime.month;
-  ((location_s *)array_ptr->data[2])->v_data_ptr = (basic_64b)datetime.day;
-  ((location_s *)array_ptr->data[3])->v_data_ptr = (basic_64b)datetime.wday;
-  ((location_s *)array_ptr->data[4])->v_data_ptr = (basic_64b)datetime.hour;
-  ((location_s *)array_ptr->data[5])->v_data_ptr = (basic_64b)datetime.min;
-  ((location_s *)array_ptr->data[6])->v_data_ptr = (basic_64b)datetime.sec;
-  ((location_s *)array_ptr->data[7])->v_data_ptr = (basic_64b)datetime.msec;
-  ((location_s *)array_ptr->data[8])->v_data_ptr = (basic_64b)datetime.usec;
-  ((location_s *)array_ptr->data[9])->v_data_ptr = (basic_64b)datetime.nsec;
+  ((location_s *)array_ptr->data[0])->v_data_ptr = (long long int)datetime.year;
+  ((location_s *)array_ptr->data[1])->v_data_ptr = (long long int)datetime.month;
+  ((location_s *)array_ptr->data[2])->v_data_ptr = (long long int)datetime.day;
+  ((location_s *)array_ptr->data[3])->v_data_ptr = (long long int)datetime.wday;
+  ((location_s *)array_ptr->data[4])->v_data_ptr = (long long int)datetime.hour;
+  ((location_s *)array_ptr->data[5])->v_data_ptr = (long long int)datetime.min;
+  ((location_s *)array_ptr->data[6])->v_data_ptr = (long long int)datetime.sec;
+  ((location_s *)array_ptr->data[7])->v_data_ptr = (long long int)datetime.msec;
+  ((location_s *)array_ptr->data[8])->v_data_ptr = (long long int)datetime.usec;
+  ((location_s *)array_ptr->data[9])->v_data_ptr = (long long int)datetime.nsec;
   
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
   BIC_SET_RESULT(new_location);
@@ -1101,8 +1098,8 @@ bool bic_time_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
   if (src_0_location->v_type == c_bi_class_time)
   {
-    PP_Time first = *((PP_Time *)&dst_location->v_data_ptr);
-    PP_Time second = *((PP_Time *)&src_0_location->v_data_ptr);
+    PP_Time first = (PP_Time)dst_location->v_data_ptr;
+    PP_Time second = (PP_Time)src_0_location->v_data_ptr;
 
     result = first < second ? -1 : (first > second ? 1 : 0);
   }
@@ -1120,7 +1117,7 @@ bool bic_time_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
 {/*{{{*/
   BIC_TO_STRING(
 
-    PP_Time time = *((PP_Time *)&dst_location->v_data_ptr);
+    PP_Time time = (PP_Time)dst_location->v_data_ptr;
 
     // - convert time to datetime structure -
     datetime_s datetime;
@@ -1138,7 +1135,7 @@ bool bic_time_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *o
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  PP_Time time = *((PP_Time *)&dst_location->v_data_ptr);
+  PP_Time time = (PP_Time)dst_location->v_data_ptr;
 
   // - convert time to datetime structure -
   datetime_s datetime;
@@ -1273,7 +1270,7 @@ void bic_console_consts(location_array_s &const_locations)
 #define CREATE_CONSOLE_LOGLEVEL_BIC_STATIC(LOGLEVEL)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)LOGLEVEL;\
+  cv_ptr->v_data_ptr = (long long int)LOGLEVEL;\
   cv_ptr++;
 
     CREATE_CONSOLE_LOGLEVEL_BIC_STATIC(PP_LOGLEVEL_TIP);
@@ -1583,7 +1580,7 @@ void bic_net_address_consts(location_array_s &const_locations)
 #define CREATE_NET_ADDRESS_FAMILY_TYPE_BIC_STATIC(FAMILY_TYPE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)FAMILY_TYPE;\
+  cv_ptr->v_data_ptr = (long long int)FAMILY_TYPE;\
   cv_ptr++;
 
     CREATE_NET_ADDRESS_FAMILY_TYPE_BIC_STATIC(PP_NETADDRESS_FAMILY_UNSPECIFIED);
@@ -1594,7 +1591,7 @@ void bic_net_address_consts(location_array_s &const_locations)
 
 void bic_net_address_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)0;
+  location_ptr->v_data_ptr = (PP_Resource)0;
 }/*}}}*/
 
 void bic_net_address_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1695,7 +1692,7 @@ bool bic_net_address_method_NetAddress_2(interpreter_thread_s &it,unsigned stack
     return false;
   }
 
-  ((location_s *)dst_location)->v_data_ptr = (basic_64b)pp_addr;
+  ((location_s *)dst_location)->v_data_ptr = (PP_Resource)pp_addr;
 
   return true;
 }/*}}}*/

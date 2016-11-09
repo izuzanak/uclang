@@ -951,7 +951,7 @@ void bic_sys_consts(location_array_s &const_locations)
     \
     cv_ptr->v_type = c_bi_class_string;\
     cv_ptr->v_reference_cnt.atomic_set(1);\
-    cv_ptr->v_data_ptr = (basic_64b)string_ptr;\
+    cv_ptr->v_data_ptr = (string_s *)string_ptr;\
     cv_ptr++;\
   }
 
@@ -974,7 +974,7 @@ void bic_sys_consts(location_array_s &const_locations)
 #define CREATE_SYS_RAND_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_SYS_RAND_BIC_STATIC(RAND_MAX);
@@ -2075,7 +2075,7 @@ built_in_variable_s pipe_variables[] =
     return false;\
   }\
 \
-  dst_location->v_data_ptr = (basic_64b)NULL;\
+  dst_location->v_data_ptr = (FILE *)NULL;\
 /*}}}*/
 
 void bic_pipe_consts(location_array_s &const_locations)
@@ -2084,7 +2084,7 @@ void bic_pipe_consts(location_array_s &const_locations)
 
 void bic_pipe_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (FILE *)NULL;
 }/*}}}*/
 
 void bic_pipe_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2162,7 +2162,7 @@ bool bic_pipe_method_Pipe_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
   ((location_s *)dst_location)->v_type = c_bi_class_file;
   ((location_s *)dst_location)->v_reference_cnt.atomic_inc();
-  ((location_s *)dst_location)->v_data_ptr = (basic_64b)fr;
+  ((location_s *)dst_location)->v_data_ptr = (FILE *)fr;
 
   // - fill pipe array -
   {
@@ -2191,7 +2191,7 @@ bool bic_pipe_method_Pipe_2(interpreter_thread_s &it,unsigned stack_base,uli *op
 
   SYS_PIPE_OPEN(c_bi_class_pipe,"Pipe#2");
 
-  dst_location->v_data_ptr = (basic_64b)f;
+  dst_location->v_data_ptr = (FILE *)f;
 
   return true;
 }/*}}}*/
@@ -2409,7 +2409,7 @@ built_in_variable_s file_variables[] =
     return false;\
   }\
 \
-  dst_location->v_data_ptr = (basic_64b)NULL;\
+  dst_location->v_data_ptr = (FILE *)NULL;\
 /*}}}*/
 
 void bic_file_consts(location_array_s &const_locations)
@@ -2423,7 +2423,7 @@ void bic_file_consts(location_array_s &const_locations)
 #define CREATE_FILE_STREAM_BIC_STATIC(STREAM)\
   cv_ptr->v_type = c_bi_class_file;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)STREAM;\
+  cv_ptr->v_data_ptr = (FILE *)STREAM;\
   cv_ptr++;
 
     CREATE_FILE_STREAM_BIC_STATIC(stdin);
@@ -2439,7 +2439,7 @@ void bic_file_consts(location_array_s &const_locations)
 #define CREATE_FILE_SEEK_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_FILE_SEEK_BIC_STATIC(SEEK_SET);
@@ -2451,7 +2451,7 @@ void bic_file_consts(location_array_s &const_locations)
 
 void bic_file_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (FILE *)NULL;
 }/*}}}*/
 
 void bic_file_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2493,7 +2493,7 @@ bool bic_file_method_File_2(interpreter_thread_s &it,unsigned stack_base,uli *op
 
   SYS_FILE_OPEN(c_bi_class_file,"File#2");
 
-  dst_location->v_data_ptr = (basic_64b)f;
+  dst_location->v_data_ptr = (FILE *)f;
 
   return true;
 }/*}}}*/
@@ -2716,7 +2716,7 @@ void bic_socket_addr_consts(location_array_s &const_locations)
 
 void bic_socket_addr_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (sockaddr_in *)NULL;
 }/*}}}*/
 
 void bic_socket_addr_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2782,7 +2782,7 @@ bool bic_socket_addr_method_SocketAddr_2(interpreter_thread_s &it,unsigned stack
   addr_ptr->sin_port = htons(port);
   addr_ptr->sin_family = AF_INET;
 
-  dst_location->v_data_ptr = (basic_64b)addr_ptr;
+  dst_location->v_data_ptr = (sockaddr_in *)addr_ptr;
 
   return true;
 }/*}}}*/
@@ -3019,7 +3019,7 @@ void bic_socket_consts(location_array_s &const_locations)
 #define CREATE_SOCKET_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_SOCKET_BIC_STATIC(AF_UNIX);
@@ -3037,7 +3037,7 @@ void bic_socket_consts(location_array_s &const_locations)
 
 void bic_socket_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)-1;
+  location_ptr->v_data_ptr = (int)-1;
 }/*}}}*/
 
 void bic_socket_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -3101,7 +3101,7 @@ bool bic_socket_method_Socket_2(interpreter_thread_s &it,unsigned stack_base,uli
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)sock;
+  dst_location->v_data_ptr = (int)sock;
 
   return true;
 }/*}}}*/
@@ -3598,7 +3598,7 @@ bool bic_socket_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli 
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)-1;
+  dst_location->v_data_ptr = (int)-1;
 
   BIC_SET_RESULT_BLANK();
 
@@ -4473,7 +4473,7 @@ void bic_regex_consts(location_array_s &const_locations)
 
 void bic_regex_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (regex_t *)NULL;
 }/*}}}*/
 
 void bic_regex_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -4534,7 +4534,7 @@ bool bic_regex_method_Regex_1(interpreter_thread_s &it,unsigned stack_base,uli *
   // - compile regular expression -
   if (regcomp(re,string_ptr->data,0) == 0)
   {
-    dst_location->v_data_ptr = (basic_64b)re;
+    dst_location->v_data_ptr = (regex_t *)re;
   }
   else
   {
@@ -5012,7 +5012,7 @@ void bic_signal_consts(location_array_s &const_locations)
 #define CREATE_SIGNAL_NUMERAL_IDENTIFIER(SIGNUM)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)SIGNUM;\
+  cv_ptr->v_data_ptr = (long long int)SIGNUM;\
   cv_ptr++;
 
     CREATE_SIGNAL_NUMERAL_IDENTIFIER(SIGINT);
@@ -5372,7 +5372,7 @@ void bic_poll_consts(location_array_s &const_locations)
 #define CREATE_POLL_EVENT_BIT_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_POLL_EVENT_BIT_BIC_STATIC(POLLIN);
@@ -5386,7 +5386,7 @@ void bic_poll_consts(location_array_s &const_locations)
 
 void bic_poll_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (poll_s *)NULL;
 }/*}}}*/
 
 void bic_poll_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -5481,7 +5481,7 @@ bool bic_poll_method_Poll_1(interpreter_thread_s &it,unsigned stack_base,uli *op
   poll_ptr->fds = fds;
   poll_ptr->nfds = nfds;
 
-  dst_location->v_data_ptr = (basic_64b)poll_ptr;
+  dst_location->v_data_ptr = (poll_s *)poll_ptr;
 
   return true;
 }/*}}}*/
@@ -5674,7 +5674,7 @@ void bic_timer_consts(location_array_s &const_locations)
 
 void bic_timer_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (timer_s *)NULL;
 }/*}}}*/
 
 void bic_timer_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -5714,7 +5714,7 @@ bool bic_timer_method_Timer_0(interpreter_thread_s &it,unsigned stack_base,uli *
   timer_s *timer_ptr = (timer_s *)cmalloc(sizeof(timer_s));
   timer_ptr->init();
 
-  dst_location->v_data_ptr = (basic_64b)timer_ptr;
+  dst_location->v_data_ptr = (timer_s *)timer_ptr;
 
   return true;
 }/*}}}*/
@@ -5972,7 +5972,7 @@ void bic_clock_consts(location_array_s &const_locations)
 #define CREATE_CLOCK_TYPE_ID_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
   CREATE_CLOCK_TYPE_ID_BIC_STATIC(CLOCK_REALTIME);
@@ -5983,7 +5983,7 @@ void bic_clock_consts(location_array_s &const_locations)
 
 void bic_clock_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  cassert(0);
 }/*}}}*/
 
 void bic_clock_clear(interpreter_thread_s &it,location_s *location_ptr)

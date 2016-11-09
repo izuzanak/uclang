@@ -170,7 +170,7 @@ void bic_ltg_jit_state_consts(location_array_s &const_locations)
 #define CREATE_LTG_JIT_STATE_DATA_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_LTG_JIT_STATE_DATA_TYPE_BIC_STATIC(c_val_type_i8);
@@ -189,7 +189,7 @@ void bic_ltg_jit_state_consts(location_array_s &const_locations)
 
 void bic_ltg_jit_state_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (jit_state_s *)NULL;
 }/*}}}*/
 
 void bic_ltg_jit_state_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -226,7 +226,7 @@ bool bic_ltg_jit_state_method_LtgJitState_0(interpreter_thread_s &it,unsigned st
   jit_state_s *js_ptr = (jit_state_s *)cmalloc(sizeof(jit_state_s));
   js_ptr->init();
 
-  dst_location->v_data_ptr = (basic_64b)js_ptr;
+  dst_location->v_data_ptr = (jit_state_s *)js_ptr;
 
   return true;
 }/*}}}*/

@@ -423,7 +423,7 @@ void bic_dict_init(interpreter_thread_s &it,location_s *location_ptr)
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)cmalloc(sizeof(pointer_map_tree_s));
   tree_ptr->init();
 
-  location_ptr->v_data_ptr = (basic_64b)tree_ptr;
+  location_ptr->v_data_ptr = (pointer_map_tree_s *)tree_ptr;
 }/*}}}*/
 
 void bic_dict_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -532,7 +532,7 @@ bool bic_dict_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)cmalloc(sizeof(pointer_map_tree_s));
   tree_ptr->init();
 
-  location_ptr->v_data_ptr = (basic_64b)tree_ptr;
+  location_ptr->v_data_ptr = (pointer_map_tree_s *)tree_ptr;
 
   tree_ptr->it_ptr = &it;
   tree_ptr->source_pos = source_pos;

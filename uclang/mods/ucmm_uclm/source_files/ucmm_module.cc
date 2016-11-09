@@ -190,7 +190,7 @@ void bic_modem_manager_consts(location_array_s &const_locations)
 
 void bic_modem_manager_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ModemManager *)NULL;
 }/*}}}*/
 
 void bic_modem_manager_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -256,7 +256,7 @@ bool bic_modem_manager_method_ModemManager_1(interpreter_thread_s &it,unsigned s
   }
 
   // - set destination data pointer -
-  dst_location->v_data_ptr = (basic_64b)mm_ptr;
+  dst_location->v_data_ptr = (ModemManager *)mm_ptr;
 
   return true;
 }/*}}}*/
@@ -528,7 +528,7 @@ void bic_mm_device_info_consts(location_array_s &const_locations)
 
 void bic_mm_device_info_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (device_info_s *)NULL;
 }/*}}}*/
 
 void bic_mm_device_info_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -701,7 +701,7 @@ void bic_mm_network_info_consts(location_array_s &const_locations)
 #define CREATE_NETWORK_STATUS_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_NETWORK_STATUS_BIC_STATIC(NetworkStatus::NOT_REGISTERED);
@@ -723,7 +723,7 @@ void bic_mm_network_info_consts(location_array_s &const_locations)
 #define CREATE_NETWORK_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_NETWORK_TYPE_BIC_STATIC(NetworkType::NONE);
@@ -740,7 +740,7 @@ void bic_mm_network_info_consts(location_array_s &const_locations)
 
 void bic_mm_network_info_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (network_info_s *)NULL;
 }/*}}}*/
 
 void bic_mm_network_info_clear(interpreter_thread_s &it,location_s *location_ptr)

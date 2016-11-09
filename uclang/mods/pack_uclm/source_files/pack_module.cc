@@ -773,12 +773,12 @@ bool bic_pack_method_code_2(interpreter_thread_s &it,unsigned stack_base,uli *op
         goto PCD_WRITE_DATA;
         case PCD_TERM_FLOAT:
         {/*{{{*/
-          PC_PROCESS_ELEMENT(float,c_bi_class_float,(float)*((double *)&element_location->v_data_ptr))
+          PC_PROCESS_ELEMENT(float,c_bi_class_float,(float)(double)element_location->v_data_ptr)
         }/*}}}*/
         goto PCD_WRITE_DATA;
         case PCD_TERM_DOUBLE:
         {/*{{{*/
-          PC_PROCESS_ELEMENT(double,c_bi_class_float,*((double *)&element_location->v_data_ptr))
+          PC_PROCESS_ELEMENT(double,c_bi_class_float,(double)element_location->v_data_ptr)
         }/*}}}*/
         goto PCD_WRITE_DATA;
         case PCD_TERM_STRING:
@@ -948,7 +948,7 @@ bool bic_pack_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *
   location_s *array_location = it.get_new_location_ptr();
   array_location->v_type = c_bi_class_array;
   array_location->v_reference_cnt.atomic_set(1);
-  array_location->v_data_ptr = (basic_64b)array_ptr;
+  array_location->v_data_ptr = (pointer_array_s *)array_ptr;
 
 #define PD_CLEAR_DATA() \
   it.release_location_ptr(array_location);
@@ -1008,7 +1008,7 @@ bool bic_pack_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *
       do {\
         \
         /* - create new location and push it to result array - */\
-        basic_64b v_data_ptr;\
+        v_data_type v_data_ptr;\
         RETRIEVE_CODE;\
         BIC_CREATE_NEW_LOCATION(new_location,CLASS_TYPE,v_data_ptr);\
         array_ptr->push(new_location);\
@@ -1093,67 +1093,67 @@ bool bic_pack_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *
         break;
         case PCD_TERM_CHAR:
         {/*{{{*/
-          PD_PROCESS_ELEMENT(char,c_bi_class_char,v_data_ptr = (basic_64b)*d_ptr);
+          PD_PROCESS_ELEMENT(char,c_bi_class_char,v_data_ptr = (char)*d_ptr);
         }/*}}}*/
         break;
         case PCD_TERM_SIGNED_BYTE:
         {/*{{{*/
-          PD_PROCESS_ELEMENT(signed char,c_bi_class_integer,v_data_ptr = (basic_64b)(long long int)*d_ptr);
+          PD_PROCESS_ELEMENT(signed char,c_bi_class_integer,v_data_ptr = (long long int)*d_ptr);
         }/*}}}*/
         break;
         case PCD_TERM_UNSIGNED_BYTE:
         {/*{{{*/
-          PD_PROCESS_ELEMENT(unsigned char,c_bi_class_integer,v_data_ptr = (basic_64b)(long long int)*d_ptr);
+          PD_PROCESS_ELEMENT(unsigned char,c_bi_class_integer,v_data_ptr = (long long int)*d_ptr);
         }/*}}}*/
         break;
         case PCD_TERM_SHORT:
         {/*{{{*/
-          PD_PROCESS_ELEMENT(short,c_bi_class_integer,v_data_ptr = (basic_64b)(long long int)*d_ptr);
+          PD_PROCESS_ELEMENT(short,c_bi_class_integer,v_data_ptr = (long long int)*d_ptr);
         }/*}}}*/
         break;
         case PCD_TERM_UNSIGNED_SHORT:
         {/*{{{*/
-          PD_PROCESS_ELEMENT(unsigned short,c_bi_class_integer,v_data_ptr = (basic_64b)(long long int)*d_ptr);
+          PD_PROCESS_ELEMENT(unsigned short,c_bi_class_integer,v_data_ptr = (long long int)*d_ptr);
         }/*}}}*/
         break;
         case PCD_TERM_INT:
         {/*{{{*/
-          PD_PROCESS_ELEMENT(int,c_bi_class_integer,v_data_ptr = (basic_64b)(long long int)*d_ptr);
+          PD_PROCESS_ELEMENT(int,c_bi_class_integer,v_data_ptr = (long long int)*d_ptr);
         }/*}}}*/
         break;
         case PCD_TERM_UNSIGNED:
         {/*{{{*/
-          PD_PROCESS_ELEMENT(unsigned,c_bi_class_integer,v_data_ptr = (basic_64b)(long long int)*d_ptr);
+          PD_PROCESS_ELEMENT(unsigned,c_bi_class_integer,v_data_ptr = (long long int)*d_ptr);
         }/*}}}*/
         break;
         case PCD_TERM_LONG_INT:
         {/*{{{*/
-          PD_PROCESS_ELEMENT(long int,c_bi_class_integer,v_data_ptr = (basic_64b)(long long int)*d_ptr);
+          PD_PROCESS_ELEMENT(long int,c_bi_class_integer,v_data_ptr = (long long int)*d_ptr);
         }/*}}}*/
         break;
         case PCD_TERM_LONG_UNSIGNED:
         {/*{{{*/
-          PD_PROCESS_ELEMENT(long unsigned,c_bi_class_integer,v_data_ptr = (basic_64b)(long long int)*d_ptr);
+          PD_PROCESS_ELEMENT(long unsigned,c_bi_class_integer,v_data_ptr = (long long int)*d_ptr);
         }/*}}}*/
         break;
         case PCD_TERM_LONG_LONG_INT:
         {/*{{{*/
-          PD_PROCESS_ELEMENT(long long int,c_bi_class_integer,v_data_ptr = (basic_64b)(long long int)*d_ptr);
+          PD_PROCESS_ELEMENT(long long int,c_bi_class_integer,v_data_ptr = (long long int)*d_ptr);
         }/*}}}*/
         break;
         case PCD_TERM_LONG_LONG_UNSIGNED:
         {/*{{{*/
-          PD_PROCESS_ELEMENT(long long unsigned,c_bi_class_integer,v_data_ptr = (basic_64b)(long long int)*d_ptr);
+          PD_PROCESS_ELEMENT(long long unsigned,c_bi_class_integer,v_data_ptr = (long long int)*d_ptr);
         }/*}}}*/
         break;
         case PCD_TERM_FLOAT:
         {/*{{{*/
-          PD_PROCESS_ELEMENT(float,c_bi_class_float,*((double *)&v_data_ptr) = *d_ptr);
+          PD_PROCESS_ELEMENT(float,c_bi_class_float,v_data_ptr = (double)*d_ptr);
         }/*}}}*/
         break;
         case PCD_TERM_DOUBLE:
         {/*{{{*/
-          PD_PROCESS_ELEMENT(double,c_bi_class_float,*((double *)&v_data_ptr) = *d_ptr);
+          PD_PROCESS_ELEMENT(double,c_bi_class_float,v_data_ptr = (double)*d_ptr);
         }/*}}}*/
         break;
         case PCD_TERM_STRING:

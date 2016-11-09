@@ -330,7 +330,7 @@ void bic_imx_egl_consts(location_array_s &const_locations)
 #define CREATE_EGL_API_ID_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_EGL_API_ID_BIC_STATIC(EGL_OPENGL_ES_API);
@@ -346,7 +346,7 @@ void bic_imx_egl_consts(location_array_s &const_locations)
 #define CREATE_EGL_ERROR_CODE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_EGL_ERROR_CODE_BIC_STATIC(EGL_SUCCESS);
@@ -369,7 +369,7 @@ void bic_imx_egl_consts(location_array_s &const_locations)
 
 void bic_imx_egl_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (imx_egl_s *)NULL;
 }/*}}}*/
 
 void bic_imx_egl_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -610,7 +610,7 @@ bool bic_imx_egl_method_ImxEgl_3(interpreter_thread_s &it,unsigned stack_base,ul
   ie_ptr->native_window = native_window;
 
   // - set imx egl destination location -
-  dst_location->v_data_ptr = (basic_64b)ie_ptr;
+  dst_location->v_data_ptr = (imx_egl_s *)ie_ptr;
 
   return true;
 }/*}}}*/
@@ -958,7 +958,7 @@ void bic_imx_fb_consts(location_array_s &const_locations)
 
 void bic_imx_fb_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (imx_fb_s *)NULL;
 }/*}}}*/
 
 void bic_imx_fb_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1032,7 +1032,7 @@ bool bic_imx_fb_method_ImxFb_1(interpreter_thread_s &it,unsigned stack_base,uli 
   }
 
   // - set imx fb destination location -
-  dst_location->v_data_ptr = (basic_64b)if_ptr;
+  dst_location->v_data_ptr = (imx_fb_s *)if_ptr;
 
   return true;
 }/*}}}*/
@@ -1183,7 +1183,7 @@ void bic_imx_ipu_consts(location_array_s &const_locations)
 
 void bic_imx_ipu_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (imx_ipu_s *)NULL;
 }/*}}}*/
 
 void bic_imx_ipu_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1258,7 +1258,7 @@ bool bic_imx_ipu_method_ImxIpu_1(interpreter_thread_s &it,unsigned stack_base,ul
   ii_ptr->fb_location = src_0_location;
 
   // - set imx ipu destination location -
-  dst_location->v_data_ptr = (basic_64b)ii_ptr;
+  dst_location->v_data_ptr = (imx_ipu_s *)ii_ptr;
 
   return true;
 }/*}}}*/

@@ -281,7 +281,7 @@ void bic_cv_consts(location_array_s &const_locations)
 #define CREATE_CV_LOAD_IMAGE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_CV_LOAD_IMAGE_BIC_STATIC(CV_LOAD_IMAGE_UNCHANGED);
@@ -299,7 +299,7 @@ void bic_cv_consts(location_array_s &const_locations)
 #define CREATE_CV_IMWRITE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_CV_IMWRITE_BIC_STATIC(CV_IMWRITE_JPEG_QUALITY);
@@ -495,7 +495,7 @@ void bic_cv_mat_consts(location_array_s &const_locations)
 
 void bic_cv_mat_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (Mat *)NULL;
 }/*}}}*/
 
 void bic_cv_mat_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -804,7 +804,7 @@ void bic_cv_window_consts(location_array_s &const_locations)
 
 void bic_cv_window_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (cv_window_s *)NULL;
 }/*}}}*/
 
 void bic_cv_window_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -878,7 +878,7 @@ bool bic_cv_window_method_CvWindow_1(interpreter_thread_s &it,unsigned stack_bas
 
   win_ptr->name = *string_ptr;
 
-  dst_location->v_data_ptr = (basic_64b)win_ptr;
+  dst_location->v_data_ptr = (cv_window_s *)win_ptr;
 
   return true;
 }/*}}}*/
@@ -1153,7 +1153,7 @@ void bic_cv_capture_consts(location_array_s &const_locations)
 #define CREATE_CV_CAPTURE_PROP_ID_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_CV_CAPTURE_PROP_ID_BIC_STATIC(CV_CAP_PROP_POS_MSEC);
@@ -1277,7 +1277,7 @@ void bic_cv_capture_consts(location_array_s &const_locations)
 
 void bic_cv_capture_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (VideoCapture *)NULL;
 }/*}}}*/
 
 void bic_cv_capture_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1343,7 +1343,7 @@ bool bic_cv_capture_method_CvCapture_1(interpreter_thread_s &it,unsigned stack_b
       return false;
     }
 
-    dst_location->v_data_ptr = (basic_64b)vc_ptr;
+    dst_location->v_data_ptr = (VideoCapture *)vc_ptr;
   }
   else
   {
@@ -1359,7 +1359,7 @@ bool bic_cv_capture_method_CvCapture_1(interpreter_thread_s &it,unsigned stack_b
       return false;
     }
 
-    dst_location->v_data_ptr = (basic_64b)vc_ptr;
+    dst_location->v_data_ptr = (VideoCapture *)vc_ptr;
   }
 
   return true;
@@ -1482,8 +1482,7 @@ bool bic_cv_capture_method_get_1(interpreter_thread_s &it,unsigned stack_base,ul
   VideoCapture *vc_ptr = (VideoCapture *)dst_location->v_data_ptr;
   double result = vc_ptr->get(prop_id);
 
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/
@@ -1617,7 +1616,7 @@ void bic_cv_writer_consts(location_array_s &const_locations)
 
 void bic_cv_writer_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (cv_writer_s *)NULL;
 }/*}}}*/
 
 void bic_cv_writer_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1712,7 +1711,7 @@ bool bic_cv_writer_method_CvWriter_6(interpreter_thread_s &it,unsigned stack_bas
   vw_ptr->height = height;
   vw_ptr->writer_ptr = writer_ptr;
 
-  dst_location->v_data_ptr = (basic_64b)vw_ptr;
+  dst_location->v_data_ptr = (cv_writer_s *)vw_ptr;
 
   return true;
 }/*}}}*/

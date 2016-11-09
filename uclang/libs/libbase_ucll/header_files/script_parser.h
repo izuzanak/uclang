@@ -1756,7 +1756,7 @@ inline location_s *interpreter_thread_s::get_new_reference(location_s **src_loca
     location_s *ref_location = get_new_location_ptr();
     ref_location->v_type = c_bi_reference;
     ref_location->v_reference_cnt.atomic_set(2);
-    ref_location->v_data_ptr = (basic_64b)reference_ptr;
+    ref_location->v_data_ptr = (pointer *)reference_ptr;
 
     *src_location_ptr = ref_location;
 
@@ -1875,7 +1875,7 @@ inline bool interpreter_thread_s::retrieve_integer(location_s *location_ptr,long
     a_number = (long long int)location_ptr->v_data_ptr;
     break;
   case c_bi_class_float:
-    a_number = (long long int)*((double *)&location_ptr->v_data_ptr);
+    a_number = (double)location_ptr->v_data_ptr;
     break;
 
   default:
@@ -1890,10 +1890,10 @@ inline bool interpreter_thread_s::retrieve_float(location_s *location_ptr,double
   switch (location_ptr->v_type)
   {
   case c_bi_class_integer:
-    a_number = (double)(long long int)location_ptr->v_data_ptr;
+    a_number = (long long int)location_ptr->v_data_ptr;
     break;
   case c_bi_class_float:
-    a_number = *((double *)&location_ptr->v_data_ptr);
+    a_number = (double)location_ptr->v_data_ptr;
     break;
 
   default:
@@ -1914,7 +1914,7 @@ inline bool interpreter_thread_s::test_value(location_s *location_ptr,bool &a_re
     a_result = (((long long int)location_ptr->v_data_ptr) != 0);
     break;
   case c_bi_class_float:
-    a_result = (*((double *)&location_ptr->v_data_ptr) != 0.0);
+    a_result = (((double)location_ptr->v_data_ptr) != 0.0);
     break;
   case c_bi_class_string:
     a_result = (((string_s *)location_ptr->v_data_ptr)->size > 1);

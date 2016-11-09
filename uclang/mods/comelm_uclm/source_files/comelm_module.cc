@@ -280,7 +280,7 @@ void bic_elm_comm_consts(location_array_s &const_locations)
 
 void bic_elm_comm_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (CElmCommProc *)NULL;
 }/*}}}*/
 
 void bic_elm_comm_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -348,7 +348,7 @@ bool bic_elm_comm_method_ElmComm_3(interpreter_thread_s &it,unsigned stack_base,
   }
 
   // - set destination data pointer -
-  dst_location->v_data_ptr = (basic_64b)ecp_ptr;
+  dst_location->v_data_ptr = (CElmCommProc *)ecp_ptr;
 
   return true;
 }/*}}}*/
@@ -648,7 +648,7 @@ void bic_elm_packet_consts(location_array_s &const_locations)
 #define CREATE_ELM_PACKET_BIC_STATIC(PACKET_TYPE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)PACKET_TYPE;\
+  cv_ptr->v_data_ptr = (long long int)PACKET_TYPE;\
   cv_ptr++;
 
     CREATE_ELM_PACKET_BIC_STATIC(PACKET_ADDRESS);
@@ -664,7 +664,7 @@ void bic_elm_packet_consts(location_array_s &const_locations)
 
 void bic_elm_packet_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (pointer)NULL;
 }/*}}}*/
 
 void bic_elm_packet_clear(interpreter_thread_s &it,location_s *location_ptr)

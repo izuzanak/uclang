@@ -1539,7 +1539,7 @@ void bic_filter_consts(location_array_s &const_locations)
 
 void bic_filter_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (filter_s *)NULL;
 }/*}}}*/
 
 void bic_filter_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1777,7 +1777,7 @@ void bic_range_consts(location_array_s &const_locations)
 
 void bic_range_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (range_s *)NULL;
 }/*}}}*/
 
 void bic_range_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1873,7 +1873,7 @@ bool bic_range_method_Range_2(interpreter_thread_s &it,unsigned stack_base,uli *
   tmp_code[7] = 1;
 
   // - set object pointer to result -
-  dst_location->v_data_ptr = (basic_64b)range_ptr;
+  dst_location->v_data_ptr = (range_s *)range_ptr;
 
   return true;
 }/*}}}*/
@@ -1923,7 +1923,7 @@ bool bic_range_method_Range_3(interpreter_thread_s &it,unsigned stack_base,uli *
   tmp_code[8] = 2;
 
   // - set object pointer to result -
-  dst_location->v_data_ptr = (basic_64b)range_ptr;
+  dst_location->v_data_ptr = (range_s *)range_ptr;
 
   return true;
 }/*}}}*/

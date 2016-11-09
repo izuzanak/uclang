@@ -395,7 +395,7 @@ void bic_py_object_consts(location_array_s &const_locations)
 
 void bic_py_object_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (PyObject *)NULL;
 }/*}}}*/
 
 void bic_py_object_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -614,7 +614,7 @@ bool bic_py_object_method_PyObject_1(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - set python object pointer -
-  dst_location->v_data_ptr = (basic_64b)pyo_obj;
+  dst_location->v_data_ptr = (PyObject *)pyo_obj;
 
   return true;
 }/*}}}*/
@@ -1386,7 +1386,7 @@ void bic_py_attr_ref_consts(location_array_s &const_locations)
 
 void bic_py_attr_ref_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (py_reference_s *)NULL;
 }/*}}}*/
 
 void bic_py_attr_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1610,7 +1610,7 @@ void bic_py_item_ref_consts(location_array_s &const_locations)
 
 void bic_py_item_ref_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (py_reference_s *)NULL;
 }/*}}}*/
 
 void bic_py_item_ref_clear(interpreter_thread_s &it,location_s *location_ptr)

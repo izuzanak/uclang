@@ -249,7 +249,7 @@ void bic_sqlite_conn_consts(location_array_s &const_locations)
 #define CREATE_SQLITE_CONN_OPEN_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_SQLITE_CONN_OPEN_BIC_STATIC(SQLITE_OPEN_READONLY);
@@ -278,7 +278,7 @@ void bic_sqlite_conn_consts(location_array_s &const_locations)
 
 void bic_sqlite_conn_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (sqlite3 *)NULL;
 }/*}}}*/
 
 void bic_sqlite_conn_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -333,7 +333,7 @@ bool bic_sqlite_conn_method_SQLiteConn_1(interpreter_thread_s &it,unsigned stack
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)db_ptr;
+  dst_location->v_data_ptr = (sqlite3 *)db_ptr;
 
   return true;
 }/*}}}*/
@@ -370,7 +370,7 @@ bool bic_sqlite_conn_method_SQLiteConn_2(interpreter_thread_s &it,unsigned stack
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)db_ptr;
+  dst_location->v_data_ptr = (sqlite3 *)db_ptr;
 
   return true;
 }/*}}}*/
@@ -450,8 +450,7 @@ bool bic_sqlite_conn_method_execute_1(interpreter_thread_s &it,unsigned stack_ba
             {
               double value = sqlite3_column_double(statement_ptr,col_idx);
 
-              basic_64b &v_data_ptr = *((basic_64b *)&value);
-              BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);
+              BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);
               row_array->push(new_location);
             }
             break;
@@ -746,8 +745,7 @@ built_in_variable_s sqlite_statement_variables[] =
           {\
             double value = sqlite3_column_double(statement_ptr,col_idx);\
 \
-            basic_64b &v_data_ptr = *((basic_64b *)&value);\
-            BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);\
+            BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);\
             row_array->push(new_location);\
           }\
           break;\
@@ -809,7 +807,7 @@ void bic_sqlite_statement_consts(location_array_s &const_locations)
 
 void bic_sqlite_statement_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (sqlite_stmt_s *)NULL;
 }/*}}}*/
 
 void bic_sqlite_statement_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -860,7 +858,7 @@ bool bic_sqlite_statement_method_bind_2(interpreter_thread_s &it,unsigned stack_
       break;
     case c_bi_class_float:
       {
-        double value = *((double *)&src_1_location->v_data_ptr);
+        double value = (double)src_1_location->v_data_ptr;
         result = sqlite3_bind_double(statement_ptr,index,value);
       }
       break;

@@ -313,7 +313,7 @@ void bic_snmp_session_consts(location_array_s &const_locations)
 
 void bic_snmp_session_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (snmp_session_s *)NULL;
 }/*}}}*/
 
 void bic_snmp_session_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -432,7 +432,7 @@ bool bic_snmp_session_method_SnmpSession_1(interpreter_thread_s &it,unsigned sta
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)snmps_ptr;
+  dst_location->v_data_ptr = (snmp_session_s *)snmps_ptr;
 
   return true;
 }/*}}}*/
@@ -897,7 +897,7 @@ void bic_snmp_agent_consts(location_array_s &const_locations)
 #define CREATE_SNMP_AGENT_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_SNMP_AGENT_TYPE_BIC_STATIC(SNMP_AGENT_TYPE_MASTER);
@@ -912,7 +912,7 @@ void bic_snmp_agent_consts(location_array_s &const_locations)
 #define CREATE_SNMP_VALUE_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_SNMP_VALUE_TYPE_BIC_STATIC(SNMP_VALUE_INTEGER);
@@ -922,7 +922,7 @@ void bic_snmp_agent_consts(location_array_s &const_locations)
 
 void bic_snmp_agent_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (snmp_agent_s *)NULL;
 }/*}}}*/
 
 void bic_snmp_agent_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1059,7 +1059,7 @@ bool bic_snmp_agent_method_SnmpAgent_2(interpreter_thread_s &it,unsigned stack_b
     }
   }
 
-  dst_location->v_data_ptr = (basic_64b)snmpa_ptr;
+  dst_location->v_data_ptr = (snmp_agent_s *)snmpa_ptr;
 
   return true;
 }/*}}}*/
@@ -1382,7 +1382,7 @@ void bic_snmp_obj_consts(location_array_s &const_locations)
 
 void bic_snmp_obj_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (snmp_obj_s *)NULL;
 }/*}}}*/
 
 void bic_snmp_obj_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1626,7 +1626,7 @@ void bic_snmp_oid_consts(location_array_s &const_locations)
 
 void bic_snmp_oid_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (snmp_oid_s *)NULL;
 }/*}}}*/
 
 void bic_snmp_oid_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1687,7 +1687,7 @@ bool bic_snmp_oid_method_SnmpOid_1(interpreter_thread_s &it,unsigned stack_base,
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)snmpo_ptr;
+  dst_location->v_data_ptr = (snmp_oid_s *)snmpo_ptr;
 
   return true;
 }/*}}}*/
@@ -1707,7 +1707,7 @@ bool bic_snmp_oid_method_items_0(interpreter_thread_s &it,unsigned stack_base,ul
 
     do {
       
-      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,*ptr);
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,(long long int)*ptr);
       new_array_ptr->push(new_location);
 
     } while(++ptr < ptr_end);

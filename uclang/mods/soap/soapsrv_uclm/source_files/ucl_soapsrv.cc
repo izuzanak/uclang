@@ -66,18 +66,15 @@ int ns__add(struct soap *soap,double a,double b,double *result)
 {/*{{{*/
   GSOAP_CALL_CALLBACK_DELEGATE(ns__add,param_data,param_cnt,c_bi_class_float,
 
-    basic_64b &a_value = *((basic_64b *)&a);
-    basic_64b &b_value = *((basic_64b *)&b);
-
-    BIC_CREATE_NEW_LOCATION_REFS(a_loc,c_bi_class_float,a_value,0);
-    BIC_CREATE_NEW_LOCATION_REFS(b_loc,c_bi_class_float,b_value,0);
+    BIC_CREATE_NEW_LOCATION_REFS(a_loc,c_bi_class_float,a,0);
+    BIC_CREATE_NEW_LOCATION_REFS(b_loc,c_bi_class_float,b,0);
 
     const unsigned param_cnt = 2;
     pointer param_data[param_cnt] = {a_loc MP_COMMA b_loc};
     ,
     *result = 0.0;
     ,
-    *result = *((double *)((basic_64b *)&trg_location->v_data_ptr));
+    *result = (double)trg_location->v_data_ptr;
   );
 }/*}}}*/
 
@@ -85,18 +82,15 @@ int ns__sub(struct soap *soap,double a,double b,double *result)
 {/*{{{*/
   GSOAP_CALL_CALLBACK_DELEGATE(ns__sub,param_data,param_cnt,c_bi_class_float,
 
-    basic_64b &a_value = *((basic_64b *)&a);
-    basic_64b &b_value = *((basic_64b *)&b);
-
-    BIC_CREATE_NEW_LOCATION_REFS(a_loc,c_bi_class_float,a_value,0);
-    BIC_CREATE_NEW_LOCATION_REFS(b_loc,c_bi_class_float,b_value,0);
+    BIC_CREATE_NEW_LOCATION_REFS(a_loc,c_bi_class_float,a,0);
+    BIC_CREATE_NEW_LOCATION_REFS(b_loc,c_bi_class_float,b,0);
 
     const unsigned param_cnt = 2;
     pointer param_data[param_cnt] = {a_loc MP_COMMA b_loc};
     ,
     *result = 0.0;
     ,
-    *result = *((double *)((basic_64b *)&trg_location->v_data_ptr));
+    *result = (double)trg_location->v_data_ptr;
   );
 }/*}}}*/
 
@@ -104,16 +98,14 @@ int ns__sqrt(struct soap *soap,double a,double *result)
 {/*{{{*/
   GSOAP_CALL_CALLBACK_DELEGATE(ns__sqrt,param_data,param_cnt,c_bi_class_float,
 
-    basic_64b &a_value = *((basic_64b *)&a);
-
-    BIC_CREATE_NEW_LOCATION_REFS(a_loc,c_bi_class_float,a_value,0);
+    BIC_CREATE_NEW_LOCATION_REFS(a_loc,c_bi_class_float,a,0);
 
     const unsigned param_cnt = 1;
     pointer *param_data = (pointer *)&a_loc;
     ,
     *result = 0.0;
     ,
-    *result = *((double *)((basic_64b *)&trg_location->v_data_ptr));
+    *result = (double)trg_location->v_data_ptr;
   );
 }/*}}}*/
 

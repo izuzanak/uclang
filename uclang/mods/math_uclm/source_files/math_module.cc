@@ -191,7 +191,7 @@ bool math_print_exception(interpreter_s &it,exception_s &exception)
       break;\
       \
     case c_bi_class_float:\
-      *f_ptr = *((double *)&item_location->v_data_ptr);\
+      *f_ptr = (double)item_location->v_data_ptr;\
       break;\
       \
       /* - ERROR - */\
@@ -209,8 +209,7 @@ bool math_print_exception(interpreter_s &it,exception_s &exception)
     float *f_ptr_end = f_ptr + FLOAT_CNT;\
     do {\
       double value = *f_ptr;\
-      basic_64b &v_data_ptr = *((basic_64b *)&value);\
-      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);\
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);\
       (ARRAY_PTR)->push(new_location);\
     } while(++f_ptr < f_ptr_end);\
   }/*}}}*/
@@ -221,8 +220,7 @@ bool math_print_exception(interpreter_s &it,exception_s &exception)
     float *f_ptr_end = f_ptr + FLOAT_CNT;\
     do {\
       double value = *f_ptr;\
-      basic_64b &v_data_ptr = *((basic_64b *)&value);\
-      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);\
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);\
       (ARRAY_PTR)->push(new_location);\
     } while((f_ptr += (FLOAT_STEP)) < f_ptr_end);\
   }/*}}}*/
@@ -236,7 +234,7 @@ bool math_print_exception(interpreter_s &it,exception_s &exception)
       break;\
       \
     case c_bi_class_float:\
-      *float_ptr++ = *((double *)&(LOCATION)->v_data_ptr);\
+      *float_ptr++ = (double)(LOCATION)->v_data_ptr;\
       break;\
       \
     default:\
@@ -251,8 +249,7 @@ bool math_print_exception(interpreter_s &it,exception_s &exception)
     \
     double result = ((glm::VEC_TYPE *)dst_location->v_data_ptr)->ELEMENT_NAME;\
     \
-    basic_64b &v_data_ptr = *((basic_64b *)&result);\
-    BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);\
+    BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
     \
     return true;\
   }/*}}}*/
@@ -340,8 +337,7 @@ bool math_print_exception(interpreter_s &it,exception_s &exception)
 \
   double result = glm::FUNCTION(vec_dst);\
 \
-  basic_64b &v_data_ptr = *((basic_64b *)&result);\
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);\
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
 \
   return true;\
 }/*}}}*/
@@ -368,8 +364,7 @@ bool math_print_exception(interpreter_s &it,exception_s &exception)
 \
   double result = glm::FUNCTION(vec_dst,vec_src);\
 \
-  basic_64b &v_data_ptr = *((basic_64b *)&result);\
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);\
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
 \
   return true;\
 }/*}}}*/
@@ -443,7 +438,7 @@ void bic_math_consts(location_array_s &const_locations)
 #define CREATE_MATH_BASIC_FLOAT_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_float;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  *((double *)&cv_ptr->v_data_ptr) = VALUE;\
+  cv_ptr->v_data_ptr = (double)VALUE;\
   cv_ptr++;
 
     CREATE_MATH_BASIC_FLOAT_BIC_STATIC(3.14159265358979323846264338327950288L);
@@ -454,11 +449,12 @@ void bic_math_consts(location_array_s &const_locations)
 
 void bic_math_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  cassert(0);
 }/*}}}*/
 
 void bic_math_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
+  cassert(0);
 }/*}}}*/
 
 bool bic_math_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -625,7 +621,7 @@ void bic_vec2_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   glm::vec2 *v2_ptr = new glm::vec2();
 
-  location_ptr->v_data_ptr = (basic_64b)v2_ptr;
+  location_ptr->v_data_ptr = (glm::vec2 *)v2_ptr;
 }/*}}}*/
 
 void bic_vec2_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -649,7 +645,7 @@ bool bic_vec2_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_
 {/*{{{*/
   glm::vec2 *v2_ptr = new glm::vec2();
 
-  location_ptr->v_data_ptr = (basic_64b)v2_ptr;
+  location_ptr->v_data_ptr = (glm::vec2 *)v2_ptr;
 
   if (stream.used < (sizeof(float) << 1))
   {
@@ -973,7 +969,7 @@ void bic_vec3_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   glm::vec3 *v3_ptr = new glm::vec3();
 
-  location_ptr->v_data_ptr = (basic_64b)v3_ptr;
+  location_ptr->v_data_ptr = (glm::vec3 *)v3_ptr;
 }/*}}}*/
 
 void bic_vec3_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -998,7 +994,7 @@ bool bic_vec3_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_
 {/*{{{*/
   glm::vec3 *v3_ptr = new glm::vec3();
 
-  location_ptr->v_data_ptr = (basic_64b)v3_ptr;
+  location_ptr->v_data_ptr = (glm::vec3 *)v3_ptr;
 
   if (stream.used < 3*sizeof(float))
   {
@@ -1358,7 +1354,7 @@ void bic_vec4_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   glm::vec4 *v4_ptr = new glm::vec4();
 
-  location_ptr->v_data_ptr = (basic_64b)v4_ptr;
+  location_ptr->v_data_ptr = (glm::vec4 *)v4_ptr;
 }/*}}}*/
 
 void bic_vec4_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1384,7 +1380,7 @@ bool bic_vec4_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_
 {/*{{{*/
   glm::vec4 *v4_ptr = new glm::vec4();
 
-  location_ptr->v_data_ptr = (basic_64b)v4_ptr;
+  location_ptr->v_data_ptr = (glm::vec4 *)v4_ptr;
 
   if (stream.used < 4*sizeof(float))
   {
@@ -1821,7 +1817,7 @@ void bic_mat4_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   glm::mat4 *m4_ptr = new glm::mat4();
 
-  location_ptr->v_data_ptr = (basic_64b)m4_ptr;
+  location_ptr->v_data_ptr = (glm::mat4 *)m4_ptr;
 }/*}}}*/
 
 void bic_mat4_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2482,7 +2478,7 @@ void bic_primes_init(interpreter_thread_s &it,location_s *location_ptr)
   primes_s *primes_ptr = (primes_s *)cmalloc(sizeof(primes_s));
   primes_ptr->init();
 
-  location_ptr->v_data_ptr = (basic_64b)primes_ptr;
+  location_ptr->v_data_ptr = (primes_s *)primes_ptr;
 }/*}}}*/
 
 void bic_primes_clear(interpreter_thread_s &it,location_s *location_ptr)

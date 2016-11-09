@@ -465,7 +465,7 @@ void bic_ssh2_session_consts(location_array_s &const_locations)
 #define CREATE_SSH2_HOSTKEY_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_SSH2_HOSTKEY_TYPE_BIC_STATIC(LIBSSH2_HOSTKEY_HASH_MD5);
@@ -475,7 +475,7 @@ void bic_ssh2_session_consts(location_array_s &const_locations)
 
 void bic_ssh2_session_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ssh2_session_s *)NULL;
 }/*}}}*/
 
 void bic_ssh2_session_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -562,7 +562,7 @@ bool bic_ssh2_session_method_Ssh2Session_1(interpreter_thread_s &it,unsigned sta
   // - set ssh2 session state to handshaked -
   ssh2s_ptr->state = SSH2_SESSION_STATE_HANDSHAKED;
 
-  dst_location->v_data_ptr = (basic_64b)ssh2s_ptr;
+  dst_location->v_data_ptr = (ssh2_session_s *)ssh2s_ptr;
 
   return true;
 }/*}}}*/
@@ -1040,7 +1040,7 @@ void bic_sftp_session_consts(location_array_s &const_locations)
 #define CREATE_SFTP_OPEN_MODE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_SFTP_OPEN_MODE_BIC_STATIC(LIBSSH2_FXF_READ);
@@ -1054,7 +1054,7 @@ void bic_sftp_session_consts(location_array_s &const_locations)
 
 void bic_sftp_session_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (sftp_session_s *)NULL;
 }/*}}}*/
 
 void bic_sftp_session_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1524,7 +1524,7 @@ void bic_sftp_handle_consts(location_array_s &const_locations)
 
 void bic_sftp_handle_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (sftp_handle_s *)NULL;
 }/*}}}*/
 
 void bic_sftp_handle_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1630,7 +1630,7 @@ bool bic_sftp_handle_method_close_0(interpreter_thread_s &it,unsigned stack_base
   sftph_ptr->clear(it);
   cfree(sftph_ptr);
 
-  dst_location->v_data_ptr = (basic_64b)NULL;
+  dst_location->v_data_ptr = (sftp_handle_s *)NULL;
 
   BIC_SET_RESULT_BLANK();
 
@@ -1996,7 +1996,7 @@ void bic_ssh2_channel_consts(location_array_s &const_locations)
 
 void bic_ssh2_channel_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ssh2_channel_s *)NULL;
 }/*}}}*/
 
 void bic_ssh2_channel_clear(interpreter_thread_s &it,location_s *location_ptr)

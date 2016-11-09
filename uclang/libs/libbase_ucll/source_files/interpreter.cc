@@ -31,7 +31,7 @@ exception_s *exception_s::throw_exception(interpreter_thread_s &it,unsigned a_ty
   location_s *new_location = it.get_new_location_ptr();
   new_location->v_type = c_bi_class_exception;
   new_location->v_reference_cnt.atomic_set(1);
-  new_location->v_data_ptr = (basic_64b)new_exception;
+  new_location->v_data_ptr = (exception_s *)new_exception;
 
   it.release_location_ptr((location_s *)it.exception_location);
   it.exception_location = (pointer)new_location;
@@ -159,7 +159,7 @@ bool interpreter_thread_s::create_new_object_blank_constructor(location_s *new_l
       while(object_ptr->used < class_record.element_cnt);
     }
 
-    new_location->v_data_ptr = (basic_64b)object_ptr;
+    new_location->v_data_ptr = (pointer_array_s *)object_ptr;
 
     // - traverse through all initializing codes -
     unsigned new_stack_base = data_stack.used;
@@ -1064,7 +1064,7 @@ bool interpreter_thread_s::handle_signal(int signal_number)
   location_s *sn_location = get_new_location_ptr();
   sn_location->v_type = c_bi_class_integer;
   sn_location->v_reference_cnt.atomic_set(1);
-  sn_location->v_data_ptr = (basic_64b)signal_number;
+  sn_location->v_data_ptr = (long long int)signal_number;
 
   // - call delegate method -
   location_s *trg_location = NULL;
@@ -1205,7 +1205,7 @@ void interpreter_s::create_constant_and_static_locations()
     {
       cv_ptr->v_type = c_bi_class_char;
       cv_ptr->v_reference_cnt.atomic_set(1);
-      cv_ptr->v_data_ptr = (basic_64b)*c_ptr;
+      cv_ptr->v_data_ptr = (char)*c_ptr;
     }
     while(++cv_ptr,++c_ptr < c_ptr_end);
   }
@@ -1218,7 +1218,7 @@ void interpreter_s::create_constant_and_static_locations()
     {
       cv_ptr->v_type = c_bi_class_integer;
       cv_ptr->v_reference_cnt.atomic_set(1);
-      cv_ptr->v_data_ptr = (basic_64b)const_ints.data[ci_idx].object;
+      cv_ptr->v_data_ptr = (long long int)const_ints.data[ci_idx].object;
     }
     while(++cv_ptr,++ci_idx < const_ints.used);
   }
@@ -1231,7 +1231,7 @@ void interpreter_s::create_constant_and_static_locations()
     {
       cv_ptr->v_type = c_bi_class_float;
       cv_ptr->v_reference_cnt.atomic_set(1);
-      cv_ptr->v_data_ptr = *((basic_64b *)&const_floats.data[cf_idx].object);
+      cv_ptr->v_data_ptr = (double)const_floats.data[cf_idx].object;
     }
     while(++cv_ptr,++cf_idx < const_floats.used);
   }
@@ -1244,7 +1244,7 @@ void interpreter_s::create_constant_and_static_locations()
     {
       cv_ptr->v_type = c_bi_class_string;
       cv_ptr->v_reference_cnt.atomic_set(1);
-      cv_ptr->v_data_ptr = (basic_64b)&const_strings.data[cs_idx].object;
+      cv_ptr->v_data_ptr = (string_s *)&const_strings.data[cs_idx].object;
     }
     while(++cv_ptr,++cs_idx < const_strings.used);
   }
@@ -1258,7 +1258,7 @@ void interpreter_s::create_constant_and_static_locations()
     {
       cv_ptr->v_type = c_bi_class_type;
       cv_ptr->v_reference_cnt.atomic_set(1);
-      cv_ptr->v_data_ptr = (basic_64b)cr_idx;
+      cv_ptr->v_data_ptr = (unsigned)cr_idx;
     }
     while(++cv_ptr,++cr_idx < class_records.used);
   }
@@ -1376,7 +1376,7 @@ void interpreter_s::DEBUG_print_const_locations()
         printf("Integer: %" HOST_LL_FORMAT "d\n",(long long int)v_ptr->v_data_ptr);
         break;
       case c_bi_class_float:
-        printf("Float: %f\n",*((double *)&v_ptr->v_data_ptr));
+        printf("Float: %f\n",(double)v_ptr->v_data_ptr);
         break;
       case c_bi_class_string:
         printf("String: %s\n",((string_s *)v_ptr->v_data_ptr)->data);
@@ -1463,7 +1463,7 @@ bool interpreter_s::run_new_thread(interpreter_thread_s &p_thread,unsigned p_sta
   location_s *thread_location = p_thread.get_new_location_ptr();
   thread_location->v_type = c_bi_class_thread;
   thread_location->v_reference_cnt.atomic_set(2);
-  thread_location->v_data_ptr = (basic_64b)new_thread_ptr;
+  thread_location->v_data_ptr = (thread_s *)new_thread_ptr;
 
   // - store location to old thread stack -
   pointer &stack_location = p_thread.data_stack[p_stack_base + p_stack_trg];
@@ -1572,7 +1572,7 @@ bool interpreter_s::run_new_thread(interpreter_thread_s &p_thread,unsigned p_sta
     location_s *error_location = p_thread.get_new_location_ptr();
     error_location->v_type = c_bi_class_error;
     error_location->v_reference_cnt.atomic_set(1);
-    error_location->v_data_ptr = (basic_64b)ret;
+    error_location->v_data_ptr = (unsigned)ret;
 
     // - insert error value to return position -
     p_thread.data_stack[p_stack_base + p_stack_trg] = (pointer)error_location;
@@ -1662,7 +1662,7 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
     location_s *new_location = thread->get_new_location_ptr();
     new_location->v_type = c_bi_class_thread;
     new_location->v_reference_cnt.atomic_set(1);
-    new_location->v_data_ptr = (basic_64b)new_thread;
+    new_location->v_data_ptr = (thread_s *)new_thread;
 
     thread->thread_location = (pointer)new_location;
   }
@@ -1741,7 +1741,7 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
               location_s *new_location = thread->get_new_location_ptr();
               new_location->v_type = c_bi_class_string;
               new_location->v_reference_cnt.atomic_set(1);
-              new_location->v_data_ptr = (basic_64b)string_ptr;
+              new_location->v_data_ptr = (string_s *)string_ptr;
 
               // - insertion of string location to argument array -
               array_ptr->push((pointer)new_location);
@@ -1754,7 +1754,7 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
           location_s *args_location = thread->get_new_location_ptr();
           args_location->v_type = c_bi_class_array;
           args_location->v_reference_cnt.atomic_set(1);
-          args_location->v_data_ptr = (basic_64b)array_ptr;
+          args_location->v_data_ptr = (pointer_array_s *)array_ptr;
 
           thread->data_stack.push((pointer)args_location);
         }

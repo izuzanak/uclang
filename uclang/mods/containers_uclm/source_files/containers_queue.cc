@@ -376,7 +376,7 @@ void bic_queue_init(interpreter_thread_s &it,location_s *location_ptr)
   pointer_queue_s *queue_ptr = (pointer_queue_s *)cmalloc(sizeof(pointer_queue_s));
   queue_ptr->init();
 
-  location_ptr->v_data_ptr = (basic_64b)queue_ptr;
+  location_ptr->v_data_ptr = (pointer_queue_s *)queue_ptr;
 }/*}}}*/
 
 void bic_queue_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -495,7 +495,7 @@ bool bic_queue_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array
   pointer_queue_s *queue_ptr = (pointer_queue_s *)cmalloc(sizeof(pointer_queue_s));
   queue_ptr->init();
 
-  location_ptr->v_data_ptr = (basic_64b)queue_ptr;
+  location_ptr->v_data_ptr = (pointer_queue_s *)queue_ptr;
 
   if (stream.used < sizeof(unsigned))
   {

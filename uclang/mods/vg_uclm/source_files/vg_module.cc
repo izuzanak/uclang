@@ -499,7 +499,7 @@ void bic_vg_consts(location_array_s &const_locations)
 #define CREATE_VG_BASIC_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_VG_BASIC_BIC_STATIC(VG_FALSE);
@@ -737,11 +737,12 @@ void bic_vg_consts(location_array_s &const_locations)
 
 void bic_vg_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  cassert(0);
 }/*}}}*/
 
 void bic_vg_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
+  cassert(0);
 }/*}}}*/
 
 bool bic_vg_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -1195,7 +1196,7 @@ void bic_vg_paint_consts(location_array_s &const_locations)
 
 void bic_vg_paint_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)VG_INVALID_HANDLE;
+  location_ptr->v_data_ptr = (VGPaint)VG_INVALID_HANDLE;
 }/*}}}*/
 
 void bic_vg_paint_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1228,7 +1229,7 @@ bool bic_vg_paint_method_VgPaint_0(interpreter_thread_s &it,unsigned stack_base,
 
   VGPaint paint = vgCreatePaint();
 
-  dst_location->v_data_ptr = (basic_64b)paint;
+  dst_location->v_data_ptr = (VGPaint)paint;
 
   return true;
 }/*}}}*/
@@ -1268,7 +1269,7 @@ bool bic_vg_paint_method_VgPaint_1(interpreter_thread_s &it,unsigned stack_base,
   VGPaint paint = vgCreatePaint();
   vgSetParameteri(paint,VG_PAINT_TYPE,paint_type);
 
-  dst_location->v_data_ptr = (basic_64b)paint;
+  dst_location->v_data_ptr = (VGPaint)paint;
 
   return true;
 }/*}}}*/
@@ -1523,7 +1524,7 @@ void bic_vg_path_consts(location_array_s &const_locations)
 
 void bic_vg_path_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)VG_INVALID_HANDLE;
+  location_ptr->v_data_ptr = (VGPath)VG_INVALID_HANDLE;
 }/*}}}*/
 
 void bic_vg_path_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1556,7 +1557,7 @@ bool bic_vg_path_method_VgPath_0(interpreter_thread_s &it,unsigned stack_base,ul
 
   VGPath path = vgCreatePath(VG_PATH_FORMAT_STANDARD,VG_PATH_DATATYPE_F,1.0f,0.0f,0,0,VG_PATH_CAPABILITY_ALL);
 
-  dst_location->v_data_ptr = (basic_64b)path;
+  dst_location->v_data_ptr = (VGPath)path;
 
   return true;
 }/*}}}*/
@@ -1584,7 +1585,7 @@ bool bic_vg_path_method_VgPath_2(interpreter_thread_s &it,unsigned stack_base,ul
 
   VGPath path = vgCreatePath(VG_PATH_FORMAT_STANDARD,VG_PATH_DATATYPE_F,1.0f,0.0f,segment_cap,coordination_cap,VG_PATH_CAPABILITY_ALL);
 
-  dst_location->v_data_ptr = (basic_64b)path;
+  dst_location->v_data_ptr = (VGPath)path;
 
   return true;
 }/*}}}*/

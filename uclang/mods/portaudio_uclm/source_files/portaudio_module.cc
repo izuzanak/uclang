@@ -320,7 +320,7 @@ void bic_port_audio_consts(location_array_s &const_locations)
 #define CREATE_PORTAUDIO_SAMPLE_FORMAT_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_PORTAUDIO_SAMPLE_FORMAT_BIC_STATIC(paFloat32);
@@ -626,7 +626,7 @@ void bic_pa_host_api_consts(location_array_s &const_locations)
 
 void bic_pa_host_api_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (PaHostApiInfo *)NULL;
 }/*}}}*/
 
 void bic_pa_host_api_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -913,8 +913,7 @@ built_in_variable_s pa_device_variables[] =
   pa_device_s *pad_ptr = (pa_device_s *)dst_location->v_data_ptr;\
   double result = pad_ptr->di_ptr->NAME;\
 \
-  basic_64b &v_data_ptr = *((basic_64b *)&result);\
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);\
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
 \
   return true;\
 }/*}}}*/
@@ -925,7 +924,7 @@ void bic_pa_device_consts(location_array_s &const_locations)
 
 void bic_pa_device_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (pa_device_s *)NULL;
 }/*}}}*/
 
 void bic_pa_device_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1112,7 +1111,7 @@ void bic_pa_parameters_consts(location_array_s &const_locations)
 
 void bic_pa_parameters_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (PaStreamParameters *)NULL;
 }/*}}}*/
 
 void bic_pa_parameters_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1178,7 +1177,7 @@ bool bic_pa_parameters_method_PaParameters_4(interpreter_thread_s &it,unsigned s
   sp_ptr->suggestedLatency = latency;
   sp_ptr->hostApiSpecificStreamInfo = NULL;
 
-  dst_location->v_data_ptr = (basic_64b)sp_ptr;
+  dst_location->v_data_ptr = (PaStreamParameters *)sp_ptr;
 
   return true;
 }/*}}}*/
@@ -1290,7 +1289,7 @@ void bic_pa_stream_consts(location_array_s &const_locations)
 
 void bic_pa_stream_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (pa_stream_s *)NULL;
 }/*}}}*/
 
 void bic_pa_stream_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1397,7 +1396,7 @@ bool bic_pa_stream_method_PaStream_4(interpreter_thread_s &it,unsigned stack_bas
     pas_ptr->output_ptr = src_1_location;
   }
 
-  dst_location->v_data_ptr = (basic_64b)pas_ptr;
+  dst_location->v_data_ptr = (pa_stream_s *)pas_ptr;
 
   return true;
 }/*}}}*/

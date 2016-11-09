@@ -209,7 +209,7 @@ void bic_gcrypt_cipher_consts(location_array_s &const_locations)
 #define CREATE_GCRYPT_CIPHER_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_GCRYPT_CIPHER_TYPE_BIC_STATIC(GCRY_CIPHER_NONE);
@@ -245,7 +245,7 @@ void bic_gcrypt_cipher_consts(location_array_s &const_locations)
 #define CREATE_GCRYPT_CIPHER_MODE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_GCRYPT_CIPHER_MODE_BIC_STATIC(GCRY_CIPHER_MODE_NONE);
@@ -266,7 +266,7 @@ void bic_gcrypt_cipher_consts(location_array_s &const_locations)
 #define CREATE_GCRYPT_CIPHER_OPEN_FLAGS_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_GCRYPT_CIPHER_OPEN_FLAGS_BIC_STATIC(GCRY_CIPHER_SECURE);
@@ -279,7 +279,7 @@ void bic_gcrypt_cipher_consts(location_array_s &const_locations)
 
 void bic_gcrypt_cipher_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (gcrypt_cipher_s *)NULL;
 }/*}}}*/
 
 void bic_gcrypt_cipher_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -366,7 +366,7 @@ bool bic_gcrypt_cipher_method_GcryptCipher_4(interpreter_thread_s &it,unsigned s
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)gc_ptr;
+  dst_location->v_data_ptr = (gcrypt_cipher_s *)gc_ptr;
 
   return true;
 }/*}}}*/

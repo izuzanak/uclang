@@ -475,7 +475,7 @@ void bic_traffic_store_consts(location_array_s &const_locations)
 #define CREATE_TRAFFIC_STORE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_TRAFFIC_STORE_BIC_STATIC(AP_TS_ID_MAX);
@@ -490,7 +490,7 @@ void bic_traffic_store_consts(location_array_s &const_locations)
 
 void bic_traffic_store_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (traffic_store_s *)NULL;
 }/*}}}*/
 
 void bic_traffic_store_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -582,7 +582,7 @@ bool bic_traffic_store_method_TrafficStore_1(interpreter_thread_s &it,unsigned s
   // - set traffic store id -
   ts_ptr->ts_id = ts_id;
 
-  dst_location->v_data_ptr = (basic_64b)ts_ptr;
+  dst_location->v_data_ptr = (traffic_store_s *)ts_ptr;
 
   return true;
 }/*}}}*/
@@ -900,7 +900,7 @@ void bic_tcn_port_config_consts(location_array_s &const_locations)
 #define CREATE_TCN_PORT_CONFIG_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_TCN_PORT_CONFIG_TYPE_BIC_STATIC(port_src);
@@ -918,7 +918,7 @@ void bic_tcn_port_config_consts(location_array_s &const_locations)
 #define CREATE_TCN_PORT_CONFIG_FCODE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_TCN_PORT_CONFIG_FCODE_BIC_STATIC(fcode_pd16);
@@ -935,7 +935,7 @@ void bic_tcn_port_config_consts(location_array_s &const_locations)
 
 void bic_tcn_port_config_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (SPortConfig *)NULL;
 }/*}}}*/
 
 void bic_tcn_port_config_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1134,7 +1134,7 @@ void bic_traffic_port_consts(location_array_s &const_locations)
 
 void bic_traffic_port_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (traffic_port_s *)NULL;
 }/*}}}*/
 
 void bic_traffic_port_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1761,7 +1761,7 @@ void bic_proc_var_set_consts(location_array_s &const_locations)
 
 void bic_proc_var_set_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (proc_var_set_s *)NULL;
 }/*}}}*/
 
 void bic_proc_var_set_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2146,7 +2146,7 @@ void bic_proc_variable_consts(location_array_s &const_locations)
 #define CREATE_PROC_VARIABLE_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_PROC_VARIABLE_TYPE_BIC_STATIC(dt_boolean1);
@@ -2186,7 +2186,7 @@ void bic_proc_variable_consts(location_array_s &const_locations)
 #define CREATE_PROC_VARIABLE_CHECK_VAL_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_PROC_VARIABLE_CHECK_VAL_BIC_STATIC(VR_ERROR);
@@ -2201,7 +2201,7 @@ void bic_proc_variable_consts(location_array_s &const_locations)
 
 void bic_proc_variable_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (proc_variable_s *)NULL;
 }/*}}}*/
 
 void bic_proc_variable_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2401,7 +2401,7 @@ bool bic_proc_variable_method_set_1(interpreter_thread_s &it,unsigned stack_base
       return false;
     }
 
-    double value = *((double *)&src_0_location->v_data_ptr);
+    double value = (double)src_0_location->v_data_ptr;
     *((float *)pv_list.pVariable) = value;
   }
   break;
@@ -2622,8 +2622,7 @@ bool bic_proc_variable_method_get_0(interpreter_thread_s &it,unsigned stack_base
   {
     double result = *((float *)pv_list.pVariable);
 
-    basic_64b &v_data_ptr = *((basic_64b *)&result);
-    BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+    BIC_SIMPLE_SET_RES(c_bi_class_float,result);
   }
   break;
 

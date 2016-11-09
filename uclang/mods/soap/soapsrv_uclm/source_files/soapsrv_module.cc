@@ -260,7 +260,7 @@ void bic_calc_service_consts(location_array_s &const_locations)
 
 void bic_calc_service_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (soap_env_s *)NULL;
 }/*}}}*/
 
 void bic_calc_service_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -326,7 +326,7 @@ bool bic_calc_service_method_CalcService_1(interpreter_thread_s &it,unsigned sta
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)se_ptr;
+  dst_location->v_data_ptr = (soap_env_s *)se_ptr;
 
   return true;
 }/*}}}*/
@@ -374,7 +374,7 @@ bool bic_calc_service_method_CalcService_2(interpreter_thread_s &it,unsigned sta
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)se_ptr;
+  dst_location->v_data_ptr = (soap_env_s *)se_ptr;
 
   return true;
 }/*}}}*/
@@ -521,7 +521,7 @@ void bic_soap_fault_consts(location_array_s &const_locations)
 
 void bic_soap_fault_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (soap_fault_s *)NULL;
 }/*}}}*/
 
 void bic_soap_fault_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -580,7 +580,7 @@ bool bic_soap_fault_method_SoapFault_2(interpreter_thread_s &it,unsigned stack_b
   src_1_location->v_reference_cnt.atomic_inc();
   sf_ptr->detail_ptr = src_1_location;
 
-  dst_location->v_data_ptr = (basic_64b)sf_ptr;
+  dst_location->v_data_ptr = (soap_fault_s *)sf_ptr;
 
   return true;
 }/*}}}*/

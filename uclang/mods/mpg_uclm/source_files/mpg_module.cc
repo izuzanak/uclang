@@ -293,7 +293,7 @@ void bic_mpg_consts(location_array_s &const_locations)
 #define CREATE_MPG_FEATURE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_MPG_FEATURE_BIC_STATIC(MPG123_FEATURE_ABI_UTF8OPEN);
@@ -316,7 +316,7 @@ void bic_mpg_consts(location_array_s &const_locations)
 
 void bic_mpg_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  cassert(0);
 }/*}}}*/
 
 void bic_mpg_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -656,7 +656,7 @@ void bic_mpg_handle_consts(location_array_s &const_locations)
 #define CREATE_MPG_HANDLE_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_MPG_HANDLE_TYPE_BIC_STATIC(c_mpg_handle_type_none);
@@ -672,7 +672,7 @@ void bic_mpg_handle_consts(location_array_s &const_locations)
 #define CREATE_MPG_HANDLE_PARAMETER_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_MPG_HANDLE_PARAMETER_BIC_STATIC(MPG123_VERBOSE);
@@ -704,7 +704,7 @@ void bic_mpg_handle_consts(location_array_s &const_locations)
 #define CREATE_MPG_HANDLE_PARAMETER_FLAG_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_MPG_HANDLE_PARAMETER_FLAG_BIC_STATIC(MPG123_FORCE_MONO);
@@ -735,7 +735,7 @@ void bic_mpg_handle_consts(location_array_s &const_locations)
 #define CREATE_MPG_HANDLE_RVA_CHOICE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_MPG_HANDLE_RVA_CHOICE_BIC_STATIC(MPG123_RVA_OFF);
@@ -752,7 +752,7 @@ void bic_mpg_handle_consts(location_array_s &const_locations)
 #define CREATE_MPG_HANDLE_ENCODING_FORMAT_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_MPG_HANDLE_ENCODING_FORMAT_BIC_STATIC(MPG123_ENC_8);
@@ -780,7 +780,7 @@ void bic_mpg_handle_consts(location_array_s &const_locations)
 
 void bic_mpg_handle_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (mpg_handle_s *)NULL;
 }/*}}}*/
 
 void bic_mpg_handle_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -830,7 +830,7 @@ bool bic_mpg_handle_method_MpgHandle_0(interpreter_thread_s &it,unsigned stack_b
   mh_ptr->handle = handle;
 
   // - set mpg_handle destination location -
-  dst_location->v_data_ptr = (basic_64b)mh_ptr;
+  dst_location->v_data_ptr = (mpg_handle_s *)mh_ptr;
 
   return true;
 }/*}}}*/
@@ -870,7 +870,7 @@ bool bic_mpg_handle_method_MpgHandle_1(interpreter_thread_s &it,unsigned stack_b
   mh_ptr->handle = handle;
 
   // - set mpg_handle destination location -
-  dst_location->v_data_ptr = (basic_64b)mh_ptr;
+  dst_location->v_data_ptr = (mpg_handle_s *)mh_ptr;
 
   return true;
 }/*}}}*/
@@ -1087,7 +1087,9 @@ bool bic_mpg_handle_method_get_param_1(interpreter_thread_s &it,unsigned stack_b
     case MPG123_FEEDPOOL:
     case MPG123_FEEDBUFFER:
       {
-        BIC_SIMPLE_SET_RES(c_bi_class_integer,int_value);
+        long long int result = int_value;
+
+        BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
         
         return true;
       }
@@ -1151,8 +1153,7 @@ bool bic_mpg_handle_method_volume_0(interpreter_thread_s &it,unsigned stack_base
     return false;
   }
 
-  basic_64b &v_data_ptr = *((basic_64b *)&base);
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,base);
 
   return true;
 }/*}}}*/

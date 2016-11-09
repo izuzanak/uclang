@@ -112,7 +112,7 @@ bool lua_s::create_lua_object(interpreter_thread_s &it,lua_State *L,location_s *
       }
     case c_bi_class_float:
       {
-        lua_pushnumber(L,*((double *)&location_ptr->v_data_ptr));
+        lua_pushnumber(L,(double)location_ptr->v_data_ptr);
         return true;
       }
     case c_bi_class_string:
@@ -169,8 +169,7 @@ location_s *lua_s::lua_object_value(interpreter_thread_s &it,lua_State *L,uli so
         double value = lua_tonumber(L,-1);
         lua_pop(L,1);
 
-        basic_64b &v_data_ptr = *((basic_64b *)&value);
-        BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);
+        BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);
         return new_location;
       }
     case LUA_TBOOLEAN:

@@ -188,7 +188,7 @@ void bic_gst_consts(location_array_s &const_locations)
 #define CREATE_GST_ELEMENT_STATE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_GST_ELEMENT_STATE_BIC_STATIC(GST_STATE_VOID_PENDING);
@@ -439,7 +439,7 @@ void bic_gst_pipeline_consts(location_array_s &const_locations)
 
 void bic_gst_pipeline_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (gst_pipeline_s *)NULL;
 }/*}}}*/
 
 void bic_gst_pipeline_clear(interpreter_thread_s &it,location_s *location_ptr)

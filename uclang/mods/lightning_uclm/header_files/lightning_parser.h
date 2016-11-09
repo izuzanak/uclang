@@ -382,7 +382,7 @@ array<val_type_s> val_types_s;
 struct
 <
 val_type_s:type
-basic_64b:value
+v_data_type:value
 unsigned:live_start
 unsigned:live_end
 >
@@ -493,7 +493,7 @@ additions
   void instr_stxi(unsigned a_type,int a_offset,int a_reg_base,int a_reg_src);
   void instr_ldxi(unsigned a_type,int a_reg_trg,int a_reg_base,int a_offset);
   void instr_movr(unsigned a_type_trg,unsigned a_type_src,int a_reg_trg,int a_reg_src);
-  void instr_movi(unsigned a_type_trg,unsigned a_type_src,int a_reg_trg,basic_64b a_value);
+  void instr_movi(unsigned a_type_trg,unsigned a_type_src,int a_reg_trg,v_data_type a_value);
 }
 
 ltg_parser_s;

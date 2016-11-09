@@ -321,7 +321,7 @@ void bic_docu_source_consts(location_array_s &const_locations)
 
 void bic_docu_source_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (docu_source_s *)NULL;
 }/*}}}*/
 
 void bic_docu_source_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -402,7 +402,7 @@ bool bic_docu_source_method_DocuSource_1(interpreter_thread_s &it,unsigned stack
   // - search for comments in source string -
   ds_ptr->find_comments();
 
-  dst_location->v_data_ptr = (basic_64b)ds_ptr;
+  dst_location->v_data_ptr = (docu_source_s *)ds_ptr;
 
   return true;
 }/*}}}*/
@@ -565,7 +565,7 @@ void bic_docu_comment_consts(location_array_s &const_locations)
 
 void bic_docu_comment_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (docu_comment_s *)NULL;
 }/*}}}*/
 
 void bic_docu_comment_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -773,7 +773,7 @@ void bic_docu_parsed_consts(location_array_s &const_locations)
 #define CREATE_DOCU_PARSED_COMMENT_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_DOCU_PARSED_COMMENT_TYPE_BIC_STATIC(c_comm_type_unknown);
@@ -786,7 +786,7 @@ void bic_docu_parsed_consts(location_array_s &const_locations)
 
 void bic_docu_parsed_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (docu_parsed_s *)NULL;
 }/*}}}*/
 
 void bic_docu_parsed_clear(interpreter_thread_s &it,location_s *location_ptr)

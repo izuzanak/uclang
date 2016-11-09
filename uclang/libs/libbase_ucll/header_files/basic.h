@@ -373,12 +373,6 @@ typedef void ** pointer_ptr;
 define pointer_ptr basic
 @end
 
-// - basic_64b typedef -
-typedef long long int basic_64b;
-@begin
-define basic_64b basic
-@end
-
 // - time measuring data structures -
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
 extern struct timeval tv;

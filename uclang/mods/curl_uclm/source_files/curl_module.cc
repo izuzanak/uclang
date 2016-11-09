@@ -649,7 +649,7 @@ void bic_curl_result_consts(location_array_s &const_locations)
 #define CREATE_CURL_RESULT_INFO_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
   CREATE_CURL_RESULT_INFO_BIC_STATIC(CURLINFO_EFFECTIVE_URL);
@@ -699,7 +699,7 @@ void bic_curl_result_consts(location_array_s &const_locations)
 
 void bic_curl_result_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (curl_result_s *)NULL;
 }/*}}}*/
 
 void bic_curl_result_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -796,8 +796,7 @@ bool bic_curl_result_method_info_1(interpreter_thread_s &it,unsigned stack_base,
       double data;
       if (curl_easy_getinfo(res_ptr->curl_ptr,(CURLINFO)info_type,&data) == CURLE_OK)
       {
-        basic_64b &v_data_ptr = *((basic_64b *)&data);
-        BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+        BIC_SIMPLE_SET_RES(c_bi_class_float,data);
         return true;
       }
     }/*}}}*/

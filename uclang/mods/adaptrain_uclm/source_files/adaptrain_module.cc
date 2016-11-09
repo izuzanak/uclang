@@ -713,7 +713,7 @@ void bic_ato_aru_consts(location_array_s &const_locations)
 #define CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_ATO_ARU_DATA_TYPE_BIC_STATIC(TBOOL);
@@ -742,7 +742,7 @@ void bic_ato_aru_consts(location_array_s &const_locations)
 
 void bic_ato_aru_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ato_aru_s *)NULL;
 }/*}}}*/
 
 void bic_ato_aru_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -837,7 +837,7 @@ bool bic_ato_aru_method_AtoAru_1(interpreter_thread_s &it,unsigned stack_base,ul
 
   BIC_ATO_ARU_UNPACK();
 
-  dst_location->v_data_ptr = (basic_64b)aa_ptr;
+  dst_location->v_data_ptr = (ato_aru_s *)aa_ptr;
 
   return true;
 }/*}}}*/
@@ -982,8 +982,8 @@ bool bic_ato_aru_method_create_5(interpreter_thread_s &it,unsigned stack_base,ul
         return false;
       }
       
-      std_head.r32FXValue = *((double *)&first_x_location->v_data_ptr);
-      std_head.r32LXValue = *((double *)&last_x_location->v_data_ptr);
+      std_head.r32FXValue = (double)first_x_location->v_data_ptr;
+      std_head.r32LXValue = (double)last_x_location->v_data_ptr;
     }/*}}}*/
 
     // - compute record memory size -
@@ -1040,7 +1040,7 @@ bool bic_ato_aru_method_create_5(interpreter_thread_s &it,unsigned stack_base,ul
           {/*{{{*/
             sEVTARCH_RECORD_U16 *record = (sEVTARCH_RECORD_U16 *)aa_ptr->records + r_idx;
 
-            record->r32XValue = *((double *)&x_location->v_data_ptr);
+            record->r32XValue = (double)x_location->v_data_ptr;
             record->u8TimeStampms = 0;
             record->u8Status = 0x80;
             record->u16Value = (long long int)v_location->v_data_ptr;
@@ -1051,7 +1051,7 @@ bool bic_ato_aru_method_create_5(interpreter_thread_s &it,unsigned stack_base,ul
           {/*{{{*/
             sEVTARCH_RECORD_U32 *record = (sEVTARCH_RECORD_U32 *)aa_ptr->records + r_idx;
 
-            record->r32XValue = *((double *)&x_location->v_data_ptr);
+            record->r32XValue = (double)x_location->v_data_ptr;
             record->u8TimeStampms = 0;
             record->u8Status = 0x80;
             record->u32Value = (long long int)v_location->v_data_ptr;
@@ -1084,20 +1084,20 @@ bool bic_ato_aru_method_create_5(interpreter_thread_s &it,unsigned stack_base,ul
             {/*{{{*/
               sEVTARCH_RECORD_R32 *record = (sEVTARCH_RECORD_R32 *)aa_ptr->records + r_idx;
 
-              record->r32XValue = *((double *)&x_location->v_data_ptr);
+              record->r32XValue = (double)x_location->v_data_ptr;
               record->u8TimeStampms = 0;
               record->u8Status = 0x80;
-              record->r32Value = *((double *)&v_location->v_data_ptr);
+              record->r32Value = (double)v_location->v_data_ptr;
             }/*}}}*/
             break;
           case TLREAL:
             {/*{{{*/
               sEVTARCH_RECORD_R64 *record = (sEVTARCH_RECORD_R64 *)aa_ptr->records + r_idx;
 
-              record->r32XValue = *((double *)&x_location->v_data_ptr);
+              record->r32XValue = (double)x_location->v_data_ptr;
               record->u8TimeStampms = 0;
               record->u8Status = 0x80;
-              record->r64Value = *((double *)&v_location->v_data_ptr);
+              record->r64Value = (double)v_location->v_data_ptr;
             }/*}}}*/
             break;
           }
@@ -1263,8 +1263,7 @@ bool bic_ato_aru_method_first_x_value_0(interpreter_thread_s &it,unsigned stack_
 
   double result = aa_ptr->head.stdHead.r32FXValue;
 
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/
@@ -1278,8 +1277,7 @@ bool bic_ato_aru_method_last_x_value_0(interpreter_thread_s &it,unsigned stack_b
 
   double result = aa_ptr->head.stdHead.r32LXValue;
 
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/
@@ -1441,7 +1439,7 @@ void bic_ato_aru_record_consts(location_array_s &const_locations)
 
 void bic_ato_aru_record_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ato_aru_record_s *)NULL;
 }/*}}}*/
 
 void bic_ato_aru_record_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1546,8 +1544,7 @@ bool bic_ato_aru_record_method_x_value_0(interpreter_thread_s &it,unsigned stack
       return false;
   }
 
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/
@@ -1605,8 +1602,7 @@ bool bic_ato_aru_record_method_value_0(interpreter_thread_s &it,unsigned stack_b
             cassert(0);
         }
 
-        basic_64b &v_data_ptr = *((basic_64b *)&result);
-        BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+        BIC_SIMPLE_SET_RES(c_bi_class_float,result);
       }
       break;
 
@@ -1723,7 +1719,7 @@ void bic_optim_speed_profile_consts(location_array_s &const_locations)
 
 void bic_optim_speed_profile_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (optim_speed_profile_s *)NULL;
 }/*}}}*/
 
 void bic_optim_speed_profile_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1843,7 +1839,7 @@ bool bic_optim_speed_profile_method_OptimSpeedProfile_1(interpreter_thread_s &it
     } while((ptr += c_section_name_size) < ptr_end);
   }
 
-  dst_location->v_data_ptr = (basic_64b)osp_ptr;
+  dst_location->v_data_ptr = (optim_speed_profile_s *)osp_ptr;
 
   return true;
 }/*}}}*/
@@ -2086,7 +2082,7 @@ void bic_optim_line_section_consts(location_array_s &const_locations)
 
 void bic_optim_line_section_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (optim_line_section_s *)NULL;
 }/*}}}*/
 
 void bic_optim_line_section_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2268,7 +2264,7 @@ bool bic_optim_line_section_method_OptimLineSection_1(interpreter_thread_s &it,u
     } while(++t_ptr,++s_ptr < s_ptr_end);
   }
 
-  dst_location->v_data_ptr = (basic_64b)ols_ptr;
+  dst_location->v_data_ptr = (optim_line_section_s *)ols_ptr;
 
   return true;
 }/*}}}*/
@@ -2565,8 +2561,7 @@ built_in_variable_s optim_line_segment_variables[] =
 \
   double result = ols_ptr->segments[olseg_ptr->index].NAME;\
 \
-  basic_64b &v_data_ptr = *((basic_64b *)&result);\
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);\
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
 \
   return true;\
 }/*}}}*/
@@ -2582,7 +2577,7 @@ void bic_optim_line_segment_consts(location_array_s &const_locations)
 #define CREATE_OPTIM_LINE_SEGMENT_DRIVING_MODE_IDENTIFIER(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_OPTIM_LINE_SEGMENT_DRIVING_MODE_IDENTIFIER(OPT_I_VALID_SEG);
@@ -2597,7 +2592,7 @@ void bic_optim_line_segment_consts(location_array_s &const_locations)
 
 void bic_optim_line_segment_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (optim_line_segment_s *)NULL;
 }/*}}}*/
 
 void bic_optim_line_segment_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2722,9 +2717,8 @@ bool bic_optim_line_segment_method_items_0(interpreter_thread_s &it,unsigned sta
 #define BIC_OPTIM_LINE_SEGMENT_ITEMS_GET_FLOAT(NAME) \
 {/*{{{*/\
   double result = segment.NAME;\
-  basic_64b &v_data_ptr = *((basic_64b *)&result);\
 \
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);\
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,result);\
   array_ptr->push(new_location);\
 }/*}}}*/
 
@@ -2869,7 +2863,7 @@ void bic_ato_loco_consts(location_array_s &const_locations)
 
 void bic_ato_loco_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ato_loco_s *)NULL;
 }/*}}}*/
 
 void bic_ato_loco_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -3046,7 +3040,7 @@ bool bic_ato_loco_method_AtoLoco_1(interpreter_thread_s &it,unsigned stack_base,
     } while(++s_ptr,++t_ptr < t_ptr_end);
   }
 
-  dst_location->v_data_ptr = (basic_64b)loco_ptr;
+  dst_location->v_data_ptr = (ato_loco_s *)loco_ptr;
 
   return true;
 }/*}}}*/
@@ -3220,7 +3214,7 @@ void bic_ato_train_consts(location_array_s &const_locations)
 
 void bic_ato_train_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ato_train_s *)NULL;
 }/*}}}*/
 
 void bic_ato_train_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -3326,7 +3320,7 @@ bool bic_ato_train_method_AtoTrain_1(interpreter_thread_s &it,unsigned stack_bas
   ATO_TRAIN_COPY(train.TrainSetClass,U16);
   ATO_TRAIN_COPY(train.Version,U16);
 
-  dst_location->v_data_ptr = (basic_64b)train_ptr;
+  dst_location->v_data_ptr = (ato_train_s *)train_ptr;
 
   return true;
 }/*}}}*/
@@ -3730,7 +3724,7 @@ void bic_ato_trip_consts(location_array_s &const_locations)
 
 void bic_ato_trip_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ato_trip_s *)NULL;
 }/*}}}*/
 
 void bic_ato_trip_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -3825,7 +3819,7 @@ bool bic_ato_trip_method_AtoTrip_1(interpreter_thread_s &it,unsigned stack_base,
 
   BIC_ATO_TRIP_UNPACK();
 
-  dst_location->v_data_ptr = (basic_64b)trip_ptr;
+  dst_location->v_data_ptr = (ato_trip_s *)trip_ptr;
 
   return true;
 }/*}}}*/
@@ -4176,7 +4170,7 @@ void bic_ato_trip_sec_consts(location_array_s &const_locations)
 
 void bic_ato_trip_sec_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ato_trip_sec_s *)NULL;
 }/*}}}*/
 
 void bic_ato_trip_sec_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -4478,8 +4472,7 @@ built_in_variable_s ato_line_sec_variables[] =
 \
   double result = als_ptr->line_sec.NAME;\
 \
-  basic_64b &v_data_ptr = *((basic_64b *)&result);\
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);\
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
 \
   return true;\
 }/*}}}*/
@@ -4569,7 +4562,7 @@ void bic_ato_line_sec_consts(location_array_s &const_locations)
 
 void bic_ato_line_sec_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ato_line_sec_s *)NULL;
 }/*}}}*/
 
 void bic_ato_line_sec_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -4772,7 +4765,7 @@ bool bic_ato_line_sec_method_AtoLineSec_1(interpreter_thread_s &it,unsigned stac
     } while(++t_ptr,++s_ptr < s_ptr_end);
   }
 
-  dst_location->v_data_ptr = (basic_64b)als_ptr;
+  dst_location->v_data_ptr = (ato_line_sec_s *)als_ptr;
 
   return true;
 }/*}}}*/
@@ -5072,7 +5065,7 @@ void bic_ato_line_sec_point_consts(location_array_s &const_locations)
 
 void bic_ato_line_sec_point_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ato_line_sec_point_s *)NULL;
 }/*}}}*/
 
 void bic_ato_line_sec_point_clear(interpreter_thread_s &it,location_s *location_ptr)

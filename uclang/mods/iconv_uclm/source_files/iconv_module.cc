@@ -141,7 +141,7 @@ void bic_iconv_consts(location_array_s &const_locations)
 
 void bic_iconv_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (iconv_s *)NULL;
 }/*}}}*/
 
 void bic_iconv_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -207,7 +207,7 @@ bool bic_iconv_method_Iconv_2(interpreter_thread_s &it,unsigned stack_base,uli *
   // - set iconv_t pointer -
   ic_ptr->ic_ptr = new_ic_ptr;
 
-  dst_location->v_data_ptr = (basic_64b)ic_ptr;
+  dst_location->v_data_ptr = (iconv_s *)ic_ptr;
 
   return true;
 }/*}}}*/

@@ -242,7 +242,7 @@ bool bi_object_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array
 {/*{{{*/
   pointer_array_s *object_ptr = it.get_new_array_ptr();
 
-  location_ptr->v_data_ptr = (basic_64b)object_ptr;
+  location_ptr->v_data_ptr = (pointer_array_s *)object_ptr;
 
   if (stream.used < sizeof(unsigned))
   {

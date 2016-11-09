@@ -257,8 +257,7 @@ bool pa_json_val_float(json_parser_s &_this)
     }
 
     // - create new float location -
-    basic_64b &v_data_ptr = *((basic_64b *)&const_float);
-    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,const_float);
     float_locations.push(new_location);
   }
 

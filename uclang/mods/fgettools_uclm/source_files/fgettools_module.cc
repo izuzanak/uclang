@@ -227,7 +227,7 @@ void bic_fget_target_consts(location_array_s &const_locations)
 
 void bic_fget_target_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (fget_target_s *)NULL;
 }/*}}}*/
 
 void bic_fget_target_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -366,7 +366,7 @@ bool bic_fget_target_method_FgetTarget_3(interpreter_thread_s &it,unsigned stack
   ft_ptr->done_cnt = 0;
 
   // - set destination data pointer -
-  dst_location->v_data_ptr = (basic_64b)ft_ptr;
+  dst_location->v_data_ptr = (fget_target_s *)ft_ptr;
 
   return true;
 }/*}}}*/
@@ -615,8 +615,7 @@ bool bic_fget_target_method_done_percent_0(interpreter_thread_s &it,unsigned sta
   fget_target_s *ft_ptr = (fget_target_s *)dst_location->v_data_ptr;
   double result = (100.0*ft_ptr->done_cnt)/ft_ptr->block_cnt;
 
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/

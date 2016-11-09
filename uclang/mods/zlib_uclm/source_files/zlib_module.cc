@@ -567,7 +567,7 @@ built_in_variable_s gz_file_variables[] =
     return false;\
   }\
 \
-  dst_location->v_data_ptr = (basic_64b)NULL;\
+  dst_location->v_data_ptr = (gzFile_s *)NULL;\
 /*}}}*/
 
 #define BIC_GZ_FILE_READLN() \
@@ -651,7 +651,7 @@ void bic_gz_file_consts(location_array_s &const_locations)
 #define CREATE_GZ_FILE_SEEK_WHENCE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_GZ_FILE_SEEK_WHENCE_BIC_STATIC(SEEK_SET);
@@ -662,7 +662,7 @@ void bic_gz_file_consts(location_array_s &const_locations)
 
 void bic_gz_file_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (gzFile_s *)NULL;
 }/*}}}*/
 
 void bic_gz_file_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -766,7 +766,7 @@ bool bic_gz_file_method_GzFile_2(interpreter_thread_s &it,unsigned stack_base,ul
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)gzf_ptr;
+  dst_location->v_data_ptr = (gzFile_s *)gzf_ptr;
 
   return true;
 }/*}}}*/

@@ -325,7 +325,7 @@ void bic_final_automata_consts(location_array_s &const_locations)
 
 void bic_final_automata_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (final_automata_s *)NULL;
 }/*}}}*/
 
 void bic_final_automata_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -427,7 +427,7 @@ bool bic_final_automata_method_FinalAutomata_1(interpreter_thread_s &it,unsigned
   reg_parser.clear();
   states_array.clear();
 
-  dst_location->v_data_ptr = (basic_64b)fa_ptr;
+  dst_location->v_data_ptr = (final_automata_s *)fa_ptr;
 
   return true;
 }/*}}}*/
@@ -587,7 +587,7 @@ void bic_fa_source_consts(location_array_s &const_locations)
 
 void bic_fa_source_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (fa_source_s *)NULL;
 }/*}}}*/
 
 void bic_fa_source_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -735,7 +735,7 @@ void bic_parser_consts(location_array_s &const_locations)
 
 void bic_parser_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (parser_s *)NULL;
 }/*}}}*/
 
 void bic_parser_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -808,7 +808,7 @@ bool bic_parser_method_Parser_1(interpreter_thread_s &it,unsigned stack_base,uli
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)parser_ptr;
+  dst_location->v_data_ptr = (parser_s *)parser_ptr;
 
   return true;
 }/*}}}*/
@@ -978,7 +978,7 @@ void bic_parse_state_consts(location_array_s &const_locations)
 
 void bic_parse_state_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (parse_state_s *)NULL;
 }/*}}}*/
 
 void bic_parse_state_clear(interpreter_thread_s &it,location_s *location_ptr)

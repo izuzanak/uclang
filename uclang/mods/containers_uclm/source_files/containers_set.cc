@@ -691,7 +691,7 @@ void bic_set_init(interpreter_thread_s &it,location_s *location_ptr)
   pointer_tree_s *tree_ptr = (pointer_tree_s *)cmalloc(sizeof(pointer_tree_s));
   tree_ptr->init();
 
-  location_ptr->v_data_ptr = (basic_64b)tree_ptr;
+  location_ptr->v_data_ptr = (pointer_tree_s *)tree_ptr;
 }/*}}}*/
 
 void bic_set_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -795,7 +795,7 @@ bool bic_set_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_s
   pointer_tree_s *tree_ptr = (pointer_tree_s *)cmalloc(sizeof(pointer_tree_s));
   tree_ptr->init();
 
-  location_ptr->v_data_ptr = (basic_64b)tree_ptr;
+  location_ptr->v_data_ptr = (pointer_tree_s *)tree_ptr;
   tree_ptr->it_ptr = &it;
   tree_ptr->source_pos = source_pos;
 

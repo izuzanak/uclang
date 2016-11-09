@@ -222,7 +222,7 @@ void bic_http_server_consts(location_array_s &const_locations)
 
 void bic_http_server_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (http_server_s *)NULL;
 }/*}}}*/
 
 void bic_http_server_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -309,7 +309,7 @@ bool bic_http_server_method_HttpServer_2(interpreter_thread_s &it,unsigned stack
   srv_ptr->daemon_ptr = daemon_ptr;
 
   // - set http_server destination location -
-  dst_location->v_data_ptr = (basic_64b)srv_ptr;
+  dst_location->v_data_ptr = (http_server_s *)srv_ptr;
 
   return true;
 }/*}}}*/
@@ -694,7 +694,7 @@ void bic_http_conn_consts(location_array_s &const_locations)
 #define CREATE_HTTP_CONN_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_HTTP_CONN_TYPE_BIC_STATIC(c_conn_type_CONNECT);
@@ -715,7 +715,7 @@ void bic_http_conn_consts(location_array_s &const_locations)
 #define CREATE_HTTP_CONN_VALUES_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_HTTP_CONN_VALUES_TYPE_BIC_STATIC(MHD_RESPONSE_HEADER_KIND);
@@ -729,7 +729,7 @@ void bic_http_conn_consts(location_array_s &const_locations)
 
 void bic_http_conn_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (http_conn_s *)NULL;
 }/*}}}*/
 
 void bic_http_conn_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1090,7 +1090,7 @@ void bic_http_resp_consts(location_array_s &const_locations)
 #define CREATE_HTTP_RESP_CREATE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_HTTP_CONN_TYPE_BIC_STATIC(c_resp_from_string);
@@ -1105,7 +1105,7 @@ void bic_http_resp_consts(location_array_s &const_locations)
 #define CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_CONTINUE);
@@ -1174,7 +1174,7 @@ void bic_http_resp_consts(location_array_s &const_locations)
 
 void bic_http_resp_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (MHD_Response *)NULL;
 }/*}}}*/
 
 void bic_http_resp_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1230,7 +1230,7 @@ bool bic_http_resp_method_HttpResp_1(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - set http_resp destination location -
-  dst_location->v_data_ptr = (basic_64b)resp_ptr;
+  dst_location->v_data_ptr = (MHD_Response *)resp_ptr;
 
   return true;
 }/*}}}*/
@@ -1314,7 +1314,7 @@ bool bic_http_resp_method_HttpResp_2(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - set http_resp destination location -
-  dst_location->v_data_ptr = (basic_64b)resp_ptr;
+  dst_location->v_data_ptr = (MHD_Response *)resp_ptr;
 
   return true;
 }/*}}}*/

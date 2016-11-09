@@ -69,7 +69,7 @@ struct perl_reference_s
 {
   location_s *pi_loc;
   SV *sv;
-  basic_64b v_key_ptr;
+  v_data_type v_key_ptr;
 
   inline void init();
   inline void clear(interpreter_thread_s &it);

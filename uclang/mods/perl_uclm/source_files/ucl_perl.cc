@@ -123,7 +123,7 @@ SV *perl_c::create_perl_sv(interpreter_thread_s &it,PerlInterpreter *my_perl,loc
       }
     case c_bi_class_float:
       {
-        return newSVnv(*((double *)&location_ptr->v_data_ptr));
+        return newSVnv((double)location_ptr->v_data_ptr);
       }
     case c_bi_class_string:
       {
@@ -218,8 +218,7 @@ location_s *perl_c::perl_sv_value(interpreter_thread_s &it,PerlInterpreter *my_p
       {
         double value = SvNV(sv);
 
-        basic_64b &v_data_ptr = *((basic_64b *)&value);
-        BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);
+        BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);
         return new_location;
       }
     case SVt_PV:

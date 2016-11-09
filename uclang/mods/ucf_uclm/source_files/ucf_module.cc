@@ -821,7 +821,7 @@ void bic_time_consts(location_array_s &const_locations)
 
 void bic_time_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (Time *)NULL;
 }/*}}}*/
 
 void bic_time_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -908,7 +908,7 @@ bool bic_time_method_Time_0(interpreter_thread_s &it,unsigned stack_base,uli *op
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - construct empty time object -
-  dst_location->v_data_ptr = (basic_64b)new Time();
+  dst_location->v_data_ptr = (Time *)new Time();
 
   return true;
 }/*}}}*/
@@ -923,7 +923,7 @@ bool bic_time_method_Time_1(interpreter_thread_s &it,unsigned stack_base,uli *op
   case c_bi_class_integer:
 
     // - construct time object -
-    dst_location->v_data_ptr = (basic_64b)new Time((long long int)src_0_location->v_data_ptr);
+    dst_location->v_data_ptr = (Time *)new Time((long long int)src_0_location->v_data_ptr);
 
     break;
 
@@ -981,7 +981,7 @@ bool bic_time_method_Time_1(interpreter_thread_s &it,unsigned stack_base,uli *op
     }
 
     // - construct time object -
-    dst_location->v_data_ptr = (basic_64b)new Time(dt);
+    dst_location->v_data_ptr = (Time *)new Time(dt);
   }
   break;
 
@@ -1171,16 +1171,16 @@ bool bic_time_method_SetSystemTime_0(interpreter_thread_s &it,unsigned stack_bas
     } while(++l_ptr < l_ptr_end);\
     \
     /* - set system time values - */\
-    ((location_s *)array_ptr->data[0])->v_data_ptr = (basic_64b)dateTime.year;\
-    ((location_s *)array_ptr->data[1])->v_data_ptr = (basic_64b)dateTime.month;\
-    ((location_s *)array_ptr->data[2])->v_data_ptr = (basic_64b)dateTime.day;\
-    ((location_s *)array_ptr->data[3])->v_data_ptr = (basic_64b)dateTime.dayOfWeek;\
-    ((location_s *)array_ptr->data[4])->v_data_ptr = (basic_64b)dateTime.hour;\
-    ((location_s *)array_ptr->data[5])->v_data_ptr = (basic_64b)dateTime.min;\
-    ((location_s *)array_ptr->data[6])->v_data_ptr = (basic_64b)dateTime.sec;\
-    ((location_s *)array_ptr->data[7])->v_data_ptr = (basic_64b)dateTime.msec;\
-    ((location_s *)array_ptr->data[8])->v_data_ptr = (basic_64b)dateTime.usec;\
-    ((location_s *)array_ptr->data[9])->v_data_ptr = (basic_64b)dateTime.nsec;\
+    ((location_s *)array_ptr->data[0])->v_data_ptr = (long long int)dateTime.year;\
+    ((location_s *)array_ptr->data[1])->v_data_ptr = (long long int)dateTime.month;\
+    ((location_s *)array_ptr->data[2])->v_data_ptr = (long long int)dateTime.day;\
+    ((location_s *)array_ptr->data[3])->v_data_ptr = (long long int)dateTime.dayOfWeek;\
+    ((location_s *)array_ptr->data[4])->v_data_ptr = (long long int)dateTime.hour;\
+    ((location_s *)array_ptr->data[5])->v_data_ptr = (long long int)dateTime.min;\
+    ((location_s *)array_ptr->data[6])->v_data_ptr = (long long int)dateTime.sec;\
+    ((location_s *)array_ptr->data[7])->v_data_ptr = (long long int)dateTime.msec;\
+    ((location_s *)array_ptr->data[8])->v_data_ptr = (long long int)dateTime.usec;\
+    ((location_s *)array_ptr->data[9])->v_data_ptr = (long long int)dateTime.nsec;\
     \
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);\
     BIC_SET_RESULT(new_location);\
@@ -1359,7 +1359,7 @@ void bic_cfg_file_consts(location_array_s &const_locations)
 
 void bic_cfg_file_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (CfgFile *)NULL;
 }/*}}}*/
 
 void bic_cfg_file_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1394,7 +1394,7 @@ bool bic_cfg_file_method_CfgFile_0(interpreter_thread_s &it,unsigned stack_base,
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - construct empty config file object -
-  dst_location->v_data_ptr = (basic_64b)new CfgFile();
+  dst_location->v_data_ptr = (CfgFile *)new CfgFile();
 
   return true;
 }/*}}}*/
@@ -1421,7 +1421,7 @@ bool bic_cfg_file_method_CfgFile_1(interpreter_thread_s &it,unsigned stack_base,
   try
   {
     // - construct config file object -
-    dst_location->v_data_ptr = (basic_64b)new CfgFile(filename);
+    dst_location->v_data_ptr = (CfgFile *)new CfgFile(filename);
   }
   catch(Exception e)
   {
@@ -2005,7 +2005,7 @@ void bic_ucf_log_consts(location_array_s &const_locations)
 
 void bic_ucf_log_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ucf_log_s *)NULL;
 }/*}}}*/
 
 void bic_ucf_log_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2052,7 +2052,7 @@ bool bic_ucf_log_method_UcfLog_0(interpreter_thread_s &it,unsigned stack_base,ul
   log_ptr->log_set_ptr = new LogSet();
   log_ptr->source.set(strlen(proc_name),proc_name);
 
-  dst_location->v_data_ptr = (basic_64b)log_ptr;
+  dst_location->v_data_ptr = (ucf_log_s *)log_ptr;
 
   return true;
 }/*}}}*/
@@ -2084,7 +2084,7 @@ bool bic_ucf_log_method_UcfLog_1(interpreter_thread_s &it,unsigned stack_base,ul
   log_ptr->log_set_ptr = new LogSet();
   log_ptr->source = *source;
 
-  dst_location->v_data_ptr = (basic_64b)log_ptr;
+  dst_location->v_data_ptr = (ucf_log_s *)log_ptr;
 
   return true;
 }/*}}}*/
@@ -2432,7 +2432,7 @@ void bic_ucf_mutex_consts(location_array_s &const_locations)
 
 void bic_ucf_mutex_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (Mutex *)NULL;
 }/*}}}*/
 
 void bic_ucf_mutex_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2497,7 +2497,7 @@ bool bic_ucf_mutex_method_UcfMutex_1(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - set destination data pointer -
-  dst_location->v_data_ptr = (basic_64b)mutex_ptr;
+  dst_location->v_data_ptr = (Mutex *)mutex_ptr;
 
   return true;
 }/*}}}*/
@@ -2544,7 +2544,7 @@ bool bic_ucf_mutex_method_UcfMutex_2(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - set destination data pointer -
-  dst_location->v_data_ptr = (basic_64b)mutex_ptr;
+  dst_location->v_data_ptr = (Mutex *)mutex_ptr;
 
   return true;
 }/*}}}*/
@@ -2701,7 +2701,7 @@ void bic_ucf_led_consts(location_array_s &const_locations)
 
 void bic_ucf_led_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (Led *)NULL;
 }/*}}}*/
 
 void bic_ucf_led_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2766,7 +2766,7 @@ bool bic_ucf_led_method_UcfLed_1(interpreter_thread_s &it,unsigned stack_base,ul
   }
 
   // - set destination data pointer -
-  dst_location->v_data_ptr = (basic_64b)led_ptr;
+  dst_location->v_data_ptr = (Led *)led_ptr;
 
   return true;
 }/*}}}*/
@@ -2945,7 +2945,7 @@ void bic_serial_consts(location_array_s &const_locations)
 #define CREATE_SERIAL_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_SERIAL_BIC_STATIC(SerialPort::FC_NONE);
@@ -2960,7 +2960,7 @@ void bic_serial_consts(location_array_s &const_locations)
 
 void bic_serial_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (SerialPort *)NULL;
 }/*}}}*/
 
 void bic_serial_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -3027,7 +3027,7 @@ bool bic_serial_method_Serial_1(interpreter_thread_s &it,unsigned stack_base,uli
   }
 
   // - set destination data pointer -
-  dst_location->v_data_ptr = (basic_64b)serial_ptr;
+  dst_location->v_data_ptr = (SerialPort *)serial_ptr;
 
   return true;
 }/*}}}*/
@@ -3521,7 +3521,7 @@ void bic_var_store_consts(location_array_s &const_locations)
 #define CREATE_VAR_STORE_TYPE_BIC_STATIC(DATA_TYPE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)DATA_TYPE;\
+  cv_ptr->v_data_ptr = (long long int)DATA_TYPE;\
   cv_ptr++;
 
     CREATE_VAR_STORE_TYPE_BIC_STATIC(TBOOL);
@@ -3546,7 +3546,7 @@ void bic_var_store_consts(location_array_s &const_locations)
 
 void bic_var_store_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (VarStore *)NULL;
 }/*}}}*/
 
 void bic_var_store_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -3660,7 +3660,7 @@ bool bic_var_store_method_VarStore_2(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - set destination data pointer -
-  dst_location->v_data_ptr = (basic_64b)new_vs_ptr;
+  dst_location->v_data_ptr = (VarStore *)new_vs_ptr;
 
   return true;
 }/*}}}*/
@@ -3845,7 +3845,7 @@ bool bic_var_store_method_VarStore_5(interpreter_thread_s &it,unsigned stack_bas
   cfree(SlotInfos);
 
   // - set destination data pointer -
-  dst_location->v_data_ptr = (basic_64b)new_vs_ptr;
+  dst_location->v_data_ptr = (VarStore *)new_vs_ptr;
 
   return true;
 }/*}}}*/
@@ -4221,7 +4221,7 @@ built_in_variable_s var_slot_variables[] =
         return false;\
       }\
       \
-      double value = *((double *)&((location_s *)SRC_LOCATION)->v_data_ptr);\
+      double value = (double)((location_s *)SRC_LOCATION)->v_data_ptr;\
       \
       switch (vssInfo.varType)\
       {\
@@ -4293,7 +4293,7 @@ built_in_variable_s var_slot_variables[] =
     TYPE *ptr_end = ptr + count;\
     pointer *p_ptr = array_ptr->data;\
     do {\
-      double value = *((double *)&it.get_location_value(*p_ptr)->v_data_ptr);\
+      double value = (double)it.get_location_value(*p_ptr)->v_data_ptr;\
       *ptr = value;\
     } while(++p_ptr,++ptr < ptr_end);\
   }/*}}}*/
@@ -4593,8 +4593,7 @@ built_in_variable_s var_slot_variables[] =
       break;\
       }\
       \
-      basic_64b &v_data_ptr = *((basic_64b *)&result);\
-      BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);\
+      BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
     }\
     break;\
     \
@@ -4637,8 +4636,7 @@ built_in_variable_s var_slot_variables[] =
     do {\
       double result = *ptr;\
       \
-      basic_64b &v_data_ptr = *((basic_64b *)&result);\
-      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);\
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,result);\
       \
       array_ptr->push(new_location);\
     } while(++ptr < ptr_end);\
@@ -4793,7 +4791,7 @@ void bic_var_slot_consts(location_array_s &const_locations)
 
 void bic_var_slot_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (varstore_slot_s *)NULL;
 }/*}}}*/
 
 void bic_var_slot_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -5208,7 +5206,7 @@ void bic_nvm_segment_consts(location_array_s &const_locations)
 
 void bic_nvm_segment_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (nvm_segment_s *)NULL;
 }/*}}}*/
 
 void bic_nvm_segment_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -5280,7 +5278,7 @@ bool bic_nvm_segment_method_NvmSegment_1(interpreter_thread_s &it,unsigned stack
   }
 
   // - set destination data pointer -
-  dst_location->v_data_ptr = (basic_64b)ns_ptr;
+  dst_location->v_data_ptr = (nvm_segment_s *)ns_ptr;
 
   return true;
 }/*}}}*/
@@ -5336,7 +5334,7 @@ bool bic_nvm_segment_method_NvmSegment_2(interpreter_thread_s &it,unsigned stack
   }
 
   // - set destination data pointer -
-  dst_location->v_data_ptr = (basic_64b)ns_ptr;
+  dst_location->v_data_ptr = (nvm_segment_s *)ns_ptr;
 
   return true;
 }/*}}}*/
@@ -5595,7 +5593,7 @@ void bic_msg_queue_consts(location_array_s &const_locations)
 
 void bic_msg_queue_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (MsgQueue *)NULL;
 }/*}}}*/
 
 void bic_msg_queue_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -5657,7 +5655,7 @@ bool bic_msg_queue_method_MsgQueue_1(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)mq_ptr;
+  dst_location->v_data_ptr = (MsgQueue *)mq_ptr;
 
   return true;
 }/*}}}*/
@@ -5724,7 +5722,7 @@ bool bic_msg_queue_method_MsgQueue_3(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)mq_ptr;
+  dst_location->v_data_ptr = (MsgQueue *)mq_ptr;
 
   return true;
 }/*}}}*/
@@ -5981,7 +5979,7 @@ bool bic_bcc_method_Bcc_0(interpreter_thread_s &it,unsigned stack_base,uli *oper
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - set bcc value to zero -
-  dst_location->v_data_ptr = (basic_64b)0;
+  dst_location->v_data_ptr = (long long int)0;
 
   return true;
 }/*}}}*/
@@ -6020,7 +6018,7 @@ bool bic_bcc_method_append_1(interpreter_thread_s &it,unsigned stack_base,uli *o
   }
 
   // - set bcc value -
-  dst_location->v_data_ptr = (basic_64b)value;
+  dst_location->v_data_ptr = (long long int)value;
 
   BIC_SET_RESULT_BLANK();
 
@@ -6148,7 +6146,7 @@ void bic_crc_consts(location_array_s &const_locations)
 #define CREATE_CRC_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_CRC_BIC_STATIC(CRC_SIZE_8);
@@ -6159,7 +6157,7 @@ void bic_crc_consts(location_array_s &const_locations)
 
 void bic_crc_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (crc_s *)NULL;
 }/*}}}*/
 
 void bic_crc_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -6261,7 +6259,7 @@ bool bic_crc_method_Crc_2(interpreter_thread_s &it,unsigned stack_base,uli *oper
   crc_ptr->size = size;
   crc_ptr->value = value;
 
-  dst_location->v_data_ptr = (basic_64b)crc_ptr;
+  dst_location->v_data_ptr = (crc_s *)crc_ptr;
 
   return true;
 }/*}}}*/
@@ -6439,7 +6437,7 @@ void bic_md5_consts(location_array_s &const_locations)
 
 void bic_md5_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (MD5Digest *)NULL;
 }/*}}}*/
 
 void bic_md5_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -6474,7 +6472,7 @@ bool bic_md5_method_Md5_0(interpreter_thread_s &it,unsigned stack_base,uli *oper
   // - create new md5 pointer -
   MD5Digest *md5_ptr = new MD5Digest();
 
-  dst_location->v_data_ptr = (basic_64b)md5_ptr;
+  dst_location->v_data_ptr = (MD5Digest *)md5_ptr;
 
   return true;
 }/*}}}*/

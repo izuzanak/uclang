@@ -259,7 +259,7 @@ void bic_lua_state_consts(location_array_s &const_locations)
 
 void bic_lua_state_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (lua_State *)NULL;
 }/*}}}*/
 
 void bic_lua_state_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -308,7 +308,7 @@ bool bic_lua_state_method_LuaState_0(interpreter_thread_s &it,unsigned stack_bas
   // - open lua libraries -
   luaL_openlibs(L);
 
-  dst_location->v_data_ptr = (basic_64b)L;
+  dst_location->v_data_ptr = (lua_State *)L;
 
   return true;
 }/*}}}*/
@@ -450,8 +450,7 @@ bool bic_lua_state_method_version_0(interpreter_thread_s &it,unsigned stack_base
 
   double result = *lua_version(NULL);
 
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/
@@ -548,7 +547,7 @@ void bic_lua_value_consts(location_array_s &const_locations)
 
 void bic_lua_value_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (lua_value_s *)NULL;
 }/*}}}*/
 
 void bic_lua_value_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1077,7 +1076,7 @@ void bic_lua_reference_consts(location_array_s &const_locations)
 
 void bic_lua_reference_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (lua_reference_s *)NULL;
 }/*}}}*/
 
 void bic_lua_reference_clear(interpreter_thread_s &it,location_s *location_ptr)

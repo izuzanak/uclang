@@ -249,7 +249,7 @@ void bic_sys_prop_consts(location_array_s &const_locations)
 
 void bic_sys_prop_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (prop_info *)NULL;
 }/*}}}*/
 
 void bic_sys_prop_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -312,7 +312,7 @@ bool bic_sys_prop_method_SysProp_1(interpreter_thread_s &it,unsigned stack_base,
   }
 
   // - set property info pointer -
-  dst_location->v_data_ptr = (basic_64b)prop_info_ptr;
+  dst_location->v_data_ptr = (prop_info *)prop_info_ptr;
 
   return true;
 }/*}}}*/
@@ -564,7 +564,7 @@ void bic_log_consts(location_array_s &const_locations)
 #define CREATE_LOG_PRIORITY_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_LOG_PRIORITY_BIC_STATIC(ANDROID_LOG_UNKNOWN);
@@ -581,7 +581,7 @@ void bic_log_consts(location_array_s &const_locations)
 
 void bic_log_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (log_s *)NULL;
 }/*}}}*/
 
 void bic_log_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -633,7 +633,7 @@ bool bic_log_method_Log_1(interpreter_thread_s &it,unsigned stack_base,uli *oper
   log_ptr->tag = *tag_ptr;
 
   // - set property info pointer -
-  dst_location->v_data_ptr = (basic_64b)log_ptr;
+  dst_location->v_data_ptr = (log_s *)log_ptr;
 
   return true;
 }/*}}}*/
@@ -883,7 +883,7 @@ void bic_activity_consts(location_array_s &const_locations)
 #define CREATE_ACTIVITY_COMMAND_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_ACTIVITY_COMMAND_BIC_STATIC(APP_CMD_INPUT_CHANGED);
@@ -907,7 +907,7 @@ void bic_activity_consts(location_array_s &const_locations)
 
 void bic_activity_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (activity_c *)NULL;
 }/*}}}*/
 
 void bic_activity_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -962,7 +962,7 @@ bool bic_activity_method_Activity_0(interpreter_thread_s &it,unsigned stack_base
   g_activity.it_ptr = &it;
 
   // - set activity pointer -
-  dst_location->v_data_ptr = (basic_64b)&g_activity;
+  dst_location->v_data_ptr = (activity_c *)&g_activity;
 
   return true;
 }/*}}}*/
@@ -1165,7 +1165,7 @@ void bic_event_consts(location_array_s &const_locations)
 #define CREATE_EVENT_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_EVENT_TYPE_BIC_STATIC(AINPUT_EVENT_TYPE_KEY);
@@ -1175,11 +1175,12 @@ void bic_event_consts(location_array_s &const_locations)
 
 void bic_event_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  cassert(0);
 }/*}}}*/
 
 void bic_event_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
+  cassert(0);
 }/*}}}*/
 
 bool bic_event_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -1294,11 +1295,12 @@ void bic_sensor_manager_consts(location_array_s &const_locations)
 
 void bic_sensor_manager_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  cassert(0);
 }/*}}}*/
 
 void bic_sensor_manager_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
+  cassert(0);
 }/*}}}*/
 
 bool bic_sensor_manager_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -1504,7 +1506,7 @@ void bic_sensor_consts(location_array_s &const_locations)
 #define CREATE_SENSOR_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_SENSOR_TYPE_BIC_STATIC(ASENSOR_TYPE_ACCELEROMETER);
@@ -1517,7 +1519,7 @@ void bic_sensor_consts(location_array_s &const_locations)
 
 void bic_sensor_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ASensorRef)NULL;
 }/*}}}*/
 
 void bic_sensor_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1587,8 +1589,7 @@ bool bic_sensor_method_resolution_0(interpreter_thread_s &it,unsigned stack_base
 
   double result = ASensor_getResolution((ASensorRef)dst_location->v_data_ptr);
 
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/
@@ -1702,7 +1703,7 @@ void bic_sensor_event_queue_consts(location_array_s &const_locations)
 
 void bic_sensor_event_queue_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ASensorEventQueue *)NULL;
 }/*}}}*/
 
 void bic_sensor_event_queue_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2026,7 +2027,7 @@ void bic_sensor_event_consts(location_array_s &const_locations)
 
 void bic_sensor_event_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ASensorEvent *)NULL;
 }/*}}}*/
 
 void bic_sensor_event_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2108,8 +2109,7 @@ bool bic_sensor_event_method_value_0(interpreter_thread_s &it,unsigned stack_bas
 
   double result = ((ASensorEvent *)dst_location->v_data_ptr)->temperature;
 
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/
@@ -2125,22 +2125,19 @@ bool bic_sensor_event_method_vector_0(interpreter_thread_s &it,unsigned stack_ba
 
   {
     double result = vector.x;
-    basic_64b &v_data_ptr = *((basic_64b *)&result);
-    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,result);
     array_ptr->push(new_location);
   }
 
   {
     double result = vector.y;
-    basic_64b &v_data_ptr = *((basic_64b *)&result);
-    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,result);
     array_ptr->push(new_location);
   }
 
   {
     double result = vector.z;
-    basic_64b &v_data_ptr = *((basic_64b *)&result);
-    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,result);
     array_ptr->push(new_location);
   }
 
@@ -2157,8 +2154,7 @@ bool bic_sensor_event_method_vec_x_0(interpreter_thread_s &it,unsigned stack_bas
 
   double result = ((ASensorEvent *)dst_location->v_data_ptr)->vector.x;
 
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/
@@ -2170,8 +2166,7 @@ bool bic_sensor_event_method_vec_y_0(interpreter_thread_s &it,unsigned stack_bas
 
   double result = ((ASensorEvent *)dst_location->v_data_ptr)->vector.y;
 
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/
@@ -2183,8 +2178,7 @@ bool bic_sensor_event_method_vec_z_0(interpreter_thread_s &it,unsigned stack_bas
 
   double result = ((ASensorEvent *)dst_location->v_data_ptr)->vector.z;
 
-  basic_64b &v_data_ptr = *((basic_64b *)&result);
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
   return true;
 }/*}}}*/

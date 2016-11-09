@@ -322,7 +322,7 @@ bool bic_json_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
       case c_bi_class_float:
         {/*{{{*/
-          double value = *((double *)&location_ptr->v_data_ptr);
+          double value = (double)location_ptr->v_data_ptr;
 
           buffer.reserve(max_number_string_length);
           buffer.used += snprintf(buffer.data + buffer.used,max_number_string_length,"%f",value);
@@ -589,7 +589,7 @@ bool bic_json_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,
 
       case c_bi_class_float:
         {/*{{{*/
-          double value = *((double *)&location_ptr->v_data_ptr);
+          double value = (double)location_ptr->v_data_ptr;
 
           buffer.reserve(max_number_string_length);
           buffer.used += snprintf(buffer.data + buffer.used,max_number_string_length,"%f",value);

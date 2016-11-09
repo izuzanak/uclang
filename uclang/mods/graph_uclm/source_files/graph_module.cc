@@ -426,7 +426,7 @@ void bic_graph_consts(location_array_s &const_locations)
 #define CREATE_GRAPH_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_GRAPH_TYPE_BIC_STATIC(c_graph_type_graph);
@@ -439,7 +439,7 @@ void bic_graph_init(interpreter_thread_s &it,location_s *location_ptr)
   graph_s *graph_ptr = (graph_s *)cmalloc(sizeof(graph_s));
   graph_ptr->init();
 
-  location_ptr->v_data_ptr = (basic_64b)graph_ptr;
+  location_ptr->v_data_ptr = (graph_s *)graph_ptr;
 }/*}}}*/
 
 void bic_graph_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -527,7 +527,7 @@ bool bic_graph_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array
   graph_ptr->init();
   graph_ptr->ucl_prepare(it,source_pos);
 
-  location_ptr->v_data_ptr = (basic_64b)graph_ptr;
+  location_ptr->v_data_ptr = (graph_s *)graph_ptr;
 
   if (stream.used < 3*sizeof(unsigned))
   {
@@ -2451,7 +2451,7 @@ void bic_graph_vertex_consts(location_array_s &const_locations)
 
 void bic_graph_vertex_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (graph_vertex_s *)NULL;
 }/*}}}*/
 
 void bic_graph_vertex_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2808,7 +2808,7 @@ void bic_graph_edge_consts(location_array_s &const_locations)
 
 void bic_graph_edge_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (graph_edge_s *)NULL;
 }/*}}}*/
 
 void bic_graph_edge_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -3036,7 +3036,7 @@ void bic_subgraph_consts(location_array_s &const_locations)
 
 void bic_subgraph_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (subgraph_s *)NULL;
 }/*}}}*/
 
 void bic_subgraph_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -3159,7 +3159,7 @@ void bic_graph_paths_consts(location_array_s &const_locations)
 
 void bic_graph_paths_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (graph_paths_s *)NULL;
 }/*}}}*/
 
 void bic_graph_paths_clear(interpreter_thread_s &it,location_s *location_ptr)

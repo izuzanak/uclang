@@ -675,7 +675,7 @@ void bic_bin_array_consts(location_array_s &const_locations)
 #define CREATE_BIN_ARRAY_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_BIN_ARRAY_TYPE_BIC_STATIC(c_bin_array_type_int32);
@@ -688,7 +688,7 @@ void bic_bin_array_consts(location_array_s &const_locations)
 
 void bic_bin_array_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (bin_array_s *)NULL;
 }/*}}}*/
 
 void bic_bin_array_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -850,7 +850,7 @@ bool bic_bin_array_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_a
   ba_ptr->type = type;
   ba_ptr->cont = cont;
 
-  location_ptr->v_data_ptr = (basic_64b)ba_ptr;
+  location_ptr->v_data_ptr = (bin_array_s *)ba_ptr;
 
   return true;
 }/*}}}*/
@@ -1131,7 +1131,7 @@ bool bic_bin_array_method_BinArray_1(interpreter_thread_s &it,unsigned stack_bas
   ba_ptr->type = type;
   ba_ptr->cont = cont;
 
-  dst_location->v_data_ptr = (basic_64b)ba_ptr;
+  dst_location->v_data_ptr = (bin_array_s *)ba_ptr;
 
   return true;
 }/*}}}*/
@@ -1206,7 +1206,7 @@ bool bic_bin_array_method_BinArray_2(interpreter_thread_s &it,unsigned stack_bas
   ba_ptr->type = type;
   ba_ptr->cont = cont;
 
-  dst_location->v_data_ptr = (basic_64b)ba_ptr;
+  dst_location->v_data_ptr = (bin_array_s *)ba_ptr;
 
   // - construct container from array -
   if (src_1_location->v_type == c_bi_class_array)
@@ -1392,8 +1392,7 @@ bool bic_bin_array_method_items_0(interpreter_thread_s &it,unsigned stack_base,u
     do {\
       double value = *ptr;\
       \
-      basic_64b &v_data_ptr = *((basic_64b *)&value);\
-      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);\
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);\
       target_array->push(new_location);\
       \
     } while(++ptr < ptr_end);\
@@ -1532,8 +1531,7 @@ bool bic_bin_array_method_pop_0(interpreter_thread_s &it,unsigned stack_base,uli
 \
   double result = array_ptr->pop();\
 \
-  basic_64b &v_data_ptr = *((basic_64b *)&result);\
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);\
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
 }/*}}}*/
 
   switch (ba_ptr->type)
@@ -1592,8 +1590,7 @@ bool bic_bin_array_method_last_0(interpreter_thread_s &it,unsigned stack_base,ul
 \
   double result = array_ptr->last();\
 \
-  basic_64b &v_data_ptr = *((basic_64b *)&result);\
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);\
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
 }/*}}}*/
 
   switch (ba_ptr->type)
@@ -2623,7 +2620,7 @@ void bic_bin_array_ref_consts(location_array_s &const_locations)
 
 void bic_bin_array_ref_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (bin_array_ref_s *)NULL;
 }/*}}}*/
 
 void bic_bin_array_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2718,8 +2715,7 @@ bool bic_bin_array_ref_operator_binary_equal(interpreter_thread_s &it,unsigned s
         break;
       }
 
-      basic_64b &v_data_ptr = *((basic_64b *)&value);
-      BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+      BIC_SIMPLE_SET_RES(c_bi_class_float,value);
     }/*}}}*/
     break;
   default:
@@ -2765,8 +2761,7 @@ bool bic_bin_array_ref_method_value_0(interpreter_thread_s &it,unsigned stack_ba
   \
   double result = array_ptr->data[bar_ptr->index];\
   \
-  basic_64b &v_data_ptr = *((basic_64b *)&result);\
-  BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);\
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
 }/*}}}*/
 
   switch (ba_ptr->type)
@@ -3069,7 +3064,7 @@ void bic_bin_dict_consts(location_array_s &const_locations)
 #define CREATE_BIN_DICT_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_BIN_DICT_TYPE_BIC_STATIC(c_bin_dict_type_int64_int64);
@@ -3080,7 +3075,7 @@ void bic_bin_dict_consts(location_array_s &const_locations)
 
 void bic_bin_dict_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (bin_dict_s *)NULL;
 }/*}}}*/
 
 void bic_bin_dict_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -3305,7 +3300,7 @@ bool bic_bin_dict_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_ar
   bd_ptr->type = type;
   bd_ptr->cont = cont;
 
-  location_ptr->v_data_ptr = (basic_64b)bd_ptr;
+  location_ptr->v_data_ptr = (bin_dict_s *)bd_ptr;
 
   return true;
 }/*}}}*/
@@ -3437,7 +3432,7 @@ bool bic_bin_dict_method_BinDict_1(interpreter_thread_s &it,unsigned stack_base,
   bd_ptr->type = type;
   bd_ptr->cont = cont;
 
-  dst_location->v_data_ptr = (basic_64b)bd_ptr;
+  dst_location->v_data_ptr = (bin_dict_s *)bd_ptr;
 
   return true;
 }/*}}}*/
@@ -3555,8 +3550,7 @@ bool bic_bin_dict_method_items_0(interpreter_thread_s &it,unsigned stack_base,ul
     do {\
       double value = tree_ptr->data[kv_idx].object.value;\
       \
-      basic_64b &v_data_ptr = *((basic_64b *)&value);\
-      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,v_data_ptr);\
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);\
       target_array->push(new_location);\
       \
       kv_idx = tree_ptr->get_stack_next_idx(kv_idx,&stack_ptr,stack);\
@@ -4534,7 +4528,7 @@ void bic_bin_dict_ref_consts(location_array_s &const_locations)
 
 void bic_bin_dict_ref_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (bin_dict_ref_s *)NULL;
 }/*}}}*/
 
 void bic_bin_dict_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -4617,8 +4611,7 @@ bool bic_bin_dict_ref_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
       key_value_node->object.value = value;
 
-      basic_64b &v_data_ptr = *((basic_64b *)&value);
-      BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+      BIC_SIMPLE_SET_RES(c_bi_class_float,value);
     }/*}}}*/
     break;
   default:
@@ -4692,6 +4685,7 @@ bool bic_bin_dict_ref_method_value_0(interpreter_thread_s &it,unsigned stack_bas
       }
 
       long long int &value = key_value_node->object.value;
+
       BIC_SIMPLE_SET_RES(c_bi_class_integer,value);
     }/*}}}*/
     break;
@@ -4708,8 +4702,9 @@ bool bic_bin_dict_ref_method_value_0(interpreter_thread_s &it,unsigned stack_bas
         return false;
       }
 
-      basic_64b &v_data_ptr = *((basic_64b *)&key_value_node->object.value);
-      BIC_SIMPLE_SET_RES(c_bi_class_float,v_data_ptr);
+      double &value = key_value_node->object.value;
+
+      BIC_SIMPLE_SET_RES(c_bi_class_float,value);
     }/*}}}*/
     break;
   default:

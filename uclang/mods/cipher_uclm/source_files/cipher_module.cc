@@ -125,7 +125,7 @@ void bic_cipher_rc4_consts(location_array_s &const_locations)
 
 void bic_cipher_rc4_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (cipher_s *)NULL;
 }/*}}}*/
 
 void bic_cipher_rc4_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -179,7 +179,7 @@ bool bic_cipher_rc4_method_CipherRc4_1(interpreter_thread_s &it,unsigned stack_b
   // - initialize cipher by given key -
   cipher_ptr->create(string_ptr->size - 1,string_ptr->data);
 
-  dst_location->v_data_ptr = (basic_64b)cipher_ptr;
+  dst_location->v_data_ptr = (cipher_s *)cipher_ptr;
 
   return true;
 }/*}}}*/

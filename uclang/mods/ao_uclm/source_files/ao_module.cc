@@ -184,7 +184,7 @@ void bic_ao_format_consts(location_array_s &const_locations)
 #define CREATE_AO_FORMAT_BYTE_FORMAT_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_AO_FORMAT_BYTE_FORMAT_BIC_STATIC(AO_FMT_LITTLE);
@@ -196,7 +196,7 @@ void bic_ao_format_consts(location_array_s &const_locations)
 
 void bic_ao_format_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ao_format_s *)NULL;
 }/*}}}*/
 
 void bic_ao_format_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -276,7 +276,7 @@ bool bic_ao_format_method_AoFormat_5(interpreter_thread_s &it,unsigned stack_bas
   sample_format.matrix = string_ptr->data;
 
   // - set ao_format destination location -
-  dst_location->v_data_ptr = (basic_64b)aof_ptr;
+  dst_location->v_data_ptr = (ao_format_s *)aof_ptr;
 
   return true;
 }/*}}}*/
@@ -443,7 +443,7 @@ void bic_ao_device_consts(location_array_s &const_locations)
 
 void bic_ao_device_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (ao_device *)NULL;
 }/*}}}*/
 
 void bic_ao_device_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -511,7 +511,7 @@ bool bic_ao_device_method_AoDevice_3(interpreter_thread_s &it,unsigned stack_bas
   ao_free_options(options);
 
   // - set ao_device destination location -
-  dst_location->v_data_ptr = (basic_64b)aod_ptr;
+  dst_location->v_data_ptr = (ao_device *)aod_ptr;
 
   return true;
 }/*}}}*/
@@ -566,7 +566,7 @@ bool bic_ao_device_method_AoDevice_5(interpreter_thread_s &it,unsigned stack_bas
   ao_free_options(options);
 
   // - set ao_device destination location -
-  dst_location->v_data_ptr = (basic_64b)aod_ptr;
+  dst_location->v_data_ptr = (ao_device *)aod_ptr;
 
   return true;
 }/*}}}*/

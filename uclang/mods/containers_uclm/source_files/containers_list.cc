@@ -411,7 +411,7 @@ void bic_list_init(interpreter_thread_s &it,location_s *location_ptr)
   pointer_list_s *list_ptr = (pointer_list_s *)cmalloc(sizeof(pointer_list_s));
   list_ptr->init();
 
-  location_ptr->v_data_ptr = (basic_64b)list_ptr;
+  location_ptr->v_data_ptr = (pointer_list_s *)list_ptr;
 }/*}}}*/
 
 void bic_list_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -499,7 +499,7 @@ bool bic_list_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_
   pointer_list_s *list_ptr = (pointer_list_s *)cmalloc(sizeof(pointer_list_s));
   list_ptr->init();
 
-  location_ptr->v_data_ptr = (basic_64b)list_ptr;
+  location_ptr->v_data_ptr = (pointer_list_s *)list_ptr;
 
   if (stream.used < sizeof(unsigned))
   {

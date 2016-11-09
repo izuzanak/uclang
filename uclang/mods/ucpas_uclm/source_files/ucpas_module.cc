@@ -314,7 +314,7 @@ void bic_pas_consts(location_array_s &const_locations)
   {\
     cv_ptr->v_type = c_bi_class_integer;\
     cv_ptr->v_reference_cnt.atomic_set(1);\
-    cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+    cv_ptr->v_data_ptr = (long long int)VALUE;\
     cv_ptr++;\
   }
 
@@ -324,7 +324,7 @@ void bic_pas_consts(location_array_s &const_locations)
 
 void bic_pas_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (pointer)NULL;
 }/*}}}*/
 
 void bic_pas_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1321,7 +1321,7 @@ void bic_pas_device_consts(location_array_s &const_locations)
 #define CREATE_PAS_EVENT_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_PAS_EVENT_TYPE_BIC_STATIC(PKT_EVT_ERR);
@@ -1337,7 +1337,7 @@ void bic_pas_device_consts(location_array_s &const_locations)
 #define CREATE_PAS_DEVICE_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (basic_64b)VALUE;\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
     CREATE_PAS_DEVICE_TYPE_BIC_STATIC(PKT_DEVTYPE_ANYCOMM);
@@ -1353,7 +1353,7 @@ void bic_pas_device_consts(location_array_s &const_locations)
 
 void bic_pas_device_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (pas_device_s *)NULL;
 }/*}}}*/
 
 void bic_pas_device_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1411,7 +1411,7 @@ bool bic_pas_device_method_PasDevice_2(interpreter_thread_s &it,unsigned stack_b
   pd_ptr->uid = uid;
   pd_ptr->vid = vid;
 
-  dst_location->v_data_ptr = (basic_64b)pd_ptr;
+  dst_location->v_data_ptr = (pas_device_s *)pd_ptr;
 
   return true;
 }/*}}}*/
@@ -1446,7 +1446,8 @@ bool bic_pas_device_method_PasDevice_2(interpreter_thread_s &it,unsigned stack_b
     return false;\
   }\
 \
-  ((pas_device_s *)dst_location->v_data_ptr)->STRUCT_NAME = VAR_NAME;\
+  pas_device_s *pd_ptr = (pas_device_s *)dst_location->v_data_ptr;\
+  pd_ptr->STRUCT_NAME = VAR_NAME;\
 \
   BIC_SET_RESULT_BLANK();\
 \

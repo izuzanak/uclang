@@ -308,11 +308,12 @@ built_in_method_s gl_methods[] =
 
 void bic_gl_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  cassert(0);
 }/*}}}*/
 
 void bic_gl_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
+  cassert(0);
 }/*}}}*/
 
 bool bic_gl_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -635,7 +636,7 @@ void bic_gl_shader_consts(location_array_s &const_locations)
 
 void bic_gl_shader_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)0;
+  location_ptr->v_data_ptr = (long long int)0;
 }/*}}}*/
 
 void bic_gl_shader_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -688,7 +689,7 @@ bool bic_gl_shader_method_GlShader_1(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)shader;
+  dst_location->v_data_ptr = (long long int)shader;
 
   return true;
 }/*}}}*/
@@ -761,7 +762,7 @@ bool bic_gl_shader_method_GlShader_2(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)shader;
+  dst_location->v_data_ptr = (long long int)shader;
 
   return true;
 }/*}}}*/
@@ -908,7 +909,7 @@ void bic_gl_program_consts(location_array_s &const_locations)
 
 void bic_gl_program_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)0;
+  location_ptr->v_data_ptr = (long long int)0;
 }/*}}}*/
 
 void bic_gl_program_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -949,7 +950,7 @@ bool bic_gl_program_method_GlProgram_0(interpreter_thread_s &it,unsigned stack_b
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)result;
+  dst_location->v_data_ptr = (long long int)result;
 
   return true;
 }/*}}}*/
@@ -1022,7 +1023,7 @@ bool bic_gl_program_method_GlProgram_2(interpreter_thread_s &it,unsigned stack_b
     return false;
   }
 
-  dst_location->v_data_ptr = (basic_64b)program;
+  dst_location->v_data_ptr = (long long int)program;
 
   return true;
 }/*}}}*/
@@ -1259,7 +1260,7 @@ void bic_gl_attribute_consts(location_array_s &const_locations)
 
 void bic_gl_attribute_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (gl_attribute_s *)NULL;
 }/*}}}*/
 
 void bic_gl_attribute_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1442,7 +1443,7 @@ void bic_gl_uniform_consts(location_array_s &const_locations)
 
 void bic_gl_uniform_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (gl_uniform_s *)NULL;
 }/*}}}*/
 
 void bic_gl_uniform_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1748,7 +1749,7 @@ void bic_gl_texture_consts(location_array_s &const_locations)
 
 void bic_gl_texture_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (basic_64b)NULL;
+  location_ptr->v_data_ptr = (gl_texture_s *)NULL;
 }/*}}}*/
 
 void bic_gl_texture_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1853,7 +1854,7 @@ bool bic_gl_texture_method_GlTexture_4(interpreter_thread_s &it,unsigned stack_b
   glt_ptr->init();
 
   glGenTextures(1,&glt_ptr->index);
-  dst_location->v_data_ptr = (basic_64b)glt_ptr;
+  dst_location->v_data_ptr = (gl_texture_s *)glt_ptr;
 
   glBindTexture(GL_TEXTURE_2D,glt_ptr->index);
 
