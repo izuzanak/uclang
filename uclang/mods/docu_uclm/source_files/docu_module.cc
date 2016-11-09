@@ -387,7 +387,7 @@ bool bic_docu_source_method_DocuSource_1(interpreter_thread_s &it,unsigned stack
   }
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-  
+
   docu_source_s *ds_ptr = (docu_source_s *)cmalloc(sizeof(docu_source_s));
   ds_ptr->init();
 
@@ -836,7 +836,7 @@ bool bic_docu_parsed_method_parse_1(interpreter_thread_s &it,unsigned stack_base
   // - create docu parsed object -
   docu_parsed_s *dp_ptr = (docu_parsed_s *)cmalloc(sizeof(docu_parsed_s));
   dp_ptr->init();
- 
+
   ((location_s *)it.blank_location)->v_reference_cnt.atomic_add(6);
 
   // - initialize docu parsed locations -
@@ -882,7 +882,7 @@ bool bic_docu_parsed_method_create_brief_1(interpreter_thread_s &it,unsigned sta
   // - create docu parsed object -
   docu_parsed_s *dp_ptr = (docu_parsed_s *)cmalloc(sizeof(docu_parsed_s));
   dp_ptr->init();
- 
+
   ((location_s *)it.blank_location)->v_reference_cnt.atomic_add(5);
 
   // - initialize docu parsed locations -

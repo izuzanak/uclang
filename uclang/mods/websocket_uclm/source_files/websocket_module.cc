@@ -710,7 +710,7 @@ bool bic_ws_context_method_callback_on_writable_1(interpreter_thread_s &it,unsig
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_WS_CONTEXT_PROTOCOL_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(prot_idx);
-    
+
     return false;
   }
 
@@ -1168,7 +1168,7 @@ bool bic_ws_conn_method_set_timeout_2(interpreter_thread_s &it,unsigned stack_ba
 
   // - ERROR -
   default:
-    
+
     exception_s::throw_exception(it,module.error_base + c_error_WS_CONN_SET_TIMEOUT_UNKNOWN_REASON,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -1178,7 +1178,7 @@ bool bic_ws_conn_method_set_timeout_2(interpreter_thread_s &it,unsigned stack_ba
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_WS_CONN_SET_TIMEOUT_WRONG_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(seconds);
-    
+
     return false;
   }
 

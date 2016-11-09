@@ -477,7 +477,7 @@ additions
   bool compute_follows();
 
   /*
-   * compute parse kernels 
+   * compute parse kernels
    */
   bool compute_kernels();
 

@@ -425,7 +425,7 @@ bool bic_av_format_method_stream_info_1(interpreter_thread_s &it,unsigned stack_
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_AV_FORMAT_STREAM_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(stream_idx);
-    
+
     return false;
   }
 
@@ -473,7 +473,7 @@ bool bic_av_format_method_stream_decode_1(interpreter_thread_s &it,unsigned stac
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_AV_FORMAT_STREAM_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(stream_idx);
-    
+
     return false;
   }
 
@@ -533,10 +533,10 @@ bool bic_av_format_method_next_frame_0(interpreter_thread_s &it,unsigned stack_b
 #define BIC_AV_FORMAT_FREE_PACKET() \
   av_packet_unref(&packet);\
   packet.size = 0;
-  
+
 #define BIC_AV_FORMAT_FREE_FRAME() \
   av_frame_free(&frame);
-  
+
 #define BIC_AV_FORMAT_SET_RESULT_FRAME(FRAME_CLASS) \
 {/*{{{*/\
   av_frame_s *avfr_ptr = (av_frame_s *)cmalloc(sizeof(av_frame_s));\
@@ -553,7 +553,7 @@ bool bic_av_format_method_next_frame_0(interpreter_thread_s &it,unsigned stack_b
 
   // - read next frame -
   do {
-    
+
     // - if packet is empty -
     if (packet.size == 0)
     {
@@ -596,7 +596,7 @@ bool bic_av_format_method_next_frame_0(interpreter_thread_s &it,unsigned stack_b
             {
               BIC_AV_FORMAT_FREE_PACKET();
               BIC_AV_FORMAT_FREE_FRAME();
-              
+
               exception_s::throw_exception(it,module.error_base + c_error_AV_FORMAT_PACKED_DECODE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
               return false;
             }
@@ -1360,7 +1360,7 @@ bool bic_av_picture_method_buffer_0(interpreter_thread_s &it,unsigned stack_base
 
   // - ERROR -
   default:
-    
+
     exception_s::throw_exception(it,module.error_base + c_error_AV_PICTURE_UNSUPPORTED_PIXEL_FORMAT,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -1597,7 +1597,7 @@ bool bic_av_converter_method_scale_2(interpreter_thread_s &it,unsigned stack_bas
     src_height = avp_ptr->height;
     src_format = avp_ptr->format;
   }
-  
+
   // - ERROR -
   else
   {
@@ -1712,7 +1712,7 @@ bool bic_av_converter_method_scale_4(interpreter_thread_s &it,unsigned stack_bas
     src_height = avp_ptr->height;
     src_format = avp_ptr->format;
   }
-  
+
   // - ERROR -
   else
   {

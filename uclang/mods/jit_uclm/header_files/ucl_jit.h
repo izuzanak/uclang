@@ -50,7 +50,7 @@ inline void jit_context_s::init()
 
 inline void jit_context_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release jit context -
   if (context != NULL)
   {
@@ -75,7 +75,7 @@ inline void jit_function_s::init()
 
 inline void jit_function_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release jit context pointer -
   if (jc_ptr != NULL)
   {

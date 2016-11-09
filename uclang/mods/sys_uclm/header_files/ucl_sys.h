@@ -121,7 +121,7 @@ inline void poll_s::init()
 
 inline void poll_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release poll file descriptors -
   if (fds != NULL)
   {

@@ -122,7 +122,7 @@ bool python_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    
+
     if (exception.params[0] != c_idx_not_exist)
     {
       fprintf(stderr,"\nCannot process parameter %" HOST_LL_FORMAT "d of python object method \n",exception.params[0]);
@@ -426,7 +426,7 @@ bool bic_py_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base
 
   // - retrieve object -
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
-  
+
   // - ERROR -
   if (pyo_dst == NULL)
   {
@@ -520,7 +520,7 @@ bool bic_py_object_member(interpreter_thread_s &it,uli *code,unsigned stack_base
 
   // - retrieve object -
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
-  
+
   // - ERROR -
   if (pyo_dst == NULL)
   {
@@ -566,7 +566,7 @@ bool bic_py_object_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
-  
+
   // - ERROR -
   if (pyo_dst == NULL)
   {
@@ -679,7 +679,7 @@ bool bic_py_object_method_value_0(interpreter_thread_s &it,unsigned stack_base,u
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
-  
+
   // - ERROR -
   if (pyo_dst == NULL)
   {
@@ -714,7 +714,7 @@ bool bic_py_object_method_get_type_0(interpreter_thread_s &it,unsigned stack_bas
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
-  
+
   // - ERROR -
   if (pyo_dst == NULL)
   {
@@ -746,7 +746,7 @@ bool bic_py_object_method_has_attr_1(interpreter_thread_s &it,unsigned stack_bas
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
-  
+
   // - ERROR -
   if (pyo_dst == NULL)
   {
@@ -784,7 +784,7 @@ bool bic_py_object_method_get_attr_1(interpreter_thread_s &it,unsigned stack_bas
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
-  
+
   // - ERROR -
   if (pyo_dst == NULL)
   {
@@ -831,7 +831,7 @@ bool bic_py_object_method_set_attr_2(interpreter_thread_s &it,unsigned stack_bas
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
-  
+
   // - ERROR -
   if (pyo_dst == NULL)
   {
@@ -882,7 +882,7 @@ bool bic_py_object_method_del_attr_1(interpreter_thread_s &it,unsigned stack_bas
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
-  
+
   // - ERROR -
   if (pyo_dst == NULL)
   {
@@ -928,7 +928,7 @@ bool bic_py_object_method_call_attr_2(interpreter_thread_s &it,unsigned stack_ba
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
-  
+
   // - ERROR -
   if (pyo_dst == NULL)
   {
@@ -1001,7 +1001,7 @@ bool bic_py_object_method_get_item_1(interpreter_thread_s &it,unsigned stack_bas
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
-  
+
   // - ERROR -
   if (pyo_dst == NULL)
   {
@@ -1048,7 +1048,7 @@ bool bic_py_object_method_set_item_2(interpreter_thread_s &it,unsigned stack_bas
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
-  
+
   // - ERROR -
   if (pyo_dst == NULL)
   {
@@ -1099,7 +1099,7 @@ bool bic_py_object_method_del_item_1(interpreter_thread_s &it,unsigned stack_bas
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
-  
+
   // - ERROR -
   if (pyo_dst == NULL)
   {
@@ -1143,7 +1143,7 @@ bool bic_py_object_method_dir_0(interpreter_thread_s &it,unsigned stack_base,uli
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
-  
+
   // - ERROR -
   if (pyo_dst == NULL)
   {
@@ -1174,7 +1174,7 @@ bool bic_py_object_method_length_0(interpreter_thread_s &it,unsigned stack_base,
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
-  
+
   // - ERROR -
   if (pyo_dst == NULL)
   {
@@ -1204,7 +1204,7 @@ bool bic_py_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
-  
+
   // - ERROR -
   if (pyo_dst == NULL)
   {
@@ -1247,7 +1247,7 @@ bool bic_py_object_method_print_0(interpreter_thread_s &it,unsigned stack_base,u
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
-  
+
   // - ERROR -
   if (pyo_dst == NULL)
   {

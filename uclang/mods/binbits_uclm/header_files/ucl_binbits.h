@@ -122,7 +122,7 @@ inline void bin_array_s::init()
 
 inline void bin_array_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   if (cont != NULL)
   {
     switch (type)
@@ -186,7 +186,7 @@ inline bin_array_ref_s *bin_array_s::create_reference(location_s *ba_location,un
 
 inline void bin_array_s::release_reference(interpreter_thread_s &it,bin_array_ref_s *bar_ptr)
 {/*{{{*/
-  
+
   // - store released reference -
   free_references.push(bar_ptr);
 
@@ -205,7 +205,7 @@ inline void bin_dict_s::init()
 
 inline void bin_dict_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   if (cont != NULL)
   {
     switch (type)
@@ -263,7 +263,7 @@ inline bin_dict_ref_s *bin_dict_s::create_reference(location_s *bd_location,unsi
 
 inline void bin_dict_s::release_reference(interpreter_thread_s &it,bin_dict_ref_s *bdr_ptr)
 {/*{{{*/
-  
+
   // - store released reference -
   free_references.push(bdr_ptr);
 

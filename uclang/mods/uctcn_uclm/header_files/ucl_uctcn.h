@@ -241,7 +241,7 @@ inline void pv_list_s::init()
 
 inline void pv_list_s::clear()
 {/*{{{*/
-  
+
   // - if variable pointer exists -
   if (pVariable != NULL)
   {
@@ -377,7 +377,7 @@ inline void proc_variable_s::clear(interpreter_thread_s &it)
 inline uctcn_c::uctcn_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"uctcn_init()\n"););
-  
+
   memset(ts_initialized,0,(AP_TS_ID_MAX + 1)*sizeof(bool));
 }/*}}}*/
 

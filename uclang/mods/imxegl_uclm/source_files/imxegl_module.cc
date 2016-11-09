@@ -434,7 +434,7 @@ bool bic_imx_egl_method_ImxEgl_3(interpreter_thread_s &it,unsigned stack_base,ul
     case EGL_OPENVG_API:
       api_bit = EGL_OPENVG_BIT;
       break;
-    
+
     // - ERROR -
     default:
 

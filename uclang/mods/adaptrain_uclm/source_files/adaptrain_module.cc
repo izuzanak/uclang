@@ -981,7 +981,7 @@ bool bic_ato_aru_method_create_5(interpreter_thread_s &it,unsigned stack_base,ul
 
         return false;
       }
-      
+
       std_head.r32FXValue = (double)first_x_location->v_data_ptr;
       std_head.r32LXValue = (double)last_x_location->v_data_ptr;
     }/*}}}*/
@@ -1566,7 +1566,7 @@ bool bic_ato_aru_record_method_value_0(interpreter_thread_s &it,unsigned stack_b
     case TTDticks:
       {
         long long int result;
-        
+
         switch (aa_ptr->head.stdHead.u16DataType)
         {
           case TUINT:
@@ -2429,97 +2429,97 @@ built_in_class_s optim_line_segment_class =
 
 built_in_method_s optim_line_segment_methods[] =
 {/*{{{*/
-  { 
+  {
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_optim_line_segment_operator_binary_equal
   },
-  { 
+  {
     "LPindx#0",
     c_modifier_public | c_modifier_final,
     bic_optim_line_segment_method_LPindx_0
   },
-  { 
+  {
     "LPindxR#0",
     c_modifier_public | c_modifier_final,
     bic_optim_line_segment_method_LPindxR_0
   },
-  { 
+  {
     "Dist2RefLP#0",
     c_modifier_public | c_modifier_final,
     bic_optim_line_segment_method_Dist2RefLP_0
   },
-  { 
+  {
     "DrivingMode#0",
     c_modifier_public | c_modifier_final,
     bic_optim_line_segment_method_DrivingMode_0
   },
-  { 
+  {
     "TargLPindx#0",
     c_modifier_public | c_modifier_final,
     bic_optim_line_segment_method_TargLPindx_0
   },
-  { 
+  {
     "TargLPindxR#0",
     c_modifier_public | c_modifier_final,
     bic_optim_line_segment_method_TargLPindxR_0
   },
-  { 
+  {
     "SegmentLength#0",
     c_modifier_public | c_modifier_final,
     bic_optim_line_segment_method_SegmentLength_0
   },
-  { 
+  {
     "RunningTime#0",
     c_modifier_public | c_modifier_final,
     bic_optim_line_segment_method_RunningTime_0
   },
-  { 
+  {
     "RunningTimeMin#0",
     c_modifier_public | c_modifier_final,
     bic_optim_line_segment_method_RunningTimeMin_0
   },
-  { 
+  {
     "TargSpeed#0",
     c_modifier_public | c_modifier_final,
     bic_optim_line_segment_method_TargSpeed_0
   },
-  { 
+  {
     "BegSpeed#0",
     c_modifier_public | c_modifier_final,
     bic_optim_line_segment_method_BegSpeed_0
   },
-  { 
+  {
     "MeanAcceleration#0",
     c_modifier_public | c_modifier_final,
     bic_optim_line_segment_method_MeanAcceleration_0
   },
-  { 
+  {
     "PeakAcceleration#0",
     c_modifier_public | c_modifier_final,
     bic_optim_line_segment_method_PeakAcceleration_0
   },
-  { 
+  {
     "TravelTime2Stat#0",
     c_modifier_public | c_modifier_final,
     bic_optim_line_segment_method_TravelTime2Stat_0
   },
-  { 
+  {
     "TravelTime2StatMin#0",
     c_modifier_public | c_modifier_final,
     bic_optim_line_segment_method_TravelTime2StatMin_0
   },
-  { 
+  {
     "items#0",
     c_modifier_public | c_modifier_final,
     bic_optim_line_segment_method_items_0
   },
-  { 
+  {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_optim_line_segment_method_to_string_0
   },
-  { 
+  {
     "print#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_optim_line_segment_method_print_0
@@ -2789,47 +2789,47 @@ built_in_class_s ato_loco_class =
 
 built_in_method_s ato_loco_methods[] =
 {/*{{{*/
-  { 
+  {
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_ato_loco_operator_binary_equal
   },
-  { 
+  {
     "AtoLoco#1",
     c_modifier_public | c_modifier_final,
     bic_ato_loco_method_AtoLoco_1
   },
-  { 
+  {
     "LocoId#0",
     c_modifier_public | c_modifier_final,
     bic_ato_loco_method_LocoId_0
   },
-  { 
+  {
     "LocoType#0",
     c_modifier_public | c_modifier_final,
     bic_ato_loco_method_LocoType_0
   },
-  { 
+  {
     "UIC_Id#0",
     c_modifier_public | c_modifier_final,
     bic_ato_loco_method_UIC_Id_0
   },
-  { 
+  {
     "TimeStamp#0",
     c_modifier_public | c_modifier_final,
     bic_ato_loco_method_TimeStamp_0
   },
-  { 
+  {
     "Version#0",
     c_modifier_public | c_modifier_final,
     bic_ato_loco_method_Version_0
   },
-  { 
+  {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_ato_loco_method_to_string_0
   },
-  { 
+  {
     "print#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_ato_loco_method_print_0
@@ -3027,7 +3027,7 @@ bool bic_ato_loco_method_AtoLoco_1(interpreter_thread_s &it,unsigned stack_base,
       exception_s::throw_exception(it,module.error_base + c_error_ATO_LOCO_WRONG_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
-    
+
     // - allocate characteristics memory -
     loco_ptr->charts = (R32 *)cmalloc(charts_memory_size);
 
@@ -3145,42 +3145,42 @@ built_in_class_s ato_train_class =
 
 built_in_method_s ato_train_methods[] =
 {/*{{{*/
-  { 
+  {
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_ato_train_operator_binary_equal
   },
-  { 
+  {
     "AtoTrain#1",
     c_modifier_public | c_modifier_final,
     bic_ato_train_method_AtoTrain_1
   },
-  { 
+  {
     "TrainId#0",
     c_modifier_public | c_modifier_final,
     bic_ato_train_method_TrainId_0
   },
-  { 
+  {
     "TrainIdNum#0",
     c_modifier_public | c_modifier_final,
     bic_ato_train_method_TrainIdNum_0
   },
-  { 
+  {
     "TimeStamp#0",
     c_modifier_public | c_modifier_final,
     bic_ato_train_method_TimeStamp_0
   },
-  { 
+  {
     "Version#0",
     c_modifier_public | c_modifier_final,
     bic_ato_train_method_Version_0
   },
-  { 
+  {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_ato_train_method_to_string_0
   },
-  { 
+  {
     "print#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_ato_train_method_print_0
@@ -3408,107 +3408,107 @@ built_in_class_s ato_trip_class =
 
 built_in_method_s ato_trip_methods[] =
 {/*{{{*/
-  { 
+  {
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_operator_binary_equal
   },
-  { 
+  {
     "operator_binary_le_br_re_br#1",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_operator_binary_le_br_re_br
   },
-  { 
+  {
     "AtoTrip#1",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_method_AtoTrip_1
   },
-  { 
+  {
     "pack#0",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_method_pack_0
   },
-  { 
+  {
     "unpack#1",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_ato_trip_method_unpack_1
   },
-  { 
+  {
     "TripId#0",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_method_TripId_0
   },
-  { 
+  {
     "TrainIdNum#0",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_method_TrainIdNum_0
   },
-  { 
+  {
     "DepartStation#0",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_method_DepartStation_0
   },
-  { 
+  {
     "DestinStation#0",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_method_DestinStation_0
   },
-  { 
+  {
     "TimeStamp#0",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_method_TimeStamp_0
   },
-  { 
+  {
     "DepartTime#0",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_method_DepartTime_0
   },
-  { 
+  {
     "DepartTime#1",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_method_DepartTime_1
   },
-  { 
+  {
     "ArrivalTime#0",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_method_ArrivalTime_0
   },
-  { 
+  {
     "ArrivalTime#1",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_method_ArrivalTime_1
   },
-  { 
+  {
     "Version#0",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_method_Version_0
   },
-  { 
+  {
     "item#1",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_method_item_1
   },
-  { 
+  {
     "first_idx#0",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_method_first_idx_0
   },
-  { 
+  {
     "next_idx#1",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_method_next_idx_1
   },
-  { 
+  {
     "length#0",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_method_length_0
   },
-  { 
+  {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_ato_trip_method_to_string_0
   },
-  { 
+  {
     "print#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_ato_trip_method_print_0
@@ -4083,42 +4083,42 @@ built_in_class_s ato_trip_sec_class =
 
 built_in_method_s ato_trip_sec_methods[] =
 {/*{{{*/
-  { 
+  {
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_sec_operator_binary_equal
   },
-  { 
+  {
     "LineSectionId#0",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_sec_method_LineSectionId_0
   },
-  { 
+  {
     "TimeStamp#0",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_sec_method_TimeStamp_0
   },
-  { 
+  {
     "IntermedStation#0",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_sec_method_IntermedStation_0
   },
-  { 
+  {
     "ArrivalTime#0",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_sec_method_ArrivalTime_0
   },
-  { 
+  {
     "DepartTime#0",
     c_modifier_public | c_modifier_final,
     bic_ato_trip_sec_method_DepartTime_0
   },
-  { 
+  {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_ato_trip_sec_method_to_string_0
   },
-  { 
+  {
     "print#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_ato_trip_sec_method_print_0
@@ -4268,177 +4268,177 @@ built_in_class_s ato_line_sec_class =
 
 built_in_method_s ato_line_sec_methods[] =
 {/*{{{*/
-  { 
+  {
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_operator_binary_equal
   },
-  { 
+  {
     "operator_binary_le_br_re_br#1",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_operator_binary_le_br_re_br
   },
-  { 
+  {
     "AtoLineSec#1",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_AtoLineSec_1
   },
-  { 
+  {
     "LineSectionId#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_LineSectionId_0
   },
-  { 
+  {
     "DepartStation#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_DepartStation_0
   },
-  { 
+  {
     "DestinStation#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_DestinStation_0
   },
-  { 
+  {
     "GLPsId#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_GLPsId_0
   },
-  { 
+  {
     "TextsId#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_TextsId_0
   },
-  { 
+  {
     "BalisesId#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_BalisesId_0
   },
-  { 
+  {
     "TrackMenuId#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_TrackMenuId_0
   },
-  { 
+  {
     "SignalLightsId#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_SignalLightsId_0
   },
-  { 
+  {
     "TimeStamp#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_TimeStamp_0
   },
-  { 
+  {
     "TimeStampG#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_TimeStampG_0
   },
-  { 
+  {
     "TimeStampT#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_TimeStampT_0
   },
-  { 
+  {
     "TimeStampB#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_TimeStampB_0
   },
-  { 
+  {
     "TimeStampD#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_TimeStampD_0
   },
-  { 
+  {
     "TimeStampS#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_TimeStampS_0
   },
-  { 
+  {
     "SchedulTravelTime#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_SchedulTravelTime_0
   },
-  { 
+  {
     "SectionLength#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_SectionLength_0
   },
-  { 
+  {
     "StoppingDistMax#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_StoppingDistMax_0
   },
-  { 
+  {
     "Deceler1DistMax#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_Deceler1DistMax_0
   },
-  { 
+  {
     "TargDisplac#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_TargDisplac_0
   },
-  { 
+  {
     "SpeedTargMin#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_SpeedTargMin_0
   },
-  { 
+  {
     "SpeedTargMax#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_SpeedTargMax_0
   },
-  { 
+  {
     "SpeedMin#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_SpeedMin_0
   },
-  { 
+  {
     "SpeedMax#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_SpeedMax_0
   },
-  { 
+  {
     "SpeedCoastMin#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_SpeedCoastMin_0
   },
-  { 
+  {
     "TargDisplacMax#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_TargDisplacMax_0
   },
-  { 
+  {
     "Version#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_Version_0
   },
-  { 
+  {
     "item#1",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_item_1
   },
-  { 
+  {
     "first_idx#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_first_idx_0
   },
-  { 
+  {
     "next_idx#1",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_next_idx_1
   },
-  { 
+  {
     "length#0",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_method_length_0
   },
-  { 
+  {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_ato_line_sec_method_to_string_0
   },
-  { 
+  {
     "print#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_ato_line_sec_method_print_0
@@ -4699,7 +4699,7 @@ bool bic_ato_line_sec_method_AtoLineSec_1(interpreter_thread_s &it,unsigned stac
   ATO_LINE_SEC_DATETIME48_COPY(TimeStampD);
   ATO_LINE_SEC_DATETIME48_COPY(TimeStampS);
 
-  ATO_LINE_SEC_COPY(line_sec.SchedulTravelTime,R32); 
+  ATO_LINE_SEC_COPY(line_sec.SchedulTravelTime,R32);
   ATO_LINE_SEC_COPY(line_sec.SectionLength,R32);
   ATO_LINE_SEC_COPY(line_sec.StoppingDistMax,R32);
   ATO_LINE_SEC_COPY(line_sec.Deceler1DistMax,R32);
@@ -5033,22 +5033,22 @@ built_in_class_s ato_line_sec_point_class =
 
 built_in_method_s ato_line_sec_point_methods[] =
 {/*{{{*/
-  { 
+  {
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_ato_line_sec_point_operator_binary_equal
   },
-  { 
+  {
     "LPindx#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_ato_line_sec_point_method_LPindx_0
   },
-  { 
+  {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_ato_line_sec_point_method_to_string_0
   },
-  { 
+  {
     "print#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_ato_line_sec_point_method_print_0

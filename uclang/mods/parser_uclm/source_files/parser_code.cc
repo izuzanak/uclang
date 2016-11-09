@@ -2831,7 +2831,7 @@ bool reg_parser_s::NKA_to_DKA()
           // - if state at position ss_idx is not contained in closure  -
           if (!processed_states[ss_idx])
           {
-            // - push states which are target of epsilon move from inserted state 
+            // - push states which are target of epsilon move from inserted state
             // to stack -
             unsigned have_no_eps_move = false;
 
@@ -3360,7 +3360,7 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
   {
     interpreter_thread_s &it = *((interpreter_thread_s *)it_ptr);
     exception_s::throw_exception(it,c_error_PARSER_CREATE_RULES_NO_TERMINALS_DEFINED,0,(location_s *)it.blank_location);
-    
+
     return false;
   }
 
@@ -3421,7 +3421,7 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
   {
     interpreter_thread_s &it = *((interpreter_thread_s *)it_ptr);
     exception_s::throw_exception(it,c_error_PARSER_CREATE_RULES_NO_NONTERMINALS_DEFINED,0,(location_s *)it.blank_location);
-    
+
     return false;
   }
 
@@ -3600,7 +3600,7 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
   {
     interpreter_thread_s &it = *((interpreter_thread_s *)it_ptr);
     exception_s::throw_exception(it,c_error_PARSER_CREATE_RULES_NO_RULES_DEFINED,0,(location_s *)it.blank_location);
-    
+
     return false;
   }
 
@@ -3642,7 +3642,7 @@ bool p_creat_descr_s::find_key_terminals(unsigned &end_terminal,ui_array_s &skip
         {
           interpreter_thread_s &it = *((interpreter_thread_s *)it_ptr);
           exception_s::throw_exception(it,c_error_PARSER_CREATE_MULTIPLE_PARSE_END_TERMINALS,0,(location_s *)it.blank_location);
-          
+
           return false;
         }
 
@@ -4075,7 +4075,7 @@ bool p_creat_descr_s::create_lalr_table(p_lalr_table_s &lalr_table)
           {
             interpreter_thread_s &it = *((interpreter_thread_s *)it_ptr);
             exception_s::throw_exception(it,c_error_PARSER_CREATE_SLR1_PARSE_TABLE_CONFLICT,0,(location_s *)it.blank_location);
-            
+
             return false;
           }
 
@@ -4145,7 +4145,7 @@ bool p_creat_descr_s::create_lalr_table(p_lalr_table_s &lalr_table)
                   {
                     interpreter_thread_s &it = *((interpreter_thread_s *)it_ptr);
                     exception_s::throw_exception(it,c_error_PARSER_CREATE_SLR1_PARSE_TABLE_CONFLICT,0,(location_s *)it.blank_location);
-                    
+
                     return false;
                   }
 
@@ -4160,7 +4160,7 @@ bool p_creat_descr_s::create_lalr_table(p_lalr_table_s &lalr_table)
                   {
                     interpreter_thread_s &it = *((interpreter_thread_s *)it_ptr);
                     exception_s::throw_exception(it,c_error_PARSER_CREATE_CANNOT_RESOLVE_RULE_HEAD_FOR_SHIFT_ACTION,0,(location_s *)it.blank_location);
-                    
+
                     return false;
                   }
                 }

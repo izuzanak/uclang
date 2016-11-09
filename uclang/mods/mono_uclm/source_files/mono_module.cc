@@ -225,7 +225,7 @@ bool mono_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    
+
     if (exception.params[0] != c_idx_not_exist)
     {
       fprintf(stderr,"\nCannot process parameter %" HOST_LL_FORMAT "d of mono object method \n",exception.params[0]);
@@ -835,7 +835,7 @@ bool bic_mono_class_method__new_1(interpreter_thread_s &it,unsigned stack_base,u
     exception_s::throw_exception(it,module.error_base + c_error_MONO_CLASS_CANNOT_FIND_CONSTRUCTOR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
-  
+
   MonoObject *mono_obj = mono_object_new(mono_c::domain,mono_class);
 
   mono_c::mono_exc = NULL;
@@ -1075,7 +1075,7 @@ bool bic_mono_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_ba
 
   // - retrieve object -
   MonoObject *mono_dst = mono_c::create_mono_object(it,dst_location);
-  
+
   // - ERROR -
   if (mono_dst == NULL)
   {
@@ -1143,7 +1143,7 @@ bool bic_mono_object_member(interpreter_thread_s &it,uli *code,unsigned stack_ba
 
   // - retrieve object -
   MonoObject *mono_dst = mono_c::create_mono_object(it,dst_location);
-  
+
   // - ERROR -
   if (mono_dst == NULL)
   {
@@ -1201,7 +1201,7 @@ bool bic_mono_object_operator_binary_le_br_re_br(interpreter_thread_s &it,unsign
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   MonoObject *mono_dst = mono_c::create_mono_object(it,dst_location);
-  
+
   // - ERROR -
   if (mono_dst == NULL)
   {
@@ -1300,7 +1300,7 @@ bool bic_mono_object_method__value_0(interpreter_thread_s &it,unsigned stack_bas
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   MonoObject *mono_dst = mono_c::create_mono_object(it,dst_location);
-  
+
   // - ERROR -
   if (mono_dst == NULL)
   {
@@ -1334,7 +1334,7 @@ bool bic_mono_object_method__class_0(interpreter_thread_s &it,unsigned stack_bas
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   MonoObject *mono_dst = mono_c::create_mono_object(it,dst_location);
-  
+
   // - ERROR -
   if (mono_dst == NULL)
   {
@@ -1357,7 +1357,7 @@ bool bic_mono_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   MonoObject *mono_dst = mono_c::create_mono_object(it,dst_location);
-  
+
   // - ERROR -
   if (mono_dst == NULL)
   {
@@ -1397,7 +1397,7 @@ bool bic_mono_object_method_print_0(interpreter_thread_s &it,unsigned stack_base
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   MonoObject *mono_dst = mono_c::create_mono_object(it,dst_location);
-  
+
   // - ERROR -
   if (mono_dst == NULL)
   {

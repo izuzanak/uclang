@@ -11,7 +11,7 @@ include "script_parser.h"
 
 /*
 
-XXX: 
+XXX:
 
 - Uvolneni objektu WsClient v zadnem pripade neukoncuje klientske websocketove
   spojeni. Toto se spravne musi ukoncit zaslanim zpravy close v ramci samotneho
@@ -23,7 +23,7 @@ XXX:
 
 /*
  * constants and definitions
- */ 
+ */
 
 extern unsigned c_bi_class_ws_conn;
 
@@ -106,7 +106,7 @@ struct ws_client_s
 };
 
 /*
- * definition of class websocket_c 
+ * definition of class websocket_c
  */
 class websocket_c
 {

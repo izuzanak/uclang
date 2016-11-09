@@ -443,11 +443,11 @@ bool bic_ga_real_genome_method_evolve_4(interpreter_thread_s &it,unsigned stack_
   ga.pMutation(mutation);
   ga.pCrossover(crossover);
 
-  ga.initialize(); 
+  ga.initialize();
   while(!ga.done() && grg_ptr->ret_code == c_run_return_code_OK)
   {
     ga.step();
-  } 
+  }
 
   // - if exception occurred -
   if (grg_ptr->ret_code == c_run_return_code_EXCEPTION)
@@ -545,7 +545,7 @@ bool bic_ga_real_genome_method_steady_state_4(interpreter_thread_s &it,unsigned 
   ga_ptr->pMutation(mutation);
   ga_ptr->pCrossover(crossover);
 
-  ga_ptr->initialize(); 
+  ga_ptr->initialize();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_ga_steady_state,gss_ptr);
 
@@ -559,7 +559,7 @@ bool bic_ga_real_genome_method_values_0(interpreter_thread_s &it,unsigned stack_
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  
+
   ga_real_genome_s *grg_ptr = (ga_real_genome_s *)dst_location->v_data_ptr;
 
   // - retrieve genome -
@@ -574,7 +574,7 @@ bool bic_ga_real_genome_method_data_0(interpreter_thread_s &it,unsigned stack_ba
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  
+
   ga_real_genome_s *grg_ptr = (ga_real_genome_s *)dst_location->v_data_ptr;
 
   // - retrieve genome -
@@ -697,7 +697,7 @@ bool bic_ga_tmp_real_genome_method_values_0(interpreter_thread_s &it,unsigned st
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  
+
   GARealGenome *genome_ptr = (GARealGenome *)dst_location->v_data_ptr;
 
   BIC_GA_REAL_GENOME_RETRIEVE_VALUES();
@@ -709,7 +709,7 @@ bool bic_ga_tmp_real_genome_method_data_0(interpreter_thread_s &it,unsigned stac
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  
+
   GARealGenome *genome_ptr = (GARealGenome *)dst_location->v_data_ptr;
 
   BIC_GA_REAL_GENOME_RETRIEVE_DATA();
@@ -721,7 +721,7 @@ bool bic_ga_tmp_real_genome_method_length_0(interpreter_thread_s &it,unsigned st
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  
+
   // - retrieve genome size -
   long long int result = ((GARealGenome *)dst_location->v_data_ptr)->length();
 

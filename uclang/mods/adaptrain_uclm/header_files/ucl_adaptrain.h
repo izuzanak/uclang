@@ -28,13 +28,13 @@ extern const bool c_little_endian;
 
 /*
  * ato aru archive cookie
- */ 
+ */
 
 extern const char c_ato_aru_cookie[8];
 
 /*
  * unicap standard datatypes
- */ 
+ */
 
 #define TBOOL    7 // * boolean 1 bit
 #define TSINT    8 //   short integer, 8 bits
@@ -59,7 +59,7 @@ extern const char c_ato_aru_cookie[8];
 
 /*
  * event archive records
- */ 
+ */
 
 #pragma pack(8)
 struct sEVTARCH_RECORD_U16
@@ -328,7 +328,7 @@ inline void optim_speed_profile_s::init()
 
 inline void optim_speed_profile_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release sections location -
   if (sections_loc != NULL)
   {
@@ -349,7 +349,7 @@ inline void optim_line_section_s::init()
 
 inline void optim_line_section_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release segments -
   if (segments != NULL)
   {
@@ -370,7 +370,7 @@ inline void optim_line_segment_s::init()
 
 inline void optim_line_segment_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release optim line section location -
   if (ols_loc != NULL)
   {
@@ -391,7 +391,7 @@ inline void ato_loco_s::init()
 
 inline void ato_loco_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release loco charts -
   if (charts != NULL)
   {
@@ -425,7 +425,7 @@ inline void ato_trip_s::init()
 
 inline void ato_trip_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release line section descriptions -
   if (sec_descrs != NULL)
   {
@@ -446,7 +446,7 @@ inline void ato_trip_sec_s::init()
 
 inline void ato_trip_sec_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release trip location -
   if (trip_loc != NULL)
   {
@@ -467,7 +467,7 @@ inline void ato_line_sec_s::init()
 
 inline void ato_line_sec_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release line points -
   if (line_points != NULL)
   {
@@ -488,7 +488,7 @@ inline void ato_line_sec_point_s::init()
 
 inline void ato_line_sec_point_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release line section location -
   if (line_sec_loc != NULL)
   {

@@ -590,7 +590,7 @@ bool bic_ao_device_method_driver_id_1(interpreter_thread_s &it,unsigned stack_ba
 
   // - retrieve driver id by its name -
   long long int result = ao_driver_id(string_ptr->data);
-  
+
   // - ERROR -
   if (result == -1)
   {

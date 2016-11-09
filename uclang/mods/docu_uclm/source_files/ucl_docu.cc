@@ -324,7 +324,7 @@ bool(*docu_parsed_s::pa_callers[docu_parsed_s::c_parse_action_cnt])(interpreter_
 bool docu_parsed_s::pa_null(interpreter_thread_s &it,docu_parsed_s &_this)
 {/*{{{*/
   debug_assert(0);
-  
+
   debug_message_6(fprintf(stderr,"docu_parsed_s: parse_action: pa_null\n"));
 
   return true;
@@ -614,7 +614,7 @@ unsigned docu_parsed_s::fa_recognize(unsigned &input_idx)
 
    unsigned short in_char;
 
-// - STATE 0 - 
+// - STATE 0 -
    GET_DOCU_PARSE_NEXT_CHAR();
 
    if (in_char == 0)
@@ -658,12 +658,12 @@ unsigned docu_parsed_s::fa_recognize(unsigned &input_idx)
 
    return c_idx_not_exist;
 
-// - STATE 1 - 
+// - STATE 1 -
 state_1_label:
    CLOSE_DOCU_PARSE_CHAR(15)
    return 15;
 
-// - STATE 2 - 
+// - STATE 2 -
 state_2_label:
    CLOSE_DOCU_PARSE_CHAR(10)
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -676,12 +676,12 @@ state_2_label:
 
    return 10;
 
-// - STATE 3 - 
+// - STATE 3 -
 state_3_label:
    CLOSE_DOCU_PARSE_CHAR(0)
    return 0;
 
-// - STATE 4 - 
+// - STATE 4 -
 state_4_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -694,7 +694,7 @@ state_4_label:
 
    return c_idx_not_exist;
 
-// - STATE 5 - 
+// - STATE 5 -
 state_5_label:
    CLOSE_DOCU_PARSE_CHAR(14)
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -704,7 +704,7 @@ state_5_label:
 
    return 14;
 
-// - STATE 6 - 
+// - STATE 6 -
 state_6_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -717,12 +717,12 @@ state_6_label:
 
    return c_idx_not_exist;
 
-// - STATE 7 - 
+// - STATE 7 -
 state_7_label:
    CLOSE_DOCU_PARSE_CHAR(2)
    return 2;
 
-// - STATE 8 - 
+// - STATE 8 -
 state_8_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -750,7 +750,7 @@ state_8_label:
 
    return c_idx_not_exist;
 
-// - STATE 9 - 
+// - STATE 9 -
 state_9_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -766,17 +766,17 @@ state_9_label:
 
    return c_idx_not_exist;
 
-// - STATE 10 - 
+// - STATE 10 -
 state_10_label:
    CLOSE_DOCU_PARSE_CHAR(11)
    return 11;
 
-// - STATE 11 - 
+// - STATE 11 -
 state_11_label:
    CLOSE_DOCU_PARSE_CHAR(14)
    return 14;
 
-// - STATE 12 - 
+// - STATE 12 -
 state_12_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -789,7 +789,7 @@ state_12_label:
 
    return c_idx_not_exist;
 
-// - STATE 13 - 
+// - STATE 13 -
 state_13_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -802,7 +802,7 @@ state_13_label:
 
    return c_idx_not_exist;
 
-// - STATE 14 - 
+// - STATE 14 -
 state_14_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -812,7 +812,7 @@ state_14_label:
 
    return c_idx_not_exist;
 
-// - STATE 15 - 
+// - STATE 15 -
 state_15_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -822,7 +822,7 @@ state_15_label:
 
    return c_idx_not_exist;
 
-// - STATE 16 - 
+// - STATE 16 -
 state_16_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -832,7 +832,7 @@ state_16_label:
 
    return c_idx_not_exist;
 
-// - STATE 17 - 
+// - STATE 17 -
 state_17_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -842,7 +842,7 @@ state_17_label:
 
    return c_idx_not_exist;
 
-// - STATE 18 - 
+// - STATE 18 -
 state_18_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -852,7 +852,7 @@ state_18_label:
 
    return c_idx_not_exist;
 
-// - STATE 19 - 
+// - STATE 19 -
 state_19_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -862,7 +862,7 @@ state_19_label:
 
    return c_idx_not_exist;
 
-// - STATE 20 - 
+// - STATE 20 -
 state_20_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -872,22 +872,22 @@ state_20_label:
 
    return c_idx_not_exist;
 
-// - STATE 21 - 
+// - STATE 21 -
 state_21_label:
    CLOSE_DOCU_PARSE_CHAR(1)
    return 1;
 
-// - STATE 22 - 
+// - STATE 22 -
 state_22_label:
    CLOSE_DOCU_PARSE_CHAR(13)
    return 13;
 
-// - STATE 23 - 
+// - STATE 23 -
 state_23_label:
    CLOSE_DOCU_PARSE_CHAR(12)
    return 12;
 
-// - STATE 24 - 
+// - STATE 24 -
 state_24_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -897,7 +897,7 @@ state_24_label:
 
    return c_idx_not_exist;
 
-// - STATE 25 - 
+// - STATE 25 -
 state_25_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -907,7 +907,7 @@ state_25_label:
 
    return c_idx_not_exist;
 
-// - STATE 26 - 
+// - STATE 26 -
 state_26_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -917,7 +917,7 @@ state_26_label:
 
    return c_idx_not_exist;
 
-// - STATE 27 - 
+// - STATE 27 -
 state_27_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -927,7 +927,7 @@ state_27_label:
 
    return c_idx_not_exist;
 
-// - STATE 28 - 
+// - STATE 28 -
 state_28_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -937,7 +937,7 @@ state_28_label:
 
    return c_idx_not_exist;
 
-// - STATE 29 - 
+// - STATE 29 -
 state_29_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -947,7 +947,7 @@ state_29_label:
 
    return c_idx_not_exist;
 
-// - STATE 30 - 
+// - STATE 30 -
 state_30_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -957,7 +957,7 @@ state_30_label:
 
    return c_idx_not_exist;
 
-// - STATE 31 - 
+// - STATE 31 -
 state_31_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -967,7 +967,7 @@ state_31_label:
 
    return c_idx_not_exist;
 
-// - STATE 32 - 
+// - STATE 32 -
 state_32_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -977,7 +977,7 @@ state_32_label:
 
    return c_idx_not_exist;
 
-// - STATE 33 - 
+// - STATE 33 -
 state_33_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -987,7 +987,7 @@ state_33_label:
 
    return c_idx_not_exist;
 
-// - STATE 34 - 
+// - STATE 34 -
 state_34_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -997,7 +997,7 @@ state_34_label:
 
    return c_idx_not_exist;
 
-// - STATE 35 - 
+// - STATE 35 -
 state_35_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1007,7 +1007,7 @@ state_35_label:
 
    return c_idx_not_exist;
 
-// - STATE 36 - 
+// - STATE 36 -
 state_36_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1017,7 +1017,7 @@ state_36_label:
 
    return c_idx_not_exist;
 
-// - STATE 37 - 
+// - STATE 37 -
 state_37_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1027,7 +1027,7 @@ state_37_label:
 
    return c_idx_not_exist;
 
-// - STATE 38 - 
+// - STATE 38 -
 state_38_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1037,7 +1037,7 @@ state_38_label:
 
    return c_idx_not_exist;
 
-// - STATE 39 - 
+// - STATE 39 -
 state_39_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1047,7 +1047,7 @@ state_39_label:
 
    return c_idx_not_exist;
 
-// - STATE 40 - 
+// - STATE 40 -
 state_40_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1057,7 +1057,7 @@ state_40_label:
 
    return c_idx_not_exist;
 
-// - STATE 41 - 
+// - STATE 41 -
 state_41_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1067,7 +1067,7 @@ state_41_label:
 
    return c_idx_not_exist;
 
-// - STATE 42 - 
+// - STATE 42 -
 state_42_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1077,7 +1077,7 @@ state_42_label:
 
    return c_idx_not_exist;
 
-// - STATE 43 - 
+// - STATE 43 -
 state_43_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1087,7 +1087,7 @@ state_43_label:
 
    return c_idx_not_exist;
 
-// - STATE 44 - 
+// - STATE 44 -
 state_44_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1109,12 +1109,12 @@ state_44_label:
 
    return c_idx_not_exist;
 
-// - STATE 45 - 
+// - STATE 45 -
 state_45_label:
    CLOSE_DOCU_PARSE_CHAR(3)
    return 3;
 
-// - STATE 46 - 
+// - STATE 46 -
 state_46_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1124,7 +1124,7 @@ state_46_label:
 
    return c_idx_not_exist;
 
-// - STATE 47 - 
+// - STATE 47 -
 state_47_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1146,7 +1146,7 @@ state_47_label:
 
    return c_idx_not_exist;
 
-// - STATE 48 - 
+// - STATE 48 -
 state_48_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1156,7 +1156,7 @@ state_48_label:
 
    return c_idx_not_exist;
 
-// - STATE 49 - 
+// - STATE 49 -
 state_49_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1166,7 +1166,7 @@ state_49_label:
 
    return c_idx_not_exist;
 
-// - STATE 50 - 
+// - STATE 50 -
 state_50_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1176,7 +1176,7 @@ state_50_label:
 
    return c_idx_not_exist;
 
-// - STATE 51 - 
+// - STATE 51 -
 state_51_label:
    CLOSE_DOCU_PARSE_CHAR(9)
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1201,7 +1201,7 @@ state_51_label:
 
    return 9;
 
-// - STATE 52 - 
+// - STATE 52 -
 state_52_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1223,7 +1223,7 @@ state_52_label:
 
    return c_idx_not_exist;
 
-// - STATE 53 - 
+// - STATE 53 -
 state_53_label:
    CLOSE_DOCU_PARSE_CHAR(6)
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1245,7 +1245,7 @@ state_53_label:
 
    return 6;
 
-// - STATE 54 - 
+// - STATE 54 -
 state_54_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1255,7 +1255,7 @@ state_54_label:
 
    return c_idx_not_exist;
 
-// - STATE 55 - 
+// - STATE 55 -
 state_55_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1271,12 +1271,12 @@ state_55_label:
 
    return c_idx_not_exist;
 
-// - STATE 56 - 
+// - STATE 56 -
 state_56_label:
    CLOSE_DOCU_PARSE_CHAR(5)
    return 5;
 
-// - STATE 57 - 
+// - STATE 57 -
 state_57_label:
    CLOSE_DOCU_PARSE_CHAR(7)
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1298,7 +1298,7 @@ state_57_label:
 
    return 7;
 
-// - STATE 58 - 
+// - STATE 58 -
 state_58_label:
    CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1320,7 +1320,7 @@ state_58_label:
 
    return c_idx_not_exist;
 
-// - STATE 59 - 
+// - STATE 59 -
 state_59_label:
    CLOSE_DOCU_PARSE_CHAR(4)
    GET_DOCU_PARSE_NEXT_CHAR();
@@ -1339,7 +1339,7 @@ state_59_label:
 
    return 4;
 
-// - STATE 60 - 
+// - STATE 60 -
 state_60_label:
    CLOSE_DOCU_PARSE_CHAR(8)
    GET_DOCU_PARSE_NEXT_CHAR();

@@ -1246,7 +1246,7 @@ bool bic_image_method_io_fill_1(interpreter_thread_s &it,unsigned stack_base,uli
         color[2] = (components >>  8) & 0xff;
         color[3] = components & 0xff;
         break;
-      
+
       // - ERROR -
       default:
 
@@ -1273,7 +1273,7 @@ bool bic_image_method_io_fill_1(interpreter_thread_s &it,unsigned stack_base,uli
       case c_image_pixel_format_RGBA:
         size_err = array_ptr->used != 4;
         break;
-      
+
       // - ERROR -
       default:
 
@@ -1311,7 +1311,7 @@ bool bic_image_method_io_fill_1(interpreter_thread_s &it,unsigned stack_base,uli
 
   // - ERROR -
   default:
-    
+
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("io_fill#1");
     new_exception->params.push(1);

@@ -698,7 +698,7 @@ location_s *bic_gz_file_next_item(interpreter_thread_s &it,location_s *location_
     exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_READ_ERROR,source_pos,(location_s *)it.blank_location);
     return NULL;
   }
-  
+
   if (gzeof(gzf_ptr) && line_buffer.used == 0)
   {
     line_buffer.clear();
@@ -708,12 +708,12 @@ location_s *bic_gz_file_next_item(interpreter_thread_s &it,location_s *location_
   }
   else {
     line_buffer.push('\0');
-    
+
     // - return data string -
     string_s *string_ptr = it.get_new_string_ptr();
     string_ptr->data = line_buffer.data;
     string_ptr->size = line_buffer.used;
-    
+
     // - create result location -
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
 

@@ -359,7 +359,7 @@ bool bic_inotify_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli 
     char *b_ptr_end = b_ptr + read_cnt;
     do {
       inotify_event *event = (inotify_event *)b_ptr;
-      
+
       // - create inotify event object -
       inotify_event_s *ie_ptr = (inotify_event_s *)cmalloc(sizeof(inotify_event_s));
       ie_ptr->init();

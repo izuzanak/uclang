@@ -88,7 +88,7 @@ void sax_parser_s::release_locations()
     pointer_array_s *na_ptr = node_array_stack.data;
     pointer_array_s *na_ptr_end = na_ptr + node_array_stack.used;
     do {
-      
+
       // - release node array -
       if (na_ptr->used != 0)
       {
@@ -107,7 +107,7 @@ void sax_parser_s::release_locations()
     pointer_array_s *ta_ptr = text_array_stack.data;
     pointer_array_s *ta_ptr_end = ta_ptr + text_array_stack.used;
     do {
-      
+
       // - release text array -
       if (ta_ptr->used != 0)
       {
@@ -126,7 +126,7 @@ void sax_parser_s::release_locations()
     pointer_array_s *ca_ptr = cont_array_stack.data;
     pointer_array_s *ca_ptr_end = ca_ptr + cont_array_stack.used;
     do {
-      
+
       // - release content array -
       if (ca_ptr->used != 0)
       {
@@ -310,7 +310,7 @@ void xml_characters(void *user,const xmlChar *ch,int len)
   sax_parser_s *sp = (sax_parser_s *)user;
   pointer_arrays_s &text_array_stack = sp->text_array_stack;
   pointer_arrays_s &cont_array_stack = sp->cont_array_stack;
-  
+
   // -----
 
   location_s *text_location = sp->get_string_location(len,(const char *)ch);

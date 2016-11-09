@@ -12,7 +12,7 @@ include "script_parser.h"
 
 /*
 \* contants and definitions
- */ 
+ */
 
 extern unsigned c_bi_class_http_conn;
 
@@ -85,7 +85,7 @@ int connection_func(void *cls,struct MHD_Connection *connection,
     const char *url,const char *method,const char *version,
     const char *upload_data,size_t *upload_data_size,void **con_cls);
 
-int conn_key_value_func (void *cls,enum MHD_ValueKind kind, 
+int conn_key_value_func (void *cls,enum MHD_ValueKind kind,
     const char *key,const char *value);
 
 void completed_func(void *cls,struct MHD_Connection *connection,
@@ -142,7 +142,7 @@ inline void http_conn_s::init()
 
 inline void http_conn_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release user data location -
   if (user_data_ptr != NULL)
   {

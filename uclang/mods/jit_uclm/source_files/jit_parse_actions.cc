@@ -1326,7 +1326,7 @@ bool jit_pa_operator_binary_plus(jit_parser_s &_this)
     }
 
     jit_value_t tmp_value = jit_insn_load_elem_address(jit_function,value_0,value_1,exp_node_0.jit_pointed_type());
-    
+
     exp_node_0.type.modifiers = c_var_modifier_temporary;
     exp_node_0.value = tmp_value;
   }
@@ -1365,7 +1365,7 @@ bool jit_pa_operator_binary_minus(jit_parser_s &_this)
   jit_value_t value_1 = exp_node_1.load_value(jit_function);
 
   if (exp_node_0.is_pointer())
-  { 
+  {
     if (exp_node_1.is_pointer())
     {
       // - ERROR -
@@ -1830,8 +1830,8 @@ bool jit_pa_conditional_expression(jit_parser_s &_this)
   exp_node_s &exp_node_1 = exp_node_stack.pop();
   exp_node_s &exp_node_0 = exp_node_stack.last();
 
-  jit_value_t value_0 = exp_node_0.load_value(jit_function); 
-  jit_value_t value_1 = exp_node_1.load_value(jit_function); 
+  jit_value_t value_0 = exp_node_0.load_value(jit_function);
+  jit_value_t value_1 = exp_node_1.load_value(jit_function);
 
   jit_insn_store(jit_function,value_0,value_1);
 
@@ -1941,7 +1941,7 @@ bool jit_pa_function_call(jit_parser_s &_this)
           exp_node_s *en_ptr_end = exp_node_stack.data + exp_node_stack.used;
           var_type_s *pt_ptr = fun_record.param_types.data;
           do {
-            
+
             // - expression node type -
             var_type_s &en_type = en_ptr->type;
 

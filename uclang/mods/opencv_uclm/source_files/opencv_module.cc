@@ -864,7 +864,7 @@ bool bic_cv_window_method_CvWindow_1(interpreter_thread_s &it,unsigned stack_bas
     // - create opencv window -
     cvNamedWindow(string_ptr->data);
   }
-  
+
   // - ERROR -
   catch (const cv::Exception &e)
   {
@@ -1681,7 +1681,7 @@ bool bic_cv_writer_method_CvWriter_6(interpreter_thread_s &it,unsigned stack_bas
 
   string_s *name_ptr = (string_s *)src_0_location->v_data_ptr;
   string_s *fourcc_ptr = (string_s *)src_1_location->v_data_ptr;
-  
+
   // - ERROR -
   if (fourcc_ptr->size < 5)
   {

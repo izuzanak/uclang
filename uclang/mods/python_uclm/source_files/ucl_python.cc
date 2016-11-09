@@ -268,7 +268,7 @@ PyObject *python_c::create_py_tuple(interpreter_thread_s &it,location_s *locatio
   else
   {
     PyObject *pyo_tuple = PyTuple_New(1);
-    
+
     // - ERROR -
     if (pyo_tuple == NULL)
     {
@@ -284,7 +284,7 @@ PyObject *python_c::create_py_tuple(interpreter_thread_s &it,location_s *locatio
 
       return NULL;
     }
-    
+
     // - set python tuple item -
     PyTuple_SetItem(pyo_tuple,0,pyo_obj);
 

@@ -650,7 +650,7 @@ bool bic_snmp_session_method_get_list_1(interpreter_thread_s &it,unsigned stack_
       {
       case ASN_INTEGER:
         {
-          // - insert integer to result array - 
+          // - insert integer to result array -
           long long int result = *var_ptr->val.integer;
           BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,result);
           new_array_ptr->push(new_location);
@@ -965,7 +965,7 @@ bool bic_snmp_agent_method_SnmpAgent_2(interpreter_thread_s &it,unsigned stack_b
   long long int agent_type;
 
   // - ERROR -
-  if (!it.retrieve_integer(src_0_location,agent_type) || 
+  if (!it.retrieve_integer(src_0_location,agent_type) ||
       src_1_location->v_type != c_bi_class_string)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -1006,7 +1006,7 @@ bool bic_snmp_agent_method_SnmpAgent_2(interpreter_thread_s &it,unsigned stack_b
   // - create new snmp agent object -
   snmp_agent_s *snmpa_ptr = (snmp_agent_s *)cmalloc(sizeof(snmp_agent_s));
   snmpa_ptr->init();
-  
+
   snmpa_ptr->type = agent_type;
   snmpa_ptr->name = *name_ptr;
 
@@ -1075,7 +1075,7 @@ bool bic_snmp_agent_method_add_object_3(interpreter_thread_s &it,unsigned stack_
   long long int value_type;
 
   // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string || 
+  if (src_0_location->v_type != c_bi_class_string ||
       src_1_location->v_type != c_bi_class_snmp_oid ||
       !it.retrieve_integer(src_2_location,value_type))
   {
@@ -1097,7 +1097,7 @@ bool bic_snmp_agent_method_add_object_3(interpreter_thread_s &it,unsigned stack_
 
   // - ERORR -
   default:
-    
+
     exception_s::throw_exception(it,module.error_base + c_error_SNMP_AGENT_UNRECOGNIZED_OBJECT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -1181,7 +1181,7 @@ bool bic_snmp_agent_method_add_object_3(interpreter_thread_s &it,unsigned stack_
   netsnmp_owns_watcher_info(handler);
 
   // - ERROR -
-  if (netsnmp_inject_handler(reginfo,handler) != SNMPERR_SUCCESS || 
+  if (netsnmp_inject_handler(reginfo,handler) != SNMPERR_SUCCESS ||
       netsnmp_register_instance(reginfo) != SNMPERR_SUCCESS)
   {
     object.clear();
@@ -1446,7 +1446,7 @@ bool bic_snmp_obj_method_set_1(interpreter_thread_s &it,unsigned stack_base,uli 
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  
+
   snmp_obj_s *snmpo_ptr = (snmp_obj_s *)dst_location->v_data_ptr;
   snmp_agent_s *snmpa_ptr = (snmp_agent_s *)snmpo_ptr->snmpa_ptr->v_data_ptr;
   snmp_object_s &object = snmpa_ptr->objects.data[snmpo_ptr->index].object;
@@ -1493,7 +1493,7 @@ bool bic_snmp_obj_method_set_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
   // - ERORR -
   default:
-    
+
     exception_s::throw_exception(it,module.error_base + c_error_SNMP_AGENT_UNRECOGNIZED_OBJECT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -1507,7 +1507,7 @@ bool bic_snmp_obj_method_get_0(interpreter_thread_s &it,unsigned stack_base,uli 
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  
+
   snmp_obj_s *snmpo_ptr = (snmp_obj_s *)dst_location->v_data_ptr;
   snmp_agent_s *snmpa_ptr = (snmp_agent_s *)snmpo_ptr->snmpa_ptr->v_data_ptr;
   snmp_object_s &object = snmpa_ptr->objects.data[snmpo_ptr->index].object;
@@ -1536,7 +1536,7 @@ bool bic_snmp_obj_method_get_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
   // - ERORR -
   default:
-    
+
     exception_s::throw_exception(it,module.error_base + c_error_SNMP_AGENT_UNRECOGNIZED_OBJECT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -1706,7 +1706,7 @@ bool bic_snmp_oid_method_items_0(interpreter_thread_s &it,unsigned stack_base,ul
     oid *ptr_end = ptr + snmpo_ptr->length;
 
     do {
-      
+
       BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,(long long int)*ptr);
       new_array_ptr->push(new_location);
 

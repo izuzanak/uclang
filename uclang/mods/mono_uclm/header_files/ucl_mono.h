@@ -198,7 +198,7 @@ inline MonoObject *mono_reference_s::get_item()
   MonoObject *mono_obj = mono_gchandle_get_target(gchnd_obj);
   MonoObject *mono_key = mono_gchandle_get_target(gchnd_key);
   MonoClass *mono_class = mono_object_get_class(mono_obj);
- 
+
   if (mono_class == mono_c::array_class)
   {
     MonoArray *mono_array = (MonoArray *)mono_obj;

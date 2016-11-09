@@ -1598,7 +1598,7 @@ bool bic_filter_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,
   BIC_FILTER_NEXT_ITEM(
     pointer &res_location = it.data_stack[res_loc_idx];
     it.release_location_ptr((location_s *)res_location);
-    res_location = 
+    res_location =
   ,operands[c_source_pos_idx],return false;);
 
   return true;
@@ -1945,7 +1945,7 @@ bool bic_range_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,u
     BIC_RANGE_NEXT_ITEM(
       pointer &res_location = it.data_stack[res_loc_idx];
       it.release_location_ptr((location_s *)res_location);
-      res_location = 
+      res_location =
     ,operands[c_source_pos_idx],return false);
   }
 

@@ -32,7 +32,7 @@ struct curl_result_s
 };
 
 /*
- * definition of class curl_c 
+ * definition of class curl_c
  */
 class curl_c
 {
@@ -71,7 +71,7 @@ inline void curl_result_s::init()
 
 inline void curl_result_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release curl_ptr -
   if (curl_ptr != NULL)
   {

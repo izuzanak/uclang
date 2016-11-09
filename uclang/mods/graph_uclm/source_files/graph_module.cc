@@ -679,7 +679,7 @@ bool bic_graph_method_Graph_1(interpreter_thread_s &it,unsigned stack_base,uli *
       unsigned *sgvi_ptr = sg_vertex_idxs.data;
       unsigned *sgvi_ptr_end = sgvi_ptr + sg_vertex_idxs.used;
       do {
-        
+
         // - ERROR -
         if (!hg_ptr->ucl_check_vertex_idx(*sgvi_ptr))
         {
@@ -702,7 +702,7 @@ bool bic_graph_method_Graph_1(interpreter_thread_s &it,unsigned stack_base,uli *
       unsigned *sgei_ptr = sg_edge_idxs.data;
       unsigned *sgei_ptr_end = sgei_ptr + sg_edge_idxs.used;
       do {
-        
+
         // - ERROR -
         if (!hg_ptr->ucl_check_edge_idx(*sgei_ptr))
         {
@@ -751,7 +751,7 @@ bool bic_graph_method_Graph_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
   // - ERROR -
   default:
-    
+
     exception_s::throw_exception(it,module.error_base + c_error_GRAPH_UNRECOGNIZED_GRAPH_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -1825,7 +1825,7 @@ bool bic_graph_method_vertex_values_1(interpreter_thread_s &it,unsigned stack_ba
 
       return false;
     }
-    
+
     pointer_array_s *idx_array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
     // - create result array -
@@ -2584,7 +2584,7 @@ bool bic_graph_vertex_method_adjacent_idxs_0(interpreter_thread_s &it,unsigned s
 
   // - retrieve adjacent vertices -
   graph_ptr->adjacent_vertices(gv_ptr->vertex_idx,vertex_idxs);
-  
+
   // - create target array -
   pointer_array_s *array_ptr = it.get_new_array_ptr();
 
@@ -2623,7 +2623,7 @@ bool bic_graph_vertex_method_incident_idxs_0(interpreter_thread_s &it,unsigned s
 
   // - retrieve incident edges -
   graph_ptr->incident_edges(gv_ptr->vertex_idx,edge_idxs);
-  
+
   // - create target array -
   pointer_array_s *array_ptr = it.get_new_array_ptr();
 
@@ -3195,7 +3195,7 @@ bool bic_graph_paths_method_lengths_0(interpreter_thread_s &it,unsigned stack_ba
   pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_paths_s *gp_ptr = (graph_paths_s *)((location_s *)dst_location)->v_data_ptr;
-  
+
   location_s *lengths_arr = (location_s *)gp_ptr->lengths_arr;
   lengths_arr->v_reference_cnt.atomic_inc();
 
@@ -3211,7 +3211,7 @@ bool bic_graph_paths_method_source_idx_0(interpreter_thread_s &it,unsigned stack
   pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_paths_s *gp_ptr = (graph_paths_s *)((location_s *)dst_location)->v_data_ptr;
-  
+
   long long int result = gp_ptr->src_vertex_idx;
 
   pointer &res_location = it.data_stack[res_loc_idx];
@@ -3285,7 +3285,7 @@ bool bic_graph_paths_method_path_to_1(interpreter_thread_s &it,unsigned stack_ba
   // - retrieve path length location -
   pointer_array_s *lengths_arr = (pointer_array_s *)((location_s *)gp_ptr->lengths_arr)->v_data_ptr;
   location_s *length_location = (location_s *)lengths_arr->data[trg_vertex_idx];
-  
+
   // - if there is no path to target vertex -
   if (length_location->v_type == c_bi_class_blank)
   {
@@ -3306,10 +3306,10 @@ bool bic_graph_paths_method_path_to_1(interpreter_thread_s &it,unsigned stack_ba
 
       unsigned v_idx = trg_vertex_idx;
       do {
-        
+
         // - retrieve transitive edge -
         unsigned edge_idx = edge_idxs[v_idx];
-        
+
         // - ERROR -
         if (!graph_ptr->ucl_check_edge_idx(edge_idx))
         {

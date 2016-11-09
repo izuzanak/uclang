@@ -640,7 +640,7 @@ inline jit_value_t exp_node_s::load_value(jit_function_t jit_function)
 
 inline void exp_node_s::store_value(jit_function_t jit_function,jit_value_t a_value)
 {/*{{{*/
-  
+
   // - if target is reference -
   if (type.modifiers & c_var_modifier_reference)
   {

@@ -254,7 +254,7 @@ bool bic_ltg_jit_state_method_create_fun_1(interpreter_thread_s &it,unsigned sta
   // - create lightning parser -
   ltg_parser_s parser;
   parser.init();
-  
+
   parser.it_ptr = &it;
   parser.ucl_jit_state = js_ptr;
 

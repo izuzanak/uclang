@@ -256,7 +256,7 @@ bool bic_iconv_method_convert_1(interpreter_thread_s &it,unsigned stack_base,uli
   size_t outbytesleft = output.used;
 
   do {
-    
+
     if (iconv(ic_ptr->ic_ptr,&inbuf,&inbytesleft,&outbuf,&outbytesleft) == (size_t)(-1))
     {
       switch (errno)

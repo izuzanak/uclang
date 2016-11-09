@@ -73,7 +73,7 @@ inline void py_reference_s::clear(interpreter_thread_s &it)
   {
     Py_DECREF(pyo_obj);
   }
-  
+
   if (pyo_key != NULL)
   {
     Py_DECREF(pyo_key);

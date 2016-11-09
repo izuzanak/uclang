@@ -83,7 +83,7 @@ inline void inotify_event_s::init()
 
 inline void inotify_event_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release name location -
   if (name_loc != NULL)
   {

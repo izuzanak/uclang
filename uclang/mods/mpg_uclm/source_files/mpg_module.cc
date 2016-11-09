@@ -1015,7 +1015,7 @@ bool bic_mpg_handle_method_set_param_2(interpreter_thread_s &it,unsigned stack_b
 
     // - ERROR -
     default:
-      
+
       exception_s::throw_exception(it,module.error_base + c_error_MPG_HANDLE_UNKNOWN_PARAMETER_ID,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
   }
@@ -1090,14 +1090,14 @@ bool bic_mpg_handle_method_get_param_1(interpreter_thread_s &it,unsigned stack_b
         long long int result = int_value;
 
         BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
-        
+
         return true;
       }
       break;
 
     // - ERROR -
     default:
-      
+
       exception_s::throw_exception(it,module.error_base + c_error_MPG_HANDLE_UNKNOWN_PARAMETER_ID,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
   }
@@ -1244,7 +1244,7 @@ bool bic_mpg_handle_method_read_1(interpreter_thread_s &it,unsigned stack_base,u
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MPG_HANDLE_READ_WRONG_BUFFER_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(buffer_size);
-    
+
     return false;
   }
 
@@ -1323,7 +1323,7 @@ bool bic_mpg_handle_method_read_1(interpreter_thread_s &it,unsigned stack_base,u
       // - ERROR -
       default:
         MPG_HANDLER_READ_CLEAR();
-        
+
         exception_s::throw_exception(it,module.error_base + c_error_MPG_HANDLE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
     }

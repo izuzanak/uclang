@@ -482,8 +482,8 @@ bool bic_curl_method_HEAD_1(interpreter_thread_s &it,unsigned stack_base,uli *op
   curl_easy_setopt(curl_ptr,CURLOPT_URL,address_ptr->data);
   curl_easy_setopt(curl_ptr,CURLOPT_WRITEFUNCTION,cb_write_buffer);
   curl_easy_setopt(curl_ptr,CURLOPT_WRITEDATA,&write_buffer);
-  curl_easy_setopt(curl_ptr,CURLOPT_HEADER,1); 
-  curl_easy_setopt(curl_ptr,CURLOPT_NOBODY,1); 
+  curl_easy_setopt(curl_ptr,CURLOPT_HEADER,1);
+  curl_easy_setopt(curl_ptr,CURLOPT_NOBODY,1);
 
   // - ERROR -
   if (curl_easy_perform(curl_ptr) != CURLE_OK)
@@ -804,7 +804,7 @@ bool bic_curl_result_method_info_1(interpreter_thread_s &it,unsigned stack_base,
 
   // - ERROR -
   default:
-    
+
     exception_s::throw_exception(it,module.error_base + c_error_CURL_RESULT_UNSUPPORTED_INFO_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }

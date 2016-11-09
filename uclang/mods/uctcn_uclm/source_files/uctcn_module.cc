@@ -1335,7 +1335,7 @@ bool bic_traffic_port_method_create_set_1(interpreter_thread_s &it,unsigned stac
           break;
       }
     }
-    
+
     // - data type is not array -
     else
     {
@@ -2453,7 +2453,7 @@ bool bic_proc_variable_method_set_1(interpreter_thread_s &it,unsigned stack_base
             long long int value;
             do {
               location_s *item_location = it.get_location_value(*a_ptr);
-              
+
               // - ERROR -
               if (!it.retrieve_integer(item_location,value))
               {
@@ -2697,7 +2697,7 @@ bool bic_proc_variable_method_get_string_0(interpreter_thread_s &it,unsigned sta
         *c_ptr = *v_ptr;
       } while(++c_ptr,++v_ptr < v_ptr_end);
     }
-    
+
     BIC_SET_RESULT_STRING(string_ptr);
   }
   break;

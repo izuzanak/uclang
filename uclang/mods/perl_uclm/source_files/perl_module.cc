@@ -749,7 +749,7 @@ bool bic_perl_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_bas
       // - create av containing results -
       SSize_t result_idx = result_cnt;
       do {
-        
+
         // - retrieve result from stack -
         SV *sv_param = POPs;
 
@@ -865,7 +865,7 @@ bool bic_perl_value_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigne
   PERL_SET_CONTEXT(pi_ptr->interpreter);
 
   SV *sv = perl_c::create_perl_sv(it,my_perl,dst_location);
-  
+
   // - ERROR -
   if (sv == NULL)
   {
@@ -905,7 +905,7 @@ bool bic_perl_value_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigne
   case SVt_PVHV:
     {/*{{{*/
       SV *sv_key = perl_c::create_perl_sv(it,my_perl,src_0_location);
-      
+
       // - ERROR -
       if (sv_key == NULL)
       {
@@ -954,7 +954,7 @@ bool bic_perl_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,
   PERL_SET_CONTEXT(pi_ptr->interpreter);
 
   SV *sv = perl_c::create_perl_sv(it,my_perl,dst_location);
-  
+
   // - ERROR -
   if (sv == NULL)
   {

@@ -31,7 +31,7 @@ inline void iconv_s::init()
 
 inline void iconv_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release iconv pointer -
   if (ic_ptr != NULL)
   {

@@ -51,7 +51,7 @@ inline void llvm_context_s::init()
 
 inline void llvm_context_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release llvm context -
   if (context != NULL)
   {

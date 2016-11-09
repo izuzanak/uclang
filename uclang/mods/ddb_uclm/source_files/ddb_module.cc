@@ -982,11 +982,11 @@ bool bic_trace_storage_method_Find_1(interpreter_thread_s &it,unsigned stack_bas
     // - create target data string -
     string_s *data_ptr = (string_s *)it.get_new_string_ptr();
     data_ptr->create(tsDesc->dataSize);
-    
+
     // - create new trace record object -
     trace_record_s *new_tr_ptr = (trace_record_s *)cmalloc(sizeof(trace_record_s));
     new_tr_ptr->tr_ptr = new TraceRecord();
-    
+
     TraceRecord &record = *new_tr_ptr->tr_ptr;
     record.data = data_ptr->data;
     record.size = tsDesc->dataSize;
@@ -1001,18 +1001,18 @@ bool bic_trace_storage_method_Find_1(interpreter_thread_s &it,unsigned stack_bas
       // - set reference to trace storage -
       dst_location->v_reference_cnt.atomic_inc();
       new_tr_ptr->ts_ptr = dst_location;
-      
+
       // - create data string location -
-      { 
+      {
         BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,data_ptr);
         new_tr_ptr->data_ptr = new_location;
       }
-      
+
       BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_trace_record,new_tr_ptr);
       BIC_SET_RESULT(new_location);
     }
     else {
-      
+
       // - release trace record object -
       delete new_tr_ptr->tr_ptr;
       cfree(new_tr_ptr);

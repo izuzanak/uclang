@@ -463,7 +463,7 @@ bool bic_gcrypt_cipher_method_encrypt_1(interpreter_thread_s &it,unsigned stack_
 
   // - create target sring -
   out_ptr->create(in_ptr->size - 1);
- 
+
   // - ERROR -
   gcry_error_t err;
   if ((err = gcry_cipher_encrypt(gc_ptr->handle,out_ptr->data,out_ptr->size - 1,in_ptr->data,in_ptr->size - 1)) != 0)
@@ -505,7 +505,7 @@ bool bic_gcrypt_cipher_method_decrypt_1(interpreter_thread_s &it,unsigned stack_
 
   // - create target sring -
   out_ptr->create(in_ptr->size - 1);
-  
+
   // - ERROR -
   gcry_error_t err;
   if ((err = gcry_cipher_decrypt(gc_ptr->handle,out_ptr->data,out_ptr->size - 1,in_ptr->data,in_ptr->size - 1)) != 0)

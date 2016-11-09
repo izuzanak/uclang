@@ -98,7 +98,7 @@ unsigned json_parser_s::recognize_terminal(unsigned &a_input_idx)
 
    unsigned short in_char;
 
-// - STATE 0 - 
+// - STATE 0 -
    JSON_GET_NEXT_CHAR();
 
    if (in_char == 0)
@@ -151,12 +151,12 @@ unsigned json_parser_s::recognize_terminal(unsigned &a_input_idx)
 
    return c_idx_not_exist;
 
-// - STATE 1 - 
+// - STATE 1 -
 state_1_label:
    JSON_CLOSE_CHAR(13)
    return 13;
 
-// - STATE 2 - 
+// - STATE 2 -
 state_2_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
@@ -178,12 +178,12 @@ state_2_label:
 
    return c_idx_not_exist;
 
-// - STATE 3 - 
+// - STATE 3 -
 state_3_label:
    JSON_CLOSE_CHAR(10)
    return 10;
 
-// - STATE 4 - 
+// - STATE 4 -
 state_4_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
@@ -196,7 +196,7 @@ state_4_label:
 
    return c_idx_not_exist;
 
-// - STATE 5 - 
+// - STATE 5 -
 state_5_label:
    JSON_CLOSE_CHAR(1)
    JSON_GET_NEXT_CHAR();
@@ -212,7 +212,7 @@ state_5_label:
 
    return 1;
 
-// - STATE 6 - 
+// - STATE 6 -
 state_6_label:
    JSON_CLOSE_CHAR(1)
    JSON_GET_NEXT_CHAR();
@@ -231,22 +231,22 @@ state_6_label:
 
    return 1;
 
-// - STATE 7 - 
+// - STATE 7 -
 state_7_label:
    JSON_CLOSE_CHAR(11)
    return 11;
 
-// - STATE 8 - 
+// - STATE 8 -
 state_8_label:
    JSON_CLOSE_CHAR(8)
    return 8;
 
-// - STATE 9 - 
+// - STATE 9 -
 state_9_label:
    JSON_CLOSE_CHAR(9)
    return 9;
 
-// - STATE 10 - 
+// - STATE 10 -
 state_10_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
@@ -256,7 +256,7 @@ state_10_label:
 
    return c_idx_not_exist;
 
-// - STATE 11 - 
+// - STATE 11 -
 state_11_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
@@ -266,7 +266,7 @@ state_11_label:
 
    return c_idx_not_exist;
 
-// - STATE 12 - 
+// - STATE 12 -
 state_12_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
@@ -276,17 +276,17 @@ state_12_label:
 
    return c_idx_not_exist;
 
-// - STATE 13 - 
+// - STATE 13 -
 state_13_label:
    JSON_CLOSE_CHAR(6)
    return 6;
 
-// - STATE 14 - 
+// - STATE 14 -
 state_14_label:
    JSON_CLOSE_CHAR(7)
    return 7;
 
-// - STATE 15 - 
+// - STATE 15 -
 state_15_label:
    JSON_CLOSE_CHAR(12)
    JSON_GET_NEXT_CHAR();
@@ -299,12 +299,12 @@ state_15_label:
 
    return 12;
 
-// - STATE 16 - 
+// - STATE 16 -
 state_16_label:
    JSON_CLOSE_CHAR(0)
    return 0;
 
-// - STATE 17 - 
+// - STATE 17 -
 state_17_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
@@ -338,7 +338,7 @@ state_17_label:
 
    return c_idx_not_exist;
 
-// - STATE 18 - 
+// - STATE 18 -
 state_18_label:
    JSON_CLOSE_CHAR(2)
    JSON_GET_NEXT_CHAR();
@@ -354,7 +354,7 @@ state_18_label:
 
    return 2;
 
-// - STATE 19 - 
+// - STATE 19 -
 state_19_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
@@ -370,7 +370,7 @@ state_19_label:
 
    return c_idx_not_exist;
 
-// - STATE 20 - 
+// - STATE 20 -
 state_20_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
@@ -380,7 +380,7 @@ state_20_label:
 
    return c_idx_not_exist;
 
-// - STATE 21 - 
+// - STATE 21 -
 state_21_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
@@ -390,7 +390,7 @@ state_21_label:
 
    return c_idx_not_exist;
 
-// - STATE 22 - 
+// - STATE 22 -
 state_22_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
@@ -400,7 +400,7 @@ state_22_label:
 
    return c_idx_not_exist;
 
-// - STATE 23 - 
+// - STATE 23 -
 state_23_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
@@ -416,7 +416,7 @@ state_23_label:
 
    return c_idx_not_exist;
 
-// - STATE 24 - 
+// - STATE 24 -
 state_24_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
@@ -426,7 +426,7 @@ state_24_label:
 
    return c_idx_not_exist;
 
-// - STATE 25 - 
+// - STATE 25 -
 state_25_label:
    JSON_CLOSE_CHAR(2)
    JSON_GET_NEXT_CHAR();
@@ -436,7 +436,7 @@ state_25_label:
 
    return 2;
 
-// - STATE 26 - 
+// - STATE 26 -
 state_26_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
@@ -446,7 +446,7 @@ state_26_label:
 
    return c_idx_not_exist;
 
-// - STATE 27 - 
+// - STATE 27 -
 state_27_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
@@ -456,7 +456,7 @@ state_27_label:
 
    return c_idx_not_exist;
 
-// - STATE 28 - 
+// - STATE 28 -
 state_28_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
@@ -466,7 +466,7 @@ state_28_label:
 
    return c_idx_not_exist;
 
-// - STATE 29 - 
+// - STATE 29 -
 state_29_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
@@ -482,7 +482,7 @@ state_29_label:
 
    return c_idx_not_exist;
 
-// - STATE 30 - 
+// - STATE 30 -
 state_30_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
@@ -492,17 +492,17 @@ state_30_label:
 
    return c_idx_not_exist;
 
-// - STATE 31 - 
+// - STATE 31 -
 state_31_label:
    JSON_CLOSE_CHAR(5)
    return 5;
 
-// - STATE 32 - 
+// - STATE 32 -
 state_32_label:
    JSON_CLOSE_CHAR(3)
    return 3;
 
-// - STATE 33 - 
+// - STATE 33 -
 state_33_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
@@ -518,12 +518,12 @@ state_33_label:
 
    return c_idx_not_exist;
 
-// - STATE 34 - 
+// - STATE 34 -
 state_34_label:
    JSON_CLOSE_CHAR(4)
    return 4;
 
-// - STATE 35 - 
+// - STATE 35 -
 state_35_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();

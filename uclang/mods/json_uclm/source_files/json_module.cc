@@ -232,7 +232,7 @@ bool bic_json_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *
   create_stack.last().set(src_0_location,true,c_idx_not_exist);
 
   do {
-    
+
     // - reference to last stack element -
     cs_element_s &cs_elm = create_stack.last();
 
@@ -248,12 +248,12 @@ bool bic_json_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *
       {
         buffer.push('{');
 
-        cs_elm.index = tree_ptr->root_idx == c_idx_not_exist ? 
+        cs_elm.index = tree_ptr->root_idx == c_idx_not_exist ?
           c_idx_not_exist : tree_ptr->get_min_value_idx(tree_ptr->root_idx);
 
         cs_elm.initialize = false;
       }
-      else 
+      else
       {
         if (cs_elm.index != c_idx_not_exist)
         {
@@ -272,7 +272,7 @@ bool bic_json_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *
         {
           buffer.clear();
           create_stack.clear();
-          
+
           exception_s::throw_exception(it,module.error_base + c_error_JSON_CREATE_NO_STRING_DICT_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);
           return false;
         }
@@ -354,7 +354,7 @@ bool bic_json_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *
             cs_elm.index = 0;
             cs_elm.initialize = false;
           }
-          else 
+          else
           {
             if (cs_elm.index < array_ptr->used)
             {
@@ -383,7 +383,7 @@ bool bic_json_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *
       default:
         buffer.clear();
         create_stack.clear();
-        
+
         exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_JSON_CREATE_UNSUPPORTED_CLASS,operands[c_source_pos_idx],(location_s *)it.blank_location);
         new_exception->params.push(location_ptr->v_type);
 
@@ -476,7 +476,7 @@ bool bic_json_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,
   create_stack.last().set(src_0_location,true,c_idx_not_exist);
 
   do {
-    
+
     // - reference to last stack element -
     cs_element_s &cs_elm = create_stack.last();
 
@@ -502,12 +502,12 @@ bool bic_json_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,
           JSON_CREATE_NICE_INDENT();
         }
 
-        cs_elm.index = tree_ptr->root_idx == c_idx_not_exist ? 
+        cs_elm.index = tree_ptr->root_idx == c_idx_not_exist ?
           c_idx_not_exist : tree_ptr->get_min_value_idx(tree_ptr->root_idx);
 
         cs_elm.initialize = false;
       }
-      else 
+      else
       {
         if (cs_elm.index != c_idx_not_exist)
         {
@@ -528,7 +528,7 @@ bool bic_json_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,
         if (key_location->v_type != c_bi_class_string)
         {
           JSON_CREATE_NICE_CLEAR();
-          
+
           exception_s::throw_exception(it,module.error_base + c_error_JSON_CREATE_NO_STRING_DICT_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);
           return false;
         }
@@ -631,7 +631,7 @@ bool bic_json_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,
             cs_elm.index = 0;
             cs_elm.initialize = false;
           }
-          else 
+          else
           {
             if (cs_elm.index < array_ptr->used)
             {
@@ -672,7 +672,7 @@ bool bic_json_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,
       // - ERROR -
       default:
         JSON_CREATE_NICE_CLEAR();
-        
+
         exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_JSON_CREATE_UNSUPPORTED_CLASS,operands[c_source_pos_idx],(location_s *)it.blank_location);
         new_exception->params.push(location_ptr->v_type);
 

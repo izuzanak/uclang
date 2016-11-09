@@ -29,7 +29,7 @@ enum {
 
 // - sizes of pixels by format in bytes -
 const unsigned c_bigest_pixel_size = 4*sizeof(unsigned char);
-const unsigned c_pixel_sizes[c_pixel_format_cnt] = 
+const unsigned c_pixel_sizes[c_pixel_format_cnt] =
 {
   sizeof(unsigned char),
   3*sizeof(unsigned char),

@@ -378,7 +378,7 @@ bool bic_jit_context_method_create_fun_1(interpreter_thread_s &it,unsigned stack
   // - create jit parser -
   jit_parser_s parser;
   parser.init();
-  
+
   parser.it_ptr = &it;
   parser.ucl_context = jc_ptr;
 
@@ -417,7 +417,7 @@ bool bic_jit_context_method_create_fun_1(interpreter_thread_s &it,unsigned stack
     unsigned *nli_ptr = parser.named_label_idxs.data;
     unsigned *nli_ptr_end = nli_ptr + parser.named_label_idxs.used;
     do {
-      
+
       // - if named label exist -
       if (*nli_ptr != c_idx_not_exist)
       {
@@ -711,7 +711,7 @@ bool bic_jit_function_method_call_1(interpreter_thread_s &it,unsigned stack_base
             break;
 
           default:
-            
+
           // - ERROR -
           exception_s::throw_exception(it,module.error_base + c_error_JIT_FUNCTION_PARAM_UNSUPPORTED_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
           return false;

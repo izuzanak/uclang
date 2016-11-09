@@ -3854,7 +3854,7 @@ bool bic_var_store_method_clear_slots_0(interpreter_thread_s &it,unsigned stack_
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
- 
+
   // - retrieve varstore pointer -
   VarStore *vs_ptr = (VarStore *)dst_location->v_data_ptr;
 
@@ -3871,10 +3871,10 @@ bool bic_var_store_method_clear_slots_0(interpreter_thread_s &it,unsigned stack_
     memset(zeroes,0,c_vs_max_var_size);
 
     VarStore::SlotInfo vssInfo;
-    
+
     do {
       vs_ptr->GetSlotInfo(s_idx,&vssInfo);
-      
+
       // - erase slot variables (all indexes) -
       int v_idx = 0;
       do {
@@ -3888,7 +3888,7 @@ bool bic_var_store_method_clear_slots_0(interpreter_thread_s &it,unsigned stack_
   }
 
   BIC_SET_RESULT_BLANK();
-  
+
   return true;
 }/*}}}*/
 

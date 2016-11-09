@@ -3130,7 +3130,7 @@ location_s *bic_bin_dict_item(interpreter_thread_s &it,location_s *location_ptr,
 
   // - create bin dict reference -
   bin_dict_ref_s *bdr_ptr = bd_ptr->create_reference(location_ptr,index);
-  
+
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_bin_dict_ref,bdr_ptr);
 
   return new_location;
@@ -4070,9 +4070,9 @@ bool bic_bin_dict_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  
+
   long long int index;
-  
+
   // - ERROR -
   if (!it.retrieve_integer(src_0_location,index))
   {
@@ -4080,10 +4080,10 @@ bool bic_bin_dict_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli
     BIC_EXCEPTION_PUSH_METHOD_RI("item#1");
     new_exception->params.push(1);
     new_exception->params.push(src_0_location->v_type);
-    
+
     return false;
   }
-  
+
   bin_dict_s *bd_ptr = (bin_dict_s *)((location_s *)dst_location)->v_data_ptr;
 
   switch (bd_ptr->type)
@@ -4101,10 +4101,10 @@ bool bic_bin_dict_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli
   default:
     cassert(0);
   }
-  
+
   // - create bin dict reference -
   bin_dict_ref_s *bdr_ptr = bd_ptr->create_reference((location_s *)dst_location,index);
-  
+
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_bin_dict_ref,bdr_ptr);
   BIC_SET_RESULT(new_location);
 

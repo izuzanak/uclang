@@ -901,7 +901,7 @@ bool bic_dict_method_remove_key_1(interpreter_thread_s &it,unsigned stack_base,u
 
   // - retrieve tree node -
   pointer_map_tree_s_node &node = tree_ptr->data[index];
-  
+
   it.release_location_ptr((location_s *)node.object.key);
   it.release_location_ptr((location_s *)node.object.value);
   tree_ptr->remove(index);

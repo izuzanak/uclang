@@ -229,7 +229,7 @@ built_in_class_s gl_class =
   #elif defined(LINUX)
   4876,
   #endif
-  
+
   gl_variables,
   bic_gl_consts,
   bic_gl_init,
@@ -1036,7 +1036,7 @@ bool bic_gl_program_method_active_atributes_0(interpreter_thread_s &it,unsigned 
   long long int program = (long long int)dst_location->v_data_ptr;
 
   pointer_array_s *array_ptr = it.get_new_array_ptr();
-  
+
   GLint attr_cnt;
   glGetProgramiv(program,GL_ACTIVE_ATTRIBUTES,&attr_cnt);
 
@@ -1099,7 +1099,7 @@ bool bic_gl_program_method_active_uniforms_0(interpreter_thread_s &it,unsigned s
   long long int program = (long long int)dst_location->v_data_ptr;
 
   pointer_array_s *array_ptr = it.get_new_array_ptr();
-  
+
   GLint uni_cnt;
   glGetProgramiv(program,GL_ACTIVE_UNIFORMS,&uni_cnt);
 
@@ -1623,7 +1623,7 @@ bool bic_gl_uniform_method_write_1(interpreter_thread_s &it,unsigned stack_base,
 
   // - ERROR -
   default:
-    
+
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GL_UNIFORM_NOT_SUPPORTED_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(glu_ptr->type);
 
@@ -1819,7 +1819,7 @@ bool bic_gl_texture_method_GlTexture_4(interpreter_thread_s &it,unsigned stack_b
 
   // - ERROR -
   default:
-    
+
     exception_s::throw_exception(it,module.error_base + c_error_GL_TEXTURE_UNSUPPORTED_PIXEL_FORMAT,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -1833,7 +1833,7 @@ bool bic_gl_texture_method_GlTexture_4(interpreter_thread_s &it,unsigned stack_b
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GL_TEXTURE_INVALID_DIMENSIONS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(width);
     new_exception->params.push(height);
-    
+
     return false;
   }
 

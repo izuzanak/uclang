@@ -268,7 +268,7 @@ bool bic_modem_manager_method_device_info_0(interpreter_thread_s &it,unsigned st
 
   DeviceInfo di;
 
-  try 
+  try
   {
     // - retrieve device info -
     di = ((ModemManager *)dst_location->v_data_ptr)->GetDeviceInfo();
@@ -313,7 +313,7 @@ bool bic_modem_manager_method_network_info_0(interpreter_thread_s &it,unsigned s
 
   NetworkInfo ni;
 
-  try 
+  try
   {
     // - retrieve network info -
     ni = ((ModemManager *)dst_location->v_data_ptr)->GetNetworkInfo();

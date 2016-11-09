@@ -1884,7 +1884,7 @@ bool bic_v8_reference_operator_binary_equal(interpreter_thread_s &it,unsigned st
   }
 
   v8_reference_s *v8_ref_ptr = (v8_reference_s *)dst_location->v_data_ptr;
-  
+
   // - ERROR -
   if (!v8_ref_ptr->set(hnd_src_0))
   {
@@ -1934,7 +1934,7 @@ bool bic_v8_reference_method_set_1(interpreter_thread_s &it,unsigned stack_base,
   }
 
   v8_reference_s *v8_ref_ptr = (v8_reference_s *)dst_location->v_data_ptr;
-  
+
   // - ERROR -
   if (!v8_ref_ptr->set(hnd_src_0))
   {

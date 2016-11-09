@@ -176,11 +176,11 @@ inline void snmp_agent_s::clear(interpreter_thread_s &it)
   {
     unsigned stack[objects.get_descent_stack_size()];
     unsigned *stack_ptr = stack;
-    
+
     unsigned o_idx = objects.get_stack_min_value_idx(objects.root_idx,&stack_ptr);
     do {
       cfree(objects.data[o_idx].object.data);
-      
+
       o_idx = objects.get_stack_next_idx(o_idx,&stack_ptr,stack);
     } while(o_idx != c_idx_not_exist);
   }

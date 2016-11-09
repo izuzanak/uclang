@@ -394,7 +394,7 @@ bool bic_llvm_module_method_create_fun_1(interpreter_thread_s &it,unsigned stack
   // - create llvm parser -
   llvm_parser_s parser;
   parser.init();
-  
+
   parser.it_ptr = &it;
 
   // - parse source string -

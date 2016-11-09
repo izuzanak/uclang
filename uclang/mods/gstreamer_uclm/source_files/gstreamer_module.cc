@@ -540,7 +540,7 @@ bool bic_gst_pipeline_method_main_loop_0(interpreter_thread_s &it,unsigned stack
   bool running = true;
   do {
     GstMessage *message = gst_bus_timed_pop(gstp_ptr->bus,10000000);
-   
+
     // - process message -
     if (message != NULL)
     {
@@ -620,7 +620,7 @@ bool bic_gst_pipeline_method_main_loop_0(interpreter_thread_s &it,unsigned stack
 
       gst_message_unref(message);
     }
-    
+
     // - test if interpreter terminates -
     if (terminate.value())
     {

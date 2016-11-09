@@ -71,7 +71,7 @@ inline void ga_real_genome_s::init()
 
 inline void ga_real_genome_s::clear(interpreter_thread_s &it)
 {/*{{{*/
- 
+
   // - release objective delegate -
   if (objective_dlg != NULL)
   {

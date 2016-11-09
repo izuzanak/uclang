@@ -384,7 +384,7 @@ bool bic_http_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_ba
 
     } while(++fd <= max_fd);
   }
-  
+
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
   BIC_SET_RESULT(new_location);
 
@@ -870,7 +870,7 @@ bool bic_http_conn_method_values_1(interpreter_thread_s &it,unsigned stack_base,
 
   // - ERROR -
   default:
-    
+
     exception_s::throw_exception(it,module.error_base + c_error_HTTP_CONN_UNKNOWN_VALUES_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }

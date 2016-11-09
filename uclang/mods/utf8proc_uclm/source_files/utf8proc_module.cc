@@ -977,7 +977,7 @@ int bic_unicode_string_compare(location_s *first_loc,location_s *second_loc)
     utf8proc_int32_t *s_ptr = (utf8proc_int32_t *)second->data;
 
     do {
-      
+
       // - if code points differs -
       if (*f_ptr != *s_ptr)
       {
@@ -1457,7 +1457,7 @@ bool bic_unicode_string_method_compare_1(interpreter_thread_s &it,unsigned stack
         utf8proc_int32_t *s_ptr = (utf8proc_int32_t *)second->data;
 
         do {
-          
+
           // - if code points differs -
           if (*f_ptr != *s_ptr)
           {

@@ -967,7 +967,7 @@ bool bic_time_method_Time_1(interpreter_thread_s &it,unsigned stack_base,uli *op
         BIC_EXCEPTION_PUSH_METHOD_RI("Time#1");
         new_exception->params.push(1);
         new_exception->params.push(src_0_location->v_type);
-    
+
         return false;
       }
     }
@@ -1046,7 +1046,7 @@ bool bic_time_method_datetime_0(interpreter_thread_s &it,unsigned stack_base,uli
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  
+
   PP_Time time = (PP_Time)dst_location->v_data_ptr;
 
   long long unsigned nanosec;
@@ -1060,16 +1060,16 @@ bool bic_time_method_datetime_0(interpreter_thread_s &it,unsigned stack_base,uli
   pointer_array_s *array_ptr = it.get_new_array_ptr();
   array_ptr->copy_resize(c_datetime_value_cnt);
   array_ptr->used = array_ptr->size;
-  
+
   pointer *l_ptr = array_ptr->data;
   pointer *l_ptr_end = array_ptr->data + array_ptr->used;
   do {
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,0)
-    
+
     *l_ptr = (pointer)new_location;
-    
+
   } while(++l_ptr < l_ptr_end);
-  
+
   // - set system time values -
   ((location_s *)array_ptr->data[0])->v_data_ptr = (long long int)datetime.year;
   ((location_s *)array_ptr->data[1])->v_data_ptr = (long long int)datetime.month;
@@ -1081,7 +1081,7 @@ bool bic_time_method_datetime_0(interpreter_thread_s &it,unsigned stack_base,uli
   ((location_s *)array_ptr->data[7])->v_data_ptr = (long long int)datetime.msec;
   ((location_s *)array_ptr->data[8])->v_data_ptr = (long long int)datetime.usec;
   ((location_s *)array_ptr->data[9])->v_data_ptr = (long long int)datetime.nsec;
-  
+
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
   BIC_SET_RESULT(new_location);
 
@@ -1309,7 +1309,7 @@ bool bic_console_method_log_2(interpreter_thread_s &it,unsigned stack_base,uli *
   long long int log_level;
 
   // - ERROR -
-  if (!it.retrieve_integer(src_0_location,log_level) || 
+  if (!it.retrieve_integer(src_0_location,log_level) ||
       src_1_location->v_type != c_bi_class_string)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);

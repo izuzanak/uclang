@@ -102,7 +102,7 @@ inline void gl_font_s::init()
 
 inline void gl_font_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release texture font -
   if (font_ptr != NULL)
   {
@@ -133,7 +133,7 @@ inline void gl_font_buffer_s::init()
 
 inline void gl_font_buffer_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - relese font pointer -
   if (font_ptr != NULL)
   {

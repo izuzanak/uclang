@@ -420,7 +420,7 @@ bool bic_final_automata_method_FinalAutomata_1(interpreter_thread_s &it,unsigned
   // - create final automata object -
   final_automata_s *fa_ptr = (final_automata_s *)cmalloc(sizeof(final_automata_s));
   fa_ptr->init();
- 
+
   // - create final automata -
   fa_ptr->create_new(states_array);
 

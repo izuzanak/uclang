@@ -1010,7 +1010,7 @@ bool bic_dlms_object_method_data_type_0(interpreter_thread_s &it,unsigned stack_
     case OBJECT_TYPE_REGISTER:
       {
         CGXDLMSVariant variant = ((CGXDLMSRegister *)obj_ptr)->GetValue();
-        
+
         long long int result = variant.vt;
 
         BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
@@ -1043,7 +1043,7 @@ bool bic_dlms_object_method_value_0(interpreter_thread_s &it,unsigned stack_base
     case OBJECT_TYPE_REGISTER:
       {
         CGXDLMSVariant variant = ((CGXDLMSRegister *)obj_ptr)->GetValue();
-        
+
         switch (variant.vt)
         {
           case DLMS_DATA_TYPE_INT32:
@@ -1140,7 +1140,7 @@ bool bic_dlms_object_method_value_1(interpreter_thread_s &it,unsigned stack_base
       {
         CGXDLMSRegister *reg_ptr = (CGXDLMSRegister *)obj_ptr;
         CGXDLMSVariant variant = reg_ptr->GetValue();
-        
+
         switch (variant.vt)
         {
           case DLMS_DATA_TYPE_INT32:

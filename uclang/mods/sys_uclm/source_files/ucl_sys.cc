@@ -29,7 +29,7 @@ void timer_s::clear(interpreter_thread_s &it)
   {
     unsigned stack[records.get_descent_stack_size()];
     unsigned *stack_ptr = stack;
-    
+
     // - release all records locations -
     unsigned r_idx = records.get_stack_min_value_idx(records.root_idx,&stack_ptr);
     do {
@@ -40,7 +40,7 @@ void timer_s::clear(interpreter_thread_s &it)
 
       // - release record callback parameter -
       it.release_location_ptr((location_s *)record.parameter);
-      
+
       r_idx = records.get_stack_next_idx(r_idx,&stack_ptr,stack);
     } while(r_idx != c_idx_not_exist);
   }

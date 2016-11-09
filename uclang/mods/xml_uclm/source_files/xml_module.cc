@@ -436,7 +436,7 @@ bool bic_xml_node_method_text_0(interpreter_thread_s &it,unsigned stack_base,uli
 
   location_s *item_location = it.get_location_value(texts_array_ptr->data[0]);
   item_location->v_reference_cnt.atomic_inc();
-  
+
   BIC_SET_RESULT(item_location);
 
   return true;

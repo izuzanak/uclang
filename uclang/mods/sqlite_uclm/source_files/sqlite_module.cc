@@ -433,7 +433,7 @@ bool bic_sqlite_conn_method_execute_1(interpreter_thread_s &it,unsigned stack_ba
       if (column_cnt > 0)
       {
         row_array->copy_resize(column_cnt);
-        
+
         int col_idx = 0;
         do {
           switch (sqlite3_column_type(statement_ptr,col_idx))

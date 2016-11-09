@@ -230,7 +230,7 @@ inline ssize_t sftp_handle_s::buff_read(bc_array_s &a_target,size_t a_count)
     {
       a_target.reserve(to_read);
       ssize_t read_cnt = libssh2_sftp_read(handle,a_target.data + a_target.used,to_read);
-     
+
       if (read_cnt < 0) return read_cnt;
       if (read_cnt == 0) return a_count - to_read;
 
@@ -243,7 +243,7 @@ inline ssize_t sftp_handle_s::buff_read(bc_array_s &a_target,size_t a_count)
         return a_count;
       }
     }
-    
+
     // - if count of bytes to read is less than buffer size -
     else
     {

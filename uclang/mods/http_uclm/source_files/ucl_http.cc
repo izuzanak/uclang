@@ -114,7 +114,7 @@ int connection_func(void *cls,struct MHD_Connection *connection,
   return MHD_YES;
 }/*}}}*/
 
-int conn_key_value_func(void *cls,enum MHD_ValueKind kind, 
+int conn_key_value_func(void *cls,enum MHD_ValueKind kind,
     const char *key,const char *value)
 {/*{{{*/
   http_conn_s *conn_ptr = (http_conn_s *)cls;

@@ -26,7 +26,7 @@ void ssh2_c::fake_kbd_callback(const char *name,int name_len,const char
 
   if (num_prompts > 0)
   {
-    int idx = 0; 
+    int idx = 0;
     do
     {
       char *pass_copy = (char *)cmalloc(pass_length + 1);

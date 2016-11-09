@@ -152,7 +152,7 @@ unsigned ltg_parser_s::recognize_type(unsigned a_length,const char *a_data)
    unsigned input_idx = 0;
    unsigned short in_char;
 
-// - STATE 0 - 
+// - STATE 0 -
    GET_LTG_TYPE_NEXT_CHAR();
 
    if (in_char == 102)
@@ -166,7 +166,7 @@ unsigned ltg_parser_s::recognize_type(unsigned a_length,const char *a_data)
 
    return c_idx_not_exist;
 
-// - STATE 1 - 
+// - STATE 1 -
 state_1_label:
    CLOSE_LTG_TYPE_CHAR(c_idx_not_exist);
    GET_LTG_TYPE_NEXT_CHAR();
@@ -179,7 +179,7 @@ state_1_label:
 
    return c_idx_not_exist;
 
-// - STATE 2 - 
+// - STATE 2 -
 state_2_label:
    CLOSE_LTG_TYPE_CHAR(c_idx_not_exist);
    GET_LTG_TYPE_NEXT_CHAR();
@@ -198,7 +198,7 @@ state_2_label:
 
    return c_idx_not_exist;
 
-// - STATE 3 - 
+// - STATE 3 -
 state_3_label:
    CLOSE_LTG_TYPE_CHAR(c_idx_not_exist);
    GET_LTG_TYPE_NEXT_CHAR();
@@ -217,7 +217,7 @@ state_3_label:
 
    return c_idx_not_exist;
 
-// - STATE 4 - 
+// - STATE 4 -
 state_4_label:
    CLOSE_LTG_TYPE_CHAR(c_idx_not_exist);
    GET_LTG_TYPE_NEXT_CHAR();
@@ -227,7 +227,7 @@ state_4_label:
 
    return c_idx_not_exist;
 
-// - STATE 5 - 
+// - STATE 5 -
 state_5_label:
    CLOSE_LTG_TYPE_CHAR(c_idx_not_exist);
    GET_LTG_TYPE_NEXT_CHAR();
@@ -237,7 +237,7 @@ state_5_label:
 
    return c_idx_not_exist;
 
-// - STATE 6 - 
+// - STATE 6 -
 state_6_label:
    CLOSE_LTG_TYPE_CHAR(c_idx_not_exist);
    GET_LTG_TYPE_NEXT_CHAR();
@@ -247,7 +247,7 @@ state_6_label:
 
    return c_idx_not_exist;
 
-// - STATE 7 - 
+// - STATE 7 -
 state_7_label:
    CLOSE_LTG_TYPE_CHAR(c_idx_not_exist);
    GET_LTG_TYPE_NEXT_CHAR();
@@ -257,7 +257,7 @@ state_7_label:
 
    return c_idx_not_exist;
 
-// - STATE 8 - 
+// - STATE 8 -
 state_8_label:
    CLOSE_LTG_TYPE_CHAR(c_idx_not_exist);
    GET_LTG_TYPE_NEXT_CHAR();
@@ -267,13 +267,13 @@ state_8_label:
 
    return c_idx_not_exist;
 
-// - STATE 9 - 
+// - STATE 9 -
 state_9_label:
    CLOSE_LTG_TYPE_CHAR(c_val_type_i8);
    return c_val_type_i8;
 
 
-// - STATE 10 - 
+// - STATE 10 -
 state_10_label:
    CLOSE_LTG_TYPE_CHAR(c_idx_not_exist);
    GET_LTG_TYPE_NEXT_CHAR();
@@ -283,7 +283,7 @@ state_10_label:
 
    return c_idx_not_exist;
 
-// - STATE 11 - 
+// - STATE 11 -
 state_11_label:
    CLOSE_LTG_TYPE_CHAR(c_idx_not_exist);
    GET_LTG_TYPE_NEXT_CHAR();
@@ -293,7 +293,7 @@ state_11_label:
 
    return c_idx_not_exist;
 
-// - STATE 12 - 
+// - STATE 12 -
 state_12_label:
    CLOSE_LTG_TYPE_CHAR(c_idx_not_exist);
    GET_LTG_TYPE_NEXT_CHAR();
@@ -303,47 +303,47 @@ state_12_label:
 
    return c_idx_not_exist;
 
-// - STATE 13 - 
+// - STATE 13 -
 state_13_label:
    CLOSE_LTG_TYPE_CHAR(c_val_type_u8);
    return c_val_type_u8;
 
-// - STATE 14 - 
+// - STATE 14 -
 state_14_label:
    CLOSE_LTG_TYPE_CHAR(c_val_type_f32);
    return c_val_type_f32;
 
-// - STATE 15 - 
+// - STATE 15 -
 state_15_label:
    CLOSE_LTG_TYPE_CHAR(c_val_type_f64);
    return c_val_type_f64;
 
-// - STATE 16 - 
+// - STATE 16 -
 state_16_label:
    CLOSE_LTG_TYPE_CHAR(c_val_type_i16);
    return c_val_type_i16;
 
-// - STATE 17 - 
+// - STATE 17 -
 state_17_label:
    CLOSE_LTG_TYPE_CHAR(c_val_type_i32);
    return c_val_type_i32;
 
-// - STATE 18 - 
+// - STATE 18 -
 state_18_label:
    CLOSE_LTG_TYPE_CHAR(c_val_type_i64);
    return c_val_type_i64;
 
-// - STATE 19 - 
+// - STATE 19 -
 state_19_label:
    CLOSE_LTG_TYPE_CHAR(c_val_type_u16);
    return c_val_type_u16;
 
-// - STATE 20 - 
+// - STATE 20 -
 state_20_label:
    CLOSE_LTG_TYPE_CHAR(c_val_type_u32);
    return c_val_type_u32;
 
-// - STATE 21 - 
+// - STATE 21 -
 state_21_label:
    CLOSE_LTG_TYPE_CHAR(c_val_type_u64);
    return c_val_type_u64;
@@ -406,7 +406,7 @@ void ltg_parser_s::create_signature(unsigned a_name_length,char *a_name_data,uns
       b_ptr += snprintf(b_ptr,b_ptr_end - b_ptr,"%c",(pt_ptr + 1) >= pt_ptr_end ? ')' : ',');
     } while(++pt_ptr < pt_ptr_end);
   }
-  else 
+  else
   {
     *b_ptr++ = ')';
   }
@@ -437,7 +437,7 @@ unsigned ltg_parser_s::recognize_terminal(unsigned &input_idx)
 
    unsigned short in_char;
 
-// - STATE 0 - 
+// - STATE 0 -
    GET_LTG_NEXT_CHAR();
 
    if (in_char == 0)
@@ -586,12 +586,12 @@ unsigned ltg_parser_s::recognize_terminal(unsigned &input_idx)
 
    return c_idx_not_exist;
 
-// - STATE 1 - 
+// - STATE 1 -
 state_1_label:
    CLOSE_LTG_CHAR(70);
    return 70;
 
-// - STATE 2 - 
+// - STATE 2 -
 state_2_label:
    CLOSE_LTG_CHAR(62);
    GET_LTG_NEXT_CHAR();
@@ -601,7 +601,7 @@ state_2_label:
 
    return 62;
 
-// - STATE 3 - 
+// - STATE 3 -
 state_3_label:
    CLOSE_LTG_CHAR(c_idx_not_exist);
    GET_LTG_NEXT_CHAR();
@@ -617,7 +617,7 @@ state_3_label:
 
    return c_idx_not_exist;
 
-// - STATE 4 - 
+// - STATE 4 -
 state_4_label:
    CLOSE_LTG_CHAR(59);
    GET_LTG_NEXT_CHAR();
@@ -627,7 +627,7 @@ state_4_label:
 
    return 59;
 
-// - STATE 5 - 
+// - STATE 5 -
 state_5_label:
    CLOSE_LTG_CHAR(43);
    GET_LTG_NEXT_CHAR();
@@ -640,7 +640,7 @@ state_5_label:
 
    return 43;
 
-// - STATE 6 - 
+// - STATE 6 -
 state_6_label:
    CLOSE_LTG_CHAR(c_idx_not_exist);
    GET_LTG_NEXT_CHAR();
@@ -656,17 +656,17 @@ state_6_label:
 
    return c_idx_not_exist;
 
-// - STATE 7 - 
+// - STATE 7 -
 state_7_label:
    CLOSE_LTG_CHAR(14);
    return 14;
 
-// - STATE 8 - 
+// - STATE 8 -
 state_8_label:
    CLOSE_LTG_CHAR(15);
    return 15;
 
-// - STATE 9 - 
+// - STATE 9 -
 state_9_label:
    CLOSE_LTG_CHAR(57);
    GET_LTG_NEXT_CHAR();
@@ -676,7 +676,7 @@ state_9_label:
 
    return 57;
 
-// - STATE 10 - 
+// - STATE 10 -
 state_10_label:
    CLOSE_LTG_CHAR(54);
    GET_LTG_NEXT_CHAR();
@@ -689,12 +689,12 @@ state_10_label:
 
    return 54;
 
-// - STATE 11 - 
+// - STATE 11 -
 state_11_label:
    CLOSE_LTG_CHAR(20);
    return 20;
 
-// - STATE 12 - 
+// - STATE 12 -
 state_12_label:
    CLOSE_LTG_CHAR(55);
    GET_LTG_NEXT_CHAR();
@@ -707,7 +707,7 @@ state_12_label:
 
    return 55;
 
-// - STATE 13 - 
+// - STATE 13 -
 state_13_label:
    CLOSE_LTG_CHAR(56);
    GET_LTG_NEXT_CHAR();
@@ -717,7 +717,7 @@ state_13_label:
 
    return 56;
 
-// - STATE 14 - 
+// - STATE 14 -
 state_14_label:
    CLOSE_LTG_CHAR(58);
    GET_LTG_NEXT_CHAR();
@@ -733,7 +733,7 @@ state_14_label:
 
    return 58;
 
-// - STATE 15 - 
+// - STATE 15 -
 state_15_label:
    CLOSE_LTG_CHAR(4);
    GET_LTG_NEXT_CHAR();
@@ -773,7 +773,7 @@ state_15_label:
 
    return 4;
 
-// - STATE 16 - 
+// - STATE 16 -
 state_16_label:
    CLOSE_LTG_CHAR(5);
    GET_LTG_NEXT_CHAR();
@@ -804,17 +804,17 @@ state_16_label:
 
    return 5;
 
-// - STATE 17 - 
+// - STATE 17 -
 state_17_label:
    CLOSE_LTG_CHAR(64);
    return 64;
 
-// - STATE 18 - 
+// - STATE 18 -
 state_18_label:
    CLOSE_LTG_CHAR(21);
    return 21;
 
-// - STATE 19 - 
+// - STATE 19 -
 state_19_label:
    CLOSE_LTG_CHAR(49);
    GET_LTG_NEXT_CHAR();
@@ -827,7 +827,7 @@ state_19_label:
 
    return 49;
 
-// - STATE 20 - 
+// - STATE 20 -
 state_20_label:
    CLOSE_LTG_CHAR(30);
    GET_LTG_NEXT_CHAR();
@@ -837,7 +837,7 @@ state_20_label:
 
    return 30;
 
-// - STATE 21 - 
+// - STATE 21 -
 state_21_label:
    CLOSE_LTG_CHAR(48);
    GET_LTG_NEXT_CHAR();
@@ -850,22 +850,22 @@ state_21_label:
 
    return 48;
 
-// - STATE 22 - 
+// - STATE 22 -
 state_22_label:
    CLOSE_LTG_CHAR(63);
    return 63;
 
-// - STATE 23 - 
+// - STATE 23 -
 state_23_label:
    CLOSE_LTG_CHAR(18);
    return 18;
 
-// - STATE 24 - 
+// - STATE 24 -
 state_24_label:
    CLOSE_LTG_CHAR(19);
    return 19;
 
-// - STATE 25 - 
+// - STATE 25 -
 state_25_label:
    CLOSE_LTG_CHAR(45);
    GET_LTG_NEXT_CHAR();
@@ -875,7 +875,7 @@ state_25_label:
 
    return 45;
 
-// - STATE 26 - 
+// - STATE 26 -
 state_26_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -894,7 +894,7 @@ state_26_label:
 
    return 13;
 
-// - STATE 27 - 
+// - STATE 27 -
 state_27_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -919,7 +919,7 @@ state_27_label:
 
    return 13;
 
-// - STATE 28 - 
+// - STATE 28 -
 state_28_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -944,7 +944,7 @@ state_28_label:
 
    return 13;
 
-// - STATE 29 - 
+// - STATE 29 -
 state_29_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -969,7 +969,7 @@ state_29_label:
 
    return 13;
 
-// - STATE 30 - 
+// - STATE 30 -
 state_30_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -994,7 +994,7 @@ state_30_label:
 
    return 13;
 
-// - STATE 31 - 
+// - STATE 31 -
 state_31_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1025,7 +1025,7 @@ state_31_label:
 
    return 13;
 
-// - STATE 32 - 
+// - STATE 32 -
 state_32_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1074,7 +1074,7 @@ state_32_label:
 
    return 13;
 
-// - STATE 33 - 
+// - STATE 33 -
 state_33_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1099,7 +1099,7 @@ state_33_label:
 
    return 13;
 
-// - STATE 34 - 
+// - STATE 34 -
 state_34_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1142,7 +1142,7 @@ state_34_label:
 
    return 13;
 
-// - STATE 35 - 
+// - STATE 35 -
 state_35_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1167,7 +1167,7 @@ state_35_label:
 
    return 13;
 
-// - STATE 36 - 
+// - STATE 36 -
 state_36_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1192,12 +1192,12 @@ state_36_label:
 
    return 13;
 
-// - STATE 37 - 
+// - STATE 37 -
 state_37_label:
    CLOSE_LTG_CHAR(16);
    return 16;
 
-// - STATE 38 - 
+// - STATE 38 -
 state_38_label:
    CLOSE_LTG_CHAR(44);
    GET_LTG_NEXT_CHAR();
@@ -1210,17 +1210,17 @@ state_38_label:
 
    return 44;
 
-// - STATE 39 - 
+// - STATE 39 -
 state_39_label:
    CLOSE_LTG_CHAR(17);
    return 17;
 
-// - STATE 40 - 
+// - STATE 40 -
 state_40_label:
    CLOSE_LTG_CHAR(65);
    return 65;
 
-// - STATE 41 - 
+// - STATE 41 -
 state_41_label:
    CLOSE_LTG_CHAR(66);
    GET_LTG_NEXT_CHAR();
@@ -1233,7 +1233,7 @@ state_41_label:
 
    return 66;
 
-// - STATE 42 - 
+// - STATE 42 -
 state_42_label:
    CLOSE_LTG_CHAR(c_idx_not_exist);
    GET_LTG_NEXT_CHAR();
@@ -1258,32 +1258,32 @@ state_42_label:
 
    return c_idx_not_exist;
 
-// - STATE 43 - 
+// - STATE 43 -
 state_43_label:
    CLOSE_LTG_CHAR(47);
    return 47;
 
-// - STATE 44 - 
+// - STATE 44 -
 state_44_label:
    CLOSE_LTG_CHAR(67);
    return 67;
 
-// - STATE 45 - 
+// - STATE 45 -
 state_45_label:
    CLOSE_LTG_CHAR(35);
    return 35;
 
-// - STATE 46 - 
+// - STATE 46 -
 state_46_label:
    CLOSE_LTG_CHAR(41);
    return 41;
 
-// - STATE 47 - 
+// - STATE 47 -
 state_47_label:
    CLOSE_LTG_CHAR(38);
    return 38;
 
-// - STATE 48 - 
+// - STATE 48 -
 state_48_label:
    CLOSE_LTG_CHAR(c_idx_not_exist);
    GET_LTG_NEXT_CHAR();
@@ -1326,7 +1326,7 @@ state_48_label:
 
    return c_idx_not_exist;
 
-// - STATE 49 - 
+// - STATE 49 -
 state_49_label:
    CLOSE_LTG_CHAR(c_idx_not_exist);
    GET_LTG_NEXT_CHAR();
@@ -1336,32 +1336,32 @@ state_49_label:
 
    return c_idx_not_exist;
 
-// - STATE 50 - 
+// - STATE 50 -
 state_50_label:
    CLOSE_LTG_CHAR(33);
    return 33;
 
-// - STATE 51 - 
+// - STATE 51 -
 state_51_label:
    CLOSE_LTG_CHAR(60);
    return 60;
 
-// - STATE 52 - 
+// - STATE 52 -
 state_52_label:
    CLOSE_LTG_CHAR(31);
    return 31;
 
-// - STATE 53 - 
+// - STATE 53 -
 state_53_label:
    CLOSE_LTG_CHAR(61);
    return 61;
 
-// - STATE 54 - 
+// - STATE 54 -
 state_54_label:
    CLOSE_LTG_CHAR(32);
    return 32;
 
-// - STATE 55 - 
+// - STATE 55 -
 state_55_label:
    CLOSE_LTG_CHAR(11);
    GET_LTG_NEXT_CHAR();
@@ -1383,7 +1383,7 @@ state_55_label:
 
    return 11;
 
-// - STATE 56 - 
+// - STATE 56 -
 state_56_label:
    CLOSE_LTG_CHAR(c_idx_not_exist);
    GET_LTG_NEXT_CHAR();
@@ -1399,7 +1399,7 @@ state_56_label:
 
    return c_idx_not_exist;
 
-// - STATE 57 - 
+// - STATE 57 -
 state_57_label:
    CLOSE_LTG_CHAR(c_idx_not_exist);
    GET_LTG_NEXT_CHAR();
@@ -1415,12 +1415,12 @@ state_57_label:
 
    return c_idx_not_exist;
 
-// - STATE 58 - 
+// - STATE 58 -
 state_58_label:
    CLOSE_LTG_CHAR(34);
    return 34;
 
-// - STATE 59 - 
+// - STATE 59 -
 state_59_label:
    CLOSE_LTG_CHAR(11);
    GET_LTG_NEXT_CHAR();
@@ -1442,7 +1442,7 @@ state_59_label:
 
    return 11;
 
-// - STATE 60 - 
+// - STATE 60 -
 state_60_label:
    CLOSE_LTG_CHAR(4);
    GET_LTG_NEXT_CHAR();
@@ -1476,7 +1476,7 @@ state_60_label:
 
    return 4;
 
-// - STATE 61 - 
+// - STATE 61 -
 state_61_label:
    CLOSE_LTG_CHAR(c_idx_not_exist);
    GET_LTG_NEXT_CHAR();
@@ -1492,17 +1492,17 @@ state_61_label:
 
    return c_idx_not_exist;
 
-// - STATE 62 - 
+// - STATE 62 -
 state_62_label:
    CLOSE_LTG_CHAR(10);
    return 10;
 
-// - STATE 63 - 
+// - STATE 63 -
 state_63_label:
    CLOSE_LTG_CHAR(7);
    return 7;
 
-// - STATE 64 - 
+// - STATE 64 -
 state_64_label:
    CLOSE_LTG_CHAR(c_idx_not_exist);
    GET_LTG_NEXT_CHAR();
@@ -1518,12 +1518,12 @@ state_64_label:
 
    return c_idx_not_exist;
 
-// - STATE 65 - 
+// - STATE 65 -
 state_65_label:
    CLOSE_LTG_CHAR(8);
    return 8;
 
-// - STATE 66 - 
+// - STATE 66 -
 state_66_label:
    CLOSE_LTG_CHAR(53);
    GET_LTG_NEXT_CHAR();
@@ -1533,22 +1533,22 @@ state_66_label:
 
    return 53;
 
-// - STATE 67 - 
+// - STATE 67 -
 state_67_label:
    CLOSE_LTG_CHAR(51);
    return 51;
 
-// - STATE 68 - 
+// - STATE 68 -
 state_68_label:
    CLOSE_LTG_CHAR(46);
    return 46;
 
-// - STATE 69 - 
+// - STATE 69 -
 state_69_label:
    CLOSE_LTG_CHAR(50);
    return 50;
 
-// - STATE 70 - 
+// - STATE 70 -
 state_70_label:
    CLOSE_LTG_CHAR(52);
    GET_LTG_NEXT_CHAR();
@@ -1558,12 +1558,12 @@ state_70_label:
 
    return 52;
 
-// - STATE 71 - 
+// - STATE 71 -
 state_71_label:
    CLOSE_LTG_CHAR(40);
    return 40;
 
-// - STATE 72 - 
+// - STATE 72 -
 state_72_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1588,7 +1588,7 @@ state_72_label:
 
    return 13;
 
-// - STATE 73 - 
+// - STATE 73 -
 state_73_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1613,7 +1613,7 @@ state_73_label:
 
    return 13;
 
-// - STATE 74 - 
+// - STATE 74 -
 state_74_label:
    CLOSE_LTG_CHAR(25);
    GET_LTG_NEXT_CHAR();
@@ -1632,7 +1632,7 @@ state_74_label:
 
    return 25;
 
-// - STATE 75 - 
+// - STATE 75 -
 state_75_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1657,7 +1657,7 @@ state_75_label:
 
    return 13;
 
-// - STATE 76 - 
+// - STATE 76 -
 state_76_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1682,7 +1682,7 @@ state_76_label:
 
    return 13;
 
-// - STATE 77 - 
+// - STATE 77 -
 state_77_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1707,7 +1707,7 @@ state_77_label:
 
    return 13;
 
-// - STATE 78 - 
+// - STATE 78 -
 state_78_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1732,7 +1732,7 @@ state_78_label:
 
    return 13;
 
-// - STATE 79 - 
+// - STATE 79 -
 state_79_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1757,7 +1757,7 @@ state_79_label:
 
    return 13;
 
-// - STATE 80 - 
+// - STATE 80 -
 state_80_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1782,7 +1782,7 @@ state_80_label:
 
    return 13;
 
-// - STATE 81 - 
+// - STATE 81 -
 state_81_label:
    CLOSE_LTG_CHAR(12);
    GET_LTG_NEXT_CHAR();
@@ -1801,7 +1801,7 @@ state_81_label:
 
    return 12;
 
-// - STATE 82 - 
+// - STATE 82 -
 state_82_label:
    CLOSE_LTG_CHAR(23);
    GET_LTG_NEXT_CHAR();
@@ -1820,7 +1820,7 @@ state_82_label:
 
    return 23;
 
-// - STATE 83 - 
+// - STATE 83 -
 state_83_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1845,7 +1845,7 @@ state_83_label:
 
    return 13;
 
-// - STATE 84 - 
+// - STATE 84 -
 state_84_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1870,7 +1870,7 @@ state_84_label:
 
    return 13;
 
-// - STATE 85 - 
+// - STATE 85 -
 state_85_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1895,7 +1895,7 @@ state_85_label:
 
    return 13;
 
-// - STATE 86 - 
+// - STATE 86 -
 state_86_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1920,7 +1920,7 @@ state_86_label:
 
    return 13;
 
-// - STATE 87 - 
+// - STATE 87 -
 state_87_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1945,7 +1945,7 @@ state_87_label:
 
    return 13;
 
-// - STATE 88 - 
+// - STATE 88 -
 state_88_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -1970,17 +1970,17 @@ state_88_label:
 
    return 13;
 
-// - STATE 89 - 
+// - STATE 89 -
 state_89_label:
    CLOSE_LTG_CHAR(39);
    return 39;
 
-// - STATE 90 - 
+// - STATE 90 -
 state_90_label:
    CLOSE_LTG_CHAR(42);
    return 42;
 
-// - STATE 91 - 
+// - STATE 91 -
 state_91_label:
    CLOSE_LTG_CHAR(c_idx_not_exist);
    GET_LTG_NEXT_CHAR();
@@ -1990,7 +1990,7 @@ state_91_label:
 
    return c_idx_not_exist;
 
-// - STATE 92 - 
+// - STATE 92 -
 state_92_label:
    CLOSE_LTG_CHAR(0);
    GET_LTG_NEXT_CHAR();
@@ -2000,7 +2000,7 @@ state_92_label:
 
    return 0;
 
-// - STATE 93 - 
+// - STATE 93 -
 state_93_label:
    CLOSE_LTG_CHAR(c_idx_not_exist);
    GET_LTG_NEXT_CHAR();
@@ -2013,7 +2013,7 @@ state_93_label:
 
    return c_idx_not_exist;
 
-// - STATE 94 - 
+// - STATE 94 -
 state_94_label:
    CLOSE_LTG_CHAR(c_idx_not_exist);
    GET_LTG_NEXT_CHAR();
@@ -2029,12 +2029,12 @@ state_94_label:
 
    return c_idx_not_exist;
 
-// - STATE 95 - 
+// - STATE 95 -
 state_95_label:
    CLOSE_LTG_CHAR(0);
    return 0;
 
-// - STATE 96 - 
+// - STATE 96 -
 state_96_label:
    CLOSE_LTG_CHAR(c_idx_not_exist);
    GET_LTG_NEXT_CHAR();
@@ -2050,12 +2050,12 @@ state_96_label:
 
    return c_idx_not_exist;
 
-// - STATE 97 - 
+// - STATE 97 -
 state_97_label:
    CLOSE_LTG_CHAR(68);
    return 68;
 
-// - STATE 98 - 
+// - STATE 98 -
 state_98_label:
    CLOSE_LTG_CHAR(c_idx_not_exist);
    GET_LTG_NEXT_CHAR();
@@ -2065,7 +2065,7 @@ state_98_label:
 
    return c_idx_not_exist;
 
-// - STATE 99 - 
+// - STATE 99 -
 state_99_label:
    CLOSE_LTG_CHAR(11);
    GET_LTG_NEXT_CHAR();
@@ -2081,7 +2081,7 @@ state_99_label:
 
    return 11;
 
-// - STATE 100 - 
+// - STATE 100 -
 state_100_label:
    CLOSE_LTG_CHAR(6);
    GET_LTG_NEXT_CHAR();
@@ -2103,17 +2103,17 @@ state_100_label:
 
    return 6;
 
-// - STATE 101 - 
+// - STATE 101 -
 state_101_label:
    CLOSE_LTG_CHAR(36);
    return 36;
 
-// - STATE 102 - 
+// - STATE 102 -
 state_102_label:
    CLOSE_LTG_CHAR(37);
    return 37;
 
-// - STATE 103 - 
+// - STATE 103 -
 state_103_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -2135,7 +2135,7 @@ state_103_label:
 
    return 13;
 
-// - STATE 104 - 
+// - STATE 104 -
 state_104_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -2160,7 +2160,7 @@ state_104_label:
 
    return 13;
 
-// - STATE 105 - 
+// - STATE 105 -
 state_105_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -2185,7 +2185,7 @@ state_105_label:
 
    return 13;
 
-// - STATE 106 - 
+// - STATE 106 -
 state_106_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -2210,7 +2210,7 @@ state_106_label:
 
    return 13;
 
-// - STATE 107 - 
+// - STATE 107 -
 state_107_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -2232,7 +2232,7 @@ state_107_label:
 
    return 13;
 
-// - STATE 108 - 
+// - STATE 108 -
 state_108_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -2257,17 +2257,17 @@ state_108_label:
 
    return 13;
 
-// - STATE 109 - 
+// - STATE 109 -
 state_109_label:
    CLOSE_LTG_CHAR(3);
    return 3;
 
-// - STATE 110 - 
+// - STATE 110 -
 state_110_label:
    CLOSE_LTG_CHAR(1);
    return 1;
 
-// - STATE 111 - 
+// - STATE 111 -
 state_111_label:
    CLOSE_LTG_CHAR(c_idx_not_exist);
    GET_LTG_NEXT_CHAR();
@@ -2280,7 +2280,7 @@ state_111_label:
 
    return c_idx_not_exist;
 
-// - STATE 112 - 
+// - STATE 112 -
 state_112_label:
    CLOSE_LTG_CHAR(c_idx_not_exist);
    GET_LTG_NEXT_CHAR();
@@ -2299,17 +2299,17 @@ state_112_label:
 
    return c_idx_not_exist;
 
-// - STATE 113 - 
+// - STATE 113 -
 state_113_label:
    CLOSE_LTG_CHAR(69);
    return 69;
 
-// - STATE 114 - 
+// - STATE 114 -
 state_114_label:
    CLOSE_LTG_CHAR(9);
    return 9;
 
-// - STATE 115 - 
+// - STATE 115 -
 state_115_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -2334,7 +2334,7 @@ state_115_label:
 
    return 13;
 
-// - STATE 116 - 
+// - STATE 116 -
 state_116_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -2359,7 +2359,7 @@ state_116_label:
 
    return 13;
 
-// - STATE 117 - 
+// - STATE 117 -
 state_117_label:
    CLOSE_LTG_CHAR(24);
    GET_LTG_NEXT_CHAR();
@@ -2378,7 +2378,7 @@ state_117_label:
 
    return 24;
 
-// - STATE 118 - 
+// - STATE 118 -
 state_118_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -2403,7 +2403,7 @@ state_118_label:
 
    return 13;
 
-// - STATE 119 - 
+// - STATE 119 -
 state_119_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -2428,7 +2428,7 @@ state_119_label:
 
    return 13;
 
-// - STATE 120 - 
+// - STATE 120 -
 state_120_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -2453,7 +2453,7 @@ state_120_label:
 
    return 13;
 
-// - STATE 121 - 
+// - STATE 121 -
 state_121_label:
    CLOSE_LTG_CHAR(c_idx_not_exist);
    GET_LTG_NEXT_CHAR();
@@ -2463,12 +2463,12 @@ state_121_label:
 
    return c_idx_not_exist;
 
-// - STATE 122 - 
+// - STATE 122 -
 state_122_label:
    CLOSE_LTG_CHAR(2);
    return 2;
 
-// - STATE 123 - 
+// - STATE 123 -
 state_123_label:
    CLOSE_LTG_CHAR(c_idx_not_exist);
    GET_LTG_NEXT_CHAR();
@@ -2478,7 +2478,7 @@ state_123_label:
 
    return c_idx_not_exist;
 
-// - STATE 124 - 
+// - STATE 124 -
 state_124_label:
    CLOSE_LTG_CHAR(27);
    GET_LTG_NEXT_CHAR();
@@ -2497,7 +2497,7 @@ state_124_label:
 
    return 27;
 
-// - STATE 125 - 
+// - STATE 125 -
 state_125_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -2522,7 +2522,7 @@ state_125_label:
 
    return 13;
 
-// - STATE 126 - 
+// - STATE 126 -
 state_126_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -2547,7 +2547,7 @@ state_126_label:
 
    return 13;
 
-// - STATE 127 - 
+// - STATE 127 -
 state_127_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -2572,7 +2572,7 @@ state_127_label:
 
    return 13;
 
-// - STATE 128 - 
+// - STATE 128 -
 state_128_label:
    CLOSE_LTG_CHAR(26);
    GET_LTG_NEXT_CHAR();
@@ -2591,7 +2591,7 @@ state_128_label:
 
    return 26;
 
-// - STATE 129 - 
+// - STATE 129 -
 state_129_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -2616,7 +2616,7 @@ state_129_label:
 
    return 13;
 
-// - STATE 130 - 
+// - STATE 130 -
 state_130_label:
    CLOSE_LTG_CHAR(29);
    GET_LTG_NEXT_CHAR();
@@ -2635,7 +2635,7 @@ state_130_label:
 
    return 29;
 
-// - STATE 131 - 
+// - STATE 131 -
 state_131_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -2660,7 +2660,7 @@ state_131_label:
 
    return 13;
 
-// - STATE 132 - 
+// - STATE 132 -
 state_132_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -2685,7 +2685,7 @@ state_132_label:
 
    return 13;
 
-// - STATE 133 - 
+// - STATE 133 -
 state_133_label:
    CLOSE_LTG_CHAR(13);
    GET_LTG_NEXT_CHAR();
@@ -2710,7 +2710,7 @@ state_133_label:
 
    return 13;
 
-// - STATE 134 - 
+// - STATE 134 -
 state_134_label:
    CLOSE_LTG_CHAR(28);
    GET_LTG_NEXT_CHAR();
@@ -2729,7 +2729,7 @@ state_134_label:
 
    return 28;
 
-// - STATE 135 - 
+// - STATE 135 -
 state_135_label:
    CLOSE_LTG_CHAR(22);
    GET_LTG_NEXT_CHAR();

@@ -160,7 +160,7 @@ inline void docu_source_s::init()
 
 inline void docu_source_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release source string -
   if (source_ptr != NULL)
   {
@@ -184,7 +184,7 @@ inline void docu_comment_s::init()
 
 inline void docu_comment_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release source string -
   if (ds_ptr != NULL)
   {

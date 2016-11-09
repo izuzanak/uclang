@@ -478,7 +478,7 @@ bool bic_gl_vertex_buffer_method_push_back_2(interpreter_thread_s &it,unsigned s
 
         exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GL_VERTEX_BUFFER_WRONG_VERTEX_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
         new_exception->params.push(va_ptr - vert_array_ptr->data);
-        
+
         return false;
       }
 
@@ -499,7 +499,7 @@ bool bic_gl_vertex_buffer_method_push_back_2(interpreter_thread_s &it,unsigned s
     long long int int_value;
     do {
       location_s *item_location = it.get_location_value(*ia_ptr);
-      
+
       // - ERROR -
       if (!it.retrieve_integer(item_location,int_value))
       {
@@ -508,7 +508,7 @@ bool bic_gl_vertex_buffer_method_push_back_2(interpreter_thread_s &it,unsigned s
 
         exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GL_VERTEX_BUFFER_WRONG_INDEX_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
         new_exception->params.push(ia_ptr - idx_array_ptr->data);
-        
+
         return false;
       }
 
@@ -520,7 +520,7 @@ bool bic_gl_vertex_buffer_method_push_back_2(interpreter_thread_s &it,unsigned s
 
         exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GL_VERTEX_BUFFER_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
         new_exception->params.push(int_value);
-        
+
         return false;
       }
 
@@ -827,7 +827,7 @@ bool bic_gl_font_method_GlFont_4(interpreter_thread_s &it,unsigned stack_base,ul
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GL_FONT_INVALID_TEXTURE_ATLAS_DIMENSIONS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(width);
     new_exception->params.push(height);
-    
+
     return false;
   }
 
@@ -1283,9 +1283,9 @@ bool bic_gl_font_buffer_method_push_text_1(interpreter_thread_s &it,unsigned sta
     GLuint indices[6] = {0 MP_COMMA 1 MP_COMMA 2 MP_COMMA  0 MP_COMMA 2 MP_COMMA 3};
     float vertices[20] =
     {
-      0 MP_COMMA 0 MP_COMMA 0 MP_COMMA  0 MP_COMMA 0 MP_COMMA 
-      0 MP_COMMA 0 MP_COMMA 0 MP_COMMA  0 MP_COMMA 0 MP_COMMA 
-      0 MP_COMMA 0 MP_COMMA 0 MP_COMMA  0 MP_COMMA 0 MP_COMMA 
+      0 MP_COMMA 0 MP_COMMA 0 MP_COMMA  0 MP_COMMA 0 MP_COMMA
+      0 MP_COMMA 0 MP_COMMA 0 MP_COMMA  0 MP_COMMA 0 MP_COMMA
+      0 MP_COMMA 0 MP_COMMA 0 MP_COMMA  0 MP_COMMA 0 MP_COMMA
       0 MP_COMMA 0 MP_COMMA 0 MP_COMMA  0 MP_COMMA 0
     };
 

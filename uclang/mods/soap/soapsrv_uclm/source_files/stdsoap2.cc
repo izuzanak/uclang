@@ -2553,14 +2553,14 @@ soap_putsizesoffsets(struct soap *soap, const char *type, const int *size, const
   if (!type || strlen(type) + 13 > sizeof(soap->type)) /* prevent overruns */
     return NULL;
   if (soap->version == 2)
-  { 
+  {
 #ifdef HAVE_SNPRINTF
     soap_snprintf(soap->type, sizeof(soap->type) - 1, "%s[%d", type, size[0]);
 #else
     sprintf(soap->type, "%s[%d", type, size[0]);
 #endif
     for (i = 1; i < dim; i++)
-    { 
+    {
 #ifdef HAVE_SNPRINTF
       l = strlen(soap->type);
       soap_snprintf(soap->type + l, sizeof(soap->type) - l - 1, " %d", size[i]);
@@ -2592,7 +2592,7 @@ soap_putsizesoffsets(struct soap *soap, const char *type, const int *size, const
       }
     }
     else
-    { 
+    {
 #ifdef HAVE_SNPRINTF
       soap_snprintf(soap->type, sizeof(soap->type) - 1, "%s[%d", type, size[0]);
 #else
@@ -5819,13 +5819,13 @@ http_post(struct soap *soap, const char *endpoint, const char *host, int port, c
 { register const char *s;
   register int err;
   switch (soap->status)
-  { case SOAP_GET: 
+  { case SOAP_GET:
       s = "GET";
       break;
-    case SOAP_PUT: 
+    case SOAP_PUT:
       s = "PUT";
       break;
-    case SOAP_DEL: 
+    case SOAP_DEL:
       s = "DELETE";
       break;
     case SOAP_CONNECT:
@@ -5928,7 +5928,7 @@ http_post(struct soap *soap, const char *endpoint, const char *host, int port, c
 #ifdef WITH_NTLM
   if (soap->ntlm_challenge && strlen(soap->ntlm_challenge) + 6 < sizeof(soap->tmpbuf))
   { if (*soap->ntlm_challenge)
-    { 
+    {
 #ifdef HAVE_SNPRINTF
       soap_snprintf(soap->tmpbuf, sizeof(soap->tmpbuf), "NTLM %s", soap->ntlm_challenge);
 #else
@@ -6475,7 +6475,7 @@ soap_putsetcookies(struct soap *soap)
         }
       }
       if (p->version > 0 && s-tmp < 4060)
-      { 
+      {
 #ifdef HAVE_SNPRINTF
         soap_snprintf(s, 4096 - (s-tmp), ";Version=%u", p->version);
 #else
@@ -15808,7 +15808,7 @@ soap_ntlm_handshake(struct soap *soap, int command, const char *endpoint, const 
   const char *passwd = (soap->proxy_passwd ? soap->proxy_passwd : soap->passwd);
   struct SOAP_ENV__Header *oldheader;
   if (soap->ntlm_challenge && userid && passwd && soap->authrealm)
-  { tSmbNtlmAuthRequest req;  
+  { tSmbNtlmAuthRequest req;
     tSmbNtlmAuthResponse res;
     tSmbNtlmAuthChallenge ch;
     short k = soap->keep_alive;
@@ -16420,7 +16420,7 @@ soap_set_fault(struct soap *soap)
 #ifndef WITH_NOHTTP
 #ifndef WITH_LEAN
       if (soap->error > 200 && soap->error < 600)
-      { 
+      {
 #ifdef HAVE_SNPRINTF
         soap_snprintf(soap->msgbuf, sizeof(soap->msgbuf), "HTTP Error: %d %s", soap->error, http_error(soap, soap->error));
 #else

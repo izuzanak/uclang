@@ -122,7 +122,7 @@ inline void av_format_s::clear(interpreter_thread_s &it)
         AVCodecContext **cc_ptr = codec_ctxs;
         AVCodecContext **cc_ptr_end = cc_ptr + format_ctx->nb_streams;
         do {
-          
+
           // - if codec context exists -
           if (*cc_ptr != NULL)
           {

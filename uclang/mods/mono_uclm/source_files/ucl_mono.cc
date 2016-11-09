@@ -465,7 +465,7 @@ location_s *mono_c::mono_object_value(interpreter_thread_s &it,MonoObject *mono_
     string_s *string_ptr = it.get_new_string_ptr();
     string_ptr->set(strlen(utf8_str),utf8_str);
     mono_free(utf8_str);
-    
+
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
     return new_location;
   }/*}}}*/

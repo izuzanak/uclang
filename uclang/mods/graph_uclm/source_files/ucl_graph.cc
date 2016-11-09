@@ -54,7 +54,7 @@ void gf_uclvar_get_string(interpreter_thread_s &it,unsigned source_pos,void *a_v
     char *c_ptr = a_string.data;
     char *c_ptr_end = c_ptr + a_string.size - 1;
     do {
-      
+
       // - escape special characters in string -
       switch (*c_ptr)
       {
@@ -989,7 +989,7 @@ bool graph_s::strongly_connected_components_tarjans(ui_array_s &a_comp_idxs)
         {
           // - initialize vertex mark -
           a_comp_idxs[sv_idx] = mark++;
-          
+
           // - initialize vertex edge idx -
           ei_idx = edge_idxs.root_idx != c_idx_not_exist ?
             edge_idxs.get_min_value_idx(edge_idxs.root_idx) : c_idx_not_exist;
@@ -997,7 +997,7 @@ bool graph_s::strongly_connected_components_tarjans(ui_array_s &a_comp_idxs)
 
         // - traverse throught vertex incident edges -
         do {
-          
+
           // - if there are no more edges -
           if (ei_idx == c_idx_not_exist)
           {
@@ -1195,7 +1195,7 @@ bool graph_s::is_strongly_connected_graph_tarjans()
     {
       // - initialize vertex mark -
       v_mark[vertex_idx] = mark++;
-      
+
       // - initialize vertex edge idx -
       ei_idx = edge_idxs.root_idx != c_idx_not_exist ?
         edge_idxs.get_min_value_idx(edge_idxs.root_idx) : c_idx_not_exist;
@@ -1203,7 +1203,7 @@ bool graph_s::is_strongly_connected_graph_tarjans()
 
     // - traverse throught vertex incident edges -
     do {
-      
+
       // - if there are no more edges -
       if (ei_idx == c_idx_not_exist)
       {

@@ -419,7 +419,7 @@ bool bic_pas_method_Pas_5(interpreter_thread_s &it,unsigned stack_base,uli *oper
 
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PAS_LIB_INITIALIZE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(res);
-    
+
     return false;
   }
 
@@ -525,7 +525,7 @@ bool bic_pas_method_master_ip_1(interpreter_thread_s &it,unsigned stack_base,uli
     comp[3] = strtol(ptr,&end_ptr,10);
     if (ptr == end_ptr || comp[3] < 0 || comp[3] > 255 || *end_ptr != '\0') break;
 
-    unsigned master_ip = c_little_endian ? 
+    unsigned master_ip = c_little_endian ?
       (comp[0] << 0) | (comp[1] << 8) | (comp[2] << 16) | (comp[3] << 24) :
       (comp[0] << 24) | (comp[1] << 16) | (comp[2] << 0) | (comp[3] << 0);
 
@@ -1077,7 +1077,7 @@ bool bic_pas_method_volume_1(interpreter_thread_s &it,unsigned stack_base,uli *o
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PAS_LIB_WRONG_VOLUME_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(volume);
-    
+
     return false;
   }
 
@@ -1527,13 +1527,13 @@ bool bic_pas_device_method_version_1(interpreter_thread_s &it,unsigned stack_bas
 
   pas_device_s *pd_ptr = (pas_device_s *)dst_location->v_data_ptr;
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-  
+
   // - ERROR -
   if (string_ptr->size > PKT_VERSION_SIZE)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PAS_DEVICE_VERSION_STRING_TOO_LONG,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(PKT_VERSION_SIZE);
-    
+
     return false;
   }
 

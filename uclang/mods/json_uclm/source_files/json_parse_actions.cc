@@ -49,7 +49,7 @@ bool(*json_pa_callers[c_json_parse_action_cnt])(json_parser_s &_this) =
 bool pa_json_null(json_parser_s &_this)
 {/*{{{*/
   debug_assert(0);
-  
+
   debug_message_6(fprintf(stderr,"json_parser: parse_action: pa_json_null\n"));
 
   return true;
@@ -394,7 +394,7 @@ bool pa_json_string(json_parser_s &_this)
         if (*ptr == 'u')
         {
           ptr++;
-          
+
           unsigned value = 0;
 
           // - retrieve character value -

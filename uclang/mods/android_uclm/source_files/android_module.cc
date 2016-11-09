@@ -1052,7 +1052,7 @@ bool bic_activity_method_event_loop_0(interpreter_thread_s &it,unsigned stack_ba
 
   // - enter event loop -
   g_activity.event_loop_ptr();
-  
+
   // - reset event loop flag -
   g_activity.event_loop = false;
 

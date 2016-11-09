@@ -33,7 +33,7 @@ inline void gcrypt_cipher_s::init()
 
 inline void gcrypt_cipher_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release gcrypt cipher handle -
   if (handle != NULL)
   {

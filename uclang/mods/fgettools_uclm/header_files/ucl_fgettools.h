@@ -43,7 +43,7 @@ inline void fget_target_s::init()
 
 inline void fget_target_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - unmap file -
   if (file_ptr != NULL)
   {

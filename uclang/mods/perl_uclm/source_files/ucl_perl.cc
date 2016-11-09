@@ -141,7 +141,7 @@ SV *perl_c::create_perl_sv(interpreter_thread_s &it,PerlInterpreter *my_perl,loc
           pointer *a_ptr_end = a_ptr + array_ptr->used;
           do {
             SV *sv_item = create_perl_sv(it,my_perl,it.get_location_value(*a_ptr));
-        
+
             // - ERROR -
             if (sv_item == NULL)
             {
