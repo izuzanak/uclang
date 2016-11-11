@@ -215,26 +215,23 @@ lalr_stack_s;
 // - v_data_type typedef -
 union v_data_type
 {
-  char bc;
-  int bi;
-  unsigned ui;
   long long int lli;
   long long unsigned llu;
   double bd;
   pointer ptr;
 
   v_data_type() {}
-  v_data_type(char a_bc) { bc = a_bc; }
-  v_data_type(int a_bi) { bi = a_bi; }
-  v_data_type(unsigned a_ui) { ui = a_ui; }
+  v_data_type(char a_bc) { lli = a_bc; }
+  v_data_type(int a_bi) { lli = a_bi; }
+  v_data_type(unsigned a_ui) { lli = a_ui; }
   v_data_type(long long int a_lli) { lli = a_lli; }
   v_data_type(long long unsigned a_llu) { llu = a_llu; }
   v_data_type(double a_bd) { bd = a_bd; }
   template <class T> v_data_type(T* a_ptr) { ptr = (pointer)a_ptr; }
 
-  operator char () const { return bc; }
-  operator int () const { return bi; }
-  operator unsigned () const { return ui; }
+  operator char () const { return lli; }
+  operator int () const { return lli; }
+  operator unsigned () const { return lli; }
   operator long long int () const { return lli; }
   operator long long unsigned () const { return llu; }
   operator double () const { return bd; }
