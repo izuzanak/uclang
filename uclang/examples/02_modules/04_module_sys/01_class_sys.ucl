@@ -89,6 +89,19 @@ class Main
 
     pipe.close();
 
+    Tutorial.note("Sys method pipe#0");
+    pipe = Sys.pipe();
+
+    pipe[1].write("line 0\n");
+    pipe[1].write("line 1\n");
+    pipe[1].write("line 2\n");
+    pipe[1].close();
+    
+    for (line <- pipe[0])
+    {
+      ("line: %s\n" % line).print();
+    }
+
     Tutorial.note("Sys directories manipulation methods");
     tmp_dir = "/tmp/01_class_sys";
     

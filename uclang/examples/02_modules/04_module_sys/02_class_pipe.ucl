@@ -29,7 +29,6 @@ class Main
     //
 
     Tutorial.note("Pipe object");
-    ("Pipe: %s\n" % new Pipe().to_string()).print();
     ("Pipe: %s\n" % (pipe_1 = new Pipe("ls","r")).to_string()).print();
 
     pipe_1.read();

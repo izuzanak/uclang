@@ -272,6 +272,7 @@ class UclVar
   static unsigned c_bi_mni_exit_1;
   static unsigned c_bi_mni_open_2;
   static unsigned c_bi_mni_popen_2;
+  static unsigned c_bi_mni_pipe_0;
   static unsigned c_bi_mni_mkdir_1;
   static unsigned c_bi_mni_rmdir_1;
   static unsigned c_bi_mni_chdir_1;
@@ -286,7 +287,6 @@ class UclVar
   static unsigned c_bi_mni_is_dir_1;
   static unsigned c_bi_mni_size_1;
   static unsigned c_bi_mni_time_0;
-  static unsigned c_bi_mni_Pipe_0;
   static unsigned c_bi_mni_Pipe_2;
   static unsigned c_bi_mni_close_0;
   static unsigned c_bi_mni_write_1;
@@ -1390,6 +1390,7 @@ class UclVar
     static unsigned c_bi_mi_exit_1;
     static unsigned c_bi_mi_open_2;
     static unsigned c_bi_mi_popen_2;
+    static unsigned c_bi_mi_pipe_0;
     static unsigned c_bi_mi_mkdir_1;
     static unsigned c_bi_mi_rmdir_1;
     static unsigned c_bi_mi_chdir_1;
@@ -1460,6 +1461,11 @@ class UclVar
     inline static UclVar popen(UclVar op_0,UclVar op_1)
     {/*{{{*/
       return __static_call_2(c_bi_mi_popen_2,op_0,op_1);
+    }/*}}}*/
+
+    inline static UclVar pipe()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_pipe_0);
     }/*}}}*/
 
     inline static UclVar mkdir(UclVar op_0)
@@ -1564,11 +1570,6 @@ class UclVar
     }/*}}}*/
 
   };/*}}}*/
-
-  inline static UclVar Pipe()
-  {/*{{{*/
-    return __new_object_0(c_bi_class_Pipe,c_bi_mni_Pipe_0);
-  }/*}}}*/
 
   inline static UclVar Pipe(UclVar op_0,UclVar op_1)
   {/*{{{*/
@@ -4123,6 +4124,11 @@ class UclVar
   inline UclVar popen(UclVar op_0,UclVar op_1)
   {/*{{{*/
     return __call_2(c_bi_mni_popen_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar pipe()
+  {/*{{{*/
+    return __call_0(c_bi_mni_pipe_0);
   }/*}}}*/
 
   inline UclVar mkdir(UclVar op_0)

@@ -55,6 +55,12 @@ Sys.popen("ls","r") -> Pipe
 
 pipe.readln(): 01_class_sys.ucl
 
+=== Sys method pipe#0 ==========================================================
+
+line: line 0
+line: line 1
+line: line 2
+
 === Sys directories manipulation methods =======================================
 
 Sys.getcwd() -> /home/jirka/folder/work/programming/git/uclang/uclang/examples/02_modules/04_module_sys

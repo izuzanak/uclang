@@ -152,6 +152,7 @@ bool bic_sys_method_system_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 bool bic_sys_method_exit_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sys_method_open_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sys_method_popen_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_sys_method_pipe_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sys_method_mkdir_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sys_method_rmdir_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sys_method_chdir_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -179,7 +180,6 @@ void bic_pipe_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_pipe_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_pipe_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_pipe_method_Pipe_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pipe_method_Pipe_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pipe_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pipe_method_write_close_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
