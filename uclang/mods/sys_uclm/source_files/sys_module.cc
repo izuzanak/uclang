@@ -3930,6 +3930,13 @@ bool bic_stream_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli
   // - retrieve pointer to stream -
   FILE *f = (FILE *)dst_location->v_data_ptr;
 
+  // - ERROR -
+  if (f == NULL)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_STREAM_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
   long long int result = fileno(f);
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
