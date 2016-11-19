@@ -126,7 +126,7 @@ rule body at position identified by index given as method parameter.
 
 **Parameters:**
 
-1. Object of class `Integer` representing index of rule item.
+1. Object of class `Char`, `Integer` or `Float` representing index of rule item.
 
 **Return:**
 

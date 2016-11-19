@@ -414,10 +414,21 @@ class Main
     [/*{{{*/
       "description","Class providing access to system specific parameters and functions."
     ]);/*}}}*/
+    CLASS_PROPERTIES["Pipe"] = class_Pipe = new Dict(
+    [/*{{{*/
+      "description","Class providing access to system pipes.",
+      "source_id","\\(pipe\\|stream\\)",
+      "channel_name","stream",
+      "create_example","new Pipe(\"cat -n numbers.txt 2> /dev/null\",\"r\")",
+      "create_output","new Pipe(\"cat\",\"w\")"
+    ]);/*}}}*/
     CLASS_PROPERTIES["File"] = class_File = new Dict(
     [/*{{{*/
       "description","Class providing access to system files.",
-      "source_id","\\(file\\|stream\\)"
+      "source_id","\\(file\\|stream\\)",
+      "channel_name","stream",
+      "create_example","new File(\"numbers.txt\",\"r\")",
+      "create_output","new File(\"output.txt\",\"w\")"
     ]);/*}}}*/
     CLASS_PROPERTIES["FinalAutomata"] = class_FinalAutomata = new Dict(
     [/*{{{*/
@@ -1357,6 +1368,21 @@ Sys.remove(\"temporary\");
       ]);/*}}}*/
     }
 
+    case "Pipe":
+    {
+      class_Pipe["methods"] = new Dict(
+      [/*{{{*/
+        "Pipe#2", new MethodDescr(
+"Creates object of class `%s`, based on system command to be executed and file
+open flags." % m_target_name,
+["Object of class %s containing system command to be executed." % doc_class_ref("String"),
+ "Object of class %s containing file open flags." % doc_class_ref("String")],new Blank(),"
+%s
+obj.read().print();
+" % get_code(m_target_class,"obj","create_example"))
+      ]);/*}}}*/
+    }
+
     case "File":
     {
       class_File["var_classes"] = new Dict(
@@ -1372,6 +1398,39 @@ Sys.remove(\"temporary\");
         "SEEK_SET",new VariableDescr("Object of class `Integer`. Seek position relative to file begining.","seek_consts"),
         "SEEK_CUR",new VariableDescr("Object of class `Integer`. Seek position relative to current position.","seek_consts"),
         "SEEK_END",new VariableDescr("Object of class `Integer`. Seek position relative to end of file.","seek_consts")
+      ]);/*}}}*/
+      class_File["methods"] = new Dict(
+      [/*{{{*/
+        "File#2", new MethodDescr(
+"Creates object of class `%s`, based on file path and file open flags." % m_target_name,
+["Object of class %s containing path to file." % doc_class_ref("String"),
+ "Object of class %s containing file open flags." % doc_class_ref("String")],new Blank(),"
+%s
+obj.read().print();
+" % get_code(m_target_class,"obj","create_example")),
+        "seek#2", new MethodDescr(
+"Sets file position indicator of stream represented by object of class `%s`.
+New position in bytes is obtained by adding offset to given position
+indicator." % m_target_name,
+["Object of class %s, %s or %s identifying offset in bytes." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")],
+ "Object of class %s, %s or %s identifying position to which offset is added." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]],
+"* Object of class %s." % doc_class_ref("Blank"),"
+%s
+(\"line: %%s\\n\" %% obj.readln()).print();
+(\"line: %%s\\n\" %% obj.readln()).print();
+obj.seek(0,File.SEEK_SET);
+(\"line: %%s\\n\" %% obj.readln()).print();
+" % get_code(m_target_class,"obj","create_example")),
+        "tell#0", new MethodDescr(
+"Return of file position indicator of stream represented by object of class
+`%s`." % m_target_name,
+[],"* Object of class %s." % doc_class_ref("Integer"),"
+%s
+obj.readln();
+(\"obj.tell(): %%d\\n\" %% obj.tell()).print();
+obj.readln();
+(\"obj.tell(): %%d\\n\" %% obj.tell()).print();
+" % get_code(m_target_class,"obj","create_example"))
       ]);/*}}}*/
     }
 
@@ -1493,7 +1552,7 @@ obj.parse(\"!!test\",new Delegate(this,\"parse_cb\",1));
         "rule_body#1", new MethodDescr(
 "Retrieve substring of parsed source string which is represented by item in
 rule body at position identified by index given as method parameter.",
-["Object of class %s representing index of rule item." % doc_class_ref("Integer")],
+["Object of class %s, %s or %s representing index of rule item." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]],
 "* Object of class %s." % doc_class_ref("String"),"
 if (a_state.rule_idx() == 1)
   (\"%s - %s\\n\" % [a_state.rule_body(0),a_state.rule_body(1)]).print();
@@ -1682,8 +1741,7 @@ while (Blank != (element = obj.next_item()))
 "Creates object of class `%s`, based on first and last values of requested
 sequence." % m_target_name,
 ["First value in generated sequence.",
- "Last value in generated sequence."],
-"","
+ "Last value in generated sequence."],new Blank(),"
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 (\"obj: %%s\\n\" %% obj[::].to_string()).print();
@@ -1776,32 +1834,15 @@ while (Blank != (element = obj.next_item()))
           return "%s = new %s([1,2,6,7,8]);" % [a_var_name,class_name];
         }
       }/*}}}*/
-      case "create_zero":
+      case "create_zero",
+           "create_arith",
+           "create_small",
+           "create_large",
+           "create_output":
       {/*{{{*/
-        if (Blank != (create_compare = get_property(class_name,a_code_type)))
+        if (Blank != (create_value = get_property(class_name,a_code_type)))
         {
-          return "%s = %s;" % [a_var_name,create_compare];
-        }
-      }/*}}}*/
-      case "create_arith":
-      {/*{{{*/
-        if (Blank != (create_compare = get_property(class_name,a_code_type)))
-        {
-          return "%s = %s;" % [a_var_name,create_compare];
-        }
-      }/*}}}*/
-      case "create_small":
-      {/*{{{*/
-        if (Blank != (create_compare = get_property(class_name,a_code_type)))
-        {
-          return "%s = %s;" % [a_var_name,create_compare];
-        }
-      }/*}}}*/
-      case "create_large":
-      {/*{{{*/
-        if (Blank != (create_compare = get_property(class_name,a_code_type)))
-        {
-          return "%s = %s;" % [a_var_name,create_compare];
+          return "%s = %s;" % [a_var_name,create_value];
         }
       }/*}}}*/
       case "create_repeated":
@@ -4212,8 +4253,8 @@ do {
                 new Exception("Property \"iter_element_name\" of class \"%s\" is not defined" % class_name).throw();
 
               m_meth_descr_lst.push("From object of class `%s` retrieve index of %s preceding %s identified by method parameter." % [class_name,elm_name,elm_name]);
-              m_meth_return_lst.push("* Object of class %s if there is some %s preceding %s identified by method parameter." % [doc_class_ref("Integer"),elm_name,elm_name]);
               m_meth_param_lsts[0].push("Type convertible to integer.");
+              m_meth_return_lst.push("* Object of class %s if there is some %s preceding %s identified by method parameter." % [doc_class_ref("Integer"),elm_name,elm_name]);
               m_meth_return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
 
               obj_code = get_code(a_class,"obj","create_example");
@@ -4443,6 +4484,217 @@ method. As separator of printed values is used character `,`." % class_name);
                 {
                   m_meth_ex_code = new Blank();
                 }
+              }
+            }/*}}}*/
+            case "close#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+              if (Blank == (channel_name = get_property(class_name,"channel_name")))
+                new Exception("Property \"channel_name\" of class \"%s\" is not defined" % class_name).throw();
+
+              m_meth_descr_lst.push("Closes %s represented by object of class `%s`." % [channel_name,class_name]);
+              m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Blank"));
+
+              obj_code = get_code(a_class,"obj","create_example");
+
+              if (Blank != obj_code)
+              {
+                m_meth_ex_code = ("
+%s
+obj.close();
+obj.read();
+" % obj_code);
+              }
+            }/*}}}*/
+            case "write#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+              if (Blank == (channel_name = get_property(class_name,"channel_name")))
+                new Exception("Property \"channel_name\" of class \"%s\" is not defined" % class_name).throw();
+
+              m_meth_descr_lst.push("Write object of class %s to %s represented by object of class `%s`." % [doc_class_ref("String"),channel_name,class_name]);
+              m_meth_param_lsts[0].push("Object of class %s." % doc_class_ref("String"));
+              m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Blank"));
+
+              obj_code = get_code(a_class,"obj","create_output");
+
+              if (Blank != obj_code)
+              {
+                m_meth_ex_code = ("
+%s
+obj.write(\"Hello world!\\n\");
+\"Done\\n\".print();
+" % obj_code);
+              }
+            }/*}}}*/
+            case "write_close#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+              if (Blank == (channel_name = get_property(class_name,"channel_name")))
+                new Exception("Property \"channel_name\" of class \"%s\" is not defined" % class_name).throw();
+
+              m_meth_descr_lst.push("Write object of class %s to %s represented by object of class `%s`, and closes it immediately." % [doc_class_ref("String"),channel_name,class_name]);
+              m_meth_param_lsts[0].push("Object of class %s." % doc_class_ref("String"));
+              m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Blank"));
+
+              obj_code = get_code(a_class,"obj","create_output");
+
+              if (Blank != obj_code)
+              {
+                m_meth_ex_code = ("
+%s
+obj.write_close(\"Hello world!\\n\");
+\"Done\\n\".print();
+" % obj_code);
+              }
+            }/*}}}*/
+            case "flush#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+              if (Blank == (channel_name = get_property(class_name,"channel_name")))
+                new Exception("Property \"channel_name\" of class \"%s\" is not defined" % class_name).throw();
+
+              m_meth_descr_lst.push("Force write of all buffered data of output %s represented by object of class `%s`." % [channel_name,class_name]);
+              m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Blank"));
+
+              obj_code = get_code(a_class,"obj","create_output");
+
+              if (Blank != obj_code)
+              {
+                m_meth_ex_code = ("
+%s
+obj.write(\"Hello world!\\n\");
+obj.flush();
+\"Done\\n\".print();
+" % obj_code);
+              }
+            }/*}}}*/
+            case "read#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+              if (Blank == (channel_name = get_property(class_name,"channel_name")))
+                new Exception("Property \"channel_name\" of class \"%s\" is not defined" % class_name).throw();
+
+              m_meth_descr_lst.push("Read all data from %s represented by object of class `%s`, and return object of class %s containing read data." % [channel_name,class_name,doc_class_ref("String")]);
+              m_meth_return_lst.push("* Object of class %s if %s contains any bytes to read." % [doc_class_ref("String"),channel_name]);
+              m_meth_return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+
+              obj_code = get_code(a_class,"obj","create_example");
+
+              if (Blank != obj_code)
+              {
+                m_meth_ex_code = ("
+%s
+obj.read().print();
+obj.read().print();
+'\\n'.print();
+" % obj_code);
+              }
+            }/*}}}*/
+            case "readln#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+              if (Blank == (channel_name = get_property(class_name,"channel_name")))
+                new Exception("Property \"channel_name\" of class \"%s\" is not defined" % class_name).throw();
+
+              m_meth_descr_lst.push("Read one line from %s represented by object of class `%s`, and return object of class %s containing read line." % [channel_name,class_name,doc_class_ref("String")]);
+              m_meth_return_lst.push("* Object of class %s if %s contains any lines to read." % [doc_class_ref("String"),channel_name]);
+              m_meth_return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+
+              obj_code = get_code(a_class,"obj","create_example");
+
+              if (Blank != obj_code)
+              {
+                m_meth_ex_code = ("
+%s
+while (Blank != (line = obj.readln()))
+{
+  (\"line: %%s\\n\" %% line).print();
+}
+" % obj_code);
+              }
+            }/*}}}*/
+            case "read#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+              if (Blank == (channel_name = get_property(class_name,"channel_name")))
+                new Exception("Property \"channel_name\" of class \"%s\" is not defined" % class_name).throw();
+
+              m_meth_descr_lst.push("Read requested count of bytes from %s represented by object of class `%s`, and return object of class %s containing read bytes." % [channel_name,class_name,doc_class_ref("String")]);
+              m_meth_param_lsts[0].push("Object of class %s, %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
+              m_meth_return_lst.push("* Object of class %s." % doc_class_ref("String"));
+
+              obj_code = get_code(a_class,"obj","create_example");
+
+              if (Blank != obj_code)
+              {
+                m_meth_ex_code = ("
+%s
+obj.read(32).print();
+'\\n'.print();
+" % obj_code);
+              }
+            }/*}}}*/
+            case "read_close#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+              if (Blank == (channel_name = get_property(class_name,"channel_name")))
+                new Exception("Property \"channel_name\" of class \"%s\" is not defined" % class_name).throw();
+
+              m_meth_descr_lst.push("Read all data from %s represented by object of class `%s`, and return object of class %s containing read data. Input %s will be closed after reading." % [channel_name,class_name,doc_class_ref("String"),channel_name]);
+              m_meth_return_lst.push("* Object of class %s if %s contains any bytes to read." % [doc_class_ref("String"),channel_name]);
+              m_meth_return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+
+              obj_code = get_code(a_class,"obj","create_example");
+
+              if (Blank != obj_code)
+              {
+                m_meth_ex_code = ("
+%s
+obj.read_close().print();
+" % obj_code);
+              }
+            }/*}}}*/
+            case "get_fd#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+              if (Blank == (channel_name = get_property(class_name,"channel_name")))
+                new Exception("Property \"channel_name\" of class \"%s\" is not defined" % class_name).throw();
+
+              m_meth_descr_lst.push("Return integer file descriptor of %s represented by object of class `%s`." % [channel_name,class_name]);
+              m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Integer"));
+
+              obj_code = get_code(a_class,"obj","create_example");
+
+              if (Blank != obj_code)
+              {
+                m_meth_ex_code = ("
+%s
+(\"obj.get_fd(): %%d\\n\" %% obj.get_fd()).print();
+" % obj_code);
+              }
+            }/*}}}*/
+            case "next_item#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+              if (Blank == (channel_name = get_property(class_name,"channel_name")))
+                new Exception("Property \"channel_name\" of class \"%s\" is not defined" % class_name).throw();
+
+              m_meth_descr_lst.push("Read one line from %s represented by object of class `%s`, and return object of class %s containing read line." % [channel_name,class_name,doc_class_ref("String")]);
+              m_meth_return_lst.push("* Object of class %s if %s contains any lines to read." % [doc_class_ref("String"),channel_name]);
+              m_meth_return_lst.push("* Object of class %s otherwise." % doc_class_ref("Blank"));
+
+              obj_code = get_code(a_class,"obj","create_example");
+
+              if (Blank != obj_code)
+              {
+                m_meth_ex_code = ("
+%s
+for (line <- obj)
+{
+  (\"line: %%s\\n\" %% line).print();
+}
+" % obj_code);
               }
             }/*}}}*/
           }
