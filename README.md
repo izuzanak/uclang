@@ -4,14 +4,12 @@ Interpreted, dynamically typed, object-oriented programming language.
 
 ## Language features
 
-Follows list of uclang features, that are supported by its interpreter:
-
 * Language syntax is derived from C/C++ programming languages.
   * Some syntax is derived from Java programming language.
 * Strong object oriented approach.
   * Everything is an object. 
   * No global functions at all.
-  * Almost all actions are performed by execution of methods.
+  * Almost all actions are performed by execution of methods (sending messages).
 * Support for inheritance.
 * Support for exceptions.
 * Support for native threads, no GIL (Global Interpreter Lock).

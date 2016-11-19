@@ -32,11 +32,19 @@
 #./uclang scripts/docu_gen.ucl Signal ../uclang/doc/02_modules/04_module_sys/06_class_signal.md sys
 #./uclang scripts/docu_gen.ucl Poll ../uclang/doc/02_modules/04_module_sys/007_class_poll.md sys
 #./uclang scripts/docu_gen.ucl Timer ../uclang/doc/02_modules/04_module_sys/008_class_timer.md sys
-#./uclang scripts/docu_gen.ucl Cloc ../uclang/doc/02_modules/04_module_sys/009_class_cloc.md sys
+#./uclang scripts/docu_gen.ucl Clock ../uclang/doc/02_modules/04_module_sys/009_class_clock.md sys
 
 # Generate parser documentation
 ./uclang scripts/docu_gen.ucl FinalAutomata ../uclang/doc/02_modules/05_module_parser/01_class_final_automata.md parser
 ./uclang scripts/docu_gen.ucl FaSource ../uclang/doc/02_modules/05_module_parser/02_class_fa_source.md parser
 ./uclang scripts/docu_gen.ucl Parser ../uclang/doc/02_modules/05_module_parser/03_class_parser.md parser
 ./uclang scripts/docu_gen.ucl ParseState ../uclang/doc/02_modules/05_module_parser/04_class_parse_state.md parser
+
+# Generate pack documentation
+./uclang scripts/docu_gen.ucl Pack ../uclang/doc/02_modules/06_module_pack/01_class_pack.md containers:pack
+
+# Generate algorithms documentation
+./uclang scripts/docu_gen.ucl Algo ../uclang/doc/02_modules/07_module_algorithms/01_class_algo.md containers:algorithms
+./uclang scripts/docu_gen.ucl Filter ../uclang/doc/02_modules/07_module_algorithms/02_class_filter.md containers:algorithms
+./uclang scripts/docu_gen.ucl Range ../uclang/doc/02_modules/07_module_algorithms/03_class_range.md containers:algorithms
 

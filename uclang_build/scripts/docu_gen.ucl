@@ -2,9 +2,10 @@
 import sys;
 import lang;
 import containers;
-import ucf;
+import algorithms;
 import json;
 import parser;
+import pack;
 
 class VarClassDescr
 {
@@ -147,9 +148,7 @@ class Main
     if (m_arg_modules.length() > 0)
     {
       for (module <- m_arg_modules)
-        code.push("import %s;" % module);
-
-      code.push("\n");
+        code.push("import %s;\n" % module);
     }
 
     // - if extra code is requested for target class -
@@ -520,8 +519,50 @@ class Main
 ",
       "create_example","a_state"
     ]);/*}}}*/
+    CLASS_PROPERTIES["Pack"] = class_Pack = new Dict(
+    [/*{{{*/
+      "description","Class supporting packing of arbitrary data to its binary
+representation."
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Algo"] = class_Algo = new Dict(
+    [/*{{{*/
+      "description","Class containing various algorithms for processing of
+iterable types.",
+      "extra_code","
+class Main
+{
+  static public reduce_add(a_first,a_second)
+  {
+    return a_first + a_second;
+  }
 
-    if (m_target_name == "Char")
+  public Main(a_argv)
+  {
+%s
+  }
+
+  public static main(argv)
+  {
+    new Main(argv);
+  }
+}
+"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Filter"] = class_Filter = new Dict(
+    [/*{{{*/
+      "description","Class implementing lazy algorithms for processing of
+iterable types.",
+      "create_example","Filter.map([0,1,2],[\"Zero\",\"One\",\"Two\"])"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Range"] = class_Range = new Dict(
+    [/*{{{*/
+      "description","Class allowing creation of lazy object sequences.",
+      "create_example","new Range(1,10)"
+    ]);/*}}}*/
+
+    switch (m_target_name)
+    {
+    case "Char":
     {
       class_Char["methods"] = new Dict(
       [/*{{{*/
@@ -535,7 +576,7 @@ new Blank(),"
       ]);/*}}}*/
     }
 
-    if (m_target_name == "Integer")
+    case "Integer":
     {
       class_Integer["methods"] = new Dict(
       [/*{{{*/
@@ -567,7 +608,7 @@ new Blank(),"
       ]);/*}}}*/
     }
 
-    if (m_target_name == "Float")
+    case "Float":
     {
       class_Float["var_classes"] = new Dict(
       [/*{{{*/
@@ -623,7 +664,7 @@ determined by value of object of class `%s`." % m_target_name,
 "),
         "pow#1", new MethodDescr(
 "Compute power of value of object of class `%s` raised to the value given by method parameter." % m_target_name,
-["Object of type %s, %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]],
+["Object of class %s, %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]],
 "Object of class %s." % doc_class_ref(m_target_name),"
 %s
 (\"obj: %%f\\n\" %% obj).print();
@@ -651,7 +692,7 @@ determined by value of object of class `%s`." % m_target_name,
         "hypot#1", new MethodDescr(
 "Compute length of the hypotenuse of a right-angled triangle with sides
 determined by value of object of class `%s` and method parameter." % m_target_name,
-["Object of type %s, %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]],
+["Object of class %s, %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]],
 "Object of class %s." % doc_class_ref(m_target_name),"
 %s
 (\"obj: %%f\\n\" %% obj).print();
@@ -663,7 +704,7 @@ determined by value of object of class `%s` and method parameter." % m_target_na
      get_property("Integer","create_example"),
      get_property("Float","create_example")]),
         "classify#0", new MethodDescr(
-"Return `%s` identifying float number class." % doc_class_ref("Integer"),
+"Return %s identifying float number class." % doc_class_ref("Integer"),
 [],"Object of class %s." % doc_class_ref("Integer"),"
 (\"res: %%d\\n\" %% (Float.INFINITY / Float.INFINITY).classify()).print();
 (\"res: %%d\\n\" %% (Float.INFINITY).classify()).print();
@@ -680,7 +721,7 @@ determined by value of object of class `%s` and method parameter." % m_target_na
       ]);/*}}}*/
     }
 
-    if (m_target_name == "String")
+    case "String":
     {
       class_String["methods"] = new Dict(
       [/*{{{*/
@@ -750,7 +791,7 @@ obj *= 5;
      get_property("Float","create_example"),
      get_property("String","create_example")]),
         "create#1", new MethodDescr(
-"Create new object of class `%s` which size is given by method parameter." % m_target_name,
+"Creates new object of class `%s` which size is given by method parameter." % m_target_name,
 ["Type convertible to integer."],
 "* Object of class %s." % doc_class_ref("String"),"
 obj = String.create(%s);
@@ -763,7 +804,7 @@ obj = String.create(%s);
      get_property("Integer","create_example"),
      get_property("Float","create_example")]),
         "split#1", new MethodDescr(
-"Split object of class `%s` to object of class `%s` containing one or more objects of class `%s`." % [m_target_name,doc_class_ref("Array"),m_target_name],
+"Split object of class `%s` to object of class %s containing one or more objects of class `%s`." % [m_target_name,doc_class_ref("Array"),m_target_name],
 ["Object of class %s." % doc_class_ref("String")],
 "* Object of class %s containing one or more objects of class %s." % [doc_class_ref("Array"),doc_class_ref("String")],"
 %s
@@ -843,7 +884,7 @@ obj = [\"numbers:\",1,2,3,4,\"end\"];
       ]);/*}}}*/
     }
 
-    if (m_target_name == "Array")
+    case "Array":
     {
       class_Array["methods"] = new Dict(
       [/*{{{*/
@@ -864,7 +905,7 @@ obj <= [1,2,3];
 "Resize object of class `%s` to size given by method parameter. New
 elements are initialized to objects of class %s." % [m_target_name,doc_class_ref("Blank")],
 ["Object of class convertible to %s." % doc_class_ref("Integer")],
-"* Object of class `%s`." % doc_class_ref("Blank"),"
+"* Object of class %s." % doc_class_ref("Blank"),"
 %s
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 obj.resize(8);
@@ -873,7 +914,7 @@ obj.resize(8);
       ]);/*}}}*/
     }
 
-    if (m_target_name == "Exception")
+    case "Exception":
     {
       class_Exception["var_classes"] = new Dict(
       [/*{{{*/
@@ -1003,12 +1044,12 @@ catch (exc)
       ]);/*}}}*/
     }
 
-    if (m_target_name == "Type")
+    case "Type":
     {
       class_Type["methods"] = new Dict(
       [/*{{{*/
         "Type#1", new MethodDescr(
-"Create object of class `%s` identifying type of method parameter." % m_target_name,
+"Creates object of class `%s` identifying type of method parameter." % m_target_name,
 ["Any type."],
 new Blank(),"
 obj = new Type(\"Hello world\");
@@ -1017,7 +1058,7 @@ obj = new Type(\"Hello world\");
       ]);/*}}}*/
     }
 
-    if (m_target_name == "Mutex")
+    case "Mutex":
     {
       class_Mutex["var_classes"] = new Dict(
       [/*{{{*/
@@ -1063,7 +1104,7 @@ obj.lock();
       ]);/*}}}*/
     }
 
-    if (m_target_name == "Thread")
+    case "Thread":
     {
       class_Thread["var_classes"] = new Dict(
       [/*{{{*/
@@ -1113,7 +1154,7 @@ joining." % m_target_name,
       ]);/*}}}*/
     }
 
-    if (m_target_name == "Delegate")
+    case "Delegate":
     {
       class_Delegate["methods"] = new Dict(
       [/*{{{*/
@@ -1137,7 +1178,7 @@ res = obj.call([1,2]);
       ]);/*}}}*/
     }
 
-    if (m_target_name == "Set")
+    case "Set":
     {
       class_Set["methods"] = new Dict(
       [/*{{{*/
@@ -1270,7 +1311,7 @@ res = obj_0 - obj_1;
       ]);/*}}}*/
     }
 
-    if (m_target_name == "Dict")
+    case "Dict":
     {
       class_Dict["methods"] = new Dict(
       [/*{{{*/
@@ -1285,7 +1326,7 @@ of new object of class `%s`." % [m_target_name,m_target_name],
       ]);/*}}}*/
     }
 
-    if (m_target_name == "Sys")
+    case "Sys":
     {
       class_Sys["var_classes"] = new Dict(
       [/*{{{*/
@@ -1316,7 +1357,7 @@ Sys.remove(\"temporary\");
       ]);/*}}}*/
     }
 
-    if (m_target_name == "File")
+    case "File":
     {
       class_File["var_classes"] = new Dict(
       [/*{{{*/
@@ -1334,7 +1375,7 @@ Sys.remove(\"temporary\");
       ]);/*}}}*/
     }
 
-    if (m_target_name == "FinalAutomata")
+    case "FinalAutomata":
     {
       class_FinalAutomata["methods"] = new Dict(
       [/*{{{*/
@@ -1348,7 +1389,7 @@ expressions describing terminal symbols." %
 (\"obj: %%s\\n\" %% obj.to_string()).print();
 " % get_code(m_target_class,"obj","create_example")),
         "get_source#1", new MethodDescr(
-"Create object of class %s that can be used for retrieval of terminal symbol indexes." % doc_class_ref("FaSource"),
+"Creates object of class %s that can be used for retrieval of terminal symbol indexes." % doc_class_ref("FaSource"),
 ["Object of class %s representing source string in which terminals should be recognized." % doc_class_ref("String")],
 "* Object of class %s." % doc_class_ref("FaSource"),"
 fa = new FinalAutomata([\"('_'+l).('_'+l+d)*\",\"w.w*\"]);
@@ -1358,7 +1399,7 @@ obj = fa.get_source(\"Hello world\");
       ]);/*}}}*/
     }
 
-    if (m_target_name == "FaSource")
+    case "FaSource":
     {
       class_FaSource["methods"] = new Dict(
       [/*{{{*/
@@ -1414,12 +1455,12 @@ for (term <- obj)
       ]);/*}}}*/
     }
 
-    if (m_target_name == "Parser")
+    case "Parser":
     {
       class_Parser["methods"] = new Dict(
       [/*{{{*/
         "Parser#1", new MethodDescr(
-"Create object of class `%s` based on string containing description of language terminal
+"Creates object of class `%s` based on string containing description of language terminal
 symbols and its grammar rules." % m_target_name,
 ["Object of class %s containing description of language terminal symbols and
 its grammar rules." % doc_class_ref("String")],new Blank(),"
@@ -1440,7 +1481,7 @@ obj.parse(\"!!test\",new Delegate(this,\"parse_cb\",1));
       ]);/*}}}*/
     }
 
-    if (m_target_name == "ParseState")
+    case "ParseState":
     {
       class_ParseState["methods"] = new Dict(
       [/*{{{*/
@@ -1474,6 +1515,201 @@ processed by parser.",
 (\"a_state.input_idx(): %d\\n\" % a_state.input_idx()).print();
 ")
       ]);/*}}}*/
+    }
+
+    case "Pack":
+    {
+      class_Pack["methods"] = new Dict(
+      [/*{{{*/
+        "pack#1", new MethodDescr(
+"Convert object of any type to its binary representation.",
+["Any type."],
+"* Object of class %s." % doc_class_ref("String"),"
+data = Pack.pack(%s);
+(\"data.length(): %%d\\n\" %% data.length()).print();
+" % get_property("Dict","create_example")),
+        "unpack#1", new MethodDescr(
+"Creates object from its binary representation.",
+["Object of class %s." % doc_class_ref("String")],
+"* Object of class determined by its binary representation.","
+data = Pack.pack(%s);
+result = Pack.unpack(data);
+(\"result: %%s\\n\" %% result.to_string()).print();
+" % get_property("Dict","create_example")),
+        "code#2", new MethodDescr(
+"Convert list of objects to their binary representation. Binary format of
+encoded objects is determined by first method parameter. Parser
+of binary format string is described in file
+[`pack_code.rules`](https://github.com/izuzanak/uclang/blob/master/uclang/parsers/pack_code/pack_code.rules).",
+["Object of class %s." % doc_class_ref("String"),
+ "Single object or array of objects to be converted to their binary
+representation."],
+"* Object of class %s." % doc_class_ref("String"),"
+data = Pack.code(\"bhif\",[127,32767,2147483647,1.0]);
+(\"data.length(): %d\\n\" % data.length()).print();
+"),
+        "decode#2", new MethodDescr(
+"Convert binary string to array of objects. Binary format of encoded objects
+is determined by first method parameter. Parser of binary format string is
+described in file
+[`pack_code.rules`](https://github.com/izuzanak/uclang/blob/master/uclang/parsers/pack_code/pack_code.rules).",
+["Object of class %s." % doc_class_ref("String"),
+ "Object of class %s." % doc_class_ref("String")],
+"* Object of class %s containing retrieved objects. Last element of
+array contains unused part of input binary string." % doc_class_ref("Array"),"
+format = \"bhif\";
+data = Pack.code(format,[127,32767,2147483647,1.0]);
+result = Pack.decode(format,data);
+(\"result: %s\\n\" % result.to_string()).print();
+")
+      ]);/*}}}*/
+    }
+    case "Algo":
+    {
+      class_Algo["methods"] = new Dict(
+      [/*{{{*/
+        "all_true#1", new MethodDescr(
+"Test if all elements in iterable object are true.",
+["Iterable type."],
+"Object of class %s.
+  * `0` - at least one element in iterable object is false.
+  * `1` - all elements in iterable object are true." % doc_class_ref("Integer"),"
+obj = [0,1,2,3,4,5];
+(\"result: %d\\n\" % Algo.all_true(obj)).print();
+obj = [1,2,3,4,5,6];
+(\"result: %d\\n\" % Algo.all_true(obj)).print();
+"),
+        "any_true#1", new MethodDescr(
+"Test if any element in iterable object is true.",
+["Iterable type."],
+"Object of class %s.
+  * `0` - all elements in iterable object are false.
+  * `1` - at least one element in iterable object is true." % doc_class_ref("Integer"),"
+obj = [0,0,0,0,0,0];
+(\"result: %d\\n\" % Algo.any_true(obj)).print();
+obj = [0,0,0,0,1,0];
+(\"result: %d\\n\" % Algo.any_true(obj)).print();
+"),
+        "map#2", new MethodDescr(
+"Creates object of type %s containing elements from input iterable object
+transformed by given map function." % doc_class_ref("Array"),
+["Iterable type.","Map function represented by object of class %s, %s or %s." % 
+[doc_class_ref("Array"),doc_class_ref("Dict"),doc_class_ref("Delegate")]],
+"Object of class %s containing elements from input iterable object
+transformed by given map function." % doc_class_ref("Array"),"
+result = Algo.map([0,1,2,1,0,2],[\"Zero\",\"One\",\"Two\"]);
+(\"result: %s\\n\" % result.to_string()).print();
+result = Algo.map([0,1,1000,1,0,1000],new Dict([0,\"Zero\",1,\"One\",1000,\"One thousand\"]));
+(\"result: %s\\n\" % result.to_string()).print();
+"),
+        "reduce#3", new MethodDescr(
+"Reduces all elements of iterable type object to one value.",
+["Initial value.",
+ "Iterable type.",
+ "Object of class %s performing reduction step." % doc_class_ref("Delegate")],
+"Object representing result of reduction.","
+dlg = new Delegate(this,\"reduce_add\",2);
+result = Algo.reduce(0,[1,2,3,4,5],dlg);
+(\"result: %d\\n\" % result).print();
+result = Algo.reduce(\"\",[\"a\",\"b\",\"c\",\"d\",\"e\"],dlg);
+(\"result: %s\\n\" % result).print();
+"),
+        "filter#2", new MethodDescr(
+"Creates object of type %s containing elements from input iterable object
+for which filter function returns true." % doc_class_ref("Array"),
+["Iterable type.","Filter function represented by object of class %s, %s or %s." % 
+[doc_class_ref("Array"),doc_class_ref("Dict"),doc_class_ref("Delegate")]],
+"Object of class %s containing elements from input iterable object for which
+filter function returns true." % doc_class_ref("Array"),"
+result = Algo.filter([0,1,2,1,0,2],[0,0,1]);
+(\"result: %s\\n\" % result.to_string()).print();
+result = Algo.filter([0,1,1000,1,0,1000],new Dict([0,1,1,1,1000,0]));
+(\"result: %s\\n\" % result.to_string()).print();
+"),
+        "zip#1", new MethodDescr(
+"Creates object of type %s containing interleaved elements from input iterable objects." % doc_class_ref("Array"),
+["Object of class %s containing iterable objects." % doc_class_ref("Array")],
+"Object of class %s containing interleaved elements from input iterable objects." % doc_class_ref("Array"),"
+result = Algo.zip([\"Hello\",new Range(1,10)]);
+(\"result: %s\\n\" % result.to_string()).print();
+")
+      ]);/*}}}*/
+    }
+    case "Filter":
+    {
+      class_Filter["methods"] = new Dict(
+      [/*{{{*/
+        "map#2", new MethodDescr(
+"Creates object of type `%s` representing iterable containing elements
+from input iterable object transformed by given map function." % m_target_name,
+["Iterable type.","Map function represented by object of class %s, %s or %s." % 
+[doc_class_ref("Array"),doc_class_ref("Dict"),doc_class_ref("Delegate")]],
+"Object of class `%s` representing iterable containing elements from input
+iterable object transformed by given map function." % m_target_name,"
+result = Filter.map([0,1,2,1,0,2],[\"Zero\",\"One\",\"Two\"]);
+(\"result: %s\\n\" % result[::].to_string()).print();
+result = Filter.map([0,1,1000,1,0,1000],new Dict([0,\"Zero\",1,\"One\",1000,\"One thousand\"]));
+(\"result: %s\\n\" % result[::].to_string()).print();
+"),
+        "filter#2", new MethodDescr(
+"Creates object of type `%s` representing iterable containing elements from
+input iterable object for which filter function returns true." % m_target_name,
+["Iterable type.","Filter function represented by object of class %s, %s or %s." % 
+[doc_class_ref("Array"),doc_class_ref("Dict"),doc_class_ref("Delegate")]],
+"Object of class `%s` representing iterable containing elements from
+input iterable object for which filter function returns true." % m_target_name,"
+result = Filter.filter([0,1,2,1,0,2],[0,0,1]);
+(\"result: %s\\n\" % result[::].to_string()).print();
+result = Filter.filter([0,1,1000,1,0,1000],new Dict([0,1,1,1,1000,0]));
+(\"result: %s\\n\" % result[::].to_string()).print();
+"),
+        "next_item#0", new MethodDescr(
+"Retrieve next element from iterable object `%s`." % m_target_name,
+[],"Next element from iterable object `%s`." % m_target_name,"
+%s
+while (Blank != (element = obj.next_item()))
+{
+  (\"element: %%s\\n\" %% element).print();
+}
+" % get_code(m_target_name,"obj","create_example"))
+      ]);/*}}}*/
+    }
+    case "Range":
+    {
+      class_Range["methods"] = new Dict(
+      [/*{{{*/
+        "Range#2", new MethodDescr(
+"Creates object of class `%s`, based on first and last values of requested
+sequence." % m_target_name,
+["First value in generated sequence.",
+ "Last value in generated sequence."],
+"","
+%s
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% obj[::].to_string()).print();
+" % get_code(m_target_name,"obj","create_example")),
+        "Range#3", new MethodDescr(
+"Creates object of class `%s`, based on first, last and step value
+of requested sequence." % m_target_name,
+["First value in generated sequence.",
+ "Last value in generated sequence.",
+ "Step value of generated sequence."],
+"","
+obj = new Range(0,-19,-2);
+(\"obj: %s\\n\" % obj.to_string()).print();
+(\"obj: %s\\n\" % obj[::].to_string()).print();
+"),
+        "next_item#0", new MethodDescr(
+"Retrieve next element from iterable object `%s`." % m_target_name,
+[],"Next element from iterable object `%s`." % m_target_name,"
+obj = new Range(0,20,4);
+while (Blank != (element = obj.next_item()))
+{
+  (\"element: %d\\n\" % element).print();
+}
+")
+      ]);/*}}}*/
+    }
     }
 
   }/*}}}*/
