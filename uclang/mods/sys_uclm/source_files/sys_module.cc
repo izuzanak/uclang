@@ -2276,7 +2276,7 @@ built_in_class_s file_class =
 {/*{{{*/
   "File",
   c_modifier_public | c_modifier_final,
-  17, file_methods,
+  16, file_methods,
   3 + 3, file_variables,
   bic_file_consts,
   bic_file_init,
@@ -2300,11 +2300,6 @@ built_in_method_s file_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_file_operator_binary_equal
-  },
-  {
-    "File#0",
-    c_modifier_public | c_modifier_final,
-    bic_file_method_File_0
   },
   {
     "File#2",
@@ -2478,11 +2473,6 @@ bool bic_file_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
 
-  return true;
-}/*}}}*/
-
-bool bic_file_method_File_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
   return true;
 }/*}}}*/
 
@@ -2854,7 +2844,7 @@ built_in_class_s socket_class =
 {/*{{{*/
   "Socket",
   c_modifier_public | c_modifier_final,
-  19, socket_methods,
+  18, socket_methods,
   8, socket_variables,
   bic_socket_consts,
   bic_socket_init,
@@ -2878,11 +2868,6 @@ built_in_method_s socket_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_socket_operator_binary_equal
-  },
-  {
-    "Socket#0",
-    c_modifier_public | c_modifier_final,
-    bic_socket_method_Socket_0
   },
   {
     "Socket#2",
@@ -3063,11 +3048,6 @@ bool bic_socket_operator_binary_equal(interpreter_thread_s &it,unsigned stack_ba
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
 
-  return true;
-}/*}}}*/
-
-bool bic_socket_method_Socket_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
   return true;
 }/*}}}*/
 
@@ -4402,7 +4382,7 @@ built_in_class_s regex_class =
 {/*{{{*/
   "Regex",
   c_modifier_public | c_modifier_final,
-  9, regex_methods,
+  8, regex_methods,
   0, regex_variables,
   bic_regex_consts,
   bic_regex_init,
@@ -4426,11 +4406,6 @@ built_in_method_s regex_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_regex_operator_binary_equal
-  },
-  {
-    "Regex#0",
-    c_modifier_public | c_modifier_final,
-    bic_regex_method_Regex_0
   },
   {
     "Regex#1",
@@ -4508,11 +4483,6 @@ bool bic_regex_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
 
-  return true;
-}/*}}}*/
-
-bool bic_regex_method_Regex_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
   return true;
 }/*}}}*/
 

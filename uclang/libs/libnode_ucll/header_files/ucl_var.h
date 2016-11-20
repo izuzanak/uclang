@@ -298,14 +298,12 @@ class UclVar
   static unsigned c_bi_mni_read_close_0;
   static unsigned c_bi_mni_get_fd_0;
   static unsigned c_bi_mni_next_item_0;
-  static unsigned c_bi_mni_File_0;
   static unsigned c_bi_mni_File_2;
   static unsigned c_bi_mni_seek_2;
   static unsigned c_bi_mni_tell_0;
   static unsigned c_bi_mni_SocketAddr_2;
   static unsigned c_bi_mni_name_0;
   static unsigned c_bi_mni_port_0;
-  static unsigned c_bi_mni_Socket_0;
   static unsigned c_bi_mni_Socket_2;
   static unsigned c_bi_mni_listen_2;
   static unsigned c_bi_mni_accept_0;
@@ -316,7 +314,6 @@ class UclVar
   static unsigned c_bi_mni_recvfrom_0;
   static unsigned c_bi_mni_set_timeout_2;
   static unsigned c_bi_mni_read_nonblock_0;
-  static unsigned c_bi_mni_Regex_0;
   static unsigned c_bi_mni_Regex_1;
   static unsigned c_bi_mni_match_1;
   static unsigned c_bi_mni_match_2;
@@ -1605,11 +1602,6 @@ class UclVar
 
   };/*}}}*/
 
-  inline static UclVar File()
-  {/*{{{*/
-    return __new_object_0(c_bi_class_File,c_bi_mni_File_0);
-  }/*}}}*/
-
   inline static UclVar File(UclVar op_0,UclVar op_1)
   {/*{{{*/
     return __new_object_2(c_bi_class_File,c_bi_mni_File_2,op_0,op_1);
@@ -1673,11 +1665,6 @@ class UclVar
 
   };/*}}}*/
 
-  inline static UclVar Socket()
-  {/*{{{*/
-    return __new_object_0(c_bi_class_Socket,c_bi_mni_Socket_0);
-  }/*}}}*/
-
   inline static UclVar Socket(UclVar op_0,UclVar op_1)
   {/*{{{*/
     return __new_object_2(c_bi_class_Socket,c_bi_mni_Socket_2,op_0,op_1);
@@ -1705,11 +1692,6 @@ class UclVar
     }/*}}}*/
 
   };/*}}}*/
-
-  inline static UclVar Regex()
-  {/*{{{*/
-    return __new_object_0(c_bi_class_Regex,c_bi_mni_Regex_0);
-  }/*}}}*/
 
   inline static UclVar Regex(UclVar op_0)
   {/*{{{*/

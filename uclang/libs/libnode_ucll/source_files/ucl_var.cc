@@ -236,14 +236,12 @@ unsigned UclVar::c_bi_mni_read_1;
 unsigned UclVar::c_bi_mni_read_close_0;
 unsigned UclVar::c_bi_mni_get_fd_0;
 unsigned UclVar::c_bi_mni_next_item_0;
-unsigned UclVar::c_bi_mni_File_0;
 unsigned UclVar::c_bi_mni_File_2;
 unsigned UclVar::c_bi_mni_seek_2;
 unsigned UclVar::c_bi_mni_tell_0;
 unsigned UclVar::c_bi_mni_SocketAddr_2;
 unsigned UclVar::c_bi_mni_name_0;
 unsigned UclVar::c_bi_mni_port_0;
-unsigned UclVar::c_bi_mni_Socket_0;
 unsigned UclVar::c_bi_mni_Socket_2;
 unsigned UclVar::c_bi_mni_listen_2;
 unsigned UclVar::c_bi_mni_accept_0;
@@ -254,7 +252,6 @@ unsigned UclVar::c_bi_mni_sendto_2;
 unsigned UclVar::c_bi_mni_recvfrom_0;
 unsigned UclVar::c_bi_mni_set_timeout_2;
 unsigned UclVar::c_bi_mni_read_nonblock_0;
-unsigned UclVar::c_bi_mni_Regex_0;
 unsigned UclVar::c_bi_mni_Regex_1;
 unsigned UclVar::c_bi_mni_match_1;
 unsigned UclVar::c_bi_mni_match_2;
@@ -1832,7 +1829,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_next_item_0,"next_item#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_File_0,"File#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_File_2,"File#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_seek_2,"seek#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_tell_0,"tell#0");
@@ -1854,7 +1850,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_port_0,"port#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Socket_0,"Socket#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Socket_2,"Socket#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_listen_2,"listen#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_accept_0,"accept#0");
@@ -1874,7 +1869,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
 #endif
 #ifdef ENABLE_CLASS_REGEX
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Regex_0,"Regex#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Regex_1,"Regex#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_match_1,"match#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_match_2,"match#2");

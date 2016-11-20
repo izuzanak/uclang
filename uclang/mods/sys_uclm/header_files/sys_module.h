@@ -197,7 +197,6 @@ void bic_file_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_file_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_file_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_file_method_File_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_file_method_File_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_file_method_seek_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_file_method_tell_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -234,7 +233,6 @@ void bic_socket_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_socket_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_socket_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_socket_method_Socket_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_socket_method_Socket_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_socket_method_listen_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_socket_method_accept_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -282,7 +280,6 @@ void bic_regex_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_regex_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_regex_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_regex_method_Regex_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_regex_method_Regex_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_regex_method_match_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_regex_method_match_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
