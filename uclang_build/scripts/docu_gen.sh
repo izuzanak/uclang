@@ -25,8 +25,8 @@
 
 # Generate sys documentation
 #./uclang scripts/docu_gen.ucl Sys ../uclang/doc/02_modules/04_module_sys/01_class_sys.md sys:time
-#./uclang scripts/docu_gen.ucl Pipe ../uclang/doc/02_modules/04_module_sys/02_class_pipe.md sys
-#./uclang scripts/docu_gen.ucl File ../uclang/doc/02_modules/04_module_sys/03_class_file.md sys
+./uclang scripts/docu_gen.ucl Pipe ../uclang/doc/02_modules/04_module_sys/02_class_pipe.md sys
+./uclang scripts/docu_gen.ucl File ../uclang/doc/02_modules/04_module_sys/03_class_file.md sys
 #./uclang scripts/docu_gen.ucl Socket ../uclang/doc/02_modules/04_module_sys/04_class_socket.md sys
 #./uclang scripts/docu_gen.ucl Regex ../uclang/doc/02_modules/04_module_sys/05_class_regex.md sys
 #./uclang scripts/docu_gen.ucl Signal ../uclang/doc/02_modules/04_module_sys/06_class_signal.md sys

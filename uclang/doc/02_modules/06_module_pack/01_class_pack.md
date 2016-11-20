@@ -81,8 +81,7 @@ of binary format string is described in file
 **Parameters:**
 
 1. Object of class `String`.
-2. Single object or array of objects to be converted to their binary
-representation.
+2. Single object or array of objects to be converted to their binary representation.
 
 **Return:**
 
