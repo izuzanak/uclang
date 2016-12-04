@@ -9080,6 +9080,13 @@ void script_parser_s::process_errors()
 
         ei_ptr += 3;
         break;
+      case ei_empty_try_block_for_catch:
+        fprintf(stderr,"%u. PARSE_ERROR: in file: \"%s\" on line: %u\n",error_idx,source.file_name.data,source.source_string.get_character_line(source_pos));
+        print_error_show_line(source.source_string,source_pos);
+        fprintf(stderr,"Empty try block for catch statement\n");
+
+        ei_ptr += 2;
+        break;
       case ei_module_duplicate_class_element_name:
         fprintf(stderr,"%u. ERROR: in file: \"%s\" on line: %u\n",error_idx,source.file_name.data,source.source_string.get_character_line(source_pos));
         print_error_show_line(source.source_string,source_pos);

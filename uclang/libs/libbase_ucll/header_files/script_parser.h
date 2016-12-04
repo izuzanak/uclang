@@ -352,6 +352,8 @@ enum
   ei_break_continue_as_single_loop_action,
   ei_break_continue_from_switch_case,
 
+  ei_empty_try_block_for_catch,
+
   // - process_moules errors -
   ei_module_duplicate_class_element_name,
   ei_module_duplicate_class_method_name,

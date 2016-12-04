@@ -1621,8 +1621,15 @@ bool pa_catch_begin(string_s &source_string,script_parser_s &_this)
   {
     // - FGTS_BLANK -
     case c_fgts_type_blank:
-      cassert(0);
-      break;
+    {
+      // - PARSE ERROR -
+      lalr_stack_element_s &lse = _this.lalr_stack[_this.lalr_stack.used - 4];
+
+      _this.error_code.push(ei_empty_try_block_for_catch);
+      _this.error_code.push(SET_SRC_POS(_this.source_idx,lse.terminal_start));
+
+      return false;
+    }
 
     // - FGTS_THREAD -
     case c_fgts_type_thread:
