@@ -348,7 +348,9 @@ enum
   ei_non_abstract_method_without_body,
   ei_abstract_method_with_body,
 
-  ei_break_continue_out_of_loop_or_switch,
+  ei_break_continue_without_enclosing_loop,
+  ei_break_continue_as_single_loop_action,
+  ei_break_continue_from_switch_case,
 
   // - process_moules errors -
   ei_module_duplicate_class_element_name,

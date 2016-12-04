@@ -9059,10 +9059,24 @@ void script_parser_s::process_errors()
         ei_ptr += 4;
       }
       break;
-      case ei_break_continue_out_of_loop_or_switch:
+      case ei_break_continue_without_enclosing_loop:
         fprintf(stderr,"%u. PARSE_ERROR: in file: \"%s\" on line: %u\n",error_idx,source.file_name.data,source.source_string.get_character_line(source_pos));
         print_error_show_line(source.source_string,source_pos);
-        fprintf(stderr,"Keyword %s out of loop or switch\n",ei_ptr[3]?"continue":"break");
+        fprintf(stderr,"Keyword %s is not included in any loop\n",ei_ptr[2]?"continue":"break");
+
+        ei_ptr += 3;
+        break;
+      case ei_break_continue_as_single_loop_action:
+        fprintf(stderr,"%u. PARSE_ERROR: in file: \"%s\" on line: %u\n",error_idx,source.file_name.data,source.source_string.get_character_line(source_pos));
+        print_error_show_line(source.source_string,source_pos);
+        fprintf(stderr,"Keyword %s used as single action in loop\n",ei_ptr[2]?"continue":"break");
+
+        ei_ptr += 3;
+        break;
+      case ei_break_continue_from_switch_case:
+        fprintf(stderr,"%u. PARSE_ERROR: in file: \"%s\" on line: %u\n",error_idx,source.file_name.data,source.source_string.get_character_line(source_pos));
+        print_error_show_line(source.source_string,source_pos);
+        fprintf(stderr,"Keyword %s exits from switch case\n",ei_ptr[2]?"continue":"break");
 
         ei_ptr += 3;
         break;

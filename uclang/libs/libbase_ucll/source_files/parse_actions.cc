@@ -1906,9 +1906,16 @@ bool pa_while_statement(string_s &source_string,script_parser_s &_this)
     unsigned body_end_cnt = fgd.fgts_cnt.pop();
     unsigned *ts_ptr = fgd.fg_thread_stack.data + fgd.fg_thread_stack.used - (4 + body_end_cnt);
 
+    // - PARSE ERROR -
     if (ts_ptr[3] >= c_fgts_bc_value_base)
     {
-      cassert(0);
+      lalr_stack_element_s &lse = _this.lalr_stack[_this.lalr_stack.used - 3];
+
+      _this.error_code.push(ei_break_continue_as_single_loop_action);
+      _this.error_code.push(SET_SRC_POS(_this.source_idx,lse.terminal_start));
+      _this.error_code.push(ts_ptr[3] == c_fgts_value_continue);
+
+      return false;
     }
     else
     {
@@ -2030,9 +2037,16 @@ bool pa_do_while_statement(string_s &source_string,script_parser_s &_this)
     unsigned body_end_cnt = fgd.fgts_cnt[fgd.fgts_cnt.used - 2];
     unsigned *ts_ptr = fgd.fg_thread_stack.data + fgd.fg_thread_stack.used - (4 + body_end_cnt);
 
+    // - PARSE ERROR -
     if (*ts_ptr >= c_fgts_bc_value_base)
     {
-      cassert(0);
+      lalr_stack_element_s &lse = _this.lalr_stack[_this.lalr_stack.used - 5];
+
+      _this.error_code.push(ei_break_continue_as_single_loop_action);
+      _this.error_code.push(SET_SRC_POS(_this.source_idx,lse.terminal_start));
+      _this.error_code.push(*ts_ptr == c_fgts_value_continue);
+
+      return false;
     }
     else
     {
@@ -2152,9 +2166,16 @@ bool pa_for_statement(string_s &source_string,script_parser_s &_this)
     unsigned body_end_cnt = fgd.fgts_cnt.pop();
     unsigned *ts_ptr = fgd.fg_thread_stack.data + fgd.fg_thread_stack.used - (4 + body_end_cnt);
 
+    // - PARSE ERROR -
     if (ts_ptr[3] >= c_fgts_bc_value_base)
     {
-      cassert(0);
+      lalr_stack_element_s &lse = _this.lalr_stack[_this.lalr_stack.used - 5];
+
+      _this.error_code.push(ei_break_continue_as_single_loop_action);
+      _this.error_code.push(SET_SRC_POS(_this.source_idx,lse.terminal_start));
+      _this.error_code.push(ts_ptr[3] == c_fgts_value_continue);
+
+      return false;
     }
 
     // - store body start index -
@@ -2442,10 +2463,16 @@ bool pa_switch_statement(string_s &source_string,script_parser_s &_this)
   // - retrieve break and continue command positions -
   ui_arrays_s &fgts_bc_ends = fgd.fgts_bc_ends_array.pop();
 
-  // - check break and continue command positions -
+  // - PARSE ERROR -
   if (fgts_bc_ends[0].used > 0 || fgts_bc_ends[1].used > 0)
   {
-    cassert(0);
+    lalr_stack_element_s &lse = _this.lalr_stack[_this.lalr_stack.used - 6];
+
+    _this.error_code.push(ei_break_continue_from_switch_case);
+    _this.error_code.push(SET_SRC_POS(_this.source_idx,lse.terminal_start));
+    _this.error_code.push(fgts_bc_ends[1].used > 0);
+
+    return false;
   }
 
   debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_switch_statement\n"));
@@ -2520,13 +2547,20 @@ bool pa_switch_item(string_s &source_string,script_parser_s &_this)
     unsigned body_end_cnt = fgd.fgts_cnt.pop();
     unsigned *ts_ptr = fgd.fg_thread_stack.data + fgd.fg_thread_stack.used - (1 + body_end_cnt);
 
-    if (ts_ptr[0] >= c_fgts_bc_value_base)
+    // - PARSE ERROR -
+    if (*ts_ptr >= c_fgts_bc_value_base)
     {
-      cassert(0);
+      lalr_stack_element_s &lse = _this.lalr_stack[_this.lalr_stack.used - 2];
+
+      _this.error_code.push(ei_break_continue_from_switch_case);
+      _this.error_code.push(SET_SRC_POS(_this.source_idx,lse.terminal_start));
+      _this.error_code.push(*ts_ptr == c_fgts_value_continue);
+
+      return false;
     }
 
     // - push code index to switch description -
-    sd.push(ts_ptr[0]);
+    sd.push(*ts_ptr);
 
     // - set ends of body as not continuing -
     if (body_end_cnt != 0)
@@ -2590,7 +2624,7 @@ bool pa_break(string_s &source_string,script_parser_s &_this)
   {
     lalr_stack_element_s &lse = _this.lalr_stack[_this.lalr_stack.used - 2];
 
-    _this.error_code.push(ei_break_continue_out_of_loop_or_switch);
+    _this.error_code.push(ei_break_continue_without_enclosing_loop);
     _this.error_code.push(SET_SRC_POS(_this.source_idx,lse.terminal_start));
     _this.error_code.push(0);
 
@@ -2618,7 +2652,7 @@ bool pa_continue(string_s &source_string,script_parser_s &_this)
   {
     lalr_stack_element_s &lse = _this.lalr_stack[_this.lalr_stack.used - 2];
 
-    _this.error_code.push(ei_break_continue_out_of_loop_or_switch);
+    _this.error_code.push(ei_break_continue_without_enclosing_loop);
     _this.error_code.push(SET_SRC_POS(_this.source_idx,lse.terminal_start));
     _this.error_code.push(1);
 
