@@ -91,7 +91,7 @@ built_in_class_s can_obj_dict_class =
 {/*{{{*/
   "CanObjDict",
   c_modifier_public | c_modifier_final,
-  6, can_obj_dict_methods,
+  8, can_obj_dict_methods,
   0, can_obj_dict_variables,
   bic_can_obj_dict_consts,
   bic_can_obj_dict_init,
@@ -117,6 +117,11 @@ built_in_method_s can_obj_dict_methods[] =
     bic_can_obj_dict_operator_binary_equal
   },
   {
+    "operator_binary_le_br_re_br#1",
+    c_modifier_public | c_modifier_final,
+    bic_can_obj_dict_operator_binary_le_br_re_br
+  },
+  {
     "CanObjDict#1",
     c_modifier_public | c_modifier_final,
     bic_can_obj_dict_method_CanObjDict_1
@@ -125,6 +130,11 @@ built_in_method_s can_obj_dict_methods[] =
     "CanObjDict#4",
     c_modifier_public | c_modifier_final,
     bic_can_obj_dict_method_CanObjDict_4
+  },
+  {
+    "FindObj#1",
+    c_modifier_public | c_modifier_final,
+    bic_can_obj_dict_method_FindObj_1
   },
   {
     "FindObj#2",
@@ -146,6 +156,34 @@ built_in_method_s can_obj_dict_methods[] =
 built_in_variable_s can_obj_dict_variables[] =
 {/*{{{*/
 };/*}}}*/
+
+#define BIC_CAN_OBJ_DICT_METHOD_FINDOBJ() \
+{/*{{{*/\
+\
+  /* - create new can object - */\
+  can_object_s *co_ptr = (can_object_s *)cmalloc(sizeof(can_object_s));\
+\
+  /* - find object in dictionary - */\
+  U32 result = cod_ptr->dict_ptr->FindObj(mux,co_ptr->handle);\
+\
+  /* - ERROR - */\
+  if (result != SDO_ABORT_OK)\
+  {\
+    cfree(co_ptr);\
+\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_CAN_OBJECT_DICT_INDEX_NOT_PRESENT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(mux.idx);\
+    new_exception->params.push(mux.sidx);\
+\
+    return false;\
+  }\
+\
+  dst_location->v_reference_cnt.atomic_inc();\
+  co_ptr->dict_loc = dst_location;\
+\
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_can_object,co_ptr);\
+  BIC_SET_RESULT(new_location);\
+}/*}}}*/
 
 void bic_can_obj_dict_consts(location_array_s &const_locations)
 {/*{{{*/
@@ -177,6 +215,33 @@ bool bic_can_obj_dict_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_can_obj_dict_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int index;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,index))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_le_br_re_br#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  can_obj_dict_s *cod_ptr = (can_obj_dict_s *)dst_location->v_data_ptr;
+  ObjDict::Mux mux((U32)index);
+
+  BIC_CAN_OBJ_DICT_METHOD_FINDOBJ();
 
   return true;
 }/*}}}*/
@@ -286,6 +351,33 @@ bool bic_can_obj_dict_method_CanObjDict_4(interpreter_thread_s &it,unsigned stac
   return true;
 }/*}}}*/
 
+bool bic_can_obj_dict_method_FindObj_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int index;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,index))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("FindObj#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  can_obj_dict_s *cod_ptr = (can_obj_dict_s *)dst_location->v_data_ptr;
+  ObjDict::Mux mux((U32)index);
+
+  BIC_CAN_OBJ_DICT_METHOD_FINDOBJ();
+
+  return true;
+}/*}}}*/
+
 bool bic_can_obj_dict_method_FindObj_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
@@ -310,31 +402,9 @@ bool bic_can_obj_dict_method_FindObj_2(interpreter_thread_s &it,unsigned stack_b
   }
 
   can_obj_dict_s *cod_ptr = (can_obj_dict_s *)dst_location->v_data_ptr;
-  ObjDictBase::Mux mux(index,sub_index);
+  ObjDict::Mux mux(index,sub_index);
 
-  // - create new can object -
-  can_object_s *co_ptr = (can_object_s *)cmalloc(sizeof(can_object_s));
-
-  // - find object in dictionary -
-  U32 result = cod_ptr->dict_ptr->FindObj(mux,co_ptr->handle);
-
-  // - ERROR -
-  if (result != SDO_ABORT_OK)
-  {
-    cfree(co_ptr);
-
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_CAN_OBJECT_DICT_INDEX_NOT_PRESENT,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    new_exception->params.push(mux.idx);
-    new_exception->params.push(mux.sidx);
-
-    return false;
-  }
-
-  dst_location->v_reference_cnt.atomic_inc();
-  co_ptr->dict_loc = dst_location;
-
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_can_object,co_ptr);
-  BIC_SET_RESULT(new_location);
+  BIC_CAN_OBJ_DICT_METHOD_FINDOBJ();
 
   return true;
 }/*}}}*/
@@ -364,8 +434,8 @@ built_in_class_s can_object_class =
 {/*{{{*/
   "CanObject",
   c_modifier_public | c_modifier_final,
-  3, can_object_methods,
-  0, can_object_variables,
+  7, can_object_methods,
+  6 + 12, can_object_variables,
   bic_can_object_consts,
   bic_can_object_init,
   bic_can_object_clear,
@@ -390,6 +460,26 @@ built_in_method_s can_object_methods[] =
     bic_can_object_operator_binary_equal
   },
   {
+    "size#0",
+    c_modifier_public | c_modifier_final,
+    bic_can_object_method_size_0
+  },
+  {
+    "flags#0",
+    c_modifier_public | c_modifier_final,
+    bic_can_object_method_flags_0
+  },
+  {
+    "buffer#0",
+    c_modifier_public | c_modifier_final,
+    bic_can_object_method_buffer_0
+  },
+  {
+    "get_type#0",
+    c_modifier_public | c_modifier_final,
+    bic_can_object_method_get_type_0
+  },
+  {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_can_object_method_to_string_0
@@ -403,10 +493,77 @@ built_in_method_s can_object_methods[] =
 
 built_in_variable_s can_object_variables[] =
 {/*{{{*/
+
+  // - can object flag constants -
+  { "FLAG_RO", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FLAG_WO", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FLAG_RW", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FLAG_CO", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FLAG_MAP", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FLAG_LEN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - can object type constants -
+  { "TYPE_BOOL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_I8", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_I16", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_I32", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_U8", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_U16", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_U32", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_VISIBLE_STRING", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_OCTET_STRING", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_TIME_OF_DAY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_DOMAIN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_U64", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_can_object_consts(location_array_s &const_locations)
 {/*{{{*/
+
+  // - can object flag constants -
+  {
+    const_locations.push_blanks(6);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 6);
+
+#define CREATE_CAN_OBJECT_FLAG_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_CAN_OBJECT_FLAG_BIC_STATIC(ObjAttr::RO);
+    CREATE_CAN_OBJECT_FLAG_BIC_STATIC(ObjAttr::WO);
+    CREATE_CAN_OBJECT_FLAG_BIC_STATIC(ObjAttr::RW);
+    CREATE_CAN_OBJECT_FLAG_BIC_STATIC(ObjAttr::CO);
+    CREATE_CAN_OBJECT_FLAG_BIC_STATIC(ObjAttr::MAP);
+    CREATE_CAN_OBJECT_FLAG_BIC_STATIC(ObjAttr::LEN);
+  }
+
+  // - can object type constants -
+  {
+    const_locations.push_blanks(12);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 12);
+
+#define CREATE_CAN_OBJECT_TYPE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_CAN_OBJECT_TYPE_BIC_STATIC(CT_BOOL);
+    CREATE_CAN_OBJECT_TYPE_BIC_STATIC(CT_I8);
+    CREATE_CAN_OBJECT_TYPE_BIC_STATIC(CT_I16);
+    CREATE_CAN_OBJECT_TYPE_BIC_STATIC(CT_I32);
+    CREATE_CAN_OBJECT_TYPE_BIC_STATIC(CT_U8);
+    CREATE_CAN_OBJECT_TYPE_BIC_STATIC(CT_U16);
+    CREATE_CAN_OBJECT_TYPE_BIC_STATIC(CT_U32);
+    CREATE_CAN_OBJECT_TYPE_BIC_STATIC(CT_VISIBLE_STRING);
+    CREATE_CAN_OBJECT_TYPE_BIC_STATIC(CT_OCTET_STRING);
+    CREATE_CAN_OBJECT_TYPE_BIC_STATIC(CT_TIME_OF_DAY);
+    CREATE_CAN_OBJECT_TYPE_BIC_STATIC(CT_DOMAIN);
+    CREATE_CAN_OBJECT_TYPE_BIC_STATIC(CT_U64);
+  }
 }/*}}}*/
 
 void bic_can_object_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -437,6 +594,39 @@ bool bic_can_object_operator_binary_equal(interpreter_thread_s &it,unsigned stac
   BIC_SET_RESULT(src_0_location);
 
   return true;
+}/*}}}*/
+
+#define BIC_CAN_OBJECT_METHOD_GET_VALUE(VALUE) \
+{/*{{{*/\
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+\
+  can_object_s *co_ptr = (can_object_s *)dst_location->v_data_ptr;\
+\
+  long long int result = (*((can_object_s::ObjMap_s **)(&co_ptr->handle)))->VALUE;\
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
+\
+  return true;\
+}/*}}}*/
+
+bool bic_can_object_method_size_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_CAN_OBJECT_METHOD_GET_VALUE(size);
+}/*}}}*/
+
+bool bic_can_object_method_flags_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_CAN_OBJECT_METHOD_GET_VALUE(flags);
+}/*}}}*/
+
+bool bic_can_object_method_buffer_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_CAN_OBJECT_METHOD_GET_VALUE(alloc);
+}/*}}}*/
+
+bool bic_can_object_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_CAN_OBJECT_METHOD_GET_VALUE(copType);
 }/*}}}*/
 
 bool bic_can_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)

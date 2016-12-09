@@ -450,12 +450,15 @@ built_in_method_s traffic_store_methods[] =
 
 built_in_variable_s traffic_store_variables[] =
 {/*{{{*/
+
+  // - traffic store constants -
   { "AP_TS_ID_MAX", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "MAX_PORT_SZ", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "NUM_PAGES", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "MAX_FRESHNESS", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "MAX_NR_CHG_PORTS", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "LP_PAGE_MSK", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_traffic_store_consts(location_array_s &const_locations)

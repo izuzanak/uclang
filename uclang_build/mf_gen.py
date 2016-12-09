@@ -1351,7 +1351,7 @@ if cfg_ref[CFG_TARGET]:
         os.sep.join(["..","..","..","ext_libs","ucframework","1.60","build","lib"]),
         os.sep.join(["..","..","..","ext_libs","uccanopen","1.14","build","lib"])
       ],
-      opt_build, # CXX options
+      opt_build + "-fno-strict-aliasing ", # CXX options
       opt_link, # CXX link options
       "", # CXX defines
       [],

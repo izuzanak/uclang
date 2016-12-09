@@ -14,6 +14,13 @@ using namespace Lod;
 using namespace CopAsi;
 
 /*
+ * basic definitions and constants
+ */
+
+extern const unsigned short c_two_bytes;
+extern const bool c_big_endian;
+
+/*
  * definition of structure can_obj_dict_s
  */
 
@@ -32,6 +39,23 @@ struct can_obj_dict_s
 
 struct can_object_s
 {
+  struct ObjMap_s
+  {
+    U32  size;       // Object size [B]
+    U32  alloc;      // Allocated buffer size [B]
+    U32  data;       // ...
+    int  type;       // ...
+    int  flags;      // Bitflags (ObjAttr)
+    VU32 timestamp;  // ...
+    VB1  freshValid; // ...
+    VB1  invalid;    // ...
+    VU8  pageCnt;    // ...
+    U8   copType;    // CANopen variable type (CopTypes)
+    B1   swapEndian; // ...
+    ObjDict::Mux     mux;  // ...
+    ObjDict::ObjDesc desc; // ...
+  };
+
   location_s *dict_loc;
   HObj handle;
 

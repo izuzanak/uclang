@@ -43,9 +43,10 @@ void bic_can_obj_dict_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_can_obj_dict_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_can_obj_dict_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_can_obj_dict_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_can_obj_dict_method_CanObjDict_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_can_obj_dict_method_CanObjDict_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_can_obj_dict_method_FindObj_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_can_obj_dict_method_FindObj_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_can_obj_dict_method_FindObj_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_can_obj_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_can_obj_dict_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -60,6 +61,10 @@ void bic_can_object_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_can_object_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_can_object_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_can_object_method_size_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_can_object_method_flags_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_can_object_method_buffer_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_can_object_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_can_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_can_object_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
