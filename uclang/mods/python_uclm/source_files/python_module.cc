@@ -99,9 +99,6 @@ bool python_print_exception(interpreter_s &it,exception_s &exception)
   unsigned source_pos = GET_SRC_POS(exception.position);
   source_s &source = it.sources[GET_SRC_IDX(exception.position)];
 
-  ui_array_s class_stack;
-  class_stack.init();
-
   switch (exception.type - module.error_base)
   {
   case c_error_PY_OBJECT_INVOKE_METHOD_UNKNOWN_NAME:
@@ -254,11 +251,8 @@ bool python_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
-    class_stack.clear();
     return false;
   }
-
-  class_stack.clear();
 
   return true;
 }/*}}}*/
