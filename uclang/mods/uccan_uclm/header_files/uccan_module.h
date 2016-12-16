@@ -22,6 +22,9 @@ enum
   c_error_CAN_OBJECT_DICT_CREATE_ERROR = 0,
   c_error_CAN_OBJECT_DICT_OPEN_ERROR,
   c_error_CAN_OBJECT_DICT_INDEX_NOT_PRESENT,
+  c_error_CAN_OBJECT_UNSUPPORTED_VARIABLE_TYPE,
+  c_error_CAN_OBJECT_UNSUPPORTED_OBJECT_TYPE,
+  c_error_CAN_OBJECT_READ_ERROR,
 };
 
 // - UCCAN error strings -
@@ -65,6 +68,8 @@ bool bic_can_object_method_size_0(interpreter_thread_s &it,unsigned stack_base,u
 bool bic_can_object_method_flags_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_can_object_method_buffer_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_can_object_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_can_object_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_can_object_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_can_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_can_object_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
