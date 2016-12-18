@@ -14,7 +14,7 @@ built_in_module_s module =
   uccan_classes,         // Classes
 
   0,                     // Error base index
-  6,                     // Error count
+  9,                     // Error count
   uccan_error_strings,   // Error strings
 
   uccan_initialize,      // Initialize function
@@ -37,6 +37,9 @@ const char *uccan_error_strings[] =
   "error_CAN_OBJECT_UNSUPPORTED_VARIABLE_TYPE",
   "error_CAN_OBJECT_UNSUPPORTED_OBJECT_TYPE",
   "error_CAN_OBJECT_READ_ERROR",
+  "error_CAN_OBJECT_WRITE_ERROR",
+  "error_CAN_OBJECT_WRITE_VARIABLE_NOT_WRITABLE",
+  "error_CAN_OBJECT_WRITE_WRONG_VARIABLE_TYPE",
 };/*}}}*/
 
 // - UCCAN initialize -
@@ -100,7 +103,28 @@ bool uccan_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while reading CANopen variable\n");
+    fprintf(stderr,"\nCANopen variable read error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CAN_OBJECT_WRITE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCANopen variable write error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CAN_OBJECT_WRITE_VARIABLE_NOT_WRITABLE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCANopen variable is not writable\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CAN_OBJECT_WRITE_WRONG_VARIABLE_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCANopen variable write error, expected %s\n",it.class_symbol_names[it.class_records[exception.params[0]].name_idx].data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -665,10 +689,139 @@ bool bic_can_object_method_get_type_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_can_object_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  
-  // FIXME TODO continue ...
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  can_object_s *co_ptr = (can_object_s *)dst_location->v_data_ptr;
+  can_obj_dict_s *cod_ptr = (can_obj_dict_s *)co_ptr->dict_loc->v_data_ptr;
+  can_object_s::ObjMap_s *obj_map = *((can_object_s::ObjMap_s **)(&co_ptr->handle));
+
+  // - ERROR -
+  if (obj_map->desc.objectCode != CO_VAR)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_CAN_OBJECT_UNSUPPORTED_OBJECT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(obj_map->desc.objectCode);
+
+    return false;
+  }
+
+  // - ERROR -
+  if (!(obj_map->flags & ObjAttr::WO))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CAN_OBJECT_WRITE_VARIABLE_NOT_WRITABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  switch (obj_map->copType)
+  {
+    case CT_BOOL:
+    case CT_I8:
+    case CT_I16:
+    case CT_I32:
+    case CT_U8:
+    case CT_U16:
+    case CT_U32:
+    case CT_U64:
+      {/*{{{*/
+        long long int value;
+
+        // - ERROR -
+        if (!it.retrieve_integer(src_0_location,value))
+        {
+          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_CAN_OBJECT_WRITE_WRONG_VARIABLE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          new_exception->params.push(c_bi_class_integer);
+
+          return false;
+        }
+
+        U32 result = SDO_ABORT_OK;
+
+#define CAN_OBJECT_METHOD_WRITE_COD_VALUE_INTEGER(TYPE) \
+{/*{{{*/\
+  TYPE cod_value = value;\
+  result = cod_ptr->dict_ptr->Write(co_ptr->handle,&cod_value,sizeof(TYPE),0,false);\
+}/*}}}*/
+
+        switch (obj_map->copType)
+        {
+          case CT_BOOL:
+          case CT_I8:
+            CAN_OBJECT_METHOD_WRITE_COD_VALUE_INTEGER(I8)
+            break;
+          case CT_I16:
+            CAN_OBJECT_METHOD_WRITE_COD_VALUE_INTEGER(I16)
+            break;
+          case CT_I32:
+            CAN_OBJECT_METHOD_WRITE_COD_VALUE_INTEGER(I32)
+            break;
+          case CT_U8:
+            CAN_OBJECT_METHOD_WRITE_COD_VALUE_INTEGER(U8)
+            break;
+          case CT_U16:
+            CAN_OBJECT_METHOD_WRITE_COD_VALUE_INTEGER(U16)
+            break;
+          case CT_U32:
+            CAN_OBJECT_METHOD_WRITE_COD_VALUE_INTEGER(U32)
+            break;
+          case CT_U64:
+            CAN_OBJECT_METHOD_WRITE_COD_VALUE_INTEGER(U64)
+            break;
+        }
+
+        // - ERROR -
+        if (result != SDO_ABORT_OK)
+        {
+          exception_s::throw_exception(it,module.error_base + c_error_CAN_OBJECT_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          return false;
+        }
+
+      }/*}}}*/
+      break;
+
+    case CT_VISIBLE_STRING:
+    case CT_OCTET_STRING:
+      {/*{{{*/
+        
+        // - ERROR -
+        if (src_0_location->v_type != c_bi_class_string)
+        {
+          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_CAN_OBJECT_WRITE_WRONG_VARIABLE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          new_exception->params.push(c_bi_class_string);
+
+          return false;
+        }
+
+        // - retrieve source string -
+        string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+        U32 result = cod_ptr->dict_ptr->Write(co_ptr->handle,string_ptr->data,string_ptr->size - 1,0,false);
+
+        // - ERROR -
+        if (result != SDO_ABORT_OK)
+        {
+          exception_s::throw_exception(it,module.error_base + c_error_CAN_OBJECT_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          return false;
+        }
+      }/*}}}*/
+      break;
+
+    // - ERROR -
+    case CT_TIME_OF_DAY:
+    case CT_DOMAIN:
+    default:
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_CAN_OBJECT_UNSUPPORTED_VARIABLE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(obj_map->copType);
+
+        return false;
+      }
+      break;
+  }
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
 }/*}}}*/
 
 bool bic_can_object_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
