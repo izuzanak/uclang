@@ -1,0 +1,57 @@
+
+import containers;
+import mono;
+import json;
+
+class Main
+{
+  // - print information about person -
+  public person_info(a_person)
+  {
+    return "%s %s" % [$a_person.name,$a_person.surname];
+  }
+
+  public Main(a_argv)
+  {
+    // - load mono assembly -
+    asm = new MonoAssembly("demo.exe",a_argv);
+
+    // - retrieve reference to class Demo -
+    demo_cls = MonoAssembly.get_class("","Demo");
+
+    // - create object of class Demo -
+    demo = demo_cls._new([]);
+
+    // - class demo properties -
+    ("demo methods: %s\n" % $demo_cls.methods()).print();
+    ("demo properties: %s\n" % $demo_cls.properties()).print();
+
+    // - retrieve reference to class Person -
+    person_cls = MonoAssembly.get_class("","Person");
+
+    // - retrieve person from dictionary -
+    avone = demo.persons["avone"];
+    ("person: %s\n" % person_info(avone)).print();
+    ("persons: %s\n" % $demo.person_list()._value()).print();
+
+    // - add person to dictionary -
+    frank = person_cls._new(["Frank","Sobotka"]);
+    demo.persons["frank"] = frank;
+    ("person: %s\n" % person_info(frank)).print();
+    ("persons: %s\n" % $demo.person_list()._value()).print();
+
+    // - create persons JSON in mono -
+    mono_json = demo.json(demo.person_dict());
+    ("mono_json: %s\n" % mono_json._value()).print();
+
+    // - create persons JSON in uclang -
+    ucl_json = Json.create(demo.person_dict()._value());
+    ("ucl_json:  %s\n" % ucl_json).print();
+  }
+
+  static public main(argv)
+  {
+    new Main(argv);
+  }
+}
+
