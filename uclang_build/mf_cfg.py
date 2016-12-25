@@ -74,6 +74,7 @@ C_MODULE_V8         = index; index += 1
 C_MODULE_LUA        = index; index += 1
 C_MODULE_MONO       = index; index += 1
 C_MODULE_PERL       = index; index += 1
+C_MODULE_RUBY       = index; index += 1
 C_MODULE_UV         = index; index += 1
 C_MODULE_ZLIB       = index; index += 1
 C_MODULE_PIGPIO     = index; index += 1
@@ -157,6 +158,7 @@ c_cfg = [
     ["MOD_LUA"       ,c_enabled[C_MODULE_LUA]       ,C_UCLANG_DIR + "mods/lua_uclm"         ,None],
     ["MOD_MONO"      ,c_enabled[C_MODULE_MONO]      ,C_UCLANG_DIR + "mods/mono_uclm"        ,None],
     ["MOD_PERL"      ,c_enabled[C_MODULE_PERL]      ,C_UCLANG_DIR + "mods/perl_uclm"        ,None],
+    ["MOD_RUBY"      ,c_enabled[C_MODULE_RUBY]      ,C_UCLANG_DIR + "mods/ruby_uclm"        ,None],
     ["MOD_UV"        ,c_enabled[C_MODULE_UV]        ,C_UCLANG_DIR + "mods/uv_uclm"          ,None],
     ["MOD_ZLIB"      ,c_enabled[C_MODULE_ZLIB]      ,C_UCLANG_DIR + "mods/zlib_uclm"        ,None],
     ["MOD_PIGPIO"    ,c_enabled[C_MODULE_PIGPIO]    ,C_UCLANG_DIR + "mods/pigpio_uclm"      ,None],

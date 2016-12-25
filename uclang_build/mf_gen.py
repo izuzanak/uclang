@@ -2549,6 +2549,32 @@ if cfg_ref[CFG_TARGET]:
     )
 # }}}
 
+# ruby module
+cfg_ref = c_cfg[C_MODULE_RUBY]
+# {{{
+if cfg_ref[CFG_TARGET]:
+    cfg_ref[CFG_MODULE] = module_c(
+      configuration,
+      cfg_ref[CFG_DIR],
+      cfg_ref[CFG_NAME],
+      [ 
+        "header_files",
+        os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
+      ],
+      [ 
+        "source_files",
+      ],
+      [
+        os.sep.join(["..","..","libs","libbase_ucll"])
+      ],
+      opt_build + "-I/usr/include/ruby-2.3.0 -I/usr/include/i386-linux-gnu/ruby-2.3.0 ", # CXX options
+      opt_link + "-L/usr/lib/i386-linux-gnu -lruby-2.3 ", # CXX link options
+      "", # CXX defines
+      [],
+      [],
+    )
+# }}}
+
 # uv module
 cfg_ref = c_cfg[C_MODULE_UV]
 # {{{
