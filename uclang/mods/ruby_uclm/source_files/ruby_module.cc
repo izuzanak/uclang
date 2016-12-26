@@ -17,7 +17,7 @@ built_in_module_s module =
   ruby_classes,         // Classes
 
   0,                    // Error base index
-  1,                    // Error count
+  3,                    // Error count
   ruby_error_strings,   // Error strings
 
   ruby_initialize,      // Initialize function
@@ -35,6 +35,8 @@ built_in_class_s *ruby_classes[] =
 const char *ruby_error_strings[] =
 {/*{{{*/
   "error_RUBY_INTERPRETER_PROCESS_CODE_ERROR",
+  "error_RUBY_VALUE_WRONG_VALUE_REFERENCE",
+  "error_RUBY_VALUE_VALUE_ERROR",
 };/*}}}*/
 
 // - RUBY initialize -
@@ -79,6 +81,20 @@ bool ruby_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nError while processing Ruby code: %s\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_RUBY_VALUE_WRONG_VALUE_REFERENCE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong reference to Ruby value\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_RUBY_VALUE_VALUE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while retrieving value of Ruby value\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   default:
     return false;
   }
@@ -91,7 +107,7 @@ built_in_class_s ruby_interpreter_class =
 {/*{{{*/
   "RubyInterpreter",
   c_modifier_public | c_modifier_final,
-  5, ruby_interpreter_methods,
+  7, ruby_interpreter_methods,
   0, ruby_interpreter_variables,
   bic_ruby_interpreter_consts,
   bic_ruby_interpreter_init,
@@ -125,6 +141,16 @@ built_in_method_s ruby_interpreter_methods[] =
     "require#1",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_ruby_interpreter_method_require_1
+  },
+  {
+    "gv_get#1",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_ruby_interpreter_method_gv_get_1
+  },
+  {
+    "gv_set#2",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_ruby_interpreter_method_gv_set_2
   },
   {
     "to_string#0",
@@ -278,6 +304,40 @@ bool bic_ruby_interpreter_method_require_1(interpreter_thread_s &it,unsigned sta
   return true;
 }/*}}}*/
 
+bool bic_ruby_interpreter_method_gv_get_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_ruby_interpreter,"gv_get#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  VALUE rv_result = rb_gv_get(((string_s *)src_0_location->v_data_ptr)->data);
+
+  unsigned value_idx = ruby_c::keep_value(rv_result);
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_ruby_value,value_idx);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_ruby_interpreter_method_gv_set_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  
+  // FIXME TODO continue ...
+  BIC_TODO_ERROR(__FILE__,__LINE__);
+  return false;
+}/*}}}*/
+
 bool bic_ruby_interpreter_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -303,7 +363,7 @@ built_in_class_s ruby_value_class =
 {/*{{{*/
   "RubyValue",
   c_modifier_public | c_modifier_final,
-  3, ruby_value_methods,
+  4, ruby_value_methods,
   0, ruby_value_variables,
   bic_ruby_value_consts,
   bic_ruby_value_init,
@@ -327,6 +387,11 @@ built_in_method_s ruby_value_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_ruby_value_operator_binary_equal
+  },
+  {
+    "value#0",
+    c_modifier_public | c_modifier_final,
+    bic_ruby_value_method_value_0
   },
   {
     "to_string#0",
@@ -387,6 +452,41 @@ bool bic_ruby_value_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_ruby_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  int status;
+  VALUE rv_dst = ruby_c::create_ruby_value(it,dst_location,status);
+
+  // - ERROR -
+  if (status)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_RUBY_VALUE_WRONG_VALUE_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  location_s *location_ptr = ruby_c::ruby_value_value(it,rv_dst,operands[c_source_pos_idx]);
+
+  // - ERROR -
+  if (location_ptr == NULL)
+  {
+    // - if exception was already thrown -
+    if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+    {
+      return false;
+    }
+
+    exception_s::throw_exception(it,module.error_base + c_error_RUBY_VALUE_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT(location_ptr);
 
   return true;
 }/*}}}*/
