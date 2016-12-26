@@ -259,7 +259,7 @@ bool bic_ruby_interpreter_method_require_1(interpreter_thread_s &it,unsigned sta
   VALUE rv_file_name = rb_str_new(string_ptr->data,string_ptr->size - 1);
 
   int state;
-  rb_protect(ruby_c::rb_require_protect,rv_file_name,&state);
+  VALUE rv_result = rb_protect(ruby_c::rb_require_protect,rv_file_name,&state);
 
   // - ERROR -
   if (state)
@@ -270,7 +270,10 @@ bool bic_ruby_interpreter_method_require_1(interpreter_thread_s &it,unsigned sta
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  unsigned value_idx = ruby_c::keep_value(rv_result);
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_ruby_value,value_idx);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/

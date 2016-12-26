@@ -59,8 +59,8 @@ inline ruby_c::~ruby_c()
   debug_message_2(fprintf(stderr,"ruby_exit()\n"););
 
   // FIXME debug output
-  //fprintf(stderr,"RARRAY_LEN(values): %ld\n",RARRAY_LEN(values));
-  //fprintf(stderr,"free_idxs.used: %u\n",free_idxs.used);
+  fprintf(stderr,"DEBUG_OUTPUT - RARRAY_LEN(values): %ld\n",RARRAY_LEN(values));
+  fprintf(stderr,"DEBUG_OUTPUT - free_idxs.used: %u\n",free_idxs.used);
 
   rb_gc_unregister_address(&values);
   free_idxs.clear();
@@ -88,7 +88,7 @@ inline unsigned ruby_c::keep_value(VALUE a_value)
 
 inline void ruby_c::release_value(unsigned a_idx)
 {/*{{{*/
-  rb_ary_delete_at(values,a_idx);
+  rb_ary_store(values,a_idx,Qnil);
   free_idxs.push(a_idx);
 }/*}}}*/
 
