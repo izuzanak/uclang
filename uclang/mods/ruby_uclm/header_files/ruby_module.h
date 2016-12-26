@@ -19,7 +19,7 @@ extern built_in_class_s *ruby_classes[];
 // - RUBY error identifiers -
 enum
 {
-  c_error_RUBY_DUMMY_ERROR = 0,
+  c_error_RUBY_INTERPRETER_PROCESS_CODE_ERROR = 0,
 };
 
 // - RUBY error strings -
@@ -40,6 +40,9 @@ void bic_ruby_interpreter_consts(location_array_s &const_locations);
 void bic_ruby_interpreter_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_ruby_interpreter_clear(interpreter_thread_s &it,location_s *location_ptr);
 
+bool bic_ruby_interpreter_method_eval_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ruby_interpreter_method_load_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ruby_interpreter_method_require_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ruby_interpreter_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ruby_interpreter_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

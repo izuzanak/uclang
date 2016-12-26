@@ -34,7 +34,7 @@ built_in_class_s *ruby_classes[] =
 // - RUBY error strings -
 const char *ruby_error_strings[] =
 {/*{{{*/
-  "error_RUBY_DUMMY_ERROR",
+  "error_RUBY_INTERPRETER_PROCESS_CODE_ERROR",
 };/*}}}*/
 
 // - RUBY initialize -
@@ -72,11 +72,11 @@ bool ruby_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_RUBY_DUMMY_ERROR:
+  case c_error_RUBY_INTERPRETER_PROCESS_CODE_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nRuby dummy error\n");
+    fprintf(stderr,"\nError while processing Ruby code: %s\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -91,7 +91,7 @@ built_in_class_s ruby_interpreter_class =
 {/*{{{*/
   "RubyInterpreter",
   c_modifier_public | c_modifier_final,
-  2, ruby_interpreter_methods,
+  5, ruby_interpreter_methods,
   0, ruby_interpreter_variables,
   bic_ruby_interpreter_consts,
   bic_ruby_interpreter_init,
@@ -111,6 +111,21 @@ built_in_class_s ruby_interpreter_class =
 
 built_in_method_s ruby_interpreter_methods[] =
 {/*{{{*/
+  {
+    "eval#1",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_ruby_interpreter_method_eval_1
+  },
+  {
+    "load#1",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_ruby_interpreter_method_load_1
+  },
+  {
+    "require#1",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_ruby_interpreter_method_require_1
+  },
   {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
@@ -137,6 +152,127 @@ void bic_ruby_interpreter_init(interpreter_thread_s &it,location_s *location_ptr
 
 void bic_ruby_interpreter_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
+}/*}}}*/
+
+#define BIC_RUBY_INTERPRETER_RETRIEVE_ERROR_LOCATION() \
+/*{{{*/\
+  VALUE rv_error = rb_obj_as_string(rb_errinfo());\
+  rb_set_errinfo(Qnil);\
+\
+  string_s *err_string = it.get_new_string_ptr();\
+  err_string->set(RSTRING_LEN(rv_error),StringValuePtr(rv_error));\
+\
+  BIC_CREATE_NEW_LOCATION(err_location,c_bi_class_string,err_string);\
+/*}}}*/
+
+bool bic_ruby_interpreter_method_eval_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_ruby_interpreter,"eval#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  int state;
+  VALUE rv_result = rb_eval_string_protect(string_ptr->data,&state);
+
+  // - ERROR -
+  if (state)
+  {
+    BIC_RUBY_INTERPRETER_RETRIEVE_ERROR_LOCATION();
+
+    exception_s::throw_exception(it,module.error_base + c_error_RUBY_INTERPRETER_PROCESS_CODE_ERROR,operands[c_source_pos_idx],err_location);
+    return false;
+  }
+
+  unsigned value_idx = ruby_c::keep_value(rv_result);
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_ruby_value,value_idx);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_ruby_interpreter_method_load_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_ruby_interpreter,"load#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+  VALUE rv_file_name = rb_str_new(string_ptr->data,string_ptr->size - 1);
+
+  int state;
+  rb_protect(ruby_c::rb_load_protect,rv_file_name,&state);
+
+  // - ERROR -
+  if (state)
+  {
+    BIC_RUBY_INTERPRETER_RETRIEVE_ERROR_LOCATION();
+
+    exception_s::throw_exception(it,module.error_base + c_error_RUBY_INTERPRETER_PROCESS_CODE_ERROR,operands[c_source_pos_idx],err_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_ruby_interpreter_method_require_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_ruby_interpreter,"require#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+  VALUE rv_file_name = rb_str_new(string_ptr->data,string_ptr->size - 1);
+
+  int state;
+  rb_protect(ruby_c::rb_require_protect,rv_file_name,&state);
+
+  // - ERROR -
+  if (state)
+  {
+    BIC_RUBY_INTERPRETER_RETRIEVE_ERROR_LOCATION();
+
+    exception_s::throw_exception(it,module.error_base + c_error_RUBY_INTERPRETER_PROCESS_CODE_ERROR,operands[c_source_pos_idx],err_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
 }/*}}}*/
 
 bool bic_ruby_interpreter_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -211,16 +347,17 @@ void bic_ruby_value_consts(location_array_s &const_locations)
 
 void bic_ruby_value_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  
-  // FIXME TODO continue ...
-  cassert(0);
+  location_ptr->v_data_ptr = (unsigned)c_idx_not_exist;
 }/*}}}*/
 
 void bic_ruby_value_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
+  unsigned value_idx = (unsigned)location_ptr->v_data_ptr;
 
-  // FIXME TODO continue ...
-  cassert(0);
+  if (value_idx != c_idx_not_exist)
+  {
+    ruby_c::release_value(value_idx);
+  }
 }/*}}}*/
 
 bool bic_ruby_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base,uli *operands)
