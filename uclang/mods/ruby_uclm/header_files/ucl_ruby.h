@@ -36,6 +36,8 @@ class ruby_c
   static VALUE rb_require_protect(VALUE a_file_name);
   static VALUE rb_big2ll_protect(VALUE a_big_num);
 
+  static int hash_kv_pair(VALUE key,VALUE value,VALUE array);
+
   static VALUE create_ruby_value(interpreter_thread_s &it,location_s *location_ptr,int &status);
   static location_s *ruby_value_value(interpreter_thread_s &it,VALUE value,uli source_pos);
 };

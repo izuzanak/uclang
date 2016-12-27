@@ -186,7 +186,7 @@ void bic_ruby_interpreter_clear(interpreter_thread_s &it,location_s *location_pt
   rb_set_errinfo(Qnil);\
 \
   string_s *err_string = it.get_new_string_ptr();\
-  err_string->set(RSTRING_LEN(rv_error),StringValuePtr(rv_error));\
+  err_string->set(RSTRING_LEN(rv_error),RSTRING_PTR(rv_error));\
 \
   BIC_CREATE_NEW_LOCATION(err_location,c_bi_class_string,err_string);\
 /*}}}*/
