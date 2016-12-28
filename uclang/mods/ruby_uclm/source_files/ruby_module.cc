@@ -17,7 +17,7 @@ built_in_module_s module =
   ruby_classes,         // Classes
 
   0,                    // Error base index
-  3,                    // Error count
+  4,                    // Error count
   ruby_error_strings,   // Error strings
 
   ruby_initialize,      // Initialize function
@@ -36,6 +36,7 @@ const char *ruby_error_strings[] =
 {/*{{{*/
   "error_RUBY_INTERPRETER_PROCESS_CODE_ERROR",
   "error_RUBY_VALUE_WRONG_VALUE_REFERENCE",
+  "error_RUBY_VALUE_CREATE_ERROR",
   "error_RUBY_VALUE_VALUE_ERROR",
 };/*}}}*/
 
@@ -86,6 +87,13 @@ bool ruby_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nWrong reference to Ruby value\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_RUBY_VALUE_CREATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while creating Ruby value\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_RUBY_VALUE_VALUE_ERROR:
@@ -472,12 +480,8 @@ bool bic_ruby_value_method_RubyValue_1(interpreter_thread_s &it,unsigned stack_b
   // - ERROR -
   if (status)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_RUBY_VALUE_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
-
-    //exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    //return false;
   }
 
   unsigned value_idx = ruby_c::keep_value(rv_value);
