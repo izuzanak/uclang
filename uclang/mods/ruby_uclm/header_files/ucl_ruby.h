@@ -15,6 +15,13 @@ include "script_parser.h"
 extern unsigned c_bi_class_ruby_value;
 extern unsigned c_rm_class_dict;
 
+// - return statuses -
+enum
+{
+  STATUS_OK = 0,
+  STATUS_ERROR
+};
+
 /*
  * definition of class ruby_c
  */
@@ -70,6 +77,9 @@ inline ruby_c::~ruby_c()
 
   rb_gc_unregister_address(&values);
   free_idxs.clear();
+
+  // - final ruby gc run -
+  rb_gc_start();
 
   ruby_cleanup(0);
 }/*}}}*/

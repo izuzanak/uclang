@@ -209,11 +209,11 @@ bool bic_ruby_interpreter_method_eval_1(interpreter_thread_s &it,unsigned stack_
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
-  int state;
-  VALUE rv_result = rb_eval_string_protect(string_ptr->data,&state);
+  int status;
+  VALUE rv_result = rb_eval_string_protect(string_ptr->data,&status);
 
   // - ERROR -
-  if (state)
+  if (status)
   {
     BIC_RUBY_INTERPRETER_RETRIEVE_ERROR_LOCATION();
 
@@ -248,11 +248,11 @@ bool bic_ruby_interpreter_method_load_1(interpreter_thread_s &it,unsigned stack_
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
   VALUE rv_file_name = rb_str_new(string_ptr->data,string_ptr->size - 1);
 
-  int state;
-  rb_protect(ruby_c::rb_load_protect,rv_file_name,&state);
+  int status;
+  rb_protect(ruby_c::rb_load_protect,rv_file_name,&status);
 
   // - ERROR -
-  if (state)
+  if (status)
   {
     BIC_RUBY_INTERPRETER_RETRIEVE_ERROR_LOCATION();
 
@@ -284,11 +284,11 @@ bool bic_ruby_interpreter_method_require_1(interpreter_thread_s &it,unsigned sta
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
   VALUE rv_file_name = rb_str_new(string_ptr->data,string_ptr->size - 1);
 
-  int state;
-  VALUE rv_result = rb_protect(ruby_c::rb_require_protect,rv_file_name,&state);
+  int status;
+  VALUE rv_result = rb_protect(ruby_c::rb_require_protect,rv_file_name,&status);
 
   // - ERROR -
-  if (state)
+  if (status)
   {
     BIC_RUBY_INTERPRETER_RETRIEVE_ERROR_LOCATION();
 
@@ -466,7 +466,7 @@ bool bic_ruby_value_method_RubyValue_1(interpreter_thread_s &it,unsigned stack_b
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
-  int status;
+  int status = STATUS_OK;
   VALUE rv_value = ruby_c::create_ruby_value(it,src_0_location,status);
 
   // - ERROR -
@@ -491,7 +491,7 @@ bool bic_ruby_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  int status;
+  int status = STATUS_OK;
   VALUE rv_dst = ruby_c::create_ruby_value(it,dst_location,status);
 
   // - ERROR -
