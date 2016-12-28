@@ -33,6 +33,14 @@ VALUE ruby_c::rb_big2ll_protect(VALUE a_big_num)
   return Qnil;
 }/*}}}*/
 
+int ruby_c::hash_kv_pair(VALUE key,VALUE value,VALUE array)
+{/*{{{*/
+  rb_ary_push(array,key);
+  rb_ary_push(array,value);
+
+  return ST_CONTINUE;
+}/*}}}*/
+
 VALUE ruby_c::create_ruby_value(interpreter_thread_s &it,location_s *location_ptr,int &status)
 {/*{{{*/
   status = 0;
@@ -43,17 +51,22 @@ VALUE ruby_c::create_ruby_value(interpreter_thread_s &it,location_s *location_pt
   }
   else
   {
-    status = 1;
-    return Qnil;
+    switch (location_ptr->v_type)
+    {
+    case c_bi_class_blank:
+      return Qnil;
+    case c_bi_class_char:
+    case c_bi_class_integer:
+    case c_bi_class_float:
+    case c_bi_class_string:
+    case c_bi_class_array:
+
+    // - ERROR -
+    default:
+      status = 1;
+      return Qnil;
+    }
   }
-}/*}}}*/
-
-int ruby_c::hash_kv_pair(VALUE key,VALUE value,VALUE array)
-{/*{{{*/
-  rb_ary_push(array,key);
-  rb_ary_push(array,value);
-
-  return ST_CONTINUE;
 }/*}}}*/
 
 location_s *ruby_c::ruby_value_value(interpreter_thread_s &it,VALUE rv_value,uli source_pos)
@@ -177,7 +190,24 @@ location_s *ruby_c::ruby_value_value(interpreter_thread_s &it,VALUE rv_value,uli
         VALUE rv_value = RARRAY_AREF(kv_pairs,idx + 1);
 
         location_s *key_location = ruby_value_value(it,rv_key,source_pos);
+
+        // - ERROR -
+        if (key_location == NULL)
+        {
+          it.release_location_ptr(dict_location);
+          return NULL;
+        }
+
         location_s *value_location = ruby_value_value(it,rv_value,source_pos);
+
+        // - ERROR -
+        if (value_location == NULL)
+        {
+          it.release_location_ptr(key_location);
+          it.release_location_ptr(dict_location);
+
+          return NULL;
+        }
 
         pointer_map_s insert_map = {key_location,NULL};
         unsigned index = tree_ptr->unique_insert(insert_map);

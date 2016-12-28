@@ -62,6 +62,7 @@ bool bic_ruby_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_bas
 bool bic_ruby_value_member(interpreter_thread_s &it,uli *code,unsigned stack_base);
 
 bool bic_ruby_value_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ruby_value_method_RubyValue_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ruby_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ruby_value_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ruby_value_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

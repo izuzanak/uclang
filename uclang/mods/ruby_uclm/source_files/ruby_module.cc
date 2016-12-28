@@ -363,7 +363,7 @@ built_in_class_s ruby_value_class =
 {/*{{{*/
   "RubyValue",
   c_modifier_public | c_modifier_final,
-  4, ruby_value_methods,
+  5, ruby_value_methods,
   0, ruby_value_variables,
   bic_ruby_value_consts,
   bic_ruby_value_init,
@@ -387,6 +387,11 @@ built_in_method_s ruby_value_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_ruby_value_operator_binary_equal
+  },
+  {
+    "RubyValue#1",
+    c_modifier_public | c_modifier_final,
+    bic_ruby_value_method_RubyValue_1
   },
   {
     "value#0",
@@ -452,6 +457,31 @@ bool bic_ruby_value_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_ruby_value_method_RubyValue_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  int status;
+  VALUE rv_value = ruby_c::create_ruby_value(it,src_0_location,status);
+
+  // - ERROR -
+  if (status)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+
+    //exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    //return false;
+  }
+
+  unsigned value_idx = ruby_c::keep_value(rv_value);
+  dst_location->v_data_ptr = value_idx;
 
   return true;
 }/*}}}*/
