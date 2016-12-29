@@ -149,7 +149,7 @@ bool pack_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError in pack code format string, at index: %" HOST_LL_FORMAT "d \n",exception.params[0]);
+    fprintf(stderr,"\nError in pack code format string, at index: %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_PACK_CODE_NOT_ALL_ARGUMENTS_CONVERTED:

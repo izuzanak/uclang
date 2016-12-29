@@ -122,11 +122,11 @@ bool python_print_exception(interpreter_s &it,exception_s &exception)
 
     if (exception.params[0] != c_idx_not_exist)
     {
-      fprintf(stderr,"\nCannot process parameter %" HOST_LL_FORMAT "d of python object method \n",exception.params[0]);
+      fprintf(stderr,"\nCannot process parameter %" HOST_LL_FORMAT "d of python object method\n",exception.params[0]);
     }
     else
     {
-      fprintf(stderr,"\nCannot process parameters of python object method \n");
+      fprintf(stderr,"\nCannot process parameters of python object method\n");
     }
 
     fprintf(stderr," ---------------------------------------- \n");

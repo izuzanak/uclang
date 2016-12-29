@@ -167,7 +167,7 @@ bool mpg_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nMpg handle, wrong read buffer size %" HOST_LL_FORMAT "d \n",exception.params[0]);
+    fprintf(stderr,"\nMpg handle, wrong read buffer size %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_MPG_HANDLE_ADJUST_OUTPUT_FORMAT_ERROR:
