@@ -9,6 +9,7 @@ include "ucl_ruby.h"
 // - RUBY indexes of built in classes -
 extern unsigned c_bi_class_ruby_interpreter;
 extern unsigned c_bi_class_ruby_value;
+extern unsigned c_bi_class_ruby_item_ref;
 
 // - RUBY module -
 extern built_in_module_s module;
@@ -20,6 +21,7 @@ extern built_in_class_s *ruby_classes[];
 enum
 {
   c_error_RUBY_INTERPRETER_PROCESS_CODE_ERROR = 0,
+  c_error_RUBY_VALUE_ITEM_SELECT_ERROR,
   c_error_RUBY_VALUE_WRONG_VALUE_REFERENCE,
   c_error_RUBY_VALUE_CREATE_ERROR,
   c_error_RUBY_VALUE_VALUE_ERROR,
@@ -63,10 +65,22 @@ bool bic_ruby_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_bas
 bool bic_ruby_value_member(interpreter_thread_s &it,uli *code,unsigned stack_base);
 
 bool bic_ruby_value_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ruby_value_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ruby_value_method_RubyValue_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ruby_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ruby_value_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ruby_value_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class RUBY_ITEM_REF -
+extern built_in_variable_s ruby_item_ref_variables[];
+extern built_in_method_s ruby_item_ref_methods[];
+extern built_in_class_s ruby_item_ref_class;
+
+void bic_ruby_item_ref_consts(location_array_s &const_locations);
+void bic_ruby_item_ref_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_ruby_item_ref_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_ruby_item_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 

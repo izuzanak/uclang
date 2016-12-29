@@ -928,6 +928,7 @@ bool bic_perl_value_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigne
   default:
     SvREFCNT_dec(sv);
 
+    // FIXME TODO throw PERL_VALUE_ITEM_SELECT_ERROR
     exception_s::throw_exception(it,module.error_base + c_error_PERL_VALUE_MEMBER_SELECT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }

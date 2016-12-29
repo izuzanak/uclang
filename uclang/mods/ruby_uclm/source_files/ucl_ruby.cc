@@ -47,6 +47,10 @@ VALUE ruby_c::create_ruby_value(interpreter_thread_s &it,location_s *location_pt
   {
     return ruby_c::get_value((unsigned)location_ptr->v_data_ptr);
   }
+  if (location_ptr->v_type == c_bi_class_ruby_item_ref)
+  {
+    return ((ruby_reference_s *)location_ptr->v_data_ptr)->get_item(status);
+  }
   else if (location_ptr->v_type == c_rm_class_dict)
   {/*{{{*/
     pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)location_ptr->v_data_ptr;

@@ -13,6 +13,7 @@ include "script_parser.h"
  */
 
 extern unsigned c_bi_class_ruby_value;
+extern unsigned c_bi_class_ruby_item_ref;
 extern unsigned c_rm_class_dict;
 
 // - return statuses -
@@ -47,6 +48,22 @@ class ruby_c
 
   static VALUE create_ruby_value(interpreter_thread_s &it,location_s *location_ptr,int &status);
   static location_s *ruby_value_value(interpreter_thread_s &it,VALUE value,uli source_pos);
+};
+
+/*
+ * definition of structure ruby_reference_s
+ */
+
+struct ruby_reference_s
+{
+  unsigned obj_idx;
+  unsigned key_idx;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+
+  inline VALUE get_item(int &status);
+  inline bool set_item(VALUE rv_value);
 };
 
 /*
@@ -111,6 +128,69 @@ inline void ruby_c::release_value(unsigned a_idx)
 inline VALUE ruby_c::get_value(unsigned a_idx)
 {/*{{{*/
   return rb_ary_entry(values,a_idx);
+}/*}}}*/
+
+/*
+ * inline methods of structure ruby_reference_s
+ */
+
+inline void ruby_reference_s::init()
+{/*{{{*/
+  obj_idx = c_idx_not_exist;
+  key_idx = c_idx_not_exist;
+}/*}}}*/
+
+inline void ruby_reference_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+  if (obj_idx != c_idx_not_exist)
+  {
+    ruby_c::release_value(obj_idx);
+  }
+
+  if (key_idx != c_idx_not_exist)
+  {
+    ruby_c::release_value(key_idx);
+  }
+
+  init();
+}/*}}}*/
+
+inline VALUE ruby_reference_s::get_item(int &status)
+{/*{{{*/
+  VALUE rv_obj = ruby_c::get_value(obj_idx);
+  VALUE rv_key = ruby_c::get_value(key_idx);
+
+  switch (TYPE(rv_obj))
+  {
+  case T_ARRAY:
+    return rb_ary_entry(rv_obj,RB_NUM2LONG(rv_key));
+
+  case T_HASH:
+    return rb_hash_lookup(rv_obj,rv_key);
+
+  default:
+    cassert(0);
+  }
+}/*}}}*/
+
+inline bool ruby_reference_s::set_item(VALUE rv_value)
+{/*{{{*/
+  VALUE rv_obj = ruby_c::get_value(obj_idx);
+  VALUE rv_key = ruby_c::get_value(key_idx);
+
+  switch (TYPE(rv_obj))
+  {
+  case T_ARRAY:
+    rb_ary_store(rv_obj,RB_NUM2LONG(rv_key),rv_value);
+    return true;
+
+  case T_HASH:
+    rb_hash_aset(rv_obj,rv_key,rv_value);
+    return true;
+
+  default:
+    cassert(0);
+  }
 }/*}}}*/
 
 #endif
