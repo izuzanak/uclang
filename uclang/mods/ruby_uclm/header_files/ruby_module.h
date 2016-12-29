@@ -25,6 +25,7 @@ enum
   c_error_RUBY_VALUE_WRONG_VALUE_REFERENCE,
   c_error_RUBY_VALUE_CREATE_ERROR,
   c_error_RUBY_VALUE_VALUE_ERROR,
+  c_error_RUBY_VALUE_SET_ITEM_ERROR,
 };
 
 // - RUBY error strings -

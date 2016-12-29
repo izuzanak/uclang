@@ -18,7 +18,7 @@ built_in_module_s module =
   ruby_classes,         // Classes
 
   0,                    // Error base index
-  5,                    // Error count
+  6,                    // Error count
   ruby_error_strings,   // Error strings
 
   ruby_initialize,      // Initialize function
@@ -41,6 +41,7 @@ const char *ruby_error_strings[] =
   "error_RUBY_VALUE_WRONG_VALUE_REFERENCE",
   "error_RUBY_VALUE_CREATE_ERROR",
   "error_RUBY_VALUE_VALUE_ERROR",
+  "error_RUBY_VALUE_SET_ITEM_ERROR",
 };/*}}}*/
 
 // - RUBY initialize -
@@ -114,6 +115,13 @@ bool ruby_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nError while retrieving value of Ruby value\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_RUBY_VALUE_SET_ITEM_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot set item of ruby value\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -732,12 +740,8 @@ bool bic_ruby_item_ref_operator_binary_equal(interpreter_thread_s &it,unsigned s
   // - ERROR -
   if (!((ruby_reference_s *)dst_location->v_data_ptr)->set_item(rv_src_0))
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_RUBY_VALUE_SET_ITEM_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
-
-    //exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_SET_ITEM_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    //return false;
   }
 
   unsigned src_0_idx = ruby_c::keep_value(rv_src_0);
