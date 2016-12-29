@@ -18,7 +18,7 @@ built_in_module_s module =
   perl_classes,          // Classes
 
   0,                     // Error base index
-  14,                    // Error count
+  15,                    // Error count
   perl_error_strings,    // Error strings
 
   perl_initialize,       // Initialize function
@@ -46,6 +46,7 @@ const char *perl_error_strings[] =
   "error_PERL_VALUE_INVOKE_FUNCTION_WRONG_PARAMETER",
   "error_PERL_VALUE_INVOKE_FUNCTION_RESULT_ARRAY_ERROR",
   "error_PERL_VALUE_MEMBER_SELECT_ERROR",
+  "error_PERL_VALUE_ITEM_SELECT_ERROR",
   "error_PERL_VALUE_CREATE_ERROR",
   "error_PERL_VALUE_VALUE_ERROR",
   "error_PERL_INTERPRETER_GET_VARIABLE_DOES_NOT_EXIST",
@@ -165,6 +166,13 @@ bool perl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nError while selecting member of Perl value\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PERL_VALUE_ITEM_SELECT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while selecting item from Perl value\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_PERL_VALUE_CREATE_ERROR:
@@ -928,8 +936,7 @@ bool bic_perl_value_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigne
   default:
     SvREFCNT_dec(sv);
 
-    // FIXME TODO throw PERL_VALUE_ITEM_SELECT_ERROR
-    exception_s::throw_exception(it,module.error_base + c_error_PERL_VALUE_MEMBER_SELECT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s::throw_exception(it,module.error_base + c_error_PERL_VALUE_ITEM_SELECT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 

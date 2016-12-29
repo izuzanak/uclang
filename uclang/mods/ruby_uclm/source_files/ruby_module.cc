@@ -618,9 +618,6 @@ bool bic_ruby_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_ruby_value_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  
-  // FIXME TODO continue ...
-
   BIC_TO_STRING_WITHOUT_DEST(
     string_ptr->set(strlen("RubyValue"),"RubyValue");
   );
@@ -631,8 +628,6 @@ bool bic_ruby_value_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 bool bic_ruby_value_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
-  // FIXME TODO continue ...
 
   printf("RubyValue");
 
