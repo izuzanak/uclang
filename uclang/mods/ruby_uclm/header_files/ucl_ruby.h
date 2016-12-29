@@ -13,6 +13,7 @@ include "script_parser.h"
  */
 
 extern unsigned c_bi_class_ruby_value;
+extern unsigned c_bi_class_ruby_iv_ref;
 extern unsigned c_bi_class_ruby_item_ref;
 extern unsigned c_rm_class_dict;
 
@@ -61,6 +62,9 @@ struct ruby_reference_s
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
+
+  inline VALUE get_iv(int &status);
+  inline bool set_iv(VALUE rv_value);
 
   inline VALUE get_item(int &status);
   inline bool set_item(VALUE rv_value);
@@ -153,6 +157,22 @@ inline void ruby_reference_s::clear(interpreter_thread_s &it)
   }
 
   init();
+}/*}}}*/
+
+inline VALUE ruby_reference_s::get_iv(int &status)
+{/*{{{*/
+  VALUE rv_obj = ruby_c::get_value(obj_idx);
+  VALUE rv_key = ruby_c::get_value(key_idx);
+
+  return rb_ivar_get(rv_obj,rb_intern_str(rv_key));
+}/*}}}*/
+
+inline bool ruby_reference_s::set_iv(VALUE rv_value)
+{/*{{{*/
+  VALUE rv_obj = ruby_c::get_value(obj_idx);
+  VALUE rv_key = ruby_c::get_value(key_idx);
+
+  return rb_ivar_set(rv_obj,rb_intern_str(rv_key),rv_value);
 }/*}}}*/
 
 inline VALUE ruby_reference_s::get_item(int &status)
