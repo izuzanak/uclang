@@ -108,10 +108,6 @@ inline ruby_c::~ruby_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"ruby_exit()\n"););
 
-  // FIXME debug output
-  fprintf(stderr,"DEBUG_OUTPUT - RARRAY_LEN(values): %ld\n",RARRAY_LEN(values));
-  fprintf(stderr,"DEBUG_OUTPUT - free_idxs.used: %u\n",free_idxs.used);
-
   rb_gc_unregister_address(&values);
   free_idxs.clear();
 

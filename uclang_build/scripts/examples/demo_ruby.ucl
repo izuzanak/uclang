@@ -1,0 +1,90 @@
+
+import containers;
+import ruby;
+import json;
+
+class Main
+{
+  script_src = ("
+class Person
+  attr_reader :name, :surname
+  def initialize(a_name,a_surname)
+    @name = a_name
+    @surname = a_surname
+  end
+end
+
+class Demo
+  def initialize()
+    @persons = {
+      'omar' => Person.new('Omar','Little'),
+      'avone' => Person.new('Avone','Barksdale')
+    }
+  end
+
+  def person_dict()
+    result = {}
+    @persons.each do |key, value|
+      result[key] = {'name'=>value.name,'surname'=>value.surname}
+    end
+    return result
+  end
+
+  def person_list()
+    result = []
+    @persons.each do |key, value|
+      result.push('%s %s' % [value.name,value.surname])
+    end
+    return result
+  end
+end
+
+$Person = Person
+$Demo = Demo
+");
+
+  // - print information about person -
+  public person_info(a_person)
+  {
+    return "%s %s" % [
+      a_person.name._value(),
+      a_person.surname._value()];
+  }
+
+  public Main(a_argv)
+  {
+    RubyInterpreter.require("json");
+    RubyInterpreter.eval(script_src);
+
+    Person = RubyInterpreter.gv_get("Person");
+    demo = RubyInterpreter.gv_get("Demo")._new([]);
+
+    // - module demo properties -
+    ("demo variables: %s\n" % demo.instance_variables().to_s()._value()).print();
+    ("demo methods: %s\n" % demo.methods().to_s()._value()).print();
+
+    // - retrieve person from dictionary -
+    avone = demo.persons["avone"];
+    ("person: %s\n" % person_info(avone)).print();
+    ("persons: %s\n" % demo.person_list()._value().to_string()).print();
+
+    // - add person to dictionary -
+    frank = Person._new(["Frank","Sobotka"]);
+    demo.persons["frank"] = frank;
+    ("person: %s\n" % person_info(frank)).print();
+    ("persons: %s\n" % demo.person_list()._value().to_string()).print();
+
+    // - create persons JSON in ruby -
+    ruby_json = demo.person_dict().to_json();
+    ("ruby_json: %s\n" % ruby_json._value()).print();
+
+    // - create persons JSON in uclang -
+    ucl_json = Json.create(demo.person_dict()._value());
+    ("ucl_json:  %s\n" % ucl_json).print();
+  }
+
+  static public main(argv)
+  {
+    new Main(argv);
+  }
+}

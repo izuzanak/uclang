@@ -165,7 +165,7 @@ built_in_class_s ruby_interpreter_class =
 {/*{{{*/
   "RubyInterpreter",
   c_modifier_public | c_modifier_final,
-  7, ruby_interpreter_methods,
+  6, ruby_interpreter_methods,
   0, ruby_interpreter_variables,
   bic_ruby_interpreter_consts,
   bic_ruby_interpreter_init,
@@ -204,11 +204,6 @@ built_in_method_s ruby_interpreter_methods[] =
     "gv_get#1",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_ruby_interpreter_method_gv_get_1
-  },
-  {
-    "gv_set#2",
-    c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_ruby_interpreter_method_gv_set_2
   },
   {
     "to_string#0",
@@ -388,14 +383,6 @@ bool bic_ruby_interpreter_method_gv_get_1(interpreter_thread_s &it,unsigned stac
   return true;
 }/*}}}*/
 
-bool bic_ruby_interpreter_method_gv_set_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  
-  // FIXME TODO continue ...
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
-}/*}}}*/
-
 bool bic_ruby_interpreter_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -421,7 +408,7 @@ built_in_class_s ruby_value_class =
 {/*{{{*/
   "RubyValue",
   c_modifier_public | c_modifier_final,
-  6, ruby_value_methods,
+  7, ruby_value_methods,
   0, ruby_value_variables,
   bic_ruby_value_consts,
   bic_ruby_value_init,
@@ -457,9 +444,14 @@ built_in_method_s ruby_value_methods[] =
     bic_ruby_value_method_RubyValue_1
   },
   {
-    "value#0",
+    "_new#1",
     c_modifier_public | c_modifier_final,
-    bic_ruby_value_method_value_0
+    bic_ruby_value_method__new_1
+  },
+  {
+    "_value#0",
+    c_modifier_public | c_modifier_final,
+    bic_ruby_value_method__value_0
   },
   {
     "to_string#0",
@@ -711,7 +703,75 @@ bool bic_ruby_value_method_RubyValue_1(interpreter_thread_s &it,unsigned stack_b
   return true;
 }/*}}}*/
 
-bool bic_ruby_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_ruby_value_method__new_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_array)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("_new#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  // - shared status -
+  int status = STATUS_OK;
+
+  VALUE rv_dst = ruby_c::get_value((unsigned)dst_location->v_data_ptr);
+  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+  // - prepare parameters -
+  unsigned param_cnt = array_ptr->used;
+  VALUE rv_params[c_max_method_param_cnt];
+
+  if (param_cnt > 0)
+  {
+    unsigned param_idx = 0;
+    do {
+      location_s *param_location = it.get_location_value(array_ptr->data[param_idx]);
+      rv_params[param_idx] = ruby_c::create_ruby_value(it,param_location,status);
+
+      // - ERROR -
+      if (status)
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_RUBY_VALUE_INVOKE_METHOD_WRONG_PARAMETER,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(param_idx);
+
+        return false;
+      }
+    } while(++param_idx < param_cnt);
+  }
+
+  // - prepare call arguments -
+  call_args_s args = {rv_dst,rb_intern2("new",3),param_cnt,rv_params};
+
+  // - call object method -
+  VALUE rv_result = rb_protect(ruby_c::rb_funcallv_protect,(VALUE)&args,&status);
+
+  // - ERROR -
+  if (status)
+  {
+    BIC_RUBY_INTERPRETER_RETRIEVE_ERROR_LOCATION();
+
+    exception_s::throw_exception(it,module.error_base + c_error_RUBY_VALUE_INVOKE_METHOD_ERROR,operands[c_source_pos_idx],err_location);
+    return false;
+  }
+
+  unsigned result_idx = ruby_c::keep_value(rv_result);
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_ruby_value,result_idx);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_ruby_value_method__value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -771,7 +831,7 @@ built_in_class_s ruby_iv_ref_class =
 {/*{{{*/
   "RubyIVRef",
   c_modifier_public | c_modifier_final,
-  5, ruby_iv_ref_methods,
+  6, ruby_iv_ref_methods,
   0, ruby_iv_ref_variables,
   bic_ruby_iv_ref_consts,
   bic_ruby_iv_ref_init,
@@ -802,9 +862,14 @@ built_in_method_s ruby_iv_ref_methods[] =
     bic_ruby_value_operator_binary_le_br_re_br
   },
   {
-    "value#0",
+    "_new#1",
     c_modifier_public | c_modifier_final,
-    bic_ruby_value_method_value_0
+    bic_ruby_value_method__new_1
+  },
+  {
+    "_value#0",
+    c_modifier_public | c_modifier_final,
+    bic_ruby_value_method__value_0
   },
   {
     "to_string#0",
@@ -882,7 +947,7 @@ built_in_class_s ruby_item_ref_class =
 {/*{{{*/
   "RubyItemRef",
   c_modifier_public | c_modifier_final,
-  5, ruby_item_ref_methods,
+  6, ruby_item_ref_methods,
   0, ruby_item_ref_variables,
   bic_ruby_item_ref_consts,
   bic_ruby_item_ref_init,
@@ -913,9 +978,14 @@ built_in_method_s ruby_item_ref_methods[] =
     bic_ruby_value_operator_binary_le_br_re_br
   },
   {
-    "value#0",
+    "_new#1",
     c_modifier_public | c_modifier_final,
-    bic_ruby_value_method_value_0
+    bic_ruby_value_method__new_1
+  },
+  {
+    "_value#0",
+    c_modifier_public | c_modifier_final,
+    bic_ruby_value_method__value_0
   },
   {
     "to_string#0",
