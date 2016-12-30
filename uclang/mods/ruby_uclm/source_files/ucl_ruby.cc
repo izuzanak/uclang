@@ -33,6 +33,13 @@ VALUE ruby_c::rb_big2ll_protect(VALUE a_big_num)
   return Qnil;
 }/*}}}*/
 
+VALUE ruby_c::rb_funcallv_protect(VALUE a_args)
+{/*{{{*/
+  call_args_s *args = (call_args_s *)a_args;
+
+  return rb_funcallv(args->recv,args->mid,args->argc,args->argv);
+}/*}}}*/
+
 int ruby_c::hash_kv_pair(VALUE key,VALUE value,VALUE array)
 {/*{{{*/
   rb_ary_push(array,key);

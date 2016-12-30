@@ -19,7 +19,7 @@ built_in_module_s module =
   ruby_classes,         // Classes
 
   0,                    // Error base index
-  8,                    // Error count
+  9,                    // Error count
   ruby_error_strings,   // Error strings
 
   ruby_initialize,      // Initialize function
@@ -39,6 +39,7 @@ built_in_class_s *ruby_classes[] =
 const char *ruby_error_strings[] =
 {/*{{{*/
   "error_RUBY_INTERPRETER_PROCESS_CODE_ERROR",
+  "error_RUBY_VALUE_INVOKE_METHOD_ERROR",
   "error_RUBY_VALUE_INVOKE_METHOD_WRONG_PARAMETER",
   "error_RUBY_VALUE_ITEM_SELECT_ERROR",
   "error_RUBY_VALUE_WRONG_VALUE_REFERENCE",
@@ -94,6 +95,13 @@ bool ruby_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nError while processing Ruby code: %s\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_RUBY_VALUE_INVOKE_METHOD_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while invoking Ruby method: %s\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_RUBY_VALUE_INVOKE_METHOD_WRONG_PARAMETER:
@@ -238,7 +246,7 @@ void bic_ruby_interpreter_clear(interpreter_thread_s &it,location_s *location_pt
   string_s *err_string = it.get_new_string_ptr();\
   err_string->set(RSTRING_LEN(rv_error),RSTRING_PTR(rv_error));\
 \
-  BIC_CREATE_NEW_LOCATION(err_location,c_bi_class_string,err_string);\
+  BIC_CREATE_NEW_LOCATION_REFS(err_location,c_bi_class_string,err_string,0);\
 /*}}}*/
 
 bool bic_ruby_interpreter_method_eval_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -512,7 +520,7 @@ bool bic_ruby_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_bas
   }
 
   // - prepare parameters -
-  VALUE rv_params[param_cnt];
+  VALUE rv_params[c_max_method_param_cnt];
 
   if (param_cnt > 0)
   {
@@ -535,8 +543,20 @@ bool bic_ruby_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_bas
   // - retrieve method id -
   ID rv_id = rb_intern2(name_ref.data,name_length);
 
+  // - prepare call arguments -
+  call_args_s args = {rv_dst,rv_id,param_cnt,rv_params};
+
   // - call object method -
-  VALUE rv_result = rb_funcallv(rv_dst,rv_id,param_cnt,rv_params);
+  VALUE rv_result = rb_protect(ruby_c::rb_funcallv_protect,(VALUE)&args,&status);
+
+  // - ERROR -
+  if (status)
+  {
+    BIC_RUBY_INTERPRETER_RETRIEVE_ERROR_LOCATION();
+
+    exception_s::throw_exception(it,module.error_base + c_error_RUBY_VALUE_INVOKE_METHOD_ERROR,operands[c_source_pos_idx],err_location);
+    return false;
+  }
 
   unsigned result_idx = ruby_c::keep_value(rv_result);
 

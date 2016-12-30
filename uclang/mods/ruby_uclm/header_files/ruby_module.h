@@ -22,6 +22,7 @@ extern built_in_class_s *ruby_classes[];
 enum
 {
   c_error_RUBY_INTERPRETER_PROCESS_CODE_ERROR = 0,
+  c_error_RUBY_VALUE_INVOKE_METHOD_ERROR,
   c_error_RUBY_VALUE_INVOKE_METHOD_WRONG_PARAMETER,
   c_error_RUBY_VALUE_ITEM_SELECT_ERROR,
   c_error_RUBY_VALUE_WRONG_VALUE_REFERENCE,

@@ -17,11 +17,26 @@ extern unsigned c_bi_class_ruby_iv_ref;
 extern unsigned c_bi_class_ruby_item_ref;
 extern unsigned c_rm_class_dict;
 
+// - max method parameter count -
+const unsigned c_max_method_param_cnt = 32;
+
 // - return statuses -
 enum
 {
   STATUS_OK = 0,
   STATUS_ERROR
+};
+
+/*
+ * definition of structure call_args_s
+ */
+
+struct call_args_s
+{
+  VALUE recv;
+  ID mid;
+  unsigned argc;
+  const VALUE *argv;
 };
 
 /*
@@ -44,6 +59,7 @@ class ruby_c
   static VALUE rb_load_protect(VALUE a_file_name);
   static VALUE rb_require_protect(VALUE a_file_name);
   static VALUE rb_big2ll_protect(VALUE a_big_num);
+  static VALUE rb_funcallv_protect(VALUE a_args);
 
   static int hash_kv_pair(VALUE key,VALUE value,VALUE array);
 
