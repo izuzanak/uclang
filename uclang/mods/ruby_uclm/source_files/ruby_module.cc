@@ -720,10 +720,16 @@ bool bic_ruby_value_method__new_1(interpreter_thread_s &it,unsigned stack_base,u
     return false;
   }
 
-  // - shared status -
   int status = STATUS_OK;
+  VALUE rv_dst = ruby_c::create_ruby_value(it,dst_location,status);
 
-  VALUE rv_dst = ruby_c::get_value((unsigned)dst_location->v_data_ptr);
+  // - ERROR -
+  if (status)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_RUBY_VALUE_WRONG_VALUE_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
   // - prepare parameters -

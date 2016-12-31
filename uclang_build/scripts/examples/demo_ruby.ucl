@@ -38,9 +38,6 @@ class Demo
     return result
   end
 end
-
-$Person = Person
-$Demo = Demo
 ");
 
   // - print information about person -
@@ -56,6 +53,10 @@ $Demo = Demo
     RubyInterpreter.require("json");
     RubyInterpreter.eval(script_src);
 
+    // - create class global values -
+    result = RubyInterpreter.eval("$Person=Person; $Demo=Demo");
+
+    // - retrieve class objects -
     Person = RubyInterpreter.gv_get("Person");
     demo = RubyInterpreter.gv_get("Demo")._new([]);
 
