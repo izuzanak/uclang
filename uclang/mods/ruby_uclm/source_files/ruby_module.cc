@@ -5,6 +5,7 @@ include "ruby_module.h"
 
 // - RUBY indexes of built in classes -
 unsigned c_bi_class_ruby_interpreter = c_idx_not_exist;
+unsigned c_bi_class_ruby_symbol = c_idx_not_exist;
 unsigned c_bi_class_ruby_value = c_idx_not_exist;
 unsigned c_bi_class_ruby_iv_ref = c_idx_not_exist;
 unsigned c_bi_class_ruby_item_ref = c_idx_not_exist;
@@ -15,7 +16,7 @@ unsigned c_rm_class_dict = c_idx_not_exist;
 // - RUBY module -
 built_in_module_s module =
 {/*{{{*/
-  4,                    // Class count
+  5,                    // Class count
   ruby_classes,         // Classes
 
   0,                    // Error base index
@@ -30,6 +31,7 @@ built_in_module_s module =
 built_in_class_s *ruby_classes[] =
 {/*{{{*/
   &ruby_interpreter_class,
+  &ruby_symbol_class,
   &ruby_value_class,
   &ruby_iv_ref_class,
   &ruby_item_ref_class,
@@ -56,6 +58,9 @@ bool ruby_initialize(script_parser_s &sp)
 
   // - initialize ruby_interpreter class identifier -
   c_bi_class_ruby_interpreter = class_base_idx++;
+
+  // - initialize ruby_symbol class identifier -
+  c_bi_class_ruby_symbol = class_base_idx++;
 
   // - initialize ruby_value class identifier -
   c_bi_class_ruby_value = class_base_idx++;
@@ -397,6 +402,99 @@ bool bic_ruby_interpreter_method_print_0(interpreter_thread_s &it,unsigned stack
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
   printf("RubyInterpreter");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class RUBY_SYMBOL -
+built_in_class_s ruby_symbol_class =
+{/*{{{*/
+  "RubySymbol",
+  c_modifier_public | c_modifier_final,
+  3, ruby_symbol_methods,
+  0, ruby_symbol_variables,
+  bic_ruby_symbol_consts,
+  bic_ruby_symbol_init,
+  bic_ruby_symbol_clear,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};/*}}}*/
+
+built_in_method_s ruby_symbol_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_ruby_symbol_operator_binary_equal
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_ruby_symbol_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_ruby_symbol_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s ruby_symbol_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_ruby_symbol_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_ruby_symbol_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (long long int)(ID)0;
+}/*}}}*/
+
+void bic_ruby_symbol_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+}/*}}}*/
+
+bool bic_ruby_symbol_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_ruby_symbol_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("RubySymbol"),"RubySymbol");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_ruby_symbol_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  printf("RubySymbol");
 
   BIC_SET_RESULT_BLANK();
 

@@ -12,6 +12,7 @@ include "script_parser.h"
  * constants and definitions
  */
 
+extern unsigned c_bi_class_ruby_symbol;
 extern unsigned c_bi_class_ruby_value;
 extern unsigned c_bi_class_ruby_iv_ref;
 extern unsigned c_bi_class_ruby_item_ref;

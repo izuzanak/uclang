@@ -8,6 +8,7 @@ include "ucl_ruby.h"
 
 // - RUBY indexes of built in classes -
 extern unsigned c_bi_class_ruby_interpreter;
+extern unsigned c_bi_class_ruby_symbol;
 extern unsigned c_bi_class_ruby_value;
 extern unsigned c_bi_class_ruby_iv_ref;
 extern unsigned c_bi_class_ruby_item_ref;
@@ -56,6 +57,19 @@ bool bic_ruby_interpreter_method_require_1(interpreter_thread_s &it,unsigned sta
 bool bic_ruby_interpreter_method_gv_get_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ruby_interpreter_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ruby_interpreter_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class RUBY_SYMBOL -
+extern built_in_variable_s ruby_symbol_variables[];
+extern built_in_method_s ruby_symbol_methods[];
+extern built_in_class_s ruby_symbol_class;
+
+void bic_ruby_symbol_consts(location_array_s &const_locations);
+void bic_ruby_symbol_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_ruby_symbol_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_ruby_symbol_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ruby_symbol_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ruby_symbol_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 // - class RUBY_VALUE -
 extern built_in_variable_s ruby_value_variables[];
