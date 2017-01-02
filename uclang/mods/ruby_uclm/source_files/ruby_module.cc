@@ -440,12 +440,12 @@ built_in_method_s ruby_symbol_methods[] =
   },
   {
     "to_string#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_ruby_symbol_method_to_string_0
   },
   {
     "print#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_ruby_symbol_method_print_0
   },
 };/*}}}*/
@@ -483,9 +483,23 @@ bool bic_ruby_symbol_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_ruby_symbol_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  BIC_TO_STRING_WITHOUT_DEST(
-    string_ptr->set(strlen("RubySymbol"),"RubySymbol");
-  );
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  ID rv_id = (long long int)dst_location->v_data_ptr;
+
+  // - retrieve name of symbol -
+  VALUE rv_string = rb_id2str(rv_id);
+  cassert(rv_string);
+
+  // - create string object -
+  unsigned name_length = RSTRING_LEN(rv_string);
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->create(name_length + 1);
+  string_ptr->data[0] = ':';
+  memcpy(string_ptr->data + 1,RSTRING_PTR(rv_string),name_length);
+
+  BIC_SET_RESULT_STRING(string_ptr);
 
   return true;
 }/*}}}*/
@@ -493,8 +507,17 @@ bool bic_ruby_symbol_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 bool bic_ruby_symbol_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  printf("RubySymbol");
+  ID rv_id = (long long int)dst_location->v_data_ptr;
+
+  // - retrieve name of symbol -
+  VALUE rv_string = rb_id2str(rv_id);
+  cassert(rv_string);
+
+  // - write value to standard output -
+  fputc(':',stdout);
+  fwrite(RSTRING_PTR(rv_string),RSTRING_LEN(rv_string),1,stdout);
 
   BIC_SET_RESULT_BLANK();
 

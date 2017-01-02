@@ -50,6 +50,10 @@ int ruby_c::hash_kv_pair(VALUE key,VALUE value,VALUE array)
 
 VALUE ruby_c::create_ruby_value(interpreter_thread_s &it,location_s *location_ptr,int &status)
 {/*{{{*/
+  if (location_ptr->v_type == c_bi_class_ruby_symbol)
+  {
+    return RB_ID2SYM((long long int)location_ptr->v_data_ptr);
+  }
   if (location_ptr->v_type == c_bi_class_ruby_value)
   {
     return ruby_c::get_value((unsigned)location_ptr->v_data_ptr);
@@ -319,8 +323,14 @@ location_s *ruby_c::ruby_value_value(interpreter_thread_s &it,VALUE rv_value,uli
 
       return dict_location;
     }/*}}}*/
-
   case T_SYMBOL:
+    {/*{{{*/
+      long long int value = RB_SYM2ID(rv_value);
+
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_ruby_symbol,value);
+      return new_location;
+    }/*}}}*/
+    
   case T_DATA:
   default:
     return NULL;
