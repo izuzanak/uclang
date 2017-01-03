@@ -77,6 +77,7 @@ Some of implemented modules are:
 [`lua`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/lua_uclm),
 [`mono`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/mono_uclm),
 [`perl`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/perl_uclm),
+[`ruby`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/ruby_uclm),
 [`zlib`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/zlib_uclm),
 [`fuse`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/fuse_uclm),
 [`android`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/android_uclm)
