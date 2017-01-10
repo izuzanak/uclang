@@ -1786,6 +1786,32 @@ if cfg_ref[CFG_TARGET]:
     )
 # }}}
 
+# gtk module
+cfg_ref = c_cfg[C_MODULE_GTK]
+# {{{
+if cfg_ref[CFG_TARGET]:
+    cfg_ref[CFG_MODULE] = module_c(
+      configuration,
+      cfg_ref[CFG_DIR],
+      cfg_ref[CFG_NAME],
+      [ 
+        "header_files",
+        os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
+      ],
+      [ 
+        "source_files",
+      ],
+      [ 
+        os.sep.join(["..","..","libs","libbase_ucll"]),
+      ],
+      opt_build + "`pkg-config --cflags gtk+-3.0` ", # CXX options
+      opt_link + "`pkg-config --libs gtk+-3.0` ", # CXX link options
+      "", # CXX defines
+      [],
+      [],
+    )
+# }}}
+
 # image module
 cfg_ref = c_cfg[C_MODULE_IMAGE]
 # {{{

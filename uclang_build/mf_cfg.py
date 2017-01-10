@@ -45,6 +45,7 @@ C_MODULE_AO         = index; index += 1
 C_MODULE_MPG        = index; index += 1
 C_MODULE_PORTAUDIO  = index; index += 1
 C_MODULE_GSTREAMER  = index; index += 1
+C_MODULE_GTK        = index; index += 1
 C_MODULE_IMAGE      = index; index += 1
 C_MODULE_OPENCV     = index; index += 1
 C_MODULE_DOCU       = index; index += 1
@@ -129,6 +130,7 @@ c_cfg = [
     ["MOD_MPG"       ,c_enabled[C_MODULE_MPG]       ,C_UCLANG_DIR + "mods/mpg_uclm"         ,None],
     ["MOD_PORTAUDIO" ,c_enabled[C_MODULE_PORTAUDIO] ,C_UCLANG_DIR + "mods/portaudio_uclm"   ,None],
     ["MOD_GSTREAMER" ,c_enabled[C_MODULE_GSTREAMER] ,C_UCLANG_DIR + "mods/gstreamer_uclm"   ,None],
+    ["MOD_GTK"       ,c_enabled[C_MODULE_GTK]       ,C_UCLANG_DIR + "mods/gtk_uclm"         ,None],
     ["MOD_IMAGE"     ,c_enabled[C_MODULE_IMAGE]     ,C_UCLANG_DIR + "mods/image_uclm"       ,None],
     ["MOD_OPENCV"    ,c_enabled[C_MODULE_OPENCV]    ,C_UCLANG_DIR + "mods/opencv_uclm"      ,None],
     ["MOD_DOCU"      ,c_enabled[C_MODULE_DOCU]      ,C_UCLANG_DIR + "mods/docu_uclm"        ,None],
