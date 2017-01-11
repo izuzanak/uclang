@@ -412,7 +412,7 @@ bool bic_py_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base
 
   // - parameter count and method name length -
   unsigned param_cnt = (unsigned)code[icl_parm_cnt] - 1;
-  unsigned name_length = name_ref.size - (3 + (unsigned)(logf(param_cnt)/logf(10)));
+  unsigned name_length = name_ref.size - (3 + (unsigned)log10f(param_cnt));
 
   char name[c_max_method_name_length];
   memcpy(name,name_ref.data,name_length);

@@ -661,7 +661,7 @@ bool bic_perl_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_bas
 
   // - parameter count and method name length -
   unsigned param_cnt = (unsigned)code[icl_parm_cnt];
-  unsigned name_length = name_ref.size - (3 + (unsigned)(logf(param_cnt)/logf(10)));
+  unsigned name_length = name_ref.size - (3 + (unsigned)log10f(param_cnt));
 
   SV** sv_fun_ptr = hv_fetch(hv_stash,name_ref.data,name_length,0);
 
