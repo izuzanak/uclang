@@ -382,7 +382,7 @@ built_in_variable_s ao_device_variables[] =
   pointer_array_s *opt_array_ptr = (pointer_array_s *)OPTIONS_LOC->v_data_ptr;\
 \
   /* - ERROR - */\
-  if (opt_array_ptr->used & 1)\
+  if (opt_array_ptr->used & 0x01)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_AO_DEVICE_OPTIONS_NOT_DIVISIBLE_BY_TWO,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\

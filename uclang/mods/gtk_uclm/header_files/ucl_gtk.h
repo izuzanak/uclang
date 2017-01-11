@@ -18,6 +18,10 @@ include "script_parser.h"
 // g_object_class_list_properties - Get an array of GParamSpec* for all properties of a class.
 // g_object_class_find_property - Looks up the GParamSpec for a property of a class.
 
+// g_object_ref_sink
+// g_object_ref
+// g_object_unref
+
 // #define G_TYPE_INVALID
 // #define G_TYPE_NONE
 // #define G_TYPE_INTERFACE
@@ -42,6 +46,34 @@ include "script_parser.h"
 // #define G_TYPE_GTYPE
 // #define G_TYPE_VARIANT
 // #define G_TYPE_CHECKSUM
+
+/*
+ * definition of class gtk_c
+ */
+
+class gtk_c
+{
+  public:
+  inline gtk_c();
+  inline ~gtk_c();
+
+  static GValue *create_g_value(interpreter_thread_s &it,location_s *location_ptr,GValue *value);
+  static location_s *g_value_value(interpreter_thread_s &it,GValue *value,uli source_pos);
+};
+
+/*
+ * inline methods of class gtk_c
+ */
+
+inline gtk_c::gtk_c()
+{/*{{{*/
+  debug_message_2(fprintf(stderr,"gtk_init()\n"););
+}/*}}}*/
+
+inline gtk_c::~gtk_c()
+{/*{{{*/
+  debug_message_2(fprintf(stderr,"gtk_exit()\n"););
+}/*}}}*/
 
 #endif
 

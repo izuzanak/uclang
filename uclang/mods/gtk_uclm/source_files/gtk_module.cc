@@ -70,7 +70,7 @@ built_in_class_s gtk_g_object_class =
 {/*{{{*/
   "GtkGObject",
   c_modifier_public | c_modifier_final,
-  3, gtk_g_object_methods,
+  4, gtk_g_object_methods,
   165, gtk_g_object_variables,
   bic_gtk_g_object_consts,
   bic_gtk_g_object_init,
@@ -94,6 +94,11 @@ built_in_method_s gtk_g_object_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_gtk_g_object_operator_binary_equal
+  },
+  {
+    "GtkGObject#2",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_GtkGObject_2
   },
   {
     "to_string#0",
@@ -464,16 +469,17 @@ void bic_gtk_g_object_consts(location_array_s &const_locations)
 
 void bic_gtk_g_object_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  
-  // FIXME TODO continue ...
-  cassert(0);
+  location_ptr->v_data_ptr = (gpointer)NULL;
 }/*}}}*/
 
 void bic_gtk_g_object_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
+  gpointer g_obj = (gpointer)location_ptr->v_data_ptr;
 
-  // FIXME TODO continue ...
-  cassert(0);
+  if (g_obj != NULL)
+  {
+    g_object_unref(g_obj);
+  }
 }/*}}}*/
 
 bool bic_gtk_g_object_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -486,6 +492,112 @@ bool bic_gtk_g_object_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_g_object_method_GtkGObject_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  long long int g_type;
+
+  if (!it.retrieve_integer(src_0_location,g_type) ||
+      src_1_location->v_type != c_bi_class_array)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("GtkGObject#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  pointer_array_s *array_ptr = (pointer_array_s *)src_1_location->v_data_ptr;
+
+  // - ERROR -
+  if (array_ptr->used & 0x01)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  guint param_cnt = array_ptr->used >> 1;
+  GParameter params[param_cnt] = {0};
+
+#define BIC_GTK_G_OBJECT_RELEASE_PARAMS() \
+{/*{{{*/\
+  GParameter *rp_ptr = params;\
+  GParameter *rp_ptr_end = rp_ptr + param_cnt;\
+\
+  do {\
+    g_value_unset(&rp_ptr->value);\
+  } while(++rp_ptr < rp_ptr_end);\
+}/*}}}*/
+
+  // - prepare parameters -
+  if (param_cnt > 0)
+  {
+    GParameter *p_ptr = params;
+    GParameter *p_ptr_end = p_ptr + param_cnt;
+    pointer *a_ptr = array_ptr->data;
+
+    do {
+      location_s *name_location = it.get_location_value(a_ptr[0]);
+      location_s *value_location = it.get_location_value(a_ptr[1]);
+
+      // - ERROR -
+      if (name_location->v_type != c_bi_class_string)
+      {
+        BIC_GTK_G_OBJECT_RELEASE_PARAMS();
+
+        // FIXME TODO throw proper exception
+        BIC_TODO_ERROR(__FILE__,__LINE__);
+        return false;
+      }
+
+      string_s *string_ptr = (string_s *)name_location->v_data_ptr;
+      p_ptr->name = string_ptr->data;
+
+      // - ERROR -
+      if (!gtk_c::create_g_value(it,value_location,&p_ptr->value))
+      {
+        BIC_GTK_G_OBJECT_RELEASE_PARAMS();
+
+        // FIXME TODO throw proper exception
+        BIC_TODO_ERROR(__FILE__,__LINE__);
+        return false;
+      }
+
+    } while((a_ptr += 2),++p_ptr < p_ptr_end);
+  }
+
+  // - create new g_object -
+  gpointer g_obj = g_object_newv(g_type,param_cnt,params);
+
+  // - ERROR -
+  if (!g_obj)
+  {
+    BIC_GTK_G_OBJECT_RELEASE_PARAMS();
+
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - acquire floating reference to object -
+  if (g_object_is_floating(g_obj))
+  {
+    g_object_ref_sink(g_obj);
+  }
+
+  BIC_GTK_G_OBJECT_RELEASE_PARAMS();
+
+  dst_location->v_data_ptr = (gpointer)g_obj;
 
   return true;
 }/*}}}*/

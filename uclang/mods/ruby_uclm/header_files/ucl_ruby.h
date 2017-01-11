@@ -43,6 +43,7 @@ struct call_args_s
 /*
  * definition of class ruby_c
  */
+
 class ruby_c
 {
   private:
