@@ -54,15 +54,15 @@ VALUE ruby_c::create_ruby_value(interpreter_thread_s &it,location_s *location_pt
   {
     return RB_ID2SYM((long long int)location_ptr->v_data_ptr);
   }
-  if (location_ptr->v_type == c_bi_class_ruby_value)
+  else if (location_ptr->v_type == c_bi_class_ruby_value)
   {
     return ruby_c::get_value((unsigned)location_ptr->v_data_ptr);
   }
-  if (location_ptr->v_type == c_bi_class_ruby_iv_ref)
+  else if (location_ptr->v_type == c_bi_class_ruby_iv_ref)
   {
     return ((ruby_reference_s *)location_ptr->v_data_ptr)->get_iv(status);
   }
-  if (location_ptr->v_type == c_bi_class_ruby_item_ref)
+  else if (location_ptr->v_type == c_bi_class_ruby_item_ref)
   {
     return ((ruby_reference_s *)location_ptr->v_data_ptr)->get_item(status);
   }
