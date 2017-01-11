@@ -17,10 +17,14 @@ include "script_parser.h"
 // G_OBJECT_GET_CLASS(object)
 // g_object_class_list_properties - Get an array of GParamSpec* for all properties of a class.
 // g_object_class_find_property - Looks up the GParamSpec for a property of a class.
+// g_signal_list_ids
 
 // g_object_ref_sink
 // g_object_ref
 // g_object_unref
+
+// g_quark_from_string
+// g_object_set_qdata_full
 
 // #define G_TYPE_INVALID
 // #define G_TYPE_NONE
@@ -48,12 +52,20 @@ include "script_parser.h"
 // #define G_TYPE_CHECKSUM
 
 /*
+ * constants and definitions
+ */
+
+extern unsigned c_bi_class_gtk_g_object;
+
+/*
  * definition of class gtk_c
  */
 
 class gtk_c
 {
   public:
+  GQuark ucl_dlgs_quark;
+
   inline gtk_c();
   inline ~gtk_c();
 
@@ -62,18 +74,68 @@ class gtk_c
 };
 
 /*
+ * definition of generated structures
+ */
+
+// -- gtk_delegate_s --
+@begin
+struct
+<
+pointer:delegate_loc
+pointer:data_loc
+>
+gtk_delegate_s;
+@end
+
+// -- gtk_delegate_list_s --
+@begin
+list<gtk_delegate_s> gtk_delegate_list_s;
+@end
+
+// -- gtk_dlg_data_s --
+@begin
+struct
+<
+pointer:it_ptr
+gtk_delegate_list_s:delegates
+>
+gtk_dlg_data_s;
+@end
+
+/*
  * inline methods of class gtk_c
  */
 
 inline gtk_c::gtk_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"gtk_init()\n"););
+
+  ucl_dlgs_quark = g_quark_from_string("uclang delegates");
 }/*}}}*/
 
 inline gtk_c::~gtk_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"gtk_exit()\n"););
 }/*}}}*/
+
+/*
+ * inline methods of generated structures
+ */
+
+// -- gtk_delegate_s --
+@begin
+inlines gtk_delegate_s
+@end
+
+// -- gtk_delegate_list_s --
+@begin
+inlines gtk_delegate_list_s
+@end
+
+// -- gtk_dlg_data_s --
+@begin
+inlines gtk_dlg_data_s
+@end
 
 #endif
 

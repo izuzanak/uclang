@@ -70,7 +70,7 @@ built_in_class_s gtk_g_object_class =
 {/*{{{*/
   "GtkGObject",
   c_modifier_public | c_modifier_final,
-  4, gtk_g_object_methods,
+  6, gtk_g_object_methods,
   165, gtk_g_object_variables,
   bic_gtk_g_object_consts,
   bic_gtk_g_object_init,
@@ -99,6 +99,16 @@ built_in_method_s gtk_g_object_methods[] =
     "GtkGObject#2",
     c_modifier_public | c_modifier_final,
     bic_gtk_g_object_method_GtkGObject_2
+  },
+  {
+    "list_properties#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_list_properties_0
+  },
+  {
+    "signal_connect#3",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_signal_connect_3
   },
   {
     "to_string#0",
@@ -598,6 +608,75 @@ bool bic_gtk_g_object_method_GtkGObject_2(interpreter_thread_s &it,unsigned stac
   BIC_GTK_G_OBJECT_RELEASE_PARAMS();
 
   dst_location->v_data_ptr = (gpointer)g_obj;
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_g_object_method_list_properties_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+
+  // - retrieve list of object properties -
+  guint prop_cnt;
+  GParamSpec **param_specs =
+    g_object_class_list_properties(G_OBJECT_GET_CLASS(g_obj),&prop_cnt);
+
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+  if (prop_cnt > 0)
+  {
+    GParamSpec **ps_ptr = param_specs;
+    GParamSpec **ps_ptr_end = ps_ptr + prop_cnt;
+
+    do {
+      const gchar *name = (*ps_ptr)->name;
+
+      // - create name string -
+      string_s *string_ptr = it.get_new_string_ptr();
+      string_ptr->set(strlen(name),name);
+
+      // - create name location -
+      BIC_CREATE_NEW_LOCATION(name_location,c_bi_class_string,string_ptr);
+      array_ptr->push(name_location);
+
+    } while(++ps_ptr < ps_ptr_end);
+  }
+
+  g_free(param_specs);
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_string ||
+      src_1_location->v_type != c_bi_class_delegate)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("signal_connect#3");
+    new_exception->params.push(3);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+    new_exception->params.push(src_2_location->v_type);
+
+    return false;
+  }
+
+  // FIXME TODO continue ...
+
+  BIC_SET_RESULT_BLANK();
 
   return true;
 }/*}}}*/
