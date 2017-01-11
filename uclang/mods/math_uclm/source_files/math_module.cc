@@ -342,7 +342,7 @@ bool math_print_exception(interpreter_s &it,exception_s &exception)
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
 \
-  /* ERROR */\
+  /* - ERROR - */\
   if (src_0_location->v_type != c_bi_class_ ## VEC_TYPE)\
   {\
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
