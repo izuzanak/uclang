@@ -5,6 +5,15 @@
 #define ENABLED 1
 #define MP_COMMA ,
 
+// - GCC un/likely macros -
+#ifdef __GNUC__
+#define likely(x) __builtin_expect(!!(x),1)
+#define unlikely(x) __builtin_expect(!!(x),0)
+#else
+#define likely(x) x
+#define unlikely(x) x
+#endif
+
 // - system type selection -
 #define SYSTEM_TYPE_UNIX        1 // - for system calls use unix environment
 #define SYSTEM_TYPE_WINDOWS     2 // - for system calls use windows environment
