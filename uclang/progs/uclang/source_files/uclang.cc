@@ -92,20 +92,15 @@ void *run_interpreter(void *data)
 
     // - fake program source for DSP -
     const char *dummy_src =
-      "\n"
-      "public class Main\n"
-      "{\n"
-      "   Main()\n"
-      "   {\n"
-      "      \"Hello world\\\n\".print();\n"
-      "   }\n"
-      "\n"
-      "   static main(args) {\n"
-      "      new Main();\n"
-      "   }\n"
-      "}\n"
-      "\n"
-      ;
+"class Main\n"
+"{\n"
+"  static public main(argv)\n"
+"  {\n"
+"    \"Hello world!\\n\".print();\n"
+"\n"
+"    return 0;\n"
+"  }\n"
+"}\n";
 
     // - initialize source structure -
     source.file_name.set(strlen("dummy"),"dummy");
@@ -183,7 +178,7 @@ void *run_interpreter(void *data)
         sizeof(long long int) != 8 ||
         sizeof(double)        != 8)
     {
-      fprintf(stderr,"%s: Not tested on non 32bit system, sorry\n",argv[0]);
+      fprintf(stderr,"%s: Unsupported sizes of basic data types\n",argv[0]);
 
       mods_path.clear();
       source.clear();
