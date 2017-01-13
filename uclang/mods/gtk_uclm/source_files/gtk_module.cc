@@ -70,7 +70,7 @@ built_in_class_s gtk_g_object_class =
 {/*{{{*/
   "GtkGObject",
   c_modifier_public | c_modifier_final,
-  6, gtk_g_object_methods,
+  7, gtk_g_object_methods,
   165, gtk_g_object_variables,
   bic_gtk_g_object_consts,
   bic_gtk_g_object_init,
@@ -109,6 +109,11 @@ built_in_method_s gtk_g_object_methods[] =
     "signal_connect#3",
     c_modifier_public | c_modifier_final,
     bic_gtk_g_object_method_signal_connect_3
+  },
+  {
+    "application_run#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_application_run_0
   },
   {
     "to_string#0",
@@ -674,9 +679,95 @@ bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned 
     return false;
   }
 
-  // FIXME TODO continue ...
+  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
+  // - retrieve delegate pointer -
+  delegate_s *delegate_ptr = (delegate_s *)src_1_location->v_data_ptr;
+
+  // - ERROR -
+  if (delegate_ptr->param_cnt != 2)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - retrieve delegate data pointer -
+  gtk_dlg_data_s *dlg_data_ptr =
+    (gtk_dlg_data_s *)g_object_get_qdata(G_OBJECT(g_obj),gtk_c::ucl_dlgs_quark);
+
+  // - if delegate data pointer does not exist -
+  if (dlg_data_ptr == NULL)
+  {
+    // - create delegate data pointer -
+    dlg_data_ptr = (gtk_dlg_data_s *)cmalloc(sizeof(gtk_dlg_data_s));
+    dlg_data_ptr->init();
+    dlg_data_ptr->it_ptr = &it;
+    dlg_data_ptr->object_loc = dst_location;
+
+    g_object_set_qdata_full(G_OBJECT(g_obj),gtk_c::ucl_dlgs_quark,
+        dlg_data_ptr,gtk_c::dlg_data_release);
+  }
+
+  unsigned delegate_idx = dlg_data_ptr->delegates.append_blank();
+
+  // - store delegate and associated data -
+  src_1_location->v_reference_cnt.atomic_inc();
+  src_2_location->v_reference_cnt.atomic_inc();
+  dlg_data_ptr->delegates[delegate_idx].set(src_1_location,src_2_location);
+
+  // - connect signal to handler -
+  g_signal_connect(g_obj,string_ptr->data,G_CALLBACK(gtk_c::callback_handler),(gpointer)delegate_idx);
+
+  // FIXME TODO return signal handler
   BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_g_object_method_application_run_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  // - ERROR - 
+  if (gtk_c::app_running)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (G_OBJECT_TYPE(g_obj) != GTK_TYPE_APPLICATION)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  gtk_c::app_ptr = (GApplication *)g_obj;
+  gtk_c::app_running = true;
+  gtk_c::app_source_pos = operands[c_source_pos_idx];
+  gtk_c::app_ret_code = c_run_return_code_OK;
+
+  // - run application -
+  long long int status = g_application_run(G_APPLICATION(g_obj),0,NULL);
+
+  unsigned app_ret_code = gtk_c::app_ret_code;
+  gtk_c::init_static();
+
+  // - if exception occurred in one of callbacks -
+  if (app_ret_code == c_run_return_code_EXCEPTION)
+  {
+    return false;
+  }
+
+  pointer &res_location = it.data_stack[res_loc_idx];
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,status);
 
   return true;
 }/*}}}*/

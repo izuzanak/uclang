@@ -25,6 +25,7 @@ include "script_parser.h"
 
 // g_quark_from_string
 // g_object_set_qdata_full
+// g_object_get_qdata
 
 // #define G_TYPE_INVALID
 // #define G_TYPE_NONE
@@ -64,10 +65,20 @@ extern unsigned c_bi_class_gtk_g_object;
 class gtk_c
 {
   public:
-  GQuark ucl_dlgs_quark;
+  static GQuark ucl_dlgs_quark;
+
+  static GApplication *app_ptr;
+  static bool app_running;
+  static unsigned app_source_pos;
+  static unsigned app_ret_code;
+
+  static inline void init_static();
 
   inline gtk_c();
   inline ~gtk_c();
+
+  static void dlg_data_release(gpointer data);
+  static void callback_handler(gpointer g_obj,gpointer data);
 
   static GValue *create_g_value(interpreter_thread_s &it,location_s *location_ptr,GValue *value);
   static location_s *g_value_value(interpreter_thread_s &it,GValue *value,uli source_pos);
@@ -97,6 +108,7 @@ list<gtk_delegate_s> gtk_delegate_list_s;
 struct
 <
 pointer:it_ptr
+pointer:object_loc
 gtk_delegate_list_s:delegates
 >
 gtk_dlg_data_s;
@@ -106,11 +118,20 @@ gtk_dlg_data_s;
  * inline methods of class gtk_c
  */
 
+inline void gtk_c::init_static()
+{/*{{{*/
+  app_ptr = NULL;
+  app_running = false;
+  app_source_pos = 0;
+  app_ret_code = c_run_return_code_OK;
+}/*}}}*/
+
 inline gtk_c::gtk_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"gtk_init()\n"););
 
   ucl_dlgs_quark = g_quark_from_string("uclang delegates");
+  gtk_c::init_static();
 }/*}}}*/
 
 inline gtk_c::~gtk_c()
