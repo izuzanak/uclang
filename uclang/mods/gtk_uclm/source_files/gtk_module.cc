@@ -70,7 +70,7 @@ built_in_class_s gtk_g_object_class =
 {/*{{{*/
   "GtkGObject",
   c_modifier_public | c_modifier_final,
-  7, gtk_g_object_methods,
+  8, gtk_g_object_methods,
   165, gtk_g_object_variables,
   bic_gtk_g_object_consts,
   bic_gtk_g_object_init,
@@ -111,9 +111,14 @@ built_in_method_s gtk_g_object_methods[] =
     bic_gtk_g_object_method_signal_connect_3
   },
   {
-    "application_run#0",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_application_run_0
+    "main_loop#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_gtk_g_object_method_main_loop_0
+  },
+  {
+    "quit_main_loop#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_gtk_g_object_method_quit_main_loop_0
   },
   {
     "to_string#0",
@@ -609,6 +614,10 @@ bool bic_gtk_g_object_method_GtkGObject_2(interpreter_thread_s &it,unsigned stac
   {
     g_object_ref_sink(g_obj);
   }
+  else
+  {
+    g_object_ref(g_obj);
+  }
 
   BIC_GTK_G_OBJECT_RELEASE_PARAMS();
 
@@ -726,48 +735,56 @@ bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned 
   return true;
 }/*}}}*/
 
-bool bic_gtk_g_object_method_application_run_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_gtk_g_object_method_main_loop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - ERROR - 
-  if (gtk_c::app_running)
+  if (gtk_c::main_loop)
   {
     // FIXME TODO throw proper exception
     BIC_TODO_ERROR(__FILE__,__LINE__);
     return false;
   }
 
-  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+  gtk_c::main_loop = true;
+  gtk_c::main_source_pos = operands[c_source_pos_idx];
+  gtk_c::main_ret_code = c_run_return_code_OK;
 
-  // - ERROR -
-  if (G_OBJECT_TYPE(g_obj) != GTK_TYPE_APPLICATION)
-  {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
-    return false;
-  }
+  // - run gtk main loop -
+  gtk_main();
 
-  gtk_c::app_ptr = (GApplication *)g_obj;
-  gtk_c::app_running = true;
-  gtk_c::app_source_pos = operands[c_source_pos_idx];
-  gtk_c::app_ret_code = c_run_return_code_OK;
-
-  // - run application -
-  long long int status = g_application_run(G_APPLICATION(g_obj),0,NULL);
-
-  unsigned app_ret_code = gtk_c::app_ret_code;
+  unsigned main_ret_code = gtk_c::main_ret_code;
   gtk_c::init_static();
 
   // - if exception occurred in one of callbacks -
-  if (app_ret_code == c_run_return_code_EXCEPTION)
+  if (main_ret_code == c_run_return_code_EXCEPTION)
   {
     return false;
   }
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SIMPLE_SET_RES(c_bi_class_integer,status);
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_g_object_method_quit_main_loop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  // - ERROR - 
+  if (!gtk_c::main_loop)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - quit gtk main loop -
+  gtk_main_quit();
+
+  BIC_SET_RESULT_BLANK();
 
   return true;
 }/*}}}*/

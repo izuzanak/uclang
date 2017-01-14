@@ -67,10 +67,9 @@ class gtk_c
   public:
   static GQuark ucl_dlgs_quark;
 
-  static GApplication *app_ptr;
-  static bool app_running;
-  static unsigned app_source_pos;
-  static unsigned app_ret_code;
+  static bool main_loop;
+  static unsigned main_source_pos;
+  static unsigned main_ret_code;
 
   static inline void init_static();
 
@@ -120,15 +119,16 @@ gtk_dlg_data_s;
 
 inline void gtk_c::init_static()
 {/*{{{*/
-  app_ptr = NULL;
-  app_running = false;
-  app_source_pos = 0;
-  app_ret_code = c_run_return_code_OK;
+  main_loop = false;
+  main_source_pos = 0;
+  main_ret_code = c_run_return_code_OK;
 }/*}}}*/
 
 inline gtk_c::gtk_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"gtk_init()\n"););
+
+  gtk_init(0,NULL);
 
   ucl_dlgs_quark = g_quark_from_string("uclang delegates");
   gtk_c::init_static();

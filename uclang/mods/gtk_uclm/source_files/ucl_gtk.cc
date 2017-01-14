@@ -6,10 +6,9 @@ include "ucl_gtk.h"
 // - static members of class gtk_c -
 GQuark gtk_c::ucl_dlgs_quark;
 
-GApplication *gtk_c::app_ptr;
-bool gtk_c::app_running;
-unsigned gtk_c::app_source_pos;
-unsigned gtk_c::app_ret_code;
+bool gtk_c::main_loop;
+unsigned gtk_c::main_source_pos;
+unsigned gtk_c::main_ret_code;
 
 // - gtk global init object -
 gtk_c g_gtk;
@@ -76,14 +75,11 @@ void gtk_c::callback_handler(gpointer g_obj,gpointer data)
 
   // - call delegate method -
   location_s *trg_location = NULL;
-  BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,gtk_c::app_source_pos,
-      gtk_c::app_ret_code = c_run_return_code_EXCEPTION;
+  BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,gtk_c::main_source_pos,
+      gtk_c::main_ret_code = c_run_return_code_EXCEPTION;
 
-      // - if application exists, quit it -
-      if (gtk_c::app_ptr != NULL)
-      {
-        g_application_quit(gtk_c::app_ptr);
-      }
+      // - quit gtk main loop -
+      gtk_main_quit();
 
       return;
       );
