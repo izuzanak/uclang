@@ -13,7 +13,7 @@ built_in_module_s module =
   gtk_classes,         // Classes
 
   0,                   // Error base index
-  1,                   // Error count
+  8,                   // Error count
   gtk_error_strings,   // Error strings
 
   gtk_initialize,      // Initialize function
@@ -29,7 +29,14 @@ built_in_class_s *gtk_classes[] =
 // - GTK error strings -
 const char *gtk_error_strings[] =
 {/*{{{*/
-  "error_GTK_DUMMY_ERROR",
+  "error_GTK_G_OBJECT_WRONG_PROPERTIES_ARRAY_SIZE",
+  "error_GTK_G_OBJECT_PROPERTY_NAME_EXPECTED_STRING",
+  "error_GTK_G_OBJECT_UNKNOWN_PROPERTY",
+  "error_GTK_G_OBJECT_G_VALUE_CREATE_ERROR",
+  "error_GTK_G_OBJECT_G_VALUE_VALUE_ERROR",
+  "error_GTK_G_OBJECT_WRONG_SIGNAL_CALLBACK_DELEGATE",
+  "error_GTK_G_OBJECT_CREATE_ERROR",
+  "error_GTK_G_OBJECT_MAIN_LOOP_STATE_ERROR",
 };/*}}}*/
 
 // - GTK initialize -
@@ -51,11 +58,65 @@ bool gtk_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_GTK_DUMMY_ERROR:
+  case c_error_GTK_G_OBJECT_WRONG_PROPERTIES_ARRAY_SIZE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nGTK dummy error\n");
+    fprintf(stderr,"\nWrong size of GObject properties array\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GTK_G_OBJECT_PROPERTY_NAME_EXPECTED_STRING:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nExpected string as property name at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GTK_G_OBJECT_UNKNOWN_PROPERTY:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nGObject does not contain property \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GTK_G_OBJECT_G_VALUE_CREATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while creating GValue");
+    
+    (exception.params.used >= 1) ?
+      fprintf(stderr," at position %" HOST_LL_FORMAT "d\n",exception.params[0]) :
+      fputc('\n',stderr);
+
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GTK_G_OBJECT_G_VALUE_VALUE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while retrieving value from GValue\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GTK_G_OBJECT_WRONG_SIGNAL_CALLBACK_DELEGATE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong signal callback delegate\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GTK_G_OBJECT_CREATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while creating GObject\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GTK_G_OBJECT_MAIN_LOOP_STATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nGTK main loop is %s running\n",exception.params[0] ? "already" : "not");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -70,7 +131,7 @@ built_in_class_s gtk_g_object_class =
 {/*{{{*/
   "GtkGObject",
   c_modifier_public | c_modifier_final,
-  8, gtk_g_object_methods,
+  13, gtk_g_object_methods,
   165, gtk_g_object_variables,
   bic_gtk_g_object_consts,
   bic_gtk_g_object_init,
@@ -106,9 +167,34 @@ built_in_method_s gtk_g_object_methods[] =
     bic_gtk_g_object_method_list_properties_0
   },
   {
+    "set_prop#2",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_set_prop_2
+  },
+  {
+    "get_prop#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_get_prop_1
+  },
+  {
     "signal_connect#3",
     c_modifier_public | c_modifier_final,
     bic_gtk_g_object_method_signal_connect_3
+  },
+  {
+    "container_add#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_container_add_1
+  },
+  {
+    "grid_attach#5",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_grid_attach_5
+  },
+  {
+    "widget_show_all#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_widget_show_all_0
   },
   {
     "main_loop#0",
@@ -541,8 +627,7 @@ bool bic_gtk_g_object_method_GtkGObject_2(interpreter_thread_s &it,unsigned stac
   // - ERROR -
   if (array_ptr->used & 0x01)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_WRONG_PROPERTIES_ARRAY_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -575,8 +660,9 @@ bool bic_gtk_g_object_method_GtkGObject_2(interpreter_thread_s &it,unsigned stac
       {
         BIC_GTK_G_OBJECT_RELEASE_PARAMS();
 
-        // FIXME TODO throw proper exception
-        BIC_TODO_ERROR(__FILE__,__LINE__);
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_PROPERTY_NAME_EXPECTED_STRING,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(p_ptr - params);
+
         return false;
       }
 
@@ -588,8 +674,9 @@ bool bic_gtk_g_object_method_GtkGObject_2(interpreter_thread_s &it,unsigned stac
       {
         BIC_GTK_G_OBJECT_RELEASE_PARAMS();
 
-        // FIXME TODO throw proper exception
-        BIC_TODO_ERROR(__FILE__,__LINE__);
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_G_VALUE_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(p_ptr - params);
+
         return false;
       }
 
@@ -604,8 +691,7 @@ bool bic_gtk_g_object_method_GtkGObject_2(interpreter_thread_s &it,unsigned stac
   {
     BIC_GTK_G_OBJECT_RELEASE_PARAMS();
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -667,6 +753,96 @@ bool bic_gtk_g_object_method_list_properties_0(interpreter_thread_s &it,unsigned
   return true;
 }/*}}}*/
 
+bool bic_gtk_g_object_method_set_prop_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("set_prop#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  GValue g_value = {0};
+
+  // - ERROR -
+  if (gtk_c::create_g_value(it,src_1_location,&g_value) == NULL)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_G_VALUE_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  g_object_set_property(G_OBJECT(g_obj),string_ptr->data,&g_value);
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_g_object_method_get_prop_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("get_prop#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  // - retrieve parameter specification -
+  GParamSpec *value_spec = g_object_class_find_property(
+      G_OBJECT_GET_CLASS(G_OBJECT(g_obj)),string_ptr->data);
+
+  // - ERROR -
+  if (value_spec == NULL)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_UNKNOWN_PROPERTY,operands[c_source_pos_idx],src_0_location);
+    return false;
+  }
+ 
+  GValue g_value = {0};
+  g_value_init(&g_value,value_spec->value_type);
+  g_object_get_property(G_OBJECT(g_obj),string_ptr->data,&g_value);
+
+  // - retrieve value of g_value -
+  location_s *location_ptr = gtk_c::g_value_value(it,value_spec->value_type,&g_value);
+
+  // - ERROR -
+  if (location_ptr == NULL)
+  {
+    g_value_unset(&g_value);
+
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_G_VALUE_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  g_value_unset(&g_value);
+
+  BIC_SET_RESULT(location_ptr);
+
+  return true;
+}/*}}}*/
+
 bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
@@ -697,8 +873,7 @@ bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned 
   // - ERROR -
   if (delegate_ptr->param_cnt != 2)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_WRONG_SIGNAL_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -735,6 +910,92 @@ bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned 
   return true;
 }/*}}}*/
 
+bool bic_gtk_g_object_method_container_add_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_gtk_g_object)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("container_add#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+  gpointer g_obj_widget = (gpointer)src_0_location->v_data_ptr;
+
+  // - add widget to container -
+  gtk_container_add(GTK_CONTAINER(g_obj),GTK_WIDGET(g_obj_widget));
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_g_object_method_grid_attach_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
+  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
+  location_s *src_4_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_4_op_idx]);
+
+  long long int left;
+  long long int top;
+  long long int width;
+  long long int height;
+
+  if (src_0_location->v_type != c_bi_class_gtk_g_object ||
+      !it.retrieve_integer(src_1_location,left) ||
+      !it.retrieve_integer(src_2_location,top) ||
+      !it.retrieve_integer(src_3_location,width) ||
+      !it.retrieve_integer(src_4_location,height))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("grid_attach#5");
+    new_exception->params.push(5);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+    new_exception->params.push(src_2_location->v_type);
+    new_exception->params.push(src_3_location->v_type);
+    new_exception->params.push(src_4_location->v_type);
+
+    return false;
+  }
+
+  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+  gpointer g_obj_widget = (gpointer)src_0_location->v_data_ptr;
+
+  // - attach widget to grid -
+  gtk_grid_attach(GTK_GRID(g_obj),GTK_WIDGET(g_obj_widget),left,top,width,height);
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_g_object_method_widget_show_all_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+
+  // - show widget and all its children -
+  gtk_widget_show_all(GTK_WIDGET(g_obj));
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
 bool bic_gtk_g_object_method_main_loop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
@@ -742,8 +1003,9 @@ bool bic_gtk_g_object_method_main_loop_0(interpreter_thread_s &it,unsigned stack
   // - ERROR - 
   if (gtk_c::main_loop)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_MAIN_LOOP_STATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(1);
+
     return false;
   }
 
@@ -776,8 +1038,9 @@ bool bic_gtk_g_object_method_quit_main_loop_0(interpreter_thread_s &it,unsigned 
   // - ERROR - 
   if (!gtk_c::main_loop)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_MAIN_LOOP_STATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(0);
+
     return false;
   }
 

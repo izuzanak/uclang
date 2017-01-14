@@ -79,8 +79,8 @@ class gtk_c
   static void dlg_data_release(gpointer data);
   static void callback_handler(gpointer g_obj,gpointer data);
 
-  static GValue *create_g_value(interpreter_thread_s &it,location_s *location_ptr,GValue *value);
-  static location_s *g_value_value(interpreter_thread_s &it,GValue *value,uli source_pos);
+  static GValue *create_g_value(interpreter_thread_s &it,location_s *location_ptr,GValue *g_value);
+  static location_s *g_value_value(interpreter_thread_s &it,GType g_type,GValue *g_value);
 };
 
 /*

@@ -86,41 +86,41 @@ void gtk_c::callback_handler(gpointer g_obj,gpointer data)
   it.release_location_ptr(trg_location);
 }/*}}}*/
 
-GValue *gtk_c::create_g_value(interpreter_thread_s &it,location_s *location_ptr,GValue *value)
+GValue *gtk_c::create_g_value(interpreter_thread_s &it,location_s *location_ptr,GValue *g_value)
 {/*{{{*/
   if (location_ptr->v_type == c_bi_class_gtk_g_object)
   {/*{{{*/
     gpointer g_obj = (gpointer)location_ptr->v_data_ptr;
 
-    g_value_init(value,G_TYPE_OBJECT);
-    g_value_set_object(value,g_obj);
+    g_value_init(g_value,G_TYPE_OBJECT);
+    g_value_set_object(g_value,g_obj);
 
-    return value;
+    return g_value;
   }/*}}}*/
   else
   {
     switch (location_ptr->v_type)
     {
     case c_bi_class_char:
-      g_value_init(value,G_TYPE_CHAR);
-      g_value_set_schar(value,(char)location_ptr->v_data_ptr);
-      return value;
+      g_value_init(g_value,G_TYPE_CHAR);
+      g_value_set_schar(g_value,(char)location_ptr->v_data_ptr);
+      return g_value;
     case c_bi_class_integer:
-      g_value_init(value,G_TYPE_INT64);
-      g_value_set_int64(value,(long long int)location_ptr->v_data_ptr);
-      return value;
+      g_value_init(g_value,G_TYPE_INT64);
+      g_value_set_int64(g_value,(long long int)location_ptr->v_data_ptr);
+      return g_value;
     case c_bi_class_float:
-      g_value_init(value,G_TYPE_DOUBLE);
-      g_value_set_double(value,(double)location_ptr->v_data_ptr);
-      return value;
+      g_value_init(g_value,G_TYPE_DOUBLE);
+      g_value_set_double(g_value,(double)location_ptr->v_data_ptr);
+      return g_value;
     case c_bi_class_string:
       {/*{{{*/
         string_s *string_ptr = (string_s *)location_ptr->v_data_ptr;
 
-        g_value_init(value,G_TYPE_STRING);
-        g_value_set_string(value,string_ptr->data);
+        g_value_init(g_value,G_TYPE_STRING);
+        g_value_set_string(g_value,string_ptr->data);
 
-        return value;
+        return g_value;
       }/*}}}*/
 
     // - ERROR -
@@ -130,11 +130,161 @@ GValue *gtk_c::create_g_value(interpreter_thread_s &it,location_s *location_ptr,
   }
 }/*}}}*/
 
-location_s *gtk_c::g_value_value(interpreter_thread_s &it,GValue *value,uli source_pos)
+location_s *gtk_c::g_value_value(interpreter_thread_s &it,GType g_type,GValue *g_value)
 {/*{{{*/
 
-  // FIXME TODO continue ...
-  return NULL;
+  // FIXME debug output
+  //{/*{{{*/
+  //  do {
+  //    switch (g_type)
+  //    {
+  //      case G_TYPE_INVALID: fprintf(stderr,"g_type: G_TYPE_INVALID\n"); break;
+  //      case G_TYPE_NONE: fprintf(stderr,"g_type: G_TYPE_NONE\n"); break;
+  //      case G_TYPE_INTERFACE: fprintf(stderr,"g_type: G_TYPE_INTERFACE\n"); break;
+  //      case G_TYPE_CHAR: fprintf(stderr,"g_type: G_TYPE_CHAR\n"); break;
+  //      case G_TYPE_UCHAR: fprintf(stderr,"g_type: G_TYPE_UCHAR\n"); break;
+  //      case G_TYPE_BOOLEAN: fprintf(stderr,"g_type: G_TYPE_BOOLEAN\n"); break;
+  //      case G_TYPE_INT: fprintf(stderr,"g_type: G_TYPE_INT\n"); break;
+  //      case G_TYPE_UINT: fprintf(stderr,"g_type: G_TYPE_UINT\n"); break;
+  //      case G_TYPE_LONG: fprintf(stderr,"g_type: G_TYPE_LONG\n"); break;
+  //      case G_TYPE_ULONG: fprintf(stderr,"g_type: G_TYPE_ULONG\n"); break;
+  //      case G_TYPE_INT64: fprintf(stderr,"g_type: G_TYPE_INT64\n"); break;
+  //      case G_TYPE_UINT64: fprintf(stderr,"g_type: G_TYPE_UINT64\n"); break;
+  //      case G_TYPE_ENUM: fprintf(stderr,"g_type: G_TYPE_ENUM\n"); break;
+  //      case G_TYPE_FLAGS: fprintf(stderr,"g_type: G_TYPE_FLAGS\n"); break;
+  //      case G_TYPE_FLOAT: fprintf(stderr,"g_type: G_TYPE_FLOAT\n"); break;
+  //      case G_TYPE_DOUBLE: fprintf(stderr,"g_type: G_TYPE_DOUBLE\n"); break;
+  //      case G_TYPE_STRING: fprintf(stderr,"g_type: G_TYPE_STRING\n"); break;
+  //      case G_TYPE_POINTER: fprintf(stderr,"g_type: G_TYPE_POINTER\n"); break;
+  //      case G_TYPE_BOXED: fprintf(stderr,"g_type: G_TYPE_BOXED\n"); break;
+  //      case G_TYPE_PARAM: fprintf(stderr,"g_type: G_TYPE_PARAM\n"); break;
+  //      case G_TYPE_OBJECT: fprintf(stderr,"g_type: G_TYPE_OBJECT\n"); break;
+  //      case G_TYPE_VARIANT: fprintf(stderr,"g_type: G_TYPE_VARIANT\n"); break;
+  //    }
+  //  } while(0);
+  //}/*}}}*/
+
+  switch (g_type)
+  {
+  case G_TYPE_STRING:
+    {/*{{{*/
+      const gchar *string = g_value_get_string(g_value);
+
+      string_s *string_ptr = it.get_new_string_ptr();
+      string_ptr->set(strlen(string),string);
+
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+      return new_location;
+    }/*}}}*/
+  case G_TYPE_INVALID:
+  case G_TYPE_NONE:
+  case G_TYPE_INTERFACE:
+    return NULL;
+  case G_TYPE_CHAR:
+  case G_TYPE_UCHAR:
+    {/*{{{*/
+      char value;
+
+      switch (g_type)
+      {
+      case G_TYPE_CHAR:
+        value = g_value_get_schar(g_value);
+        break;
+      case G_TYPE_UCHAR:
+        value = g_value_get_uchar(g_value);
+        break;
+      default:
+        cassert(0);
+      }
+
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_char,value);
+      return new_location;
+    }/*}}}*/
+  case G_TYPE_BOOLEAN:
+  case G_TYPE_INT:
+  case G_TYPE_UINT:
+  case G_TYPE_LONG:
+  case G_TYPE_ULONG:
+  case G_TYPE_INT64:
+  case G_TYPE_UINT64:
+  case G_TYPE_ENUM:
+  case G_TYPE_FLAGS:
+    {/*{{{*/
+      long long int value;
+
+      switch (g_type)
+      {
+      case G_TYPE_BOOLEAN:
+        value = g_value_get_boolean(g_value);
+        break;
+      case G_TYPE_INT:
+        value = g_value_get_int(g_value);
+        break;
+      case G_TYPE_UINT:
+        value = g_value_get_uint(g_value);
+        break;
+      case G_TYPE_LONG:
+        value = g_value_get_long(g_value);
+        break;
+      case G_TYPE_ULONG:
+        value = g_value_get_ulong(g_value);
+        break;
+      case G_TYPE_INT64:
+        value = g_value_get_int64(g_value);
+        break;
+      case G_TYPE_UINT64:
+        value = g_value_get_uint64(g_value);
+        break;
+      case G_TYPE_ENUM:
+        value = g_value_get_enum(g_value);
+        break;
+      case G_TYPE_FLAGS:
+        value = g_value_get_flags(g_value);
+        break;
+      default:
+        cassert(0);
+      }
+
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
+      return new_location;
+    }/*}}}*/
+  case G_TYPE_FLOAT:
+  case G_TYPE_DOUBLE:
+    {/*{{{*/
+      double value;
+
+      switch (g_type)
+      {
+      case G_TYPE_FLOAT:
+        value = g_value_get_float(g_value);
+        break;
+      case G_TYPE_DOUBLE:
+        value = g_value_get_double(g_value);
+        break;
+      default:
+        cassert(0);
+      }
+
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);
+      return new_location;
+    }/*}}}*/
+  case G_TYPE_POINTER:
+  case G_TYPE_BOXED:
+  case G_TYPE_PARAM:
+    return NULL;
+  case G_TYPE_OBJECT:
+    {/*{{{*/
+      gpointer g_obj = g_value_get_object(g_value);
+
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_gtk_g_object,g_obj);
+      return new_location;
+    }/*}}}*/
+  case G_TYPE_VARIANT:
+
+  // - ERROR -
+  default:
+    return NULL;
+  }
 }/*}}}*/
 
 /*
