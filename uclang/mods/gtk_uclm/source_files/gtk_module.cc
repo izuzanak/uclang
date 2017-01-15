@@ -13,7 +13,7 @@ built_in_module_s module =
   gtk_classes,         // Classes
 
   0,                   // Error base index
-  8,                   // Error count
+  11,                  // Error count
   gtk_error_strings,   // Error strings
 
   gtk_initialize,      // Initialize function
@@ -34,7 +34,10 @@ const char *gtk_error_strings[] =
   "error_GTK_G_OBJECT_UNKNOWN_PROPERTY",
   "error_GTK_G_OBJECT_G_VALUE_CREATE_ERROR",
   "error_GTK_G_OBJECT_G_VALUE_VALUE_ERROR",
-  "error_GTK_G_OBJECT_WRONG_SIGNAL_CALLBACK_DELEGATE",
+  "error_GTK_G_OBJECT_UNKNOWN_SIGNAL",
+  "error_GTK_G_OBJECT_SIGNAL_WRONG_CALLBACK_DELEGATE",
+  "error_GTK_G_OBJECT_SIGNAL_INVALID_PARAMETER_COUNT",
+  "error_GTK_G_OBJECT_SIGNAL_INVALID_PARAMETER_TYPE",
   "error_GTK_G_OBJECT_CREATE_ERROR",
   "error_GTK_G_OBJECT_MAIN_LOOP_STATE_ERROR",
 };/*}}}*/
@@ -98,11 +101,32 @@ bool gtk_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nError while retrieving value from GValue\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_GTK_G_OBJECT_WRONG_SIGNAL_CALLBACK_DELEGATE:
+  case c_error_GTK_G_OBJECT_UNKNOWN_SIGNAL:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nGObject does not recognize signal \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GTK_G_OBJECT_SIGNAL_WRONG_CALLBACK_DELEGATE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nWrong signal callback delegate\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GTK_G_OBJECT_SIGNAL_INVALID_PARAMETER_COUNT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid count of signal parameters, expected %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GTK_G_OBJECT_SIGNAL_INVALID_PARAMETER_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid type of signal parameter at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_GTK_G_OBJECT_CREATE_ERROR:
@@ -131,7 +155,7 @@ built_in_class_s gtk_g_object_class =
 {/*{{{*/
   "GtkGObject",
   c_modifier_public | c_modifier_final,
-  13, gtk_g_object_methods,
+  14, gtk_g_object_methods,
   165, gtk_g_object_variables,
   bic_gtk_g_object_consts,
   bic_gtk_g_object_init,
@@ -180,6 +204,11 @@ built_in_method_s gtk_g_object_methods[] =
     "signal_connect#3",
     c_modifier_public | c_modifier_final,
     bic_gtk_g_object_method_signal_connect_3
+  },
+  {
+    "signal_emit#2",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_signal_emit_2
   },
   {
     "container_add#1",
@@ -634,7 +663,7 @@ bool bic_gtk_g_object_method_GtkGObject_2(interpreter_thread_s &it,unsigned stac
   guint param_cnt = array_ptr->used >> 1;
   GParameter params[param_cnt] = {0};
 
-#define BIC_GTK_G_OBJECT_RELEASE_PARAMS() \
+#define BIC_GTK_G_OBJECT_METHOD_GTKGOBJECT_2_RELEASE_PARAMS() \
 {/*{{{*/\
   GParameter *rp_ptr = params;\
   GParameter *rp_ptr_end = rp_ptr + param_cnt;\
@@ -658,7 +687,7 @@ bool bic_gtk_g_object_method_GtkGObject_2(interpreter_thread_s &it,unsigned stac
       // - ERROR -
       if (name_location->v_type != c_bi_class_string)
       {
-        BIC_GTK_G_OBJECT_RELEASE_PARAMS();
+        BIC_GTK_G_OBJECT_METHOD_GTKGOBJECT_2_RELEASE_PARAMS();
 
         exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_PROPERTY_NAME_EXPECTED_STRING,operands[c_source_pos_idx],(location_s *)it.blank_location);
         new_exception->params.push(p_ptr - params);
@@ -672,7 +701,7 @@ bool bic_gtk_g_object_method_GtkGObject_2(interpreter_thread_s &it,unsigned stac
       // - ERROR -
       if (!gtk_c::create_g_value(it,value_location,&p_ptr->value))
       {
-        BIC_GTK_G_OBJECT_RELEASE_PARAMS();
+        BIC_GTK_G_OBJECT_METHOD_GTKGOBJECT_2_RELEASE_PARAMS();
 
         exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_G_VALUE_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         new_exception->params.push(p_ptr - params);
@@ -689,7 +718,7 @@ bool bic_gtk_g_object_method_GtkGObject_2(interpreter_thread_s &it,unsigned stac
   // - ERROR -
   if (!g_obj)
   {
-    BIC_GTK_G_OBJECT_RELEASE_PARAMS();
+    BIC_GTK_G_OBJECT_METHOD_GTKGOBJECT_2_RELEASE_PARAMS();
 
     exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -705,7 +734,7 @@ bool bic_gtk_g_object_method_GtkGObject_2(interpreter_thread_s &it,unsigned stac
     g_object_ref(g_obj);
   }
 
-  BIC_GTK_G_OBJECT_RELEASE_PARAMS();
+  BIC_GTK_G_OBJECT_METHOD_GTKGOBJECT_2_RELEASE_PARAMS();
 
   dst_location->v_data_ptr = (gpointer)g_obj;
 
@@ -873,7 +902,7 @@ bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned 
   // - ERROR -
   if (delegate_ptr->param_cnt != 2)
   {
-    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_WRONG_SIGNAL_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_SIGNAL_WRONG_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -899,13 +928,131 @@ bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned 
   // - store delegate and associated data -
   src_1_location->v_reference_cnt.atomic_inc();
   src_2_location->v_reference_cnt.atomic_inc();
-  dlg_data_ptr->delegates[delegate_idx].set(src_1_location,src_2_location);
+  dlg_data_ptr->delegates[delegate_idx].set(0,src_1_location,src_2_location);
 
   // - connect signal to handler -
   g_signal_connect(g_obj,string_ptr->data,G_CALLBACK(gtk_c::callback_handler),(gpointer)delegate_idx);
 
   // FIXME TODO return signal handler
   BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_g_object_method_signal_emit_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_string ||
+      src_1_location->v_type != c_bi_class_array)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("signal_emit#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+  pointer_array_s *array_ptr = (pointer_array_s *)src_1_location->v_data_ptr;
+
+  // - retrieve signal identifier -
+  guint signal_id = g_signal_lookup(string_ptr->data,G_OBJECT_TYPE(g_obj));
+
+  // - ERROR -
+  if (signal_id == 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_UNKNOWN_SIGNAL,operands[c_source_pos_idx],src_0_location);
+    return false;
+  }
+
+  // - query signal info -
+  GSignalQuery signal_info;
+  g_signal_query(signal_id,&signal_info);
+
+  // - ERROR -
+  if (array_ptr->used != signal_info.n_params)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_SIGNAL_INVALID_PARAMETER_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(signal_info.n_params);
+
+    return false;
+  }
+
+  // - instance + parameters -
+  GValue inst_params[array_ptr->used + 1] = {0};
+
+  // - prepare instance value -
+  cassert(gtk_c::create_g_value(it,dst_location,inst_params) != NULL);
+
+#define BIC_GTK_G_OBJECT_METHOD_SIGNAL_EMIT_2_RELEASE_PARAMS(FIRST_UNSET) \
+{/*{{{*/\
+  GValue *rv_ptr = inst_params;\
+  GValue *rv_ptr_end = rv_ptr + (FIRST_UNSET);\
+  do {\
+    g_value_unset(rv_ptr);\
+  } while(++rv_ptr < rv_ptr_end);\
+}/*}}}*/
+
+  // - prepare parameters values -
+  if (array_ptr->used > 0)
+  {
+    unsigned p_idx = 0;
+    do {
+      location_s *param_location = it.get_location_value(array_ptr->data[p_idx]);
+
+      // - ERROR -
+      if (!gtk_c::check_g_type(param_location,signal_info.param_types[p_idx]))
+      {
+        BIC_GTK_G_OBJECT_METHOD_SIGNAL_EMIT_2_RELEASE_PARAMS(p_idx);
+
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_SIGNAL_INVALID_PARAMETER_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(p_idx);
+
+        return false;
+      }
+
+      // - retrieve parameter value -
+      cassert(gtk_c::create_g_value(it,param_location,inst_params + p_idx + 1) != NULL);
+
+    } while(++p_idx < array_ptr->used);
+  }
+
+  // - prepare result value -
+  GValue ret_value = {0};
+  if (signal_info.return_type != G_TYPE_NONE)
+  {
+    g_value_init(&ret_value,signal_info.return_type);
+  }
+
+  // - emit signal -
+  g_signal_emitv(inst_params,signal_id,0,&ret_value);
+
+  // - release parameters values -
+  BIC_GTK_G_OBJECT_METHOD_SIGNAL_EMIT_2_RELEASE_PARAMS(
+    array_ptr->used + 1);
+
+  // - retrieve return location -
+  location_s *ret_location = gtk_c::g_value_value(it,signal_info.return_type,&ret_value);
+
+  // - release result value -
+  g_value_unset(&ret_value);
+
+  // - ERROR -
+  if (ret_location == NULL)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_G_VALUE_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  pointer &res_location = it.data_stack[res_loc_idx];
+  BIC_SET_RESULT(ret_location);
 
   return true;
 }/*}}}*/

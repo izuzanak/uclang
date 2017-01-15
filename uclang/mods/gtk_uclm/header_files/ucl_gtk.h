@@ -15,6 +15,7 @@ include "script_parser.h"
 #include <gtk/gtk.h>
 
 // G_OBJECT_GET_CLASS(object)
+// G_OBJECT_TYPE
 // g_object_class_list_properties - Get an array of GParamSpec* for all properties of a class.
 // g_object_class_find_property - Looks up the GParamSpec for a property of a class.
 // g_signal_list_ids
@@ -79,6 +80,7 @@ class gtk_c
   static void dlg_data_release(gpointer data);
   static void callback_handler(gpointer g_obj,gpointer data);
 
+  static bool check_g_type(location_s *location_ptr,GType g_type);
   static GValue *create_g_value(interpreter_thread_s &it,location_s *location_ptr,GValue *g_value);
   static location_s *g_value_value(interpreter_thread_s &it,GType g_type,GValue *g_value);
 };
@@ -91,6 +93,7 @@ class gtk_c
 @begin
 struct
 <
+unsigned:signal_id
 pointer:delegate_loc
 pointer:data_loc
 >

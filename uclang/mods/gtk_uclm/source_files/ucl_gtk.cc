@@ -86,6 +86,35 @@ void gtk_c::callback_handler(gpointer g_obj,gpointer data)
   it.release_location_ptr(trg_location);
 }/*}}}*/
 
+bool gtk_c::check_g_type(location_s *location_ptr,GType g_type)
+{/*{{{*/
+  switch (g_type)
+  {
+  case G_TYPE_CHAR:
+  case G_TYPE_UCHAR:
+    return location_ptr->v_type == c_bi_class_char;
+  case G_TYPE_BOOLEAN:
+  case G_TYPE_INT:
+  case G_TYPE_UINT:
+  case G_TYPE_LONG:
+  case G_TYPE_ULONG:
+  case G_TYPE_INT64:
+  case G_TYPE_UINT64:
+  case G_TYPE_ENUM:
+  case G_TYPE_FLAGS:
+    return location_ptr->v_type == c_bi_class_integer;
+  case G_TYPE_FLOAT:
+  case G_TYPE_DOUBLE:
+    return location_ptr->v_type == c_bi_class_float;
+  case G_TYPE_STRING:
+    return location_ptr->v_type == c_bi_class_string;
+  case G_TYPE_OBJECT:
+    return location_ptr->v_type == c_bi_class_gtk_g_object;
+  default:
+    return false;
+  }
+}/*}}}*/
+
 GValue *gtk_c::create_g_value(interpreter_thread_s &it,location_s *location_ptr,GValue *g_value)
 {/*{{{*/
   if (location_ptr->v_type == c_bi_class_gtk_g_object)
@@ -93,7 +122,7 @@ GValue *gtk_c::create_g_value(interpreter_thread_s &it,location_s *location_ptr,
     gpointer g_obj = (gpointer)location_ptr->v_data_ptr;
 
     g_value_init(g_value,G_TYPE_OBJECT);
-    g_value_set_object(g_value,g_obj);
+    g_value_set_object(g_value,G_OBJECT(g_obj));
 
     return g_value;
   }/*}}}*/
@@ -166,20 +195,14 @@ location_s *gtk_c::g_value_value(interpreter_thread_s &it,GType g_type,GValue *g
 
   switch (g_type)
   {
-  case G_TYPE_STRING:
-    {/*{{{*/
-      const gchar *string = g_value_get_string(g_value);
-
-      string_s *string_ptr = it.get_new_string_ptr();
-      string_ptr->set(strlen(string),string);
-
-      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
-      return new_location;
-    }/*}}}*/
   case G_TYPE_INVALID:
-  case G_TYPE_NONE:
   case G_TYPE_INTERFACE:
     return NULL;
+  case G_TYPE_NONE:
+    {/*{{{*/
+      ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
+      return (location_s *)it.blank_location;
+    }/*}}}*/
   case G_TYPE_CHAR:
   case G_TYPE_UCHAR:
     {/*{{{*/
@@ -266,6 +289,16 @@ location_s *gtk_c::g_value_value(interpreter_thread_s &it,GType g_type,GValue *g
       }
 
       BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);
+      return new_location;
+    }/*}}}*/
+  case G_TYPE_STRING:
+    {/*{{{*/
+      const gchar *string = g_value_get_string(g_value);
+
+      string_s *string_ptr = it.get_new_string_ptr();
+      string_ptr->set(strlen(string),string);
+
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
       return new_location;
     }/*}}}*/
   case G_TYPE_POINTER:

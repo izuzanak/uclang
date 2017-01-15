@@ -23,7 +23,10 @@ enum
   c_error_GTK_G_OBJECT_UNKNOWN_PROPERTY,
   c_error_GTK_G_OBJECT_G_VALUE_CREATE_ERROR,
   c_error_GTK_G_OBJECT_G_VALUE_VALUE_ERROR,
-  c_error_GTK_G_OBJECT_WRONG_SIGNAL_CALLBACK_DELEGATE,
+  c_error_GTK_G_OBJECT_UNKNOWN_SIGNAL,
+  c_error_GTK_G_OBJECT_SIGNAL_WRONG_CALLBACK_DELEGATE,
+  c_error_GTK_G_OBJECT_SIGNAL_INVALID_PARAMETER_COUNT,
+  c_error_GTK_G_OBJECT_SIGNAL_INVALID_PARAMETER_TYPE,
   c_error_GTK_G_OBJECT_CREATE_ERROR,
   c_error_GTK_G_OBJECT_MAIN_LOOP_STATE_ERROR,
 };
@@ -52,6 +55,7 @@ bool bic_gtk_g_object_method_set_prop_2(interpreter_thread_s &it,unsigned stack_
 bool bic_gtk_g_object_method_get_prop_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_list_properties_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_g_object_method_signal_emit_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_container_add_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_grid_attach_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_widget_show_all_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
