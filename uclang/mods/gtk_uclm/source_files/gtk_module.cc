@@ -13,7 +13,7 @@ built_in_module_s module =
   gtk_classes,         // Classes
 
   0,                   // Error base index
-  11,                  // Error count
+  12,                  // Error count
   gtk_error_strings,   // Error strings
 
   gtk_initialize,      // Initialize function
@@ -29,9 +29,10 @@ built_in_class_s *gtk_classes[] =
 // - GTK error strings -
 const char *gtk_error_strings[] =
 {/*{{{*/
+  "error_GTK_G_OBJECT_UNKNOWN_PROPERTY",
   "error_GTK_G_OBJECT_WRONG_PROPERTIES_ARRAY_SIZE",
   "error_GTK_G_OBJECT_PROPERTY_NAME_EXPECTED_STRING",
-  "error_GTK_G_OBJECT_UNKNOWN_PROPERTY",
+  "error_GTK_G_OBJECT_PROPERTY_INVALID_VALUE_TYPE",
   "error_GTK_G_OBJECT_G_VALUE_CREATE_ERROR",
   "error_GTK_G_OBJECT_G_VALUE_VALUE_ERROR",
   "error_GTK_G_OBJECT_UNKNOWN_SIGNAL",
@@ -61,6 +62,13 @@ bool gtk_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
+  case c_error_GTK_G_OBJECT_UNKNOWN_PROPERTY:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nGObject does not contain property \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_GTK_G_OBJECT_WRONG_PROPERTIES_ARRAY_SIZE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -75,11 +83,11 @@ bool gtk_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nExpected string as property name at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_GTK_G_OBJECT_UNKNOWN_PROPERTY:
+  case c_error_GTK_G_OBJECT_PROPERTY_INVALID_VALUE_TYPE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nGObject does not contain property \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr,"\nInvalid type of property value to be set\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_GTK_G_OBJECT_G_VALUE_CREATE_ERROR:
@@ -87,7 +95,7 @@ bool gtk_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nError while creating GValue");
-    
+
     (exception.params.used >= 1) ?
       fprintf(stderr," at position %" HOST_LL_FORMAT "d\n",exception.params[0]) :
       fputc('\n',stderr);
@@ -803,6 +811,24 @@ bool bic_gtk_g_object_method_set_prop_2(interpreter_thread_s &it,unsigned stack_
   gpointer g_obj = (gpointer)dst_location->v_data_ptr;
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
+  // - retrieve parameter specification -
+  GParamSpec *value_spec = g_object_class_find_property(
+      G_OBJECT_GET_CLASS(G_OBJECT(g_obj)),string_ptr->data);
+
+  // - ERROR -
+  if (value_spec == NULL)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_UNKNOWN_PROPERTY,operands[c_source_pos_idx],src_0_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (!gtk_c::check_g_type(src_1_location,value_spec->value_type))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_PROPERTY_INVALID_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
   GValue g_value = {0};
 
   // - ERROR -
@@ -848,7 +874,7 @@ bool bic_gtk_g_object_method_get_prop_1(interpreter_thread_s &it,unsigned stack_
     exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_UNKNOWN_PROPERTY,operands[c_source_pos_idx],src_0_location);
     return false;
   }
- 
+
   GValue g_value = {0};
   g_value_init(&g_value,value_spec->value_type);
   g_object_get_property(G_OBJECT(g_obj),string_ptr->data,&g_value);
@@ -896,11 +922,25 @@ bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned 
   gpointer g_obj = (gpointer)dst_location->v_data_ptr;
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
+  // - retrieve signal identifier -
+  guint signal_id = g_signal_lookup(string_ptr->data,G_OBJECT_TYPE(g_obj));
+
+  // - ERROR -
+  if (signal_id == 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_UNKNOWN_SIGNAL,operands[c_source_pos_idx],src_0_location);
+    return false;
+  }
+
+  // - query signal info -
+  GSignalQuery signal_info;
+  g_signal_query(signal_id,&signal_info);
+
   // - retrieve delegate pointer -
   delegate_s *delegate_ptr = (delegate_s *)src_1_location->v_data_ptr;
 
   // - ERROR -
-  if (delegate_ptr->param_cnt != 2)
+  if (delegate_ptr->param_cnt != signal_info.n_params + 2)
   {
     exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_SIGNAL_WRONG_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -928,7 +968,7 @@ bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned 
   // - store delegate and associated data -
   src_1_location->v_reference_cnt.atomic_inc();
   src_2_location->v_reference_cnt.atomic_inc();
-  dlg_data_ptr->delegates[delegate_idx].set(0,src_1_location,src_2_location);
+  dlg_data_ptr->delegates[delegate_idx].set(signal_id,src_1_location,src_2_location);
 
   // - connect signal to handler -
   g_signal_connect(g_obj,string_ptr->data,G_CALLBACK(gtk_c::callback_handler),(gpointer)delegate_idx);
@@ -1147,7 +1187,7 @@ bool bic_gtk_g_object_method_main_loop_0(interpreter_thread_s &it,unsigned stack
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
 
-  // - ERROR - 
+  // - ERROR -
   if (gtk_c::main_loop)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_MAIN_LOOP_STATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -1182,7 +1222,7 @@ bool bic_gtk_g_object_method_quit_main_loop_0(interpreter_thread_s &it,unsigned 
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
-  // - ERROR - 
+  // - ERROR -
   if (!gtk_c::main_loop)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_MAIN_LOOP_STATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);

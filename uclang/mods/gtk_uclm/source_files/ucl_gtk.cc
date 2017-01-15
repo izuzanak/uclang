@@ -88,6 +88,43 @@ void gtk_c::callback_handler(gpointer g_obj,gpointer data)
 
 bool gtk_c::check_g_type(location_s *location_ptr,GType g_type)
 {/*{{{*/
+
+  // FIXME debug output
+  //{/*{{{*/
+  //  switch (g_type)
+  //  {
+  //  case G_TYPE_INVALID:   fprintf(stderr,"g_type: G_TYPE_INVALID\n"); break;
+  //  case G_TYPE_NONE:      fprintf(stderr,"g_type: G_TYPE_NONE\n"); break;
+  //  case G_TYPE_INTERFACE: fprintf(stderr,"g_type: G_TYPE_INTERFACE\n"); break;
+  //  case G_TYPE_CHAR:      fprintf(stderr,"g_type: G_TYPE_CHAR\n"); break;
+  //  case G_TYPE_UCHAR:     fprintf(stderr,"g_type: G_TYPE_UCHAR\n"); break;
+  //  case G_TYPE_BOOLEAN:   fprintf(stderr,"g_type: G_TYPE_BOOLEAN\n"); break;
+  //  case G_TYPE_INT:       fprintf(stderr,"g_type: G_TYPE_INT\n"); break;
+  //  case G_TYPE_UINT:      fprintf(stderr,"g_type: G_TYPE_UINT\n"); break;
+  //  case G_TYPE_LONG:      fprintf(stderr,"g_type: G_TYPE_LONG\n"); break;
+  //  case G_TYPE_ULONG:     fprintf(stderr,"g_type: G_TYPE_ULONG\n"); break;
+  //  case G_TYPE_INT64:     fprintf(stderr,"g_type: G_TYPE_INT64\n"); break;
+  //  case G_TYPE_UINT64:    fprintf(stderr,"g_type: G_TYPE_UINT64\n"); break;
+  //  case G_TYPE_ENUM:      fprintf(stderr,"g_type: G_TYPE_ENUM\n"); break;
+  //  case G_TYPE_FLAGS:     fprintf(stderr,"g_type: G_TYPE_FLAGS\n"); break;
+  //  case G_TYPE_FLOAT:     fprintf(stderr,"g_type: G_TYPE_FLOAT\n"); break;
+  //  case G_TYPE_DOUBLE:    fprintf(stderr,"g_type: G_TYPE_DOUBLE\n"); break;
+  //  case G_TYPE_STRING:    fprintf(stderr,"g_type: G_TYPE_STRING\n"); break;
+  //  case G_TYPE_POINTER:   fprintf(stderr,"g_type: G_TYPE_POINTER\n"); break;
+  //  case G_TYPE_BOXED:     fprintf(stderr,"g_type: G_TYPE_BOXED\n"); break;
+  //  case G_TYPE_PARAM:     fprintf(stderr,"g_type: G_TYPE_PARAM\n"); break;
+  //  case G_TYPE_OBJECT:    fprintf(stderr,"g_type: G_TYPE_OBJECT\n"); break;
+  //  case G_TYPE_VARIANT:   fprintf(stderr,"g_type: G_TYPE_VARIANT\n"); break;
+  //  default:
+  //    {/*{{{*/
+  //      if (g_type == GTK_TYPE_WIDGET)
+  //      {
+  //        fprintf(stderr,"g_type: GTK_TYPE_WIDGET\n"); break;
+  //      }
+  //    }/*}}}*/
+  //  }
+  //}/*}}}*/
+
   switch (g_type)
   {
   case G_TYPE_CHAR:
@@ -111,7 +148,14 @@ bool gtk_c::check_g_type(location_s *location_ptr,GType g_type)
   case G_TYPE_OBJECT:
     return location_ptr->v_type == c_bi_class_gtk_g_object;
   default:
-    return false;
+    {/*{{{*/
+      if (g_type == GTK_TYPE_WIDGET)
+      {
+        return location_ptr->v_type == c_bi_class_gtk_g_object;
+      }
+
+      return false;
+    }/*}}}*/
   }
 }/*}}}*/
 
@@ -161,38 +205,6 @@ GValue *gtk_c::create_g_value(interpreter_thread_s &it,location_s *location_ptr,
 
 location_s *gtk_c::g_value_value(interpreter_thread_s &it,GType g_type,GValue *g_value)
 {/*{{{*/
-
-  // FIXME debug output
-  //{/*{{{*/
-  //  do {
-  //    switch (g_type)
-  //    {
-  //      case G_TYPE_INVALID: fprintf(stderr,"g_type: G_TYPE_INVALID\n"); break;
-  //      case G_TYPE_NONE: fprintf(stderr,"g_type: G_TYPE_NONE\n"); break;
-  //      case G_TYPE_INTERFACE: fprintf(stderr,"g_type: G_TYPE_INTERFACE\n"); break;
-  //      case G_TYPE_CHAR: fprintf(stderr,"g_type: G_TYPE_CHAR\n"); break;
-  //      case G_TYPE_UCHAR: fprintf(stderr,"g_type: G_TYPE_UCHAR\n"); break;
-  //      case G_TYPE_BOOLEAN: fprintf(stderr,"g_type: G_TYPE_BOOLEAN\n"); break;
-  //      case G_TYPE_INT: fprintf(stderr,"g_type: G_TYPE_INT\n"); break;
-  //      case G_TYPE_UINT: fprintf(stderr,"g_type: G_TYPE_UINT\n"); break;
-  //      case G_TYPE_LONG: fprintf(stderr,"g_type: G_TYPE_LONG\n"); break;
-  //      case G_TYPE_ULONG: fprintf(stderr,"g_type: G_TYPE_ULONG\n"); break;
-  //      case G_TYPE_INT64: fprintf(stderr,"g_type: G_TYPE_INT64\n"); break;
-  //      case G_TYPE_UINT64: fprintf(stderr,"g_type: G_TYPE_UINT64\n"); break;
-  //      case G_TYPE_ENUM: fprintf(stderr,"g_type: G_TYPE_ENUM\n"); break;
-  //      case G_TYPE_FLAGS: fprintf(stderr,"g_type: G_TYPE_FLAGS\n"); break;
-  //      case G_TYPE_FLOAT: fprintf(stderr,"g_type: G_TYPE_FLOAT\n"); break;
-  //      case G_TYPE_DOUBLE: fprintf(stderr,"g_type: G_TYPE_DOUBLE\n"); break;
-  //      case G_TYPE_STRING: fprintf(stderr,"g_type: G_TYPE_STRING\n"); break;
-  //      case G_TYPE_POINTER: fprintf(stderr,"g_type: G_TYPE_POINTER\n"); break;
-  //      case G_TYPE_BOXED: fprintf(stderr,"g_type: G_TYPE_BOXED\n"); break;
-  //      case G_TYPE_PARAM: fprintf(stderr,"g_type: G_TYPE_PARAM\n"); break;
-  //      case G_TYPE_OBJECT: fprintf(stderr,"g_type: G_TYPE_OBJECT\n"); break;
-  //      case G_TYPE_VARIANT: fprintf(stderr,"g_type: G_TYPE_VARIANT\n"); break;
-  //    }
-  //  } while(0);
-  //}/*}}}*/
-
   switch (g_type)
   {
   case G_TYPE_INVALID:
