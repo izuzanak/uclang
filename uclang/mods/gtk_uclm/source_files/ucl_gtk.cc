@@ -4,13 +4,10 @@ include "ucl_gtk.h"
 @end
 
 // - static members of class gtk_c -
-GQuark gtk_c::ucl_dlgs_quark;
+GQuark gtk_c::dlg_idxs_quark;
 
-void (*gtk_c::cb_handlers[gtk_c::cb_handlers_cnt])(void) =
-{
-  (void (*)(void))gtk_c::callback_handler_0,
-  (void (*)(void))gtk_c::callback_handler_1,
-};
+interpreter_thread_s *gtk_c::it_ptr;
+gtk_delegate_list_s gtk_c::delegates;
 
 bool gtk_c::main_loop;
 unsigned gtk_c::main_source_pos;
@@ -26,49 +23,40 @@ gtk_c g_gtk;
 void gtk_c::dlg_data_release(gpointer delegate_data)
 {/*{{{*/
 
-  // - retrieve delegate data pointer -
-  gtk_dlg_data_s *dlg_data_ptr = (gtk_dlg_data_s *)delegate_data;
+  // - retrieve object delegate indexes -
+  ui_list_s *obj_dlg_idxs = (ui_list_s *)delegate_data;
+  debug_assert(obj_dlg_idxs != NULL);
 
-  // - if delegate data pointer exists -
-  if (dlg_data_ptr != NULL)
+  if (obj_dlg_idxs->first_idx != c_idx_not_exist)
   {
-    interpreter_thread_s &it = *((interpreter_thread_s *)dlg_data_ptr->it_ptr);
-    gtk_delegate_list_s &delegates = dlg_data_ptr->delegates;
+    unsigned idx = obj_dlg_idxs->first_idx;
+    do {
+      unsigned delegate_idx = obj_dlg_idxs->data[idx].object;
+      gtk_delegate_s &delegate = gtk_c::delegates[delegate_idx];
 
-    if (delegates.first_idx != c_idx_not_exist)
-    {
-      unsigned idx = delegates.first_idx;
-      do {
-        gtk_delegate_list_s_element &element = delegates.data[idx];
+      // - release delegate location -
+      gtk_c::it_ptr->release_location_ptr((location_s *)delegate.delegate_loc);
 
-        // - release delegate location -
-        it.release_location_ptr((location_s *)element.object.delegate_loc);
+      // - release data location -
+      gtk_c::it_ptr->release_location_ptr((location_s *)delegate.data_loc);
+      
+      // - remove delegate from delegates list -
+      gtk_c::delegates.remove(delegate_idx);
 
-        // - release data location -
-        it.release_location_ptr((location_s *)element.object.data_loc);
-
-        idx = element.next_idx;
-      } while(idx != c_idx_not_exist);
-    }
-
-    // - release delegate data pointer -
-    dlg_data_ptr->clear();
-    cfree(dlg_data_ptr);
+      idx = obj_dlg_idxs->next_idx(idx);
+    } while(idx != c_idx_not_exist);
   }
+
+  obj_dlg_idxs->clear();
+  cfree(obj_dlg_idxs);
 }/*}}}*/
 
-void gtk_c::callback_handler_0(gpointer g_obj,gpointer delegate_idx)
+void gtk_c::callback_handler(gpointer delegate_idx,...)
 {/*{{{*/
-
-  // - retrieve delegate data pointer -
-  gtk_dlg_data_s *dlg_data_ptr =
-    (gtk_dlg_data_s *)g_object_get_qdata(G_OBJECT(g_obj),gtk_c::ucl_dlgs_quark);
+  gtk_delegate_s &delegate = gtk_c::delegates[(unsigned)delegate_idx];
 
   // - retrieve interpreter thread reference -
-  interpreter_thread_s &it = *((interpreter_thread_s *)dlg_data_ptr->it_ptr);
-
-  // - retrieve gtk delegate description -
-  gtk_delegate_s &delegate = dlg_data_ptr->delegates[(unsigned)delegate_idx];
+  interpreter_thread_s &it = *gtk_c::it_ptr;
 
   // - retrieve delegate pointer -
   delegate_s *delegate_ptr =
@@ -77,7 +65,7 @@ void gtk_c::callback_handler_0(gpointer g_obj,gpointer delegate_idx)
   // - callback parameters -
   const unsigned param_cnt = 2;
   pointer param_data[param_cnt] = {
-    dlg_data_ptr->object_loc,delegate.data_loc};
+    delegate.object_loc,delegate.data_loc};
 
   // - call delegate method -
   location_s *trg_location = NULL;
@@ -90,69 +78,6 @@ void gtk_c::callback_handler_0(gpointer g_obj,gpointer delegate_idx)
       return;
       );
   it.release_location_ptr(trg_location);
-}/*}}}*/
-
-//void gtk_c::callback_handler_1(gpointer g_obj,gpointer param1,gpointer delegate_idx)
-//{/*{{{*/
-//
-//  // - retrieve delegate data pointer -
-//  gtk_dlg_data_s *dlg_data_ptr =
-//    (gtk_dlg_data_s *)g_object_get_qdata(G_OBJECT(g_obj),gtk_c::ucl_dlgs_quark);
-//
-//  // - retrieve interpreter thread reference -
-//  interpreter_thread_s &it = *((interpreter_thread_s *)dlg_data_ptr->it_ptr);
-//
-//  // - retrieve gtk delegate description -
-//  gtk_delegate_s &delegate = dlg_data_ptr->delegates[(unsigned)delegate_idx];
-//
-//  // - retrieve delegate pointer -
-//  delegate_s *delegate_ptr =
-//    (delegate_s *)((location_s *)delegate.delegate_loc)->v_data_ptr;
-//
-//  // - query signal info -
-//  GSignalQuery signal_info;
-//  g_signal_query(delegate.signal_id,&signal_info);
-//
-//  // - retrieve parameter location -
-//  location_s *p1_location = gtk_c::g_type_value(it,signal_info.param_types[0],param1);
-//  if (p1_location == NULL)
-//  {
-//    // FIXME TODO throw proper exception
-//    string_s *string_ptr = it.get_new_string_ptr();
-//    string_ptr->set(strlen(__FILE__),__FILE__);
-//
-//    BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_string,string_ptr,0);
-//
-//    exception_s *new_exception = exception_s::throw_exception(it,c_error_TODO_EXCEPTION,gtk_c::main_source_pos,new_location);
-//    new_exception->params.push(__LINE__);
-//  }
-//
-//  // -----
-//
-//  // - callback parameters -
-//  const unsigned param_cnt = 3;
-//  pointer param_data[param_cnt] = {
-//    dlg_data_ptr->object_loc,p1_location,delegate.data_loc};
-//
-//  // - call delegate method -
-//  location_s *trg_location = NULL;
-//  BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,gtk_c::main_source_pos,
-//      gtk_c::main_ret_code = c_run_return_code_EXCEPTION;
-//
-//      // - quit gtk main loop -
-//      gtk_main_quit();
-//
-//      return;
-//      );
-//  it.release_location_ptr(trg_location);
-//}/*}}}*/
-
-void gtk_c::callback_handler_1(gpointer g_obj,...)
-{/*{{{*/
-  
-  // FIXME debug output
-  fprintf(stderr,"g_obj: %p\n",g_obj);
-
 }/*}}}*/
 
 void gtk_c::g_type_print(GType g_type)
@@ -227,66 +152,6 @@ bool gtk_c::g_type_check(location_s *location_ptr,GType g_type)
       }
 
       return false;
-    }/*}}}*/
-  }
-}/*}}}*/
-
-location_s *gtk_c::g_type_value(interpreter_thread_s &it,GType g_type,gpointer g_pointer)
-{/*{{{*/
-  switch (g_type)
-  {
-  case G_TYPE_INVALID:
-  case G_TYPE_INTERFACE:
-    return NULL;
-  case G_TYPE_NONE:
-    return NULL;
-  case G_TYPE_CHAR:
-  case G_TYPE_UCHAR:
-    return NULL;
-  case G_TYPE_BOOLEAN:
-  case G_TYPE_INT:
-  case G_TYPE_UINT:
-  case G_TYPE_LONG:
-  case G_TYPE_ULONG:
-  case G_TYPE_INT64:
-  case G_TYPE_UINT64:
-  case G_TYPE_ENUM:
-  case G_TYPE_FLAGS:
-    return NULL;
-  case G_TYPE_FLOAT:
-  case G_TYPE_DOUBLE:
-    return NULL;
-  case G_TYPE_STRING:
-    return NULL;
-  case G_TYPE_POINTER:
-  case G_TYPE_BOXED:
-  case G_TYPE_PARAM:
-    return NULL;
-  case G_TYPE_OBJECT:
-    {/*{{{*/
-      if (g_pointer == NULL)
-        return (location_s *)it.blank_location;
-
-      g_object_ref(G_OBJECT(g_pointer));
-      BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_gtk_g_object,g_pointer,0);
-      return new_location;
-    }/*}}}*/
-  case G_TYPE_VARIANT:
-
-  // - ERROR -
-  default:
-    {/*{{{*/
-      if (g_type == GTK_TYPE_WIDGET)
-      {
-        if (g_pointer == NULL)
-          return (location_s *)it.blank_location;
-
-        g_object_ref(G_OBJECT(g_pointer));
-        BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_gtk_g_object,g_pointer,0);
-        return new_location;
-      }
-
-      return NULL;
     }/*}}}*/
   }
 }/*}}}*/
@@ -486,6 +351,11 @@ location_s *gtk_c::g_value_value(interpreter_thread_s &it,GType g_type,GValue *g
  * methods of generated structures
  */
 
+// -- ui_list_s --
+@begin
+methods ui_list_s
+@end
+
 // -- gtk_delegate_s --
 @begin
 methods gtk_delegate_s
@@ -494,10 +364,5 @@ methods gtk_delegate_s
 // -- gtk_delegate_list_s --
 @begin
 methods gtk_delegate_list_s
-@end
-
-// -- gtk_dlg_data_s --
-@begin
-methods gtk_dlg_data_s
 @end
 

@@ -936,14 +936,6 @@ bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned 
   GSignalQuery signal_info;
   g_signal_query(signal_id,&signal_info);
 
-  // - ERROR -
-  if (signal_info.n_params >= gtk_c::cb_handlers_cnt)
-  {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
-    return false;
-  }
-
   // - retrieve delegate pointer -
   delegate_s *delegate_ptr = (delegate_s *)src_1_location->v_data_ptr;
 
@@ -954,34 +946,41 @@ bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned 
     return false;
   }
 
-  // - retrieve delegate data pointer -
-  gtk_dlg_data_s *dlg_data_ptr =
-    (gtk_dlg_data_s *)g_object_get_qdata(G_OBJECT(g_obj),gtk_c::ucl_dlgs_quark);
-
-  // - if delegate data pointer does not exist -
-  if (dlg_data_ptr == NULL)
+  // - set gtk interpreter pointer -
+  if (gtk_c::it_ptr == NULL)
   {
-    // - create delegate data pointer -
-    dlg_data_ptr = (gtk_dlg_data_s *)cmalloc(sizeof(gtk_dlg_data_s));
-    dlg_data_ptr->init();
-    dlg_data_ptr->it_ptr = &it;
-    dlg_data_ptr->object_loc = dst_location;
-
-    g_object_set_qdata_full(G_OBJECT(g_obj),gtk_c::ucl_dlgs_quark,
-        dlg_data_ptr,gtk_c::dlg_data_release);
+    gtk_c::it_ptr = &it;
   }
 
-  unsigned delegate_idx = dlg_data_ptr->delegates.append_blank();
+  // - retrieve object delegate indexes -
+  ui_list_s *obj_dlg_idxs =
+    (ui_list_s *)g_object_get_qdata(G_OBJECT(g_obj),gtk_c::dlg_idxs_quark);
+
+  // - if object delegate indexes does not exist -
+  if (obj_dlg_idxs == NULL)
+  {
+    // - create object delegate list -
+    obj_dlg_idxs = (ui_list_s *)cmalloc(sizeof(ui_list_s));
+    obj_dlg_idxs->init();
+
+    g_object_set_qdata_full(G_OBJECT(g_obj),gtk_c::dlg_idxs_quark,
+        obj_dlg_idxs,gtk_c::dlg_data_release);
+  }
+
+  unsigned delegate_idx = gtk_c::delegates.append_blank();
+
+  // - store delegate index to object delegate indexes -
+  unsigned dlg_idx_idx = obj_dlg_idxs->append(delegate_idx);
 
   // - store delegate and associated data -
   src_1_location->v_reference_cnt.atomic_inc();
   src_2_location->v_reference_cnt.atomic_inc();
-  dlg_data_ptr->delegates[delegate_idx].set(signal_id,src_1_location,src_2_location);
+  gtk_c::delegates[delegate_idx].set(
+      signal_id,dlg_idx_idx,dst_location,src_1_location,src_2_location);
 
   // - connect signal to handler -
-  g_signal_connect(g_obj,string_ptr->data,
-      G_CALLBACK(gtk_c::cb_handlers[signal_info.n_params]),
-      (gpointer)delegate_idx);
+  g_signal_connect_swapped(g_obj,string_ptr->data,
+      G_CALLBACK(gtk_c::callback_handler),(gpointer)delegate_idx);
 
   // FIXME TODO return signal handler
   BIC_SET_RESULT_BLANK();
