@@ -62,10 +62,63 @@ void gtk_c::callback_handler(gpointer delegate_idx,...)
   delegate_s *delegate_ptr =
     (delegate_s *)((location_s *)delegate.delegate_loc)->v_data_ptr;
 
+  // - query signal info -
+  GSignalQuery signal_info;
+  g_signal_query(delegate.signal_id,&signal_info);
+
   // - callback parameters -
-  const unsigned param_cnt = 2;
-  pointer param_data[param_cnt] = {
-    delegate.object_loc,delegate.data_loc};
+  const unsigned param_cnt = signal_info.n_params + 2;
+  pointer param_data[param_cnt];
+  pointer *param_ptr = param_data;
+
+  // - set object location -
+  *param_ptr++ = delegate.object_loc;
+
+  if (signal_info.n_params > 0)
+  {
+    va_list vlist;
+    va_start(vlist,delegate_idx);
+
+#define GTK_C_CALLBACK_HANDLER_OBJECT_PARAMETER() \
+{/*{{{*/\
+  gpointer g_obj = va_arg(vlist,gpointer);\
+  if (g_obj == NULL)\
+  {\
+    *param_ptr++ = it.blank_location;\
+    continue;\
+  }\
+\
+  g_object_ref(g_obj);\
+  BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_gtk_g_object,g_obj,0);\
+  *param_ptr++ = new_location;\
+  continue;\
+}/*}}}*/
+
+    // - create parameter locations -
+    const GType *pt_ptr = signal_info.param_types;
+    const GType *pt_ptr_end = pt_ptr + signal_info.n_params;
+    do {
+      switch (*pt_ptr)
+      {
+      case G_TYPE_OBJECT:
+        GTK_C_CALLBACK_HANDLER_OBJECT_PARAMETER()
+
+      // - ERROR -
+      default:
+
+        if (*pt_ptr == GTK_TYPE_WIDGET)
+          GTK_C_CALLBACK_HANDLER_OBJECT_PARAMETER();
+
+        // FIXME TODO throw proper exception ...
+        cassert(0);
+      }
+    } while(++pt_ptr < pt_ptr_end);
+
+    va_end(vlist);
+  }
+
+  // - set data location -
+  *param_ptr++ = delegate.data_loc;
 
   // - call delegate method -
   location_s *trg_location = NULL;
