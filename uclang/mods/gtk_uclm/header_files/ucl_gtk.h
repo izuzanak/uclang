@@ -140,7 +140,7 @@ inline gtk_c::gtk_c()
 
   gtk_init(0,NULL);
 
-  dlg_idxs_quark = g_quark_from_string("uclang-delegates");
+  dlg_idxs_quark = g_quark_from_string("uclang-delegate-idxs");
 
   it_ptr = NULL;
   delegates.init();
@@ -152,8 +152,9 @@ inline gtk_c::~gtk_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"gtk_exit()\n"););
 
-  // FIXME debug test
-  //cassert(delegates.first_idx == c_idx_not_exist);
+  // FIXME debug output
+  fprintf(stderr,"delegate_count: %u\n",delegates.count);
+
   delegates.clear();
 }/*}}}*/
 
