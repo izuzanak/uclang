@@ -68,6 +68,10 @@ class gtk_c
   public:
   static GQuark ucl_dlgs_quark;
 
+  // - array of callback handlers -
+  static const unsigned cb_handlers_cnt = 2;
+  static void (*cb_handlers[cb_handlers_cnt])(void);
+
   static bool main_loop;
   static unsigned main_source_pos;
   static unsigned main_ret_code;
@@ -77,10 +81,15 @@ class gtk_c
   inline gtk_c();
   inline ~gtk_c();
 
-  static void dlg_data_release(gpointer data);
-  static void callback_handler(gpointer g_obj,gpointer data);
+  static void dlg_data_release(gpointer delegate_data);
+  static void callback_handler_0(gpointer g_obj,gpointer delegate_idx);
+  //static void callback_handler_1(gpointer g_obj,gpointer param1,gpointer delegate_idx);
+  static void callback_handler_1(gpointer g_obj,...);
 
-  static bool check_g_type(location_s *location_ptr,GType g_type);
+  static void g_type_print(GType g_type);
+  static bool g_type_check(location_s *location_ptr,GType g_type);
+  static location_s *g_type_value(interpreter_thread_s &it,GType g_type,gpointer g_pointer);
+
   static GValue *create_g_value(interpreter_thread_s &it,location_s *location_ptr,GValue *g_value);
   static location_s *g_value_value(interpreter_thread_s &it,GType g_type,GValue *g_value);
 };

@@ -6,6 +6,12 @@ include "ucl_gtk.h"
 // - static members of class gtk_c -
 GQuark gtk_c::ucl_dlgs_quark;
 
+void (*gtk_c::cb_handlers[gtk_c::cb_handlers_cnt])(void) =
+{
+  (void (*)(void))gtk_c::callback_handler_0,
+  (void (*)(void))gtk_c::callback_handler_1,
+};
+
 bool gtk_c::main_loop;
 unsigned gtk_c::main_source_pos;
 unsigned gtk_c::main_ret_code;
@@ -17,11 +23,11 @@ gtk_c g_gtk;
  * methods of class gtk_c
  */
 
-void gtk_c::dlg_data_release(gpointer data)
+void gtk_c::dlg_data_release(gpointer delegate_data)
 {/*{{{*/
 
   // - retrieve delegate data pointer -
-  gtk_dlg_data_s *dlg_data_ptr = (gtk_dlg_data_s *)data;
+  gtk_dlg_data_s *dlg_data_ptr = (gtk_dlg_data_s *)delegate_data;
 
   // - if delegate data pointer exists -
   if (dlg_data_ptr != NULL)
@@ -51,7 +57,7 @@ void gtk_c::dlg_data_release(gpointer data)
   }
 }/*}}}*/
 
-void gtk_c::callback_handler(gpointer g_obj,gpointer data)
+void gtk_c::callback_handler_0(gpointer g_obj,gpointer delegate_idx)
 {/*{{{*/
 
   // - retrieve delegate data pointer -
@@ -62,7 +68,7 @@ void gtk_c::callback_handler(gpointer g_obj,gpointer data)
   interpreter_thread_s &it = *((interpreter_thread_s *)dlg_data_ptr->it_ptr);
 
   // - retrieve gtk delegate description -
-  gtk_delegate_s &delegate = dlg_data_ptr->delegates[(unsigned)data];
+  gtk_delegate_s &delegate = dlg_data_ptr->delegates[(unsigned)delegate_idx];
 
   // - retrieve delegate pointer -
   delegate_s *delegate_ptr =
@@ -86,45 +92,111 @@ void gtk_c::callback_handler(gpointer g_obj,gpointer data)
   it.release_location_ptr(trg_location);
 }/*}}}*/
 
-bool gtk_c::check_g_type(location_s *location_ptr,GType g_type)
+//void gtk_c::callback_handler_1(gpointer g_obj,gpointer param1,gpointer delegate_idx)
+//{/*{{{*/
+//
+//  // - retrieve delegate data pointer -
+//  gtk_dlg_data_s *dlg_data_ptr =
+//    (gtk_dlg_data_s *)g_object_get_qdata(G_OBJECT(g_obj),gtk_c::ucl_dlgs_quark);
+//
+//  // - retrieve interpreter thread reference -
+//  interpreter_thread_s &it = *((interpreter_thread_s *)dlg_data_ptr->it_ptr);
+//
+//  // - retrieve gtk delegate description -
+//  gtk_delegate_s &delegate = dlg_data_ptr->delegates[(unsigned)delegate_idx];
+//
+//  // - retrieve delegate pointer -
+//  delegate_s *delegate_ptr =
+//    (delegate_s *)((location_s *)delegate.delegate_loc)->v_data_ptr;
+//
+//  // - query signal info -
+//  GSignalQuery signal_info;
+//  g_signal_query(delegate.signal_id,&signal_info);
+//
+//  // - retrieve parameter location -
+//  location_s *p1_location = gtk_c::g_type_value(it,signal_info.param_types[0],param1);
+//  if (p1_location == NULL)
+//  {
+//    // FIXME TODO throw proper exception
+//    string_s *string_ptr = it.get_new_string_ptr();
+//    string_ptr->set(strlen(__FILE__),__FILE__);
+//
+//    BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_string,string_ptr,0);
+//
+//    exception_s *new_exception = exception_s::throw_exception(it,c_error_TODO_EXCEPTION,gtk_c::main_source_pos,new_location);
+//    new_exception->params.push(__LINE__);
+//  }
+//
+//  // -----
+//
+//  // - callback parameters -
+//  const unsigned param_cnt = 3;
+//  pointer param_data[param_cnt] = {
+//    dlg_data_ptr->object_loc,p1_location,delegate.data_loc};
+//
+//  // - call delegate method -
+//  location_s *trg_location = NULL;
+//  BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,gtk_c::main_source_pos,
+//      gtk_c::main_ret_code = c_run_return_code_EXCEPTION;
+//
+//      // - quit gtk main loop -
+//      gtk_main_quit();
+//
+//      return;
+//      );
+//  it.release_location_ptr(trg_location);
+//}/*}}}*/
+
+void gtk_c::callback_handler_1(gpointer g_obj,...)
 {/*{{{*/
-
+  
   // FIXME debug output
-  //{/*{{{*/
-  //  switch (g_type)
-  //  {
-  //  case G_TYPE_INVALID:   fprintf(stderr,"g_type: G_TYPE_INVALID\n"); break;
-  //  case G_TYPE_NONE:      fprintf(stderr,"g_type: G_TYPE_NONE\n"); break;
-  //  case G_TYPE_INTERFACE: fprintf(stderr,"g_type: G_TYPE_INTERFACE\n"); break;
-  //  case G_TYPE_CHAR:      fprintf(stderr,"g_type: G_TYPE_CHAR\n"); break;
-  //  case G_TYPE_UCHAR:     fprintf(stderr,"g_type: G_TYPE_UCHAR\n"); break;
-  //  case G_TYPE_BOOLEAN:   fprintf(stderr,"g_type: G_TYPE_BOOLEAN\n"); break;
-  //  case G_TYPE_INT:       fprintf(stderr,"g_type: G_TYPE_INT\n"); break;
-  //  case G_TYPE_UINT:      fprintf(stderr,"g_type: G_TYPE_UINT\n"); break;
-  //  case G_TYPE_LONG:      fprintf(stderr,"g_type: G_TYPE_LONG\n"); break;
-  //  case G_TYPE_ULONG:     fprintf(stderr,"g_type: G_TYPE_ULONG\n"); break;
-  //  case G_TYPE_INT64:     fprintf(stderr,"g_type: G_TYPE_INT64\n"); break;
-  //  case G_TYPE_UINT64:    fprintf(stderr,"g_type: G_TYPE_UINT64\n"); break;
-  //  case G_TYPE_ENUM:      fprintf(stderr,"g_type: G_TYPE_ENUM\n"); break;
-  //  case G_TYPE_FLAGS:     fprintf(stderr,"g_type: G_TYPE_FLAGS\n"); break;
-  //  case G_TYPE_FLOAT:     fprintf(stderr,"g_type: G_TYPE_FLOAT\n"); break;
-  //  case G_TYPE_DOUBLE:    fprintf(stderr,"g_type: G_TYPE_DOUBLE\n"); break;
-  //  case G_TYPE_STRING:    fprintf(stderr,"g_type: G_TYPE_STRING\n"); break;
-  //  case G_TYPE_POINTER:   fprintf(stderr,"g_type: G_TYPE_POINTER\n"); break;
-  //  case G_TYPE_BOXED:     fprintf(stderr,"g_type: G_TYPE_BOXED\n"); break;
-  //  case G_TYPE_PARAM:     fprintf(stderr,"g_type: G_TYPE_PARAM\n"); break;
-  //  case G_TYPE_OBJECT:    fprintf(stderr,"g_type: G_TYPE_OBJECT\n"); break;
-  //  case G_TYPE_VARIANT:   fprintf(stderr,"g_type: G_TYPE_VARIANT\n"); break;
-  //  default:
-  //    {/*{{{*/
-  //      if (g_type == GTK_TYPE_WIDGET)
-  //      {
-  //        fprintf(stderr,"g_type: GTK_TYPE_WIDGET\n"); break;
-  //      }
-  //    }/*}}}*/
-  //  }
-  //}/*}}}*/
+  fprintf(stderr,"g_obj: %p\n",g_obj);
 
+}/*}}}*/
+
+void gtk_c::g_type_print(GType g_type)
+{/*{{{*/
+  switch (g_type)
+  {
+  case G_TYPE_INVALID:   fprintf(stderr,"g_type: G_TYPE_INVALID\n"); break;
+  case G_TYPE_NONE:      fprintf(stderr,"g_type: G_TYPE_NONE\n"); break;
+  case G_TYPE_INTERFACE: fprintf(stderr,"g_type: G_TYPE_INTERFACE\n"); break;
+  case G_TYPE_CHAR:      fprintf(stderr,"g_type: G_TYPE_CHAR\n"); break;
+  case G_TYPE_UCHAR:     fprintf(stderr,"g_type: G_TYPE_UCHAR\n"); break;
+  case G_TYPE_BOOLEAN:   fprintf(stderr,"g_type: G_TYPE_BOOLEAN\n"); break;
+  case G_TYPE_INT:       fprintf(stderr,"g_type: G_TYPE_INT\n"); break;
+  case G_TYPE_UINT:      fprintf(stderr,"g_type: G_TYPE_UINT\n"); break;
+  case G_TYPE_LONG:      fprintf(stderr,"g_type: G_TYPE_LONG\n"); break;
+  case G_TYPE_ULONG:     fprintf(stderr,"g_type: G_TYPE_ULONG\n"); break;
+  case G_TYPE_INT64:     fprintf(stderr,"g_type: G_TYPE_INT64\n"); break;
+  case G_TYPE_UINT64:    fprintf(stderr,"g_type: G_TYPE_UINT64\n"); break;
+  case G_TYPE_ENUM:      fprintf(stderr,"g_type: G_TYPE_ENUM\n"); break;
+  case G_TYPE_FLAGS:     fprintf(stderr,"g_type: G_TYPE_FLAGS\n"); break;
+  case G_TYPE_FLOAT:     fprintf(stderr,"g_type: G_TYPE_FLOAT\n"); break;
+  case G_TYPE_DOUBLE:    fprintf(stderr,"g_type: G_TYPE_DOUBLE\n"); break;
+  case G_TYPE_STRING:    fprintf(stderr,"g_type: G_TYPE_STRING\n"); break;
+  case G_TYPE_POINTER:   fprintf(stderr,"g_type: G_TYPE_POINTER\n"); break;
+  case G_TYPE_BOXED:     fprintf(stderr,"g_type: G_TYPE_BOXED\n"); break;
+  case G_TYPE_PARAM:     fprintf(stderr,"g_type: G_TYPE_PARAM\n"); break;
+  case G_TYPE_OBJECT:    fprintf(stderr,"g_type: G_TYPE_OBJECT\n"); break;
+  case G_TYPE_VARIANT:   fprintf(stderr,"g_type: G_TYPE_VARIANT\n"); break;
+  default:
+    {/*{{{*/
+      if (g_type == GTK_TYPE_WIDGET)
+      {
+        fprintf(stderr,"g_type: GTK_TYPE_WIDGET\n"); break;
+      }
+      else
+      {
+        fprintf(stderr,"g_type: UNKNOWN\n"); break;
+      }
+    }/*}}}*/
+  }
+}/*}}}*/
+
+bool gtk_c::g_type_check(location_s *location_ptr,GType g_type)
+{/*{{{*/
   switch (g_type)
   {
   case G_TYPE_CHAR:
@@ -155,6 +227,66 @@ bool gtk_c::check_g_type(location_s *location_ptr,GType g_type)
       }
 
       return false;
+    }/*}}}*/
+  }
+}/*}}}*/
+
+location_s *gtk_c::g_type_value(interpreter_thread_s &it,GType g_type,gpointer g_pointer)
+{/*{{{*/
+  switch (g_type)
+  {
+  case G_TYPE_INVALID:
+  case G_TYPE_INTERFACE:
+    return NULL;
+  case G_TYPE_NONE:
+    return NULL;
+  case G_TYPE_CHAR:
+  case G_TYPE_UCHAR:
+    return NULL;
+  case G_TYPE_BOOLEAN:
+  case G_TYPE_INT:
+  case G_TYPE_UINT:
+  case G_TYPE_LONG:
+  case G_TYPE_ULONG:
+  case G_TYPE_INT64:
+  case G_TYPE_UINT64:
+  case G_TYPE_ENUM:
+  case G_TYPE_FLAGS:
+    return NULL;
+  case G_TYPE_FLOAT:
+  case G_TYPE_DOUBLE:
+    return NULL;
+  case G_TYPE_STRING:
+    return NULL;
+  case G_TYPE_POINTER:
+  case G_TYPE_BOXED:
+  case G_TYPE_PARAM:
+    return NULL;
+  case G_TYPE_OBJECT:
+    {/*{{{*/
+      if (g_pointer == NULL)
+        return (location_s *)it.blank_location;
+
+      g_object_ref(G_OBJECT(g_pointer));
+      BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_gtk_g_object,g_pointer,0);
+      return new_location;
+    }/*}}}*/
+  case G_TYPE_VARIANT:
+
+  // - ERROR -
+  default:
+    {/*{{{*/
+      if (g_type == GTK_TYPE_WIDGET)
+      {
+        if (g_pointer == NULL)
+          return (location_s *)it.blank_location;
+
+        g_object_ref(G_OBJECT(g_pointer));
+        BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_gtk_g_object,g_pointer,0);
+        return new_location;
+      }
+
+      return NULL;
     }/*}}}*/
   }
 }/*}}}*/
@@ -321,6 +453,10 @@ location_s *gtk_c::g_value_value(interpreter_thread_s &it,GType g_type,GValue *g
     {/*{{{*/
       gpointer g_obj = g_value_get_object(g_value);
 
+      if (g_obj == NULL)
+        return (location_s *)it.blank_location;
+
+      g_object_ref(g_obj);
       BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_gtk_g_object,g_obj);
       return new_location;
     }/*}}}*/
@@ -328,7 +464,21 @@ location_s *gtk_c::g_value_value(interpreter_thread_s &it,GType g_type,GValue *g
 
   // - ERROR -
   default:
-    return NULL;
+    {/*{{{*/
+      if (g_type == GTK_TYPE_WIDGET)
+      {
+        gpointer g_obj = g_value_get_object(g_value);
+
+        if (g_obj == NULL)
+          return (location_s *)it.blank_location;
+
+        g_object_ref(g_obj);
+        BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_gtk_g_object,g_obj);
+        return new_location;
+      }
+
+      return NULL;
+    }/*}}}*/
   }
 }/*}}}*/
 

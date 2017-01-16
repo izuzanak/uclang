@@ -823,7 +823,7 @@ bool bic_gtk_g_object_method_set_prop_2(interpreter_thread_s &it,unsigned stack_
   }
 
   // - ERROR -
-  if (!gtk_c::check_g_type(src_1_location,value_spec->value_type))
+  if (!gtk_c::g_type_check(src_1_location,value_spec->value_type))
   {
     exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_PROPERTY_INVALID_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -936,6 +936,14 @@ bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned 
   GSignalQuery signal_info;
   g_signal_query(signal_id,&signal_info);
 
+  // - ERROR -
+  if (signal_info.n_params >= gtk_c::cb_handlers_cnt)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
   // - retrieve delegate pointer -
   delegate_s *delegate_ptr = (delegate_s *)src_1_location->v_data_ptr;
 
@@ -971,7 +979,9 @@ bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned 
   dlg_data_ptr->delegates[delegate_idx].set(signal_id,src_1_location,src_2_location);
 
   // - connect signal to handler -
-  g_signal_connect(g_obj,string_ptr->data,G_CALLBACK(gtk_c::callback_handler),(gpointer)delegate_idx);
+  g_signal_connect(g_obj,string_ptr->data,
+      G_CALLBACK(gtk_c::cb_handlers[signal_info.n_params]),
+      (gpointer)delegate_idx);
 
   // FIXME TODO return signal handler
   BIC_SET_RESULT_BLANK();
@@ -1048,7 +1058,7 @@ bool bic_gtk_g_object_method_signal_emit_2(interpreter_thread_s &it,unsigned sta
       location_s *param_location = it.get_location_value(array_ptr->data[p_idx]);
 
       // - ERROR -
-      if (!gtk_c::check_g_type(param_location,signal_info.param_types[p_idx]))
+      if (!gtk_c::g_type_check(param_location,signal_info.param_types[p_idx]))
       {
         BIC_GTK_G_OBJECT_METHOD_SIGNAL_EMIT_2_RELEASE_PARAMS(p_idx);
 
