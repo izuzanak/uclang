@@ -109,7 +109,16 @@ void gtk_c::callback_handler(gpointer delegate_idx,...)
         if (*pt_ptr == GTK_TYPE_WIDGET)
           GTK_C_CALLBACK_HANDLER_OBJECT_PARAMETER();
 
-        // FIXME TODO throw proper exception ...
+        if (*pt_ptr == GTK_TYPE_DIRECTION_TYPE)
+        {
+          long long int value = va_arg(vlist,unsigned);
+          BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_integer,value,0);
+          *param_ptr++ = new_location;
+          continue;
+        }
+
+        // - ERROR -
+        fprintf(stderr,"Unsupported type of handle parameter: %s\n",g_type_name(*pt_ptr));
         cassert(0);
       }
     } while(++pt_ptr < pt_ptr_end);
@@ -131,46 +140,6 @@ void gtk_c::callback_handler(gpointer delegate_idx,...)
       return;
       );
   it.release_location_ptr(trg_location);
-}/*}}}*/
-
-void gtk_c::g_type_print(GType g_type)
-{/*{{{*/
-  switch (g_type)
-  {
-  case G_TYPE_INVALID:   fprintf(stderr,"g_type: G_TYPE_INVALID\n"); break;
-  case G_TYPE_NONE:      fprintf(stderr,"g_type: G_TYPE_NONE\n"); break;
-  case G_TYPE_INTERFACE: fprintf(stderr,"g_type: G_TYPE_INTERFACE\n"); break;
-  case G_TYPE_CHAR:      fprintf(stderr,"g_type: G_TYPE_CHAR\n"); break;
-  case G_TYPE_UCHAR:     fprintf(stderr,"g_type: G_TYPE_UCHAR\n"); break;
-  case G_TYPE_BOOLEAN:   fprintf(stderr,"g_type: G_TYPE_BOOLEAN\n"); break;
-  case G_TYPE_INT:       fprintf(stderr,"g_type: G_TYPE_INT\n"); break;
-  case G_TYPE_UINT:      fprintf(stderr,"g_type: G_TYPE_UINT\n"); break;
-  case G_TYPE_LONG:      fprintf(stderr,"g_type: G_TYPE_LONG\n"); break;
-  case G_TYPE_ULONG:     fprintf(stderr,"g_type: G_TYPE_ULONG\n"); break;
-  case G_TYPE_INT64:     fprintf(stderr,"g_type: G_TYPE_INT64\n"); break;
-  case G_TYPE_UINT64:    fprintf(stderr,"g_type: G_TYPE_UINT64\n"); break;
-  case G_TYPE_ENUM:      fprintf(stderr,"g_type: G_TYPE_ENUM\n"); break;
-  case G_TYPE_FLAGS:     fprintf(stderr,"g_type: G_TYPE_FLAGS\n"); break;
-  case G_TYPE_FLOAT:     fprintf(stderr,"g_type: G_TYPE_FLOAT\n"); break;
-  case G_TYPE_DOUBLE:    fprintf(stderr,"g_type: G_TYPE_DOUBLE\n"); break;
-  case G_TYPE_STRING:    fprintf(stderr,"g_type: G_TYPE_STRING\n"); break;
-  case G_TYPE_POINTER:   fprintf(stderr,"g_type: G_TYPE_POINTER\n"); break;
-  case G_TYPE_BOXED:     fprintf(stderr,"g_type: G_TYPE_BOXED\n"); break;
-  case G_TYPE_PARAM:     fprintf(stderr,"g_type: G_TYPE_PARAM\n"); break;
-  case G_TYPE_OBJECT:    fprintf(stderr,"g_type: G_TYPE_OBJECT\n"); break;
-  case G_TYPE_VARIANT:   fprintf(stderr,"g_type: G_TYPE_VARIANT\n"); break;
-  default:
-    {/*{{{*/
-      if (g_type == GTK_TYPE_WIDGET)
-      {
-        fprintf(stderr,"g_type: GTK_TYPE_WIDGET\n"); break;
-      }
-      else
-      {
-        fprintf(stderr,"g_type: UNKNOWN\n"); break;
-      }
-    }/*}}}*/
-  }
 }/*}}}*/
 
 bool gtk_c::g_type_check(location_s *location_ptr,GType g_type)

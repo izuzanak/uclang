@@ -89,9 +89,7 @@ class gtk_c
   static void dlg_data_release(gpointer delegate_data);
   static void callback_handler(gpointer delegate_idx,...);
 
-  static void g_type_print(GType g_type);
   static bool g_type_check(location_s *location_ptr,GType g_type);
-
   static GValue *create_g_value(interpreter_thread_s &it,location_s *location_ptr,GValue *g_value);
   static location_s *g_value_value(interpreter_thread_s &it,GType g_type,GValue *g_value);
 };
