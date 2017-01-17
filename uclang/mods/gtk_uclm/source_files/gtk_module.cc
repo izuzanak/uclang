@@ -5,15 +5,16 @@ include "gtk_module.h"
 
 // - GTK indexes of built in classes -
 unsigned c_bi_class_gtk_g_object = c_idx_not_exist;
+unsigned c_bi_class_gtk_handler = c_idx_not_exist;
 
 // - GTK module -
 built_in_module_s module =
 {/*{{{*/
-  1,                   // Class count
+  2,                   // Class count
   gtk_classes,         // Classes
 
   0,                   // Error base index
-  13,                  // Error count
+  14,                  // Error count
   gtk_error_strings,   // Error strings
 
   gtk_initialize,      // Initialize function
@@ -24,6 +25,7 @@ built_in_module_s module =
 built_in_class_s *gtk_classes[] =
 {/*{{{*/
   &gtk_g_object_class,
+  &gtk_handler_class,
 };/*}}}*/
 
 // - GTK error strings -
@@ -42,6 +44,7 @@ const char *gtk_error_strings[] =
   "error_GTK_G_OBJECT_SIGNAL_INVALID_PARAMETER_TYPE",
   "error_GTK_G_OBJECT_CREATE_ERROR",
   "error_GTK_G_OBJECT_MAIN_LOOP_STATE_ERROR",
+  "error_GTK_HANDLER_ALREADY_DISCONNECTED",
 };/*}}}*/
 
 // - GTK initialize -
@@ -51,6 +54,9 @@ bool gtk_initialize(script_parser_s &sp)
 
   // - initialize gtk_g_object class identifier -
   c_bi_class_gtk_g_object = class_base_idx++;
+
+  // - initialize gtk_handler class identifier -
+  c_bi_class_gtk_handler = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -157,6 +163,13 @@ bool gtk_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nGTK main loop is %s running\n",exception.params[0] ? "already" : "not");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GTK_HANDLER_ALREADY_DISCONNECTED:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nSignal handler was already disconnected\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -980,23 +993,25 @@ bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned 
         obj_dlg_idxs,gtk_c::dlg_data_release);
   }
 
-  unsigned delegate_idx = gtk_c::delegates.append_blank();
+  long long int delegate_idx = gtk_c::delegates.append_blank();
 
   // - store delegate index to object delegate indexes -
   unsigned dlg_idx_idx = obj_dlg_idxs->append(delegate_idx);
 
   // - store delegate and associated data -
+  dst_location->v_reference_cnt.atomic_inc();
   src_1_location->v_reference_cnt.atomic_inc();
   src_2_location->v_reference_cnt.atomic_inc();
   gtk_c::delegates[delegate_idx].set(
-      signal_id,dlg_idx_idx,dst_location,src_1_location,src_2_location);
+      signal_id,dlg_idx_idx,0,dst_location,src_1_location,src_2_location);
 
   // - connect signal to handler -
-  g_signal_connect_swapped(g_obj,string_ptr->data,
-      G_CALLBACK(gtk_c::callback_handler),(gpointer)delegate_idx);
+  gtk_c::delegates[delegate_idx].handler_id =
+    g_signal_connect_swapped(g_obj,string_ptr->data,
+        G_CALLBACK(gtk_c::callback_handler),(gpointer)delegate_idx);
 
-  // FIXME TODO return signal handler
-  BIC_SET_RESULT_BLANK();
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_gtk_handler,delegate_idx);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
@@ -1318,6 +1333,142 @@ bool bic_gtk_g_object_method_print_0(interpreter_thread_s &it,unsigned stack_bas
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
   printf("GtkGObject");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class GTK_HANDLER -
+built_in_class_s gtk_handler_class =
+{/*{{{*/
+  "GtkHandler",
+  c_modifier_public | c_modifier_final,
+  4, gtk_handler_methods,
+  0, gtk_handler_variables,
+  bic_gtk_handler_consts,
+  bic_gtk_handler_init,
+  bic_gtk_handler_clear,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};/*}}}*/
+
+built_in_method_s gtk_handler_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_handler_operator_binary_equal
+  },
+  {
+    "disconnect#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_handler_method_disconnect_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_gtk_handler_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_gtk_handler_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s gtk_handler_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_gtk_handler_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_gtk_handler_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = -1LL;
+}/*}}}*/
+
+void bic_gtk_handler_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  long long int delegate_idx = (long long int)location_ptr->v_data_ptr;
+
+  if (delegate_idx != -1)
+  {
+    gtk_delegate_s &delegate = gtk_c::delegates[delegate_idx];
+    it.release_location_ptr((location_s *)delegate.object_loc);
+  }
+}/*}}}*/
+
+bool bic_gtk_handler_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_handler_method_disconnect_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long delegate_idx = (long long int)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (delegate_idx == -1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_HANDLER_ALREADY_DISCONNECTED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  gtk_delegate_s &delegate = gtk_c::delegates[delegate_idx];
+  gpointer g_obj = (gpointer)((location_s *)delegate.object_loc)->v_data_ptr;
+
+  // - disconnect handle from signal -
+  g_signal_handler_disconnect(g_obj,delegate.handler_id);
+
+  // - release object reference -
+  it.release_location_ptr((location_s *)delegate.object_loc);
+
+  // - reset handler identifier -
+  dst_location->v_data_ptr = -1LL;
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_handler_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("GtkHandler"),"GtkHandler");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_handler_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  printf("GtkHandler");
 
   BIC_SET_RESULT_BLANK();
 

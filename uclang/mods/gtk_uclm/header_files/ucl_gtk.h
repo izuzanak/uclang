@@ -111,6 +111,7 @@ struct
 <
 unsigned:signal_id
 unsigned:object_dlg_idx
+uli:handler_id
 pointer:object_loc
 pointer:delegate_loc
 pointer:data_loc
