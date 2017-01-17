@@ -18,7 +18,8 @@ extern built_in_class_s *gtk_classes[];
 // - GTK error identifiers -
 enum
 {
-  c_error_GTK_G_OBJECT_UNKNOWN_PROPERTY = 0,
+  c_error_GTK_G_OBJECT_INVALID_TYPE = 0,
+  c_error_GTK_G_OBJECT_UNKNOWN_PROPERTY,
   c_error_GTK_G_OBJECT_WRONG_PROPERTIES_ARRAY_SIZE,
   c_error_GTK_G_OBJECT_PROPERTY_NAME_EXPECTED_STRING,
   c_error_GTK_G_OBJECT_PROPERTY_INVALID_VALUE_TYPE,
@@ -60,6 +61,7 @@ bool bic_gtk_g_object_method_signal_emit_2(interpreter_thread_s &it,unsigned sta
 bool bic_gtk_g_object_method_container_add_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_grid_attach_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_widget_show_all_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_g_object_method_window_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_main_loop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_quit_main_loop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

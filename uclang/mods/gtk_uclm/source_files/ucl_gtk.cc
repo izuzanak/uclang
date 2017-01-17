@@ -117,9 +117,8 @@ void gtk_c::callback_handler(gpointer delegate_idx,...)
           continue;
         }
 
-        // - ERROR -
-        fprintf(stderr,"Unsupported type of handle parameter: %s\n",g_type_name(*pt_ptr));
-        cassert(0);
+        // - unknown parameter type -
+        *param_ptr++ = it.blank_location;
       }
     } while(++pt_ptr < pt_ptr_end);
 

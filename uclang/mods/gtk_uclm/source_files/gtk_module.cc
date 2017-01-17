@@ -13,7 +13,7 @@ built_in_module_s module =
   gtk_classes,         // Classes
 
   0,                   // Error base index
-  12,                  // Error count
+  13,                  // Error count
   gtk_error_strings,   // Error strings
 
   gtk_initialize,      // Initialize function
@@ -29,6 +29,7 @@ built_in_class_s *gtk_classes[] =
 // - GTK error strings -
 const char *gtk_error_strings[] =
 {/*{{{*/
+  "error_GTK_G_OBJECT_INVALID_TYPE",
   "error_GTK_G_OBJECT_UNKNOWN_PROPERTY",
   "error_GTK_G_OBJECT_WRONG_PROPERTIES_ARRAY_SIZE",
   "error_GTK_G_OBJECT_PROPERTY_NAME_EXPECTED_STRING",
@@ -62,6 +63,13 @@ bool gtk_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
+  case c_error_GTK_G_OBJECT_INVALID_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid type of GObject\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_GTK_G_OBJECT_UNKNOWN_PROPERTY:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -163,7 +171,7 @@ built_in_class_s gtk_g_object_class =
 {/*{{{*/
   "GtkGObject",
   c_modifier_public | c_modifier_final,
-  14, gtk_g_object_methods,
+  15, gtk_g_object_methods,
   165, gtk_g_object_variables,
   bic_gtk_g_object_consts,
   bic_gtk_g_object_init,
@@ -232,6 +240,11 @@ built_in_method_s gtk_g_object_methods[] =
     "widget_show_all#0",
     c_modifier_public | c_modifier_final,
     bic_gtk_g_object_method_widget_show_all_0
+  },
+  {
+    "window_close#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_window_close_0
   },
   {
     "main_loop#0",
@@ -1125,6 +1138,13 @@ bool bic_gtk_g_object_method_container_add_1(interpreter_thread_s &it,unsigned s
   gpointer g_obj = (gpointer)dst_location->v_data_ptr;
   gpointer g_obj_widget = (gpointer)src_0_location->v_data_ptr;
 
+  // - ERROR -
+  if (!(GTK_IS_CONTAINER(g_obj) && GTK_IS_WIDGET(g_obj_widget)))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_INVALID_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
   // - add widget to container -
   gtk_container_add(GTK_CONTAINER(g_obj),GTK_WIDGET(g_obj_widget));
 
@@ -1169,6 +1189,13 @@ bool bic_gtk_g_object_method_grid_attach_5(interpreter_thread_s &it,unsigned sta
   gpointer g_obj = (gpointer)dst_location->v_data_ptr;
   gpointer g_obj_widget = (gpointer)src_0_location->v_data_ptr;
 
+  // - ERROR -
+  if (!(GTK_IS_GRID(g_obj) && GTK_IS_WIDGET(g_obj_widget)))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_INVALID_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
   // - attach widget to grid -
   gtk_grid_attach(GTK_GRID(g_obj),GTK_WIDGET(g_obj_widget),left,top,width,height);
 
@@ -1184,8 +1211,37 @@ bool bic_gtk_g_object_method_widget_show_all_0(interpreter_thread_s &it,unsigned
 
   gpointer g_obj = (gpointer)dst_location->v_data_ptr;
 
+  // - ERROR -
+  if (!GTK_IS_WIDGET(g_obj))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_INVALID_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
   // - show widget and all its children -
   gtk_widget_show_all(GTK_WIDGET(g_obj));
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_g_object_method_window_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (!GTK_IS_WINDOW(g_obj))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_INVALID_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - show widget and all its children -
+  gtk_window_close(GTK_WINDOW(g_obj));
 
   BIC_SET_RESULT_BLANK();
 

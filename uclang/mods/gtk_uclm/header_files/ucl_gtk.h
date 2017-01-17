@@ -24,6 +24,8 @@ include "script_parser.h"
 // g_object_ref
 // g_object_unref
 
+// g_type_name
+
 // g_quark_from_string
 // g_object_set_qdata_full
 // g_object_get_qdata
