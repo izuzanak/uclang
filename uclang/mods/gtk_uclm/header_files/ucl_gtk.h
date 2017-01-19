@@ -60,6 +60,7 @@ include "script_parser.h"
  */
 
 extern unsigned c_bi_class_gtk_g_object;
+extern unsigned c_bi_class_gtk_window;
 
 /*
  * structure definitions
@@ -92,6 +93,7 @@ class gtk_c
   static void callback_handler(gpointer delegate_idx,...);
 
   static bool g_type_check(location_s *location_ptr,GType g_type);
+  static gpointer create_g_object(interpreter_thread_s &it,GType g_type,pointer_array_s *array_ptr,unsigned source_pos);
   static GValue *create_g_value(interpreter_thread_s &it,location_s *location_ptr,GValue *g_value);
   static location_s *g_value_value(interpreter_thread_s &it,GType g_type,GValue *g_value);
 };

@@ -4,13 +4,15 @@ include "gtk_module.h"
 @end
 
 // - GTK indexes of built in classes -
+unsigned c_bi_class_gtk = c_idx_not_exist;
 unsigned c_bi_class_gtk_g_object = c_idx_not_exist;
+unsigned c_bi_class_gtk_window = c_idx_not_exist;
 unsigned c_bi_class_gtk_handler = c_idx_not_exist;
 
 // - GTK module -
 built_in_module_s module =
 {/*{{{*/
-  2,                   // Class count
+  4,                   // Class count
   gtk_classes,         // Classes
 
   0,                   // Error base index
@@ -24,13 +26,16 @@ built_in_module_s module =
 // - GTK classes -
 built_in_class_s *gtk_classes[] =
 {/*{{{*/
+  &gtk_class,
   &gtk_g_object_class,
+  &gtk_window_class,
   &gtk_handler_class,
 };/*}}}*/
 
 // - GTK error strings -
 const char *gtk_error_strings[] =
 {/*{{{*/
+  "error_GTK_MAIN_LOOP_STATE_ERROR",
   "error_GTK_G_OBJECT_INVALID_TYPE",
   "error_GTK_G_OBJECT_UNKNOWN_PROPERTY",
   "error_GTK_G_OBJECT_WRONG_PROPERTIES_ARRAY_SIZE",
@@ -43,7 +48,6 @@ const char *gtk_error_strings[] =
   "error_GTK_G_OBJECT_SIGNAL_INVALID_PARAMETER_COUNT",
   "error_GTK_G_OBJECT_SIGNAL_INVALID_PARAMETER_TYPE",
   "error_GTK_G_OBJECT_CREATE_ERROR",
-  "error_GTK_G_OBJECT_MAIN_LOOP_STATE_ERROR",
   "error_GTK_HANDLER_ALREADY_DISCONNECTED",
 };/*}}}*/
 
@@ -52,8 +56,14 @@ bool gtk_initialize(script_parser_s &sp)
 {/*{{{*/
   unsigned class_base_idx = sp.class_records.used - module.class_cnt;
 
+  // - initialize gtk class identifier -
+  c_bi_class_gtk = class_base_idx++;
+
   // - initialize gtk_g_object class identifier -
   c_bi_class_gtk_g_object = class_base_idx++;
+
+  // - initialize gtk_window class identifier -
+  c_bi_class_gtk_window = class_base_idx++;
 
   // - initialize gtk_handler class identifier -
   c_bi_class_gtk_handler = class_base_idx++;
@@ -69,6 +79,13 @@ bool gtk_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
+  case c_error_GTK_MAIN_LOOP_STATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nGTK main loop is %s running\n",exception.params[0] ? "already" : "not");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_GTK_G_OBJECT_INVALID_TYPE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -158,13 +175,6 @@ bool gtk_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nError while creating GObject\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_GTK_G_OBJECT_MAIN_LOOP_STATE_ERROR:
-    fprintf(stderr," ---------------------------------------- \n");
-    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
-    print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nGTK main loop is %s running\n",exception.params[0] ? "already" : "not");
-    fprintf(stderr," ---------------------------------------- \n");
-    break;
   case c_error_GTK_HANDLER_ALREADY_DISCONNECTED:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -179,16 +189,16 @@ bool gtk_print_exception(interpreter_s &it,exception_s &exception)
   return true;
 }/*}}}*/
 
-// - class GTK_G_OBJECT -
-built_in_class_s gtk_g_object_class =
+// - class GTK -
+built_in_class_s gtk_class =
 {/*{{{*/
-  "GtkGObject",
+  "Gtk",
   c_modifier_public | c_modifier_final,
-  15, gtk_g_object_methods,
-  165, gtk_g_object_variables,
-  bic_gtk_g_object_consts,
-  bic_gtk_g_object_init,
-  bic_gtk_g_object_clear,
+  4, gtk_methods,
+  165, gtk_variables,
+  bic_gtk_consts,
+  bic_gtk_init,
+  bic_gtk_clear,
   NULL,
   NULL,
   NULL,
@@ -202,86 +212,31 @@ built_in_class_s gtk_g_object_class =
   NULL
 };/*}}}*/
 
-built_in_method_s gtk_g_object_methods[] =
+built_in_method_s gtk_methods[] =
 {/*{{{*/
-  {
-    "operator_binary_equal#1",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_operator_binary_equal
-  },
-  {
-    "GtkGObject#2",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_GtkGObject_2
-  },
-  {
-    "list_properties#0",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_list_properties_0
-  },
-  {
-    "set_prop#2",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_set_prop_2
-  },
-  {
-    "get_prop#1",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_get_prop_1
-  },
-  {
-    "signal_connect#3",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_signal_connect_3
-  },
-  {
-    "signal_emit#2",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_signal_emit_2
-  },
-  {
-    "container_add#1",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_container_add_1
-  },
-  {
-    "grid_attach#5",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_grid_attach_5
-  },
-  {
-    "widget_show_all#0",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_widget_show_all_0
-  },
-  {
-    "window_close#0",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_window_close_0
-  },
   {
     "main_loop#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_gtk_g_object_method_main_loop_0
+    bic_gtk_method_main_loop_0
   },
   {
     "quit_main_loop#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_gtk_g_object_method_quit_main_loop_0
+    bic_gtk_method_quit_main_loop_0
   },
   {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_gtk_g_object_method_to_string_0
+    bic_gtk_method_to_string_0
   },
   {
     "print#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_gtk_g_object_method_print_0
+    bic_gtk_method_print_0
   },
 };/*}}}*/
 
-built_in_variable_s gtk_g_object_variables[] =
+built_in_variable_s gtk_variables[] =
 {/*{{{*/
 
   // - g_object type constants -
@@ -453,7 +408,7 @@ built_in_variable_s gtk_g_object_variables[] =
 
 };/*}}}*/
 
-void bic_gtk_g_object_consts(location_array_s &const_locations)
+void bic_gtk_consts(location_array_s &const_locations)
 {/*{{{*/
 
   // - insert g_object type constants -
@@ -636,6 +591,187 @@ void bic_gtk_g_object_consts(location_array_s &const_locations)
 
 }/*}}}*/
 
+void bic_gtk_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  cassert(0);
+}/*}}}*/
+
+void bic_gtk_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  cassert(0);
+}/*}}}*/
+
+bool bic_gtk_method_main_loop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+
+  // - ERROR -
+  if (gtk_c::main_loop)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_MAIN_LOOP_STATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(1);
+
+    return false;
+  }
+
+  gtk_c::main_loop = true;
+  gtk_c::main_source_pos = operands[c_source_pos_idx];
+  gtk_c::main_ret_code = c_run_return_code_OK;
+
+  // - run gtk main loop -
+  gtk_main();
+
+  unsigned main_ret_code = gtk_c::main_ret_code;
+  gtk_c::init_static();
+
+  // - if exception occurred in one of callbacks -
+  if (main_ret_code == c_run_return_code_EXCEPTION)
+  {
+    return false;
+  }
+
+  pointer &res_location = it.data_stack[res_loc_idx];
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_method_quit_main_loop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  // - ERROR -
+  if (!gtk_c::main_loop)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_MAIN_LOOP_STATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(0);
+
+    return false;
+  }
+
+  // - quit gtk main loop -
+  gtk_main_quit();
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("Gtk"),"Gtk");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  printf("Gtk");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class GTK_G_OBJECT -
+built_in_class_s gtk_g_object_class =
+{/*{{{*/
+  "GtkGObject",
+  c_modifier_public | c_modifier_final,
+  12, gtk_g_object_methods,
+  0, gtk_g_object_variables,
+  bic_gtk_g_object_consts,
+  bic_gtk_g_object_init,
+  bic_gtk_g_object_clear,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};/*}}}*/
+
+built_in_method_s gtk_g_object_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_operator_binary_equal
+  },
+  {
+    "GtkGObject#2",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_GtkGObject_2
+  },
+  {
+    "list_properties#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_list_properties_0
+  },
+  {
+    "set_prop#2",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_set_prop_2
+  },
+  {
+    "get_prop#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_get_prop_1
+  },
+  {
+    "signal_connect#3",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_signal_connect_3
+  },
+  {
+    "signal_emit#2",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_signal_emit_2
+  },
+  {
+    "container_add#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_container_add_1
+  },
+  {
+    "grid_attach#5",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_grid_attach_5
+  },
+  {
+    "widget_show_all#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_widget_show_all_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_gtk_g_object_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_gtk_g_object_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s gtk_g_object_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_gtk_g_object_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
 void bic_gtk_g_object_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   location_ptr->v_data_ptr = (gpointer)NULL;
@@ -687,88 +823,13 @@ bool bic_gtk_g_object_method_GtkGObject_2(interpreter_thread_s &it,unsigned stac
 
   pointer_array_s *array_ptr = (pointer_array_s *)src_1_location->v_data_ptr;
 
-  // - ERROR -
-  if (array_ptr->used & 0x01)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_WRONG_PROPERTIES_ARRAY_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  guint param_cnt = array_ptr->used >> 1;
-  GParameter params[param_cnt] = {0};
-
-#define BIC_GTK_G_OBJECT_METHOD_GTKGOBJECT_2_RELEASE_PARAMS() \
-{/*{{{*/\
-  GParameter *rp_ptr = params;\
-  GParameter *rp_ptr_end = rp_ptr + param_cnt;\
-\
-  do {\
-    g_value_unset(&rp_ptr->value);\
-  } while(++rp_ptr < rp_ptr_end);\
-}/*}}}*/
-
-  // - prepare parameters -
-  if (param_cnt > 0)
-  {
-    GParameter *p_ptr = params;
-    GParameter *p_ptr_end = p_ptr + param_cnt;
-    pointer *a_ptr = array_ptr->data;
-
-    do {
-      location_s *name_location = it.get_location_value(a_ptr[0]);
-      location_s *value_location = it.get_location_value(a_ptr[1]);
-
-      // - ERROR -
-      if (name_location->v_type != c_bi_class_string)
-      {
-        BIC_GTK_G_OBJECT_METHOD_GTKGOBJECT_2_RELEASE_PARAMS();
-
-        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_PROPERTY_NAME_EXPECTED_STRING,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        new_exception->params.push(p_ptr - params);
-
-        return false;
-      }
-
-      string_s *string_ptr = (string_s *)name_location->v_data_ptr;
-      p_ptr->name = string_ptr->data;
-
-      // - ERROR -
-      if (!gtk_c::create_g_value(it,value_location,&p_ptr->value))
-      {
-        BIC_GTK_G_OBJECT_METHOD_GTKGOBJECT_2_RELEASE_PARAMS();
-
-        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_G_VALUE_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        new_exception->params.push(p_ptr - params);
-
-        return false;
-      }
-
-    } while((a_ptr += 2),++p_ptr < p_ptr_end);
-  }
-
-  // - create new g_object -
-  gpointer g_obj = g_object_newv(g_type,param_cnt,params);
+  gpointer g_obj = gtk_c::create_g_object(it,g_type,array_ptr,operands[c_source_pos_idx]);
 
   // - ERROR -
-  if (!g_obj)
+  if (g_obj == NULL)
   {
-    BIC_GTK_G_OBJECT_METHOD_GTKGOBJECT_2_RELEASE_PARAMS();
-
-    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
-
-  // - acquire floating reference to object -
-  if (g_object_is_floating(g_obj))
-  {
-    g_object_ref_sink(g_obj);
-  }
-  else
-  {
-    g_object_ref(g_obj);
-  }
-
-  BIC_GTK_G_OBJECT_METHOD_GTKGOBJECT_2_RELEASE_PARAMS();
 
   dst_location->v_data_ptr = (gpointer)g_obj;
 
@@ -1263,62 +1324,6 @@ bool bic_gtk_g_object_method_window_close_0(interpreter_thread_s &it,unsigned st
   return true;
 }/*}}}*/
 
-bool bic_gtk_g_object_method_main_loop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-
-  // - ERROR -
-  if (gtk_c::main_loop)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_MAIN_LOOP_STATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    new_exception->params.push(1);
-
-    return false;
-  }
-
-  gtk_c::main_loop = true;
-  gtk_c::main_source_pos = operands[c_source_pos_idx];
-  gtk_c::main_ret_code = c_run_return_code_OK;
-
-  // - run gtk main loop -
-  gtk_main();
-
-  unsigned main_ret_code = gtk_c::main_ret_code;
-  gtk_c::init_static();
-
-  // - if exception occurred in one of callbacks -
-  if (main_ret_code == c_run_return_code_EXCEPTION)
-  {
-    return false;
-  }
-
-  pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
-
-  return true;
-}/*}}}*/
-
-bool bic_gtk_g_object_method_quit_main_loop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
-  // - ERROR -
-  if (!gtk_c::main_loop)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_MAIN_LOOP_STATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    new_exception->params.push(0);
-
-    return false;
-  }
-
-  // - quit gtk main loop -
-  gtk_main_quit();
-
-  BIC_SET_RESULT_BLANK();
-
-  return true;
-}/*}}}*/
-
 bool bic_gtk_g_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -1333,6 +1338,183 @@ bool bic_gtk_g_object_method_print_0(interpreter_thread_s &it,unsigned stack_bas
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
   printf("GtkGObject");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class GTK_WINDOW -
+built_in_class_s gtk_window_class =
+{/*{{{*/
+  "GtkWindow",
+  c_modifier_public | c_modifier_final,
+  13, gtk_window_methods,
+  0, gtk_window_variables,
+  bic_gtk_window_consts,
+  bic_gtk_g_object_init,
+  bic_gtk_g_object_clear,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};/*}}}*/
+
+built_in_method_s gtk_window_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_window_operator_binary_equal
+  },
+  {
+    "GtkWindow#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_window_method_GtkWindow_1
+  },
+  {
+    "list_properties#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_list_properties_0
+  },
+  {
+    "set_prop#2",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_set_prop_2
+  },
+  {
+    "get_prop#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_get_prop_1
+  },
+  {
+    "signal_connect#3",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_signal_connect_3
+  },
+  {
+    "signal_emit#2",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_signal_emit_2
+  },
+  {
+    "container_add#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_container_add_1
+  },
+  {
+    "widget_show_all#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_widget_show_all_0
+  },
+  {
+    "window_close#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_window_close_0
+  },
+  {
+    "close#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_window_method_close_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_gtk_window_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_gtk_window_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s gtk_window_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_gtk_window_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+bool bic_gtk_window_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_window_method_GtkWindow_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_array)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("GtkWindow#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+  gpointer g_obj = gtk_c::create_g_object(it,GTK_TYPE_WINDOW,array_ptr,operands[c_source_pos_idx]);
+
+  // - ERROR -
+  if (g_obj == NULL)
+  {
+    return false;
+  }
+
+  dst_location->v_data_ptr = (gpointer)g_obj;
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_window_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+  gtk_window_close(GTK_WINDOW(g_obj));
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_window_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("GtkWindow"),"GtkWindow");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_window_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  printf("GtkWindow");
 
   BIC_SET_RESULT_BLANK();
 

@@ -1,6 +1,6 @@
 
 @begin
-include "ucl_gtk.h"
+include "gtk_module.h"
 @end
 
 // - static members of class gtk_c -
@@ -106,8 +106,11 @@ void gtk_c::callback_handler(gpointer delegate_idx,...)
       // - ERROR -
       default:
 
-        if (*pt_ptr == GTK_TYPE_WIDGET)
+        if (*pt_ptr == GTK_TYPE_WIDGET ||
+            *pt_ptr == GTK_TYPE_WINDOW)
+        {
           GTK_C_CALLBACK_HANDLER_OBJECT_PARAMETER();
+        }
 
         if (*pt_ptr == GTK_TYPE_DIRECTION_TYPE)
         {
@@ -167,7 +170,8 @@ bool gtk_c::g_type_check(location_s *location_ptr,GType g_type)
     return location_ptr->v_type == c_bi_class_gtk_g_object;
   default:
     {/*{{{*/
-      if (g_type == GTK_TYPE_WIDGET)
+      if (g_type == GTK_TYPE_WIDGET ||
+          g_type == GTK_TYPE_WINDOW)
       {
         return location_ptr->v_type == c_bi_class_gtk_g_object;
       }
@@ -177,9 +181,99 @@ bool gtk_c::g_type_check(location_s *location_ptr,GType g_type)
   }
 }/*}}}*/
 
+gpointer gtk_c::create_g_object(interpreter_thread_s &it,GType g_type,pointer_array_s *array_ptr,unsigned source_pos)
+{/*{{{*/
+
+  // - ERROR -
+  if (array_ptr->used & 0x01)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_WRONG_PROPERTIES_ARRAY_SIZE,source_pos,(location_s *)it.blank_location);
+    return NULL;
+  }
+
+  guint param_cnt = array_ptr->used >> 1;
+  GParameter params[param_cnt] = {0};
+
+#define BIC_GTK_CREATE_G_OBJECT_RELEASE_PARAMS() \
+{/*{{{*/\
+  GParameter *rp_ptr = params;\
+  GParameter *rp_ptr_end = rp_ptr + param_cnt;\
+\
+  do {\
+    g_value_unset(&rp_ptr->value);\
+  } while(++rp_ptr < rp_ptr_end);\
+}/*}}}*/
+
+  // - prepare parameters -
+  if (param_cnt > 0)
+  {
+    GParameter *p_ptr = params;
+    GParameter *p_ptr_end = p_ptr + param_cnt;
+    pointer *a_ptr = array_ptr->data;
+
+    do {
+      location_s *name_location = it.get_location_value(a_ptr[0]);
+      location_s *value_location = it.get_location_value(a_ptr[1]);
+
+      // - ERROR -
+      if (name_location->v_type != c_bi_class_string)
+      {
+        BIC_GTK_CREATE_G_OBJECT_RELEASE_PARAMS();
+
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_PROPERTY_NAME_EXPECTED_STRING,source_pos,(location_s *)it.blank_location);
+        new_exception->params.push(p_ptr - params);
+
+        return NULL;
+      }
+
+      string_s *string_ptr = (string_s *)name_location->v_data_ptr;
+      p_ptr->name = string_ptr->data;
+
+      // - ERROR -
+      if (!gtk_c::create_g_value(it,value_location,&p_ptr->value))
+      {
+        BIC_GTK_CREATE_G_OBJECT_RELEASE_PARAMS();
+
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_G_VALUE_CREATE_ERROR,source_pos,(location_s *)it.blank_location);
+        new_exception->params.push(p_ptr - params);
+
+        return NULL;
+      }
+
+    } while((a_ptr += 2),++p_ptr < p_ptr_end);
+  }
+
+  // - create new g_object -
+  gpointer g_obj = g_object_newv(g_type,param_cnt,params);
+
+  // - ERROR -
+  if (!g_obj)
+  {
+    BIC_GTK_CREATE_G_OBJECT_RELEASE_PARAMS();
+
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_CREATE_ERROR,source_pos,(location_s *)it.blank_location);
+    return NULL;
+  }
+
+  // - acquire floating reference to object -
+  if (g_object_is_floating(g_obj))
+  {
+    g_object_ref_sink(g_obj);
+  }
+  else
+  {
+    g_object_ref(g_obj);
+  }
+
+  BIC_GTK_CREATE_G_OBJECT_RELEASE_PARAMS();
+
+  return g_obj;
+}/*}}}*/
+
 GValue *gtk_c::create_g_value(interpreter_thread_s &it,location_s *location_ptr,GValue *g_value)
 {/*{{{*/
-  if (location_ptr->v_type == c_bi_class_gtk_g_object)
+  if (location_ptr->v_type >= c_bi_class_gtk_g_object &&
+      location_ptr->v_type <= c_bi_class_gtk_window)
   {/*{{{*/
     gpointer g_obj = (gpointer)location_ptr->v_data_ptr;
 
@@ -351,7 +445,8 @@ location_s *gtk_c::g_value_value(interpreter_thread_s &it,GType g_type,GValue *g
   // - ERROR -
   default:
     {/*{{{*/
-      if (g_type == GTK_TYPE_WIDGET)
+      if (g_type == GTK_TYPE_WIDGET ||
+          g_type == GTK_TYPE_WINDOW)
       {
         gpointer g_obj = g_value_get_object(g_value);
 
