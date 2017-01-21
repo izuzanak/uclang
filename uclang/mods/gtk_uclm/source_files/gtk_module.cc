@@ -7,13 +7,14 @@ include "gtk_module.h"
 unsigned c_bi_class_gtk = c_idx_not_exist;
 unsigned c_bi_class_gtk_g_object = c_idx_not_exist;
 unsigned c_bi_class_gtk_widget = c_idx_not_exist;
+unsigned c_bi_class_gtk_container = c_idx_not_exist;
 unsigned c_bi_class_gtk_window = c_idx_not_exist;
 unsigned c_bi_class_gtk_handler = c_idx_not_exist;
 
 // - GTK module -
 built_in_module_s module =
 {/*{{{*/
-  5,                   // Class count
+  6,                   // Class count
   gtk_classes,         // Classes
 
   0,                   // Error base index
@@ -30,6 +31,7 @@ built_in_class_s *gtk_classes[] =
   &gtk_class,
   &gtk_g_object_class,
   &gtk_widget_class,
+  &gtk_container_class,
   &gtk_window_class,
   &gtk_handler_class,
 };/*}}}*/
@@ -67,6 +69,9 @@ bool gtk_initialize(script_parser_s &sp)
   // - initialize gtk_widget class identifier -
   c_bi_class_gtk_widget = class_base_idx++;
   gtk_c::gtk_obj_class_first = c_bi_class_gtk_widget;
+
+  // - initialize gtk_container class identifier -
+  c_bi_class_gtk_container = class_base_idx++;
 
   // - initialize gtk_window class identifier -
   c_bi_class_gtk_window = class_base_idx++;
@@ -953,7 +958,7 @@ built_in_class_s gtk_g_object_class =
 {/*{{{*/
   "GtkGObject",
   c_modifier_public | c_modifier_final,
-  12, gtk_g_object_methods,
+  11, gtk_g_object_methods,
   0, gtk_g_object_variables,
   bic_gtk_g_object_consts,
   bic_gtk_g_object_init,
@@ -1012,11 +1017,6 @@ built_in_method_s gtk_g_object_methods[] =
     "signal_emit#2",
     c_modifier_public | c_modifier_final,
     bic_gtk_g_object_method_signal_emit_2
-  },
-  {
-    "container_add#1",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_container_add_1
   },
   {
     "grid_attach#5",
@@ -1500,42 +1500,6 @@ bool bic_gtk_g_object_method_signal_emit_2(interpreter_thread_s &it,unsigned sta
   return true;
 }/*}}}*/
 
-bool bic_gtk_g_object_method_container_add_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_gtk_g_object)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("container_add#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
-  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
-  gpointer g_obj_widget = (gpointer)src_0_location->v_data_ptr;
-
-  // - ERROR -
-  if (!(GTK_IS_CONTAINER(g_obj) && GTK_IS_WIDGET(g_obj_widget)))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_INCOMPATIBLE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    new_exception->params.push(GTK_TYPE_CONTAINER);
-
-    return false;
-  }
-
-  // - add widget to container -
-  gtk_container_add(GTK_CONTAINER(g_obj),GTK_WIDGET(g_obj_widget));
-
-  BIC_SET_RESULT_BLANK();
-
-  return true;
-}/*}}}*/
-
 bool bic_gtk_g_object_method_grid_attach_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
@@ -1640,6 +1604,11 @@ built_in_method_s gtk_widget_methods[] =
     bic_gtk_widget_operator_binary_equal
   },
   {
+    "GtkWidget#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_widget_method_GtkWidget_1
+  },
+  {
     "list_properties#0",
     c_modifier_public | c_modifier_final,
     bic_gtk_g_object_method_list_properties_0
@@ -1663,11 +1632,6 @@ built_in_method_s gtk_widget_methods[] =
     "signal_emit#2",
     c_modifier_public | c_modifier_final,
     bic_gtk_g_object_method_signal_emit_2
-  },
-  {
-    "GtkWidget#1",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_widget_method_GtkWidget_1
   },
   {
     "show_all#0",
@@ -1777,6 +1741,200 @@ bool bic_gtk_widget_method_print_0(interpreter_thread_s &it,unsigned stack_base,
   return true;
 }/*}}}*/
 
+// - class GTK_CONTAINER -
+built_in_class_s gtk_container_class =
+{/*{{{*/
+  "GtkContainer",
+  c_modifier_public | c_modifier_final,
+  11, gtk_container_methods,
+  0, gtk_container_variables,
+  bic_gtk_container_consts,
+  bic_gtk_g_object_init,
+  bic_gtk_g_object_clear,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};/*}}}*/
+
+built_in_method_s gtk_container_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_container_operator_binary_equal
+  },
+  {
+    "GtkContainer#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_container_method_GtkContainer_1
+  },
+  {
+    "add#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_container_method_add_1
+  },
+  {
+    "list_properties#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_list_properties_0
+  },
+  {
+    "set_prop#2",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_set_prop_2
+  },
+  {
+    "get_prop#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_get_prop_1
+  },
+  {
+    "signal_connect#3",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_signal_connect_3
+  },
+  {
+    "signal_emit#2",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_signal_emit_2
+  },
+  {
+    "show_all#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_widget_method_show_all_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_gtk_container_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_gtk_container_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s gtk_container_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_gtk_container_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+bool bic_gtk_container_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_container_method_GtkContainer_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type < c_bi_class_gtk_g_object ||
+      src_0_location->v_type > gtk_c::gtk_obj_class_last)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("GtkContainer#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  gpointer g_obj = (gpointer)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (!GTK_IS_CONTAINER(g_obj))
+  {
+  exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_INCOMPATIBLE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+  new_exception->params.push(GTK_TYPE_CONTAINER);
+
+  return false;
+  }
+
+  g_object_ref(g_obj);
+
+  dst_location->v_data_ptr = (gpointer)g_obj;
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_container_method_add_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_gtk_g_object)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("add#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+  gpointer g_obj_widget = (gpointer)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (!GTK_IS_WIDGET(g_obj_widget))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_INCOMPATIBLE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(GTK_TYPE_WIDGET);
+
+    return false;
+  }
+
+  // - add widget to container -
+  gtk_container_add(GTK_CONTAINER(g_obj),GTK_WIDGET(g_obj_widget));
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_container_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("GtkContainer"),"GtkContainer");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_container_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  printf("GtkContainer");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
 // - class GTK_WINDOW -
 built_in_class_s gtk_window_class =
 {/*{{{*/
@@ -1838,9 +1996,9 @@ built_in_method_s gtk_window_methods[] =
     bic_gtk_g_object_method_signal_emit_2
   },
   {
-    "container_add#1",
+    "add#1",
     c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_container_add_1
+    bic_gtk_container_method_add_1
   },
   {
     "show_all#0",
