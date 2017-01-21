@@ -11,6 +11,7 @@ extern unsigned c_bi_class_gtk;
 extern unsigned c_bi_class_gtk_g_object;
 extern unsigned c_bi_class_gtk_widget;
 extern unsigned c_bi_class_gtk_container;
+extern unsigned c_bi_class_gtk_grid;
 extern unsigned c_bi_class_gtk_window;
 extern unsigned c_bi_class_gtk_handler;
 
@@ -79,10 +80,6 @@ bool bic_gtk_g_object_method_get_prop_1(interpreter_thread_s &it,unsigned stack_
 bool bic_gtk_g_object_method_list_properties_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_signal_emit_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-
-// FIXME TODO continue ...
-bool bic_gtk_g_object_method_grid_attach_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-
 bool bic_gtk_g_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -111,6 +108,19 @@ bool bic_gtk_container_method_GtkContainer_1(interpreter_thread_s &it,unsigned s
 bool bic_gtk_container_method_add_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_container_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_container_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class GTK_GRID -
+extern built_in_variable_s gtk_grid_variables[];
+extern built_in_method_s gtk_grid_methods[];
+extern built_in_class_s gtk_grid_class;
+
+void bic_gtk_grid_consts(location_array_s &const_locations);
+
+bool bic_gtk_grid_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_grid_method_GtkGrid_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_grid_method_attach_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_grid_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_grid_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 // - class GTK_WINDOW -
 extern built_in_variable_s gtk_window_variables[];
