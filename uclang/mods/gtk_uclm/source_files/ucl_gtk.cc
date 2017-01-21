@@ -5,6 +5,13 @@ include "gtk_module.h"
 
 // - static members of class gtk_c -
 GQuark gtk_c::dlg_idxs_quark;
+GQuark gtk_c::bi_class_quark;
+
+GType gtk_c::gtk_type_min;
+GType gtk_c::gtk_type_max;
+
+unsigned gtk_c::gtk_obj_class_first;
+unsigned gtk_c::gtk_obj_class_last;
 
 interpreter_thread_s *gtk_c::it_ptr;
 gtk_delegate_list_s gtk_c::delegates;
@@ -79,7 +86,7 @@ void gtk_c::callback_handler(gpointer delegate_idx,...)
     va_list vlist;
     va_start(vlist,delegate_idx);
 
-#define GTK_C_CALLBACK_HANDLER_OBJECT_PARAMETER() \
+#define GTK_C_CALLBACK_HANDLER_OBJECT_PARAMETER(CLASS) \
 {/*{{{*/\
   gpointer g_obj = va_arg(vlist,gpointer);\
   if (g_obj == NULL)\
@@ -89,7 +96,7 @@ void gtk_c::callback_handler(gpointer delegate_idx,...)
   }\
 \
   g_object_ref(g_obj);\
-  BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_gtk_g_object,g_obj,0);\
+  BIC_CREATE_NEW_LOCATION_REFS(new_location,CLASS,g_obj,0);\
   *param_ptr++ = new_location;\
   continue;\
 }/*}}}*/
@@ -98,30 +105,42 @@ void gtk_c::callback_handler(gpointer delegate_idx,...)
     const GType *pt_ptr = signal_info.param_types;
     const GType *pt_ptr_end = pt_ptr + signal_info.n_params;
     do {
-      switch (*pt_ptr)
+      GType pg_type = *pt_ptr;
+
+      switch (pg_type)
       {
       case G_TYPE_OBJECT:
-        GTK_C_CALLBACK_HANDLER_OBJECT_PARAMETER()
+        GTK_C_CALLBACK_HANDLER_OBJECT_PARAMETER(c_bi_class_gtk_g_object)
 
       // - ERROR -
       default:
-
-        if (*pt_ptr == GTK_TYPE_WIDGET ||
-            *pt_ptr == GTK_TYPE_WINDOW)
         {
-          GTK_C_CALLBACK_HANDLER_OBJECT_PARAMETER();
-        }
+          // - retrieve type identification -
+          int type_id = (int)g_type_get_qdata(pg_type,gtk_c::bi_class_quark);
+          
+          switch (type_id)
+          {
 
-        if (*pt_ptr == GTK_TYPE_DIRECTION_TYPE)
-        {
-          long long int value = va_arg(vlist,unsigned);
-          BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_integer,value,0);
-          *param_ptr++ = new_location;
-          continue;
-        }
+          // - process basic types -
+          case c_type_ui:
+            {
+              long long int value = va_arg(vlist,unsigned);
+              BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_integer,value,0);
+              *param_ptr++ = new_location;
+              continue;
+            }
+          }
 
-        // - unknown parameter type -
-        *param_ptr++ = it.blank_location;
+          // - process known objects -
+          if (type_id >= (int)gtk_c::gtk_obj_class_first &&
+              type_id <= (int)gtk_c::gtk_obj_class_last)
+          {
+            GTK_C_CALLBACK_HANDLER_OBJECT_PARAMETER(type_id);
+          }
+
+          // - unknown parameter type -
+          *param_ptr++ = it.blank_location;
+        }
       }
     } while(++pt_ptr < pt_ptr_end);
 
@@ -170,10 +189,17 @@ bool gtk_c::g_type_check(location_s *location_ptr,GType g_type)
     return location_ptr->v_type == c_bi_class_gtk_g_object;
   default:
     {/*{{{*/
-      if (g_type == GTK_TYPE_WIDGET ||
-          g_type == GTK_TYPE_WINDOW)
+      if (g_type >= gtk_c::gtk_type_min && g_type <= gtk_c::gtk_type_max)
       {
-        return location_ptr->v_type == c_bi_class_gtk_g_object;
+        // - retrieve type identification -
+        int type_id = (int)g_type_get_qdata(g_type,gtk_c::bi_class_quark);
+
+        // - process known objects -
+        if (type_id >= (int)gtk_c::gtk_obj_class_first &&
+            type_id <= (int)gtk_c::gtk_obj_class_last)
+        {
+          return location_ptr->v_type == (unsigned)type_id;
+        }
       }
 
       return false;
@@ -273,7 +299,7 @@ gpointer gtk_c::create_g_object(interpreter_thread_s &it,GType g_type,pointer_ar
 GValue *gtk_c::create_g_value(interpreter_thread_s &it,location_s *location_ptr,GValue *g_value)
 {/*{{{*/
   if (location_ptr->v_type >= c_bi_class_gtk_g_object &&
-      location_ptr->v_type <= c_bi_class_gtk_window)
+      location_ptr->v_type <= gtk_c::gtk_obj_class_last)
   {/*{{{*/
     gpointer g_obj = (gpointer)location_ptr->v_data_ptr;
 
@@ -445,17 +471,24 @@ location_s *gtk_c::g_value_value(interpreter_thread_s &it,GType g_type,GValue *g
   // - ERROR -
   default:
     {/*{{{*/
-      if (g_type == GTK_TYPE_WIDGET ||
-          g_type == GTK_TYPE_WINDOW)
+      if (g_type >= gtk_c::gtk_type_min && g_type <= gtk_c::gtk_type_max)
       {
-        gpointer g_obj = g_value_get_object(g_value);
+        // - retrieve type identification -
+        int type_id = (int)g_type_get_qdata(g_type,gtk_c::bi_class_quark);
 
-        if (g_obj == NULL)
-          return (location_s *)it.blank_location;
+        // - process known objects -
+        if (type_id >= (int)gtk_c::gtk_obj_class_first &&
+            type_id <= (int)gtk_c::gtk_obj_class_last)
+        {
+          gpointer g_obj = g_value_get_object(g_value);
 
-        g_object_ref(g_obj);
-        BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_gtk_g_object,g_obj);
-        return new_location;
+          if (g_obj == NULL)
+            return (location_s *)it.blank_location;
+
+          g_object_ref(g_obj);
+          BIC_CREATE_NEW_LOCATION(new_location,type_id,g_obj);
+          return new_location;
+        }
       }
 
       return NULL;

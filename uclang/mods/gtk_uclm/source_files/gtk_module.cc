@@ -6,13 +6,14 @@ include "gtk_module.h"
 // - GTK indexes of built in classes -
 unsigned c_bi_class_gtk = c_idx_not_exist;
 unsigned c_bi_class_gtk_g_object = c_idx_not_exist;
+unsigned c_bi_class_gtk_widget = c_idx_not_exist;
 unsigned c_bi_class_gtk_window = c_idx_not_exist;
 unsigned c_bi_class_gtk_handler = c_idx_not_exist;
 
 // - GTK module -
 built_in_module_s module =
 {/*{{{*/
-  4,                   // Class count
+  5,                   // Class count
   gtk_classes,         // Classes
 
   0,                   // Error base index
@@ -28,6 +29,7 @@ built_in_class_s *gtk_classes[] =
 {/*{{{*/
   &gtk_class,
   &gtk_g_object_class,
+  &gtk_widget_class,
   &gtk_window_class,
   &gtk_handler_class,
 };/*}}}*/
@@ -36,7 +38,7 @@ built_in_class_s *gtk_classes[] =
 const char *gtk_error_strings[] =
 {/*{{{*/
   "error_GTK_MAIN_LOOP_STATE_ERROR",
-  "error_GTK_G_OBJECT_INVALID_TYPE",
+  "error_GTK_G_OBJECT_INCOMPATIBLE_TYPE",
   "error_GTK_G_OBJECT_UNKNOWN_PROPERTY",
   "error_GTK_G_OBJECT_WRONG_PROPERTIES_ARRAY_SIZE",
   "error_GTK_G_OBJECT_PROPERTY_NAME_EXPECTED_STRING",
@@ -62,8 +64,13 @@ bool gtk_initialize(script_parser_s &sp)
   // - initialize gtk_g_object class identifier -
   c_bi_class_gtk_g_object = class_base_idx++;
 
+  // - initialize gtk_widget class identifier -
+  c_bi_class_gtk_widget = class_base_idx++;
+  gtk_c::gtk_obj_class_first = c_bi_class_gtk_widget;
+
   // - initialize gtk_window class identifier -
   c_bi_class_gtk_window = class_base_idx++;
+  gtk_c::gtk_obj_class_last = c_bi_class_gtk_window;
 
   // - initialize gtk_handler class identifier -
   c_bi_class_gtk_handler = class_base_idx++;
@@ -86,11 +93,11 @@ bool gtk_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nGTK main loop is %s running\n",exception.params[0] ? "already" : "not");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_GTK_G_OBJECT_INVALID_TYPE:
+  case c_error_GTK_G_OBJECT_INCOMPATIBLE_TYPE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nInvalid type of GObject\n");
+    fprintf(stderr,"\nIncompatible type of GObject, expected %s\n",g_type_name(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_GTK_G_OBJECT_UNKNOWN_PROPERTY:
@@ -195,7 +202,7 @@ built_in_class_s gtk_class =
   "Gtk",
   c_modifier_public | c_modifier_final,
   4, gtk_methods,
-  165, gtk_variables,
+  165 + 119, gtk_variables,
   bic_gtk_consts,
   bic_gtk_init,
   bic_gtk_clear,
@@ -406,6 +413,126 @@ built_in_variable_s gtk_variables[] =
   { "TYPE_WINDOW", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "TYPE_WINDOW_GROUP", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
+  { "TYPE_LICENSE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_ACCEL_FLAGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_APPLICATION_INHIBIT_FLAGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_ASSISTANT_PAGE_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_BUTTON_BOX_STYLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_BUILDER_ERROR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_CALENDAR_DISPLAY_OPTIONS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_CELL_RENDERER_STATE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_CELL_RENDERER_MODE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_CELL_RENDERER_ACCEL_MODE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_RESIZE_MODE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_CSS_PROVIDER_ERROR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_CSS_SECTION_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_DEBUG_FLAG", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_DIALOG_FLAGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_RESPONSE_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_DEST_DEFAULTS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_ENTRY_ICON_POSITION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_ALIGN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_ARROW_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_BASELINE_POSITION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_DELETE_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_DIRECTION_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_ICON_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_SENSITIVITY_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_TEXT_DIRECTION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_JUSTIFICATION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_MENU_DIRECTION_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_MESSAGE_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_MOVEMENT_STEP", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_SCROLL_STEP", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_ORIENTATION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_PACK_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_POSITION_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_RELIEF_STYLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_SCROLL_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_SELECTION_MODE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_SHADOW_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_STATE_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_TOOLBAR_STYLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_WRAP_MODE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_SORT_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_IM_PREEDIT_STYLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_IM_STATUS_STYLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_PACK_DIRECTION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_PRINT_PAGES", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_PAGE_SET", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_NUMBER_UP_LAYOUT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_PAGE_ORIENTATION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_PRINT_QUALITY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_PRINT_DUPLEX", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_UNIT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_TREE_VIEW_GRID_LINES", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_DRAG_RESULT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_SIZE_GROUP_MODE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_SIZE_REQUEST_MODE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_SCROLLABLE_POLICY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_STATE_FLAGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_REGION_FLAGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_JUNCTION_SIDES", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_BORDER_STYLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_LEVEL_BAR_MODE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_INPUT_PURPOSE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_INPUT_HINTS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_PROPAGATION_PHASE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_EVENT_SEQUENCE_STATE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_PAN_DIRECTION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_POPOVER_CONSTRAINT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_FILE_CHOOSER_ACTION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_FILE_CHOOSER_CONFIRMATION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_FILE_CHOOSER_ERROR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_FILE_FILTER_FLAGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_ICON_LOOKUP_FLAGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_ICON_THEME_ERROR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_ICON_VIEW_DROP_POSITION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_IMAGE_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_ARROW_PLACEMENT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_BUTTONS_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_BUTTON_ROLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_NOTEBOOK_TAB", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_PAD_ACTION_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_PLACES_OPEN_FLAGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_PRINT_STATUS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_PRINT_OPERATION_RESULT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_PRINT_OPERATION_ACTION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_PRINT_ERROR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_RECENT_SORT_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_RECENT_CHOOSER_ERROR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_RECENT_FILTER_FLAGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_RECENT_MANAGER_ERROR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_REVEALER_TRANSITION_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_CORNER_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_POLICY_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_TARGET_FLAGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_SHORTCUT_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_SPIN_BUTTON_UPDATE_POLICY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_SPIN_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_STACK_TRANSITION_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_STYLE_CONTEXT_PRINT_FLAGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_TEXT_BUFFER_TARGET_INFO", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_TEXT_SEARCH_FLAGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_TEXT_WINDOW_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_TEXT_VIEW_LAYER", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_TEXT_EXTEND_SELECTION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_TOOLBAR_SPACE_STYLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_TOOL_PALETTE_DRAG_TARGETS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_TREE_MODEL_FLAGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_TREE_VIEW_DROP_POSITION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_TREE_VIEW_COLUMN_SIZING", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_WIDGET_HELP_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_WINDOW_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_WINDOW_POSITION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_RC_FLAGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_RC_TOKEN_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_PATH_PRIORITY_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_PATH_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_EXPANDER_STYLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_ATTACH_OPTIONS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_UI_MANAGER_ITEM_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_gtk_consts(location_array_s &const_locations)
@@ -413,180 +540,324 @@ void bic_gtk_consts(location_array_s &const_locations)
 
   // - insert g_object type constants -
   {
-    const_locations.push_blanks(165);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 165);
+    const_locations.push_blanks(165 + 119);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - (165 + 119));
 
-#define CREATE_G_OBJECT_TYPE_BIC_STATIC(VALUE)\
+    // - retrieve minimal and maximal gtk type -
+    gtk_c::gtk_type_min = GTK_TYPE_ABOUT_DIALOG;
+    gtk_c::gtk_type_max = GTK_TYPE_ABOUT_DIALOG;
+
+#define CREATE_G_OBJECT_TYPE_BIC_STATIC(VALUE,TYPE_ID)\
+{/*{{{*/\
+  if ((int)TYPE_ID != 0)\
+    g_type_set_qdata(VALUE,gtk_c::bi_class_quark,(gpointer)TYPE_ID);\
+  \
+  if (VALUE < gtk_c::gtk_type_min) gtk_c::gtk_type_min = VALUE;\
+  if (VALUE > gtk_c::gtk_type_max) gtk_c::gtk_type_max = VALUE;\
+  \
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
   cv_ptr->v_data_ptr = (long long int)VALUE;\
-  cv_ptr++;
+  cv_ptr++;\
+}/*}}}*/
 
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_ABOUT_DIALOG);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_ACCEL_GROUP);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_ACCEL_LABEL);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_ACCEL_MAP);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_ACCESSIBLE);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_ACTION_BAR);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_ADJUSTMENT);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_APP_CHOOSER_BUTTON);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_APP_CHOOSER_DIALOG);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_APP_CHOOSER_WIDGET);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_APPLICATION);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_APPLICATION_WINDOW);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_ASPECT_FRAME);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_ASSISTANT);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_BIN);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_BOX);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_BUILDER);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_BUTTON);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_BUTTON_BOX);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_CALENDAR);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_CELL_AREA);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_CELL_AREA_BOX);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_CELL_AREA_CONTEXT);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_CELL_RENDERER);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_CELL_RENDERER_ACCEL);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_CELL_RENDERER_COMBO);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_CELL_RENDERER_PIXBUF);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_CELL_RENDERER_PROGRESS);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_CELL_RENDERER_SPIN);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_CELL_RENDERER_SPINNER);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_CELL_RENDERER_TEXT);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_CELL_RENDERER_TOGGLE);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_CELL_VIEW);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_CHECK_BUTTON);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_CHECK_MENU_ITEM);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_CLIPBOARD);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_COLOR_BUTTON);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_COLOR_CHOOSER_DIALOG);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_COLOR_CHOOSER_WIDGET);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_COMBO_BOX);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_COMBO_BOX_TEXT);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_CONTAINER);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_CSS_PROVIDER);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_DIALOG);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_DRAWING_AREA);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_ENTRY);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_ENTRY_BUFFER);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_ENTRY_COMPLETION);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_EVENT_BOX);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_EVENT_CONTROLLER);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_EXPANDER);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_FILE_CHOOSER_BUTTON);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_FILE_CHOOSER_DIALOG);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_FILE_CHOOSER_WIDGET);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_FIXED);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_FLOW_BOX);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_FLOW_BOX_CHILD);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_FONT_BUTTON);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_FONT_CHOOSER_DIALOG);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_FONT_CHOOSER_WIDGET);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_FRAME);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_GESTURE);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_GESTURE_DRAG);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_GESTURE_LONG_PRESS);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_GESTURE_MULTI_PRESS);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_GESTURE_PAN);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_GESTURE_ROTATE);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_GESTURE_SINGLE);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_GESTURE_SWIPE);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_GESTURE_ZOOM);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_GL_AREA);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_GRID);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_HEADER_BAR);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_ICON_INFO);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_ICON_THEME);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_ICON_VIEW);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_IMAGE);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_IM_CONTEXT);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_IM_CONTEXT_SIMPLE);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_IM_MULTICONTEXT);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_INFO_BAR);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_INVISIBLE);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_LABEL);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_LAYOUT);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_LEVEL_BAR);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_LINK_BUTTON);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_LIST_BOX);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_LIST_BOX_ROW);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_LIST_STORE);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_LOCK_BUTTON);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_MENU);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_MENU_BAR);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_MENU_BUTTON);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_MENU_ITEM);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_MENU_SHELL);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_MENU_TOOL_BUTTON);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_MESSAGE_DIALOG);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_MOUNT_OPERATION);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_NOTEBOOK);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_OFFSCREEN_WINDOW);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_OVERLAY);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_PAD_CONTROLLER);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_PANED);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_PLACES_SIDEBAR);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_POPOVER);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_POPOVER_MENU);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_PRINT_OPERATION);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_PROGRESS_BAR);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_RADIO_BUTTON);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_RADIO_MENU_ITEM);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_RADIO_TOOL_BUTTON);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_RANGE);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_RECENT_CHOOSER_DIALOG);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_RECENT_CHOOSER_MENU);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_RECENT_CHOOSER_WIDGET);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_RECENT_MANAGER);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_REVEALER);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_SCALE);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_SCALE_BUTTON);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_SCROLLBAR);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_SCROLLED_WINDOW);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_SEARCH_BAR);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_SEARCH_ENTRY);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_SEPARATOR);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_SEPARATOR_MENU_ITEM);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_SEPARATOR_TOOL_ITEM);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_SETTINGS);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_SHORTCUT_LABEL);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_SHORTCUTS_GROUP);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_SHORTCUTS_SECTION);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_SHORTCUTS_SHORTCUT);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_SHORTCUTS_WINDOW);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_SIZE_GROUP);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_SPIN_BUTTON);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_SPINNER);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_STACK);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_STACK_SIDEBAR);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_STACK_SWITCHER);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_STATUSBAR);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_STYLE_CONTEXT);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_SWITCH);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_TEXT_BUFFER);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_TEXT_CHILD_ANCHOR);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_TEXT_MARK);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_TEXT_TAG);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_TEXT_TAG_TABLE);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_TEXT_VIEW);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_TOGGLE_BUTTON);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_TOGGLE_TOOL_BUTTON);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_TOOLBAR);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_TOOL_BUTTON);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_TOOL_ITEM);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_TOOL_ITEM_GROUP);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_TOOL_PALETTE);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_TREE_MODEL_FILTER);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_TREE_MODEL_SORT);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_TREE_SELECTION);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_TREE_STORE);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_TREE_VIEW);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_TREE_VIEW_COLUMN);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_VIEWPORT);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_VOLUME_BUTTON);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_WIDGET);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_WINDOW);
-    CREATE_G_OBJECT_TYPE_BIC_STATIC(GTK_TYPE_WINDOW_GROUP);
+    const struct {GType type;int type_id;} data[] =
+    {/*{{{*/
+      { GTK_TYPE_ABOUT_DIALOG, 0 },
+      { GTK_TYPE_ACCEL_GROUP, 0 },
+      { GTK_TYPE_ACCEL_LABEL, 0 },
+      { GTK_TYPE_ACCEL_MAP, 0 },
+      { GTK_TYPE_ACCESSIBLE, 0 },
+      { GTK_TYPE_ACTION_BAR, 0 },
+      { GTK_TYPE_ADJUSTMENT, 0 },
+      { GTK_TYPE_APP_CHOOSER_BUTTON, 0 },
+      { GTK_TYPE_APP_CHOOSER_DIALOG, 0 },
+      { GTK_TYPE_APP_CHOOSER_WIDGET, 0 },
+      { GTK_TYPE_APPLICATION, 0 },
+      { GTK_TYPE_APPLICATION_WINDOW, 0 },
+      { GTK_TYPE_ASPECT_FRAME, 0 },
+      { GTK_TYPE_ASSISTANT, 0 },
+      { GTK_TYPE_BIN, 0 },
+      { GTK_TYPE_BOX, 0 },
+      { GTK_TYPE_BUILDER, 0 },
+      { GTK_TYPE_BUTTON, 0 },
+      { GTK_TYPE_BUTTON_BOX, 0 },
+      { GTK_TYPE_CALENDAR, 0 },
+      { GTK_TYPE_CELL_AREA, 0 },
+      { GTK_TYPE_CELL_AREA_BOX, 0 },
+      { GTK_TYPE_CELL_AREA_CONTEXT, 0 },
+      { GTK_TYPE_CELL_RENDERER, 0 },
+      { GTK_TYPE_CELL_RENDERER_ACCEL, 0 },
+      { GTK_TYPE_CELL_RENDERER_COMBO, 0 },
+      { GTK_TYPE_CELL_RENDERER_PIXBUF, 0 },
+      { GTK_TYPE_CELL_RENDERER_PROGRESS, 0 },
+      { GTK_TYPE_CELL_RENDERER_SPIN, 0 },
+      { GTK_TYPE_CELL_RENDERER_SPINNER, 0 },
+      { GTK_TYPE_CELL_RENDERER_TEXT, 0 },
+      { GTK_TYPE_CELL_RENDERER_TOGGLE, 0 },
+      { GTK_TYPE_CELL_VIEW, 0 },
+      { GTK_TYPE_CHECK_BUTTON, 0 },
+      { GTK_TYPE_CHECK_MENU_ITEM, 0 },
+      { GTK_TYPE_CLIPBOARD, 0 },
+      { GTK_TYPE_COLOR_BUTTON, 0 },
+      { GTK_TYPE_COLOR_CHOOSER_DIALOG, 0 },
+      { GTK_TYPE_COLOR_CHOOSER_WIDGET, 0 },
+      { GTK_TYPE_COMBO_BOX, 0 },
+      { GTK_TYPE_COMBO_BOX_TEXT, 0 },
+      { GTK_TYPE_CONTAINER, 0 },
+      { GTK_TYPE_CSS_PROVIDER, 0 },
+      { GTK_TYPE_DIALOG, 0 },
+      { GTK_TYPE_DRAWING_AREA, 0 },
+      { GTK_TYPE_ENTRY, 0 },
+      { GTK_TYPE_ENTRY_BUFFER, 0 },
+      { GTK_TYPE_ENTRY_COMPLETION, 0 },
+      { GTK_TYPE_EVENT_BOX, 0 },
+      { GTK_TYPE_EVENT_CONTROLLER, 0 },
+      { GTK_TYPE_EXPANDER, 0 },
+      { GTK_TYPE_FILE_CHOOSER_BUTTON, 0 },
+      { GTK_TYPE_FILE_CHOOSER_DIALOG, 0 },
+      { GTK_TYPE_FILE_CHOOSER_WIDGET, 0 },
+      { GTK_TYPE_FIXED, 0 },
+      { GTK_TYPE_FLOW_BOX, 0 },
+      { GTK_TYPE_FLOW_BOX_CHILD, 0 },
+      { GTK_TYPE_FONT_BUTTON, 0 },
+      { GTK_TYPE_FONT_CHOOSER_DIALOG, 0 },
+      { GTK_TYPE_FONT_CHOOSER_WIDGET, 0 },
+      { GTK_TYPE_FRAME, 0 },
+      { GTK_TYPE_GESTURE, 0 },
+      { GTK_TYPE_GESTURE_DRAG, 0 },
+      { GTK_TYPE_GESTURE_LONG_PRESS, 0 },
+      { GTK_TYPE_GESTURE_MULTI_PRESS, 0 },
+      { GTK_TYPE_GESTURE_PAN, 0 },
+      { GTK_TYPE_GESTURE_ROTATE, 0 },
+      { GTK_TYPE_GESTURE_SINGLE, 0 },
+      { GTK_TYPE_GESTURE_SWIPE, 0 },
+      { GTK_TYPE_GESTURE_ZOOM, 0 },
+      { GTK_TYPE_GL_AREA, 0 },
+      { GTK_TYPE_GRID, 0 },
+      { GTK_TYPE_HEADER_BAR, 0 },
+      { GTK_TYPE_ICON_INFO, 0 },
+      { GTK_TYPE_ICON_THEME, 0 },
+      { GTK_TYPE_ICON_VIEW, 0 },
+      { GTK_TYPE_IMAGE, 0 },
+      { GTK_TYPE_IM_CONTEXT, 0 },
+      { GTK_TYPE_IM_CONTEXT_SIMPLE, 0 },
+      { GTK_TYPE_IM_MULTICONTEXT, 0 },
+      { GTK_TYPE_INFO_BAR, 0 },
+      { GTK_TYPE_INVISIBLE, 0 },
+      { GTK_TYPE_LABEL, 0 },
+      { GTK_TYPE_LAYOUT, 0 },
+      { GTK_TYPE_LEVEL_BAR, 0 },
+      { GTK_TYPE_LINK_BUTTON, 0 },
+      { GTK_TYPE_LIST_BOX, 0 },
+      { GTK_TYPE_LIST_BOX_ROW, 0 },
+      { GTK_TYPE_LIST_STORE, 0 },
+      { GTK_TYPE_LOCK_BUTTON, 0 },
+      { GTK_TYPE_MENU, 0 },
+      { GTK_TYPE_MENU_BAR, 0 },
+      { GTK_TYPE_MENU_BUTTON, 0 },
+      { GTK_TYPE_MENU_ITEM, 0 },
+      { GTK_TYPE_MENU_SHELL, 0 },
+      { GTK_TYPE_MENU_TOOL_BUTTON, 0 },
+      { GTK_TYPE_MESSAGE_DIALOG, 0 },
+      { GTK_TYPE_MOUNT_OPERATION, 0 },
+      { GTK_TYPE_NOTEBOOK, 0 },
+      { GTK_TYPE_OFFSCREEN_WINDOW, 0 },
+      { GTK_TYPE_OVERLAY, 0 },
+      { GTK_TYPE_PAD_CONTROLLER, 0 },
+      { GTK_TYPE_PANED, 0 },
+      { GTK_TYPE_PLACES_SIDEBAR, 0 },
+      { GTK_TYPE_POPOVER, 0 },
+      { GTK_TYPE_POPOVER_MENU, 0 },
+      { GTK_TYPE_PRINT_OPERATION, 0 },
+      { GTK_TYPE_PROGRESS_BAR, 0 },
+      { GTK_TYPE_RADIO_BUTTON, 0 },
+      { GTK_TYPE_RADIO_MENU_ITEM, 0 },
+      { GTK_TYPE_RADIO_TOOL_BUTTON, 0 },
+      { GTK_TYPE_RANGE, 0 },
+      { GTK_TYPE_RECENT_CHOOSER_DIALOG, 0 },
+      { GTK_TYPE_RECENT_CHOOSER_MENU, 0 },
+      { GTK_TYPE_RECENT_CHOOSER_WIDGET, 0 },
+      { GTK_TYPE_RECENT_MANAGER, 0 },
+      { GTK_TYPE_REVEALER, 0 },
+      { GTK_TYPE_SCALE, 0 },
+      { GTK_TYPE_SCALE_BUTTON, 0 },
+      { GTK_TYPE_SCROLLBAR, 0 },
+      { GTK_TYPE_SCROLLED_WINDOW, 0 },
+      { GTK_TYPE_SEARCH_BAR, 0 },
+      { GTK_TYPE_SEARCH_ENTRY, 0 },
+      { GTK_TYPE_SEPARATOR, 0 },
+      { GTK_TYPE_SEPARATOR_MENU_ITEM, 0 },
+      { GTK_TYPE_SEPARATOR_TOOL_ITEM, 0 },
+      { GTK_TYPE_SETTINGS, 0 },
+      { GTK_TYPE_SHORTCUT_LABEL, 0 },
+      { GTK_TYPE_SHORTCUTS_GROUP, 0 },
+      { GTK_TYPE_SHORTCUTS_SECTION, 0 },
+      { GTK_TYPE_SHORTCUTS_SHORTCUT, 0 },
+      { GTK_TYPE_SHORTCUTS_WINDOW, 0 },
+      { GTK_TYPE_SIZE_GROUP, 0 },
+      { GTK_TYPE_SPIN_BUTTON, 0 },
+      { GTK_TYPE_SPINNER, 0 },
+      { GTK_TYPE_STACK, 0 },
+      { GTK_TYPE_STACK_SIDEBAR, 0 },
+      { GTK_TYPE_STACK_SWITCHER, 0 },
+      { GTK_TYPE_STATUSBAR, 0 },
+      { GTK_TYPE_STYLE_CONTEXT, 0 },
+      { GTK_TYPE_SWITCH, 0 },
+      { GTK_TYPE_TEXT_BUFFER, 0 },
+      { GTK_TYPE_TEXT_CHILD_ANCHOR, 0 },
+      { GTK_TYPE_TEXT_MARK, 0 },
+      { GTK_TYPE_TEXT_TAG, 0 },
+      { GTK_TYPE_TEXT_TAG_TABLE, 0 },
+      { GTK_TYPE_TEXT_VIEW, 0 },
+      { GTK_TYPE_TOGGLE_BUTTON, 0 },
+      { GTK_TYPE_TOGGLE_TOOL_BUTTON, 0 },
+      { GTK_TYPE_TOOLBAR, 0 },
+      { GTK_TYPE_TOOL_BUTTON, 0 },
+      { GTK_TYPE_TOOL_ITEM, 0 },
+      { GTK_TYPE_TOOL_ITEM_GROUP, 0 },
+      { GTK_TYPE_TOOL_PALETTE, 0 },
+      { GTK_TYPE_TREE_MODEL_FILTER, 0 },
+      { GTK_TYPE_TREE_MODEL_SORT, 0 },
+      { GTK_TYPE_TREE_SELECTION, 0 },
+      { GTK_TYPE_TREE_STORE, 0 },
+      { GTK_TYPE_TREE_VIEW, 0 },
+      { GTK_TYPE_TREE_VIEW_COLUMN, 0 },
+      { GTK_TYPE_VIEWPORT, 0 },
+      { GTK_TYPE_VOLUME_BUTTON, 0 },
+      { GTK_TYPE_WIDGET, (int)c_bi_class_gtk_widget },
+      { GTK_TYPE_WINDOW, (int)c_bi_class_gtk_window },
+      { GTK_TYPE_WINDOW_GROUP, 0 },
+
+      { GTK_TYPE_LICENSE, 0 },
+      { GTK_TYPE_ACCEL_FLAGS, 0 },
+      { GTK_TYPE_APPLICATION_INHIBIT_FLAGS, 0 },
+      { GTK_TYPE_ASSISTANT_PAGE_TYPE, 0 },
+      { GTK_TYPE_BUTTON_BOX_STYLE, 0 },
+      { GTK_TYPE_BUILDER_ERROR, 0 },
+      { GTK_TYPE_CALENDAR_DISPLAY_OPTIONS, 0 },
+      { GTK_TYPE_CELL_RENDERER_STATE, 0 },
+      { GTK_TYPE_CELL_RENDERER_MODE, 0 },
+      { GTK_TYPE_CELL_RENDERER_ACCEL_MODE, 0 },
+      { GTK_TYPE_RESIZE_MODE, 0 },
+      { GTK_TYPE_CSS_PROVIDER_ERROR, 0 },
+      { GTK_TYPE_CSS_SECTION_TYPE, 0 },
+      { GTK_TYPE_DEBUG_FLAG, 0 },
+      { GTK_TYPE_DIALOG_FLAGS, 0 },
+      { GTK_TYPE_RESPONSE_TYPE, 0 },
+      { GTK_TYPE_DEST_DEFAULTS, 0 },
+      { GTK_TYPE_ENTRY_ICON_POSITION, 0 },
+      { GTK_TYPE_ALIGN, 0 },
+      { GTK_TYPE_ARROW_TYPE, 0 },
+      { GTK_TYPE_BASELINE_POSITION, 0 },
+      { GTK_TYPE_DELETE_TYPE, 0 },
+      { GTK_TYPE_DIRECTION_TYPE, c_type_ui },
+      { GTK_TYPE_ICON_SIZE, 0 },
+      { GTK_TYPE_SENSITIVITY_TYPE, 0 },
+      { GTK_TYPE_TEXT_DIRECTION, 0 },
+      { GTK_TYPE_JUSTIFICATION, 0 },
+      { GTK_TYPE_MENU_DIRECTION_TYPE, 0 },
+      { GTK_TYPE_MESSAGE_TYPE, 0 },
+      { GTK_TYPE_MOVEMENT_STEP, 0 },
+      { GTK_TYPE_SCROLL_STEP, 0 },
+      { GTK_TYPE_ORIENTATION, 0 },
+      { GTK_TYPE_PACK_TYPE, 0 },
+      { GTK_TYPE_POSITION_TYPE, 0 },
+      { GTK_TYPE_RELIEF_STYLE, 0 },
+      { GTK_TYPE_SCROLL_TYPE, 0 },
+      { GTK_TYPE_SELECTION_MODE, 0 },
+      { GTK_TYPE_SHADOW_TYPE, 0 },
+      { GTK_TYPE_STATE_TYPE, 0 },
+      { GTK_TYPE_TOOLBAR_STYLE, 0 },
+      { GTK_TYPE_WRAP_MODE, 0 },
+      { GTK_TYPE_SORT_TYPE, 0 },
+      { GTK_TYPE_IM_PREEDIT_STYLE, 0 },
+      { GTK_TYPE_IM_STATUS_STYLE, 0 },
+      { GTK_TYPE_PACK_DIRECTION, 0 },
+      { GTK_TYPE_PRINT_PAGES, 0 },
+      { GTK_TYPE_PAGE_SET, 0 },
+      { GTK_TYPE_NUMBER_UP_LAYOUT, 0 },
+      { GTK_TYPE_PAGE_ORIENTATION, 0 },
+      { GTK_TYPE_PRINT_QUALITY, 0 },
+      { GTK_TYPE_PRINT_DUPLEX, 0 },
+      { GTK_TYPE_UNIT, 0 },
+      { GTK_TYPE_TREE_VIEW_GRID_LINES, 0 },
+      { GTK_TYPE_DRAG_RESULT, 0 },
+      { GTK_TYPE_SIZE_GROUP_MODE, 0 },
+      { GTK_TYPE_SIZE_REQUEST_MODE, 0 },
+      { GTK_TYPE_SCROLLABLE_POLICY, 0 },
+      { GTK_TYPE_STATE_FLAGS, 0 },
+      { GTK_TYPE_REGION_FLAGS, 0 },
+      { GTK_TYPE_JUNCTION_SIDES, 0 },
+      { GTK_TYPE_BORDER_STYLE, 0 },
+      { GTK_TYPE_LEVEL_BAR_MODE, 0 },
+      { GTK_TYPE_INPUT_PURPOSE, 0 },
+      { GTK_TYPE_INPUT_HINTS, 0 },
+      { GTK_TYPE_PROPAGATION_PHASE, 0 },
+      { GTK_TYPE_EVENT_SEQUENCE_STATE, 0 },
+      { GTK_TYPE_PAN_DIRECTION, 0 },
+      { GTK_TYPE_POPOVER_CONSTRAINT, 0 },
+      { GTK_TYPE_FILE_CHOOSER_ACTION, 0 },
+      { GTK_TYPE_FILE_CHOOSER_CONFIRMATION, 0 },
+      { GTK_TYPE_FILE_CHOOSER_ERROR, 0 },
+      { GTK_TYPE_FILE_FILTER_FLAGS, 0 },
+      { GTK_TYPE_ICON_LOOKUP_FLAGS, 0 },
+      { GTK_TYPE_ICON_THEME_ERROR, 0 },
+      { GTK_TYPE_ICON_VIEW_DROP_POSITION, 0 },
+      { GTK_TYPE_IMAGE_TYPE, 0 },
+      { GTK_TYPE_ARROW_PLACEMENT, 0 },
+      { GTK_TYPE_BUTTONS_TYPE, 0 },
+      { GTK_TYPE_BUTTON_ROLE, 0 },
+      { GTK_TYPE_NOTEBOOK_TAB, 0 },
+      { GTK_TYPE_PAD_ACTION_TYPE, 0 },
+      { GTK_TYPE_PLACES_OPEN_FLAGS, 0 },
+      { GTK_TYPE_PRINT_STATUS, 0 },
+      { GTK_TYPE_PRINT_OPERATION_RESULT, 0 },
+      { GTK_TYPE_PRINT_OPERATION_ACTION, 0 },
+      { GTK_TYPE_PRINT_ERROR, 0 },
+      { GTK_TYPE_RECENT_SORT_TYPE, 0 },
+      { GTK_TYPE_RECENT_CHOOSER_ERROR, 0 },
+      { GTK_TYPE_RECENT_FILTER_FLAGS, 0 },
+      { GTK_TYPE_RECENT_MANAGER_ERROR, 0 },
+      { GTK_TYPE_REVEALER_TRANSITION_TYPE, 0 },
+      { GTK_TYPE_CORNER_TYPE, 0 },
+      { GTK_TYPE_POLICY_TYPE, 0 },
+      { GTK_TYPE_TARGET_FLAGS, 0 },
+      { GTK_TYPE_SHORTCUT_TYPE, 0 },
+      { GTK_TYPE_SPIN_BUTTON_UPDATE_POLICY, 0 },
+      { GTK_TYPE_SPIN_TYPE, 0 },
+      { GTK_TYPE_STACK_TRANSITION_TYPE, 0 },
+      { GTK_TYPE_STYLE_CONTEXT_PRINT_FLAGS, 0 },
+      { GTK_TYPE_TEXT_BUFFER_TARGET_INFO, 0 },
+      { GTK_TYPE_TEXT_SEARCH_FLAGS, 0 },
+      { GTK_TYPE_TEXT_WINDOW_TYPE, 0 },
+      { GTK_TYPE_TEXT_VIEW_LAYER, 0 },
+      { GTK_TYPE_TEXT_EXTEND_SELECTION, 0 },
+      { GTK_TYPE_TOOLBAR_SPACE_STYLE, 0 },
+      { GTK_TYPE_TOOL_PALETTE_DRAG_TARGETS, 0 },
+      { GTK_TYPE_TREE_MODEL_FLAGS, 0 },
+      { GTK_TYPE_TREE_VIEW_DROP_POSITION, 0 },
+      { GTK_TYPE_TREE_VIEW_COLUMN_SIZING, 0 },
+      { GTK_TYPE_WIDGET_HELP_TYPE, 0 },
+      { GTK_TYPE_WINDOW_TYPE, 0 },
+      { GTK_TYPE_WINDOW_POSITION, 0 },
+      { GTK_TYPE_RC_FLAGS, 0 },
+      { GTK_TYPE_RC_TOKEN_TYPE, 0 },
+      { GTK_TYPE_PATH_PRIORITY_TYPE, 0 },
+      { GTK_TYPE_PATH_TYPE, 0 },
+      { GTK_TYPE_EXPANDER_STYLE, 0 },
+      { GTK_TYPE_ATTACH_OPTIONS, 0 },
+      { GTK_TYPE_UI_MANAGER_ITEM_TYPE, 0 },
+    };/*}}}*/
+
+    unsigned v_idx = 0;
+    unsigned v_idx_end = sizeof(data)/sizeof(data[0]);
+    do {
+      GType type = data[v_idx].type;
+      int type_id = data[v_idx].type_id;
+
+      CREATE_G_OBJECT_TYPE_BIC_STATIC(type,type_id);
+    } while(++v_idx < v_idx_end);
   }
 
 }/*}}}*/
@@ -708,6 +979,11 @@ built_in_method_s gtk_g_object_methods[] =
     bic_gtk_g_object_operator_binary_equal
   },
   {
+    "GtkGObject#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_GtkGObject_1
+  },
+  {
     "GtkGObject#2",
     c_modifier_public | c_modifier_final,
     bic_gtk_g_object_method_GtkGObject_2
@@ -746,11 +1022,6 @@ built_in_method_s gtk_g_object_methods[] =
     "grid_attach#5",
     c_modifier_public | c_modifier_final,
     bic_gtk_g_object_method_grid_attach_5
-  },
-  {
-    "widget_show_all#0",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_widget_show_all_0
   },
   {
     "to_string#0",
@@ -797,6 +1068,40 @@ bool bic_gtk_g_object_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_g_object_method_GtkGObject_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type < c_bi_class_gtk_g_object ||
+      src_0_location->v_type > gtk_c::gtk_obj_class_last)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("GtkGObject#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  gpointer g_obj = (gpointer)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (!G_IS_OBJECT(g_obj))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_INCOMPATIBLE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(G_TYPE_OBJECT);
+
+    return false;
+  }
+
+  g_object_ref(g_obj);
+
+  dst_location->v_data_ptr = (gpointer)g_obj;
 
   return true;
 }/*}}}*/
@@ -1217,7 +1522,9 @@ bool bic_gtk_g_object_method_container_add_1(interpreter_thread_s &it,unsigned s
   // - ERROR -
   if (!(GTK_IS_CONTAINER(g_obj) && GTK_IS_WIDGET(g_obj_widget)))
   {
-    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_INVALID_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_INCOMPATIBLE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(GTK_TYPE_CONTAINER);
+
     return false;
   }
 
@@ -1268,56 +1575,14 @@ bool bic_gtk_g_object_method_grid_attach_5(interpreter_thread_s &it,unsigned sta
   // - ERROR -
   if (!(GTK_IS_GRID(g_obj) && GTK_IS_WIDGET(g_obj_widget)))
   {
-    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_INVALID_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_INCOMPATIBLE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(GTK_TYPE_GRID);
+
     return false;
   }
 
   // - attach widget to grid -
   gtk_grid_attach(GTK_GRID(g_obj),GTK_WIDGET(g_obj_widget),left,top,width,height);
-
-  BIC_SET_RESULT_BLANK();
-
-  return true;
-}/*}}}*/
-
-bool bic_gtk_g_object_method_widget_show_all_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
-
-  // - ERROR -
-  if (!GTK_IS_WIDGET(g_obj))
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_INVALID_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - show widget and all its children -
-  gtk_widget_show_all(GTK_WIDGET(g_obj));
-
-  BIC_SET_RESULT_BLANK();
-
-  return true;
-}/*}}}*/
-
-bool bic_gtk_g_object_method_window_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
-
-  // - ERROR -
-  if (!GTK_IS_WINDOW(g_obj))
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_INVALID_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - show widget and all its children -
-  gtk_window_close(GTK_WINDOW(g_obj));
 
   BIC_SET_RESULT_BLANK();
 
@@ -1344,12 +1609,180 @@ bool bic_gtk_g_object_method_print_0(interpreter_thread_s &it,unsigned stack_bas
   return true;
 }/*}}}*/
 
+// - class GTK_WIDGET -
+built_in_class_s gtk_widget_class =
+{/*{{{*/
+  "GtkWidget",
+  c_modifier_public | c_modifier_final,
+  10, gtk_widget_methods,
+  0, gtk_widget_variables,
+  bic_gtk_widget_consts,
+  bic_gtk_g_object_init,
+  bic_gtk_g_object_clear,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};/*}}}*/
+
+built_in_method_s gtk_widget_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_widget_operator_binary_equal
+  },
+  {
+    "list_properties#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_list_properties_0
+  },
+  {
+    "set_prop#2",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_set_prop_2
+  },
+  {
+    "get_prop#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_get_prop_1
+  },
+  {
+    "signal_connect#3",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_signal_connect_3
+  },
+  {
+    "signal_emit#2",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_signal_emit_2
+  },
+  {
+    "GtkWidget#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_widget_method_GtkWidget_1
+  },
+  {
+    "show_all#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_widget_method_show_all_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_gtk_widget_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_gtk_widget_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s gtk_widget_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_gtk_widget_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+bool bic_gtk_widget_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_widget_method_GtkWidget_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type < c_bi_class_gtk_g_object ||
+      src_0_location->v_type > gtk_c::gtk_obj_class_last)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("GtkWidget#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  gpointer g_obj = (gpointer)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (!GTK_IS_WIDGET(g_obj))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_INCOMPATIBLE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(GTK_TYPE_WIDGET);
+
+    return false;
+  }
+
+  g_object_ref(g_obj);
+
+  dst_location->v_data_ptr = (gpointer)g_obj;
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_widget_method_show_all_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+
+  // - show widget and all its children -
+  gtk_widget_show_all(GTK_WIDGET(g_obj));
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_widget_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("GtkWidget"),"GtkWidget");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_widget_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  printf("GtkWidget");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
 // - class GTK_WINDOW -
 built_in_class_s gtk_window_class =
 {/*{{{*/
   "GtkWindow",
   c_modifier_public | c_modifier_final,
-  13, gtk_window_methods,
+  12, gtk_window_methods,
   0, gtk_window_variables,
   bic_gtk_window_consts,
   bic_gtk_g_object_init,
@@ -1410,14 +1843,9 @@ built_in_method_s gtk_window_methods[] =
     bic_gtk_g_object_method_container_add_1
   },
   {
-    "widget_show_all#0",
+    "show_all#0",
     c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_widget_show_all_0
-  },
-  {
-    "window_close#0",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_window_close_0
+    bic_gtk_widget_method_show_all_0
   },
   {
     "close#0",
@@ -1465,25 +1893,46 @@ bool bic_gtk_window_method_GtkWindow_1(interpreter_thread_s &it,unsigned stack_b
 
   if (src_0_location->v_type != c_bi_class_array)
   {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("GtkWindow#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
+    if (src_0_location->v_type < c_bi_class_gtk_g_object ||
+        src_0_location->v_type > gtk_c::gtk_obj_class_last)
+    {
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      BIC_EXCEPTION_PUSH_METHOD_RI("GtkWindow#1");
+      new_exception->params.push(1);
+      new_exception->params.push(src_0_location->v_type);
+
+      return false;
+    }
+
+    gpointer g_obj = (gpointer)src_0_location->v_data_ptr;
+
+    // - ERROR -
+    if (!GTK_IS_WINDOW(g_obj))
+    {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_INCOMPATIBLE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(GTK_TYPE_WINDOW);
 
     return false;
+    }
+
+    g_object_ref(g_obj);
+
+    dst_location->v_data_ptr = (gpointer)g_obj;
   }
-
-  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
-
-  gpointer g_obj = gtk_c::create_g_object(it,GTK_TYPE_WINDOW,array_ptr,operands[c_source_pos_idx]);
-
-  // - ERROR -
-  if (g_obj == NULL)
+  else
   {
-    return false;
-  }
+    pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
-  dst_location->v_data_ptr = (gpointer)g_obj;
+    gpointer g_obj = gtk_c::create_g_object(it,GTK_TYPE_WINDOW,array_ptr,operands[c_source_pos_idx]);
+
+    // - ERROR -
+    if (g_obj == NULL)
+    {
+      return false;
+    }
+
+    dst_location->v_data_ptr = (gpointer)g_obj;
+  }
 
   return true;
 }/*}}}*/

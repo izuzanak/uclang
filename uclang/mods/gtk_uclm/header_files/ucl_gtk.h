@@ -62,6 +62,25 @@ include "script_parser.h"
 extern unsigned c_bi_class_gtk_g_object;
 extern unsigned c_bi_class_gtk_window;
 
+// - gtk parameter type identifiers -
+enum
+{
+  c_type_bb   =  -1,
+  c_type_bc   =  -2,
+  c_type_uc   =  -3,
+  c_type_si   =  -4,
+  c_type_usi  =  -5,
+  c_type_bi   =  -6,
+  c_type_ui   =  -7,
+  c_type_li   =  -8,
+  c_type_uli  =  -9,
+  c_type_lli  = -10,
+  c_type_ulli = -11,
+  c_type_bf   = -12,
+  c_type_bd   = -13,
+  c_type_ld   = -14,
+};
+
 /*
  * structure definitions
  */
@@ -76,6 +95,13 @@ class gtk_c
 {
   public:
   static GQuark dlg_idxs_quark;
+  static GQuark bi_class_quark;
+
+  static GType gtk_type_min;
+  static GType gtk_type_max;
+
+  static unsigned gtk_obj_class_first;
+  static unsigned gtk_obj_class_last;
 
   static interpreter_thread_s *it_ptr;
   static gtk_delegate_list_s delegates;
@@ -144,6 +170,7 @@ inline gtk_c::gtk_c()
   gtk_init(0,NULL);
 
   dlg_idxs_quark = g_quark_from_string("uclang-delegate-idxs");
+  bi_class_quark = g_quark_from_string("uclang-bi-class");
 
   it_ptr = NULL;
   delegates.init();

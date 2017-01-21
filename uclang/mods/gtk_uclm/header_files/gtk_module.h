@@ -9,6 +9,7 @@ include "ucl_gtk.h"
 // - GTK indexes of built in classes -
 extern unsigned c_bi_class_gtk;
 extern unsigned c_bi_class_gtk_g_object;
+extern unsigned c_bi_class_gtk_widget;
 extern unsigned c_bi_class_gtk_window;
 extern unsigned c_bi_class_gtk_handler;
 
@@ -22,7 +23,7 @@ extern built_in_class_s *gtk_classes[];
 enum
 {
   c_error_GTK_MAIN_LOOP_STATE_ERROR = 0,
-  c_error_GTK_G_OBJECT_INVALID_TYPE,
+  c_error_GTK_G_OBJECT_INCOMPATIBLE_TYPE,
   c_error_GTK_G_OBJECT_UNKNOWN_PROPERTY,
   c_error_GTK_G_OBJECT_WRONG_PROPERTIES_ARRAY_SIZE,
   c_error_GTK_G_OBJECT_PROPERTY_NAME_EXPECTED_STRING,
@@ -70,6 +71,7 @@ void bic_gtk_g_object_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_gtk_g_object_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_gtk_g_object_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_g_object_method_GtkGObject_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_GtkGObject_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_set_prop_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_get_prop_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -80,10 +82,22 @@ bool bic_gtk_g_object_method_signal_emit_2(interpreter_thread_s &it,unsigned sta
 // FIXME TODO continue ...
 bool bic_gtk_g_object_method_container_add_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_grid_attach_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_gtk_g_object_method_widget_show_all_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 bool bic_gtk_g_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class GTK_WIDGET -
+extern built_in_variable_s gtk_widget_variables[];
+extern built_in_method_s gtk_widget_methods[];
+extern built_in_class_s gtk_widget_class;
+
+void bic_gtk_widget_consts(location_array_s &const_locations);
+
+bool bic_gtk_widget_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_widget_method_GtkWidget_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_widget_method_show_all_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_widget_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_widget_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 // - class GTK_WINDOW -
 extern built_in_variable_s gtk_window_variables[];
