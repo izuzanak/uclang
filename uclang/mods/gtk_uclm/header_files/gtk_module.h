@@ -13,6 +13,7 @@ extern unsigned c_bi_class_gtk_widget;
 extern unsigned c_bi_class_gtk_container;
 extern unsigned c_bi_class_gtk_grid;
 extern unsigned c_bi_class_gtk_window;
+extern unsigned c_bi_class_gtk_dialog;
 extern unsigned c_bi_class_gtk_handler;
 
 // - GTK module -
@@ -25,10 +26,11 @@ extern built_in_class_s *gtk_classes[];
 enum
 {
   c_error_GTK_MAIN_LOOP_STATE_ERROR = 0,
+  c_error_GTK_WRONG_ARRAY_SIZE,
+  c_error_GTK_EXPECTED_STRING,
+  c_error_GTK_INVALID_VALUE_TYPE,
   c_error_GTK_G_OBJECT_INCOMPATIBLE_TYPE,
   c_error_GTK_G_OBJECT_UNKNOWN_PROPERTY,
-  c_error_GTK_G_OBJECT_WRONG_PROPERTIES_ARRAY_SIZE,
-  c_error_GTK_G_OBJECT_PROPERTY_NAME_EXPECTED_STRING,
   c_error_GTK_G_OBJECT_PROPERTY_INVALID_VALUE_TYPE,
   c_error_GTK_G_OBJECT_G_VALUE_CREATE_ERROR,
   c_error_GTK_G_OBJECT_G_VALUE_VALUE_ERROR,
@@ -132,8 +134,23 @@ void bic_gtk_window_consts(location_array_s &const_locations);
 bool bic_gtk_window_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_window_method_GtkWindow_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_window_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_window_method_dialog_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_window_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_window_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class GTK_DIALOG -
+extern built_in_variable_s gtk_dialog_variables[];
+extern built_in_method_s gtk_dialog_methods[];
+extern built_in_class_s gtk_dialog_class;
+
+void bic_gtk_dialog_consts(location_array_s &const_locations);
+
+bool bic_gtk_dialog_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_dialog_method_GtkDialog_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_dialog_method_add_button_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_dialog_method_run_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_dialog_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_dialog_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 // - class GTK_HANDLER -
 extern built_in_variable_s gtk_handler_variables[];

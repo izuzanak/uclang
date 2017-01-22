@@ -213,7 +213,9 @@ gpointer gtk_c::create_g_object(interpreter_thread_s &it,GType g_type,pointer_ar
   // - ERROR -
   if (array_ptr->used & 0x01)
   {
-    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_WRONG_PROPERTIES_ARRAY_SIZE,source_pos,(location_s *)it.blank_location);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_WRONG_ARRAY_SIZE,source_pos,(location_s *)it.blank_location);
+    new_exception->params.push(0);
+
     return NULL;
   }
 
@@ -246,7 +248,8 @@ gpointer gtk_c::create_g_object(interpreter_thread_s &it,GType g_type,pointer_ar
       {
         BIC_GTK_CREATE_G_OBJECT_RELEASE_PARAMS();
 
-        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_PROPERTY_NAME_EXPECTED_STRING,source_pos,(location_s *)it.blank_location);
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_EXPECTED_STRING,source_pos,(location_s *)it.blank_location);
+        new_exception->params.push(0);
         new_exception->params.push(p_ptr - params);
 
         return NULL;

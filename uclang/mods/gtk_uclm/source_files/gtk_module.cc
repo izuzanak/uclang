@@ -10,16 +10,17 @@ unsigned c_bi_class_gtk_widget = c_idx_not_exist;
 unsigned c_bi_class_gtk_container = c_idx_not_exist;
 unsigned c_bi_class_gtk_grid = c_idx_not_exist;
 unsigned c_bi_class_gtk_window = c_idx_not_exist;
+unsigned c_bi_class_gtk_dialog = c_idx_not_exist;
 unsigned c_bi_class_gtk_handler = c_idx_not_exist;
 
 // - GTK module -
 built_in_module_s module =
 {/*{{{*/
-  7,                   // Class count
+  8,                   // Class count
   gtk_classes,         // Classes
 
   0,                   // Error base index
-  14,                  // Error count
+  15,                  // Error count
   gtk_error_strings,   // Error strings
 
   gtk_initialize,      // Initialize function
@@ -35,6 +36,7 @@ built_in_class_s *gtk_classes[] =
   &gtk_container_class,
   &gtk_grid_class,
   &gtk_window_class,
+  &gtk_dialog_class,
   &gtk_handler_class,
 };/*}}}*/
 
@@ -42,10 +44,11 @@ built_in_class_s *gtk_classes[] =
 const char *gtk_error_strings[] =
 {/*{{{*/
   "error_GTK_MAIN_LOOP_STATE_ERROR",
+  "error_GTK_WRONG_ARRAY_SIZE",
+  "error_GTK_EXPECTED_STRING",
+  "error_GTK_INVALID_VALUE_TYPE",
   "error_GTK_G_OBJECT_INCOMPATIBLE_TYPE",
   "error_GTK_G_OBJECT_UNKNOWN_PROPERTY",
-  "error_GTK_G_OBJECT_WRONG_PROPERTIES_ARRAY_SIZE",
-  "error_GTK_G_OBJECT_PROPERTY_NAME_EXPECTED_STRING",
   "error_GTK_G_OBJECT_PROPERTY_INVALID_VALUE_TYPE",
   "error_GTK_G_OBJECT_G_VALUE_CREATE_ERROR",
   "error_GTK_G_OBJECT_G_VALUE_VALUE_ERROR",
@@ -80,7 +83,10 @@ bool gtk_initialize(script_parser_s &sp)
 
   // - initialize gtk_window class identifier -
   c_bi_class_gtk_window = class_base_idx++;
-  gtk_c::gtk_obj_class_last = c_bi_class_gtk_window;
+
+  // - initialize gtk_dialog class identifier -
+  c_bi_class_gtk_dialog = class_base_idx++;
+  gtk_c::gtk_obj_class_last = c_bi_class_gtk_dialog;
 
   // - initialize gtk_handler class identifier -
   c_bi_class_gtk_handler = class_base_idx++;
@@ -103,6 +109,35 @@ bool gtk_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nGTK main loop is %s running\n",exception.params[0] ? "already" : "not");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_GTK_WRONG_ARRAY_SIZE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong size of %s array\n",((const char *[]){
+      "GObject properties",
+      "dialog buttons",
+    })[exception.params[0]]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GTK_EXPECTED_STRING:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nExpected string as %s at position %" HOST_LL_FORMAT "d\n",((const char *[]){
+      "property name",
+      "button text",
+    })[exception.params[0]],exception.params[1]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_GTK_INVALID_VALUE_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid type %s at position %" HOST_LL_FORMAT "d\n",((const char *[]){
+      "for button response id",
+    })[exception.params[0]],exception.params[1]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_GTK_G_OBJECT_INCOMPATIBLE_TYPE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -115,20 +150,6 @@ bool gtk_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nGObject does not contain property \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
-    fprintf(stderr," ---------------------------------------- \n");
-    break;
-  case c_error_GTK_G_OBJECT_WRONG_PROPERTIES_ARRAY_SIZE:
-    fprintf(stderr," ---------------------------------------- \n");
-    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
-    print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nWrong size of GObject properties array\n");
-    fprintf(stderr," ---------------------------------------- \n");
-    break;
-  case c_error_GTK_G_OBJECT_PROPERTY_NAME_EXPECTED_STRING:
-    fprintf(stderr," ---------------------------------------- \n");
-    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
-    print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nExpected string as property name at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_GTK_G_OBJECT_PROPERTY_INVALID_VALUE_TYPE:
@@ -573,7 +594,7 @@ void bic_gtk_consts(location_array_s &const_locations)
 
     const struct {GType type;int type_id;} data[] =
     {/*{{{*/
-      { GTK_TYPE_ABOUT_DIALOG, 0 },
+      { GTK_TYPE_ABOUT_DIALOG, (int)c_bi_class_gtk_dialog },
       { GTK_TYPE_ACCEL_GROUP, 0 },
       { GTK_TYPE_ACCEL_LABEL, 0 },
       { GTK_TYPE_ACCEL_MAP, 0 },
@@ -581,7 +602,7 @@ void bic_gtk_consts(location_array_s &const_locations)
       { GTK_TYPE_ACTION_BAR, 0 },
       { GTK_TYPE_ADJUSTMENT, 0 },
       { GTK_TYPE_APP_CHOOSER_BUTTON, 0 },
-      { GTK_TYPE_APP_CHOOSER_DIALOG, 0 },
+      { GTK_TYPE_APP_CHOOSER_DIALOG, (int)c_bi_class_gtk_dialog },
       { GTK_TYPE_APP_CHOOSER_WIDGET, 0 },
       { GTK_TYPE_APPLICATION, 0 },
       { GTK_TYPE_APPLICATION_WINDOW, 0 },
@@ -610,11 +631,11 @@ void bic_gtk_consts(location_array_s &const_locations)
       { GTK_TYPE_CHECK_MENU_ITEM, 0 },
       { GTK_TYPE_CLIPBOARD, 0 },
       { GTK_TYPE_COLOR_BUTTON, 0 },
-      { GTK_TYPE_COLOR_CHOOSER_DIALOG, 0 },
+      { GTK_TYPE_COLOR_CHOOSER_DIALOG, (int)c_bi_class_gtk_dialog },
       { GTK_TYPE_COLOR_CHOOSER_WIDGET, 0 },
       { GTK_TYPE_COMBO_BOX, 0 },
       { GTK_TYPE_COMBO_BOX_TEXT, 0 },
-      { GTK_TYPE_CONTAINER, 0 },
+      { GTK_TYPE_CONTAINER, (int)c_bi_class_gtk_container },
       { GTK_TYPE_CSS_PROVIDER, 0 },
       { GTK_TYPE_DIALOG, 0 },
       { GTK_TYPE_DRAWING_AREA, 0 },
@@ -625,13 +646,13 @@ void bic_gtk_consts(location_array_s &const_locations)
       { GTK_TYPE_EVENT_CONTROLLER, 0 },
       { GTK_TYPE_EXPANDER, 0 },
       { GTK_TYPE_FILE_CHOOSER_BUTTON, 0 },
-      { GTK_TYPE_FILE_CHOOSER_DIALOG, 0 },
+      { GTK_TYPE_FILE_CHOOSER_DIALOG, (int)c_bi_class_gtk_dialog },
       { GTK_TYPE_FILE_CHOOSER_WIDGET, 0 },
       { GTK_TYPE_FIXED, 0 },
       { GTK_TYPE_FLOW_BOX, 0 },
       { GTK_TYPE_FLOW_BOX_CHILD, 0 },
       { GTK_TYPE_FONT_BUTTON, 0 },
-      { GTK_TYPE_FONT_CHOOSER_DIALOG, 0 },
+      { GTK_TYPE_FONT_CHOOSER_DIALOG, (int)c_bi_class_gtk_dialog },
       { GTK_TYPE_FONT_CHOOSER_WIDGET, 0 },
       { GTK_TYPE_FRAME, 0 },
       { GTK_TYPE_GESTURE, 0 },
@@ -644,7 +665,7 @@ void bic_gtk_consts(location_array_s &const_locations)
       { GTK_TYPE_GESTURE_SWIPE, 0 },
       { GTK_TYPE_GESTURE_ZOOM, 0 },
       { GTK_TYPE_GL_AREA, 0 },
-      { GTK_TYPE_GRID, 0 },
+      { GTK_TYPE_GRID, (int)c_bi_class_gtk_grid },
       { GTK_TYPE_HEADER_BAR, 0 },
       { GTK_TYPE_ICON_INFO, 0 },
       { GTK_TYPE_ICON_THEME, 0 },
@@ -669,7 +690,7 @@ void bic_gtk_consts(location_array_s &const_locations)
       { GTK_TYPE_MENU_ITEM, 0 },
       { GTK_TYPE_MENU_SHELL, 0 },
       { GTK_TYPE_MENU_TOOL_BUTTON, 0 },
-      { GTK_TYPE_MESSAGE_DIALOG, 0 },
+      { GTK_TYPE_MESSAGE_DIALOG, (int)c_bi_class_gtk_dialog },
       { GTK_TYPE_MOUNT_OPERATION, 0 },
       { GTK_TYPE_NOTEBOOK, 0 },
       { GTK_TYPE_OFFSCREEN_WINDOW, 0 },
@@ -685,7 +706,7 @@ void bic_gtk_consts(location_array_s &const_locations)
       { GTK_TYPE_RADIO_MENU_ITEM, 0 },
       { GTK_TYPE_RADIO_TOOL_BUTTON, 0 },
       { GTK_TYPE_RANGE, 0 },
-      { GTK_TYPE_RECENT_CHOOSER_DIALOG, 0 },
+      { GTK_TYPE_RECENT_CHOOSER_DIALOG, (int)c_bi_class_gtk_dialog },
       { GTK_TYPE_RECENT_CHOOSER_MENU, 0 },
       { GTK_TYPE_RECENT_CHOOSER_WIDGET, 0 },
       { GTK_TYPE_RECENT_MANAGER, 0 },
@@ -2103,7 +2124,7 @@ built_in_class_s gtk_window_class =
 {/*{{{*/
   "GtkWindow",
   c_modifier_public | c_modifier_final,
-  12, gtk_window_methods,
+  13, gtk_window_methods,
   0, gtk_window_variables,
   bic_gtk_window_consts,
   bic_gtk_g_object_init,
@@ -2172,6 +2193,11 @@ built_in_method_s gtk_window_methods[] =
     "close#0",
     c_modifier_public | c_modifier_final,
     bic_gtk_window_method_close_0
+  },
+  {
+    "dialog#3",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_window_method_dialog_3
   },
   {
     "to_string#0",
@@ -2248,6 +2274,109 @@ bool bic_gtk_window_method_close_0(interpreter_thread_s &it,unsigned stack_base,
   return true;
 }/*}}}*/
 
+bool bic_gtk_window_method_dialog_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
+
+  long long int dialog_type;
+
+  if (!it.retrieve_integer(src_0_location,dialog_type) ||
+      src_1_location->v_type != c_bi_class_array ||
+      src_2_location->v_type != c_bi_class_array)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("dialog#3");
+    new_exception->params.push(3);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+    new_exception->params.push(src_2_location->v_type);
+
+    return false;
+  }
+
+  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+  pointer_array_s *prop_array_ptr = (pointer_array_s *)src_1_location->v_data_ptr;
+  pointer_array_s *butt_array_ptr = (pointer_array_s *)src_2_location->v_data_ptr;
+
+  // - ERROR -
+  if (butt_array_ptr->used & 0x01)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_WRONG_ARRAY_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(1);
+
+    return NULL;
+  }
+
+  // - buttons descriptions -
+  unsigned button_cnt = butt_array_ptr->used >> 1;
+  struct button_s {const char *text; lli resp_id;} buttons[butt_array_ptr->used];
+
+  // - check and retrieve buttons descriptions -
+  if (button_cnt > 0)
+  {
+    pointer *a_ptr = butt_array_ptr->data;
+    pointer *a_ptr_end = a_ptr + butt_array_ptr->used;
+    button_s *b_ptr = buttons;
+    do {
+      location_s *text_location = it.get_location_value(a_ptr[0]);
+      location_s *resp_id_location = it.get_location_value(a_ptr[1]);
+
+      // - ERROR -
+      if (text_location->v_type != c_bi_class_string)
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_EXPECTED_STRING,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(1);
+        new_exception->params.push(b_ptr - buttons);
+
+        return NULL;
+      }
+
+      b_ptr->text = ((string_s *)text_location->v_data_ptr)->data;
+
+      // - ERROR -
+      if (!it.retrieve_integer(resp_id_location,b_ptr->resp_id))
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_INVALID_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(0);
+        new_exception->params.push(b_ptr - buttons);
+
+        return false;
+      }
+
+    } while(++b_ptr,(a_ptr += 2) < a_ptr_end);
+  }
+
+  gpointer g_dialog = gtk_c::create_g_object(it,dialog_type,prop_array_ptr,operands[c_source_pos_idx]);
+
+  // - ERROR -
+  if (g_dialog == NULL)
+  {
+    return false;
+  }
+
+  gtk_window_set_transient_for(GTK_WINDOW(g_dialog),GTK_WINDOW(g_obj));
+
+  // - create dialog buttons -
+  if (button_cnt > 0)
+  {
+    button_s *b_ptr = buttons;
+    button_s *b_ptr_end = b_ptr + button_cnt;
+    do {
+      gtk_dialog_add_button(GTK_DIALOG(g_dialog),
+          b_ptr->text,b_ptr->resp_id);
+    } while(++b_ptr < b_ptr_end);
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_gtk_dialog,g_dialog);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
 bool bic_gtk_window_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -2262,6 +2391,210 @@ bool bic_gtk_window_method_print_0(interpreter_thread_s &it,unsigned stack_base,
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
   printf("GtkWindow");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class GTK_DIALOG -
+built_in_class_s gtk_dialog_class =
+{/*{{{*/
+  "GtkDialog",
+  c_modifier_public | c_modifier_final,
+  14, gtk_dialog_methods,
+  0, gtk_dialog_variables,
+  bic_gtk_dialog_consts,
+  bic_gtk_g_object_init,
+  bic_gtk_g_object_clear,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};/*}}}*/
+
+built_in_method_s gtk_dialog_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_dialog_operator_binary_equal
+  },
+  {
+    "GtkDialog#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_dialog_method_GtkDialog_1
+  },
+  {
+    "list_properties#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_list_properties_0
+  },
+  {
+    "set_prop#2",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_set_prop_2
+  },
+  {
+    "get_prop#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_get_prop_1
+  },
+  {
+    "signal_connect#3",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_signal_connect_3
+  },
+  {
+    "signal_emit#2",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_g_object_method_signal_emit_2
+  },
+  {
+    "show_all#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_widget_method_show_all_0
+  },
+  {
+    "add#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_container_method_add_1
+  },
+  {
+    "close#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_window_method_close_0
+  },
+  {
+    "add_button#2",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_dialog_method_add_button_2
+  },
+  {
+    "run#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_dialog_method_run_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_gtk_dialog_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_gtk_dialog_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s gtk_dialog_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_gtk_dialog_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+bool bic_gtk_dialog_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_dialog_method_GtkDialog_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type < c_bi_class_gtk_g_object ||
+      src_0_location->v_type > gtk_c::gtk_obj_class_last)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("GtkDialog#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  BIC_GTK_G_OBJECT_CREATE_FROM_OBJECT(DIALOG);
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_dialog_method_add_button_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  long long int response_id;
+
+  if (src_0_location->v_type != c_bi_class_string ||
+      !it.retrieve_integer(src_1_location,response_id))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("add_button#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  gtk_dialog_add_button(GTK_DIALOG(g_obj),string_ptr->data,response_id);
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_dialog_method_run_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+  long long result = gtk_dialog_run(GTK_DIALOG(g_obj));
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_dialog_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("GtkDialog"),"GtkDialog");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_dialog_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  printf("GtkDialog");
 
   BIC_SET_RESULT_BLANK();
 
