@@ -1019,31 +1019,38 @@ built_in_method_s gtk_g_object_methods[] =
     c_modifier_public | c_modifier_final,
     bic_gtk_g_object_method_GtkGObject_2
   },
-  {
-    "list_properties#0",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_list_properties_0
-  },
-  {
-    "set_prop#2",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_set_prop_2
-  },
-  {
-    "get_prop#1",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_get_prop_1
-  },
-  {
-    "signal_connect#3",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_signal_connect_3
-  },
-  {
-    "signal_emit#2",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_signal_emit_2
-  },
+
+#define BIC_GTK_G_OBJECT_INHERITED_METHODS() \
+/*{{{*/\
+  {\
+    "list_properties#0",\
+    c_modifier_public | c_modifier_final,\
+    bic_gtk_g_object_method_list_properties_0\
+  },\
+  {\
+    "set_prop#2",\
+    c_modifier_public | c_modifier_final,\
+    bic_gtk_g_object_method_set_prop_2\
+  },\
+  {\
+    "get_prop#1",\
+    c_modifier_public | c_modifier_final,\
+    bic_gtk_g_object_method_get_prop_1\
+  },\
+  {\
+    "signal_connect#3",\
+    c_modifier_public | c_modifier_final,\
+    bic_gtk_g_object_method_signal_connect_3\
+  },\
+  {\
+    "signal_emit#2",\
+    c_modifier_public | c_modifier_final,\
+    bic_gtk_g_object_method_signal_emit_2\
+  },\
+/*}}}*/
+
+  BIC_GTK_G_OBJECT_INHERITED_METHODS()
+
   {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
@@ -1609,36 +1616,19 @@ built_in_method_s gtk_widget_methods[] =
     c_modifier_public | c_modifier_final,
     bic_gtk_widget_method_GtkWidget_1
   },
-  {
-    "list_properties#0",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_list_properties_0
-  },
-  {
-    "set_prop#2",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_set_prop_2
-  },
-  {
-    "get_prop#1",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_get_prop_1
-  },
-  {
-    "signal_connect#3",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_signal_connect_3
-  },
-  {
-    "signal_emit#2",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_signal_emit_2
-  },
-  {
-    "show_all#0",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_widget_method_show_all_0
-  },
+
+#define BIC_GTK_WIDGET_INHERITED_METHODS() \
+/*{{{*/\
+  {\
+    "show_all#0",\
+    c_modifier_public | c_modifier_final,\
+    bic_gtk_widget_method_show_all_0\
+  },\
+/*}}}*/
+
+  BIC_GTK_G_OBJECT_INHERITED_METHODS()
+  BIC_GTK_WIDGET_INHERITED_METHODS()
+
   {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
@@ -1763,41 +1753,20 @@ built_in_method_s gtk_container_methods[] =
     c_modifier_public | c_modifier_final,
     bic_gtk_container_method_GtkContainer_1
   },
-  {
-    "list_properties#0",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_list_properties_0
-  },
-  {
-    "set_prop#2",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_set_prop_2
-  },
-  {
-    "get_prop#1",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_get_prop_1
-  },
-  {
-    "signal_connect#3",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_signal_connect_3
-  },
-  {
-    "signal_emit#2",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_signal_emit_2
-  },
-  {
-    "show_all#0",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_widget_method_show_all_0
-  },
-  {
-    "add#1",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_container_method_add_1
-  },
+
+#define BIC_GTK_CONTAINER_INHERITED_METHODS() \
+/*{{{*/\
+  {\
+    "add#1",\
+    c_modifier_public | c_modifier_final,\
+    bic_gtk_container_method_add_1\
+  },\
+/*}}}*/
+
+  BIC_GTK_G_OBJECT_INHERITED_METHODS()
+  BIC_GTK_WIDGET_INHERITED_METHODS()
+  BIC_GTK_CONTAINER_INHERITED_METHODS()
+
   {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
@@ -1944,41 +1913,11 @@ built_in_method_s gtk_grid_methods[] =
     c_modifier_public | c_modifier_final,
     bic_gtk_grid_method_GtkGrid_1
   },
-  {
-    "list_properties#0",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_list_properties_0
-  },
-  {
-    "set_prop#2",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_set_prop_2
-  },
-  {
-    "get_prop#1",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_get_prop_1
-  },
-  {
-    "signal_connect#3",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_signal_connect_3
-  },
-  {
-    "signal_emit#2",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_signal_emit_2
-  },
-  {
-    "show_all#0",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_widget_method_show_all_0
-  },
-  {
-    "add#1",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_container_method_add_1
-  },
+
+  BIC_GTK_G_OBJECT_INHERITED_METHODS()
+  BIC_GTK_WIDGET_INHERITED_METHODS()
+  BIC_GTK_CONTAINER_INHERITED_METHODS()
+
   {
     "attach#5",
     c_modifier_public | c_modifier_final,
@@ -2154,46 +2093,21 @@ built_in_method_s gtk_window_methods[] =
     c_modifier_public | c_modifier_final,
     bic_gtk_window_method_GtkWindow_1
   },
-  {
-    "list_properties#0",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_list_properties_0
-  },
-  {
-    "set_prop#2",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_set_prop_2
-  },
-  {
-    "get_prop#1",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_get_prop_1
-  },
-  {
-    "signal_connect#3",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_signal_connect_3
-  },
-  {
-    "signal_emit#2",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_signal_emit_2
-  },
-  {
-    "show_all#0",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_widget_method_show_all_0
-  },
-  {
-    "add#1",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_container_method_add_1
-  },
-  {
-    "close#0",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_window_method_close_0
-  },
+
+#define BIC_GTK_WINDOW_INHERITED_METHODS() \
+/*{{{*/\
+  {\
+    "close#0",\
+    c_modifier_public | c_modifier_final,\
+    bic_gtk_window_method_close_0\
+  },\
+/*}}}*/
+
+  BIC_GTK_G_OBJECT_INHERITED_METHODS()
+  BIC_GTK_WIDGET_INHERITED_METHODS()
+  BIC_GTK_CONTAINER_INHERITED_METHODS()
+  BIC_GTK_WINDOW_INHERITED_METHODS()
+
   {
     "dialog#3",
     c_modifier_public | c_modifier_final,
@@ -2402,7 +2316,7 @@ built_in_class_s gtk_dialog_class =
 {/*{{{*/
   "GtkDialog",
   c_modifier_public | c_modifier_final,
-  14, gtk_dialog_methods,
+  16, gtk_dialog_methods,
   0, gtk_dialog_variables,
   bic_gtk_dialog_consts,
   bic_gtk_g_object_init,
@@ -2432,55 +2346,36 @@ built_in_method_s gtk_dialog_methods[] =
     c_modifier_public | c_modifier_final,
     bic_gtk_dialog_method_GtkDialog_1
   },
+
+#define BIC_GTK_DIALOG_INHERITED_METHODS() \
+/*{{{*/\
+  {\
+    "add_button#2",\
+    c_modifier_public | c_modifier_final,\
+    bic_gtk_dialog_method_add_button_2\
+  },\
+  {\
+    "run#0",\
+    c_modifier_public | c_modifier_final,\
+    bic_gtk_dialog_method_run_0\
+  },\
+/*}}}*/
+
+  BIC_GTK_G_OBJECT_INHERITED_METHODS()
+  BIC_GTK_WIDGET_INHERITED_METHODS()
+  BIC_GTK_CONTAINER_INHERITED_METHODS()
+  BIC_GTK_WINDOW_INHERITED_METHODS()
+  BIC_GTK_DIALOG_INHERITED_METHODS()
+
   {
-    "list_properties#0",
+    "get_filename#0",
     c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_list_properties_0
+    bic_gtk_dialog_method_get_filename_0
   },
   {
-    "set_prop#2",
+    "get_filenames#0",
     c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_set_prop_2
-  },
-  {
-    "get_prop#1",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_get_prop_1
-  },
-  {
-    "signal_connect#3",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_signal_connect_3
-  },
-  {
-    "signal_emit#2",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_g_object_method_signal_emit_2
-  },
-  {
-    "show_all#0",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_widget_method_show_all_0
-  },
-  {
-    "add#1",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_container_method_add_1
-  },
-  {
-    "close#0",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_window_method_close_0
-  },
-  {
-    "add_button#2",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_dialog_method_add_button_2
-  },
-  {
-    "run#0",
-    c_modifier_public | c_modifier_final,
-    bic_gtk_dialog_method_run_0
+    bic_gtk_dialog_method_get_filenames_0
   },
   {
     "to_string#0",
@@ -2577,6 +2472,86 @@ bool bic_gtk_dialog_method_run_0(interpreter_thread_s &it,unsigned stack_base,ul
   long long result = gtk_dialog_run(GTK_DIALOG(g_obj));
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_dialog_method_get_filename_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (!GTK_IS_FILE_CHOOSER(g_obj))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_INCOMPATIBLE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(GTK_TYPE_FILE_CHOOSER);
+
+    return false;
+  }
+
+  gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(g_obj));
+
+  if (filename != NULL)
+  {
+    // - create filename string -
+    string_s *string_ptr = it.get_new_string_ptr();
+    string_ptr->set(strlen(filename),filename);
+    g_free(filename);
+
+    BIC_SET_RESULT_STRING(string_ptr);
+  }
+  else
+  {
+    BIC_SET_RESULT_BLANK();
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_dialog_method_get_filenames_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (!GTK_IS_FILE_CHOOSER(g_obj))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_INCOMPATIBLE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(GTK_TYPE_FILE_CHOOSER);
+
+    return false;
+  }
+
+  GSList *list = gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(g_obj));
+
+  // - create result array -
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+  GSList *item = list;
+  while (item != NULL)
+  {
+    gchar *filename = (gchar *)item->data;
+
+    // - create filename string -
+    string_s *string_ptr = it.get_new_string_ptr();
+    string_ptr->set(strlen(filename),filename);
+    g_free(filename);
+    
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+    array_ptr->push(new_location);
+
+    item = item->next;
+  }
+
+  g_slist_free(list);
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);;
 
   return true;
 }/*}}}*/

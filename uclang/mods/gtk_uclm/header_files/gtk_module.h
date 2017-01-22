@@ -77,9 +77,9 @@ void bic_gtk_g_object_clear(interpreter_thread_s &it,location_s *location_ptr);
 bool bic_gtk_g_object_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_GtkGObject_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_GtkGObject_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_g_object_method_list_properties_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_set_prop_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_get_prop_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_gtk_g_object_method_list_properties_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_signal_emit_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -149,6 +149,8 @@ bool bic_gtk_dialog_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 bool bic_gtk_dialog_method_GtkDialog_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_dialog_method_add_button_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_dialog_method_run_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_dialog_method_get_filename_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_dialog_method_get_filenames_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_dialog_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_dialog_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
