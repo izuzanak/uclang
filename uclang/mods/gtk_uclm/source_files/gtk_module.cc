@@ -70,10 +70,10 @@ bool gtk_initialize(script_parser_s &sp)
 
   // - initialize gtk_g_object class identifier -
   c_bi_class_gtk_g_object = class_base_idx++;
+  gtk_c::gtk_obj_class_first = c_bi_class_gtk_g_object;
 
   // - initialize gtk_widget class identifier -
   c_bi_class_gtk_widget = class_base_idx++;
-  gtk_c::gtk_obj_class_first = c_bi_class_gtk_widget;
 
   // - initialize gtk_container class identifier -
   c_bi_class_gtk_container = class_base_idx++;
@@ -600,7 +600,7 @@ void bic_gtk_consts(location_array_s &const_locations)
       { GTK_TYPE_ACCEL_MAP, 0 },
       { GTK_TYPE_ACCESSIBLE, 0 },
       { GTK_TYPE_ACTION_BAR, 0 },
-      { GTK_TYPE_ADJUSTMENT, 0 },
+      { GTK_TYPE_ADJUSTMENT, (int)c_bi_class_gtk_g_object },
       { GTK_TYPE_APP_CHOOSER_BUTTON, 0 },
       { GTK_TYPE_APP_CHOOSER_DIALOG, (int)c_bi_class_gtk_dialog },
       { GTK_TYPE_APP_CHOOSER_WIDGET, 0 },
@@ -735,7 +735,7 @@ void bic_gtk_consts(location_array_s &const_locations)
       { GTK_TYPE_STATUSBAR, 0 },
       { GTK_TYPE_STYLE_CONTEXT, 0 },
       { GTK_TYPE_SWITCH, 0 },
-      { GTK_TYPE_TEXT_BUFFER, 0 },
+      { GTK_TYPE_TEXT_BUFFER, (int)c_bi_class_gtk_g_object },
       { GTK_TYPE_TEXT_CHILD_ANCHOR, 0 },
       { GTK_TYPE_TEXT_MARK, 0 },
       { GTK_TYPE_TEXT_TAG, 0 },
@@ -1138,7 +1138,7 @@ bool bic_gtk_g_object_method_GtkGObject_1(interpreter_thread_s &it,unsigned stac
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
-  if (src_0_location->v_type < c_bi_class_gtk_g_object ||
+  if (src_0_location->v_type < gtk_c::gtk_obj_class_first ||
       src_0_location->v_type > gtk_c::gtk_obj_class_last)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -1668,7 +1668,7 @@ bool bic_gtk_widget_method_GtkWidget_1(interpreter_thread_s &it,unsigned stack_b
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
-  if (src_0_location->v_type < c_bi_class_gtk_g_object ||
+  if (src_0_location->v_type < gtk_c::gtk_obj_class_first ||
       src_0_location->v_type > gtk_c::gtk_obj_class_last)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -1806,7 +1806,7 @@ bool bic_gtk_container_method_GtkContainer_1(interpreter_thread_s &it,unsigned s
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
-  if (src_0_location->v_type < c_bi_class_gtk_g_object ||
+  if (src_0_location->v_type < gtk_c::gtk_obj_class_first ||
       src_0_location->v_type > gtk_c::gtk_obj_class_last)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -1828,7 +1828,7 @@ bool bic_gtk_container_method_add_1(interpreter_thread_s &it,unsigned stack_base
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
-  if (src_0_location->v_type < c_bi_class_gtk_g_object ||
+  if (src_0_location->v_type < gtk_c::gtk_obj_class_first ||
       src_0_location->v_type > gtk_c::gtk_obj_class_last)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -1964,7 +1964,7 @@ bool bic_gtk_grid_method_GtkGrid_1(interpreter_thread_s &it,unsigned stack_base,
 
   if (src_0_location->v_type != c_bi_class_array)
   {
-    if (src_0_location->v_type < c_bi_class_gtk_g_object ||
+    if (src_0_location->v_type < gtk_c::gtk_obj_class_first ||
         src_0_location->v_type > gtk_c::gtk_obj_class_last)
     {
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -2000,7 +2000,7 @@ bool bic_gtk_grid_method_attach_5(interpreter_thread_s &it,unsigned stack_base,u
   long long int width;
   long long int height;
 
-  if (src_0_location->v_type < c_bi_class_gtk_g_object ||
+  if (src_0_location->v_type < gtk_c::gtk_obj_class_first ||
       src_0_location->v_type > gtk_c::gtk_obj_class_last ||
       !it.retrieve_integer(src_1_location,left) ||
       !it.retrieve_integer(src_2_location,top) ||
@@ -2154,7 +2154,7 @@ bool bic_gtk_window_method_GtkWindow_1(interpreter_thread_s &it,unsigned stack_b
 
   if (src_0_location->v_type != c_bi_class_array)
   {
-    if (src_0_location->v_type < c_bi_class_gtk_g_object ||
+    if (src_0_location->v_type < gtk_c::gtk_obj_class_first ||
         src_0_location->v_type > gtk_c::gtk_obj_class_last)
     {
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -2416,7 +2416,7 @@ bool bic_gtk_dialog_method_GtkDialog_1(interpreter_thread_s &it,unsigned stack_b
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
-  if (src_0_location->v_type < c_bi_class_gtk_g_object ||
+  if (src_0_location->v_type < gtk_c::gtk_obj_class_first ||
       src_0_location->v_type > gtk_c::gtk_obj_class_last)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);

@@ -558,10 +558,11 @@ built_in_variable_s fa_source_variables[] =
   /* - update old input index - */\
   fs_ptr->old_input_idx = fs_ptr->input_idx;\
 \
-  /* - recognize next terminal symbol - */\
-  unsigned terminal = fa_ptr->recognize(string_ptr->data,fs_ptr->input_idx,string_ptr->size - 1);\
+  unsigned terminal;\
 \
-  if (terminal != c_idx_not_exist)\
+  /* - recognize next terminal symbol - */\
+  if ((fs_ptr->input_idx < string_ptr->size - 1) &&\
+      (terminal = fa_ptr->recognize(string_ptr->data,fs_ptr->input_idx,string_ptr->size - 1)) != c_idx_not_exist)\
   {\
     long long int result = terminal;\
 \
