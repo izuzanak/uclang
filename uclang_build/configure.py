@@ -48,7 +48,7 @@ c_packages = [
   ["MOD_MPG"       ,"pkg-config",["libmpg123 >= 1.20.1"]],
   ["MOD_PORTAUDIO" ,"pkg-config",["portaudio-2.0 >= 19"]],
   ["MOD_GSTREAMER" ,"pkg-config",["gstreamer-1.0 >= 1.4.4"]],
-  ["MOD_GTK"       ,"pkg-config",["gtk+-3.0 > 3.22.0"]],
+  ["MOD_GTK"       ,"pkg-config",["gtk+-3.0 >= 3.18.9"]],
   ["MOD_IMAGE"     ,"pkg-config",["libpng >= 1.2.50","libjpeg"]],
   ["MOD_OPENCV"    ,"pkg-config",["opencv >= 2.4.9.1"]],
   ["MOD_DOCU"      ,"true"      ,[]],
