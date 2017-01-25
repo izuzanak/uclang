@@ -6,6 +6,7 @@ include "gtk_module.h"
 // - GTK indexes of built in classes -
 unsigned c_bi_class_gtk = c_idx_not_exist;
 unsigned c_bi_class_gtk_g_object = c_idx_not_exist;
+unsigned c_bi_class_gtk_clipboard = c_idx_not_exist;
 unsigned c_bi_class_gtk_widget = c_idx_not_exist;
 unsigned c_bi_class_gtk_container = c_idx_not_exist;
 unsigned c_bi_class_gtk_grid = c_idx_not_exist;
@@ -16,7 +17,7 @@ unsigned c_bi_class_gtk_handler = c_idx_not_exist;
 // - GTK module -
 built_in_module_s module =
 {/*{{{*/
-  8,                   // Class count
+  9,                   // Class count
   gtk_classes,         // Classes
 
   0,                   // Error base index
@@ -32,6 +33,7 @@ built_in_class_s *gtk_classes[] =
 {/*{{{*/
   &gtk_class,
   &gtk_g_object_class,
+  &gtk_clipboard_class,
   &gtk_widget_class,
   &gtk_container_class,
   &gtk_grid_class,
@@ -71,6 +73,9 @@ bool gtk_initialize(script_parser_s &sp)
   // - initialize gtk_g_object class identifier -
   c_bi_class_gtk_g_object = class_base_idx++;
   gtk_c::gtk_obj_class_first = c_bi_class_gtk_g_object;
+
+  // - initialize gtk_clipboard class identifier -
+  c_bi_class_gtk_clipboard = class_base_idx++;
 
   // - initialize gtk_widget class identifier -
   c_bi_class_gtk_widget = class_base_idx++;
@@ -1575,6 +1580,162 @@ bool bic_gtk_g_object_method_print_0(interpreter_thread_s &it,unsigned stack_bas
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
   printf("GtkGObject");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class GTK_CLIPBOARD -
+built_in_class_s gtk_clipboard_class =
+{/*{{{*/
+  "GtkClipboard",
+  c_modifier_public | c_modifier_final,
+  5, gtk_clipboard_methods,
+  0, gtk_clipboard_variables,
+  bic_gtk_clipboard_consts,
+  bic_gtk_g_object_init,
+  bic_gtk_g_object_clear,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};/*}}}*/
+
+built_in_method_s gtk_clipboard_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_clipboard_operator_binary_equal
+  },
+  {
+    "GtkClipboard#1",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_clipboard_method_GtkClipboard_1
+  },
+  {
+    "wait_for_text#0",
+    c_modifier_public | c_modifier_final,
+    bic_gtk_clipboard_method_wait_for_text_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_gtk_clipboard_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_gtk_clipboard_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s gtk_clipboard_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_gtk_clipboard_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+bool bic_gtk_clipboard_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_clipboard_method_GtkClipboard_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    if (src_0_location->v_type < gtk_c::gtk_obj_class_first ||
+        src_0_location->v_type > gtk_c::gtk_obj_class_last)
+    {
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      BIC_EXCEPTION_PUSH_METHOD_RI("GtkWindow#1");
+      new_exception->params.push(1);
+      new_exception->params.push(src_0_location->v_type);
+
+      return false;
+    }
+
+    BIC_GTK_G_OBJECT_CREATE_FROM_OBJECT(CLIPBOARD);
+  }
+  else
+  {
+    GdkAtom atom = gdk_atom_intern(((string_s *)src_0_location->v_data_ptr)->data,FALSE);
+    gpointer g_obj = gtk_clipboard_get(atom);
+
+    // - create explicit reference -
+    g_object_ref(g_obj);
+
+    dst_location->v_data_ptr = (gpointer)g_obj;
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_clipboard_method_wait_for_text_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  gpointer g_obj = (gpointer)dst_location->v_data_ptr;
+
+  // - retrieve text from clipboard -
+  char *text = gtk_clipboard_wait_for_text(GTK_CLIPBOARD(g_obj));
+
+  if (text != NULL)
+  {
+    string_s *string_ptr = it.get_new_string_ptr();
+    string_ptr->set(strlen(text),text);
+    g_free(text);
+
+    pointer &res_location = it.data_stack[res_loc_idx];
+    BIC_SET_RESULT_STRING(string_ptr);
+  }
+  else
+  {
+    pointer &res_location = it.data_stack[res_loc_idx];
+    BIC_SET_RESULT_BLANK();
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_clipboard_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("GtkClipboard"),"GtkClipboard");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_gtk_clipboard_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  printf("GtkClipboard");
 
   BIC_SET_RESULT_BLANK();
 

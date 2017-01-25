@@ -30,6 +30,7 @@ include "script_parser.h"
 // g_object_set_qdata_full
 // g_object_get_qdata
 
+// gdk_atom_intern
 // gdk_atom_name
 // gtk_clipboard_get
 // gtk_clipboard_wait_for_text

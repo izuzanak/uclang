@@ -9,6 +9,7 @@ include "ucl_gtk.h"
 // - GTK indexes of built in classes -
 extern unsigned c_bi_class_gtk;
 extern unsigned c_bi_class_gtk_g_object;
+extern unsigned c_bi_class_gtk_clipboard;
 extern unsigned c_bi_class_gtk_widget;
 extern unsigned c_bi_class_gtk_container;
 extern unsigned c_bi_class_gtk_grid;
@@ -84,6 +85,19 @@ bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned 
 bool bic_gtk_g_object_method_signal_emit_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gtk_g_object_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class GTK_CLIPBOARD -
+extern built_in_variable_s gtk_clipboard_variables[];
+extern built_in_method_s gtk_clipboard_methods[];
+extern built_in_class_s gtk_clipboard_class;
+
+void bic_gtk_clipboard_consts(location_array_s &const_locations);
+
+bool bic_gtk_clipboard_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_clipboard_method_GtkClipboard_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_clipboard_method_wait_for_text_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_clipboard_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gtk_clipboard_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 // - class GTK_WIDGET -
 extern built_in_variable_s gtk_widget_variables[];
