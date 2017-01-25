@@ -220,21 +220,27 @@ gpointer gtk_c::create_g_object(interpreter_thread_s &it,GType g_type,pointer_ar
   }
 
   guint param_cnt = array_ptr->used >> 1;
-  GParameter params[param_cnt] = {0};
+  GParameter params[param_cnt];
 
 #define BIC_GTK_CREATE_G_OBJECT_RELEASE_PARAMS() \
 {/*{{{*/\
-  GParameter *rp_ptr = params;\
-  GParameter *rp_ptr_end = rp_ptr + param_cnt;\
+  if (param_cnt > 0)\
+  {\
+    GParameter *rp_ptr = params;\
+    GParameter *rp_ptr_end = rp_ptr + param_cnt;\
 \
-  do {\
-    g_value_unset(&rp_ptr->value);\
-  } while(++rp_ptr < rp_ptr_end);\
+    do {\
+      g_value_unset(&rp_ptr->value);\
+    } while(++rp_ptr < rp_ptr_end);\
+  }\
 }/*}}}*/
 
   // - prepare parameters -
   if (param_cnt > 0)
   {
+    // - clear parameter values -
+    memset(params,0,sizeof(params));
+
     GParameter *p_ptr = params;
     GParameter *p_ptr_end = p_ptr + param_cnt;
     pointer *a_ptr = array_ptr->data;
