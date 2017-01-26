@@ -115,7 +115,7 @@ class Main
 
     if (Blank == input_data)
     {
-      return 0;
+      input_data = "";
     }
 
     names = [];
