@@ -1206,9 +1206,9 @@ bool bic_sys_method_popen_2(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_sys_method_pipe_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
+#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
-#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
   // - create pipe -
   int pipefd[2];
 

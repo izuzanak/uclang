@@ -2586,22 +2586,22 @@ class UclVar
     static unsigned c_bi_mi_print_0;
 
     public:
-    inline static UclVar GET(UclVar op_0)
+    inline static UclVar _GET(UclVar op_0)
     {/*{{{*/
       return __static_call_1(c_bi_mi_GET_1,op_0);
     }/*}}}*/
 
-    inline static UclVar PUT(UclVar op_0,UclVar op_1)
+    inline static UclVar _PUT(UclVar op_0,UclVar op_1)
     {/*{{{*/
       return __static_call_2(c_bi_mi_PUT_2,op_0,op_1);
     }/*}}}*/
 
-    inline static UclVar DELETE(UclVar op_0)
+    inline static UclVar _DELETE(UclVar op_0)
     {/*{{{*/
       return __static_call_1(c_bi_mi_DELETE_1,op_0);
     }/*}}}*/
 
-    inline static UclVar HEAD(UclVar op_0)
+    inline static UclVar _HEAD(UclVar op_0)
     {/*{{{*/
       return __static_call_1(c_bi_mi_HEAD_1,op_0);
     }/*}}}*/
@@ -4658,22 +4658,22 @@ class UclVar
     return __call_1(c_bi_mni_info_1,op_0);
   }/*}}}*/
 
-  inline UclVar GET(UclVar op_0)
+  inline UclVar _GET(UclVar op_0)
   {/*{{{*/
     return __call_1(c_bi_mni_GET_1,op_0);
   }/*}}}*/
 
-  inline UclVar PUT(UclVar op_0,UclVar op_1)
+  inline UclVar _PUT(UclVar op_0,UclVar op_1)
   {/*{{{*/
     return __call_2(c_bi_mni_PUT_2,op_0,op_1);
   }/*}}}*/
 
-  inline UclVar DELETE(UclVar op_0)
+  inline UclVar _DELETE(UclVar op_0)
   {/*{{{*/
     return __call_1(c_bi_mni_DELETE_1,op_0);
   }/*}}}*/
 
-  inline UclVar HEAD(UclVar op_0)
+  inline UclVar _HEAD(UclVar op_0)
   {/*{{{*/
     return __call_1(c_bi_mni_HEAD_1,op_0);
   }/*}}}*/

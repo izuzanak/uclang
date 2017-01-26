@@ -526,8 +526,13 @@ bool bic_time_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *o
   datetime_s datetime;
   datetime.from_nanosec(nanosec);
 
+#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
   printf("%4.4hu/%2.2hhu/%2.2hhu %2.2hhu:%2.2hhu:%2.2hhu"
       ,datetime.year,datetime.month,datetime.day,datetime.hour,datetime.min,datetime.sec);
+#else
+  printf("%4.4hu/%2.2hu/%2.2hu %2.2hu:%2.2hu:%2.2hu"
+      ,datetime.year,(usi)datetime.month,(usi)datetime.day,(usi)datetime.hour,(usi)datetime.min,(usi)datetime.sec);
+#endif
 
   BIC_SET_RESULT_BLANK();
 
