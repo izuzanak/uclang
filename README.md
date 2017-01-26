@@ -57,6 +57,7 @@ Some of implemented modules are:
 [`mpg`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/mpg_uclm),
 [`portaudio`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/portaudio_uclm),
 [`gstreamer`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/gstreamer_uclm),
+[`gtk`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/gtk_uclm),
 [`image`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/image_uclm),
 [`glut`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/glut_uclm),
 [`glew`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/glew_uclm),

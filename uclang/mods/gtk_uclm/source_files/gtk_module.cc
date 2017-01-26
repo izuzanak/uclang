@@ -1013,14 +1013,14 @@ built_in_method_s gtk_g_object_methods[] =
     bic_gtk_g_object_method_list_properties_0\
   },\
   {\
-    "set_prop#2",\
+    "prop#2",\
     c_modifier_public | c_modifier_final,\
-    bic_gtk_g_object_method_set_prop_2\
+    bic_gtk_g_object_method_prop_2\
   },\
   {\
-    "get_prop#1",\
+    "prop#1",\
     c_modifier_public | c_modifier_final,\
-    bic_gtk_g_object_method_get_prop_1\
+    bic_gtk_g_object_method_prop_1\
   },\
   {\
     "signal_connect#3",\
@@ -1228,7 +1228,7 @@ bool bic_gtk_g_object_method_list_properties_0(interpreter_thread_s &it,unsigned
   return true;
 }/*}}}*/
 
-bool bic_gtk_g_object_method_set_prop_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_gtk_g_object_method_prop_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -1238,7 +1238,7 @@ bool bic_gtk_g_object_method_set_prop_2(interpreter_thread_s &it,unsigned stack_
   if (src_0_location->v_type != c_bi_class_string)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("set_prop#2");
+    BIC_EXCEPTION_PUSH_METHOD_RI("prop#2");
     new_exception->params.push(2);
     new_exception->params.push(src_0_location->v_type);
     new_exception->params.push(src_1_location->v_type);
@@ -1283,7 +1283,7 @@ bool bic_gtk_g_object_method_set_prop_2(interpreter_thread_s &it,unsigned stack_
   return true;
 }/*}}}*/
 
-bool bic_gtk_g_object_method_get_prop_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_gtk_g_object_method_prop_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -1292,7 +1292,7 @@ bool bic_gtk_g_object_method_get_prop_1(interpreter_thread_s &it,unsigned stack_
   if (src_0_location->v_type != c_bi_class_string)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("get_prop#1");
+    BIC_EXCEPTION_PUSH_METHOD_RI("prop#1");
     new_exception->params.push(1);
     new_exception->params.push(src_0_location->v_type);
 

@@ -1,0 +1,315 @@
+
+import gtk;
+import sys;
+import containers;
+import parser;
+import time;
+
+class TextView
+{
+  public m_label;
+  public m_buffer;
+
+  public TextView(grid,x_pos,y_pos,label)
+  {/*{{{*/
+
+    // - create label -
+    m_label = new GtkGObject(Gtk.TYPE_LABEL,[
+      "label",label
+    ]);
+
+    // - create text view -
+    scrolled_window = new GtkContainer(
+      new GtkGObject(Gtk.TYPE_SCROLLED_WINDOW,[
+        "border-width",1
+        ,"hscrollbar-policy",1
+        ,"vscrollbar-policy",1
+        ,"expand",1
+      ]));
+
+    scrolled_window.add(
+      text_view = new GtkGObject(Gtk.TYPE_TEXT_VIEW,[]));
+
+    // - retrieve text buffer -
+    m_buffer = text_view.prop("buffer");
+
+    // - attach all to grid -
+    grid.attach(m_label,x_pos,y_pos++,1,1);
+    grid.attach(scrolled_window,x_pos,y_pos++,1,1);
+  }/*}}}*/
+}
+
+class Main
+{
+  static public TV_COUNT = 0;
+  static public TV_NAMES   = TV_COUNT++;
+  static public TV_WINNERS = TV_COUNT++;
+
+  static TV_LABELS = 
+  [/*{{{*/
+    "Names (%d)",
+    "Winners (%d)"
+  ];/*}}}*/
+
+  INVALID_NAMES = new Set(
+  [/*{{{*/
+    "Odebrat",
+    "líbí",
+    "Odpovědět",
+    "Zpráva",
+    "Odebrat",
+    "nelíbí",
+    "...",
+    "Zobrazit",
+    "Upraveno",
+    "Okomentoval(a)",
+    "Herbatint",
+    "herbatint",
+    "stibio",
+    "odpověď",
+    "sdílení",
+    ""
+  ]);/*}}}*/
+
+  m_window;
+  m_text_views;
+  m_sb_name_count;
+
+  m_names = [];
+
+  public cb_destroy(obj,unused)
+  {/*{{{*/
+    Gtk.quit_main_loop();
+  }/*}}}*/
+
+  public cb_tv_changed(obj,tv_idx)
+  {/*{{{*/
+    items = [];
+
+    for (item <- obj.prop("text").split("\n"))
+    {
+      if (item != "")
+      {
+        items.push(item);
+      }
+    }
+
+    // - set items count -
+    m_text_views[tv_idx].m_label.prop("label",TV_LABELS[tv_idx] % items.length());
+
+    if (tv_idx == TV_NAMES)
+    {
+      // - set name count maximum -
+      m_sb_name_count.prop("adjustment").prop("upper",new Float(items.length()));
+
+      // - store names list -
+      m_names = items;
+    }
+  }/*}}}*/
+
+  public cb_retrieve_names(obj,unused)
+  {/*{{{*/
+
+    // - retrieve data from clipboard -
+    input_data = new GtkClipboard("CLIPBOARD").wait_for_text();
+
+    if (Blank == input_data)
+    {
+      return 0;
+    }
+
+    names = [];
+    names_set = new Set();
+
+    fa = new FinalAutomata(
+    [
+      "\"<!-- react-text: \".d*.\" -->\""
+      ,"\"<!-- /react-text -->\""
+      ,"'<'"
+      ,"!'<'*"
+    ]);
+
+    inside_name = 0;
+    name_begin = 0;
+
+    fa_src = fa.get_source(input_data);
+    for (term <- fa_src)
+    {
+      if (inside_name)
+      {
+        if (term == 1)
+        {
+          inside_name = 0;
+          name_end = fa_src.old_input_idx();
+
+          // - if name contain some characters -
+          if (name_end > name_begin)
+          {
+            // - retrieve name string -
+            name = input_data.range(name_begin,fa_src.old_input_idx() - 1);
+            name_set = new Set(name.split(" "));
+
+            // - filter out invalid name candidates -
+            if (name_set.length() > 1 and (INVALID_NAMES & name_set).length() == 0)
+            {
+              if (!(name in names_set))
+              {
+                names.push(name);
+                names_set.insert(name);
+              }
+            }
+          }
+        }
+      }
+      else
+      {
+        if (term == 0)
+        {
+          inside_name = 1;
+          name_begin = fa_src.input_idx();
+        }
+      }
+    }
+
+    // - write names to text view -
+    m_text_views[TV_NAMES].m_buffer.prop("text",names.to_string("\n"));
+  }/*}}}*/
+
+  public cb_select_winners(obj,unused)
+  {/*{{{*/
+
+    // - retrieve count of winners -
+    winner_cnt = new Integer(m_sb_name_count.prop("value"));
+
+    max_winner_cnt = m_names.length();
+    if (winner_cnt > max_winner_cnt)
+    {
+      message = m_window.dialog(Gtk.TYPE_MESSAGE_DIALOG,
+      [
+        "title", "Error message",
+        "text", "Invalid count of winners (max %d)" % max_winner_cnt
+      ],["_Ok",1]);
+
+      message.run();
+      message.close();
+
+      return 0;
+    }
+
+    winners = [];
+
+    if (winner_cnt > 0)
+    {
+      names = [];
+      for (name <- m_names)
+        names.push(name);
+
+      do {
+        name_idx = winners.length() + (Sys.rand() % (names.length() - winners.length()));
+
+        name = names[name_idx];
+        names[name_idx] = names[winners.length()];
+        winners.push(name);
+
+      } while(winners.length() < winner_cnt);
+    }
+
+    // - write winners to text view -
+    m_text_views[TV_WINNERS].m_buffer.prop("text",winners.to_string("\n"));
+  }/*}}}*/
+
+  public Main()
+  {/*{{{*/
+    m_window = new GtkWindow([
+      "type", 0
+      ,"title", "Losovačka"
+      ,"border-width", 2
+      ,"window-position", 1
+      ,"default-width", 400
+      ,"default-height", 400
+      ,"resizable", 1
+    ]);
+
+    m_window.signal_connect("destroy",new Delegate(this,"cb_destroy",2),0);
+
+    vgrid_y = 0;
+    vgrid = new GtkGrid([
+      "column-spacing", 1
+      ,"row-spacing", 2
+    ]);
+
+    // - names text view -
+    m_text_views = [];
+    tv_idx = 0;
+    do {
+      free text_view;
+      text_view = new TextView(vgrid,tv_idx,vgrid_y,TV_LABELS[tv_idx] % 0);
+      text_view.m_buffer.signal_connect("changed",
+        new Delegate(this,"cb_tv_changed",2),tv_idx);
+
+      m_text_views.push(text_view);
+    } while(++tv_idx < TV_COUNT);
+
+    vgrid_y += 2;
+
+    // - name count spin -
+    {
+      hgrid = new GtkGrid([
+        "margin-left", 10
+        ,"column-spacing", 10
+        ,"row-spacing", 2
+      ]);
+
+      hgrid.attach(new GtkGObject(Gtk.TYPE_LABEL,[
+        "label","Winners count:"
+      ]),0,0,1,1);
+
+      hgrid.attach(m_sb_name_count = new GtkGObject(Gtk.TYPE_SPIN_BUTTON,
+      [
+        "adjustment",new GtkGObject(Gtk.TYPE_ADJUSTMENT,
+        [
+          "lower",0.0,
+          "upper",0.0,
+          "page-increment",1.0,
+          "step-increment",1.0,
+          "value",0.0
+        ])
+        ,"numeric",1
+        ,"digits",0
+        ,"hexpand",1
+      ]),1,0,1,1);
+
+      vgrid.attach(hgrid,0,vgrid_y++,2,1);
+    }
+
+    // - retrieve names button -
+    vgrid.attach(but_retrieve_names = new GtkGObject(Gtk.TYPE_BUTTON,[
+      "label","Retrieve names"
+    ]),0,vgrid_y,1,1);
+
+
+    // - choose winners button -
+    vgrid.attach(but_select_winners = new GtkGObject(Gtk.TYPE_BUTTON,[
+      "label","Select winners"
+    ]),1,vgrid_y++,1,1);
+
+    but_retrieve_names.signal_connect("clicked",new Delegate(this,"cb_retrieve_names",2),new Blank());
+    but_select_winners.signal_connect("clicked",new Delegate(this,"cb_select_winners",2),new Blank());
+
+    m_window.add(vgrid);
+
+    m_window.show_all();
+    Gtk.main_loop();
+
+    free m_window;
+    free m_text_views;
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    Sys.srand(new Time().milli_sec());
+
+    new Main();
+  }/*}}}*/
+}
+
