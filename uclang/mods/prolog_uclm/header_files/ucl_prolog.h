@@ -25,11 +25,16 @@ class prolog_c
 inline prolog_c::prolog_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"prolog_init()\n"););
+
+  const char *argv[] = {"uclang","-q",NULL};
+  cassert(PL_initialise(2,(char **)argv));
 }/*}}}*/
 
 inline prolog_c::~prolog_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"prolog_exit()\n"););
+
+  cassert(PL_cleanup(0));
 }/*}}}*/
 
 #endif
