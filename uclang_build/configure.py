@@ -79,6 +79,7 @@ c_packages = [
   ["MOD_MONO"      ,"pkg-config",["mono-2 >= 3.2.8"]],
   ["MOD_PERL"      ,"false",     []],
   ["MOD_RUBY"      ,"pkg-config",["ruby-2.3 >= 2.3.0"]],
+  ["MOD_PROLOG"    ,"pkg-config",["swipl >= 7.2.3"]],
   ["MOD_UV"        ,"false"     ,[]],
   ["MOD_ZLIB"      ,"pkg-config",["zlib >= 1.2.8"]],
   ["MOD_PIGPIO"    ,"files"     ,["/usr/include/pigpio.h"]],

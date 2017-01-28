@@ -2601,6 +2601,32 @@ if cfg_ref[CFG_TARGET]:
     )
 # }}}
 
+# prolog module
+cfg_ref = c_cfg[C_MODULE_PROLOG]
+# {{{
+if cfg_ref[CFG_TARGET]:
+    cfg_ref[CFG_MODULE] = module_c(
+      configuration,
+      cfg_ref[CFG_DIR],
+      cfg_ref[CFG_NAME],
+      [ 
+        "header_files",
+        os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
+      ],
+      [ 
+        "source_files",
+      ],
+      [
+        os.sep.join(["..","..","libs","libbase_ucll"])
+      ],
+      opt_build + "`pkg-config --cflags swipl` ", # CXX options
+      opt_link + "`pkg-config --libs swipl` ", # CXX link options
+      "", # CXX defines
+      [],
+      [],
+    )
+# }}}
+
 # uv module
 cfg_ref = c_cfg[C_MODULE_UV]
 # {{{
