@@ -9,6 +9,14 @@ include "script_parser.h"
 #include "SWI-Prolog.h"
 
 /*
+ * constants and definitions
+ */
+
+extern unsigned c_bi_class_prolog_atom;
+extern unsigned c_bi_class_prolog_module;
+extern unsigned c_bi_class_prolog_functor;
+
+/*
  * definition of class prolog_c
  */
 class prolog_c
@@ -16,6 +24,8 @@ class prolog_c
   public:
   inline prolog_c();
   inline ~prolog_c();
+
+  static bool retrieve_atom(location_s *location_ptr,atom_t &atom);
 };
 
 /*

@@ -4,8 +4,8 @@ include "prolog_module.h"
 @end
 
 // - PROLOG indexes of built in classes -
-unsigned c_bi_class_prolog_context = c_idx_not_exist;
 unsigned c_bi_class_prolog_atom = c_idx_not_exist;
+unsigned c_bi_class_prolog_module = c_idx_not_exist;
 unsigned c_bi_class_prolog_functor = c_idx_not_exist;
 
 // - PROLOG indexes of remote classes -
@@ -28,8 +28,8 @@ built_in_module_s module =
 // - PROLOG classes -
 built_in_class_s *prolog_classes[] =
 {/*{{{*/
-  &prolog_context_class,
   &prolog_atom_class,
+  &prolog_module_class,
   &prolog_functor_class,
 };/*}}}*/
 
@@ -44,11 +44,11 @@ bool prolog_initialize(script_parser_s &sp)
 {/*{{{*/
   unsigned class_base_idx = sp.class_records.used - module.class_cnt;
 
-  // - initialize prolog_context class identifier -
-  c_bi_class_prolog_context = class_base_idx++;
-
   // - initialize prolog_atom class identifier -
   c_bi_class_prolog_atom = class_base_idx++;
+
+  // - initialize prolog_module class identifier -
+  c_bi_class_prolog_module = class_base_idx++;
 
   // - initialize prolog_functor class identifier -
   c_bi_class_prolog_functor = class_base_idx++;
@@ -74,117 +74,6 @@ bool prolog_print_exception(interpreter_s &it,exception_s &exception)
   default:
     return false;
   }
-
-  return true;
-}/*}}}*/
-
-// - class PROLOG_CONTEXT -
-built_in_class_s prolog_context_class =
-{/*{{{*/
-  "PrologContext",
-  c_modifier_public | c_modifier_final,
-  4, prolog_context_methods,
-  0, prolog_context_variables,
-  bic_prolog_context_consts,
-  bic_prolog_context_init,
-  bic_prolog_context_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
-};/*}}}*/
-
-built_in_method_s prolog_context_methods[] =
-{/*{{{*/
-  {
-    "operator_binary_equal#1",
-    c_modifier_public | c_modifier_final,
-    bic_prolog_context_operator_binary_equal
-  },
-  {
-    "PrologContext#1",
-    c_modifier_public | c_modifier_final,
-    bic_prolog_context_method_PrologContext_1
-  },
-  {
-    "to_string#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_prolog_context_method_to_string_0
-  },
-  {
-    "print#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_prolog_context_method_print_0
-  },
-};/*}}}*/
-
-built_in_variable_s prolog_context_variables[] =
-{/*{{{*/
-};/*}}}*/
-
-void bic_prolog_context_consts(location_array_s &const_locations)
-{/*{{{*/
-}/*}}}*/
-
-void bic_prolog_context_init(interpreter_thread_s &it,location_s *location_ptr)
-{/*{{{*/
-
-  // FIXME TODO continue ...
-  cassert(0);
-}/*}}}*/
-
-void bic_prolog_context_clear(interpreter_thread_s &it,location_s *location_ptr)
-{/*{{{*/
-
-  // FIXME TODO continue ...
-  cassert(0);
-}/*}}}*/
-
-bool bic_prolog_context_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  src_0_location->v_reference_cnt.atomic_add(2);
-
-  BIC_SET_DESTINATION(src_0_location);
-  BIC_SET_RESULT(src_0_location);
-
-  return true;
-}/*}}}*/
-
-bool bic_prolog_context_method_PrologContext_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  
-  // FIXME TODO continue ...
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
-}/*}}}*/
-
-bool bic_prolog_context_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  BIC_TO_STRING_WITHOUT_DEST(
-    string_ptr->set(strlen("PrologContext"),"PrologContext");
-  );
-
-  return true;
-}/*}}}*/
-
-bool bic_prolog_context_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
-  printf("PrologContext");
-
-  BIC_SET_RESULT_BLANK();
 
   return true;
 }/*}}}*/
@@ -339,6 +228,213 @@ bool bic_prolog_atom_method_print_0(interpreter_thread_s &it,unsigned stack_base
   return true;
 }/*}}}*/
 
+// - class PROLOG_MODULE -
+built_in_class_s prolog_module_class =
+{/*{{{*/
+  "PrologModule",
+  c_modifier_public | c_modifier_final,
+  7, prolog_module_methods,
+  0, prolog_module_variables,
+  bic_prolog_module_consts,
+  bic_prolog_module_init,
+  bic_prolog_module_clear,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};/*}}}*/
+
+built_in_method_s prolog_module_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_prolog_module_operator_binary_equal
+  },
+  {
+    "PrologModule#0",
+    c_modifier_public | c_modifier_final,
+    bic_prolog_module_method_PrologModule_0
+  },
+  {
+    "PrologModule#1",
+    c_modifier_public | c_modifier_final,
+    bic_prolog_module_method_PrologModule_1
+  },
+  {
+    "name#0",
+    c_modifier_public | c_modifier_final,
+    bic_prolog_module_method_name_0
+  },
+  {
+    "load_file#1",
+    c_modifier_public | c_modifier_final,
+    bic_prolog_module_method_load_file_1
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_prolog_module_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_prolog_module_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s prolog_module_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_prolog_module_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_prolog_module_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (module_t)0;
+}/*}}}*/
+
+void bic_prolog_module_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+}/*}}}*/
+
+bool bic_prolog_module_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_prolog_module_method_PrologModule_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  // - retrieve active context module -
+  dst_location->v_data_ptr = (module_t)PL_context();
+
+  return true;
+}/*}}}*/
+
+bool bic_prolog_module_method_PrologModule_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  atom_t atom;
+
+  if (!prolog_c::retrieve_atom(src_0_location,atom))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("PrologModule#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  // - create prolog module -
+  module_t module = PL_new_module(atom);
+
+  dst_location->v_data_ptr = (module_t)module;
+
+  return true;
+}/*}}}*/
+
+bool bic_prolog_module_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  atom_t atom = PL_module_name((module_t)dst_location->v_data_ptr);
+  PL_register_atom(atom);
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_prolog_atom,atom);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_prolog_module_method_load_file_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("load_file#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  module_t module = (module_t)dst_location->v_data_ptr;
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  static predicate_t pred = NULL;
+
+  // - retrieve predicate -
+  if (!pred)
+  {
+    functor_t p_ftor = PL_new_functor(PL_new_atom("load_files"),2);
+    pred = PL_pred(p_ftor,module);
+  }
+
+  term_t terms = PL_new_term_refs(2);
+  PL_put_atom_nchars(terms + 0,string_ptr->size - 1,string_ptr->data);
+  PL_put_nil(terms + 1);
+
+  // - ERROR -
+  if (!PL_call_predicate(module,PL_Q_NORMAL,pred,terms))
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_prolog_module_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("PrologModule"),"PrologModule");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_prolog_module_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  printf("PrologModule");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
 // - class PROLOG_FUNCTOR -
 built_in_class_s prolog_functor_class =
 {/*{{{*/
@@ -433,10 +529,10 @@ bool bic_prolog_functor_method_PrologFunctor_2(interpreter_thread_s &it,unsigned
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
+  atom_t atom;
   long long int arity;
 
-  if ((src_0_location->v_type != c_bi_class_prolog_atom &&
-       src_0_location->v_type != c_bi_class_string) ||
+  if (!prolog_c::retrieve_atom(src_0_location,atom) ||
       !it.retrieve_integer(src_1_location,arity))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -446,18 +542,6 @@ bool bic_prolog_functor_method_PrologFunctor_2(interpreter_thread_s &it,unsigned
     new_exception->params.push(src_1_location->v_type);
 
     return false;
-  }
-
-  atom_t atom;
-
-  if (src_0_location->v_type == c_bi_class_prolog_atom)
-  {
-    atom = (atom_t)src_0_location->v_data_ptr;
-  }
-  else
-  {
-    string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-    atom = PL_new_atom_nchars(string_ptr->size - 1,string_ptr->data);
   }
 
   // - create prolog functor -
