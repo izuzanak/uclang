@@ -21,7 +21,10 @@ extern built_in_class_s *prolog_classes[];
 // - PROLOG error identifiers -
 enum
 {
-  c_error_PROLOG_DUMMY_ERROR = 0,
+  c_error_PROLOG_PREDICATE_INVALID_TERM_COUNT = 0,
+  c_error_PROLOG_TERM_WRONG_TERM_REFERENCE,
+  c_error_PROLOG_QUERY_CREATE_ERROR,
+  c_error_PROLOG_QUERY_EXCEPTION,
 };
 
 // - PROLOG error strings -
@@ -61,12 +64,8 @@ bool bic_prolog_module_operator_binary_equal(interpreter_thread_s &it,unsigned s
 bool bic_prolog_module_method_PrologModule_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_module_method_PrologModule_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_module_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_prolog_module_method_load_file_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_module_method_predicate_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_module_method_predicate_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-
-// FIXME TODO remove debug_test
-bool bic_prolog_module_method_debug_test_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_module_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_module_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

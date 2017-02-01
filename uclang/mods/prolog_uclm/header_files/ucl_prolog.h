@@ -26,6 +26,9 @@ class prolog_c
   inline ~prolog_c();
 
   static bool retrieve_atom(location_s *location_ptr,atom_t &atom);
+
+  static bool create_prolog_term(interpreter_thread_s &it,term_t term,location_s *location_ptr);
+  static location_s *prolog_term_value(interpreter_thread_s &it,term_t term,uli source_pos);
 };
 
 /*

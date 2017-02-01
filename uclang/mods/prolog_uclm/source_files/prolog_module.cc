@@ -19,7 +19,7 @@ built_in_module_s module =
   prolog_classes,         // Classes
 
   0,                      // Error base index
-  1,                      // Error count
+  4,                      // Error count
   prolog_error_strings,   // Error strings
 
   prolog_initialize,      // Initialize function
@@ -38,7 +38,10 @@ built_in_class_s *prolog_classes[] =
 // - PROLOG error strings -
 const char *prolog_error_strings[] =
 {/*{{{*/
-  "error_PROLOG_DUMMY_ERROR",
+  "error_PROLOG_PREDICATE_INVALID_TERM_COUNT",
+  "error_PROLOG_TERM_WRONG_TERM_REFERENCE",
+  "error_PROLOG_QUERY_CREATE_ERROR",
+  "error_PROLOG_QUERY_EXCEPTION",
 };/*}}}*/
 
 // - PROLOG initialize -
@@ -69,11 +72,32 @@ bool prolog_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_PROLOG_DUMMY_ERROR:
+  case c_error_PROLOG_PREDICATE_INVALID_TERM_COUNT:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nProlog dummy error\n");
+    fprintf(stderr,"\nInvalid count of terms for predicate, expected %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PROLOG_TERM_WRONG_TERM_REFERENCE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong reference to Prolog term\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PROLOG_QUERY_CREATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while creating Prolog query\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PROLOG_QUERY_EXCEPTION:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nException occurred while executing Prolog query\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -238,7 +262,7 @@ built_in_class_s prolog_module_class =
 {/*{{{*/
   "PrologModule",
   c_modifier_public | c_modifier_final,
-  10, prolog_module_methods,
+  8, prolog_module_methods,
   0, prolog_module_variables,
   bic_prolog_module_consts,
   bic_prolog_module_init,
@@ -279,11 +303,6 @@ built_in_method_s prolog_module_methods[] =
     bic_prolog_module_method_name_0
   },
   {
-    "load_file#1",
-    c_modifier_public | c_modifier_final,
-    bic_prolog_module_method_load_file_1
-  },
-  {
     "predicate#1",
     c_modifier_public | c_modifier_final,
     bic_prolog_module_method_predicate_1
@@ -292,11 +311,6 @@ built_in_method_s prolog_module_methods[] =
     "predicate#2",
     c_modifier_public | c_modifier_final,
     bic_prolog_module_method_predicate_2
-  },
-  {
-    "debug_test#0",
-    c_modifier_public | c_modifier_final,
-    bic_prolog_module_method_debug_test_0
   },
   {
     "to_string#0",
@@ -369,9 +383,9 @@ bool bic_prolog_module_method_PrologModule_1(interpreter_thread_s &it,unsigned s
   }
 
   // - create prolog module -
-  module_t module = PL_new_module(atom);
+  module_t plmod = PL_new_module(atom);
 
-  dst_location->v_data_ptr = (module_t)module;
+  dst_location->v_data_ptr = (module_t)plmod;
 
   return true;
 }/*}}}*/
@@ -386,51 +400,6 @@ bool bic_prolog_module_method_name_0(interpreter_thread_s &it,unsigned stack_bas
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_prolog_atom,atom);
   BIC_SET_RESULT(new_location);
-
-  return true;
-}/*}}}*/
-
-bool bic_prolog_module_method_load_file_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("load_file#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
-  module_t module = (module_t)dst_location->v_data_ptr;
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-
-  static predicate_t pred_load_files = NULL;
-
-  // - retrieve predicate -
-  if (!pred_load_files)
-  {
-    functor_t p_ftor = PL_new_functor(PL_new_atom("load_files"),2);
-    pred_load_files = PL_pred(p_ftor,module);
-  }
-
-  term_t terms = PL_new_term_refs(2);
-  PL_put_atom_nchars(terms + 0,string_ptr->size - 1,string_ptr->data);
-  PL_put_nil(terms + 1);
-
-  // - ERROR -
-  if (!PL_call_predicate(module,PL_Q_NORMAL | PL_Q_CATCH_EXCEPTION,pred_load_files,terms))
-  {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
-    return false;
-  }
-
-  BIC_SET_RESULT_BLANK();
 
   return true;
 }/*}}}*/
@@ -451,11 +420,11 @@ bool bic_prolog_module_method_predicate_1(interpreter_thread_s &it,unsigned stac
     return false;
   }
 
-  module_t module = (module_t)dst_location->v_data_ptr;
+  module_t plmod = (module_t)dst_location->v_data_ptr;
   functor_t ftor = (functor_t)src_0_location->v_data_ptr;
 
   // - create prolog predicate from functor -
-  predicate_t pred = PL_pred(ftor,module);
+  predicate_t pred = PL_pred(ftor,plmod);
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_prolog_predicate,pred);
   BIC_SET_RESULT(new_location);
@@ -484,70 +453,16 @@ bool bic_prolog_module_method_predicate_2(interpreter_thread_s &it,unsigned stac
     return false;
   }
 
-  module_t module = (module_t)dst_location->v_data_ptr;
+  module_t plmod = (module_t)dst_location->v_data_ptr;
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - create prolog predicate from name and arity -
   atom_t atom = PL_new_atom_nchars(string_ptr->size - 1,string_ptr->data);
   functor_t ftor = PL_new_functor(atom,2);
-  predicate_t pred = PL_pred(ftor,module);
+  predicate_t pred = PL_pred(ftor,plmod);
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_prolog_predicate,pred);
   BIC_SET_RESULT(new_location);
-
-  return true;
-}/*}}}*/
-
-bool bic_prolog_module_method_debug_test_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  module_t module = (module_t)dst_location->v_data_ptr;
-
-  static predicate_t pred_father = NULL;
-
-  // - retrieve predicate -
-  if (!pred_father)
-  {
-    atom_t atom = PL_new_atom("father");
-    functor_t p_ftor = PL_new_functor(atom,2);
-    pred_father = PL_pred(p_ftor,module);
-  }
-
-  fid_t fid = PL_open_foreign_frame();
-
-  term_t terms = PL_new_term_refs(2);
-  PL_put_variable(terms + 0);
-  PL_put_variable(terms + 1);
-
-  // - create query -
-  qid_t query = PL_open_query(module,PL_Q_NORMAL | PL_Q_CATCH_EXCEPTION,pred_father,terms + 0);
-  cassert(query != 0);
-
-  // - process all solutions -
-  while (PL_next_solution(query))
-  {
-    atom_t atoms[2];
-    cassert(PL_get_atom(terms + 0,atoms + 0));
-    cassert(PL_get_atom(terms + 1,atoms + 1));
-
-    fprintf(stderr,"SOLUTION %s - %s\n",
-      PL_atom_chars(atoms[0]),PL_atom_chars(atoms[1]));
-  }
-
-  // - ERROR -
-  if (PL_exception(query) != 0)
-  {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
-    return false;
-  }
-
-  PL_close_query(query);
-  PL_close_foreign_frame(fid);
-
-  BIC_SET_RESULT_BLANK();
 
   return true;
 }/*}}}*/
@@ -796,6 +711,27 @@ built_in_variable_s prolog_predicate_variables[] =
 {/*{{{*/
 };/*}}}*/
 
+#define BIC_PROLOG_PREDICATE_OPEN_QUERY(QUERY,MODULE,PRED,TERMS) \
+/*{{{*/\
+\
+  /* FIXME TODO check that no other query is running */\
+\
+  /* - create query - */\
+  qid_t QUERY = PL_open_query(MODULE,PL_Q_NORMAL | PL_Q_CATCH_EXCEPTION,PRED,TERMS);\
+\
+  /* - ERROR - */\
+  if (QUERY == 0)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_PROLOG_QUERY_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+/*}}}*/
+
+#define BIC_PROLOG_PREDICATE_CLOSE_QUERY(QUERY) \
+/*{{{*/\
+  PL_close_query(query);\
+/*}}}*/
+
 void bic_prolog_predicate_consts(location_array_s &const_locations)
 {/*{{{*/
 }/*}}}*/
@@ -876,22 +812,60 @@ bool bic_prolog_predicate_method_call_1(interpreter_thread_s &it,unsigned stack_
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
   int arity;
-  module_t module;
-  PL_predicate_info(pred,NULL,&arity,&module);
+  module_t plmod;
+  PL_predicate_info(pred,NULL,&arity,&plmod);
 
   // - ERROR -
   if (array_ptr->used != (unsigned)arity)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PROLOG_PREDICATE_INVALID_TERM_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(arity);
+
     return false;
   }
 
-  // FIXME TODO continue, retrieve parameter terms from array
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
+  // - retrieve predicate terms -
+  fid_t fid = PL_open_foreign_frame();
+  term_t terms = 0;
+  
+  if (arity > 0)
+  {
+    terms = PL_new_term_refs(arity);
 
-  BIC_SET_RESULT_BLANK();
+    int idx = 0;
+    do {
+      location_s *item_location = it.get_location_value(array_ptr->data[idx]);
+
+      // - ERROR -
+      if (!prolog_c::create_prolog_term(it,terms + idx,item_location))
+      {
+        PL_close_foreign_frame(fid);
+
+        exception_s::throw_exception(it,module.error_base + c_error_PROLOG_TERM_WRONG_TERM_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+    } while(++idx < arity);
+  }
+
+  BIC_PROLOG_PREDICATE_OPEN_QUERY(query,plmod,pred,terms);
+
+  // - retrieve first solution -
+  long long int result = PL_next_solution(query);
+
+  // - ERROR -
+  if (PL_exception(query) != 0)
+  {
+    BIC_PROLOG_PREDICATE_CLOSE_QUERY(query);
+    PL_close_foreign_frame(fid);
+
+    exception_s::throw_exception(it,module.error_base + c_error_PROLOG_QUERY_EXCEPTION,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_PROLOG_PREDICATE_CLOSE_QUERY(query);
+  PL_close_foreign_frame(fid);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
