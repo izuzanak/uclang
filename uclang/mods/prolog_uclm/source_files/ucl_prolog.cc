@@ -3,6 +3,9 @@
 include "ucl_prolog.h"
 @end
 
+// - static members of class prolog_c -
+qid_t prolog_c::qid = 0;
+
 // - prolog global init object -
 prolog_c g_prolog;
 
