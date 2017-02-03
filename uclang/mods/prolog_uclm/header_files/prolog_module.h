@@ -10,7 +10,8 @@ include "ucl_prolog.h"
 extern unsigned c_bi_class_prolog_atom;
 extern unsigned c_bi_class_prolog_module;
 extern unsigned c_bi_class_prolog_functor;
-extern unsigned c_bi_class_prolog_predicate;
+extern unsigned c_bi_class_prolog_pred;
+extern unsigned c_bi_class_prolog_var;
 extern unsigned c_bi_class_prolog_query;
 
 // - PROLOG module -
@@ -22,8 +23,9 @@ extern built_in_class_s *prolog_classes[];
 // - PROLOG error identifiers -
 enum
 {
-  c_error_PROLOG_PREDICATE_INVALID_TERM_COUNT = 0,
+  c_error_PROLOG_PRED_INVALID_TERM_COUNT = 0,
   c_error_PROLOG_TERM_WRONG_TERM_REFERENCE,
+  c_error_PROLOG_TERM_VALUE_ERROR,
   c_error_PROLOG_QUERY_ALREADY_ACTIVE,
   c_error_PROLOG_QUERY_CREATE_ERROR,
   c_error_PROLOG_QUERY_EXCEPTION,
@@ -66,8 +68,8 @@ bool bic_prolog_module_operator_binary_equal(interpreter_thread_s &it,unsigned s
 bool bic_prolog_module_method_PrologModule_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_module_method_PrologModule_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_module_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_prolog_module_method_predicate_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_prolog_module_method_predicate_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_prolog_module_method_pred_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_prolog_module_method_pred_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_module_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_module_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -87,22 +89,36 @@ bool bic_prolog_functor_method_arity_0(interpreter_thread_s &it,unsigned stack_b
 bool bic_prolog_functor_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_functor_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
-// - class PROLOG_PREDICATE -
-extern built_in_variable_s prolog_predicate_variables[];
-extern built_in_method_s prolog_predicate_methods[];
-extern built_in_class_s prolog_predicate_class;
+// - class PROLOG_PRED -
+extern built_in_variable_s prolog_pred_variables[];
+extern built_in_method_s prolog_pred_methods[];
+extern built_in_class_s prolog_pred_class;
 
-void bic_prolog_predicate_consts(location_array_s &const_locations);
-void bic_prolog_predicate_init(interpreter_thread_s &it,location_s *location_ptr);
-void bic_prolog_predicate_clear(interpreter_thread_s &it,location_s *location_ptr);
+void bic_prolog_pred_consts(location_array_s &const_locations);
+void bic_prolog_pred_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_prolog_pred_clear(interpreter_thread_s &it,location_s *location_ptr);
 
-bool bic_prolog_predicate_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_prolog_predicate_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_prolog_predicate_method_arity_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_prolog_predicate_method_call_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_prolog_predicate_method_query_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_prolog_predicate_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_prolog_predicate_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_prolog_pred_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_prolog_pred_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_prolog_pred_method_arity_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_prolog_pred_method_call_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_prolog_pred_method_query_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_prolog_pred_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_prolog_pred_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class PROLOG_VAR -
+extern built_in_variable_s prolog_var_variables[];
+extern built_in_method_s prolog_var_methods[];
+extern built_in_class_s prolog_var_class;
+
+void bic_prolog_var_consts(location_array_s &const_locations);
+void bic_prolog_var_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_prolog_var_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_prolog_var_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_prolog_var_method_PrologVar_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_prolog_var_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_prolog_var_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 // - class PROLOG_QUERY -
 extern built_in_variable_s prolog_query_variables[];
@@ -114,6 +130,7 @@ void bic_prolog_query_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_prolog_query_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_prolog_query_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_prolog_query_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_query_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_query_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

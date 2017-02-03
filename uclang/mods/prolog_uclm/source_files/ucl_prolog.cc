@@ -33,23 +33,15 @@ bool prolog_c::retrieve_atom(location_s *location_ptr,atom_t &atom)
 
 bool prolog_c::create_prolog_term(interpreter_thread_s &it,term_t term,location_s *location_ptr)
 {/*{{{*/
-
-  //PL_VARIABLE
-  //PL_ATOM
-  //PL_NIL
-  //PL_BLOB
-  //PL_STRING
-  //PL_INTEGER
-  //PL_FLOAT
-  //PL_TERM
-  //PL_LIST_PAIR
-  //PL_DICT
-
   if (location_ptr->v_type == c_bi_class_prolog_atom)
   {
-    atom_t atom = (atom_t)location_ptr->v_data_ptr;
-    return PL_put_atom(term,atom);
+    return PL_put_atom(term,(atom_t)location_ptr->v_data_ptr);
   }
+  else if (location_ptr->v_type == c_bi_class_prolog_var)
+  {
+    return PL_put_term(term,(term_t)location_ptr->v_data_ptr);
+  }
+
   // FIXME TODO remote dict
   //else if (location_ptr->v_type != c_rm_class_dict)
   //{
@@ -70,6 +62,7 @@ bool prolog_c::create_prolog_term(interpreter_thread_s &it,term_t term,location_
           atom_t atom = PL_new_atom_nchars(string_ptr->size - 1,string_ptr->data);
           return PL_put_atom(term,atom);
         }
+
       // FIXME TODO array
       // case c_bi_class_array
       default:
@@ -80,8 +73,38 @@ bool prolog_c::create_prolog_term(interpreter_thread_s &it,term_t term,location_
 
 location_s *prolog_c::prolog_term_value(interpreter_thread_s &it,term_t term,uli source_pos)
 {/*{{{*/
+  switch (PL_term_type(term))
+  {
+  case PL_ATOM:
+    {
+      atom_t atom;
+      if (!PL_get_atom(term,&atom))
+      {
+        return NULL;
+      }
+
+      size_t length;
+      const char *data = PL_atom_nchars(atom,&length);
+
+      string_s *string_ptr = it.get_new_string_ptr();
+      string_ptr->set(length,data);
+
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+      return new_location;
+    }
 
   // FIXME TODO continue ...
-  return NULL;
+  case PL_NIL:
+  case PL_BLOB:
+  case PL_STRING:
+  case PL_INTEGER:
+  case PL_FLOAT:
+  case PL_TERM:
+  case PL_LIST_PAIR:
+  case PL_DICT:
+  case PL_VARIABLE:
+  default:
+    return NULL;
+  }
 }/*}}}*/
 
