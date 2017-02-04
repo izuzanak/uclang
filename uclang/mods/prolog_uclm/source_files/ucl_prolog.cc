@@ -37,7 +37,7 @@ bool prolog_c::create_prolog_term(interpreter_thread_s &it,term_t term,location_
   {
     return PL_put_atom(term,(atom_t)location_ptr->v_data_ptr);
   }
-  else if (location_ptr->v_type == c_bi_class_prolog_var)
+  else if (location_ptr->v_type == c_bi_class_prolog_term)
   {
     return PL_put_term(term,(term_t)location_ptr->v_data_ptr);
   }
@@ -50,6 +50,7 @@ bool prolog_c::create_prolog_term(interpreter_thread_s &it,term_t term,location_
   {
     switch (location_ptr->v_type)
     {
+      // FIXME TODO remove c_bi_class_blank
       case c_bi_class_blank:
         return PL_put_nil(term);
       case c_bi_class_integer:
@@ -75,8 +76,13 @@ location_s *prolog_c::prolog_term_value(interpreter_thread_s &it,term_t term,uli
 {/*{{{*/
   switch (PL_term_type(term))
   {
+  case PL_VARIABLE:
+    {/*{{{*/
+      ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
+      return (location_s *)it.blank_location;
+    }/*}}}*/
   case PL_ATOM:
-    {
+    {/*{{{*/
       atom_t atom;
       if (!PL_get_atom(term,&atom))
       {
@@ -91,9 +97,7 @@ location_s *prolog_c::prolog_term_value(interpreter_thread_s &it,term_t term,uli
 
       BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
       return new_location;
-    }
-
-  // FIXME TODO continue ...
+    }/*}}}*/
   case PL_NIL:
   case PL_BLOB:
   case PL_STRING:
@@ -102,7 +106,6 @@ location_s *prolog_c::prolog_term_value(interpreter_thread_s &it,term_t term,uli
   case PL_TERM:
   case PL_LIST_PAIR:
   case PL_DICT:
-  case PL_VARIABLE:
   default:
     return NULL;
   }

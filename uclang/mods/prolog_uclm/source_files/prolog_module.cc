@@ -8,7 +8,7 @@ unsigned c_bi_class_prolog_atom = c_idx_not_exist;
 unsigned c_bi_class_prolog_module = c_idx_not_exist;
 unsigned c_bi_class_prolog_functor = c_idx_not_exist;
 unsigned c_bi_class_prolog_pred = c_idx_not_exist;
-unsigned c_bi_class_prolog_var = c_idx_not_exist;
+unsigned c_bi_class_prolog_term = c_idx_not_exist;
 unsigned c_bi_class_prolog_query = c_idx_not_exist;
 
 // - PROLOG indexes of remote classes -
@@ -35,7 +35,7 @@ built_in_class_s *prolog_classes[] =
   &prolog_module_class,
   &prolog_functor_class,
   &prolog_pred_class,
-  &prolog_var_class,
+  &prolog_term_class,
   &prolog_query_class,
 };/*}}}*/
 
@@ -67,8 +67,8 @@ bool prolog_initialize(script_parser_s &sp)
   // - initialize prolog_pred class identifier -
   c_bi_class_prolog_pred = class_base_idx++;
 
-  // - initialize prolog_var class identifier -
-  c_bi_class_prolog_var = class_base_idx++;
+  // - initialize prolog_term class identifier -
+  c_bi_class_prolog_term = class_base_idx++;
 
   // - initialize prolog_query class identifier -
   c_bi_class_prolog_query = class_base_idx++;
@@ -517,7 +517,7 @@ built_in_class_s prolog_functor_class =
 {/*{{{*/
   "PrologFunctor",
   c_modifier_public | c_modifier_final,
-  6, prolog_functor_methods,
+  7, prolog_functor_methods,
   0, prolog_functor_variables,
   bic_prolog_functor_consts,
   bic_prolog_functor_init,
@@ -556,6 +556,11 @@ built_in_method_s prolog_functor_methods[] =
     "arity#0",
     c_modifier_public | c_modifier_final,
     bic_prolog_functor_method_arity_0
+  },
+  {
+    "term#1",
+    c_modifier_public | c_modifier_final,
+    bic_prolog_functor_method_term_1
   },
   {
     "to_string#0",
@@ -655,6 +660,31 @@ bool bic_prolog_functor_method_arity_0(interpreter_thread_s &it,unsigned stack_b
   return true;
 }/*}}}*/
 
+bool bic_prolog_functor_method_term_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_array)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("term#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  // FIXME TODO continue ...
+  BIC_TODO_ERROR(__FILE__,__LINE__);
+  return false;
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
 bool bic_prolog_functor_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -741,7 +771,7 @@ built_in_variable_s prolog_pred_variables[] =
 {/*{{{*/
 };/*}}}*/
 
-#define BIC_PROLOG_PRED_RETRIEVE_TERMS(TERM_CODE,ERR_CODE) \
+#define BIC_PROLOG_PRED_RETRIEVE_TERMS(ERR_CODE) \
 {/*{{{*/\
   if (arity > 0)\
   {\
@@ -759,9 +789,6 @@ built_in_variable_s prolog_pred_variables[] =
         exception_s::throw_exception(it,module.error_base + c_error_PROLOG_TERM_WRONG_TERM_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
         return false;\
       }\
-\
-      TERM_CODE;\
-\
     } while(++idx < arity);\
   }\
 }/*}}}*/
@@ -893,7 +920,7 @@ bool bic_prolog_pred_method_call_1(interpreter_thread_s &it,unsigned stack_base,
   fid_t fid = PL_open_foreign_frame();
   term_t terms = 0;
   
-  BIC_PROLOG_PRED_RETRIEVE_TERMS(,
+  BIC_PROLOG_PRED_RETRIEVE_TERMS(
     PL_close_foreign_frame(fid);
   );
 
@@ -954,27 +981,16 @@ bool bic_prolog_pred_method_query_1(interpreter_thread_s &it,unsigned stack_base
     return false;
   }
 
-  // - indexes of variables -
-  ui_array_s var_idxs;
-  var_idxs.init();
-
   // - retrieve predicate terms -
   fid_t fid = PL_open_foreign_frame();
   term_t terms = 0;
 
   BIC_PROLOG_PRED_RETRIEVE_TERMS(
-    if (item_location->v_type == c_bi_class_prolog_var)
-    {
-      var_idxs.push(idx);
-    }
-  ,
     PL_close_foreign_frame(fid);
-    var_idxs.clear();
   );
 
   BIC_PROLOG_PRED_OPEN_QUERY(plmod,pred,terms,
     PL_close_foreign_frame(fid);
-    var_idxs.clear();
   );
 
   // - create prolog query object -
@@ -985,7 +1001,6 @@ bool bic_prolog_pred_method_query_1(interpreter_thread_s &it,unsigned stack_base
   query_ptr->plmod = plmod;
   query_ptr->pred = pred;
   query_ptr->terms = terms;
-  query_ptr->var_idxs.swap(var_idxs);
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_prolog_query,query_ptr);
   BIC_SET_RESULT(new_location);
@@ -1013,16 +1028,16 @@ bool bic_prolog_pred_method_print_0(interpreter_thread_s &it,unsigned stack_base
   return true;
 }/*}}}*/
 
-// - class PROLOG_VAR -
-built_in_class_s prolog_var_class =
+// - class PROLOG_TERM -
+built_in_class_s prolog_term_class =
 {/*{{{*/
-  "PrologVar",
+  "PrologTerm",
   c_modifier_public | c_modifier_final,
-  4, prolog_var_methods,
-  0, prolog_var_variables,
-  bic_prolog_var_consts,
-  bic_prolog_var_init,
-  bic_prolog_var_clear,
+  5, prolog_term_methods,
+  0, prolog_term_variables,
+  bic_prolog_term_consts,
+  bic_prolog_term_init,
+  bic_prolog_term_clear,
   NULL,
   NULL,
   NULL,
@@ -1036,48 +1051,53 @@ built_in_class_s prolog_var_class =
   NULL
 };/*}}}*/
 
-built_in_method_s prolog_var_methods[] =
+built_in_method_s prolog_term_methods[] =
 {/*{{{*/
   {
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
-    bic_prolog_var_operator_binary_equal
+    bic_prolog_term_operator_binary_equal
   },
   {
-    "PrologVar#0",
+    "PrologTerm#0",
     c_modifier_public | c_modifier_final,
-    bic_prolog_var_method_PrologVar_0
+    bic_prolog_term_method_PrologTerm_0
+  },
+  {
+    "value#0",
+    c_modifier_public | c_modifier_final,
+    bic_prolog_term_method_value_0
   },
   {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_prolog_var_method_to_string_0
+    bic_prolog_term_method_to_string_0
   },
   {
     "print#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_prolog_var_method_print_0
+    bic_prolog_term_method_print_0
   },
 };/*}}}*/
 
-built_in_variable_s prolog_var_variables[] =
+built_in_variable_s prolog_term_variables[] =
 {/*{{{*/
 };/*}}}*/
 
-void bic_prolog_var_consts(location_array_s &const_locations)
+void bic_prolog_term_consts(location_array_s &const_locations)
 {/*{{{*/
 }/*}}}*/
 
-void bic_prolog_var_init(interpreter_thread_s &it,location_s *location_ptr)
+void bic_prolog_term_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   location_ptr->v_data_ptr = (term_t)0;
 }/*}}}*/
 
-void bic_prolog_var_clear(interpreter_thread_s &it,location_s *location_ptr)
+void bic_prolog_term_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
 }/*}}}*/
 
-bool bic_prolog_var_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_prolog_term_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -1091,7 +1111,7 @@ bool bic_prolog_var_operator_binary_equal(interpreter_thread_s &it,unsigned stac
   return true;
 }/*}}}*/
 
-bool bic_prolog_var_method_PrologVar_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_prolog_term_method_PrologTerm_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
@@ -1100,20 +1120,48 @@ bool bic_prolog_var_method_PrologVar_0(interpreter_thread_s &it,unsigned stack_b
   return true;
 }/*}}}*/
 
-bool bic_prolog_var_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_prolog_term_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  term_t term = (term_t)dst_location->v_data_ptr;
+
+  location_s *location_ptr = 
+    prolog_c::prolog_term_value(it,term,operands[c_source_pos_idx]);
+
+  // - ERROR -
+  if (location_ptr == NULL)
+  {
+    // - if exception was already thrown -
+    if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+    {
+      return false;
+    }
+
+    exception_s::throw_exception(it,module.error_base + c_error_PROLOG_TERM_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT(location_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_prolog_term_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
-    string_ptr->set(strlen("PrologVar"),"PrologVar");
+    string_ptr->set(strlen("PrologTerm"),"PrologTerm");
   );
 
   return true;
 }/*}}}*/
 
-bool bic_prolog_var_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_prolog_term_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
-  printf("PrologVar");
+  printf("PrologTerm");
 
   BIC_SET_RESULT_BLANK();
 
@@ -1171,25 +1219,6 @@ built_in_variable_s prolog_query_variables[] =
 {/*{{{*/
 };/*}}}*/
 
-#define BIC_PROLOG_QUERY_METHOD_NEXT_ITEM_CHECK_LOCATION(LOCATION,ERR_CODE) \
-{/*{{{*/\
-\
-  /* - ERROR - */\
-  if (LOCATION == NULL)\
-  {\
-    ERR_CODE;\
-\
-    /* - if exception was already thrown - */\
-    if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)\
-    {\
-      return false;\
-    }\
-\
-    exception_s::throw_exception(it,module.error_base + c_error_PROLOG_TERM_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    return false;\
-  }\
-}/*}}}*/
-
 void bic_prolog_query_consts(location_array_s &const_locations)
 {/*{{{*/
 }/*}}}*/
@@ -1229,9 +1258,6 @@ bool bic_prolog_query_operator_binary_equal(interpreter_thread_s &it,unsigned st
 bool bic_prolog_query_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  prolog_query_s *query_ptr = (prolog_query_s *)dst_location->v_data_ptr;
 
   if (!PL_next_solution(prolog_c::qid))
   {
@@ -1247,46 +1273,7 @@ bool bic_prolog_query_method_next_item_0(interpreter_thread_s &it,unsigned stack
     return true;
   }
 
-  // - no variables -
-  if (query_ptr->var_idxs.used == 0)
-  {
-    BIC_SIMPLE_SET_RES(c_bi_class_integer,1);
-
-    return true;
-  }
-
-  // - one variable -
-  if (query_ptr->var_idxs.used == 1)
-  {
-    location_s *location_ptr = 
-      prolog_c::prolog_term_value(it,query_ptr->terms + query_ptr->var_idxs[0],operands[c_source_pos_idx]);
-
-    BIC_PROLOG_QUERY_METHOD_NEXT_ITEM_CHECK_LOCATION(location_ptr,);
-
-    BIC_SET_RESULT(location_ptr);
-
-    return true;
-  }
-
-  // - multiple variables -
-  pointer_array_s *array_ptr = it.get_new_array_ptr();
-  BIC_CREATE_NEW_LOCATION(arr_location,c_bi_class_array,array_ptr);
-
-  unsigned *i_ptr = query_ptr->var_idxs.data;
-  unsigned *i_ptr_end = i_ptr + query_ptr->var_idxs.used;
-  do {
-    location_s *item_location = 
-      prolog_c::prolog_term_value(it,query_ptr->terms + *i_ptr,operands[c_source_pos_idx]);
-
-    BIC_PROLOG_QUERY_METHOD_NEXT_ITEM_CHECK_LOCATION(item_location,
-        it.release_location_ptr(arr_location);
-    );
-
-    array_ptr->push(item_location);
-
-  } while(++i_ptr < i_ptr_end);
-
-  BIC_SET_RESULT(arr_location);
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,1);
 
   return true;
 }/*}}}*/

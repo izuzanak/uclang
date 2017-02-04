@@ -16,7 +16,7 @@ extern unsigned c_bi_class_prolog_atom;
 extern unsigned c_bi_class_prolog_module;
 extern unsigned c_bi_class_prolog_functor;
 extern unsigned c_bi_class_prolog_pred;
-extern unsigned c_bi_class_prolog_var;
+extern unsigned c_bi_class_prolog_term;
 extern unsigned c_bi_class_prolog_query;
 
 /*
@@ -46,7 +46,6 @@ struct prolog_query_s
   module_t plmod;
   predicate_t pred;
   term_t terms;
-  ui_array_s var_idxs;
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
@@ -77,14 +76,11 @@ inline prolog_c::~prolog_c()
 
 inline void prolog_query_s::init()
 {/*{{{*/
-  var_idxs.init();
 }/*}}}*/
 
 inline void prolog_query_s::clear(interpreter_thread_s &it)
 {/*{{{*/
   PL_close_foreign_frame(fid);
-
-  var_idxs.clear();
 
   init();
 }/*}}}*/
