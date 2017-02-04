@@ -25,6 +25,7 @@ enum
 {
   c_error_PROLOG_PRED_INVALID_TERM_COUNT = 0,
   c_error_PROLOG_TERM_WRONG_TERM_REFERENCE,
+  c_error_PROLOG_TERM_CREATE_ERROR,
   c_error_PROLOG_TERM_VALUE_ERROR,
   c_error_PROLOG_QUERY_ALREADY_ACTIVE,
   c_error_PROLOG_QUERY_CREATE_ERROR,
@@ -118,7 +119,7 @@ void bic_prolog_term_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_prolog_term_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_term_method_PrologTerm_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_prolog_term_method_PrologTerm_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_prolog_term_method_PrologTerm_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_term_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_term_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_term_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

@@ -21,7 +21,7 @@ built_in_module_s module =
   prolog_classes,         // Classes
 
   0,                      // Error base index
-  6,                      // Error count
+  7,                      // Error count
   prolog_error_strings,   // Error strings
 
   prolog_initialize,      // Initialize function
@@ -44,6 +44,7 @@ const char *prolog_error_strings[] =
 {/*{{{*/
   "error_PROLOG_PRED_INVALID_TERM_COUNT",
   "error_PROLOG_TERM_WRONG_TERM_REFERENCE",
+  "error_PROLOG_TERM_CREATE_ERROR",
   "error_PROLOG_TERM_VALUE_ERROR",
   "error_PROLOG_QUERY_ALREADY_ACTIVE",
   "error_PROLOG_QUERY_CREATE_ERROR",
@@ -96,6 +97,13 @@ bool prolog_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nWrong reference to Prolog term\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PROLOG_TERM_CREATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while creating Prolog term\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_PROLOG_TERM_VALUE_ERROR:
@@ -1033,7 +1041,7 @@ built_in_class_s prolog_term_class =
 {/*{{{*/
   "PrologTerm",
   c_modifier_public | c_modifier_final,
-  5, prolog_term_methods,
+  6, prolog_term_methods,
   0, prolog_term_variables,
   bic_prolog_term_consts,
   bic_prolog_term_init,
@@ -1062,6 +1070,11 @@ built_in_method_s prolog_term_methods[] =
     "PrologTerm#0",
     c_modifier_public | c_modifier_final,
     bic_prolog_term_method_PrologTerm_0
+  },
+  {
+    "PrologTerm#1",
+    c_modifier_public | c_modifier_final,
+    bic_prolog_term_method_PrologTerm_1
   },
   {
     "value#0",
@@ -1116,6 +1129,24 @@ bool bic_prolog_term_method_PrologTerm_0(interpreter_thread_s &it,unsigned stack
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   dst_location->v_data_ptr = PL_new_term_ref();
+
+  return true;
+}/*}}}*/
+
+bool bic_prolog_term_method_PrologTerm_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  term_t term = PL_new_term_ref();
+
+  if (!prolog_c::create_prolog_term(it,term,src_0_location))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_PROLOG_TERM_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  dst_location->v_data_ptr = term;
 
   return true;
 }/*}}}*/
