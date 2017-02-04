@@ -12,11 +12,11 @@ include "script_parser.h"
  * constants and definitions
  */
 
-extern unsigned c_bi_class_prolog_atom;
 extern unsigned c_bi_class_prolog_module;
+extern unsigned c_bi_class_prolog_atom;
 extern unsigned c_bi_class_prolog_functor;
-extern unsigned c_bi_class_prolog_pred;
 extern unsigned c_bi_class_prolog_term;
+extern unsigned c_bi_class_prolog_pred;
 extern unsigned c_bi_class_prolog_query;
 
 /*
