@@ -1,0 +1,59 @@
+
+import prolog;
+
+class Main
+{
+  public Main(a_argv)
+  {
+    frame = new PrologFrame();
+
+    module = new PrologModule();
+    module.pred("load_files",2).call(["scripts/examples/demo",[]]);
+
+    // - create empty terms (variables) -
+    X = new PrologTerm();
+    Y = new PrologTerm();
+
+    // - retrieve predicates -
+    pred_brother = module.pred("brother",2);
+    pred_descendent = module.pred("descendent",2);
+    ped_conc = module.pred("conc",3);
+
+    // - brother queries -
+    for (res <- pred_brother.query(["mike",X]))
+    {
+      ("brother of mike: %s\n" % $X.value()).print();
+    }
+
+    for (res <- pred_brother.query([X,Y]))
+    {
+      ("brothers: %s\n" % $[X.value(),Y.value()]).print();
+    }
+
+    // - descendent queries -
+    luke_descs = [];
+    for (res <- pred_descendent.query([X,"luke"]))
+    {
+      luke_descs.push(X.value());
+    }
+    ("descendents of luke: %s\n" % $luke_descs).print();
+
+    // - concatenation queries -
+    for (res <- ped_conc.query([X,[4,5,6],[1,2,3,4,5,6]]))
+    {
+      ("concatenation prefix: %s\n" % $X.value()).print();
+    }
+
+    list = [1,2,3,4,5];
+    for (res <- ped_conc.query([X,Y,list]))
+    {
+      ("concatenation: %-11s + %-11s = %s\n" % [$X.value(),$Y.value(),$list]).print();
+    }
+  }
+
+  static public main(argv)
+  {
+    new Main(argv);
+  }
+}
+
