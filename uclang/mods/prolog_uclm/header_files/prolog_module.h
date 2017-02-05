@@ -51,6 +51,7 @@ extern built_in_class_s prolog_module_class;
 void bic_prolog_module_consts(location_array_s &const_locations);
 void bic_prolog_module_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_prolog_module_clear(interpreter_thread_s &it,location_s *location_ptr);
+bool bic_prolog_module_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base,uli *operands);
 
 bool bic_prolog_module_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_module_method_PrologModule_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
