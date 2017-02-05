@@ -337,16 +337,7 @@ bool bic_prolog_module_invoke(interpreter_thread_s &it,uli *code,unsigned stack_
     PL_close_foreign_frame(fid);
   );
 
-  // - create prolog query object -
-  prolog_query_s *query_ptr = (prolog_query_s *)cmalloc(sizeof(prolog_query_s));
-  query_ptr->init();
-
-  query_ptr->fid = fid;
-  query_ptr->plmod = plmod;
-  query_ptr->pred = pred;
-  query_ptr->terms = terms;
-
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_prolog_query,query_ptr);
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_prolog_query,(fid_t)fid);
 
   pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
@@ -1374,16 +1365,7 @@ bool bic_prolog_pred_method_query_1(interpreter_thread_s &it,unsigned stack_base
     PL_close_foreign_frame(fid);
   );
 
-  // - create prolog query object -
-  prolog_query_s *query_ptr = (prolog_query_s *)cmalloc(sizeof(prolog_query_s));
-  query_ptr->init();
-
-  query_ptr->fid = fid;
-  query_ptr->plmod = plmod;
-  query_ptr->pred = pred;
-  query_ptr->terms = terms;
-
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_prolog_query,query_ptr);
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_prolog_query,(fid_t)fid);
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -1471,15 +1453,10 @@ void bic_prolog_query_init(interpreter_thread_s &it,location_s *location_ptr)
 
 void bic_prolog_query_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  prolog_query_s *query_ptr = (prolog_query_s *)location_ptr->v_data_ptr;
+  fid_t fid = (fid_t)location_ptr->v_data_ptr;
 
-  if (query_ptr != NULL)
-  {
-    BIC_PROLOG_MODULE_CLOSE_QUERY();
-
-    query_ptr->clear(it);
-    cfree(query_ptr);
-  }
+  BIC_PROLOG_MODULE_CLOSE_QUERY();
+  PL_close_foreign_frame(fid);
 }/*}}}*/
 
 bool bic_prolog_query_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)

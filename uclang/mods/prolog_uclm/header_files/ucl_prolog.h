@@ -38,21 +38,6 @@ class prolog_c
 };
 
 /*
- * definition of structure prolog_query_s
- */
-
-struct prolog_query_s
-{
-  fid_t fid;
-  module_t plmod;
-  predicate_t pred;
-  term_t terms;
-
-  inline void init();
-  inline void clear(interpreter_thread_s &it);
-};
-
-/*
  * inline methods of class prolog_c
  */
 
@@ -69,21 +54,6 @@ inline prolog_c::~prolog_c()
   debug_message_2(fprintf(stderr,"prolog_exit()\n"););
 
   cassert(PL_cleanup(0));
-}/*}}}*/
-
-/*
- * inline methods of structure prolog_query_s
- */
-
-inline void prolog_query_s::init()
-{/*{{{*/
-}/*}}}*/
-
-inline void prolog_query_s::clear(interpreter_thread_s &it)
-{/*{{{*/
-  PL_close_foreign_frame(fid);
-
-  init();
 }/*}}}*/
 
 #endif
