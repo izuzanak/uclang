@@ -21,7 +21,7 @@ built_in_module_s module =
   prolog_classes,         // Classes
 
   0,                      // Error base index
-  7,                      // Error count
+  8,                      // Error count
   prolog_error_strings,   // Error strings
 
   prolog_initialize,      // Initialize function
@@ -46,6 +46,7 @@ const char *prolog_error_strings[] =
   "error_PROLOG_TERM_WRONG_TERM_REFERENCE",
   "error_PROLOG_TERM_CREATE_ERROR",
   "error_PROLOG_TERM_VALUE_ERROR",
+  "error_PROLOG_FUNCTOR_COMPOUND_TERM_CREATE_ERROR",
   "error_PROLOG_QUERY_ALREADY_ACTIVE",
   "error_PROLOG_QUERY_CREATE_ERROR",
   "error_PROLOG_QUERY_EXCEPTION",
@@ -111,6 +112,13 @@ bool prolog_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nError while retrieving value of Prolog term\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PROLOG_FUNCTOR_COMPOUND_TERM_CREATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while creating compound term\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_PROLOG_QUERY_ALREADY_ACTIVE:
@@ -586,6 +594,28 @@ built_in_variable_s prolog_functor_variables[] =
 {/*{{{*/
 };/*}}}*/
 
+#define BIC_PROLOG_RETRIEVE_TERMS_FROM_ARRAY(ERR_CODE) \
+{/*{{{*/\
+  if (arity > 0)\
+  {\
+    terms = PL_new_term_refs(arity);\
+\
+    int idx = 0;\
+    do {\
+      location_s *item_location = it.get_location_value(array_ptr->data[idx]);\
+\
+      /* - ERROR - */\
+      if (!prolog_c::create_prolog_term(it,terms + idx,item_location))\
+      {\
+        ERR_CODE;\
+\
+        exception_s::throw_exception(it,module.error_base + c_error_PROLOG_TERM_WRONG_TERM_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+        return false;\
+      }\
+    } while(++idx < arity);\
+  }\
+}/*}}}*/
+
 void bic_prolog_functor_consts(location_array_s &const_locations)
 {/*{{{*/
 }/*}}}*/
@@ -684,11 +714,33 @@ bool bic_prolog_functor_method_term_1(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
-  // FIXME TODO continue ...
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
+  functor_t ftor = (functor_t)dst_location->v_data_ptr;
+  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
-  BIC_SET_RESULT_BLANK();
+  // - retrieve functor arity -
+  int arity = PL_functor_arity(ftor);
+
+  term_t term = PL_new_term_ref();
+
+  // - retrieve functor terms -
+  fid_t fid = PL_open_foreign_frame();
+  term_t terms = 0;
+
+  BIC_PROLOG_RETRIEVE_TERMS_FROM_ARRAY(
+    PL_close_foreign_frame(fid);
+  );
+
+  // - ERROR -
+  if (!PL_cons_functor_v(term,ftor,terms))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_PROLOG_FUNCTOR_COMPOUND_TERM_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  PL_close_foreign_frame(fid);
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_prolog_term,term);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
@@ -942,28 +994,6 @@ built_in_variable_s prolog_pred_variables[] =
 {/*{{{*/
 };/*}}}*/
 
-#define BIC_PROLOG_PRED_RETRIEVE_TERMS(ERR_CODE) \
-{/*{{{*/\
-  if (arity > 0)\
-  {\
-    terms = PL_new_term_refs(arity);\
-\
-    int idx = 0;\
-    do {\
-      location_s *item_location = it.get_location_value(array_ptr->data[idx]);\
-\
-      /* - ERROR - */\
-      if (!prolog_c::create_prolog_term(it,terms + idx,item_location))\
-      {\
-        ERR_CODE;\
-\
-        exception_s::throw_exception(it,module.error_base + c_error_PROLOG_TERM_WRONG_TERM_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-        return false;\
-      }\
-    } while(++idx < arity);\
-  }\
-}/*}}}*/
-
 #define BIC_PROLOG_PRED_OPEN_QUERY(MODULE,PRED,TERMS,ERR_CODE) \
 /*{{{*/\
 \
@@ -1091,7 +1121,7 @@ bool bic_prolog_pred_method_call_1(interpreter_thread_s &it,unsigned stack_base,
   fid_t fid = PL_open_foreign_frame();
   term_t terms = 0;
   
-  BIC_PROLOG_PRED_RETRIEVE_TERMS(
+  BIC_PROLOG_RETRIEVE_TERMS_FROM_ARRAY(
     PL_close_foreign_frame(fid);
   );
 
@@ -1156,7 +1186,7 @@ bool bic_prolog_pred_method_query_1(interpreter_thread_s &it,unsigned stack_base
   fid_t fid = PL_open_foreign_frame();
   term_t terms = 0;
 
-  BIC_PROLOG_PRED_RETRIEVE_TERMS(
+  BIC_PROLOG_RETRIEVE_TERMS_FROM_ARRAY(
     PL_close_foreign_frame(fid);
   );
 
