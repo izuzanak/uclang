@@ -47,8 +47,8 @@ const char *prolog_error_strings[] =
   "error_PROLOG_PRED_INVALID_TERM_COUNT",
   "error_PROLOG_TERM_WRONG_TERM_REFERENCE",
   "error_PROLOG_TERM_CREATE_ERROR",
+  "error_PROLOG_TERM_COMPOUND_CREATE_ERROR",
   "error_PROLOG_TERM_VALUE_ERROR",
-  "error_PROLOG_FUNCTOR_COMPOUND_TERM_CREATE_ERROR",
   "error_PROLOG_QUERY_ALREADY_ACTIVE",
   "error_PROLOG_QUERY_CREATE_ERROR",
   "error_PROLOG_QUERY_EXCEPTION",
@@ -112,18 +112,18 @@ bool prolog_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nError while creating Prolog term\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_PROLOG_TERM_COMPOUND_CREATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while creating compound term\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_PROLOG_TERM_VALUE_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nError while retrieving value of Prolog term\n");
-    fprintf(stderr," ---------------------------------------- \n");
-    break;
-  case c_error_PROLOG_FUNCTOR_COMPOUND_TERM_CREATE_ERROR:
-    fprintf(stderr," ---------------------------------------- \n");
-    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
-    print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while creating compound term\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_PROLOG_QUERY_ALREADY_ACTIVE:
@@ -301,14 +301,28 @@ bool bic_prolog_module_invoke(interpreter_thread_s &it,uli *code,unsigned stack_
 
   // - parameter count and method name length -
   unsigned param_cnt = (unsigned)code[icl_parm_cnt] - 1;
+  char *name_data = name_ref.data;
   unsigned name_length = name_ref.size - (3 + (unsigned)log10f(param_cnt));
 
-  module_t plmod = (module_t)dst_location->v_data_ptr;
+  // - query or compound term flag -
+  bool do_query = true;
+  term_t term;
 
-  // - create prolog predicate from method name and parameter count -
-  atom_t atom = PL_new_atom_nchars(name_length,name_ref.data);
+  // - check request for compound term -
+  if (*name_data == '_')
+  {
+    // - remove character '_' from name -
+    ++name_data;
+    --name_length;
+    do_query = false;
+
+    // - alocate compound term reference -
+    term = PL_new_term_ref();
+  }
+
+  // - create prolog functor from method name and parameter count -
+  atom_t atom = PL_new_atom_nchars(name_length,name_data);
   functor_t ftor = PL_new_functor(atom,param_cnt);
-  predicate_t pred = PL_pred(ftor,plmod);
 
   // - prepare parameters -
   fid_t fid = PL_open_foreign_frame();
@@ -333,14 +347,42 @@ bool bic_prolog_module_invoke(interpreter_thread_s &it,uli *code,unsigned stack_
     } while(++param_idx < param_cnt);
   }
 
-  BIC_PROLOG_MODULE_OPEN_QUERY(plmod,pred,terms,
+  // - if query is requested -
+  if (do_query)
+  {
+    // - create prolog predicate from prolog functor -
+    module_t plmod = (module_t)dst_location->v_data_ptr;
+    predicate_t pred = PL_pred(ftor,plmod);
+
+    BIC_PROLOG_MODULE_OPEN_QUERY(plmod,pred,terms,
+      PL_close_foreign_frame(fid);
+    );
+
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_prolog_query,(fid_t)fid);
+
+    pointer &res_location = it.data_stack[res_loc_idx];
+    BIC_SET_RESULT(new_location);
+  }
+
+  // - if compound term is requested -
+  else
+  {
+    // - ERROR -
+    if (!PL_cons_functor_v(term,ftor,terms))
+    {
+      PL_close_foreign_frame(fid);
+
+      exception_s::throw_exception(it,module.error_base + c_error_PROLOG_TERM_COMPOUND_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
     PL_close_foreign_frame(fid);
-  );
 
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_prolog_query,(fid_t)fid);
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_prolog_term,term);
 
-  pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT(new_location);
+    pointer &res_location = it.data_stack[res_loc_idx];
+    BIC_SET_RESULT(new_location);
+  }
 
   return true;
 }/*}}}*/
@@ -935,7 +977,7 @@ bool bic_prolog_functor_method_term_1(interpreter_thread_s &it,unsigned stack_ba
   {
     PL_close_foreign_frame(fid);
 
-    exception_s::throw_exception(it,module.error_base + c_error_PROLOG_FUNCTOR_COMPOUND_TERM_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s::throw_exception(it,module.error_base + c_error_PROLOG_TERM_COMPOUND_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
