@@ -7,8 +7,9 @@ include "ucl_prolog.h"
 @end
 
 // - PROLOG indexes of built in classes -
-extern unsigned c_bi_class_prolog_atom;
 extern unsigned c_bi_class_prolog_module;
+extern unsigned c_bi_class_prolog_atom;
+extern unsigned c_bi_class_prolog_frame;
 extern unsigned c_bi_class_prolog_functor;
 extern unsigned c_bi_class_prolog_term;
 extern unsigned c_bi_class_prolog_pred;
@@ -59,6 +60,20 @@ bool bic_prolog_module_method_pred_1(interpreter_thread_s &it,unsigned stack_bas
 bool bic_prolog_module_method_pred_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_module_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_prolog_module_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class PROLOG_FRAME -
+extern built_in_variable_s prolog_frame_variables[];
+extern built_in_method_s prolog_frame_methods[];
+extern built_in_class_s prolog_frame_class;
+
+void bic_prolog_frame_consts(location_array_s &const_locations);
+void bic_prolog_frame_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_prolog_frame_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_prolog_frame_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_prolog_frame_method_PrologFrame_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_prolog_frame_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_prolog_frame_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 // - class PROLOG_ATOM -
 extern built_in_variable_s prolog_atom_variables[];

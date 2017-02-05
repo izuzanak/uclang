@@ -6,6 +6,7 @@ include "prolog_module.h"
 // - PROLOG indexes of built in classes -
 unsigned c_bi_class_prolog_module = c_idx_not_exist;
 unsigned c_bi_class_prolog_atom = c_idx_not_exist;
+unsigned c_bi_class_prolog_frame = c_idx_not_exist;
 unsigned c_bi_class_prolog_functor = c_idx_not_exist;
 unsigned c_bi_class_prolog_term = c_idx_not_exist;
 unsigned c_bi_class_prolog_pred = c_idx_not_exist;
@@ -17,7 +18,7 @@ unsigned c_rm_class_dict = c_idx_not_exist;
 // - PROLOG module -
 built_in_module_s module =
 {/*{{{*/
-  6,                      // Class count
+  7,                      // Class count
   prolog_classes,         // Classes
 
   0,                      // Error base index
@@ -33,6 +34,7 @@ built_in_class_s *prolog_classes[] =
 {/*{{{*/
   &prolog_module_class,
   &prolog_atom_class,
+  &prolog_frame_class,
   &prolog_functor_class,
   &prolog_term_class,
   &prolog_pred_class,
@@ -62,6 +64,9 @@ bool prolog_initialize(script_parser_s &sp)
 
   // - initialize prolog_atom class identifier -
   c_bi_class_prolog_atom = class_base_idx++;
+
+  // - initialize prolog_frame class identifier -
+  c_bi_class_prolog_frame = class_base_idx++;
 
   // - initialize prolog_functor class identifier -
   c_bi_class_prolog_functor = class_base_idx++;
@@ -373,6 +378,116 @@ bool bic_prolog_module_method_print_0(interpreter_thread_s &it,unsigned stack_ba
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
   printf("PrologModule");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class PROLOG_FRAME -
+built_in_class_s prolog_frame_class =
+{/*{{{*/
+  "PrologFrame",
+  c_modifier_public | c_modifier_final,
+  4, prolog_frame_methods,
+  0, prolog_frame_variables,
+  bic_prolog_frame_consts,
+  bic_prolog_frame_init,
+  bic_prolog_frame_clear,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};/*}}}*/
+
+built_in_method_s prolog_frame_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_prolog_frame_operator_binary_equal
+  },
+  {
+    "PrologFrame#0",
+    c_modifier_public | c_modifier_final,
+    bic_prolog_frame_method_PrologFrame_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_prolog_frame_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_prolog_frame_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s prolog_frame_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_prolog_frame_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_prolog_frame_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (fid_t)0;
+}/*}}}*/
+
+void bic_prolog_frame_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  fid_t fid = (fid_t)location_ptr->v_data_ptr;
+  PL_close_foreign_frame(fid);
+}/*}}}*/
+
+bool bic_prolog_frame_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_prolog_frame_method_PrologFrame_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  // - open new foreign frame -
+  dst_location->v_data_ptr = (fid_t)PL_open_foreign_frame();
+
+  return true;
+}/*}}}*/
+
+bool bic_prolog_frame_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("PrologFrame"),"PrologFrame");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_prolog_frame_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  printf("PrologFrame");
 
   BIC_SET_RESULT_BLANK();
 
@@ -733,6 +848,8 @@ bool bic_prolog_functor_method_term_1(interpreter_thread_s &it,unsigned stack_ba
   // - ERROR -
   if (!PL_cons_functor_v(term,ftor,terms))
   {
+    PL_close_foreign_frame(fid);
+
     exception_s::throw_exception(it,module.error_base + c_error_PROLOG_FUNCTOR_COMPOUND_TERM_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
