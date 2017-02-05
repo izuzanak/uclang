@@ -342,7 +342,7 @@ bool bic_prolog_module_method_pred_2(interpreter_thread_s &it,unsigned stack_bas
 
   // - create prolog predicate from name and arity -
   atom_t atom = PL_new_atom_nchars(string_ptr->size - 1,string_ptr->data);
-  functor_t ftor = PL_new_functor(atom,2);
+  functor_t ftor = PL_new_functor(atom,arity);
   predicate_t pred = PL_pred(ftor,plmod);
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_prolog_pred,pred);
