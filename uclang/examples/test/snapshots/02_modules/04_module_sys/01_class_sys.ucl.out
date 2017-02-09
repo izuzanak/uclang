@@ -96,7 +96,7 @@ Sys.setenv("ENV_VAR","value") -> <blank>
 
 === Sys method getenv#1 ========================================================
 
-Sys.getenv("PATH")    -> /usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+Sys.getenv("PATH")    -> /usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/db/bin:/usr/lib/jvm/java-8-oracle/jre/bin
 Sys.getenv("ENV_VAR") -> value
 Sys.getenv("ENV_ERR") -> <blank>
 
