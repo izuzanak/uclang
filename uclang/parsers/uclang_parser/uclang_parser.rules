@@ -223,6 +223,9 @@ nonterminals:
    <exp_colon_exp_colon>
    <exp_colon>
 
+   <string_const_list>
+   <string_const>
+
    <H>
    <G>
    <F>
@@ -2400,7 +2403,45 @@ rules:
       end
    }
 
-   <A> -> string_const ->>
+   <A> -> <string_const_list> ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"<string_const_list>\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      else
+         print(table.concat(tabs,"").."const string register");
+      end
+   }
+
+   <string_const_list> -> <string_const_list> <string_const> ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"<string_const> <string_const_list>\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      else
+         print(table.concat(tabs,"").."const string append");
+      end
+   }
+
+   <string_const_list> -> <string_const> ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"<string_const>\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      end
+   }
+
+   <string_const> -> string_const ->>
    {
       if gen_parse_tree == 1 then
          value = rule_body(0);

@@ -127,6 +127,8 @@ bool pa_const_oct_int(string_s &source_string,script_parser_s &_this);
 bool pa_const_dec_int(string_s &source_string,script_parser_s &_this);
 bool pa_const_hex_int(string_s &source_string,script_parser_s &_this);
 bool pa_const_float(string_s &source_string,script_parser_s &_this);
+bool pa_const_string_register(string_s &source_string,script_parser_s &_this);
+bool pa_const_string_append(string_s &source_string,script_parser_s &_this);
 bool pa_const_string(string_s &source_string,script_parser_s &_this);
 
 /*

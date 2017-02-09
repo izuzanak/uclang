@@ -10,7 +10,7 @@ include "script_parser.h"
 const unsigned max_number_string_length = 12;
 
 // - callers of parse action functions -
-const unsigned c_script_parse_action_cnt = 183;
+const unsigned c_script_parse_action_cnt = 186;
 bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,script_parser_s &_this) =
 {/*{{{*/
 
@@ -260,6 +260,9 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
 
   pa_const_float,
 
+  pa_const_string_register,
+  pa_const_string_append,
+  pa_null,
   pa_const_string,
 };/*}}}*/
 
@@ -4346,136 +4349,149 @@ bool pa_const_float(string_s &source_string,script_parser_s &_this)
   return true;
 }/*}}}*/
 
-bool pa_const_string(string_s &source_string,script_parser_s &_this)
+bool pa_const_string_register(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
+  name_pos_array_s &tmp_name_pos_array = _this.tmp_name_pos_array;
+  ui_array_s &member_cnt = _this.member_cnt;
   expression_descr_s &ed = _this.expression_descr;
   string_rb_tree_s &const_strings = _this.const_strings;
-  lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
 
-  lalr_stack_element_s &lse = lalr_stack.last();
-
-  char *ptr = source_string.data + lse.terminal_start + 1;
-  char *ptr_end = source_string.data + lse.terminal_end - 1;
+  // - retrieve string components length and count -
+  unsigned *mc_ptr = member_cnt.data + member_cnt.used - 2;
 
   bc_array_s char_buffer;
-  char_buffer.init_size((ptr_end - ptr) + 1);
+  char_buffer.init_size(mc_ptr[0] + 1);
 
-  if (ptr < ptr_end)
+  // - process all string components -
+  name_pos_s *np_ptr_end = tmp_name_pos_array.data + tmp_name_pos_array.used;
+  name_pos_s *np_ptr = np_ptr_end - mc_ptr[1];
+  do
   {
-    do
+    // - if string component is not empty -
+    if (np_ptr->ui_first < np_ptr->ui_second)
     {
-      if (*ptr == '\\')
+      char *ptr = source_string.data + np_ptr->ui_first;
+      char *ptr_end = source_string.data + np_ptr->ui_second;
+      do
       {
-        ptr++;
-
-        // - process char represented by octal number -
-        if (*ptr >= '0' && *ptr <= '7')
+        if (*ptr == '\\')
         {
-          char new_char = *ptr++ - '0';
+          ptr++;
 
+          // - process char represented by octal number -
           if (*ptr >= '0' && *ptr <= '7')
           {
-            new_char = (new_char << 3) | (*ptr++ - '0');
+            char new_char = *ptr++ - '0';
 
             if (*ptr >= '0' && *ptr <= '7')
             {
               new_char = (new_char << 3) | (*ptr++ - '0');
+
+              if (*ptr >= '0' && *ptr <= '7')
+              {
+                new_char = (new_char << 3) | (*ptr++ - '0');
+              }
             }
-          }
 
-          char_buffer.push(new_char);
-        }
-        // - process char representation by hexadecimal number -
-        else if (*ptr == 'x')
-        {
-          ptr++;
-          char new_char = 0;
+            char_buffer.push(new_char);
+          }
+          // - process char representation by hexadecimal number -
+          else if (*ptr == 'x')
+          {
+            ptr++;
+            char new_char = 0;
 
-          // - first char in hexadecimal representation -
-          if (*ptr >= '0' && *ptr <= '9')
-          {
-            new_char = *ptr++ - '0';
-          }
-          else if (*ptr >= 'a' && *ptr <= 'f')
-          {
-            new_char = 10 + (*ptr++ - 'a');
-          }
-          else if (*ptr >= 'A' && *ptr <= 'F')
-          {
-            new_char = 10 + (*ptr++ - 'A');
+            // - first char in hexadecimal representation -
+            if (*ptr >= '0' && *ptr <= '9')
+            {
+              new_char = *ptr++ - '0';
+            }
+            else if (*ptr >= 'a' && *ptr <= 'f')
+            {
+              new_char = 10 + (*ptr++ - 'a');
+            }
+            else if (*ptr >= 'A' && *ptr <= 'F')
+            {
+              new_char = 10 + (*ptr++ - 'A');
+            }
+            else
+            {
+              debug_assert(0);
+            }
+
+            // - second char in hexadecimal representation -
+            if (*ptr >= '0' && *ptr <= '9')
+            {
+              new_char = (new_char << 4) | (*ptr++ - '0');
+            }
+            else if (*ptr >= 'a' && *ptr <= 'f')
+            {
+              new_char = (new_char << 4) | (10 + (*ptr++ - 'a'));
+            }
+            else if (*ptr >= 'A' && *ptr <= 'F')
+            {
+              new_char = (new_char << 4) | (10 + (*ptr++ - 'A'));
+            }
+
+            char_buffer.push(new_char);
           }
           else
           {
-            debug_assert(0);
+            switch (*ptr++)
+            {
+            case 'a':
+              char_buffer.push('\a');
+              break;
+            case 'b':
+              char_buffer.push('\b');
+              break;
+            case 'f':
+              char_buffer.push('\f');
+              break;
+            case 'n':
+              char_buffer.push('\n');
+              break;
+            case 'r':
+              char_buffer.push('\r');
+              break;
+            case 't':
+              char_buffer.push('\t');
+              break;
+            case 'v':
+              char_buffer.push('\v');
+              break;
+            case '\\':
+              char_buffer.push('\\');
+              break;
+            case '?':
+              char_buffer.push('?');
+              break;
+            case '\'':
+              char_buffer.push('\'');
+              break;
+            case '"':
+              char_buffer.push('"');
+              break;
+            default:
+              debug_assert(0);
+            }
           }
-
-          // - second char in hexadecimal representation -
-          if (*ptr >= '0' && *ptr <= '9')
-          {
-            new_char = (new_char << 4) | (*ptr++ - '0');
-          }
-          else if (*ptr >= 'a' && *ptr <= 'f')
-          {
-            new_char = (new_char << 4) | (10 + (*ptr++ - 'a'));
-          }
-          else if (*ptr >= 'A' && *ptr <= 'F')
-          {
-            new_char = (new_char << 4) | (10 + (*ptr++ - 'A'));
-          }
-
-          char_buffer.push(new_char);
         }
         else
         {
-          switch (*ptr++)
-          {
-          case 'a':
-            char_buffer.push('\a');
-            break;
-          case 'b':
-            char_buffer.push('\b');
-            break;
-          case 'f':
-            char_buffer.push('\f');
-            break;
-          case 'n':
-            char_buffer.push('\n');
-            break;
-          case 'r':
-            char_buffer.push('\r');
-            break;
-          case 't':
-            char_buffer.push('\t');
-            break;
-          case 'v':
-            char_buffer.push('\v');
-            break;
-          case '\\':
-            char_buffer.push('\\');
-            break;
-          case '?':
-            char_buffer.push('?');
-            break;
-          case '\'':
-            char_buffer.push('\'');
-            break;
-          case '"':
-            char_buffer.push('"');
-            break;
-          default:
-            debug_assert(0);
-          }
+          char_buffer.push(*ptr++);
         }
       }
-      else
-      {
-        char_buffer.push(*ptr++);
-      }
+      while(ptr < ptr_end);
     }
-    while(ptr < ptr_end);
   }
+  while(++np_ptr < np_ptr_end);
+
+  // - remove string component positions -
+  tmp_name_pos_array.used -= mc_ptr[1];
+  member_cnt.used -= 2;
 
   // - modification of character buffer -
   char_buffer.data[char_buffer.used] = '\0';
@@ -4500,6 +4516,53 @@ bool pa_const_string(string_s &source_string,script_parser_s &_this)
 
   tmp_exp_info.ui_first = tmp_node_idx;
   tmp_exp_info.ui_second = 2;
+
+  debug_message_4(
+    fprintf(stderr,"script_parser: parse_action: pa_const_string_register\n");
+  );
+
+  return true;
+}/*}}}*/
+
+bool pa_const_string_append(string_s &source_string,script_parser_s &_this)
+{/*{{{*/
+  ui_array_s &member_cnt = _this.member_cnt;
+
+  // *****
+
+  unsigned *mc_ptr = member_cnt.data + member_cnt.used - 4;
+
+  // - sum string components lengths and counts -
+  mc_ptr[0] += mc_ptr[2];
+  mc_ptr[1] += mc_ptr[3];
+
+  member_cnt.used -= 2;
+
+  debug_message_4(
+    fprintf(stderr,"script_parser: parse_action: pa_const_string_append\n");
+  );
+
+  return true;
+}/*}}}*/
+
+bool pa_const_string(string_s &source_string,script_parser_s &_this)
+{/*{{{*/
+  name_pos_array_s &tmp_name_pos_array = _this.tmp_name_pos_array;
+  ui_array_s &member_cnt = _this.member_cnt;
+  lalr_stack_s &lalr_stack = _this.lalr_stack;
+
+  // *****
+
+  lalr_stack_element_s &lse = lalr_stack.last();
+
+  // - store string component -
+  tmp_name_pos_array.push_blank();
+  name_pos_s &name_pos = tmp_name_pos_array.last();
+  name_pos.set(lse.terminal_start + 1,lse.terminal_end - 1);
+
+  // - store string component length and count -
+  member_cnt.push(name_pos.ui_second - name_pos.ui_first);
+  member_cnt.push(1);
 
   debug_message_4(
     char *end_ptr = source_string.data + lse.terminal_end;
