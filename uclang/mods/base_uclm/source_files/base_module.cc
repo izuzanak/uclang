@@ -8662,7 +8662,11 @@ void bic_delegate_clear(interpreter_thread_s &it,location_s *location_ptr)
   // - if delegate exist -
   if (delegate_ptr != NULL)
   {
-    it.release_location_ptr(delegate_ptr->object_location);
+    if (delegate_ptr->object_location != NULL)
+    {
+      it.release_location_ptr(delegate_ptr->object_location);
+    }
+
     cfree(delegate_ptr);
   }
 }/*}}}*/
@@ -8728,35 +8732,91 @@ bool bic_delegate_method_Delegate_3(interpreter_thread_s &it,unsigned stack_base
   unsigned name_idx = IT_INTERPRETER->method_symbol_names.get_idx_char_ptr(name_len,buffer);
   cfree(buffer);
 
-  // - ERROR -
-  if (name_idx == c_idx_not_exist)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
-  // - retrieve method record index -
-  unsigned method_ri = IT_INTERPRETER->class_records[src_0_location->v_type].mnri_map.map_name(name_idx);
-
-  // - ERROR -
-  if (method_ri == c_idx_not_exist)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
   // - create new delegate object -
   delegate_s *delegate_ptr = (delegate_s *)cmalloc(sizeof(delegate_s));
 
-  src_0_reference->v_reference_cnt.atomic_inc();
-  delegate_ptr->object_location = src_0_reference;
+  // - process static method delegate -
+  if (src_0_location->v_type == c_bi_class_type)
+  {/*{{{*/
+    unsigned class_idx = (unsigned)src_0_location->v_data_ptr;
 
-  delegate_ptr->method_name_idx = name_idx;
-  delegate_ptr->param_cnt = param_cnt;
+    // - ERROR -
+    if (name_idx == c_idx_not_exist)
+    {
+      cfree(delegate_ptr);
+
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      new_exception->params.push(class_idx);
+
+      return false;
+    }
+
+    // - retrieve method record index -
+    unsigned method_ri = IT_INTERPRETER->class_records[class_idx].mnri_map.map_name(name_idx);
+
+    // - ERROR -
+    if (method_ri == c_idx_not_exist)
+    {
+      cfree(delegate_ptr);
+
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      new_exception->params.push(class_idx);
+
+      return false;
+    }
+
+    method_record_s &method_record = IT_INTERPRETER->method_records[method_ri];
+
+    // - ERROR -
+    if (!(method_record.modifiers & c_modifier_static))
+    {
+      cfree(delegate_ptr);
+
+      // FIXME TODO throw proper exception
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+      return false;
+    }
+
+    delegate_ptr->object_location = NULL;
+    delegate_ptr->method_name_idx = method_ri;
+    delegate_ptr->param_cnt = param_cnt;
+  }/*}}}*/
+
+  // - process method delegate -
+  else
+  {/*{{{*/
+
+    // - ERROR -
+    if (name_idx == c_idx_not_exist)
+    {
+      cfree(delegate_ptr);
+
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      new_exception->params.push(src_0_location->v_type);
+
+      return false;
+    }
+
+    // - retrieve method record index -
+    unsigned method_ri = IT_INTERPRETER->class_records[src_0_location->v_type].mnri_map.map_name(name_idx);
+
+    // - ERROR -
+    if (method_ri == c_idx_not_exist)
+    {
+      cfree(delegate_ptr);
+
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      new_exception->params.push(src_0_location->v_type);
+
+      return false;
+    }
+    
+    src_0_reference->v_reference_cnt.atomic_inc();
+    delegate_ptr->object_location = src_0_reference;
+
+    delegate_ptr->method_name_idx = name_idx;
+    delegate_ptr->param_cnt = param_cnt;
+  }/*}}}*/
 
   // - set object pointer to result -
   dst_location->v_data_ptr = (delegate_s *)delegate_ptr;
