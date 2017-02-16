@@ -121,10 +121,20 @@ public:
       /* - create exception - */\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_RETURN_INTEGER,g_activity.loop_source_pos,(location_s *)it.blank_location);\
 \
-      unsigned method_ri = ((interpreter_s *)it.interpreter_ptr)->class_records[it.get_location_value(delegate_ptr->object_location)->v_type].mnri_map.map_name(delegate_ptr->method_name_idx);\
-      cassert(method_ri != c_idx_not_exist);\
+      /* - if delegate is static - */\
+      if (delegate_ptr->object_location == NULL)\
+      {\
+        new_exception->params.push(delegate_ptr->name_idx_ri);\
+      }\
 \
-      new_exception->params.push(method_ri);\
+      /* - if delegate is not static - */\
+      else\
+      {\
+        unsigned method_ri = ((interpreter_s *)it.interpreter_ptr)->class_records[it.get_location_value(delegate_ptr->object_location)->v_type].mnri_map.map_name(delegate_ptr->name_idx_ri);\
+        cassert(method_ri != c_idx_not_exist);\
+\
+        new_exception->params.push(method_ri);\
+      }\
 \
       g_activity.loop_ret_code = c_run_return_code_EXCEPTION;\
       ERR_CODE;\

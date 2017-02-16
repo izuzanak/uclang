@@ -759,7 +759,7 @@ enum
     \
     tmp_code[0] = i_call;\
     tmp_code[1] = 1 + PARAM_CNT;\
-    tmp_code[2] = DELEGATE_PTR->method_name_idx;\
+    tmp_code[2] = DELEGATE_PTR->name_idx_ri;\
     tmp_code[3] = c_idx_not_exist;\
     tmp_code[4] = c_idx_not_exist;\
     tmp_code[5] = SOURCE_POS;\

@@ -588,7 +588,7 @@ struct built_in_module_s
 struct delegate_s
 {
   location_s *object_location;
-  unsigned method_name_idx; // method_ri for static delegates
+  unsigned name_idx_ri; // method_ri for static delegates
   unsigned param_cnt;
 };
 

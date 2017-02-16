@@ -8778,7 +8778,7 @@ bool bic_delegate_method_Delegate_3(interpreter_thread_s &it,unsigned stack_base
     }
 
     delegate_ptr->object_location = NULL;
-    delegate_ptr->method_name_idx = method_ri;
+    delegate_ptr->name_idx_ri = method_ri;
     delegate_ptr->param_cnt = param_cnt;
   }/*}}}*/
 
@@ -8814,7 +8814,7 @@ bool bic_delegate_method_Delegate_3(interpreter_thread_s &it,unsigned stack_base
     src_0_reference->v_reference_cnt.atomic_inc();
     delegate_ptr->object_location = src_0_reference;
 
-    delegate_ptr->method_name_idx = name_idx;
+    delegate_ptr->name_idx_ri = name_idx;
     delegate_ptr->param_cnt = param_cnt;
   }/*}}}*/
 
