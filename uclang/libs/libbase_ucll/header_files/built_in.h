@@ -750,49 +750,92 @@ enum
     ((location_s *)IT.blank_location)->v_reference_cnt.atomic_inc();\
     IT.data_stack.push(IT.blank_location);\
     \
-    /* - push this location to stack - */\
-    location_s *location = DELEGATE_PTR->object_location;\
-    location->v_reference_cnt.atomic_inc();\
-    IT.data_stack.push((pointer)location);\
-    \
-    uli tmp_code[8 + PARAM_CNT];\
-    \
-    tmp_code[0] = i_call;\
-    tmp_code[1] = 1 + PARAM_CNT;\
-    tmp_code[2] = DELEGATE_PTR->name_idx_ri;\
-    tmp_code[3] = c_idx_not_exist;\
-    tmp_code[4] = c_idx_not_exist;\
-    tmp_code[5] = SOURCE_POS;\
-    tmp_code[6] = 0;\
-    tmp_code[7] = 1;\
-    \
-    /* - push parameters to stack - */\
-    if (PARAM_CNT != 0)\
-    {\
-      pointer *p_ptr = PARAM_DATA;\
-      pointer *p_ptr_end = p_ptr + PARAM_CNT;\
-      unsigned p_idx = 2;\
-      do\
-      {\
-        /* - push parameter to stack - */\
-        ((location_s *)*p_ptr)->v_reference_cnt.atomic_inc();\
-        IT.data_stack.push(*p_ptr);\
-        \
-        /* - set parameter index in code - */\
-        tmp_code[6 + p_idx] = p_idx;\
-      }\
-      while(++p_idx,++p_ptr < p_ptr_end);\
-    }\
-    \
-    /* - call method - */\
-    uli *code_ptr = tmp_code;\
-    inst_params_s params = {&(IT),&code_ptr,new_stack_base,NULL};\
-    if (inst_call(&params) != c_run_return_code_OK)\
-    {\
-      IT.release_stack_from(new_stack_base);\
+    /* - if delegate is static - */\
+    if (DELEGATE_PTR->object_location == NULL)\
+    {/*{{{*/\
+      uli tmp_code[5 + PARAM_CNT];\
+      tmp_code[0] = i_static_call;\
+      tmp_code[1] = PARAM_CNT;\
+      tmp_code[2] = SOURCE_POS;\
+      tmp_code[3] = 0;\
+      tmp_code[4] = DELEGATE_PTR->name_idx_ri;\
       \
-      ERR_CODE;\
-    }\
+      /* - push parameters to stack - */\
+      if (PARAM_CNT != 0)\
+      {\
+        pointer *p_ptr = PARAM_DATA;\
+        pointer *p_ptr_end = p_ptr + PARAM_CNT;\
+        unsigned param_idx = 1;\
+        do\
+        {\
+          /* - push parameter to stack - */\
+          ((location_s *)*p_ptr)->v_reference_cnt.atomic_inc();\
+          IT.data_stack.push(*p_ptr);\
+          \
+          /* - set parameter index in code - */\
+          tmp_code[4 + param_idx] = param_idx;\
+        }\
+        while(++param_idx,++p_ptr < p_ptr_end);\
+      }\
+      \
+      /* - call static method - */\
+      uli *code_ptr = tmp_code;\
+      inst_params_s params = {&(IT),&code_ptr,new_stack_base,NULL};\
+      if (inst_static_call(&params) != c_run_return_code_OK)\
+      {\
+        IT.release_stack_from(new_stack_base);\
+        \
+        ERR_CODE;\
+      }\
+    }/*}}}*/\
+    \
+    /* - if delegate is not static - */\
+    else\
+    {/*{{{*/\
+      \
+      /* - push this location to stack - */\
+      location_s *location = DELEGATE_PTR->object_location;\
+      location->v_reference_cnt.atomic_inc();\
+      IT.data_stack.push((pointer)location);\
+      \
+      uli tmp_code[8 + PARAM_CNT];\
+      tmp_code[0] = i_call;\
+      tmp_code[1] = 1 + PARAM_CNT;\
+      tmp_code[2] = DELEGATE_PTR->name_idx_ri;\
+      tmp_code[3] = c_idx_not_exist;\
+      tmp_code[4] = c_idx_not_exist;\
+      tmp_code[5] = SOURCE_POS;\
+      tmp_code[6] = 0;\
+      tmp_code[7] = 1;\
+      \
+      /* - push parameters to stack - */\
+      if (PARAM_CNT != 0)\
+      {\
+        pointer *p_ptr = PARAM_DATA;\
+        pointer *p_ptr_end = p_ptr + PARAM_CNT;\
+        unsigned param_idx = 2;\
+        do\
+        {\
+          /* - push parameter to stack - */\
+          ((location_s *)*p_ptr)->v_reference_cnt.atomic_inc();\
+          IT.data_stack.push(*p_ptr);\
+          \
+          /* - set parameter index in code - */\
+          tmp_code[6 + param_idx] = param_idx;\
+        }\
+        while(++param_idx,++p_ptr < p_ptr_end);\
+      }\
+      \
+      /* - call method - */\
+      uli *code_ptr = tmp_code;\
+      inst_params_s params = {&(IT),&code_ptr,new_stack_base,NULL};\
+      if (inst_call(&params) != c_run_return_code_OK)\
+      {\
+        IT.release_stack_from(new_stack_base);\
+        \
+        ERR_CODE;\
+      }\
+    }/*}}}*/\
     \
     /* - get return value - */\
     location_s *ret_location = (location_s *)IT.data_stack[new_stack_base];\
