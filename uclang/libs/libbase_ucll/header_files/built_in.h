@@ -785,7 +785,9 @@ enum
     }\
     \
     /* - call method - */\
-    if (!IT.call_method(tmp_code,new_stack_base))\
+    uli *code_ptr = tmp_code;\
+    inst_params_s params = {&(IT),&code_ptr,new_stack_base,NULL};\
+    if (inst_call(&params) != c_run_return_code_OK)\
     {\
       IT.release_stack_from(new_stack_base);\
       \
