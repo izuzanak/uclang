@@ -896,6 +896,9 @@ ui_array_s:using_namespace_idxs
 $// - parse, stack of parent class indexes -
 ui_array_s:parent_class_idxs
 
+$// - parse, stack of parent method indexes -
+ui_array_s:parent_method_idxs
+
 $// - parse, stack of try flow graph map indexes -
 ui_array_s:try_fg_map_idxs
 

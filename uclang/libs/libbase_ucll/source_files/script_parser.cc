@@ -7992,6 +7992,7 @@ void script_parser_s::parse_script(unsigned a_source_idx)
   modifiers = 0;
 
   parent_class_idxs.clear();
+  parent_method_idxs.clear();
 
   try_fg_map_idxs.clear();
 

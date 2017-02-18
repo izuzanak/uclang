@@ -826,7 +826,7 @@ bool pa_class_def_end(string_s &source_string,script_parser_s &_this)
   // *****
 
   // - remove class index from parent class stack -
-  parent_class_idxs.used--;
+  --parent_class_idxs.used;
 
   debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_class_def_end\n"));
 
@@ -914,7 +914,7 @@ bool pa_class_name(string_s &source_string,script_parser_s &_this)
     namespace_records[parent_namespace_ri].class_record_idxs.push(class_record_idx);
   }
 
-  // - push this class record index to parent class stack -
+  // - push class record index to parent class stack -
   parent_class_idxs.push(class_record_idx);
 
   // - initialization of modifiers -
@@ -1010,6 +1010,7 @@ bool pa_element_name_pa_identifier(string_s &source_string,script_parser_s &_thi
 bool pa_method_def_end(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   method_records_s &method_records = _this.method_records;
+  ui_array_s &parent_method_idxs = _this.parent_method_idxs;
   flow_graph_descr_s &fgd = _this.flow_graph_descr;
   ui_array_s &tmp_flow_graph = _this.tmp_flow_graph;
   expressions_s &tmp_expressions = _this.tmp_expressions;
@@ -1031,7 +1032,8 @@ bool pa_method_def_end(string_s &source_string,script_parser_s &_this)
   debug_assert(*ts_ptr < c_fgts_bc_value_base);
 
   // - setting flow graph index in method -
-  method_records.last().flow_graph_idx = method_flow_graphs.used;
+  method_record_s &method_record = method_records[parent_method_idxs.last()];
+  method_record.flow_graph_idx = method_flow_graphs.used;
 
   // - copy (swap) parsed flow graph -
   method_flow_graphs.push_blank();
@@ -1044,6 +1046,9 @@ bool pa_method_def_end(string_s &source_string,script_parser_s &_this)
   // - remove temporary data -
   fgd.fg_thread_stack.used = 0;
   fgd.fgts_cnt.used = 0;
+
+  // - remove method index from parent method stack -
+  --parent_method_idxs.used;
 
   debug_assert(fgd.fg_thread_stack.used == 0);
   debug_assert(fgd.fgts_cnt.used == 0);
@@ -1060,6 +1065,7 @@ bool pa_method_name(string_s &source_string,script_parser_s &_this)
   method_records_s &method_records = _this.method_records;
   unsigned &modifiers = _this.modifiers;
   ui_array_s &parent_class_idxs = _this.parent_class_idxs;
+  ui_array_s &parent_method_idxs = _this.parent_method_idxs;
   name_pos_array_s &tmp_name_pos_array = _this.tmp_name_pos_array;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
@@ -1134,6 +1140,9 @@ bool pa_method_name(string_s &source_string,script_parser_s &_this)
   // - store method index to parent class -
   class_record.method_record_idxs.push(method_record_idx);
 
+  // - push method record index to parent method stack -
+  parent_method_idxs.push(method_record_idx);
+
   // - initialization of modifier -
   modifiers = 0;
 
@@ -1152,13 +1161,14 @@ bool pa_method_parameters_done(string_s &source_string,script_parser_s &_this)
   class_records_s &class_records = _this.class_records;
   method_records_s &method_records = _this.method_records;
   ui_array_s &parent_class_idxs = _this.parent_class_idxs;
+  ui_array_s &parent_method_idxs = _this.parent_method_idxs;
   name_pos_s &tmp_name_pos = _this.tmp_name_pos_array.pop();
 
   // *****
 
   class_record_s &parent_record = class_records[parent_class_idxs.last()];
 
-  method_record_s &method_record = method_records.last();
+  method_record_s &method_record = method_records[parent_method_idxs.last()];
   unsigned m_parameter_cnt = method_record.parameter_record_idxs.used;
 
   // - creation of space for method name -
@@ -1224,6 +1234,7 @@ bool pa_method_parameter(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   method_records_s &method_records = _this.method_records;
   variable_records_s &variable_records = _this.variable_records;
+  ui_array_s &parent_method_idxs = _this.parent_method_idxs;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
@@ -1237,7 +1248,7 @@ bool pa_method_parameter(string_s &source_string,script_parser_s &_this)
   unsigned name_idx = _this.variable_symbol_names.get_idx_char_ptr_insert(name_length,name_data);
 
   // - get parameter parent method -
-  method_record_s &method_record = method_records.last();
+  method_record_s &method_record = method_records[parent_method_idxs.last()];
 
   // - test method parameter uniqueness -
   ui_array_s &method_pr_idxs = method_record.parameter_record_idxs;
@@ -1286,6 +1297,7 @@ bool pa_method_reference_parameter(string_s &source_string,script_parser_s &_thi
 {/*{{{*/
   method_records_s &method_records = _this.method_records;
   variable_records_s &variable_records = _this.variable_records;
+  ui_array_s &parent_method_idxs = _this.parent_method_idxs;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
@@ -1299,7 +1311,7 @@ bool pa_method_reference_parameter(string_s &source_string,script_parser_s &_thi
   unsigned name_idx = _this.variable_symbol_names.get_idx_char_ptr_insert(name_length,name_data);
 
   // - get parent method -
-  method_record_s &method_record = method_records.last();
+  method_record_s &method_record = method_records[parent_method_idxs.last()];
 
   // - test uniqueness of method parameter name in parent method -
   ui_array_s &method_pr_idxs = method_record.parameter_record_idxs;
@@ -1348,12 +1360,13 @@ bool pa_method_reference_parameter(string_s &source_string,script_parser_s &_thi
 bool pa_method_body_semicolon(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   method_records_s &method_records = _this.method_records;
+  ui_array_s &parent_method_idxs = _this.parent_method_idxs;
   flow_graph_descr_s &fgd = _this.flow_graph_descr;
 
   // *****
 
   // - test if method is defined as abstract -
-  method_record_s &method_record = method_records.last();
+  method_record_s &method_record = method_records[parent_method_idxs.last()];
 
   // - PARSE ERROR -
   if (!(method_record.modifiers & c_modifier_abstract))
@@ -1431,11 +1444,12 @@ bool pa_method_body_empty(string_s &source_string,script_parser_s &_this)
 bool pa_method_body_begin(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   method_records_s &method_records = _this.method_records;
+  ui_array_s &parent_method_idxs = _this.parent_method_idxs;
 
   // *****
 
   // - test if method is defined as abstract -
-  method_record_s &method_record = method_records.last();
+  method_record_s &method_record = method_records[parent_method_idxs.last()];
 
   // - PARSE ERROR -
   if (method_record.modifiers & c_modifier_abstract)
@@ -1482,6 +1496,7 @@ bool pa_blank_command_block(string_s &source_string,script_parser_s &_this)
 bool pa_try_catch_done(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   method_records_s &method_records = _this.method_records;
+  ui_array_s &parent_method_idxs = _this.parent_method_idxs;
   ui_array_s &try_fg_map_idxs = _this.try_fg_map_idxs;
   flow_graph_descr_s &fgd = _this.flow_graph_descr;
 
@@ -1507,7 +1522,7 @@ bool pa_try_catch_done(string_s &source_string,script_parser_s &_this)
     case c_fgts_type_blank:
     case c_fgts_type_thread:
     {
-      method_record_s &method_record = method_records.last();
+      method_record_s &method_record = method_records[parent_method_idxs.last()];
       method_record.try_fg_maps[try_fg_map_idx].tfgm_fg_idx = c_idx_not_exist;
     }
     break;
@@ -1525,7 +1540,7 @@ bool pa_try_catch_done(string_s &source_string,script_parser_s &_this)
       unsigned second_end_cnt = fgd.fgts_cnt.pop();
       fgd.fg_thread_stack.used -= second_end_cnt + 1;
 
-      method_record_s &method_record = method_records.last();
+      method_record_s &method_record = method_records[parent_method_idxs.last()];
       method_record.try_fg_maps[try_fg_map_idx].tfgm_fg_idx = c_idx_not_exist;
     }
     break;
@@ -1538,7 +1553,7 @@ bool pa_try_catch_done(string_s &source_string,script_parser_s &_this)
       // - should always be true -
       cassert(ts_ptr[first_end_cnt + 1] < c_fgts_bc_value_base);
 
-      method_record_s &method_record = method_records.last();
+      method_record_s &method_record = method_records[parent_method_idxs.last()];
       method_record.try_fg_maps[try_fg_map_idx].tfgm_fg_idx = ts_ptr[first_end_cnt + 1];
 
       if (second_end_cnt != 0)
@@ -1578,12 +1593,13 @@ bool pa_try_catch_done(string_s &source_string,script_parser_s &_this)
 bool pa_try_begin(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   method_records_s &method_records = _this.method_records;
+  ui_array_s &parent_method_idxs = _this.parent_method_idxs;
   ui_array_s &try_fg_map_idxs = _this.try_fg_map_idxs;
 
   // *****
 
   // - create new method try_fg_map -
-  method_record_s &method_record = method_records.last();
+  method_record_s &method_record = method_records[parent_method_idxs.last()];
   method_record.try_fg_maps.push_blank();
 
   // - store try_fg_map index -
@@ -1597,6 +1613,7 @@ bool pa_try_begin(string_s &source_string,script_parser_s &_this)
 bool pa_catch_begin(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   method_records_s &method_records = _this.method_records;
+  ui_array_s &parent_method_idxs = _this.parent_method_idxs;
   ui_array_s &try_fg_map_idxs = _this.try_fg_map_idxs;
   expression_descr_s &ed = _this.expression_descr;
   flow_graph_descr_s &fgd = _this.flow_graph_descr;
@@ -1620,7 +1637,8 @@ bool pa_catch_begin(string_s &source_string,script_parser_s &_this)
   unsigned try_fg_map_idx = try_fg_map_idxs.last();
 
   // - set last fg node, and variable name idx of method try_fg_map -
-  try_fg_map_s &try_fg_map = method_records.last().try_fg_maps[try_fg_map_idx];
+  method_record_s &method_record = method_records[parent_method_idxs.last()];
+  try_fg_map_s &try_fg_map = method_record.try_fg_maps[try_fg_map_idx];
   try_fg_map.tfgm_last_fg_node = tmp_flow_graph.used;
   try_fg_map.tfgm_var_idx = name_idx;
 
@@ -3971,23 +3989,69 @@ bool pa_object_member_name(string_s &source_string,script_parser_s &_this)
 
 bool pa_lambda_end(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  
+
   // FIXME TODO continue ...
   cassert(0);
+
+  debug_message_4(
+    fprintf(stderr,"script_parser: parse_action: pa_lambda_end\n");
+  );
+
+  return true;
 }/*}}}*/
 
 bool pa_lambda_begin(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  
-  // FIXME TODO continue ...
-  cassert(0);
+  method_records_s &method_records = _this.method_records;
+  ui_array_s &parent_method_idxs = _this.parent_method_idxs;
+  name_pos_array_s &tmp_name_pos_array = _this.tmp_name_pos_array;
+  lalr_stack_s &lalr_stack = _this.lalr_stack;
+
+  // *****
+
+  // - get lambda position -
+  lalr_stack_element_s &lse = lalr_stack[lalr_stack.used - 2];
+  tmp_name_pos_array.push_blank();
+  tmp_name_pos_array.last().set(lse.terminal_start,lse.terminal_end);
+
+  // - creation of new method record -
+  method_records.push_blank();
+  unsigned method_record_idx = method_records.used - 1;
+  method_record_s &method_record = method_records.last();
+
+  // - setting of variables describing method -
+  method_record.name_idx = c_idx_not_exist;
+
+  method_record.modifiers = c_modifier_public & c_modifier_static & c_modifier_final;
+  method_record.parent_record = c_idx_not_exist;
+  method_record.flow_graph_idx = c_idx_not_exist;
+
+  // - store position of lambda in code -
+  name_pos_s &name_position = method_record.name_position;
+  name_position.ui_first = SET_SRC_POS(_this.source_idx,lse.terminal_start);
+  name_position.ui_second = SET_SRC_POS(_this.source_idx,lse.terminal_end);
+
+  // - push method record index to parent method stack -
+  parent_method_idxs.push(method_record_idx);
+
+  debug_message_4(
+    fprintf(stderr,"script_parser: parse_action: pa_lambda_begin\n");
+  );
+
+  return true;
 }/*}}}*/
 
 bool pa_lambda_parameters(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  
+
   // FIXME TODO continue ...
   cassert(0);
+
+  debug_message_4(
+    fprintf(stderr,"script_parser: parse_action: pa_lambda_parameters\n");
+  );
+
+  return true;
 }/*}}}*/
 
 bool pa_const_char(string_s &source_string,script_parser_s &_this)
