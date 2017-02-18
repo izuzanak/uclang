@@ -10,7 +10,7 @@ include "script_parser.h"
 const unsigned max_number_string_length = 12;
 
 // - callers of parse action functions -
-const unsigned c_script_parse_action_cnt = 186;
+const unsigned c_script_parse_action_cnt = 189;
 bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,script_parser_s &_this) =
 {/*{{{*/
 
@@ -248,6 +248,10 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
   pa_parameter,
 
   pa_object_member_name,
+
+  pa_lambda_end,
+  pa_lambda_begin,
+  pa_lambda_parameters,
 
   pa_const_char,
   pa_const_octal_char,
@@ -3963,6 +3967,27 @@ bool pa_object_member_name(string_s &source_string,script_parser_s &_this)
   );
 
   return true;
+}/*}}}*/
+
+bool pa_lambda_end(string_s &source_string,script_parser_s &_this)
+{/*{{{*/
+  
+  // FIXME TODO continue ...
+  cassert(0);
+}/*}}}*/
+
+bool pa_lambda_begin(string_s &source_string,script_parser_s &_this)
+{/*{{{*/
+  
+  // FIXME TODO continue ...
+  cassert(0);
+}/*}}}*/
+
+bool pa_lambda_parameters(string_s &source_string,script_parser_s &_this)
+{/*{{{*/
+  
+  // FIXME TODO continue ...
+  cassert(0);
 }/*}}}*/
 
 bool pa_const_char(string_s &source_string,script_parser_s &_this)
