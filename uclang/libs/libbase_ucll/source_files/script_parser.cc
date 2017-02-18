@@ -1301,14 +1301,36 @@ void script_parser_s::DEBUG_show_expression(expression_s &exp)
       printf("#%u this_access\n",exp_idx);
       break;
     case c_node_type_new_object:
+    {
       DEBUG_print_spaces(deep);
-      printf("#%u new_object: \"%s\"\n",exp_idx,class_symbol_names[exp_ptr[2]].data);
-      break;
+      printf("#%u new_object\n",exp_idx);
+
+      unsigned parm_cnt = exp_ptr[2];
+
+      if (parm_cnt != 0)
+      {
+        unsigned parm_idx = parm_cnt;
+        do
+        {
+          parm_idx--;
+
+          exp_stack.push(exp_ptr[parm_idx + 4]);
+          deep_stack.push(deep + 1);
+        }
+        while(parm_idx > 0);
+      }
+
+      exp_stack.push(exp_ptr[3]);
+      deep_stack.push(deep + 1);
+    }
+    break;
     case c_node_type_new_objects_array:
       DEBUG_print_spaces(deep);
-      printf("#%u new_objects_array: \"%s\"\n",exp_idx,class_symbol_names[exp_ptr[2]].data);
+      printf("#%u new_objects_array\n",exp_idx);
 
-      exp_stack.push(exp_ptr[4]);
+      exp_stack.push(exp_ptr[3]);
+      exp_stack.push(exp_ptr[2]);
+      deep_stack.push(deep + 1);
       deep_stack.push(deep + 1);
       break;
     case c_node_type_free_object:
@@ -1363,6 +1385,30 @@ void script_parser_s::DEBUG_show_expression(expression_s &exp)
       deep_stack.push(deep + 1);
       deep_stack.push(deep + 1);
       break;
+    case c_node_type_class_access:
+    {
+      DEBUG_print_spaces(deep);
+      printf("#%u class_access: ",exp_idx);
+
+      unsigned name_cnt = exp_ptr[2];
+
+      if (name_cnt != 0)
+      {
+        unsigned *ni_ptr = exp_ptr + 3;
+        unsigned *ni_ptr_end = ni_ptr + name_cnt;
+        do {
+          printf("\"%s\"",class_symbol_names[*ni_ptr].data);
+
+          if (++ni_ptr >= ni_ptr_end)
+            break;
+
+          printf(", ");
+        } while(1);
+      }
+
+      printf("\n");
+    }
+    break;
     case c_node_type_object_member_select:
       DEBUG_print_spaces(deep);
       printf("#%u object_member_select: \"%s\"\n",exp_idx,variable_symbol_names[exp_ptr[2]].data);
@@ -1922,14 +1968,36 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       printf("   nd_%u [ label = \"this_acces\" ]\n",exp_idx);
       break;
     case c_node_type_new_object:
-      printf("   nd_%u [ label = \"new_object: %s\" ]\n",exp_idx,class_symbol_names[exp_ptr[2]].data);
-      break;
+    {
+      printf("   nd_%u [ label = \"new_object\" ]\n",exp_idx);
+
+      printf("   nd_%u -> nd_%u\n",exp_idx,exp_ptr[3]);
+      exp_stack.push(exp_ptr[3]);
+
+      unsigned parm_cnt = exp_ptr[2];
+
+      if (parm_cnt != 0)
+      {
+        unsigned parm_idx = parm_cnt;
+        do
+        {
+          parm_idx--;
+
+          printf("   nd_%u -> nd_%u\n",exp_idx,exp_ptr[parm_idx + 4]);
+          exp_stack.push(exp_ptr[parm_idx + 4]);
+        }
+        while(parm_idx > 0);
+      }
+    }
+    break;
     case c_node_type_new_objects_array:
       printf(
-        "   nd_%1$u [ label = \"new_objects_array: %2$s\" ]\n"
+        "   nd_%1$u [ label = \"new_objects_array\" ]\n"
+        "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
-        ,exp_idx,class_symbol_names[exp_ptr[2]].data,exp_ptr[4]);
-      exp_stack.push(exp_ptr[4]);
+        ,exp_idx,exp_ptr[2],exp_ptr[3]);
+      exp_stack.push(exp_ptr[2]);
+      exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_free_object:
       printf(
@@ -1983,6 +2051,30 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[2]);
       exp_stack.push(exp_ptr[3]);
       break;
+    case c_node_type_class_access:
+    {
+      printf(
+        "   nd_%u [ label = \"class_access",exp_idx);
+
+      unsigned name_cnt = exp_ptr[2];
+
+      if (name_cnt != 0)
+      {
+        unsigned *ni_ptr = exp_ptr + 3;
+        unsigned *ni_ptr_end = ni_ptr + name_cnt;
+        do {
+          printf(" %s",class_symbol_names[*ni_ptr].data);
+
+          if (++ni_ptr >= ni_ptr_end)
+            break;
+
+          printf(",");
+        } while(1);
+      }
+
+      printf("\" ]\n");
+    }
+    break;
     case c_node_type_object_member_select:
       printf(
         "   nd_%1$u [ label = \"object_member_select: %2$s\" ]\n"
