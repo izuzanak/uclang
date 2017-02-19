@@ -1491,6 +1491,10 @@ void script_parser_s::DEBUG_show_expression(expression_s &exp)
       DEBUG_print_spaces(deep);
       printf("#%u const: \"%s\"\n",exp_idx,const_strings[exp_ptr[1]].data);
       break;
+    case c_node_type_const_delegate:
+      DEBUG_print_spaces(deep);
+      printf("#%u const: lambda function\n",exp_idx);
+      break;
     default:
       cassert(0);
     }
@@ -2146,6 +2150,9 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       break;
     case c_node_type_const_string:
       printf("   nd_%u [ label = \"const: \\\"%s\\\"\" ]\n",exp_idx,const_strings[exp_ptr[1]].data);
+      break;
+    case c_node_type_const_delegate:
+      printf("   nd_%u [ label = \"const: lambda function\" ]\n",exp_idx);
       break;
     default:
       cassert(0);
@@ -3446,6 +3453,7 @@ void script_parser_s::initialize_parser(source_s &a_source,string_s &a_mods_path
   const_ints.clear();
   const_floats.clear();
   const_strings.clear();
+  const_delegates.clear();
 
   init_expressions.clear();
   method_flow_graphs.clear();
@@ -8361,7 +8369,9 @@ void script_parser_s::element_search()
 {/*{{{*/
 
   // - acquire count of program constants -
-  unsigned constant_cnt = const_chars.used + const_ints.used + const_floats.used + const_strings.used + class_records.used;
+  unsigned constant_cnt =
+    const_chars.used + const_ints.used + const_floats.used +
+    const_strings.used + const_delegates.used + class_records.used;
 
   // - counters of static constant elements and static elements -
   static_const_element_cnt = 0;
@@ -8580,6 +8590,163 @@ bool script_parser_s::generate_expression_intermediate_code(uli_array_s &begin_c
   return true;
 }/*}}}*/
 
+bool script_parser_s::generate_method_intermediate_code()
+{/*{{{*/
+
+  // - retrieve method record and flow graph -
+  method_record_s &method_record = method_records[im_descr.method_idx];
+  exp_flow_graph_s &fg = method_flow_graphs[method_record.flow_graph_idx];
+
+  // - reset free stack indexes -
+  im_descr.free_stack_idxs.used = 0;
+
+  // - clear array of identifier operands, and clear of variable name mapping -
+  im_descr.found_operands.used = 0;
+  memset(im_descr.var_name_fo_map.data,(int)c_idx_not_exist,im_descr.var_name_fo_map.used*sizeof(unsigned));
+  memset(im_descr.const_idx_fo_map.data,(int)c_idx_not_exist,im_descr.const_idx_fo_map.used*sizeof(unsigned));
+  memset(im_descr.static_vi_fo_map.data,(int)c_idx_not_exist,im_descr.static_vi_fo_map.used*sizeof(unsigned));
+
+  unsigned me_idx = 0;
+  unsigned *fgn_ptr = fg.nodes.data;
+  unsigned *fgn_ptr_end = fgn_ptr + fg.nodes.used;
+
+  // - cycle through method expressions -
+  do
+  {
+#define GENERATE_INTERMEDIATE_CODE_PROCESS_EXPRESSION(CODE) \
+{/*{{{*/\
+\
+  /* - attach expression code to flow graph node - */\
+  fgn_ptr[c_fg_expression_idx] = method_record.run_time_code.used;\
+\
+  im_descr.exp_idx = me_idx;\
+  if (!generate_expression_intermediate_code(method_record.begin_code,method_record.run_time_code,fg.expressions[me_idx]))\
+  {\
+    return false;\
+  }\
+\
+  /* - increase method expression index - */\
+  me_idx++;\
+\
+  /* - pointer to last expression operand - */\
+  op_ptr = im_descr.operands.data + im_descr.operand_stack.pop();\
+\
+  CODE;\
+\
+  /* - if last operand is temporary, insert its index to free position list - */\
+  if (*op_ptr & c_op_modifier_tmp)\
+  {\
+    im_descr.free_stack_idxs.push(op_ptr[1]);\
+  }\
+}/*}}}*/
+
+    unsigned *op_ptr;
+
+    // - generation of last instruction of expression base on flow graph node type -
+    switch (*fgn_ptr)
+    {
+    case c_fg_type_expression:
+      GENERATE_INTERMEDIATE_CODE_PROCESS_EXPRESSION(
+        method_record.run_time_code.push(i_expression_end);
+        fgn_ptr += c_fg_expression_size;
+      );
+      break;
+    case c_fg_type_condition:
+      GENERATE_INTERMEDIATE_CODE_PROCESS_EXPRESSION(
+        method_record.run_time_code.push(i_return);
+        method_record.run_time_code.push(op_ptr[1]);
+
+        // - ERROR -
+        if (!(*op_ptr & c_op_modifier_object))
+        {
+          error_code.push(ei_expected_object_as_operand);
+          error_code.push(fgn_ptr[c_fg_condition_source_pos]);
+        }
+
+        fgn_ptr += c_fg_condition_size;
+      );
+      break;
+    case c_fg_type_return_expression:
+      GENERATE_INTERMEDIATE_CODE_PROCESS_EXPRESSION(
+        method_record.run_time_code.push(i_return);
+        method_record.run_time_code.push(op_ptr[1]);
+
+        // - ERROR -
+        if (!(*op_ptr & c_op_modifier_object))
+        {
+          error_code.push(ei_expected_object_as_operand);
+          error_code.push(fgn_ptr[c_fg_return_expression_source_pos]);
+        }
+
+        fgn_ptr += c_fg_return_expression_size;
+      );
+      break;
+    case c_fg_type_for_loop:
+      GENERATE_INTERMEDIATE_CODE_PROCESS_EXPRESSION(
+        method_record.run_time_code.push(i_return);
+        method_record.run_time_code.push(op_ptr[1]);
+
+        // - ERROR -
+        if (!(*op_ptr & c_op_modifier_object))
+        {
+          error_code.push(ei_expected_object_as_operand);
+          error_code.push(fgn_ptr[c_fg_for_loop_source_pos]);
+        }
+
+        fgn_ptr += c_fg_for_loop_size;
+      );
+      break;
+    case c_fg_type_break:
+      fgn_ptr += c_fg_break_size;
+      break;
+    case c_fg_type_continue:
+      fgn_ptr += c_fg_continue_size;
+      break;
+    case c_fg_type_switch:
+      GENERATE_INTERMEDIATE_CODE_PROCESS_EXPRESSION(
+        method_record.run_time_code.push(i_return);
+        method_record.run_time_code.push(op_ptr[1]);
+
+        // - ERROR -
+        if (!(*op_ptr & c_op_modifier_object))
+        {
+          error_code.push(ei_expected_object_as_operand);
+          error_code.push(fgn_ptr[c_fg_switch_source_pos]);
+        }
+
+        fgn_ptr += c_fg_switch_size + fgn_ptr[c_fg_switch_default_cnt] + fgn_ptr[c_fg_switch_exp_cnt];
+      );
+      break;
+    default:
+      debug_assert(0);
+    }
+  }
+  while(fgn_ptr < fgn_ptr_end);
+
+  // - insert end instruction to begin code -
+  method_record.begin_code.push(i_expression_end);
+
+  // - set method stack size -
+  method_record.stack_size = im_descr.stack_idx_max;
+
+  // - translation of catch variable names to stack positions -
+  if (method_record.try_fg_maps.used != 0)
+  {
+    try_fg_map_s *tfg_ptr = method_record.try_fg_maps.data;
+    try_fg_map_s *tfg_ptr_end = tfg_ptr + method_record.try_fg_maps.used;
+
+    do
+    {
+      unsigned *fo_ptr = im_descr.found_operands.data + im_descr.var_name_fo_map[tfg_ptr->tfgm_var_idx];
+      cassert(*fo_ptr == c_op_modifier_object);
+      tfg_ptr->tfgm_var_idx = fo_ptr[1];
+    }
+    while(++tfg_ptr < tfg_ptr_end);
+  }
+
+  return true;
+}/*}}}*/
+
 void script_parser_s::generate_intermediate_code()
 {/*{{{*/
 
@@ -8588,7 +8755,8 @@ void script_parser_s::generate_intermediate_code()
   im_descr.cv_integer_base = im_descr.cv_char_base + const_chars.used;
   im_descr.cv_float_base = im_descr.cv_integer_base + const_ints.used;
   im_descr.cv_string_base = im_descr.cv_float_base + const_floats.used;
-  im_descr.cv_type_base = im_descr.cv_string_base + const_strings.used;
+  im_descr.cv_delegate_base = im_descr.cv_string_base + const_strings.used;
+  im_descr.cv_type_base = im_descr.cv_delegate_base + const_delegates.used;
   im_descr.cv_count = im_descr.cv_type_base + class_records.used + static_const_element_cnt;
 
   // - queue for storing indexes of top classes -
@@ -8838,155 +9006,14 @@ void script_parser_s::generate_intermediate_code()
                 im_descr.stack_idx_max = method_record.parameter_record_idxs.used + 1;
               }
 
-              im_descr.free_stack_idxs.used = 0;
-
-              // - clear array of identifier operands, and clear of variable name mapping -
-              im_descr.found_operands.used = 0;
-              memset(im_descr.var_name_fo_map.data,(int)c_idx_not_exist,im_descr.var_name_fo_map.used*sizeof(unsigned));
-              memset(im_descr.const_idx_fo_map.data,(int)c_idx_not_exist,im_descr.const_idx_fo_map.used*sizeof(unsigned));
-              memset(im_descr.static_vi_fo_map.data,(int)c_idx_not_exist,im_descr.static_vi_fo_map.used*sizeof(unsigned));
-
-              unsigned me_idx = 0;
-              unsigned *fgn_ptr = fg.nodes.data;
-              unsigned *fgn_ptr_end = fgn_ptr + fg.nodes.used;
-
-              // - cycle through method expressions -
-              do
+              // - generate method intermediate code -
+              if (!generate_method_intermediate_code())
               {
-#define GENERATE_INTERMEDIATE_CODE_PROCESS_EXPRESSION(CODE) \
-{/*{{{*/\
-\
-  /* - attach expression code to flow graph node - */\
-  fgn_ptr[c_fg_expression_idx] = method_record.run_time_code.used;\
-\
-  im_descr.exp_idx = me_idx;\
-  if (!generate_expression_intermediate_code(method_record.begin_code,method_record.run_time_code,fg.expressions[me_idx]))\
-  {\
-    /* - reset class using namespaces - */\
-    class_record.using_namespace_idxs.swap(using_namespace_idxs);\
-\
-    return;\
-  }\
-\
-  /* - increase method expression index - */\
-  me_idx++;\
-\
-  /* - pointer to last expression operand - */\
-  op_ptr = im_descr.operands.data + im_descr.operand_stack.pop();\
-\
-  CODE;\
-\
-  /* - if last operand is temporary, insert its index to free position list - */\
-  if (*op_ptr & c_op_modifier_tmp)\
-  {\
-    im_descr.free_stack_idxs.push(op_ptr[1]);\
-  }\
-}/*}}}*/
+                // - reset class using namespaces -
+                class_record.using_namespace_idxs.swap(using_namespace_idxs);
 
-                unsigned *op_ptr;
-
-                // - generation of last instruction of expression base on flow graph node type -
-                switch (*fgn_ptr)
-                {
-                case c_fg_type_expression:
-                  GENERATE_INTERMEDIATE_CODE_PROCESS_EXPRESSION(
-                    method_record.run_time_code.push(i_expression_end);
-                    fgn_ptr += c_fg_expression_size;
-                  );
-                  break;
-                case c_fg_type_condition:
-                  GENERATE_INTERMEDIATE_CODE_PROCESS_EXPRESSION(
-                    method_record.run_time_code.push(i_return);
-                    method_record.run_time_code.push(op_ptr[1]);
-
-                    // - ERROR -
-                    if (!(*op_ptr & c_op_modifier_object))
-                    {
-                      error_code.push(ei_expected_object_as_operand);
-                      error_code.push(fgn_ptr[c_fg_condition_source_pos]);
-                    }
-
-                    fgn_ptr += c_fg_condition_size;
-                  );
-                  break;
-                case c_fg_type_return_expression:
-                  GENERATE_INTERMEDIATE_CODE_PROCESS_EXPRESSION(
-                    method_record.run_time_code.push(i_return);
-                    method_record.run_time_code.push(op_ptr[1]);
-
-                    // - ERROR -
-                    if (!(*op_ptr & c_op_modifier_object))
-                    {
-                      error_code.push(ei_expected_object_as_operand);
-                      error_code.push(fgn_ptr[c_fg_return_expression_source_pos]);
-                    }
-
-                    fgn_ptr += c_fg_return_expression_size;
-                  );
-                  break;
-                case c_fg_type_for_loop:
-                  GENERATE_INTERMEDIATE_CODE_PROCESS_EXPRESSION(
-                    method_record.run_time_code.push(i_return);
-                    method_record.run_time_code.push(op_ptr[1]);
-
-                    // - ERROR -
-                    if (!(*op_ptr & c_op_modifier_object))
-                    {
-                      error_code.push(ei_expected_object_as_operand);
-                      error_code.push(fgn_ptr[c_fg_for_loop_source_pos]);
-                    }
-
-                    fgn_ptr += c_fg_for_loop_size;
-                  );
-                  break;
-                case c_fg_type_break:
-                  fgn_ptr += c_fg_break_size;
-                  break;
-                case c_fg_type_continue:
-                  fgn_ptr += c_fg_continue_size;
-                  break;
-                case c_fg_type_switch:
-                  GENERATE_INTERMEDIATE_CODE_PROCESS_EXPRESSION(
-                    method_record.run_time_code.push(i_return);
-                    method_record.run_time_code.push(op_ptr[1]);
-
-                    // - ERROR -
-                    if (!(*op_ptr & c_op_modifier_object))
-                    {
-                      error_code.push(ei_expected_object_as_operand);
-                      error_code.push(fgn_ptr[c_fg_switch_source_pos]);
-                    }
-
-                    fgn_ptr += c_fg_switch_size + fgn_ptr[c_fg_switch_default_cnt] + fgn_ptr[c_fg_switch_exp_cnt];
-                  );
-                  break;
-                default:
-                  debug_assert(0);
-                }
+                return;
               }
-              while(fgn_ptr < fgn_ptr_end);
-
-              // - insert end instruction to begin code -
-              method_record.begin_code.push(i_expression_end);
-
-              // - set method stack size -
-              method_record.stack_size = im_descr.stack_idx_max;
-
-              // - translation of catch variable names to stack positions -
-              if (method_record.try_fg_maps.used != 0)
-              {
-                try_fg_map_s *tfg_ptr = method_record.try_fg_maps.data;
-                try_fg_map_s *tfg_ptr_end = tfg_ptr + method_record.try_fg_maps.used;
-
-                do
-                {
-                  unsigned *fo_ptr = im_descr.found_operands.data + im_descr.var_name_fo_map[tfg_ptr->tfgm_var_idx];
-                  cassert(*fo_ptr == c_op_modifier_object);
-                  tfg_ptr->tfgm_var_idx = fo_ptr[1];
-                }
-                while(++tfg_ptr < tfg_ptr_end);
-              }
-
             }
           }
         }
@@ -8998,6 +9025,29 @@ void script_parser_s::generate_intermediate_code()
     }
   }
   while(++cr_idx < class_records.used);
+
+  // - generate code for constant delegates -
+  if (const_delegates.used != 0)
+  {
+    unsigned cd_idx = 0;
+    do {
+      
+      // - retrieve method record index -
+      im_descr.method_idx = const_delegates[cd_idx].name_idx_ri;
+
+      // - set modifier of generated code -
+      im_descr.code_modifiers = c_code_modifier_run_time | c_code_modifier_static;
+
+      // - count method parameters on stack -
+      im_descr.stack_idx_max = method_records[im_descr.method_idx].parameter_record_idxs.used;
+
+      // - generate method intermediate code -
+      if (!generate_method_intermediate_code())
+      {
+        return;
+      }
+    } while(++cd_idx < const_delegates.used);
+  }
 
   im_descr.static_vi_fo_map.clear();
   im_descr.const_idx_fo_map.clear();

@@ -155,7 +155,8 @@ enum
   c_node_type_const_char,
   c_node_type_const_int,
   c_node_type_const_float,
-  c_node_type_const_string
+  c_node_type_const_string,
+  c_node_type_const_delegate
 };
 
 // - modifiers of operands used while generating intermediate code -
@@ -842,6 +843,7 @@ unsigned:cv_char_base
 unsigned:cv_integer_base
 unsigned:cv_float_base
 unsigned:cv_string_base
+unsigned:cv_delegate_base
 unsigned:cv_type_base
 unsigned:cv_count
 
@@ -959,6 +961,7 @@ bc_array_s:const_chars
 lli_rb_tree_s:const_ints
 bd_rb_tree_s:const_floats
 string_rb_tree_s:const_strings
+delegates_s:const_delegates
 
 expressions_s:init_expressions
 
@@ -1122,6 +1125,11 @@ additions
    * \return false if generation failed, otherwise returns true
    */
   bool generate_expression_intermediate_code(uli_array_s &begin_code,uli_array_s &code,expression_s &exp);
+
+  /*!
+   * \brief generate intermediate code for one method
+   */
+  bool generate_method_intermediate_code();
 
   /*!
    * \brief generate intermediate code for all methods, class initializations and static variables initializations
@@ -1398,6 +1406,7 @@ bc_array_s:const_chars
 lli_rb_tree_s:const_ints
 bd_rb_tree_s:const_floats
 string_rb_tree_s:const_strings
+delegates_s:const_delegates
 
 $// - graphs of program flow -
 flow_graphs_s:method_flow_graphs

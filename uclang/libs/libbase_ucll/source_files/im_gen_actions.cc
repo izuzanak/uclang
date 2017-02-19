@@ -10,7 +10,7 @@ include "script_parser.h"
 const unsigned max_number_string_length = 12;
 
 // - callers of intermediate code generating functions -
-const unsigned c_script_im_gen_action_cnt = 60;
+const unsigned c_script_im_gen_action_cnt = 61;
 bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,script_parser_s &_this) =
 {/*{{{*/
   im_elements_array,
@@ -73,6 +73,7 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
   im_const_int,
   im_const_float,
   im_const_string,
+  im_const_delegate,
 };/*}}}*/
 
 /*
@@ -2690,6 +2691,46 @@ bool im_const_string(expression_s &exp,uli_array_s &begin_code,uli_array_s &code
   }
 
   debug_message_4(fprintf(stderr,"script_parser: intermediate generate: im_const_string\n"));
+
+  return true;
+}/*}}}*/
+
+bool im_const_delegate(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,script_parser_s &_this)
+{/*{{{*/
+  im_descr_s &im = _this.im_descr;
+
+  // *****
+
+  unsigned const_idx = im.cv_delegate_base + exp.nodes[im.exp_node_stack.pop() + 1];
+  unsigned &cv_operand = im.const_idx_fo_map[const_idx];
+
+  if (cv_operand == c_idx_not_exist)
+  {
+    // - creation of position for reference to constant -
+    unsigned local_idx = im.stack_idx_max++;
+
+    cv_operand = im.found_operands.used;
+    im.found_operands.push(c_op_modifier_object);
+    im.found_operands.push(local_idx);
+
+    im.operand_stack.push(im.operands.used);
+    im.operands.push(c_op_modifier_object);
+    im.operands.push(local_idx);
+
+    begin_code.push(i_const);
+    begin_code.push(local_idx);
+    begin_code.push(const_idx);
+  }
+  else
+  {
+    im.operand_stack.push(im.operands.used);
+
+    unsigned *fo_ptr = im.found_operands.data + cv_operand;
+    im.operands.push(*fo_ptr);
+    im.operands.push(fo_ptr[1]);
+  }
+
+  debug_message_4(fprintf(stderr,"script_parser: intermediate generate: im_const_delegate\n"));
 
   return true;
 }/*}}}*/

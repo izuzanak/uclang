@@ -1036,7 +1036,8 @@ bool pa_method_def_end(string_s &source_string,script_parser_s &_this)
   debug_assert(*ts_ptr < c_fgts_bc_value_base);
 
   // - setting flow graph index in method -
-  method_record_s &method_record = method_records[parent_method_idxs.last()];
+  unsigned method_record_idx = parent_method_idxs.last();
+  method_record_s &method_record = method_records[method_record_idx];
   method_record.flow_graph_idx = method_flow_graphs.used;
 
   // - copy (swap) parsed flow graph -
@@ -4031,6 +4032,7 @@ bool pa_lambda_end(string_s &source_string,script_parser_s &_this)
   expressions_s &tmp_expressions = code_descr.tmp_expressions;
   flow_graph_descr_s &fgd = code_descr.flow_graph_descr;
 
+  delegates_s &const_delegates = _this.const_delegates;
   exp_flow_graphs_s &method_flow_graphs = _this.method_flow_graphs;
 
   // *****
@@ -4049,7 +4051,8 @@ bool pa_lambda_end(string_s &source_string,script_parser_s &_this)
   debug_assert(*ts_ptr < c_fgts_bc_value_base);
 
   // - setting flow graph index in method -
-  method_record_s &method_record = method_records[parent_method_idxs.last()];
+  unsigned method_record_idx = parent_method_idxs.last();
+  method_record_s &method_record = method_records[method_record_idx];
   method_record.flow_graph_idx = method_flow_graphs.used;
 
   // - copy (swap) parsed flow graph -
@@ -4075,29 +4078,29 @@ bool pa_lambda_end(string_s &source_string,script_parser_s &_this)
   // - remove code description -
   code_descrs.used--;
 
-  // FIXME TODO create expression value ...
-  {
-    expression_descr_s &ed = _this.code_descrs.last().expression_descr;
-    lli_rb_tree_s &const_ints = _this.const_ints;
+  // - create constant delegate -
+  const_delegates.push_blank();
+  delegate_s &delegate = const_delegates.last();
 
-    // - get constant position in array -
-    unsigned ci_idx = const_ints.unique_insert(0);
+  delegate.object_location = NULL;
+  delegate.name_idx_ri = method_record_idx;
+  delegate.param_cnt = method_record.parameter_record_idxs.used;
 
-    // - store node position -
-    unsigned tmp_node_idx = ed.tmp_expression.used;
+  // - retrieve expression description (after code_descr pop) -
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
-    ed.tmp_expression.push(c_node_type_const_int);
-    ed.tmp_expression.push(ci_idx);
+  // - store node position -
+  unsigned tmp_node_idx = ed.tmp_expression.used;
 
-    // - create expression info node -
-    ed.tmp_exp_info.push_blank();
-    idx_size_s &tmp_exp_info = ed.tmp_exp_info.last();
+  ed.tmp_expression.push(c_node_type_const_delegate);
+  ed.tmp_expression.push(const_delegates.used - 1);
 
-    tmp_exp_info.ui_first = tmp_node_idx;
-    tmp_exp_info.ui_second = 2;
-  }
+  // - create expression info node -
+  ed.tmp_exp_info.push_blank();
+  idx_size_s &tmp_exp_info = ed.tmp_exp_info.last();
 
-  // -----
+  tmp_exp_info.ui_first = tmp_node_idx;
+  tmp_exp_info.ui_second = 2;
 
   debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_lambda_end\n"));
 

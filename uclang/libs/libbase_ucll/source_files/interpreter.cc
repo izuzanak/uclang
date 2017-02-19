@@ -1141,6 +1141,7 @@ void interpreter_s::create_from_script_parser(script_parser_s &sp)
   const_ints.swap(sp.const_ints);
   const_floats.swap(sp.const_floats);
   const_strings.swap(sp.const_strings);
+  const_delegates.swap(sp.const_delegates);
 
   // - graphs of program flow -
 
@@ -1191,6 +1192,7 @@ void interpreter_s::create_constant_and_static_locations()
     const_ints.used +
     const_floats.used +
     const_strings.used +
+    const_delegates.used +
     class_records.used);
 
   location_s *cv_ptr = const_locations.data;
@@ -1247,6 +1249,19 @@ void interpreter_s::create_constant_and_static_locations()
       cv_ptr->v_data_ptr = (string_s *)&const_strings.data[cs_idx].object;
     }
     while(++cv_ptr,++cs_idx < const_strings.used);
+  }
+
+  // - process delegate constants -
+  if (const_delegates.used != 0)
+  {
+    unsigned cd_idx = 0;
+    do
+    {
+      cv_ptr->v_type = c_bi_class_delegate;
+      cv_ptr->v_reference_cnt.atomic_set(1);
+      cv_ptr->v_data_ptr = (delegate_s *)&const_delegates[cd_idx];
+    }
+    while(++cv_ptr,++cd_idx < const_delegates.used);
   }
 
   // - creation type constants -
@@ -1311,7 +1326,8 @@ void interpreter_s::release_constant_and_static_locations()
 
   // - release static built in constants -
   unsigned parse_constant_cnt = const_chars.used + const_ints.used +
-                                const_floats.used + const_strings.used + class_records.used;
+                                const_floats.used + const_strings.used +
+                                const_delegates.used + class_records.used;
 
   if (const_locations.used > parse_constant_cnt)
   {

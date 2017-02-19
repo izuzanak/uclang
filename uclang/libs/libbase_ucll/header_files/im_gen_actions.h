@@ -66,6 +66,7 @@ bool im_const_char(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,s
 bool im_const_int(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,script_parser_s &_this);
 bool im_const_float(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,script_parser_s &_this);
 bool im_const_string(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,script_parser_s &_this);
+bool im_const_delegate(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,script_parser_s &_this);
 
 /*
  * access to function callers
