@@ -121,7 +121,6 @@ bool pa_parameter(string_s &source_string,script_parser_s &_this);
 bool pa_object_member_name(string_s &source_string,script_parser_s &_this);
 bool pa_lambda_end(string_s &source_string,script_parser_s &_this);
 bool pa_lambda_begin(string_s &source_string,script_parser_s &_this);
-bool pa_lambda_parameters(string_s &source_string,script_parser_s &_this);
 bool pa_const_char(string_s &source_string,script_parser_s &_this);
 bool pa_const_octal_char(string_s &source_string,script_parser_s &_this);
 bool pa_const_hex_char(string_s &source_string,script_parser_s &_this);

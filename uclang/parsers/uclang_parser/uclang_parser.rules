@@ -214,6 +214,8 @@ nonterminals:
    <class_access>
    <object_member>
 
+   <lambda_begin>
+
    <array_elements>
    <array_elements_begin>
    <array_element_list>
@@ -2315,6 +2317,34 @@ rules:
          table.insert(node_stack,this_idx);
       else
          print(table.concat(tabs,"").."object member name: \""..rule_body(2).."\"");
+      end
+   }
+
+   $ -- lambda function --
+   <A> -> <lambda_begin> <method_parameter_list> rr_br <command> ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"<lambda_begin> <method_parameter_list> ) <command>\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      else
+         print(table.concat(tabs,"").."lambda end");
+      end
+   }
+
+   <lambda_begin> -> colon lr_br ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \": (\"]");
+         table.insert(node_stack,this_idx);
+      else
+         print(table.concat(tabs,"").."lambda begin");
       end
    }
 

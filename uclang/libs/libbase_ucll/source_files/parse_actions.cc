@@ -10,7 +10,7 @@ include "script_parser.h"
 const unsigned max_number_string_length = 12;
 
 // - callers of parse action functions -
-const unsigned c_script_parse_action_cnt = 189;
+const unsigned c_script_parse_action_cnt = 188;
 bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,script_parser_s &_this) =
 {/*{{{*/
 
@@ -251,7 +251,6 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
 
   pa_lambda_end,
   pa_lambda_begin,
-  pa_lambda_parameters,
 
   pa_const_char,
   pa_const_octal_char,
@@ -586,6 +585,52 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
     tmp_exp_info.ui_first = tmp_node_idx;\
     tmp_exp_info.ui_second = exp_size;\
   }/*}}}*/
+
+// -- PA_METHOD_DEFINITION_END --
+#define PA_METHOD_DEFINITION_END() \
+/*{{{*/\
+  \
+  /* - test if thread was created on stack of graph flow - */\
+  debug_assert(fgd.fgts_type.used > 0);\
+  \
+  /* - if method body contains no code - */\
+  if (fgd.fgts_type.last() == c_fgts_type_blank)\
+  {\
+    fgd.fgts_type.pop();\
+    pa_method_body_empty(source_string,_this);\
+  }\
+  \
+  unsigned *ts_ptr = fgd.fg_thread_stack.data;\
+  debug_assert(*ts_ptr < c_fgts_bc_value_base);\
+  \
+  /* - setting flow graph index in method - */\
+  unsigned method_record_idx = parent_method_idxs.last();\
+  method_record_s &method_record = method_records[method_record_idx];\
+  method_record.flow_graph_idx = method_flow_graphs.used;\
+  \
+  /* - copy (swap) parsed flow graph - */\
+  method_flow_graphs.push_blank();\
+  exp_flow_graph_s &method_flow_graph = method_flow_graphs.last();\
+  \
+  method_flow_graph.start_node_idx = *ts_ptr;\
+  method_flow_graph.nodes.swap(tmp_flow_graph);\
+  method_flow_graph.expressions.swap(tmp_expressions);\
+  \
+  /* - remove temporary data - */\
+  fgd.fg_thread_stack.used = 0;\
+  fgd.fgts_cnt.used = 0;\
+  \
+  /* - remove method index from parent method stack - */\
+  parent_method_idxs.used--;\
+  \
+  debug_assert(tmp_flow_graph.used == 0);\
+  debug_assert(tmp_expressions.used == 0);\
+  debug_assert(fgd.fg_thread_stack.used == 0);\
+  debug_assert(fgd.fgts_cnt.used == 0);\
+  \
+  /* - remove code description - */\
+  code_descrs.used--;\
+/*}}}*/
 
 /*
  * functions implementing parse actions of parser
@@ -1022,46 +1067,7 @@ bool pa_method_def_end(string_s &source_string,script_parser_s &_this)
 
   // *****
 
-  // - test if thread was created on stack of graph flow -
-  debug_assert(fgd.fgts_type.used > 0);
-
-  // - if method body contains no code -
-  if (fgd.fgts_type.last() == c_fgts_type_blank)
-  {
-    fgd.fgts_type.pop();
-    pa_method_body_empty(source_string,_this);
-  }
-
-  unsigned *ts_ptr = fgd.fg_thread_stack.data;
-  debug_assert(*ts_ptr < c_fgts_bc_value_base);
-
-  // - setting flow graph index in method -
-  unsigned method_record_idx = parent_method_idxs.last();
-  method_record_s &method_record = method_records[method_record_idx];
-  method_record.flow_graph_idx = method_flow_graphs.used;
-
-  // - copy (swap) parsed flow graph -
-  method_flow_graphs.push_blank();
-  exp_flow_graph_s &method_flow_graph = method_flow_graphs.last();
-
-  method_flow_graph.start_node_idx = *ts_ptr;
-  method_flow_graph.nodes.swap(tmp_flow_graph);
-  method_flow_graph.expressions.swap(tmp_expressions);
-
-  // - remove temporary data -
-  fgd.fg_thread_stack.used = 0;
-  fgd.fgts_cnt.used = 0;
-
-  // - remove method index from parent method stack -
-  parent_method_idxs.used--;
-
-  debug_assert(tmp_flow_graph.used == 0);
-  debug_assert(tmp_expressions.used == 0);
-  debug_assert(fgd.fg_thread_stack.used == 0);
-  debug_assert(fgd.fgts_cnt.used == 0);
-
-  // - remove code description -
-  code_descrs.used--;
+  PA_METHOD_DEFINITION_END();
 
   debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_method_def_end\n"));
 
@@ -4037,46 +4043,7 @@ bool pa_lambda_end(string_s &source_string,script_parser_s &_this)
 
   // *****
 
-  // - test if thread was created on stack of graph flow -
-  debug_assert(fgd.fgts_type.used > 0);
-
-  // - if method body contains no code -
-  if (fgd.fgts_type.last() == c_fgts_type_blank)
-  {
-    fgd.fgts_type.pop();
-    pa_method_body_empty(source_string,_this);
-  }
-
-  unsigned *ts_ptr = fgd.fg_thread_stack.data;
-  debug_assert(*ts_ptr < c_fgts_bc_value_base);
-
-  // - setting flow graph index in method -
-  unsigned method_record_idx = parent_method_idxs.last();
-  method_record_s &method_record = method_records[method_record_idx];
-  method_record.flow_graph_idx = method_flow_graphs.used;
-
-  // - copy (swap) parsed flow graph -
-  method_flow_graphs.push_blank();
-  exp_flow_graph_s &method_flow_graph = method_flow_graphs.last();
-
-  method_flow_graph.start_node_idx = *ts_ptr;
-  method_flow_graph.nodes.swap(tmp_flow_graph);
-  method_flow_graph.expressions.swap(tmp_expressions);
-
-  // - remove temporary data -
-  fgd.fg_thread_stack.used = 0;
-  fgd.fgts_cnt.used = 0;
-
-  // - remove method index from parent method stack -
-  parent_method_idxs.used--;
-
-  debug_assert(tmp_flow_graph.used == 0);
-  debug_assert(tmp_expressions.used == 0);
-  debug_assert(fgd.fg_thread_stack.used == 0);
-  debug_assert(fgd.fgts_cnt.used == 0);
-
-  // - remove code description -
-  code_descrs.used--;
+  PA_METHOD_DEFINITION_END();
 
   // - create constant delegate -
   const_delegates.push_blank();
@@ -4145,16 +4112,6 @@ bool pa_lambda_begin(string_s &source_string,script_parser_s &_this)
   debug_message_4(
     fprintf(stderr,"script_parser: parse_action: pa_lambda_begin\n");
   );
-
-  return true;
-}/*}}}*/
-
-bool pa_lambda_parameters(string_s &source_string,script_parser_s &_this)
-{/*{{{*/
-
-  // FIXME TODO remove unused parse action ...
-
-  debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_lambda_parameters\n"));
 
   return true;
 }/*}}}*/
