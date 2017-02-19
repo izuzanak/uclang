@@ -826,7 +826,7 @@ bool pa_class_def_end(string_s &source_string,script_parser_s &_this)
   // *****
 
   // - remove class index from parent class stack -
-  --parent_class_idxs.used;
+  parent_class_idxs.used--;
 
   debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_class_def_end\n"));
 
@@ -967,7 +967,7 @@ bool pa_element_name(string_s &source_string,script_parser_s &_this)
 bool pa_init_expression(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   variable_records_s &variable_records = _this.variable_records;
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
   expressions_s &init_expressions = _this.init_expressions;
 
   // *****
@@ -993,7 +993,7 @@ bool pa_element_name_pa_identifier(string_s &source_string,script_parser_s &_thi
   class_records_s &class_records = _this.class_records;
   variable_records_s &variable_records = _this.variable_records;
   ui_array_s &parent_class_idxs = _this.parent_class_idxs;
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
@@ -1011,9 +1011,13 @@ bool pa_method_def_end(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   method_records_s &method_records = _this.method_records;
   ui_array_s &parent_method_idxs = _this.parent_method_idxs;
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
-  ui_array_s &tmp_flow_graph = _this.tmp_flow_graph;
-  expressions_s &tmp_expressions = _this.tmp_expressions;
+
+  code_descrs_s &code_descrs = _this.code_descrs;
+  code_descr_s &code_descr = code_descrs.last();
+  ui_array_s &tmp_flow_graph = code_descr.tmp_flow_graph;
+  expressions_s &tmp_expressions = code_descr.tmp_expressions;
+  flow_graph_descr_s &fgd = code_descr.flow_graph_descr;
+
   exp_flow_graphs_s &method_flow_graphs = _this.method_flow_graphs;
 
   // *****
@@ -1048,11 +1052,15 @@ bool pa_method_def_end(string_s &source_string,script_parser_s &_this)
   fgd.fgts_cnt.used = 0;
 
   // - remove method index from parent method stack -
-  --parent_method_idxs.used;
+  parent_method_idxs.used--;
 
+  debug_assert(tmp_flow_graph.used == 0);
+  debug_assert(tmp_expressions.used == 0);
   debug_assert(fgd.fg_thread_stack.used == 0);
   debug_assert(fgd.fgts_cnt.used == 0);
-  debug_assert(tmp_flow_graph.used == 0);
+
+  // - remove code description -
+  code_descrs.used--;
 
   debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_method_def_end\n"));
 
@@ -1067,6 +1075,7 @@ bool pa_method_name(string_s &source_string,script_parser_s &_this)
   ui_array_s &parent_class_idxs = _this.parent_class_idxs;
   ui_array_s &parent_method_idxs = _this.parent_method_idxs;
   name_pos_array_s &tmp_name_pos_array = _this.tmp_name_pos_array;
+  code_descrs_s &code_descrs = _this.code_descrs;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
@@ -1145,6 +1154,9 @@ bool pa_method_name(string_s &source_string,script_parser_s &_this)
 
   // - initialization of modifier -
   modifiers = 0;
+
+  // - initialize code description -
+  code_descrs.push_blank();
 
   debug_message_4(
     char tmp_char = source_string[lse.terminal_end];
@@ -1361,7 +1373,7 @@ bool pa_method_body_semicolon(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   method_records_s &method_records = _this.method_records;
   ui_array_s &parent_method_idxs = _this.parent_method_idxs;
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
+  flow_graph_descr_s &fgd = _this.code_descrs.last().flow_graph_descr;
 
   // *****
 
@@ -1387,11 +1399,13 @@ bool pa_method_body_semicolon(string_s &source_string,script_parser_s &_this)
 
 bool pa_method_body_empty(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
   lli_rb_tree_s &const_ints = _this.const_ints;
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
-  ui_array_s &tmp_flow_graph = _this.tmp_flow_graph;
-  expressions_s &tmp_expressions = _this.tmp_expressions;
+
+  code_descr_s &code_descr = _this.code_descrs.last();
+  ui_array_s &tmp_flow_graph = code_descr.tmp_flow_graph;
+  expressions_s &tmp_expressions = code_descr.tmp_expressions;
+  flow_graph_descr_s &fgd = code_descr.flow_graph_descr;
 
   // *****
 
@@ -1467,8 +1481,9 @@ bool pa_method_body_begin(string_s &source_string,script_parser_s &_this)
 
 bool pa_command_join(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
-  ui_array_s &tmp_flow_graph = _this.tmp_flow_graph;
+  code_descr_s &code_descr = _this.code_descrs.last();
+  ui_array_s &tmp_flow_graph = code_descr.tmp_flow_graph;
+  flow_graph_descr_s &fgd = code_descr.flow_graph_descr;
 
   // *****
 
@@ -1481,7 +1496,7 @@ bool pa_command_join(string_s &source_string,script_parser_s &_this)
 
 bool pa_blank_command_block(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
+  flow_graph_descr_s &fgd = _this.code_descrs.last().flow_graph_descr;
 
   // *****
 
@@ -1498,7 +1513,7 @@ bool pa_try_catch_done(string_s &source_string,script_parser_s &_this)
   method_records_s &method_records = _this.method_records;
   ui_array_s &parent_method_idxs = _this.parent_method_idxs;
   ui_array_s &try_fg_map_idxs = _this.try_fg_map_idxs;
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
+  flow_graph_descr_s &fgd = _this.code_descrs.last().flow_graph_descr;
 
   // *****
 
@@ -1615,10 +1630,13 @@ bool pa_catch_begin(string_s &source_string,script_parser_s &_this)
   method_records_s &method_records = _this.method_records;
   ui_array_s &parent_method_idxs = _this.parent_method_idxs;
   ui_array_s &try_fg_map_idxs = _this.try_fg_map_idxs;
-  expression_descr_s &ed = _this.expression_descr;
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
-  ui_array_s &tmp_flow_graph = _this.tmp_flow_graph;
-  expressions_s &tmp_expressions = _this.tmp_expressions;
+
+  code_descr_s &code_descr = _this.code_descrs.last();
+  ui_array_s &tmp_flow_graph = code_descr.tmp_flow_graph;
+  expressions_s &tmp_expressions = code_descr.tmp_expressions;
+  flow_graph_descr_s &fgd = code_descr.flow_graph_descr;
+  expression_descr_s &ed = code_descr.expression_descr;
+
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
@@ -1689,8 +1707,9 @@ bool pa_catch_begin(string_s &source_string,script_parser_s &_this)
 
 bool pa_if_statement(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
-  ui_array_s &tmp_flow_graph = _this.tmp_flow_graph;
+  code_descr_s &code_descr = _this.code_descrs.last();
+  ui_array_s &tmp_flow_graph = code_descr.tmp_flow_graph;
+  flow_graph_descr_s &fgd = code_descr.flow_graph_descr;
 
   // *****
 
@@ -1752,8 +1771,9 @@ bool pa_if_statement(string_s &source_string,script_parser_s &_this)
 
 bool pa_if_else_statement(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
-  ui_array_s &tmp_flow_graph = _this.tmp_flow_graph;
+  code_descr_s &code_descr = _this.code_descrs.last();
+  ui_array_s &tmp_flow_graph = code_descr.tmp_flow_graph;
+  flow_graph_descr_s &fgd = code_descr.flow_graph_descr;
 
   // *****
 
@@ -1911,8 +1931,9 @@ bool pa_if_else_statement(string_s &source_string,script_parser_s &_this)
 
 bool pa_while_statement(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
-  ui_array_s &tmp_flow_graph = _this.tmp_flow_graph;
+  code_descr_s &code_descr = _this.code_descrs.last();
+  ui_array_s &tmp_flow_graph = code_descr.tmp_flow_graph;
+  flow_graph_descr_s &fgd = code_descr.flow_graph_descr;
 
   // *****
 
@@ -2017,7 +2038,7 @@ bool pa_while_statement(string_s &source_string,script_parser_s &_this)
 
 bool pa_while_begin(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
+  flow_graph_descr_s &fgd = _this.code_descrs.last().flow_graph_descr;
 
   // *****
 
@@ -2038,8 +2059,9 @@ bool pa_while_begin(string_s &source_string,script_parser_s &_this)
 
 bool pa_do_while_statement(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
-  ui_array_s &tmp_flow_graph = _this.tmp_flow_graph;
+  code_descr_s &code_descr = _this.code_descrs.last();
+  ui_array_s &tmp_flow_graph = code_descr.tmp_flow_graph;
+  flow_graph_descr_s &fgd = code_descr.flow_graph_descr;
 
   // *****
 
@@ -2155,7 +2177,7 @@ bool pa_do_while_statement(string_s &source_string,script_parser_s &_this)
 
 bool pa_do_while_begin(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
+  flow_graph_descr_s &fgd = _this.code_descrs.last().flow_graph_descr;
 
   // *****
 
@@ -2176,8 +2198,9 @@ bool pa_do_while_begin(string_s &source_string,script_parser_s &_this)
 
 bool pa_for_statement(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
-  ui_array_s &tmp_flow_graph = _this.tmp_flow_graph;
+  code_descr_s &code_descr = _this.code_descrs.last();
+  ui_array_s &tmp_flow_graph = code_descr.tmp_flow_graph;
+  flow_graph_descr_s &fgd = code_descr.flow_graph_descr;
 
   // *****
 
@@ -2283,11 +2306,12 @@ bool pa_for_statement(string_s &source_string,script_parser_s &_this)
 
 bool pa_for_expression(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
+  code_descr_s &code_descr = _this.code_descrs.last();
+  ui_array_s &tmp_flow_graph = code_descr.tmp_flow_graph;
+  expressions_s &tmp_expressions = code_descr.tmp_expressions;
+  expression_descr_s &ed = code_descr.expression_descr;
+  flow_graph_descr_s &fgd = code_descr.flow_graph_descr;
 
-  expression_descr_s &ed = _this.expression_descr;
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
-  ui_array_s &tmp_flow_graph = _this.tmp_flow_graph;
-  expressions_s &tmp_expressions = _this.tmp_expressions;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
@@ -2343,7 +2367,7 @@ bool pa_for_expression(string_s &source_string,script_parser_s &_this)
 
 bool pa_for_begin(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
+  flow_graph_descr_s &fgd = _this.code_descrs.last().flow_graph_descr;
 
   // *****
 
@@ -2366,10 +2390,13 @@ bool pa_switch_statement(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   ui_arrays_s &sds = _this.switch_descrs;
   expression_descrs_s &seds = _this.switch_expression_descrs;
-  expression_descr_s &ed = _this.expression_descr;
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
-  ui_array_s &tmp_flow_graph = _this.tmp_flow_graph;
-  expressions_s &tmp_expressions = _this.tmp_expressions;
+
+  code_descr_s &code_descr = _this.code_descrs.last();
+  ui_array_s &tmp_flow_graph = code_descr.tmp_flow_graph;
+  expressions_s &tmp_expressions = code_descr.tmp_expressions;
+  flow_graph_descr_s &fgd = code_descr.flow_graph_descr;
+  expression_descr_s &ed = code_descr.expression_descr;
+
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
@@ -2516,7 +2543,7 @@ bool pa_switch_expression(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   ui_arrays_s &sds = _this.switch_descrs;
   expression_descrs_s &seds = _this.switch_expression_descrs;
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
+  flow_graph_descr_s &fgd = _this.code_descrs.last().flow_graph_descr;
 
   // *****
 
@@ -2557,9 +2584,11 @@ bool pa_switch_item(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   ui_array_s &sd = _this.switch_descrs.last();
   expression_descr_s &sed = _this.switch_expression_descrs.last();
-  expression_descr_s &ed = _this.expression_descr;
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
-  ui_array_s &tmp_flow_graph = _this.tmp_flow_graph;
+
+  code_descr_s &code_descr = _this.code_descrs.last();
+  ui_array_s &tmp_flow_graph = code_descr.tmp_flow_graph;
+  flow_graph_descr_s &fgd = code_descr.flow_graph_descr;
+  expression_descr_s &ed = code_descr.expression_descr;
 
   // *****
 
@@ -2627,7 +2656,7 @@ bool pa_switch_item_begin(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   ui_array_s &sd = _this.switch_descrs.last();
   expression_descr_s &sed = _this.switch_expression_descrs.last();
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -2647,7 +2676,7 @@ bool pa_switch_item_begin(string_s &source_string,script_parser_s &_this)
 
 bool pa_break(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
+  flow_graph_descr_s &fgd = _this.code_descrs.last().flow_graph_descr;
 
   // *****
 
@@ -2675,7 +2704,7 @@ bool pa_break(string_s &source_string,script_parser_s &_this)
 
 bool pa_continue(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
+  flow_graph_descr_s &fgd = _this.code_descrs.last().flow_graph_descr;
 
   // *****
 
@@ -2703,8 +2732,10 @@ bool pa_continue(string_s &source_string,script_parser_s &_this)
 
 bool pa_return(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
-  ui_array_s &tmp_flow_graph = _this.tmp_flow_graph;
+  code_descr_s &code_descr = _this.code_descrs.last();
+  ui_array_s &tmp_flow_graph = code_descr.tmp_flow_graph;
+  flow_graph_descr_s &fgd = code_descr.flow_graph_descr;
+
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
@@ -2726,7 +2757,7 @@ bool pa_return(string_s &source_string,script_parser_s &_this)
 bool pa_elements_array(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   ui_array_s &member_cnt = _this.member_cnt;
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -2797,10 +2828,11 @@ bool pa_array_element(string_s &source_string,script_parser_s &_this)
 
 bool pa_condition(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
-  ui_array_s &tmp_flow_graph = _this.tmp_flow_graph;
-  expressions_s &tmp_expressions = _this.tmp_expressions;
+  code_descr_s &code_descr = _this.code_descrs.last();
+  ui_array_s &tmp_flow_graph = code_descr.tmp_flow_graph;
+  expressions_s &tmp_expressions = code_descr.tmp_expressions;
+  flow_graph_descr_s &fgd = code_descr.flow_graph_descr;
+  expression_descr_s &ed = code_descr.expression_descr;
 
   // *****
 
@@ -2838,10 +2870,11 @@ bool pa_condition(string_s &source_string,script_parser_s &_this)
 
 bool pa_expression(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
-  flow_graph_descr_s &fgd = _this.flow_graph_descr;
-  ui_array_s &tmp_flow_graph = _this.tmp_flow_graph;
-  expressions_s &tmp_expressions = _this.tmp_expressions;
+  code_descr_s &code_descr = _this.code_descrs.last();
+  ui_array_s &tmp_flow_graph = code_descr.tmp_flow_graph;
+  expressions_s &tmp_expressions = code_descr.tmp_expressions;
+  flow_graph_descr_s &fgd = code_descr.flow_graph_descr;
+  expression_descr_s &ed = code_descr.expression_descr;
 
   // *****
 
@@ -2854,7 +2887,7 @@ bool pa_expression(string_s &source_string,script_parser_s &_this)
 
 bool pa_operator_binary_equal(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -2867,7 +2900,7 @@ bool pa_operator_binary_equal(string_s &source_string,script_parser_s &_this)
 
 bool pa_operator_binary_plus_equal(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -2880,7 +2913,7 @@ bool pa_operator_binary_plus_equal(string_s &source_string,script_parser_s &_thi
 
 bool pa_operator_binary_minus_equal(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -2893,7 +2926,7 @@ bool pa_operator_binary_minus_equal(string_s &source_string,script_parser_s &_th
 
 bool pa_operator_binary_asterisk_equal(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -2906,7 +2939,7 @@ bool pa_operator_binary_asterisk_equal(string_s &source_string,script_parser_s &
 
 bool pa_operator_binary_slash_equal(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -2919,7 +2952,7 @@ bool pa_operator_binary_slash_equal(string_s &source_string,script_parser_s &_th
 
 bool pa_operator_binary_percent_equal(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -2932,7 +2965,7 @@ bool pa_operator_binary_percent_equal(string_s &source_string,script_parser_s &_
 
 bool pa_operator_binary_double_ls_br_equal(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -2945,7 +2978,7 @@ bool pa_operator_binary_double_ls_br_equal(string_s &source_string,script_parser
 
 bool pa_operator_binary_double_rs_br_equal(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -2958,7 +2991,7 @@ bool pa_operator_binary_double_rs_br_equal(string_s &source_string,script_parser
 
 bool pa_operator_binary_ampersand_equal(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -2971,7 +3004,7 @@ bool pa_operator_binary_ampersand_equal(string_s &source_string,script_parser_s 
 
 bool pa_operator_binary_pipe_equal(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -2984,7 +3017,7 @@ bool pa_operator_binary_pipe_equal(string_s &source_string,script_parser_s &_thi
 
 bool pa_operator_binary_circumflex_equal(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -2997,7 +3030,7 @@ bool pa_operator_binary_circumflex_equal(string_s &source_string,script_parser_s
 
 bool pa_operator_binary_double_ampersand(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3010,7 +3043,7 @@ bool pa_operator_binary_double_ampersand(string_s &source_string,script_parser_s
 
 bool pa_operator_binary_double_pipe(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3023,7 +3056,7 @@ bool pa_operator_binary_double_pipe(string_s &source_string,script_parser_s &_th
 
 bool pa_operator_binary_ampersand(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3036,7 +3069,7 @@ bool pa_operator_binary_ampersand(string_s &source_string,script_parser_s &_this
 
 bool pa_operator_binary_pipe(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3049,7 +3082,7 @@ bool pa_operator_binary_pipe(string_s &source_string,script_parser_s &_this)
 
 bool pa_operator_binary_circumflex(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3062,7 +3095,7 @@ bool pa_operator_binary_circumflex(string_s &source_string,script_parser_s &_thi
 
 bool pa_operator_binary_double_equal(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3075,7 +3108,7 @@ bool pa_operator_binary_double_equal(string_s &source_string,script_parser_s &_t
 
 bool pa_operator_binary_exclamation_equal(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3088,7 +3121,7 @@ bool pa_operator_binary_exclamation_equal(string_s &source_string,script_parser_
 
 bool pa_operator_binary_rs_br(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3101,7 +3134,7 @@ bool pa_operator_binary_rs_br(string_s &source_string,script_parser_s &_this)
 
 bool pa_operator_binary_ls_br(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3114,7 +3147,7 @@ bool pa_operator_binary_ls_br(string_s &source_string,script_parser_s &_this)
 
 bool pa_operator_binary_rs_br_equal(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3127,7 +3160,7 @@ bool pa_operator_binary_rs_br_equal(string_s &source_string,script_parser_s &_th
 
 bool pa_operator_binary_ls_br_equal(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3140,7 +3173,7 @@ bool pa_operator_binary_ls_br_equal(string_s &source_string,script_parser_s &_th
 
 bool pa_presence_test(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3178,7 +3211,7 @@ bool pa_presence_test(string_s &source_string,script_parser_s &_this)
 
 bool pa_operator_binary_double_rs_br(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3191,7 +3224,7 @@ bool pa_operator_binary_double_rs_br(string_s &source_string,script_parser_s &_t
 
 bool pa_operator_binary_double_ls_br(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3204,7 +3237,7 @@ bool pa_operator_binary_double_ls_br(string_s &source_string,script_parser_s &_t
 
 bool pa_operator_binary_plus(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3217,7 +3250,7 @@ bool pa_operator_binary_plus(string_s &source_string,script_parser_s &_this)
 
 bool pa_operator_binary_minus(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3230,7 +3263,7 @@ bool pa_operator_binary_minus(string_s &source_string,script_parser_s &_this)
 
 bool pa_operator_binary_asterisk(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3243,7 +3276,7 @@ bool pa_operator_binary_asterisk(string_s &source_string,script_parser_s &_this)
 
 bool pa_operator_binary_slash(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3256,7 +3289,7 @@ bool pa_operator_binary_slash(string_s &source_string,script_parser_s &_this)
 
 bool pa_operator_binary_percent(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3269,7 +3302,7 @@ bool pa_operator_binary_percent(string_s &source_string,script_parser_s &_this)
 
 bool pa_operator_unary_post_double_plus(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3282,7 +3315,7 @@ bool pa_operator_unary_post_double_plus(string_s &source_string,script_parser_s 
 
 bool pa_operator_unary_post_double_minus(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3295,7 +3328,7 @@ bool pa_operator_unary_post_double_minus(string_s &source_string,script_parser_s
 
 bool pa_operator_unary_pre_double_plus(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3308,7 +3341,7 @@ bool pa_operator_unary_pre_double_plus(string_s &source_string,script_parser_s &
 
 bool pa_operator_unary_pre_double_minus(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3321,7 +3354,7 @@ bool pa_operator_unary_pre_double_minus(string_s &source_string,script_parser_s 
 
 bool pa_operator_unary_pre_plus(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3334,7 +3367,7 @@ bool pa_operator_unary_pre_plus(string_s &source_string,script_parser_s &_this)
 
 bool pa_operator_unary_pre_minus(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3347,7 +3380,7 @@ bool pa_operator_unary_pre_minus(string_s &source_string,script_parser_s &_this)
 
 bool pa_operator_unary_pre_exclamation(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3360,7 +3393,7 @@ bool pa_operator_unary_pre_exclamation(string_s &source_string,script_parser_s &
 
 bool pa_operator_unary_pre_tilde(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3373,7 +3406,7 @@ bool pa_operator_unary_pre_tilde(string_s &source_string,script_parser_s &_this)
 
 bool pa_operator_binary_le_br_re_br(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3386,7 +3419,7 @@ bool pa_operator_binary_le_br_re_br(string_s &source_string,script_parser_s &_th
 
 bool pa_slice_range(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3420,7 +3453,7 @@ bool pa_slice_range(string_s &source_string,script_parser_s &_this)
 
 bool pa_slice_blank_value(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
   lli_rb_tree_s &const_ints = _this.const_ints;
 
   // *****
@@ -3450,7 +3483,7 @@ bool pa_slice_blank_value(string_s &source_string,script_parser_s &_this)
 
 bool pa_identifier(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
@@ -3473,7 +3506,7 @@ bool pa_identifier(string_s &source_string,script_parser_s &_this)
 
 bool pa_this_access(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3497,7 +3530,7 @@ bool pa_this_access(string_s &source_string,script_parser_s &_this)
 bool pa_new_object(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   ui_array_s &member_cnt = _this.member_cnt;
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3545,7 +3578,7 @@ bool pa_new_object(string_s &source_string,script_parser_s &_this)
 
 bool pa_new_objects_array(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3575,7 +3608,7 @@ bool pa_new_objects_array(string_s &source_string,script_parser_s &_this)
 
 bool pa_free_object(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3601,7 +3634,7 @@ bool pa_free_object(string_s &source_string,script_parser_s &_this)
 
 bool pa_type_identification(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3627,7 +3660,7 @@ bool pa_type_identification(string_s &source_string,script_parser_s &_this)
 
 bool pa_convert_to_string(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3640,7 +3673,7 @@ bool pa_convert_to_string(string_s &source_string,script_parser_s &_this)
 
 bool pa_object_reference_copy(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3670,7 +3703,7 @@ bool pa_object_reference_copy(string_s &source_string,script_parser_s &_this)
 
 bool pa_conditional_expression(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3702,7 +3735,7 @@ bool pa_conditional_expression(string_s &source_string,script_parser_s &_this)
 
 bool pa_logical_and(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3733,7 +3766,7 @@ bool pa_logical_and(string_s &source_string,script_parser_s &_this)
 
 bool pa_logical_or(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3765,7 +3798,7 @@ bool pa_logical_or(string_s &source_string,script_parser_s &_this)
 bool pa_class_access(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   ui_array_s &namespace_name_idxs = _this.namespace_name_idxs;
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3803,7 +3836,7 @@ bool pa_class_access(string_s &source_string,script_parser_s &_this)
 bool pa_object_member_select(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   name_pos_s &tmp_name_pos = _this.tmp_name_pos_array.pop();
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3838,7 +3871,7 @@ bool pa_object_member_select(string_s &source_string,script_parser_s &_this)
 bool pa_this_method_call(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   ui_array_s &member_cnt = _this.member_cnt;
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
@@ -3907,7 +3940,7 @@ bool pa_object_method_call(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   name_pos_s &tmp_name_pos = _this.tmp_name_pos_array.pop();
   ui_array_s &member_cnt = _this.member_cnt;
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
 
   // *****
 
@@ -3989,13 +4022,84 @@ bool pa_object_member_name(string_s &source_string,script_parser_s &_this)
 
 bool pa_lambda_end(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
+  method_records_s &method_records = _this.method_records;
+  ui_array_s &parent_method_idxs = _this.parent_method_idxs;
 
-  // FIXME TODO continue ...
-  cassert(0);
+  code_descrs_s &code_descrs = _this.code_descrs;
+  code_descr_s &code_descr = code_descrs.last();
+  ui_array_s &tmp_flow_graph = code_descr.tmp_flow_graph;
+  expressions_s &tmp_expressions = code_descr.tmp_expressions;
+  flow_graph_descr_s &fgd = code_descr.flow_graph_descr;
 
-  debug_message_4(
-    fprintf(stderr,"script_parser: parse_action: pa_lambda_end\n");
-  );
+  exp_flow_graphs_s &method_flow_graphs = _this.method_flow_graphs;
+
+  // *****
+
+  // - test if thread was created on stack of graph flow -
+  debug_assert(fgd.fgts_type.used > 0);
+
+  // - if method body contains no code -
+  if (fgd.fgts_type.last() == c_fgts_type_blank)
+  {
+    fgd.fgts_type.pop();
+    pa_method_body_empty(source_string,_this);
+  }
+
+  unsigned *ts_ptr = fgd.fg_thread_stack.data;
+  debug_assert(*ts_ptr < c_fgts_bc_value_base);
+
+  // - setting flow graph index in method -
+  method_record_s &method_record = method_records[parent_method_idxs.last()];
+  method_record.flow_graph_idx = method_flow_graphs.used;
+
+  // - copy (swap) parsed flow graph -
+  method_flow_graphs.push_blank();
+  exp_flow_graph_s &method_flow_graph = method_flow_graphs.last();
+
+  method_flow_graph.start_node_idx = *ts_ptr;
+  method_flow_graph.nodes.swap(tmp_flow_graph);
+  method_flow_graph.expressions.swap(tmp_expressions);
+
+  // - remove temporary data -
+  fgd.fg_thread_stack.used = 0;
+  fgd.fgts_cnt.used = 0;
+
+  // - remove method index from parent method stack -
+  parent_method_idxs.used--;
+
+  debug_assert(tmp_flow_graph.used == 0);
+  debug_assert(tmp_expressions.used == 0);
+  debug_assert(fgd.fg_thread_stack.used == 0);
+  debug_assert(fgd.fgts_cnt.used == 0);
+
+  // - remove code description -
+  code_descrs.used--;
+
+  // FIXME TODO create expression value ...
+  {
+    expression_descr_s &ed = _this.code_descrs.last().expression_descr;
+    lli_rb_tree_s &const_ints = _this.const_ints;
+
+    // - get constant position in array -
+    unsigned ci_idx = const_ints.unique_insert(0);
+
+    // - store node position -
+    unsigned tmp_node_idx = ed.tmp_expression.used;
+
+    ed.tmp_expression.push(c_node_type_const_int);
+    ed.tmp_expression.push(ci_idx);
+
+    // - create expression info node -
+    ed.tmp_exp_info.push_blank();
+    idx_size_s &tmp_exp_info = ed.tmp_exp_info.last();
+
+    tmp_exp_info.ui_first = tmp_node_idx;
+    tmp_exp_info.ui_second = 2;
+  }
+
+  // -----
+
+  debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_lambda_end\n"));
 
   return true;
 }/*}}}*/
@@ -4004,15 +4108,13 @@ bool pa_lambda_begin(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   method_records_s &method_records = _this.method_records;
   ui_array_s &parent_method_idxs = _this.parent_method_idxs;
-  name_pos_array_s &tmp_name_pos_array = _this.tmp_name_pos_array;
+  code_descrs_s &code_descrs = _this.code_descrs;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
 
   // - get lambda position -
   lalr_stack_element_s &lse = lalr_stack[lalr_stack.used - 2];
-  tmp_name_pos_array.push_blank();
-  tmp_name_pos_array.last().set(lse.terminal_start,lse.terminal_end);
 
   // - creation of new method record -
   method_records.push_blank();
@@ -4034,6 +4136,9 @@ bool pa_lambda_begin(string_s &source_string,script_parser_s &_this)
   // - push method record index to parent method stack -
   parent_method_idxs.push(method_record_idx);
 
+  // - initialize code description -
+  code_descrs.push_blank();
+
   debug_message_4(
     fprintf(stderr,"script_parser: parse_action: pa_lambda_begin\n");
   );
@@ -4044,19 +4149,16 @@ bool pa_lambda_begin(string_s &source_string,script_parser_s &_this)
 bool pa_lambda_parameters(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
 
-  // FIXME TODO continue ...
-  cassert(0);
+  // FIXME TODO remove unused parse action ...
 
-  debug_message_4(
-    fprintf(stderr,"script_parser: parse_action: pa_lambda_parameters\n");
-  );
+  debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_lambda_parameters\n"));
 
   return true;
 }/*}}}*/
 
 bool pa_const_char(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
   bc_array_s &const_chars = _this.const_chars;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
@@ -4092,7 +4194,7 @@ bool pa_const_char(string_s &source_string,script_parser_s &_this)
 
 bool pa_const_octal_char(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
   bc_array_s &const_chars = _this.const_chars;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
@@ -4140,7 +4242,7 @@ bool pa_const_octal_char(string_s &source_string,script_parser_s &_this)
 
 bool pa_const_hex_char(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
   bc_array_s &const_chars = _this.const_chars;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
@@ -4187,7 +4289,7 @@ bool pa_const_hex_char(string_s &source_string,script_parser_s &_this)
 
 bool pa_const_backslash_char(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
   bc_array_s &const_chars = _this.const_chars;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
@@ -4268,7 +4370,7 @@ bool pa_const_backslash_char(string_s &source_string,script_parser_s &_this)
 
 bool pa_const_oct_int(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
   lli_rb_tree_s &const_ints = _this.const_ints;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
@@ -4311,7 +4413,7 @@ bool pa_const_oct_int(string_s &source_string,script_parser_s &_this)
 
 bool pa_const_dec_int(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
   lli_rb_tree_s &const_ints = _this.const_ints;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
@@ -4354,7 +4456,7 @@ bool pa_const_dec_int(string_s &source_string,script_parser_s &_this)
 
 bool pa_const_hex_int(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
   lli_rb_tree_s &const_ints = _this.const_ints;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
@@ -4397,7 +4499,7 @@ bool pa_const_hex_int(string_s &source_string,script_parser_s &_this)
 
 bool pa_const_float(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
   bd_rb_tree_s &const_floats = _this.const_floats;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
@@ -4442,7 +4544,7 @@ bool pa_const_string_register(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   name_pos_array_s &tmp_name_pos_array = _this.tmp_name_pos_array;
   ui_array_s &member_cnt = _this.member_cnt;
-  expression_descr_s &ed = _this.expression_descr;
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
   string_rb_tree_s &const_strings = _this.const_strings;
 
   // *****

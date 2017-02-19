@@ -256,6 +256,12 @@ v_data_type:v_data_ptr
 location_s;
 @end
 
+typedef location_s * location_s_ptr;
+
+@begin
+define location_s_ptr basic
+@end
+
 // -- location_array_s --
 @begin
 array<location_s> location_array_s;

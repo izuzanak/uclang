@@ -346,9 +346,14 @@ const unsigned lalr_table[lalr_state_cnt*c_terminal_plus_nonterminal_cnt] =
  * methods of generated structures
  */
 
-// -- method_record_s --
+// -- delegate_s --
 @begin
-methods method_record_s
+methods delegate_s
+@end
+
+// -- delegates_s --
+@begin
+methods delegates_s
 @end
 
 // -- name_pos_array_s --
@@ -386,6 +391,11 @@ methods class_record_s
 // -- class_records_s --
 @begin
 methods class_records_s
+@end
+
+// -- method_record_s --
+@begin
+methods method_record_s
 @end
 
 // -- method_records_s --
@@ -438,6 +448,16 @@ methods exp_flow_graphs_s
 // -- flow_graph_descr_s --
 @begin
 methods flow_graph_descr_s
+@end
+
+// -- code_descr_s --
+@begin
+methods code_descr_s
+@end
+
+// -- code_descrs_s --
+@begin
+methods code_descrs_s
 @end
 
 // -- im_descr_s --
@@ -8003,11 +8023,8 @@ void script_parser_s::parse_script(unsigned a_source_idx)
   switch_descrs.clear();
   switch_expression_descrs.clear();
 
-  tmp_flow_graph.clear();
-  tmp_expressions.clear();
-
-  expression_descr.clear();
-  flow_graph_descr.clear();
+  code_descrs.clear();
+  code_descrs.push_blank();
 
   lalr_stack.clear();
   lalr_stack.push(0);

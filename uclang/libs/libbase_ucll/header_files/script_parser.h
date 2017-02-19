@@ -582,17 +582,6 @@ struct built_in_module_s
 };
 
 /*
- * definition of structure delegate_s
- */
-
-struct delegate_s
-{
-  location_s *object_location;
-  unsigned name_idx_ri; // method_ri for static delegates
-  unsigned param_cnt;
-};
-
-/*
  * definition of structure buffer_s
  */
 
@@ -606,6 +595,22 @@ struct buffer_s
 /*
  * definition of generated structures
  */
+
+// -- delegate_s --
+@begin
+struct
+<
+location_s_ptr:object_location
+unsigned:name_idx_ri $// method_ri for static delegates
+unsigned:param_cnt
+>
+delegate_s;
+@end
+
+// -- delegates_s --
+@begin
+array<delegate_s> delegates_s;
+@end
 
 // -- name_pos_array_s --
 // -- ri_ep_array_s --
@@ -805,6 +810,30 @@ ui_arrays_array_s:fgts_bc_ends_array
 flow_graph_descr_s;
 @end
 
+// -- code_descr_s --
+@begin
+struct
+<
+$// - parse, temporary flow graph storage -
+ui_array_s:tmp_flow_graph
+
+$// - parse, temporary expression storage -
+expressions_s:tmp_expressions
+
+$// - parse, temporary expression variables -
+expression_descr_s:expression_descr
+
+$// - parse, temporary flow graph variables -
+flow_graph_descr_s:flow_graph_descr
+>
+code_descr_s;
+@end
+
+// -- code_descrs_s --
+@begin
+array<code_descr_s> code_descrs_s;
+@end
+
 // -- im_descr_s --
 @begin
 struct
@@ -917,17 +946,8 @@ ui_arrays_s:switch_descrs
 $// - parse, temporary expression variables -
 expression_descrs_s:switch_expression_descrs
 
-$// - parse, temporary flow graph storage -
-ui_array_s:tmp_flow_graph
-
-$// - parse, temporary expression storage -
-expressions_s:tmp_expressions
-
-$// - parse, temporary expression variables -
-expression_descr_s:expression_descr
-
-$// - parse, temporary flow graph variables -
-flow_graph_descr_s:flow_graph_descr
+$// - parse, code description -
+code_descrs_s:code_descrs
 
 $// - parse, LALR stack -
 lalr_stack_s:lalr_stack
@@ -1509,9 +1529,14 @@ void *new_thread_function(void *nt_start_info);
  * inline methods of generated structures
  */
 
-// -- method_record_s --
+// -- delegate_s --
 @begin
-inlines method_record_s
+inlines delegate_s
+@end
+
+// -- delegates_s --
+@begin
+inlines delegates_s
 @end
 
 // -- name_pos_array_s --
@@ -1555,6 +1580,11 @@ inlines class_record_s
 // -- class_records_s --
 @begin
 inlines class_records_s
+@end
+
+// -- method_record_s --
+@begin
+inlines method_record_s
 @end
 
 // -- method_records_s --
@@ -1607,6 +1637,16 @@ inlines expression_descrs_s
 // -- flow_graph_descr_s --
 @begin
 inlines flow_graph_descr_s
+@end
+
+// -- code_descr_s --
+@begin
+inlines code_descr_s
+@end
+
+// -- code_descrs_s --
+@begin
+inlines code_descrs_s
 @end
 
 // -- im_descr_s --
