@@ -2033,12 +2033,12 @@ rules:
    }
 
    $ -- new object creation --
-   <A> -> <object_class_name> <parameters> rr_br ->>
+   <A> -> <object_class_name> <parameters> ->>
    {
       if gen_parse_tree == 1 then
          this_idx = node_idx;
          node_idx = node_idx + 1;
-         print("   node_"..this_idx.." [label = \"<object_class_name> <parameters> )\"]");
+         print("   node_"..this_idx.." [label = \"<object_class_name> <parameters>\"]");
          print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
          print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
          table.insert(node_stack,this_idx);
@@ -2215,24 +2215,24 @@ rules:
    }
 
    $ -- method call --
-   <A> -> id <parameters> rr_br ->>
+   <A> -> id <parameters> ->>
    {
       if gen_parse_tree == 1 then
          this_idx = node_idx;
          node_idx = node_idx + 1;
-         print("   node_"..this_idx.." [label = \""..rule_body(0).." <parameters> )\"]");
+         print("   node_"..this_idx.." [label = \""..rule_body(0).." <parameters>\"]");
          print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
          table.insert(node_stack,this_idx);
       else
          print(table.concat(tabs,"").."this method call: \""..rule_body(0).."\"");
       end
    }
-   <A> -> <object_member> <parameters> rr_br ->>
+   <A> -> <object_member> <parameters> ->>
    {
       if gen_parse_tree == 1 then
          this_idx = node_idx;
          node_idx = node_idx + 1;
-         print("   node_"..this_idx.." [label = \"<object_member> <parameters> )\"]");
+         print("   node_"..this_idx.." [label = \"<object_member> <parameters>\"]");
          print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
          print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
          table.insert(node_stack,this_idx);
@@ -2241,24 +2241,24 @@ rules:
       end
    }
 
-   <parameters> -> <parameters_begin> ->>
+   <parameters> -> <parameters_begin> rr_br ->>
    {
       if gen_parse_tree == 1 then
          this_idx = node_idx;
          node_idx = node_idx + 1;
-         print("   node_"..this_idx.." [label = \"<parameters_begin>\"]");
+         print("   node_"..this_idx.." [label = \"<parameters_begin> )\"]");
          print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
          table.insert(node_stack,this_idx);
       else
          table.remove(tabs);
       end
    }
-   <parameters> -> <parameters_begin> <parameter_list> ->>
+   <parameters> -> <parameters_begin> <parameter_list> rr_br ->>
    {
       if gen_parse_tree == 1 then
          this_idx = node_idx;
          node_idx = node_idx + 1;
-         print("   node_"..this_idx.." [label = \"<parameters_begin> <parameter_list>\"]");
+         print("   node_"..this_idx.." [label = \"<parameters_begin> <parameter_list> )\"]");
          print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
          print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
          table.insert(node_stack,this_idx);

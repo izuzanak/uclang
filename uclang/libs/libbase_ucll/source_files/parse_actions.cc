@@ -3883,7 +3883,7 @@ bool pa_this_method_call(string_s &source_string,script_parser_s &_this)
 
   // *****
 
-  lalr_stack_element_s &lse = lalr_stack[lalr_stack.used - 3];
+  lalr_stack_element_s &lse = lalr_stack[lalr_stack.used - 2];
 
   // - count of method parameters -
   unsigned m_parameter_cnt = member_cnt.pop();
