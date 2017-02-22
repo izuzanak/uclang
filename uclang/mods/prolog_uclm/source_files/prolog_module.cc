@@ -302,7 +302,7 @@ bool bic_prolog_module_invoke(interpreter_thread_s &it,uli *code,unsigned stack_
   // - parameter count and method name length -
   unsigned param_cnt = (unsigned)code[icl_parm_cnt] - 1;
   char *name_data = name_ref.data;
-  unsigned name_length = name_ref.size - (3 + (unsigned)log10f(param_cnt));
+  unsigned name_length = strchr(name_data,'#') - name_data;
 
   // - query or compound term flag -
   bool do_query = true;
