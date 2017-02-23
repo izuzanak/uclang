@@ -40,6 +40,17 @@ void term_signal_handler(int signum)
 }/*}}}*/
 #endif
 
+#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
+bool run_spawner(const char *spawner_path,string_s &spawn_name)
+{/*{{{*/
+  
+  // FIXME TODO continue ...
+  spawn_name.set(strlen("hello-world"),"hello-world");
+
+  return true;
+}/*}}}*/
+#endif
+
 void *run_interpreter(void *data)
 {/*{{{*/
   int return_value = 0;
@@ -113,7 +124,12 @@ void *run_interpreter(void *data)
     int arg_idx = 1;
 
     const char *arg_mods_ptr = "-mods=";
+    const char *arg_spawn_ptr = "-spawner=";
+
     const int arg_mods_len = strlen(arg_mods_ptr);
+    const int arg_spawn_len = strlen(arg_spawn_ptr);
+
+    const char *spawner_path = NULL;
 
     // - process interpreter arguments -
     if (arg_idx < argc)
@@ -123,9 +139,12 @@ void *run_interpreter(void *data)
 
         // - test modules argument -
         if (strncmp(arg_ptr,arg_mods_ptr,arg_mods_len) == 0)
-        {
           mods_path.set(strlen(arg_ptr) - arg_mods_len,arg_ptr + arg_mods_len);
-        }
+        
+        // - test spawner argument -
+        else if (strncmp(arg_ptr,arg_spawn_ptr,arg_spawn_len) == 0)
+          spawner_path = arg_ptr + arg_spawn_len;
+
         // - argument was not recognized -
         else
         {
@@ -210,108 +229,163 @@ void *run_interpreter(void *data)
     else
     {
       debug_message_1(fprintf(stderr,"main: script_parser, source parse (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
-      debug_message_1(fprintf(stderr,"main: script_parser, process modules\n"); tm_mark_time());
-      parser.process_modules();
 
-      if (parser.error_code.used != 0)
-      {
-        debug_message_1(fprintf(stderr,"main: script_parser, process modules (%" HOST_LL_FORMAT "d us) FAILED\n" MP_COMMA tm_time_diff()));
-        parser.process_errors();
-      }
-      else
-      {
-        debug_message_1(fprintf(stderr,"main: script_parser, process modules (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
-        debug_message_1(fprintf(stderr,"main: script_parser, classes search\n"); tm_mark_time());
-        parser.extended_classes_search();
+      // - run process flag -
+      bool run_process = true;
 
-        // - exist errors ? -
+#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
+
+      // - if spawner path is set -
+      if (spawner_path != NULL)
+      {
+        debug_message_1(fprintf(stderr,"main: script_parser, process modules\n"); tm_mark_time());
+        parser.process_modules();
+
         if (parser.error_code.used != 0)
         {
-          debug_message_1(fprintf(stderr,"main: script_parser, classes search (%" HOST_LL_FORMAT "d us) FAILED\n" MP_COMMA tm_time_diff()));
+          debug_message_1(fprintf(stderr,"main: script_parser, process modules (%" HOST_LL_FORMAT "d us) FAILED\n" MP_COMMA tm_time_diff()));
+          parser.process_errors();
+
+          // - reset run process flag -
+          run_process = false;
+        }
+        else
+        {
+          string_s spawn_name;
+          spawn_name.init();
+
+          // - run process spawner -
+          if (!run_spawner(spawner_path,spawn_name))
+          {
+            // - reset run process flag -
+            run_process = false;
+          }
+          else
+          {
+            // - insert module name to module names array -
+            unsigned name_idx = parser.module_names.get_idx(spawn_name);
+            if (name_idx == c_idx_not_exist)
+            {
+              parser.module_names.push_blank();
+              parser.module_names.last().swap(spawn_name);
+
+              // - set module import name position -
+              parser.module_names_positions.push_blank();
+              parser.module_names_positions.last().set(SET_SRC_POS(0,0),SET_SRC_POS(0,0));
+            }
+          }
+
+          spawn_name.clear();
+        }
+      }
+#endif
+
+      // - if process was not canceled -
+      if (run_process)
+      {
+        debug_message_1(fprintf(stderr,"main: script_parser, process modules\n"); tm_mark_time());
+        parser.process_modules();
+
+        if (parser.error_code.used != 0)
+        {
+          debug_message_1(fprintf(stderr,"main: script_parser, process modules (%" HOST_LL_FORMAT "d us) FAILED\n" MP_COMMA tm_time_diff()));
           parser.process_errors();
         }
         else
         {
-          debug_message_1(fprintf(stderr,"main: script_parser, classes search (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
-          debug_message_1(fprintf(stderr,"main: script_parser, element search\n"); tm_mark_time());
-          parser.element_search();
+          debug_message_1(fprintf(stderr,"main: script_parser, process modules (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
+          debug_message_1(fprintf(stderr,"main: script_parser, classes search\n"); tm_mark_time());
+          parser.extended_classes_search();
 
           // - exist errors ? -
           if (parser.error_code.used != 0)
           {
-            debug_message_1(fprintf(stderr,"main: script_parser, element search (%" HOST_LL_FORMAT "d us) FAILED\n" MP_COMMA tm_time_diff()));
+            debug_message_1(fprintf(stderr,"main: script_parser, classes search (%" HOST_LL_FORMAT "d us) FAILED\n" MP_COMMA tm_time_diff()));
             parser.process_errors();
           }
           else
           {
-            debug_message_1(fprintf(stderr,"main: script_parser, element search (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
-
-            //parser.DEBUG_show_variables();
-            //parser.DEBUG_show_methods();
-            //parser.DEBUG_show_classes();
-            //parser.DEBUG_show_namespaces();
-
-            //parser.DEBUG_show_init_expressions();
-            //parser.DEBUG_show_method_flow_graphs();
-
-            //parser.DEBUG_show_dot_format_method_expressions();
-            //parser.DEBUG_show_dot_format_init_expressions();
-            //parser.DEBUG_show_dot_format_method_flow_graphs();
-            //parser.DEBUG_show_dot_format_class_inheritance();
-
-            //parser.DEBUG_gen_ucl_description(stderr);
-
-            debug_message_1(fprintf(stderr,"main: script_parser, intermediate code generation\n"); tm_mark_time());
-            parser.generate_intermediate_code();
+            debug_message_1(fprintf(stderr,"main: script_parser, classes search (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
+            debug_message_1(fprintf(stderr,"main: script_parser, element search\n"); tm_mark_time());
+            parser.element_search();
 
             // - exist errors ? -
             if (parser.error_code.used != 0)
             {
-              debug_message_1(fprintf(stderr,"main: script_parser, intermediate code generation (%" HOST_LL_FORMAT "d us) FAILED\n" MP_COMMA tm_time_diff()));
+              debug_message_1(fprintf(stderr,"main: script_parser, element search (%" HOST_LL_FORMAT "d us) FAILED\n" MP_COMMA tm_time_diff()));
               parser.process_errors();
             }
             else
             {
-              debug_message_1(fprintf(stderr,"main: script parser, intermediate code generation (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
+              debug_message_1(fprintf(stderr,"main: script_parser, element search (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
 
-              // - prints out intermediate code -
-              //parser.DEBUG_show_static_im_code();
-              //parser.DEBUG_show_class_im_codes();
-              //parser.DEBUG_show_method_im_codes();
+              //parser.DEBUG_show_variables();
+              //parser.DEBUG_show_methods();
+              //parser.DEBUG_show_classes();
+              //parser.DEBUG_show_namespaces();
 
-              interpreter_s interpreter;
-              interpreter.init();
+              //parser.DEBUG_show_init_expressions();
+              //parser.DEBUG_show_method_flow_graphs();
 
-              debug_message_1(fprintf(stderr,"main: interpreter initialization from script parser\n"); tm_mark_time());
-              interpreter.create_from_script_parser(parser);
-              debug_message_1(fprintf(stderr,"main: interpreter initialization from script parser (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
+              //parser.DEBUG_show_dot_format_method_expressions();
+              //parser.DEBUG_show_dot_format_init_expressions();
+              //parser.DEBUG_show_dot_format_method_flow_graphs();
+              //parser.DEBUG_show_dot_format_class_inheritance();
 
-              // - set global pointer to interpreter -
-              interpreter_ptr = &interpreter;
+              //parser.DEBUG_gen_ucl_description(stderr);
 
-              debug_message_1(fprintf(stderr,"main: interpreter, creation of constants and locations\n"); tm_mark_time());
-              interpreter.create_constant_and_static_locations();
-              debug_message_1(fprintf(stderr,"main: interpreter, creation of constants and locations (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
+              debug_message_1(fprintf(stderr,"main: script_parser, intermediate code generation\n"); tm_mark_time());
+              parser.generate_intermediate_code();
 
-              // - prints defined locations of constants -
-              //interpreter.DEBUG_print_const_locations();
+              // - exist errors ? -
+              if (parser.error_code.used != 0)
+              {
+                debug_message_1(fprintf(stderr,"main: script_parser, intermediate code generation (%" HOST_LL_FORMAT "d us) FAILED\n" MP_COMMA tm_time_diff()));
+                parser.process_errors();
+              }
+              else
+              {
+                debug_message_1(fprintf(stderr,"main: script parser, intermediate code generation (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
 
-              // - execute method defined by its parrent class name and its name -
-              // - executed method must be defined as static -
-              debug_message_1(fprintf(stderr,"main: interpreter, run of main thread\n"); tm_mark_time());
-              return_value = interpreter.run_main_thread("Main","main#1",argc - arg_idx,argv + arg_idx);
-              debug_message_1(fprintf(stderr,"main: interpreter, run of main thread (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
+                // - prints out intermediate code -
+                //parser.DEBUG_show_static_im_code();
+                //parser.DEBUG_show_class_im_codes();
+                //parser.DEBUG_show_method_im_codes();
 
-              debug_message_1(fprintf(stderr,"main: interpreter, static locations release\n"); tm_mark_time());
-              interpreter.release_constant_and_static_locations();
-              debug_message_1(fprintf(stderr,"main: interpreter, static locations release (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
+                interpreter_s interpreter;
+                interpreter.init();
 
-              // - remove global pointer to interpreter -
-              interpreter_ptr = NULL;
+                debug_message_1(fprintf(stderr,"main: interpreter initialization from script parser\n"); tm_mark_time());
+                interpreter.create_from_script_parser(parser);
+                debug_message_1(fprintf(stderr,"main: interpreter initialization from script parser (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
 
-              debug_message_1(fprintf(stderr,"main: interpreter remove\n"); tm_mark_time());
-              interpreter.clear();
-              debug_message_1(fprintf(stderr,"main: interpreter remove (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
+                // - set global pointer to interpreter -
+                interpreter_ptr = &interpreter;
+
+                debug_message_1(fprintf(stderr,"main: interpreter, creation of constants and locations\n"); tm_mark_time());
+                interpreter.create_constant_and_static_locations();
+                debug_message_1(fprintf(stderr,"main: interpreter, creation of constants and locations (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
+
+                // - prints defined locations of constants -
+                //interpreter.DEBUG_print_const_locations();
+
+                // - execute method defined by its parrent class name and its name -
+                // - executed method must be defined as static -
+                debug_message_1(fprintf(stderr,"main: interpreter, run of main thread\n"); tm_mark_time());
+                return_value = interpreter.run_main_thread("Main","main#1",argc - arg_idx,argv + arg_idx);
+                debug_message_1(fprintf(stderr,"main: interpreter, run of main thread (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
+
+                debug_message_1(fprintf(stderr,"main: interpreter, static locations release\n"); tm_mark_time());
+                interpreter.release_constant_and_static_locations();
+                debug_message_1(fprintf(stderr,"main: interpreter, static locations release (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
+
+                // - remove global pointer to interpreter -
+                interpreter_ptr = NULL;
+
+                debug_message_1(fprintf(stderr,"main: interpreter remove\n"); tm_mark_time());
+                interpreter.clear();
+                debug_message_1(fprintf(stderr,"main: interpreter remove (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
+              }
             }
           }
         }

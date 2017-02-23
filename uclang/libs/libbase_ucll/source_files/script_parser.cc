@@ -8154,6 +8154,9 @@ void script_parser_s::process_modules()
       file_name.setf("%s_uclm" DYNAMIC_LIB_EXTENSION,module_names[module_idx].data);
 #endif
 
+      // FIXME debug output
+      fprintf(stderr,"loading module: %s\n",module_names[module_idx].data);
+
       // - load build in module -
       if (load_module(file_name.data))
       {
