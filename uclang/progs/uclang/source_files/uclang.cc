@@ -43,11 +43,69 @@ void term_signal_handler(int signum)
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
 bool run_spawner(const char *spawner_path,string_s &spawn_name)
 {/*{{{*/
-  
-  // FIXME TODO continue ...
-  spawn_name.set(strlen("hello-world"),"hello-world");
 
-  return true;
+  // - create spawner fifo -
+  cassert(mkfifo(spawner_path,0666) == 0);
+
+  do {
+
+    // - open spawner fifo for reading -
+    FILE *fifo = fopen(spawner_path,"r");
+    cassert(fifo != NULL);
+
+    char *line = NULL;
+    size_t size = 0;
+    ssize_t count = getline(&line,&size,fifo);
+
+    // - close spawner fifo -
+    fclose(fifo);
+
+    cassert(count != -1);
+
+    // - replace '\n' by terminating zero -
+    line[count - 1] = '\0';
+
+    // - check spawner stop request -
+    if (strcmp("uclang-spawner-stop",line) == 0)
+    {
+      free(line);
+
+      // - delete spawner fifo -
+      cassert(remove(spawner_path) == 0);
+
+      return false;
+    }
+
+    // - fork process to create spawn -
+    pid_t pid = fork();
+    cassert(pid != -1);
+
+    // - process is spawned child process -
+    if (pid == 0)
+    {
+      // - set spawn name -
+      spawn_name.set(count - 1,line);
+      free(line);
+
+      // - fork process to detach from parent -
+      pid = fork();
+      cassert(pid != -1);
+
+      // - terminate parent, keep child -
+      return pid == 0;
+    }
+
+    // - process is spawner -
+    else
+    {
+      // - wait on child to terminate -
+      int status;
+      cassert(pid == waitpid(pid,&status,0));
+    }
+
+    free(line);
+
+  } while(true);
 }/*}}}*/
 #endif
 

@@ -6,6 +6,17 @@
 include "script_parser.h"
 @end
 
+#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
+#include <sys/wait.h>
+
+/*!
+ * \brief function implementing process spawner
+ * \param spawner_path - path to spawner fifo pipe
+ * \param spawn_name - name of spawn source module
+ */
+bool run_spawner(const char *spawner_path,string_s &spawn_name);
+#endif
+
 /*!
  * \brief function executing script interpreter
  * \param data - data pointing to int argument cnt and char * array (argc,argv)
