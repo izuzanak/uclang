@@ -41,17 +41,30 @@ void term_signal_handler(int signum)
 #endif
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
-bool run_spawner(const char *spawner_path,string_s &spawn_name)
+int run_spawner(const char *proc_name,const char *spawner_path,string_s &spawn_name)
 {/*{{{*/
 
   // - create spawner fifo -
-  cassert(mkfifo(spawner_path,0666) == 0);
+  if (mkfifo(spawner_path,0666) != 0)
+  {
+    fprintf(stderr,"%s: Cannot create spawner fifo \"%s\"\n",proc_name,spawner_path);
+
+    return -1;
+  }
 
   do {
 
     // - open spawner fifo for reading -
     FILE *fifo = fopen(spawner_path,"r");
-    cassert(fifo != NULL);
+    if (fifo == NULL)
+    {
+      fprintf(stderr,"%s: Cannot open spawner fifo \"%s\"\n",proc_name,spawner_path);
+
+      // - delete spawner fifo -
+      remove(spawner_path);
+
+      return -1;
+    }
 
     char *line = NULL;
     size_t size = 0;
@@ -60,7 +73,16 @@ bool run_spawner(const char *spawner_path,string_s &spawn_name)
     // - close spawner fifo -
     fclose(fifo);
 
-    cassert(count != -1);
+    // - check read result -
+    if (count == -1)
+    {
+      fprintf(stderr,"%s: Error while reading from spawner fifo\n",proc_name);
+
+      // - delete spawner fifo -
+      remove(spawner_path);
+
+      return -1;
+    }
 
     // - replace '\n' by terminating zero -
     line[count - 1] = '\0';
@@ -71,14 +93,24 @@ bool run_spawner(const char *spawner_path,string_s &spawn_name)
       free(line);
 
       // - delete spawner fifo -
-      cassert(remove(spawner_path) == 0);
+      if (remove(spawner_path) != 0)
+      {
+        fprintf(stderr,"%s: Cannot remove spawner fifo \"%s\"\n",proc_name,spawner_path);
 
-      return false;
+        return -1;
+      }
+
+      return 0;
     }
 
-    // - fork process to create spawn -
+    // - fork process in order to create spawn -
     pid_t pid = fork();
-    cassert(pid != -1);
+    if (pid == -1)
+    {
+      fprintf(stderr,"%s: Cannot fork in order to create spawn\n",proc_name);
+
+      return -1;
+    }
 
     // - process is spawned child process -
     if (pid == 0)
@@ -87,9 +119,13 @@ bool run_spawner(const char *spawner_path,string_s &spawn_name)
       spawn_name.set(count - 1,line);
       free(line);
 
-      // - fork process to detach from parent -
-      pid = fork();
-      cassert(pid != -1);
+      // - fork process in order to detach from spawner -
+      if ((pid = fork()) == -1)
+      {
+        fprintf(stderr,"%s: Cannot fork in order to detach from spawner\n",proc_name);
+
+        return -1;
+      }
 
       // - terminate parent, keep child -
       return pid == 0;
@@ -100,7 +136,7 @@ bool run_spawner(const char *spawner_path,string_s &spawn_name)
     {
       // - wait on child to terminate -
       int status;
-      cassert(pid == waitpid(pid,&status,0));
+      while (pid != waitpid(pid,&status,0));
     }
 
     free(line);
@@ -313,8 +349,12 @@ void *run_interpreter(void *data)
           spawn_name.init();
 
           // - run process spawner -
-          if (!run_spawner(spawner_path,spawn_name))
+          int res;
+          if ((res = run_spawner(argv[0],spawner_path,spawn_name)) <= 0)
           {
+            // - set return value -
+            return_value = -res;
+
             // - reset run process flag -
             run_process = false;
           }

@@ -14,7 +14,7 @@ include "script_parser.h"
  * \param spawner_path - path to spawner fifo pipe
  * \param spawn_name - name of spawn source module
  */
-bool run_spawner(const char *spawner_path,string_s &spawn_name);
+int run_spawner(const char *proc_name,const char *spawner_path,string_s &spawn_name);
 #endif
 
 /*!
