@@ -7,6 +7,7 @@ include "script_parser.h"
 @end
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
+#include <fcntl.h>
 #include <sys/wait.h>
 
 /*!

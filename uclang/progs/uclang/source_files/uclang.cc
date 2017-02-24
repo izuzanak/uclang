@@ -55,8 +55,8 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_s &spawn_n
   do {
 
     // - open spawner fifo for reading -
-    FILE *fifo = fopen(spawner_path,"r");
-    if (fifo == NULL)
+    int fd = open(spawner_path,O_RDONLY);
+    if (fd == -1)
     {
       fprintf(stderr,"%s: Cannot open spawner fifo \"%s\"\n",proc_name,spawner_path);
 
@@ -66,31 +66,47 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_s &spawn_n
       return -1;
     }
 
-    char *line = NULL;
-    size_t size = 0;
-    ssize_t count = getline(&line,&size,fifo);
+    // - line data buffer -
+    bc_array_s line_buffer;
+    line_buffer.init();
 
-    // - close spawner fifo -
-    fclose(fifo);
-
-    // - check read result -
-    if (count == -1)
     {
-      fprintf(stderr,"%s: Error while reading from spawner fifo\n",proc_name);
+      const ssize_t c_buffer_add = 256;
 
-      // - delete spawner fifo -
-      remove(spawner_path);
+      ssize_t read_cnt;
+      do
+      {
+        unsigned old_used = line_buffer.used;
+        line_buffer.push_blanks(c_buffer_add);
+        read_cnt = read(fd,line_buffer.data + old_used,c_buffer_add);
 
-      return -1;
+        // - ERROR -
+        if (read_cnt == -1)
+        {
+          fprintf(stderr,"%s: Error while reading from spawner fifo\n",proc_name);
+
+          line_buffer.clear();
+
+          // - delete spawner fifo -
+          remove(spawner_path);
+
+          return -1;
+        }
+
+        line_buffer.used = old_used + read_cnt;
+      }
+      while(read_cnt > 0);
+
+      line_buffer.push('\0');
     }
 
-    // - replace '\n' by terminating zero -
-    line[count - 1] = '\0';
+    // - close spawner fifo -
+    close(fd);
 
     // - check spawner stop request -
-    if (strcmp("uclang-spawner-stop",line) == 0)
+    if (strcmp("uclang-spawner-stop",line_buffer.data) == 0)
     {
-      free(line);
+      line_buffer.clear();
 
       // - delete spawner fifo -
       if (remove(spawner_path) != 0)
@@ -116,8 +132,11 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_s &spawn_n
     if (pid == 0)
     {
       // - set spawn name -
-      spawn_name.set(count - 1,line);
-      free(line);
+      spawn_name.data = line_buffer.data;
+      spawn_name.size = line_buffer.used;
+
+      // - no need to release buffer -
+      //line_buffer.clear();
 
       // - fork process in order to detach from spawner -
       if ((pid = fork()) == -1)
@@ -139,7 +158,7 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_s &spawn_n
       while (pid != waitpid(pid,&status,0));
     }
 
-    free(line);
+    line_buffer.clear();
 
   } while(true);
 }/*}}}*/
