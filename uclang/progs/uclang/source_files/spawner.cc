@@ -421,7 +421,7 @@ bool spawn_parser_s::parse_source(string_s &a_string)
 
 // - spawner global functions -
 
-int run_spawner(const char *proc_name,const char *spawner_path,string_s &spawn_name)
+int run_spawner(const char *proc_name,const char *spawner_path,string_array_s &spawn_args)
 {/*{{{*/
 
   // - create spawner fifo -
@@ -512,14 +512,17 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_s &spawn_n
     if (pid == 0)
     {
       // - retrieve spawn command string -
-      string_s spawn_cmd = {line_buffer.used,line_buffer.data};
+      string_s spawn_cmd;
+      spawn_cmd.size = line_buffer.used;
+      spawn_cmd.data = line_buffer.data;
 
       // - create spawn parser -
       spawn_parser_s spawn_parser;
       spawn_parser.init();
 
       // - parse spawn command -
-      if (!spawn_parser.parse_source(spawn_cmd))
+      if (!spawn_parser.parse_source(spawn_cmd) ||
+          spawn_parser.arguments.used == 0)
       {
         spawn_parser.clear();
         spawn_cmd.clear();
@@ -529,8 +532,8 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_s &spawn_n
         return -1;
       }
 
-      // FIXME set dummy spawn name
-      spawn_name.set(strlen("hello-world"),"hello-world");
+      // - retrieve spawn arguments -
+      spawn_args.swap(spawn_parser.arguments);
 
       spawn_parser.clear();
       spawn_cmd.clear();

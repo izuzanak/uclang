@@ -78,13 +78,17 @@ void *run_interpreter(void *data)
       sigaction(SIGHUP,&signal_term_action,NULL);
 #endif
 
-    // - source initialization -
+    // - init source -
     source_s source;
     source.init();
 
-    // - modules path initialization -
+    // - init modules path -
     string_s mods_path;
     mods_path.init();
+
+    // - init argument list -
+    string_array_s arg_list;
+    arg_list.init();
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_DSP
     int argc = 1;
@@ -240,12 +244,9 @@ void *run_interpreter(void *data)
         }
         else
         {
-          string_s spawn_name;
-          spawn_name.init();
-
           // - run process spawner -
           int res;
-          if ((res = run_spawner(argv[0],spawner_path,spawn_name)) <= 0)
+          if ((res = run_spawner(argv[0],spawner_path,arg_list)) <= 0)
           {
             // - set return value -
             return_value = -res;
@@ -256,22 +257,31 @@ void *run_interpreter(void *data)
           else
           {
             // - insert module name to module names array -
-            unsigned name_idx = parser.module_names.get_idx(spawn_name);
+            unsigned name_idx = parser.module_names.get_idx(arg_list[0]);
             if (name_idx == c_idx_not_exist)
             {
-              parser.module_names.push_blank();
-              parser.module_names.last().swap(spawn_name);
+              // - push module to module names -
+              parser.module_names.push(arg_list[0]);
 
               // - set module import name position -
               parser.module_names_positions.push_blank();
               parser.module_names_positions.last().set(SET_SRC_POS(0,0),SET_SRC_POS(0,0));
             }
           }
-
-          spawn_name.clear();
         }
       }
+      else
 #endif
+      // - initialize list of process arguments -
+      {
+        char **a_ptr = argv + arg_idx;
+        char **a_ptr_end = argv + argc;
+
+        do {
+          arg_list.push_blank();
+          arg_list.last().set(strlen(*a_ptr),*a_ptr);
+        } while(++a_ptr < a_ptr_end);
+      }
 
       // - if process was not canceled -
       if (run_process)
@@ -365,7 +375,7 @@ void *run_interpreter(void *data)
                 // - execute method defined by its parrent class name and its name -
                 // - executed method must be defined as static -
                 debug_message_1(fprintf(stderr,"main: interpreter, run of main thread\n"); tm_mark_time());
-                return_value = interpreter.run_main_thread("Main","main#1",argc - arg_idx,argv + arg_idx);
+                return_value = interpreter.run_main_thread("Main","main#1",arg_list);
                 debug_message_1(fprintf(stderr,"main: interpreter, run of main thread (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
 
                 debug_message_1(fprintf(stderr,"main: interpreter, static locations release\n"); tm_mark_time());
@@ -389,6 +399,9 @@ void *run_interpreter(void *data)
     debug_message_1(fprintf(stderr,"main: parser remove\n"); tm_mark_time());
     parser.clear();
     debug_message_1(fprintf(stderr,"main: parser remove (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
+
+    // - release argument list -
+    arg_list.clear();
   }
 
 #if !defined(ANDROID)

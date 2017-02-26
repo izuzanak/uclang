@@ -1486,11 +1486,10 @@ additions
    * \brief execute described method as first thread of interpreter
    * \param class_name - name of class containing method
    * \param method_name - name of method desired to run
-   * \param argc - count of arguments given to interpreter
-   * \param argv - pointer to array of string arguments given to  interpreter
+   * \param arg_list - array of string arguments given to interpreter
    * \return thread (program) exit code
    */
-  int run_main_thread(const char *class_name,const char *method_name,int argc,char **argv);
+  int run_main_thread(const char *class_name,const char *method_name,string_array_s &arg_list);
 }
 
 interpreter_s;

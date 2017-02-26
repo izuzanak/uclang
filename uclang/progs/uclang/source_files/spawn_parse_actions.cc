@@ -55,7 +55,7 @@ bool(*spawn_pa_callers[c_spawn_parse_action_cnt])(spawn_parser_s &_this) =
 
 bool pa_spawn_null(spawn_parser_s &_this)
 {/*{{{*/
-  debug_message_0(fprintf(stderr,"spawn_parser: parse_action: pa_spawn_null\n"));
+  debug_message_6(fprintf(stderr,"spawn_parser: parse_action: pa_spawn_null\n"));
 
   return true;
 }/*}}}*/
@@ -79,7 +79,7 @@ bool pa_spawn_redirect_from_fd(spawn_parser_s &_this)
     return false;
   }
 
-  debug_message_0(
+  debug_message_6(
     char *end_ptr = source_string.data + lse.terminal_end;
     char tmp_char = *end_ptr;
     *end_ptr = '\0';
@@ -109,7 +109,7 @@ bool pa_spawn_redirect_to_fd(spawn_parser_s &_this)
     return false;
   }
 
-  debug_message_0(
+  debug_message_6(
     char *end_ptr = source_string.data + lse.terminal_end;
     char tmp_char = *end_ptr;
     *end_ptr = '\0';
@@ -151,7 +151,7 @@ bool pa_spawn_redirect_from_file(spawn_parser_s &_this)
   if (close(fd) == -1)
     return false;
 
-  debug_message_0(
+  debug_message_6(
     char *end_ptr = source_string.data + lse.terminal_end;
     char tmp_char = *end_ptr;
     *end_ptr = '\0';
@@ -193,7 +193,7 @@ bool pa_spawn_redirect_to_file(spawn_parser_s &_this)
   if (close(fd) == -1)
     return false;
 
-  debug_message_0(
+  debug_message_6(
     char *end_ptr = source_string.data + lse.terminal_end;
     char tmp_char = *end_ptr;
     *end_ptr = '\0';
@@ -235,7 +235,7 @@ bool pa_spawn_append_to_file(spawn_parser_s &_this)
   if (close(fd) == -1)
     return false;
 
-  debug_message_0(
+  debug_message_6(
     char *end_ptr = source_string.data + lse.terminal_end;
     char tmp_char = *end_ptr;
     *end_ptr = '\0';
@@ -277,7 +277,7 @@ bool pa_spawn_redirect_all_to_file(spawn_parser_s &_this)
   if (close(fd) == -1)
     return false;
 
-  debug_message_0(
+  debug_message_6(
     char *end_ptr = source_string.data + lse.terminal_end;
     char tmp_char = *end_ptr;
     *end_ptr = '\0';
@@ -319,7 +319,7 @@ bool pa_spawn_append_all_to_file(spawn_parser_s &_this)
   if (close(fd) == -1)
     return false;
 
-  debug_message_0(
+  debug_message_6(
     char *end_ptr = source_string.data + lse.terminal_end;
     char tmp_char = *end_ptr;
     *end_ptr = '\0';
@@ -333,15 +333,28 @@ bool pa_spawn_append_all_to_file(spawn_parser_s &_this)
 bool pa_spawn_argument(spawn_parser_s &_this)
 {/*{{{*/
   string_s &source_string = _this.source_string;
+  string_array_s &arguments = _this.arguments;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
 
   lalr_stack_element_s &lse = lalr_stack.last();
 
-  // FIXME TODO continue (remove enclosing ' or ")
+  char *arg_data = source_string.data + lse.terminal_start;
+  unsigned arg_length = lse.terminal_end - lse.terminal_start;
 
-  debug_message_0(
+  // - remove enclosing characters -
+  if (*arg_data == '\'' || *arg_data == '"')
+  {
+    ++arg_data;
+    arg_length -= 2;
+  }
+
+  // - store argument to argument list -
+  arguments.push_blank();
+  arguments.last().set(arg_length,arg_data);
+
+  debug_message_6(
     char *end_ptr = source_string.data + lse.terminal_end;
     char tmp_char = *end_ptr;
     *end_ptr = '\0';
@@ -367,7 +380,7 @@ bool pa_spawn_fd(spawn_parser_s &_this)
 
   fd_stack.push(fd);
 
-  debug_message_0(
+  debug_message_6(
     char *end_ptr = source_string.data + lse.terminal_end;
     char tmp_char = *end_ptr;
     *end_ptr = '\0';
@@ -386,7 +399,7 @@ bool pa_spawn_fd_stdin(spawn_parser_s &_this)
 
   fd_stack.push(STDIN_FILENO);
 
-  debug_message_0(fprintf(stderr,"spawn_parser: parse_action: pa_spawn_fd_stdin\n"));
+  debug_message_6(fprintf(stderr,"spawn_parser: parse_action: pa_spawn_fd_stdin\n"));
 
   return true;
 }/*}}}*/
@@ -399,7 +412,7 @@ bool pa_spawn_fd_stdout(spawn_parser_s &_this)
 
   fd_stack.push(STDOUT_FILENO);
 
-  debug_message_0(fprintf(stderr,"spawn_parser: parse_action: pa_spawn_fd_stdout\n"));
+  debug_message_6(fprintf(stderr,"spawn_parser: parse_action: pa_spawn_fd_stdout\n"));
 
   return true;
 }/*}}}*/

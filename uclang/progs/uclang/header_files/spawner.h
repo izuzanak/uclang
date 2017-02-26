@@ -74,6 +74,7 @@ struct
 string_s:source_string
 unsigned:old_input_idx
 bi_array_s:fd_stack
+string_array_s:arguments
 lalr_stack_s:lalr_stack
 >
 
@@ -106,9 +107,9 @@ inlines spawn_parser_s
 /*!
  * \brief function implementing process spawner
  * \param spawner_path - path to spawner fifo pipe
- * \param spawn_name - name of spawn source module
+ * \param spawn_args - list of spawn arguments
  */
-int run_spawner(const char *proc_name,const char *spawner_path,string_s &spawn_name);
+int run_spawner(const char *proc_name,const char *spawner_path,string_array_s &spawn_args);
 
 #endif
 

@@ -1597,7 +1597,7 @@ bool interpreter_s::run_new_thread(interpreter_thread_s &p_thread,unsigned p_sta
   return true;
 }/*}}}*/
 
-int interpreter_s::run_main_thread(const char *class_name,const char *method_name,int argc,char **argv)
+int interpreter_s::run_main_thread(const char *class_name,const char *method_name,string_array_s &arg_list)
 {/*{{{*/
 
 #if THREAD_LIB == THREAD_LIB_DSP_TSK
@@ -1740,18 +1740,17 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
         // - pass arguments to main function -
         {
           pointer_array_s *array_ptr = thread->get_new_array_ptr();
-          array_ptr->copy_resize(argc);
+          array_ptr->copy_resize(arg_list.used);
 
-          if (argc != 0)
+          if (arg_list.used != 0)
           {
-            char **a_ptr = argv;
-            char **a_ptr_end = a_ptr + argc;
+            string_s *a_ptr = arg_list.data;
+            string_s *a_ptr_end = a_ptr + arg_list.used;
+            do {
 
-            do
-            {
               // - argument string -
               string_s *string_ptr = thread->get_new_string_ptr();
-              string_ptr->set(strlen(*a_ptr),*a_ptr);
+              string_ptr->swap(*a_ptr);
 
               // - location of argument string -
               location_s *new_location = thread->get_new_location_ptr();
@@ -1762,8 +1761,7 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
               // - insertion of string location to argument array -
               array_ptr->push((pointer)new_location);
 
-            }
-            while(++a_ptr < a_ptr_end);
+            } while(++a_ptr < a_ptr_end);
           }
 
           // - arguments array location -
