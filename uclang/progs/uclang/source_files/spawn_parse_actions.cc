@@ -63,13 +63,21 @@ bool pa_spawn_null(spawn_parser_s &_this)
 bool pa_spawn_redirect_from_fd(spawn_parser_s &_this)
 {/*{{{*/
   string_s &source_string = _this.source_string;
+  bi_array_s &fd_stack = _this.fd_stack;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
 
   lalr_stack_element_s &lse = lalr_stack.last();
 
-  // FIXME TODO continue ...
+  char *fd_data = source_string.data + lse.terminal_start;
+  long long int fd = strtoll(fd_data,NULL,10);
+
+  // - ERROR -
+  if (dup2(fd,fd_stack.pop()) == -1)
+  {
+    return false;
+  }
 
   debug_message_0(
     char *end_ptr = source_string.data + lse.terminal_end;
@@ -85,13 +93,21 @@ bool pa_spawn_redirect_from_fd(spawn_parser_s &_this)
 bool pa_spawn_redirect_to_fd(spawn_parser_s &_this)
 {/*{{{*/
   string_s &source_string = _this.source_string;
+  bi_array_s &fd_stack = _this.fd_stack;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
 
   lalr_stack_element_s &lse = lalr_stack.last();
 
-  // FIXME TODO continue ...
+  char *fd_data = source_string.data + lse.terminal_start;
+  long long int fd = strtoll(fd_data,NULL,10);
+
+  // - ERROR -
+  if (dup2(fd,fd_stack.pop()) == -1)
+  {
+    return false;
+  }
 
   debug_message_0(
     char *end_ptr = source_string.data + lse.terminal_end;
@@ -107,13 +123,33 @@ bool pa_spawn_redirect_to_fd(spawn_parser_s &_this)
 bool pa_spawn_redirect_from_file(spawn_parser_s &_this)
 {/*{{{*/
   string_s &source_string = _this.source_string;
+  bi_array_s &fd_stack = _this.fd_stack;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
 
   lalr_stack_element_s &lse = lalr_stack.last();
 
-  // FIXME TODO continue (remove enclosing ' or ")
+  int fd = spawn_parser_s::open_file(
+      source_string.data + lse.terminal_start,
+      source_string.data + lse.terminal_end,
+      O_RDONLY);
+
+  // - ERROR -
+  if (fd == -1)
+    return false;
+
+  // - ERROR -
+  if (dup2(fd,fd_stack.pop()) == -1)
+  {
+    close(fd);
+
+    return false;
+  }
+
+  // - ERROR -
+  if (close(fd) == -1)
+    return false;
 
   debug_message_0(
     char *end_ptr = source_string.data + lse.terminal_end;
@@ -129,13 +165,33 @@ bool pa_spawn_redirect_from_file(spawn_parser_s &_this)
 bool pa_spawn_redirect_to_file(spawn_parser_s &_this)
 {/*{{{*/
   string_s &source_string = _this.source_string;
+  bi_array_s &fd_stack = _this.fd_stack;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
 
   lalr_stack_element_s &lse = lalr_stack.last();
 
-  // FIXME TODO continue (remove enclosing ' or ")
+  int fd = spawn_parser_s::open_file(
+      source_string.data + lse.terminal_start,
+      source_string.data + lse.terminal_end,
+      O_CREAT | O_WRONLY | O_TRUNC);
+
+  // - ERROR -
+  if (fd == -1)
+    return false;
+
+  // - ERROR -
+  if (dup2(fd,fd_stack.pop()) == -1)
+  {
+    close(fd);
+
+    return false;
+  }
+
+  // - ERROR -
+  if (close(fd) == -1)
+    return false;
 
   debug_message_0(
     char *end_ptr = source_string.data + lse.terminal_end;
@@ -151,13 +207,33 @@ bool pa_spawn_redirect_to_file(spawn_parser_s &_this)
 bool pa_spawn_append_to_file(spawn_parser_s &_this)
 {/*{{{*/
   string_s &source_string = _this.source_string;
+  bi_array_s &fd_stack = _this.fd_stack;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
 
   // *****
 
   lalr_stack_element_s &lse = lalr_stack.last();
 
-  // FIXME TODO continue (remove enclosing ' or ")
+  int fd = spawn_parser_s::open_file(
+      source_string.data + lse.terminal_start,
+      source_string.data + lse.terminal_end,
+      O_CREAT | O_WRONLY | O_APPEND);
+
+  // - ERROR -
+  if (fd == -1)
+    return false;
+
+  // - ERROR -
+  if (dup2(fd,fd_stack.pop()) == -1)
+  {
+    close(fd);
+
+    return false;
+  }
+
+  // - ERROR -
+  if (close(fd) == -1)
+    return false;
 
   debug_message_0(
     char *end_ptr = source_string.data + lse.terminal_end;
@@ -179,7 +255,27 @@ bool pa_spawn_redirect_all_to_file(spawn_parser_s &_this)
 
   lalr_stack_element_s &lse = lalr_stack.last();
 
-  // FIXME TODO continue (remove enclosing ' or ")
+  int fd = spawn_parser_s::open_file(
+      source_string.data + lse.terminal_start,
+      source_string.data + lse.terminal_end,
+      O_CREAT | O_WRONLY | O_TRUNC);
+
+  // - ERROR -
+  if (fd == -1)
+    return false;
+
+  // - ERROR -
+  if (dup2(fd,STDOUT_FILENO) == -1 ||
+      dup2(fd,STDERR_FILENO) == -1)
+  {
+    close(fd);
+
+    return false;
+  }
+
+  // - ERROR -
+  if (close(fd) == -1)
+    return false;
 
   debug_message_0(
     char *end_ptr = source_string.data + lse.terminal_end;
@@ -201,7 +297,27 @@ bool pa_spawn_append_all_to_file(spawn_parser_s &_this)
 
   lalr_stack_element_s &lse = lalr_stack.last();
 
-  // FIXME TODO continue (remove enclosing ' or ")
+  int fd = spawn_parser_s::open_file(
+      source_string.data + lse.terminal_start,
+      source_string.data + lse.terminal_end,
+      O_CREAT | O_WRONLY | O_APPEND);
+
+  // - ERROR -
+  if (fd == -1)
+    return false;
+
+  // - ERROR -
+  if (dup2(fd,STDOUT_FILENO) == -1 ||
+      dup2(fd,STDERR_FILENO) == -1)
+  {
+    close(fd);
+
+    return false;
+  }
+
+  // - ERROR -
+  if (close(fd) == -1)
+    return false;
 
   debug_message_0(
     char *end_ptr = source_string.data + lse.terminal_end;
@@ -268,7 +384,7 @@ bool pa_spawn_fd_stdin(spawn_parser_s &_this)
 
   // *****
 
-  fd_stack.push(0);
+  fd_stack.push(STDIN_FILENO);
 
   debug_message_0(fprintf(stderr,"spawn_parser: parse_action: pa_spawn_fd_stdin\n"));
 
@@ -281,7 +397,7 @@ bool pa_spawn_fd_stdout(spawn_parser_s &_this)
 
   // *****
 
-  fd_stack.push(1);
+  fd_stack.push(STDOUT_FILENO);
 
   debug_message_0(fprintf(stderr,"spawn_parser: parse_action: pa_spawn_fd_stdout\n"));
 

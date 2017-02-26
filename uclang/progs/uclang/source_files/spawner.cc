@@ -15,6 +15,26 @@ include "spawn_parse_actions.h"
 methods spawn_parser_s
 @end
 
+int spawn_parser_s::open_file(char *ptr,char *ptr_end,int flags)
+{/*{{{*/
+
+  // - remove enclosing characters -
+  if (*ptr == '\'' || *ptr == '"')
+  {
+    ++ptr;
+    --ptr_end;
+  }
+
+  char tmp_char = *ptr_end;
+  *ptr_end = '\0';
+
+  // - open file -
+  int fd = open(ptr,flags,0666);
+  *ptr_end = tmp_char;
+
+  return fd;
+}/*}}}*/
+
 unsigned spawn_parser_s::recognize_terminal(unsigned &a_input_idx)
 {/*{{{*/
   unsigned source_string_length = source_string.size - 1;

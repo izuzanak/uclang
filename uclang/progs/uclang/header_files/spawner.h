@@ -79,6 +79,9 @@ lalr_stack_s:lalr_stack
 
 additions
 {
+  // - open file with requested flags -
+  static int open_file(char *ptr,char *ptr_end,int flags);
+
   // - return index of next terminal symbol (token) in input source -
   unsigned recognize_terminal(unsigned &a_input_idx);
 
