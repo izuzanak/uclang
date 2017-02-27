@@ -9,6 +9,7 @@ include "script_parser.h"
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
 
 #include <fcntl.h>
+#include <poll.h>
 #include <sys/wait.h>
 
 /*

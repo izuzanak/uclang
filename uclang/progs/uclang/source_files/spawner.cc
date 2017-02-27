@@ -435,7 +435,7 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_array_s &s
   do {
 
     // - open spawner fifo for reading -
-    int fd = open(spawner_path,O_RDONLY);
+    int fd = open(spawner_path,O_RDONLY | O_NONBLOCK);
     if (fd == -1)
     {
       fprintf(stderr,"%s: Cannot open spawner fifo \"%s\"\n",proc_name,spawner_path);
@@ -446,9 +446,22 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_array_s &s
       return -1;
     }
 
+    // - initialize pollfd structure -
+    pollfd pfd = {fd,POLLIN | POLLPRI,0};
+
     // - line data buffer -
     bc_array_s line_buffer;
     line_buffer.init();
+
+#define RUN_SPAWNER_FIFO_READ_ERROR() \
+{/*{{{*/\
+  fprintf(stderr,"%s: Error while reading from spawner fifo\n",proc_name);\
+\
+  line_buffer.clear();\
+\
+  /* - delete spawner fifo - */\
+  remove(spawner_path);\
+}/*}}}*/
 
     {
       const ssize_t c_buffer_add = 256;
@@ -456,26 +469,44 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_array_s &s
       ssize_t read_cnt;
       do
       {
-        unsigned old_used = line_buffer.used;
-        line_buffer.push_blanks(c_buffer_add);
-        read_cnt = read(fd,line_buffer.data + old_used,c_buffer_add);
+        // - poll for data on spawner fifo -
+        int poll_res = poll(&pfd,1,100);
 
         // - ERROR -
-        if (read_cnt == -1)
+        if (poll_res == -1)
         {
-          fprintf(stderr,"%s: Error while reading from spawner fifo\n",proc_name);
-
-          line_buffer.clear();
-
-          // - delete spawner fifo -
-          remove(spawner_path);
+          RUN_SPAWNER_FIFO_READ_ERROR();
 
           return -1;
         }
 
-        line_buffer.used = old_used + read_cnt;
+        if (poll_res > 0)
+        {
+          unsigned old_used = line_buffer.used;
+          line_buffer.push_blanks(c_buffer_add);
+
+          // - read from spawner fifo -
+          read_cnt = read(fd,line_buffer.data + old_used,c_buffer_add);
+
+          // - ERROR -
+          if (read_cnt == -1)
+          {
+            RUN_SPAWNER_FIFO_READ_ERROR();
+
+            return -1;
+          }
+
+          line_buffer.used = old_used + read_cnt;
+
+          if (read_cnt == 0)
+            break;
+        }
+
+        // - collect child statuses -
+        int status;
+        while (waitpid(-1,&status,WNOHANG) > 0);
       }
-      while(read_cnt > 0);
+      while(true);
 
       line_buffer.push('\0');
     }
@@ -538,24 +569,8 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_array_s &s
       spawn_parser.clear();
       spawn_cmd.clear();
 
-      // - fork process in order to detach from spawner -
-      if ((pid = fork()) == -1)
-      {
-        fprintf(stderr,"%s: Cannot fork in order to detach from spawner\n",proc_name);
-
-        return -1;
-      }
-
       // - terminate parent, keep child -
-      return pid == 0;
-    }
-
-    // - process is spawner -
-    else
-    {
-      // - wait on child to terminate -
-      int status;
-      while (pid != waitpid(pid,&status,0));
+      return 1;
     }
 
     line_buffer.clear();
