@@ -569,7 +569,6 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_array_s &s
       spawn_parser.clear();
       spawn_cmd.clear();
 
-      // - terminate parent, keep child -
       return 1;
     }
 

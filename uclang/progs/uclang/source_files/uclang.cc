@@ -256,6 +256,28 @@ void *run_interpreter(void *data)
           }
           else
           {
+            // - update process cmdline buffer -
+            {
+              char *a_ptr = argv[1];
+              char *a_ptr_end = argv[argc - 1] + strlen(argv[argc - 1]) + 1;
+              memset(a_ptr,0,a_ptr_end - a_ptr);
+
+              string_s *s_ptr = arg_list.data;
+              string_s *s_ptr_end = s_ptr + arg_list.used;
+              do {
+                
+                // - if there is no space left -
+                if (a_ptr + s_ptr->size > a_ptr_end)
+                {
+                  break;
+                }
+
+                memcpy(a_ptr,s_ptr->data,s_ptr->size);
+                a_ptr += s_ptr->size;
+
+              } while(++s_ptr < s_ptr_end);
+            }
+
             // - insert module name to module names array -
             unsigned name_idx = parser.module_names.get_idx(arg_list[0]);
             if (name_idx == c_idx_not_exist)
