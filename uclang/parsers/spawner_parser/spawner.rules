@@ -1,0 +1,72 @@
+#vim: set syntax=rules:
+
+init_code: {}
+
+terminals:
+  ls_br {'<'}
+  rs_br {'>'}
+  double_rs_br {">>"}
+
+  num_ls_br {d.d*.'<'}
+  num_rs_br {d.d*.'>'}
+  num_double_rs_br {d.d*.">>"}
+
+  amp_rs_br {"&>"}
+  amp_double_rs_br {"&>>"}
+
+  ampersand {'&'}
+
+  number {d.d*}
+  word {|'"<>& \t\n\0|*}
+  word_quote {'"'.!'"'*.'"'}
+  word_apost {"'".|'|*."'"}
+
+  _SKIP_ {w.w*}
+  _END_ {'\0'}
+
+nonterminals:
+  <start>
+
+  <item_list>
+  <item>
+
+  <source_in>
+  <source_out>
+  <source_app>
+
+  <value>
+  <number>
+
+rules:
+  <start> -> <item_list> _END_ ->> {}
+
+  <item_list> -> <item> ->> {}
+  <item_list> -> <item_list> <item> ->> {}
+
+  <item> -> <source_in> ampersand <number> ->> {print("redirect from fd: "..rule_body(2))}
+  <item> -> <source_out> ampersand <number> ->> {print("redirect to fd: "..rule_body(2))}
+
+  <item> -> <source_in> <value> ->> {print("redirect from file: "..rule_body(1))}
+  <item> -> <source_out> <value> ->> {print("redirect to file: "..rule_body(1))}
+
+  <item> -> <source_app> <value> ->> {print("append to file: "..rule_body(1))}
+  <item> -> amp_rs_br <value> ->> {print("redirect all to file: "..rule_body(1))}
+  <item> -> amp_double_rs_br <value> ->> {print("append all to file: "..rule_body(1))}
+
+  <item> -> <value> ->> {print("argument: "..rule_body(0))}
+
+  <source_in> -> num_ls_br ->> {print("fd: "..rule_body(0))}
+  <source_out> -> num_rs_br ->> {print("fd: "..rule_body(0))}
+  <source_app> -> num_double_rs_br ->> {print("fd: "..rule_body(0))}
+
+  <source_in> -> ls_br ->> {print("fd stdin")}
+  <source_out> -> rs_br ->> {print("fd stdout")}
+  <source_app> -> double_rs_br ->> {print("fd stdout")}
+
+  <value> -> <number> ->> {}
+  <value> -> word ->> {}
+  <value> -> word_quote ->> {}
+  <value> -> word_apost ->> {}
+
+  <number> -> number ->> {}
+
