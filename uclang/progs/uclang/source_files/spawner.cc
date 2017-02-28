@@ -4,7 +4,7 @@ include "spawner.h"
 include "spawn_parse_actions.h"
 @end
 
-#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
+#if SYSTEM_TYPE_UNIX_SPAWNER == ENABLED
 
 /*
  * methods of generated structures

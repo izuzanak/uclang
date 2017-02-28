@@ -2,7 +2,7 @@
 #ifndef __SPAWN_PARSE_ACTIONS_H
 #define __SPAWN_PARSE_ACTIONS_H
 
-#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
+#if SYSTEM_TYPE_UNIX_SPAWNER == ENABLED
 
 /*
  * declaration of function describing parse actions

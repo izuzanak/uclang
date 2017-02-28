@@ -6,7 +6,7 @@
 include "script_parser.h"
 @end
 
-#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
+#if SYSTEM_TYPE_UNIX_SPAWNER == ENABLED
 
 #include <fcntl.h>
 #include <poll.h>

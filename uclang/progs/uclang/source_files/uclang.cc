@@ -117,12 +117,14 @@ void *run_interpreter(void *data)
     int arg_idx = 1;
 
     const char *arg_mods_ptr = "-mods=";
-    const char *arg_spawn_ptr = "-spawner=";
-
     const int arg_mods_len = strlen(arg_mods_ptr);
+
+#if SYSTEM_TYPE_UNIX_SPAWNER == ENABLED
+    const char *arg_spawn_ptr = "-spawner=";
     const int arg_spawn_len = strlen(arg_spawn_ptr);
 
     const char *spawner_path = NULL;
+#endif
 
     // - process interpreter arguments -
     if (arg_idx < argc)
@@ -134,9 +136,11 @@ void *run_interpreter(void *data)
         if (strncmp(arg_ptr,arg_mods_ptr,arg_mods_len) == 0)
           mods_path.set(strlen(arg_ptr) - arg_mods_len,arg_ptr + arg_mods_len);
         
+#if SYSTEM_TYPE_UNIX_SPAWNER == ENABLED
         // - test spawner argument -
         else if (strncmp(arg_ptr,arg_spawn_ptr,arg_spawn_len) == 0)
           spawner_path = arg_ptr + arg_spawn_len;
+#endif
 
         // - argument was not recognized -
         else
@@ -226,7 +230,7 @@ void *run_interpreter(void *data)
       // - run process flag -
       bool run_process = true;
 
-#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
+#if SYSTEM_TYPE_UNIX_SPAWNER == ENABLED
 
       // - if spawner path is set -
       if (spawner_path != NULL)
