@@ -4,6 +4,8 @@ include "spawner.h"
 include "spawn_parse_actions.h"
 @end
 
+#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
+
 /*
  * constants and definitions
  */
@@ -416,4 +418,6 @@ bool pa_spawn_fd_stdout(spawn_parser_s &_this)
 
   return true;
 }/*}}}*/
+
+#endif
 

@@ -2,6 +2,8 @@
 #ifndef __SPAWN_PARSE_ACTIONS_H
 #define __SPAWN_PARSE_ACTIONS_H
 
+#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
+
 /*
  * declaration of function describing parse actions
  */
@@ -24,6 +26,8 @@ bool pa_spawn_fd_stdout(spawn_parser_s &_this);
  */
 
 extern bool(*spawn_pa_callers[])(spawn_parser_s &_this);
+
+#endif
 
 #endif
 
