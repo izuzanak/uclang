@@ -415,6 +415,12 @@ inline void *cmalloc(unsigned a_size)
   return malloc(a_size);
 }/*}}}*/
 
+// - definition of crealloc function -
+inline void *crealloc(void *a_location,unsigned a_size)
+{/*{{{*/
+  return realloc(a_location,a_size);
+}/*}}}*/
+
 // - definition of cfree function -
 inline void cfree(void *a_location)
 {/*{{{*/
