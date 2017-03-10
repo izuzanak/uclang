@@ -65,6 +65,12 @@ const unsigned spwn_lalr_table[spwn_lalr_state_cnt*c_spwn_terminal_plus_nontermi
 };/*}}}*/
 
 /*
+ * global spawner variables
+ */
+
+extern atomic_s g_spawner_running;
+
+/*
  * definition of generated structures
  */
 

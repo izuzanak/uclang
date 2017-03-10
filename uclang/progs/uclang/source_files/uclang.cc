@@ -13,8 +13,19 @@ void term_signal_handler(int signum)
   // - if interpreter not exist or its main thread is not running -
   if (interpreter_ptr == NULL || interpreter_ptr->main_thread_ptr == NULL)
   {
-    // - just terminate -
-    exit(1);
+#if SYSTEM_TYPE_UNIX_SPAWNER == ENABLED
+    if (g_spawner_running.value())
+    {
+      g_spawner_running.atomic_set(0);
+    }
+    else
+#endif
+    {
+      // - just terminate -
+      exit(1);
+    }
+
+    return;
   }
 
   // - retrieve thread object -

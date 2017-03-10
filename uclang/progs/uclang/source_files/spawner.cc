@@ -7,6 +7,12 @@ include "spawn_parse_actions.h"
 #if SYSTEM_TYPE_UNIX_SPAWNER == ENABLED
 
 /*
+ * global spawner variables
+ */
+
+atomic_s g_spawner_running = {0};
+
+/*
  * methods of generated structures
  */
 
@@ -424,6 +430,9 @@ bool spawn_parser_s::parse_source(string_s &a_string)
 int run_spawner(const char *proc_name,const char *spawner_path,string_array_s &spawn_args)
 {/*{{{*/
 
+  // - set spawner running flag -
+  g_spawner_running.atomic_set(1);
+
   // - create spawner fifo -
   if (mkfifo(spawner_path,0666) != 0)
   {
@@ -473,7 +482,7 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_array_s &s
         int poll_res = poll(&pfd,1,100);
 
         // - ERROR -
-        if (poll_res == -1)
+        if (poll_res == -1 && errno != EINTR)
         {
           RUN_SPAWNER_FIFO_READ_ERROR();
 
@@ -506,7 +515,7 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_array_s &s
         int status;
         while (waitpid(-1,&status,WNOHANG) > 0);
       }
-      while(true);
+      while(g_spawner_running.value());
 
       line_buffer.push('\0');
     }
@@ -515,7 +524,8 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_array_s &s
     close(fd);
 
     // - check spawner stop request -
-    if (strcmp("uclang-spawner-stop",line_buffer.data) == 0)
+    if (!g_spawner_running.value() ||
+        strcmp("uclang-spawner-stop",line_buffer.data) == 0)
     {
       line_buffer.clear();
 
