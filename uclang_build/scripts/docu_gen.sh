@@ -48,3 +48,6 @@
 ./uclang scripts/docu_gen.ucl Filter ../uclang/doc/02_modules/07_module_algorithms/02_class_filter.md containers:algorithms
 ./uclang scripts/docu_gen.ucl Range ../uclang/doc/02_modules/07_module_algorithms/03_class_range.md containers:algorithms
 
+# Generate json documentation
+./uclang scripts/docu_gen.ucl Json ../uclang/doc/02_modules/08_module_json/01_class_json.md containers:json
+

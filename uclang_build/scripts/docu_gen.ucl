@@ -624,6 +624,10 @@ iterable types.",
       "description","Class allowing creation of lazy object sequences.",
       "create_example","new Range(1,10)"
     ]);/*}}}*/
+    CLASS_PROPERTIES["Json"] = class_Json = new Dict(
+    [/*{{{*/
+      "description","Class supporting serialization and deserialization of language objects to JavaScript Object Notation."
+    ]);/*}}}*/
 
     switch (m_target_name)
     {
@@ -2024,6 +2028,42 @@ while (Blank != (element = obj.next_item()))
 {
   (\"element: %d\\n\" % element).print();
 }
+"
+)/*}}}*/
+      ]);/*}}}*/
+    }
+    case "Json":
+    {
+      class_Json["methods"] = new Dict(
+      [/*{{{*/
+        "create#1", new MethodDescr
+(/*{{{*/
+"Create object of class %s containing `JSON` representation of method parameter." % doc_class_ref("String"),
+["Object of class %s." % doc_class_ref("Dict")],
+"Object of class %s containing `JSON` representation of method parameter." % doc_class_ref("String"),"
+obj = Json.create(%s);
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % get_property("Dict","create_example")
+),/*}}}*/
+        "create_nice#2", new MethodDescr
+(/*{{{*/
+"Create object of class %s containing `JSON` representation of method parameter.
+Output is formatted in Human readable format." % doc_class_ref("String"),
+["Object of class %s." % doc_class_ref("Dict"),
+ "Object of class %s, representing tabular string." % doc_class_ref("String")],
+"Object of class %s containing `JSON` representation of method parameter." % doc_class_ref("String"),"
+%s
+obj = Json.create_nice(dict,\"   \");
+(\"obj: %%s\\n\" %% obj.to_string()).print();
+" % get_code("Dict","dict","create_example")
+),/*}}}*/
+        "parse#1", new MethodDescr
+(/*{{{*/
+"Parse object of class %s containing `JSON` representation of object." % doc_class_ref("String"),
+["Object of class %s containing `JSON` representation of object." % doc_class_ref("String")],
+"Object of class %s." % doc_class_ref("Dict"),"
+obj = Json.parse(\"{\\\"One\\\":1,\\\"Two\\\":2,\\\"Three\\\":3}\");
+(\"obj: %s\\n\" % obj.to_string()).print();
 "
 )/*}}}*/
       ]);/*}}}*/
