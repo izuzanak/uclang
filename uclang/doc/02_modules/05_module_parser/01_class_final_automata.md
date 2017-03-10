@@ -28,7 +28,7 @@ for recognition of binary data sequences too.
 
 <a name="FinalAutomata#1" />
 
-### Constructor [`FinalAutomata#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L356)
+### Constructor [`FinalAutomata#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L350)
 
 Creates final automata recognizing terminal symbols, from array of strings
 describing regular expressions.
@@ -61,7 +61,7 @@ obj: FinalAutomata
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L342)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L336)
 
 Assignment operator `=`. Object of class `FinalAutomata` is replaced by method parameter.
 
@@ -99,7 +99,7 @@ obj: New value
 
 <a name="get_source#1" />
 
-### Method [`get_source#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L435)
+### Method [`get_source#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L429)
 
 Creates object of class `FaSource` that can be used for retrieval of terminal symbol indexes.
 
@@ -124,7 +124,7 @@ obj: FaSource
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L467)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L461)
 
 Convert object of class `FinalAutomata` to object of class `String`.
 This method returns name of class `FinalAutomata`.
@@ -144,7 +144,7 @@ FinalAutomata.to_string(): FinalAutomata
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L476)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L470)
 
 Print string representation of object of class `FinalAutomata` to standard output.
 This method prints name of class `FinalAutomata`.
