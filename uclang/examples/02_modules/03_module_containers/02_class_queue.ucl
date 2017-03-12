@@ -36,14 +36,14 @@ class Main
     //
 
     Tutorial.note("Queue object");
-    ("Queue: %s\n" % new Queue().to_string()).print();
-    ("Queue: %s\n" % new Queue([1,2,3,4,5]).to_string()).print();
+    ("Queue: %s\n" % $new Queue()).print();
+    ("Queue: %s\n" % $new Queue([1,2,3,4,5])).print();
 
     Tutorial.note("Queue assign operator");
     queue = new Queue();
-    ("queue: %s\n" % queue.to_string()).print();
+    ("queue: %s\n" % $queue).print();
     queue = 10;
-    ("queue: %s\n" % queue.to_string()).print();
+    ("queue: %s\n" % $queue).print();
 
     Tutorial.note("Queue compare operators");
     queue_0 = new Queue([1,2,3,4]);
@@ -60,60 +60,60 @@ class Main
     Tutorial.note("Queue plus operators");
     queue_0 = new Queue([1,2,3]);
     arr_1 = [4,5,6];
-    ("queue_0          -> %s\n" % queue_0.to_string()).print();
-    ("queue_0 + arr_1  -> %s\n" % (queue_0 + arr_1).to_string()).print();
-    ("queue_0          -> %s\n" % queue_0.to_string()).print();
-    ("queue_0 += arr_1 -> %s\n" % (queue_0 += arr_1).to_string()).print();
-    ("queue_0          -> %s\n" % queue_0.to_string()).print();
+    ("queue_0          -> %s\n" % $queue_0).print();
+    ("queue_0 + arr_1  -> %s\n" % $(queue_0 + arr_1)).print();
+    ("queue_0          -> %s\n" % $queue_0).print();
+    ("queue_0 += arr_1 -> %s\n" % $(queue_0 += arr_1)).print();
+    ("queue_0          -> %s\n" % $queue_0).print();
 
     Tutorial.note("Queue method clear#0");
     queue = new Queue([1,2,3,4,5]);
-    ("queue         -> %s\n" % queue.to_string()).print();
-    ("queue.clear() -> %s\n" % queue.clear().to_string()).print();
-    ("queue         -> %s\n" % queue.to_string()).print();
+    ("queue         -> %s\n" % $queue).print();
+    ("queue.clear() -> %s\n" % $queue.clear()).print();
+    ("queue         -> %s\n" % $queue).print();
 
     Tutorial.note("Queue method items#0");
     queue = new Queue([1,2,3,4,5]);
-    ("queue -> type: %s, value %s\n" % [(type queue).to_string(),queue.to_string()]).print();
+    ("queue -> type: %s, value %s\n" % [$(type queue),$queue]).print();
     items = queue.items();
-    ("items -> type: %s, value %s\n" % [(type items).to_string(),items.to_string()]).print();
-    ("queue -> type: %s, value %s\n" % [(type queue).to_string(),queue.to_string()]).print();
+    ("items -> type: %s, value %s\n" % [$(type items),$items]).print();
+    ("queue -> type: %s, value %s\n" % [$(type queue),$queue]).print();
 
     Tutorial.note("Queue method insert#1");
     value = 10;
     queue = new Queue([1,2,3,4,5]);
     ("value                   -> %d\n" % value).print();
-    ("queue                   -> %s\n" % queue.to_string()).print();
-    ("queue.insert_ref(value) -> %s\n" % queue.insert_ref(value).to_string()).print();
-    ("queue.insert_ref(value) -> %s\n" % queue.insert_ref(value).to_string()).print();
-    ("queue.insert_ref(value) -> %s\n" % queue.insert_ref(value).to_string()).print();
-    ("queue                   -> %s\n" % queue.to_string()).print();
+    ("queue                   -> %s\n" % $queue).print();
+    ("queue.insert_ref(value) -> %s\n" % $queue.insert_ref(value)).print();
+    ("queue.insert_ref(value) -> %s\n" % $queue.insert_ref(value)).print();
+    ("queue.insert_ref(value) -> %s\n" % $queue.insert_ref(value)).print();
+    ("queue                   -> %s\n" % $queue).print();
     ("value = 100;            -> %d\n" % (value = 100)).print();
-    ("queue                   -> %s\n" % queue.to_string()).print();
+    ("queue                   -> %s\n" % $queue).print();
 
     Tutorial.note("Queue method insert_ref#1");
     queue = new Queue([1,2,3,4,5]);
-    ("queue            -> %s\n" % queue.to_string()).print();
-    ("queue.insert(10) -> %s\n" % queue.insert(10).to_string()).print();
-    ("queue.insert(10) -> %s\n" % queue.insert(10).to_string()).print();
-    ("queue.insert(10) -> %s\n" % queue.insert(10).to_string()).print();
-    ("queue            -> %s\n" % queue.to_string()).print();
+    ("queue            -> %s\n" % $queue).print();
+    ("queue.insert(10) -> %s\n" % $queue.insert(10)).print();
+    ("queue.insert(10) -> %s\n" % $queue.insert(10)).print();
+    ("queue.insert(10) -> %s\n" % $queue.insert(10)).print();
+    ("queue            -> %s\n" % $queue).print();
 
     Tutorial.note("Queue method next#0");
     queue = new Queue([1,2,3,4,5]);
-    ("queue        -> %s\n" % queue.to_string()).print();
-    ("queue.next() -> %s\n" % queue.next().to_string()).print();
-    ("queue.next() -> %s\n" % queue.next().to_string()).print();
-    ("queue.next() -> %s\n" % queue.next().to_string()).print();
-    ("queue        -> %s\n" % queue.to_string()).print();
+    ("queue        -> %s\n" % $queue).print();
+    ("queue.next() -> %s\n" % $queue.next()).print();
+    ("queue.next() -> %s\n" % $queue.next()).print();
+    ("queue.next() -> %s\n" % $queue.next()).print();
+    ("queue        -> %s\n" % $queue).print();
 
     Tutorial.note("Queue method contain");
     queue = new Queue([1,2,3,4,5]);
-    ("queue            -> %s\n" % queue.to_string()).print();
+    ("queue            -> %s\n" % $queue).print();
     ("queue.contain(2) -> %d\n" % queue.contain(2)).print();
     ("queue.contain(4) -> %d\n" % queue.contain(4)).print();
     ("queue.contain(6) -> %d\n" % queue.contain(6)).print();
-    ("queue            -> %s\n" % queue.to_string()).print();
+    ("queue            -> %s\n" % $queue).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl

@@ -22,9 +22,9 @@ class Main
 
     Tutorial.note("Array slice");
     array = [1,2,3,4,5,6,7,8,9,10];
-    ("array: %s\n" % array.to_string()).print();
-    ("array[::2]: %s\n" % array[::2].to_string()).print();
-    ("array[-1::-2]: %s\n" % array[-1::-2].to_string()).print();
+    ("array: %s\n" % $array).print();
+    ("array[::2]: %s\n" % $array[::2]).print();
+    ("array[-1::-2]: %s\n" % $array[-1::-2]).print();
 
     // String is too iterable
     //
@@ -37,20 +37,20 @@ class Main
 
     Tutorial.note("Iter_0 slice");
     iter_0 = new Iter_0(10);
-    ("Iter_0[::]: %s\n" % new Iter_0(10)[::].to_string()).print();
-    ("Iter_0[::-1]: %s\n" % new Iter_0(10)[::-1].to_string()).print();
+    ("Iter_0[::]: %s\n" % $new Iter_0(10)[::]).print();
+    ("Iter_0[::-1]: %s\n" % $new Iter_0(10)[::-1]).print();
 
     Tutorial.note("Iter_1 slice");
-    ("Iter_1[::]: %s\n" % new Iter_1(10)[::].to_string()).print();
-    ("Iter_1[::-1]: %s\n" % new Iter_1(10)[::-1].to_string()).print();
-    ("Iter_1[4::]: %s\n" % new Iter_1(10)[4::].to_string()).print();
-    ("Iter_1[-4::-1]: %s\n" % new Iter_1(10)[-4::-1].to_string()).print();
+    ("Iter_1[::]: %s\n" % $new Iter_1(10)[::]).print();
+    ("Iter_1[::-1]: %s\n" % $new Iter_1(10)[::-1]).print();
+    ("Iter_1[4::]: %s\n" % $new Iter_1(10)[4::]).print();
+    ("Iter_1[-4::-1]: %s\n" % $new Iter_1(10)[-4::-1]).print();
 
     // File from module sys is Iter_1
     //
 
     Tutorial.note("File lines slice");
-    ("Odd lines: %s\n" % new File("10_slice_operator.ucl","r")[::2].to_string()).print();
+    ("Odd lines: %s\n" % $new File("10_slice_operator.ucl","r")[::2]).print();
 
     Tutorial.note("Tutorial end");
   }

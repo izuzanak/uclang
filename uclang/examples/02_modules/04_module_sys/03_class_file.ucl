@@ -31,7 +31,7 @@ class Main
     //
 
     Tutorial.note("File object");
-    ("File: %s\n" % (file = new File("03_class_file.ucl","r")).to_string()).print();
+    ("File: %s\n" % $(file = new File("03_class_file.ucl","r"))).print();
     file.close();
 
     Tutorial.note("File methods seek#2, tell#0 and close#0");
@@ -39,11 +39,11 @@ class Main
     file.write_close("Hello world!\n");
 
     file = new File("/tmp/03_class_file.ucl","r");
-    ("file                       -> %s\n" % file.to_string()).print();
+    ("file                       -> %s\n" % $file).print();
     ("file.tell()                -> %d\n" % file.tell()).print();
-    ("file.seek(5,File.SEEK_SET) -> %s\n" % file.seek(5,File.SEEK_SET).to_string()).print();
+    ("file.seek(5,File.SEEK_SET) -> %s\n" % $file.seek(5,File.SEEK_SET)).print();
     ("file.tell()                -> %d\n" % file.tell()).print();
-    ("file.close()               -> %s\n" % file.close().to_string()).print();
+    ("file.close()               -> %s\n" % $file.close()).print();
 
     Tutorial.note("File methods write#1 and flush#0");
     file = new File("/tmp/03_class_file.ucl","w");
@@ -57,35 +57,35 @@ class Main
 
     Tutorial.note("File method read#0");
     file = new File("/tmp/03_class_file.ucl","r");
-    ("file        -> %s\n" % file.to_string()).print();
+    ("file        -> %s\n" % $file).print();
     ("file.read() -> %s" % file.read()).print();
     file.close();
 
     Tutorial.note("File method readln#0");
     file = new File("/tmp/03_class_file.ucl","r");
-    ("file          -> %s\n" % file.to_string()).print();
+    ("file          -> %s\n" % $file).print();
 
     do {
-      ("file.readln() -> %s\n" % (line = file.readln()).to_string()).print();
+      ("file.readln() -> %s\n" % $(line = file.readln())).print();
     } while(Blank != line);
 
     file.close();
 
     Tutorial.note("File method read#1");
     file = new File("/tmp/03_class_file.ucl","r");
-    ("file          -> %s\n" % file.to_string()).print();
+    ("file          -> %s\n" % $file).print();
     ("file.read(10) -> %s\n" % file.read(10)).print();
     ("file.read(10) -> %s\n" % file.read(10)).print();
     file.close();
 
     Tutorial.note("File method read_close#0");
     file = new File("/tmp/03_class_file.ucl","r");
-    ("file              -> %s\n" % file.to_string()).print();
+    ("file              -> %s\n" % $file).print();
     ("file.read_close() -> %s\n" % file.read_close()).print();
 
     Tutorial.note("File method get_fd#1");
     file = new File("/tmp/03_class_file.ucl","r");
-    ("file          -> %s\n" % file.to_string()).print();
+    ("file          -> %s\n" % $file).print();
     ("file.get_fd() -> %d\n" % file.get_fd()).print();
     file.close();
 
@@ -106,9 +106,9 @@ class Main
     // public static static_const stderr
     //
 
-    ("File.stdin:  %s\n" % File.stdin.to_string()).print();
-    ("File.stdout: %s\n" % File.stdout.to_string()).print();
-    ("File.stderr: %s\n" % File.stderr.to_string()).print();
+    ("File.stdin:  %s\n" % $File.stdin).print();
+    ("File.stdout: %s\n" % $File.stdout).print();
+    ("File.stderr: %s\n" % $File.stderr).print();
 
     // Methods of class File throws following exceptions
     //

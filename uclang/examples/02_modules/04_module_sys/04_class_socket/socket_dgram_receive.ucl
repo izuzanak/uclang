@@ -19,7 +19,7 @@ public class Main
 
       // Receive data from socket
       data = socket.recvfrom();
-      ("Received: %s, from: %s:%s\n" % [data[0],data[1].name(),(type data[1].port()).to_string()]).print();
+      ("Received: %s, from: %s:%s\n" % [data[0],data[1].name(),$(type data[1].port())]).print();
 
     } while(++idx < 5);
 

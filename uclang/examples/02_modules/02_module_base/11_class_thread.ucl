@@ -43,7 +43,7 @@ class Main
     // return object of class Thread instead of its return value
     //
     thread = thread_fun();
-    ("thread: %s\n" % thread.to_string()).print();
+    ("thread: %s\n" % $thread).print();
     thread.join();
 
     // Request to join calling thread to thread identified by object of class
@@ -53,9 +53,9 @@ class Main
     //
     Tutorial.note("Thread method join#0");
     thread = thread_fun();
-    ("thread        -> %s\n" % thread.to_string()).print();
-    ("thread.join() -> %s\n" % thread.join().to_string()).print();
-    ("thread        -> %s\n" % thread.to_string()).print();
+    ("thread        -> %s\n" % $thread).print();
+    ("thread.join() -> %s\n" % $thread.join()).print();
+    ("thread        -> %s\n" % $thread).print();
 
     // Request to join calling thread to thread identified by object of class
     // Thread. If joined thread does not exists yet, method will return
@@ -68,24 +68,24 @@ class Main
     mutex = new Mutex();
     mutex.lock();
     thread = thread_fun_mutex(mutex);
-    ("thread            -> %s\n" % thread.to_string()).print();
-    ("thread.try_join() -> %s\n" % thread.try_join().to_string()).print();
+    ("thread            -> %s\n" % $thread).print();
+    ("thread.try_join() -> %s\n" % $thread.try_join()).print();
     mutex.unlock();
     while((res = thread.try_join()) == Thread.ERROR_BUSY)
     {
       Thread.yield();
     }
-    ("thread.try_join() -> %s\n" % res.to_string()).print();
-    ("thread            -> %s\n" % thread.to_string()).print();
+    ("thread.try_join() -> %s\n" % $res).print();
+    ("thread            -> %s\n" % $thread).print();
 
     // Request to detach thread identified by object of class Thread from
     // calling thread.
     //
     Tutorial.note("Thread method detach#0");
     thread = thread_detached();
-    ("thread          -> %s\n" % thread.to_string()).print();
-    ("thread.detach() -> %s\n" % thread.detach().to_string()).print();
-    ("thread          -> %s\n" % thread.to_string()).print();
+    ("thread          -> %s\n" % $thread).print();
+    ("thread.detach() -> %s\n" % $thread.detach()).print();
+    ("thread          -> %s\n" % $thread).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl
@@ -105,11 +105,11 @@ class Main
     // public static static_const ERROR_BUSY
     //
 
-    ("Thread.ERROR_AGAIN:    %s\n" % Thread.ERROR_AGAIN.to_string()).print();
-    ("Thread.ERROR_SEARCH:   %s\n" % Thread.ERROR_SEARCH.to_string()).print();
-    ("Thread.ERROR_INVALID:  %s\n" % Thread.ERROR_INVALID.to_string()).print();
-    ("Thread.ERROR_DEADLOCK: %s\n" % Thread.ERROR_DEADLOCK.to_string()).print();
-    ("Thread.ERROR_BUSY:     %s\n" % Thread.ERROR_BUSY.to_string()).print();
+    ("Thread.ERROR_AGAIN:    %s\n" % $Thread.ERROR_AGAIN).print();
+    ("Thread.ERROR_SEARCH:   %s\n" % $Thread.ERROR_SEARCH).print();
+    ("Thread.ERROR_INVALID:  %s\n" % $Thread.ERROR_INVALID).print();
+    ("Thread.ERROR_DEADLOCK: %s\n" % $Thread.ERROR_DEADLOCK).print();
+    ("Thread.ERROR_BUSY:     %s\n" % $Thread.ERROR_BUSY).print();
 
     Tutorial.note("Tutorial end");
   }

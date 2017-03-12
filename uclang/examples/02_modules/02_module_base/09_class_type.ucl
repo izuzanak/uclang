@@ -19,25 +19,25 @@ class Main
     //
 
     Tutorial.note("Type object");
-    ("Type: %s\n" % new Type().to_string()).print();
-    ("Type: %s\n" % new Type(10).to_string()).print();
-    ("Type: %s\n" % new Type("Hello").to_string()).print();
-    ("Type: %s\n" % new Type([1,2,3]).to_string()).print();
-    ("Type: %s\n" % new Type(new Dummy()).to_string()).print();
+    ("Type: %s\n" % $new Type()).print();
+    ("Type: %s\n" % $new Type(10)).print();
+    ("Type: %s\n" % $new Type("Hello")).print();
+    ("Type: %s\n" % $new Type([1,2,3])).print();
+    ("Type: %s\n" % $new Type(new Dummy())).print();
 
     Tutorial.note("Type constant syntax");
-    ("Type: %s\n" % (type Blank).to_string()).print();
-    ("Type: %s\n" % (type Integer).to_string()).print();
-    ("Type: %s\n" % (type String).to_string()).print();
-    ("Type: %s\n" % (type Array).to_string()).print();
-    ("Type: %s\n" % (type Dummy).to_string()).print();
+    ("Type: %s\n" % $(type Blank)).print();
+    ("Type: %s\n" % $(type Integer)).print();
+    ("Type: %s\n" % $(type String)).print();
+    ("Type: %s\n" % $(type Array)).print();
+    ("Type: %s\n" % $(type Dummy)).print();
 
     Tutorial.note("Type retrieve syntax");
-    ("Type: %s\n" % (type new Blank()).to_string()).print();
-    ("Type: %s\n" % (type 10).to_string()).print();
-    ("Type: %s\n" % (type "Hello").to_string()).print();
-    ("Type: %s\n" % (type [1,2,3]).to_string()).print();
-    ("Type: %s\n" % (type new Dummy()).to_string()).print();
+    ("Type: %s\n" % $(type new Blank())).print();
+    ("Type: %s\n" % $(type 10)).print();
+    ("Type: %s\n" % $(type "Hello")).print();
+    ("Type: %s\n" % $(type [1,2,3])).print();
+    ("Type: %s\n" % $(type new Dummy())).print();
 
     Tutorial.note("Type compare operators");
     type_0 = type Integer;

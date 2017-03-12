@@ -55,11 +55,11 @@ class Main
     //
 
     Tutorial.note("Float object");
-    ("Float: %s\n" % new Float().to_string()).print();
-    ("Float: %s\n" % new Float('A').to_string()).print();
-    ("Float: %s\n" % new Float(10).to_string()).print();
-    ("Float: %s\n" % new Float(11.0).to_string()).print();
-    ("Float: %s\n" % new Float("0x10").to_string()).print();
+    ("Float: %s\n" % $new Float()).print();
+    ("Float: %s\n" % $new Float('A')).print();
+    ("Float: %s\n" % $new Float(10)).print();
+    ("Float: %s\n" % $new Float(11.0)).print();
+    ("Float: %s\n" % $new Float("0x10")).print();
 
     Tutorial.note("Float constant syntax");
     ("Float: 1000.0 -> %f\n" % 1000.0).print();
@@ -71,9 +71,9 @@ class Main
 
     Tutorial.note("Float assign operator");
     float = 10.0;
-    ("float: %s\n" % float.to_string()).print();
+    ("float: %s\n" % $float).print();
     float = "string";
-    ("float: %s\n" % float.to_string()).print();
+    ("float: %s\n" % $float).print();
 
     Tutorial.note("Float plus operators");
     float_0 = 125.25;

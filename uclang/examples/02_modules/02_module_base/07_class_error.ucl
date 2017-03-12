@@ -25,21 +25,21 @@ class Main
     try { [1,2,3][3]; } catch (e) { error_2 = e.get_type(); }
     try { "abc".add(); } catch (e) { error_3 = e.get_type(); }
 
-    ("Error: %s\n" % new Error().to_string()).print();
-    ("Error: %s\n" % error_1.to_string()).print();
-    ("Error: %s\n" % error_2.to_string()).print();
-    ("Error: %s\n" % error_3.to_string()).print();
+    ("Error: %s\n" % $new Error()).print();
+    ("Error: %s\n" % $error_1).print();
+    ("Error: %s\n" % $error_2).print();
+    ("Error: %s\n" % $error_3).print();
 
     Tutorial.note("Error assign operator");
     error = new Error();
-    ("error: %s\n" % error.to_string()).print();
+    ("error: %s\n" % $error).print();
     error = 10;
-    ("error: %s\n" % error.to_string()).print();
+    ("error: %s\n" % $error).print();
 
     Tutorial.note("Error compare operators");
     error_0 = new Error();
-    ("error_0            -> %s\n" % error_0.to_string()).print();
-    ("error_1            -> %s\n" % error_1.to_string()).print();
+    ("error_0            -> %s\n" % $error_0).print();
+    ("error_1            -> %s\n" % $error_1).print();
     ("error_0 == error_0 -> %d\n" % (error_0 == error_0)).print();
     ("error_0 == error_1 -> %d\n" % (error_0 == error_1)).print();
     ("error_0 == 10      -> %d\n" % (error_0 == 10)).print();

@@ -44,19 +44,19 @@ class Main
     demo = new Demo();
 
     Tutorial.note("Instance of class Demo was created by constructor Demo#0");
-    ("demo: %s\n" % demo.to_string()).print();
+    ("demo: %s\n" % $demo).print();
 
     // Create new object of class Demo
     demo_1 = new Demo(1);
 
     Tutorial.note("Instance of class Demo was created by constructor Demo#1");
-    ("demo_1: %s\n" % demo_1.to_string()).print();
+    ("demo_1: %s\n" % $demo_1).print();
 
     // Create multiple instances of class Demo
     demos = new Demo[5];
 
     Tutorial.note("Multiple instances of class Demo were created by constructor Demo#0");
-    ("demos: %s\n" % demos.to_string()).print();
+    ("demos: %s\n" % $demos).print();
 
     Tutorial.note("Tutorial end");
   }

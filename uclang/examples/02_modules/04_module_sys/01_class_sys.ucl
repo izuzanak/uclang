@@ -39,29 +39,29 @@ class Main
     //
 
     Tutorial.note("Sys method sleep#1");
-    ("Sys.sleep(1) -> %s\n" % Sys.sleep(1).to_string()).print();
+    ("Sys.sleep(1) -> %s\n" % $Sys.sleep(1)).print();
 
     Tutorial.note("Sys methods srand#1 and rand#0");
-    ("Sys.srand(13) -> %s\n" % Sys.srand(13).to_string()).print();
-    ("Sys.rand()    -> %s\n" % Sys.rand().to_string()).print();
-    ("Sys.rand()    -> %s\n" % Sys.rand().to_string()).print();
-    ("Sys.rand()    -> %s\n" % Sys.rand().to_string()).print();
+    ("Sys.srand(13) -> %s\n" % $Sys.srand(13)).print();
+    ("Sys.rand()    -> %s\n" % $Sys.rand()).print();
+    ("Sys.rand()    -> %s\n" % $Sys.rand()).print();
+    ("Sys.rand()    -> %s\n" % $Sys.rand()).print();
 
     // Method getpid retrieve PID of interpreter process
     Tutorial.note("Sys method getpid#0");
-    ("Sys.getpid() -> %s\n" % (type Sys.getpid()).to_string()).print();
+    ("Sys.getpid() -> %s\n" % $(type Sys.getpid())).print();
 
     // Method getuid retrieve user identity of interpreter process
     Tutorial.note("Sys method getuid#0");
-    ("Sys.getuid() -> %s\n" % (type Sys.getuid()).to_string()).print();
+    ("Sys.getuid() -> %s\n" % $(type Sys.getuid())).print();
 
     // Method getgid retrieve group identity of interpreter process
     Tutorial.note("Sys method getgid#0");
-    ("Sys.getgid() -> %s\n" % (type Sys.getgid()).to_string()).print();
+    ("Sys.getgid() -> %s\n" % $(type Sys.getgid())).print();
 
     // Method system executes shell command
     Tutorial.note("Sys method system#1");
-    ("Sys.system(\"ls\") -> %s\n" % Sys.system("ls").to_string()).print();
+    ("Sys.system(\"ls\") -> %s\n" % $Sys.system("ls")).print();
 
     // Method exit cause normal termination of process, return value of process
     // will be set to given parameter
@@ -70,7 +70,7 @@ class Main
 
     Tutorial.note("Sys method open#2");
     file = Sys.open("01_class_sys.ucl","r");
-    ("Sys.open(\"01_class_sys.ucl\",\"r\") -> %s\n\n" % file.to_string()).print();
+    ("Sys.open(\"01_class_sys.ucl\",\"r\") -> %s\n\n" % $file).print();
 
     idx = 0;
     do {
@@ -81,7 +81,7 @@ class Main
 
     Tutorial.note("Sys method popen#2");
     pipe = Sys.popen("ls","r");
-    ("Sys.popen(\"ls\",\"r\") -> %s\n\n" % pipe.to_string()).print();
+    ("Sys.popen(\"ls\",\"r\") -> %s\n\n" % $pipe).print();
 
     do {
       ("pipe.readln(): %s\n" % pipe.readln()).print();
@@ -113,35 +113,35 @@ class Main
 
     ("Sys.getcwd() -> %s\n\n" % (cwd = Sys.getcwd())).print();
 
-    ("Sys.mkdir(\"%s\") -> %s\n" % [tmp_dir,Sys.mkdir(tmp_dir).to_string()]).print();
-    ("Sys.chdir(\"%s\") -> %s\n\n" % [tmp_dir,Sys.chdir(tmp_dir).to_string()]).print();
+    ("Sys.mkdir(\"%s\") -> %s\n" % [tmp_dir,$Sys.mkdir(tmp_dir)]).print();
+    ("Sys.chdir(\"%s\") -> %s\n\n" % [tmp_dir,$Sys.chdir(tmp_dir)]).print();
 
-    ("Sys.listdir(\".\")   -> %s\n" % Sys.listdir(".").to_string()).print();
-    ("Sys.mkdir(\"dir_0\") -> %s\n" % Sys.mkdir("dir_0").to_string()).print();
-    ("Sys.mkdir(\"dir_1\") -> %s\n" % Sys.mkdir("dir_1").to_string()).print();
-    ("Sys.listdir(\".\")   -> %s\n" % Sys.listdir(".").to_string()).print();
-    ("Sys.rmdir(\"dir_1\") -> %s\n" % Sys.rmdir("dir_1").to_string()).print();
-    ("Sys.listdir(\".\")   -> %s\n" % Sys.listdir(".").to_string()).print();
+    ("Sys.listdir(\".\")   -> %s\n" % $Sys.listdir(".")).print();
+    ("Sys.mkdir(\"dir_0\") -> %s\n" % $Sys.mkdir("dir_0")).print();
+    ("Sys.mkdir(\"dir_1\") -> %s\n" % $Sys.mkdir("dir_1")).print();
+    ("Sys.listdir(\".\")   -> %s\n" % $Sys.listdir(".")).print();
+    ("Sys.rmdir(\"dir_1\") -> %s\n" % $Sys.rmdir("dir_1")).print();
+    ("Sys.listdir(\".\")   -> %s\n" % $Sys.listdir(".")).print();
 
     Tutorial.note("Sys method mkfifo#1");
-    ("Sys.mkfifo(\"fifo\") -> %s\n" % Sys.mkfifo("fifo").to_string()).print();
-    ("Sys.listdir(\".\")   -> %s\n" % Sys.listdir(".").to_string()).print();
+    ("Sys.mkfifo(\"fifo\") -> %s\n" % $Sys.mkfifo("fifo")).print();
+    ("Sys.listdir(\".\")   -> %s\n" % $Sys.listdir(".")).print();
 
     Tutorial.note("Sys method rename#2");
-    ("Sys.rename(\"fifo\",\"new_fifo\") -> %s\n" % Sys.rename("fifo","new_fifo").to_string()).print();
-    ("Sys.listdir(\".\")              -> %s\n" % Sys.listdir(".").to_string()).print();
+    ("Sys.rename(\"fifo\",\"new_fifo\") -> %s\n" % $Sys.rename("fifo","new_fifo")).print();
+    ("Sys.listdir(\".\")              -> %s\n" % $Sys.listdir(".")).print();
 
     Tutorial.note("Sys method remove#1");
-    ("Sys.remove(\"new_fifo\") -> %s\n" % Sys.remove("new_fifo").to_string()).print();
-    ("Sys.listdir(\".\")       -> %s\n" % Sys.listdir(".").to_string()).print();
+    ("Sys.remove(\"new_fifo\") -> %s\n" % $Sys.remove("new_fifo")).print();
+    ("Sys.listdir(\".\")       -> %s\n" % $Sys.listdir(".")).print();
 
     Tutorial.note("Sys method setenv#2");
-    ("Sys.setenv(\"ENV_VAR\",\"value\") -> %s\n" % Sys.setenv("ENV_VAR","value").to_string()).print();
+    ("Sys.setenv(\"ENV_VAR\",\"value\") -> %s\n" % $Sys.setenv("ENV_VAR","value")).print();
 
     Tutorial.note("Sys method getenv#1");
-    ("Sys.getenv(\"PATH\")    -> %s\n" % Sys.getenv("PATH").to_string()).print();
-    ("Sys.getenv(\"ENV_VAR\") -> %s\n" % Sys.getenv("ENV_VAR").to_string()).print();
-    ("Sys.getenv(\"ENV_ERR\") -> %s\n" % Sys.getenv("ENV_ERR").to_string()).print();
+    ("Sys.getenv(\"PATH\")    -> %s\n" % $Sys.getenv("PATH")).print();
+    ("Sys.getenv(\"ENV_VAR\") -> %s\n" % $Sys.getenv("ENV_VAR")).print();
+    ("Sys.getenv(\"ENV_ERR\") -> %s\n" % $Sys.getenv("ENV_ERR")).print();
 
     Tutorial.note("Sys methods is_file#1 and is_dir#1");
 
@@ -149,12 +149,12 @@ class Main
     file.write("Hello world!");
     file.close();
 
-    ("Sys.listdir(\".\")     -> %s\n" % Sys.listdir(".").to_string()).print();
+    ("Sys.listdir(\".\")     -> %s\n" % $Sys.listdir(".")).print();
     ("Sys.is_file(\"file\")  -> %d\n" % Sys.is_file("file")).print();
     ("Sys.is_file(\"dir_0\") -> %d\n" % Sys.is_file("dir_0")).print();
     ("Sys.is_dir(\"file\")   -> %d\n" % Sys.is_dir("file")).print();
     ("Sys.is_dir(\"dir_0\")  -> %d\n" % Sys.is_dir("dir_0")).print();
-    ("Sys.listdir(\".\")     -> %s\n" % Sys.listdir(".").to_string()).print();
+    ("Sys.listdir(\".\")     -> %s\n" % $Sys.listdir(".")).print();
 
     Tutorial.note("Sys method size#1");
     ("Sys.size(\".\")     -> %d\n" % Sys.size(".")).print();
@@ -165,9 +165,9 @@ class Main
     // 1970
     //
     Tutorial.note("Sys method time#0");
-    ("Sys.time() -> %s\n" % (type Sys.time()).to_string()).print();
-    ("Sys.time() -> %s\n" % (type Sys.time()).to_string()).print();
-    ("Sys.time() -> %s\n" % (type Sys.time()).to_string()).print();
+    ("Sys.time() -> %s\n" % $(type Sys.time())).print();
+    ("Sys.time() -> %s\n" % $(type Sys.time())).print();
+    ("Sys.time() -> %s\n" % $(type Sys.time())).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl

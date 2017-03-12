@@ -287,7 +287,6 @@ class Main
       "label","Retrieve names"
     ]),0,vgrid_y,1,1);
 
-
     // - choose winners button -
     vgrid.attach(but_select_winners = new GtkGObject(Gtk.TYPE_BUTTON,[
       "label","Select winners"

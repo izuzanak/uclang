@@ -27,16 +27,16 @@ class Main
     //
 
     Tutorial.note("Clock method getres#1");
-    ("Clock.getres(Clock.CLOCK_REALTIME)           -> %s\n" % Clock.getres(Clock.CLOCK_REALTIME).to_string()).print();
-    ("Clock.getres(Clock.CLOCK_MONOTONIC)          -> %s\n" % Clock.getres(Clock.CLOCK_MONOTONIC).to_string()).print();
-    ("Clock.getres(Clock.CLOCK_PROCESS_CPUTIME_ID) -> %s\n" % Clock.getres(Clock.CLOCK_PROCESS_CPUTIME_ID).to_string()).print();
-    ("Clock.getres(Clock.CLOCK_THREAD_CPUTIME_ID)  -> %s\n" % Clock.getres(Clock.CLOCK_THREAD_CPUTIME_ID).to_string()).print();
+    ("Clock.getres(Clock.CLOCK_REALTIME)           -> %s\n" % $Clock.getres(Clock.CLOCK_REALTIME)).print();
+    ("Clock.getres(Clock.CLOCK_MONOTONIC)          -> %s\n" % $Clock.getres(Clock.CLOCK_MONOTONIC)).print();
+    ("Clock.getres(Clock.CLOCK_PROCESS_CPUTIME_ID) -> %s\n" % $Clock.getres(Clock.CLOCK_PROCESS_CPUTIME_ID)).print();
+    ("Clock.getres(Clock.CLOCK_THREAD_CPUTIME_ID)  -> %s\n" % $Clock.getres(Clock.CLOCK_THREAD_CPUTIME_ID)).print();
 
     Tutorial.note("Clock method gettime#1");
-    ("Clock.gettime(Clock.CLOCK_REALTIME)           -> %s\n" % (type Clock.gettime(Clock.CLOCK_REALTIME)).to_string()).print();
-    ("Clock.gettime(Clock.CLOCK_MONOTONIC)          -> %s\n" % (type Clock.gettime(Clock.CLOCK_MONOTONIC)).to_string()).print();
-    ("Clock.gettime(Clock.CLOCK_PROCESS_CPUTIME_ID) -> %s\n" % (type Clock.gettime(Clock.CLOCK_PROCESS_CPUTIME_ID)).to_string()).print();
-    ("Clock.gettime(Clock.CLOCK_THREAD_CPUTIME_ID)  -> %s\n" % (type Clock.gettime(Clock.CLOCK_THREAD_CPUTIME_ID)).to_string()).print();
+    ("Clock.gettime(Clock.CLOCK_REALTIME)           -> %s\n" % $(type Clock.gettime(Clock.CLOCK_REALTIME))).print();
+    ("Clock.gettime(Clock.CLOCK_MONOTONIC)          -> %s\n" % $(type Clock.gettime(Clock.CLOCK_MONOTONIC))).print();
+    ("Clock.gettime(Clock.CLOCK_PROCESS_CPUTIME_ID) -> %s\n" % $(type Clock.gettime(Clock.CLOCK_PROCESS_CPUTIME_ID))).print();
+    ("Clock.gettime(Clock.CLOCK_THREAD_CPUTIME_ID)  -> %s\n" % $(type Clock.gettime(Clock.CLOCK_THREAD_CPUTIME_ID))).print();
 
     Tutorial.note("Clock built in constants");
 

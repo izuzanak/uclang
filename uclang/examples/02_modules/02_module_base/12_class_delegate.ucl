@@ -26,23 +26,23 @@ class Main
     //
 
     Tutorial.note("Delegate object");
-    ("Delegate: %s\n" % new Delegate(main,"callback",2).to_string()).print();
+    ("Delegate: %s\n" % $new Delegate(main,"callback",2)).print();
 
     Tutorial.note("Delegate assign operator");
     delegate = new Delegate(main,"callback",2);
-    ("delegate: %s\n" % delegate.to_string()).print();
+    ("delegate: %s\n" % $delegate).print();
     delegate = 10;
-    ("delegate: %s\n" % delegate.to_string()).print();
+    ("delegate: %s\n" % $delegate).print();
 
     // Call method referred by delegate object
     //
     Tutorial.note("Delegate method call#1");
     delegate = new Delegate(main,"callback",2);
-    ("delegate -> %s\n" % delegate.to_string()).print();
-    ("delegate.call([10,5])             -> %s\n" % delegate.call([10,5]).to_string()).print();
-    ("delegate.call([\"First\",\"Second\"]) -> %s\n" % delegate.call(["First","Second"]).to_string()).print();
-    ("delegate.call([[1,2,3],[4,5,6]])  -> %s\n" % delegate.call([[1,2,3],[4,5,6]]).to_string()).print();
-    ("delegate -> %s\n" % delegate.to_string()).print();
+    ("delegate -> %s\n" % $delegate).print();
+    ("delegate.call([10,5])             -> %s\n" % $delegate.call([10,5])).print();
+    ("delegate.call([\"First\",\"Second\"]) -> %s\n" % $delegate.call(["First","Second"])).print();
+    ("delegate.call([[1,2,3],[4,5,6]])  -> %s\n" % $delegate.call([[1,2,3],[4,5,6]])).print();
+    ("delegate -> %s\n" % $delegate).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl

@@ -41,11 +41,11 @@ class Main
     //
 
     Tutorial.note("String object");
-    ("String: %s\n" % new String().to_string()).print();
-    ("String: %s\n" % new String('A').to_string()).print();
-    ("String: %s\n" % new String(10).to_string()).print();
-    ("String: %s\n" % new String(11.0).to_string()).print();
-    ("String: %s\n" % new String("Hello world!").to_string()).print();
+    ("String: %s\n" % $new String()).print();
+    ("String: %s\n" % $new String('A')).print();
+    ("String: %s\n" % $new String(10)).print();
+    ("String: %s\n" % $new String(11.0)).print();
+    ("String: %s\n" % $new String("Hello world!")).print();
 
     Tutorial.note("String constant syntax");
 
@@ -61,9 +61,9 @@ string";
 
     Tutorial.note("String assign operator");
     string = "Hello world!";
-    ("string: %s\n" % string.to_string()).print();
+    ("string: %s\n" % $string).print();
     string = 10;
-    ("string: %s\n" % string.to_string()).print();
+    ("string: %s\n" % $string).print();
 
     Tutorial.note("String plus operators");
     str_0 = "Hello ";
@@ -145,13 +145,13 @@ string";
     Tutorial.note("String method split#1");
     string = "One Two Three Four";
     ("string            -> %s\n" % string).print();
-    ("string.split(\" \") -> %s\n" % string.split(" ").to_string()).print();
+    ("string.split(\" \") -> %s\n" % $string.split(" ")).print();
 
     Tutorial.note("String method join#1");
     string = "-";
     array = [1,2,3,4,5];
     ("string             -> %s\n" % string).print();
-    ("array              -> %s\n" % array.to_string()).print();
+    ("array              -> %s\n" % $array).print();
     ("string.join(array) -> %s\n" % string.join(array)).print();
 
     Tutorial.note("String method head#1");
@@ -184,9 +184,9 @@ string";
     Tutorial.note("String method get_idxs#1");
     string = "Well hello brave new world!";
     ("string                   -> %s\n" % string).print();
-    ("string.get_idxs(\"hello\") -> %s\n" % string.get_idxs("hello").to_string()).print();
-    ("string.get_idxs(\"ll\")    -> %s\n" % string.get_idxs("ll").to_string()).print();
-    ("string.get_idxs(\"e\")     -> %s\n" % string.get_idxs("e").to_string()).print();
+    ("string.get_idxs(\"hello\") -> %s\n" % $string.get_idxs("hello")).print();
+    ("string.get_idxs(\"ll\")    -> %s\n" % $string.get_idxs("ll")).print();
+    ("string.get_idxs(\"e\")     -> %s\n" % $string.get_idxs("e")).print();
 
     Tutorial.note("String method replace#2");
     string = "Well hello brave new world!";

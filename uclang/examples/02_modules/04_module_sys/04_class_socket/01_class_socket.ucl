@@ -21,24 +21,24 @@ class Main
     //
 
     Tutorial.note("SocketAddr object");
-    ("SocketAddr: %s\n" % (new SocketAddr("127.0.0.1",8888)).to_string()).print();
-    ("SocketAddr: %s\n" % (new SocketAddr("localhost",8888)).to_string()).print();
-    ("SocketAddr: %s\n" % (new SocketAddr("192.168.2.2",8888)).to_string()).print();
+    ("SocketAddr: %s\n" % $(new SocketAddr("127.0.0.1",8888))).print();
+    ("SocketAddr: %s\n" % $(new SocketAddr("localhost",8888))).print();
+    ("SocketAddr: %s\n" % $(new SocketAddr("192.168.2.2",8888))).print();
 
     Tutorial.note("SocketAddr assign operator");
     sockaddr = new SocketAddr("127.0.0.1",8888);
-    ("sockaddr: %s\n" % sockaddr.to_string()).print();
+    ("sockaddr: %s\n" % $sockaddr).print();
     sockaddr = 10;
-    ("sockaddr: %s\n" % sockaddr.to_string()).print();
+    ("sockaddr: %s\n" % $sockaddr).print();
 
     Tutorial.note("SocketAddr method name#0");
     sockaddr = new SocketAddr("localhost",8888);
-    ("sockaddr        -> %s\n" % sockaddr.to_string()).print();
+    ("sockaddr        -> %s\n" % $sockaddr).print();
     ("sockaddr.name() -> %s\n" % sockaddr.name()).print();
 
     Tutorial.note("SocketAddr method port#0");
     sockaddr = new SocketAddr("localhost",8888);
-    ("sockaddr        -> %s\n" % sockaddr.to_string()).print();
+    ("sockaddr        -> %s\n" % $sockaddr).print();
     ("sockaddr.port() -> %d\n" % sockaddr.port()).print();
 
     // Function of special methods is described in
@@ -81,14 +81,14 @@ class Main
     //
 
     Tutorial.note("Socket object");
-    ("Socket: %s\n" % (new Socket(Socket.AF_INET,Socket.SOCK_STREAM)).to_string()).print();
-    ("Socket: %s\n" % (new Socket(Socket.AF_INET,Socket.SOCK_DGRAM)).to_string()).print();
+    ("Socket: %s\n" % $(new Socket(Socket.AF_INET,Socket.SOCK_STREAM))).print();
+    ("Socket: %s\n" % $(new Socket(Socket.AF_INET,Socket.SOCK_DGRAM))).print();
 
     Tutorial.note("Socket assign operator");
     socket = new Socket(Socket.AF_INET,Socket.SOCK_STREAM);
-    ("socket: %s\n" % socket.to_string()).print();
+    ("socket: %s\n" % $socket).print();
     socket = 10;
-    ("socket: %s\n" % socket.to_string()).print();
+    ("socket: %s\n" % $socket).print();
 
     // Following methods are used in extended examples
     //

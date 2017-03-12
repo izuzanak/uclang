@@ -40,14 +40,14 @@ class Main
     //
 
     Tutorial.note("Dict object");
-    ("Dict: %s\n" % new Dict().to_string()).print();
-    ("Dict: %s\n" % new Dict(["One",1,"Two",2,"Three",3]).to_string()).print();
+    ("Dict: %s\n" % $new Dict()).print();
+    ("Dict: %s\n" % $new Dict(["One",1,"Two",2,"Three",3])).print();
 
     Tutorial.note("Dict assign operator");
     dict = new Dict();
-    ("dict: %s\n" % dict.to_string()).print();
+    ("dict: %s\n" % $dict).print();
     dict = 10;
-    ("dict: %s\n" % dict.to_string()).print();
+    ("dict: %s\n" % $dict).print();
 
     Tutorial.note("Dict compare operators");
     dict_0 = new Dict(["One",1,"Two",2,"Three",3]);
@@ -61,92 +61,92 @@ class Main
 
     Tutorial.note("Dict item select operator");
     dict = new Dict(["One",1,"Two",2,"Three",3,"Four",4]);
-    ("dict          -> %s\n" % dict.to_string()).print();
+    ("dict          -> %s\n" % $dict).print();
     for (key <- dict)
     {
-      ("dict[\"%5.s\"] -> %s\n" % [key,dict[key].to_string()]).print();
+      ("dict[\"%5.s\"] -> %s\n" % [key,$dict[key]]).print();
     }
 
     // Access to value by select item operator using non-existing key will
     // create this key and assign Blank value to it
     //
     Tutorial.note("Dict item select operator, non existing key");
-    ("dict         -> %s\n" % dict.to_string()).print();
-    ("dict[\"Five\"] -> %s\n" % [dict["Five"].to_string()]).print();
-    ("dict         -> %s\n" % dict.to_string()).print();
+    ("dict         -> %s\n" % $dict).print();
+    ("dict[\"Five\"] -> %s\n" % [$dict["Five"]]).print();
+    ("dict         -> %s\n" % $dict).print();
 
     Tutorial.note("Dict method clear#0");
     dict = new Dict(["One",1,"Two",2,"Three",3]);
-    ("dict         -> %s\n" % dict.to_string()).print();
-    ("dict.clear() -> %s\n" % dict.clear().to_string()).print();
-    ("dict         -> %s\n" % dict.to_string()).print();
+    ("dict         -> %s\n" % $dict).print();
+    ("dict.clear() -> %s\n" % $dict.clear()).print();
+    ("dict         -> %s\n" % $dict).print();
 
     Tutorial.note("Dict method keys#0");
     dict = new Dict(["One",1,"Two",2,"Three",3]);
-    ("dict -> type: %s, value %s\n" % [(type dict).to_string(),dict.to_string()]).print();
+    ("dict -> type: %s, value %s\n" % [$(type dict),$dict]).print();
     keys = dict.keys();
-    ("keys -> type: %s, value %s\n" % [(type keys).to_string(),keys.to_string()]).print();
-    ("dict -> type: %s, value %s\n" % [(type dict).to_string(),dict.to_string()]).print();
+    ("keys -> type: %s, value %s\n" % [$(type keys),$keys]).print();
+    ("dict -> type: %s, value %s\n" % [$(type dict),$dict]).print();
 
     Tutorial.note("Dict method items#0");
     dict = new Dict(["One",1,"Two",2,"Three",3]);
-    ("dict  -> type: %s, value %s\n" % [(type dict).to_string(),dict.to_string()]).print();
+    ("dict  -> type: %s, value %s\n" % [$(type dict),$dict]).print();
     items = dict.items();
-    ("items -> type: %s, value %s\n" % [(type items).to_string(),items.to_string()]).print();
-    ("dict  -> type: %s, value %s\n" % [(type dict).to_string(),dict.to_string()]).print();
+    ("items -> type: %s, value %s\n" % [$(type items),$items]).print();
+    ("dict  -> type: %s, value %s\n" % [$(type dict),$dict]).print();
 
     Tutorial.note("Dict method store_ref#2");
     value = 10;
     dict = new Dict(["One",1,"Two",2,"Three",3]);
     ("value                        -> %d\n" % value).print();
-    ("dict                         -> %s\n" % dict.to_string()).print();
-    ("dict.store_ref(\"Two\",value)  -> %s\n" % dict.store_ref("Two",value).to_string()).print();
-    ("dict.store_ref(\"Four\",value) -> %s\n" % dict.store_ref("Four",value).to_string()).print();
-    ("dict                         -> %s\n" % dict.to_string()).print();
+    ("dict                         -> %s\n" % $dict).print();
+    ("dict.store_ref(\"Two\",value)  -> %s\n" % $dict.store_ref("Two",value)).print();
+    ("dict.store_ref(\"Four\",value) -> %s\n" % $dict.store_ref("Four",value)).print();
+    ("dict                         -> %s\n" % $dict).print();
     ("value = 100;                 -> %d\n" % (value = 100)).print();
-    ("dict                         -> %s\n" % dict.to_string()).print();
+    ("dict                         -> %s\n" % $dict).print();
 
     Tutorial.note("Dict method has_key#1");
     dict = new Dict(["One",1,"Two",2,"Three",3]);
-    ("dict                 -> %s\n" % dict.to_string()).print();
+    ("dict                 -> %s\n" % $dict).print();
     ("dict.has_key(\"One\")  -> %d\n" % dict.has_key("One")).print();
     ("dict.has_key(\"Four\") -> %d\n" % dict.has_key("Four")).print();
     ("dict.has_key(2)      -> %d\n" % dict.has_key(2)).print();
 
     Tutorial.note("Dict method remove_key#1");
     dict = new Dict(["One",1,"Two",2,"Three",3,"Four",4]);
-    ("dict                     -> %s\n" % dict.to_string()).print();
-    ("dict.remove_key(\"One\")   -> %s\n" % dict.remove_key("One").to_string()).print();
-    ("dict.remove_key(\"Three\") -> %s\n" % dict.remove_key("Three").to_string()).print();
-    ("dict                     -> %s\n" % dict.to_string()).print();
+    ("dict                     -> %s\n" % $dict).print();
+    ("dict.remove_key(\"One\")   -> %s\n" % $dict.remove_key("One")).print();
+    ("dict.remove_key(\"Three\") -> %s\n" % $dict.remove_key("Three")).print();
+    ("dict                     -> %s\n" % $dict).print();
 
     Tutorial.note("Dict methods first_key#0 and next_key#1");
     dict = new Dict(["One",1,"Two",2,"Three",3,"Four",4]);
-    ("dict -> %s\n" % dict.to_string()).print();
+    ("dict -> %s\n" % $dict).print();
     key = dict.first_key();
     while (Blank != key)
     {
-      ("key  -> %s\n" % key.to_string()).print();
+      ("key  -> %s\n" % $key).print();
       key = dict.next_key(key);
     }
 
     Tutorial.note("Dict methods last_key#0 and prev_key#1");
     dict = new Dict(["One",1,"Two",2,"Three",3,"Four",4]);
-    ("dict -> %s\n" % dict.to_string()).print();
+    ("dict -> %s\n" % $dict).print();
     key = dict.last_key();
     while (Blank != key)
     {
-      ("key  -> %s\n" % key.to_string()).print();
+      ("key  -> %s\n" % $key).print();
       key = dict.prev_key(key);
     }
 
     Tutorial.note("Dict method contain#0");
     dict = new Dict(["One",1,"Two",2,"Three",3,"Four",4]);
-    ("dict                 -> %s\n" % dict.to_string()).print();
+    ("dict                 -> %s\n" % $dict).print();
     ("dict.contain(\"One\")  -> %d\n" % dict.contain("One")).print();
     ("dict.contain(\"Two\")  -> %d\n" % dict.contain("Two")).print();
     ("dict.contain(\"Five\") -> %d\n" % dict.contain("Five")).print();
-    ("dict                 -> %s\n" % dict.to_string()).print();
+    ("dict                 -> %s\n" % $dict).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl

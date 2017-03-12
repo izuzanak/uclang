@@ -23,7 +23,7 @@ public class Main
       acc = listen_sock.accept();
 
       sockaddr = acc[1];
-      ("Server: connection: %s:%s\n" % [sockaddr.name(),(type sockaddr.port()).to_string()]).print();
+      ("Server: connection: %s:%s\n" % [sockaddr.name(),$(type sockaddr.port())]).print();
 
       socket = acc[0];
 

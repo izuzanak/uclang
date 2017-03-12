@@ -46,15 +46,15 @@ class Main
     //
 
     Tutorial.note("Set object");
-    ("Set: %s\n" % new Set().to_string()).print();
-    ("Set: %s\n" % new Set([1,2,3,4,5]).to_string()).print();
-    ("Set: %s\n" % new Set([1,2,2,4,4]).to_string()).print();
+    ("Set: %s\n" % $new Set()).print();
+    ("Set: %s\n" % $new Set([1,2,3,4,5])).print();
+    ("Set: %s\n" % $new Set([1,2,2,4,4])).print();
 
     Tutorial.note("Set assign operator");
     set = new Set();
-    ("set: %s\n" % set.to_string()).print();
+    ("set: %s\n" % $set).print();
     set = 10;
-    ("set: %s\n" % set.to_string()).print();
+    ("set: %s\n" % $set).print();
 
     Tutorial.note("Set compare operators");
     set_0 = new Set([1,2,3,4]);
@@ -71,59 +71,59 @@ class Main
     Tutorial.note("Set plus operators");
     set_0 = new Set([1,2,3]);
     arr_1 = [5,4,2];
-    ("set_0          -> %s\n" % set_0.to_string()).print();
-    ("arr_1          -> %s\n" % arr_1.to_string()).print();
-    ("set_0 + arr_1  -> %s\n" % (set_0 + arr_1).to_string()).print();
-    ("set_0          -> %s\n" % set_0.to_string()).print();
-    ("set_0 += arr_1 -> %s\n" % (set_0 += arr_1).to_string()).print();
-    ("set_0          -> %s\n" % set_0.to_string()).print();
+    ("set_0          -> %s\n" % $set_0).print();
+    ("arr_1          -> %s\n" % $arr_1).print();
+    ("set_0 + arr_1  -> %s\n" % $(set_0 + arr_1)).print();
+    ("set_0          -> %s\n" % $set_0).print();
+    ("set_0 += arr_1 -> %s\n" % $(set_0 += arr_1)).print();
+    ("set_0          -> %s\n" % $set_0).print();
 
     Tutorial.note("Set difference operators");
     set_0 = new Set([1,2,3,4]);
     set_1 = new Set([3,4,5,6]);
-    ("set_0          -> %s\n" % set_0.to_string()).print();
-    ("set_1          -> %s\n" % set_1.to_string()).print();
-    ("set_0 - set_1  -> %s\n" % (set_0 - set_1).to_string()).print();
-    ("set_1 - set_0  -> %s\n" % (set_1 - set_0).to_string()).print();
-    ("set_0          -> %s\n" % set_0.to_string()).print();
-    ("set_0 -= set_1 -> %s\n" % (set_0 -= set_1).to_string()).print();
-    ("set_0          -> %s\n" % set_0.to_string()).print();
+    ("set_0          -> %s\n" % $set_0).print();
+    ("set_1          -> %s\n" % $set_1).print();
+    ("set_0 - set_1  -> %s\n" % $(set_0 - set_1)).print();
+    ("set_1 - set_0  -> %s\n" % $(set_1 - set_0)).print();
+    ("set_0          -> %s\n" % $set_0).print();
+    ("set_0 -= set_1 -> %s\n" % $(set_0 -= set_1)).print();
+    ("set_0          -> %s\n" % $set_0).print();
 
     Tutorial.note("Set intersection operators");
     set_0 = new Set([1,2,3,4]);
     set_1 = new Set([3,4,5,6]);
-    ("set_0          -> %s\n" % set_0.to_string()).print();
-    ("set_1          -> %s\n" % set_1.to_string()).print();
-    ("set_0 & set_1  -> %s\n" % (set_0 & set_1).to_string()).print();
-    ("set_0          -> %s\n" % set_0.to_string()).print();
-    ("set_0 &= set_1 -> %s\n" % (set_0 &= set_1).to_string()).print();
-    ("set_0          -> %s\n" % set_0.to_string()).print();
+    ("set_0          -> %s\n" % $set_0).print();
+    ("set_1          -> %s\n" % $set_1).print();
+    ("set_0 & set_1  -> %s\n" % $(set_0 & set_1)).print();
+    ("set_0          -> %s\n" % $set_0).print();
+    ("set_0 &= set_1 -> %s\n" % $(set_0 &= set_1)).print();
+    ("set_0          -> %s\n" % $set_0).print();
 
     Tutorial.note("Set union operators");
     set_0 = new Set([1,2,3,4]);
     set_1 = new Set([3,4,5,6]);
-    ("set_0          -> %s\n" % set_0.to_string()).print();
-    ("set_1          -> %s\n" % set_1.to_string()).print();
-    ("set_0 | set_1  -> %s\n" % (set_0 | set_1).to_string()).print();
-    ("set_0          -> %s\n" % set_0.to_string()).print();
-    ("set_0 |= set_1 -> %s\n" % (set_0 |= set_1).to_string()).print();
-    ("set_0          -> %s\n" % set_0.to_string()).print();
+    ("set_0          -> %s\n" % $set_0).print();
+    ("set_1          -> %s\n" % $set_1).print();
+    ("set_0 | set_1  -> %s\n" % $(set_0 | set_1)).print();
+    ("set_0          -> %s\n" % $set_0).print();
+    ("set_0 |= set_1 -> %s\n" % $(set_0 |= set_1)).print();
+    ("set_0          -> %s\n" % $set_0).print();
 
     Tutorial.note("Set symmetric difference operators");
     set_0 = new Set([1,2,3,4]);
     set_1 = new Set([3,4,5,6]);
-    ("set_0          -> %s\n" % set_0.to_string()).print();
-    ("set_1          -> %s\n" % set_1.to_string()).print();
-    ("set_0 ^ set_1  -> %s\n" % (set_0 ^ set_1).to_string()).print();
-    ("set_0          -> %s\n" % set_0.to_string()).print();
-    ("set_0 ^= set_1 -> %s\n" % (set_0 ^= set_1).to_string()).print();
-    ("set_0          -> %s\n" % set_0.to_string()).print();
+    ("set_0          -> %s\n" % $set_0).print();
+    ("set_1          -> %s\n" % $set_1).print();
+    ("set_0 ^ set_1  -> %s\n" % $(set_0 ^ set_1)).print();
+    ("set_0          -> %s\n" % $set_0).print();
+    ("set_0 ^= set_1 -> %s\n" % $(set_0 ^= set_1)).print();
+    ("set_0          -> %s\n" % $set_0).print();
 
     Tutorial.note("Set subset test operators");
     set_0 = new Set([3,4,5]);
     set_1 = new Set([3,4,5,6]);
-    ("set_0          -> %s\n" % set_0.to_string()).print();
-    ("set_1          -> %s\n" % set_1.to_string()).print();
+    ("set_0          -> %s\n" % $set_0).print();
+    ("set_1          -> %s\n" % $set_1).print();
     ("set_0 <= set_1 -> %d\n" % (set_0 <= set_1)).print();
     ("set_1 <= set_0 -> %d\n" % (set_1 <= set_0)).print();
     ("set_0 >= set_1 -> %d\n" % (set_0 >= set_1)).print();
@@ -140,49 +140,49 @@ class Main
 
     Tutorial.note("Set method clear#0");
     set = new Set([1,2,3,4,5]);
-    ("set         -> %s\n" % set.to_string()).print();
-    ("set.clear() -> %s\n" % set.clear().to_string()).print();
-    ("set         -> %s\n" % set.to_string()).print();
+    ("set         -> %s\n" % $set).print();
+    ("set.clear() -> %s\n" % $set.clear()).print();
+    ("set         -> %s\n" % $set).print();
 
     Tutorial.note("Set method items#0");
     set = new Set([1,2,3,4,5]);
-    ("set   -> type: %s, value %s\n" % [(type set).to_string(),set.to_string()]).print();
+    ("set   -> type: %s, value %s\n" % [$(type set),$set]).print();
     items = set.items();
-    ("items -> type: %s, value %s\n" % [(type items).to_string(),items.to_string()]).print();
-    ("set   -> type: %s, value %s\n" % [(type set).to_string(),set.to_string()]).print();
+    ("items -> type: %s, value %s\n" % [$(type items),$items]).print();
+    ("set   -> type: %s, value %s\n" % [$(type set),$set]).print();
 
     Tutorial.note("Set method insert#1");
     set = new Set([1,2,3,4,5]);
-    ("set            -> %s\n" % set.to_string()).print();
-    ("set.insert(10) -> %s\n" % set.insert(10).to_string()).print();
-    ("set.insert(10) -> %s\n" % set.insert(10).to_string()).print();
-    ("set.insert(9)  -> %s\n" % set.insert(9).to_string()).print();
-    ("set            -> %s\n" % set.to_string()).print();
+    ("set            -> %s\n" % $set).print();
+    ("set.insert(10) -> %s\n" % $set.insert(10)).print();
+    ("set.insert(10) -> %s\n" % $set.insert(10)).print();
+    ("set.insert(9)  -> %s\n" % $set.insert(9)).print();
+    ("set            -> %s\n" % $set).print();
 
     Tutorial.note("Set method remove#0");
     set = new Set([1,2,3,4,5]);
-    ("set           -> %s\n" % set.to_string()).print();
-    ("set.remove(2) -> %s\n" % set.remove(2).to_string()).print();
-    ("set.remove(4) -> %s\n" % set.remove(4).to_string()).print();
-    ("set           -> %s\n" % set.to_string()).print();
+    ("set           -> %s\n" % $set).print();
+    ("set.remove(2) -> %s\n" % $set.remove(2)).print();
+    ("set.remove(4) -> %s\n" % $set.remove(4)).print();
+    ("set           -> %s\n" % $set).print();
 
     try {
-    ("set.remove(6) -> %s\n" % set.remove(6).to_string()).print();
+      ("set.remove(6) -> %s\n" % $set.remove(6)).print();
     }
     catch (e)
     {
       e.error_print();
     }
 
-    ("set           -> %s\n" % set.to_string()).print();
+    ("set           -> %s\n" % $set).print();
 
     Tutorial.note("Set method contain#0");
     set = new Set([1,2,3,4,5]);
-    ("set            -> %s\n" % set.to_string()).print();
+    ("set            -> %s\n" % $set).print();
     ("set.contain(2) -> %d\n" % set.contain(2)).print();
     ("set.contain(4) -> %d\n" % set.contain(4)).print();
     ("set.contain(6) -> %d\n" % set.contain(6)).print();
-    ("set            -> %s\n" % set.to_string()).print();
+    ("set            -> %s\n" % $set).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl

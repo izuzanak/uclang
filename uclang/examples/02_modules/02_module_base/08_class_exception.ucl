@@ -26,9 +26,9 @@ class Main
     try { "abc".add(); } catch (except_2) {}
 
     Tutorial.note("Exception object");
-    ("Exception: %s\n" % except_0.to_string()).print();
-    ("Exception: %s\n" % except_1.to_string()).print();
-    ("Exception: %s\n" % except_2.to_string()).print();
+    ("Exception: %s\n" % $except_0).print();
+    ("Exception: %s\n" % $except_1).print();
+    ("Exception: %s\n" % $except_2).print();
 
     // Method throw rethrow catched exception or throw user defined exception
     //
@@ -40,26 +40,26 @@ class Main
     }
     catch(except_3)
     {
-      ("Exception: %s\n" % except_3.to_string()).print();
+      ("Exception: %s\n" % $except_3).print();
     }
 
     Tutorial.note("Exception method get_type#0");
-    ("except_0.get_type() -> %s\n" % except_0.get_type().to_string()).print();
-    ("except_1.get_type() -> %s\n" % except_1.get_type().to_string()).print();
-    ("except_2.get_type() -> %s\n" % except_2.get_type().to_string()).print();
-    ("except_3.get_type() -> %s\n" % except_3.get_type().to_string()).print();
+    ("except_0.get_type() -> %s\n" % $except_0.get_type()).print();
+    ("except_1.get_type() -> %s\n" % $except_1.get_type()).print();
+    ("except_2.get_type() -> %s\n" % $except_2.get_type()).print();
+    ("except_3.get_type() -> %s\n" % $except_3.get_type()).print();
 
     Tutorial.note("Exception method get_value#0");
-    ("except_0.get_value() -> %s\n" % except_0.get_value().to_string()).print();
-    ("except_1.get_value() -> %s\n" % except_1.get_value().to_string()).print();
-    ("except_2.get_value() -> %s\n" % except_2.get_value().to_string()).print();
-    ("except_3.get_value() -> %s\n" % except_3.get_value().to_string()).print();
+    ("except_0.get_value() -> %s\n" % $except_0.get_value()).print();
+    ("except_1.get_value() -> %s\n" % $except_1.get_value()).print();
+    ("except_2.get_value() -> %s\n" % $except_2.get_value()).print();
+    ("except_3.get_value() -> %s\n" % $except_3.get_value()).print();
 
     Tutorial.note("Exception method get_file_name#0");
-    ("except_0.get_file_name() -> %s\n" % except_0.get_file_name().to_string()).print();
-    ("except_1.get_file_name() -> %s\n" % except_1.get_file_name().to_string()).print();
-    ("except_2.get_file_name() -> %s\n" % except_2.get_file_name().to_string()).print();
-    ("except_3.get_file_name() -> %s\n" % except_3.get_file_name().to_string()).print();
+    ("except_0.get_file_name() -> %s\n" % $except_0.get_file_name()).print();
+    ("except_1.get_file_name() -> %s\n" % $except_1.get_file_name()).print();
+    ("except_2.get_file_name() -> %s\n" % $except_2.get_file_name()).print();
+    ("except_3.get_file_name() -> %s\n" % $except_3.get_file_name()).print();
 
     Tutorial.note("Exception method get_line#0");
     ("except_0.get_line() -> %d\n" % except_0.get_line()).print();

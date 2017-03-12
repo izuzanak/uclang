@@ -42,17 +42,17 @@ class Main
     //
 
     Tutorial.note("Array object");
-    ("Array: %s\n" % new Array().to_string()).print();
-    ("Array: %s\n" % new Array(new Iter_0(5)).to_string()).print();
+    ("Array: %s\n" % $new Array()).print();
+    ("Array: %s\n" % $new Array(new Iter_0(5))).print();
 
     Tutorial.note("Array constant syntax");
-    ("Array: %s\n" % [1,2,3].to_string()).print();
+    ("Array: %s\n" % $[1,2,3]).print();
 
     Tutorial.note("Array assign operator");
     array = new Array();
-    ("array: %s\n" % array.to_string()).print();
+    ("array: %s\n" % $array).print();
     array = 10;
-    ("array: %s\n" % array.to_string()).print();
+    ("array: %s\n" % $array).print();
 
     Tutorial.note("Array compare operators");
     array_0 = [1,2,3,4];
@@ -69,11 +69,11 @@ class Main
     Tutorial.note("Array plus operators");
     arr_0 = [1,2,3];
     arr_1 = [4,5,6];
-    ("arr_0          -> %s\n" % arr_0.to_string()).print();
-    ("arr_0 + arr_1  -> %s\n" % (arr_0 + arr_1).to_string()).print();
-    ("arr_0          -> %s\n" % arr_0.to_string()).print();
-    ("arr_0 += arr_1 -> %s\n" % (arr_0 += arr_1).to_string()).print();
-    ("arr_0          -> %s\n" % arr_0.to_string()).print();
+    ("arr_0          -> %s\n" % $arr_0).print();
+    ("arr_0 + arr_1  -> %s\n" % $(arr_0 + arr_1)).print();
+    ("arr_0          -> %s\n" % $arr_0).print();
+    ("arr_0 += arr_1 -> %s\n" % $(arr_0 += arr_1)).print();
+    ("arr_0          -> %s\n" % $arr_0).print();
 
     Tutorial.note("Array item select operator");
     array = ["One","Two","Three","Four"];
@@ -84,73 +84,73 @@ class Main
 
     Tutorial.note("Array method clear#0");
     array = [1,2,3,4,5];
-    ("array         -> %s\n" % array.to_string()).print();
-    ("array.clear() -> %s\n" % array.clear().to_string()).print();
-    ("array         -> %s\n" % array.to_string()).print();
+    ("array         -> %s\n" % $array).print();
+    ("array.clear() -> %s\n" % $array.clear()).print();
+    ("array         -> %s\n" % $array).print();
 
     Tutorial.note("Array method resize#1");
     array = [1,2,3,4,5];
-    ("array            -> %s\n" % array.to_string()).print();
-    ("array.resize(10) -> %s\n" % array.resize(10).to_string()).print();
-    ("array            -> %s\n" % array.to_string()).print();
+    ("array            -> %s\n" % $array).print();
+    ("array.resize(10) -> %s\n" % $array.resize(10)).print();
+    ("array            -> %s\n" % $array).print();
 
     Tutorial.note("Array method push#1");
     array = [1,2,3,4,5];
-    ("array          -> %s\n" % array.to_string()).print();
-    ("array.push(10) -> %s\n" % array.push(10).to_string()).print();
-    ("array.push(10) -> %s\n" % array.push(10).to_string()).print();
-    ("array.push(10) -> %s\n" % array.push(10).to_string()).print();
-    ("array          -> %s\n" % array.to_string()).print();
+    ("array          -> %s\n" % $array).print();
+    ("array.push(10) -> %s\n" % $array.push(10)).print();
+    ("array.push(10) -> %s\n" % $array.push(10)).print();
+    ("array.push(10) -> %s\n" % $array.push(10)).print();
+    ("array          -> %s\n" % $array).print();
 
     Tutorial.note("Array method push_ref#1");
     value = 10;
     array = [1,2,3,4,5];
     ("value                 -> %d\n" % value).print();
-    ("array                 -> %s\n" % array.to_string()).print();
-    ("array.push_ref(value) -> %s\n" % array.push_ref(value).to_string()).print();
-    ("array.push_ref(value) -> %s\n" % array.push_ref(value).to_string()).print();
-    ("array.push_ref(value) -> %s\n" % array.push_ref(value).to_string()).print();
-    ("array                 -> %s\n" % array.to_string()).print();
+    ("array                 -> %s\n" % $array).print();
+    ("array.push_ref(value) -> %s\n" % $array.push_ref(value)).print();
+    ("array.push_ref(value) -> %s\n" % $array.push_ref(value)).print();
+    ("array.push_ref(value) -> %s\n" % $array.push_ref(value)).print();
+    ("array                 -> %s\n" % $array).print();
     ("value = 100;          -> %d\n" % (value = 100)).print();
-    ("array                 -> %s\n" % array.to_string()).print();
+    ("array                 -> %s\n" % $array).print();
 
     Tutorial.note("Array method pop#0");
     array = [1,2,3,4,5];
-    ("array       -> %s\n" % array.to_string()).print();
-    ("array.pop() -> %s\n" % array.pop().to_string()).print();
-    ("array.pop() -> %s\n" % array.pop().to_string()).print();
-    ("array.pop() -> %s\n" % array.pop().to_string()).print();
-    ("array       -> %s\n" % array.to_string()).print();
+    ("array       -> %s\n" % $array).print();
+    ("array.pop() -> %s\n" % $array.pop()).print();
+    ("array.pop() -> %s\n" % $array.pop()).print();
+    ("array.pop() -> %s\n" % $array.pop()).print();
+    ("array       -> %s\n" % $array).print();
 
     Tutorial.note("Array method last#0");
     array = [1,2,3,4,5];
-    ("array        -> %s\n" % array.to_string()).print();
-    ("array.last() -> %s\n" % array.last().to_string()).print();
-    ("array        -> %s\n" % array.to_string()).print();
+    ("array        -> %s\n" % $array).print();
+    ("array.last() -> %s\n" % $array.last()).print();
+    ("array        -> %s\n" % $array).print();
 
     Tutorial.note("Array method fill#1");
     array = [1,2,3,4,5];
-    ("array         -> %s\n" % array.to_string()).print();
-    ("array.fill(3) -> %s\n" % array.fill(3).to_string()).print();
-    ("array         -> %s\n" % array.to_string()).print();
+    ("array         -> %s\n" % $array).print();
+    ("array.fill(3) -> %s\n" % $array.fill(3)).print();
+    ("array         -> %s\n" % $array).print();
 
     Tutorial.note("Array method get_idx#1");
     array = [1,5,5,2,5];
-    ("array            -> %s\n" % array.to_string()).print();
+    ("array            -> %s\n" % $array).print();
     ("array.get_idx(5) -> %d\n" % array.get_idx(5)).print();
 
     Tutorial.note("Array method get_idxs#1");
     array = [1,5,5,2,5];
-    ("array             -> %s\n" % array.to_string()).print();
-    ("array.get_idxs(5) -> %s\n" % array.get_idxs(5).to_string()).print();
+    ("array             -> %s\n" % $array).print();
+    ("array.get_idxs(5) -> %s\n" % $array.get_idxs(5)).print();
 
     Tutorial.note("Array method contain");
     array = [1,2,3,4,5];
-    ("array            -> %s\n" % array.to_string()).print();
+    ("array            -> %s\n" % $array).print();
     ("array.contain(2) -> %d\n" % array.contain(2)).print();
     ("array.contain(4) -> %d\n" % array.contain(4)).print();
     ("array.contain(6) -> %d\n" % array.contain(6)).print();
-    ("array            -> %s\n" % array.to_string()).print();
+    ("array            -> %s\n" % $array).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl

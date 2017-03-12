@@ -123,7 +123,7 @@ class Main
       {
         "Five is bigger than ten\n".print();
       }
-      case Blank != ("Glass of water".get_idx("water")):
+      case "water" in "Glass of water":
       {
         "\"Glass of water\" contains \"water\"\n".print();
       }

@@ -70,7 +70,7 @@ string";
 
     Tutorial.note("Array construction syntax");
 
-    ("Array: \"[1,2,3,4,5]\" -> %s\n" % [1,2,3,4,5].to_string()).print();
+    ("Array: \"[1,2,3,4,5]\" -> %s\n" % $[1,2,3,4,5]).print();
 
     Tutorial.note("Tutorial end");
   }

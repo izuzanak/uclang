@@ -38,14 +38,14 @@ class Main
     //
 
     Tutorial.note("Tree object");
-    ("Tree: %s\n" % new Tree().to_string()).print();
-    ("Tree: %s\n" % new Tree([1,2,3,4,5]).to_string()).print();
+    ("Tree: %s\n" % $new Tree()).print();
+    ("Tree: %s\n" % $new Tree([1,2,3,4,5])).print();
 
     Tutorial.note("Tree assign operator");
     tree = new Tree();
-    ("tree: %s\n" % tree.to_string()).print();
+    ("tree: %s\n" % $tree).print();
     tree = 10;
-    ("tree: %s\n" % tree.to_string()).print();
+    ("tree: %s\n" % $tree).print();
 
     Tutorial.note("Tree compare operators");
     tree_0 = new Tree([1,2,3,4]);
@@ -62,11 +62,11 @@ class Main
     Tutorial.note("Tree plus operators");
     tree_0 = new Tree([1,2,3]);
     arr_1 = [5,5,4];
-    ("tree_0          -> %s\n" % tree_0.to_string()).print();
-    ("tree_0 + arr_1  -> %s\n" % (tree_0 + arr_1).to_string()).print();
-    ("tree_0          -> %s\n" % tree_0.to_string()).print();
-    ("tree_0 += arr_1 -> %s\n" % (tree_0 += arr_1).to_string()).print();
-    ("tree_0          -> %s\n" % tree_0.to_string()).print();
+    ("tree_0          -> %s\n" % $tree_0).print();
+    ("tree_0 + arr_1  -> %s\n" % $(tree_0 + arr_1)).print();
+    ("tree_0          -> %s\n" % $tree_0).print();
+    ("tree_0 += arr_1 -> %s\n" % $(tree_0 += arr_1)).print();
+    ("tree_0          -> %s\n" % $tree_0).print();
 
     Tutorial.note("Tree item select operator");
     tree = new Tree(["One","Two","Three","Four"]);
@@ -79,51 +79,51 @@ class Main
 
     Tutorial.note("Tree method clear#0");
     tree = new Tree([1,2,3,4,5]);
-    ("tree         -> %s\n" % tree.to_string()).print();
-    ("tree.clear() -> %s\n" % tree.clear().to_string()).print();
-    ("tree         -> %s\n" % tree.to_string()).print();
+    ("tree         -> %s\n" % $tree).print();
+    ("tree.clear() -> %s\n" % $tree.clear()).print();
+    ("tree         -> %s\n" % $tree).print();
 
     Tutorial.note("Tree method items#0");
     tree = new Tree([1,2,3,4,5]);
-    ("tree  -> type: %s, value %s\n" % [(type tree).to_string(),tree.to_string()]).print();
+    ("tree  -> type: %s, value %s\n" % [$(type tree),$tree]).print();
     items = tree.items();
-    ("items -> type: %s, value %s\n" % [(type items).to_string(),items.to_string()]).print();
-    ("tree  -> type: %s, value %s\n" % [(type tree).to_string(),tree.to_string()]).print();
+    ("items -> type: %s, value %s\n" % [$(type items),$items]).print();
+    ("tree  -> type: %s, value %s\n" % [$(type tree),$tree]).print();
 
     Tutorial.note("Tree method insert#1");
     tree = new Tree([1,2,3,4,5]);
-    ("tree            -> %s\n" % tree.to_string()).print();
+    ("tree            -> %s\n" % $tree).print();
     ("tree.insert(10) -> %d\n" % tree.insert(10)).print();
     ("tree.insert(10) -> %d\n" % tree.insert(10)).print();
     ("tree.insert(10) -> %d\n" % tree.insert(10)).print();
-    ("tree            -> %s\n" % tree.to_string()).print();
+    ("tree            -> %s\n" % $tree).print();
 
     Tutorial.note("Tree method remove#1");
     tree = new Tree([1,2,3,3,4,5]);
     idx = tree.get_idx(3);
-    ("tree             -> %s\n" % tree.to_string()).print();
-    ("tree.remove(idx) -> %s\n" % tree.remove(idx).to_string()).print();
-    ("tree             -> %s\n" % tree.to_string()).print();
+    ("tree             -> %s\n" % $tree).print();
+    ("tree.remove(idx) -> %s\n" % $tree.remove(idx)).print();
+    ("tree             -> %s\n" % $tree).print();
 
     Tutorial.note("Tree method get_idx#1");
     tree = new Tree([1,2,3,4,5]);
-    ("tree            -> %s\n" % tree.to_string()).print();
+    ("tree            -> %s\n" % $tree).print();
     ("tree.get_idx(2) -> %d\n" % tree.get_idx(2)).print();
     ("tree.get_idx(3) -> %d\n" % tree.get_idx(3)).print();
 
     Tutorial.note("Tree method get_idxs#1");
     tree = new Tree([1,2,3,3,2,4]);
-    ("tree             -> %s\n" % tree.to_string()).print();
-    ("tree.get_idxs(2) -> %s\n" % tree.get_idxs(2).to_string()).print();
-    ("tree.get_idxs(3) -> %s\n" % tree.get_idxs(3).to_string()).print();
+    ("tree             -> %s\n" % $tree).print();
+    ("tree.get_idxs(2) -> %s\n" % $tree.get_idxs(2)).print();
+    ("tree.get_idxs(3) -> %s\n" % $tree.get_idxs(3)).print();
 
     Tutorial.note("Tree method contain#0");
     tree = new Tree([1,2,3,4,5]);
-    ("tree            -> %s\n" % tree.to_string()).print();
+    ("tree            -> %s\n" % $tree).print();
     ("tree.contain(2) -> %d\n" % tree.contain(2)).print();
     ("tree.contain(4) -> %d\n" % tree.contain(4)).print();
     ("tree.contain(6) -> %d\n" % tree.contain(6)).print();
-    ("tree            -> %s\n" % tree.to_string()).print();
+    ("tree            -> %s\n" % $tree).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl

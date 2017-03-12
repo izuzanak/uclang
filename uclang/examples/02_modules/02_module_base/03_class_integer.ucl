@@ -56,14 +56,14 @@ class Main
     //
 
     Tutorial.note("Integer object");
-    ("Integer: %s\n" % new Integer().to_string()).print();
-    ("Integer: %s\n" % new Integer('A').to_string()).print();
-    ("Integer: %s\n" % new Integer(10).to_string()).print();
-    ("Integer: %s\n" % new Integer(11.0).to_string()).print();
-    ("Integer: %s\n" % new Integer("0x10").to_string()).print();
-    ("Integer: %s\n" % new Integer("100",8).to_string()).print();
-    ("Integer: %s\n" % new Integer("100",10).to_string()).print();
-    ("Integer: %s\n" % new Integer("100",16).to_string()).print();
+    ("Integer: %s\n" % $new Integer()).print();
+    ("Integer: %s\n" % $new Integer('A')).print();
+    ("Integer: %s\n" % $new Integer(10)).print();
+    ("Integer: %s\n" % $new Integer(11.0)).print();
+    ("Integer: %s\n" % $new Integer("0x10")).print();
+    ("Integer: %s\n" % $new Integer("100",8)).print();
+    ("Integer: %s\n" % $new Integer("100",10)).print();
+    ("Integer: %s\n" % $new Integer("100",16)).print();
 
     Tutorial.note("Integer constant syntax");
     ("Octal integer:    0700 -> %d\n" % 0700).print();
@@ -72,9 +72,9 @@ class Main
 
     Tutorial.note("Integer assign operator");
     integer = 10;
-    ("integer: %s\n" % integer.to_string()).print();
+    ("integer: %s\n" % $integer).print();
     integer = "string";
-    ("integer: %s\n" % integer.to_string()).print();
+    ("integer: %s\n" % $integer).print();
 
     Tutorial.note("Integer plus operators");
     int_0 = 125;

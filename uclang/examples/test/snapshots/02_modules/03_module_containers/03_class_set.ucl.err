@@ -1,6 +1,6 @@
  ---------------------------------------- 
 Exception: ERROR: in file: "03_class_set.ucl" on line: 170
-    ("set.remove(6) -> %s\n" % set.remove(6).to_string()).print();
+      ("set.remove(6) -> %s\n" % $set.remove(6)).print();
 
 Set does not contain requested element
  ---------------------------------------- 

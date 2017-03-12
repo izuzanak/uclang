@@ -46,14 +46,14 @@ class Main
     //
 
     Tutorial.note("List object");
-    ("List: %s\n" % new List().to_string()).print();
-    ("List: %s\n" % new List([1,2,3,4,5]).to_string()).print();
+    ("List: %s\n" % $new List()).print();
+    ("List: %s\n" % $new List([1,2,3,4,5])).print();
 
     Tutorial.note("List assign operator");
     list = new List();
-    ("list: %s\n" % list.to_string()).print();
+    ("list: %s\n" % $list).print();
     list = 10;
-    ("list: %s\n" % list.to_string()).print();
+    ("list: %s\n" % $list).print();
 
     Tutorial.note("List compare operators");
     list_0 = new List([1,2,3,4]);
@@ -70,11 +70,11 @@ class Main
     Tutorial.note("List plus operators");
     list_0 = new List([1,2,3]);
     arr_1 = [4,5,6];
-    ("list_0          -> %s\n" % list_0.to_string()).print();
-    ("list_0 + arr_1  -> %s\n" % (list_0 + arr_1).to_string()).print();
-    ("list_0          -> %s\n" % list_0.to_string()).print();
-    ("list_0 += arr_1 -> %s\n" % (list_0 += arr_1).to_string()).print();
-    ("list_0          -> %s\n" % list_0.to_string()).print();
+    ("list_0          -> %s\n" % $list_0).print();
+    ("list_0 + arr_1  -> %s\n" % $(list_0 + arr_1)).print();
+    ("list_0          -> %s\n" % $list_0).print();
+    ("list_0 += arr_1 -> %s\n" % $(list_0 += arr_1)).print();
+    ("list_0          -> %s\n" % $list_0).print();
 
     Tutorial.note("List item select operator");
     list = new List(["One","Two","Three","Four"]);
@@ -87,133 +87,133 @@ class Main
 
     Tutorial.note("List method clear#0");
     list = new List([1,2,3,4,5]);
-    ("list         -> %s\n" % list.to_string()).print();
-    ("list.clear() -> %s\n" % list.clear().to_string()).print();
-    ("list         -> %s\n" % list.to_string()).print();
+    ("list         -> %s\n" % $list).print();
+    ("list.clear() -> %s\n" % $list.clear()).print();
+    ("list         -> %s\n" % $list).print();
 
     Tutorial.note("List method items#0");
     list = new List([1,2,3,4,5]);
-    ("list  -> type: %s, value %s\n" % [(type list).to_string(),list.to_string()]).print();
+    ("list  -> type: %s, value %s\n" % [$(type list),$list]).print();
     items = list.items();
-    ("items -> type: %s, value %s\n" % [(type items).to_string(),items.to_string()]).print();
-    ("list  -> type: %s, value %s\n" % [(type list).to_string(),list.to_string()]).print();
+    ("items -> type: %s, value %s\n" % [$(type items),$items]).print();
+    ("list  -> type: %s, value %s\n" % [$(type list),$list]).print();
 
     Tutorial.note("List method append#1");
     list = new List([1,2,3,4,5]);
-    ("list           -> %s\n" % list.to_string()).print();
+    ("list           -> %s\n" % $list).print();
     ("list.append(6) -> %d\n" % list.append(6)).print();
     ("list.append(7) -> %d\n" % list.append(7)).print();
     ("list.append(8) -> %d\n" % list.append(8)).print();
-    ("list           -> %s\n" % list.to_string()).print();
+    ("list           -> %s\n" % $list).print();
 
     Tutorial.note("List method append_ref#1");
     value = 10;
     list = new List([1,2,3,4,5]);
     ("value                  -> %d\n" % value).print();
-    ("list                   -> %s\n" % list.to_string()).print();
+    ("list                   -> %s\n" % $list).print();
     ("list.append_ref(value) -> %d\n" % list.append_ref(value)).print();
     ("list.append_ref(value) -> %d\n" % list.append_ref(value)).print();
     ("list.append_ref(value) -> %d\n" % list.append_ref(value)).print();
-    ("list                   -> %s\n" % list.to_string()).print();
+    ("list                   -> %s\n" % $list).print();
     ("value = 100;           -> %d\n" % (value = 100)).print();
-    ("list                   -> %s\n" % list.to_string()).print();
+    ("list                   -> %s\n" % $list).print();
 
     Tutorial.note("List method prepend#1");
     list = new List([1,2,3,4,5]);
-    ("list            -> %s\n" % list.to_string()).print();
+    ("list            -> %s\n" % $list).print();
     ("list.prepend(6) -> %d\n" % list.prepend(6)).print();
     ("list.prepend(7) -> %d\n" % list.prepend(7)).print();
     ("list.prepend(8) -> %d\n" % list.prepend(8)).print();
-    ("list            -> %s\n" % list.to_string()).print();
+    ("list            -> %s\n" % $list).print();
 
     Tutorial.note("List method prepend_ref#1");
     value = 10;
     list = new List([1,2,3,4,5]);
     ("value                   -> %d\n" % value).print();
-    ("list                    -> %s\n" % list.to_string()).print();
+    ("list                    -> %s\n" % $list).print();
     ("list.prepend_ref(value) -> %d\n" % list.prepend_ref(value)).print();
     ("list.prepend_ref(value) -> %d\n" % list.prepend_ref(value)).print();
     ("list.prepend_ref(value) -> %d\n" % list.prepend_ref(value)).print();
-    ("list                    -> %s\n" % list.to_string()).print();
+    ("list                    -> %s\n" % $list).print();
     ("value = 100;            -> %d\n" % (value = 100)).print();
-    ("list                    -> %s\n" % list.to_string()).print();
+    ("list                    -> %s\n" % $list).print();
 
     Tutorial.note("List method insert_before#2");
     list = new List([1,2,3,4,5]);
     idx = list.get_idx(3);
-    ("list                      -> %s\n" % list.to_string()).print();
+    ("list                      -> %s\n" % $list).print();
     ("list.insert_before(idx,6) -> %d\n" % list.insert_before(idx,6)).print();
     ("list.insert_before(idx,7) -> %d\n" % list.insert_before(idx,7)).print();
     ("list.insert_before(idx,8) -> %d\n" % list.insert_before(idx,8)).print();
-    ("list                      -> %s\n" % list.to_string()).print();
+    ("list                      -> %s\n" % $list).print();
 
     Tutorial.note("List method insert_before_ref#2");
     value = 10;
     list = new List([1,2,3,4,5]);
     idx = list.get_idx(3);
     ("value                             -> %d\n" % value).print();
-    ("list                              -> %s\n" % list.to_string()).print();
+    ("list                              -> %s\n" % $list).print();
     ("list.insert_before_ref(idx,value) -> %d\n" % list.insert_before_ref(idx,value)).print();
     ("list.insert_before_ref(idx,value) -> %d\n" % list.insert_before_ref(idx,value)).print();
     ("list.insert_before_ref(idx,value) -> %d\n" % list.insert_before_ref(idx,value)).print();
-    ("list                              -> %s\n" % list.to_string()).print();
+    ("list                              -> %s\n" % $list).print();
     ("value = 100;                      -> %d\n" % (value = 100)).print();
-    ("list                              -> %s\n" % list.to_string()).print();
+    ("list                              -> %s\n" % $list).print();
 
     Tutorial.note("List method insert_after#2");
     list = new List([1,2,3,4,5]);
     idx = list.get_idx(3);
-    ("list                     -> %s\n" % list.to_string()).print();
+    ("list                     -> %s\n" % $list).print();
     ("list.insert_after(idx,6) -> %d\n" % list.insert_after(idx,6)).print();
     ("list.insert_after(idx,7) -> %d\n" % list.insert_after(idx,7)).print();
     ("list.insert_after(idx,8) -> %d\n" % list.insert_after(idx,8)).print();
-    ("list                     -> %s\n" % list.to_string()).print();
+    ("list                     -> %s\n" % $list).print();
 
     Tutorial.note("List method insert_after_ref#2");
     value = 10;
     list = new List([1,2,3,4,5]);
     idx = list.get_idx(3);
     ("value                            -> %d\n" % value).print();
-    ("list                             -> %s\n" % list.to_string()).print();
+    ("list                             -> %s\n" % $list).print();
     ("list.insert_after_ref(idx,value) -> %d\n" % list.insert_after_ref(idx,value)).print();
     ("list.insert_after_ref(idx,value) -> %d\n" % list.insert_after_ref(idx,value)).print();
     ("list.insert_after_ref(idx,value) -> %d\n" % list.insert_after_ref(idx,value)).print();
-    ("list                             -> %s\n" % list.to_string()).print();
+    ("list                             -> %s\n" % $list).print();
     ("value = 100;                     -> %d\n" % (value = 100)).print();
-    ("list                             -> %s\n" % list.to_string()).print();
+    ("list                             -> %s\n" % $list).print();
 
     Tutorial.note("List method remove#1");
     list = new List([1,2,3,4,5]);
     idx = list.get_idx(3);
-    ("list             -> %s\n" % list.to_string()).print();
-    ("list.remove(idx) -> %s\n" % list.remove(idx).to_string()).print();
-    ("list             -> %s\n" % list.to_string()).print();
+    ("list             -> %s\n" % $list).print();
+    ("list.remove(idx) -> %s\n" % $list.remove(idx)).print();
+    ("list             -> %s\n" % $list).print();
 
     Tutorial.note("List method has_idx#1");
     list = new List([1,2,3,4,5]);
-    ("list            -> %s\n" % list.to_string()).print();
+    ("list            -> %s\n" % $list).print();
     ("list.has_idx(2) -> %d\n" % list.has_idx(2)).print();
     ("list.has_idx(6) -> %d\n" % list.has_idx(6)).print();
 
     Tutorial.note("List method get_idx#1");
     list = new List([1,2,3,4,5]);
-    ("list            -> %s\n" % list.to_string()).print();
+    ("list            -> %s\n" % $list).print();
     ("list.get_idx(2) -> %d\n" % list.get_idx(2)).print();
     ("list.get_idx(3) -> %d\n" % list.get_idx(3)).print();
 
     Tutorial.note("List method get_idxs#1");
     list = new List([1,2,3,3,2,4]);
-    ("list             -> %s\n" % list.to_string()).print();
-    ("list.get_idxs(2) -> %s\n" % list.get_idxs(2).to_string()).print();
-    ("list.get_idxs(3) -> %s\n" % list.get_idxs(3).to_string()).print();
+    ("list             -> %s\n" % $list).print();
+    ("list.get_idxs(2) -> %s\n" % $list.get_idxs(2)).print();
+    ("list.get_idxs(3) -> %s\n" % $list.get_idxs(3)).print();
 
     Tutorial.note("List method contain#0");
     list = new List([1,2,3,4,5]);
-    ("list            -> %s\n" % list.to_string()).print();
+    ("list            -> %s\n" % $list).print();
     ("list.contain(2) -> %d\n" % list.contain(2)).print();
     ("list.contain(4) -> %d\n" % list.contain(4)).print();
     ("list.contain(6) -> %d\n" % list.contain(6)).print();
-    ("list            -> %s\n" % list.to_string()).print();
+    ("list            -> %s\n" % $list).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl

@@ -28,13 +28,13 @@ class Main
 
     Tutorial.note("Signal method bind#2");
     dlg = new Delegate(this,"signal_handler",1);
-    ("Signal.bind(Signal.SIGINT,dlg)  -> %s\n" % Signal.bind(Signal.SIGINT,dlg).to_string()).print();
-    ("Signal.bind(Signal.SIGTERM,dlg) -> %s\n" % Signal.bind(Signal.SIGTERM,dlg).to_string()).print();
-    ("Signal.bind(Signal.SIGHUP,dlg)  -> %s\n" % Signal.bind(Signal.SIGHUP,dlg).to_string()).print();
+    ("Signal.bind(Signal.SIGINT,dlg)  -> %s\n" % $Signal.bind(Signal.SIGINT,dlg)).print();
+    ("Signal.bind(Signal.SIGTERM,dlg) -> %s\n" % $Signal.bind(Signal.SIGTERM,dlg)).print();
+    ("Signal.bind(Signal.SIGHUP,dlg)  -> %s\n" % $Signal.bind(Signal.SIGHUP,dlg)).print();
 
     Tutorial.note("Signal method unbind#1");
-    ("Signal.unbind(Signal.SIGINT)  -> %s\n" % Signal.unbind(Signal.SIGINT).to_string()).print();
-    ("Signal.unbind(Signal.SIGHUP)  -> %s\n" % Signal.unbind(Signal.SIGHUP).to_string()).print();
+    ("Signal.unbind(Signal.SIGINT)  -> %s\n" % $Signal.unbind(Signal.SIGINT)).print();
+    ("Signal.unbind(Signal.SIGHUP)  -> %s\n" % $Signal.unbind(Signal.SIGHUP)).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl
@@ -66,7 +66,7 @@ class Main
     //
 
     Tutorial.note("Signal method send#2");
-    ("Signal.send(Sys.getpid(),Signal.SIGTERM) -> %s\n" % Signal.send(Sys.getpid(),Signal.SIGTERM).to_string()).print();
+    ("Signal.send(Sys.getpid(),Signal.SIGTERM) -> %s\n" % $Signal.send(Sys.getpid(),Signal.SIGTERM)).print();
 
     Tutorial.note("Tutorial end");
   }

@@ -6,7 +6,7 @@ class Main
   public Main()
   {
     Tutorial.note("Keyword \"this\" refers to object of enclosing class");
-    ("type this: %s, this: %s\n" % [(type this).to_string(),this.to_string()]).print();
+    ("type this: %s, this: %s\n" % [$(type this),$this]).print();
   }
 
   public to_string()
@@ -31,35 +31,35 @@ class Main
     // Keyword "type" retrieve type of variable
     Tutorial.note("Keyword \"type\" retrieve type of variable");
     obj = new Integer(); 
-    ("type obj: %s\n" % (type obj).to_string()).print();
+    ("type obj: %s\n" % $(type obj)).print();
     obj = new String("Hello world"); 
-    ("type obj: %s\n" % (type obj).to_string()).print();
+    ("type obj: %s\n" % $(type obj)).print();
     obj = new Array(); 
-    ("type obj: %s\n" % (type obj).to_string()).print();
+    ("type obj: %s\n" % $(type obj)).print();
 
     // Keyword "new" creates new object instance of given class
     Tutorial.note("Keyword \"new\" create new object and call its constructor");
     obj = new Integer(); 
-    ("type obj: %s, obj: %s\n" % [(type obj).to_string(),obj.to_string()]).print();
+    ("type obj: %s, obj: %s\n" % [$(type obj),$obj]).print();
     obj = new String("Hello world"); 
-    ("type obj: %s, obj: %s\n" % [(type obj).to_string(),obj.to_string()]).print();
+    ("type obj: %s, obj: %s\n" % [$(type obj),$obj]).print();
     obj = new Array(); 
-    ("type obj: %s, obj: %s\n" % [(type obj).to_string(),obj.to_string()]).print();
+    ("type obj: %s, obj: %s\n" % [$(type obj),$obj]).print();
 
     Tutorial.note("It can create array of objects");
     obj = new Integer[10]; 
-    ("type obj: %s, obj: %s\n" % [(type obj).to_string(),obj.to_string()]).print();
+    ("type obj: %s, obj: %s\n" % [$(type obj),$obj]).print();
     obj = new String[10]; 
-    ("type obj: %s, obj: %s\n" % [(type obj).to_string(),obj.to_string()]).print();
+    ("type obj: %s, obj: %s\n" % [$(type obj),$obj]).print();
     obj = new Array[10]; 
-    ("type obj: %s, obj: %s\n" % [(type obj).to_string(),obj.to_string()]).print();
+    ("type obj: %s, obj: %s\n" % [$(type obj),$obj]).print();
 
     // Keyword free release object instance
     Tutorial.note("Keyword \"free\" release object, and set variable value to Blank");
     obj = new Array[10];
-    ("type obj: %s, obj: %s\n" % [(type obj).to_string(),obj.to_string()]).print();
+    ("type obj: %s, obj: %s\n" % [$(type obj),$obj]).print();
     free obj;
-    ("type obj: %s, obj: %s\n" % [(type obj).to_string(),obj.to_string()]).print();
+    ("type obj: %s, obj: %s\n" % [$(type obj),$obj]).print();
 
     // Keyword "this" refers to object instance
     new Main();
@@ -86,11 +86,11 @@ class Main
 
     // Create reference to value
     ref =@ value;
-    ("type value: %s, value: %s\n" % [(type value).to_string(),value.to_string()]).print();
+    ("type value: %s, value: %s\n" % [$(type value),$value]).print();
 
     // Change value through reference
     ref = "Changed value";
-    ("type value: %s, value: %s\n" % [(type value).to_string(),value.to_string()]).print();
+    ("type value: %s, value: %s\n" % [$(type value),$value]).print();
 
     // BE WARNED:
     // - keyword "type" is often in conflict with intended name of member or method

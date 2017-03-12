@@ -22,17 +22,17 @@ class Main
     //
 
     Tutorial.note("Blank object");
-    ("Blank: %s\n" % Blank.to_string()).print();
-    ("Blank: %s\n" % new Blank().to_string()).print();
+    ("Blank: %s\n" % $Blank).print();
+    ("Blank: %s\n" % $new Blank()).print();
 
     // Assign operator replace blank object by operator parameter
     //
 
     Tutorial.note("Blank assign operator");
     blank = new Blank();
-    ("blank: %s\n" % blank.to_string()).print();
+    ("blank: %s\n" % $blank).print();
     blank = 10;
-    ("blank: %s\n" % blank.to_string()).print();
+    ("blank: %s\n" % $blank).print();
 
     Tutorial.note("Blank equality operators");
     blank = new Blank();
@@ -76,8 +76,8 @@ class Main
     //
     Tutorial.note("Blank methods - to_string#0");
     blank = new Blank();
-    ("blank.to_string() -> %s\n" % blank.to_string()).print();
-    ("Blank.to_string() -> %s\n" % Blank.to_string()).print();
+    ("blank.to_string() -> %s\n" % $blank).print();
+    ("Blank.to_string() -> %s\n" % $Blank).print();
 
     // Method print#0 print string describing object to standard output
     //

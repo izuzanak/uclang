@@ -36,14 +36,14 @@ class Main
     //
 
     Tutorial.note("Stack object");
-    ("Stack: %s\n" % new Stack().to_string()).print();
-    ("Stack: %s\n" % new Stack([1,2,3,4,5]).to_string()).print();
+    ("Stack: %s\n" % $new Stack()).print();
+    ("Stack: %s\n" % $new Stack([1,2,3,4,5])).print();
 
     Tutorial.note("Stack assign operator");
     stack = new Stack();
-    ("stack: %s\n" % stack.to_string()).print();
+    ("stack: %s\n" % $stack).print();
     stack = 10;
-    ("stack: %s\n" % stack.to_string()).print();
+    ("stack: %s\n" % $stack).print();
 
     Tutorial.note("Stack compare operators");
     stack_0 = new Stack([1,2,3,4]);
@@ -60,60 +60,60 @@ class Main
     Tutorial.note("Stack plus operators");
     stack_0 = new Stack([1,2,3]);
     arr_1 = [4,5,6];
-    ("stack_0          -> %s\n" % stack_0.to_string()).print();
-    ("stack_0 + arr_1  -> %s\n" % (stack_0 + arr_1).to_string()).print();
-    ("stack_0          -> %s\n" % stack_0.to_string()).print();
-    ("stack_0 += arr_1 -> %s\n" % (stack_0 += arr_1).to_string()).print();
-    ("stack_0          -> %s\n" % stack_0.to_string()).print();
+    ("stack_0          -> %s\n" % $stack_0).print();
+    ("stack_0 + arr_1  -> %s\n" % $(stack_0 + arr_1)).print();
+    ("stack_0          -> %s\n" % $stack_0).print();
+    ("stack_0 += arr_1 -> %s\n" % $(stack_0 += arr_1)).print();
+    ("stack_0          -> %s\n" % $stack_0).print();
 
     Tutorial.note("Stack method clear#0");
     stack = new Stack([1,2,3,4,5]);
-    ("stack         -> %s\n" % stack.to_string()).print();
-    ("stack.clear() -> %s\n" % stack.clear().to_string()).print();
-    ("stack         -> %s\n" % stack.to_string()).print();
+    ("stack         -> %s\n" % $stack).print();
+    ("stack.clear() -> %s\n" % $stack.clear()).print();
+    ("stack         -> %s\n" % $stack).print();
 
     Tutorial.note("Stack method items#0");
     stack = new Stack([1,2,3,4,5]);
-    ("stack -> type: %s, value %s\n" % [(type stack).to_string(),stack.to_string()]).print();
+    ("stack -> type: %s, value %s\n" % [$(type stack),$stack]).print();
     items = stack.items();
-    ("items -> type: %s, value %s\n" % [(type items).to_string(),items.to_string()]).print();
-    ("stack -> type: %s, value %s\n" % [(type stack).to_string(),stack.to_string()]).print();
+    ("items -> type: %s, value %s\n" % [$(type items),$items]).print();
+    ("stack -> type: %s, value %s\n" % [$(type stack),$stack]).print();
 
     Tutorial.note("Stack method push#1");
     stack = new Stack([1,2,3,4,5]);
-    ("stack          -> %s\n" % stack.to_string()).print();
-    ("stack.push(10) -> %s\n" % stack.push(10).to_string()).print();
-    ("stack.push(10) -> %s\n" % stack.push(10).to_string()).print();
-    ("stack.push(10) -> %s\n" % stack.push(10).to_string()).print();
-    ("stack          -> %s\n" % stack.to_string()).print();
+    ("stack          -> %s\n" % $stack).print();
+    ("stack.push(10) -> %s\n" % $stack.push(10)).print();
+    ("stack.push(10) -> %s\n" % $stack.push(10)).print();
+    ("stack.push(10) -> %s\n" % $stack.push(10)).print();
+    ("stack          -> %s\n" % $stack).print();
 
     Tutorial.note("Stack method push_ref#1");
     value = 10;
     stack = new Stack([1,2,3,4,5]);
     ("value                 -> %d\n" % value).print();
-    ("stack                 -> %s\n" % stack.to_string()).print();
-    ("stack.push_ref(value) -> %s\n" % stack.push_ref(value).to_string()).print();
-    ("stack.push_ref(value) -> %s\n" % stack.push_ref(value).to_string()).print();
-    ("stack.push_ref(value) -> %s\n" % stack.push_ref(value).to_string()).print();
-    ("stack                 -> %s\n" % stack.to_string()).print();
+    ("stack                 -> %s\n" % $stack).print();
+    ("stack.push_ref(value) -> %s\n" % $stack.push_ref(value)).print();
+    ("stack.push_ref(value) -> %s\n" % $stack.push_ref(value)).print();
+    ("stack.push_ref(value) -> %s\n" % $stack.push_ref(value)).print();
+    ("stack                 -> %s\n" % $stack).print();
     ("value = 100;          -> %d\n" % (value = 100)).print();
-    ("stack                 -> %s\n" % stack.to_string()).print();
+    ("stack                 -> %s\n" % $stack).print();
 
     Tutorial.note("Stack method pop#0");
     stack = new Stack([1,2,3,4,5]);
-    ("stack       -> %s\n" % stack.to_string()).print();
-    ("stack.pop() -> %s\n" % stack.pop().to_string()).print();
-    ("stack.pop() -> %s\n" % stack.pop().to_string()).print();
-    ("stack.pop() -> %s\n" % stack.pop().to_string()).print();
-    ("stack       -> %s\n" % stack.to_string()).print();
+    ("stack       -> %s\n" % $stack).print();
+    ("stack.pop() -> %s\n" % $stack.pop()).print();
+    ("stack.pop() -> %s\n" % $stack.pop()).print();
+    ("stack.pop() -> %s\n" % $stack.pop()).print();
+    ("stack       -> %s\n" % $stack).print();
 
     Tutorial.note("Stack method contain");
     stack = new Stack([1,2,3,4,5]);
-    ("stack            -> %s\n" % stack.to_string()).print();
+    ("stack            -> %s\n" % $stack).print();
     ("stack.contain(2) -> %d\n" % stack.contain(2)).print();
     ("stack.contain(4) -> %d\n" % stack.contain(4)).print();
     ("stack.contain(6) -> %d\n" % stack.contain(6)).print();
-    ("stack            -> %s\n" % stack.to_string()).print();
+    ("stack            -> %s\n" % $stack).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl

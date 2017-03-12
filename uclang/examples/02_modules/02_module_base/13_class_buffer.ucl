@@ -25,19 +25,19 @@ class Main
     //
 
     Tutorial.note("Buffer object");
-    ("Buffer: %s\n" % image.buffer().to_string()).print();
+    ("Buffer: %s\n" % $image.buffer()).print();
 
     Tutorial.note("Buffer assign operator");
     buffer = image.buffer();
-    ("buffer: %s\n" % buffer.to_string()).print();
+    ("buffer: %s\n" % $buffer).print();
     buffer = 10;
-    ("buffer: %s\n" % buffer.to_string()).print();
+    ("buffer: %s\n" % $buffer).print();
 
     Tutorial.note("Array method size#0");
     buffer = image.buffer();
-    ("buffer        -> %s\n" % buffer.to_string()).print();
-    ("buffer.size() -> %s\n" % buffer.size().to_string()).print();
-    ("buffer        -> %s\n" % buffer.to_string()).print();
+    ("buffer        -> %s\n" % $buffer).print();
+    ("buffer.size() -> %s\n" % $buffer.size()).print();
+    ("buffer        -> %s\n" % $buffer).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl

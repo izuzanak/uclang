@@ -55,10 +55,10 @@ class Main
     //
     Tutorial.note("Operators example");
     counter = new Counter();
-    ("counter: %s\n" % counter.to_string()).print();
-    ("counter: %s\n" % (counter += 1).to_string()).print();
-    ("counter: %s\n" % (counter += 2).to_string()).print();
-    ("counter: %s\n" % (counter += 3).to_string()).print();
+    ("counter: %s\n" % $counter).print();
+    ("counter: %s\n" % $(counter += 1)).print();
+    ("counter: %s\n" % $(counter += 2)).print();
+    ("counter: %s\n" % $(counter += 3)).print();
 
     // Method compare#1 should compare object to parameter and return integer
     // -1/0/1 if object is lesser/equal/greater than parameter
@@ -75,7 +75,7 @@ class Main
     set.insert(new Comparable(92));
     set.insert(new Comparable(49));
     set.insert(new Comparable(21));
-    ("\nset: %s\n" % set.to_string()).print();
+    ("\nset: %s\n" % $set).print();
 
     // Methods used by iterable objects of first type
     //
@@ -88,7 +88,7 @@ class Main
     //
     Tutorial.note("Methods item#1, first_idx#0 and next_idx#1");
     iter_0 = new Iter_0(7);
-    ("\niter_0: %s\n" % iter_0[::].to_string()).print();
+    ("\niter_0: %s\n" % $iter_0[::]).print();
 
     // Method used by iterable objects of second type
     //
@@ -97,7 +97,7 @@ class Main
 
     Tutorial.note("Method next_item#0");
     iter_1 = new Iter_1(7);
-    ("\niter_1: %s\n" % iter_1[::].to_string()).print();
+    ("\niter_1: %s\n" % $iter_1[::]).print();
 
     // Method length#0 should return count of elements in container/iterable
     //
@@ -108,7 +108,7 @@ class Main
     ("new Iter_0(9).length(): %d\n" % new Iter_0(9).length()).print();
 
     Tutorial.note("Method length#0 is used by iteration");
-    ("\nnew Iter_0(7)[-2::-2]: %s\n" % new Iter_0(7)[-2::-2].to_string()).print();
+    ("\nnew Iter_0(7)[-2::-2]: %s\n" % $new Iter_0(7)[-2::-2]).print();
 
     // Method to_string#0 should return string description of object
     // Content of simple objects Integers, Strings, ...
@@ -173,7 +173,7 @@ class Comparable
 
   public compare(a_second)
   {
-    ("DEBUG: %s.compare(%s)\n" % [this.to_string(),a_second.to_string()]).print();
+    ("DEBUG: %s.compare(%s)\n" % [$this,$a_second]).print();
 
     return value.compare(a_second.value);
   }
