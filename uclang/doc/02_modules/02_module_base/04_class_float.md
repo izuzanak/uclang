@@ -86,7 +86,7 @@ Creates default object of class `Float`.
 
 ```cpp
 obj = new Float();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 0.000000
@@ -143,9 +143,9 @@ Assignment operator `=`. Object of class `Float` is replaced by method parameter
 
 ```cpp
 obj = 12.234;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 12.234000
@@ -170,13 +170,13 @@ Add and assign operator `+=`. Operator adds value of method parameter to value o
 
 ```cpp
 obj = 549.2;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj += 'e';
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj += 123;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj += 12.234;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 549.200000
@@ -203,13 +203,13 @@ Subtract and assign operator `-=`. Operator subtracts value of method parameter 
 
 ```cpp
 obj = 549.2;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj -= 'e';
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj -= 123;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj -= 12.234;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 549.200000
@@ -236,13 +236,13 @@ Multiply and assign operator `*=`. Operator multiplies value of object of class 
 
 ```cpp
 obj = 549.2;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj *= 'e';
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj *= 123;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj *= 12.234;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 549.200000
@@ -270,13 +270,13 @@ Divide and assign operator `/=`. Operator divides value of object of class `Floa
 ```cpp
 obj = 56787236.67;
 obj /= 'e';
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = 56787236.67;
 obj /= 123;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = 56787236.67;
 obj /= 12.234;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 562249.868020
@@ -432,7 +432,7 @@ Greater test operator `>`. Test if value of object of class `Float` is greater t
 
 ```cpp
 obj = 549.2;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ("obj > 'e': %d\n" % (obj > 'e')).print();
 ("obj > 123: %d\n" % (obj > 123)).print();
 ("obj > 12.234: %d\n" % (obj > 12.234)).print();
@@ -464,7 +464,7 @@ Lesser test operator `<`. Test if value of object of class `Float` is lesser tha
 
 ```cpp
 obj = 549.2;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ("obj < 'e': %d\n" % (obj < 'e')).print();
 ("obj < 123: %d\n" % (obj < 123)).print();
 ("obj < 12.234: %d\n" % (obj < 12.234)).print();
@@ -496,7 +496,7 @@ Greater or equal test operator `>=`. Test if value of object of class `Float` is
 
 ```cpp
 obj = 549.2;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ("obj >= 'e': %d\n" % (obj >= 'e')).print();
 ("obj >= 123: %d\n" % (obj >= 123)).print();
 ("obj >= 12.234: %d\n" % (obj >= 12.234)).print();
@@ -528,7 +528,7 @@ Lesser or equal test operator `<=`. Test if value of object of class `Float` is 
 
 ```cpp
 obj = 549.2;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ("obj <= 'e': %d\n" % (obj <= 'e')).print();
 ("obj <= 123: %d\n" % (obj <= 123)).print();
 ("obj <= 12.234: %d\n" % (obj <= 12.234)).print();
@@ -558,13 +558,13 @@ Add operator `+`. Operator adds value of method parameter to value of object of 
 
 ```cpp
 obj = 549.2;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 res = obj + 'e';
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj + 123;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj + 12.234;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: 549.200000
@@ -591,13 +591,13 @@ Subtract operator `-`. Operator subtracts value of method parameter from value o
 
 ```cpp
 obj = 549.2;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 res = obj - 'e';
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj - 123;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj - 12.234;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: 549.200000
@@ -624,13 +624,13 @@ Multiply operator `*`. It multiplies value of object of class `Float` by value o
 
 ```cpp
 obj = 2.532;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 res = obj * 'e';
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj * 123;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj * 12.234;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: 2.532000
@@ -657,13 +657,13 @@ Divide operator `/`. Operator divides value of object of class `Float` by value 
 
 ```cpp
 obj = 549.2;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 res = obj / '\x02';
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj / 2;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj / 2.532;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: 549.200000
@@ -686,9 +686,9 @@ Post increment operator `++`. Increase value of object of class `Float` by one.
 
 ```cpp
 obj = 12.234;
-("obj: %s\n" % obj.to_string()).print();
-("obj++: %s\n" % (obj++).to_string()).print();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj++: %s\n" % $(obj++)).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 12.234000
@@ -710,9 +710,9 @@ Post decrement operator `--`. Decrease value of object of class `Float` by one.
 
 ```cpp
 obj = 12.234;
-("obj: %s\n" % obj.to_string()).print();
-("obj--: %s\n" % (obj--).to_string()).print();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj--: %s\n" % $(obj--)).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 12.234000
@@ -734,9 +734,9 @@ Pre increment operator `++`. Increase value of object of class `Float` by one.
 
 ```cpp
 obj = 12.234;
-("obj: %s\n" % obj.to_string()).print();
-("++obj: %s\n" % (++obj).to_string()).print();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
+("++obj: %s\n" % $(++obj)).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 12.234000
@@ -758,9 +758,9 @@ Pre decrement operator `--`. Decrease value of object of class `Float` by one.
 
 ```cpp
 obj = 12.234;
-("obj: %s\n" % obj.to_string()).print();
-("--obj: %s\n" % (--obj).to_string()).print();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
+("--obj: %s\n" % $(--obj)).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 12.234000
@@ -782,9 +782,9 @@ Unary operator `+`. Return value of object of class `Float`.
 
 ```cpp
 obj = 12.234;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = +obj;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 12.234000
@@ -805,9 +805,9 @@ Unary negative operator `-`. Return negative value of object of class `Float`.
 
 ```cpp
 obj = 12.234;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = -obj;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 12.234000
@@ -828,9 +828,9 @@ Logical NOT operator `!`. Reverse logical state of value of object of class `Flo
 
 ```cpp
 obj = 12.234;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = !obj;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 12.234000

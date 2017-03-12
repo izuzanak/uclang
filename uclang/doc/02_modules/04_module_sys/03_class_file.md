@@ -96,9 +96,9 @@ Assignment operator `=`. Object of class `File` is replaced by method parameter.
 
 ```cpp
 obj = new File("numbers.txt","r");
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: File

@@ -58,7 +58,7 @@ Creates default object of class `Dict`.
 
 ```cpp
 obj = new Dict();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: []
@@ -80,7 +80,7 @@ of new object of class `Dict`.
 
 ```cpp
 obj = new Dict(["One",1,"Two",2,"Three",3]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [One:1,Two:2,Three:3]
@@ -108,9 +108,9 @@ Assignment operator `=`. Object of class `Dict` is replaced by method parameter.
 
 ```cpp
 obj = new Dict(["One",1,"Two",2,"Three",3]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [One:1,Two:2,Three:3]
@@ -196,9 +196,9 @@ Retrieve element from object of class `Dict` stored at requested key position.
 
 ```cpp
 obj = new Dict(["One",1,"Two",2,"Three",3]);
-("obj: %s\n" % obj.to_string()).print();
-("obj[\"One\"]: %s\n" % obj["One"].to_string()).print();
-("obj[\"Two\"]: %s\n" % obj["Two"].to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj[\"One\"]: %s\n" % $obj["One"]).print();
+("obj[\"Two\"]: %s\n" % $obj["Two"]).print();
 ```
 ```
 obj: [One:1,Two:2,Three:3]
@@ -224,9 +224,9 @@ Release all elements stored in object of class `Dict`.
 
 ```cpp
 obj = new Dict(["One",1,"Two",2,"Three",3]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.clear();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [One:1,Two:2,Three:3]
@@ -247,10 +247,10 @@ Retrieve keys contained in object of class `Dict`. Keys are returned as object o
 
 ```cpp
 obj = new Dict(["One",1,"Two",2,"Three",3]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 keys = obj.keys();
-("type keys: %s\n" % (type keys).to_string()).print();
-("keys: %s\n" % keys.to_string()).print();
+("type keys: %s\n" % $(type keys)).print();
+("keys: %s\n" % $keys).print();
 ```
 ```
 obj: [One:1,Two:2,Three:3]
@@ -272,10 +272,10 @@ Retrieve list of elements contained in object of class `Dict`. Elements are retu
 
 ```cpp
 obj = new Dict(["One",1,"Two",2,"Three",3]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 items = obj.items();
-("type items: %s\n" % (type items).to_string()).print();
-("items: %s\n" % items.to_string()).print();
+("type items: %s\n" % $(type items)).print();
+("items: %s\n" % $items).print();
 ```
 ```
 obj: [One:1,Two:2,Three:3]
@@ -304,9 +304,9 @@ Store reference to second method parameter under key given by first method param
 obj = new Dict(["One",1,"Two",2,"Three",3]);
 value = 0;
 obj.store_ref("Value",value);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 value = "Hello world!";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [One:1,Two:2,Three:3,Value:0]
@@ -334,7 +334,7 @@ Object of class `Integer`.
 
 ```cpp
 obj = new Dict(["One",1,"Two",2,"Three",3]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ("obj.has_key(\"Two\"): %d\n" % obj.has_key("Two")).print();
 ("obj.has_key(\"Three\"): %d\n" % obj.has_key("Three")).print();
 ("obj.has_key(\"Four\"): %d\n" % obj.has_key("Four")).print();
@@ -364,9 +364,9 @@ Object of class `Blank`.
 
 ```cpp
 obj = new Dict(["One",1,"Two",2,"Three",3]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.remove_key("Two");
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [One:1,Two:2,Three:3]
@@ -388,11 +388,11 @@ Retrieve first key of object of class `Dict`.
 
 ```cpp
 obj = new Dict(["One",1,"Two",2,"Three",3]);
-("obj.first_key(): %s\n" % obj.first_key().to_string()).print();
+("obj.first_key(): %s\n" % $obj.first_key()).print();
 obj.remove_key(obj.first_key());
-("obj.first_key(): %s\n" % obj.first_key().to_string()).print();
+("obj.first_key(): %s\n" % $obj.first_key()).print();
 obj.clear();
-("obj.first_key(): %s\n" % obj.first_key().to_string()).print();
+("obj.first_key(): %s\n" % $obj.first_key()).print();
 ```
 ```
 obj.first_key(): One
@@ -415,11 +415,11 @@ Retrieve last key of object of class `Dict`.
 
 ```cpp
 obj = new Dict(["One",1,"Two",2,"Three",3]);
-("obj.last_key(): %s\n" % obj.last_key().to_string()).print();
+("obj.last_key(): %s\n" % $obj.last_key()).print();
 obj.remove_key(obj.last_key());
-("obj.last_key(): %s\n" % obj.last_key().to_string()).print();
+("obj.last_key(): %s\n" % $obj.last_key()).print();
 obj.clear();
-("obj.last_key(): %s\n" % obj.last_key().to_string()).print();
+("obj.last_key(): %s\n" % $obj.last_key()).print();
 ```
 ```
 obj.last_key(): Three
@@ -446,10 +446,10 @@ From object of class `Dict` retrieve key following key identified by method para
 
 ```cpp
 obj = new Dict(["One",1,"Two",2,"Three",3]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 key = obj.first_key();
 do {
-  ("key: %s\n" % key.to_string()).print();
+  ("key: %s\n" % $key).print();
   key = obj.next_key(key);
 } while(Blank != key);
 ```
@@ -479,10 +479,10 @@ From object of class `Dict` retrieve key preceding key identified by method para
 
 ```cpp
 obj = new Dict(["One",1,"Two",2,"Three",3]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 key = obj.last_key();
 do {
-  ("key: %s\n" % key.to_string()).print();
+  ("key: %s\n" % $key).print();
   key = obj.prev_key(key);
 } while(Blank != key);
 ```
@@ -512,9 +512,9 @@ Retrieve key of object of class `Dict` which value is less or equal than value o
 
 ```cpp
 obj = new Dict([1.0,"One",2.0,"Two",3.0,"Three"]);
-("obj.lee_key(0.6): %s\n" % obj.lee_key(0.6).to_string()).print();
-("obj.lee_key(1.5): %s\n" % obj.lee_key(1.5).to_string()).print();
-("obj.lee_key(2.1): %s\n" % obj.lee_key(2.1).to_string()).print();
+("obj.lee_key(0.6): %s\n" % $obj.lee_key(0.6)).print();
+("obj.lee_key(1.5): %s\n" % $obj.lee_key(1.5)).print();
+("obj.lee_key(2.1): %s\n" % $obj.lee_key(2.1)).print();
 ```
 ```
 obj.lee_key(0.6): <blank>
@@ -541,9 +541,9 @@ Retrieve key of object of class `Dict` which value is greater or equal than valu
 
 ```cpp
 obj = new Dict([1.0,"One",2.0,"Two",3.0,"Three"]);
-("obj.gre_key(1.5): %s\n" % obj.gre_key(1.5).to_string()).print();
-("obj.gre_key(2.1): %s\n" % obj.gre_key(2.1).to_string()).print();
-("obj.gre_key(3.2): %s\n" % obj.gre_key(3.2).to_string()).print();
+("obj.gre_key(1.5): %s\n" % $obj.gre_key(1.5)).print();
+("obj.gre_key(2.1): %s\n" % $obj.gre_key(2.1)).print();
+("obj.gre_key(3.2): %s\n" % $obj.gre_key(3.2)).print();
 ```
 ```
 obj.gre_key(1.5): 2.000000
@@ -631,10 +631,10 @@ Retrieve key from object of class `Dict` stored at requested index position.
 
 ```cpp
 obj = new Dict(["One",1,"Two",2,"Three",3]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.first_idx();
 do {
-  ("obj.item(%d): %s\n" % [idx,obj.item(idx).to_string()]).print();
+  ("obj.item(%d): %s\n" % [idx,$obj.item(idx)]).print();
   idx = obj.next_idx(idx);
 } while(Blank != idx);
 ```
@@ -660,9 +660,9 @@ Retrieve index of first key in object of class `Dict`.
 
 ```cpp
 obj = new Dict(["One",1,"Two",2,"Three",3]);
-("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
+("obj.first_idx: %s\n" % $obj.first_idx()).print();
 obj.clear();
-("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
+("obj.first_idx: %s\n" % $obj.first_idx()).print();
 ```
 ```
 obj.first_idx: 0
@@ -684,9 +684,9 @@ Retrieve index of last key in object of class `Dict`.
 
 ```cpp
 obj = new Dict(["One",1,"Two",2,"Three",3]);
-("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
+("obj.last_idx: %s\n" % $obj.last_idx()).print();
 obj.clear();
-("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
+("obj.last_idx: %s\n" % $obj.last_idx()).print();
 ```
 ```
 obj.last_idx: 3
@@ -712,10 +712,10 @@ From object of class `Dict` retrieve index of key following key identified by me
 
 ```cpp
 obj = new Dict(["One",1,"Two",2,"Three",3]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.first_idx();
 do {
-  ("idx: %s\n" % idx.to_string()).print();
+  ("idx: %s\n" % $idx).print();
   idx = obj.next_idx(idx);
 } while(Blank != idx);
 ```
@@ -745,10 +745,10 @@ From object of class `Dict` retrieve index of key preceding key identified by me
 
 ```cpp
 obj = new Dict(["One",1,"Two",2,"Three",3]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.last_idx();
 do {
-  ("idx: %s\n" % idx.to_string()).print();
+  ("idx: %s\n" % $idx).print();
   idx = obj.prev_idx(idx);
 } while(Blank != idx);
 ```

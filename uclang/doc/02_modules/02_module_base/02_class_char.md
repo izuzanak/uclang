@@ -120,9 +120,9 @@ Assignment operator `=`. Object of class `Char` is replaced by method parameter.
 
 ```cpp
 obj = 'e';
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: e
@@ -672,7 +672,7 @@ Greater test operator `>`. Test if value of object of class `Char` is greater th
 
 ```cpp
 obj = '\x45';
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ("obj > 'e': %d\n" % (obj > 'e')).print();
 ("obj > 123: %d\n" % (obj > 123)).print();
 ("obj > 12.234: %d\n" % (obj > 12.234)).print();
@@ -704,7 +704,7 @@ Lesser test operator `<`. Test if value of object of class `Char` is lesser than
 
 ```cpp
 obj = '\x45';
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ("obj < 'e': %d\n" % (obj < 'e')).print();
 ("obj < 123: %d\n" % (obj < 123)).print();
 ("obj < 12.234: %d\n" % (obj < 12.234)).print();
@@ -736,7 +736,7 @@ Greater or equal test operator `>=`. Test if value of object of class `Char` is 
 
 ```cpp
 obj = '\x45';
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ("obj >= 'e': %d\n" % (obj >= 'e')).print();
 ("obj >= 123: %d\n" % (obj >= 123)).print();
 ("obj >= 12.234: %d\n" % (obj >= 12.234)).print();
@@ -768,7 +768,7 @@ Lesser or equal test operator `<=`. Test if value of object of class `Char` is l
 
 ```cpp
 obj = '\x45';
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ("obj <= 'e': %d\n" % (obj <= 'e')).print();
 ("obj <= 123: %d\n" % (obj <= 123)).print();
 ("obj <= 12.234: %d\n" % (obj <= 12.234)).print();
@@ -862,9 +862,9 @@ obj = '\x45';
 res = obj + 'e';
 ("res: %d\n" % new Integer(res)).print();
 res = obj + 123;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj + 12.234;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: 69
@@ -895,9 +895,9 @@ obj = '\x45';
 res = obj - 'e';
 ("res: %d\n" % new Integer(res)).print();
 res = obj - 123;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj - 12.234;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: 69
@@ -928,9 +928,9 @@ obj = '\x02';
 res = obj * 'e';
 ("res: %d\n" % new Integer(res)).print();
 res = obj * 123;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj * 12.234;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: 2
@@ -961,9 +961,9 @@ obj = '\x45';
 res = obj / '\x02';
 ("res: %d\n" % new Integer(res)).print();
 res = obj / 2;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj / 2.532;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: 69
@@ -994,7 +994,7 @@ obj = '\x45';
 res = obj % 'e';
 ("res: %d\n" % new Integer(res)).print();
 res = obj % 123;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: 69
@@ -1016,9 +1016,9 @@ Post increment operator `++`. Increase value of object of class `Char` by one.
 
 ```cpp
 obj = 'e';
-("obj: %s\n" % obj.to_string()).print();
-("obj++: %s\n" % (obj++).to_string()).print();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj++: %s\n" % $(obj++)).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: e
@@ -1040,9 +1040,9 @@ Post decrement operator `--`. Decrease value of object of class `Char` by one.
 
 ```cpp
 obj = 'e';
-("obj: %s\n" % obj.to_string()).print();
-("obj--: %s\n" % (obj--).to_string()).print();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj--: %s\n" % $(obj--)).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: e
@@ -1064,9 +1064,9 @@ Pre increment operator `++`. Increase value of object of class `Char` by one.
 
 ```cpp
 obj = 'e';
-("obj: %s\n" % obj.to_string()).print();
-("++obj: %s\n" % (++obj).to_string()).print();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
+("++obj: %s\n" % $(++obj)).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: e
@@ -1088,9 +1088,9 @@ Pre decrement operator `--`. Decrease value of object of class `Char` by one.
 
 ```cpp
 obj = 'e';
-("obj: %s\n" % obj.to_string()).print();
-("--obj: %s\n" % (--obj).to_string()).print();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
+("--obj: %s\n" % $(--obj)).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: e

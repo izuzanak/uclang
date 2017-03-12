@@ -54,7 +54,7 @@ Creates default object of class `Tree`.
 
 ```cpp
 obj = new Tree();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: []
@@ -74,7 +74,7 @@ Creates object of class `Tree` containing elements retrieved from method paramet
 
 ```cpp
 obj = new Tree([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -102,9 +102,9 @@ Assignment operator `=`. Object of class `Tree` is replaced by method parameter.
 
 ```cpp
 obj = new Tree([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -129,9 +129,9 @@ Append operator `+=`. Append elements retrieved from method parameter to object 
 
 ```cpp
 obj = new Tree([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj += [1,2,6,7,8];
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -217,8 +217,8 @@ Concatenation operator `+`. Creates object of class `Tree` containing elements o
 ```cpp
 obj = new Tree([1,2,3,4,5]);
 res = obj + [1,2,3,4,5];
-("obj: %s\n" % obj.to_string()).print();
-("res: %s\n" % res.to_string()).print();
+("obj: %s\n" % $obj).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -244,10 +244,10 @@ Retrieve element from object of class `Tree` stored at requested index position.
 
 ```cpp
 obj = new Tree([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
-("obj[0]: %s\n" % obj[0].to_string()).print();
-("obj[2]: %s\n" % obj[2].to_string()).print();
-("obj[3]: %s\n" % obj[3].to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj[0]: %s\n" % $obj[0]).print();
+("obj[2]: %s\n" % $obj[2]).print();
+("obj[3]: %s\n" % $obj[3]).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -274,9 +274,9 @@ Release all elements stored in object of class `Tree`.
 
 ```cpp
 obj = new Tree([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.clear();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -297,10 +297,10 @@ Retrieve list of elements contained in object of class `Tree`. Elements are retu
 
 ```cpp
 obj = new Tree([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 items = obj.items();
-("type items: %s\n" % (type items).to_string()).print();
-("items: %s\n" % items.to_string()).print();
+("type items: %s\n" % $(type items)).print();
+("items: %s\n" % $items).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -326,11 +326,11 @@ Insert method parameter to object of class `Tree`.
 
 ```cpp
 obj = new Tree([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.insert(5);
 obj.insert(6);
 obj.insert(7);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -355,10 +355,10 @@ Remove element from object of class `Tree` stored at position given by method pa
 
 ```cpp
 obj = new Tree([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.remove(0);
 obj.remove(2);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -384,9 +384,9 @@ From object of class `Tree`, retrieve index of first element equal to method par
 
 ```cpp
 obj = new Tree([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
-("obj.get_idx(2): %s\n" % obj.get_idx(2).to_string()).print();
-("obj.get_idx(100): %s\n" % obj.get_idx(100).to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj.get_idx(2): %s\n" % $obj.get_idx(2)).print();
+("obj.get_idx(100): %s\n" % $obj.get_idx(100)).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -412,9 +412,9 @@ From object of class `Tree`, retrieve indexes of elements that are equal to meth
 
 ```cpp
 obj = new Tree([1,2,2,4,2,5]);
-("obj: %s\n" % obj.to_string()).print();
-("obj.get_idxs(2): %s\n" % obj.get_idxs(2).to_string()).print();
-("obj.get_idxs(100): %s\n" % obj.get_idxs(100).to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj.get_idxs(2): %s\n" % $obj.get_idxs(2)).print();
+("obj.get_idxs(100): %s\n" % $obj.get_idxs(100)).print();
 ```
 ```
 obj: [1,2,2,2,4,5]
@@ -502,10 +502,10 @@ Retrieve element from object of class `Tree` stored at requested index position.
 
 ```cpp
 obj = new Tree([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.first_idx();
 do {
-  ("obj.item(%d): %s\n" % [idx,obj.item(idx).to_string()]).print();
+  ("obj.item(%d): %s\n" % [idx,$obj.item(idx)]).print();
   idx = obj.next_idx(idx);
 } while(Blank != idx);
 ```
@@ -533,9 +533,9 @@ Retrieve index of first element in object of class `Tree`.
 
 ```cpp
 obj = new Tree([1,2,3,4,5]);
-("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
+("obj.first_idx: %s\n" % $obj.first_idx()).print();
 obj.clear();
-("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
+("obj.first_idx: %s\n" % $obj.first_idx()).print();
 ```
 ```
 obj.first_idx: 0
@@ -557,9 +557,9 @@ Retrieve index of last element in object of class `Tree`.
 
 ```cpp
 obj = new Tree([1,2,3,4,5]);
-("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
+("obj.last_idx: %s\n" % $obj.last_idx()).print();
 obj.clear();
-("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
+("obj.last_idx: %s\n" % $obj.last_idx()).print();
 ```
 ```
 obj.last_idx: 5
@@ -585,10 +585,10 @@ From object of class `Tree` retrieve index of element following element identifi
 
 ```cpp
 obj = new Tree([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.first_idx();
 do {
-  ("idx: %s\n" % idx.to_string()).print();
+  ("idx: %s\n" % $idx).print();
   idx = obj.next_idx(idx);
 } while(Blank != idx);
 ```
@@ -620,10 +620,10 @@ From object of class `Tree` retrieve index of element preceding element identifi
 
 ```cpp
 obj = new Tree([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.last_idx();
 do {
-  ("idx: %s\n" % idx.to_string()).print();
+  ("idx: %s\n" % $idx).print();
   idx = obj.prev_idx(idx);
 } while(Blank != idx);
 ```

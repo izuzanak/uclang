@@ -325,7 +325,7 @@ class Main
 {
   public method(a_p0,a_p1)
   {
-    (\"method: %%s\\n\" %% [a_p0,a_p1].to_string()).print();
+    (\"method: %%s\\n\" %% $[a_p0,a_p1]).print();
     return a_p0 + a_p1;
   }
 
@@ -917,7 +917,7 @@ obj = String.create(%s);
 "* Object of class %s containing one or more objects of class %s." % [doc_class_ref("Array"),doc_class_ref("String")],"
 %s
 (\"obj: %%s\\n\" %% obj).print();
-(\"res: %%s\\n\" %% obj.split(\" \").to_string()).print();
+(\"res: %%s\\n\" %% $obj.split(\" \")).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
         "join#1", new MethodDescr
@@ -928,11 +928,11 @@ concatenated to one string, with object of class `%s` used as separator." % m_ta
 ["Iterable type."],
 "* Object of class %s." % doc_class_ref("String"),"
 obj = %s;
-(\"res: %%s\\n\" %% \" \".join(obj).to_string()).print();
+(\"res: %%s\\n\" %% $\" \".join(obj)).print();
 obj = %s;
-(\"res: %%s\\n\" %% \" \".join(obj).to_string()).print();
+(\"res: %%s\\n\" %% $\" \".join(obj)).print();
 obj = [\"numbers:\",1,2,3,4,\"end\"];
-(\"res: %%s\\n\" %% \" \".join(obj).to_string()).print();
+(\"res: %%s\\n\" %% $\" \".join(obj)).print();
 " % [get_property("Array","create_example"),get_property("Dict","create_example")]
 ),/*}}}*/
         "head#1", new MethodDescr
@@ -979,7 +979,7 @@ obj = [\"numbers:\",1,2,3,4,\"end\"];
 %s
 (\"obj.get_idx(\\\"Hi\\\"): %%d\\n\" %% obj.get_idx(\"Hi\")).print();
 (\"obj.get_idx(\\\"world\\\"): %%d\\n\" %% obj.get_idx(\"world\")).print();
-(\"obj.get_idx(\\\"Test\\\"): %%s\\n\" %% obj.get_idx(\"Test\").to_string()).print();
+(\"obj.get_idx(\\\"Test\\\"): %%s\\n\" %% $obj.get_idx(\"Test\")).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
         "get_idxs#1", new MethodDescr
@@ -988,9 +988,9 @@ obj = [\"numbers:\",1,2,3,4,\"end\"];
 ["Object of class %s." % doc_class_ref("String")],
 "* Object of class %s, containing all positions of substring in original object of class `%s`." % [doc_class_ref("Array"),m_target_name],"
 %s
-(\"obj.get_idxs(\\\"one\\\"): %%s\\n\" %% obj.get_idxs(\"one\").to_string()).print();
-(\"obj.get_idxs(\\\"Test\\\"): %%s\\n\" %% obj.get_idxs(\"Test\").to_string()).print();
-(\"obj.get_idxs(\\\"e\\\"): %%s\\n\" %% obj.get_idxs(\"e\").to_string()).print();
+(\"obj.get_idxs(\\\"one\\\"): %%s\\n\" %% $obj.get_idxs(\"one\")).print();
+(\"obj.get_idxs(\\\"Test\\\"): %%s\\n\" %% $obj.get_idxs(\"Test\")).print();
+(\"obj.get_idxs(\\\"e\\\"): %%s\\n\" %% $obj.get_idxs(\"e\")).print();
 " % get_code(m_target_class,"obj","create_repeated")
 ),/*}}}*/
         "replace#2", new MethodDescr
@@ -1021,9 +1021,9 @@ a = b = c = 0;
 obj.push_ref(a);
 obj.push_ref(b);
 obj.push_ref(c);
-(\"a,b,c: %s\\n\" % [a,b,c].to_string()).print();
+(\"a,b,c: %s\\n\" % $[a,b,c]).print();
 obj <= [1,2,3];
-(\"a,b,c: %s\\n\" % [a,b,c].to_string()).print();
+(\"a,b,c: %s\\n\" % $[a,b,c]).print();
 "
 ),/*}}}*/
         "resize#1", new MethodDescr
@@ -1033,9 +1033,9 @@ elements are initialized to objects of class %s." % [m_target_name,doc_class_ref
 ["Object of class convertible to %s." % doc_class_ref("Integer")],
 "* Object of class %s." % doc_class_ref("Blank"),"
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 obj.resize(8);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % get_code(m_target_class,"obj","create_example")
 )/*}}}*/
       ]);/*}}}*/
@@ -1103,7 +1103,7 @@ obj.resize(8);
 ["Any type."],
 new Blank(),"
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
         "throw#0", new MethodDescr
@@ -1116,7 +1116,7 @@ try
 }
 catch (exc)
 {
-  (\"exc: %%s\\n\" %% exc.to_string()).print();
+  (\"exc: %%s\\n\" %% $exc).print();
 }
 " % get_property(m_target_name,"create_example")
 ),/*}}}*/
@@ -1125,7 +1125,7 @@ catch (exc)
 "Retrieve object of class %s representing type of exception." % doc_class_ref("Error"),
 [],"* Object of class %s." % doc_class_ref("Error"),"
 %s
-(\"obj.get_type(): %%s\\n\" %% obj.get_type().to_string()).print();
+(\"obj.get_type(): %%s\\n\" %% $obj.get_type()).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
         "get_value#0", new MethodDescr
@@ -1143,7 +1143,7 @@ catch (exc)
 * Object of class %s otherwise." % [doc_class_ref("String"),doc_class_ref("Blank")],"
 try {
   %s
-  (\"obj.get_file_name(): %%s\\n\" %% obj.get_file_name().to_string()).print();
+  (\"obj.get_file_name(): %%s\\n\" %% $obj.get_file_name()).print();
   obj.throw();
 }
 catch (exc)
@@ -1159,7 +1159,7 @@ catch (exc)
 * Object of class %s otherwise." % [doc_class_ref("Integer"),doc_class_ref("Blank")],"
 try {
   %s
-  (\"obj.get_line(): %%s\\n\" %% obj.get_line().to_string()).print();
+  (\"obj.get_line(): %%s\\n\" %% $obj.get_line()).print();
   obj.throw();
 }
 catch (exc)
@@ -1195,7 +1195,7 @@ catch (exc)
 ["Any type."],
 new Blank(),"
 obj = new Type(\"Hello world\");
-(\"obj: %s\\n\" % obj.to_string()).print();
+(\"obj: %s\\n\" % $obj).print();
 "
 )/*}}}*/
       ]);/*}}}*/
@@ -1224,7 +1224,7 @@ m_target_name,
 [],"* Object of class %s if object of class `%s` was successfully locked.
 * Object of class %s otherwise." % [doc_class_ref("Blank"),m_target_name,doc_class_ref("Error")],"
 %s
-(\"obj.lock(): %%s\\n\" %% obj.lock().to_string()).print();
+(\"obj.lock(): %%s\\n\" %% $obj.lock()).print();
 obj.unlock();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
@@ -1236,7 +1236,7 @@ locked, method do not blocks and returns object of class %s immediately." %
 [],"* Object of class %s if object of class `%s` was successfully locked.
 * Object of class %s otherwise." % [doc_class_ref("Blank"),m_target_name,doc_class_ref("Error")],"
 %s
-(\"obj.try_lock(): %%s\\n\" %% obj.try_lock().to_string()).print();
+(\"obj.try_lock(): %%s\\n\" %% $obj.try_lock()).print();
 obj.unlock();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
@@ -1247,7 +1247,7 @@ obj.unlock();
 * Object of class %s otherwise." % [doc_class_ref("Blank"),m_target_name,doc_class_ref("Error")],"
 %s
 obj.lock();
-(\"obj.unlock(): %%s\\n\" %% obj.unlock().to_string()).print();
+(\"obj.unlock(): %%s\\n\" %% $obj.unlock()).print();
 " % get_code(m_target_class,"obj","create_example")
 )/*}}}*/
       ]);/*}}}*/
@@ -1275,7 +1275,7 @@ obj.lock();
 [],"* Value returned by entry method of successfully joined thread.
 * Object of class %s if thread was not joined." % doc_class_ref("Error"),"
 %s
-(\"obj.join(): %%s\\n\" %% obj.join().to_string()).print();
+(\"obj.join(): %%s\\n\" %% $obj.join()).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
         "try_join#0", new MethodDescr
@@ -1285,9 +1285,9 @@ immediately even if thread was not yet terminated." % m_target_name,
 [],"* Value returned by entry method of successfully joined thread.
 * Object of class %s if thread was not joined." % doc_class_ref("Error"),"
 %s
-(\"obj.try_join(): %%s\\n\" %% obj.try_join().to_string()).print();
+(\"obj.try_join(): %%s\\n\" %% $obj.try_join()).print();
 Sys.sleep(100);
-(\"obj.try_join(): %%s\\n\" %% obj.try_join().to_string()).print();
+(\"obj.try_join(): %%s\\n\" %% $obj.try_join()).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
         "detach#0", new MethodDescr
@@ -1298,14 +1298,14 @@ joining." % m_target_name,
 [],"* Return object of class %s if thread was successfully detached.
 * Object of class %s otherwise." % [doc_class_ref("Blank"),doc_class_ref("Error")],"
 %s
-(\"obj.detach(): %%s\\n\" %% obj.detach().to_string()).print();
+(\"obj.detach(): %%s\\n\" %% $obj.detach()).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
         "yield#0", new MethodDescr
 (/*{{{*/
 "Method suspend thread execution in favor of other threads running in system.",
 [],"* Object of class %s." % doc_class_ref("Blank"),"
-(\"Thread.yield(): %s\\n\" % Thread.yield().to_string()).print();
+(\"Thread.yield(): %s\\n\" % $Thread.yield()).print();
 "
 )/*}}}*/
       ]);/*}}}*/
@@ -1322,7 +1322,7 @@ of object given as first parameter, with name given by second parameter,
 and accepting count of parameters given by third parameter." % m_target_name,
 ["Any type.","Object of class %s" % doc_class_ref("String"),"Type convertible to integer."],"* Value returned by called method.","
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
         "call#1", new MethodDescr
@@ -1333,7 +1333,7 @@ method parameter." % [m_target_name,doc_class_ref("Array")],
 ["Object of class %s." % doc_class_ref("Array")],"* Value returned by called method.","
 %s
 res = obj.call([1,2]);
-(\"res: %%s\\n\" %% res.to_string()).print();
+(\"res: %%s\\n\" %% $res).print();
 " % get_code(m_target_class,"obj","create_example")
 )/*}}}*/
       ]);/*}}}*/
@@ -1349,10 +1349,10 @@ res = obj.call([1,2]);
 parameter." % m_target_name,
 ["Any type."],"* Object of class `Blank`.","
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 obj.remove(2);
 obj.remove(4);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
         "operator_binary_minus_equal#1", new MethodDescr
@@ -1365,7 +1365,7 @@ object of class `%s`. Value of variable is set to result object of class
 %s
 %s
 obj_0 -= obj_1;
-(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
+(\"obj_0: %%s\\n\" %% $obj_0).print();
 " % [get_code(m_target_class,"obj_0","create_example"),
      get_code(m_target_class,"obj_1","create_compare")]
 ),/*}}}*/
@@ -1378,7 +1378,7 @@ set to result object of class `%s`." % [m_target_name,m_target_name,m_target_nam
 %s
 %s
 obj_0 &= obj_1;
-(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
+(\"obj_0: %%s\\n\" %% $obj_0).print();
 " % [get_code(m_target_class,"obj_0","create_example"),
      get_code(m_target_class,"obj_1","create_compare")]
 ),/*}}}*/
@@ -1391,7 +1391,7 @@ object of class `%s`." % [m_target_name,m_target_name,m_target_name],
 %s
 %s
 obj_0 |= obj_1;
-(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
+(\"obj_0: %%s\\n\" %% $obj_0).print();
 " % [get_code(m_target_class,"obj_0","create_example"),
      get_code(m_target_class,"obj_1","create_compare")]
 ),/*}}}*/
@@ -1405,7 +1405,7 @@ exactly in one of them. Value of variable is set to result object of class
 %s
 %s
 obj_0 ^= obj_1;
-(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
+(\"obj_0: %%s\\n\" %% $obj_0).print();
 " % [get_code(m_target_class,"obj_0","create_example"),
      get_code(m_target_class,"obj_1","create_compare")]
 ),/*}}}*/
@@ -1417,7 +1417,7 @@ elements contained in both source objects of class `%s`." % [m_target_name,m_tar
 %s
 %s
 res = obj_0 & obj_1;
-(\"res: %%s\\n\" %% res.to_string()).print();
+(\"res: %%s\\n\" %% $res).print();
 " % [get_code(m_target_class,"obj_0","create_example"),
      get_code(m_target_class,"obj_1","create_compare")]
 ),/*}}}*/
@@ -1429,7 +1429,7 @@ both source objects of class `%s`." % [m_target_name,m_target_name],
 %s
 %s
 res = obj_0 | obj_1;
-(\"res: %%s\\n\" %% res.to_string()).print();
+(\"res: %%s\\n\" %% $res).print();
 " % [get_code(m_target_class,"obj_0","create_example"),
      get_code(m_target_class,"obj_1","create_compare")]
 ),/*}}}*/
@@ -1442,7 +1442,7 @@ exactly in one of them." % [m_target_name,m_target_name],
 %s
 %s
 res = obj_0 ^ obj_1;
-(\"res: %%s\\n\" %% res.to_string()).print();
+(\"res: %%s\\n\" %% $res).print();
 " % [get_code(m_target_class,"obj_0","create_example"),
      get_code(m_target_class,"obj_1","create_compare")]
 ),/*}}}*/
@@ -1456,8 +1456,8 @@ parameter is subset of object of class `%s`." % [m_target_name,m_target_name],
   * `1` - method parameter is subset of object." % doc_class_ref("Integer"),"
 %s
 obj_1 = new Set(obj_0[0:2:]);
-(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
-(\"obj_1: %%s\\n\" %% obj_1.to_string()).print();
+(\"obj_0: %%s\\n\" %% $obj_0).print();
+(\"obj_1: %%s\\n\" %% $obj_1).print();
 (\"obj_0 >= obj_1: %%d\\n\" %% (obj_0 >= obj_1)).print();
 (\"obj_1 >= obj_0: %%d\\n\" %% (obj_1 >= obj_0)).print();
 " % get_code(m_target_class,"obj_0","create_example")
@@ -1472,8 +1472,8 @@ parameter is superset of object of class `%s`." % [m_target_name,m_target_name],
   * `1` - method parameter is superset of object." % doc_class_ref("Integer"),"
 %s
 obj_1 = new Set(obj_0[0:2:]);
-(\"obj_0: %%s\\n\" %% obj_0.to_string()).print();
-(\"obj_1: %%s\\n\" %% obj_1.to_string()).print();
+(\"obj_0: %%s\\n\" %% $obj_0).print();
+(\"obj_1: %%s\\n\" %% $obj_1).print();
 (\"obj_0 <= obj_1: %%d\\n\" %% (obj_0 <= obj_1)).print();
 (\"obj_1 <= obj_0: %%d\\n\" %% (obj_1 <= obj_0)).print();
 " % get_code(m_target_class,"obj_0","create_example")
@@ -1487,7 +1487,7 @@ class `%s`." % [m_target_name,m_target_name,m_target_name],
 %s
 %s
 res = obj_0 - obj_1;
-(\"res: %%s\\n\" %% res.to_string()).print();
+(\"res: %%s\\n\" %% $res).print();
 " % [get_code(m_target_class,"obj_0","create_example"),
      get_code(m_target_class,"obj_1","create_compare")]
 )/*}}}*/
@@ -1505,7 +1505,7 @@ parameter. Values of parameter elements represents alternating keys and values
 of new object of class `%s`." % [m_target_name,m_target_name],
 ["Iterable type."],new Blank(),"
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % get_code(m_target_class,"obj","create_example")
 )/*}}}*/
       ]);/*}}}*/
@@ -1656,7 +1656,7 @@ describing regular expressions.",
 expressions describing terminal symbols." %
 [doc_class_ref("Array"),doc_class_ref("String")]],new Blank(),"
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
         "get_source#1", new MethodDescr
@@ -1666,7 +1666,7 @@ expressions describing terminal symbols." %
 "* Object of class %s." % doc_class_ref("FaSource"),"
 fa = new FinalAutomata([\"('_'+l).('_'+l+d)*\",\"w.w*\"]);
 obj = fa.get_source(\"Hello world\");
-(\"obj: %s\\n\" % obj.to_string()).print();
+(\"obj: %s\\n\" % $obj).print();
 "
 )/*}}}*/
       ]);/*}}}*/
@@ -1685,7 +1685,7 @@ symbol was recognized, method will return object of class %s." %
 "* Object of class %s if next terminal symbol was recognized. Integer represents index in original array of regular expressions used to create object of class %s.
 * Object of class %s if next terminal symbol was not recognized." % [doc_class_ref("Integer"),doc_class_ref("FinalAtomata"),doc_class_ref("Blank")],"
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 while(Blank != (term = obj.next_terminal()))
 {
   (\"terminal: %%d\\n\" %% term).print();
@@ -1698,7 +1698,7 @@ while(Blank != (term = obj.next_terminal()))
 [],
 "* Object of class %s representing index in source string that refers to beginning of last recognized terminal symbol." % doc_class_ref("Integer"),"
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 while(Blank != (term = obj.next_terminal()))
 {
   (\"obj.old_input_idx(): %%d\\n\" %% obj.old_input_idx()).print();
@@ -1711,7 +1711,7 @@ while(Blank != (term = obj.next_terminal()))
 [],
 "* Object of class %s representing index in source string referring to first character that was not yet processed by final automata." % doc_class_ref("Integer"),"
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 while(Blank != (term = obj.next_terminal()))
 {
   (\"obj.input_idx(): %%d\\n\" %% obj.input_idx()).print();
@@ -1726,7 +1726,7 @@ while(Blank != (term = obj.next_terminal()))
 "* Object of class %s if next terminal symbol was recognized. Integer represents index in original array of regular expressions used to create object of class %s.
 * Object of class %s if next terminal symbol was not recognized." % [doc_class_ref("Integer"),doc_class_ref("FinalAtomata"),doc_class_ref("Blank")],"
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 for (term <- obj)
 {
   (\"terminal: %%d\\n\" %% term).print();
@@ -1747,7 +1747,7 @@ symbols and its grammar rules." % m_target_name,
 ["Object of class %s containing description of language terminal symbols and
 its grammar rules." % doc_class_ref("String")],new Blank(),"
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
         "parse#2", new MethodDescr
@@ -1829,7 +1829,7 @@ data = Pack.pack(%s);
 "* Object of class determined by its binary representation.","
 data = Pack.pack(%s);
 result = Pack.unpack(data);
-(\"result: %%s\\n\" %% result.to_string()).print();
+(\"result: %%s\\n\" %% $result).print();
 " % get_property("Dict","create_example")
 ),/*}}}*/
         "code#2", new MethodDescr
@@ -1858,7 +1858,7 @@ array contains unused part of input binary string." % doc_class_ref("Array"),"
 format = \"bhif\";
 data = Pack.code(format,[127,32767,2147483647,1.0]);
 result = Pack.decode(format,data);
-(\"result: %s\\n\" % result.to_string()).print();
+(\"result: %s\\n\" % $result).print();
 "
 )/*}}}*/
       ]);/*}}}*/
@@ -1902,9 +1902,9 @@ transformed by given map function." % doc_class_ref("Array"),
 "Object of class %s containing elements from input iterable object
 transformed by given map function." % doc_class_ref("Array"),"
 result = Algo.map([0,1,2,1,0,2],[\"Zero\",\"One\",\"Two\"]);
-(\"result: %s\\n\" % result.to_string()).print();
+(\"result: %s\\n\" % $result).print();
 result = Algo.map([0,1,1000,1,0,1000],new Dict([0,\"Zero\",1,\"One\",1000,\"One thousand\"]));
-(\"result: %s\\n\" % result.to_string()).print();
+(\"result: %s\\n\" % $result).print();
 "
 ),/*}}}*/
         "reduce#3", new MethodDescr
@@ -1930,9 +1930,9 @@ for which filter function returns true." % doc_class_ref("Array"),
 "Object of class %s containing elements from input iterable object for which
 filter function returns true." % doc_class_ref("Array"),"
 result = Algo.filter([0,1,2,1,0,2],[0,0,1]);
-(\"result: %s\\n\" % result.to_string()).print();
+(\"result: %s\\n\" % $result).print();
 result = Algo.filter([0,1,1000,1,0,1000],new Dict([0,1,1,1,1000,0]));
-(\"result: %s\\n\" % result.to_string()).print();
+(\"result: %s\\n\" % $result).print();
 "
 ),/*}}}*/
         "zip#1", new MethodDescr
@@ -1941,7 +1941,7 @@ result = Algo.filter([0,1,1000,1,0,1000],new Dict([0,1,1,1,1000,0]));
 ["Object of class %s containing iterable objects." % doc_class_ref("Array")],
 "Object of class %s containing interleaved elements from input iterable objects." % doc_class_ref("Array"),"
 result = Algo.zip([\"Hello\",new Range(1,10)]);
-(\"result: %s\\n\" % result.to_string()).print();
+(\"result: %s\\n\" % $result).print();
 "
 )/*}}}*/
       ]);/*}}}*/
@@ -1959,9 +1959,9 @@ from input iterable object transformed by given map function." % m_target_name,
 "Object of class `%s` representing iterable containing elements from input
 iterable object transformed by given map function." % m_target_name,"
 result = Filter.map([0,1,2,1,0,2],[\"Zero\",\"One\",\"Two\"]);
-(\"result: %s\\n\" % result[::].to_string()).print();
+(\"result: %s\\n\" % $result[::]).print();
 result = Filter.map([0,1,1000,1,0,1000],new Dict([0,\"Zero\",1,\"One\",1000,\"One thousand\"]));
-(\"result: %s\\n\" % result[::].to_string()).print();
+(\"result: %s\\n\" % $result[::]).print();
 "
 ),/*}}}*/
         "filter#2", new MethodDescr
@@ -1973,9 +1973,9 @@ input iterable object for which filter function returns true." % m_target_name,
 "Object of class `%s` representing iterable containing elements from
 input iterable object for which filter function returns true." % m_target_name,"
 result = Filter.filter([0,1,2,1,0,2],[0,0,1]);
-(\"result: %s\\n\" % result[::].to_string()).print();
+(\"result: %s\\n\" % $result[::]).print();
 result = Filter.filter([0,1,1000,1,0,1000],new Dict([0,1,1,1,1000,0]));
-(\"result: %s\\n\" % result[::].to_string()).print();
+(\"result: %s\\n\" % $result[::]).print();
 "
 ),/*}}}*/
         "next_item#0", new MethodDescr
@@ -2002,8 +2002,8 @@ sequence." % m_target_name,
 ["First value in generated sequence.",
  "Last value in generated sequence."],new Blank(),"
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-(\"obj: %%s\\n\" %% obj[::].to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
+(\"obj: %%s\\n\" %% $obj[::]).print();
 " % get_code(m_target_name,"obj","create_example")
 ),/*}}}*/
         "Range#3", new MethodDescr
@@ -2015,8 +2015,8 @@ of requested sequence." % m_target_name,
  "Step value of generated sequence."],
 "","
 obj = new Range(0,-19,-2);
-(\"obj: %s\\n\" % obj.to_string()).print();
-(\"obj: %s\\n\" % obj[::].to_string()).print();
+(\"obj: %s\\n\" % $obj).print();
+(\"obj: %s\\n\" % $obj[::]).print();
 "
 ),/*}}}*/
         "next_item#0", new MethodDescr
@@ -2042,7 +2042,7 @@ while (Blank != (element = obj.next_item()))
 ["Object of class %s." % doc_class_ref("Dict")],
 "Object of class %s containing `JSON` representation of method parameter." % doc_class_ref("String"),"
 obj = Json.create(%s);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % get_property("Dict","create_example")
 ),/*}}}*/
         "create_nice#2", new MethodDescr
@@ -2054,7 +2054,7 @@ Output is formatted in Human readable format." % doc_class_ref("String"),
 "Object of class %s containing `JSON` representation of method parameter." % doc_class_ref("String"),"
 %s
 obj = Json.create_nice(dict,\"   \");
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % get_code("Dict","dict","create_example")
 ),/*}}}*/
         "parse#1", new MethodDescr
@@ -2063,7 +2063,7 @@ obj = Json.create_nice(dict,\"   \");
 ["Object of class %s containing `JSON` representation of object." % doc_class_ref("String")],
 "Object of class %s." % doc_class_ref("Dict"),"
 obj = Json.parse(\"{\\\"One\\\":1,\\\"Two\\\":2,\\\"Three\\\":3}\");
-(\"obj: %s\\n\" % obj.to_string()).print();
+(\"obj: %s\\n\" % $obj).print();
 "
 )/*}}}*/
       ]);/*}}}*/
@@ -2188,7 +2188,7 @@ obj = Json.parse(\"{\\\"One\\\":1,\\\"Two\\\":2,\\\"Three\\\":3}\");
           return check_print % [a_var_name,a_var_name];
         }
 
-        return "(\"%s: %%s\\n\" %% %s.to_string()).print();" %
+        return "(\"%s: %%s\\n\" %% $%s).print();" %
           [a_var_name,a_var_name];
       }/*}}}*/
     }
@@ -2474,7 +2474,7 @@ obj = Json.parse(\"{\\\"One\\\":1,\\\"Two\\\":2,\\\"Three\\\":3}\");
     {
       m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
 
       for (param_class <- a_param_classes)
@@ -2627,7 +2627,7 @@ obj = new %s();
                 {
                   m_meth_ex_code = ("
 obj = new %s(%s);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % [class_name,arr_code]);
                 }
               }
@@ -2670,9 +2670,9 @@ obj = new %s(%s);
               {
                 m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 obj = \"New value\";
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
               }
             }/*}}}*/
@@ -2693,9 +2693,9 @@ obj = \"New value\";
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 obj += %s;
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % [obj_code,arr_code]);
                 }
               }
@@ -3299,8 +3299,8 @@ obj_2 = obj_0;
                   m_meth_ex_code = ("
 %s
 res = obj + %s;
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-(\"res: %%s\\n\" %% res.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
+(\"res: %%s\\n\" %% $res).print();
 " % [obj_code,arr_code]);
                 }
               }
@@ -3385,9 +3385,9 @@ res = obj + %s;
               {
                 m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-(\"obj++: %%s\\n\" %% (obj++).to_string()).print();
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
+(\"obj++: %%s\\n\" %% $(obj++)).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
               }
             }/*}}}*/
@@ -3404,9 +3404,9 @@ res = obj + %s;
               {
                 m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-(\"obj--: %%s\\n\" %% (obj--).to_string()).print();
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
+(\"obj--: %%s\\n\" %% $(obj--)).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
               }
             }/*}}}*/
@@ -3423,9 +3423,9 @@ res = obj + %s;
               {
                 m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-(\"++obj: %%s\\n\" %% (++obj).to_string()).print();
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
+(\"++obj: %%s\\n\" %% $(++obj)).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
               }
             }/*}}}*/
@@ -3442,9 +3442,9 @@ res = obj + %s;
               {
                 m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-(\"--obj: %%s\\n\" %% (--obj).to_string()).print();
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
+(\"--obj: %%s\\n\" %% $(--obj)).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
               }
             }/*}}}*/
@@ -3517,13 +3517,13 @@ obj = !obj;
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % [obj_code]);
                   
                   for (idx <- iter_indexes)
                   {
                     idx_str = type String == type idx ? "\"%s\"" % idx : idx.to_string();
-                    m_meth_ex_code += ("(\"obj[%s]: %%s\\n\" %% obj[%s].to_string()).print();
+                    m_meth_ex_code += ("(\"obj[%s]: %%s\\n\" %% $obj[%s]).print();
 " % [idx_str.replace("\"","\\\""),idx_str]);
                   }
                 }
@@ -3561,9 +3561,9 @@ obj = !obj;
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 obj.clear();
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
                 }
               }
@@ -3583,10 +3583,10 @@ obj.clear();
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 keys = obj.keys();
-(\"type keys: %%s\\n\" %% (type keys).to_string()).print();
-(\"keys: %%s\\n\" %% keys.to_string()).print();
+(\"type keys: %%s\\n\" %% $(type keys)).print();
+(\"keys: %%s\\n\" %% $keys).print();
 " % obj_code);
                 }
               }
@@ -3606,10 +3606,10 @@ keys = obj.keys();
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 items = obj.items();
-(\"type items: %%s\\n\" %% (type items).to_string()).print();
-(\"items: %%s\\n\" %% items.to_string()).print();
+(\"type items: %%s\\n\" %% $(type items)).print();
+(\"items: %%s\\n\" %% $items).print();
 " % obj_code);
                 }
               }
@@ -3630,10 +3630,10 @@ items = obj.items();
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 obj.push(6);
 obj.push(7);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
                 }
               }
@@ -3656,9 +3656,9 @@ obj.push(7);
 %s
 value = 0;
 obj.push_ref(value);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 value = \"Hello world!\";
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
                 }
               }
@@ -3679,11 +3679,11 @@ value = \"Hello world!\";
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 obj.insert(5);
 obj.insert(6);
 obj.insert(7);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
                 }
               }
@@ -3706,9 +3706,9 @@ obj.insert(7);
 %s
 value = 0;
 obj.insert_ref(value);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 value = \"Hello world!\";
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
                 }
               }
@@ -3729,11 +3729,11 @@ value = \"Hello world!\";
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 (\"obj.append(1): %%d\\n\" %% obj.append(1)).print();
 (\"obj.append(2): %%d\\n\" %% obj.append(2)).print();
 (\"obj.append(3): %%d\\n\" %% obj.append(3)).print();
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
                 }
               }
@@ -3756,9 +3756,9 @@ value = \"Hello world!\";
 %s
 value = 0;
 (\"obj.append_ref(value): %%d\\n\" %% obj.append_ref(value)).print();
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 value = \"Hello world!\";
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
                 }
               }
@@ -3779,11 +3779,11 @@ value = \"Hello world!\";
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 (\"obj.prepend(1): %%d\\n\" %% obj.prepend(1)).print();
 (\"obj.prepend(2): %%d\\n\" %% obj.prepend(2)).print();
 (\"obj.prepend(3): %%d\\n\" %% obj.prepend(3)).print();
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
                 }
               }
@@ -3806,9 +3806,9 @@ value = \"Hello world!\";
 %s
 value = 0;
 (\"obj.prepend_ref(value): %%d\\n\" %% obj.prepend_ref(value)).print();
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 value = \"Hello world!\";
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
                 }
               }
@@ -3831,11 +3831,11 @@ value = \"Hello world!\";
                   m_meth_ex_code = ("
 %s
 idx = obj.get_idx(2);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 obj.insert_before(idx,4);
 obj.insert_before(idx,5);
 obj.insert_before(idx,6);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
                 }
               }
@@ -3859,11 +3859,11 @@ obj.insert_before(idx,6);
 %s
 value = 0;
 idx = obj.get_idx(2);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 obj.insert_before_ref(idx,value);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 value = \"Hello world!\";
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
                 }
               }
@@ -3886,11 +3886,11 @@ value = \"Hello world!\";
                   m_meth_ex_code = ("
 %s
 idx = obj.get_idx(2);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 obj.insert_after(idx,4);
 obj.insert_after(idx,5);
 obj.insert_after(idx,6);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
                 }
               }
@@ -3914,11 +3914,11 @@ obj.insert_after(idx,6);
 %s
 value = 0;
 idx = obj.get_idx(2);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 obj.insert_after_ref(idx,value);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 value = \"Hello world!\";
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
                 }
               }
@@ -3938,10 +3938,10 @@ value = \"Hello world!\";
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-(\"obj.pop(): %%s\\n\" %% obj.pop().to_string()).print();
-(\"obj.pop(): %%s\\n\" %% obj.pop().to_string()).print();
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
+(\"obj.pop(): %%s\\n\" %% $obj.pop()).print();
+(\"obj.pop(): %%s\\n\" %% $obj.pop()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
                 }
               }
@@ -3961,9 +3961,9 @@ value = \"Hello world!\";
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-(\"obj.last(): %%s\\n\" %% obj.last().to_string()).print();
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
+(\"obj.last(): %%s\\n\" %% $obj.last()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
                 }
               }
@@ -3983,10 +3983,10 @@ value = \"Hello world!\";
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-(\"obj.next(): %%s\\n\" %% obj.next().to_string()).print();
-(\"obj.next(): %%s\\n\" %% obj.next().to_string()).print();
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
+(\"obj.next(): %%s\\n\" %% $obj.next()).print();
+(\"obj.next(): %%s\\n\" %% $obj.next()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
                 }
               }
@@ -4008,10 +4008,10 @@ value = \"Hello world!\";
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 obj.remove(%d);
 obj.remove(%d);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % [obj_code,iter_indexes[0],iter_indexes[1]]);
                 }
               }
@@ -4032,9 +4032,9 @@ obj.remove(%d);
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 obj.fill(0);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
                 }
               }
@@ -4058,7 +4058,7 @@ obj.fill(0);
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 (\"obj.has_idx(2): %%d\\n\" %% obj.has_idx(2)).print();
 (\"obj.has_idx(100): %%d\\n\" %% obj.has_idx(100)).print();
 " % obj_code);
@@ -4082,9 +4082,9 @@ obj.fill(0);
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-(\"obj.get_idx(2): %%s\\n\" %% obj.get_idx(2).to_string()).print();
-(\"obj.get_idx(100): %%s\\n\" %% obj.get_idx(100).to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
+(\"obj.get_idx(2): %%s\\n\" %% $obj.get_idx(2)).print();
+(\"obj.get_idx(100): %%s\\n\" %% $obj.get_idx(100)).print();
 " % obj_code);
                 }
               }
@@ -4105,9 +4105,9 @@ obj.fill(0);
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
-(\"obj.get_idxs(2): %%s\\n\" %% obj.get_idxs(2).to_string()).print();
-(\"obj.get_idxs(100): %%s\\n\" %% obj.get_idxs(100).to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
+(\"obj.get_idxs(2): %%s\\n\" %% $obj.get_idxs(2)).print();
+(\"obj.get_idxs(100): %%s\\n\" %% $obj.get_idxs(100)).print();
 " % obj_code);
                 }
               }
@@ -4131,9 +4131,9 @@ obj.fill(0);
 %s
 value = 0;
 obj.store_ref(\"Value\",value);
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 value = \"Hello world!\";
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
                 }
               }
@@ -4157,7 +4157,7 @@ value = \"Hello world!\";
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 (\"obj.has_key(\\\"Two\\\"): %%d\\n\" %% obj.has_key(\"Two\")).print();
 (\"obj.has_key(\\\"Three\\\"): %%d\\n\" %% obj.has_key(\"Three\")).print();
 (\"obj.has_key(\\\"Four\\\"): %%d\\n\" %% obj.has_key(\"Four\")).print();
@@ -4181,9 +4181,9 @@ value = \"Hello world!\";
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 obj.remove_key(\"Two\");
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 " % obj_code);
                 }
               }
@@ -4204,20 +4204,20 @@ obj.remove_key(\"Two\");
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj.first_key(): %%s\\n\" %% obj.first_key().to_string()).print();
+(\"obj.first_key(): %%s\\n\" %% $obj.first_key()).print();
 " % obj_code);
 
                   if (Blank != (iter_remove_key_code = get_property(class_name,"iter_remove_key")))
                   {
                     m_meth_ex_code += ("%s;
-(\"obj.first_key(): %%s\\n\" %% obj.first_key().to_string()).print();
+(\"obj.first_key(): %%s\\n\" %% $obj.first_key()).print();
 ") % (iter_remove_key_code % ["obj","obj.first_key()"]);
 
                   }
                   if (Blank != (clear_code = get_property(class_name,"cont_clear")))
                   {
                     m_meth_ex_code += ("%s;
-(\"obj.first_key(): %%s\\n\" %% obj.first_key().to_string()).print();
+(\"obj.first_key(): %%s\\n\" %% $obj.first_key()).print();
 ") % (clear_code % "obj");
                   }
                 }
@@ -4239,20 +4239,20 @@ obj.remove_key(\"Two\");
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj.last_key(): %%s\\n\" %% obj.last_key().to_string()).print();
+(\"obj.last_key(): %%s\\n\" %% $obj.last_key()).print();
 " % obj_code);
 
                   if (Blank != (iter_remove_key_code = get_property(class_name,"iter_remove_key")))
                   {
                     m_meth_ex_code += ("%s;
-(\"obj.last_key(): %%s\\n\" %% obj.last_key().to_string()).print();
+(\"obj.last_key(): %%s\\n\" %% $obj.last_key()).print();
 ") % (iter_remove_key_code % ["obj","obj.last_key()"]);
                   }
 
                   if (Blank != (clear_code = get_property(class_name,"cont_clear")))
                   {
                     m_meth_ex_code += ("%s;
-(\"obj.last_key(): %%s\\n\" %% obj.last_key().to_string()).print();
+(\"obj.last_key(): %%s\\n\" %% $obj.last_key()).print();
 ") % (clear_code % "obj");
                   }
                 }
@@ -4276,10 +4276,10 @@ obj.remove_key(\"Two\");
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 key = %s;
 do {
-  (\"key: %%s\\n\" %% key.to_string()).print();
+  (\"key: %%s\\n\" %% $key).print();
   key = obj.next_key(key);
 } while(Blank != key);
 " % [obj_code,iter_first_key_code % "obj"]);
@@ -4304,10 +4304,10 @@ do {
                 {
                   m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 key = %s;
 do {
-  (\"key: %%s\\n\" %% key.to_string()).print();
+  (\"key: %%s\\n\" %% $key).print();
   key = obj.prev_key(key);
 } while(Blank != key);
 " % [obj_code,iter_last_key_code % "obj"]);
@@ -4327,9 +4327,9 @@ do {
 
                 m_meth_ex_code = ("
 obj = new Dict([1.0,\"One\",2.0,\"Two\",3.0,\"Three\"]);
-(\"obj.lee_key(0.6): %s\\n\" % obj.lee_key(0.6).to_string()).print();
-(\"obj.lee_key(1.5): %s\\n\" % obj.lee_key(1.5).to_string()).print();
-(\"obj.lee_key(2.1): %s\\n\" % obj.lee_key(2.1).to_string()).print();
+(\"obj.lee_key(0.6): %s\\n\" % $obj.lee_key(0.6)).print();
+(\"obj.lee_key(1.5): %s\\n\" % $obj.lee_key(1.5)).print();
+(\"obj.lee_key(2.1): %s\\n\" % $obj.lee_key(2.1)).print();
 ");
               }
             }/*}}}*/
@@ -4346,9 +4346,9 @@ obj = new Dict([1.0,\"One\",2.0,\"Two\",3.0,\"Three\"]);
 
                 m_meth_ex_code = ("
 obj = new Dict([1.0,\"One\",2.0,\"Two\",3.0,\"Three\"]);
-(\"obj.gre_key(1.5): %s\\n\" % obj.gre_key(1.5).to_string()).print();
-(\"obj.gre_key(2.1): %s\\n\" % obj.gre_key(2.1).to_string()).print();
-(\"obj.gre_key(3.2): %s\\n\" % obj.gre_key(3.2).to_string()).print();
+(\"obj.gre_key(1.5): %s\\n\" % $obj.gre_key(1.5)).print();
+(\"obj.gre_key(2.1): %s\\n\" % $obj.gre_key(2.1)).print();
+(\"obj.gre_key(3.2): %s\\n\" % $obj.gre_key(3.2)).print();
 ");
               }
             }/*}}}*/
@@ -4442,10 +4442,10 @@ obj = new Dict([1.0,\"One\",2.0,\"Two\",3.0,\"Three\"]);
               {
                 m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 idx = %s;
 do {
-  (\"obj.item(%%d): %%s\\n\" %% [idx,obj.item(idx).to_string()]).print();
+  (\"obj.item(%%d): %%s\\n\" %% [idx,$obj.item(idx)]).print();
   idx = %s;
 } while(Blank != idx);
 " % [obj_code,iter_first_idx_code % "obj",iter_next_idx_code % ["obj","idx"]]);
@@ -4467,20 +4467,20 @@ do {
               {
                 m_meth_ex_code = ("
 %s
-(\"obj.first_idx: %%s\\n\" %% obj.first_idx().to_string()).print();
+(\"obj.first_idx: %%s\\n\" %% $obj.first_idx()).print();
 " % obj_code);
 
                 if (Blank != (cont_remove_first_code = get_property(class_name,"cont_remove_first")))
                 {
                   m_meth_ex_code += ("%s;
-(\"obj.first_idx: %%s\\n\" %% obj.first_idx().to_string()).print();
+(\"obj.first_idx: %%s\\n\" %% $obj.first_idx()).print();
 ") % (cont_remove_first_code % "obj");
                 }
 
                 if (Blank != (clear_code = get_property(class_name,"cont_clear")))
                 {
                   m_meth_ex_code += ("%s;
-(\"obj.first_idx: %%s\\n\" %% obj.first_idx().to_string()).print();
+(\"obj.first_idx: %%s\\n\" %% $obj.first_idx()).print();
 ") % (clear_code % "obj");
                 }
               }
@@ -4501,20 +4501,20 @@ do {
               {
                 m_meth_ex_code = ("
 %s
-(\"obj.last_idx: %%s\\n\" %% obj.last_idx().to_string()).print();
+(\"obj.last_idx: %%s\\n\" %% $obj.last_idx()).print();
 " % obj_code);
 
                 if (Blank != (cont_remove_last_code = get_property(class_name,"cont_remove_last")))
                 {
                   m_meth_ex_code += ("%s;
-(\"obj.last_idx: %%s\\n\" %% obj.last_idx().to_string()).print();
+(\"obj.last_idx: %%s\\n\" %% $obj.last_idx()).print();
 ") % (cont_remove_last_code % "obj");
                 }
 
                 if (Blank != (clear_code = get_property(class_name,"cont_clear")))
                 {
                   m_meth_ex_code += ("%s;
-(\"obj.last_idx: %%s\\n\" %% obj.last_idx().to_string()).print();
+(\"obj.last_idx: %%s\\n\" %% $obj.last_idx()).print();
 ") % (clear_code % "obj");
                 }
               }
@@ -4537,10 +4537,10 @@ do {
               {
                 m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 idx = %s;
 do {
-  (\"idx: %%s\\n\" %% idx.to_string()).print();
+  (\"idx: %%s\\n\" %% $idx).print();
   idx = obj.next_idx(idx);
 } while(Blank != idx);
 " % [obj_code,iter_first_idx_code % "obj"]);
@@ -4564,10 +4564,10 @@ do {
               {
                 m_meth_ex_code = ("
 %s
-(\"obj: %%s\\n\" %% obj.to_string()).print();
+(\"obj: %%s\\n\" %% $obj).print();
 idx = %s;
 do {
-  (\"idx: %%s\\n\" %% idx.to_string()).print();
+  (\"idx: %%s\\n\" %% $idx).print();
   idx = obj.prev_idx(idx);
 } while(Blank != idx);
 " % [obj_code,iter_last_idx_code % "obj"]);

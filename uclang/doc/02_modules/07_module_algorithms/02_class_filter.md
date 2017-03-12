@@ -41,9 +41,9 @@ Assignment operator `=`. Object of class `Filter` is replaced by method paramete
 
 ```cpp
 obj = Filter.map([0,1,2],["Zero","One","Two"]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: Filter
@@ -75,9 +75,9 @@ iterable object transformed by given map function.
 
 ```cpp
 result = Filter.map([0,1,2,1,0,2],["Zero","One","Two"]);
-("result: %s\n" % result[::].to_string()).print();
+("result: %s\n" % $result[::]).print();
 result = Filter.map([0,1,1000,1,0,1000],new Dict([0,"Zero",1,"One",1000,"One thousand"]));
-("result: %s\n" % result[::].to_string()).print();
+("result: %s\n" % $result[::]).print();
 ```
 ```
 result: [Zero,One,Two,One,Zero,Two]
@@ -105,9 +105,9 @@ input iterable object for which filter function returns true.
 
 ```cpp
 result = Filter.filter([0,1,2,1,0,2],[0,0,1]);
-("result: %s\n" % result[::].to_string()).print();
+("result: %s\n" % $result[::]).print();
 result = Filter.filter([0,1,1000,1,0,1000],new Dict([0,1,1,1,1000,0]));
-("result: %s\n" % result[::].to_string()).print();
+("result: %s\n" % $result[::]).print();
 ```
 ```
 result: [2,2]

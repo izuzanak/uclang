@@ -49,7 +49,7 @@ obj = new FinalAutomata(
   "('_'+l).('_'+l+d)*",
   "w.w*"
 ]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: FinalAutomata
@@ -84,9 +84,9 @@ obj = new FinalAutomata(
   "('_'+l).('_'+l+d)*",
   "w.w*"
 ]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: FinalAutomata
@@ -116,7 +116,7 @@ Creates object of class `FaSource` that can be used for retrieval of terminal sy
 ```cpp
 fa = new FinalAutomata(["('_'+l).('_'+l+d)*","w.w*"]);
 obj = fa.get_source("Hello world");
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: FaSource

@@ -57,7 +57,7 @@ Creates default object of class `String`.
 
 ```cpp
 obj = new String();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 
@@ -114,9 +114,9 @@ Assignment operator `=`. Object of class `String` is replaced by method paramete
 
 ```cpp
 obj = "Hi world!";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: Hi world!
@@ -339,12 +339,12 @@ Retrieve element from object of class `String` stored at requested index positio
 
 ```cpp
 obj = "Hi world!";
-("obj: %s\n" % obj.to_string()).print();
-("obj[0]: %s\n" % obj[0].to_string()).print();
-("obj[1]: %s\n" % obj[1].to_string()).print();
-("obj[2]: %s\n" % obj[2].to_string()).print();
-("obj[3]: %s\n" % obj[3].to_string()).print();
-("obj[4]: %s\n" % obj[4].to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj[0]: %s\n" % $obj[0]).print();
+("obj[1]: %s\n" % $obj[1]).print();
+("obj[2]: %s\n" % $obj[2]).print();
+("obj[3]: %s\n" % $obj[3]).print();
+("obj[4]: %s\n" % $obj[4]).print();
 ```
 ```
 obj: Hi world!
@@ -408,7 +408,7 @@ Split object of class `String` to object of class `Array` containing one or more
 ```cpp
 obj = "Hi world!";
 ("obj: %s\n" % obj).print();
-("res: %s\n" % obj.split(" ").to_string()).print();
+("res: %s\n" % $obj.split(" ")).print();
 ```
 ```
 obj: Hi world!
@@ -435,11 +435,11 @@ concatenated to one string, with object of class `String` used as separator.
 
 ```cpp
 obj = [1,2,3,4,5];
-("res: %s\n" % " ".join(obj).to_string()).print();
+("res: %s\n" % $" ".join(obj)).print();
 obj = new Dict(["One",1,"Two",2,"Three",3]);
-("res: %s\n" % " ".join(obj).to_string()).print();
+("res: %s\n" % $" ".join(obj)).print();
 obj = ["numbers:",1,2,3,4,"end"];
-("res: %s\n" % " ".join(obj).to_string()).print();
+("res: %s\n" % $" ".join(obj)).print();
 ```
 ```
 res: 1 2 3 4 5
@@ -553,7 +553,7 @@ Retrieve index of substring given by method parameter in object of class `String
 obj = "Hi world!";
 ("obj.get_idx(\"Hi\"): %d\n" % obj.get_idx("Hi")).print();
 ("obj.get_idx(\"world\"): %d\n" % obj.get_idx("world")).print();
-("obj.get_idx(\"Test\"): %s\n" % obj.get_idx("Test").to_string()).print();
+("obj.get_idx(\"Test\"): %s\n" % $obj.get_idx("Test")).print();
 ```
 ```
 obj.get_idx("Hi"): 0
@@ -579,9 +579,9 @@ Retrieve all indexes of substring given by method parameter in object of class `
 
 ```cpp
 obj = "This sentence contain more than one character 'e'.";
-("obj.get_idxs(\"one\"): %s\n" % obj.get_idxs("one").to_string()).print();
-("obj.get_idxs(\"Test\"): %s\n" % obj.get_idxs("Test").to_string()).print();
-("obj.get_idxs(\"e\"): %s\n" % obj.get_idxs("e").to_string()).print();
+("obj.get_idxs(\"one\"): %s\n" % $obj.get_idxs("one")).print();
+("obj.get_idxs(\"Test\"): %s\n" % $obj.get_idxs("Test")).print();
+("obj.get_idxs(\"e\"): %s\n" % $obj.get_idxs("e")).print();
 ```
 ```
 obj.get_idxs("one"): [32]
@@ -696,10 +696,10 @@ Retrieve character from object of class `String` stored at requested index posit
 
 ```cpp
 obj = "Hi world!";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.first_idx();
 do {
-  ("obj.item(%d): %s\n" % [idx,obj.item(idx).to_string()]).print();
+  ("obj.item(%d): %s\n" % [idx,$obj.item(idx)]).print();
   idx = obj.next_idx(idx);
 } while(Blank != idx);
 ```
@@ -731,9 +731,9 @@ Retrieve index of first character in object of class `String`.
 
 ```cpp
 obj = "Hi world!";
-("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
+("obj.first_idx: %s\n" % $obj.first_idx()).print();
 obj = "";
-("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
+("obj.first_idx: %s\n" % $obj.first_idx()).print();
 ```
 ```
 obj.first_idx: 0
@@ -759,10 +759,10 @@ From object of class `String` retrieve index of character following character id
 
 ```cpp
 obj = "Hi world!";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.first_idx();
 do {
-  ("idx: %s\n" % idx.to_string()).print();
+  ("idx: %s\n" % $idx).print();
   idx = obj.next_idx(idx);
 } while(Blank != idx);
 ```

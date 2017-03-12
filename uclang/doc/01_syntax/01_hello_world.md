@@ -55,7 +55,7 @@ class Main
 {
   static public main(argv)
   {
-    ("argv: %s\n" % argv.to_string()).print();
+    ("argv: %s\n" % $argv).print();
   }
 }
 ```

@@ -44,9 +44,9 @@ Assignment operator `=`. Object of class `FaSource` is replaced by method parame
 ```cpp
 fa = new FinalAutomata(["('_'+l).('_'+l+d)*","w.w*"]);
 obj = fa.get_source("hello world");
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: FaSource
@@ -74,7 +74,7 @@ symbol was recognized, method will return object of class `Blank`.
 ```cpp
 fa = new FinalAutomata(["('_'+l).('_'+l+d)*","w.w*"]);
 obj = fa.get_source("hello world");
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 while(Blank != (term = obj.next_terminal()))
 {
   ("terminal: %d\n" % term).print();
@@ -102,7 +102,7 @@ Retrieve index in source string that refers to beginning of last recognized term
 ```cpp
 fa = new FinalAutomata(["('_'+l).('_'+l+d)*","w.w*"]);
 obj = fa.get_source("hello world");
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 while(Blank != (term = obj.next_terminal()))
 {
   ("obj.old_input_idx(): %d\n" % obj.old_input_idx()).print();
@@ -130,7 +130,7 @@ Retrieve index in source string referring to first character that was not yet pr
 ```cpp
 fa = new FinalAutomata(["('_'+l).('_'+l+d)*","w.w*"]);
 obj = fa.get_source("hello world");
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 while(Blank != (term = obj.next_terminal()))
 {
   ("obj.input_idx(): %d\n" % obj.input_idx()).print();
@@ -159,7 +159,7 @@ Retrieve next terminal symbol identified by object of class `Integer`. If no ter
 ```cpp
 fa = new FinalAutomata(["('_'+l).('_'+l+d)*","w.w*"]);
 obj = fa.get_source("hello world");
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 for (term <- obj)
 {
   ("terminal: %d\n" % term).print();

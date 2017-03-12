@@ -31,7 +31,7 @@ class Main
 {
   public method(a_p0,a_p1)
   {
-    ("method: %s\n" % [a_p0,a_p1].to_string()).print();
+    ("method: %s\n" % $[a_p0,a_p1]).print();
     return a_p0 + a_p1;
   }
 
@@ -69,7 +69,7 @@ and accepting count of parameters given by third parameter.
 
 ```cpp
 obj = new Delegate(this,"method",2);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: Delegate
@@ -97,9 +97,9 @@ Assignment operator `=`. Object of class `Delegate` is replaced by method parame
 
 ```cpp
 obj = new Delegate(this,"method",2);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: Delegate
@@ -131,7 +131,7 @@ method parameter.
 ```cpp
 obj = new Delegate(this,"method",2);
 res = obj.call([1,2]);
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 method: [1,2]

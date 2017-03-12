@@ -36,7 +36,7 @@ Creates default object of class `Blank`.
 
 ```cpp
 obj = new Blank();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: <blank>
@@ -64,9 +64,9 @@ Assignment operator `=`. Object of class `Blank` is replaced by method parameter
 
 ```cpp
 obj = new Blank();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: <blank>

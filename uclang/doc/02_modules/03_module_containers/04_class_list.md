@@ -62,7 +62,7 @@ Creates default object of class `List`.
 
 ```cpp
 obj = new List();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: []
@@ -82,7 +82,7 @@ Creates object of class `List` containing elements retrieved from method paramet
 
 ```cpp
 obj = new List([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -110,9 +110,9 @@ Assignment operator `=`. Object of class `List` is replaced by method parameter.
 
 ```cpp
 obj = new List([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -137,9 +137,9 @@ Append operator `+=`. Append elements retrieved from method parameter to object 
 
 ```cpp
 obj = new List([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj += [1,2,6,7,8];
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -225,8 +225,8 @@ Concatenation operator `+`. Creates object of class `List` containing elements o
 ```cpp
 obj = new List([1,2,3,4,5]);
 res = obj + [1,2,3,4,5];
-("obj: %s\n" % obj.to_string()).print();
-("res: %s\n" % res.to_string()).print();
+("obj: %s\n" % $obj).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -252,10 +252,10 @@ Retrieve element from object of class `List` stored at requested index position.
 
 ```cpp
 obj = new List([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
-("obj[0]: %s\n" % obj[0].to_string()).print();
-("obj[1]: %s\n" % obj[1].to_string()).print();
-("obj[2]: %s\n" % obj[2].to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj[0]: %s\n" % $obj[0]).print();
+("obj[1]: %s\n" % $obj[1]).print();
+("obj[2]: %s\n" % $obj[2]).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -282,9 +282,9 @@ Release all elements stored in object of class `List`.
 
 ```cpp
 obj = new List([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.clear();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -305,10 +305,10 @@ Retrieve list of elements contained in object of class `List`. Elements are retu
 
 ```cpp
 obj = new List([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 items = obj.items();
-("type items: %s\n" % (type items).to_string()).print();
-("items: %s\n" % items.to_string()).print();
+("type items: %s\n" % $(type items)).print();
+("items: %s\n" % $items).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -334,11 +334,11 @@ Append method parameter to end of object of class `List`.
 
 ```cpp
 obj = new List([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ("obj.append(1): %d\n" % obj.append(1)).print();
 ("obj.append(2): %d\n" % obj.append(2)).print();
 ("obj.append(3): %d\n" % obj.append(3)).print();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -368,9 +368,9 @@ Append reference to method parameter to end of object of class `List`.
 obj = new List([1,2,3,4,5]);
 value = 0;
 ("obj.append_ref(value): %d\n" % obj.append_ref(value)).print();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 value = "Hello world!";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj.append_ref(value): 5
@@ -396,11 +396,11 @@ Prepend method parameter before begining of object of class `List`.
 
 ```cpp
 obj = new List([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ("obj.prepend(1): %d\n" % obj.prepend(1)).print();
 ("obj.prepend(2): %d\n" % obj.prepend(2)).print();
 ("obj.prepend(3): %d\n" % obj.prepend(3)).print();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -430,9 +430,9 @@ Prepend reference to method parameter before begining of object of class `List`.
 obj = new List([1,2,3,4,5]);
 value = 0;
 ("obj.prepend_ref(value): %d\n" % obj.prepend_ref(value)).print();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 value = "Hello world!";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj.prepend_ref(value): 5
@@ -460,11 +460,11 @@ Insert second method parameter before element identified by first method paramet
 ```cpp
 obj = new List([1,2,3,4,5]);
 idx = obj.get_idx(2);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.insert_before(idx,4);
 obj.insert_before(idx,5);
 obj.insert_before(idx,6);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -492,11 +492,11 @@ Insert reference to second method parameter before element identified by first m
 obj = new List([1,2,3,4,5]);
 value = 0;
 idx = obj.get_idx(2);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.insert_before_ref(idx,value);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 value = "Hello world!";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -524,11 +524,11 @@ Insert second method parameter after element identified by first method paramete
 ```cpp
 obj = new List([1,2,3,4,5]);
 idx = obj.get_idx(2);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.insert_after(idx,4);
 obj.insert_after(idx,5);
 obj.insert_after(idx,6);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -556,11 +556,11 @@ Insert reference to second method parameter after element identified by first me
 obj = new List([1,2,3,4,5]);
 value = 0;
 idx = obj.get_idx(2);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.insert_after_ref(idx,value);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 value = "Hello world!";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -586,10 +586,10 @@ Remove element from object of class `List` stored at position given by method pa
 
 ```cpp
 obj = new List([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.remove(0);
 obj.remove(1);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -617,7 +617,7 @@ Object of class `Integer`.
 
 ```cpp
 obj = new List([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ("obj.has_idx(2): %d\n" % obj.has_idx(2)).print();
 ("obj.has_idx(100): %d\n" % obj.has_idx(100)).print();
 ```
@@ -646,9 +646,9 @@ From object of class `List`, retrieve index of first element equal to method par
 
 ```cpp
 obj = new List([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
-("obj.get_idx(2): %s\n" % obj.get_idx(2).to_string()).print();
-("obj.get_idx(100): %s\n" % obj.get_idx(100).to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj.get_idx(2): %s\n" % $obj.get_idx(2)).print();
+("obj.get_idx(100): %s\n" % $obj.get_idx(100)).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -674,9 +674,9 @@ From object of class `List`, retrieve indexes of elements that are equal to meth
 
 ```cpp
 obj = new List([1,2,2,4,2,5]);
-("obj: %s\n" % obj.to_string()).print();
-("obj.get_idxs(2): %s\n" % obj.get_idxs(2).to_string()).print();
-("obj.get_idxs(100): %s\n" % obj.get_idxs(100).to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj.get_idxs(2): %s\n" % $obj.get_idxs(2)).print();
+("obj.get_idxs(100): %s\n" % $obj.get_idxs(100)).print();
 ```
 ```
 obj: [1,2,2,4,2,5]
@@ -764,10 +764,10 @@ Retrieve element from object of class `List` stored at requested index position.
 
 ```cpp
 obj = new List([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.first_idx();
 do {
-  ("obj.item(%d): %s\n" % [idx,obj.item(idx).to_string()]).print();
+  ("obj.item(%d): %s\n" % [idx,$obj.item(idx)]).print();
   idx = obj.next_idx(idx);
 } while(Blank != idx);
 ```
@@ -795,9 +795,9 @@ Retrieve index of first element in object of class `List`.
 
 ```cpp
 obj = new List([1,2,3,4,5]);
-("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
+("obj.first_idx: %s\n" % $obj.first_idx()).print();
 obj.clear();
-("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
+("obj.first_idx: %s\n" % $obj.first_idx()).print();
 ```
 ```
 obj.first_idx: 0
@@ -819,9 +819,9 @@ Retrieve index of last element in object of class `List`.
 
 ```cpp
 obj = new List([1,2,3,4,5]);
-("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
+("obj.last_idx: %s\n" % $obj.last_idx()).print();
 obj.clear();
-("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
+("obj.last_idx: %s\n" % $obj.last_idx()).print();
 ```
 ```
 obj.last_idx: 4
@@ -847,10 +847,10 @@ From object of class `List` retrieve index of element following element identifi
 
 ```cpp
 obj = new List([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.first_idx();
 do {
-  ("idx: %s\n" % idx.to_string()).print();
+  ("idx: %s\n" % $idx).print();
   idx = obj.next_idx(idx);
 } while(Blank != idx);
 ```
@@ -882,10 +882,10 @@ From object of class `List` retrieve index of element preceding element identifi
 
 ```cpp
 obj = new List([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.last_idx();
 do {
-  ("idx: %s\n" % idx.to_string()).print();
+  ("idx: %s\n" % $idx).print();
   idx = obj.prev_idx(idx);
 } while(Blank != idx);
 ```

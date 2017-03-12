@@ -52,7 +52,7 @@ Creates default object of class `Stack`.
 
 ```cpp
 obj = new Stack();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: []
@@ -72,7 +72,7 @@ Creates object of class `Stack` containing elements retrieved from method parame
 
 ```cpp
 obj = new Stack([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -100,9 +100,9 @@ Assignment operator `=`. Object of class `Stack` is replaced by method parameter
 
 ```cpp
 obj = new Stack([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -127,9 +127,9 @@ Append operator `+=`. Append elements retrieved from method parameter to object 
 
 ```cpp
 obj = new Stack([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj += [1,2,6,7,8];
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -215,8 +215,8 @@ Concatenation operator `+`. Creates object of class `Stack` containing elements 
 ```cpp
 obj = new Stack([1,2,3,4,5]);
 res = obj + [1,2,3,4,5];
-("obj: %s\n" % obj.to_string()).print();
-("res: %s\n" % res.to_string()).print();
+("obj: %s\n" % $obj).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -241,9 +241,9 @@ Release all elements stored in object of class `Stack`.
 
 ```cpp
 obj = new Stack([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.clear();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -264,10 +264,10 @@ Retrieve list of elements contained in object of class `Stack`. Elements are ret
 
 ```cpp
 obj = new Stack([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 items = obj.items();
-("type items: %s\n" % (type items).to_string()).print();
-("items: %s\n" % items.to_string()).print();
+("type items: %s\n" % $(type items)).print();
+("items: %s\n" % $items).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -293,10 +293,10 @@ Insert method parameter to end of object of class `Stack`.
 
 ```cpp
 obj = new Stack([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.push(6);
 obj.push(7);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -323,9 +323,9 @@ Insert reference to method parameter to end of object of class `Stack`.
 obj = new Stack([1,2,3,4,5]);
 value = 0;
 obj.push_ref(value);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 value = "Hello world!";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5,0]
@@ -346,10 +346,10 @@ Remove and return last element from object of class `Stack`.
 
 ```cpp
 obj = new Stack([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
-("obj.pop(): %s\n" % obj.pop().to_string()).print();
-("obj.pop(): %s\n" % obj.pop().to_string()).print();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj.pop(): %s\n" % $obj.pop()).print();
+("obj.pop(): %s\n" % $obj.pop()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -438,10 +438,10 @@ Retrieve element from object of class `Stack` stored at requested index position
 
 ```cpp
 obj = new Stack([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.first_idx();
 do {
-  ("obj.item(%d): %s\n" % [idx,obj.item(idx).to_string()]).print();
+  ("obj.item(%d): %s\n" % [idx,$obj.item(idx)]).print();
   idx = obj.next_idx(idx);
 } while(Blank != idx);
 ```
@@ -469,9 +469,9 @@ Retrieve index of first element in object of class `Stack`.
 
 ```cpp
 obj = new Stack([1,2,3,4,5]);
-("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
+("obj.first_idx: %s\n" % $obj.first_idx()).print();
 obj.clear();
-("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
+("obj.first_idx: %s\n" % $obj.first_idx()).print();
 ```
 ```
 obj.first_idx: 0
@@ -493,11 +493,11 @@ Retrieve index of last element in object of class `Stack`.
 
 ```cpp
 obj = new Stack([1,2,3,4,5]);
-("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
+("obj.last_idx: %s\n" % $obj.last_idx()).print();
 obj.pop();
-("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
+("obj.last_idx: %s\n" % $obj.last_idx()).print();
 obj.clear();
-("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
+("obj.last_idx: %s\n" % $obj.last_idx()).print();
 ```
 ```
 obj.last_idx: 4
@@ -524,10 +524,10 @@ From object of class `Stack` retrieve index of element following element identif
 
 ```cpp
 obj = new Stack([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.first_idx();
 do {
-  ("idx: %s\n" % idx.to_string()).print();
+  ("idx: %s\n" % $idx).print();
   idx = obj.next_idx(idx);
 } while(Blank != idx);
 ```
@@ -559,10 +559,10 @@ From object of class `Stack` retrieve index of element preceding element identif
 
 ```cpp
 obj = new Stack([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.last_idx();
 do {
-  ("idx: %s\n" % idx.to_string()).print();
+  ("idx: %s\n" % $idx).print();
   idx = obj.prev_idx(idx);
 } while(Blank != idx);
 ```

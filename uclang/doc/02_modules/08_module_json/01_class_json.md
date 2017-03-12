@@ -36,7 +36,7 @@ Object of class `String` containing `JSON` representation of method parameter.
 
 ```cpp
 obj = Json.create(new Dict(["One",1,"Two",2,"Three",3]));
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: {"One":1,"Two":2,"Three":3}
@@ -63,7 +63,7 @@ Object of class `String` containing `JSON` representation of method parameter.
 ```cpp
 dict = new Dict(["One",1,"Two",2,"Three",3]);
 obj = Json.create_nice(dict,"   ");
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: {
@@ -91,7 +91,7 @@ Object of class `Dict`.
 
 ```cpp
 obj = Json.parse("{\"One\":1,\"Two\":2,\"Three\":3}");
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [One:1,Two:2,Three:3]

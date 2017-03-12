@@ -62,7 +62,7 @@ Creates default object of class `Set`.
 
 ```cpp
 obj = new Set();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: []
@@ -82,7 +82,7 @@ Creates object of class `Set` containing elements retrieved from method paramete
 
 ```cpp
 obj = new Set([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -110,9 +110,9 @@ Assignment operator `=`. Object of class `Set` is replaced by method parameter.
 
 ```cpp
 obj = new Set([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -137,9 +137,9 @@ Append operator `+=`. Append elements retrieved from method parameter to object 
 
 ```cpp
 obj = new Set([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj += [1,2,6,7,8];
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -169,7 +169,7 @@ object of class `Set`. Value of variable is set to result object of class
 obj_0 = new Set([1,2,3,4,5]);
 obj_1 = new Set([1,2,6,7,8]);
 obj_0 -= obj_1;
-("obj_0: %s\n" % obj_0.to_string()).print();
+("obj_0: %s\n" % $obj_0).print();
 ```
 ```
 obj_0: [3,4,5]
@@ -197,7 +197,7 @@ set to result object of class `Set`.
 obj_0 = new Set([1,2,3,4,5]);
 obj_1 = new Set([1,2,6,7,8]);
 obj_0 &= obj_1;
-("obj_0: %s\n" % obj_0.to_string()).print();
+("obj_0: %s\n" % $obj_0).print();
 ```
 ```
 obj_0: [1,2]
@@ -225,7 +225,7 @@ object of class `Set`.
 obj_0 = new Set([1,2,3,4,5]);
 obj_1 = new Set([1,2,6,7,8]);
 obj_0 |= obj_1;
-("obj_0: %s\n" % obj_0.to_string()).print();
+("obj_0: %s\n" % $obj_0).print();
 ```
 ```
 obj_0: [1,2,3,4,5,6,7,8]
@@ -254,7 +254,7 @@ exactly in one of them. Value of variable is set to result object of class
 obj_0 = new Set([1,2,3,4,5]);
 obj_1 = new Set([1,2,6,7,8]);
 obj_0 ^= obj_1;
-("obj_0: %s\n" % obj_0.to_string()).print();
+("obj_0: %s\n" % $obj_0).print();
 ```
 ```
 obj_0: [3,4,5,6,7,8]
@@ -281,7 +281,7 @@ elements contained in both source objects of class `Set`.
 obj_0 = new Set([1,2,3,4,5]);
 obj_1 = new Set([1,2,6,7,8]);
 res = obj_0 & obj_1;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 res: [1,2]
@@ -308,7 +308,7 @@ both source objects of class `Set`.
 obj_0 = new Set([1,2,3,4,5]);
 obj_1 = new Set([1,2,6,7,8]);
 res = obj_0 | obj_1;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 res: [1,2,3,4,5,6,7,8]
@@ -336,7 +336,7 @@ exactly in one of them.
 obj_0 = new Set([1,2,3,4,5]);
 obj_1 = new Set([1,2,6,7,8]);
 res = obj_0 ^ obj_1;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 res: [3,4,5,6,7,8]
@@ -424,8 +424,8 @@ parameter is subset of object of class `Set`.
 ```cpp
 obj_0 = new Set([1,2,3,4,5]);
 obj_1 = new Set(obj_0[0:2:]);
-("obj_0: %s\n" % obj_0.to_string()).print();
-("obj_1: %s\n" % obj_1.to_string()).print();
+("obj_0: %s\n" % $obj_0).print();
+("obj_1: %s\n" % $obj_1).print();
 ("obj_0 >= obj_1: %d\n" % (obj_0 >= obj_1)).print();
 ("obj_1 >= obj_0: %d\n" % (obj_1 >= obj_0)).print();
 ```
@@ -458,8 +458,8 @@ parameter is superset of object of class `Set`.
 ```cpp
 obj_0 = new Set([1,2,3,4,5]);
 obj_1 = new Set(obj_0[0:2:]);
-("obj_0: %s\n" % obj_0.to_string()).print();
-("obj_1: %s\n" % obj_1.to_string()).print();
+("obj_0: %s\n" % $obj_0).print();
+("obj_1: %s\n" % $obj_1).print();
 ("obj_0 <= obj_1: %d\n" % (obj_0 <= obj_1)).print();
 ("obj_1 <= obj_0: %d\n" % (obj_1 <= obj_0)).print();
 ```
@@ -489,8 +489,8 @@ Concatenation operator `+`. Creates object of class `Set` containing elements of
 ```cpp
 obj = new Set([1,2,3,4,5]);
 res = obj + [1,2,3,4,5];
-("obj: %s\n" % obj.to_string()).print();
-("res: %s\n" % res.to_string()).print();
+("obj: %s\n" % $obj).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -519,7 +519,7 @@ class `Set`.
 obj_0 = new Set([1,2,3,4,5]);
 obj_1 = new Set([1,2,6,7,8]);
 res = obj_0 - obj_1;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 res: [3,4,5]
@@ -544,10 +544,10 @@ Retrieve element from object of class `Set` stored at requested index position.
 
 ```cpp
 obj = new Set([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
-("obj[0]: %s\n" % obj[0].to_string()).print();
-("obj[2]: %s\n" % obj[2].to_string()).print();
-("obj[3]: %s\n" % obj[3].to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj[0]: %s\n" % $obj[0]).print();
+("obj[2]: %s\n" % $obj[2]).print();
+("obj[3]: %s\n" % $obj[3]).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -574,9 +574,9 @@ Release all elements stored in object of class `Set`.
 
 ```cpp
 obj = new Set([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.clear();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -597,10 +597,10 @@ Retrieve list of elements contained in object of class `Set`. Elements are retur
 
 ```cpp
 obj = new Set([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 items = obj.items();
-("type items: %s\n" % (type items).to_string()).print();
-("items: %s\n" % items.to_string()).print();
+("type items: %s\n" % $(type items)).print();
+("items: %s\n" % $items).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -626,11 +626,11 @@ Insert method parameter to object of class `Set`.
 
 ```cpp
 obj = new Set([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.insert(5);
 obj.insert(6);
 obj.insert(7);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -656,10 +656,10 @@ parameter.
 
 ```cpp
 obj = new Set([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.remove(2);
 obj.remove(4);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -746,10 +746,10 @@ Retrieve element from object of class `Set` stored at requested index position.
 
 ```cpp
 obj = new Set([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.first_idx();
 do {
-  ("obj.item(%d): %s\n" % [idx,obj.item(idx).to_string()]).print();
+  ("obj.item(%d): %s\n" % [idx,$obj.item(idx)]).print();
   idx = obj.next_idx(idx);
 } while(Blank != idx);
 ```
@@ -777,9 +777,9 @@ Retrieve index of first element in object of class `Set`.
 
 ```cpp
 obj = new Set([1,2,3,4,5]);
-("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
+("obj.first_idx: %s\n" % $obj.first_idx()).print();
 obj.clear();
-("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
+("obj.first_idx: %s\n" % $obj.first_idx()).print();
 ```
 ```
 obj.first_idx: 0
@@ -801,9 +801,9 @@ Retrieve index of last element in object of class `Set`.
 
 ```cpp
 obj = new Set([1,2,3,4,5]);
-("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
+("obj.last_idx: %s\n" % $obj.last_idx()).print();
 obj.clear();
-("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
+("obj.last_idx: %s\n" % $obj.last_idx()).print();
 ```
 ```
 obj.last_idx: 5
@@ -829,10 +829,10 @@ From object of class `Set` retrieve index of element following element identifie
 
 ```cpp
 obj = new Set([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.first_idx();
 do {
-  ("idx: %s\n" % idx.to_string()).print();
+  ("idx: %s\n" % $idx).print();
   idx = obj.next_idx(idx);
 } while(Blank != idx);
 ```
@@ -864,10 +864,10 @@ From object of class `Set` retrieve index of element preceding element identifie
 
 ```cpp
 obj = new Set([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.last_idx();
 do {
-  ("idx: %s\n" % idx.to_string()).print();
+  ("idx: %s\n" % $idx).print();
   idx = obj.prev_idx(idx);
 } while(Blank != idx);
 ```

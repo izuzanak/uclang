@@ -72,7 +72,7 @@ Creates default object of class `Integer`.
 
 ```cpp
 obj = new Integer();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 0
@@ -155,9 +155,9 @@ Assignment operator `=`. Object of class `Integer` is replaced by method paramet
 
 ```cpp
 obj = 123;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 123
@@ -182,13 +182,13 @@ Add and assign operator `+=`. Operator adds value of method parameter to value o
 
 ```cpp
 obj = 567;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj += 'e';
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj += 123;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj += 12.234;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 567
@@ -215,13 +215,13 @@ Subtract and assign operator `-=`. Operator subtracts value of method parameter 
 
 ```cpp
 obj = 567;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj -= 'e';
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj -= 123;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj -= 12.234;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 567
@@ -248,13 +248,13 @@ Multiply and assign operator `*=`. Operator multiplies value of object of class 
 
 ```cpp
 obj = 567;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj *= 'e';
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj *= 123;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj *= 12.234;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 567
@@ -282,13 +282,13 @@ Divide and assign operator `/=`. Operator divides value of object of class `Inte
 ```cpp
 obj = 0xffffffff;
 obj /= 'e';
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = 0xffffffff;
 obj /= 123;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = 0xffffffff;
 obj /= 12.234;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 42524428
@@ -315,10 +315,10 @@ Modulus and assign operator `%=`. Operator computes modulus of value of object o
 ```cpp
 obj = 567;
 obj %= 'e';
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = 567;
 obj %= 123;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 62
@@ -343,11 +343,11 @@ Left shift and assign operator `<<=`. Value of object of class `Integer` is shif
 
 ```cpp
 obj = 567;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj <<= '\x02';
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj <<= 2;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 567
@@ -373,11 +373,11 @@ Right shift and assign operator `>>=`. Value of object of class `Integer` is shi
 
 ```cpp
 obj = 567;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj >>= '\x02';
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj >>= 2;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 567
@@ -407,10 +407,10 @@ object of class `Integer` and method parameter.
 ```cpp
 obj = 567;
 obj &= 'e';
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = 567;
 obj &= 123;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 37
@@ -439,10 +439,10 @@ object of class `Integer` or in method parameter.
 ```cpp
 obj = 567;
 obj |= 'e';
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = 567;
 obj |= 123;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 631
@@ -471,10 +471,10 @@ object of class `Integer` or in method parameter, but not both.
 ```cpp
 obj = 567;
 obj ^= 'e';
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = 567;
 obj ^= 123;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 594
@@ -707,7 +707,7 @@ Greater test operator `>`. Test if value of object of class `Integer` is greater
 
 ```cpp
 obj = 567;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ("obj > 'e': %d\n" % (obj > 'e')).print();
 ("obj > 123: %d\n" % (obj > 123)).print();
 ("obj > 12.234: %d\n" % (obj > 12.234)).print();
@@ -739,7 +739,7 @@ Lesser test operator `<`. Test if value of object of class `Integer` is lesser t
 
 ```cpp
 obj = 567;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ("obj < 'e': %d\n" % (obj < 'e')).print();
 ("obj < 123: %d\n" % (obj < 123)).print();
 ("obj < 12.234: %d\n" % (obj < 12.234)).print();
@@ -771,7 +771,7 @@ Greater or equal test operator `>=`. Test if value of object of class `Integer` 
 
 ```cpp
 obj = 567;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ("obj >= 'e': %d\n" % (obj >= 'e')).print();
 ("obj >= 123: %d\n" % (obj >= 123)).print();
 ("obj >= 12.234: %d\n" % (obj >= 12.234)).print();
@@ -803,7 +803,7 @@ Lesser or equal test operator `<=`. Test if value of object of class `Integer` i
 
 ```cpp
 obj = 567;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ("obj <= 'e': %d\n" % (obj <= 'e')).print();
 ("obj <= 123: %d\n" % (obj <= 123)).print();
 ("obj <= 12.234: %d\n" % (obj <= 12.234)).print();
@@ -833,11 +833,11 @@ Right shift operator `>>`. Value of object of class `Integer` is shifted to righ
 
 ```cpp
 obj = 567;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 res = obj >> '\x02';
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj >> 2;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: 567
@@ -863,11 +863,11 @@ Left shift operator `<<`. Value of object of class `Integer` is shifted to left 
 
 ```cpp
 obj = 567;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 res = obj << '\x02';
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj << 2;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: 567
@@ -893,13 +893,13 @@ Add operator `+`. Operator adds value of method parameter to value of object of 
 
 ```cpp
 obj = 567;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 res = obj + 'e';
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj + 123;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj + 12.234;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: 567
@@ -926,13 +926,13 @@ Subtract operator `-`. Operator subtracts value of method parameter from value o
 
 ```cpp
 obj = 567;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 res = obj - 'e';
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj - 123;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj - 12.234;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: 567
@@ -960,15 +960,15 @@ If method parameter is object of class `String`, then result will be created as 
 
 ```cpp
 obj = 2;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 res = obj * 'e';
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj * 123;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj * 12.234;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj * "Hi world!";
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: 2
@@ -996,13 +996,13 @@ Divide operator `/`. Operator divides value of object of class `Integer` by valu
 
 ```cpp
 obj = 567;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 res = obj / '\x02';
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj / 2;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj / 2.532;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: 567
@@ -1029,11 +1029,11 @@ Modulus operator `%`. Operator computes modulus of value of object of class `Int
 
 ```cpp
 obj = 567;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 res = obj % 'e';
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 res = obj % 123;
-("res: %s\n" % res.to_string()).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: 567
@@ -1055,9 +1055,9 @@ Post increment operator `++`. Increase value of object of class `Integer` by one
 
 ```cpp
 obj = 123;
-("obj: %s\n" % obj.to_string()).print();
-("obj++: %s\n" % (obj++).to_string()).print();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj++: %s\n" % $(obj++)).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 123
@@ -1079,9 +1079,9 @@ Post decrement operator `--`. Decrease value of object of class `Integer` by one
 
 ```cpp
 obj = 123;
-("obj: %s\n" % obj.to_string()).print();
-("obj--: %s\n" % (obj--).to_string()).print();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj--: %s\n" % $(obj--)).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 123
@@ -1103,9 +1103,9 @@ Pre increment operator `++`. Increase value of object of class `Integer` by one.
 
 ```cpp
 obj = 123;
-("obj: %s\n" % obj.to_string()).print();
-("++obj: %s\n" % (++obj).to_string()).print();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
+("++obj: %s\n" % $(++obj)).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 123
@@ -1127,9 +1127,9 @@ Pre decrement operator `--`. Decrease value of object of class `Integer` by one.
 
 ```cpp
 obj = 123;
-("obj: %s\n" % obj.to_string()).print();
-("--obj: %s\n" % (--obj).to_string()).print();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
+("--obj: %s\n" % $(--obj)).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 123
@@ -1151,9 +1151,9 @@ Unary operator `+`. Return value of object of class `Integer`.
 
 ```cpp
 obj = 123;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = +obj;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 123
@@ -1174,9 +1174,9 @@ Unary negative operator `-`. Return negative value of object of class `Integer`.
 
 ```cpp
 obj = 123;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = -obj;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 123
@@ -1197,9 +1197,9 @@ Logical NOT operator `!`. Reverse logical state of value of object of class `Int
 
 ```cpp
 obj = 123;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = !obj;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 123
@@ -1220,9 +1220,9 @@ Bitwise complement operator `~`. Return binary complement of value of object of 
 
 ```cpp
 obj = 123;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = ~obj;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: 123

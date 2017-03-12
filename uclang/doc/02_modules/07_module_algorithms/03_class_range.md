@@ -41,8 +41,8 @@ sequence.
 
 ```cpp
 obj = new Range(1,10);
-("obj: %s\n" % obj.to_string()).print();
-("obj: %s\n" % obj[::].to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj: %s\n" % $obj[::]).print();
 ```
 ```
 obj: Range
@@ -66,8 +66,8 @@ of requested sequence.
 
 ```cpp
 obj = new Range(0,-19,-2);
-("obj: %s\n" % obj.to_string()).print();
-("obj: %s\n" % obj[::].to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj: %s\n" % $obj[::]).print();
 ```
 ```
 obj: Range
@@ -96,9 +96,9 @@ Assignment operator `=`. Object of class `Range` is replaced by method parameter
 
 ```cpp
 obj = new Range(1,10);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: Range

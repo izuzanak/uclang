@@ -79,9 +79,9 @@ Assignment operator `=`. Object of class `ParseState` is replaced by method para
 
 ```cpp
 obj = a_state;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: ParseState

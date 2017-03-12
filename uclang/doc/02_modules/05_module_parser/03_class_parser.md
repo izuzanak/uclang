@@ -80,7 +80,7 @@ obj = new Parser("
     <exp> -> excl <exp>    ->> {}
     <exp> -> id            ->> {}
 ");
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: Parser
@@ -116,9 +116,9 @@ obj = new Parser("
     <exp> -> excl <exp>    ->> {}
     <exp> -> id            ->> {}
 ");
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: Parser

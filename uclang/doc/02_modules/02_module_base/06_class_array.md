@@ -58,7 +58,7 @@ Creates default object of class `Array`.
 
 ```cpp
 obj = new Array();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: []
@@ -78,7 +78,7 @@ Creates object of class `Array` containing elements retrieved from method parame
 
 ```cpp
 obj = new Array([1,2,3,4,5]);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -106,9 +106,9 @@ Assignment operator `=`. Object of class `Array` is replaced by method parameter
 
 ```cpp
 obj = [1,2,3,4,5];
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -133,9 +133,9 @@ Append operator `+=`. Append elements retrieved from method parameter to object 
 
 ```cpp
 obj = [1,2,3,4,5];
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj += [1,2,6,7,8];
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -221,8 +221,8 @@ Concatenation operator `+`. Creates object of class `Array` containing elements 
 ```cpp
 obj = [1,2,3,4,5];
 res = obj + [1,2,3,4,5];
-("obj: %s\n" % obj.to_string()).print();
-("res: %s\n" % res.to_string()).print();
+("obj: %s\n" % $obj).print();
+("res: %s\n" % $res).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -252,9 +252,9 @@ a = b = c = 0;
 obj.push_ref(a);
 obj.push_ref(b);
 obj.push_ref(c);
-("a,b,c: %s\n" % [a,b,c].to_string()).print();
+("a,b,c: %s\n" % $[a,b,c]).print();
 obj <= [1,2,3];
-("a,b,c: %s\n" % [a,b,c].to_string()).print();
+("a,b,c: %s\n" % $[a,b,c]).print();
 ```
 ```
 a,b,c: [0,0,0]
@@ -280,10 +280,10 @@ Retrieve element from object of class `Array` stored at requested index position
 
 ```cpp
 obj = [1,2,3,4,5];
-("obj: %s\n" % obj.to_string()).print();
-("obj[0]: %s\n" % obj[0].to_string()).print();
-("obj[1]: %s\n" % obj[1].to_string()).print();
-("obj[2]: %s\n" % obj[2].to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj[0]: %s\n" % $obj[0]).print();
+("obj[1]: %s\n" % $obj[1]).print();
+("obj[2]: %s\n" % $obj[2]).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -310,9 +310,9 @@ Release all elements stored in object of class `Array`.
 
 ```cpp
 obj = [1,2,3,4,5];
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.clear();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -338,9 +338,9 @@ elements are initialized to objects of class `Blank`.
 
 ```cpp
 obj = [1,2,3,4,5];
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.resize(8);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -365,10 +365,10 @@ Insert method parameter to end of object of class `Array`.
 
 ```cpp
 obj = [1,2,3,4,5];
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.push(6);
 obj.push(7);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -395,9 +395,9 @@ Insert reference to method parameter to end of object of class `Array`.
 obj = [1,2,3,4,5];
 value = 0;
 obj.push_ref(value);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 value = "Hello world!";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5,0]
@@ -418,10 +418,10 @@ Remove and return last element from object of class `Array`.
 
 ```cpp
 obj = [1,2,3,4,5];
-("obj: %s\n" % obj.to_string()).print();
-("obj.pop(): %s\n" % obj.pop().to_string()).print();
-("obj.pop(): %s\n" % obj.pop().to_string()).print();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj.pop(): %s\n" % $obj.pop()).print();
+("obj.pop(): %s\n" % $obj.pop()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -444,9 +444,9 @@ Retrieve and return last element of object of class `Array`.
 
 ```cpp
 obj = [1,2,3,4,5];
-("obj: %s\n" % obj.to_string()).print();
-("obj.last(): %s\n" % obj.last().to_string()).print();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj.last(): %s\n" % $obj.last()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -472,9 +472,9 @@ Replace all elements of object of class `Array` by method parameter.
 
 ```cpp
 obj = [1,2,3,4,5];
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj.fill(0);
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -500,9 +500,9 @@ From object of class `Array`, retrieve index of first element equal to method pa
 
 ```cpp
 obj = [1,2,3,4,5];
-("obj: %s\n" % obj.to_string()).print();
-("obj.get_idx(2): %s\n" % obj.get_idx(2).to_string()).print();
-("obj.get_idx(100): %s\n" % obj.get_idx(100).to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj.get_idx(2): %s\n" % $obj.get_idx(2)).print();
+("obj.get_idx(100): %s\n" % $obj.get_idx(100)).print();
 ```
 ```
 obj: [1,2,3,4,5]
@@ -528,9 +528,9 @@ From object of class `Array`, retrieve indexes of elements that are equal to met
 
 ```cpp
 obj = new Array([1,2,2,4,2,5]);
-("obj: %s\n" % obj.to_string()).print();
-("obj.get_idxs(2): %s\n" % obj.get_idxs(2).to_string()).print();
-("obj.get_idxs(100): %s\n" % obj.get_idxs(100).to_string()).print();
+("obj: %s\n" % $obj).print();
+("obj.get_idxs(2): %s\n" % $obj.get_idxs(2)).print();
+("obj.get_idxs(100): %s\n" % $obj.get_idxs(100)).print();
 ```
 ```
 obj: [1,2,2,4,2,5]
@@ -618,10 +618,10 @@ Retrieve element from object of class `Array` stored at requested index position
 
 ```cpp
 obj = [1,2,3,4,5];
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.first_idx();
 do {
-  ("obj.item(%d): %s\n" % [idx,obj.item(idx).to_string()]).print();
+  ("obj.item(%d): %s\n" % [idx,$obj.item(idx)]).print();
   idx = obj.next_idx(idx);
 } while(Blank != idx);
 ```
@@ -649,9 +649,9 @@ Retrieve index of first element in object of class `Array`.
 
 ```cpp
 obj = [1,2,3,4,5];
-("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
+("obj.first_idx: %s\n" % $obj.first_idx()).print();
 obj.clear();
-("obj.first_idx: %s\n" % obj.first_idx().to_string()).print();
+("obj.first_idx: %s\n" % $obj.first_idx()).print();
 ```
 ```
 obj.first_idx: 0
@@ -673,11 +673,11 @@ Retrieve index of last element in object of class `Array`.
 
 ```cpp
 obj = [1,2,3,4,5];
-("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
+("obj.last_idx: %s\n" % $obj.last_idx()).print();
 obj.pop();
-("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
+("obj.last_idx: %s\n" % $obj.last_idx()).print();
 obj.clear();
-("obj.last_idx: %s\n" % obj.last_idx().to_string()).print();
+("obj.last_idx: %s\n" % $obj.last_idx()).print();
 ```
 ```
 obj.last_idx: 4
@@ -704,10 +704,10 @@ From object of class `Array` retrieve index of element following element identif
 
 ```cpp
 obj = [1,2,3,4,5];
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.first_idx();
 do {
-  ("idx: %s\n" % idx.to_string()).print();
+  ("idx: %s\n" % $idx).print();
   idx = obj.next_idx(idx);
 } while(Blank != idx);
 ```
@@ -739,10 +739,10 @@ From object of class `Array` retrieve index of element preceding element identif
 
 ```cpp
 obj = [1,2,3,4,5];
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 idx = obj.last_idx();
 do {
-  ("idx: %s\n" % idx.to_string()).print();
+  ("idx: %s\n" % $idx).print();
   idx = obj.prev_idx(idx);
 } while(Blank != idx);
 ```

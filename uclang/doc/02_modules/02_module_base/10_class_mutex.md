@@ -46,7 +46,7 @@ Creates default object of class `Mutex`.
 
 ```cpp
 obj = new Mutex();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: Mutex
@@ -74,9 +74,9 @@ Assignment operator `=`. Object of class `Mutex` is replaced by method parameter
 
 ```cpp
 obj = new Mutex();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: Mutex
@@ -103,7 +103,7 @@ locked, calling thread blocks until the mutex becomes available.
 
 ```cpp
 obj = new Mutex();
-("obj.lock(): %s\n" % obj.lock().to_string()).print();
+("obj.lock(): %s\n" % $obj.lock()).print();
 obj.unlock();
 ```
 ```
@@ -126,7 +126,7 @@ locked, method do not blocks and returns object of class `Error` immediately.
 
 ```cpp
 obj = new Mutex();
-("obj.try_lock(): %s\n" % obj.try_lock().to_string()).print();
+("obj.try_lock(): %s\n" % $obj.try_lock()).print();
 obj.unlock();
 ```
 ```
@@ -149,7 +149,7 @@ Unlock object of class `Mutex` owned by calling thread.
 ```cpp
 obj = new Mutex();
 obj.lock();
-("obj.unlock(): %s\n" % obj.unlock().to_string()).print();
+("obj.unlock(): %s\n" % $obj.unlock()).print();
 ```
 ```
 obj.unlock(): <blank>

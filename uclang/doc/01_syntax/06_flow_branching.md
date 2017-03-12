@@ -183,7 +183,7 @@ for (val <- [1,2,3,4,5])
     case val < 2: descr.push("is lesser than two");
     case val > 2: descr.push("is greater than two");
 
-    case Blank != [2,3,5,7].get_idx(val): descr.push("is prime");
+    case val in [2,3,5,7]: descr.push("is prime");
 
     default:
       descr.push("is unknown");

@@ -36,7 +36,7 @@ Creates default object of class `Error`.
 
 ```cpp
 obj = new Error();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: error_OK
@@ -64,9 +64,9 @@ Assignment operator `=`. Object of class `Error` is replaced by method parameter
 
 ```cpp
 obj = new Error();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: error_OK

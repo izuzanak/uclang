@@ -63,7 +63,7 @@ Creates object from its binary representation.
 ```cpp
 data = Pack.pack(new Dict(["One",1,"Two",2,"Three",3]));
 result = Pack.unpack(data);
-("result: %s\n" % result.to_string()).print();
+("result: %s\n" % $result).print();
 ```
 ```
 result: [One:1,Two:2,Three:3]
@@ -122,7 +122,7 @@ array contains unused part of input binary string.
 format = "bhif";
 data = Pack.code(format,[127,32767,2147483647,1.0]);
 result = Pack.decode(format,data);
-("result: %s\n" % result.to_string()).print();
+("result: %s\n" % $result).print();
 ```
 ```
 result: [127,32767,2147483647,1.000000,]

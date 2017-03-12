@@ -81,9 +81,9 @@ Assignment operator `=`. Object of class `Pipe` is replaced by method parameter.
 
 ```cpp
 obj = new Pipe("cat -n numbers.txt 2> /dev/null","r");
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: Pipe

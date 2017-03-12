@@ -37,7 +37,7 @@ Creates default object of class `Type`.
 
 ```cpp
 obj = new Type();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: Blank
@@ -57,7 +57,7 @@ Creates object of class `Type` identifying type of method parameter.
 
 ```cpp
 obj = new Type("Hello world");
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: String
@@ -85,9 +85,9 @@ Assignment operator `=`. Object of class `Type` is replaced by method parameter.
 
 ```cpp
 obj = type Integer;
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: Integer

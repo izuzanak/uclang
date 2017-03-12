@@ -73,9 +73,9 @@ Assignment operator `=`. Object of class `Thread` is replaced by method paramete
 
 ```cpp
 obj = thread_fun("Data");
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 obj = "New value";
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: Thread
@@ -101,7 +101,7 @@ Method waits for thread specified by object of class `Thread` to terminate.
 
 ```cpp
 obj = thread_fun("Data");
-("obj.join(): %s\n" % obj.join().to_string()).print();
+("obj.join(): %s\n" % $obj.join()).print();
 ```
 ```
 obj.join(): Thread return: Data
@@ -123,9 +123,9 @@ immediately even if thread was not yet terminated.
 
 ```cpp
 obj = thread_fun("Data");
-("obj.try_join(): %s\n" % obj.try_join().to_string()).print();
+("obj.try_join(): %s\n" % $obj.try_join()).print();
 Sys.sleep(100);
-("obj.try_join(): %s\n" % obj.try_join().to_string()).print();
+("obj.try_join(): %s\n" % $obj.try_join()).print();
 ```
 ```
 obj.try_join(): error_BUSY
@@ -149,7 +149,7 @@ joining.
 
 ```cpp
 obj = thread_fun("Data");
-("obj.detach(): %s\n" % obj.detach().to_string()).print();
+("obj.detach(): %s\n" % $obj.detach()).print();
 ```
 ```
 obj.detach(): <blank>
@@ -168,7 +168,7 @@ Method suspend thread execution in favor of other threads running in system.
 **Example:**
 
 ```cpp
-("Thread.yield(): %s\n" % Thread.yield().to_string()).print();
+("Thread.yield(): %s\n" % $Thread.yield()).print();
 ```
 ```
 Thread.yield(): <blank>

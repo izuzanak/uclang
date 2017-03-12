@@ -87,7 +87,7 @@ Creates default object of class `Exception`.
 
 ```cpp
 obj = new Exception();
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: Exception
@@ -107,7 +107,7 @@ Creates user exception (object of class `Exception`) encapsulating object given 
 
 ```cpp
 obj = new Exception("Simple exception");
-("obj: %s\n" % obj.to_string()).print();
+("obj: %s\n" % $obj).print();
 ```
 ```
 obj: Exception
@@ -132,7 +132,7 @@ try
 }
 catch (exc)
 {
-  ("exc: %s\n" % exc.to_string()).print();
+  ("exc: %s\n" % $exc).print();
 }
 ```
 ```
@@ -153,7 +153,7 @@ Retrieve object of class `Error` representing type of exception.
 
 ```cpp
 obj = new Exception("Simple exception");
-("obj.get_type(): %s\n" % obj.get_type().to_string()).print();
+("obj.get_type(): %s\n" % $obj.get_type()).print();
 ```
 ```
 obj.get_type(): error_USER_EXCEPTION
@@ -195,7 +195,7 @@ Return name of source file in which object of class `Exception` was thrown.
 ```cpp
 try {
   obj = new Exception("Simple exception");
-  ("obj.get_file_name(): %s\n" % obj.get_file_name().to_string()).print();
+  ("obj.get_file_name(): %s\n" % $obj.get_file_name()).print();
   obj.throw();
 }
 catch (exc)
@@ -224,7 +224,7 @@ Return line of source file in which object of class `Exception` was thrown.
 ```cpp
 try {
   obj = new Exception("Simple exception");
-  ("obj.get_line(): %s\n" % obj.get_line().to_string()).print();
+  ("obj.get_line(): %s\n" % $obj.get_line()).print();
   obj.throw();
 }
 catch (exc)
