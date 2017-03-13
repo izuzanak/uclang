@@ -10,7 +10,7 @@ include "script_parser.h"
 const unsigned max_number_string_length = 12;
 
 // - callers of parse action functions -
-const unsigned c_script_parse_action_cnt = 188;
+const unsigned c_script_parse_action_cnt = 190;
 bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,script_parser_s &_this) =
 {/*{{{*/
 
@@ -251,6 +251,8 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
 
   pa_lambda_end,
   pa_lambda_begin,
+  pa_null,
+  pa_null,
 
   pa_const_char,
   pa_const_octal_char,
