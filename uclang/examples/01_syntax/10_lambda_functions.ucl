@@ -1,0 +1,72 @@
+
+import tutorial;
+import containers;
+import algorithms;
+
+class Main
+{
+  static public main(argv)
+  {
+    // Lambda function expression syntax
+    //
+    // : ( <method_parameter_list> ) <command>
+    //
+
+    Tutorial.note("Lambda functions are delegates");
+    (":(a,b) return a + b; -> %s\n" % $:(a,b) return a + b;).print();
+
+    Tutorial.note("Single expression lambda functions");
+    lambda = :(a,b) return a + b;;
+    ("lambda = :(a,b) return a + b; -> %s\n" % $lambda).print();
+    ("lambda.call([10,15])          -> %d\n" % lambda.call([10,15])).print();
+    ("lambda.call([\"Jelly\",\"fish\"]) -> %s\n" % lambda.call(["Jelly","fish"])).print();
+
+    Tutorial.note("Multiple expression lambda functions");
+    lambda = :(acc,cont) {
+      for (value <- cont)
+      {
+        acc += value;
+      }
+      return acc;
+    };
+    ("lambda = :(acc,cont) { ... }      -> %s\n" % $lambda).print();
+    ("lambda.call([0,[1,2,3,4,5]])      -> %d\n" % lambda.call([0,[1,2,3,4,5]])).print();
+    ("lambda.call([\"\",[\"a\",\"b\",\"c\"]])   -> %s\n" % lambda.call(["",["a","b","c"]])).print();
+    ("lambda.call([0,new Range(0,100)]) -> %d\n" % lambda.call([0,new Range(0,100)])).print();
+
+    Tutorial.note("Lambda function without parameters");
+    (":() return 125;.call([])       -> %d\n" % :() return 125;.call([])).print();
+    (":() return \"Value\";.call([])   -> %s\n" % :() return "Value";.call([])).print();
+    (":() return [1,2,3,4];.call([]) -> %s\n" % $:() return [1,2,3,4];.call([])).print();
+
+    Tutorial.note("Algo/Filter map by lambda function");
+    lambda = :(index) return 'a' += index;;
+    ("lambda = :(index) return 'a' += index; -> %s\n" % $lambda).print();
+    ("Algo.map(new Range(0,15),lambda)       -> %s\n" % $Algo.map(new Range(0,15),lambda)).print();
+    ("Filter.map(new Range(0,15),lambda)[::] -> %s\n" % $Filter.map(new Range(0,15),lambda)[::]).print();
+
+    Tutorial.note("Algo/Filter filter by lambda function");
+    lambda = :(value) return value & 0x01;;
+    ("lambda = :(value) return value & 0x01;    -> %s\n" % $lambda).print();
+    ("Algo.filter(new Range(0,20),lambda)       -> %s\n" % $Algo.filter(new Range(0,20),lambda)).print();
+    ("Filter.filter(new Range(0,20),lambda)[::] -> %s\n" % $Filter.filter(new Range(0,20),lambda)[::]).print();
+
+    Tutorial.note("Lambda function returning lambda function");
+    lambda = :(index) {
+      return [
+        :(a,b) return a + b;,
+        :(a,b) return a - b;,
+        :(a,b) return a * b;,
+        :(a,b) return a / b;
+      ][index];
+    };
+
+    ("Algo.reduce(0,new Range(1,10),lambda.call([0]))      -> %s\n" % $Algo.reduce(0,new Range(1,10),lambda.call([0]))).print();
+    ("Algo.reduce(0,new Range(1,10),lambda.call([1]))      -> %s\n" % $Algo.reduce(0,new Range(1,10),lambda.call([1]))).print();
+    ("Algo.reduce(1,new Range(1,10),lambda.call([2]))      -> %s\n" % $Algo.reduce(1,new Range(1,10),lambda.call([2]))).print();
+    ("Algo.reduce(5000000,new Range(1,5),lambda.call([3])) -> %s\n" % $Algo.reduce(5000000,new Range(1,5),lambda.call([3]))).print();
+
+    Tutorial.note("Tutorial end");
+  }
+}
+

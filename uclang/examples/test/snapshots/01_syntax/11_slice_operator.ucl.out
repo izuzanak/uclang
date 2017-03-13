@@ -1,0 +1,25 @@
+
+=== Array slice ================================================================
+
+array: [1,2,3,4,5,6,7,8,9,10]
+array[::2]: [1,3,5,7,9]
+array[-1::-2]: [10,8,6,4,2]
+
+=== String slice ===============================================================
+
+"!!ddllrrooww oolllleeHH"[::-2]: Hello world!
+
+=== Iter_0 slice ===============================================================
+
+Iter_0[::]: [item(0),item(1),item(2),item(3),item(4),item(5),item(6),item(7),item(8),item(9)]
+Iter_0[::-1]: [item(9),item(8),item(7),item(6),item(5),item(4),item(3),item(2),item(1),item(0)]
+
+=== Iter_1 slice ===============================================================
+
+Iter_1[::]: [item(0),item(1),item(2),item(3),item(4),item(5),item(6),item(7),item(8),item(9)]
+Iter_1[::-1]: [item(9),item(8),item(7),item(6),item(5),item(4),item(3),item(2),item(1),item(0)]
+Iter_1[4::]: [item(4),item(5),item(6),item(7),item(8),item(9)]
+Iter_1[-4::-1]: [item(6),item(5),item(4),item(3),item(2),item(1),item(0)]
+
+=== File lines slice ===========================================================
+

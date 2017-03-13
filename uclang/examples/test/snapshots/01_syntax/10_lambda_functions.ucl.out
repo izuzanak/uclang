@@ -1,0 +1,45 @@
+
+=== Lambda functions are delegates =============================================
+
+:(a,b) return a + b; -> Delegate
+
+=== Single expression lambda functions =========================================
+
+lambda = :(a,b) return a + b; -> Delegate
+lambda.call([10,15])          -> 25
+lambda.call(["Jelly","fish"]) -> Jellyfish
+
+=== Multiple expression lambda functions =======================================
+
+lambda = :(acc,cont) { ... }      -> Delegate
+lambda.call([0,[1,2,3,4,5]])      -> 15
+lambda.call(["",["a","b","c"]])   -> abc
+lambda.call([0,new Range(0,100)]) -> 5050
+
+=== Lambda function without parameters =========================================
+
+:() return 125;.call([])       -> 125
+:() return "Value";.call([])   -> Value
+:() return [1,2,3,4];.call([]) -> [1,2,3,4]
+
+=== Algo/Filter map by lambda function =========================================
+
+lambda = :(index) return 'a' += index; -> Delegate
+Algo.map(new Range(0,15),lambda)       -> [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p]
+Filter.map(new Range(0,15),lambda)[::] -> [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p]
+
+=== Algo/Filter filter by lambda function ======================================
+
+lambda = :(value) return value & 0x01;    -> Delegate
+Algo.filter(new Range(0,20),lambda)       -> [1,3,5,7,9,11,13,15,17,19]
+Filter.filter(new Range(0,20),lambda)[::] -> [1,3,5,7,9,11,13,15,17,19]
+
+=== Lambda function returning lambda function ==================================
+
+Algo.reduce(0,new Range(1,10),lambda.call([0]))      -> 55
+Algo.reduce(0,new Range(1,10),lambda.call([1]))      -> -55
+Algo.reduce(1,new Range(1,10),lambda.call([2]))      -> 3628800
+Algo.reduce(5000000,new Range(1,5),lambda.call([3])) -> 41666
+
+=== Tutorial end ===============================================================
+
