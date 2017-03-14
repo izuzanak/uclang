@@ -9,19 +9,19 @@ class Main
   {
     // Lambda function expression syntax
     //
-    // : ( <method_parameter_list> ) <command>
+    // : ( <parameter_list> ) <command>
     //
 
     Tutorial.note("Lambda functions are delegates");
     (":(a,b) return a + b; -> %s\n" % $:(a,b) return a + b;).print();
 
-    Tutorial.note("Single expression lambda functions");
+    Tutorial.note("Single statement lambda functions");
     lambda = :(a,b) return a + b;;
     ("lambda = :(a,b) return a + b; -> %s\n" % $lambda).print();
     ("lambda.call([10,15])          -> %d\n" % lambda.call([10,15])).print();
     ("lambda.call([\"Jelly\",\"fish\"]) -> %s\n" % lambda.call(["Jelly","fish"])).print();
 
-    Tutorial.note("Multiple expression lambda functions");
+    Tutorial.note("Multiple statement lambda functions");
     lambda = :(acc,cont) {
       for (value <- cont)
       {
@@ -61,10 +61,10 @@ class Main
       ][index];
     };
 
-    ("Algo.reduce(0,new Range(1,10),lambda.call([0]))      -> %s\n" % $Algo.reduce(0,new Range(1,10),lambda.call([0]))).print();
-    ("Algo.reduce(0,new Range(1,10),lambda.call([1]))      -> %s\n" % $Algo.reduce(0,new Range(1,10),lambda.call([1]))).print();
-    ("Algo.reduce(1,new Range(1,10),lambda.call([2]))      -> %s\n" % $Algo.reduce(1,new Range(1,10),lambda.call([2]))).print();
-    ("Algo.reduce(5000000,new Range(1,5),lambda.call([3])) -> %s\n" % $Algo.reduce(5000000,new Range(1,5),lambda.call([3]))).print();
+    ("Algo.reduce(0,new Range(1,10),lambda.call([0]))      -> %d\n" % Algo.reduce(0,new Range(1,10),lambda.call([0]))).print();
+    ("Algo.reduce(0,new Range(1,10),lambda.call([1]))      -> %d\n" % Algo.reduce(0,new Range(1,10),lambda.call([1]))).print();
+    ("Algo.reduce(1,new Range(1,10),lambda.call([2]))      -> %d\n" % Algo.reduce(1,new Range(1,10),lambda.call([2]))).print();
+    ("Algo.reduce(5000000,new Range(1,5),lambda.call([3])) -> %d\n" % Algo.reduce(5000000,new Range(1,5),lambda.call([3]))).print();
 
     Tutorial.note("Tutorial end");
   }

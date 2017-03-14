@@ -3,13 +3,13 @@
 
 :(a,b) return a + b; -> Delegate
 
-=== Single expression lambda functions =========================================
+=== Single statement lambda functions ==========================================
 
 lambda = :(a,b) return a + b; -> Delegate
 lambda.call([10,15])          -> 25
 lambda.call(["Jelly","fish"]) -> Jellyfish
 
-=== Multiple expression lambda functions =======================================
+=== Multiple statement lambda functions ========================================
 
 lambda = :(acc,cont) { ... }      -> Delegate
 lambda.call([0,[1,2,3,4,5]])      -> 15
