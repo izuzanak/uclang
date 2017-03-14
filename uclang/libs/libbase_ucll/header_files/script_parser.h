@@ -603,7 +603,9 @@ struct
 <
 location_s_ptr:object_location
 unsigned:name_idx_ri $// method_ri for static delegates
+unsigned:orig_param_cnt
 unsigned:param_cnt
+pointer:curry
 >
 delegate_s;
 @end

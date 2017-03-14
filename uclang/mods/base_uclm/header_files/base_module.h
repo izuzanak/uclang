@@ -407,6 +407,7 @@ void bic_delegate_clear(interpreter_thread_s &it,location_s *location_ptr);
 bool bic_delegate_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_delegate_method_Delegate_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_delegate_method_call_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_delegate_method_curry_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_delegate_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_delegate_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

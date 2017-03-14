@@ -10,7 +10,7 @@ built_in_module_s module =
   base_classes,         // Classes
 
   0,                    // Error base index
-  53,                   // Error count
+  54,                   // Error count
   base_error_strings,   // Error strings
 
   base_initialize,      // Initialize function
@@ -112,6 +112,7 @@ const char *base_error_strings[] =
   "error_DELEGATE_NEGATIVE_PARAMETER_COUNT",
   "error_DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD",
   "error_DELEGATE_CALL_WRONG_PARAMETER_COUNT",
+  "error_DELEGATE_CURRY_WRONG_PARAMETER_COUNT",
   "error_DELEGATE_WRONG_RETURN_VALUE_TYPE",
 };/*}}}*/
 
@@ -580,6 +581,13 @@ bool base_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nDelegate: wrong count of parameters %" HOST_LL_FORMAT "d, expected %" HOST_LL_FORMAT "d\n",exception.params[0],exception.params[1]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_DELEGATE_CURRY_WRONG_PARAMETER_COUNT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nDelegate: wrong count of curry parameters %" HOST_LL_FORMAT "d, expected 1 - %" HOST_LL_FORMAT "d\n",exception.params[0],exception.params[1]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_DELEGATE_WRONG_RETURN_VALUE_TYPE:
@@ -7618,6 +7626,10 @@ built_in_variable_s exception_variables[] =
     c_modifier_public | c_modifier_static | c_modifier_static_const
   },
   {
+    "DELEGATE_CURRY_WRONG_PARAMETER_COUNT",
+    c_modifier_public | c_modifier_static | c_modifier_static_const
+  },
+  {
     "DELEGATE_WRONG_RETURN_VALUE_TYPE",
     c_modifier_public | c_modifier_static | c_modifier_static_const
   },
@@ -7678,6 +7690,7 @@ void bic_exception_consts(location_array_s &const_locations)
   CREATE_EXCEPTION_TYPE_BIC_STATIC(c_error_DELEGATE_NEGATIVE_PARAMETER_COUNT);
   CREATE_EXCEPTION_TYPE_BIC_STATIC(c_error_DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD);
   CREATE_EXCEPTION_TYPE_BIC_STATIC(c_error_DELEGATE_CALL_WRONG_PARAMETER_COUNT);
+  CREATE_EXCEPTION_TYPE_BIC_STATIC(c_error_DELEGATE_CURRY_WRONG_PARAMETER_COUNT);
   CREATE_EXCEPTION_TYPE_BIC_STATIC(c_error_DELEGATE_WRONG_RETURN_VALUE_TYPE);
 }/*}}}*/
 
@@ -8595,7 +8608,7 @@ built_in_class_s delegate_class =
 {/*{{{*/
   "Delegate",
   c_modifier_public | c_modifier_final,
-  5, delegate_methods,
+  6, delegate_methods,
   0, delegate_variables,
   bic_delegate_consts,
   bic_delegate_init,
@@ -8631,6 +8644,11 @@ built_in_method_s delegate_methods[] =
     bic_delegate_method_call_1
   },
   {
+    "curry#1",
+    c_modifier_public | c_modifier_final,
+    bic_delegate_method_curry_1
+  },
+  {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_delegate_method_to_string_0
@@ -8662,9 +8680,29 @@ void bic_delegate_clear(interpreter_thread_s &it,location_s *location_ptr)
   // - if delegate exist -
   if (delegate_ptr != NULL)
   {
+    // - release delegate object -
     if (delegate_ptr->object_location != NULL)
     {
       it.release_location_ptr(delegate_ptr->object_location);
+    }
+
+    // - release delegate curry parameters -
+    if (delegate_ptr->curry != NULL)
+    {
+      pointer_array_s *curry_params = (pointer_array_s *)delegate_ptr->curry;
+
+      // - release curry parameters locations -
+      if (curry_params->used != 0)
+      {
+        pointer *p_ptr = curry_params->data;
+        pointer *p_ptr_end = p_ptr + curry_params->used;
+        do {
+          it.release_location_ptr((location_s *)*p_ptr);
+        } while(++p_ptr < p_ptr_end);
+      }
+
+      curry_params->clear();
+      cfree(curry_params);
     }
 
     cfree(delegate_ptr);
@@ -8772,14 +8810,17 @@ bool bic_delegate_method_Delegate_3(interpreter_thread_s &it,unsigned stack_base
     {
       cfree(delegate_ptr);
 
-      // FIXME TODO throw proper exception
-      BIC_TODO_ERROR(__FILE__,__LINE__);
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      new_exception->params.push(class_idx);
+
       return false;
     }
 
     delegate_ptr->object_location = NULL;
     delegate_ptr->name_idx_ri = method_ri;
+    delegate_ptr->orig_param_cnt = param_cnt;
     delegate_ptr->param_cnt = param_cnt;
+    delegate_ptr->curry = NULL;
   }/*}}}*/
 
   // - process method delegate -
@@ -8815,7 +8856,9 @@ bool bic_delegate_method_Delegate_3(interpreter_thread_s &it,unsigned stack_base
     delegate_ptr->object_location = src_0_reference;
 
     delegate_ptr->name_idx_ri = name_idx;
+    delegate_ptr->orig_param_cnt = param_cnt;
     delegate_ptr->param_cnt = param_cnt;
+    delegate_ptr->curry = NULL;
   }/*}}}*/
 
   // - set object pointer to result -
@@ -8863,6 +8906,92 @@ bool bic_delegate_method_call_1(interpreter_thread_s &it,unsigned stack_base,uli
 
   pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(trg_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_delegate_method_curry_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_array)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("curry#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  // - retrieve delegate pointer -
+  delegate_s *orig_dlg_ptr = (delegate_s *)dst_location->v_data_ptr;
+
+  // - retrieve parameters array -
+  pointer_array_s *params_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (params_ptr->used == 0 || params_ptr->used > orig_dlg_ptr->param_cnt)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_DELEGATE_CURRY_WRONG_PARAMETER_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(params_ptr->used);
+    new_exception->params.push(orig_dlg_ptr->param_cnt);
+
+    return false;
+  }
+
+  // - create new delegate object -
+  delegate_s *new_dlg_ptr = (delegate_s *)cmalloc(sizeof(delegate_s));
+
+  // - retrieve object location -
+  if (orig_dlg_ptr->object_location != NULL)
+  {
+    orig_dlg_ptr->object_location->v_reference_cnt.atomic_inc();
+  }
+
+  new_dlg_ptr->object_location = orig_dlg_ptr->object_location;
+
+  // - retrieve method properties -
+  new_dlg_ptr->name_idx_ri = orig_dlg_ptr->name_idx_ri;
+  new_dlg_ptr->orig_param_cnt = orig_dlg_ptr->orig_param_cnt;
+  new_dlg_ptr->param_cnt = orig_dlg_ptr->param_cnt - params_ptr->used;
+
+  // - retrieve curry parameters -
+  pointer_array_s *new_curry_params = (pointer_array_s *)cmalloc(sizeof(pointer_array_s));
+  new_curry_params->init();
+
+  // - copy original curry parameters -
+  if (orig_dlg_ptr->curry != NULL)
+  {
+    pointer_array_s *orig_curry_params = (pointer_array_s *)orig_dlg_ptr->curry;
+
+    pointer *p_ptr = orig_curry_params->data;
+    pointer *p_ptr_end = p_ptr + orig_curry_params->used;
+    do {
+      ((location_s *)*p_ptr)->v_reference_cnt.atomic_inc();
+      new_curry_params->push(*p_ptr);
+    } while(++p_ptr < p_ptr_end);
+  }
+
+  // - copy new curry parameters -
+  {
+    pointer *p_ptr = params_ptr->data;
+    pointer *p_ptr_end = p_ptr + params_ptr->used;
+    do {
+      location_s *location_ptr = it.get_location_value(*p_ptr);
+
+      location_ptr->v_reference_cnt.atomic_inc();
+      new_curry_params->push(location_ptr);
+    } while(++p_ptr < p_ptr_end);
+  }
+
+  new_dlg_ptr->curry = new_curry_params;
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_delegate,new_dlg_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/

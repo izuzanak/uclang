@@ -742,6 +742,45 @@ enum
     }\
   }/*}}}*/
 
+#define BIC_CALL_DELEGATE_PARAMETERS(IT,PARAM_CNT,PARAM_DATA,DELEGATE_PTR,PARAM_IDX,PARAM_BASE) \
+{/*{{{*/\
+  unsigned param_idx = PARAM_IDX;\
+\
+  if (DELEGATE_PTR->curry != NULL)\
+  {\
+    pointer_array_s *curry_params = (pointer_array_s *)DELEGATE_PTR->curry;\
+\
+    pointer *p_ptr = curry_params->data;\
+    pointer *p_ptr_end = p_ptr + curry_params->used;\
+    do\
+    {\
+      /* - push parameter to stack - */\
+      ((location_s *)*p_ptr)->v_reference_cnt.atomic_inc();\
+      IT.data_stack.push(*p_ptr);\
+      \
+      /* - set parameter index in code - */\
+      tmp_code[PARAM_BASE + param_idx] = param_idx;\
+    }\
+    while(++param_idx,++p_ptr < p_ptr_end);\
+  }\
+\
+  if (PARAM_CNT != 0)\
+  {\
+    pointer *p_ptr = PARAM_DATA;\
+    pointer *p_ptr_end = p_ptr + PARAM_CNT;\
+    do\
+    {\
+      /* - push parameter to stack - */\
+      ((location_s *)*p_ptr)->v_reference_cnt.atomic_inc();\
+      IT.data_stack.push(*p_ptr);\
+      \
+      /* - set parameter index in code - */\
+      tmp_code[PARAM_BASE + param_idx] = param_idx;\
+    }\
+    while(++param_idx,++p_ptr < p_ptr_end);\
+  }\
+}/*}}}*/
+
 #define BIC_CALL_DELEGATE(IT,DELEGATE_PTR,PARAM_DATA,PARAM_CNT,TRG_LOCATION_PTR,SOURCE_POS,ERR_CODE) \
   {/*{{{*/\
     unsigned new_stack_base = IT.data_stack.used;\
@@ -753,30 +792,15 @@ enum
     /* - if delegate is static - */\
     if (DELEGATE_PTR->object_location == NULL)\
     {/*{{{*/\
-      uli tmp_code[5 + PARAM_CNT];\
+      uli tmp_code[5 + DELEGATE_PTR->orig_param_cnt];\
       tmp_code[0] = i_static_call;\
-      tmp_code[1] = PARAM_CNT;\
+      tmp_code[1] = DELEGATE_PTR->orig_param_cnt;\
       tmp_code[2] = SOURCE_POS;\
       tmp_code[3] = 0;\
       tmp_code[4] = DELEGATE_PTR->name_idx_ri;\
       \
       /* - push parameters to stack - */\
-      if (PARAM_CNT != 0)\
-      {\
-        pointer *p_ptr = PARAM_DATA;\
-        pointer *p_ptr_end = p_ptr + PARAM_CNT;\
-        unsigned param_idx = 1;\
-        do\
-        {\
-          /* - push parameter to stack - */\
-          ((location_s *)*p_ptr)->v_reference_cnt.atomic_inc();\
-          IT.data_stack.push(*p_ptr);\
-          \
-          /* - set parameter index in code - */\
-          tmp_code[4 + param_idx] = param_idx;\
-        }\
-        while(++param_idx,++p_ptr < p_ptr_end);\
-      }\
+      BIC_CALL_DELEGATE_PARAMETERS(IT,PARAM_CNT,PARAM_DATA,DELEGATE_PTR,1,4);\
       \
       /* - call static method - */\
       uli *code_ptr = tmp_code;\
@@ -798,9 +822,9 @@ enum
       location->v_reference_cnt.atomic_inc();\
       IT.data_stack.push((pointer)location);\
       \
-      uli tmp_code[8 + PARAM_CNT];\
+      uli tmp_code[8 + DELEGATE_PTR->orig_param_cnt];\
       tmp_code[0] = i_call;\
-      tmp_code[1] = 1 + PARAM_CNT;\
+      tmp_code[1] = 1 + DELEGATE_PTR->orig_param_cnt;\
       tmp_code[2] = DELEGATE_PTR->name_idx_ri;\
       tmp_code[3] = c_idx_not_exist;\
       tmp_code[4] = c_idx_not_exist;\
@@ -809,22 +833,7 @@ enum
       tmp_code[7] = 1;\
       \
       /* - push parameters to stack - */\
-      if (PARAM_CNT != 0)\
-      {\
-        pointer *p_ptr = PARAM_DATA;\
-        pointer *p_ptr_end = p_ptr + PARAM_CNT;\
-        unsigned param_idx = 2;\
-        do\
-        {\
-          /* - push parameter to stack - */\
-          ((location_s *)*p_ptr)->v_reference_cnt.atomic_inc();\
-          IT.data_stack.push(*p_ptr);\
-          \
-          /* - set parameter index in code - */\
-          tmp_code[6 + param_idx] = param_idx;\
-        }\
-        while(++param_idx,++p_ptr < p_ptr_end);\
-      }\
+      BIC_CALL_DELEGATE_PARAMETERS(IT,PARAM_CNT,PARAM_DATA,DELEGATE_PTR,2,6);\
       \
       /* - call method - */\
       uli *code_ptr = tmp_code;\

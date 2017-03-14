@@ -4053,7 +4053,9 @@ bool pa_lambda_end(string_s &source_string,script_parser_s &_this)
 
   delegate.object_location = NULL;
   delegate.name_idx_ri = method_record_idx;
-  delegate.param_cnt = method_record.parameter_record_idxs.used;
+  delegate.orig_param_cnt = method_record.parameter_record_idxs.used;
+  delegate.param_cnt = delegate.orig_param_cnt;
+  delegate.curry = NULL;
 
   // - retrieve expression description (after code_descr pop) -
   expression_descr_s &ed = _this.code_descrs.last().expression_descr;
