@@ -589,7 +589,7 @@ class UclVar
   static unsigned c_bi_vni_DELEGATE_NEGATIVE_PARAMETER_COUNT;
   static unsigned c_bi_vni_DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD;
   static unsigned c_bi_vni_DELEGATE_CALL_WRONG_PARAMETER_COUNT;
-  static unsigned c_bi_vni_DELEGATE_CURRY_WRONG_PARAMETER_COUNT;
+  static unsigned c_bi_vni_DELEGATE_PAPPLY_WRONG_PARAMETER_COUNT;
   static unsigned c_bi_vni_DELEGATE_WRONG_RETURN_VALUE_TYPE;
   static unsigned c_bi_vni__ERROR_INVALID;
   static unsigned c_bi_vni__ERROR_DEADLOCK;
@@ -1224,7 +1224,7 @@ class UclVar
     static UclVar DELEGATE_NEGATIVE_PARAMETER_COUNT;
     static UclVar DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD;
     static UclVar DELEGATE_CALL_WRONG_PARAMETER_COUNT;
-    static UclVar DELEGATE_CURRY_WRONG_PARAMETER_COUNT;
+    static UclVar DELEGATE_PAPPLY_WRONG_PARAMETER_COUNT;
     static UclVar DELEGATE_WRONG_RETURN_VALUE_TYPE;
 
     public:

@@ -746,12 +746,12 @@ enum
 {/*{{{*/\
   unsigned param_idx = PARAM_IDX;\
 \
-  if (DELEGATE_PTR->curry != NULL)\
+  if (DELEGATE_PTR->papply != NULL)\
   {\
-    pointer_array_s *curry_params = (pointer_array_s *)DELEGATE_PTR->curry;\
+    pointer_array_s *papply_params = (pointer_array_s *)DELEGATE_PTR->papply;\
 \
-    pointer *p_ptr = curry_params->data;\
-    pointer *p_ptr_end = p_ptr + curry_params->used;\
+    pointer *p_ptr = papply_params->data;\
+    pointer *p_ptr_end = p_ptr + papply_params->used;\
     do\
     {\
       /* - push parameter to stack - */\

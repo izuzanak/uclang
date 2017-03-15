@@ -16,12 +16,12 @@ delegate.call(["First","Second"]) -> FirstSecond
 delegate.call([[1,2,3],[4,5,6]])  -> [1,2,3,4,5,6]
 delegate -> Delegate
 
-=== Delegate method curry#1 ====================================================
+=== Delegate method papply#1 ===================================================
 
 delegate -> Delegate
-delegate.curry([10]).call([5])             -> 15
-delegate.curry(["First"]).call(["Second"]) -> FirstSecond
-delegate.curry([[1,2,3]]).call([[4,5,6]])  -> [1,2,3,4,5,6]
+delegate.papply([10]).call([5])             -> 15
+delegate.papply(["First"]).call(["Second"]) -> FirstSecond
+delegate.papply([[1,2,3]]).call([[4,5,6]])  -> [1,2,3,4,5,6]
 
 === Tutorial end ===============================================================
 

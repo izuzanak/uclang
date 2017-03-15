@@ -41,9 +41,9 @@ Algo.reduce(0,new Range(1,10),lambda.call([1]))      -> -55
 Algo.reduce(1,new Range(1,10),lambda.call([2]))      -> 3628800
 Algo.reduce(5000000,new Range(1,5),lambda.call([3])) -> 41666
 
-=== Currying lambda function ===================================================
+=== Partial application of lambda function =====================================
 
-lambda = :(a,b) return a + b;.curry([100]) -> Delegate
+lambda = :(a,b) return a + b;.papply([100]) -> Delegate
 Algo.map(new Range(0,7),lambda) -> [100,101,102,103,104,105,106,107]
 
 === Tutorial end ===============================================================

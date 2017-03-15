@@ -21,7 +21,7 @@ class Main
     // public final operator_binary_equal#1
     // public final Delegate#3
     // public final call#1
-    // public final curry#1
+    // public final papply#1
     // public final static to_string#0
     // public final static print#0
     //
@@ -45,14 +45,14 @@ class Main
     ("delegate.call([[1,2,3],[4,5,6]])  -> %s\n" % $delegate.call([[1,2,3],[4,5,6]])).print();
     ("delegate -> %s\n" % $delegate).print();
 
-    // Curry delegate, return delegate with implicit parameters defined
+    // Partial apply delegate, return delegate with implicit parameters defined
     //
-    Tutorial.note("Delegate method curry#1");
+    Tutorial.note("Delegate method papply#1");
     delegate = new Delegate(main,"callback",2);
     ("delegate -> %s\n" % $delegate).print();
-    ("delegate.curry([10]).call([5])             -> %s\n" % $delegate.curry([10]).call([5])).print();
-    ("delegate.curry([\"First\"]).call([\"Second\"]) -> %s\n" % $delegate.curry(["First"]).call(["Second"])).print();
-    ("delegate.curry([[1,2,3]]).call([[4,5,6]])  -> %s\n" % $delegate.curry([[1,2,3]]).call([[4,5,6]])).print();
+    ("delegate.papply([10]).call([5])             -> %s\n" % $delegate.papply([10]).call([5])).print();
+    ("delegate.papply([\"First\"]).call([\"Second\"]) -> %s\n" % $delegate.papply(["First"]).call(["Second"])).print();
+    ("delegate.papply([[1,2,3]]).call([[4,5,6]])  -> %s\n" % $delegate.papply([[1,2,3]]).call([[4,5,6]])).print();
 
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl
