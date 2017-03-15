@@ -66,6 +66,12 @@ class Main
     ("Algo.reduce(1,new Range(1,10),lambda.call([2]))      -> %d\n" % Algo.reduce(1,new Range(1,10),lambda.call([2]))).print();
     ("Algo.reduce(5000000,new Range(1,5),lambda.call([3])) -> %d\n" % Algo.reduce(5000000,new Range(1,5),lambda.call([3]))).print();
 
+    Tutorial.note("Currying lambda function");
+
+    lambda = :(a,b) return a + b;.curry([100]);
+    ("lambda = :(a,b) return a + b;.curry([100]) -> %s\n" % $lambda).print();
+    ("Algo.map(new Range(0,7),lambda) -> %s\n" % $Algo.map(new Range(0,7),lambda)).print();
+
     Tutorial.note("Tutorial end");
   }
 }
