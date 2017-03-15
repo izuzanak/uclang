@@ -7376,7 +7376,7 @@ built_in_class_s exception_class =
   "Exception",
   c_modifier_public | c_modifier_final,
   10, exception_methods,
-  45, exception_variables,
+  46, exception_variables,
   bic_exception_consts,
   bic_exception_init,
   bic_exception_clear,
@@ -7637,8 +7637,8 @@ built_in_variable_s exception_variables[] =
 
 void bic_exception_consts(location_array_s &const_locations)
 {/*{{{*/
-  const_locations.push_blanks(45);
-  location_s *cv_ptr = const_locations.data + (const_locations.used - 45);
+  const_locations.push_blanks(46);
+  location_s *cv_ptr = const_locations.data + (const_locations.used - 46);
 
 #define CREATE_EXCEPTION_TYPE_BIC_STATIC(EXCEPTION_TYPE)\
   cv_ptr->v_type = c_bi_class_error;\
