@@ -50,7 +50,7 @@ class Main
     //
 
     Tutorial.note("File lines slice");
-    ("Odd lines: %s\n" % $new File("10_slice_operator.ucl","r")[::2]).print();
+    ("Odd lines: %s\n" % $new File("11_slice_operator.ucl","r")[::2]).print();
 
     Tutorial.note("Tutorial end");
   }

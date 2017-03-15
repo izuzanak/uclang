@@ -1,6 +1,0 @@
- ---------------------------------------- 
-Exception: ERROR: in file: "11_slice_operator.ucl" on line: 53
-    ("Odd lines: %s\n" % $new File("10_slice_operator.ucl","r")[::2]).print();
-
-Cannot open file "10_slice_operator.ucl"
- ---------------------------------------- 
