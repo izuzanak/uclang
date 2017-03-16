@@ -1,7 +1,7 @@
 
 # Flow loops
 
-This document describes syntax of loops used in uclang.
+This document describes syntax of loops used in Uclang.
 
 ### While loop statement
 
@@ -16,7 +16,7 @@ same as in languages C, C++, Java or JavaScript.
 
 Where used symbols have following meaning:
 
-* `<expression>` - represents single uclang expression.
+* `<expression>` - represents single Uclang expression.
 * `<command>` - represents one command, or block of commands enclosed in curly
   brackets `{` and `}`.
 
@@ -50,7 +50,7 @@ in languages C, C++, Java or JavaScript.
 
 Where used symbols have following meaning:
 
-* `<expression>` - represents single uclang expression.
+* `<expression>` - represents single Uclang expression.
 * `<command>` - represents one command, or block of commands enclosed in curly
   brackets `{` and `}`.
 
@@ -89,7 +89,7 @@ Where used symbols have following meaning:
 
 * `<variable>` - name of variable which value is set to objects of iterable,
   one by one.
-* `<expression>` - represents single uclang expression.
+* `<expression>` - represents single Uclang expression.
 * `<command>` - represents one command, or block of commands enclosed in curly
   brackets `{` and `}`.
 

@@ -1,7 +1,7 @@
 
 # Flow branching
 
-This document describes branching structures used in uclang.
+This document describes branching structures used in Uclang.
 
 ### If statement
 
@@ -16,7 +16,7 @@ languages C, C++, Java or JavaScript.
 
 Where used symbols have following meaning:
 
-* `<expression>` - represents single uclang expression.
+* `<expression>` - represents single Uclang expression.
 * `<command>` - represents one command, or block of commands enclosed in curly
   brackets `{` and `}`.
 
@@ -59,7 +59,7 @@ same as in languages C, C++, Java or JavaScript.
 
 Where used symbols have following meaning:
 
-* `<expression>` - represents single uclang expression.
+* `<expression>` - represents single Uclang expression.
 * `<command>` - represents one command, or block of commands enclosed in curly
   brackets `{` and `}`.
 
@@ -83,7 +83,7 @@ value 4 is not equal to three
 ### If-else syntax grammar rules
 
 Grammar rules of if-else statement, that are defined in real syntax grammar
-used for parsing of uclang source files:
+used for parsing of Uclang source files:
 
 ```
 <command>   -> if <condition> <if_else>
@@ -112,7 +112,7 @@ languages C, C++, Java or JavaScript.
 
 Where used symbols have following meaning:
 
-* `<expression>` - represents single uclang expression.
+* `<expression>` - represents single Uclang expression.
 * `<command>` - represents one command, or block of commands enclosed in curly
   brackets `{` and `}`.
 
@@ -212,7 +212,7 @@ JavaScript.
 <expression> -> <expression> ? <expression> : <expression>
 ```
 
-Where symbol `<expression>` represents single uclang expression.
+Where symbol `<expression>` represents single Uclang expression.
 
 **Example:**
 

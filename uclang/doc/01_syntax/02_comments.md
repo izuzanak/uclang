@@ -2,7 +2,7 @@
 # Source code comments
 
 In this document are introduced types of source code comments, that are
-available in uclang source files.
+available in Uclang source files.
 
 ### One line comments - first type
 

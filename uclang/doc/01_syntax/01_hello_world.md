@@ -2,8 +2,8 @@
 # Hello world program
 
 In this document is introduced "Hello world" program written in language
-uclang. On this simple program we describe some basic (process execution related)
-concepts of language uclang.
+Uclang. On this simple program we describe some basic (process execution related)
+concepts of language Uclang.
 
 ```cpp
 class Main

@@ -1,7 +1,7 @@
 
 # Lambda functions
 
-This document describes lambda functions in uclang.
+This document describes lambda functions in Uclang.
 
 ### Lambda function expression
 
@@ -68,6 +68,24 @@ res: 28
 res: 36
 res: 45
 res: 55
+```
+
+### Partial application of lambda function
+
+As any other object of class `Delegate`, lambda function parameters can be
+partially applied.
+
+**Example:**
+
+```cpp
+lambda = :(a,b) return a + b;.papply([10]);
+
+("result: %d\n" % lambda.call([5])).print();
+("result: %f\n" % lambda.call([5.0])).print();
+```
+```
+result: 15
+result: 15.000000
 ```
 
 ### Lambda function returning lambda function
