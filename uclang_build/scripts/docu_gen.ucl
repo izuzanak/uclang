@@ -1335,6 +1335,18 @@ method parameter." % [m_target_name,doc_class_ref("Array")],
 res = obj.call([1,2]);
 (\"res: %%s\\n\" %% $res).print();
 " % get_code(m_target_class,"obj","create_example")
+),/*}}}*/
+        "papply#1", new MethodDescr
+(/*{{{*/
+"Partially apply parameters of method identified by object of class `%s`. Parameters 
+of partially applied method are retrieved from object of class %s, which is given as
+method parameter." % [m_target_name,doc_class_ref("Array")],
+["Object of class %s." % doc_class_ref("Array")],"* Object of class %s." % doc_class_ref("Delegate"),"
+%s
+res = obj.papply([1]);
+(\"res: %%s\\n\" %% $res).print();
+res.call([2]);
+" % get_code(m_target_class,"obj","create_example")
 )/*}}}*/
       ]);/*}}}*/
     }

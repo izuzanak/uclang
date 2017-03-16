@@ -17,6 +17,7 @@ Class representing delegate referring to method of particular object.
 * Methods
 
   * Method [`call#1`](#call%231)
+  * Method [`papply#1`](#papply%231)
   * Method [`to_string#0`](#to_string%230)
   * Method [`print#0`](#print%230)
 
@@ -53,7 +54,7 @@ class Main
 
 <a name="Delegate#3" />
 
-### Constructor [`Delegate#3`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8688)
+### Constructor [`Delegate#3`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8726)
 
 Creates object of class `Delegate` referring to method
 of object given as first parameter, with name given by second parameter,
@@ -81,7 +82,7 @@ obj: Delegate
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8674)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8712)
 
 Assignment operator `=`. Object of class `Delegate` is replaced by method parameter.
 
@@ -112,7 +113,7 @@ obj: New value
 
 <a name="call#1" />
 
-### Method [`call#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8827)
+### Method [`call#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8870)
 
 Calls method identified by object of class `Delegate`. Parameters 
 of called method are retrieved from object of class `Array`, which is given as
@@ -138,9 +139,38 @@ method: [1,2]
 res: 3
 ```
 
+<a name="papply#1" />
+
+### Method [`papply#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8913)
+
+Partially apply parameters of method identified by object of class `Delegate`. Parameters 
+of partially applied method are retrieved from object of class `Array`, which is given as
+method parameter.
+
+**Parameters:**
+
+1. Object of class `Array`.
+
+**Return:**
+
+* Object of class `Delegate`.
+
+**Example:**
+
+```cpp
+obj = new Delegate(this,"method",2);
+res = obj.papply([1]);
+("res: %s\n" % $res).print();
+res.call([2]);
+```
+```
+res: Delegate
+method: [1,2]
+```
+
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8870)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8999)
 
 Convert object of class `Delegate` to object of class `String`.
 This method returns name of class `Delegate`.
@@ -160,7 +190,7 @@ Delegate.to_string(): Delegate
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8879)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L9008)
 
 Print string representation of object of class `Delegate` to standard output.
 This method prints name of class `Delegate`.
