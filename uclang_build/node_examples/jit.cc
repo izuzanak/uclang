@@ -60,14 +60,16 @@ int main(int argc,char **argv)
     int nums[num_cnt];
 
     memset(nums,0,num_cnt*sizeof(int));
-    for (int idx=0;idx<num_cnt;idx++) printf("%d,",nums[idx]); printf("\n");
+    for (int idx=0;idx<num_cnt;idx++) printf("%d,",nums[idx]);
+    printf("\n");
 
     {
       GET_ARRAY(args,{(long long int)nums MP_COMMA num_cnt});
       UclVar res = jit_fun.call(args);
     }
 
-    for (int idx=0;idx<num_cnt;idx++) printf("%d,",nums[idx]); printf("\n");
+    for (int idx=0;idx<num_cnt;idx++) printf("%d,",nums[idx]);
+    printf("\n");
 
     UCL_NODE_CATCH
 

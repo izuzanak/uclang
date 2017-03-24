@@ -240,12 +240,16 @@ class Main
 
   static m_name_blacklist = new Set(
   [/*{{{*/
+    "isnan#0",
+    "INFINITY",
+    "throw#0",
     "ERROR_INVALID",
     "ERROR_DEADLOCK",
     "ERROR_BUSY",
     "ERROR_PERMISSION",
     "ERROR_AGAIN",
     "ERROR_SEARCH",
+    "RAND_MAX",
     "stdin",
     "stdout",
     "stderr",
@@ -292,8 +296,10 @@ class Main
     "CLOCK_MONOTONIC",
     "CLOCK_PROCESS_CPUTIME_ID",
     "CLOCK_THREAD_CPUTIME_ID",
-    "isnan#0",
-    "throw#0"
+    "GET#1",
+    "PUT#2",
+    "DELETE#1",
+    "HEAD#1"
   ]);/*}}}*/
 
   m_header_mod_idxs;

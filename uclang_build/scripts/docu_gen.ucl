@@ -1093,6 +1093,7 @@ obj.resize(8);
         "DELEGATE_NEGATIVE_PARAMETER_COUNT",new VariableDescr(new Blank(),"built_in"),
         "DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD",new VariableDescr(new Blank(),"built_in"),
         "DELEGATE_CALL_WRONG_PARAMETER_COUNT",new VariableDescr(new Blank(),"built_in"),
+        "DELEGATE_PAPPLY_WRONG_PARAMETER_COUNT",new VariableDescr(new Blank(),"built_in"),
         "DELEGATE_WRONG_RETURN_VALUE_TYPE",new VariableDescr(new Blank(),"built_in")
       ]);/*}}}*/
       class_Exception["methods"] = new Dict(

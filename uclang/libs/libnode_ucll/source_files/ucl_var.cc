@@ -149,6 +149,7 @@ unsigned UclVar::c_bi_mni_pow_1;
 unsigned UclVar::c_bi_mni_sqrt_0;
 unsigned UclVar::c_bi_mni_cbrt_0;
 unsigned UclVar::c_bi_mni_hypot_1;
+unsigned UclVar::c_bi_mni_classify_0;
 unsigned UclVar::c_bi_mni__isnan_0;
 unsigned UclVar::c_bi_mni_String_0;
 unsigned UclVar::c_bi_mni_String_1;
@@ -199,6 +200,7 @@ unsigned UclVar::c_bi_mni_detach_0;
 unsigned UclVar::c_bi_mni_yield_0;
 unsigned UclVar::c_bi_mni_Delegate_3;
 unsigned UclVar::c_bi_mni_call_1;
+unsigned UclVar::c_bi_mni_papply_1;
 unsigned UclVar::c_bi_mni_size_0;
 unsigned UclVar::c_bi_mni_sleep_1;
 unsigned UclVar::c_bi_mni_srand_1;
@@ -336,10 +338,10 @@ unsigned UclVar::c_bi_mni_encode_1;
 unsigned UclVar::c_bi_mni_decode_1;
 unsigned UclVar::c_bi_mni_data_0;
 unsigned UclVar::c_bi_mni_info_1;
-unsigned UclVar::c_bi_mni_GET_1;
-unsigned UclVar::c_bi_mni_PUT_2;
-unsigned UclVar::c_bi_mni_DELETE_1;
-unsigned UclVar::c_bi_mni_HEAD_1;
+unsigned UclVar::c_bi_mni__GET_1;
+unsigned UclVar::c_bi_mni__PUT_2;
+unsigned UclVar::c_bi_mni__DELETE_1;
+unsigned UclVar::c_bi_mni__HEAD_1;
 unsigned UclVar::c_bi_mni_GetProcessId_0;
 unsigned UclVar::c_bi_mni_GetProcessName_0;
 unsigned UclVar::c_bi_mni_GetWorkingDirectory_0;
@@ -409,6 +411,7 @@ unsigned UclVar::c_bi_mni_append_1;
 unsigned UclVar::c_bi_mni_value_0;
 unsigned UclVar::c_bi_mni_Crc_2;
 unsigned UclVar::c_bi_mni_Md5_0;
+unsigned UclVar::c_bi_mni_string_0;
 unsigned UclVar::c_bi_mni_FtpSession_1;
 unsigned UclVar::c_bi_mni_login_2;
 unsigned UclVar::c_bi_mni_get_file_2;
@@ -483,6 +486,12 @@ unsigned UclVar::c_bi_mni_texts_0;
 unsigned UclVar::c_bi_mni_content_0;
 
 // - built in variable name indexes -
+unsigned UclVar::c_bi_vni__INFINITY;
+unsigned UclVar::c_bi_vni_CLASS_NAN;
+unsigned UclVar::c_bi_vni_CLASS_INFINITE;
+unsigned UclVar::c_bi_vni_CLASS_ZERO;
+unsigned UclVar::c_bi_vni_CLASS_SUBNORMAL;
+unsigned UclVar::c_bi_vni_CLASS_NORMAL;
 unsigned UclVar::c_bi_vni_USER_EXCEPTION;
 unsigned UclVar::c_bi_vni_TODO_EXCEPTION;
 unsigned UclVar::c_bi_vni_CLASS_DOES_NOT_CONTAIN_CONSTRUCTOR;
@@ -537,6 +546,7 @@ unsigned UclVar::c_bi_vni__ERROR_AGAIN;
 unsigned UclVar::c_bi_vni__ERROR_SEARCH;
 unsigned UclVar::c_bi_vni_NAME;
 unsigned UclVar::c_bi_vni_SEP;
+unsigned UclVar::c_bi_vni__RAND_MAX;
 unsigned UclVar::c_bi_vni__stdin;
 unsigned UclVar::c_bi_vni__stdout;
 unsigned UclVar::c_bi_vni__stderr;
@@ -969,10 +979,10 @@ unsigned UclVar::WsBase64::c_bi_mi_to_string_0;
 unsigned UclVar::WsBase64::c_bi_mi_print_0;
 unsigned UclVar::CurlResult::c_bi_mi_to_string_0;
 unsigned UclVar::CurlResult::c_bi_mi_print_0;
-unsigned UclVar::Curl::c_bi_mi_GET_1;
-unsigned UclVar::Curl::c_bi_mi_PUT_2;
-unsigned UclVar::Curl::c_bi_mi_DELETE_1;
-unsigned UclVar::Curl::c_bi_mi_HEAD_1;
+unsigned UclVar::Curl::c_bi_mi__GET_1;
+unsigned UclVar::Curl::c_bi_mi__PUT_2;
+unsigned UclVar::Curl::c_bi_mi__DELETE_1;
+unsigned UclVar::Curl::c_bi_mi__HEAD_1;
 unsigned UclVar::Curl::c_bi_mi_to_string_0;
 unsigned UclVar::Curl::c_bi_mi_print_0;
 unsigned UclVar::System::c_bi_mi_GetProcessId_0;
@@ -1052,6 +1062,12 @@ unsigned UclVar::XmlNode::c_bi_mi_to_string_0;
 unsigned UclVar::XmlNode::c_bi_mi_print_0;
 
 // - built in variable values -
+UclVar UclVar::Float::_INFINITY = UclVar(NO_INIT());
+UclVar UclVar::Float::CLASS_NAN = UclVar(NO_INIT());
+UclVar UclVar::Float::CLASS_INFINITE = UclVar(NO_INIT());
+UclVar UclVar::Float::CLASS_ZERO = UclVar(NO_INIT());
+UclVar UclVar::Float::CLASS_SUBNORMAL = UclVar(NO_INIT());
+UclVar UclVar::Float::CLASS_NORMAL = UclVar(NO_INIT());
 UclVar UclVar::Exception::USER_EXCEPTION = UclVar(NO_INIT());
 UclVar UclVar::Exception::TODO_EXCEPTION = UclVar(NO_INIT());
 UclVar UclVar::Exception::CLASS_DOES_NOT_CONTAIN_CONSTRUCTOR = UclVar(NO_INIT());
@@ -1109,6 +1125,7 @@ UclVar UclVar::Thread::_ERROR_DEADLOCK = UclVar(NO_INIT());
 UclVar UclVar::Thread::_ERROR_BUSY = UclVar(NO_INIT());
 UclVar UclVar::Sys::NAME = UclVar(NO_INIT());
 UclVar UclVar::Sys::SEP = UclVar(NO_INIT());
+UclVar UclVar::Sys::_RAND_MAX = UclVar(NO_INIT());
 UclVar UclVar::File::_stdin = UclVar(NO_INIT());
 UclVar UclVar::File::_stdout = UclVar(NO_INIT());
 UclVar UclVar::File::_stderr = UclVar(NO_INIT());
@@ -1701,6 +1718,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_sqrt_0,"sqrt#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_cbrt_0,"cbrt#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_hypot_1,"hypot#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_classify_0,"classify#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni__isnan_0,"isnan#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_compare_1,"compare#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
@@ -1781,6 +1799,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Delegate_3,"Delegate#3");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_call_1,"call#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_papply_1,"papply#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_size_0,"size#0");
@@ -1875,6 +1894,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_match_1,"match#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_match_2,"match#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_match_from_2,"match_from#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_split_1,"split#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
 #endif
@@ -2073,10 +2093,10 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_info_1,"info#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_GET_1,"GET#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_PUT_2,"PUT#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_DELETE_1,"DELETE#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_HEAD_1,"HEAD#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni__GET_1,"GET#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni__PUT_2,"PUT#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni__DELETE_1,"DELETE#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni__HEAD_1,"HEAD#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
   }
@@ -2206,6 +2226,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Md5_0,"Md5#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_append_1,"append#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_value_0,"value#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_string_0,"string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
   }
@@ -2489,6 +2510,12 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
   // - module base -
   if (a_modules[c_uclvar_module_base])
   {
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__INFINITY,"INFINITY");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CLASS_NAN,"CLASS_NAN");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CLASS_INFINITE,"CLASS_INFINITE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CLASS_ZERO,"CLASS_ZERO");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CLASS_SUBNORMAL,"CLASS_SUBNORMAL");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CLASS_NORMAL,"CLASS_NORMAL");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_USER_EXCEPTION,"USER_EXCEPTION");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TODO_EXCEPTION,"TODO_EXCEPTION");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_CLASS_DOES_NOT_CONTAIN_CONSTRUCTOR,"CLASS_DOES_NOT_CONTAIN_CONSTRUCTOR");
@@ -2548,6 +2575,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
   {
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_NAME,"NAME");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_SEP,"SEP");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__RAND_MAX,"RAND_MAX");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__stdin,"stdin");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__stdout,"stdout");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__stderr,"stderr");
@@ -3130,10 +3158,10 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
   {
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(CurlResult,c_bi_class_CurlResult,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(CurlResult,c_bi_class_CurlResult,c_bi_mi_print_0,c_bi_mni_print_0);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi_GET_1,c_bi_mni_GET_1);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi_PUT_2,c_bi_mni_PUT_2);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi_DELETE_1,c_bi_mni_DELETE_1);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi_HEAD_1,c_bi_mni_HEAD_1);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi__GET_1,c_bi_mni__GET_1);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi__PUT_2,c_bi_mni__PUT_2);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi__DELETE_1,c_bi_mni__DELETE_1);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi__HEAD_1,c_bi_mni__HEAD_1);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi_print_0,c_bi_mni_print_0);
   }
@@ -3287,6 +3315,12 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
   // - module base -
   if (a_modules[c_uclvar_module_base])
   {
+    UCLVAR_RETRIEVE_STATIC_CONST(Float,c_bi_class_Float,_INFINITY);
+    UCLVAR_RETRIEVE_STATIC_CONST(Float,c_bi_class_Float,CLASS_NAN);
+    UCLVAR_RETRIEVE_STATIC_CONST(Float,c_bi_class_Float,CLASS_INFINITE);
+    UCLVAR_RETRIEVE_STATIC_CONST(Float,c_bi_class_Float,CLASS_ZERO);
+    UCLVAR_RETRIEVE_STATIC_CONST(Float,c_bi_class_Float,CLASS_SUBNORMAL);
+    UCLVAR_RETRIEVE_STATIC_CONST(Float,c_bi_class_Float,CLASS_NORMAL);
     UCLVAR_RETRIEVE_STATIC_CONST(Exception,c_bi_class_Exception,USER_EXCEPTION);
     UCLVAR_RETRIEVE_STATIC_CONST(Exception,c_bi_class_Exception,TODO_EXCEPTION);
     UCLVAR_RETRIEVE_STATIC_CONST(Exception,c_bi_class_Exception,CLASS_DOES_NOT_CONTAIN_CONSTRUCTOR);
@@ -3349,6 +3383,7 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
   {
     UCLVAR_RETRIEVE_STATIC_CONST(Sys,c_bi_class_Sys,NAME);
     UCLVAR_RETRIEVE_STATIC_CONST(Sys,c_bi_class_Sys,SEP);
+    UCLVAR_RETRIEVE_STATIC_CONST(Sys,c_bi_class_Sys,_RAND_MAX);
     UCLVAR_RETRIEVE_STATIC_CONST(File,c_bi_class_File,_stdin);
     UCLVAR_RETRIEVE_STATIC_CONST(File,c_bi_class_File,_stdout);
     UCLVAR_RETRIEVE_STATIC_CONST(File,c_bi_class_File,_stderr);

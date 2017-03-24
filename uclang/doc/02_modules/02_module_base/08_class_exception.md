@@ -51,7 +51,7 @@ Class describing objects representing various types of exceptions.
   * `Exception.DELEGATE_NEGATIVE_PARAMETER_COUNT`
   * `Exception.DELEGATE_OBJECT_DOES_NOT_CONTAIN_METHOD`
   * `Exception.DELEGATE_CALL_WRONG_PARAMETER_COUNT`
-  * `Exception.DELEGATE_PAPPLY_WRONG_PARAMETER_COUNT` - TODO variable description ...
+  * `Exception.DELEGATE_PAPPLY_WRONG_PARAMETER_COUNT`
   * `Exception.DELEGATE_WRONG_RETURN_VALUE_TYPE`
 
 -----
