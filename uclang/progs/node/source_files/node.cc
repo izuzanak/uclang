@@ -30,12 +30,9 @@ UclVar callback(UclVar a_conn)
 
 UclVar node_to_dict(UclVar a_node)
 {/*{{{*/
-  UclVar dict = UclVar::Dict();
-
-  UCL_FOR_LOOP(node,a_node.nodes(),
-  {
-    dict[node.name()] = node.text();
-  })
+  UclVar dict = UclVar::Dict({
+    a_node.nodes()[0].text(),a_node.attributes()
+  });
 
   return dict;
 }/*}}}*/
@@ -57,8 +54,8 @@ int main(int argc,char **argv)
 
   // - select modules to import -
   const char *modules[] = {
-    "sys","containers","node_test",NULL
-    //"sys","containers","json","websocket","jit","ucf",NULL
+    "sys","containers","algorithms","node_test","parser","time",NULL
+    //"sys","containers","json","websocket","jit","ucf","pack","algorithms","node_test","xml",NULL
   };
 
   // - initialize uclang node -
@@ -79,39 +76,39 @@ int main(int argc,char **argv)
     }
 
     // - slice range test -
-    //{/*{{{*/
-    //  UclVar array = {0,1,2,3,4,5,6,7,8,9};
-    //  printf("array: %s\n",array.to_string().__str());
+    {/*{{{*/
+      UclVar array = {0,1,2,3,4,5,6,7,8,9};
+      printf("array: %s\n",array.to_string().__str());
 
-    //  UclVar slice = array.__slice(7,LLONG_MAX,-2);
-    //  UCL_FOR_LOOP(var,slice,
-    //  {
-    //    printf("val: %s\n",var.to_string().__str());
-    //  })
-    //}/*}}}*/
+      UclVar slice = array.__slice(7,LLONG_MAX,-2);
+      UCL_FOR_LOOP(var,slice,
+      {
+        printf("val: %s\n",var.to_string().__str());
+      })
+    }/*}}}*/
 
     // - for loop test -
-    //{/*{{{*/
-    //  UclVar dict = UclVar::Dict({1,2,3,4,5,6});
-    //  UCL_FOR_LOOP(item,dict,
-    //  {
-    //    printf("key/val: %" HOST_LL_FORMAT "d:%" HOST_LL_FORMAT "d\n",item.__int(),dict[item].__int());
-    //  })
+    {/*{{{*/
+      UclVar dict = UclVar::Dict({1,2,3,4,5,6});
+      UCL_FOR_LOOP(item,dict,
+      {
+        printf("key/val: %" HOST_LL_FORMAT "d:%" HOST_LL_FORMAT "d\n",item.__int(),dict[item].__int());
+      })
 
-    //  // - file loop test -
-    //  UclVar file = UclVar::File("node.log","r");
-    //  UCL_FOR_LOOP(item,file,
-    //  {
-    //    printf("item: %s\n",item.__str());
-    //  })
+      // - file loop test -
+      UclVar file = UclVar::File("node.log","r");
+      UCL_FOR_LOOP(item,file,
+      {
+        printf("item: %s\n",item.__str());
+      })
 
-    //  // - array loop test -
-    //  UclVar array = {0,1,2,3,4,5,6,7,8,9};
-    //  UCL_FOR_LOOP(item,array,
-    //  {
-    //    printf("item: %" HOST_LL_FORMAT "d\n",item.__int());
-    //  })
-    //}/*}}}*/
+      // - array loop test -
+      UclVar array = {0,1,2,3,4,5,6,7,8,9};
+      UCL_FOR_LOOP(item,array,
+      {
+        printf("item: %" HOST_LL_FORMAT "d\n",item.__int());
+      })
+    }/*}}}*/
 
     // - http server example -
     //{/*{{{*/
@@ -209,16 +206,16 @@ int main(int argc,char **argv)
     //}/*}}}*/
 
     // - module algorithms test -
-    //{/*{{{*/
-    //  UclVar range = UclVar::Range(0,20);
-    //  UCL_FOR_LOOP(item,range,
-    //  {
-    //    printf("%" HOST_LL_FORMAT "d\n",item.__int());
-    //  })
+    {/*{{{*/
+      UclVar range = UclVar::Range(0,20);
+      UCL_FOR_LOOP(item,range,
+      {
+        printf("%" HOST_LL_FORMAT "d\n",item.__int());
+      })
 
-    //  UclVar array = UclVar::Array(UclVar::Range(0,1000));
-    //  printf("array: %s\n",array.to_string().__str());
-    //}/*}}}*/
+      UclVar array = UclVar::Array(UclVar::Range(0,1000));
+      printf("array: %s\n",array.to_string().__str());
+    }/*}}}*/
 
     // - module curl test -
     //{/*{{{*/
@@ -231,10 +228,10 @@ int main(int argc,char **argv)
     //  UclVar data = UclVar::File("trasa.gpx","r").read_close();
     //  UclVar doc = UclVar::Xml::parse(data);
 
-    //  UclVar nodes = doc.nodes();
+    //  UclVar nodes = doc.nodes()[0].nodes()[1].nodes();
     //  UCL_FOR_LOOP(node,nodes,
     //  {
-    //    UclVar dict = node_to_dict(node.nodes()[1]);
+    //    UclVar dict = node_to_dict(node);
     //    printf("node: %s\n",dict.to_string().__str());
     //  })
     //}/*}}}*/
@@ -297,18 +294,18 @@ int main(int argc,char **argv)
     //}/*}}}*/
 
     // - module parser test -
-    //{/*{{{*/
-    //  UclVar fa = UclVar::FinalAutomata({"\"xxx\"","'y'.'y'*","\"zzz\""});
-    //  UclVar src = fa.get_source("xxxyyyyyyyyzzz");
+    {/*{{{*/
+      UclVar fa = UclVar::FinalAutomata({"\"xxx\"","'y'.'y'*","\"zzz\""});
+      UclVar src = fa.get_source("xxxyyyyyyyyzzz");
 
-    //  UCL_FOR_LOOP(term,src,
-    //  {
-    //    printf("terminal: %" HOST_LL_FORMAT "d\n",term.__int());
-    //  });
+      UCL_FOR_LOOP(term,src,
+      {
+        printf("terminal: %" HOST_LL_FORMAT "d\n",term.__int());
+      });
 
-    //  UclVar parser = UclVar::Parser(UclVar::File("new_reg.rules","r").read_close());
-    //  parser.parse("('\\xff' + <\\nz>.d + \"Hello\\n\" + '\\n' + '\\\\' + 'X' + |0123| + |abc\\||)\0",UclVar::Delegate(parse_cb));
-    //}/*}}}*/
+      UclVar parser = UclVar::Parser(UclVar::File("new_reg.rules","r").read_close());
+      parser.parse("('\\xff' + <\\nz>.d + \"Hello\\n\" + '\\n' + '\\\\' + 'X' + |0123| + |abc\\||)\0",UclVar::Delegate(parse_cb));
+    }/*}}}*/
 
     // - module inotify test -
     //{/*{{{*/
@@ -338,25 +335,25 @@ int main(int argc,char **argv)
     //}/*}}}*/
 
     // - module time test -
-    //{/*{{{*/
-    //  UclVar time = UclVar::Time();
+    {/*{{{*/
+      UclVar time = UclVar::Time();
 
-    //  printf("time.value(): %" HOST_LL_FORMAT "d\n",time.value().__int());
-    //  printf("time.nano_sec(): %" HOST_LL_FORMAT "d\n",time.nano_sec().__int());
-    //  printf("time.micro_sec(): %" HOST_LL_FORMAT "d\n",time.micro_sec().__int());
-    //  printf("time.milli_sec(): %" HOST_LL_FORMAT "d\n",time.milli_sec().__int());
-    //  printf("time.seconds(): %" HOST_LL_FORMAT "d\n",time.seconds().__int());
-    //  printf("time.minutes(): %" HOST_LL_FORMAT "d\n",time.minutes().__int());
-    //  printf("time.hours(): %" HOST_LL_FORMAT "d\n",time.hours().__int());
-    //  printf("time.days(): %" HOST_LL_FORMAT "d\n",time.days().__int());
-    //  printf("time.datetime(): %s\n",time.datetime().to_string().__str());
+      printf("time.value(): %" HOST_LL_FORMAT "d\n",time.value().__int());
+      printf("time.nano_sec(): %" HOST_LL_FORMAT "d\n",time.nano_sec().__int());
+      printf("time.micro_sec(): %" HOST_LL_FORMAT "d\n",time.micro_sec().__int());
+      printf("time.milli_sec(): %" HOST_LL_FORMAT "d\n",time.milli_sec().__int());
+      printf("time.seconds(): %" HOST_LL_FORMAT "d\n",time.seconds().__int());
+      printf("time.minutes(): %" HOST_LL_FORMAT "d\n",time.minutes().__int());
+      printf("time.hours(): %" HOST_LL_FORMAT "d\n",time.hours().__int());
+      printf("time.days(): %" HOST_LL_FORMAT "d\n",time.days().__int());
+      printf("time.datetime(): %s\n",time.datetime().to_string().__str());
 
-    //  UclVar time_ref = UclVar::Time("20140101010000");
-    //  (UclVar("Compare: %d\n") % (time_ref.compare(time))).print();
+      UclVar time_ref = UclVar::Time("20140101010000");
+      (UclVar("Compare: %d\n") % (time_ref.compare(time))).print();
 
-    //  time.print();
-    //  (UclVar("\n%s\n") % time.to_string()).print();
-    //}/*}}}*/
+      time.print();
+      (UclVar("\n%s\n") % time.to_string()).print();
+    }/*}}}*/
 
 #if __cplusplus >= 201103
     // - c++11 initializer_list -
