@@ -1159,8 +1159,8 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build, # CXX options
-      opt_link + "-lpq ", # CXX link options
+      opt_build + "`pkg-config --cflags libpq` " , # CXX options
+      opt_link + "`pkg-config --libs libpq` ", # CXX link options
       "", # CXX defines
       [],
       [],

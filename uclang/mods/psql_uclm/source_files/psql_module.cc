@@ -315,6 +315,7 @@ bool bic_psql_conn_method_execute_1(interpreter_thread_s &it,unsigned stack_base
 
   // - create tuple array -
   pointer_array_s *tuple_array_ptr = it.get_new_array_ptr();
+  BIC_CREATE_NEW_LOCATION(tuple_array_loc,c_bi_class_array,tuple_array_ptr);
 
   int tuple_cnt = PQntuples(res_ptr);
   if (tuple_cnt > 0)
@@ -329,29 +330,62 @@ bool bic_psql_conn_method_execute_1(interpreter_thread_s &it,unsigned stack_base
       {
         // - create field array -
         pointer_array_s *field_array_ptr = it.get_new_array_ptr();
+        BIC_CREATE_NEW_LOCATION(field_array_loc,c_bi_class_array,field_array_ptr);
+
         field_array_ptr->copy_resize(field_cnt);
 
         int field_idx = 0;
         do
         {
-          int length = PQgetlength(res_ptr,tuple_idx,field_idx);
-          char *data = PQgetvalue(res_ptr,tuple_idx,field_idx);
+          switch (PQftype(res_ptr,field_idx))
+          {
+          case BOOLOID:
+            {
+              long long int value = PQgetvalue(res_ptr,tuple_idx,field_idx)[0] == 't';
 
-          string_s *value_ptr = it.get_new_string_ptr();
-          value_ptr->set(length,data);
+              BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
+              field_array_ptr->push(new_location);
+            }
+            break;
+          case INT8OID:
+          case INT2OID:
+          case INT4OID:
+            {
+              char *data = PQgetvalue(res_ptr,tuple_idx,field_idx);
+              long long int value = strtoll(data,NULL,10);
 
-          BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,value_ptr);
+              BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
+              field_array_ptr->push(new_location);
+            }
+            break;
+          case FLOAT4OID:
+          case FLOAT8OID:
+            {
+              char *data = PQgetvalue(res_ptr,tuple_idx,field_idx);
+              double value = strtod(data,NULL);
 
-          // - push string location to field array -
-          field_array_ptr->push(new_location);
+              BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);
+              field_array_ptr->push(new_location);
+            }
+            break;
+          default:
+            {
+              int length = PQgetlength(res_ptr,tuple_idx,field_idx);
+              char *data = PQgetvalue(res_ptr,tuple_idx,field_idx);
 
+              string_s *string_ptr = it.get_new_string_ptr();
+              string_ptr->set(length,data);
+
+              BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+              field_array_ptr->push(new_location);
+            }
+            break;
+          }
         }
         while(++field_idx < field_cnt);
 
-        BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,field_array_ptr);
-
         // - push field array location to tuple array -
-        tuple_array_ptr->push(new_location);
+        tuple_array_ptr->push(field_array_loc);
 
       }
       while(++tuple_idx < tuple_cnt);
@@ -360,8 +394,7 @@ bool bic_psql_conn_method_execute_1(interpreter_thread_s &it,unsigned stack_base
 
   PQclear(res_ptr);
 
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,tuple_array_ptr);
-  BIC_SET_RESULT(new_location);
+  BIC_SET_RESULT(tuple_array_loc);
 
   return true;
 }/*}}}*/

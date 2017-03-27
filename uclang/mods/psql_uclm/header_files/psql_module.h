@@ -8,6 +8,15 @@ include "script_parser.h"
 
 #include <postgresql/libpq-fe.h>
 
+#define BOOLOID 16
+
+#define INT8OID 20
+#define INT2OID 21
+#define INT4OID 23
+
+#define FLOAT4OID 700
+#define FLOAT8OID 701
+
 // - PSQL indexes of built in classes -
 extern unsigned c_bi_class_psql;
 extern unsigned c_bi_class_psql_conn;
