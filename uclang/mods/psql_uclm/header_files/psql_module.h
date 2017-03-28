@@ -3,23 +3,13 @@
 #define __PSQL_MODULE_H
 
 @begin
-include "script_parser.h"
+include "ucl_psql.h"
 @end
-
-#include <postgresql/libpq-fe.h>
-
-#define BOOLOID 16
-
-#define INT8OID 20
-#define INT2OID 21
-#define INT4OID 23
-
-#define FLOAT4OID 700
-#define FLOAT8OID 701
 
 // - PSQL indexes of built in classes -
 extern unsigned c_bi_class_psql;
 extern unsigned c_bi_class_psql_conn;
+extern unsigned c_bi_class_psql_statement;
 
 // - PSQL module -
 extern built_in_module_s module;
@@ -66,10 +56,26 @@ void bic_psql_conn_consts(location_array_s &const_locations);
 void bic_psql_conn_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_psql_conn_clear(interpreter_thread_s &it,location_s *location_ptr);
 
+bool bic_psql_conn_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_PSqlConn_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_execute_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_conn_method_prepare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class PSQL_STATEMENT -
+extern built_in_variable_s psql_statement_variables[];
+extern built_in_method_s psql_statement_methods[];
+extern built_in_class_s psql_statement_class;
+
+void bic_psql_statement_consts(location_array_s &const_locations);
+void bic_psql_statement_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_psql_statement_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_psql_statement_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_statement_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_statement_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_statement_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 

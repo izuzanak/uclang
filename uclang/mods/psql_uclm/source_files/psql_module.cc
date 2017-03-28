@@ -6,11 +6,12 @@ include "psql_module.h"
 // - PSQL indexes of built in classes -
 unsigned c_bi_class_psql = c_idx_not_exist;
 unsigned c_bi_class_psql_conn = c_idx_not_exist;
+unsigned c_bi_class_psql_statement = c_idx_not_exist;
 
 // - PSQL module -
 built_in_module_s module =
 {/*{{{*/
-  2,                     // Class count
+  3,                     // Class count
   psql_classes,          // Classes
   0,                     // Error base index
   4,                     // Error count
@@ -24,6 +25,7 @@ built_in_class_s *psql_classes[] =
 {/*{{{*/
   &psql_class,
   &psql_conn_class,
+  &psql_statement_class,
 };/*}}}*/
 
 // - PSQL error strings -
@@ -45,6 +47,9 @@ bool psql_initialize(script_parser_s &sp)
 
   // - initialize psql_conn class identifier -
   c_bi_class_psql_conn = class_base_idx++;
+
+  // - initialize psql_statement class identifier -
+  c_bi_class_psql_statement = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -172,7 +177,7 @@ built_in_class_s psql_conn_class =
 {/*{{{*/
   "PSqlConn",
   c_modifier_public | c_modifier_final,
-  4, psql_conn_methods,
+  6, psql_conn_methods,
   0, psql_conn_variables,
   bic_psql_conn_consts,
   bic_psql_conn_init,
@@ -193,6 +198,11 @@ built_in_class_s psql_conn_class =
 built_in_method_s psql_conn_methods[] =
 {/*{{{*/
   {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_psql_conn_operator_binary_equal
+  },
+  {
     "PSqlConn#1",
     c_modifier_public | c_modifier_final,
     bic_psql_conn_method_PSqlConn_1
@@ -201,6 +211,11 @@ built_in_method_s psql_conn_methods[] =
     "execute#1",
     c_modifier_public | c_modifier_final,
     bic_psql_conn_method_execute_1
+  },
+  {
+    "prepare#1",
+    c_modifier_public | c_modifier_final,
+    bic_psql_conn_method_prepare_1
   },
   {
     "to_string#0",
@@ -235,6 +250,20 @@ void bic_psql_conn_clear(interpreter_thread_s &it,location_s *location_ptr)
   {
     PQfinish(conn_ptr);
   }
+}/*}}}*/
+
+bool bic_psql_conn_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
 }/*}}}*/
 
 bool bic_psql_conn_method_PSqlConn_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -399,6 +428,61 @@ bool bic_psql_conn_method_execute_1(interpreter_thread_s &it,unsigned stack_base
   return true;
 }/*}}}*/
 
+bool bic_psql_conn_method_prepare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("execute#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  PGconn *conn_ptr = (PGconn *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (conn_ptr == NULL)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  string_s *query_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  PGresult *res_ptr = PQexec(conn_ptr,query_ptr->data);
+  ExecStatusType res_status = PQresultStatus(res_ptr);
+
+  // - ERROR -
+  if ((res_status != PGRES_COMMAND_OK) && res_status != PGRES_TUPLES_OK)
+  {
+    PQclear(res_ptr);
+
+    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_EXEC_FAILED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - create psql statement object -
+  psql_stmt_s *stmt_ptr = (psql_stmt_s *)cmalloc(sizeof(psql_stmt_s));
+  stmt_ptr->init();
+
+  stmt_ptr->res_ptr = res_ptr;
+
+  dst_location->v_reference_cnt.atomic_inc();
+  stmt_ptr->conn_ptr = dst_location;
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_psql_statement,stmt_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
 bool bic_psql_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -413,6 +497,198 @@ bool bic_psql_conn_method_print_0(interpreter_thread_s &it,unsigned stack_base,u
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
   printf("PSqlConn");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class PSQL_STATEMENT -
+built_in_class_s psql_statement_class =
+{/*{{{*/
+  "PSqlStatement",
+  c_modifier_public | c_modifier_final,
+  4, psql_statement_methods,
+  0, psql_statement_variables,
+  bic_psql_statement_consts,
+  bic_psql_statement_init,
+  bic_psql_statement_clear,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};/*}}}*/
+
+built_in_method_s psql_statement_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_psql_statement_operator_binary_equal
+  },
+  {
+    "next_item#0",
+    c_modifier_public | c_modifier_final,
+    bic_psql_statement_method_next_item_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_psql_statement_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_psql_statement_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s psql_statement_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_psql_statement_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_psql_statement_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (psql_stmt_s *)NULL;
+}/*}}}*/
+
+void bic_psql_statement_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  psql_stmt_s *stmt_ptr = (psql_stmt_s *)location_ptr->v_data_ptr;
+
+  if (stmt_ptr != NULL)
+  {
+    stmt_ptr->clear(it);
+    cfree(stmt_ptr);
+  }
+}/*}}}*/
+
+bool bic_psql_statement_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_psql_statement_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  psql_stmt_s *stmt_ptr = (psql_stmt_s *)dst_location->v_data_ptr;
+  PGresult *res_ptr = stmt_ptr->res_ptr;
+
+  int &tuple_idx = stmt_ptr->tuple_idx;
+
+  // - if there are any rows -
+  if (PQntuples(res_ptr) > tuple_idx)
+  {
+    // - create field array -
+    pointer_array_s *field_array_ptr = it.get_new_array_ptr();
+    BIC_CREATE_NEW_LOCATION(field_array_loc,c_bi_class_array,field_array_ptr);
+
+    int field_cnt = PQnfields(res_ptr);
+    field_array_ptr->copy_resize(field_cnt);
+
+    // - if field array is not empty -
+    if (field_cnt > 0)
+    {
+      int field_idx = 0;
+      do
+      {
+        switch (PQftype(res_ptr,field_idx))
+        {
+        case BOOLOID:
+          {
+            long long int value = PQgetvalue(res_ptr,tuple_idx,field_idx)[0] == 't';
+
+            BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
+            field_array_ptr->push(new_location);
+          }
+          break;
+        case INT8OID:
+        case INT2OID:
+        case INT4OID:
+          {
+            char *data = PQgetvalue(res_ptr,tuple_idx,field_idx);
+            long long int value = strtoll(data,NULL,10);
+
+            BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
+            field_array_ptr->push(new_location);
+          }
+          break;
+        case FLOAT4OID:
+        case FLOAT8OID:
+          {
+            char *data = PQgetvalue(res_ptr,tuple_idx,field_idx);
+            double value = strtod(data,NULL);
+
+            BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);
+            field_array_ptr->push(new_location);
+          }
+          break;
+        default:
+          {
+            int length = PQgetlength(res_ptr,tuple_idx,field_idx);
+            char *data = PQgetvalue(res_ptr,tuple_idx,field_idx);
+
+            string_s *string_ptr = it.get_new_string_ptr();
+            string_ptr->set(length,data);
+
+            BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+            field_array_ptr->push(new_location);
+          }
+          break;
+        }
+      }
+      while(++field_idx < field_cnt);
+
+      // - skip to next tuple -
+      ++tuple_idx;
+    }
+
+    BIC_SET_RESULT(field_array_loc);
+  }
+  else
+  {
+    BIC_SET_RESULT_BLANK();
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_psql_statement_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("PSqlStatement"),"PSqlStatement");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_psql_statement_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+
+  printf("PSqlStatement");
 
   BIC_SET_RESULT_BLANK();
 
