@@ -71,7 +71,7 @@ built_in_class_s uv_loop_class =
   "UvLoop",
   c_modifier_public | c_modifier_final,
   4, uv_loop_methods,
-  0, uv_loop_variables,
+  3, uv_loop_variables,
   bic_uv_loop_consts,
   bic_uv_loop_init,
   bic_uv_loop_clear,
@@ -114,10 +114,32 @@ built_in_method_s uv_loop_methods[] =
 
 built_in_variable_s uv_loop_variables[] =
 {/*{{{*/
+
+  // - uv loop run mode constants -
+  { "UV_RUN_DEFAULT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "UV_RUN_ONCE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "UV_RUN_NOWAIT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_uv_loop_consts(location_array_s &const_locations)
 {/*{{{*/
+
+  // - insert uv loop run mode constants -
+  {
+    const_locations.push_blanks(3);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 3);
+
+#define CREATE_UV_LOOP_RUN_MODE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_UV_LOOP_RUN_MODE_BIC_STATIC(UV_RUN_DEFAULT);
+    CREATE_UV_LOOP_RUN_MODE_BIC_STATIC(UV_RUN_ONCE);
+    CREATE_UV_LOOP_RUN_MODE_BIC_STATIC(UV_RUN_NOWAIT);
+  }
 }/*}}}*/
 
 void bic_uv_loop_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -131,8 +153,9 @@ void bic_uv_loop_clear(interpreter_thread_s &it,location_s *location_ptr)
 
   if (uvl_ptr != NULL)
   {
-    // - delete uv loop -
-    uv_loop_delete(uvl_ptr);
+    // - close uv loop -
+    uv_loop_close(uvl_ptr);
+    cfree(uvl_ptr);
   }
 }/*}}}*/
 
@@ -154,8 +177,9 @@ bool bic_uv_loop_method_UvLoop_0(interpreter_thread_s &it,unsigned stack_base,ul
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  // - create uv loop object -
-  uv_loop_t *uvl_ptr = uv_loop_new();
+  // - create and initialize uv loop object -
+  uv_loop_t *uvl_ptr = (uv_loop_t *)cmalloc(sizeof(uv_loop_t));
+  uv_loop_init(uvl_ptr);
 
   dst_location->v_data_ptr = (uv_loop_t *)uvl_ptr;
 
