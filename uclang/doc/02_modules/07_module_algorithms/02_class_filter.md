@@ -78,10 +78,13 @@ result = Filter.map([0,1,2,1,0,2],["Zero","One","Two"]);
 ("result: %s\n" % $result[::]).print();
 result = Filter.map([0,1,1000,1,0,1000],new Dict([0,"Zero",1,"One",1000,"One thousand"]));
 ("result: %s\n" % $result[::]).print();
+result = Filter.map(new Range(1,5),:(size) return new Integer[size];);
+("result: %s\n" % $result[::]).print();
 ```
 ```
 result: [Zero,One,Two,One,Zero,Two]
 result: [Zero,One,One thousand,One,Zero,One thousand]
+result: [[0],[0,0],[0,0,0],[0,0,0,0],[0,0,0,0,0]]
 ```
 
 <a name="filter#2" />
@@ -108,10 +111,13 @@ result = Filter.filter([0,1,2,1,0,2],[0,0,1]);
 ("result: %s\n" % $result[::]).print();
 result = Filter.filter([0,1,1000,1,0,1000],new Dict([0,1,1,1,1000,0]));
 ("result: %s\n" % $result[::]).print();
+result = Filter.filter(new Range(1,10),:(value) return value & 1;);
+("result: %s\n" % $result[::]).print();
 ```
 ```
 result: [2,2]
 result: [0,1,1,0]
+result: [1,3,5,7,9]
 ```
 
 <a name="next_item#0" />

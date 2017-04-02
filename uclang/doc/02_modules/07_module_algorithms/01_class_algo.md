@@ -130,10 +130,13 @@ result = Algo.map([0,1,2,1,0,2],["Zero","One","Two"]);
 ("result: %s\n" % $result).print();
 result = Algo.map([0,1,1000,1,0,1000],new Dict([0,"Zero",1,"One",1000,"One thousand"]));
 ("result: %s\n" % $result).print();
+result = Algo.map(new Range(1,5),:(size) return new Integer[size];);
+("result: %s\n" % $result).print();
 ```
 ```
 result: [Zero,One,Two,One,Zero,Two]
 result: [Zero,One,One thousand,One,Zero,One thousand]
+result: [[0],[0,0],[0,0,0],[0,0,0,0],[0,0,0,0,0]]
 ```
 
 <a name="reduce#3" />
@@ -160,10 +163,13 @@ result = Algo.reduce(0,[1,2,3,4,5],dlg);
 ("result: %d\n" % result).print();
 result = Algo.reduce("",["a","b","c","d","e"],dlg);
 ("result: %s\n" % result).print();
+result = Algo.reduce(0,new Range(1,10),:(acc,value) return acc + value;);
+("result: %d\n" % result).print();
 ```
 ```
 result: 15
 result: abcde
+result: 55
 ```
 
 <a name="filter#2" />
@@ -190,10 +196,13 @@ result = Algo.filter([0,1,2,1,0,2],[0,0,1]);
 ("result: %s\n" % $result).print();
 result = Algo.filter([0,1,1000,1,0,1000],new Dict([0,1,1,1,1000,0]));
 ("result: %s\n" % $result).print();
+result = Algo.filter(new Range(1,10),:(value) return value & 1;);
+("result: %s\n" % $result).print();
 ```
 ```
 result: [2,2]
 result: [0,1,1,0]
+result: [1,3,5,7,9]
 ```
 
 <a name="zip#1" />
