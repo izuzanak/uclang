@@ -91,7 +91,7 @@ int connection_func(void *cls,struct MHD_Connection *connection,
     return MHD_YES;
   }
 
-  // - retrieve connection objects -
+  // - retrieve connection object -
   location_s *conn_location = (location_s *)*con_cls;
   conn_ptr = (http_conn_s *)conn_location->v_data_ptr;
 
@@ -150,7 +150,7 @@ void completed_func(void *cls,struct MHD_Connection *connection,
     void **con_cls,enum MHD_RequestTerminationCode toe)
 {/*{{{*/
 
-  // - retrieve connection objects -
+  // - retrieve connection object -
   location_s *conn_location = (location_s *)*con_cls;
 
   // - if connection object exists -

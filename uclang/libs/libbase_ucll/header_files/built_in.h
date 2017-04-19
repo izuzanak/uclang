@@ -380,7 +380,7 @@ enum
         second_loc->v_reference_cnt.atomic_inc();\
         IT.data_stack.push((pointer)second_loc);\
         \
-        uli tmp_code[9] = {i_call,2,c_built_in_method_idxs[c_built_in_method_compare_1],c_idx_not_exist,c_idx_not_exist,SOURCE_POS,0,1,2};\
+        uli tmp_code[7] = {i_call,2,c_built_in_method_idxs[c_built_in_method_compare_1],SOURCE_POS,0,1,2};\
         \
         if (!IT.call_method(tmp_code,new_stack_base))\
         {\
@@ -421,7 +421,7 @@ enum
     location->v_reference_cnt.atomic_inc();\
     IT.data_stack.push((pointer)location);\
     \
-    uli tmp_code[8] = {i_call,1,c_built_in_method_idxs[c_built_in_method_to_string_0],c_idx_not_exist,c_idx_not_exist,SOURCE_POS,0,1};\
+    uli tmp_code[6] = {i_call,1,c_built_in_method_idxs[c_built_in_method_to_string_0],SOURCE_POS,0,1};\
     \
     if (!IT.call_method(tmp_code,new_stack_base))\
     {\
@@ -461,7 +461,7 @@ enum
     location->v_reference_cnt.atomic_inc();\
     IT.data_stack.push((pointer)location);\
     \
-    uli tmp_code[8] = {i_call,1,c_built_in_method_idxs[c_built_in_method_print_0],c_idx_not_exist,c_idx_not_exist,SOURCE_POS,0,1};\
+    uli tmp_code[6] = {i_call,1,c_built_in_method_idxs[c_built_in_method_print_0],SOURCE_POS,0,1};\
     \
     if (!IT.call_method(tmp_code,new_stack_base))\
     {\
@@ -494,7 +494,7 @@ enum
       location->v_reference_cnt.atomic_inc();\
       IT.data_stack.push((pointer)location);\
       \
-      uli tmp_code[8] = {i_call,1,c_built_in_method_idxs[c_built_in_method_length_0],c_idx_not_exist,c_idx_not_exist,SOURCE_POS,0,1};\
+      uli tmp_code[6] = {i_call,1,c_built_in_method_idxs[c_built_in_method_length_0],SOURCE_POS,0,1};\
       \
       if (!IT.call_method(tmp_code,new_stack_base))\
       {\
@@ -551,7 +551,7 @@ enum
       idx_location->v_data_ptr = (SRC_INDEX);\
       IT.data_stack.push((pointer)idx_location);\
       \
-      uli tmp_code[9] = {i_call,2,c_built_in_method_idxs[c_built_in_method_item_1],c_idx_not_exist,c_idx_not_exist,SOURCE_POS,0,1,2};\
+      uli tmp_code[7] = {i_call,2,c_built_in_method_idxs[c_built_in_method_item_1],SOURCE_POS,0,1,2};\
       \
       if (!IT.call_method(tmp_code,new_stack_base))\
       {\
@@ -591,7 +591,7 @@ enum
       location->v_reference_cnt.atomic_inc();\
       IT.data_stack.push((pointer)location);\
       \
-      uli tmp_code[8] = {i_call,1,c_built_in_method_idxs[c_built_in_method_first_idx_0],c_idx_not_exist,c_idx_not_exist,SOURCE_POS,0,1};\
+      uli tmp_code[6] = {i_call,1,c_built_in_method_idxs[c_built_in_method_first_idx_0],SOURCE_POS,0,1};\
       \
       if (!IT.call_method(tmp_code,new_stack_base))\
       {\
@@ -658,7 +658,7 @@ enum
       idx_location->v_data_ptr = (SRC_INDEX);\
       IT.data_stack.push((pointer)idx_location);\
       \
-      uli tmp_code[9] = {i_call,2,c_built_in_method_idxs[c_built_in_method_next_idx_1],c_idx_not_exist,c_idx_not_exist,SOURCE_POS,0,1,2};\
+      uli tmp_code[7] = {i_call,2,c_built_in_method_idxs[c_built_in_method_next_idx_1],SOURCE_POS,0,1,2};\
       \
       if (!IT.call_method(tmp_code,new_stack_base))\
       {\
@@ -723,7 +723,7 @@ enum
       location->v_reference_cnt.atomic_inc();\
       IT.data_stack.push((pointer)location);\
       \
-      uli tmp_code[8] = {i_call,1,c_built_in_method_idxs[c_built_in_method_next_item_0],c_idx_not_exist,c_idx_not_exist,SOURCE_POS,0,1};\
+      uli tmp_code[6] = {i_call,1,c_built_in_method_idxs[c_built_in_method_next_item_0],SOURCE_POS,0,1};\
       \
       if (!IT.call_method(tmp_code,new_stack_base))\
       {\
@@ -826,14 +826,12 @@ enum
       tmp_code[0] = i_call;\
       tmp_code[1] = 1 + DELEGATE_PTR->orig_param_cnt;\
       tmp_code[2] = DELEGATE_PTR->name_idx_ri;\
-      tmp_code[3] = c_idx_not_exist;\
-      tmp_code[4] = c_idx_not_exist;\
-      tmp_code[5] = SOURCE_POS;\
-      tmp_code[6] = 0;\
-      tmp_code[7] = 1;\
+      tmp_code[3] = SOURCE_POS;\
+      tmp_code[4] = 0;\
+      tmp_code[5] = 1;\
       \
       /* - push parameters to stack - */\
-      BIC_CALL_DELEGATE_PARAMETERS(IT,PARAM_CNT,PARAM_DATA,DELEGATE_PTR,2,6);\
+      BIC_CALL_DELEGATE_PARAMETERS(IT,PARAM_CNT,PARAM_DATA,DELEGATE_PTR,2,4);\
       \
       /* - call method - */\
       uli *code_ptr = tmp_code;\
@@ -870,7 +868,7 @@ enum
     src_location->v_reference_cnt.atomic_inc();\
     IT.data_stack.push((pointer)src_location);\
     \
-    uli tmp_code[9] = {i_call,2,c_built_in_method_idxs[c_operator_binary_plus],c_idx_not_exist,c_idx_not_exist,SOURCE_POS,0,1,2};\
+    uli tmp_code[7] = {i_call,2,c_built_in_method_idxs[c_operator_binary_plus],SOURCE_POS,0,1,2};\
     \
     if (!IT.call_method(tmp_code,new_stack_base))\
     {\

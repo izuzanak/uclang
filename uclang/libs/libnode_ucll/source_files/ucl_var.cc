@@ -3858,12 +3858,10 @@ UclVar UclVar::__call_0(unsigned a_method_idx)
 {/*{{{*/
   UCLVAR_CALL(
   ,
-    uli tmp_code[8] = {
+    uli tmp_code[6] = {
       i_call MP_COMMA
       1 MP_COMMA
       a_method_idx MP_COMMA
-      c_idx_not_exist MP_COMMA
-      c_idx_not_exist MP_COMMA
       0 MP_COMMA
       0 MP_COMMA
       1
@@ -3877,12 +3875,10 @@ UclVar UclVar::__call_1(unsigned a_method_idx,UclVar a_op)
     a_op.location_ptr->v_reference_cnt.atomic_inc();
     it_ptr->data_stack.push((pointer)a_op.location_ptr);
   ,
-    uli tmp_code[9] = {
+    uli tmp_code[7] = {
       i_call MP_COMMA
       2 MP_COMMA
       a_method_idx MP_COMMA
-      c_idx_not_exist MP_COMMA
-      c_idx_not_exist MP_COMMA
       0 MP_COMMA
       0 MP_COMMA
       1 MP_COMMA
@@ -3900,12 +3896,10 @@ UclVar UclVar::__call_2(unsigned a_method_idx,UclVar a_op,UclVar a_op_1)
     a_op_1.location_ptr->v_reference_cnt.atomic_inc();
     it_ptr->data_stack.push((pointer)a_op_1.location_ptr);
   ,
-    uli tmp_code[10] = {
+    uli tmp_code[8] = {
       i_call MP_COMMA
       3 MP_COMMA
       a_method_idx MP_COMMA
-      c_idx_not_exist MP_COMMA
-      c_idx_not_exist MP_COMMA
       0 MP_COMMA
       0 MP_COMMA
       1 MP_COMMA
@@ -3927,12 +3921,10 @@ UclVar UclVar::__call_3(unsigned a_method_idx,UclVar a_op,UclVar a_op_1,UclVar a
     a_op_2.location_ptr->v_reference_cnt.atomic_inc();
     it_ptr->data_stack.push((pointer)a_op_2.location_ptr);
   ,
-    uli tmp_code[11] = {
+    uli tmp_code[9] = {
       i_call MP_COMMA
       4 MP_COMMA
       a_method_idx MP_COMMA
-      c_idx_not_exist MP_COMMA
-      c_idx_not_exist MP_COMMA
       0 MP_COMMA
       0 MP_COMMA
       1 MP_COMMA
@@ -3958,12 +3950,10 @@ UclVar UclVar::__call_4(unsigned a_method_idx,UclVar a_op,UclVar a_op_1,UclVar a
     a_op_3.location_ptr->v_reference_cnt.atomic_inc();
     it_ptr->data_stack.push((pointer)a_op_3.location_ptr);
   ,
-    uli tmp_code[12] = {
+    uli tmp_code[10] = {
       i_call MP_COMMA
       5 MP_COMMA
       a_method_idx MP_COMMA
-      c_idx_not_exist MP_COMMA
-      c_idx_not_exist MP_COMMA
       0 MP_COMMA
       0 MP_COMMA
       1 MP_COMMA
@@ -3993,12 +3983,10 @@ UclVar UclVar::__call_5(unsigned a_method_idx,UclVar a_op,UclVar a_op_1,UclVar a
     a_op_4.location_ptr->v_reference_cnt.atomic_inc();
     it_ptr->data_stack.push((pointer)a_op_4.location_ptr);
   ,
-    uli tmp_code[13] = {
+    uli tmp_code[11] = {
       i_call MP_COMMA
       6 MP_COMMA
       a_method_idx MP_COMMA
-      c_idx_not_exist MP_COMMA
-      c_idx_not_exist MP_COMMA
       0 MP_COMMA
       0 MP_COMMA
       1 MP_COMMA

@@ -209,7 +209,7 @@ enum
   ic_size     = 3,
   is_size     = 4,
 
-  icl_size    = 7,
+  icl_size    = 5,
   iscl_size   = 5,
   iea_size    = 4,
   ino_size    = 6,
@@ -244,8 +244,6 @@ enum
 
   icl_parm_cnt      = 1,
   icl_name_idx,
-  icl_last_class,
-  icl_last_bi_mc,
   icl_source_pos,
   icl_stack_trg,
   icl_parm_this,

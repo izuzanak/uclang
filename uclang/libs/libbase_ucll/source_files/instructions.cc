@@ -127,22 +127,10 @@ int inst_call(inst_params_s *params)
     fputc('\n',stderr);
   );
 
-  // - test if caller address for built in class is stored -
-  if (code[icl_last_class] == ((location_s *)it.get_stack_value(stack_base + code[icl_parm_this]))->v_type)
+  // - proper call of method -
+  if (!it.call_method(code,stack_base))
   {
-    // - call built in method -
-    if (!((bi_method_caller_dt)(code[icl_last_bi_mc]))(it,stack_base,code + icl_source_pos))
-    {
-      return c_run_return_code_EXCEPTION;
-    }
-  }
-  else
-  {
-    // - proper call of method -
-    if (!it.call_method(code,stack_base))
-    {
-      return c_run_return_code_EXCEPTION;
-    }
+    return c_run_return_code_EXCEPTION;
   }
 
   code += (icl_size + code[icl_parm_cnt]);

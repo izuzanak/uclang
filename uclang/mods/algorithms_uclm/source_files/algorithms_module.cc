@@ -1713,24 +1713,11 @@ built_in_variable_s range_variables[] =
     /* - set source position in temporary code - */\
     tmp_code[icl_source_pos] = SOURCE_POS;\
 \
-    /* - test if caller address for built in class is stored - */\
-    if (tmp_code[icl_last_class] == range_ptr->actual_location->v_type)\
+    /* - proper call of method - */\
+    if (!it.call_method(tmp_code,new_stack_base))\
     {\
-      /* - call built in method - */\
-      if (!((bi_method_caller_dt)(tmp_code[icl_last_bi_mc]))(it,new_stack_base,tmp_code + icl_source_pos))\
-      {\
-        it.release_stack_from(new_stack_base);\
-        ERROR_CODE;\
-      }\
-    }\
-    else\
-    {\
-      /* - proper call of method - */\
-      if (!it.call_method(tmp_code,new_stack_base))\
-      {\
-        it.release_stack_from(new_stack_base);\
-        ERROR_CODE;\
-      }\
+      it.release_stack_from(new_stack_base);\
+      ERROR_CODE;\
     }\
 \
     /* - get result value - */\
@@ -1866,11 +1853,9 @@ bool bic_range_method_Range_2(interpreter_thread_s &it,unsigned stack_base,uli *
     tmp_code[2] = c_built_in_method_idxs[c_operator_unary_post_double_minus];
   }
 
-  tmp_code[3] = c_idx_not_exist;
-  tmp_code[4] = c_idx_not_exist;
-  tmp_code[5] = 0;
-  tmp_code[6] = 0;
-  tmp_code[7] = 1;
+  tmp_code[3] = 0;
+  tmp_code[4] = 0;
+  tmp_code[5] = 1;
 
   // - set object pointer to result -
   dst_location->v_data_ptr = (range_s *)range_ptr;
@@ -1915,12 +1900,10 @@ bool bic_range_method_Range_3(interpreter_thread_s &it,unsigned stack_base,uli *
   tmp_code[0] = i_call;
   tmp_code[1] = 2;
   tmp_code[2] = c_built_in_method_idxs[c_operator_binary_plus];
-  tmp_code[3] = c_idx_not_exist;
-  tmp_code[4] = c_idx_not_exist;
-  tmp_code[5] = 0;
-  tmp_code[6] = 0;
-  tmp_code[7] = 1;
-  tmp_code[8] = 2;
+  tmp_code[3] = 0;
+  tmp_code[4] = 0;
+  tmp_code[5] = 1;
+  tmp_code[6] = 2;
 
   // - set object pointer to result -
   dst_location->v_data_ptr = (range_s *)range_ptr;

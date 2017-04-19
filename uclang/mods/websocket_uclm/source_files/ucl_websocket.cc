@@ -48,7 +48,6 @@ int http_func(libwebsocket_context *ctx,libwebsocket *wsi,
 
         switch (reason)
         {
-
           // - add poll fd -
           case LWS_CALLBACK_ADD_POLL_FD:
             {

@@ -72,7 +72,7 @@ struct range_s
   location_s *step_location;
   location_s *actual_location;
 
-  uli tmp_code[9];
+  uli tmp_code[7];
 
   inline void init();
   inline void clear(interpreter_thread_s &it);

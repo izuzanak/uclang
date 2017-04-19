@@ -149,8 +149,6 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
         code.push(i_call);\
         code.push(1);\
         code.push(OP_NAME);\
-        code.push(c_idx_not_exist);\
-        code.push(c_idx_not_exist);\
         code.push(exp.nodes[exp_node_idx + 1]);\
         code.push(tmp_local_idx);\
         \
@@ -251,8 +249,6 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
         code.push(i_call);\
         code.push(2);\
         code.push(OP_NAME);\
-        code.push(c_idx_not_exist);\
-        code.push(c_idx_not_exist);\
         code.push(exp.nodes[exp_node_idx + 1]);\
         code.push(tmp_local_idx);\
         \
@@ -2337,8 +2333,6 @@ bool im_this_method_call(expression_s &exp,uli_array_s &begin_code,uli_array_s &
       code.push(i_call);
       code.push(parm_cnt + 1);
       code.push(exp.nodes[exp_node_idx + 2]);
-      code.push(c_idx_not_exist);
-      code.push(c_idx_not_exist);
       code.push(exp.nodes[exp_node_idx + 1]);
       code.push(tmp_local_idx);
       code.push(0);
@@ -2474,8 +2468,6 @@ bool im_object_method_call(expression_s &exp,uli_array_s &begin_code,uli_array_s
       code.push(i_call);
       code.push(parm_cnt);
       code.push(exp.nodes[exp_node_idx + 2]);
-      code.push(c_idx_not_exist);
-      code.push(c_idx_not_exist);
       code.push(exp.nodes[exp_node_idx + 1]);
       code.push(tmp_local_idx);
 

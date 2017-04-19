@@ -945,10 +945,6 @@ bool interpreter_thread_s::call_method(uli *code,unsigned stack_base)
 
     if (method_record.modifiers & c_modifier_built_in)
     {
-      // - store address of caller for build in class -
-      code[icl_last_class] = call_location->v_type;
-      code[icl_last_bi_mc] = (uli)method_record.bi_method_caller;
-
       // - call built in method -
       if (!method_record.bi_method_caller(*this,stack_base,code + icl_source_pos))
       {
