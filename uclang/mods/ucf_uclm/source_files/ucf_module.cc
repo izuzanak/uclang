@@ -3860,25 +3860,20 @@ bool bic_var_store_method_clear_slots_0(interpreter_thread_s &it,unsigned stack_
   int s_idx = 0;
   if (vsInfo.slots > 0)
   {
-    // - create buffer filled by zeroes -
-    void *zeroes = cmalloc(c_vs_max_var_size);
-    memset(zeroes,0,c_vs_max_var_size);
-
     VarStore::SlotInfo vssInfo;
 
     do {
       vs_ptr->GetSlotInfo(s_idx,&vssInfo);
 
-      // - erase slot variables (all indexes) -
-      int v_idx = 0;
-      do {
-        vs_ptr->Write(s_idx,v_idx,zeroes,vssInfo.varSize,0,0,false);
-      } while(++v_idx < vssInfo.nVars);
-
+      if (vssInfo.nVars >= 1)
+      {
+        // - erase slot variables (all indexes) -
+        int v_idx = 0;
+        do {
+          vs_ptr->Write(s_idx,v_idx,c_zeroes,vssInfo.varSize,0,0,false);
+        } while(++v_idx < vssInfo.nVars);
+      }
     } while(++s_idx < vsInfo.slots);
-
-    // - release buffer filled by zeroes -
-    cfree(zeroes);
   }
 
   BIC_SET_RESULT_BLANK();
@@ -4913,20 +4908,13 @@ bool bic_var_slot_method_clear_0(interpreter_thread_s &it,unsigned stack_base,ul
   VarStore::SlotInfo vssInfo;
   vs_ptr->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);
 
-  // - create buffer filled by zeroes -
-  void *zeroes = cmalloc(vssInfo.varSize);
-  memset(zeroes,0,vssInfo.varSize);
-
   if (vssInfo.nVars >= 1)
   {
     int idx = 0;
     do {
-      vs_ptr->Write(vss_ptr->slot_idx,idx,zeroes,vssInfo.varSize,0,0,false);
+      vs_ptr->Write(vss_ptr->slot_idx,idx,c_zeroes,vssInfo.varSize,0,0,false);
     } while(++idx < vssInfo.nVars);
   }
-
-  // - release buffer filled by zeroes -
-  cfree(zeroes);
 
   BIC_SET_RESULT_BLANK();
 

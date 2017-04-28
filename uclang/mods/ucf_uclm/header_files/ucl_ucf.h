@@ -22,6 +22,7 @@ const int c_vs_max_var_size = 256;
 const int c_vs_max_str_size = c_vs_max_var_size;
 const unsigned c_vs_client_info_name_size = 12; // sizeof(VarStore::ClientInfo::name)
 const unsigned c_vs_slot_info_name_size = 16;   // sizeof(VarStore::SlotInfo::name)
+const unsigned char c_zeroes[c_vs_max_var_size] = {0};
 
 /*
  * definition of varstore variable types
