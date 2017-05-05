@@ -2103,6 +2103,7 @@ built_in_variable_s pipe_variables[] =
   }\
   while(read_cnt >= c_buffer_add);\
 \
+  /* - ERROR - */\
   if (ferror(f))\
   {\
     data_buffer.clear();\
@@ -2786,7 +2787,7 @@ bool bic_socket_addr_method_name_0(interpreter_thread_s &it,unsigned stack_base,
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->create(256);
 
-  if (getnameinfo((sockaddr*)addr_ptr,sizeof(sockaddr_in),string_ptr->data,
+  if (getnameinfo((sockaddr *)addr_ptr,sizeof(sockaddr_in),string_ptr->data,
         string_ptr->size - 1,NULL,0,NI_NUMERICHOST | NI_NUMERICSERV) == 0)
   {
     // - set string size -
@@ -3476,7 +3477,7 @@ bool bic_socket_method_recvfrom_0(interpreter_thread_s &it,unsigned stack_base,u
   // - ERROR -
   if (fd == -1)
   {
-    exception_s::throw_exception(it,module.error_base + c_error_FD_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s::throw_exception(it,module.error_base + c_error_SOCKET_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -4091,7 +4092,7 @@ bool bic_fd_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *ope
     do
     {
       // - ERROR -
-      if ((cnt = write(fd,string_ptr->data,length - writed)) == -1)
+      if ((cnt = write(fd,string_ptr->data + writed,length - writed)) == -1)
       {
         exception_s::throw_exception(it,module.error_base + c_error_FD_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
