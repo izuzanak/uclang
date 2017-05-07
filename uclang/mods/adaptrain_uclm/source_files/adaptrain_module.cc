@@ -3659,7 +3659,7 @@ built_in_variable_s ato_trip_variables[] =
 \
   nanosec_to_time_stamp(nanosec,trip_ptr->trip.NAME);\
 \
-  BIC_SET_RESULT_BLANK();\
+  BIC_SET_RESULT_DESTINATION();\
 \
   return true;\
 }/*}}}*/

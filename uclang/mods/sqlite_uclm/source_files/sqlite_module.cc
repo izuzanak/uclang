@@ -878,7 +878,7 @@ bool bic_sqlite_statement_method_bind_2(interpreter_thread_s &it,unsigned stack_
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -911,7 +911,7 @@ bool bic_sqlite_statement_method_bind_blob_2(interpreter_thread_s &it,unsigned s
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -939,7 +939,7 @@ bool bic_sqlite_statement_method_reset_0(interpreter_thread_s &it,unsigned stack
   // - reset statement complete flag -
   stmt_ptr->done = false;
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -969,7 +969,7 @@ bool bic_sqlite_statement_method_reset_clear_0(interpreter_thread_s &it,unsigned
   // - reset statement complete flag -
   stmt_ptr->done = false;
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

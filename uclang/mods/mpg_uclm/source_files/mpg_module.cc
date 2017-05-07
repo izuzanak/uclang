@@ -886,7 +886,7 @@ bool bic_mpg_handle_method_open_file_1(interpreter_thread_s &it,unsigned stack_b
 
   mh_ptr->type = c_mpg_handle_type_file;
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -914,7 +914,7 @@ bool bic_mpg_handle_method_open_feed_0(interpreter_thread_s &it,unsigned stack_b
 
   mh_ptr->type = c_mpg_handle_type_feed;
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1004,7 +1004,7 @@ bool bic_mpg_handle_method_set_param_2(interpreter_thread_s &it,unsigned stack_b
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1105,7 +1105,7 @@ bool bic_mpg_handle_method_volume_1(interpreter_thread_s &it,unsigned stack_base
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1182,7 +1182,7 @@ bool bic_mpg_handle_method_feed_1(interpreter_thread_s &it,unsigned stack_base,u
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

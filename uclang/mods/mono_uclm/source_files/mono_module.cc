@@ -1425,7 +1425,7 @@ bool bic_mono_object_method_print_0(interpreter_thread_s &it,unsigned stack_base
   fwrite(utf8_str,strlen(utf8_str),1,stdout);
   mono_free(utf8_str);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

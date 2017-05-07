@@ -265,7 +265,7 @@ built_in_variable_s nacl_variables[] =
   src_0_location->v_reference_cnt.atomic_inc();\
   DLG_PTR_NAME = src_0_location;\
 \
-  BIC_SET_RESULT_BLANK();\
+  BIC_SET_RESULT_DESTINATION();\
 \
   return true;\
 }/*}}}*/
@@ -379,7 +379,7 @@ bool bic_nacl_method_CallOnMainThread_3(interpreter_thread_s &it,unsigned stack_
   PP_CompletionCallback cc = PP_MakeCompletionCallback(on_completion_callback,cd_ptr);
   ppb_core_iface->CallOnMainThread(delay,cc,0);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -599,7 +599,7 @@ bool bic_nacl_3d_method_SwapBuffers_2(interpreter_thread_s &it,unsigned stack_ba
   PP_CompletionCallback cc = PP_MakeCompletionCallback(on_completion_callback,cd_ptr);
   ppb_graphics_3d_iface->SwapBuffers(pp_3d_context,cc);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

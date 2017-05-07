@@ -1000,7 +1000,7 @@ bool bic_stack_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *
   putchar(']');
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

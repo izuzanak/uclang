@@ -519,7 +519,7 @@ bool bic_ruby_symbol_method_print_0(interpreter_thread_s &it,unsigned stack_base
   fputc(':',stdout);
   fwrite(RSTRING_PTR(rv_string),RSTRING_LEN(rv_string),1,stdout);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

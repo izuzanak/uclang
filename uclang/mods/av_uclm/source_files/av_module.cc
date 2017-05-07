@@ -498,7 +498,7 @@ bool bic_av_format_method_stream_decode_1(interpreter_thread_s &it,unsigned stac
   // - add context to format codec context array -
   avf_ptr->codec_ctxs[stream_idx] = stream->codec;
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1638,7 +1638,7 @@ bool bic_av_converter_method_scale_2(interpreter_thread_s &it,unsigned stack_bas
   // - scale source picture to target -
   sws_scale(*avc_ptr,src_pic->data,src_pic->linesize,0,src_height,trg_pic->data,trg_pic->linesize);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

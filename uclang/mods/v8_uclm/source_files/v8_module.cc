@@ -494,7 +494,7 @@ bool bic_v8_context_method_enter_0(interpreter_thread_s &it,unsigned stack_base,
   // - enter context -
   per_context->Enter();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -510,7 +510,7 @@ bool bic_v8_context_method_exit_0(interpreter_thread_s &it,unsigned stack_base,u
   // - exit context -
   per_context->Exit();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -867,7 +867,7 @@ bool bic_v8_heap_stat_method_update_0(interpreter_thread_s &it,unsigned stack_ba
   // - retrieve v8 heap statistics -
   V8::GetHeapStatistics(hs_ptr);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1449,7 +1449,7 @@ bool bic_v8_object_method_set_prop_2(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1493,7 +1493,7 @@ bool bic_v8_object_method_del_prop_1(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1917,7 +1917,7 @@ bool bic_v8_reference_method_set_1(interpreter_thread_s &it,unsigned stack_base,
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

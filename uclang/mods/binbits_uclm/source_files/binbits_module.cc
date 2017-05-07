@@ -2558,7 +2558,7 @@ bool bic_bin_array_method_print_0(interpreter_thread_s &it,unsigned stack_base,u
 
   putchar(']');
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -3691,7 +3691,7 @@ bool bic_bin_dict_method_remove_key_1(interpreter_thread_s &it,unsigned stack_ba
     cassert(0);
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -4461,7 +4461,7 @@ bool bic_bin_dict_method_print_0(interpreter_thread_s &it,unsigned stack_base,ul
 
   putchar(']');
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

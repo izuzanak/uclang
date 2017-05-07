@@ -1278,7 +1278,7 @@ bool bic_gtk_g_object_method_prop_2(interpreter_thread_s &it,unsigned stack_base
 
   g_object_set_property(G_OBJECT(g_obj),string_ptr->data,&g_value);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1834,7 +1834,7 @@ bool bic_gtk_widget_method_show_all_0(interpreter_thread_s &it,unsigned stack_ba
 
   gtk_widget_show_all(GTK_WIDGET(g_obj));
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1994,7 +1994,7 @@ bool bic_gtk_container_method_add_1(interpreter_thread_s &it,unsigned stack_base
 
   gtk_container_add(GTK_CONTAINER(g_obj),GTK_WIDGET(g_obj_widget));
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2174,7 +2174,7 @@ bool bic_gtk_grid_method_attach_5(interpreter_thread_s &it,unsigned stack_base,u
 
   gtk_grid_attach(GTK_GRID(g_obj),GTK_WIDGET(g_obj_widget),left,top,width,height);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2599,7 +2599,7 @@ bool bic_gtk_dialog_method_add_button_2(interpreter_thread_s &it,unsigned stack_
 
   gtk_dialog_add_button(GTK_DIALOG(g_obj),string_ptr->data,response_id);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2828,7 +2828,7 @@ bool bic_gtk_handler_method_disconnect_0(interpreter_thread_s &it,unsigned stack
   // - reset handler identifier -
   dst_location->v_data_ptr = -1LL;
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

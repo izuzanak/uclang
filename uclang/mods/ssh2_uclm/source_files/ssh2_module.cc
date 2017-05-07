@@ -698,7 +698,7 @@ bool bic_ssh2_session_method_userauth_password_2(interpreter_thread_s &it,unsign
   // - set ssh2 session state to authenticated -
   ssh2s_ptr->state = SSH2_SESSION_STATE_AUTHENTICATED;
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -744,7 +744,7 @@ bool bic_ssh2_session_method_userauth_fake_interactive_2(interpreter_thread_s &i
   // - set ssh2 session state to authenticated -
   ssh2s_ptr->state = SSH2_SESSION_STATE_AUTHENTICATED;
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -806,7 +806,7 @@ bool bic_ssh2_session_method_userauth_publickey_fromfile_4(interpreter_thread_s 
   // - set ssh2 session state to authenticated -
   ssh2s_ptr->state = SSH2_SESSION_STATE_AUTHENTICATED;
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1112,7 +1112,7 @@ bool bic_sftp_session_method_mkdir_2(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1147,7 +1147,7 @@ bool bic_sftp_session_method_rmdir_1(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1681,7 +1681,7 @@ bool bic_sftp_handle_method_write_1(interpreter_thread_s &it,unsigned stack_base
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2049,7 +2049,7 @@ bool bic_ssh2_channel_method_write_1(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2069,7 +2069,7 @@ bool bic_ssh2_channel_method_flush_0(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2089,7 +2089,7 @@ bool bic_ssh2_channel_method_send_eof_0(interpreter_thread_s &it,unsigned stack_
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

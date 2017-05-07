@@ -345,7 +345,7 @@ bool bic_lua_state_method_do_string_1(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -993,7 +993,7 @@ bool bic_lua_value_method_print_0(interpreter_thread_s &it,unsigned stack_base,u
   printf("%s",luaL_tolstring(L,-1,NULL));
   lua_pop(L,2);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

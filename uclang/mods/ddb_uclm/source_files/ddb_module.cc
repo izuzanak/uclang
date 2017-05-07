@@ -809,7 +809,7 @@ bool bic_trace_storage_method_Erase_0(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -864,7 +864,7 @@ bool bic_trace_storage_method_Write_1(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -934,7 +934,7 @@ bool bic_trace_storage_method_Write_2(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

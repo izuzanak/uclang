@@ -1644,7 +1644,7 @@ bool bic_graph_method_vertex_remove_1(interpreter_thread_s &it,unsigned stack_ba
   }
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1986,7 +1986,7 @@ bool bic_graph_method_edge_remove_1(interpreter_thread_s &it,unsigned stack_base
   }
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

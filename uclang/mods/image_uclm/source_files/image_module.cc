@@ -923,7 +923,7 @@ bool bic_image_method_write_png_file_1(interpreter_thread_s &it,unsigned stack_b
   fclose(f);
   png_destroy_write_struct(&png_ptr,&info_ptr);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1118,7 +1118,7 @@ bool bic_image_method_write_jpeg_file_2(interpreter_thread_s &it,unsigned stack_
 
   fclose(f);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1202,7 +1202,7 @@ bool bic_image_method_io_clear_0(interpreter_thread_s &it,unsigned stack_base,ul
   image_s *img_ptr = (image_s *)dst_location->v_data_ptr;
   img_ptr->io_clear();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1321,7 +1321,7 @@ bool bic_image_method_io_fill_1(interpreter_thread_s &it,unsigned stack_base,uli
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1362,7 +1362,7 @@ bool bic_image_method_io_copy_1(interpreter_thread_s &it,unsigned stack_base,uli
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

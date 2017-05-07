@@ -439,7 +439,7 @@ bool bic_http_server_method_process_0(interpreter_thread_s &it,unsigned stack_ba
   }
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -526,7 +526,7 @@ bool bic_http_server_method_process_1(interpreter_thread_s &it,unsigned stack_ba
   }
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -920,7 +920,7 @@ bool bic_http_conn_method_queue_response_2(interpreter_thread_s &it,unsigned sta
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1344,7 +1344,7 @@ bool bic_http_resp_method_add_header_2(interpreter_thread_s &it,unsigned stack_b
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1380,7 +1380,7 @@ bool bic_http_resp_method_add_footer_2(interpreter_thread_s &it,unsigned stack_b
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

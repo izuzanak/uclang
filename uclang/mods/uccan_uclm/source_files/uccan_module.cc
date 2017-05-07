@@ -819,7 +819,7 @@ bool bic_can_object_method_write_1(interpreter_thread_s &it,unsigned stack_base,
       break;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

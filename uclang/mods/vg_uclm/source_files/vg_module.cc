@@ -1285,7 +1285,7 @@ bool bic_vg_paint_method_Type_1(interpreter_thread_s &it,unsigned stack_base,uli
   VGPaint paint = (VGPaint)dst_location->v_data_ptr;
   vgSetParameteri(paint,VG_PAINT_TYPE,paint_type);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1311,7 +1311,7 @@ bool bic_vg_paint_method_Color_1(interpreter_thread_s &it,unsigned stack_base,ul
 
   vgSetParameterfv(paint,VG_PAINT_COLOR,4,glm::value_ptr(v4));
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1344,7 +1344,7 @@ bool bic_vg_paint_method_Set_1(interpreter_thread_s &it,unsigned stack_base,uli 
   VGPaint paint = (VGPaint)dst_location->v_data_ptr;
   vgSetPaint(paint,paint_modes);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1587,7 +1587,7 @@ bool bic_vg_path_method_MoveTo_1(interpreter_thread_s &it,unsigned stack_base,ul
   VGubyte segment = VG_MOVE_TO;
   vgAppendPathData(path,1,&segment,glm::value_ptr(v2));
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1621,7 +1621,7 @@ bool bic_vg_path_method_MoveTo_2(interpreter_thread_s &it,unsigned stack_base,ul
 
   vgAppendPathData(path,1,&segment,coords);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1648,7 +1648,7 @@ bool bic_vg_path_method_LineTo_1(interpreter_thread_s &it,unsigned stack_base,ul
   VGubyte segment = VG_LINE_TO;
   vgAppendPathData(path,1,&segment,glm::value_ptr(v2));
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1682,7 +1682,7 @@ bool bic_vg_path_method_LineTo_2(interpreter_thread_s &it,unsigned stack_base,ul
 
   vgAppendPathData(path,1,&segment,coords);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1697,7 +1697,7 @@ bool bic_vg_path_method_CloseSubpath_0(interpreter_thread_s &it,unsigned stack_b
   VGubyte segment = VG_CLOSE_PATH;
   vgAppendPathData(path,1,&segment,NULL);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1730,7 +1730,7 @@ bool bic_vg_path_method_Draw_1(interpreter_thread_s &it,unsigned stack_base,uli 
   VGPath path = (VGPath)dst_location->v_data_ptr;
   vgDrawPath(path,paint_modes);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

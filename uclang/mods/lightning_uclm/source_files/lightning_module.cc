@@ -306,7 +306,7 @@ bool bic_ltg_jit_state_method_create_fun_1(interpreter_thread_s &it,unsigned sta
   // - release lightning parser -
   parser.clear();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

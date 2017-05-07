@@ -416,7 +416,7 @@ bool bic_llvm_module_method_create_fun_1(interpreter_thread_s &it,unsigned stack
   // - release llvm parser -
   parser.clear();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

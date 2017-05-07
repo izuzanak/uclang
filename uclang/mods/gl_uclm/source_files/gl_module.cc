@@ -1138,7 +1138,7 @@ bool bic_gl_program_method_use_0(interpreter_thread_s &it,unsigned stack_base,ul
 
   glUseProgram(program);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1612,7 +1612,7 @@ bool bic_gl_uniform_method_write_1(interpreter_thread_s &it,unsigned stack_base,
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1941,7 +1941,7 @@ bool bic_gl_texture_method_update_1(interpreter_thread_s &it,unsigned stack_base
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1977,7 +1977,7 @@ bool bic_gl_texture_method_bind_0(interpreter_thread_s &it,unsigned stack_base,u
 
   glBindTexture(GL_TEXTURE_2D,glt_ptr->index);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

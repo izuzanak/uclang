@@ -1390,7 +1390,7 @@ bool bic_pa_stream_method_start_0(interpreter_thread_s &it,unsigned stack_base,u
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1409,7 +1409,7 @@ bool bic_pa_stream_method_stop_0(interpreter_thread_s &it,unsigned stack_base,ul
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1574,7 +1574,7 @@ bool bic_pa_stream_method_write_1(interpreter_thread_s &it,unsigned stack_base,u
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

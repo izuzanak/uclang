@@ -594,7 +594,7 @@ bool bic_cv_mat_method_write_2(interpreter_thread_s &it,unsigned stack_base,uli 
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -891,7 +891,7 @@ bool bic_cv_window_method_show_1(interpreter_thread_s &it,unsigned stack_base,ul
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1404,7 +1404,7 @@ bool bic_cv_capture_method_retrieve_1(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1494,7 +1494,7 @@ bool bic_cv_capture_method_set_2(interpreter_thread_s &it,unsigned stack_base,ul
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1758,7 +1758,7 @@ bool bic_cv_writer_method_write_1(interpreter_thread_s &it,unsigned stack_base,u
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

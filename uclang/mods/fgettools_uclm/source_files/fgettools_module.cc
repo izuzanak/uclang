@@ -398,7 +398,7 @@ bool bic_fget_target_method_index_1(interpreter_thread_s &it,unsigned stack_base
   // - set fget target index -
   ft_ptr->index = index;
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

@@ -873,7 +873,7 @@ bool bic_gz_file_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli
 
   BIC_GZ_FILE_METHOD_WRITE_1();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

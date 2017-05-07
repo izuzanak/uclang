@@ -243,7 +243,7 @@ built_in_variable_s calc_service_variables[] =
   src_0_location->v_reference_cnt.atomic_inc();\
   se_ptr->DLG_PTR_NAME = src_0_location;\
 \
-  BIC_SET_RESULT_BLANK();\
+  BIC_SET_RESULT_DESTINATION();\
 \
   return true;\
 }/*}}}*/
@@ -433,7 +433,7 @@ bool bic_calc_service_method_process_0(interpreter_thread_s &it,unsigned stack_b
   }
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

@@ -1136,7 +1136,7 @@ bool bic_time_method_SetSystemTime_0(interpreter_thread_s &it,unsigned stack_bas
   // - set system time -
   SetSystemTime(dateTime);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1246,7 +1246,7 @@ bool bic_time_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *o
   printf("%4.4hu/%2.2hhu/%2.2hhu %2.2hhu:%2.2hhu:%2.2hhu"
       ,dateTime.year,dateTime.month,dateTime.day,dateTime.hour,dateTime.min,dateTime.sec);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1460,7 +1460,7 @@ bool bic_cfg_file_method_Open_1(interpreter_thread_s &it,unsigned stack_base,uli
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1555,7 +1555,7 @@ bool bic_cfg_file_method_OpenSection_1(interpreter_thread_s &it,unsigned stack_b
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1957,7 +1957,7 @@ built_in_variable_s ucf_log_variables[] =
   file_log_ptr->SetVerbosity(verbosity);\
   log_set_ptr->AddLog(file_log_ptr);\
 \
-  BIC_SET_RESULT_BLANK();\
+  BIC_SET_RESULT_DESTINATION();\
 \
   return true;\
 }/*}}}*/
@@ -1988,7 +1988,7 @@ built_in_variable_s ucf_log_variables[] =
     stdout_log_ptr->SetVerbosity(verbosity);\
     log_set_ptr->AddLog(stdout_log_ptr);\
     \
-    BIC_SET_RESULT_BLANK();\
+    BIC_SET_RESULT_DESTINATION();\
     \
     return true;\
   }/*}}}*/
@@ -2214,7 +2214,7 @@ bool bic_ucf_log_method_add_nvm_2(interpreter_thread_s &it,unsigned stack_base,u
   nvm_log_ptr->SetVerbosity(verbosity);
   log_set_ptr->AddLog(nvm_log_ptr);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2254,7 +2254,7 @@ bool bic_ucf_log_method_write_2(interpreter_thread_s &it,unsigned stack_base,uli
   // - write string to log -
   log_ptr->log_set_ptr->Write(level,log_ptr->source.data,GetSystemTime(),"%s",string_ptr->data);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2324,7 +2324,7 @@ bool bic_ucf_log_method_write_3(interpreter_thread_s &it,unsigned stack_base,uli
   // - write string to log -
   log_ptr->log_set_ptr->Write(level,source_ptr,log_time,"%s",string_ptr->data);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2551,7 +2551,7 @@ bool bic_ucf_mutex_method_Reserve_0(interpreter_thread_s &it,unsigned stack_base
   Mutex *mutex_ptr = (Mutex *)dst_location->v_data_ptr;
   mutex_ptr->Reserve();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2598,7 +2598,7 @@ bool bic_ucf_mutex_method_Release_0(interpreter_thread_s &it,unsigned stack_base
   Mutex *mutex_ptr = (Mutex *)dst_location->v_data_ptr;
   mutex_ptr->Release();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2776,7 +2776,7 @@ bool bic_ucf_led_method_LightOn_0(interpreter_thread_s &it,unsigned stack_base,u
   // - turn on led diod -
   led_ptr->LightOn();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2792,7 +2792,7 @@ bool bic_ucf_led_method_LightOff_0(interpreter_thread_s &it,unsigned stack_base,
   // - turn off led diod -
   led_ptr->LightOff();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2808,7 +2808,7 @@ bool bic_ucf_led_method_Toggle_0(interpreter_thread_s &it,unsigned stack_base,ul
   // - toggle led diod -
   led_ptr->Toggle();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -3076,7 +3076,7 @@ bool bic_serial_method_SetFormat_5(interpreter_thread_s &it,unsigned stack_base,
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -3172,7 +3172,7 @@ bool bic_serial_method_WriteAll_1(interpreter_thread_s &it,unsigned stack_base,u
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -3876,7 +3876,7 @@ bool bic_var_store_method_clear_slots_0(interpreter_thread_s &it,unsigned stack_
     } while(++s_idx < vsInfo.slots);
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -4943,7 +4943,7 @@ bool bic_var_slot_method_write_1(interpreter_thread_s &it,unsigned stack_base,ul
     BIC_VAR_SLOT_WRITE_BLOCK(src_0_location);
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -4973,7 +4973,7 @@ bool bic_var_slot_method_write_2(interpreter_thread_s &it,unsigned stack_base,ul
 
   BIC_VAR_SLOT_WRITE(index,src_1_location);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -5403,7 +5403,7 @@ bool bic_nvm_segment_method_write_2(interpreter_thread_s &it,unsigned stack_base
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -5754,7 +5754,7 @@ bool bic_msg_queue_method_write_1(interpreter_thread_s &it,unsigned stack_base,u
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -6002,7 +6002,7 @@ bool bic_bcc_method_append_1(interpreter_thread_s &it,unsigned stack_base,uli *o
   // - set bcc value -
   dst_location->v_data_ptr = (long long int)value;
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -6294,7 +6294,7 @@ bool bic_crc_method_append_1(interpreter_thread_s &it,unsigned stack_base,uli *o
   break;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -6488,7 +6488,7 @@ bool bic_md5_method_append_1(interpreter_thread_s &it,unsigned stack_base,uli *o
     md5_ptr->Append(string_ptr->data,string_ptr->size - 1);
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

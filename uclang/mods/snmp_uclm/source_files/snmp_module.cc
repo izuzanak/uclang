@@ -560,7 +560,7 @@ bool bic_snmp_session_method_set_list_2(interpreter_thread_s &it,unsigned stack_
     }
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1492,7 +1492,7 @@ bool bic_snmp_obj_method_set_1(interpreter_thread_s &it,unsigned stack_base,uli 
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

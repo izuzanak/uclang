@@ -542,7 +542,7 @@ built_in_variable_s log_variables[] =
   /* - write android log message - */\
   __android_log_write(PRIORITY,log_ptr->tag.data,text_ptr->data);\
 \
-  BIC_SET_RESULT_BLANK();\
+  BIC_SET_RESULT_DESTINATION();\
 \
   return true;\
 }/*}}}*/
@@ -861,7 +861,7 @@ built_in_variable_s activity_variables[] =
   src_0_location->v_reference_cnt.atomic_inc();\
   DLG_PTR_NAME = src_0_location;\
 \
-  BIC_SET_RESULT_BLANK();\
+  BIC_SET_RESULT_DESTINATION();\
 \
   return true;\
 }/*}}}*/
@@ -1713,7 +1713,7 @@ bool bic_sensor_event_queue_method_enable_sensor_1(interpreter_thread_s &it,unsi
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1745,7 +1745,7 @@ bool bic_sensor_event_queue_method_disable_sensor_1(interpreter_thread_s &it,uns
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1782,7 +1782,7 @@ bool bic_sensor_event_queue_method_event_rate_2(interpreter_thread_s &it,unsigne
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

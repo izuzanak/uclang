@@ -473,7 +473,7 @@ bool bic_ftp_session_method_login_2(interpreter_thread_s &it,unsigned stack_base
   // - set ftp session state to authenticated -
   ftps_ptr->state = FTP_SESSION_STATE_AUTHENTICATED;
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -508,7 +508,7 @@ bool bic_ftp_session_method_mkdir_1(interpreter_thread_s &it,unsigned stack_base
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -543,7 +543,7 @@ bool bic_ftp_session_method_rmdir_1(interpreter_thread_s &it,unsigned stack_base
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -660,7 +660,7 @@ bool bic_ftp_session_method_chdir_1(interpreter_thread_s &it,unsigned stack_base
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -729,7 +729,7 @@ bool bic_ftp_session_method_get_file_2(interpreter_thread_s &it,unsigned stack_b
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -769,7 +769,7 @@ bool bic_ftp_session_method_put_file_2(interpreter_thread_s &it,unsigned stack_b
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -844,7 +844,7 @@ bool bic_ftp_session_method_rename_2(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1227,7 +1227,7 @@ bool bic_ftp_handle_method_write_1(interpreter_thread_s &it,unsigned stack_base,
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

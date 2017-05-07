@@ -557,7 +557,7 @@ bool bic_gl_vertex_buffer_method_render_1(interpreter_thread_s &it,unsigned stac
 
   vertex_buffer_render(vb_ptr->buffer_ptr,mode);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1048,7 +1048,7 @@ bool bic_gl_font_method_bind_texture_0(interpreter_thread_s &it,unsigned stack_b
   texture_atlas_t *atlas_ptr = glf_ptr->atlas_ptr;
   glBindTexture(GL_TEXTURE_2D,atlas_ptr->id);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1207,7 +1207,7 @@ bool bic_gl_font_buffer_method_set_pos_2(interpreter_thread_s &it,unsigned stack
   glfb_ptr->pos_x = pos_x;
   glfb_ptr->pos_y = pos_y;
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1321,7 +1321,7 @@ bool bic_gl_font_buffer_method_push_text_1(interpreter_thread_s &it,unsigned sta
     vertex_buffer_push_back(buffer_ptr MP_COMMA vertices MP_COMMA 4 MP_COMMA indices MP_COMMA 6);
   )
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1337,7 +1337,7 @@ bool bic_gl_font_buffer_method_render_0(interpreter_thread_s &it,unsigned stack_
   glBindTexture(GL_TEXTURE_2D,glf_ptr->atlas_ptr->id);
   vertex_buffer_render(glfb_ptr->buffer_ptr,GL_TRIANGLES);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1351,7 +1351,7 @@ bool bic_gl_font_buffer_method_clear_0(interpreter_thread_s &it,unsigned stack_b
 
   vertex_buffer_clear(glfb_ptr->buffer_ptr);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

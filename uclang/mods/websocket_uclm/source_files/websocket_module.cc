@@ -640,7 +640,7 @@ bool bic_ws_context_method_process_1(interpreter_thread_s &it,unsigned stack_bas
   }
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -710,7 +710,7 @@ bool bic_ws_context_method_callback_on_writable_1(interpreter_thread_s &it,unsig
 
   libwebsocket_callback_on_writable_all_protocol(wsc_ptr->protocols + 1 + prot_idx);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -907,7 +907,7 @@ built_in_variable_s ws_conn_variables[] =
   /* - release data buffer - */\
   cfree(buffer);\
 \
-  BIC_SET_RESULT_BLANK();\
+  BIC_SET_RESULT_DESTINATION();\
 \
   return true;\
 }/*}}}*/
@@ -1116,7 +1116,7 @@ bool bic_ws_conn_method_callback_on_writable_0(interpreter_thread_s &it,unsigned
 
   libwebsocket_callback_on_writable(wsc_ptr->context,wscn_ptr->ws_ptr);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1179,7 +1179,7 @@ bool bic_ws_conn_method_set_timeout_2(interpreter_thread_s &it,unsigned stack_ba
   // - set connection timeout -
   libwebsocket_set_timeout(wscn_ptr->ws_ptr,(pending_timeout)reason,seconds);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1369,7 +1369,7 @@ bool bic_ws_client_method_callback_on_writable_0(interpreter_thread_s &it,unsign
 
   libwebsocket_callback_on_writable(wsc_ptr->context,wscl_ptr->ws_ptr);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

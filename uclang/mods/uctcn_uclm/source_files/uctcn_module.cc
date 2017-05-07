@@ -599,7 +599,7 @@ bool bic_traffic_store_method_start_0(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -619,7 +619,7 @@ bool bic_traffic_store_method_stop_0(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1469,7 +1469,7 @@ bool bic_traffic_port_method_put_dataset_1(interpreter_thread_s &it,unsigned sta
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1535,7 +1535,7 @@ bool bic_traffic_port_method_enable_0(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1557,7 +1557,7 @@ bool bic_traffic_port_method_disable_0(interpreter_thread_s &it,unsigned stack_b
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1820,7 +1820,7 @@ bool bic_proc_var_set_method_write_0(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1858,7 +1858,7 @@ bool bic_proc_var_set_method_safe_write_0(interpreter_thread_s &it,unsigned stac
   // - release port buffer -
   cfree(port_buffer);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1888,7 +1888,7 @@ bool bic_proc_var_set_method_read_0(interpreter_thread_s &it,unsigned stack_base
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1908,7 +1908,7 @@ bool bic_proc_var_set_method_force_0(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1928,7 +1928,7 @@ bool bic_proc_var_set_method_unforce_0(interpreter_thread_s &it,unsigned stack_b
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2490,7 +2490,7 @@ bool bic_proc_variable_method_set_1(interpreter_thread_s &it,unsigned stack_base
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

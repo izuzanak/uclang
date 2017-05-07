@@ -630,7 +630,7 @@ bool bic_imx_egl_method_set_as_global_0(interpreter_thread_s &it,unsigned stack_
 
   global_egl_mutex.unlock();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -819,7 +819,7 @@ bool bic_imx_egl_method_MakeCurrent_0(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -838,7 +838,7 @@ bool bic_imx_egl_method_SwapBuffers_0(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1083,7 +1083,7 @@ bool bic_imx_fb_method_wait_on_vsync_0(interpreter_thread_s &it,unsigned stack_b
   // - wait for framebuffer vertical sync -
   ioctl(if_ptr->fd,MXCFB_WAIT_FOR_VSYNC,0);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1347,7 +1347,7 @@ bool bic_imx_ipu_method_prepare_rotation_0(interpreter_thread_s &it,unsigned sta
   // - set prepared flag -
   ii_ptr->prepared = true;
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1399,7 +1399,7 @@ bool bic_imx_ipu_method_execute_0(interpreter_thread_s &it,unsigned stack_base,u
     buffer_idx = !buffer_idx;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

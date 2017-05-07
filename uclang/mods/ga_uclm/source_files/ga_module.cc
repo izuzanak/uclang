@@ -453,7 +453,7 @@ bool bic_ga_real_genome_method_evolve_4(interpreter_thread_s &it,unsigned stack_
   genome = ga.statistics().bestIndividual();
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -880,7 +880,7 @@ bool bic_ga_steady_state_method_step_0(interpreter_thread_s &it,unsigned stack_b
   }
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -896,7 +896,7 @@ bool bic_ga_steady_state_method_best_individual_0(interpreter_thread_s &it,unsig
   // - retrieve best individual -
   *grg_ptr->genome_ptr = gss_ptr->ga_ptr->statistics().bestIndividual();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

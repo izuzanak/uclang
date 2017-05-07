@@ -622,7 +622,7 @@ bool bic_ao_device_method_play_1(interpreter_thread_s &it,unsigned stack_base,ul
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

@@ -533,7 +533,7 @@ bool bic_pas_method_master_ip_1(interpreter_thread_s &it,unsigned stack_base,uli
     // - unlock pas data mutex -
     pas_s::mutex.unlock();
 
-    BIC_SET_RESULT_BLANK();
+    BIC_SET_RESULT_DESTINATION();
 
     return true;
 
@@ -594,7 +594,7 @@ bool bic_pas_method_device_1(interpreter_thread_s &it,unsigned stack_base,uli *o
   // - unlock pas data mutex -
   pas_s::mutex.unlock();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -682,7 +682,7 @@ bool bic_pas_method_samples_append_1(interpreter_thread_s &it,unsigned stack_bas
     pas_s::mutex.unlock();
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -779,7 +779,7 @@ bool bic_pas_method_samples_append_sine_3(interpreter_thread_s &it,unsigned stac
     pas_s::mutex.unlock();
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -827,7 +827,7 @@ bool bic_pas_method_samples_append_silence_1(interpreter_thread_s &it,unsigned s
     pas_s::mutex.unlock();
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -913,7 +913,7 @@ bool bic_pas_method_hold_delay_1(interpreter_thread_s &it,unsigned stack_base,ul
   // - unlock pas data mutex -
   pas_s::mutex.unlock();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -978,7 +978,7 @@ bool bic_pas_method_audio_section_1(interpreter_thread_s &it,unsigned stack_base
   // - unlock pas data mutex -
   pas_s::mutex.unlock();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1026,7 +1026,7 @@ bool bic_pas_method_priority_1(interpreter_thread_s &it,unsigned stack_base,uli 
   // - unlock pas data mutex -
   pas_s::mutex.unlock();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1083,7 +1083,7 @@ bool bic_pas_method_volume_1(interpreter_thread_s &it,unsigned stack_base,uli *o
   // - unlock pas data mutex -
   pas_s::mutex.unlock();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1114,7 +1114,7 @@ bool bic_pas_method_pause_1(interpreter_thread_s &it,unsigned stack_base,uli *op
   // - unlock pas data mutex -
   pas_s::mutex.unlock();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1443,7 +1443,7 @@ bool bic_pas_device_method_PasDevice_2(interpreter_thread_s &it,unsigned stack_b
   pas_device_s *pd_ptr = (pas_device_s *)dst_location->v_data_ptr;\
   pd_ptr->STRUCT_NAME = VAR_NAME;\
 \
-  BIC_SET_RESULT_BLANK();\
+  BIC_SET_RESULT_DESTINATION();\
 \
   return true;\
 }/*}}}*/
@@ -1534,7 +1534,7 @@ bool bic_pas_device_method_version_1(interpreter_thread_s &it,unsigned stack_bas
   // - set device version -
   memcpy(pd_ptr->ident.version,string_ptr->data,string_ptr->size);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

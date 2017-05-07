@@ -1110,7 +1110,7 @@ bool bic_fuse_handle_method_loop_0(interpreter_thread_s &it,unsigned stack_base,
   }
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1250,7 +1250,7 @@ built_in_variable_s fuse_stat_variables[] =
   struct stat *st_ptr = (struct stat *)dst_location->v_data_ptr;\
   st_ptr->VALUE = value;\
 \
-  BIC_SET_RESULT_BLANK();\
+  BIC_SET_RESULT_DESTINATION();\
 \
   return true;\
 }/*}}}*/
@@ -1586,7 +1586,7 @@ bool bic_fuse_dir_filler_method_fill_dir_1(interpreter_thread_s &it,unsigned sta
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

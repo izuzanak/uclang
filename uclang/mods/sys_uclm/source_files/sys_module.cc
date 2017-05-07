@@ -2579,7 +2579,7 @@ bool bic_file_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 
   BIC_FILE_METHOD_CLOSE_0();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -3582,7 +3582,7 @@ bool bic_socket_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
   dst_location->v_data_ptr = (int)-1;
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

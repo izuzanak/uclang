@@ -641,7 +641,7 @@ bool bic_unicode_char_method_print_0(interpreter_thread_s &it,unsigned stack_bas
 
   fwrite(buffer,count,1,stdout);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1566,7 +1566,7 @@ bool bic_unicode_string_method_print_0(interpreter_thread_s &it,unsigned stack_b
 
   utf8proc_s::unicode_print(*((ui_array_s *)dst_location->v_data_ptr));
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

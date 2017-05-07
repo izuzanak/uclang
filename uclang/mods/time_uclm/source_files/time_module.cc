@@ -534,7 +534,7 @@ bool bic_time_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *o
       ,datetime.year,(usi)datetime.month,(usi)datetime.day,(usi)datetime.hour,(usi)datetime.min,(usi)datetime.sec);
 #endif
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

@@ -581,7 +581,7 @@ bool bic_dlms_server_method_process_0(interpreter_thread_s &it,unsigned stack_ba
   dlmss_ptr->m_Media.ListenerStep();
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1241,7 +1241,7 @@ bool bic_dlms_object_method_value_1(interpreter_thread_s &it,unsigned stack_base
     }
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

@@ -388,7 +388,7 @@ bool bic_elm_comm_method_check_sync_time_1(interpreter_thread_s &it,unsigned sta
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -523,7 +523,7 @@ bool bic_elm_comm_method_write_init_speed_1(interpreter_thread_s &it,unsigned st
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

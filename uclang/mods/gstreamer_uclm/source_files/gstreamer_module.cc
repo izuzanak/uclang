@@ -480,7 +480,7 @@ bool bic_gst_pipeline_method_set_state_1(interpreter_thread_s &it,unsigned stack
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -605,7 +605,7 @@ bool bic_gst_pipeline_method_main_loop_0(interpreter_thread_s &it,unsigned stack
   } while (running);
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -624,7 +624,7 @@ bool bic_gst_pipeline_method_stop_0(interpreter_thread_s &it,unsigned stack_base
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

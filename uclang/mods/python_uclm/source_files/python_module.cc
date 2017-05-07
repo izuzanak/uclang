@@ -864,7 +864,7 @@ bool bic_py_object_method_set_attr_2(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -909,7 +909,7 @@ bool bic_py_object_method_del_attr_1(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1081,7 +1081,7 @@ bool bic_py_object_method_set_item_2(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1126,7 +1126,7 @@ bool bic_py_object_method_del_item_1(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1253,7 +1253,7 @@ bool bic_py_object_method_print_0(interpreter_thread_s &it,unsigned stack_base,u
   PyObject_Print(pyo_dst,stdout,Py_PRINT_RAW);
   Py_DECREF(pyo_dst);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1477,7 +1477,7 @@ bool bic_py_attr_ref_method_set_1(interpreter_thread_s &it,unsigned stack_base,u
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1701,7 +1701,7 @@ bool bic_py_item_ref_method_set_1(interpreter_thread_s &it,unsigned stack_base,u
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
