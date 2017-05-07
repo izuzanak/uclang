@@ -4916,7 +4916,7 @@ bool bic_var_slot_method_clear_0(interpreter_thread_s &it,unsigned stack_base,ul
     } while(++idx < vssInfo.nVars);
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

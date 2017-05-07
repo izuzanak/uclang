@@ -1705,7 +1705,7 @@ bool bic_v8_object_method_print_0(interpreter_thread_s &it,unsigned stack_base,u
   // - print string content -
   fwrite(*utf8_value,utf8_value.length(),1,stdout);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

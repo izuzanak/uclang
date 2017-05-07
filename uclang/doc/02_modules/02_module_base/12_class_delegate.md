@@ -197,7 +197,7 @@ This method prints name of class `Delegate`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Delegate`.
 
 **Example:**
 

@@ -203,7 +203,7 @@ This method prints name of class `Thread`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Thread`.
 
 **Example:**
 

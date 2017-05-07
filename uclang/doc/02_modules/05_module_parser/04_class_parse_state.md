@@ -221,7 +221,7 @@ Print string representation of object of class `ParseState` to standard output.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `ParseState`.
 
 **Example:**
 

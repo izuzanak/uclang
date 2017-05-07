@@ -258,7 +258,7 @@ This method prints name of class `Algo`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Algo`.
 
 **Example:**
 

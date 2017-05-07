@@ -1253,7 +1253,7 @@ Print string representation of object of class `Char` to standard output.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Char`.
 
 **Example:**
 

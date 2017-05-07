@@ -2071,8 +2071,6 @@ built_in_variable_s pipe_variables[] =
     exception_s::throw_exception(it,module.error_base + c_error_STREAM_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-\
-  BIC_SET_RESULT_BLANK();\
 /*}}}*/
 
 #define BIC_STREAM_METHOD_READ_0() \
@@ -2213,7 +2211,7 @@ bool bic_pipe_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 
   BIC_PIPE_METHOD_CLOSE_0();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2237,6 +2235,8 @@ bool bic_pipe_method_write_close_1(interpreter_thread_s &it,unsigned stack_base,
 
   BIC_STREAM_METHOD_WRITE_1();
   BIC_PIPE_METHOD_CLOSE_0();
+
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2528,7 +2528,7 @@ bool bic_file_method_seek_2(interpreter_thread_s &it,unsigned stack_base,uli *op
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2603,6 +2603,8 @@ bool bic_file_method_write_close_1(interpreter_thread_s &it,unsigned stack_base,
 
   BIC_STREAM_METHOD_WRITE_1();
   BIC_FILE_METHOD_CLOSE_0();
+
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -3159,7 +3161,7 @@ bool bic_socket_method_listen_2(interpreter_thread_s &it,unsigned stack_base,uli
   }
 #endif
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -3341,7 +3343,7 @@ bool bic_socket_method_connect_1(interpreter_thread_s &it,unsigned stack_base,ul
   }
 #endif
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -3403,7 +3405,7 @@ bool bic_socket_method_bind_1(interpreter_thread_s &it,unsigned stack_base,uli *
   }
 #endif
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -3461,7 +3463,7 @@ bool bic_socket_method_sendto_2(interpreter_thread_s &it,unsigned stack_base,uli
     while((writed += cnt) < length);
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -3629,7 +3631,7 @@ bool bic_socket_method_set_timeout_2(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -3793,6 +3795,8 @@ bool bic_stream_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
   BIC_STREAM_METHOD_WRITE_1();
 
+  BIC_SET_RESULT_DESTINATION();
+
   return true;
 }/*}}}*/
 
@@ -3817,7 +3821,7 @@ bool bic_stream_method_flush_0(interpreter_thread_s &it,unsigned stack_base,uli 
     return false;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -4101,7 +4105,7 @@ bool bic_fd_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *ope
     while((writed += cnt) < length);
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -5750,7 +5754,7 @@ bool bic_timer_method_schedule_3(interpreter_thread_s &it,unsigned stack_base,ul
   // - insert record to timer records list -
   timer_ptr->records.swap_insert(record);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -5838,7 +5842,7 @@ bool bic_timer_method_process_0(interpreter_thread_s &it,unsigned stack_base,uli
   }
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

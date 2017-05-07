@@ -402,7 +402,7 @@ built_in_variable_s dict_variables[] =
 
 #define BIC_DICT_CHECK_INDEX() \
   /*{{{*/\
-  pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)((location_s *)dst_location)->v_data_ptr;\
+  pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;\
   \
   /* - ERROR - */\
   if (index < 0 || index >= tree_ptr->used || !tree_ptr->data[index].valid)\
@@ -730,7 +730,7 @@ bool bic_dict_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *o
   tree_ptr->clear();
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -841,7 +841,7 @@ bool bic_dict_method_store_ref_2(interpreter_thread_s &it,unsigned stack_base,ul
   map.value = (pointer)new_ref_location;
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1147,7 +1147,7 @@ bool bic_dict_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli 
 bool bic_dict_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int index;
@@ -1177,9 +1177,9 @@ bool bic_dict_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 bool bic_dict_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)((location_s *)dst_location)->v_data_ptr;
+  pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;
 
   if (tree_ptr->root_idx != c_idx_not_exist)
   {
@@ -1200,9 +1200,9 @@ bool bic_dict_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,ul
 bool bic_dict_method_last_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)((location_s *)dst_location)->v_data_ptr;
+  pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;
 
   if (tree_ptr->root_idx != c_idx_not_exist)
   {
@@ -1223,7 +1223,7 @@ bool bic_dict_method_last_idx_0(interpreter_thread_s &it,unsigned stack_base,uli
 bool bic_dict_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int index;
@@ -1252,7 +1252,7 @@ bool bic_dict_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli
 bool bic_dict_method_prev_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int index;

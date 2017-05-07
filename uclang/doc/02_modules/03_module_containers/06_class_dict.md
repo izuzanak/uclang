@@ -218,7 +218,7 @@ Release all elements stored in object of class `Dict`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Dict`.
 
 **Example:**
 
@@ -296,7 +296,7 @@ Store reference to second method parameter under key given by first method param
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Dict`.
 
 **Example:**
 
@@ -845,7 +845,7 @@ character `:`. As separator of key-element pairs is used character `,`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Dict`.
 
 **Example:**
 

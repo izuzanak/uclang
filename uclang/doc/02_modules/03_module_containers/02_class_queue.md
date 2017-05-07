@@ -235,7 +235,7 @@ Release all elements stored in object of class `Queue`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Queue`.
 
 **Example:**
 
@@ -287,7 +287,7 @@ Insert method parameter to object of class `Queue`.
 
 **Return:**
 
-* Object of class ``Blank``.
+* Object of class `Queue`.
 
 **Example:**
 
@@ -316,7 +316,7 @@ Insert reference to method parameter to object of class `Queue`.
 
 **Return:**
 
-* Object of class ``Blank``.
+* Object of class `Queue`.
 
 **Example:**
 
@@ -659,7 +659,7 @@ method. As separator of printed values is used character `,`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Queue`.
 
 **Example:**
 

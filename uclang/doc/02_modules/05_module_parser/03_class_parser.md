@@ -145,7 +145,7 @@ method parameter. Delegate accepts one parameter represented by object of class
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Parser`.
 
 **Example:**
 
@@ -196,7 +196,7 @@ This method prints name of class `Parser`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Parser`.
 
 **Example:**
 

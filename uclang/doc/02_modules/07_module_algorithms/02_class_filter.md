@@ -174,7 +174,7 @@ This method prints name of class `Filter`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Filter`.
 
 **Example:**
 

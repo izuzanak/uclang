@@ -434,7 +434,7 @@ built_in_variable_s bin_array_variables[] =
 
 #define BIC_BIN_ARRAY_GET_USED(LOCATION) \
 /*{{{*/\
-  bin_array_s *ba_ptr = (bin_array_s *)((location_s *)(LOCATION))->v_data_ptr;\
+  bin_array_s *ba_ptr = (bin_array_s *)(LOCATION)->v_data_ptr;\
   unsigned used;\
   \
   switch (ba_ptr->type)\
@@ -639,7 +639,7 @@ built_in_variable_s bin_array_variables[] =
 #define BIC_BIN_ARRAY_ITEM(NAME) \
 {/*{{{*/\
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
   \
   long long int index;\
@@ -658,7 +658,7 @@ built_in_variable_s bin_array_variables[] =
   BIC_BIN_ARRAY_CHECK_INDEX();\
   \
   /* - create bin array reference - */\
-  bin_array_ref_s *bar_ptr = ba_ptr->create_reference((location_s *)dst_location,index);\
+  bin_array_ref_s *bar_ptr = ba_ptr->create_reference(dst_location,index);\
   \
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_bin_array_ref,bar_ptr);\
   BIC_SET_RESULT(new_location);\
@@ -1280,7 +1280,7 @@ bool bic_bin_array_method_clear_0(interpreter_thread_s &it,unsigned stack_base,u
     cassert(0);
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1350,7 +1350,7 @@ bool bic_bin_array_method_resize_1(interpreter_thread_s &it,unsigned stack_base,
     break;
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1491,7 +1491,7 @@ bool bic_bin_array_method_push_1(interpreter_thread_s &it,unsigned stack_base,ul
     cassert(0);
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1710,7 +1710,7 @@ bool bic_bin_array_method_fill_1(interpreter_thread_s &it,unsigned stack_base,ul
     cassert(0);
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2297,7 +2297,7 @@ bool bic_bin_array_method_last_idx_0(interpreter_thread_s &it,unsigned stack_bas
 bool bic_bin_array_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int index;
@@ -2330,7 +2330,7 @@ bool bic_bin_array_method_next_idx_1(interpreter_thread_s &it,unsigned stack_bas
 bool bic_bin_array_method_prev_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int index;
@@ -3456,7 +3456,7 @@ bool bic_bin_dict_method_clear_0(interpreter_thread_s &it,unsigned stack_base,ul
     cassert(0);
   }
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -4068,7 +4068,7 @@ bool bic_bin_dict_method_compare_1(interpreter_thread_s &it,unsigned stack_base,
 bool bic_bin_dict_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int index;
@@ -4084,7 +4084,7 @@ bool bic_bin_dict_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli
     return false;
   }
 
-  bin_dict_s *bd_ptr = (bin_dict_s *)((location_s *)dst_location)->v_data_ptr;
+  bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
 
   switch (bd_ptr->type)
   {
@@ -4103,7 +4103,7 @@ bool bic_bin_dict_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli
   }
 
   // - create bin dict reference -
-  bin_dict_ref_s *bdr_ptr = bd_ptr->create_reference((location_s *)dst_location,index);
+  bin_dict_ref_s *bdr_ptr = bd_ptr->create_reference(dst_location,index);
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_bin_dict_ref,bdr_ptr);
   BIC_SET_RESULT(new_location);

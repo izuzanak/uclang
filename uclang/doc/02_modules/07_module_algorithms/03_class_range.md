@@ -166,7 +166,7 @@ This method prints name of class `Range`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Range`.
 
 **Example:**
 

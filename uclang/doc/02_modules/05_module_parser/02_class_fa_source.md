@@ -201,7 +201,7 @@ This method prints name of class `FaSource`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `FaSource`.
 
 **Example:**
 

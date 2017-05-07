@@ -284,7 +284,7 @@ built_in_variable_s stack_variables[] =
 
 #define BIC_STACK_CHECK_INDEX() \
   /*{{{*/\
-  pointer_array_s *array_ptr = (pointer_array_s *)((location_s *)dst_location)->v_data_ptr;\
+  pointer_array_s *array_ptr = (pointer_array_s *)dst_location->v_data_ptr;\
   \
   /* - ERROR - */\
   if (index < 0 || index >= array_ptr->used) {\
@@ -556,9 +556,9 @@ bool bic_stack_method_Stack_1(interpreter_thread_s &it,unsigned stack_base,uli *
 bool bic_stack_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  pointer_array_s *array_ptr = (pointer_array_s *)((location_s *)dst_location)->v_data_ptr;
+  pointer_array_s *array_ptr = (pointer_array_s *)dst_location->v_data_ptr;
 
   if (array_ptr->used != 0)
   {
@@ -575,7 +575,7 @@ bool bic_stack_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *
   array_ptr->clear();
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -613,16 +613,16 @@ bool bic_stack_method_items_0(interpreter_thread_s &it,unsigned stack_base,uli *
 bool bic_stack_method_push_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
-  pointer_array_s *array_ptr = (pointer_array_s *)((location_s *)dst_location)->v_data_ptr;
+  pointer_array_s *array_ptr = (pointer_array_s *)dst_location->v_data_ptr;
 
   src_0_location->v_reference_cnt.atomic_inc();
   array_ptr->push((pointer)src_0_location);
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -630,16 +630,16 @@ bool bic_stack_method_push_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 bool bic_stack_method_push_ref_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   pointer &src_0_location = it.data_stack[stack_base + operands[c_src_0_op_idx]];
 
-  pointer_array_s *array_ptr = (pointer_array_s *)((location_s *)dst_location)->v_data_ptr;
+  pointer_array_s *array_ptr = (pointer_array_s *)dst_location->v_data_ptr;
 
   location_s *new_ref_location = it.get_new_reference((location_s **)&src_0_location);
   array_ptr->push((pointer)new_ref_location);
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -647,9 +647,9 @@ bool bic_stack_method_push_ref_1(interpreter_thread_s &it,unsigned stack_base,ul
 bool bic_stack_method_pop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  pointer_array_s *array_ptr = (pointer_array_s *)((location_s *)dst_location)->v_data_ptr;
+  pointer_array_s *array_ptr = (pointer_array_s *)dst_location->v_data_ptr;
 
   // - ERROR -
   if (array_ptr->used == 0)
@@ -721,7 +721,7 @@ bool bic_stack_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli
 bool bic_stack_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int index;
@@ -795,7 +795,7 @@ bool bic_stack_method_last_idx_0(interpreter_thread_s &it,unsigned stack_base,ul
 bool bic_stack_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int index;
@@ -830,7 +830,7 @@ bool bic_stack_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,ul
 bool bic_stack_method_prev_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int index;

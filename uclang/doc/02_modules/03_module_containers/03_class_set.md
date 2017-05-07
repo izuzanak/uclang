@@ -568,7 +568,7 @@ Release all elements stored in object of class `Set`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Set`.
 
 **Example:**
 
@@ -620,7 +620,7 @@ Insert method parameter to object of class `Set`.
 
 **Return:**
 
-* Object of class ``Blank``.
+* Object of class `Set`.
 
 **Example:**
 
@@ -963,7 +963,7 @@ method. As separator of printed values is used character `,`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Set`.
 
 **Example:**
 

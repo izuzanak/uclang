@@ -383,7 +383,7 @@ built_in_variable_s set_variables[] =
 
 #define BIC_SET_CHECK_INDEX() \
   /*{{{*/\
-  pointer_tree_s *tree_ptr = (pointer_tree_s *)((location_s *)dst_location)->v_data_ptr;\
+  pointer_tree_s *tree_ptr = (pointer_tree_s *)dst_location->v_data_ptr;\
   \
   /* - ERROR - */\
   if (index < 0 || index >= tree_ptr->used || !tree_ptr->data[index].valid)\
@@ -398,7 +398,7 @@ built_in_variable_s set_variables[] =
 #define BIC_SET_ITEM(NAME) \
   {/*{{{*/\
     unsigned res_loc_idx = stack_base + operands[c_res_op_idx];\
-    pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+    location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
     \
     long long int index;\
@@ -884,7 +884,7 @@ bool bic_set_operator_binary_minus_equal(interpreter_thread_s &it,unsigned stack
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   unsigned dst_loc_idx = stack_base + operands[c_dst_op_idx];
-  pointer &dst_location = it.get_stack_value(dst_loc_idx);
+  location_s *dst_location = (location_s *)it.get_stack_value(dst_loc_idx);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -899,7 +899,7 @@ bool bic_set_operator_binary_minus_equal(interpreter_thread_s &it,unsigned stack
   }
 
   // - get references to first and second -
-  pointer_tree_s &first = *((pointer_tree_s *)((location_s *)dst_location)->v_data_ptr);
+  pointer_tree_s &first = *((pointer_tree_s *)dst_location->v_data_ptr);
   pointer_tree_s &second = *((pointer_tree_s *)src_0_location->v_data_ptr);
 
   // - create target -
@@ -927,7 +927,7 @@ bool bic_set_operator_binary_ampersand_equal(interpreter_thread_s &it,unsigned s
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   unsigned dst_loc_idx = stack_base + operands[c_dst_op_idx];
-  pointer &dst_location = it.get_stack_value(dst_loc_idx);
+  location_s *dst_location = (location_s *)it.get_stack_value(dst_loc_idx);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -942,7 +942,7 @@ bool bic_set_operator_binary_ampersand_equal(interpreter_thread_s &it,unsigned s
   }
 
   // - get references to first and second -
-  pointer_tree_s &first = *((pointer_tree_s *)((location_s *)dst_location)->v_data_ptr);
+  pointer_tree_s &first = *((pointer_tree_s *)dst_location->v_data_ptr);
   pointer_tree_s &second = *((pointer_tree_s *)src_0_location->v_data_ptr);
 
   // - create target -
@@ -970,7 +970,7 @@ bool bic_set_operator_binary_pipe_equal(interpreter_thread_s &it,unsigned stack_
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   unsigned dst_loc_idx = stack_base + operands[c_dst_op_idx];
-  pointer &dst_location = it.get_stack_value(dst_loc_idx);
+  location_s *dst_location = (location_s *)it.get_stack_value(dst_loc_idx);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -985,7 +985,7 @@ bool bic_set_operator_binary_pipe_equal(interpreter_thread_s &it,unsigned stack_
   }
 
   // - get references to first and second -
-  pointer_tree_s &first = *((pointer_tree_s *)((location_s *)dst_location)->v_data_ptr);
+  pointer_tree_s &first = *((pointer_tree_s *)dst_location->v_data_ptr);
   pointer_tree_s &second = *((pointer_tree_s *)src_0_location->v_data_ptr);
 
   // - create target -
@@ -1013,7 +1013,7 @@ bool bic_set_operator_binary_circumflex_equal(interpreter_thread_s &it,unsigned 
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   unsigned dst_loc_idx = stack_base + operands[c_dst_op_idx];
-  pointer &dst_location = it.get_stack_value(dst_loc_idx);
+  location_s *dst_location = (location_s *)it.get_stack_value(dst_loc_idx);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -1028,7 +1028,7 @@ bool bic_set_operator_binary_circumflex_equal(interpreter_thread_s &it,unsigned 
   }
 
   // - get references to first and second -
-  pointer_tree_s &first = *((pointer_tree_s *)((location_s *)dst_location)->v_data_ptr);
+  pointer_tree_s &first = *((pointer_tree_s *)dst_location->v_data_ptr);
   pointer_tree_s &second = *((pointer_tree_s *)src_0_location->v_data_ptr);
 
   // - create target -
@@ -1055,7 +1055,7 @@ bool bic_set_operator_binary_circumflex_equal(interpreter_thread_s &it,unsigned 
 bool bic_set_operator_binary_ampersand(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -1070,7 +1070,7 @@ bool bic_set_operator_binary_ampersand(interpreter_thread_s &it,unsigned stack_b
   }
 
   // - get references to first and second -
-  pointer_tree_s &first = *((pointer_tree_s *)((location_s *)dst_location)->v_data_ptr);
+  pointer_tree_s &first = *((pointer_tree_s *)dst_location->v_data_ptr);
   pointer_tree_s &second = *((pointer_tree_s *)src_0_location->v_data_ptr);
 
   // - create target -
@@ -1090,7 +1090,7 @@ bool bic_set_operator_binary_ampersand(interpreter_thread_s &it,unsigned stack_b
 bool bic_set_operator_binary_pipe(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -1105,7 +1105,7 @@ bool bic_set_operator_binary_pipe(interpreter_thread_s &it,unsigned stack_base,u
   }
 
   // - get references to first and second -
-  pointer_tree_s &first = *((pointer_tree_s *)((location_s *)dst_location)->v_data_ptr);
+  pointer_tree_s &first = *((pointer_tree_s *)dst_location->v_data_ptr);
   pointer_tree_s &second = *((pointer_tree_s *)src_0_location->v_data_ptr);
 
   // - create target -
@@ -1383,7 +1383,7 @@ bool bic_set_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *op
   tree_ptr->clear();
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1443,7 +1443,7 @@ bool bic_set_method_insert_1(interpreter_thread_s &it,unsigned stack_base,uli *o
   }
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1477,7 +1477,7 @@ bool bic_set_method_remove_1(interpreter_thread_s &it,unsigned stack_base,uli *o
   tree_ptr->remove(index);
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

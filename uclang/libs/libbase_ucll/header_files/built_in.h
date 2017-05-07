@@ -137,6 +137,12 @@ enum
     BIC_SET_RESULT(it.blank_location);\
   }/*}}}*/
 
+#define BIC_SET_RESULT_DESTINATION() \
+  {/*{{{*/\
+    dst_location->v_reference_cnt.atomic_inc();\
+    BIC_SET_RESULT(dst_location);\
+  }/*}}}*/
+
 #define BIC_SET_RESULT_STRING(VALUE) \
   {/*{{{*/\
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,(VALUE));\

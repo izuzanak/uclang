@@ -157,7 +157,7 @@ This method prints name of class `Pack`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Pack`.
 
 **Example:**
 

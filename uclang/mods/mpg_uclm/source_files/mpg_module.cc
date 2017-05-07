@@ -1329,7 +1329,7 @@ bool bic_mpg_handle_method_close_0(interpreter_thread_s &it,unsigned stack_base,
   mh_ptr->type = c_mpg_handle_type_none;
   mh_ptr->init_format();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

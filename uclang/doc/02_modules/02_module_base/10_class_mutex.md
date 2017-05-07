@@ -184,7 +184,7 @@ This method prints name of class `Mutex`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Mutex`.
 
 **Example:**
 

@@ -217,7 +217,7 @@ Print string representation of object of class `Type` to standard output.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Type`.
 
 **Example:**
 

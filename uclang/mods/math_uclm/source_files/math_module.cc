@@ -801,7 +801,7 @@ bool bic_vec2_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 
   printf("[%f,%f]",v2.x,v2.y);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1188,7 +1188,7 @@ bool bic_vec3_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 
   printf("[%f,%f,%f]",v3.x,v3.y,v3.z);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1554,7 +1554,7 @@ bool bic_vec4_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 
   printf("[%f,%f,%f,%f]",v4.x,v4.y,v4.z,v4.w);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2325,7 +2325,7 @@ bool bic_mat4_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *o
          m4[2].x,m4[2].y,m4[2].z,m4[2].w,
          m4[3].x,m4[3].y,m4[3].z,m4[3].w);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -2409,7 +2409,7 @@ built_in_variable_s primes_variables[] =
 #define BIC_PRIMES_ITEM(NAME) \
   {/*{{{*/\
     pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-    pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+    location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
     \
     long long int index;\
@@ -2425,7 +2425,7 @@ built_in_variable_s primes_variables[] =
       return false;\
     }\
     \
-    primes_s *primes_ptr = (primes_s *)((location_s *)dst_location)->v_data_ptr;\
+    primes_s *primes_ptr = (primes_s *)dst_location->v_data_ptr;\
     \
     /* - retrieve next index - */\
     long long int prime = primes_ptr->get_prime(index);\
@@ -2555,7 +2555,7 @@ bool bic_primes_method_Primes_1(interpreter_thread_s &it,unsigned stack_base,uli
 bool bic_primes_method_prime_factors_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int number;
@@ -2571,7 +2571,7 @@ bool bic_primes_method_prime_factors_1(interpreter_thread_s &it,unsigned stack_b
     return false;
   }
 
-  primes_s *primes_ptr = (primes_s *)((location_s *)dst_location)->v_data_ptr;
+  primes_s *primes_ptr = (primes_s *)dst_location->v_data_ptr;
 
   // - ERROR -
   if (number <= 0)
@@ -2658,7 +2658,7 @@ bool bic_primes_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,
 bool bic_primes_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int index;
@@ -2674,7 +2674,7 @@ bool bic_primes_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,u
     return false;
   }
 
-  primes_s *primes_ptr = (primes_s *)((location_s *)dst_location)->v_data_ptr;
+  primes_s *primes_ptr = (primes_s *)dst_location->v_data_ptr;
 
   // - retrieve next index -
   long long int next_index = primes_ptr->next_idx(index);

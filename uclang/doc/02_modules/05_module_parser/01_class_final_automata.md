@@ -151,7 +151,7 @@ This method prints name of class `FinalAutomata`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `FinalAutomata`.
 
 **Example:**
 

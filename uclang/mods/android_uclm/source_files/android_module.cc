@@ -345,10 +345,10 @@ bool bic_sys_prop_method_get_1(interpreter_thread_s &it,unsigned stack_base,uli 
 bool bic_sys_prop_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve property info pointer -
-  prop_info *prop_info_ptr = (prop_info *)((location_s *)dst_location)->v_data_ptr;
+  prop_info *prop_info_ptr = (prop_info *)dst_location->v_data_ptr;
 
   // - ERROR -
   if (prop_info_ptr == NULL)
@@ -372,10 +372,10 @@ bool bic_sys_prop_method_value_0(interpreter_thread_s &it,unsigned stack_base,ul
 bool bic_sys_prop_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve property info pointer -
-  prop_info *prop_info_ptr = (prop_info *)((location_s *)dst_location)->v_data_ptr;
+  prop_info *prop_info_ptr = (prop_info *)dst_location->v_data_ptr;
 
   // - ERROR -
   if (prop_info_ptr == NULL)

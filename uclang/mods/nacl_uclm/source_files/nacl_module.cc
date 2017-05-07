@@ -859,16 +859,16 @@ bool bic_time_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_time_method_Time_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  ((location_s *)dst_location)->v_data_ptr = (PP_Time)ppb_core_iface->GetTime();
+  dst_location->v_data_ptr = (PP_Time)ppb_core_iface->GetTime();
 
   return true;
 }/*}}}*/
 
 bool bic_time_method_Time_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   PP_Time time;
@@ -967,7 +967,7 @@ bool bic_time_method_Time_1(interpreter_thread_s &it,unsigned stack_base,uli *op
     }
   }
 
-  ((location_s *)dst_location)->v_data_ptr = (PP_Time)time;
+  dst_location->v_data_ptr = (PP_Time)time;
 
   return true;
 }/*}}}*/
@@ -1138,7 +1138,7 @@ bool bic_time_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *o
   printf("%4.4hu/%2.2hhu/%2.2hhu %2.2hhu:%2.2hhu:%2.2hhu"
       ,datetime.year,datetime.month,datetime.day,datetime.hour,datetime.min,datetime.sec);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1614,7 +1614,7 @@ bool bic_net_address_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_net_address_method_NetAddress_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
@@ -1686,7 +1686,7 @@ bool bic_net_address_method_NetAddress_2(interpreter_thread_s &it,unsigned stack
     return false;
   }
 
-  ((location_s *)dst_location)->v_data_ptr = (PP_Resource)pp_addr;
+  dst_location->v_data_ptr = (PP_Resource)pp_addr;
 
   return true;
 }/*}}}*/
@@ -1733,7 +1733,7 @@ bool bic_net_address_method_print_0(interpreter_thread_s &it,unsigned stack_base
   PP_STRING_FWRITE(pp_str,stdout);
   PP_RELEASE(pp_str);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

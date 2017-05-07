@@ -1292,7 +1292,7 @@ Print string representation of object of class `Integer` to standard output.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Integer`.
 
 **Example:**
 

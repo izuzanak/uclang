@@ -831,7 +831,7 @@ Print object of class `String` to standard output.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `String`.
 
 **Example:**
 

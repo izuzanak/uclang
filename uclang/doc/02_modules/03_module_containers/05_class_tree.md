@@ -268,7 +268,7 @@ Release all elements stored in object of class `Tree`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Tree`.
 
 **Example:**
 
@@ -320,7 +320,7 @@ Insert method parameter to object of class `Tree`.
 
 **Return:**
 
-* Object of class ``Blank``.
+* Object of class `Integer`.
 
 **Example:**
 
@@ -349,7 +349,7 @@ Remove element from object of class `Tree` stored at position given by method pa
 
 **Return:**
 
-* Object of class ``Blank``.
+* Object of class `Tree`.
 
 **Example:**
 
@@ -719,7 +719,7 @@ method. As separator of printed values is used character `,`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Tree`.
 
 **Example:**
 

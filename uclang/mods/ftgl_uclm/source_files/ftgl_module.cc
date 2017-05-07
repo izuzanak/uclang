@@ -571,7 +571,7 @@ bool bic_gl_vertex_buffer_method_clear_0(interpreter_thread_s &it,unsigned stack
 
   vertex_buffer_clear(vb_ptr->buffer_ptr);
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

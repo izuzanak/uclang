@@ -208,19 +208,19 @@ bool bic_time_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_time_method_Time_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
   timeval tv;
   gettimeofday(&tv,NULL);
 
-  ((location_s *)dst_location)->v_data_ptr = (long long unsigned)(tv.tv_sec*1000000000LLU + tv.tv_usec*1000LLU);
+  dst_location->v_data_ptr = (long long unsigned)(tv.tv_sec*1000000000LLU + tv.tv_usec*1000LLU);
 #elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
   FILETIME ft;
   GetSystemTimeAsFileTime(&ft);
 
   ULARGE_INTEGER ularge_int = { ft.dwLowDateTime,ft.dwHighDateTime };
-  ((location_s *)dst_location)->v_data_ptr = (long long unsigned)((ularge_int.QuadPart - 116444736000000000ULL)*100LLU);
+  dst_location->v_data_ptr = (long long unsigned)((ularge_int.QuadPart - 116444736000000000ULL)*100LLU);
 #else
   exception_s *new_exception = exception_s::throw_exception(it,c_error_BUILT_IN_NOT_IMPLEMENTED_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
   BIC_EXCEPTION_PUSH_METHOD_RI("Time#0");
@@ -233,7 +233,7 @@ bool bic_time_method_Time_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_time_method_Time_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long unsigned time;
@@ -329,7 +329,7 @@ bool bic_time_method_Time_1(interpreter_thread_s &it,unsigned stack_base,uli *op
     }
   }
 
-  ((location_s *)dst_location)->v_data_ptr = (long long unsigned)time;
+  dst_location->v_data_ptr = (long long unsigned)time;
 
   return true;
 }/*}}}*/

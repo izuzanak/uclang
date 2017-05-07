@@ -126,7 +126,7 @@ This method prints name of class `Json`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Json`.
 
 **Example:**
 

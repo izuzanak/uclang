@@ -247,7 +247,7 @@ error output of process.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Exception`.
 
 **Example:**
 
@@ -298,7 +298,7 @@ This method prints name of class `Exception`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Exception`.
 
 **Example:**
 

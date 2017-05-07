@@ -276,7 +276,7 @@ Release all elements stored in object of class `List`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `List`.
 
 **Example:**
 
@@ -580,7 +580,7 @@ Remove element from object of class `List` stored at position given by method pa
 
 **Return:**
 
-* Object of class ``Blank``.
+* Object of class `List`.
 
 **Example:**
 
@@ -981,7 +981,7 @@ method. As separator of printed values is used character `,`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `List`.
 
 **Example:**
 

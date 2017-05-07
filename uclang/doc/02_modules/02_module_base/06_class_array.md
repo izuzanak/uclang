@@ -304,7 +304,7 @@ Release all elements stored in object of class `Array`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Array`.
 
 **Example:**
 
@@ -332,7 +332,7 @@ elements are initialized to objects of class `Blank`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Array`.
 
 **Example:**
 
@@ -359,7 +359,7 @@ Insert method parameter to end of object of class `Array`.
 
 **Return:**
 
-* Object of class ``Blank``.
+* Object of class `Array`.
 
 **Example:**
 
@@ -387,7 +387,7 @@ Insert reference to method parameter to end of object of class `Array`.
 
 **Return:**
 
-* Object of class ``Blank``.
+* Object of class `Array`.
 
 **Example:**
 
@@ -466,7 +466,7 @@ Replace all elements of object of class `Array` by method parameter.
 
 **Return:**
 
-* Object of class ``Blank``.
+* Object of class `Array`.
 
 **Example:**
 
@@ -838,7 +838,7 @@ method. As separator of printed values is used character `,`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Array`.
 
 **Example:**
 

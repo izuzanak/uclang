@@ -1256,7 +1256,7 @@ Print string representation of object of class `Float` to standard output.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Float`.
 
 **Example:**
 

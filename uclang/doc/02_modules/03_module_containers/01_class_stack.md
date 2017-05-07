@@ -235,7 +235,7 @@ Release all elements stored in object of class `Stack`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Stack`.
 
 **Example:**
 
@@ -287,7 +287,7 @@ Insert method parameter to end of object of class `Stack`.
 
 **Return:**
 
-* Object of class ``Blank``.
+* Object of class `Stack`.
 
 **Example:**
 
@@ -315,7 +315,7 @@ Insert reference to method parameter to end of object of class `Stack`.
 
 **Return:**
 
-* Object of class ``Blank``.
+* Object of class `Stack`.
 
 **Example:**
 
@@ -658,7 +658,7 @@ method. As separator of printed values is used character `,`.
 
 **Return:**
 
-* Object of class `Blank`.
+* Object of class `Stack`.
 
 **Example:**
 

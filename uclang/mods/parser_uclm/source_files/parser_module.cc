@@ -876,7 +876,7 @@ bool bic_parser_method_parse_2(interpreter_thread_s &it,unsigned stack_base,uli 
   it.release_location_ptr(ps_location);
 
   pointer &res_location = it.data_stack[res_loc_idx];
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

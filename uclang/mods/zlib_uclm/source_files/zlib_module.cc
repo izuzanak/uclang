@@ -488,8 +488,6 @@ built_in_variable_s gz_file_variables[] =
     exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-\
-  BIC_SET_RESULT_BLANK();\
 /*}}}*/
 
 #define BIC_GZ_FILE_METHOD_READ_0() \
@@ -851,7 +849,7 @@ bool bic_gz_file_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli
 
   BIC_GZ_FILE_METHOD_CLOSE_0();
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -899,6 +897,8 @@ bool bic_gz_file_method_write_close_1(interpreter_thread_s &it,unsigned stack_ba
 
   BIC_GZ_FILE_METHOD_WRITE_1();
   BIC_GZ_FILE_METHOD_CLOSE_0();
+
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

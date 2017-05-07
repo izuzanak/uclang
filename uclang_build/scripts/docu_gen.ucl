@@ -383,7 +383,7 @@ class Main
       "iter_next_idx", "%s.next_idx(%s)",
       "cont_clear", "%s.clear()"
     ]);/*}}}*/
-    CLASS_PROPERTIES["Tree"] = new Dict(
+    CLASS_PROPERTIES["Tree"] = class_Tree = new Dict(
     [/*{{{*/
       "description","Container class implementing abstract data type tree.",
       "iter_indexes",[0,2,3],
@@ -1031,7 +1031,7 @@ obj <= [1,2,3];
 "Resize object of class `%s` to size given by method parameter. New
 elements are initialized to objects of class %s." % [m_target_name,doc_class_ref("Blank")],
 ["Object of class convertible to %s." % doc_class_ref("Integer")],
-"* Object of class %s." % doc_class_ref("Blank"),"
+"* Object of class `%s`." % m_target_name,"
 %s
 (\"obj: %%s\\n\" %% $obj).print();
 obj.resize(8);
@@ -1173,7 +1173,7 @@ catch (exc)
 (/*{{{*/
 "Print information about exception described by object of class `%s` to
 error output of process." % m_target_name,
-[],"* Object of class %s." % doc_class_ref("Blank"),"
+[],"* Object of class `%s`." % m_target_name,"
 try {
   %s.throw();
 }
@@ -1507,6 +1507,25 @@ res = obj_0 - obj_1;
       ]);/*}}}*/
     }
 
+    case "Tree":
+    {
+      class_Tree["methods"] = new Dict(
+      [/*{{{*/
+        "insert#1", new MethodDescr
+(/*{{{*/
+"Insert method parameter to object of class `%s`." % m_target_name,
+["Any type."],"* Object of class %s." % doc_class_ref("Integer"),"
+%s
+(\"obj: %%s\\n\" %% $obj).print();
+obj.insert(5);
+obj.insert(6);
+obj.insert(7);
+(\"obj: %%s\\n\" %% $obj).print();
+" % get_code(m_target_class,"obj","create_example")
+)/*}}}*/
+      ]);/*}}}*/
+    }
+
     case "Dict":
     {
       class_Dict["methods"] = new Dict(
@@ -1610,7 +1629,7 @@ New position in bytes is obtained by adding offset to given position
 indicator." % m_target_name,
 ["Object of class %s, %s or %s identifying offset in bytes." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")],
  "Object of class %s, %s or %s identifying position to which offset is added." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]],
-"* Object of class %s." % doc_class_ref("Blank"),"
+"* Object of class %s." % doc_class_ref("File"),"
 %s
 (\"line: %%s\\n\" %% obj.readln()).print();
 (\"line: %%s\\n\" %% obj.readln()).print();
@@ -1771,7 +1790,7 @@ method parameter. Delegate accepts one parameter represented by object of class
 %s." % doc_class_ref("ParseState"),
 ["Object of class %s representing string to be parsed by parser." % doc_class_ref("String"),
 "Object of class %s to be called when reduction according to language grammar rule has occur." % doc_class_ref("Delegate")],
-"* Object of class %s." % doc_class_ref("Blank"),"
+"* Object of class `%s`." % m_target_name,"
 %s
 obj.parse(\"!!test\",new Delegate(this,\"parse_cb\",1));
 " % get_code(m_target_class,"obj","create_example")
@@ -3576,7 +3595,7 @@ obj = !obj;
               if (class_is_container(a_class))
               {
                 m_meth_descr_lst.push("Release all elements stored in object of class `%s`." % class_name);
-                m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Blank"));
+                m_meth_return_lst.push("* Object of class `%s`." % class_name);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
@@ -3645,7 +3664,7 @@ items = obj.items();
               {
                 m_meth_descr_lst.push("Insert method parameter to end of object of class `%s`." % class_name);
                 m_meth_param_lsts[0].push("Any type.");
-                m_meth_return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
+                m_meth_return_lst.push("* Object of class `%s`." % class_name);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
@@ -3669,7 +3688,7 @@ obj.push(7);
               {
                 m_meth_descr_lst.push("Insert reference to method parameter to end of object of class `%s`." % class_name);
                 m_meth_param_lsts[0].push("Any type.");
-                m_meth_return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
+                m_meth_return_lst.push("* Object of class `%s`." % class_name);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
@@ -3694,7 +3713,7 @@ value = \"Hello world!\";
               {
                 m_meth_descr_lst.push("Insert method parameter to object of class `%s`." % class_name);
                 m_meth_param_lsts[0].push("Any type.");
-                m_meth_return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
+                m_meth_return_lst.push("* Object of class `%s`." % class_name);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
@@ -3719,7 +3738,7 @@ obj.insert(7);
               {
                 m_meth_descr_lst.push("Insert reference to method parameter to object of class `%s`." % class_name);
                 m_meth_param_lsts[0].push("Any type.");
-                m_meth_return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
+                m_meth_return_lst.push("* Object of class `%s`." % class_name);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
@@ -4022,7 +4041,7 @@ value = \"Hello world!\";
               {
                 m_meth_descr_lst.push("Remove element from object of class `%s` stored at position given by method parameter." % class_name);
                 m_meth_param_lsts[0].push("Type convertible to integer.");
-                m_meth_return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
+                m_meth_return_lst.push("* Object of class `%s`." % class_name);
 
                 obj_code = get_code(a_class,"obj","create_example");
                 iter_indexes = get_code(a_class,0,"iter_indexes");
@@ -4047,7 +4066,7 @@ obj.remove(%d);
               {
                 m_meth_descr_lst.push("Replace all elements of object of class `%s` by method parameter." % class_name);
                 m_meth_param_lsts[0].push("Any type.");
-                m_meth_return_lst.push("* Object of class `%s`." % doc_class_ref("Blank"));
+                m_meth_return_lst.push("* Object of class `%s`." % class_name);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
@@ -4144,7 +4163,7 @@ obj.fill(0);
                 m_meth_descr_lst.push("Store reference to second method parameter under key given by first method parameter in object of class `%s`." % class_name);
                 m_meth_param_lsts[0].push("Any type.");
                 m_meth_param_lsts[1].push("Any type.");
-                m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Blank"));
+                m_meth_return_lst.push("* Object of class `%s`." % class_name);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
@@ -4750,7 +4769,7 @@ class_name);
                 m_meth_descr_lst.push("Print string representation of object of class `%s` to standard output." % class_name);
               }
 
-              m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Blank"));
+              m_meth_return_lst.push("* Object of class `%s`." % class_name);
 
               if (a_method.is_static())
               {
@@ -4816,7 +4835,7 @@ method. As separator of printed values is used character `,`." % class_name);
                 new Exception("Property \"channel_name\" of class \"%s\" is not defined" % class_name).throw();
 
               m_meth_descr_lst.push("Closes %s represented by object of class `%s`." % [channel_name,class_name]);
-              m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Blank"));
+              m_meth_return_lst.push("* Object of class `%s`." % class_name);
 
               obj_code = get_code(a_class,"obj","create_example");
 
@@ -4837,7 +4856,7 @@ obj.read();
 
               m_meth_descr_lst.push("Write object of class %s to %s represented by object of class `%s`." % [doc_class_ref("String"),channel_name,class_name]);
               m_meth_param_lsts[0].push("Object of class %s." % doc_class_ref("String"));
-              m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Blank"));
+              m_meth_return_lst.push("* Object of class `%s`." % class_name);
 
               obj_code = get_code(a_class,"obj","create_output");
 
@@ -4858,7 +4877,7 @@ obj.write(\"Hello world!\\n\");
 
               m_meth_descr_lst.push("Write object of class %s to %s represented by object of class `%s`, and closes it immediately." % [doc_class_ref("String"),channel_name,class_name]);
               m_meth_param_lsts[0].push("Object of class %s." % doc_class_ref("String"));
-              m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Blank"));
+              m_meth_return_lst.push("* Object of class `%s`." % class_name);
 
               obj_code = get_code(a_class,"obj","create_output");
 
@@ -4878,7 +4897,7 @@ obj.write_close(\"Hello world!\\n\");
                 new Exception("Property \"channel_name\" of class \"%s\" is not defined" % class_name).throw();
 
               m_meth_descr_lst.push("Force write of all buffered data of output %s represented by object of class `%s`." % [channel_name,class_name]);
-              m_meth_return_lst.push("* Object of class %s." % doc_class_ref("Blank"));
+              m_meth_return_lst.push("* Object of class `%s`." % class_name);
 
               obj_code = get_code(a_class,"obj","create_output");
 

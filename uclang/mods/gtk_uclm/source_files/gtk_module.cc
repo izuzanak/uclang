@@ -2324,7 +2324,7 @@ bool bic_gtk_window_method_close_0(interpreter_thread_s &it,unsigned stack_base,
   gpointer g_obj = (gpointer)dst_location->v_data_ptr;
   gtk_window_close(GTK_WINDOW(g_obj));
 
-  BIC_SET_RESULT_BLANK();
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
