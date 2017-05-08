@@ -35,7 +35,7 @@ dict         -> [One:1,Two:2,Five:<blank>,Four:4,Three:3]
 === Dict method clear#0 ========================================================
 
 dict         -> [One:1,Two:2,Three:3]
-dict.clear() -> <blank>
+dict.clear() -> []
 dict         -> []
 
 === Dict method keys#0 =========================================================
@@ -54,8 +54,8 @@ dict  -> type: Dict, value [One:1,Two:2,Three:3]
 
 value                        -> 10
 dict                         -> [One:1,Two:2,Three:3]
-dict.store_ref("Two",value)  -> <blank>
-dict.store_ref("Four",value) -> <blank>
+dict.store_ref("Two",value)  -> [One:1,Two:10,Three:3]
+dict.store_ref("Four",value) -> [One:1,Two:10,Four:10,Three:3]
 dict                         -> [One:1,Two:10,Four:10,Three:3]
 value = 100;                 -> 100
 dict                         -> [One:1,Two:100,Four:100,Three:3]
@@ -70,8 +70,8 @@ dict.has_key(2)      -> 0
 === Dict method remove_key#1 ===================================================
 
 dict                     -> [One:1,Two:2,Four:4,Three:3]
-dict.remove_key("One")   -> <blank>
-dict.remove_key("Three") -> <blank>
+dict.remove_key("One")   -> [Two:2,Four:4,Three:3]
+dict.remove_key("Three") -> [Two:2,Four:4]
 dict                     -> [Two:2,Four:4]
 
 === Dict methods first_key#0 and next_key#1 ====================================

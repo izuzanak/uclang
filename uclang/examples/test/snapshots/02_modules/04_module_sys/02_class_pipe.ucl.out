@@ -8,7 +8,7 @@ Pipe: Pipe
 === Pipe method close#0 ========================================================
 
 pipe         -> Pipe
-pipe.close() -> <blank>
+pipe.close() -> Pipe
 
 === Pipe methods write#1 and flush#0 ===========================================
 

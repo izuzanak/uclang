@@ -7,9 +7,9 @@ File: File
 
 file                       -> File
 file.tell()                -> 0
-file.seek(5,File.SEEK_SET) -> <blank>
+file.seek(5,File.SEEK_SET) -> File
 file.tell()                -> 5
-file.close()               -> <blank>
+file.close()               -> File
 
 === File methods write#1 and flush#0 ===========================================
 

@@ -11,10 +11,10 @@ timer: 10
 === Timer method schedule#3 ====================================================
 
 timer  -> Timer
-fourth -> <blank>
-third  -> <blank>
-second -> <blank>
-first  -> <blank>
+fourth -> Timer
+third  -> Timer
+second -> Timer
+first  -> Timer
 
 === Timer methods process#0 and remain#0 =======================================
 

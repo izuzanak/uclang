@@ -40,30 +40,30 @@ array[3]: Four
 === Array method clear#0 =======================================================
 
 array         -> [1,2,3,4,5]
-array.clear() -> <blank>
+array.clear() -> []
 array         -> []
 
 === Array method resize#1 ======================================================
 
 array            -> [1,2,3,4,5]
-array.resize(10) -> <blank>
+array.resize(10) -> [1,2,3,4,5,<blank>,<blank>,<blank>,<blank>,<blank>]
 array            -> [1,2,3,4,5,<blank>,<blank>,<blank>,<blank>,<blank>]
 
 === Array method push#1 ========================================================
 
 array          -> [1,2,3,4,5]
-array.push(10) -> <blank>
-array.push(10) -> <blank>
-array.push(10) -> <blank>
+array.push(10) -> [1,2,3,4,5,10]
+array.push(10) -> [1,2,3,4,5,10,10]
+array.push(10) -> [1,2,3,4,5,10,10,10]
 array          -> [1,2,3,4,5,10,10,10]
 
 === Array method push_ref#1 ====================================================
 
 value                 -> 10
 array                 -> [1,2,3,4,5]
-array.push_ref(value) -> <blank>
-array.push_ref(value) -> <blank>
-array.push_ref(value) -> <blank>
+array.push_ref(value) -> [1,2,3,4,5,10]
+array.push_ref(value) -> [1,2,3,4,5,10,10]
+array.push_ref(value) -> [1,2,3,4,5,10,10,10]
 array                 -> [1,2,3,4,5,10,10,10]
 value = 100;          -> 100
 array                 -> [1,2,3,4,5,100,100,100]
@@ -85,7 +85,7 @@ array        -> [1,2,3,4,5]
 === Array method fill#1 ========================================================
 
 array         -> [1,2,3,4,5]
-array.fill(3) -> <blank>
+array.fill(3) -> [3,3,3,3,3]
 array         -> [3,3,3,3,3]
 
 === Array method get_idx#1 =====================================================
