@@ -1043,7 +1043,7 @@ additions
    */
   unsigned get_parent_namespace_class_idx_by_name_idx(unsigned a_name_idx,unsigned a_namespace_idx);
 
-#if SYSTEM_TYPE != SYSTEM_TYPE_DSP
+#if (DEBUG_MESSAGES >= 1) && (SYSTEM_TYPE != SYSTEM_TYPE_DSP)
   void DEBUG_show_variables();
   void DEBUG_show_methods();
   void DEBUG_show_classes();

@@ -700,7 +700,7 @@ unsigned script_parser_s::get_parent_namespace_class_idx_by_name_idx(unsigned a_
   return c_idx_not_exist;
 }/*}}}*/
 
-#if SYSTEM_TYPE != SYSTEM_TYPE_DSP
+#if (DEBUG_MESSAGES >= 1) && (SYSTEM_TYPE != SYSTEM_TYPE_DSP)
 void script_parser_s::DEBUG_show_variables()
 {/*{{{*/
   if (variable_records.used != 0)
