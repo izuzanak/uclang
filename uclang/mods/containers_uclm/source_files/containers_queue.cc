@@ -847,7 +847,7 @@ bool bic_queue_method_contain_1(interpreter_thread_s &it,unsigned stack_base,uli
     }
     while(++e_ptr < e_ptr_end);
 
-    if (sec_cnt != 0)
+    if (!found && sec_cnt != 0)
     {
       e_ptr = queue_ptr->data;
       e_ptr_end = e_ptr + sec_cnt;
