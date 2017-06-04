@@ -51,26 +51,6 @@ class Main
     "Winners (%d)"
   ];/*}}}*/
 
-  INVALID_NAMES = new Set(
-  [/*{{{*/
-    "Odebrat",
-    "líbí",
-    "Odpovědět",
-    "Zpráva",
-    "Odebrat",
-    "nelíbí",
-    "...",
-    "Zobrazit",
-    "Upraveno",
-    "Okomentoval(a)",
-    "Herbatint",
-    "herbatint",
-    "stibio",
-    "odpověď",
-    "sdílení",
-    ""
-  ]);/*}}}*/
-
   m_window;
   m_text_views;
   m_sb_name_count;
@@ -121,53 +101,18 @@ class Main
     names = [];
     names_set = new Set();
 
-    fa = new FinalAutomata(
-    [
-      "\"<!-- react-text: \".d*.\" -->\""
-      ,"\"<!-- /react-text -->\""
-      ,"'<'"
-      ,"!'<'*"
-    ]);
+    // - retrieve lines -
+    regex = new Regex("UFICommentActorName[^>]*>");
 
-    inside_name = 0;
-    name_begin = 0;
-
-    fa_src = fa.get_source(input_data);
-    for (term <- fa_src)
+    // - retrieve names -
+    for (line <- regex.split(input_data)[1::])
     {
-      if (inside_name)
-      {
-        if (term == 1)
-        {
-          inside_name = 0;
-          name_end = fa_src.old_input_idx();
+      name = line.split("<")[0];
 
-          // - if name contain some characters -
-          if (name_end > name_begin)
-          {
-            // - retrieve name string -
-            name = input_data.range(name_begin,fa_src.old_input_idx() - 1);
-            name_set = new Set(name.split(" "));
-
-            // - filter out invalid name candidates -
-            if (name_set.length() > 1 and (INVALID_NAMES & name_set).length() == 0)
-            {
-              if (!(name in names_set))
-              {
-                names.push(name);
-                names_set.insert(name);
-              }
-            }
-          }
-        }
-      }
-      else
+      if (!(name in names_set))
       {
-        if (term == 0)
-        {
-          inside_name = 1;
-          name_begin = fa_src.input_idx();
-        }
+        names.push(name);
+        names_set.insert(name);
       }
     }
 
