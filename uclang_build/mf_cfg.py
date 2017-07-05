@@ -79,6 +79,7 @@ C_MODULE_RUBY       = index; index += 1
 C_MODULE_PROLOG     = index; index += 1
 C_MODULE_UV         = index; index += 1
 C_MODULE_ZLIB       = index; index += 1
+C_MODULE_SNAPPY     = index; index += 1
 C_MODULE_PIGPIO     = index; index += 1
 C_MODULE_FUSE       = index; index += 1
 C_MODULE_ANDROID    = index; index += 1
@@ -165,6 +166,7 @@ c_cfg = [
     ["MOD_PROLOG"    ,c_enabled[C_MODULE_PROLOG]    ,C_UCLANG_DIR + "mods/prolog_uclm"      ,None],
     ["MOD_UV"        ,c_enabled[C_MODULE_UV]        ,C_UCLANG_DIR + "mods/uv_uclm"          ,None],
     ["MOD_ZLIB"      ,c_enabled[C_MODULE_ZLIB]      ,C_UCLANG_DIR + "mods/zlib_uclm"        ,None],
+    ["MOD_SNAPPY"    ,c_enabled[C_MODULE_SNAPPY]    ,C_UCLANG_DIR + "mods/snappy_uclm"      ,None],
     ["MOD_PIGPIO"    ,c_enabled[C_MODULE_PIGPIO]    ,C_UCLANG_DIR + "mods/pigpio_uclm"      ,None],
     ["MOD_FUSE"      ,c_enabled[C_MODULE_FUSE]      ,C_UCLANG_DIR + "mods/fuse_uclm"        ,None],
     ["MOD_ANDROID"   ,c_enabled[C_MODULE_ANDROID]   ,C_UCLANG_DIR + "mods/android_uclm"     ,None],
