@@ -2,7 +2,6 @@
 import gtk;
 import sys;
 import containers;
-import parser;
 import time;
 
 class TextView
