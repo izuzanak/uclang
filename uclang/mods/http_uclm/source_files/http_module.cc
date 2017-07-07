@@ -557,7 +557,7 @@ built_in_class_s http_conn_class =
   "HttpConn",
   c_modifier_public | c_modifier_final,
   12, http_conn_methods,
-  8 + 6, http_conn_variables,
+  8 + 5, http_conn_variables,
   bic_http_conn_consts,
   bic_http_conn_init,
   bic_http_conn_clear,
@@ -652,7 +652,6 @@ built_in_variable_s http_conn_variables[] =
   { "TYPE_TRACE", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
   // - value type constants -
-  { "VALS_RESPONSE_HEADER", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VALS_HEADER", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VALS_COOKIE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VALS_POSTDATA", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -703,8 +702,8 @@ void bic_http_conn_consts(location_array_s &const_locations)
 
   // - insert http conn value type constants -
   {
-    const_locations.push_blanks(6);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 6);
+    const_locations.push_blanks(5);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 5);
 
 #define CREATE_HTTP_CONN_VALUES_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -712,7 +711,6 @@ void bic_http_conn_consts(location_array_s &const_locations)
   cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
-    CREATE_HTTP_CONN_VALUES_TYPE_BIC_STATIC(MHD_RESPONSE_HEADER_KIND);
     CREATE_HTTP_CONN_VALUES_TYPE_BIC_STATIC(MHD_HEADER_KIND);
     CREATE_HTTP_CONN_VALUES_TYPE_BIC_STATIC(MHD_COOKIE_KIND);
     CREATE_HTTP_CONN_VALUES_TYPE_BIC_STATIC(MHD_POSTDATA_KIND);
@@ -854,7 +852,6 @@ bool bic_http_conn_method_values_1(interpreter_thread_s &it,unsigned stack_base,
   // - test requested values type -
   switch (vals_type)
   {
-  case MHD_RESPONSE_HEADER_KIND:
   case MHD_HEADER_KIND:
   case MHD_COOKIE_KIND:
   case MHD_POSTDATA_KIND:
@@ -951,7 +948,7 @@ built_in_class_s http_resp_class =
   "HttpResp",
   c_modifier_public | c_modifier_final,
   7, http_resp_methods,
-  2 + 56, http_resp_variables,
+  2 + 53, http_resp_variables,
   bic_http_resp_consts,
   bic_http_resp_init,
   bic_http_resp_clear,
@@ -1047,10 +1044,7 @@ built_in_variable_s http_resp_variables[] =
   { "HTTP_GONE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HTTP_LENGTH_REQUIRED", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HTTP_PRECONDITION_FAILED", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "HTTP_REQUEST_ENTITY_TOO_LARGE", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "HTTP_REQUEST_URI_TOO_LONG", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HTTP_UNSUPPORTED_MEDIA_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "HTTP_REQUESTED_RANGE_NOT_SATISFIABLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HTTP_EXPECTATION_FAILED", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HTTP_UNPROCESSABLE_ENTITY", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HTTP_LOCKED", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -1093,8 +1087,8 @@ void bic_http_resp_consts(location_array_s &const_locations)
 
   // - insert http resp response codes -
   {
-    const_locations.push_blanks(56);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 56);
+    const_locations.push_blanks(53);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 53);
 
 #define CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -1138,10 +1132,7 @@ void bic_http_resp_consts(location_array_s &const_locations)
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_GONE);
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_LENGTH_REQUIRED);
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_PRECONDITION_FAILED);
-    CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_REQUEST_ENTITY_TOO_LARGE);
-    CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_REQUEST_URI_TOO_LONG);
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_UNSUPPORTED_MEDIA_TYPE);
-    CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_REQUESTED_RANGE_NOT_SATISFIABLE);
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_EXPECTATION_FAILED);
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_UNPROCESSABLE_ENTITY);
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_LOCKED);
