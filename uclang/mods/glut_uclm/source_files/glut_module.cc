@@ -115,17 +115,17 @@ built_in_class_s glut_class =
   bic_glut_consts,
   bic_glut_init,
   bic_glut_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s glut_methods[] =
@@ -482,7 +482,7 @@ built_in_variable_s glut_variables[] =
   GLUT_NAME(glut_s::FUN_PTR_NAME);\
 \
   /* - release previous delegate - */\
-  if (glut_s::glut_ptr->DLG_PTR_NAME != NULL)\
+  if (glut_s::glut_ptr->DLG_PTR_NAME != nullptr)\
   {\
     it.release_location_ptr(glut_s::glut_ptr->DLG_PTR_NAME);\
   }\
@@ -677,7 +677,7 @@ void bic_glut_consts(location_array_s &const_locations)
 
 void bic_glut_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (glut_s *)NULL;
+  location_ptr->v_data_ptr = (glut_s *)nullptr;
 }/*}}}*/
 
 void bic_glut_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -685,7 +685,7 @@ void bic_glut_clear(interpreter_thread_s &it,location_s *location_ptr)
   glut_s *glut_ptr = (glut_s *)location_ptr->v_data_ptr;
 
   // - if glut object exists -
-  if (glut_ptr != NULL)
+  if (glut_ptr != nullptr)
   {
     glut_ptr->clear(it);
     cfree(glut_ptr);
@@ -711,7 +711,7 @@ bool bic_glut_method_Glut_0(interpreter_thread_s &it,unsigned stack_base,uli *op
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - ERROR -
-  if (glut_s::glut_ptr != NULL)
+  if (glut_s::glut_ptr != nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_GLUT_OBJECT_ALREADY_CREATED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -719,7 +719,7 @@ bool bic_glut_method_Glut_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
   // - dummy init arguments -
   int argc = 0;
-  char *argv = NULL;
+  char *argv = nullptr;
 
   glutInit(&argc,&argv);
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE,GLUT_ACTION_CONTINUE_EXECUTION);
@@ -965,7 +965,7 @@ bool bic_glut_method_TimerFunc_3(interpreter_thread_s &it,unsigned stack_base,ul
   if (src_1_location != glut_s::glut_ptr->timer_dlg)
   {
     // - release previous delegate -
-    if (glut_s::glut_ptr->timer_dlg != NULL)
+    if (glut_s::glut_ptr->timer_dlg != nullptr)
     {
       it.release_location_ptr(glut_s::glut_ptr->timer_dlg);
     }

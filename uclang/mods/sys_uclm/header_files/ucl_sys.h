@@ -115,7 +115,7 @@ inline int timer_record_rb_tree_s::__compare_value(timer_record_s &a_first,timer
 
 inline void poll_s::init()
 {/*{{{*/
-  fds = NULL;
+  fds = nullptr;
   nfds = 0;
 }/*}}}*/
 
@@ -123,7 +123,7 @@ inline void poll_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release poll file descriptors -
-  if (fds != NULL)
+  if (fds != nullptr)
   {
     cfree(fds);
   }

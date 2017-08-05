@@ -53,7 +53,7 @@ class port_audio_c
 inline void pa_device_s::init()
 {/*{{{*/
   index = -1;
-  di_ptr = NULL;
+  di_ptr = nullptr;
 }/*}}}*/
 
 inline void pa_device_s::clear(interpreter_thread_s &it)
@@ -67,27 +67,27 @@ inline void pa_device_s::clear(interpreter_thread_s &it)
 
 inline void pa_stream_s::init()
 {/*{{{*/
-  stream_ptr = NULL;
-  info_ptr = NULL;
-  input_ptr = NULL;
-  output_ptr = NULL;
+  stream_ptr = nullptr;
+  info_ptr = nullptr;
+  input_ptr = nullptr;
+  output_ptr = nullptr;
 }/*}}}*/
 
 inline void pa_stream_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (stream_ptr != NULL)
+  if (stream_ptr != nullptr)
   {
     Pa_CloseStream(stream_ptr);
   }
 
   // - release input parameters location -
-  if (input_ptr != NULL)
+  if (input_ptr != nullptr)
   {
     it.release_location_ptr(input_ptr);
   }
 
   // - release output parameters location -
-  if (output_ptr != NULL)
+  if (output_ptr != nullptr)
   {
     it.release_location_ptr(output_ptr);
   }

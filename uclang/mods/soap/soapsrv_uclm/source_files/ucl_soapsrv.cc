@@ -12,7 +12,7 @@ include "ucl_soapsrv.h"
   soap_env_s *se_ptr = (soap_env_s *)soap->user;\
 \
   if (se_ptr->proc_ret_code == c_run_return_code_OK &&\
-      se_ptr->NAME ## _dlg != NULL)\
+      se_ptr->NAME ## _dlg != nullptr)\
   {\
     interpreter_thread_s &it = *se_ptr->it_ptr;\
     delegate_s *delegate_ptr = (delegate_s *)se_ptr->NAME ## _dlg->v_data_ptr;\
@@ -20,7 +20,7 @@ include "ucl_soapsrv.h"
     PARAM_CODE;\
 \
     /* - call delegate method - */\
-    location_s *trg_location = NULL;\
+    location_s *trg_location = nullptr;\
     BIC_CALL_DELEGATE(it,delegate_ptr,PARAM_DATA,PARAM_CNT,trg_location,se_ptr->proc_source_pos,\
       se_ptr->proc_ret_code = c_run_return_code_EXCEPTION;\
 \

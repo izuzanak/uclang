@@ -20,10 +20,10 @@ SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.8.17r 2014-04-25 10:24:15 GMT")
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__add(struct soap *soap, const char *soap_endpoint, const char *soap_action, double a, double b, double *result)
 {	struct ns__add soap_tmp_ns__add;
 	struct ns__addResponse *soap_tmp_ns__addResponse;
-	if (soap_endpoint == NULL)
+	if (soap_endpoint == nullptr)
 		soap_endpoint = "http://127.0.0.1:6000";
 	soap_begin(soap);
-	soap->encodingStyle = NULL;
+	soap->encodingStyle = nullptr;
 	soap_tmp_ns__add.a = a;
 	soap_tmp_ns__add.b = b;
 	soap_serializeheader(soap);
@@ -34,18 +34,18 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__add(struct soap *soap, const char *soap_
 	{	if (soap_envelope_begin_out(soap)
 		 || soap_putheader(soap)
 		 || soap_body_begin_out(soap)
-		 || soap_put_ns__add(soap, &soap_tmp_ns__add, "ns:add", NULL)
+		 || soap_put_ns__add(soap, &soap_tmp_ns__add, "ns:add", nullptr)
 		 || soap_body_end_out(soap)
 		 || soap_envelope_end_out(soap))
 			 return soap->error;
 	}
 	if (soap_end_count(soap))
 		return soap->error;
-	if (soap_connect(soap, soap_url(soap, soap_endpoint, NULL), soap_action)
+	if (soap_connect(soap, soap_url(soap, soap_endpoint, nullptr), soap_action)
 	 || soap_envelope_begin_out(soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
-	 || soap_put_ns__add(soap, &soap_tmp_ns__add, "ns:add", NULL)
+	 || soap_put_ns__add(soap, &soap_tmp_ns__add, "ns:add", nullptr)
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))
@@ -58,7 +58,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__add(struct soap *soap, const char *soap_
 	 || soap_recv_header(soap)
 	 || soap_body_begin_in(soap))
 		return soap_closesock(soap);
-	soap_tmp_ns__addResponse = soap_get_ns__addResponse(soap, NULL, "ns:addResponse", "");
+	soap_tmp_ns__addResponse = soap_get_ns__addResponse(soap, nullptr, "ns:addResponse", "");
 	if (!soap_tmp_ns__addResponse || soap->error)
 		return soap_recv_fault(soap, 0);
 	if (soap_body_end_in(soap)
@@ -73,10 +73,10 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__add(struct soap *soap, const char *soap_
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sub(struct soap *soap, const char *soap_endpoint, const char *soap_action, double a, double b, double *result)
 {	struct ns__sub soap_tmp_ns__sub;
 	struct ns__subResponse *soap_tmp_ns__subResponse;
-	if (soap_endpoint == NULL)
+	if (soap_endpoint == nullptr)
 		soap_endpoint = "http://127.0.0.1:6000";
 	soap_begin(soap);
-	soap->encodingStyle = NULL;
+	soap->encodingStyle = nullptr;
 	soap_tmp_ns__sub.a = a;
 	soap_tmp_ns__sub.b = b;
 	soap_serializeheader(soap);
@@ -87,18 +87,18 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sub(struct soap *soap, const char *soap_
 	{	if (soap_envelope_begin_out(soap)
 		 || soap_putheader(soap)
 		 || soap_body_begin_out(soap)
-		 || soap_put_ns__sub(soap, &soap_tmp_ns__sub, "ns:sub", NULL)
+		 || soap_put_ns__sub(soap, &soap_tmp_ns__sub, "ns:sub", nullptr)
 		 || soap_body_end_out(soap)
 		 || soap_envelope_end_out(soap))
 			 return soap->error;
 	}
 	if (soap_end_count(soap))
 		return soap->error;
-	if (soap_connect(soap, soap_url(soap, soap_endpoint, NULL), soap_action)
+	if (soap_connect(soap, soap_url(soap, soap_endpoint, nullptr), soap_action)
 	 || soap_envelope_begin_out(soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
-	 || soap_put_ns__sub(soap, &soap_tmp_ns__sub, "ns:sub", NULL)
+	 || soap_put_ns__sub(soap, &soap_tmp_ns__sub, "ns:sub", nullptr)
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))
@@ -111,7 +111,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sub(struct soap *soap, const char *soap_
 	 || soap_recv_header(soap)
 	 || soap_body_begin_in(soap))
 		return soap_closesock(soap);
-	soap_tmp_ns__subResponse = soap_get_ns__subResponse(soap, NULL, "ns:subResponse", "");
+	soap_tmp_ns__subResponse = soap_get_ns__subResponse(soap, nullptr, "ns:subResponse", "");
 	if (!soap_tmp_ns__subResponse || soap->error)
 		return soap_recv_fault(soap, 0);
 	if (soap_body_end_in(soap)
@@ -126,10 +126,10 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sub(struct soap *soap, const char *soap_
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sqrt(struct soap *soap, const char *soap_endpoint, const char *soap_action, double a, double *result)
 {	struct ns__sqrt soap_tmp_ns__sqrt;
 	struct ns__sqrtResponse *soap_tmp_ns__sqrtResponse;
-	if (soap_endpoint == NULL)
+	if (soap_endpoint == nullptr)
 		soap_endpoint = "http://127.0.0.1:6000";
 	soap_begin(soap);
-	soap->encodingStyle = NULL;
+	soap->encodingStyle = nullptr;
 	soap_tmp_ns__sqrt.a = a;
 	soap_serializeheader(soap);
 	soap_serialize_ns__sqrt(soap, &soap_tmp_ns__sqrt);
@@ -139,18 +139,18 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sqrt(struct soap *soap, const char *soap
 	{	if (soap_envelope_begin_out(soap)
 		 || soap_putheader(soap)
 		 || soap_body_begin_out(soap)
-		 || soap_put_ns__sqrt(soap, &soap_tmp_ns__sqrt, "ns:sqrt", NULL)
+		 || soap_put_ns__sqrt(soap, &soap_tmp_ns__sqrt, "ns:sqrt", nullptr)
 		 || soap_body_end_out(soap)
 		 || soap_envelope_end_out(soap))
 			 return soap->error;
 	}
 	if (soap_end_count(soap))
 		return soap->error;
-	if (soap_connect(soap, soap_url(soap, soap_endpoint, NULL), soap_action)
+	if (soap_connect(soap, soap_url(soap, soap_endpoint, nullptr), soap_action)
 	 || soap_envelope_begin_out(soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
-	 || soap_put_ns__sqrt(soap, &soap_tmp_ns__sqrt, "ns:sqrt", NULL)
+	 || soap_put_ns__sqrt(soap, &soap_tmp_ns__sqrt, "ns:sqrt", nullptr)
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))
@@ -163,7 +163,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sqrt(struct soap *soap, const char *soap
 	 || soap_recv_header(soap)
 	 || soap_body_begin_in(soap))
 		return soap_closesock(soap);
-	soap_tmp_ns__sqrtResponse = soap_get_ns__sqrtResponse(soap, NULL, "ns:sqrtResponse", "");
+	soap_tmp_ns__sqrtResponse = soap_get_ns__sqrtResponse(soap, nullptr, "ns:sqrtResponse", "");
 	if (!soap_tmp_ns__sqrtResponse || soap->error)
 		return soap_recv_fault(soap, 0);
 	if (soap_body_end_in(soap)

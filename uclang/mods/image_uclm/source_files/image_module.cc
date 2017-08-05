@@ -179,17 +179,17 @@ built_in_class_s image_class =
   bic_image_consts,
   bic_image_init,
   bic_image_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s image_methods[] =
@@ -335,7 +335,7 @@ built_in_variable_s image_variables[] =
   /* - ERROR - */\
   if (bit_depth != 8)\
   {\
-    png_destroy_read_struct(&png_ptr,&info_ptr,NULL);\
+    png_destroy_read_struct(&png_ptr,&info_ptr,nullptr);\
     RELEASE_CODE;\
 \
     exception_s::throw_exception(it,module.error_base + c_error_IMAGE_UNSUPPORTED_PIXEL_FORMAT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
@@ -359,7 +359,7 @@ built_in_variable_s image_variables[] =
   /* - ERROR - */\
   default:\
     \
-    png_destroy_read_struct(&png_ptr,&info_ptr,NULL);\
+    png_destroy_read_struct(&png_ptr,&info_ptr,nullptr);\
     RELEASE_CODE;\
 \
     exception_s::throw_exception(it,module.error_base + c_error_IMAGE_UNSUPPORTED_PIXEL_FORMAT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
@@ -376,7 +376,7 @@ built_in_variable_s image_variables[] =
   /* - ERROR - */\
   if (png_get_rowbytes(png_ptr,info_ptr) != img_ptr->image_data_ptr->line_bytes)\
   {\
-    png_destroy_read_struct(&png_ptr,&info_ptr,NULL);\
+    png_destroy_read_struct(&png_ptr,&info_ptr,nullptr);\
     RELEASE_CODE;\
 \
     exception_s::throw_exception(it,module.error_base + c_error_IMAGE_UNSUPPORTED_PIXEL_FORMAT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
@@ -393,7 +393,7 @@ built_in_variable_s image_variables[] =
   if (setjmp(png_jmpbuf(png_ptr)))\
   {\
     cfree(row_ptrs);\
-    png_destroy_read_struct(&png_ptr,&info_ptr,NULL);\
+    png_destroy_read_struct(&png_ptr,&info_ptr,nullptr);\
     RELEASE_CODE;\
 \
     exception_s::throw_exception(it,module.error_base + c_error_IMAGE_PNG_DATA_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
@@ -405,7 +405,7 @@ built_in_variable_s image_variables[] =
 \
   /* - release resources - */\
   cfree(row_ptrs);\
-  png_destroy_read_struct(&png_ptr,&info_ptr,NULL);\
+  png_destroy_read_struct(&png_ptr,&info_ptr,nullptr);\
   RELEASE_CODE;\
 \
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_image,img_ptr);\
@@ -493,14 +493,14 @@ void bic_image_consts(location_array_s &const_locations)
 
 void bic_image_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (image_s *)NULL;
+  location_ptr->v_data_ptr = (image_s *)nullptr;
 }/*}}}*/
 
 void bic_image_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   image_s *img_ptr = (image_s *)location_ptr->v_data_ptr;
 
-  if (img_ptr != NULL)
+  if (img_ptr != nullptr)
   {
     img_ptr->clear();
     cfree(img_ptr);
@@ -676,10 +676,10 @@ bool bic_image_method_read_png_data_1(interpreter_thread_s &it,unsigned stack_ba
   }
 
   // - create png reader structure -
-  png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,NULL,NULL,NULL);
+  png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,nullptr,nullptr,nullptr);
 
   // - ERROR -
-  if (png_ptr == NULL)
+  if (png_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_IMAGE_PNG_READ_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -689,9 +689,9 @@ bool bic_image_method_read_png_data_1(interpreter_thread_s &it,unsigned stack_ba
   png_infop info_ptr = png_create_info_struct(png_ptr);
 
   // - ERROR -
-  if (info_ptr == NULL)
+  if (info_ptr == nullptr)
   {
-    png_destroy_read_struct(&png_ptr,NULL,NULL);
+    png_destroy_read_struct(&png_ptr,nullptr,nullptr);
 
     exception_s::throw_exception(it,module.error_base + c_error_IMAGE_PNG_READ_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -700,7 +700,7 @@ bool bic_image_method_read_png_data_1(interpreter_thread_s &it,unsigned stack_ba
   // - ERROR -
   if (setjmp(png_jmpbuf(png_ptr)))
   {
-    png_destroy_read_struct(&png_ptr,&info_ptr,NULL);
+    png_destroy_read_struct(&png_ptr,&info_ptr,nullptr);
 
     exception_s::throw_exception(it,module.error_base + c_error_IMAGE_PNG_READ_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -738,7 +738,7 @@ bool bic_image_method_read_png_file_1(interpreter_thread_s &it,unsigned stack_ba
   FILE *f = fopen(file_name->data,"rb");
 
   // - ERROR -
-  if (f == NULL)
+  if (f == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_IMAGE_CANNOT_OPEN_FILE,operands[c_source_pos_idx],src_0_location);
     return false;
@@ -758,10 +758,10 @@ bool bic_image_method_read_png_file_1(interpreter_thread_s &it,unsigned stack_ba
   }
 
   // - create png reader structure -
-  png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,NULL,NULL,NULL);
+  png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,nullptr,nullptr,nullptr);
 
   // - ERROR -
-  if (png_ptr == NULL)
+  if (png_ptr == nullptr)
   {
     fclose(f);
 
@@ -773,9 +773,9 @@ bool bic_image_method_read_png_file_1(interpreter_thread_s &it,unsigned stack_ba
   png_infop info_ptr = png_create_info_struct(png_ptr);
 
   // - ERROR -
-  if (info_ptr == NULL)
+  if (info_ptr == nullptr)
   {
-    png_destroy_read_struct(&png_ptr,NULL,NULL);
+    png_destroy_read_struct(&png_ptr,nullptr,nullptr);
     fclose(f);
 
     exception_s::throw_exception(it,module.error_base + c_error_IMAGE_PNG_READ_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -785,7 +785,7 @@ bool bic_image_method_read_png_file_1(interpreter_thread_s &it,unsigned stack_ba
   // - ERROR -
   if (setjmp(png_jmpbuf(png_ptr)))
   {
-    png_destroy_read_struct(&png_ptr,&info_ptr,NULL);
+    png_destroy_read_struct(&png_ptr,&info_ptr,nullptr);
     fclose(f);
 
     exception_s::throw_exception(it,module.error_base + c_error_IMAGE_PNG_FILE_READ_ERROR,operands[c_source_pos_idx],src_0_location);
@@ -845,10 +845,10 @@ bool bic_image_method_write_png_file_1(interpreter_thread_s &it,unsigned stack_b
   }
 
   // - create png writer structure -
-  png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,NULL,NULL,NULL);
+  png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,nullptr,nullptr,nullptr);
 
   // - ERROR -
-  if (png_ptr == NULL)
+  if (png_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_IMAGE_PNG_WRITE_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -858,9 +858,9 @@ bool bic_image_method_write_png_file_1(interpreter_thread_s &it,unsigned stack_b
   png_infop info_ptr = png_create_info_struct(png_ptr);
 
   // - ERROR -
-  if (info_ptr == NULL)
+  if (info_ptr == nullptr)
   {
-    png_destroy_write_struct(&png_ptr,NULL);
+    png_destroy_write_struct(&png_ptr,nullptr);
 
     exception_s::throw_exception(it,module.error_base + c_error_IMAGE_PNG_WRITE_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -870,7 +870,7 @@ bool bic_image_method_write_png_file_1(interpreter_thread_s &it,unsigned stack_b
   FILE *f = fopen(file_name->data,"wb");
 
   // - ERROR -
-  if (f == NULL)
+  if (f == nullptr)
   {
     png_destroy_write_struct(&png_ptr,&info_ptr);
 
@@ -916,7 +916,7 @@ bool bic_image_method_write_png_file_1(interpreter_thread_s &it,unsigned stack_b
 
   // - write image data -
   png_write_image(png_ptr,row_ptrs);
-  png_write_end(png_ptr,NULL);
+  png_write_end(png_ptr,nullptr);
 
   // - release resources -
   cfree(row_ptrs);
@@ -987,7 +987,7 @@ bool bic_image_method_read_jpeg_file_1(interpreter_thread_s &it,unsigned stack_b
   FILE *f = fopen(file_name->data,"rb");
 
   // - ERROR -
-  if (f == NULL)
+  if (f == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_IMAGE_CANNOT_OPEN_FILE,operands[c_source_pos_idx],src_0_location);
     return false;
@@ -1065,7 +1065,7 @@ bool bic_image_method_write_jpeg_file_2(interpreter_thread_s &it,unsigned stack_
   FILE *f = fopen(file_name->data,"wb");
 
   // - ERROR -
-  if (f == NULL)
+  if (f == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_IMAGE_CANNOT_OPEN_FILE,operands[c_source_pos_idx],src_0_location);
     return false;

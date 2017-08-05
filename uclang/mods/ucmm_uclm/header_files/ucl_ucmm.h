@@ -51,10 +51,10 @@ struct network_info_s
 
 inline void device_info_s::init()
 {/*{{{*/
-  manufacturer = NULL;
-  model = NULL;
-  revision = NULL;
-  device_id = NULL;
+  manufacturer = nullptr;
+  model = nullptr;
+  revision = nullptr;
+  device_id = nullptr;
 }/*}}}*/
 
 inline void device_info_s::clear(interpreter_thread_s &it)
@@ -62,7 +62,7 @@ inline void device_info_s::clear(interpreter_thread_s &it)
 
 #define RELEASE_LOCATION_PTR(NAME) \
 {/*{{{*/\
-  if (NAME != NULL)\
+  if (NAME != nullptr)\
   {\
     it.release_location_ptr(NAME);\
   }\
@@ -82,8 +82,8 @@ inline void device_info_s::clear(interpreter_thread_s &it)
 
 inline void network_info_s::init()
 {/*{{{*/
-  oper_name = NULL;
-  oper_code = NULL;
+  oper_name = nullptr;
+  oper_code = nullptr;
 }/*}}}*/
 
 inline void network_info_s::clear(interpreter_thread_s &it)
@@ -91,7 +91,7 @@ inline void network_info_s::clear(interpreter_thread_s &it)
 
 #define RELEASE_LOCATION_PTR(NAME) \
 {/*{{{*/\
-  if (NAME != NULL)\
+  if (NAME != nullptr)\
   {\
     it.release_location_ptr(NAME);\
   }\

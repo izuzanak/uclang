@@ -125,17 +125,17 @@ built_in_class_s utf8proc_class =
   bic_utf8proc_consts,
   bic_utf8proc_init,
   bic_utf8proc_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s utf8proc_methods[] =
@@ -331,16 +331,16 @@ built_in_class_s unicode_char_class =
   bic_unicode_char_init,
   bic_unicode_char_clear,
   bic_unicode_char_compare,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s unicode_char_methods[] =
@@ -661,12 +661,12 @@ built_in_class_s unicode_string_class =
   bic_unicode_string_item,
   bic_unicode_string_first_idx,
   bic_unicode_string_next_idx,
-  NULL,
+  nullptr,
   bic_unicode_string_from_slice,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s unicode_string_methods[] =
@@ -922,7 +922,7 @@ void bic_unicode_string_consts(location_array_s &const_locations)
 
 void bic_unicode_string_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ui_array_s *)NULL;
+  location_ptr->v_data_ptr = (ui_array_s *)nullptr;
 }/*}}}*/
 
 void bic_unicode_string_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -930,7 +930,7 @@ void bic_unicode_string_clear(interpreter_thread_s &it,location_s *location_ptr)
   ui_array_s *ustring_ptr = (ui_array_s *)location_ptr->v_data_ptr;
 
   // - if websocket context exists -
-  if (ustring_ptr != NULL)
+  if (ustring_ptr != nullptr)
   {
     ustring_ptr->clear();
     cfree(ustring_ptr);
@@ -942,8 +942,8 @@ int bic_unicode_string_compare(location_s *first_loc,location_s *second_loc)
   ui_array_s *first = (ui_array_s *)first_loc->v_data_ptr;
   ui_array_s *second = (ui_array_s *)second_loc->v_data_ptr;
 
-  if (first->used < second->used) return -1;
-  if (first->used > second->used) return 1;
+  if (first->used < second->used) { return -1; }
+  if (first->used > second->used) { return 1; }
 
   if (first->used != 0)
   {

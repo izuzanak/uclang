@@ -161,17 +161,17 @@ built_in_class_s ddb_class =
   bic_ddb_consts,
   bic_ddb_init,
   bic_ddb_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ddb_methods[] =
@@ -233,14 +233,14 @@ void bic_ddb_consts(location_array_s &const_locations)
 
 void bic_ddb_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (DDB *)NULL;
+  location_ptr->v_data_ptr = (DDB *)nullptr;
 }/*}}}*/
 
 void bic_ddb_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   DDB *ddb_ptr = (DDB *)location_ptr->v_data_ptr;
 
-  if (ddb_ptr != NULL)
+  if (ddb_ptr != nullptr)
   {
     ddb_ptr->Close();
     delete ddb_ptr;
@@ -375,7 +375,7 @@ bool bic_ddb_method_GetTraceStorage_1(interpreter_thread_s &it,unsigned stack_ba
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   DDB *ddb_ptr = (DDB *)dst_location->v_data_ptr;
-  TraceStorage *ts_ptr = NULL;
+  TraceStorage *ts_ptr = nullptr;
 
   if (src_0_location->v_type == c_bi_class_string)
   {
@@ -390,7 +390,7 @@ bool bic_ddb_method_GetTraceStorage_1(interpreter_thread_s &it,unsigned stack_ba
       do
       {
         ts_ptr = ddb_ptr->GetTraceStorage(t_idx);
-        if (ts_ptr != NULL && strcmp(name_ptr->data,ts_ptr->GetDesc()->name) == 0)
+        if (ts_ptr != nullptr && strcmp(name_ptr->data,ts_ptr->GetDesc()->name) == 0)
         {
           break;
         }
@@ -423,7 +423,7 @@ bool bic_ddb_method_GetTraceStorage_1(interpreter_thread_s &it,unsigned stack_ba
     ts_ptr = ddb_ptr->GetTraceStorage(index);
 
     // - ERORR -
-    if (ts_ptr == NULL)
+    if (ts_ptr == nullptr)
     {
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_DDB_GET_TRACE_INDEX_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       new_exception->params.push(index);
@@ -478,17 +478,17 @@ built_in_class_s trace_storage_class =
   bic_trace_storage_consts,
   bic_trace_storage_init,
   bic_trace_storage_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s trace_storage_methods[] =
@@ -691,7 +691,7 @@ void bic_trace_storage_consts(location_array_s &const_locations)
 
 void bic_trace_storage_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (trace_storage_s *)NULL;
+  location_ptr->v_data_ptr = (trace_storage_s *)nullptr;
 }/*}}}*/
 
 void bic_trace_storage_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -699,7 +699,7 @@ void bic_trace_storage_clear(interpreter_thread_s &it,location_s *location_ptr)
   trace_storage_s *ts_ptr = (trace_storage_s *)location_ptr->v_data_ptr;
 
   // - if trace storage exists -
-  if (ts_ptr != NULL)
+  if (ts_ptr != nullptr)
   {
     it.release_location_ptr(ts_ptr->ddb_ptr);
     cfree(ts_ptr);
@@ -1063,7 +1063,7 @@ bool bic_trace_storage_method_FindId_1(interpreter_thread_s &it,unsigned stack_b
   try
   {
     TraceRecord record;
-    record.data = NULL;
+    record.data = nullptr;
     record.size = 0;
 
     Time req_time(record_time);
@@ -1199,17 +1199,17 @@ built_in_class_s trace_record_class =
   bic_trace_record_consts,
   bic_trace_record_init,
   bic_trace_record_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s trace_record_methods[] =
@@ -1256,7 +1256,7 @@ void bic_trace_record_consts(location_array_s &const_locations)
 
 void bic_trace_record_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (trace_record_s *)NULL;
+  location_ptr->v_data_ptr = (trace_record_s *)nullptr;
 }/*}}}*/
 
 void bic_trace_record_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1264,7 +1264,7 @@ void bic_trace_record_clear(interpreter_thread_s &it,location_s *location_ptr)
   trace_record_s *tr_ptr = (trace_record_s *)location_ptr->v_data_ptr;
 
   // - if trace record exists -
-  if (tr_ptr != NULL)
+  if (tr_ptr != nullptr)
   {
     it.release_location_ptr(tr_ptr->ts_ptr);
     delete tr_ptr->tr_ptr;

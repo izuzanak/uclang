@@ -208,17 +208,17 @@ built_in_class_s mpg_class =
   bic_mpg_consts,
   bic_mpg_init,
   bic_mpg_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s mpg_methods[] =
@@ -320,7 +320,7 @@ void bic_mpg_clear(interpreter_thread_s &it,location_s *location_ptr)
   /* - fill result string array - */\
   const char **d_ptr = decoders;\
 \
-  while (*d_ptr != NULL)\
+  while (*d_ptr != nullptr)\
   {\
     string_s *string_ptr = it.get_new_string_ptr();\
     string_ptr->set(strlen(*d_ptr),*d_ptr);\
@@ -414,17 +414,17 @@ built_in_class_s mpg_handle_class =
   bic_mpg_handle_consts,
   bic_mpg_handle_init,
   bic_mpg_handle_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s mpg_handle_methods[] =
@@ -755,14 +755,14 @@ void bic_mpg_handle_consts(location_array_s &const_locations)
 
 void bic_mpg_handle_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (mpg_handle_s *)NULL;
+  location_ptr->v_data_ptr = (mpg_handle_s *)nullptr;
 }/*}}}*/
 
 void bic_mpg_handle_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   mpg_handle_s *mh_ptr = (mpg_handle_s *)location_ptr->v_data_ptr;
 
-  if (mh_ptr != NULL)
+  if (mh_ptr != nullptr)
   {
     mh_ptr->clear(it);
     cfree(mh_ptr);
@@ -789,10 +789,10 @@ bool bic_mpg_handle_method_MpgHandle_0(interpreter_thread_s &it,unsigned stack_b
 
   // - create new handle -
   int error;
-  mpg123_handle *handle = mpg123_new(NULL,&error);
+  mpg123_handle *handle = mpg123_new(nullptr,&error);
 
   // - ERROR -
-  if (handle == NULL)
+  if (handle == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MPG_HANDLE_CREATE_NEW_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -832,7 +832,7 @@ bool bic_mpg_handle_method_MpgHandle_1(interpreter_thread_s &it,unsigned stack_b
   mpg123_handle *handle = mpg123_new(string_ptr->data,&error);
 
   // - ERROR -
-  if (handle == NULL)
+  if (handle == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MPG_HANDLE_CREATE_NEW_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;

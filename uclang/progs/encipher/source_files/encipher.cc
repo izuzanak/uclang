@@ -43,7 +43,7 @@ void encipher_file(int argc,char **argv)
 
   // - open target file -
   FILE *f = fopen(argv[2],"w");
-  if (f == NULL)
+  if (f == nullptr)
   {
     fprintf(stderr,"%s: Cannot open file \"%s\"\n",argv[0],argv[2]);
 

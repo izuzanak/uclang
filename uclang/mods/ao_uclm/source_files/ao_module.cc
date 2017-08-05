@@ -120,17 +120,17 @@ built_in_class_s ao_format_class =
   bic_ao_format_consts,
   bic_ao_format_init,
   bic_ao_format_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ao_format_methods[] =
@@ -190,14 +190,14 @@ void bic_ao_format_consts(location_array_s &const_locations)
 
 void bic_ao_format_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ao_format_s *)NULL;
+  location_ptr->v_data_ptr = (ao_format_s *)nullptr;
 }/*}}}*/
 
 void bic_ao_format_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   ao_format_s *aof_ptr = (ao_format_s *)location_ptr->v_data_ptr;
 
-  if (aof_ptr != NULL)
+  if (aof_ptr != nullptr)
   {
     aof_ptr->clear(it);
     cfree(aof_ptr);
@@ -305,17 +305,17 @@ built_in_class_s ao_device_class =
   bic_ao_device_consts,
   bic_ao_device_init,
   bic_ao_device_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ao_device_methods[] =
@@ -388,7 +388,7 @@ built_in_variable_s ao_device_variables[] =
     return false;\
   }\
 \
-  ao_option *options = NULL;\
+  ao_option *options = nullptr;\
 \
   /* - construct options from options array - */\
   if (opt_array_ptr->used > 0)\
@@ -437,14 +437,14 @@ void bic_ao_device_consts(location_array_s &const_locations)
 
 void bic_ao_device_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ao_device *)NULL;
+  location_ptr->v_data_ptr = (ao_device *)nullptr;
 }/*}}}*/
 
 void bic_ao_device_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   ao_device *aod_ptr = (ao_device *)location_ptr->v_data_ptr;
 
-  if (aod_ptr != NULL)
+  if (aod_ptr != nullptr)
   {
     ao_close(aod_ptr);
   }
@@ -493,7 +493,7 @@ bool bic_ao_device_method_AoDevice_3(interpreter_thread_s &it,unsigned stack_bas
   ao_device *aod_ptr = ao_open_live(driver_id,&aof_ptr->sample_format,options);
 
   // - ERROR -
-  if (aod_ptr == NULL)
+  if (aod_ptr == nullptr)
   {
     ao_free_options(options);
 
@@ -548,7 +548,7 @@ bool bic_ao_device_method_AoDevice_5(interpreter_thread_s &it,unsigned stack_bas
   ao_device *aod_ptr = ao_open_file(driver_id,filename_ptr->data,overwrite,&aof_ptr->sample_format,options);
 
   // - ERROR -
-  if (aod_ptr == NULL)
+  if (aod_ptr == nullptr)
   {
     ao_free_options(options);
 

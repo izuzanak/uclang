@@ -194,17 +194,17 @@ built_in_class_s ws_context_class =
   bic_ws_context_consts,
   bic_ws_context_init,
   bic_ws_context_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ws_context_methods[] =
@@ -288,7 +288,7 @@ void bic_ws_context_consts(location_array_s &const_locations)
 
 void bic_ws_context_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ws_context_s *)NULL;
+  location_ptr->v_data_ptr = (ws_context_s *)nullptr;
 }/*}}}*/
 
 void bic_ws_context_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -296,7 +296,7 @@ void bic_ws_context_clear(interpreter_thread_s &it,location_s *location_ptr)
   ws_context_s *wsc_ptr = (ws_context_s *)location_ptr->v_data_ptr;
 
   // - if websocket context exists -
-  if (wsc_ptr != NULL)
+  if (wsc_ptr != nullptr)
   {
     wsc_ptr->clear(it);
     cfree(wsc_ptr);
@@ -424,8 +424,8 @@ bool bic_ws_context_method_WsContext_2(interpreter_thread_s &it,unsigned stack_b
 
   // - configure terminator protocol -
   libwebsocket_protocols *term_prot = wsc_ptr->protocols + prot_idx;
-  term_prot->name = NULL;
-  term_prot->callback = NULL;
+  term_prot->name = nullptr;
+  term_prot->callback = nullptr;
   term_prot->per_session_data_size = 0;
   term_prot->rx_buffer_size = 0;
 
@@ -434,7 +434,7 @@ bool bic_ws_context_method_WsContext_2(interpreter_thread_s &it,unsigned stack_b
   memset(&info,0,sizeof info);
 
   info.port = port;
-  info.iface = NULL;
+  info.iface = nullptr;
   info.protocols = wsc_ptr->protocols;
   info.extensions = libwebsocket_get_internal_extensions();
   info.gid = -1;
@@ -446,7 +446,7 @@ bool bic_ws_context_method_WsContext_2(interpreter_thread_s &it,unsigned stack_b
   wsc_ptr->context = libwebsocket_create_context(&info);
 
   // - ERROR -
-  if (wsc_ptr->context == NULL)
+  if (wsc_ptr->context == nullptr)
   {
     wsc_ptr->clear(it);
     cfree(wsc_ptr);
@@ -535,7 +535,7 @@ bool bic_ws_context_method_client_4(interpreter_thread_s &it,unsigned stack_base
       addr_ptr->data,addr_ptr->data,prot_ptr->data,-1,wscl_udp_ptr);
 
   // - ERROR -
-  if (wsi == NULL)
+  if (wsi == nullptr)
   {
     cfree(wscl_udp_ptr);
 
@@ -745,17 +745,17 @@ built_in_class_s ws_conn_class =
   bic_ws_conn_consts,
   bic_ws_conn_init,
   bic_ws_conn_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ws_conn_methods[] =
@@ -999,7 +999,7 @@ void bic_ws_conn_consts(location_array_s &const_locations)
 
 void bic_ws_conn_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ws_conn_s *)NULL;
+  location_ptr->v_data_ptr = (ws_conn_s *)nullptr;
 }/*}}}*/
 
 void bic_ws_conn_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1007,7 +1007,7 @@ void bic_ws_conn_clear(interpreter_thread_s &it,location_s *location_ptr)
   ws_conn_s *wscn_ptr = (ws_conn_s *)location_ptr->v_data_ptr;
 
   // - if websocket context exists -
-  if (wscn_ptr != NULL)
+  if (wscn_ptr != nullptr)
   {
     wscn_ptr->clear(it);
     cfree(wscn_ptr);
@@ -1257,17 +1257,17 @@ built_in_class_s ws_client_class =
   bic_ws_client_consts,
   bic_ws_client_init,
   bic_ws_client_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ws_client_methods[] =
@@ -1309,7 +1309,7 @@ void bic_ws_client_consts(location_array_s &const_locations)
 
 void bic_ws_client_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ws_client_s *)NULL;
+  location_ptr->v_data_ptr = (ws_client_s *)nullptr;
 }/*}}}*/
 
 void bic_ws_client_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1317,7 +1317,7 @@ void bic_ws_client_clear(interpreter_thread_s &it,location_s *location_ptr)
   ws_client_s *wscl_ptr = (ws_client_s *)location_ptr->v_data_ptr;
 
   // - if websocket context exists -
-  if (wscl_ptr != NULL)
+  if (wscl_ptr != nullptr)
   {
     wscl_ptr->clear(it);
     cfree(wscl_ptr);
@@ -1404,17 +1404,17 @@ built_in_class_s ws_base64_class =
   bic_ws_base64_consts,
   bic_ws_base64_init,
   bic_ws_base64_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ws_base64_methods[] =

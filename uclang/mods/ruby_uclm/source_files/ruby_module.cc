@@ -175,17 +175,17 @@ built_in_class_s ruby_interpreter_class =
   bic_ruby_interpreter_consts,
   bic_ruby_interpreter_init,
   bic_ruby_interpreter_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ruby_interpreter_methods[] =
@@ -418,17 +418,17 @@ built_in_class_s ruby_symbol_class =
   bic_ruby_symbol_consts,
   bic_ruby_symbol_init,
   bic_ruby_symbol_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ruby_symbol_methods[] =
@@ -534,15 +534,15 @@ built_in_class_s ruby_value_class =
   bic_ruby_value_consts,
   bic_ruby_value_init,
   bic_ruby_value_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_ruby_value_invoke,
   bic_ruby_value_member
 };/*}}}*/
@@ -916,7 +916,7 @@ bool bic_ruby_value_method__value_0(interpreter_thread_s &it,unsigned stack_base
   location_s *location_ptr = ruby_c::ruby_value_value(it,rv_dst,operands[c_source_pos_idx]);
 
   // - ERROR -
-  if (location_ptr == NULL)
+  if (location_ptr == nullptr)
   {
     // - if exception was already thrown -
     if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
@@ -963,15 +963,15 @@ built_in_class_s ruby_iv_ref_class =
   bic_ruby_iv_ref_consts,
   bic_ruby_iv_ref_init,
   bic_ruby_iv_ref_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_ruby_value_invoke,
   bic_ruby_value_member
 };/*}}}*/
@@ -1020,14 +1020,14 @@ void bic_ruby_iv_ref_consts(location_array_s &const_locations)
 
 void bic_ruby_iv_ref_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ruby_reference_s *)NULL;
+  location_ptr->v_data_ptr = (ruby_reference_s *)nullptr;
 }/*}}}*/
 
 void bic_ruby_iv_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   ruby_reference_s *rv_iv_ref_ptr = (ruby_reference_s *)location_ptr->v_data_ptr;
 
-  if (rv_iv_ref_ptr != NULL)
+  if (rv_iv_ref_ptr != nullptr)
   {
     rv_iv_ref_ptr->clear(it);
     cfree(rv_iv_ref_ptr);
@@ -1079,15 +1079,15 @@ built_in_class_s ruby_item_ref_class =
   bic_ruby_item_ref_consts,
   bic_ruby_item_ref_init,
   bic_ruby_item_ref_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_ruby_value_invoke,
   bic_ruby_value_member
 };/*}}}*/
@@ -1136,14 +1136,14 @@ void bic_ruby_item_ref_consts(location_array_s &const_locations)
 
 void bic_ruby_item_ref_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ruby_reference_s *)NULL;
+  location_ptr->v_data_ptr = (ruby_reference_s *)nullptr;
 }/*}}}*/
 
 void bic_ruby_item_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   ruby_reference_s *rv_iref_ptr = (ruby_reference_s *)location_ptr->v_data_ptr;
 
-  if (rv_iref_ptr != NULL)
+  if (rv_iref_ptr != nullptr)
   {
     rv_iref_ptr->clear(it);
     cfree(rv_iref_ptr);

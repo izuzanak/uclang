@@ -40,7 +40,7 @@ int av_lock_callback(void **mutex,enum AVLockOp op)
         mutex_ptr->clear();
         cfree(mutex_ptr);
 
-        *mutex = NULL;
+        *mutex = nullptr;
         break;
       }
   }

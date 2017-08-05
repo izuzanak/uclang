@@ -984,7 +984,7 @@ class UclVar
   inline UclVar(UclVar &&a_src)
   {/*{{{*/
     location_ptr = a_src.location_ptr;
-    a_src.location_ptr = NULL;
+    a_src.location_ptr = nullptr;
   }/*}}}*/
 #endif
 
@@ -995,7 +995,7 @@ class UclVar
 
   inline ~UclVar()
   {/*{{{*/
-    if (location_ptr != NULL)
+    if (location_ptr != nullptr)
     {
       it_ptr->release_location_ptr(location_ptr);
     }
@@ -1003,7 +1003,7 @@ class UclVar
 
   class NO_INIT {};
 
-  inline UclVar(NO_INIT)                              { location_ptr = NULL; }
+  inline UclVar(NO_INIT)                              { location_ptr = nullptr; }
   inline UclVar()                                     { BLANK(); }
   inline UclVar(char a_value)                         { CHAR(a_value); }
   inline UclVar(int a_value)                          { INTEGER(a_value); }

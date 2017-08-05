@@ -1556,7 +1556,11 @@ inlines name_pos_array_s
 
 inline ri_ep_s &ri_ep_array_s::map_name(unsigned a_name_idx)
 {/*{{{*/
-  if (a_name_idx >= used) return *(ri_ep_s *)&c_blank_ri_ep;
+  if (a_name_idx >= used)
+  {
+    return *(ri_ep_s *)&c_blank_ri_ep;
+  }
+
   return data[a_name_idx];
 }/*}}}*/
 
@@ -1788,12 +1792,7 @@ inline location_s *interpreter_thread_s::get_new_location_ptr()
 
 inline location_s *interpreter_thread_s::get_new_reference(location_s **src_location_ptr)
 {/*{{{*/
-  if ((*src_location_ptr)->v_type == c_bi_reference)
-  {
-    (*src_location_ptr)->v_reference_cnt.atomic_inc();
-    return *src_location_ptr;
-  }
-  else
+  if ((*src_location_ptr)->v_type != c_bi_reference)
   {
     pointer *reference_ptr;
 
@@ -1817,6 +1816,9 @@ inline location_s *interpreter_thread_s::get_new_reference(location_s **src_loca
 
     return ref_location;
   }
+
+  (*src_location_ptr)->v_reference_cnt.atomic_inc();
+  return *src_location_ptr;
 }/*}}}*/
 
 inline string_s *interpreter_thread_s::get_new_string_ptr()

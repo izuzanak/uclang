@@ -41,19 +41,19 @@ struct psql_stmt_s
 
 inline void psql_stmt_s::init()
 {/*{{{*/
-  res_ptr = NULL;
-  conn_ptr = NULL;
+  res_ptr = nullptr;
+  conn_ptr = nullptr;
   tuple_idx = 0;
 }/*}}}*/
 
 inline void psql_stmt_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (res_ptr != NULL)
+  if (res_ptr != nullptr)
   {
     PQclear(res_ptr);
   }
 
-  if (conn_ptr != NULL)
+  if (conn_ptr != nullptr)
   {
     it.release_location_ptr(conn_ptr);
   }

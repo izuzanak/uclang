@@ -76,16 +76,16 @@ built_in_class_s time_class =
   bic_time_init,
   bic_time_clear,
   bic_time_compare,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s time_methods[] =
@@ -212,7 +212,7 @@ bool bic_time_method_Time_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
   timeval tv;
-  gettimeofday(&tv,NULL);
+  gettimeofday(&tv,nullptr);
 
   dst_location->v_data_ptr = (long long unsigned)(tv.tv_sec*1000000000LLU + tv.tv_usec*1000LLU);
 #elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS

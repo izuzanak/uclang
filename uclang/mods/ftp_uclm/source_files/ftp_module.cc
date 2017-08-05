@@ -208,17 +208,17 @@ built_in_class_s ftp_session_class =
   bic_ftp_session_consts,
   bic_ftp_session_init,
   bic_ftp_session_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ftp_session_methods[] =
@@ -366,7 +366,7 @@ void bic_ftp_session_consts(location_array_s &const_locations)
 
 void bic_ftp_session_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ftp_session_s *)NULL;
+  location_ptr->v_data_ptr = (ftp_session_s *)nullptr;
 }/*}}}*/
 
 void bic_ftp_session_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -374,7 +374,7 @@ void bic_ftp_session_clear(interpreter_thread_s &it,location_s *location_ptr)
   ftp_session_s *ftps_ptr = (ftp_session_s *)location_ptr->v_data_ptr;
 
   // - if session exists -
-  if (ftps_ptr != NULL)
+  if (ftps_ptr != nullptr)
   {
     ftps_ptr->clear(it);
     cfree(ftps_ptr);
@@ -932,17 +932,17 @@ built_in_class_s ftp_handle_class =
   bic_ftp_handle_consts,
   bic_ftp_handle_init,
   bic_ftp_handle_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_ftp_handle_next_item,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ftp_handle_methods[] =
@@ -1030,7 +1030,7 @@ built_in_variable_s ftp_handle_variables[] =
     ftp_handle_s *ftph_ptr = (ftp_handle_s *)dst_location->v_data_ptr;\
     \
     /* - ERROR - */\
-    if (ftph_ptr == NULL)\
+    if (ftph_ptr == nullptr)\
     {\
       exception_s::throw_exception(it,module.error_base + c_error_FTP_HANDLE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       return false;\
@@ -1076,7 +1076,7 @@ void bic_ftp_handle_consts(location_array_s &const_locations)
 
 void bic_ftp_handle_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ftp_handle_s *)NULL;
+  location_ptr->v_data_ptr = (ftp_handle_s *)nullptr;
 }/*}}}*/
 
 void bic_ftp_handle_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1084,7 +1084,7 @@ void bic_ftp_handle_clear(interpreter_thread_s &it,location_s *location_ptr)
   ftp_handle_s *ftph_ptr = (ftp_handle_s *)location_ptr->v_data_ptr;
 
   // - if handle exists -
-  if (ftph_ptr != NULL)
+  if (ftph_ptr != nullptr)
   {
     ftph_ptr->clear(it);
     cfree(ftph_ptr);
@@ -1097,10 +1097,10 @@ location_s *bic_ftp_handle_next_item(interpreter_thread_s &it,location_s *locati
   ftp_handle_s *ftph_ptr = (ftp_handle_s *)location_ptr->v_data_ptr;
 
   // - ERROR -
-  if (ftph_ptr == NULL)
+  if (ftph_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_FTP_HANDLE_NOT_OPENED,source_pos,(location_s *)it.blank_location);
-    return NULL;
+    return nullptr;
   }
 
   BIC_FTP_HANDLE_READLN();
@@ -1111,7 +1111,7 @@ location_s *bic_ftp_handle_next_item(interpreter_thread_s &it,location_s *locati
     line_buffer.clear();
 
     exception_s::throw_exception(it,module.error_base + c_error_FTP_HANDLE_READ_ERROR,source_pos,(location_s *)it.blank_location);
-    return NULL;
+    return nullptr;
   }
 
   // - was any data read from file -
@@ -1122,20 +1122,18 @@ location_s *bic_ftp_handle_next_item(interpreter_thread_s &it,location_s *locati
     ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
     return ((location_s *)it.blank_location);
   }
-  else
-  {
-    line_buffer.push('\0');
 
-    // - return data string -
-    string_s *string_ptr = it.get_new_string_ptr();
-    string_ptr->data = line_buffer.data;
-    string_ptr->size = line_buffer.used;
+  line_buffer.push('\0');
 
-    // - create result location -
-    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+  // - return data string -
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->data = line_buffer.data;
+  string_ptr->size = line_buffer.used;
 
-    return new_location;
-  }
+  // - create result location -
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+
+  return new_location;
 }/*}}}*/
 
 bool bic_ftp_handle_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -1161,7 +1159,7 @@ bool bic_ftp_handle_method_close_0(interpreter_thread_s &it,unsigned stack_base,
   ftp_handle_s *ftph_ptr = (ftp_handle_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (ftph_ptr == NULL)
+  if (ftph_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_FTP_HANDLE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1177,13 +1175,13 @@ bool bic_ftp_handle_method_close_0(interpreter_thread_s &it,unsigned stack_base,
     return false;
   }
 
-  ftph_ptr->nb_ptr = NULL;
+  ftph_ptr->nb_ptr = nullptr;
 
   // - release sftp handle object -
   ftph_ptr->clear(it);
   cfree(ftph_ptr);
 
-  dst_location->v_data_ptr = (ftp_handle_s *)NULL;
+  dst_location->v_data_ptr = (ftp_handle_s *)nullptr;
 
   BIC_SET_RESULT_DESTINATION();
 
@@ -1211,7 +1209,7 @@ bool bic_ftp_handle_method_write_1(interpreter_thread_s &it,unsigned stack_base,
   ftp_handle_s *ftph_ptr = (ftp_handle_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (ftph_ptr == NULL)
+  if (ftph_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_FTP_HANDLE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1241,7 +1239,7 @@ bool bic_ftp_handle_method_read_0(interpreter_thread_s &it,unsigned stack_base,u
   ftp_handle_s *ftph_ptr = (ftp_handle_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (ftph_ptr == NULL)
+  if (ftph_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_FTP_HANDLE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1329,7 +1327,7 @@ bool bic_ftp_handle_method_read_1(interpreter_thread_s &it,unsigned stack_base,u
   ftp_handle_s *ftph_ptr = (ftp_handle_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (ftph_ptr == NULL)
+  if (ftph_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_FTP_HANDLE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;

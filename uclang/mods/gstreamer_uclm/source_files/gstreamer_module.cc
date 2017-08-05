@@ -112,17 +112,17 @@ built_in_class_s gst_class =
   bic_gst_consts,
   bic_gst_init,
   bic_gst_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gst_methods[] =
@@ -275,14 +275,14 @@ bool bic_gst_method_pipeline_video_uri_imxegl_2(interpreter_thread_s &it,unsigne
   GstElement *pipeline = gst_pipeline_new("video-uri");
 
   // - create gstreamer elements -
-  GstElement *decoder = gst_element_factory_make("uridecodebin",NULL);
-  GstElement *sink    = gst_element_factory_make("imxeglvivsink",NULL);
+  GstElement *decoder = gst_element_factory_make("uridecodebin",nullptr);
+  GstElement *sink    = gst_element_factory_make("imxeglvivsink",nullptr);
 
   // - ERROR -
   if (!sink)
   {
-    if (pipeline) gst_object_unref(pipeline);
-    if (decoder)  gst_object_unref(decoder);
+    if (pipeline) { gst_object_unref(pipeline); }
+    if (decoder)  { gst_object_unref(decoder); }
 
     exception_s::throw_exception(it,module.error_base + c_error_GST_CANNOT_CREATE_SINK,operands[c_source_pos_idx],src_1_location);
     return false;
@@ -291,20 +291,20 @@ bool bic_gst_method_pipeline_video_uri_imxegl_2(interpreter_thread_s &it,unsigne
   // - ERROR -
   if (!pipeline || !decoder || !sink)
   {
-    if (pipeline) gst_object_unref(pipeline);
-    if (decoder)  gst_object_unref(decoder);
-    if (sink)     gst_object_unref(sink);
+    if (pipeline) { gst_object_unref(pipeline); }
+    if (decoder)  { gst_object_unref(decoder); }
+    if (sink)     { gst_object_unref(sink); }
 
     exception_s::throw_exception(it,module.error_base + c_error_GST_CANNOT_CONSTRUCT_PIPELINE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
   // - set elements parameters -
-  g_object_set(G_OBJECT(decoder),"uri",uri_ptr->data,NULL);
-  g_object_set(G_OBJECT(sink),"texture-id",texture_id,NULL);
+  g_object_set(G_OBJECT(decoder),"uri",uri_ptr->data,nullptr);
+  g_object_set(G_OBJECT(sink),"texture-id",texture_id,nullptr);
 
   // - add elements to pipeline -
-  gst_bin_add_many(GST_BIN(pipeline),decoder,sink,NULL);
+  gst_bin_add_many(GST_BIN(pipeline),decoder,sink,nullptr);
 
   // - link elements -
   g_signal_connect(decoder,"pad-added",G_CALLBACK(gstreamer_c::on_pad_add_video),sink);
@@ -352,17 +352,17 @@ built_in_class_s gst_pipeline_class =
   bic_gst_pipeline_consts,
   bic_gst_pipeline_init,
   bic_gst_pipeline_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gst_pipeline_methods[] =
@@ -414,14 +414,14 @@ void bic_gst_pipeline_consts(location_array_s &const_locations)
 
 void bic_gst_pipeline_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (gst_pipeline_s *)NULL;
+  location_ptr->v_data_ptr = (gst_pipeline_s *)nullptr;
 }/*}}}*/
 
 void bic_gst_pipeline_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   gst_pipeline_s *gstp_ptr = (gst_pipeline_s *)location_ptr->v_data_ptr;
 
-  if (gstp_ptr != NULL)
+  if (gstp_ptr != nullptr)
   {
     gstp_ptr->clear(it);
     cfree(gstp_ptr);
@@ -494,7 +494,7 @@ bool bic_gst_pipeline_method_get_state_0(interpreter_thread_s &it,unsigned stack
 
   // - retrieve pipeline state -
   GstState state;
-  gst_element_get_state(gstp_ptr->pipeline,&state,NULL,GST_CLOCK_TIME_NONE);
+  gst_element_get_state(gstp_ptr->pipeline,&state,nullptr,GST_CLOCK_TIME_NONE);
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,state);
 
@@ -517,7 +517,7 @@ bool bic_gst_pipeline_method_main_loop_0(interpreter_thread_s &it,unsigned stack
     GstMessage *message = gst_bus_timed_pop(gstp_ptr->bus,10000000);
 
     // - process message -
-    if (message != NULL)
+    if (message != nullptr)
     {
       switch (GST_MESSAGE_TYPE(message))
       {

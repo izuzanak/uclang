@@ -1979,10 +1979,8 @@ bool pa_while_statement(string_s &source_string,script_parser_s &_this)
 
       return false;
     }
-    else
-    {
-      tmp_flow_graph[ts_ptr[1]] = ts_ptr[3];
-    }
+
+    tmp_flow_graph[ts_ptr[1]] = ts_ptr[3];
 
     ts_ptr[1] = ts_ptr[2];
 
@@ -2111,10 +2109,8 @@ bool pa_do_while_statement(string_s &source_string,script_parser_s &_this)
 
       return false;
     }
-    else
-    {
-      tmp_flow_graph[ts_ptr[2 + body_end_cnt]] = *ts_ptr;
-    }
+
+    tmp_flow_graph[ts_ptr[2 + body_end_cnt]] = *ts_ptr;
 
     if (body_end_cnt != 0)
     {
@@ -4051,11 +4047,11 @@ bool pa_lambda_end(string_s &source_string,script_parser_s &_this)
   const_delegates.push_blank();
   delegate_s &delegate = const_delegates.last();
 
-  delegate.object_location = NULL;
+  delegate.object_location = nullptr;
   delegate.name_idx_ri = method_record_idx;
   delegate.orig_param_cnt = method_record.parameter_record_idxs.used;
   delegate.param_cnt = delegate.orig_param_cnt;
-  delegate.papply = NULL;
+  delegate.papply = nullptr;
 
   // - retrieve expression description (after code_descr pop) -
   expression_descr_s &ed = _this.code_descrs.last().expression_descr;
@@ -4170,7 +4166,7 @@ bool pa_const_octal_char(string_s &source_string,script_parser_s &_this)
 
   // - retrieve char number -
   char_num_data[char_num_end] = '\0';
-  char const_char = strtol(char_num_data + 2,NULL,8);
+  char const_char = strtol(char_num_data + 2,nullptr,8);
   char_num_data[char_num_end] = '\'';
 
   // - get constant position in array -
@@ -4218,7 +4214,7 @@ bool pa_const_hex_char(string_s &source_string,script_parser_s &_this)
 
   // - retrieve char number -
   char_num_data[char_num_end] = '\0';
-  char const_char = strtol(char_num_data + 3,NULL,16);
+  char const_char = strtol(char_num_data + 3,nullptr,16);
   char_num_data[char_num_end] = '\'';
 
   // - get constant position in array -
@@ -4347,7 +4343,7 @@ bool pa_const_oct_int(string_s &source_string,script_parser_s &_this)
   // - retrieve number -
   char tmp_char = num_data[num_end];
   num_data[num_end] = '\0';
-  long long int const_int = strtoll(num_data,NULL,8);
+  long long int const_int = strtoll(num_data,nullptr,8);
   num_data[num_end] = tmp_char;
 
   // - get constant position in array -
@@ -4390,7 +4386,7 @@ bool pa_const_dec_int(string_s &source_string,script_parser_s &_this)
   // - retrieve number -
   char tmp_char = num_data[num_end];
   num_data[num_end] = '\0';
-  long long int const_int = strtoll(num_data,NULL,10);
+  long long int const_int = strtoll(num_data,nullptr,10);
   num_data[num_end] = tmp_char;
 
   // - get constant position in array -
@@ -4433,7 +4429,7 @@ bool pa_const_hex_int(string_s &source_string,script_parser_s &_this)
   // - retrieve number -
   char tmp_char = num_data[num_end];
   num_data[num_end] = '\0';
-  long long int const_int = strtoll(num_data,NULL,16);
+  long long int const_int = strtoll(num_data,nullptr,16);
   num_data[num_end] = tmp_char;
 
   // - get constant position in array -
@@ -4476,7 +4472,7 @@ bool pa_const_float(string_s &source_string,script_parser_s &_this)
   // - retrieve number from string -
   char tmp_char = float_num_data[float_num_end];
   float_num_data[float_num_end] = '\0';
-  double const_float = strtod(float_num_data,NULL);
+  double const_float = strtod(float_num_data,nullptr);
   float_num_data[float_num_end] = tmp_char;
 
   // - get constant position in array -

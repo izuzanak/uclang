@@ -45,7 +45,7 @@ inline prolog_c::prolog_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"prolog_init()\n"););
 
-  const char *argv[] = {"uclang","-q",NULL};
+  const char *argv[] = {"uclang","-q",nullptr};
   cassert(PL_initialise(2,(char **)argv));
 }/*}}}*/
 

@@ -152,9 +152,9 @@ struct docu_parsed_s
 
 inline void docu_source_s::init()
 {/*{{{*/
-  source_ptr = NULL;
+  source_ptr = nullptr;
   src_length = 0;
-  src_data = NULL;
+  src_data = nullptr;
   comment_ranges.init();
 }/*}}}*/
 
@@ -162,7 +162,7 @@ inline void docu_source_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release source string -
-  if (source_ptr != NULL)
+  if (source_ptr != nullptr)
   {
     it.release_location_ptr(source_ptr);
   }
@@ -179,14 +179,14 @@ inline void docu_source_s::clear(interpreter_thread_s &it)
 
 inline void docu_comment_s::init()
 {/*{{{*/
-  ds_ptr = NULL;
+  ds_ptr = nullptr;
 }/*}}}*/
 
 inline void docu_comment_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release source string -
-  if (ds_ptr != NULL)
+  if (ds_ptr != nullptr)
   {
     it.release_location_ptr(ds_ptr);
   }
@@ -203,12 +203,12 @@ inline void docu_parsed_s::init()
   after_member = false;
   comm_type = c_comm_type_unknown;
 
-  id_string_ptr = NULL;
-  brief_ptr = NULL;
-  paragraphs_ptr = NULL;
-  param_names_ptr = NULL;
-  params_ptr = NULL;
-  return_ptr = NULL;
+  id_string_ptr = nullptr;
+  brief_ptr = nullptr;
+  paragraphs_ptr = nullptr;
+  param_names_ptr = nullptr;
+  params_ptr = nullptr;
+  return_ptr = nullptr;
 
   text_lines.init();
   lalr_stack.init();
@@ -219,7 +219,7 @@ inline void docu_parsed_s::clear(interpreter_thread_s &it)
 
   #define DOCU_PARSER_RELEASE_LOCATION(POINTER) \
   {/*{{{*/\
-    if (POINTER != NULL)\
+    if (POINTER != nullptr)\
     {\
       it.release_location_ptr(POINTER);\
     }\

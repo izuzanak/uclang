@@ -140,7 +140,7 @@ text_buffer_printf( text_buffer_t * self, vec2 *pen, ... )
     va_start ( args, pen ); 
     do {
         markup = va_arg( args, markup_t * );
-        if( markup == NULL )
+        if( markup == nullptr )
         {
             return;
         }
@@ -177,7 +177,7 @@ text_buffer_add_text( text_buffer_t * self,
     font_manager_t * manager = self->manager;
     int i;
 
-    if( markup == NULL )
+    if( markup == nullptr )
     {
         return;
     }
@@ -257,7 +257,7 @@ text_buffer_add_wchar( text_buffer_t * self,
     glyph = texture_font_get_glyph( font, current );
     black = texture_font_get_glyph( font, -1 );
         
-    if( glyph == NULL )
+    if( glyph == nullptr )
     {
         return;
     }

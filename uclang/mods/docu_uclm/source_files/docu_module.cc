@@ -98,17 +98,17 @@ built_in_class_s docu_class =
   bic_docu_consts,
   bic_docu_init,
   bic_docu_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s docu_methods[] =
@@ -173,17 +173,17 @@ built_in_class_s docu_source_class =
   bic_docu_source_consts,
   bic_docu_source_init,
   bic_docu_source_clear,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_docu_source_first_idx,
   bic_docu_source_next_idx,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s docu_source_methods[] =
@@ -296,14 +296,14 @@ void bic_docu_source_consts(location_array_s &const_locations)
 
 void bic_docu_source_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (docu_source_s *)NULL;
+  location_ptr->v_data_ptr = (docu_source_s *)nullptr;
 }/*}}}*/
 
 void bic_docu_source_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   docu_source_s *ds_ptr = (docu_source_s *)location_ptr->v_data_ptr;
 
-  if (ds_ptr != NULL)
+  if (ds_ptr != nullptr)
   {
     ds_ptr->clear(it);
     cfree(ds_ptr);
@@ -483,17 +483,17 @@ built_in_class_s docu_comment_class =
   bic_docu_comment_consts,
   bic_docu_comment_init,
   bic_docu_comment_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s docu_comment_methods[] =
@@ -540,14 +540,14 @@ void bic_docu_comment_consts(location_array_s &const_locations)
 
 void bic_docu_comment_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (docu_comment_s *)NULL;
+  location_ptr->v_data_ptr = (docu_comment_s *)nullptr;
 }/*}}}*/
 
 void bic_docu_comment_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   docu_comment_s *dc_ptr = (docu_comment_s *)location_ptr->v_data_ptr;
 
-  if (dc_ptr != NULL)
+  if (dc_ptr != nullptr)
   {
     dc_ptr->clear(it);
     cfree(dc_ptr);
@@ -646,17 +646,17 @@ built_in_class_s docu_parsed_class =
   bic_docu_parsed_consts,
   bic_docu_parsed_init,
   bic_docu_parsed_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s docu_parsed_methods[] =
@@ -761,14 +761,14 @@ void bic_docu_parsed_consts(location_array_s &const_locations)
 
 void bic_docu_parsed_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (docu_parsed_s *)NULL;
+  location_ptr->v_data_ptr = (docu_parsed_s *)nullptr;
 }/*}}}*/
 
 void bic_docu_parsed_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   docu_parsed_s *dp_ptr = (docu_parsed_s *)location_ptr->v_data_ptr;
 
-  if (dp_ptr != NULL)
+  if (dp_ptr != nullptr)
   {
     dp_ptr->clear(it);
     cfree(dp_ptr);

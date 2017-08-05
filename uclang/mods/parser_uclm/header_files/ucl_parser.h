@@ -50,8 +50,8 @@ struct parse_state_s
 
 inline void fa_source_s::init()
 {/*{{{*/
-  final_automata_loc = NULL;
-  source_loc = NULL;
+  final_automata_loc = nullptr;
+  source_loc = nullptr;
   old_input_idx = 0;
   input_idx = 0;
 }/*}}}*/
@@ -60,13 +60,13 @@ inline void fa_source_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release final automata -
-  if (final_automata_loc != NULL)
+  if (final_automata_loc != nullptr)
   {
     it.release_location_ptr(final_automata_loc);
   }
 
   // - release source -
-  if (source_loc != NULL)
+  if (source_loc != nullptr)
   {
     it.release_location_ptr(source_loc);
   }
@@ -80,8 +80,8 @@ inline void fa_source_s::clear(interpreter_thread_s &it)
 
 inline void parse_state_s::init()
 {/*{{{*/
-  parser_loc = NULL;
-  source_loc = NULL;
+  parser_loc = nullptr;
+  source_loc = nullptr;
   lalr_stack.init();
 }/*}}}*/
 
@@ -89,13 +89,13 @@ inline void parse_state_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release parser location -
-  if (parser_loc != NULL)
+  if (parser_loc != nullptr)
   {
     it.release_location_ptr(parser_loc);
   }
 
   // - release source location -
-  if (source_loc != NULL)
+  if (source_loc != nullptr)
   {
     it.release_location_ptr(source_loc);
   }

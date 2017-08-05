@@ -44,14 +44,14 @@ struct inotify_event_s
 
 inline void inotify_watch_s::init()
 {/*{{{*/
-  inotify_loc = NULL;
-  name_loc = NULL;
+  inotify_loc = nullptr;
+  name_loc = nullptr;
   wd = -1;
 }/*}}}*/
 
 inline void inotify_watch_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (inotify_loc != NULL)
+  if (inotify_loc != nullptr)
   {
     // - release inotify watch descriptor -
     if (wd != -1)
@@ -64,7 +64,7 @@ inline void inotify_watch_s::clear(interpreter_thread_s &it)
   }
 
   // - release name location -
-  if (name_loc != NULL)
+  if (name_loc != nullptr)
   {
     it.release_location_ptr(name_loc);
   }
@@ -78,14 +78,14 @@ inline void inotify_watch_s::clear(interpreter_thread_s &it)
 
 inline void inotify_event_s::init()
 {/*{{{*/
-  name_loc = NULL;
+  name_loc = nullptr;
 }/*}}}*/
 
 inline void inotify_event_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release name location -
-  if (name_loc != NULL)
+  if (name_loc != nullptr)
   {
     // - release inotify location -
     it.release_location_ptr(name_loc);

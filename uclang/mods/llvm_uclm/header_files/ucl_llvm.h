@@ -46,14 +46,14 @@ class llvm_c
 
 inline void llvm_context_s::init()
 {/*{{{*/
-  context = NULL;
+  context = nullptr;
 }/*}}}*/
 
 inline void llvm_context_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release llvm context -
-  if (context != NULL)
+  if (context != nullptr)
   {
     delete context;
   }
@@ -67,7 +67,7 @@ inline void llvm_context_s::clear(interpreter_thread_s &it)
 
 inline void llvm_module_s::init()
 {/*{{{*/
-  module = NULL;
+  module = nullptr;
 }/*}}}*/
 
 inline void llvm_module_s::clear(interpreter_thread_s &it)

@@ -28,14 +28,14 @@ struct gcrypt_cipher_s
 
 inline void gcrypt_cipher_s::init()
 {/*{{{*/
-  handle = NULL;
+  handle = nullptr;
 }/*}}}*/
 
 inline void gcrypt_cipher_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release gcrypt cipher handle -
-  if (handle != NULL)
+  if (handle != nullptr)
   {
     gcry_cipher_close(handle);
   }

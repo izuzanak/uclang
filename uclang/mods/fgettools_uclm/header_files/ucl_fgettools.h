@@ -37,21 +37,21 @@ struct fget_target_s
 
 inline void fget_target_s::init()
 {/*{{{*/
-  file_ptr = NULL;
-  map_ptr = NULL;
+  file_ptr = nullptr;
+  map_ptr = nullptr;
 }/*}}}*/
 
 inline void fget_target_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - unmap file -
-  if (file_ptr != NULL)
+  if (file_ptr != nullptr)
   {
     munmap(file_ptr,file_size);
   }
 
   // - unmap map -
-  if (map_ptr != NULL)
+  if (map_ptr != nullptr)
   {
     munmap(map_ptr,map_size);
   }

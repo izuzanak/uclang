@@ -207,17 +207,17 @@ built_in_class_s cv_class =
   bic_cv_consts,
   bic_cv_init,
   bic_cv_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s cv_methods[] =
@@ -370,17 +370,17 @@ built_in_class_s cv_mat_class =
   bic_cv_mat_consts,
   bic_cv_mat_init,
   bic_cv_mat_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s cv_mat_methods[] =
@@ -470,14 +470,14 @@ void bic_cv_mat_consts(location_array_s &const_locations)
 
 void bic_cv_mat_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (Mat *)NULL;
+  location_ptr->v_data_ptr = (Mat *)nullptr;
 }/*}}}*/
 
 void bic_cv_mat_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   Mat *mat_ptr = (Mat *)location_ptr->v_data_ptr;
 
-  if (mat_ptr != NULL)
+  if (mat_ptr != nullptr)
   {
     delete mat_ptr;
   }
@@ -535,7 +535,7 @@ bool bic_cv_mat_method_read_2(interpreter_thread_s &it,unsigned stack_base,uli *
   *mat_ptr = imread(string_ptr->data,flags);
 
   // - ERROR -
-  if (mat_ptr->data == NULL)
+  if (mat_ptr->data == nullptr)
   {
     delete mat_ptr;
 
@@ -629,7 +629,7 @@ bool bic_cv_mat_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli
   *mat_ptr = imdecode(Mat(1,string_ptr->size - 1,CV_8UC1,string_ptr->data),flags);
 
   // - ERROR -
-  if (mat_ptr->data == NULL)
+  if (mat_ptr->data == nullptr)
   {
     delete mat_ptr;
 
@@ -727,17 +727,17 @@ built_in_class_s cv_window_class =
   bic_cv_window_consts,
   bic_cv_window_init,
   bic_cv_window_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s cv_window_methods[] =
@@ -779,14 +779,14 @@ void bic_cv_window_consts(location_array_s &const_locations)
 
 void bic_cv_window_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (cv_window_s *)NULL;
+  location_ptr->v_data_ptr = (cv_window_s *)nullptr;
 }/*}}}*/
 
 void bic_cv_window_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   cv_window_s *win_ptr = (cv_window_s *)location_ptr->v_data_ptr;
 
-  if (win_ptr != NULL)
+  if (win_ptr != nullptr)
   {
     try
     {
@@ -926,17 +926,17 @@ built_in_class_s cv_capture_class =
   bic_cv_capture_consts,
   bic_cv_capture_init,
   bic_cv_capture_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s cv_capture_methods[] =
@@ -1252,14 +1252,14 @@ void bic_cv_capture_consts(location_array_s &const_locations)
 
 void bic_cv_capture_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (VideoCapture *)NULL;
+  location_ptr->v_data_ptr = (VideoCapture *)nullptr;
 }/*}}}*/
 
 void bic_cv_capture_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   VideoCapture *vc_ptr = (VideoCapture *)location_ptr->v_data_ptr;
 
-  if (vc_ptr != NULL)
+  if (vc_ptr != nullptr)
   {
     // - if video capture is opened -
     if (vc_ptr->isOpened())
@@ -1529,17 +1529,17 @@ built_in_class_s cv_writer_class =
   bic_cv_writer_consts,
   bic_cv_writer_init,
   bic_cv_writer_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s cv_writer_methods[] =
@@ -1591,14 +1591,14 @@ void bic_cv_writer_consts(location_array_s &const_locations)
 
 void bic_cv_writer_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (cv_writer_s *)NULL;
+  location_ptr->v_data_ptr = (cv_writer_s *)nullptr;
 }/*}}}*/
 
 void bic_cv_writer_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   cv_writer_s *vw_ptr = (cv_writer_s *)location_ptr->v_data_ptr;
 
-  if (vw_ptr != NULL)
+  if (vw_ptr != nullptr)
   {
     vw_ptr->clear(it);
     cfree(vw_ptr);

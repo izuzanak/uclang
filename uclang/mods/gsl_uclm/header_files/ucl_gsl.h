@@ -55,30 +55,30 @@ class gsl_c
 
 inline void gsl_spline_s::init()
 {/*{{{*/
-  accel  = NULL;
-  interp = NULL;
-  xa = NULL;
-  ya = NULL;
+  accel  = nullptr;
+  interp = nullptr;
+  xa = nullptr;
+  ya = nullptr;
 }/*}}}*/
 
 inline void gsl_spline_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (accel != NULL)
+  if (accel != nullptr)
   {
     gsl_interp_accel_free(accel);
   }
 
-  if (interp != NULL)
+  if (interp != nullptr)
   {
     gsl_interp_free(interp);
   }
 
-  if (xa != NULL)
+  if (xa != nullptr)
   {
     cfree(xa);
   }
 
-  if (ya != NULL)
+  if (ya != nullptr)
   {
     cfree(ya);
   }

@@ -215,17 +215,17 @@ built_in_class_s graph_class =
   bic_graph_consts,
   bic_graph_init,
   bic_graph_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_graph_pack,
   bic_graph_unpack,
-  NULL,
-  NULL
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s graph_methods[] =
@@ -2283,17 +2283,17 @@ built_in_class_s graph_vertex_class =
   bic_graph_vertex_consts,
   bic_graph_vertex_init,
   bic_graph_vertex_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s graph_vertex_methods[] =
@@ -2445,14 +2445,14 @@ void bic_graph_vertex_consts(location_array_s &const_locations)
 
 void bic_graph_vertex_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (graph_vertex_s *)NULL;
+  location_ptr->v_data_ptr = (graph_vertex_s *)nullptr;
 }/*}}}*/
 
 void bic_graph_vertex_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   graph_vertex_s *gv_ptr = (graph_vertex_s *)location_ptr->v_data_ptr;
 
-  if (gv_ptr != NULL)
+  if (gv_ptr != nullptr)
   {
     gv_ptr->clear(it);
     cfree(gv_ptr);
@@ -2722,17 +2722,17 @@ built_in_class_s graph_edge_class =
   bic_graph_edge_consts,
   bic_graph_edge_init,
   bic_graph_edge_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s graph_edge_methods[] =
@@ -2802,14 +2802,14 @@ void bic_graph_edge_consts(location_array_s &const_locations)
 
 void bic_graph_edge_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (graph_edge_s *)NULL;
+  location_ptr->v_data_ptr = (graph_edge_s *)nullptr;
 }/*}}}*/
 
 void bic_graph_edge_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   graph_edge_s *ge_ptr = (graph_edge_s *)location_ptr->v_data_ptr;
 
-  if (ge_ptr != NULL)
+  if (ge_ptr != nullptr)
   {
     ge_ptr->clear(it);
     cfree(ge_ptr);
@@ -2988,17 +2988,17 @@ built_in_class_s subgraph_class =
   bic_subgraph_consts,
   bic_subgraph_init,
   bic_subgraph_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s subgraph_methods[] =
@@ -3030,14 +3030,14 @@ void bic_subgraph_consts(location_array_s &const_locations)
 
 void bic_subgraph_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (subgraph_s *)NULL;
+  location_ptr->v_data_ptr = (subgraph_s *)nullptr;
 }/*}}}*/
 
 void bic_subgraph_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   subgraph_s *sg_ptr = (subgraph_s *)location_ptr->v_data_ptr;
 
-  if (sg_ptr != NULL)
+  if (sg_ptr != nullptr)
   {
     sg_ptr->clear(it);
     cfree(sg_ptr);
@@ -3091,17 +3091,17 @@ built_in_class_s graph_paths_class =
   bic_graph_paths_consts,
   bic_graph_paths_init,
   bic_graph_paths_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s graph_paths_methods[] =
@@ -3153,14 +3153,14 @@ void bic_graph_paths_consts(location_array_s &const_locations)
 
 void bic_graph_paths_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (graph_paths_s *)NULL;
+  location_ptr->v_data_ptr = (graph_paths_s *)nullptr;
 }/*}}}*/
 
 void bic_graph_paths_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   graph_paths_s *gp_ptr = (graph_paths_s *)location_ptr->v_data_ptr;
 
-  if (gp_ptr != NULL)
+  if (gp_ptr != nullptr)
   {
     gp_ptr->clear(it);
     cfree(gp_ptr);

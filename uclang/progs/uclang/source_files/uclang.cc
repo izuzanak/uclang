@@ -4,14 +4,14 @@ include "uclang.h"
 @end
 
 // - global interpreter pointer -
-interpreter_s *interpreter_ptr = NULL;
+interpreter_s *interpreter_ptr = nullptr;
 
 #if SYSTEM_TYPE_UNIX_SIGACTION == ENABLED
 void term_signal_handler(int signum)
 {/*{{{*/
 
   // - if interpreter not exist or its main thread is not running -
-  if (interpreter_ptr == NULL || interpreter_ptr->main_thread_ptr == NULL)
+  if (interpreter_ptr == nullptr || interpreter_ptr->main_thread_ptr == nullptr)
   {
 #if SYSTEM_TYPE_UNIX_SPAWNER == ENABLED
     if (g_spawner_running.value())
@@ -65,7 +65,7 @@ void *run_interpreter(void *data)
     ignore_action.sa_flags = 0;
 
     // - ignore SIGPIPE signal -
-    sigaction(SIGPIPE,&ignore_action,NULL);
+    sigaction(SIGPIPE,&ignore_action,nullptr);
 
     // - create signal handler action -
     struct sigaction signal_term_action;
@@ -76,17 +76,23 @@ void *run_interpreter(void *data)
     struct sigaction old_action;
 
     // - set signal handlers -
-    sigaction(SIGINT,NULL,&old_action);
+    sigaction(SIGINT,nullptr,&old_action);
     if (old_action.sa_handler != SIG_IGN)
-      sigaction(SIGINT,&signal_term_action,NULL);
+    {
+      sigaction(SIGINT,&signal_term_action,nullptr);
+    }
 
-    sigaction(SIGTERM,NULL,&old_action);
+    sigaction(SIGTERM,nullptr,&old_action);
     if (old_action.sa_handler != SIG_IGN)
-      sigaction(SIGTERM,&signal_term_action,NULL);
+    {
+      sigaction(SIGTERM,&signal_term_action,nullptr);
+    }
 
-    sigaction(SIGHUP,NULL,&old_action);
+    sigaction(SIGHUP,nullptr,&old_action);
     if (old_action.sa_handler != SIG_IGN)
-      sigaction(SIGHUP,&signal_term_action,NULL);
+    {
+      sigaction(SIGHUP,&signal_term_action,nullptr);
+    }
 #endif
 
     // - init source -
@@ -103,7 +109,7 @@ void *run_interpreter(void *data)
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_DSP
     int argc = 1;
-    char *argv[] = {(char *)"main",NULL};
+    char *argv[] = {(char *)"main",nullptr};
 
     // - fake program source for DSP -
     const char *dummy_src =
@@ -134,7 +140,7 @@ void *run_interpreter(void *data)
     const char *arg_spawn_ptr = "-spawner=";
     const int arg_spawn_len = strlen(arg_spawn_ptr);
 
-    const char *spawner_path = NULL;
+    const char *spawner_path = nullptr;
 #endif
 
     // - process interpreter arguments -
@@ -145,12 +151,16 @@ void *run_interpreter(void *data)
 
         // - test modules argument -
         if (strncmp(arg_ptr,arg_mods_ptr,arg_mods_len) == 0)
+        {
           mods_path.set(strlen(arg_ptr) - arg_mods_len,arg_ptr + arg_mods_len);
+        }
         
 #if SYSTEM_TYPE_UNIX_SPAWNER == ENABLED
         // - test spawner argument -
         else if (strncmp(arg_ptr,arg_spawn_ptr,arg_spawn_len) == 0)
+        {
           spawner_path = arg_ptr + arg_spawn_len;
+        }
 #endif
 
         // - argument was not recognized -
@@ -190,7 +200,7 @@ void *run_interpreter(void *data)
     {
       // - read modules path environment variable -
       char *mp_value = getenv("UCLANG_MODS_PATH");
-      if (mp_value != NULL)
+      if (mp_value != nullptr)
       {
         // - set modules path to value of environment variable -
         mods_path.set(strlen(mp_value),mp_value);
@@ -244,7 +254,7 @@ void *run_interpreter(void *data)
 #if SYSTEM_TYPE_UNIX_SPAWNER == ENABLED
 
       // - if spawner path is set -
-      if (spawner_path != NULL)
+      if (spawner_path != nullptr)
       {
         debug_message_1(fprintf(stderr,"main: script_parser, process modules\n"); tm_mark_time());
         parser.process_modules();
@@ -420,7 +430,7 @@ void *run_interpreter(void *data)
                 debug_message_1(fprintf(stderr,"main: interpreter, static locations release (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
 
                 // - remove global pointer to interpreter -
-                interpreter_ptr = NULL;
+                interpreter_ptr = nullptr;
 
                 debug_message_1(fprintf(stderr,"main: interpreter remove\n"); tm_mark_time());
                 interpreter.clear();

@@ -242,17 +242,17 @@ built_in_class_s gtk_class =
   bic_gtk_consts,
   bic_gtk_init,
   bic_gtk_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gtk_methods[] =
@@ -974,17 +974,17 @@ built_in_class_s gtk_g_object_class =
   bic_gtk_g_object_consts,
   bic_gtk_g_object_init,
   bic_gtk_g_object_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gtk_g_object_methods[] =
@@ -1077,8 +1077,9 @@ built_in_variable_s gtk_g_object_variables[] =
   gpointer g_obj = gtk_c::create_g_object(it,GTK_TYPE_ ## TYPE,array_ptr,operands[c_source_pos_idx]);\
 \
   /* - ERROR - */\
-  if (g_obj == NULL)\
+  if (g_obj == nullptr)\
   {\
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
 \
@@ -1091,14 +1092,14 @@ void bic_gtk_g_object_consts(location_array_s &const_locations)
 
 void bic_gtk_g_object_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (gpointer)NULL;
+  location_ptr->v_data_ptr = (gpointer)nullptr;
 }/*}}}*/
 
 void bic_gtk_g_object_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   gpointer g_obj = (gpointer)location_ptr->v_data_ptr;
 
-  if (g_obj != NULL)
+  if (g_obj != nullptr)
   {
     g_object_unref(g_obj);
   }
@@ -1177,8 +1178,9 @@ bool bic_gtk_g_object_method_GtkGObject_2(interpreter_thread_s &it,unsigned stac
   gpointer g_obj = gtk_c::create_g_object(it,g_type,array_ptr,operands[c_source_pos_idx]);
 
   // - ERROR -
-  if (g_obj == NULL)
+  if (g_obj == nullptr)
   {
+    exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1254,7 +1256,7 @@ bool bic_gtk_g_object_method_prop_2(interpreter_thread_s &it,unsigned stack_base
       G_OBJECT_GET_CLASS(G_OBJECT(g_obj)),string_ptr->data);
 
   // - ERROR -
-  if (value_spec == NULL)
+  if (value_spec == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_UNKNOWN_PROPERTY,operands[c_source_pos_idx],src_0_location);
     return false;
@@ -1270,7 +1272,7 @@ bool bic_gtk_g_object_method_prop_2(interpreter_thread_s &it,unsigned stack_base
   GValue g_value = {0};
 
   // - ERROR -
-  if (gtk_c::create_g_value(it,src_1_location,&g_value) == NULL)
+  if (gtk_c::create_g_value(it,src_1_location,&g_value) == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_G_VALUE_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1307,7 +1309,7 @@ bool bic_gtk_g_object_method_prop_1(interpreter_thread_s &it,unsigned stack_base
       G_OBJECT_GET_CLASS(G_OBJECT(g_obj)),string_ptr->data);
 
   // - ERROR -
-  if (value_spec == NULL)
+  if (value_spec == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_UNKNOWN_PROPERTY,operands[c_source_pos_idx],src_0_location);
     return false;
@@ -1321,7 +1323,7 @@ bool bic_gtk_g_object_method_prop_1(interpreter_thread_s &it,unsigned stack_base
   location_s *location_ptr = gtk_c::g_value_value(it,value_spec->value_type,&g_value);
 
   // - ERROR -
-  if (location_ptr == NULL)
+  if (location_ptr == nullptr)
   {
     g_value_unset(&g_value);
 
@@ -1385,7 +1387,7 @@ bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned 
   }
 
   // - set gtk interpreter pointer -
-  if (gtk_c::it_ptr == NULL)
+  if (gtk_c::it_ptr == nullptr)
   {
     gtk_c::it_ptr = &it;
   }
@@ -1395,7 +1397,7 @@ bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned 
     (ui_list_s *)g_object_get_qdata(G_OBJECT(g_obj),gtk_c::dlg_idxs_quark);
 
   // - if object delegate indexes does not exist -
-  if (obj_dlg_idxs == NULL)
+  if (obj_dlg_idxs == nullptr)
   {
     // - create object delegate list -
     obj_dlg_idxs = (ui_list_s *)cmalloc(sizeof(ui_list_s));
@@ -1478,7 +1480,7 @@ bool bic_gtk_g_object_method_signal_emit_2(interpreter_thread_s &it,unsigned sta
   GValue inst_params[array_ptr->used + 1] = {0};
 
   // - prepare instance value -
-  cassert(gtk_c::create_g_value(it,dst_location,inst_params) != NULL);
+  cassert(gtk_c::create_g_value(it,dst_location,inst_params) != nullptr);
 
 #define BIC_GTK_G_OBJECT_METHOD_SIGNAL_EMIT_2_RELEASE_PARAMS(FIRST_UNSET) \
 {/*{{{*/\
@@ -1508,7 +1510,7 @@ bool bic_gtk_g_object_method_signal_emit_2(interpreter_thread_s &it,unsigned sta
       }
 
       // - retrieve parameter value -
-      cassert(gtk_c::create_g_value(it,param_location,inst_params + p_idx + 1) != NULL);
+      cassert(gtk_c::create_g_value(it,param_location,inst_params + p_idx + 1) != nullptr);
 
     } while(++p_idx < array_ptr->used);
   }
@@ -1534,7 +1536,7 @@ bool bic_gtk_g_object_method_signal_emit_2(interpreter_thread_s &it,unsigned sta
   g_value_unset(&ret_value);
 
   // - ERROR -
-  if (ret_location == NULL)
+  if (ret_location == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_G_VALUE_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1576,17 +1578,17 @@ built_in_class_s gtk_clipboard_class =
   bic_gtk_clipboard_consts,
   bic_gtk_g_object_init,
   bic_gtk_g_object_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gtk_clipboard_methods[] =
@@ -1684,7 +1686,7 @@ bool bic_gtk_clipboard_method_wait_for_text_0(interpreter_thread_s &it,unsigned 
   // - retrieve text from clipboard -
   char *text = gtk_clipboard_wait_for_text(GTK_CLIPBOARD(g_obj));
 
-  if (text != NULL)
+  if (text != nullptr)
   {
     string_s *string_ptr = it.get_new_string_ptr();
     string_ptr->set(strlen(text),text);
@@ -1732,17 +1734,17 @@ built_in_class_s gtk_widget_class =
   bic_gtk_widget_consts,
   bic_gtk_g_object_init,
   bic_gtk_g_object_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gtk_widget_methods[] =
@@ -1869,17 +1871,17 @@ built_in_class_s gtk_container_class =
   bic_gtk_container_consts,
   bic_gtk_g_object_init,
   bic_gtk_g_object_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gtk_container_methods[] =
@@ -2029,17 +2031,17 @@ built_in_class_s gtk_grid_class =
   bic_gtk_grid_consts,
   bic_gtk_g_object_init,
   bic_gtk_g_object_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gtk_grid_methods[] =
@@ -2209,17 +2211,17 @@ built_in_class_s gtk_window_class =
   bic_gtk_window_consts,
   bic_gtk_g_object_init,
   bic_gtk_g_object_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gtk_window_methods[] =
@@ -2363,7 +2365,7 @@ bool bic_gtk_window_method_dialog_3(interpreter_thread_s &it,unsigned stack_base
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_WRONG_ARRAY_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(1);
 
-    return NULL;
+    return false;
   }
 
   // - buttons descriptions -
@@ -2387,7 +2389,7 @@ bool bic_gtk_window_method_dialog_3(interpreter_thread_s &it,unsigned stack_base
         new_exception->params.push(1);
         new_exception->params.push(b_ptr - buttons);
 
-        return NULL;
+        return false;
       }
 
       b_ptr->text = ((string_s *)text_location->v_data_ptr)->data;
@@ -2408,7 +2410,7 @@ bool bic_gtk_window_method_dialog_3(interpreter_thread_s &it,unsigned stack_base
   gpointer g_dialog = gtk_c::create_g_object(it,dialog_type,prop_array_ptr,operands[c_source_pos_idx]);
 
   // - ERROR -
-  if (g_dialog == NULL)
+  if (g_dialog == nullptr)
   {
     return false;
   }
@@ -2462,17 +2464,17 @@ built_in_class_s gtk_dialog_class =
   bic_gtk_dialog_consts,
   bic_gtk_g_object_init,
   bic_gtk_g_object_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gtk_dialog_methods[] =
@@ -2635,7 +2637,7 @@ bool bic_gtk_dialog_method_get_filename_0(interpreter_thread_s &it,unsigned stac
 
   gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(g_obj));
 
-  if (filename != NULL)
+  if (filename != nullptr)
   {
     // - create filename string -
     string_s *string_ptr = it.get_new_string_ptr();
@@ -2674,7 +2676,7 @@ bool bic_gtk_dialog_method_get_filenames_0(interpreter_thread_s &it,unsigned sta
   pointer_array_s *array_ptr = it.get_new_array_ptr();
 
   GSList *item = list;
-  while (item != NULL)
+  while (item != nullptr)
   {
     gchar *filename = (gchar *)item->data;
 
@@ -2727,17 +2729,17 @@ built_in_class_s gtk_handler_class =
   bic_gtk_handler_consts,
   bic_gtk_handler_init,
   bic_gtk_handler_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gtk_handler_methods[] =

@@ -83,8 +83,8 @@ methods ui_array_set_s
 
 bool ui_array_set_s::set_compare(ui_array_set_s &second)
 {/*{{{*/
-  if (used != second.used) return false;
-  if (used == 0) return true;
+  if (used != second.used) { return false; }
+  if (used == 0) { return true; }
 
   unsigned *ptr = data;
   unsigned *ptr_end = ptr + used;
@@ -115,7 +115,10 @@ bool ui_array_set_s::set_compare(ui_array_set_s &second)
 
 void ui_array_set_s::add_to_set(p_follow_set_s &add_set)
 {/*{{{*/
-  if (add_set.used == 0) return;
+  if (add_set.used == 0)
+  {
+    return;
+  }
 
   unsigned *a_ptr = add_set.data;
   unsigned *a_ptr_end = a_ptr + add_set.used;
@@ -170,7 +173,10 @@ methods reg_mul_state_move_array_s
 
 unsigned reg_mul_state_move_array_s::get_idx_by_move_char(unsigned short a_move_char)
 {/*{{{*/
-  if (used == 0) return c_idx_not_exist;
+  if (used == 0)
+  {
+    return c_idx_not_exist;
+  }
 
   reg_mul_state_move_s *ptr = data;
   reg_mul_state_move_s *ptr_end = ptr + used;
@@ -204,7 +210,10 @@ methods reg_mul_state_map_array_s
 
 unsigned reg_mul_state_map_array_s::get_idx_by_mul_state(ui_array_set_s &a_mul_state)
 {/*{{{*/
-  if (used == 0) return c_idx_not_exist;
+  if (used == 0)
+  {
+    return c_idx_not_exist;
+  }
 
   reg_mul_state_map_s *ptr = data;
   reg_mul_state_map_s *ptr_end = ptr + used;
@@ -233,7 +242,10 @@ methods fa_state_moves_s
 
 unsigned fa_state_moves_s::get_map_idx(fa_state_move_s &a_value)
 {/*{{{*/
-  if (used == 0) return c_idx_not_exist;
+  if (used == 0)
+  {
+    return c_idx_not_exist;
+  }
 
   fa_state_move_s *ptr = data;
   fa_state_move_s *ptr_end = data + used;
@@ -730,7 +742,7 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
 
 unsigned final_automata_s::recognize(char *input,unsigned &input_idx,unsigned input_length)
 {/*{{{*/
-  debug_assert(input != NULL);
+  debug_assert(input != nullptr);
 
   // - set first state -
   state_idx = 0;
@@ -3043,7 +3055,10 @@ methods p_terminals_s
 
 unsigned p_terminals_s::get_map_idx(p_terminal_s &a_value)
 {/*{{{*/
-  if (used == 0) return c_idx_not_exist;
+  if (used == 0)
+  {
+    return c_idx_not_exist;
+  }
 
   p_terminal_s *ptr = data;
   p_terminal_s *ptr_end = data + used;
@@ -3062,7 +3077,10 @@ unsigned p_terminals_s::get_map_idx(p_terminal_s &a_value)
 
 unsigned p_terminals_s::get_char_ptr_idx(unsigned a_length,char *a_data)
 {/*{{{*/
-  if (used == 0) return c_idx_not_exist;
+  if (used == 0)
+  {
+    return c_idx_not_exist;
+  }
 
   p_terminal_s *ptr = data;
   p_terminal_s *ptr_end = ptr + used;
@@ -3091,7 +3109,10 @@ methods p_nonterminals_s
 
 unsigned p_nonterminals_s::get_char_ptr_idx(unsigned a_length,char *a_data)
 {/*{{{*/
-  if (used == 0) return c_idx_not_exist;
+  if (used == 0)
+  {
+    return c_idx_not_exist;
+  }
 
   p_nonterminal_s *ptr = data;
   p_nonterminal_s *ptr_end = ptr + used;
@@ -3130,7 +3151,10 @@ methods p_kernels_s
 
 unsigned p_kernels_s::get_idx_by_rule_dots(p_kernel_s &a_value)
 {/*{{{*/
-  if (used == 0) return c_idx_not_exist;
+  if (used == 0)
+  {
+    return c_idx_not_exist;
+  }
 
   p_kernel_s *ptr = data;
   p_kernel_s *ptr_end = ptr + used;

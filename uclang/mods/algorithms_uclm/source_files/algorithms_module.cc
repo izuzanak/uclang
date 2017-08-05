@@ -145,17 +145,17 @@ built_in_class_s algo_class =
   bic_algo_consts,
   bic_algo_init,
   bic_algo_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s algo_methods[] =
@@ -464,7 +464,7 @@ bool bic_algo_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
   map_tree_ptr->it_ptr = &it;\
   map_tree_ptr->source_pos = operands[c_source_pos_idx];\
 \
-  pointer_map_s search_map = {(pointer)item_location MP_COMMA NULL};\
+  pointer_map_s search_map = {(pointer)item_location MP_COMMA nullptr};\
   unsigned index = map_tree_ptr->get_idx(search_map);\
 \
   if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)\
@@ -494,7 +494,7 @@ bool bic_algo_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
 /*{{{*/\
 \
   /* - call delegate method - */\
-  location_s *trg_location = NULL;\
+  location_s *trg_location = nullptr;\
   BIC_CALL_DELEGATE(it,delegate_ptr,(pointer *)&item_location,1,trg_location,operands[c_source_pos_idx],\
     RELEASE_REFERENCE;\
     it.release_location_ptr(array_location);\
@@ -667,7 +667,7 @@ bool bic_algo_method_reduce_3(interpreter_thread_s &it,unsigned stack_base,uli *
       pointer params[2] = {inter_location MP_COMMA item_location};
 
       // - call delegate method -
-      location_s *trg_location = NULL;
+      location_s *trg_location = nullptr;
       BIC_CALL_DELEGATE(it,delegate_ptr,params,2,trg_location,operands[c_source_pos_idx],
         it.release_location_ptr(inter_location);
         return false;
@@ -685,7 +685,7 @@ bool bic_algo_method_reduce_3(interpreter_thread_s &it,unsigned stack_base,uli *
       pointer params[2] = {inter_location MP_COMMA item_location};
 
       // - call delegate method -
-      location_s *trg_location = NULL;
+      location_s *trg_location = nullptr;
       BIC_CALL_DELEGATE(it,delegate_ptr,params,2,trg_location,operands[c_source_pos_idx],
         it.release_location_ptr(item_reference);
         it.release_location_ptr(inter_location);
@@ -756,7 +756,7 @@ bool bic_algo_method_filter_2(interpreter_thread_s &it,unsigned stack_base,uli *
   map_tree_ptr->it_ptr = &it;\
   map_tree_ptr->source_pos = operands[c_source_pos_idx];\
 \
-  pointer_map_s search_map = {(pointer)item_location MP_COMMA NULL};\
+  pointer_map_s search_map = {(pointer)item_location MP_COMMA nullptr};\
   unsigned index = map_tree_ptr->get_idx(search_map);\
 \
   if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)\
@@ -784,7 +784,7 @@ bool bic_algo_method_filter_2(interpreter_thread_s &it,unsigned stack_base,uli *
 /*{{{*/\
 \
   /* - call delegate method - */\
-  location_s *trg_location = NULL;\
+  location_s *trg_location = nullptr;\
   BIC_CALL_DELEGATE(it,delegate_ptr,(pointer *)&item_location,1,trg_location,operands[c_source_pos_idx],\
     RELEASE_REFERENCE;\
     it.release_location_ptr(array_location);\
@@ -1096,7 +1096,7 @@ bool bic_algo_method_zip_1(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
         // - release item reference -
         it.release_location_ptr(i_ptr->item_reference);
-        i_ptr->item_reference = NULL;
+        i_ptr->item_reference = nullptr;
 
       } while(++i_ptr < i_ptr_end);
 
@@ -1142,17 +1142,17 @@ built_in_class_s filter_class =
   bic_filter_consts,
   bic_filter_init,
   bic_filter_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_filter_next_item,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s filter_methods[] =
@@ -1202,7 +1202,7 @@ built_in_variable_s filter_variables[] =
   {\
     /* - release item reference - */\
     it.release_location_ptr(iter.item_reference);\
-    iter.item_reference = NULL;\
+    iter.item_reference = nullptr;\
 \
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_EXPECTED_INTEGER_AS_ARRAY_INDEX,SOURCE_POS,(location_s *)it.blank_location);\
     new_exception->params.push(iter.item_location->v_type);\
@@ -1215,7 +1215,7 @@ built_in_variable_s filter_variables[] =
   {\
     /* - release item reference - */\
     it.release_location_ptr(iter.item_reference);\
-    iter.item_reference = NULL;\
+    iter.item_reference = nullptr;\
 \
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_INDEX_EXCEEDS_ARRAY_RANGE,SOURCE_POS,(location_s *)it.blank_location);\
     new_exception->params.push(map_index);\
@@ -1234,14 +1234,14 @@ built_in_variable_s filter_variables[] =
   map_tree_ptr->it_ptr = &it;\
   map_tree_ptr->source_pos = SOURCE_POS;\
 \
-  pointer_map_s search_map = {(pointer)iter.item_location MP_COMMA NULL};\
+  pointer_map_s search_map = {(pointer)iter.item_location MP_COMMA nullptr};\
   unsigned index = map_tree_ptr->get_idx(search_map);\
 \
   if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)\
   {\
     /* - release item reference - */\
     it.release_location_ptr(iter.item_reference);\
-    iter.item_reference = NULL;\
+    iter.item_reference = nullptr;\
 \
     ERROR_CODE;\
   }\
@@ -1251,7 +1251,7 @@ built_in_variable_s filter_variables[] =
   {\
     /* - release item reference - */\
     it.release_location_ptr(iter.item_reference);\
-    iter.item_reference = NULL;\
+    iter.item_reference = nullptr;\
 \
     exception_s::throw_exception(it,module.error_base + c_error_ALGO_FILTER_UNDEFINED_DICTIONARY_KEY,SOURCE_POS,(location_s *)it.blank_location);\
 \
@@ -1266,12 +1266,12 @@ built_in_variable_s filter_variables[] =
 /*{{{*/\
 \
   /* - call delegate method - */\
-  location_s *trg_location = NULL;\
+  location_s *trg_location = nullptr;\
   BIC_CALL_DELEGATE(it,((delegate_s *)map_ptr),(pointer *)&iter.item_location,1,trg_location,SOURCE_POS,\
 \
     /* - release item reference - */\
     it.release_location_ptr(iter.item_reference);\
-    iter.item_reference = NULL;\
+    iter.item_reference = nullptr;\
 \
     ERROR_CODE;\
   );\
@@ -1298,7 +1298,7 @@ built_in_variable_s filter_variables[] =
 \
     /* - release item reference - */\
     it.release_location_ptr(iter.item_reference);\
-    iter.item_reference = NULL;\
+    iter.item_reference = nullptr;\
 \
     exception_s *new_exception = exception_s::throw_exception(it,c_error_CANNOT_TEST_TYPE_VALUE,SOURCE_POS,(location_s *)it.blank_location);\
     new_exception->params.push(trg_location->v_type);\
@@ -1363,7 +1363,7 @@ built_in_variable_s filter_variables[] =
           {\
             /* - release item reference - */\
             it.release_location_ptr(iter.item_reference);\
-            iter.item_reference = NULL;\
+            iter.item_reference = nullptr;\
 \
             /* - iterable is empty - */\
             iter_empty = true;\
@@ -1429,7 +1429,7 @@ built_in_variable_s filter_variables[] =
 \
       /* - release item reference - */\
       it.release_location_ptr(iter.item_reference);\
-      iter.item_reference = NULL;\
+      iter.item_reference = nullptr;\
     }\
   } while(!done);\
 }/*}}}*/
@@ -1539,7 +1539,7 @@ void bic_filter_consts(location_array_s &const_locations)
 
 void bic_filter_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (filter_s *)NULL;
+  location_ptr->v_data_ptr = (filter_s *)nullptr;
 }/*}}}*/
 
 void bic_filter_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1547,7 +1547,7 @@ void bic_filter_clear(interpreter_thread_s &it,location_s *location_ptr)
   filter_s *filter_ptr = (filter_s *)location_ptr->v_data_ptr;
 
   // - if filter exist -
-  if (filter_ptr != NULL)
+  if (filter_ptr != nullptr)
   {
     filter_ptr->clear(it);
     cfree(filter_ptr);
@@ -1559,7 +1559,7 @@ location_s *bic_filter_next_item(interpreter_thread_s &it,location_s *location_p
   filter_s *filter_ptr = (filter_s *)location_ptr->v_data_ptr;
 
   location_s *return_location;
-  BIC_FILTER_NEXT_ITEM(return_location = ,source_pos,return NULL);
+  BIC_FILTER_NEXT_ITEM(return_location = ,source_pos,return nullptr);
 
   return return_location;
 }/*}}}*/
@@ -1634,17 +1634,17 @@ built_in_class_s range_class =
   bic_range_consts,
   bic_range_init,
   bic_range_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_range_next_item,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s range_methods[] =
@@ -1702,7 +1702,7 @@ built_in_variable_s range_variables[] =
     location->v_reference_cnt.atomic_inc();\
     it.data_stack.push((pointer)location);\
 \
-    if (range_ptr->step_location != NULL)\
+    if (range_ptr->step_location != nullptr)\
     {\
       /* - push second parameter on stack - */\
       location_s *src_location = (location_s *)(range_ptr->step_location);\
@@ -1728,7 +1728,7 @@ built_in_variable_s range_variables[] =
     location_s *this_location = (location_s *)it.data_stack[new_stack_base + 1];\
     this_location->v_reference_cnt.atomic_inc();\
 \
-    if (range_ptr->step_location == NULL)\
+    if (range_ptr->step_location == nullptr)\
     {\
       it.release_location_ptr(range_ptr->actual_location);\
       range_ptr->actual_location = this_location;\
@@ -1754,7 +1754,7 @@ built_in_variable_s range_variables[] =
   if ((range_ptr->type == c_range_type_ascending) ? result > 0 : result < 0)\
   {\
     it.release_location_ptr(range_ptr->actual_location);\
-    range_ptr->actual_location = NULL;\
+    range_ptr->actual_location = nullptr;\
   }\
 }/*}}}*/
 
@@ -1764,7 +1764,7 @@ void bic_range_consts(location_array_s &const_locations)
 
 void bic_range_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (range_s *)NULL;
+  location_ptr->v_data_ptr = (range_s *)nullptr;
 }/*}}}*/
 
 void bic_range_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1772,7 +1772,7 @@ void bic_range_clear(interpreter_thread_s &it,location_s *location_ptr)
   range_s *range_ptr = (range_s *)location_ptr->v_data_ptr;
 
   // - if range exist -
-  if (range_ptr != NULL)
+  if (range_ptr != nullptr)
   {
     range_ptr->clear(it);
     cfree(range_ptr);
@@ -1783,18 +1783,16 @@ location_s *bic_range_next_item(interpreter_thread_s &it,location_s *location_pt
 {/*{{{*/
   range_s *range_ptr = (range_s *)location_ptr->v_data_ptr;
 
-  if (range_ptr->actual_location == NULL)
+  if (range_ptr->actual_location == nullptr)
   {
     ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
     return ((location_s *)it.blank_location);
   }
-  else
-  {
-    location_s *return_location;
-    BIC_RANGE_NEXT_ITEM(return_location = ,source_pos,return NULL);
 
-    return return_location;
-  }
+  location_s *return_location;
+  BIC_RANGE_NEXT_ITEM(return_location = ,source_pos,return nullptr);
+
+  return return_location;
 }/*}}}*/
 
 bool bic_range_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -1918,7 +1916,7 @@ bool bic_range_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,u
 
   range_s *range_ptr = (range_s *)dst_location->v_data_ptr;
 
-  if (range_ptr->actual_location == NULL)
+  if (range_ptr->actual_location == nullptr)
   {
     pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT_BLANK();

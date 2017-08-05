@@ -54,8 +54,8 @@ int main(int argc,char **argv)
 
   // - select modules to import -
   const char *modules[] = {
-    "sys","containers","algorithms","node_test","parser","time",NULL
-    //"sys","containers","json","websocket","jit","ucf","pack","algorithms","node_test","xml",NULL
+    "sys","containers","algorithms","node_test","parser","time",nullptr
+    //"sys","containers","json","websocket","jit","ucf","pack","algorithms","node_test","xml",nullptr
   };
 
   // - initialize uclang node -

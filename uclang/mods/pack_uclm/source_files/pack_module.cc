@@ -186,17 +186,17 @@ built_in_class_s pack_class =
   bic_pack_consts,
   bic_pack_init,
   bic_pack_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s pack_methods[] =
@@ -289,7 +289,7 @@ bool bic_pack_method_pack_1(interpreter_thread_s &it,unsigned stack_base,uli *op
     if (class_record.modifiers & c_modifier_built_in)
     {
       // - ERROR -
-      if (class_record.bi_class_ptr->pack_caller == NULL)
+      if (class_record.bi_class_ptr->pack_caller == nullptr)
       {
         PACK_RELEASE();
 
@@ -479,7 +479,7 @@ bool bic_pack_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,uli *
     if (class_record.modifiers & c_modifier_built_in)
     {
       // - ERROR -
-      if (class_record.bi_class_ptr->unpack_caller == NULL)
+      if (class_record.bi_class_ptr->unpack_caller == nullptr)
       {
         UNPACK_RELEASE();
 
@@ -698,7 +698,7 @@ bool bic_pack_method_code_2(interpreter_thread_s &it,unsigned stack_base,uli *op
         {
         case PCD_TERM_NUMBER:
         {/*{{{*/
-          count = strtoll(old_f_ptr,NULL,10);
+          count = strtoll(old_f_ptr,nullptr,10);
         }/*}}}*/
         break;
         case PCD_TERM_NATIVE:
@@ -1073,7 +1073,7 @@ bool bic_pack_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *
         {
         case PCD_TERM_NUMBER:
         {/*{{{*/
-          count = strtoll(old_f_ptr,NULL,10);
+          count = strtoll(old_f_ptr,nullptr,10);
         }/*}}}*/
         break;
         case PCD_TERM_NATIVE:

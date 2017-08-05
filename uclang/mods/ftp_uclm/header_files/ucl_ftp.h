@@ -70,13 +70,13 @@ struct ftp_handle_s
 
 inline void ftp_session_s::init()
 {/*{{{*/
-  nb_ptr = NULL;
+  nb_ptr = nullptr;
   state = FTP_SESSION_STATE_DISCONNECTED;
 }/*}}}*/
 
 inline void ftp_session_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (nb_ptr != NULL)
+  if (nb_ptr != nullptr)
   {
     FtpQuit(nb_ptr);
   }
@@ -90,18 +90,18 @@ inline void ftp_session_s::clear(interpreter_thread_s &it)
 
 inline void ftp_handle_s::init()
 {/*{{{*/
-  nb_ptr = NULL;
-  ftps_ptr = NULL;
+  nb_ptr = nullptr;
+  ftps_ptr = nullptr;
 }/*}}}*/
 
 inline void ftp_handle_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (nb_ptr != NULL)
+  if (nb_ptr != nullptr)
   {
     FtpClose(nb_ptr);
   }
 
-  if (ftps_ptr != NULL)
+  if (ftps_ptr != nullptr)
   {
     it.release_location_ptr(ftps_ptr);
   }

@@ -36,7 +36,7 @@ location_s *sax_parser_s::get_string_location(unsigned a_length,const char *a_da
     // - skip rb_tree indexes gap -
     while (cs_idx > string_locations.used)
     {
-      string_locations.push(NULL);
+      string_locations.push(nullptr);
     }
 
     // - create location string copy -
@@ -49,10 +49,8 @@ location_s *sax_parser_s::get_string_location(unsigned a_length,const char *a_da
 
     return new_location;
   }
-  else
-  {
-    return (location_s *)string_locations[cs_idx];
-  }
+
+  return (location_s *)string_locations[cs_idx];
 }/*}}}*/
 
 void sax_parser_s::release_locations()
@@ -65,7 +63,7 @@ void sax_parser_s::release_locations()
     pointer *sl_ptr = string_locations.data;
     pointer *sl_ptr_end = sl_ptr + string_locations.used;
     do {
-      if (*sl_ptr != NULL)
+      if (*sl_ptr != nullptr)
       {
         it.release_location_ptr((location_s *)*sl_ptr);
       }
@@ -163,7 +161,7 @@ void xml_start_element(void *user,const xmlChar *name,const xmlChar **attrs)
 
   // -----
 
-  if (attrs != NULL)
+  if (attrs != nullptr)
   {
     // - process element attributes -
     pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)cmalloc(sizeof(pointer_map_tree_s));
@@ -173,7 +171,7 @@ void xml_start_element(void *user,const xmlChar *name,const xmlChar **attrs)
     tree_ptr->source_pos = 0;
 
     const char **attr_ptr = (const char **)attrs;
-    while (*attr_ptr != NULL)
+    while (*attr_ptr != nullptr)
     {
       location_s *attr_name = sp->get_string_location(strlen(attr_ptr[0]),attr_ptr[0]);
       location_s *attr_value = sp->get_string_location(strlen(attr_ptr[1]),attr_ptr[1]);
@@ -182,7 +180,7 @@ void xml_start_element(void *user,const xmlChar *name,const xmlChar **attrs)
       attr_value->v_reference_cnt.atomic_inc();
 
       // - search index of key location -
-      pointer_map_s insert_map = {(pointer)attr_name,NULL};
+      pointer_map_s insert_map = {(pointer)attr_name,nullptr};
       unsigned index = tree_ptr->unique_insert(insert_map);
       cassert(((location_s *)it.exception_location)->v_type == c_bi_class_blank);
 

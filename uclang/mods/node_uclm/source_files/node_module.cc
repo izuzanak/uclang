@@ -83,17 +83,17 @@ built_in_class_s node_callback_class =
   bic_node_callback_consts,
   bic_node_callback_init,
   bic_node_callback_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s node_callback_methods[] =
@@ -145,7 +145,7 @@ void bic_node_callback_consts(location_array_s &const_locations)
 
 void bic_node_callback_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (node_callback_s *)NULL;
+  location_ptr->v_data_ptr = (node_callback_s *)nullptr;
 }/*}}}*/
 
 void bic_node_callback_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -153,7 +153,7 @@ void bic_node_callback_clear(interpreter_thread_s &it,location_s *location_ptr)
   node_callback_s *nc_ptr = (node_callback_s *)location_ptr->v_data_ptr;
 
   // - if session exists -
-  if (nc_ptr != NULL)
+  if (nc_ptr != nullptr)
   {
     nc_ptr->clear(it);
     cfree(nc_ptr);

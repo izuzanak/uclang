@@ -40,21 +40,21 @@ class gstreamer_c
 
 inline void gst_pipeline_s::init()
 {/*{{{*/
-  pipeline = NULL;
-  bus = NULL;
+  pipeline = nullptr;
+  bus = nullptr;
 }/*}}}*/
 
 inline void gst_pipeline_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release bus -
-  if (bus != NULL)
+  if (bus != nullptr)
   {
     gst_object_unref(bus);
   }
 
   // - release pipeline -
-  if (pipeline != NULL)
+  if (pipeline != nullptr)
   {
     gst_element_set_state(pipeline,GST_STATE_NULL);
     gst_object_unref(pipeline);
@@ -72,7 +72,7 @@ inline gstreamer_c::gstreamer_c()
   debug_message_2(fprintf(stderr,"gst_init()\n"););
 
   GError *err;
-  cassert(gst_init_check(0,NULL,&err));
+  cassert(gst_init_check(0,nullptr,&err));
 }/*}}}*/
 
 inline gstreamer_c::~gstreamer_c()

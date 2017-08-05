@@ -128,17 +128,17 @@ built_in_class_s curl_class =
   bic_curl_consts,
   bic_curl_init,
   bic_curl_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s curl_methods[] =
@@ -214,7 +214,7 @@ bool bic_curl_method_GET_1(interpreter_thread_s &it,unsigned stack_base,uli *ope
   CURL *curl_ptr = curl_easy_init();
 
   // - ERROR -
-  if (curl_ptr == NULL)
+  if (curl_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_CURL_CANNOT_CREATE_SESSION,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -290,7 +290,7 @@ bool bic_curl_method_PUT_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
   CURL *curl_ptr = curl_easy_init();
 
   // - ERROR -
-  if (curl_ptr == NULL)
+  if (curl_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_CURL_CANNOT_CREATE_SESSION,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -371,7 +371,7 @@ bool bic_curl_method_DELETE_1(interpreter_thread_s &it,unsigned stack_base,uli *
   CURL *curl_ptr = curl_easy_init();
 
   // - ERROR -
-  if (curl_ptr == NULL)
+  if (curl_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_CURL_CANNOT_CREATE_SESSION,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -444,7 +444,7 @@ bool bic_curl_method_HEAD_1(interpreter_thread_s &it,unsigned stack_base,uli *op
   CURL *curl_ptr = curl_easy_init();
 
   // - ERROR -
-  if (curl_ptr == NULL)
+  if (curl_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_CURL_CANNOT_CREATE_SESSION,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -527,17 +527,17 @@ built_in_class_s curl_result_class =
   bic_curl_result_consts,
   bic_curl_result_init,
   bic_curl_result_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s curl_result_methods[] =
@@ -674,14 +674,14 @@ void bic_curl_result_consts(location_array_s &const_locations)
 
 void bic_curl_result_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (curl_result_s *)NULL;
+  location_ptr->v_data_ptr = (curl_result_s *)nullptr;
 }/*}}}*/
 
 void bic_curl_result_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   curl_result_s *res_ptr = (curl_result_s *)location_ptr->v_data_ptr;
 
-  if (res_ptr != NULL)
+  if (res_ptr != nullptr)
   {
     res_ptr->clear(it);
     cfree(res_ptr);

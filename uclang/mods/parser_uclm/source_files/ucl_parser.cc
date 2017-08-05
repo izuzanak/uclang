@@ -97,7 +97,7 @@ bool parse_state_s::parse_source_string(location_s *parse_state_loc,delegate_s *
         in_reduce_callback = true;
 
         // - call delegate method -
-        location_s *trg_location = NULL;
+        location_s *trg_location = nullptr;
         BIC_CALL_DELEGATE(it,delegate_ptr,(void **)&parse_state_loc,1,trg_location,source_pos,
           return false
         );

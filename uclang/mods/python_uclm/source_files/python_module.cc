@@ -267,15 +267,15 @@ built_in_class_s py_object_class =
   bic_py_object_consts,
   bic_py_object_init,
   bic_py_object_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_py_object_invoke,
   bic_py_object_member
 };/*}}}*/
@@ -389,14 +389,14 @@ void bic_py_object_consts(location_array_s &const_locations)
 
 void bic_py_object_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (PyObject *)NULL;
+  location_ptr->v_data_ptr = (PyObject *)nullptr;
 }/*}}}*/
 
 void bic_py_object_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   PyObject *pyo_obj = (PyObject *)location_ptr->v_data_ptr;
 
-  if (pyo_obj != NULL)
+  if (pyo_obj != nullptr)
   {
     Py_DECREF(pyo_obj);
   }
@@ -422,7 +422,7 @@ bool bic_py_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
 
   // - ERROR -
-  if (pyo_dst == NULL)
+  if (pyo_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -433,7 +433,7 @@ bool bic_py_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base
   Py_DECREF(pyo_dst);
 
   // - ERROR -
-  if (pyo_fun == NULL)
+  if (pyo_fun == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_INVOKE_METHOD_UNKNOWN_NAME,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -443,7 +443,7 @@ bool bic_py_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base
   PyObject *pyo_params = PyTuple_New(param_cnt);
 
   // - ERROR -
-  if (pyo_params == NULL)
+  if (pyo_params == nullptr)
   {
     Py_DECREF(pyo_fun);
 
@@ -459,7 +459,7 @@ bool bic_py_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base
       PyObject *pyo_param = python_c::create_py_object(it,param_location);
 
       // - ERROR -
-      if (pyo_param == NULL)
+      if (pyo_param == nullptr)
       {
         Py_DECREF(pyo_fun);
         Py_DECREF(pyo_params);
@@ -481,7 +481,7 @@ bool bic_py_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base
   Py_DECREF(pyo_params);
 
   // - ERROR -
-  if (pyo_result == NULL)
+  if (pyo_result == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_INVOKE_METHOD_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -506,7 +506,7 @@ bool bic_py_object_member(interpreter_thread_s &it,uli *code,unsigned stack_base
   PyObject *pyo_key = PyString_FromStringAndSize(name_ref.data,name_ref.size - 1);
 
   // - ERROR -
-  if (pyo_key == NULL)
+  if (pyo_key == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_MEMBER_SELECT_ERROR,code[ioms_source_pos],(location_s *)it.blank_location);
     return false;
@@ -516,7 +516,7 @@ bool bic_py_object_member(interpreter_thread_s &it,uli *code,unsigned stack_base
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
 
   // - ERROR -
-  if (pyo_dst == NULL)
+  if (pyo_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_WRONG_OBJECT_REFERENCE,code[ioms_source_pos],(location_s *)it.blank_location);
     return false;
@@ -562,7 +562,7 @@ bool bic_py_object_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
 
   // - ERROR -
-  if (pyo_dst == NULL)
+  if (pyo_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -571,7 +571,7 @@ bool bic_py_object_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned
   PyObject *pyo_src_0 = python_c::create_py_object(it,src_0_location);
 
   // - ERROR -
-  if (pyo_src_0 == NULL)
+  if (pyo_src_0 == nullptr)
   {
     Py_DECREF(pyo_dst);
 
@@ -601,7 +601,7 @@ bool bic_py_object_method_PyObject_1(interpreter_thread_s &it,unsigned stack_bas
   PyObject *pyo_obj = python_c::create_py_object(it,src_0_location);
 
   // - ERROR -
-  if (pyo_obj == NULL)
+  if (pyo_obj == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -634,7 +634,7 @@ bool bic_py_object_method_module_1(interpreter_thread_s &it,unsigned stack_base,
   PyObject *pyo_module = PyImport_ImportModule(string_ptr->data);
 
   // - ERROR -
-  if (pyo_module == NULL)
+  if (pyo_module == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_MODULE_ERROR,operands[c_source_pos_idx],src_0_location);
     return false;
@@ -655,7 +655,7 @@ bool bic_py_object_method_tuple_1(interpreter_thread_s &it,unsigned stack_base,u
   PyObject *pyo_tuple = python_c::create_py_tuple(it,src_0_location);
 
   // - ERROR -
-  if (pyo_tuple == NULL)
+  if (pyo_tuple == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_TUPLE_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -675,7 +675,7 @@ bool bic_py_object_method_value_0(interpreter_thread_s &it,unsigned stack_base,u
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
 
   // - ERROR -
-  if (pyo_dst == NULL)
+  if (pyo_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -685,7 +685,7 @@ bool bic_py_object_method_value_0(interpreter_thread_s &it,unsigned stack_base,u
   Py_DECREF(pyo_dst);
 
   // - ERROR -
-  if (location_ptr == NULL)
+  if (location_ptr == nullptr)
   {
     // - if exception was already thrown -
     if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
@@ -710,7 +710,7 @@ bool bic_py_object_method_get_type_0(interpreter_thread_s &it,unsigned stack_bas
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
 
   // - ERROR -
-  if (pyo_dst == NULL)
+  if (pyo_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -721,7 +721,7 @@ bool bic_py_object_method_get_type_0(interpreter_thread_s &it,unsigned stack_bas
   Py_DECREF(pyo_dst);
 
   // - ERROR -
-  if (pyo_type == NULL)
+  if (pyo_type == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_TYPE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -742,7 +742,7 @@ bool bic_py_object_method_has_attr_1(interpreter_thread_s &it,unsigned stack_bas
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
 
   // - ERROR -
-  if (pyo_dst == NULL)
+  if (pyo_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -751,7 +751,7 @@ bool bic_py_object_method_has_attr_1(interpreter_thread_s &it,unsigned stack_bas
   PyObject *pyo_src_0 = python_c::create_py_object(it,src_0_location);
 
   // - ERROR -
-  if (pyo_src_0 == NULL)
+  if (pyo_src_0 == nullptr)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("has_attr#1");
@@ -780,7 +780,7 @@ bool bic_py_object_method_get_attr_1(interpreter_thread_s &it,unsigned stack_bas
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
 
   // - ERROR -
-  if (pyo_dst == NULL)
+  if (pyo_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -789,7 +789,7 @@ bool bic_py_object_method_get_attr_1(interpreter_thread_s &it,unsigned stack_bas
   PyObject *pyo_src_0 = python_c::create_py_object(it,src_0_location);
 
   // - ERROR -
-  if (pyo_src_0 == NULL)
+  if (pyo_src_0 == nullptr)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("get_attr#1");
@@ -805,7 +805,7 @@ bool bic_py_object_method_get_attr_1(interpreter_thread_s &it,unsigned stack_bas
   Py_DECREF(pyo_src_0);
 
   // - ERROR -
-  if (pyo_attr == NULL)
+  if (pyo_attr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_GET_ATTR_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -827,7 +827,7 @@ bool bic_py_object_method_set_attr_2(interpreter_thread_s &it,unsigned stack_bas
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
 
   // - ERROR -
-  if (pyo_dst == NULL)
+  if (pyo_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -837,7 +837,7 @@ bool bic_py_object_method_set_attr_2(interpreter_thread_s &it,unsigned stack_bas
   PyObject *pyo_src_1 = python_c::create_py_object(it,src_1_location);
 
   // - ERROR -
-  if (pyo_src_0 == NULL || pyo_src_1 == NULL)
+  if (pyo_src_0 == nullptr || pyo_src_1 == nullptr)
   {
     Py_XDECREF(pyo_src_0);
     Py_XDECREF(pyo_src_1);
@@ -878,7 +878,7 @@ bool bic_py_object_method_del_attr_1(interpreter_thread_s &it,unsigned stack_bas
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
 
   // - ERROR -
-  if (pyo_dst == NULL)
+  if (pyo_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -887,7 +887,7 @@ bool bic_py_object_method_del_attr_1(interpreter_thread_s &it,unsigned stack_bas
   PyObject *pyo_src_0 = python_c::create_py_object(it,src_0_location);
 
   // - ERROR -
-  if (pyo_src_0 == NULL)
+  if (pyo_src_0 == nullptr)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("del_attr#1");
@@ -924,7 +924,7 @@ bool bic_py_object_method_call_attr_2(interpreter_thread_s &it,unsigned stack_ba
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
 
   // - ERROR -
-  if (pyo_dst == NULL)
+  if (pyo_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -933,7 +933,7 @@ bool bic_py_object_method_call_attr_2(interpreter_thread_s &it,unsigned stack_ba
   PyObject *pyo_name = python_c::create_py_object(it,src_0_location);
 
   // - ERROR -
-  if (pyo_name == NULL)
+  if (pyo_name == nullptr)
   {
     Py_DECREF(pyo_dst);
 
@@ -951,7 +951,7 @@ bool bic_py_object_method_call_attr_2(interpreter_thread_s &it,unsigned stack_ba
   Py_DECREF(pyo_name);
 
   // - ERROR -
-  if (pyo_fun == NULL)
+  if (pyo_fun == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_INVOKE_METHOD_UNKNOWN_NAME,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -960,7 +960,7 @@ bool bic_py_object_method_call_attr_2(interpreter_thread_s &it,unsigned stack_ba
   PyObject *pyo_params = python_c::create_py_tuple(it,src_1_location);
 
   // - ERROR -
-  if (pyo_params == NULL)
+  if (pyo_params == nullptr)
   {
     Py_DECREF(pyo_fun);
 
@@ -976,7 +976,7 @@ bool bic_py_object_method_call_attr_2(interpreter_thread_s &it,unsigned stack_ba
   Py_DECREF(pyo_params);
 
   // - ERROR -
-  if (pyo_result == NULL)
+  if (pyo_result == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_INVOKE_METHOD_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -997,7 +997,7 @@ bool bic_py_object_method_get_item_1(interpreter_thread_s &it,unsigned stack_bas
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
 
   // - ERROR -
-  if (pyo_dst == NULL)
+  if (pyo_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1006,7 +1006,7 @@ bool bic_py_object_method_get_item_1(interpreter_thread_s &it,unsigned stack_bas
   PyObject *pyo_src_0 = python_c::create_py_object(it,src_0_location);
 
   // - ERROR -
-  if (pyo_src_0 == NULL)
+  if (pyo_src_0 == nullptr)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("get_item#1");
@@ -1022,7 +1022,7 @@ bool bic_py_object_method_get_item_1(interpreter_thread_s &it,unsigned stack_bas
   Py_DECREF(pyo_src_0);
 
   // - ERROR -
-  if (pyo_item == NULL)
+  if (pyo_item == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_GET_ITEM_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1044,7 +1044,7 @@ bool bic_py_object_method_set_item_2(interpreter_thread_s &it,unsigned stack_bas
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
 
   // - ERROR -
-  if (pyo_dst == NULL)
+  if (pyo_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1054,7 +1054,7 @@ bool bic_py_object_method_set_item_2(interpreter_thread_s &it,unsigned stack_bas
   PyObject *pyo_src_1 = python_c::create_py_object(it,src_1_location);
 
   // - ERROR -
-  if (pyo_src_0 == NULL || pyo_src_1 == NULL)
+  if (pyo_src_0 == nullptr || pyo_src_1 == nullptr)
   {
     Py_XDECREF(pyo_src_0);
     Py_XDECREF(pyo_src_1);
@@ -1095,7 +1095,7 @@ bool bic_py_object_method_del_item_1(interpreter_thread_s &it,unsigned stack_bas
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
 
   // - ERROR -
-  if (pyo_dst == NULL)
+  if (pyo_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1104,7 +1104,7 @@ bool bic_py_object_method_del_item_1(interpreter_thread_s &it,unsigned stack_bas
   PyObject *pyo_src_0 = python_c::create_py_object(it,src_0_location);
 
   // - ERROR -
-  if (pyo_src_0 == NULL)
+  if (pyo_src_0 == nullptr)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("del_item#1");
@@ -1139,7 +1139,7 @@ bool bic_py_object_method_dir_0(interpreter_thread_s &it,unsigned stack_base,uli
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
 
   // - ERROR -
-  if (pyo_dst == NULL)
+  if (pyo_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1150,7 +1150,7 @@ bool bic_py_object_method_dir_0(interpreter_thread_s &it,unsigned stack_base,uli
   Py_DECREF(pyo_dst);
 
   // - ERROR -
-  if (pyo_result == NULL)
+  if (pyo_result == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_DIR_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1170,7 +1170,7 @@ bool bic_py_object_method_length_0(interpreter_thread_s &it,unsigned stack_base,
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
 
   // - ERROR -
-  if (pyo_dst == NULL)
+  if (pyo_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1200,7 +1200,7 @@ bool bic_py_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
 
   // - ERROR -
-  if (pyo_dst == NULL)
+  if (pyo_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1211,7 +1211,7 @@ bool bic_py_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
   Py_DECREF(pyo_dst);
 
   // - ERROR -
-  if (pyo_str == NULL)
+  if (pyo_str == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_TO_STRING_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1243,7 +1243,7 @@ bool bic_py_object_method_print_0(interpreter_thread_s &it,unsigned stack_base,u
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
 
   // - ERROR -
-  if (pyo_dst == NULL)
+  if (pyo_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1268,15 +1268,15 @@ built_in_class_s py_attr_ref_class =
   bic_py_attr_ref_consts,
   bic_py_attr_ref_init,
   bic_py_attr_ref_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_py_object_invoke,
   bic_py_object_member
 };/*}}}*/
@@ -1380,14 +1380,14 @@ void bic_py_attr_ref_consts(location_array_s &const_locations)
 
 void bic_py_attr_ref_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (py_reference_s *)NULL;
+  location_ptr->v_data_ptr = (py_reference_s *)nullptr;
 }/*}}}*/
 
 void bic_py_attr_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   py_reference_s *py_aref_ptr = (py_reference_s *)location_ptr->v_data_ptr;
 
-  if (py_aref_ptr != NULL)
+  if (py_aref_ptr != nullptr)
   {
     py_aref_ptr->clear(it);
     cfree(py_aref_ptr);
@@ -1403,7 +1403,7 @@ bool bic_py_attr_ref_operator_binary_equal(interpreter_thread_s &it,unsigned sta
   PyObject *pyo_src_0 = python_c::create_py_object(it,src_0_location);
 
   // - ERROR -
-  if (pyo_src_0 == NULL)
+  if (pyo_src_0 == nullptr)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_equal#1");
@@ -1436,7 +1436,7 @@ bool bic_py_attr_ref_method_get_0(interpreter_thread_s &it,unsigned stack_base,u
   PyObject *pyo_result = ((py_reference_s *)dst_location->v_data_ptr)->get_attr();
 
   // - ERROR -
-  if (pyo_result == NULL)
+  if (pyo_result == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_GET_ATTR_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1457,7 +1457,7 @@ bool bic_py_attr_ref_method_set_1(interpreter_thread_s &it,unsigned stack_base,u
   PyObject *pyo_src_0 = python_c::create_py_object(it,src_0_location);
 
   // - ERROR -
-  if (pyo_src_0 == NULL)
+  if (pyo_src_0 == nullptr)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("set#1");
@@ -1492,15 +1492,15 @@ built_in_class_s py_item_ref_class =
   bic_py_item_ref_consts,
   bic_py_item_ref_init,
   bic_py_item_ref_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_py_object_invoke,
   bic_py_object_member
 };/*}}}*/
@@ -1604,14 +1604,14 @@ void bic_py_item_ref_consts(location_array_s &const_locations)
 
 void bic_py_item_ref_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (py_reference_s *)NULL;
+  location_ptr->v_data_ptr = (py_reference_s *)nullptr;
 }/*}}}*/
 
 void bic_py_item_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   py_reference_s *py_iref_ptr = (py_reference_s *)location_ptr->v_data_ptr;
 
-  if (py_iref_ptr != NULL)
+  if (py_iref_ptr != nullptr)
   {
     py_iref_ptr->clear(it);
     cfree(py_iref_ptr);
@@ -1627,7 +1627,7 @@ bool bic_py_item_ref_operator_binary_equal(interpreter_thread_s &it,unsigned sta
   PyObject *pyo_src_0 = python_c::create_py_object(it,src_0_location);
 
   // - ERROR -
-  if (pyo_src_0 == NULL)
+  if (pyo_src_0 == nullptr)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_equal#1");
@@ -1660,7 +1660,7 @@ bool bic_py_item_ref_method_get_0(interpreter_thread_s &it,unsigned stack_base,u
   PyObject *pyo_result = ((py_reference_s *)dst_location->v_data_ptr)->get_item();
 
   // - ERROR -
-  if (pyo_result == NULL)
+  if (pyo_result == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PY_OBJECT_GET_ITEM_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1681,7 +1681,7 @@ bool bic_py_item_ref_method_set_1(interpreter_thread_s &it,unsigned stack_base,u
   PyObject *pyo_src_0 = python_c::create_py_object(it,src_0_location);
 
   // - ERROR -
-  if (pyo_src_0 == NULL)
+  if (pyo_src_0 == nullptr)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("set#1");

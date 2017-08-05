@@ -314,17 +314,17 @@ built_in_class_s ssh2_session_class =
   bic_ssh2_session_consts,
   bic_ssh2_session_init,
   bic_ssh2_session_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ssh2_session_methods[] =
@@ -424,7 +424,7 @@ built_in_variable_s ssh2_session_variables[] =
   ssh2ch_ptr->channel = libssh2_channel_open_session(ssh2s_ptr->session);\
 \
   /* - ERROR - */\
-  if (ssh2ch_ptr->channel == NULL)\
+  if (ssh2ch_ptr->channel == nullptr)\
   {\
     ssh2ch_ptr->clear(it);\
     cfree(ssh2ch_ptr);\
@@ -469,7 +469,7 @@ void bic_ssh2_session_consts(location_array_s &const_locations)
 
 void bic_ssh2_session_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ssh2_session_s *)NULL;
+  location_ptr->v_data_ptr = (ssh2_session_s *)nullptr;
 }/*}}}*/
 
 void bic_ssh2_session_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -477,7 +477,7 @@ void bic_ssh2_session_clear(interpreter_thread_s &it,location_s *location_ptr)
   ssh2_session_s *ssh2s_ptr = (ssh2_session_s *)location_ptr->v_data_ptr;
 
   // - if session exists -
-  if (ssh2s_ptr != NULL)
+  if (ssh2s_ptr != nullptr)
   {
     ssh2s_ptr->clear(it);
     cfree(ssh2s_ptr);
@@ -527,7 +527,7 @@ bool bic_ssh2_session_method_Ssh2Session_1(interpreter_thread_s &it,unsigned sta
   ssh2s_ptr->init();
 
   // - ERROR -
-  if ((ssh2s_ptr->session = libssh2_session_init()) == NULL)
+  if ((ssh2s_ptr->session = libssh2_session_init()) == nullptr)
   {
     ssh2s_ptr->clear(it);
     cfree(ssh2s_ptr);
@@ -585,7 +585,7 @@ bool bic_ssh2_session_method_hostkey_hash_1(interpreter_thread_s &it,unsigned st
 
   // - ERROR -
   const char *hostkey_hash;
-  if ((hostkey_hash = libssh2_hostkey_hash(ssh2s_ptr->session,hostkey_type)) == NULL)
+  if ((hostkey_hash = libssh2_hostkey_hash(ssh2s_ptr->session,hostkey_type)) == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SSH2_SESSION_CANNOT_RETRIEVE_HOSTKEY_HASH,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -638,7 +638,7 @@ bool bic_ssh2_session_method_userauth_list_1(interpreter_thread_s &it,unsigned s
   char *userauth_list = libssh2_userauth_list(ssh2s_ptr->session,user_ptr->data,user_ptr->size - 1);
 
   // - ERROR -
-  if (userauth_list == NULL)
+  if (userauth_list == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SSH2_SESSION_CANNOT_RETRIEVE_USERAUTH_LIST,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -686,7 +686,7 @@ bool bic_ssh2_session_method_userauth_password_2(interpreter_thread_s &it,unsign
                  ssh2s_ptr->session,
                  user_ptr->data,user_ptr->size - 1,
                  pass_ptr->data,pass_ptr->size - 1,
-                 NULL);
+                 nullptr);
 
   // - ERROR -
   if (result != 0)
@@ -834,7 +834,7 @@ bool bic_ssh2_session_method_sftp_session_0(interpreter_thread_s &it,unsigned st
   sftps_ptr->session = libssh2_sftp_init(ssh2s_ptr->session);
 
   // - ERROR -
-  if (sftps_ptr->session == NULL)
+  if (sftps_ptr->session == nullptr)
   {
     sftps_ptr->clear(it);
     cfree(sftps_ptr);
@@ -938,17 +938,17 @@ built_in_class_s sftp_session_class =
   bic_sftp_session_consts,
   bic_sftp_session_init,
   bic_sftp_session_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s sftp_session_methods[] =
@@ -1048,7 +1048,7 @@ void bic_sftp_session_consts(location_array_s &const_locations)
 
 void bic_sftp_session_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (sftp_session_s *)NULL;
+  location_ptr->v_data_ptr = (sftp_session_s *)nullptr;
 }/*}}}*/
 
 void bic_sftp_session_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1056,7 +1056,7 @@ void bic_sftp_session_clear(interpreter_thread_s &it,location_s *location_ptr)
   sftp_session_s *sftps_ptr = (sftp_session_s *)location_ptr->v_data_ptr;
 
   // - if session exists -
-  if (sftps_ptr != NULL)
+  if (sftps_ptr != nullptr)
   {
     sftps_ptr->clear(it);
     cfree(sftps_ptr);
@@ -1185,7 +1185,7 @@ bool bic_sftp_session_method_listdir_1(interpreter_thread_s &it,unsigned stack_b
   LIBSSH2_SFTP_HANDLE *sftp_handle = libssh2_sftp_open_ex(sftps_ptr->session,path_ptr->data,path_ptr->size - 1,LIBSSH2_FXF_READ,0,LIBSSH2_SFTP_OPENDIR);
 
   // - ERROR -
-  if (sftp_handle == NULL)
+  if (sftp_handle == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SFTP_SESSION_DIR_LIST_ERROR,operands[c_source_pos_idx],src_0_location);
     return false;
@@ -1320,7 +1320,7 @@ bool bic_sftp_session_method_open_3(interpreter_thread_s &it,unsigned stack_base
   sftph_ptr->handle = libssh2_sftp_open_ex(sftps_ptr->session,file_name_ptr->data,file_name_ptr->size - 1,open_flags,open_mode,LIBSSH2_SFTP_OPENFILE);
 
   // - ERROR -
-  if (sftph_ptr->handle == NULL)
+  if (sftph_ptr->handle == nullptr)
   {
     sftph_ptr->clear(it);
     cfree(sftph_ptr);
@@ -1370,17 +1370,17 @@ built_in_class_s sftp_handle_class =
   bic_sftp_handle_consts,
   bic_sftp_handle_init,
   bic_sftp_handle_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_sftp_handle_next_item,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s sftp_handle_methods[] =
@@ -1472,7 +1472,7 @@ built_in_variable_s sftp_handle_variables[] =
     sftp_handle_s *sftph_ptr = (sftp_handle_s *)dst_location->v_data_ptr;\
     \
     /* - ERROR - */\
-    if (sftph_ptr == NULL)\
+    if (sftph_ptr == nullptr)\
     {\
       exception_s::throw_exception(it,module.error_base + c_error_SFTP_HANDLE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       return false;\
@@ -1518,7 +1518,7 @@ void bic_sftp_handle_consts(location_array_s &const_locations)
 
 void bic_sftp_handle_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (sftp_handle_s *)NULL;
+  location_ptr->v_data_ptr = (sftp_handle_s *)nullptr;
 }/*}}}*/
 
 void bic_sftp_handle_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1526,7 +1526,7 @@ void bic_sftp_handle_clear(interpreter_thread_s &it,location_s *location_ptr)
   sftp_handle_s *sftph_ptr = (sftp_handle_s *)location_ptr->v_data_ptr;
 
   // - if handle exists -
-  if (sftph_ptr != NULL)
+  if (sftph_ptr != nullptr)
   {
     sftph_ptr->clear(it);
     cfree(sftph_ptr);
@@ -1540,10 +1540,10 @@ location_s *bic_sftp_handle_next_item(interpreter_thread_s &it,location_s *locat
   sftp_handle_s *sftph_ptr = (sftp_handle_s *)location_ptr->v_data_ptr;
 
   // - ERROR -
-  if (sftph_ptr == NULL)
+  if (sftph_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SFTP_HANDLE_NOT_OPENED,source_pos,(location_s *)it.blank_location);
-    return NULL;
+    return nullptr;
   }
 
   BIC_SFTP_HANDLE_READLN();
@@ -1554,7 +1554,7 @@ location_s *bic_sftp_handle_next_item(interpreter_thread_s &it,location_s *locat
     line_buffer.clear();
 
     exception_s::throw_exception(it,module.error_base + c_error_SFTP_HANDLE_READ_ERROR,source_pos,(location_s *)it.blank_location);
-    return NULL;
+    return nullptr;
   }
 
   if (read_cnt == 0 && line_buffer.used == 0)
@@ -1564,20 +1564,18 @@ location_s *bic_sftp_handle_next_item(interpreter_thread_s &it,location_s *locat
     ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
     return ((location_s *)it.blank_location);
   }
-  else
-  {
-    line_buffer.push('\0');
 
-    // - return data string -
-    string_s *string_ptr = it.get_new_string_ptr();
-    string_ptr->data = line_buffer.data;
-    string_ptr->size = line_buffer.used;
+  line_buffer.push('\0');
 
-    // - create result location -
-    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+  // - return data string -
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->data = line_buffer.data;
+  string_ptr->size = line_buffer.used;
 
-    return new_location;
-  }
+  // - create result location -
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+
+  return new_location;
 }/*}}}*/
 
 bool bic_sftp_handle_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -1603,7 +1601,7 @@ bool bic_sftp_handle_method_close_0(interpreter_thread_s &it,unsigned stack_base
   sftp_handle_s *sftph_ptr = (sftp_handle_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (sftph_ptr == NULL)
+  if (sftph_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SFTP_HANDLE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1618,13 +1616,13 @@ bool bic_sftp_handle_method_close_0(interpreter_thread_s &it,unsigned stack_base
     return false;
   }
 
-  sftph_ptr->handle = NULL;
+  sftph_ptr->handle = nullptr;
 
   // - release sftp handle object -
   sftph_ptr->clear(it);
   cfree(sftph_ptr);
 
-  dst_location->v_data_ptr = (sftp_handle_s *)NULL;
+  dst_location->v_data_ptr = (sftp_handle_s *)nullptr;
 
   BIC_SET_RESULT_DESTINATION();
 
@@ -1652,7 +1650,7 @@ bool bic_sftp_handle_method_write_1(interpreter_thread_s &it,unsigned stack_base
   sftp_handle_s *sftph_ptr = (sftp_handle_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (sftph_ptr == NULL)
+  if (sftph_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SFTP_HANDLE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1695,7 +1693,7 @@ bool bic_sftp_handle_method_read_0(interpreter_thread_s &it,unsigned stack_base,
   sftp_handle_s *sftph_ptr = (sftp_handle_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (sftph_ptr == NULL)
+  if (sftph_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SFTP_HANDLE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1778,7 +1776,7 @@ bool bic_sftp_handle_method_read_1(interpreter_thread_s &it,unsigned stack_base,
   sftp_handle_s *sftph_ptr = (sftp_handle_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (sftph_ptr == NULL)
+  if (sftph_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SFTP_HANDLE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1866,17 +1864,17 @@ built_in_class_s ssh2_channel_class =
   bic_ssh2_channel_consts,
   bic_ssh2_channel_init,
   bic_ssh2_channel_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ssh2_channel_methods[] =
@@ -1990,7 +1988,7 @@ void bic_ssh2_channel_consts(location_array_s &const_locations)
 
 void bic_ssh2_channel_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ssh2_channel_s *)NULL;
+  location_ptr->v_data_ptr = (ssh2_channel_s *)nullptr;
 }/*}}}*/
 
 void bic_ssh2_channel_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1998,7 +1996,7 @@ void bic_ssh2_channel_clear(interpreter_thread_s &it,location_s *location_ptr)
   ssh2_channel_s *ssh2ch_ptr = (ssh2_channel_s *)location_ptr->v_data_ptr;
 
   // - if handle exists -
-  if (ssh2ch_ptr != NULL)
+  if (ssh2ch_ptr != nullptr)
   {
     ssh2ch_ptr->clear(it);
     cfree(ssh2ch_ptr);

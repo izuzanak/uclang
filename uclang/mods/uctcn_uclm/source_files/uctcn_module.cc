@@ -391,17 +391,17 @@ built_in_class_s traffic_store_class =
   bic_traffic_store_consts,
   bic_traffic_store_init,
   bic_traffic_store_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s traffic_store_methods[] =
@@ -487,14 +487,14 @@ void bic_traffic_store_consts(location_array_s &const_locations)
 
 void bic_traffic_store_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (traffic_store_s *)NULL;
+  location_ptr->v_data_ptr = (traffic_store_s *)nullptr;
 }/*}}}*/
 
 void bic_traffic_store_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   traffic_store_s *ts_ptr = (traffic_store_s *)location_ptr->v_data_ptr;
 
-  if (ts_ptr != NULL)
+  if (ts_ptr != nullptr)
   {
     ts_ptr->clear(it);
     cfree(ts_ptr);
@@ -552,7 +552,7 @@ bool bic_traffic_store_method_TrafficStore_1(interpreter_thread_s &it,unsigned s
   }
 
   // - ERROR -
-  if (lsa_init(ts_id,NULL) != LS_OK)
+  if (lsa_init(ts_id,nullptr) != LS_OK)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRAFFIC_STORE_INITIALIZATION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(ts_id);
@@ -633,7 +633,7 @@ bool bic_traffic_store_method_port_config_0(interpreter_thread_s &it,unsigned st
   traffic_store_s *ts_ptr = (traffic_store_s *)dst_location->v_data_ptr;
 
   U16 port_cnt = 0;
-  SPortConfig *port_cfg = NULL;
+  SPortConfig *port_cfg = nullptr;
 
   // - ERROR -
   if (lp_get_config(ts_ptr->ts_id,&port_cnt,&port_cfg) != LP_OK)
@@ -702,7 +702,7 @@ bool bic_traffic_store_method_get_port_1(interpreter_thread_s &it,unsigned stack
 
   // - ports configuration -
   U16 port_cnt = 0;
-  SPortConfig *port_cfg = NULL;
+  SPortConfig *port_cfg = nullptr;
 
   // - ERROR -
   if (lp_get_config(ts_ptr->ts_id,&port_cnt,&port_cfg) != LP_OK)
@@ -719,7 +719,7 @@ bool bic_traffic_store_method_get_port_1(interpreter_thread_s &it,unsigned stack
   }
 
   // - find requested port -
-  SPortConfig *port_cfg_ptr = NULL;
+  SPortConfig *port_cfg_ptr = nullptr;
   SPortConfig *pc_ptr = port_cfg;
   SPortConfig *pc_ptr_end = pc_ptr + port_cnt;
 
@@ -734,7 +734,7 @@ bool bic_traffic_store_method_get_port_1(interpreter_thread_s &it,unsigned stack
   while(++pc_ptr < pc_ptr_end);
 
   // - ERROR -
-  if (port_cfg_ptr == NULL)
+  if (port_cfg_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_TRAFFIC_STORE_CANNOT_FIND_PORT_CONFIGURATION,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -746,7 +746,7 @@ bool bic_traffic_store_method_get_port_1(interpreter_thread_s &it,unsigned stack
   ds_name.u12PortAddress = port_addr;
 
   // - ERROR -
-  if (ds_subscribe(&ds_name,NULL,NULL) != LP_OK)
+  if (ds_subscribe(&ds_name,nullptr,nullptr) != LP_OK)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRAFFIC_STORE_PORT_SUBSCRIBE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(port_addr);
@@ -807,17 +807,17 @@ built_in_class_s tcn_port_config_class =
   bic_tcn_port_config_consts,
   bic_tcn_port_config_init,
   bic_tcn_port_config_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s tcn_port_config_methods[] =
@@ -932,14 +932,14 @@ void bic_tcn_port_config_consts(location_array_s &const_locations)
 
 void bic_tcn_port_config_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (SPortConfig *)NULL;
+  location_ptr->v_data_ptr = (SPortConfig *)nullptr;
 }/*}}}*/
 
 void bic_tcn_port_config_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   SPortConfig *port_cfg_ptr = (SPortConfig *)location_ptr->v_data_ptr;
 
-  if (port_cfg_ptr != NULL)
+  if (port_cfg_ptr != nullptr)
   {
     cfree(port_cfg_ptr);
   }
@@ -1059,17 +1059,17 @@ built_in_class_s traffic_port_class =
   bic_traffic_port_consts,
   bic_traffic_port_init,
   bic_traffic_port_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s traffic_port_methods[] =
@@ -1131,14 +1131,14 @@ void bic_traffic_port_consts(location_array_s &const_locations)
 
 void bic_traffic_port_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (traffic_port_s *)NULL;
+  location_ptr->v_data_ptr = (traffic_port_s *)nullptr;
 }/*}}}*/
 
 void bic_traffic_port_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   traffic_port_s *tp_ptr = (traffic_port_s *)location_ptr->v_data_ptr;
 
-  if (tp_ptr != NULL)
+  if (tp_ptr != nullptr)
   {
     traffic_store_s *ts_ptr = (traffic_store_s *)tp_ptr->ts_ptr->v_data_ptr;
     ui_rb_tree_s &subscribed_ports = ts_ptr->subscribed_ports;
@@ -1227,7 +1227,7 @@ bool bic_traffic_port_method_create_set_1(interpreter_thread_s &it,unsigned stac
   pv_set.pu16Freshtime = &pvs_ptr->freshness;
   pv_set.sDatasetName = tp_ptr->ds_name;
   pv_set.u16CPvList = 0;
-  pv_set.asPvList = NULL;
+  pv_set.asPvList = nullptr;
 
   // - retrieve variable configuration -
   pointer_array_s *vars_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
@@ -1526,7 +1526,7 @@ bool bic_traffic_port_method_enable_0(interpreter_thread_s &it,unsigned stack_ba
   traffic_port_s *tp_ptr = (traffic_port_s *)dst_location->v_data_ptr;
 
   // - temporary set -
-  SPvSet pv_set = {NULL,tp_ptr->ds_name,0,NULL};
+  SPvSet pv_set = {nullptr,tp_ptr->ds_name,0,nullptr};
 
   // - ERROR -
   if (ap_enable_set(&pv_set) != AP_OK)
@@ -1548,7 +1548,7 @@ bool bic_traffic_port_method_disable_0(interpreter_thread_s &it,unsigned stack_b
   traffic_port_s *tp_ptr = (traffic_port_s *)dst_location->v_data_ptr;
 
   // - temporary set -
-  SPvSet pv_set = {NULL,tp_ptr->ds_name,0,NULL};
+  SPvSet pv_set = {nullptr,tp_ptr->ds_name,0,nullptr};
 
   // - ERROR -
   if (ap_disable_set(&pv_set) != AP_OK)
@@ -1592,17 +1592,17 @@ built_in_class_s proc_var_set_class =
   bic_proc_var_set_consts,
   bic_proc_var_set_init,
   bic_proc_var_set_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s proc_var_set_methods[] =
@@ -1758,14 +1758,14 @@ void bic_proc_var_set_consts(location_array_s &const_locations)
 
 void bic_proc_var_set_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (proc_var_set_s *)NULL;
+  location_ptr->v_data_ptr = (proc_var_set_s *)nullptr;
 }/*}}}*/
 
 void bic_proc_var_set_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   proc_var_set_s *pvs_ptr = (proc_var_set_s *)location_ptr->v_data_ptr;
 
-  if (pvs_ptr != NULL)
+  if (pvs_ptr != nullptr)
   {
     pvs_ptr->clear(it);
     cfree(pvs_ptr);
@@ -1813,7 +1813,7 @@ bool bic_proc_var_set_method_write_0(interpreter_thread_s &it,unsigned stack_bas
   proc_var_set_s *pvs_ptr = (proc_var_set_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (ap_proc_write_set(&pvs_ptr->pv_set,NULL,
+  if (ap_proc_write_set(&pvs_ptr->pv_set,nullptr,
       ap_get_swap_endian(pvs_ptr->pv_set.sDatasetName.u4TrafficStoreId)) != AP_OK)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PROC_VAR_SET_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -2034,17 +2034,17 @@ built_in_class_s proc_variable_class =
   bic_proc_variable_consts,
   bic_proc_variable_init,
   bic_proc_variable_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s proc_variable_methods[] =
@@ -2198,14 +2198,14 @@ void bic_proc_variable_consts(location_array_s &const_locations)
 
 void bic_proc_variable_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (proc_variable_s *)NULL;
+  location_ptr->v_data_ptr = (proc_variable_s *)nullptr;
 }/*}}}*/
 
 void bic_proc_variable_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   proc_variable_s *pv_ptr = (proc_variable_s *)location_ptr->v_data_ptr;
 
-  if (pv_ptr != NULL)
+  if (pv_ptr != nullptr)
   {
     pv_ptr->clear(it);
     cfree(pv_ptr);

@@ -34,7 +34,7 @@ float ga_s::objective_real(GAGenome& genome)
   pointer param_data = genome_location;
 
   // - call delegate method -
-  location_s *trg_location = NULL;
+  location_s *trg_location = nullptr;
   BIC_CALL_DELEGATE(it,delegate_ptr,&param_data,param_cnt,trg_location,grg_ptr->source_pos,
       grg_ptr->ret_code = c_run_return_code_EXCEPTION;
 

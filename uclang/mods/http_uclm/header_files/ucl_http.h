@@ -97,22 +97,22 @@ void completed_func(void *cls,struct MHD_Connection *connection,
 
 inline void http_server_s::init()
 {/*{{{*/
-  it_ptr = NULL;
+  it_ptr = nullptr;
   source_pos = 0;
   ret_code = c_run_return_code_OK;
 
-  daemon_ptr = NULL;
-  connection_dlg = NULL;
+  daemon_ptr = nullptr;
+  connection_dlg = nullptr;
 }/*}}}*/
 
 inline void http_server_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (daemon_ptr != NULL)
+  if (daemon_ptr != nullptr)
   {
     MHD_stop_daemon(daemon_ptr);
   }
 
-  if (connection_dlg != NULL)
+  if (connection_dlg != nullptr)
   {
     it.release_location_ptr(connection_dlg);
   }
@@ -126,25 +126,25 @@ inline void http_server_s::clear(interpreter_thread_s &it)
 
 inline void http_conn_s::init()
 {/*{{{*/
-  srv_ptr = NULL;
+  srv_ptr = nullptr;
 
   conn_type = c_conn_type_NONE;
-  connection_ptr = NULL;
-  key_value_arr_ptr = NULL;
-  user_data_ptr = NULL;
+  connection_ptr = nullptr;
+  key_value_arr_ptr = nullptr;
+  user_data_ptr = nullptr;
 
-  url = NULL;
-  method = NULL;
-  version = NULL;
-  upload_data = NULL;
-  upload_data_size = NULL;
+  url = nullptr;
+  method = nullptr;
+  version = nullptr;
+  upload_data = nullptr;
+  upload_data_size = nullptr;
 }/*}}}*/
 
 inline void http_conn_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release user data location -
-  if (user_data_ptr != NULL)
+  if (user_data_ptr != nullptr)
   {
     it.release_location_ptr(user_data_ptr);
   }

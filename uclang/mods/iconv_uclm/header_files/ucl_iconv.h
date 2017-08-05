@@ -26,14 +26,14 @@ struct iconv_s
 
 inline void iconv_s::init()
 {/*{{{*/
-  ic_ptr = NULL;
+  ic_ptr = nullptr;
 }/*}}}*/
 
 inline void iconv_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release iconv pointer -
-  if (ic_ptr != NULL)
+  if (ic_ptr != nullptr)
   {
     iconv_close(ic_ptr);
   }

@@ -113,7 +113,7 @@ texture_font_load_face( FT_Library * library,
     }
 
     /* Set transform matrix */
-    FT_Set_Transform( *face, &matrix, NULL );
+    FT_Set_Transform( *face, &matrix, nullptr );
 
     return 1;
 }
@@ -262,7 +262,7 @@ texture_font_new( texture_atlas_t * atlas,
       free(self->filename);
       free(self);
 
-      return NULL;
+      return nullptr;
     }
 
     // 64 * 64 because of 26.6 encoding AND the transform matrix used
@@ -596,7 +596,7 @@ texture_font_get_glyph( texture_font_t * self,
                                             255,255,255,255,255,255,255,255,255,255,255,255};
         if ( region.x < 0 )
         {
-            return NULL;
+            return nullptr;
         }
         texture_atlas_set_region( self->atlas, region.x, region.y, 4, 4, data, 0 );
         glyph->charcode = (wchar_t)(-1);
@@ -614,7 +614,7 @@ texture_font_get_glyph( texture_font_t * self,
     {
         return *(texture_glyph_t **) vector_back( self->glyphs );
     }
-    return NULL;
+    return nullptr;
 }
 
 

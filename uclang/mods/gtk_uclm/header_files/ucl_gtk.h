@@ -172,12 +172,12 @@ inline gtk_c::gtk_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"gtk_init()\n"););
 
-  gtk_init(0,NULL);
+  gtk_init(0,nullptr);
 
   dlg_idxs_quark = g_quark_from_string("uclang-delegate-idxs");
   bi_class_quark = g_quark_from_string("uclang-bi-class");
 
-  it_ptr = NULL;
+  it_ptr = nullptr;
   delegates.init();
 
   gtk_c::init_static();

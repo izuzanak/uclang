@@ -53,7 +53,7 @@ class mpg_c
 
 inline void mpg_handle_s::init()
 {/*{{{*/
-  handle = NULL;
+  handle = nullptr;
   type = c_mpg_handle_type_none;
   init_format();
 }/*}}}*/
@@ -70,7 +70,7 @@ inline void mpg_handle_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release handle -
-  if (handle != NULL)
+  if (handle != nullptr)
   {
     mpg123_close(handle);
     mpg123_delete(handle);

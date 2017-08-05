@@ -37,14 +37,14 @@ class ao_c
 
 inline void ao_format_s::init()
 {/*{{{*/
-  matrix_loc_ptr = NULL;
+  matrix_loc_ptr = nullptr;
 }/*}}}*/
 
 inline void ao_format_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release matrix location -
-  if (matrix_loc_ptr != NULL)
+  if (matrix_loc_ptr != nullptr)
   {
     it.release_location_ptr(matrix_loc_ptr);
   }

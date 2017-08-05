@@ -283,12 +283,12 @@ inline long long int time_stamp_to_nanosec(sTIMEDATE48 &a_time_stamp);
 
 inline void ato_aru_s::init()
 {/*{{{*/
-  records = NULL;
+  records = nullptr;
 }/*}}}*/
 
 inline void ato_aru_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (records != NULL)
+  if (records != nullptr)
   {
     cfree(records);
   }
@@ -302,14 +302,14 @@ inline void ato_aru_s::clear(interpreter_thread_s &it)
 
 inline void ato_aru_record_s::init()
 {/*{{{*/
-  ato_aru_loc = NULL;
+  ato_aru_loc = nullptr;
 }/*}}}*/
 
 inline void ato_aru_record_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release atu aro location -
-  if (ato_aru_loc != NULL)
+  if (ato_aru_loc != nullptr)
   {
     it.release_location_ptr(ato_aru_loc);
   }
@@ -323,14 +323,14 @@ inline void ato_aru_record_s::clear(interpreter_thread_s &it)
 
 inline void optim_speed_profile_s::init()
 {/*{{{*/
-  sections_loc = NULL;
+  sections_loc = nullptr;
 }/*}}}*/
 
 inline void optim_speed_profile_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release sections location -
-  if (sections_loc != NULL)
+  if (sections_loc != nullptr)
   {
     it.release_location_ptr(sections_loc);
   }
@@ -344,14 +344,14 @@ inline void optim_speed_profile_s::clear(interpreter_thread_s &it)
 
 inline void optim_line_section_s::init()
 {/*{{{*/
-  segments = NULL;
+  segments = nullptr;
 }/*}}}*/
 
 inline void optim_line_section_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release segments -
-  if (segments != NULL)
+  if (segments != nullptr)
   {
     cfree(segments);
   }
@@ -365,14 +365,14 @@ inline void optim_line_section_s::clear(interpreter_thread_s &it)
 
 inline void optim_line_segment_s::init()
 {/*{{{*/
-  ols_loc = NULL;
+  ols_loc = nullptr;
 }/*}}}*/
 
 inline void optim_line_segment_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release optim line section location -
-  if (ols_loc != NULL)
+  if (ols_loc != nullptr)
   {
     it.release_location_ptr(ols_loc);
   }
@@ -386,14 +386,14 @@ inline void optim_line_segment_s::clear(interpreter_thread_s &it)
 
 inline void ato_loco_s::init()
 {/*{{{*/
-  charts = NULL;
+  charts = nullptr;
 }/*}}}*/
 
 inline void ato_loco_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release loco charts -
-  if (charts != NULL)
+  if (charts != nullptr)
   {
     cfree(charts);
   }
@@ -420,14 +420,14 @@ inline void ato_train_s::clear(interpreter_thread_s &it)
 
 inline void ato_trip_s::init()
 {/*{{{*/
-  sec_descrs = NULL;
+  sec_descrs = nullptr;
 }/*}}}*/
 
 inline void ato_trip_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release line section descriptions -
-  if (sec_descrs != NULL)
+  if (sec_descrs != nullptr)
   {
     cfree(sec_descrs);
   }
@@ -441,14 +441,14 @@ inline void ato_trip_s::clear(interpreter_thread_s &it)
 
 inline void ato_trip_sec_s::init()
 {/*{{{*/
-  trip_loc = NULL;
+  trip_loc = nullptr;
 }/*}}}*/
 
 inline void ato_trip_sec_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release trip location -
-  if (trip_loc != NULL)
+  if (trip_loc != nullptr)
   {
     it.release_location_ptr(trip_loc);
   }
@@ -462,14 +462,14 @@ inline void ato_trip_sec_s::clear(interpreter_thread_s &it)
 
 inline void ato_line_sec_s::init()
 {/*{{{*/
-  line_points = NULL;
+  line_points = nullptr;
 }/*}}}*/
 
 inline void ato_line_sec_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release line points -
-  if (line_points != NULL)
+  if (line_points != nullptr)
   {
     cfree(line_points);
   }
@@ -483,14 +483,14 @@ inline void ato_line_sec_s::clear(interpreter_thread_s &it)
 
 inline void ato_line_sec_point_s::init()
 {/*{{{*/
-  line_sec_loc = NULL;
+  line_sec_loc = nullptr;
 }/*}}}*/
 
 inline void ato_line_sec_point_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release line section location -
-  if (line_sec_loc != NULL)
+  if (line_sec_loc != nullptr)
   {
     it.release_location_ptr(line_sec_loc);
   }

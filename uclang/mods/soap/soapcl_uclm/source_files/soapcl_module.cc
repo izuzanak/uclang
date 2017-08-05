@@ -79,17 +79,17 @@ built_in_class_s calc_client_class =
   bic_calc_client_consts,
   bic_calc_client_init,
   bic_calc_client_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s calc_client_methods[] =
@@ -147,9 +147,9 @@ built_in_variable_s calc_client_variables[] =
 
 #define BIC_GSOAP_RETRIEVE_ENDPOINT() \
 /*{{{*/\
-  const char *endpoint_ptr = NULL;\
+  const char *endpoint_ptr = nullptr;\
 \
-  if (se_ptr->endpoint_ptr != NULL)\
+  if (se_ptr->endpoint_ptr != nullptr)\
   {\
     endpoint_ptr = ((string_s *)se_ptr->endpoint_ptr->v_data_ptr)->data;\
   }\
@@ -180,14 +180,14 @@ void bic_calc_client_consts(location_array_s &const_locations)
 
 void bic_calc_client_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (soap_env_s *)NULL;
+  location_ptr->v_data_ptr = (soap_env_s *)nullptr;
 }/*}}}*/
 
 void bic_calc_client_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   soap_env_s *se_ptr = (soap_env_s *)location_ptr->v_data_ptr;
 
-  if (se_ptr != NULL)
+  if (se_ptr != nullptr)
   {
     se_ptr->clear(it);
     cfree(se_ptr);
@@ -217,7 +217,7 @@ bool bic_calc_client_method_CalcClient_0(interpreter_thread_s &it,unsigned stack
   se_ptr->init();
 
   se_ptr->soap_ptr = soap_new();
-  se_ptr->endpoint_ptr = NULL;
+  se_ptr->endpoint_ptr = nullptr;
 
   dst_location->v_data_ptr = (soap_env_s *)se_ptr;
 
@@ -262,7 +262,7 @@ bool bic_calc_client_method_endpoint_0(interpreter_thread_s &it,unsigned stack_b
 
   soap_env_s *se_ptr = (soap_env_s *)dst_location->v_data_ptr;
 
-  if (se_ptr->endpoint_ptr != NULL)
+  if (se_ptr->endpoint_ptr != nullptr)
   {
     location_s *ep_location = se_ptr->endpoint_ptr;
     ep_location->v_reference_cnt.atomic_inc();
@@ -306,7 +306,7 @@ bool bic_calc_client_method_add_2(interpreter_thread_s &it,unsigned stack_base,u
   BIC_GSOAP_RETRIEVE_ENDPOINT();
 
   // - ERROR -
-  if (soap_call_ns__add(se_ptr->soap_ptr,endpoint_ptr,NULL,param_a,param_b,&result) != SOAP_OK)
+  if (soap_call_ns__add(se_ptr->soap_ptr,endpoint_ptr,nullptr,param_a,param_b,&result) != SOAP_OK)
   {
     BIC_GSOAP_CLIENT_CALL_FAULT_EXCEPTION()
   }
@@ -348,7 +348,7 @@ bool bic_calc_client_method_sub_2(interpreter_thread_s &it,unsigned stack_base,u
   BIC_GSOAP_RETRIEVE_ENDPOINT();
 
   // - ERROR -
-  if (soap_call_ns__sub(se_ptr->soap_ptr,endpoint_ptr,NULL,param_a,param_b,&result) != SOAP_OK)
+  if (soap_call_ns__sub(se_ptr->soap_ptr,endpoint_ptr,nullptr,param_a,param_b,&result) != SOAP_OK)
   {
     BIC_GSOAP_CLIENT_CALL_FAULT_EXCEPTION()
   }
@@ -386,7 +386,7 @@ bool bic_calc_client_method_sqrt_1(interpreter_thread_s &it,unsigned stack_base,
   BIC_GSOAP_RETRIEVE_ENDPOINT();
 
   // - ERROR -
-  if (soap_call_ns__sqrt(se_ptr->soap_ptr,endpoint_ptr,NULL,param_a,&result) != SOAP_OK)
+  if (soap_call_ns__sqrt(se_ptr->soap_ptr,endpoint_ptr,nullptr,param_a,&result) != SOAP_OK)
   {
     BIC_GSOAP_CLIENT_CALL_FAULT_EXCEPTION();
   }

@@ -143,17 +143,17 @@ built_in_class_s sqlite_conn_class =
   bic_sqlite_conn_consts,
   bic_sqlite_conn_init,
   bic_sqlite_conn_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s sqlite_conn_methods[] =
@@ -272,14 +272,14 @@ void bic_sqlite_conn_consts(location_array_s &const_locations)
 
 void bic_sqlite_conn_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (sqlite3 *)NULL;
+  location_ptr->v_data_ptr = (sqlite3 *)nullptr;
 }/*}}}*/
 
 void bic_sqlite_conn_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   sqlite3 *db_ptr = (sqlite3 *)location_ptr->v_data_ptr;
 
-  if (db_ptr != NULL)
+  if (db_ptr != nullptr)
   {
     sqlite3_close(db_ptr);
   }
@@ -356,7 +356,7 @@ bool bic_sqlite_conn_method_SQLiteConn_2(interpreter_thread_s &it,unsigned stack
   sqlite3 *db_ptr;
 
   // - ERROR -
-  if (sqlite3_open_v2(string_ptr->data,&db_ptr,flags,NULL) != SQLITE_OK)
+  if (sqlite3_open_v2(string_ptr->data,&db_ptr,flags,nullptr) != SQLITE_OK)
   {
     sqlite3_close(db_ptr);
 
@@ -402,7 +402,7 @@ bool bic_sqlite_conn_method_execute_1(interpreter_thread_s &it,unsigned stack_ba
   sqlite3_stmt *statement_ptr;
 
   // - ERROR -
-  if (sqlite3_prepare_v2(db_ptr,query_ptr->data,query_ptr->size - 1,&statement_ptr,NULL) != SQLITE_OK)
+  if (sqlite3_prepare_v2(db_ptr,query_ptr->data,query_ptr->size - 1,&statement_ptr,nullptr) != SQLITE_OK)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SQLITE_CONN_EXECUTE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -522,7 +522,7 @@ bool bic_sqlite_conn_method_prepare_1(interpreter_thread_s &it,unsigned stack_ba
   sqlite3_stmt *statement_ptr;
 
   // - ERROR -
-  if (sqlite3_prepare_v2(db_ptr,query_ptr->data,query_ptr->size - 1,&statement_ptr,NULL) != SQLITE_OK)
+  if (sqlite3_prepare_v2(db_ptr,query_ptr->data,query_ptr->size - 1,&statement_ptr,nullptr) != SQLITE_OK)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SQLITE_CONN_PREPARE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -589,17 +589,17 @@ built_in_class_s sqlite_statement_class =
   bic_sqlite_statement_consts,
   bic_sqlite_statement_init,
   bic_sqlite_statement_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s sqlite_statement_methods[] =
@@ -801,14 +801,14 @@ void bic_sqlite_statement_consts(location_array_s &const_locations)
 
 void bic_sqlite_statement_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (sqlite_stmt_s *)NULL;
+  location_ptr->v_data_ptr = (sqlite_stmt_s *)nullptr;
 }/*}}}*/
 
 void bic_sqlite_statement_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   sqlite_stmt_s *stmt_ptr = (sqlite_stmt_s *)location_ptr->v_data_ptr;
 
-  if (stmt_ptr != NULL)
+  if (stmt_ptr != nullptr)
   {
     stmt_ptr->clear(it);
     cfree(stmt_ptr);

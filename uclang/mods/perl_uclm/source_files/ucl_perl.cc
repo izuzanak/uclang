@@ -19,7 +19,7 @@ SV *perl_c::create_perl_sv(interpreter_thread_s &it,PerlInterpreter *my_perl,loc
     // - ERROR -
     if (((perl_interpreter_s *)pv_ptr->pi_loc->v_data_ptr)->interpreter != my_perl)
     {
-      return NULL;
+      return nullptr;
     }
 
     // - dereference perl reference values -
@@ -35,7 +35,7 @@ SV *perl_c::create_perl_sv(interpreter_thread_s &it,PerlInterpreter *my_perl,loc
     // - ERROR -
     if (((perl_interpreter_s *)pr_ptr->pi_loc->v_data_ptr)->interpreter != my_perl)
     {
-      return NULL;
+      return nullptr;
     }
 
     // - retrieve reference value -
@@ -67,33 +67,33 @@ SV *perl_c::create_perl_sv(interpreter_thread_s &it,PerlInterpreter *my_perl,loc
         SV *sv_key = create_perl_sv(it,my_perl,key_location);
 
         // - ERROR -
-        if (sv_key == NULL)
+        if (sv_key == nullptr)
         {
           SvREFCNT_dec(hv);
 
-          return NULL;
+          return nullptr;
         }
 
         location_s *value_location = it.get_location_value(node.object.value);
         SV *sv_value = create_perl_sv(it,my_perl,value_location);
 
         // - ERROR -
-        if (sv_value == NULL)
+        if (sv_value == nullptr)
         {
           SvREFCNT_dec(sv_key);
           SvREFCNT_dec(hv);
 
-          return NULL;
+          return nullptr;
         }
 
         // - ERROR -
-        if (hv_store_ent(hv,sv_key,sv_value,0) == NULL)
+        if (hv_store_ent(hv,sv_key,sv_value,0) == nullptr)
         {
           SvREFCNT_dec(sv_key);
           SvREFCNT_dec(sv_value);
           SvREFCNT_dec(hv);
 
-          return NULL;
+          return nullptr;
         }
 
         SvREFCNT_dec(sv_key);
@@ -143,11 +143,11 @@ SV *perl_c::create_perl_sv(interpreter_thread_s &it,PerlInterpreter *my_perl,loc
             SV *sv_item = create_perl_sv(it,my_perl,it.get_location_value(*a_ptr));
 
             // - ERROR -
-            if (sv_item == NULL)
+            if (sv_item == nullptr)
             {
               SvREFCNT_dec(av);
 
-              return NULL;
+              return nullptr;
             }
 
             // - push item to perl array -
@@ -161,11 +161,11 @@ SV *perl_c::create_perl_sv(interpreter_thread_s &it,PerlInterpreter *my_perl,loc
 
     // - ERROR -
     default:
-      return NULL;
+      return nullptr;
     }
   }
 
-  return NULL;
+  return nullptr;
 }/*}}}*/
 
 location_s *perl_c::perl_sv_value(interpreter_thread_s &it,PerlInterpreter *my_perl,SV *sv,uli source_pos)
@@ -249,7 +249,7 @@ location_s *perl_c::perl_sv_value(interpreter_thread_s &it,PerlInterpreter *my_p
           SV **sv_ptr = av_fetch(av,idx,0);
 
           // - undefined array element interpreted as blank -
-          if (sv_ptr == NULL)
+          if (sv_ptr == nullptr)
           {
             ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
             item_location = (location_s *)it.blank_location;
@@ -260,10 +260,10 @@ location_s *perl_c::perl_sv_value(interpreter_thread_s &it,PerlInterpreter *my_p
           }
 
           // - ERROR -
-          if (item_location == NULL)
+          if (item_location == nullptr)
           {
             it.release_location_ptr(arr_location);
-            return NULL;
+            return nullptr;
           }
 
           // - insert item to array -
@@ -294,20 +294,20 @@ location_s *perl_c::perl_sv_value(interpreter_thread_s &it,PerlInterpreter *my_p
           SV *sv_value = hv_iternextsv(hv,&key,&keylen);
 
           // - ERROR -
-          if (sv_value == NULL)
+          if (sv_value == nullptr)
           {
             it.release_location_ptr(dict_location);
-            return NULL;
+            return nullptr;
           }
 
           location_s *value_location = perl_sv_value(it,my_perl,sv_value,source_pos);
 
           // - ERROR -
-          if (value_location == NULL)
+          if (value_location == nullptr)
           {
             it.release_location_ptr(dict_location);
 
-            return NULL;
+            return nullptr;
           }
 
           string_s *string_ptr = it.get_new_string_ptr();
@@ -315,7 +315,7 @@ location_s *perl_c::perl_sv_value(interpreter_thread_s &it,PerlInterpreter *my_p
 
           BIC_CREATE_NEW_LOCATION(key_location,c_bi_class_string,string_ptr);
 
-          pointer_map_s insert_map = {key_location,NULL};
+          pointer_map_s insert_map = {key_location,nullptr};
           unsigned index = tree_ptr->unique_insert(insert_map);
 
           if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
@@ -324,18 +324,18 @@ location_s *perl_c::perl_sv_value(interpreter_thread_s &it,PerlInterpreter *my_p
             it.release_location_ptr(value_location);
             it.release_location_ptr(dict_location);
 
-            return NULL;
+            return nullptr;
           }
 
           pointer_map_s &map = tree_ptr->data[index].object;
 
-          if (map.value != NULL)
+          if (map.value != nullptr)
           {
             it.release_location_ptr(key_location);
             it.release_location_ptr(value_location);
             it.release_location_ptr(dict_location);
 
-            return NULL;
+            return nullptr;
           }
 
           map.value = (pointer)value_location;
@@ -354,7 +354,7 @@ location_s *perl_c::perl_sv_value(interpreter_thread_s &it,PerlInterpreter *my_p
     case SVt_PVFM:
     case SVt_PVIO:
     default:
-      return NULL;
+      return nullptr;
   }
 }/*}}}*/
 

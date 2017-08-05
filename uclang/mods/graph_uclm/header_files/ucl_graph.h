@@ -381,7 +381,10 @@ inline int edge_idxs_s::compare_edges(edge_s &a_f_edge,edge_s &a_s_edge)
 
   // - test edge evaluations -
   unsigned cmp_res = edges.ef_compare(a_f_edge.value,a_s_edge.value);
-  if (cmp_res != 0) return cmp_res;
+  if (cmp_res != 0)
+  {
+    return cmp_res;
+  }
 
   unsigned f_tv_idx;
   unsigned s_tv_idx;
@@ -414,7 +417,10 @@ inline int edge_idxs_s::compare_edges(edge_s &a_f_edge,edge_s &a_s_edge)
   }
 
   cmp_res = vertices.vf_compare(vertices[f_tv_idx].value,vertices[s_tv_idx].value);
-  if (cmp_res != 0) return cmp_res;
+  if (cmp_res != 0)
+  {
+    return cmp_res;
+  }
 
   if (((graph_s *)graph_ptr)->type == c_graph_type_digraph && f_orientation != s_orientation)
   {
@@ -696,13 +702,13 @@ inline void value_idx_rb_tree_s::ucl_prepare(interpreter_thread_s &a_it,unsigned
 
 inline void graph_vertex_s::init()
 {/*{{{*/
-  graph_ptr = NULL;
+  graph_ptr = nullptr;
   vertex_idx = c_idx_not_exist;
 }/*}}}*/
 
 inline void graph_vertex_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (graph_ptr != NULL)
+  if (graph_ptr != nullptr)
   {
     it.release_location_ptr(graph_ptr);
   }
@@ -716,13 +722,13 @@ inline void graph_vertex_s::clear(interpreter_thread_s &it)
 
 inline void graph_edge_s::init()
 {/*{{{*/
-  graph_ptr = NULL;
+  graph_ptr = nullptr;
   edge_idx = c_idx_not_exist;
 }/*}}}*/
 
 inline void graph_edge_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (graph_ptr != NULL)
+  if (graph_ptr != nullptr)
   {
     it.release_location_ptr(graph_ptr);
   }
@@ -736,14 +742,14 @@ inline void graph_edge_s::clear(interpreter_thread_s &it)
 
 inline void subgraph_s::init()
 {/*{{{*/
-  graph_ptr = NULL;
+  graph_ptr = nullptr;
   vertex_idxs.init();
   edge_idxs.init();
 }/*}}}*/
 
 inline void subgraph_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (graph_ptr != NULL)
+  if (graph_ptr != nullptr)
   {
     it.release_location_ptr(graph_ptr);
   }
@@ -760,20 +766,20 @@ inline void subgraph_s::clear(interpreter_thread_s &it)
 
 inline void graph_paths_s::init()
 {/*{{{*/
-  graph_ptr = NULL;
-  lengths_arr = NULL;
+  graph_ptr = nullptr;
+  lengths_arr = nullptr;
   src_vertex_idx = c_idx_not_exist;
   edge_idxs.init();
 }/*}}}*/
 
 inline void graph_paths_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (graph_ptr != NULL)
+  if (graph_ptr != nullptr)
   {
     it.release_location_ptr(graph_ptr);
   }
 
-  if (lengths_arr != NULL)
+  if (lengths_arr != nullptr)
   {
     it.release_location_ptr(lengths_arr);
   }

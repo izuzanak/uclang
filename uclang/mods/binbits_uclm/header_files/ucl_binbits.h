@@ -116,14 +116,14 @@ safe_rb_tree<lli_bd_map_s> lli_bd_map_tree_s;
 
 inline void bin_array_s::init()
 {/*{{{*/
-  cont = NULL;
+  cont = nullptr;
   free_references.init();
 }/*}}}*/
 
 inline void bin_array_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
-  if (cont != NULL)
+  if (cont != nullptr)
   {
     switch (type)
     {
@@ -199,14 +199,14 @@ inline void bin_array_s::release_reference(interpreter_thread_s &it,bin_array_re
 
 inline void bin_dict_s::init()
 {/*{{{*/
-  cont = NULL;
+  cont = nullptr;
   free_references.init();
 }/*}}}*/
 
 inline void bin_dict_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
-  if (cont != NULL)
+  if (cont != nullptr)
   {
     switch (type)
     {

@@ -69,12 +69,12 @@ struct can_object_s
 
 inline void can_obj_dict_s::init()
 {/*{{{*/
-  dict_ptr = NULL;
+  dict_ptr = nullptr;
 }/*}}}*/
 
 inline void can_obj_dict_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (dict_ptr != NULL)
+  if (dict_ptr != nullptr)
   {
     if (eds_builder)
     {
@@ -95,12 +95,12 @@ inline void can_obj_dict_s::clear(interpreter_thread_s &it)
 
 inline void can_object_s::init()
 {/*{{{*/
-  dict_loc = NULL;
+  dict_loc = nullptr;
 }/*}}}*/
 
 inline void can_object_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (dict_loc != NULL)
+  if (dict_loc != nullptr)
   {
     it.release_location_ptr(dict_loc);
   }

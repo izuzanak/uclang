@@ -508,11 +508,8 @@ inline bool var_type_s::are_comparable(var_type_s &a_second)
     return a_second.pointer_level == 0;
   }
 
-  // - if target is pointer -
-  else
-  {
-    return pointer_level == a_second.pointer_level && type_id == a_second.type_id;
-  }
+  // - target is pointer -
+  return pointer_level == a_second.pointer_level && type_id == a_second.type_id;
 }/*}}}*/
 
 inline bool var_type_s::are_assignable(var_type_s &a_src)

@@ -508,12 +508,14 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_array_s &s
           line_buffer.used = old_used + read_cnt;
 
           if (read_cnt == 0)
+          {
             break;
+          }
         }
 
         // - collect child statuses -
         int status;
-        while (waitpid(-1,&status,WNOHANG) > 0);
+        while (waitpid(-1,&status,WNOHANG) > 0) {};
       }
       while(g_spawner_running.value());
 

@@ -62,7 +62,7 @@ class CGXDLMSBase : public CGXDLMSServerBase,IGXMediaListener,IGXNetListener
   // - called when media component receives data -
   void OnReceived(IGXMedia* pSender,CReceiveEventArgs& e)
   {/*{{{*/
-    unsigned char* pReply = NULL;
+    unsigned char* pReply = nullptr;
     int size = 0;
 
     HandleRequest(e.getData(),pReply,size);
@@ -109,12 +109,12 @@ struct dlms_object_s
 
 inline void dlms_object_s::init()
 {/*{{{*/
-  dlmss_ptr = NULL;
+  dlmss_ptr = nullptr;
 }/*}}}*/
 
 inline void dlms_object_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (dlmss_ptr != NULL)
+  if (dlmss_ptr != nullptr)
   {
     it.release_location_ptr(dlmss_ptr);
   }

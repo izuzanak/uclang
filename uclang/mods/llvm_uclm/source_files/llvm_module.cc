@@ -101,17 +101,17 @@ built_in_class_s llvm_context_class =
   bic_llvm_context_consts,
   bic_llvm_context_init,
   bic_llvm_context_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s llvm_context_methods[] =
@@ -190,7 +190,7 @@ void bic_llvm_context_consts(location_array_s &const_locations)
 
 void bic_llvm_context_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (llvm_context_s *)NULL;
+  location_ptr->v_data_ptr = (llvm_context_s *)nullptr;
 }/*}}}*/
 
 void bic_llvm_context_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -198,7 +198,7 @@ void bic_llvm_context_clear(interpreter_thread_s &it,location_s *location_ptr)
   llvm_context_s *llvmc_ptr = (llvm_context_s *)location_ptr->v_data_ptr;
 
   // - if llvm context object exists -
-  if (llvmc_ptr != NULL)
+  if (llvmc_ptr != nullptr)
   {
     llvmc_ptr->clear(it);
     cfree(llvmc_ptr);
@@ -290,17 +290,17 @@ built_in_class_s llvm_module_class =
   bic_llvm_module_consts,
   bic_llvm_module_init,
   bic_llvm_module_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s llvm_module_methods[] =
@@ -337,7 +337,7 @@ void bic_llvm_module_consts(location_array_s &const_locations)
 
 void bic_llvm_module_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (llvm_module_s *)NULL;
+  location_ptr->v_data_ptr = (llvm_module_s *)nullptr;
 }/*}}}*/
 
 void bic_llvm_module_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -345,7 +345,7 @@ void bic_llvm_module_clear(interpreter_thread_s &it,location_s *location_ptr)
   llvm_module_s *module_ptr = (llvm_module_s *)location_ptr->v_data_ptr;
 
   // - if llvm module object exists -
-  if (module_ptr != NULL)
+  if (module_ptr != nullptr)
   {
     module_ptr->clear(it);
     cfree(module_ptr);

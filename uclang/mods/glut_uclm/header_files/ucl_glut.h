@@ -68,23 +68,23 @@ class glut_c
 
 inline void glut_s::init()
 {/*{{{*/
-  display_dlg = NULL;
-  reshape_dlg = NULL;
-  keyboard_dlg = NULL;
-  mouse_dlg = NULL;
-  motion_dlg = NULL;
-  passive_motion_dlg = NULL;
-  visibility_dlg = NULL;
-  entry_dlg = NULL;
-  special_dlg = NULL;
-  idle_dlg = NULL;
-  timer_dlg = NULL;
+  display_dlg = nullptr;
+  reshape_dlg = nullptr;
+  keyboard_dlg = nullptr;
+  mouse_dlg = nullptr;
+  motion_dlg = nullptr;
+  passive_motion_dlg = nullptr;
+  visibility_dlg = nullptr;
+  entry_dlg = nullptr;
+  special_dlg = nullptr;
+  idle_dlg = nullptr;
+  timer_dlg = nullptr;
 }/*}}}*/
 
 inline void glut_s::init_static()
 {/*{{{*/
-  glut_s::glut_ptr = NULL;
-  glut_s::it_ptr = NULL;
+  glut_s::glut_ptr = nullptr;
+  glut_s::it_ptr = nullptr;
   glut_s::window = 0;
   glut_s::main_loop = false;
   glut_s::main_source_pos = 0;
@@ -96,7 +96,7 @@ inline void glut_s::clear(interpreter_thread_s &it)
 
 #define GLUT_STATE_RELEASE_DELEGATE(NAME) \
 {/*{{{*/\
-  if (NAME != NULL)\
+  if (NAME != nullptr)\
   {\
     it.release_location_ptr(NAME);\
   }\

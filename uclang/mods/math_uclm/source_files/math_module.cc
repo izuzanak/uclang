@@ -373,17 +373,17 @@ built_in_class_s math_class =
   bic_math_consts,
   bic_math_init,
   bic_math_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s math_methods[] =
@@ -476,17 +476,17 @@ built_in_class_s vec2_class =
   bic_vec2_consts,
   bic_vec2_init,
   bic_vec2_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_vec2_pack,
   bic_vec2_unpack,
-  NULL,
-  NULL
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s vec2_methods[] =
@@ -816,17 +816,17 @@ built_in_class_s vec3_class =
   bic_vec3_consts,
   bic_vec3_init,
   bic_vec3_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_vec3_pack,
   bic_vec3_unpack,
-  NULL,
-  NULL
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s vec3_methods[] =
@@ -1203,17 +1203,17 @@ built_in_class_s vec4_class =
   bic_vec4_consts,
   bic_vec4_init,
   bic_vec4_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_vec4_pack,
   bic_vec4_unpack,
-  NULL,
-  NULL
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s vec4_methods[] =
@@ -1569,17 +1569,17 @@ built_in_class_s mat4_class =
   bic_mat4_consts,
   bic_mat4_init,
   bic_mat4_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s mat4_methods[] =
@@ -2340,17 +2340,17 @@ built_in_class_s primes_class =
   bic_primes_consts,
   bic_primes_init,
   bic_primes_clear,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
   bic_primes_item,
   bic_primes_first_idx,
   bic_primes_next_idx,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s primes_methods[] =

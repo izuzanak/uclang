@@ -144,17 +144,17 @@ built_in_class_s pas_class =
   bic_pas_consts,
   bic_pas_init,
   bic_pas_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s pas_methods[] =
@@ -318,7 +318,7 @@ void bic_pas_consts(location_array_s &const_locations)
 
 void bic_pas_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (pointer)NULL;
+  location_ptr->v_data_ptr = (pointer)nullptr;
 }/*}}}*/
 
 void bic_pas_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1124,7 +1124,7 @@ bool bic_pas_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
   // - retrieve pas version -
-  const char *version = pas_version(NULL);
+  const char *version = pas_version(nullptr);
 
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->set(strlen(version),version);
@@ -1189,17 +1189,17 @@ built_in_class_s pas_device_class =
   bic_pas_device_consts,
   bic_pas_device_init,
   bic_pas_device_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s pas_device_methods[] =
@@ -1347,7 +1347,7 @@ void bic_pas_device_consts(location_array_s &const_locations)
 
 void bic_pas_device_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (pas_device_s *)NULL;
+  location_ptr->v_data_ptr = (pas_device_s *)nullptr;
 }/*}}}*/
 
 void bic_pas_device_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1355,7 +1355,7 @@ void bic_pas_device_clear(interpreter_thread_s &it,location_s *location_ptr)
   pas_device_s *pd_ptr = (pas_device_s *)location_ptr->v_data_ptr;
 
   // - if pas device exists -
-  if (pd_ptr != NULL)
+  if (pd_ptr != nullptr)
   {
     pd_ptr->clear(it);
     cfree(pd_ptr);

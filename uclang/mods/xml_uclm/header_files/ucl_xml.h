@@ -105,18 +105,18 @@ void xml_fatal_error(void *user,const char *msg,...);
 
 inline void xml_node_s::init()
 {/*{{{*/
-  name = NULL;
-  attributes = NULL;
-  nodes = NULL;
-  texts = NULL;
-  conts = NULL;
+  name = nullptr;
+  attributes = nullptr;
+  nodes = nullptr;
+  texts = nullptr;
+  conts = nullptr;
 }/*}}}*/
 
 inline void xml_node_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 #define RELEASE_XML_NODE_MEMBER(MEMBER) \
 {/*{{{*/\
-  if (MEMBER != NULL)\
+  if (MEMBER != nullptr)\
   {\
     it.release_location_ptr(MEMBER);\
   }\

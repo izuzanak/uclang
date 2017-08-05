@@ -223,17 +223,17 @@ built_in_class_s port_audio_class =
   bic_port_audio_consts,
   bic_port_audio_init,
   bic_port_audio_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s port_audio_methods[] =
@@ -529,17 +529,17 @@ built_in_class_s pa_host_api_class =
   bic_pa_host_api_consts,
   bic_pa_host_api_init,
   bic_pa_host_api_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s pa_host_api_methods[] =
@@ -601,7 +601,7 @@ void bic_pa_host_api_consts(location_array_s &const_locations)
 
 void bic_pa_host_api_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (PaHostApiInfo *)NULL;
+  location_ptr->v_data_ptr = (PaHostApiInfo *)nullptr;
 }/*}}}*/
 
 void bic_pa_host_api_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -690,7 +690,7 @@ bool bic_pa_host_api_method_input_device_0(interpreter_thread_s &it,unsigned sta
 
   const PaDeviceInfo *di_ptr = Pa_GetDeviceInfo(index);
 
-  if (di_ptr != NULL)
+  if (di_ptr != nullptr)
   {
     // - create pa device object -
     pa_device_s *pad_ptr = (pa_device_s *)cmalloc(sizeof(pa_device_s));
@@ -726,7 +726,7 @@ bool bic_pa_host_api_method_output_device_0(interpreter_thread_s &it,unsigned st
 
   const PaDeviceInfo *di_ptr = Pa_GetDeviceInfo(index);
 
-  if (di_ptr != NULL)
+  if (di_ptr != nullptr)
   {
     // - create pa device object -
     pa_device_s *pad_ptr = (pa_device_s *)cmalloc(sizeof(pa_device_s));
@@ -776,17 +776,17 @@ built_in_class_s pa_device_class =
   bic_pa_device_consts,
   bic_pa_device_init,
   bic_pa_device_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s pa_device_methods[] =
@@ -899,14 +899,14 @@ void bic_pa_device_consts(location_array_s &const_locations)
 
 void bic_pa_device_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (pa_device_s *)NULL;
+  location_ptr->v_data_ptr = (pa_device_s *)nullptr;
 }/*}}}*/
 
 void bic_pa_device_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   pa_device_s *pad_ptr = (pa_device_s *)location_ptr->v_data_ptr;
 
-  if (pad_ptr != NULL)
+  if (pad_ptr != nullptr)
   {
     pad_ptr->clear(it);
     cfree(pad_ptr);
@@ -1039,17 +1039,17 @@ built_in_class_s pa_parameters_class =
   bic_pa_parameters_consts,
   bic_pa_parameters_init,
   bic_pa_parameters_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s pa_parameters_methods[] =
@@ -1086,14 +1086,14 @@ void bic_pa_parameters_consts(location_array_s &const_locations)
 
 void bic_pa_parameters_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (PaStreamParameters *)NULL;
+  location_ptr->v_data_ptr = (PaStreamParameters *)nullptr;
 }/*}}}*/
 
 void bic_pa_parameters_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   PaStreamParameters *sp_ptr = (PaStreamParameters *)location_ptr->v_data_ptr;
 
-  if (sp_ptr != NULL)
+  if (sp_ptr != nullptr)
   {
     cfree(sp_ptr);
   }
@@ -1150,7 +1150,7 @@ bool bic_pa_parameters_method_PaParameters_4(interpreter_thread_s &it,unsigned s
   sp_ptr->channelCount = channel_cnt;
   sp_ptr->sampleFormat = sample_format;
   sp_ptr->suggestedLatency = latency;
-  sp_ptr->hostApiSpecificStreamInfo = NULL;
+  sp_ptr->hostApiSpecificStreamInfo = nullptr;
 
   dst_location->v_data_ptr = (PaStreamParameters *)sp_ptr;
 
@@ -1187,17 +1187,17 @@ built_in_class_s pa_stream_class =
   bic_pa_stream_consts,
   bic_pa_stream_init,
   bic_pa_stream_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s pa_stream_methods[] =
@@ -1264,14 +1264,14 @@ void bic_pa_stream_consts(location_array_s &const_locations)
 
 void bic_pa_stream_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (pa_stream_s *)NULL;
+  location_ptr->v_data_ptr = (pa_stream_s *)nullptr;
 }/*}}}*/
 
 void bic_pa_stream_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   pa_stream_s *pas_ptr = (pa_stream_s *)location_ptr->v_data_ptr;
 
-  if (pas_ptr != NULL)
+  if (pas_ptr != nullptr)
   {
     pas_ptr->clear(it);
     cfree(pas_ptr);
@@ -1319,8 +1319,8 @@ bool bic_pa_stream_method_PaStream_4(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  const PaStreamParameters *input = NULL;
-  const PaStreamParameters *output = NULL;
+  const PaStreamParameters *input = nullptr;
+  const PaStreamParameters *output = nullptr;
 
   // - retrieve input parameters -
   if (src_0_location->v_type == c_bi_class_pa_parameters)
@@ -1335,16 +1335,16 @@ bool bic_pa_stream_method_PaStream_4(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - ERROR -
-  if (input == NULL && output == NULL)
+  if (input == nullptr && output == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PA_STREAM_MISSING_INPUT_OR_OUTPUT_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
-  PaStream *stream_ptr = NULL;
+  PaStream *stream_ptr = nullptr;
 
   // - ERROR -
-  if (paNoError != Pa_OpenStream(&stream_ptr,input,output,sample_rate,buffer_frames,paClipOff,NULL,NULL))
+  if (paNoError != Pa_OpenStream(&stream_ptr,input,output,sample_rate,buffer_frames,paClipOff,nullptr,nullptr))
   {
     exception_s::throw_exception(it,module.error_base + c_error_PA_STREAM_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1357,14 +1357,14 @@ bool bic_pa_stream_method_PaStream_4(interpreter_thread_s &it,unsigned stack_bas
   pas_ptr->stream_ptr = stream_ptr;
   pas_ptr->info_ptr = Pa_GetStreamInfo(stream_ptr);
 
-  if (input != NULL)
+  if (input != nullptr)
   {
     // - set reference to input parameters -
     src_0_location->v_reference_cnt.atomic_inc();
     pas_ptr->input_ptr = src_0_location;
   }
 
-  if (output != NULL)
+  if (output != nullptr)
   {
     // - set reference to output parameters -
     src_1_location->v_reference_cnt.atomic_inc();
@@ -1422,7 +1422,7 @@ bool bic_pa_stream_method_read_available_0(interpreter_thread_s &it,unsigned sta
   pa_stream_s *pas_ptr = (pa_stream_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (pas_ptr->input_ptr == NULL)
+  if (pas_ptr->input_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PA_STREAM_OUTPUT_ONLY_STREAM,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1450,7 +1450,7 @@ bool bic_pa_stream_method_write_available_0(interpreter_thread_s &it,unsigned st
   pa_stream_s *pas_ptr = (pa_stream_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (pas_ptr->output_ptr == NULL)
+  if (pas_ptr->output_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PA_STREAM_INPUT_ONLY_STREAM,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1499,7 +1499,7 @@ bool bic_pa_stream_method_read_1(interpreter_thread_s &it,unsigned stack_base,ul
   pa_stream_s *pas_ptr = (pa_stream_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (pas_ptr->input_ptr == NULL)
+  if (pas_ptr->input_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PA_STREAM_OUTPUT_ONLY_STREAM,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1546,7 +1546,7 @@ bool bic_pa_stream_method_write_1(interpreter_thread_s &it,unsigned stack_base,u
   pa_stream_s *pas_ptr = (pa_stream_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (pas_ptr->output_ptr == NULL)
+  if (pas_ptr->output_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PA_STREAM_INPUT_ONLY_STREAM,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;

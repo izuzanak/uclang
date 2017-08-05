@@ -146,17 +146,17 @@ built_in_class_s ga_real_genome_class =
   bic_ga_real_genome_consts,
   bic_ga_real_genome_init,
   bic_ga_real_genome_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ga_real_genome_methods[] =
@@ -266,14 +266,14 @@ void bic_ga_real_genome_consts(location_array_s &const_locations)
 
 void bic_ga_real_genome_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ga_real_genome_s *)NULL;
+  location_ptr->v_data_ptr = (ga_real_genome_s *)nullptr;
 }/*}}}*/
 
 void bic_ga_real_genome_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   ga_real_genome_s *grg_ptr = (ga_real_genome_s *)location_ptr->v_data_ptr;
 
-  if (grg_ptr != NULL)
+  if (grg_ptr != nullptr)
   {
     grg_ptr->clear(it);
     cfree(grg_ptr);
@@ -609,17 +609,17 @@ built_in_class_s ga_tmp_real_genome_class =
   bic_ga_tmp_real_genome_consts,
   bic_ga_tmp_real_genome_init,
   bic_ga_tmp_real_genome_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ga_tmp_real_genome_methods[] =
@@ -666,7 +666,7 @@ void bic_ga_tmp_real_genome_consts(location_array_s &const_locations)
 
 void bic_ga_tmp_real_genome_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (GARealGenome *)NULL;
+  location_ptr->v_data_ptr = (GARealGenome *)nullptr;
 }/*}}}*/
 
 void bic_ga_tmp_real_genome_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -754,17 +754,17 @@ built_in_class_s ga_steady_state_class =
   bic_ga_steady_state_consts,
   bic_ga_steady_state_init,
   bic_ga_steady_state_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ga_steady_state_methods[] =
@@ -811,14 +811,14 @@ void bic_ga_steady_state_consts(location_array_s &const_locations)
 
 void bic_ga_steady_state_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ga_steady_state_s *)NULL;
+  location_ptr->v_data_ptr = (ga_steady_state_s *)nullptr;
 }/*}}}*/
 
 void bic_ga_steady_state_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   ga_steady_state_s *gss_ptr = (ga_steady_state_s *)location_ptr->v_data_ptr;
 
-  if (gss_ptr != NULL)
+  if (gss_ptr != nullptr)
   {
     gss_ptr->clear(it);
     cfree(gss_ptr);

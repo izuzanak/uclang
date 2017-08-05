@@ -32,19 +32,19 @@ struct sqlite_stmt_s
 
 inline void sqlite_stmt_s::init()
 {/*{{{*/
-  stmt_ptr = NULL;
-  db_ptr = NULL;
+  stmt_ptr = nullptr;
+  db_ptr = nullptr;
   done = false;
 }/*}}}*/
 
 inline void sqlite_stmt_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (stmt_ptr != NULL)
+  if (stmt_ptr != nullptr)
   {
     sqlite3_finalize(stmt_ptr);
   }
 
-  if (db_ptr != NULL)
+  if (db_ptr != nullptr)
   {
     it.release_location_ptr(db_ptr);
   }

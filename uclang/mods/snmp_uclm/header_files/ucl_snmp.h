@@ -127,8 +127,8 @@ inline int snmp_object_rb_tree_s::__compare_value(snmp_object_s &a_first,snmp_ob
   string_s &f_name = a_first.name;
   string_s &s_name = a_second.name;
 
-  if (f_name.size < s_name.size) return -1;
-  if (f_name.size > s_name.size) return 1;
+  if (f_name.size < s_name.size) { return -1; }
+  if (f_name.size > s_name.size) { return 1; }
   return memcmp(f_name.data,s_name.data,f_name.size - 1);
 }/*}}}*/
 
@@ -138,12 +138,12 @@ inline int snmp_object_rb_tree_s::__compare_value(snmp_object_s &a_first,snmp_ob
 
 inline void snmp_session_s::init()
 {/*{{{*/
-  ss = NULL;
+  ss = nullptr;
 }/*}}}*/
 
 inline void snmp_session_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (ss != NULL)
+  if (ss != nullptr)
   {
     snmp_close(ss);
   }
@@ -196,13 +196,13 @@ inline void snmp_agent_s::clear(interpreter_thread_s &it)
 
 inline void snmp_obj_s::init()
 {/*{{{*/
-  snmpa_ptr = NULL;
+  snmpa_ptr = nullptr;
   index = c_idx_not_exist;
 }/*}}}*/
 
 inline void snmp_obj_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (snmpa_ptr != NULL)
+  if (snmpa_ptr != nullptr)
   {
     it.release_location_ptr(snmpa_ptr);
   }

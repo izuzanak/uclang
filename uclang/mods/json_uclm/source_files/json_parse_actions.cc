@@ -95,7 +95,7 @@ bool pa_json_object_pair(json_parser_s &_this)
   tree_ptr->source_pos = 0;
 
   // - search index of key location -
-  pointer_map_s insert_map = {(pointer)key_location,NULL};
+  pointer_map_s insert_map = {(pointer)key_location,nullptr};
   unsigned index = tree_ptr->unique_insert(insert_map);
   cassert(((location_s *)it.exception_location)->v_type == c_bi_class_blank);
 
@@ -190,7 +190,7 @@ bool pa_json_val_integer(json_parser_s &_this)
   // - retrieve number from string -
   char tmp_char = int_num_data[int_num_end];
   int_num_data[int_num_end] = '\0';
-  long long int const_int = strtoll(int_num_data,NULL,10);
+  long long int const_int = strtoll(int_num_data,nullptr,10);
   int_num_data[int_num_end] = tmp_char;
 
   // - get constant position in array -
@@ -201,7 +201,7 @@ bool pa_json_val_integer(json_parser_s &_this)
     // - skip rb_tree indexes gap -
     while (cd_idx > integer_locations.used)
     {
-      integer_locations.push(NULL);
+      integer_locations.push(nullptr);
     }
 
     // - create new integer location -
@@ -242,7 +242,7 @@ bool pa_json_val_float(json_parser_s &_this)
   // - retrieve number from string -
   char tmp_char = float_num_data[float_num_end];
   float_num_data[float_num_end] = '\0';
-  double const_float = strtod(float_num_data,NULL);
+  double const_float = strtod(float_num_data,nullptr);
   float_num_data[float_num_end] = tmp_char;
 
   // - get constant position in array -
@@ -253,7 +253,7 @@ bool pa_json_val_float(json_parser_s &_this)
     // - skip rb_tree indexes gap -
     while (cd_idx > float_locations.used)
     {
-      float_locations.push(NULL);
+      float_locations.push(nullptr);
     }
 
     // - create new float location -
@@ -312,7 +312,7 @@ bool pa_json_val_true(json_parser_s &_this)
 
   // *****
 
-  if (true_location == NULL)
+  if (true_location == nullptr)
   {
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,1);
     true_location = new_location;
@@ -334,7 +334,7 @@ bool pa_json_val_false(json_parser_s &_this)
 
   // *****
 
-  if (false_location == NULL)
+  if (false_location == nullptr)
   {
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,0);
     false_location = new_location;
@@ -492,7 +492,7 @@ bool pa_json_string(json_parser_s &_this)
     // - skip rb_tree indexes gap -
     while (cs_idx > string_locations.used)
     {
-      string_locations.push(NULL);
+      string_locations.push(nullptr);
     }
 
     // - create location string copy -

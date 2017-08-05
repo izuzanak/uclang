@@ -107,17 +107,17 @@ built_in_class_s gsl_spline_class =
   bic_gsl_spline_consts,
   bic_gsl_spline_init,
   bic_gsl_spline_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gsl_spline_methods[] =
@@ -189,14 +189,14 @@ void bic_gsl_spline_consts(location_array_s &const_locations)
 
 void bic_gsl_spline_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (gsl_spline_s *)NULL;
+  location_ptr->v_data_ptr = (gsl_spline_s *)nullptr;
 }/*}}}*/
 
 void bic_gsl_spline_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   gsl_spline_s *spl_ptr = (gsl_spline_s *)location_ptr->v_data_ptr;
 
-  if (spl_ptr != NULL)
+  if (spl_ptr != nullptr)
   {
     spl_ptr->clear(it);
     cfree(spl_ptr);
@@ -311,8 +311,8 @@ bool bic_gsl_spline_method_GslSpline_3(interpreter_thread_s &it,unsigned stack_b
   spline_ptr->init();
 
   // - ERROR -
-  if ((spline_ptr->accel = gsl_interp_accel_alloc()) == NULL ||
-      (spline_ptr->interp = gsl_interp_alloc(interp_type_ptr,size)) == NULL ||
+  if ((spline_ptr->accel = gsl_interp_accel_alloc()) == nullptr ||
+      (spline_ptr->interp = gsl_interp_alloc(interp_type_ptr,size)) == nullptr ||
       gsl_interp_init(spline_ptr->interp,xa,ya,size) != GSL_SUCCESS)
   {
     cfree(xa);

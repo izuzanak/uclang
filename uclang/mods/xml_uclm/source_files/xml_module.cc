@@ -104,17 +104,17 @@ built_in_class_s xml_class =
   bic_xml_consts,
   bic_xml_init,
   bic_xml_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s xml_methods[] =
@@ -251,17 +251,17 @@ built_in_class_s xml_node_class =
   bic_xml_node_consts,
   bic_xml_node_init,
   bic_xml_node_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s xml_node_methods[] =
@@ -338,7 +338,7 @@ void bic_xml_node_consts(location_array_s &const_locations)
 
 void bic_xml_node_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (xml_node_s *)NULL;
+  location_ptr->v_data_ptr = (xml_node_s *)nullptr;
 }/*}}}*/
 
 void bic_xml_node_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -346,7 +346,7 @@ void bic_xml_node_clear(interpreter_thread_s &it,location_s *location_ptr)
   xml_node_s *node_ptr = (xml_node_s *)location_ptr->v_data_ptr;
 
   // - if xml node exists -
-  if (node_ptr != NULL)
+  if (node_ptr != nullptr)
   {
     node_ptr->clear(it);
     cfree(node_ptr);

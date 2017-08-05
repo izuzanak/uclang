@@ -214,12 +214,12 @@ location_s *lua_s::lua_object_value(interpreter_thread_s &it,lua_State *L,uli so
             location_s *item_location = lua_object_value(it,L,source_pos);
 
             // - ERROR -
-            if (item_location == NULL)
+            if (item_location == nullptr)
             {
               it.release_location_ptr(arr_location);
 
               lua_pop(L,2);
-              return NULL;
+              return nullptr;
             }
 
             // - insert item to array -
@@ -244,28 +244,28 @@ location_s *lua_s::lua_object_value(interpreter_thread_s &it,lua_State *L,uli so
             location_s *value_location = lua_object_value(it,L,source_pos);
 
             // - ERROR -
-            if (value_location == NULL)
+            if (value_location == nullptr)
             {
               it.release_location_ptr(dict_location);
 
               lua_pop(L,2);
-              return NULL;
+              return nullptr;
             }
 
             lua_pushvalue(L,-1);
             location_s *key_location = lua_object_value(it,L,source_pos);
 
             // - ERROR -
-            if (value_location == NULL)
+            if (value_location == nullptr)
             {
               it.release_location_ptr(value_location);
               it.release_location_ptr(dict_location);
 
               lua_pop(L,2);
-              return NULL;
+              return nullptr;
             }
 
-            pointer_map_s insert_map = {key_location,NULL};
+            pointer_map_s insert_map = {key_location,nullptr};
             unsigned index = tree_ptr->unique_insert(insert_map);
 
             // - ERROR -
@@ -276,20 +276,20 @@ location_s *lua_s::lua_object_value(interpreter_thread_s &it,lua_State *L,uli so
               it.release_location_ptr(dict_location);
 
               lua_pop(L,2);
-              return NULL;
+              return nullptr;
             }
 
             pointer_map_s &map = tree_ptr->data[index].object;
 
             // - ERROR -
-            if (map.value != NULL)
+            if (map.value != nullptr)
             {
               it.release_location_ptr(key_location);
               it.release_location_ptr(value_location);
               it.release_location_ptr(dict_location);
 
               lua_pop(L,2);
-              return NULL;
+              return nullptr;
             }
 
             map.value = (pointer)value_location;
@@ -305,11 +305,11 @@ location_s *lua_s::lua_object_value(interpreter_thread_s &it,lua_State *L,uli so
     case LUA_TLIGHTUSERDATA:
       {
         lua_pop(L,1);
-        return NULL;
+        return nullptr;
       }
   }
 
   lua_pop(L,1);
-  return NULL;
+  return nullptr;
 }/*}}}*/
 

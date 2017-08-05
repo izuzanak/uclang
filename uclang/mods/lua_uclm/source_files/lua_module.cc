@@ -181,17 +181,17 @@ built_in_class_s lua_state_class =
   bic_lua_state_consts,
   bic_lua_state_init,
   bic_lua_state_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s lua_state_methods[] =
@@ -253,7 +253,7 @@ void bic_lua_state_consts(location_array_s &const_locations)
 
 void bic_lua_state_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (lua_State *)NULL;
+  location_ptr->v_data_ptr = (lua_State *)nullptr;
 }/*}}}*/
 
 void bic_lua_state_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -261,7 +261,7 @@ void bic_lua_state_clear(interpreter_thread_s &it,location_s *location_ptr)
   lua_State *L = (lua_State *)location_ptr->v_data_ptr;
 
   // - if jit context object exists -
-  if (L != NULL)
+  if (L != nullptr)
   {
     // - test size of stack -
     cassert(lua_gettop(L) == 0);
@@ -293,7 +293,7 @@ bool bic_lua_state_method_LuaState_0(interpreter_thread_s &it,unsigned stack_bas
   lua_State *L = luaL_newstate();
 
   // - ERROR -
-  if (L == NULL)
+  if (L == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_LUA_STATE_CREATE_NEW_STATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -442,7 +442,7 @@ bool bic_lua_state_method_version_0(interpreter_thread_s &it,unsigned stack_base
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
 
-  double result = *lua_version(NULL);
+  double result = *lua_version(nullptr);
 
   BIC_SIMPLE_SET_RES(c_bi_class_float,result);
 
@@ -479,15 +479,15 @@ built_in_class_s lua_value_class =
   bic_lua_value_consts,
   bic_lua_value_init,
   bic_lua_value_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_lua_value_invoke,
   bic_lua_value_member
 };/*}}}*/
@@ -541,14 +541,14 @@ void bic_lua_value_consts(location_array_s &const_locations)
 
 void bic_lua_value_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (lua_value_s *)NULL;
+  location_ptr->v_data_ptr = (lua_value_s *)nullptr;
 }/*}}}*/
 
 void bic_lua_value_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   lua_value_s *lv_ptr = (lua_value_s *)location_ptr->v_data_ptr;
 
-  if (lv_ptr != NULL)
+  if (lv_ptr != nullptr)
   {
     lv_ptr->clear(it);
     cfree(lv_ptr);
@@ -830,7 +830,7 @@ bool bic_lua_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,u
   location_s *location_ptr = lua_s::lua_object_value(it,L,operands[c_source_pos_idx]);
 
   // - ERROR -
-  if (location_ptr == NULL)
+  if (location_ptr == nullptr)
   {
     // - if exception was already thrown -
     if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
@@ -990,7 +990,7 @@ bool bic_lua_value_method_print_0(interpreter_thread_s &it,unsigned stack_base,u
     return false;
   }
 
-  printf("%s",luaL_tolstring(L,-1,NULL));
+  printf("%s",luaL_tolstring(L,-1,nullptr));
   lua_pop(L,2);
 
   BIC_SET_RESULT_DESTINATION();
@@ -1008,15 +1008,15 @@ built_in_class_s lua_reference_class =
   bic_lua_reference_consts,
   bic_lua_reference_init,
   bic_lua_reference_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_lua_value_invoke,
   bic_lua_value_member
 };/*}}}*/
@@ -1070,14 +1070,14 @@ void bic_lua_reference_consts(location_array_s &const_locations)
 
 void bic_lua_reference_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (lua_reference_s *)NULL;
+  location_ptr->v_data_ptr = (lua_reference_s *)nullptr;
 }/*}}}*/
 
 void bic_lua_reference_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   lua_reference_s *lr_ptr = (lua_reference_s *)location_ptr->v_data_ptr;
 
-  if (lr_ptr != NULL)
+  if (lr_ptr != nullptr)
   {
     lr_ptr->clear(it);
     cfree(lr_ptr);

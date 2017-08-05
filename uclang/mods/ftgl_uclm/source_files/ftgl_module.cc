@@ -165,17 +165,17 @@ built_in_class_s gl_vertex_buffer_class =
   bic_gl_vertex_buffer_consts,
   bic_gl_vertex_buffer_init,
   bic_gl_vertex_buffer_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gl_vertex_buffer_methods[] =
@@ -232,7 +232,7 @@ void bic_gl_vertex_buffer_consts(location_array_s &const_locations)
 
 void bic_gl_vertex_buffer_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (gl_vertex_buffer_s *)NULL;
+  location_ptr->v_data_ptr = (gl_vertex_buffer_s *)nullptr;
 }/*}}}*/
 
 void bic_gl_vertex_buffer_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -240,7 +240,7 @@ void bic_gl_vertex_buffer_clear(interpreter_thread_s &it,location_s *location_pt
   gl_vertex_buffer_s *vb_ptr = (gl_vertex_buffer_s *)location_ptr->v_data_ptr;
 
   // - if vertex buffer exists -
-  if (vb_ptr != NULL)
+  if (vb_ptr != nullptr)
   {
     vb_ptr->clear(it);
     cfree(vb_ptr);
@@ -281,7 +281,7 @@ bool bic_gl_vertex_buffer_method_GlVertexBuffer_1(interpreter_thread_s &it,unsig
   vertex_buffer_t *buffer_ptr = vertex_buffer_new(string_ptr->data);
 
   // - ERROR -
-  if (buffer_ptr == NULL)
+  if (buffer_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_GL_VERTEX_BUFFER_CANNOT_CREATE_NEW,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -299,7 +299,7 @@ bool bic_gl_vertex_buffer_method_GlVertexBuffer_1(interpreter_thread_s &it,unsig
 
   unsigned attr_idx = 0;
   do {
-    if (attrs[attr_idx] == NULL)
+    if (attrs[attr_idx] == nullptr)
     {
       break;
     }
@@ -606,17 +606,17 @@ built_in_class_s gl_font_class =
   bic_gl_font_consts,
   bic_gl_font_init,
   bic_gl_font_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gl_font_methods[] =
@@ -722,7 +722,7 @@ built_in_variable_s gl_font_variables[] =
       texture_glyph_t *glyph_ptr = texture_font_get_glyph(font_ptr,*wc_ptr);\
 \
       /* - ERROR - */\
-      if (glyph_ptr == NULL)\
+      if (glyph_ptr == nullptr)\
       {\
         cfree(wstring);\
 \
@@ -756,7 +756,7 @@ void bic_gl_font_consts(location_array_s &const_locations)
 
 void bic_gl_font_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (gl_font_s *)NULL;
+  location_ptr->v_data_ptr = (gl_font_s *)nullptr;
 }/*}}}*/
 
 void bic_gl_font_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -764,7 +764,7 @@ void bic_gl_font_clear(interpreter_thread_s &it,location_s *location_ptr)
   gl_font_s *glf_ptr = (gl_font_s *)location_ptr->v_data_ptr;
 
   // - if gl font exists -
-  if (glf_ptr != NULL)
+  if (glf_ptr != nullptr)
   {
     glf_ptr->clear(it);
     cfree(glf_ptr);
@@ -829,7 +829,7 @@ bool bic_gl_font_method_GlFont_4(interpreter_thread_s &it,unsigned stack_base,ul
   texture_font_t *font_ptr = texture_font_new(atlas_ptr,string_ptr->data,font_size);
 
   // - ERROR -
-  if (font_ptr == NULL)
+  if (font_ptr == nullptr)
   {
     texture_atlas_delete(atlas_ptr);
 
@@ -942,7 +942,7 @@ bool bic_gl_font_method_buffer_2(interpreter_thread_s &it,unsigned stack_base,ul
   buff_str.clear();
 
   // - ERROR -
-  if (buffer_ptr == NULL)
+  if (buffer_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_GL_VERTEX_BUFFER_CANNOT_CREATE_NEW,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1083,17 +1083,17 @@ built_in_class_s gl_font_buffer_class =
   bic_gl_font_buffer_consts,
   bic_gl_font_buffer_init,
   bic_gl_font_buffer_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gl_font_buffer_methods[] =
@@ -1150,7 +1150,7 @@ void bic_gl_font_buffer_consts(location_array_s &const_locations)
 
 void bic_gl_font_buffer_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (gl_font_buffer_s *)NULL;
+  location_ptr->v_data_ptr = (gl_font_buffer_s *)nullptr;
 }/*}}}*/
 
 void bic_gl_font_buffer_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1158,7 +1158,7 @@ void bic_gl_font_buffer_clear(interpreter_thread_s &it,location_s *location_ptr)
   gl_font_buffer_s *glfb_ptr = (gl_font_buffer_s *)location_ptr->v_data_ptr;
 
   // - if gl font buffer exists -
-  if (glfb_ptr != NULL)
+  if (glfb_ptr != nullptr)
   {
     glfb_ptr->clear(it);
     cfree(glfb_ptr);

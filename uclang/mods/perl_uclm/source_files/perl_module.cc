@@ -213,17 +213,17 @@ built_in_class_s perl_interpreter_class =
   bic_perl_interpreter_consts,
   bic_perl_interpreter_init,
   bic_perl_interpreter_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s perl_interpreter_methods[] =
@@ -302,7 +302,7 @@ built_in_variable_s perl_interpreter_variables[] =
   XV *value = get_ ## xv(string_ptr->data,0);\
 \
   /* - ERROR - */\
-  if (value == NULL)\
+  if (value == nullptr)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_PERL_INTERPRETER_GET_VARIABLE_DOES_NOT_EXIST,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
@@ -331,14 +331,14 @@ void bic_perl_interpreter_consts(location_array_s &const_locations)
 
 void bic_perl_interpreter_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (perl_interpreter_s *)NULL;
+  location_ptr->v_data_ptr = (perl_interpreter_s *)nullptr;
 }/*}}}*/
 
 void bic_perl_interpreter_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   perl_interpreter_s *pi_ptr = (perl_interpreter_s *)location_ptr->v_data_ptr;
 
-  if (pi_ptr != NULL)
+  if (pi_ptr != nullptr)
   {
     pi_ptr->clear(it);
     cfree(pi_ptr);
@@ -423,7 +423,7 @@ bool bic_perl_interpreter_method_PerlInterpreter_1(interpreter_thread_s &it,unsi
   PL_exit_flags |= PERL_EXIT_DESTRUCT_END;
 
   // - ERROR -
-  if (perl_parse(pi_ptr->interpreter,NULL,array_ptr->used,argv,NULL) != 0)
+  if (perl_parse(pi_ptr->interpreter,nullptr,array_ptr->used,argv,nullptr) != 0)
   {
     pi_ptr->clear(it);
     cfree(pi_ptr);
@@ -463,7 +463,7 @@ bool bic_perl_interpreter_method_new_value_1(interpreter_thread_s &it,unsigned s
   SV *sv = perl_c::create_perl_sv(it,my_perl,src_0_location);
 
   // - ERROR -
-  if (sv == NULL)
+  if (sv == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PERL_VALUE_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -528,15 +528,15 @@ built_in_class_s perl_value_class =
   bic_perl_value_consts,
   bic_perl_value_init,
   bic_perl_value_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_perl_value_invoke,
   bic_perl_value_member
 };/*}}}*/
@@ -580,14 +580,14 @@ void bic_perl_value_consts(location_array_s &const_locations)
 
 void bic_perl_value_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (perl_value_s *)NULL;
+  location_ptr->v_data_ptr = (perl_value_s *)nullptr;
 }/*}}}*/
 
 void bic_perl_value_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   perl_value_s *pv_ptr = (perl_value_s *)location_ptr->v_data_ptr;
 
-  if (pv_ptr != NULL)
+  if (pv_ptr != nullptr)
   {
     pv_ptr->clear(it);
     cfree(pv_ptr);
@@ -612,7 +612,7 @@ void bic_perl_value_clear(interpreter_thread_s &it,location_s *location_ptr)
     sv_dst = pr_ptr->get(my_perl);\
 \
     /* - ERROR - */\
-    if (sv_dst == NULL)\
+    if (sv_dst == nullptr)\
     {\
       exception_s::throw_exception(it,module.error_base + c_error_PERL_VALUE_WRONG_VALUE_REFERENCE,code[SOURCE_POS_IDX],(location_s *)it.blank_location);\
       return false;\
@@ -666,7 +666,7 @@ bool bic_perl_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_bas
   SV** sv_fun_ptr = hv_fetch(hv_stash,name_ref.data,name_length,0);
 
   // - ERROR -
-  if (sv_fun_ptr == NULL)
+  if (sv_fun_ptr == nullptr)
   {
     SvREFCNT_dec(sv_dst);
 
@@ -694,7 +694,7 @@ bool bic_perl_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_bas
       SV *sv_param = perl_c::create_perl_sv(it,my_perl,param_location);
 
       // - ERROR -
-      if (sv_param == NULL)
+      if (sv_param == nullptr)
       {
         PUTBACK;
         FREETMPS;
@@ -759,7 +759,7 @@ bool bic_perl_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_bas
         SV **sv_res = av_store(av,--result_idx,sv_param);
 
         // - ERROR -
-        if (sv_res == NULL)
+        if (sv_res == nullptr)
         {
           SvREFCNT_dec(sv_param);
           SvREFCNT_dec(av);
@@ -869,7 +869,7 @@ bool bic_perl_value_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigne
   SV *sv = perl_c::create_perl_sv(it,my_perl,dst_location);
 
   // - ERROR -
-  if (sv == NULL)
+  if (sv == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PERL_VALUE_WRONG_VALUE_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -909,7 +909,7 @@ bool bic_perl_value_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigne
       SV *sv_key = perl_c::create_perl_sv(it,my_perl,src_0_location);
 
       // - ERROR -
-      if (sv_key == NULL)
+      if (sv_key == nullptr)
       {
         SvREFCNT_dec(sv);
 
@@ -958,7 +958,7 @@ bool bic_perl_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,
   SV *sv = perl_c::create_perl_sv(it,my_perl,dst_location);
 
   // - ERROR -
-  if (sv == NULL)
+  if (sv == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PERL_VALUE_WRONG_VALUE_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -968,7 +968,7 @@ bool bic_perl_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,
   SvREFCNT_dec(sv);
 
   // - ERROR -
-  if (location_ptr == NULL)
+  if (location_ptr == nullptr)
   {
     // - if exception was already thrown -
     if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
@@ -1015,15 +1015,15 @@ built_in_class_s perl_reference_class =
   bic_perl_reference_consts,
   bic_perl_reference_init,
   bic_perl_reference_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_perl_value_invoke,
   bic_perl_value_member
 };/*}}}*/
@@ -1067,14 +1067,14 @@ void bic_perl_reference_consts(location_array_s &const_locations)
 
 void bic_perl_reference_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (perl_reference_s *)NULL;
+  location_ptr->v_data_ptr = (perl_reference_s *)nullptr;
 }/*}}}*/
 
 void bic_perl_reference_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   perl_reference_s *pr_ptr = (perl_reference_s *)location_ptr->v_data_ptr;
 
-  if (pr_ptr != NULL)
+  if (pr_ptr != nullptr)
   {
     pr_ptr->clear(it);
     cfree(pr_ptr);
@@ -1098,7 +1098,7 @@ bool bic_perl_reference_operator_binary_equal(interpreter_thread_s &it,unsigned 
   SV *sv_src_0 = perl_c::create_perl_sv(it,my_perl,src_0_location);
 
   // - ERROR -
-  if (sv_src_0 == NULL)
+  if (sv_src_0 == nullptr)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_equal#1");

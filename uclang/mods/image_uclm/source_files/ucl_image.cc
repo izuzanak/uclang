@@ -72,7 +72,7 @@ bool image_s::create_header(unsigned a_width,unsigned a_height,unsigned a_pixel_
   image_data_ptr = (image_data_s *)cmalloc(sizeof(image_data_s));
   image_data_ptr->reference_cnt.atomic_set(1);
   image_data_ptr->line_bytes = tmp_line_bytes;
-  image_data_ptr->data = NULL;
+  image_data_ptr->data = nullptr;
 
   return true;
 }/*}}}*/

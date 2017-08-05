@@ -65,21 +65,21 @@ inline void read_buffer_s::init(string_s &a_string)
 
 inline void curl_result_s::init()
 {/*{{{*/
-  curl_ptr = NULL;
-  data_ptr = NULL;
+  curl_ptr = nullptr;
+  data_ptr = nullptr;
 }/*}}}*/
 
 inline void curl_result_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release curl_ptr -
-  if (curl_ptr != NULL)
+  if (curl_ptr != nullptr)
   {
     curl_easy_cleanup(curl_ptr);
   }
 
   // - release result data -
-  if (data_ptr != NULL)
+  if (data_ptr != nullptr)
   {
     it.release_location_ptr(data_ptr);
   }

@@ -320,17 +320,17 @@ built_in_class_s mono_assembly_class =
   bic_mono_assembly_consts,
   bic_mono_assembly_init,
   bic_mono_assembly_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s mono_assembly_methods[] =
@@ -372,7 +372,7 @@ void bic_mono_assembly_consts(location_array_s &const_locations)
 
 void bic_mono_assembly_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (pointer)NULL;
+  location_ptr->v_data_ptr = (pointer)nullptr;
 }/*}}}*/
 
 void bic_mono_assembly_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -382,7 +382,7 @@ void bic_mono_assembly_clear(interpreter_thread_s &it,location_s *location_ptr)
     // - reset mono assembly opened flag -
     mono_c::assembly_opened = false;
 
-    if (mono_c::domain != NULL)
+    if (mono_c::domain != nullptr)
     {
       // - cleanup mono jit -
       mono_jit_cleanup(mono_c::domain);
@@ -426,7 +426,7 @@ bool bic_mono_assembly_method_MonoAssembly_2(interpreter_thread_s &it,unsigned s
   pointer_array_s *array_ptr = (pointer_array_s *)src_1_location->v_data_ptr;
 
   // - ERROR -
-  if (mono_c::assembly != NULL)
+  if (mono_c::assembly != nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_ASSEMBLY_ALREADY_OPEN,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -465,12 +465,12 @@ bool bic_mono_assembly_method_MonoAssembly_2(interpreter_thread_s &it,unsigned s
   // - initialize mono domain -
   mono_c::domain = mono_jit_init("uclang");
 
-  if (mono_c::domain != NULL)
+  if (mono_c::domain != nullptr)
   {
     // - open mono assembly -
     mono_c::assembly = mono_domain_assembly_open(mono_c::domain,string_ptr->data);
 
-    if (mono_c::assembly != NULL)
+    if (mono_c::assembly != nullptr)
     {
       // - retrieve mono assembly image -
       mono_c::image = mono_assembly_get_image(mono_c::assembly);
@@ -478,7 +478,7 @@ bool bic_mono_assembly_method_MonoAssembly_2(interpreter_thread_s &it,unsigned s
   }
 
   // - ERROR -
-  if (mono_c::domain == NULL || mono_c::assembly == NULL || mono_c::image == NULL)
+  if (mono_c::domain == nullptr || mono_c::assembly == nullptr || mono_c::image == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_ASSEMBLY_OPEN_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -495,7 +495,7 @@ bool bic_mono_assembly_method_MonoAssembly_2(interpreter_thread_s &it,unsigned s
   MonoClass *cont_class = mono_class_from_name(mono_c::image,"Uclang","Containers");
 
   // - ERROR -
-  if (cont_class == NULL)
+  if (cont_class == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_ASSEMBLY_INVALID_UCLANG_CLASSES,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -515,15 +515,15 @@ bool bic_mono_assembly_method_MonoAssembly_2(interpreter_thread_s &it,unsigned s
   mono_c::dict_arr = mono_class_get_method_from_name(cont_class,"dict_arr",3);
 
   // - ERROR -
-  if (mono_c::list_constr == NULL ||
-      mono_c::stack_constr == NULL ||
-      mono_c::queue_constr == NULL ||
-      mono_c::hset_constr == NULL ||
-      mono_c::llist_constr == NULL ||
-      mono_c::dict_constr == NULL ||
-      mono_c::hset_arr == NULL ||
-      mono_c::llist_arr == NULL ||
-      mono_c::dict_arr == NULL)
+  if (mono_c::list_constr == nullptr ||
+      mono_c::stack_constr == nullptr ||
+      mono_c::queue_constr == nullptr ||
+      mono_c::hset_constr == nullptr ||
+      mono_c::llist_constr == nullptr ||
+      mono_c::dict_constr == nullptr ||
+      mono_c::hset_arr == nullptr ||
+      mono_c::llist_arr == nullptr ||
+      mono_c::dict_arr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_ASSEMBLY_INVALID_UCLANG_CLASSES,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -538,7 +538,7 @@ bool bic_mono_assembly_method_MonoAssembly_2(interpreter_thread_s &it,unsigned s
   }\
 }/*}}}*/
 
-  mono_c::mono_exc = NULL;
+  mono_c::mono_exc = nullptr;
 
   // - create empty array parameter -
   MonoArray *array_obj = mono_array_new(mono_c::domain,mono_get_object_class(),0);
@@ -547,27 +547,27 @@ bool bic_mono_assembly_method_MonoAssembly_2(interpreter_thread_s &it,unsigned s
   // - retrieve container classes -
   mono_c::array_class = mono_array_class_get(mono_get_object_class(),1);
 
-  MonoObject *list_obj = mono_runtime_invoke(mono_c::list_constr,NULL,params,&mono_c::mono_exc);
+  MonoObject *list_obj = mono_runtime_invoke(mono_c::list_constr,nullptr,params,&mono_c::mono_exc);
   MONO_ASSEMBLY_OPEN_CHECK_EXCEPTION();
   mono_c::list_class = mono_object_get_class(list_obj);
 
-  MonoObject *stack_obj = mono_runtime_invoke(mono_c::stack_constr,NULL,params,&mono_c::mono_exc);
+  MonoObject *stack_obj = mono_runtime_invoke(mono_c::stack_constr,nullptr,params,&mono_c::mono_exc);
   MONO_ASSEMBLY_OPEN_CHECK_EXCEPTION();
   mono_c::stack_class = mono_object_get_class(stack_obj);
 
-  MonoObject *queue_obj = mono_runtime_invoke(mono_c::queue_constr,NULL,params,&mono_c::mono_exc);
+  MonoObject *queue_obj = mono_runtime_invoke(mono_c::queue_constr,nullptr,params,&mono_c::mono_exc);
   MONO_ASSEMBLY_OPEN_CHECK_EXCEPTION();
   mono_c::queue_class = mono_object_get_class(queue_obj);
 
-  MonoObject *hset_obj = mono_runtime_invoke(mono_c::hset_constr,NULL,params,&mono_c::mono_exc);
+  MonoObject *hset_obj = mono_runtime_invoke(mono_c::hset_constr,nullptr,params,&mono_c::mono_exc);
   MONO_ASSEMBLY_OPEN_CHECK_EXCEPTION();
   mono_c::hset_class = mono_object_get_class(hset_obj);
 
-  MonoObject *llist_obj = mono_runtime_invoke(mono_c::llist_constr,NULL,params,&mono_c::mono_exc);
+  MonoObject *llist_obj = mono_runtime_invoke(mono_c::llist_constr,nullptr,params,&mono_c::mono_exc);
   MONO_ASSEMBLY_OPEN_CHECK_EXCEPTION();
   mono_c::llist_class = mono_object_get_class(llist_obj);
 
-  MonoObject *dict_obj = mono_runtime_invoke(mono_c::dict_constr,NULL,NULL,&mono_c::mono_exc);
+  MonoObject *dict_obj = mono_runtime_invoke(mono_c::dict_constr,nullptr,nullptr,&mono_c::mono_exc);
   MONO_ASSEMBLY_OPEN_CHECK_EXCEPTION();
   mono_c::dict_class = mono_object_get_class(dict_obj);
 
@@ -579,10 +579,10 @@ bool bic_mono_assembly_method_MonoAssembly_2(interpreter_thread_s &it,unsigned s
   mono_c::dict_add = mono_class_get_method_from_name(mono_c::dict_class,"Add",2);
 
   // - ERROR -
-  if (mono_c::list_to_array == NULL ||
-      mono_c::stack_to_array == NULL ||
-      mono_c::queue_to_array == NULL ||
-      mono_c::dict_add == NULL)
+  if (mono_c::list_to_array == nullptr ||
+      mono_c::stack_to_array == nullptr ||
+      mono_c::queue_to_array == nullptr ||
+      mono_c::dict_add == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_ASSEMBLY_INVALID_UCLANG_CLASSES,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -592,8 +592,8 @@ bool bic_mono_assembly_method_MonoAssembly_2(interpreter_thread_s &it,unsigned s
   mono_c::dict_item = mono_class_get_property_from_name(mono_c::dict_class,"Item");
 
   // - ERROR -
-  if (mono_c::list_item == NULL ||
-      mono_c::dict_item == NULL)
+  if (mono_c::list_item == nullptr ||
+      mono_c::dict_item == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_ASSEMBLY_INVALID_UCLANG_CLASSES,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -639,7 +639,7 @@ bool bic_mono_assembly_method_get_class_2(interpreter_thread_s &it,unsigned stac
   MonoClass *mono_class = mono_class_from_name(mono_c::image,namespace_ptr->data,name_ptr->data);
 
   // - ERROR -
-  if (mono_class == NULL)
+  if (mono_class == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_ASSEMBLY_CLASS_NOT_FOUND,operands[c_source_pos_idx],src_1_location);
     return false;
@@ -682,17 +682,17 @@ built_in_class_s mono_class_class =
   bic_mono_class_consts,
   bic_mono_class_init,
   bic_mono_class_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s mono_class_methods[] =
@@ -754,7 +754,7 @@ void bic_mono_class_consts(location_array_s &const_locations)
 
 void bic_mono_class_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (MonoClass *)NULL;
+  location_ptr->v_data_ptr = (MonoClass *)nullptr;
 }/*}}}*/
 
 void bic_mono_class_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -818,7 +818,7 @@ bool bic_mono_class_method__new_1(interpreter_thread_s &it,unsigned stack_base,u
   MonoObject *mono_params = mono_c::create_mono_array(it,src_0_location);
 
   // - ERROR -
-  if (mono_params == NULL)
+  if (mono_params == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_OBJECT_ARRAY_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -830,7 +830,7 @@ bool bic_mono_class_method__new_1(interpreter_thread_s &it,unsigned stack_base,u
   MonoMethod *mono_ctor = mono_class_get_method_from_name(mono_class,".ctor",param_cnt);
 
   // - ERROR -
-  if (mono_ctor == NULL)
+  if (mono_ctor == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_CLASS_CANNOT_FIND_CONSTRUCTOR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -838,7 +838,7 @@ bool bic_mono_class_method__new_1(interpreter_thread_s &it,unsigned stack_base,u
 
   MonoObject *mono_obj = mono_object_new(mono_c::domain,mono_class);
 
-  mono_c::mono_exc = NULL;
+  mono_c::mono_exc = nullptr;
   mono_runtime_invoke_array(mono_ctor,mono_obj,(MonoArray *)mono_params,&mono_c::mono_exc);
   BIC_MONO_CHECK_EXCEPTION_RETHROW();
 
@@ -862,7 +862,7 @@ bool bic_mono_class_method_fields_0(interpreter_thread_s &it,unsigned stack_base
   pointer_array_s *array_ptr = it.get_new_array_ptr();
 
   MonoClassField *mf_ptr;
-  void *iter = NULL;
+  void *iter = nullptr;
   while ((mf_ptr = mono_class_get_fields(mono_class,&iter)))
   {
     // - retrieve field name -
@@ -894,7 +894,7 @@ bool bic_mono_class_method_methods_0(interpreter_thread_s &it,unsigned stack_bas
   pointer_array_s *array_ptr = it.get_new_array_ptr();
 
   MonoMethod *mm_ptr;
-  void *iter = NULL;
+  void *iter = nullptr;
   while ((mm_ptr = mono_class_get_methods(mono_class,&iter)))
   {
     // - retrieve method name -
@@ -926,7 +926,7 @@ bool bic_mono_class_method_properties_0(interpreter_thread_s &it,unsigned stack_
   pointer_array_s *array_ptr = it.get_new_array_ptr();
 
   MonoProperty *mono_prop;
-  void *iter = NULL;
+  void *iter = nullptr;
   while ((mono_prop = mono_class_get_properties(mono_class,&iter)))
   {
     // - retrieve property name -
@@ -977,15 +977,15 @@ built_in_class_s mono_object_class =
   bic_mono_object_consts,
   bic_mono_object_init,
   bic_mono_object_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_mono_object_invoke,
   bic_mono_object_member
 };/*}}}*/
@@ -1077,7 +1077,7 @@ bool bic_mono_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_ba
   MonoObject *mono_dst = mono_c::create_mono_object(it,dst_location);
 
   // - ERROR -
-  if (mono_dst == NULL)
+  if (mono_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1088,7 +1088,7 @@ bool bic_mono_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_ba
   MonoMethod *mono_method = mono_class_get_method_from_name(mono_class,name,param_cnt);
 
   // - ERROR -
-  if (mono_method == NULL)
+  if (mono_method == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_OBJECT_INVOKE_METHOD_UNKNOWN_NAME,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1105,7 +1105,7 @@ bool bic_mono_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_ba
       MonoObject *mono_param = mono_c::create_mono_object(it,param_location);
 
       // - ERROR -
-      if (mono_param == NULL)
+      if (mono_param == nullptr)
       {
         exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MONO_OBJECT_INVOKE_METHOD_WRONG_PARAMETER,operands[c_source_pos_idx],(location_s *)it.blank_location);
         new_exception->params.push(param_idx);
@@ -1119,7 +1119,7 @@ bool bic_mono_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_ba
   }
 
   // - call object method -
-  mono_c::mono_exc = NULL;
+  mono_c::mono_exc = nullptr;
   MonoObject *mono_result = mono_runtime_invoke_array(mono_method,mono_dst,mono_params,&mono_c::mono_exc);
   BIC_MONO_CHECK_EXCEPTION_RETHROW();
 
@@ -1145,7 +1145,7 @@ bool bic_mono_object_member(interpreter_thread_s &it,uli *code,unsigned stack_ba
   MonoObject *mono_dst = mono_c::create_mono_object(it,dst_location);
 
   // - ERROR -
-  if (mono_dst == NULL)
+  if (mono_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_OBJECT_WRONG_OBJECT_REFERENCE,code[ioms_source_pos],(location_s *)it.blank_location);
     return false;
@@ -1156,7 +1156,7 @@ bool bic_mono_object_member(interpreter_thread_s &it,uli *code,unsigned stack_ba
   MonoProperty *mono_prop = mono_class_get_property_from_name(mono_class,name_ref.data);
 
   // - ERROR -
-  if (mono_prop == NULL)
+  if (mono_prop == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_OBJECT_MEMBER_SELECT_UNKNOWN_NAME,code[ioms_source_pos],(location_s *)it.blank_location);
     return false;
@@ -1203,7 +1203,7 @@ bool bic_mono_object_operator_binary_le_br_re_br(interpreter_thread_s &it,unsign
   MonoObject *mono_dst = mono_c::create_mono_object(it,dst_location);
 
   // - ERROR -
-  if (mono_dst == NULL)
+  if (mono_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1212,7 +1212,7 @@ bool bic_mono_object_operator_binary_le_br_re_br(interpreter_thread_s &it,unsign
   MonoObject *mono_src_0 = mono_c::create_mono_object(it,src_0_location);
 
   // - ERROR -
-  if (mono_src_0 == NULL)
+  if (mono_src_0 == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_OBJECT_ITEM_SELECT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1248,7 +1248,7 @@ bool bic_mono_object_method_MonoObject_1(interpreter_thread_s &it,unsigned stack
   MonoObject *mono_obj = mono_c::create_mono_object(it,src_0_location);
 
   // - ERROR -
-  if (mono_obj == NULL)
+  if (mono_obj == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_OBJECT_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1279,7 +1279,7 @@ bool bic_mono_object_method__array_1(interpreter_thread_s &it,unsigned stack_bas
   MonoObject *mono_array = mono_c::create_mono_array(it,src_0_location);
 
   // - ERROR -
-  if (mono_array == NULL)
+  if (mono_array == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_OBJECT_ARRAY_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1302,7 +1302,7 @@ bool bic_mono_object_method__value_0(interpreter_thread_s &it,unsigned stack_bas
   MonoObject *mono_dst = mono_c::create_mono_object(it,dst_location);
 
   // - ERROR -
-  if (mono_dst == NULL)
+  if (mono_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1311,7 +1311,7 @@ bool bic_mono_object_method__value_0(interpreter_thread_s &it,unsigned stack_bas
   location_s *location_ptr = mono_c::mono_object_value(it,mono_dst,operands[c_source_pos_idx]);
 
   // - ERROR -
-  if (location_ptr == NULL)
+  if (location_ptr == nullptr)
   {
     // - if exception was already thrown -
     if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
@@ -1336,7 +1336,7 @@ bool bic_mono_object_method__class_0(interpreter_thread_s &it,unsigned stack_bas
   MonoObject *mono_dst = mono_c::create_mono_object(it,dst_location);
 
   // - ERROR -
-  if (mono_dst == NULL)
+  if (mono_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1359,13 +1359,13 @@ bool bic_mono_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_
   MonoObject *mono_dst = mono_c::create_mono_object(it,dst_location);
 
   // - ERROR -
-  if (mono_dst == NULL)
+  if (mono_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
-  mono_c::mono_exc = NULL;
+  mono_c::mono_exc = nullptr;
   MonoString *mono_str = mono_object_to_string(mono_dst,&mono_c::mono_exc);
   BIC_MONO_CHECK_EXCEPTION_RETHROW();
 
@@ -1399,13 +1399,13 @@ bool bic_mono_object_method_print_0(interpreter_thread_s &it,unsigned stack_base
   MonoObject *mono_dst = mono_c::create_mono_object(it,dst_location);
 
   // - ERROR -
-  if (mono_dst == NULL)
+  if (mono_dst == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_OBJECT_WRONG_OBJECT_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
-  mono_c::mono_exc = NULL;
+  mono_c::mono_exc = nullptr;
   MonoString *mono_str = mono_object_to_string(mono_dst,&mono_c::mono_exc);
   BIC_MONO_CHECK_EXCEPTION_RETHROW();
 
@@ -1440,15 +1440,15 @@ built_in_class_s mono_property_class =
   bic_mono_property_consts,
   bic_mono_property_init,
   bic_mono_property_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_mono_object_invoke,
   bic_mono_object_member
 };/*}}}*/
@@ -1497,14 +1497,14 @@ void bic_mono_property_consts(location_array_s &const_locations)
 
 void bic_mono_property_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (mono_property_s *)NULL;
+  location_ptr->v_data_ptr = (mono_property_s *)nullptr;
 }/*}}}*/
 
 void bic_mono_property_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   mono_property_s *mp_ptr = (mono_property_s *)location_ptr->v_data_ptr;
 
-  if (mp_ptr != NULL)
+  if (mp_ptr != nullptr)
   {
     mp_ptr->clear(it);
     cfree(mp_ptr);
@@ -1522,7 +1522,7 @@ bool bic_mono_property_operator_binary_equal(interpreter_thread_s &it,unsigned s
   MonoObject *mono_src_0 = mono_c::create_mono_object(it,src_0_location);
 
   // - ERROR -
-  if (mono_src_0 == NULL)
+  if (mono_src_0 == nullptr)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_equal#1");
@@ -1536,7 +1536,7 @@ bool bic_mono_property_operator_binary_equal(interpreter_thread_s &it,unsigned s
   MonoMethod *mono_set_method = mono_property_get_set_method(mp_ptr->mono_prop);
 
   // - ERROR -
-  if (mono_set_method == NULL)
+  if (mono_set_method == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MONO_PROPERTY_NO_SET_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1545,7 +1545,7 @@ bool bic_mono_property_operator_binary_equal(interpreter_thread_s &it,unsigned s
   MonoArray *mono_params = mono_array_new(mono_c::domain,mono_get_object_class(),1);
   mono_array_set(mono_params,MonoObject *,0,mono_src_0);
 
-  mono_c::mono_exc = NULL;
+  mono_c::mono_exc = nullptr;
   mono_runtime_invoke_array(mono_set_method,
       mono_gchandle_get_target(mp_ptr->gchandle),mono_params,&mono_c::mono_exc);
   BIC_MONO_CHECK_EXCEPTION_RETHROW();
@@ -1569,15 +1569,15 @@ built_in_class_s mono_item_ref_class =
   bic_mono_item_ref_consts,
   bic_mono_item_ref_init,
   bic_mono_item_ref_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_mono_object_invoke,
   bic_mono_object_member
 };/*}}}*/
@@ -1626,14 +1626,14 @@ void bic_mono_item_ref_consts(location_array_s &const_locations)
 
 void bic_mono_item_ref_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (mono_reference_s *)NULL;
+  location_ptr->v_data_ptr = (mono_reference_s *)nullptr;
 }/*}}}*/
 
 void bic_mono_item_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   mono_reference_s *mr_ptr = (mono_reference_s *)location_ptr->v_data_ptr;
 
-  if (mr_ptr != NULL)
+  if (mr_ptr != nullptr)
   {
     mr_ptr->clear(it);
     cfree(mr_ptr);
@@ -1651,7 +1651,7 @@ bool bic_mono_item_ref_operator_binary_equal(interpreter_thread_s &it,unsigned s
   MonoObject *mono_src_0 = mono_c::create_mono_object(it,src_0_location);
 
   // - ERROR -
-  if (mono_src_0 == NULL)
+  if (mono_src_0 == nullptr)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_equal#1");

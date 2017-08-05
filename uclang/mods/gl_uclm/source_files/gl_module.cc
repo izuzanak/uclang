@@ -228,17 +228,17 @@ built_in_class_s gl_class =
   bic_gl_consts,
   bic_gl_init,
   bic_gl_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gl_methods[] =
@@ -549,17 +549,17 @@ built_in_class_s gl_shader_class =
   bic_gl_shader_consts,
   bic_gl_shader_init,
   bic_gl_shader_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gl_shader_methods[] =
@@ -725,7 +725,7 @@ bool bic_gl_shader_method_GlShader_2(interpreter_thread_s &it,unsigned stack_bas
       err_string->create(log_size - 1);
 
       // - retrieve error log -
-      glGetShaderInfoLog(shader,log_size,NULL,err_string->data);
+      glGetShaderInfoLog(shader,log_size,nullptr,err_string->data);
     }
 
     // - delete shader object -
@@ -774,7 +774,7 @@ bool bic_gl_shader_method_source_0(interpreter_thread_s &it,unsigned stack_base,
     string_s *string_ptr = it.get_new_string_ptr();
     string_ptr->create(source_size - 1);
 
-    glGetShaderSource(shader,source_size,NULL,string_ptr->data);
+    glGetShaderSource(shader,source_size,nullptr,string_ptr->data);
 
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
     BIC_SET_RESULT(new_location);
@@ -817,17 +817,17 @@ built_in_class_s gl_program_class =
   bic_gl_program_consts,
   bic_gl_program_init,
   bic_gl_program_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gl_program_methods[] =
@@ -986,7 +986,7 @@ bool bic_gl_program_method_GlProgram_2(interpreter_thread_s &it,unsigned stack_b
       err_string->create(log_size - 1);
 
       // - retrieve error log -
-      glGetProgramInfoLog(program,log_size,NULL,err_string->data);
+      glGetProgramInfoLog(program,log_size,nullptr,err_string->data);
     }
 
     // - delete shader program -
@@ -1173,17 +1173,17 @@ built_in_class_s gl_attribute_class =
   bic_gl_attribute_consts,
   bic_gl_attribute_init,
   bic_gl_attribute_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gl_attribute_methods[] =
@@ -1235,7 +1235,7 @@ void bic_gl_attribute_consts(location_array_s &const_locations)
 
 void bic_gl_attribute_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (gl_attribute_s *)NULL;
+  location_ptr->v_data_ptr = (gl_attribute_s *)nullptr;
 }/*}}}*/
 
 void bic_gl_attribute_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1243,7 +1243,7 @@ void bic_gl_attribute_clear(interpreter_thread_s &it,location_s *location_ptr)
   gl_attribute_s *gla_ptr = (gl_attribute_s *)location_ptr->v_data_ptr;
 
   // - if gl attribute exists -
-  if (gla_ptr != NULL)
+  if (gla_ptr != nullptr)
   {
     gla_ptr->clear(it);
     cfree(gla_ptr);
@@ -1351,17 +1351,17 @@ built_in_class_s gl_uniform_class =
   bic_gl_uniform_consts,
   bic_gl_uniform_init,
   bic_gl_uniform_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gl_uniform_methods[] =
@@ -1418,7 +1418,7 @@ void bic_gl_uniform_consts(location_array_s &const_locations)
 
 void bic_gl_uniform_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (gl_uniform_s *)NULL;
+  location_ptr->v_data_ptr = (gl_uniform_s *)nullptr;
 }/*}}}*/
 
 void bic_gl_uniform_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1426,7 +1426,7 @@ void bic_gl_uniform_clear(interpreter_thread_s &it,location_s *location_ptr)
   gl_uniform_s *glu_ptr = (gl_uniform_s *)location_ptr->v_data_ptr;
 
   // - if gl uniform exists -
-  if (glu_ptr != NULL)
+  if (glu_ptr != nullptr)
   {
     glu_ptr->clear(it);
     cfree(glu_ptr);
@@ -1647,17 +1647,17 @@ built_in_class_s gl_texture_class =
   bic_gl_texture_consts,
   bic_gl_texture_init,
   bic_gl_texture_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gl_texture_methods[] =
@@ -1724,7 +1724,7 @@ void bic_gl_texture_consts(location_array_s &const_locations)
 
 void bic_gl_texture_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (gl_texture_s *)NULL;
+  location_ptr->v_data_ptr = (gl_texture_s *)nullptr;
 }/*}}}*/
 
 void bic_gl_texture_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1732,7 +1732,7 @@ void bic_gl_texture_clear(interpreter_thread_s &it,location_s *location_ptr)
   gl_texture_s *glt_ptr = (gl_texture_s *)location_ptr->v_data_ptr;
 
   // - if texture exists -
-  if (glt_ptr != NULL)
+  if (glt_ptr != nullptr)
   {
     glt_ptr->clear(it);
     cfree(glt_ptr);
@@ -1954,7 +1954,7 @@ bool bic_gl_texture_method_clear_0(interpreter_thread_s &it,unsigned stack_base,
   gl_texture_s *glt_ptr = (gl_texture_s *)dst_location->v_data_ptr;
 
   glBindTexture(GL_TEXTURE_2D,glt_ptr->index);
-  glTexImage2D(GL_TEXTURE_2D,0,glt_ptr->format,0,0,0,glt_ptr->format,GL_UNSIGNED_BYTE,NULL);
+  glTexImage2D(GL_TEXTURE_2D,0,glt_ptr->format,0,0,0,glt_ptr->format,GL_UNSIGNED_BYTE,nullptr);
 
   // - ERROR -
   if (glGetError() != GL_NO_ERROR)

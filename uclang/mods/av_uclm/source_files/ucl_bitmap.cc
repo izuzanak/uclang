@@ -10,7 +10,7 @@
 bool bitmap_s::load_from_file(const char *a_file)
 {/*{{{*/
   FILE *f = fopen(a_file,"rb");
-  if (f == NULL) {
+  if (f == nullptr) {
     return false;
   }
 
@@ -47,7 +47,7 @@ bool bitmap_s::load_from_file(const char *a_file)
 bool bitmap_s::save_to_file(const char *a_file)
 {/*{{{*/
   FILE *f = fopen(a_file,"wb");
-  if (f == NULL) {
+  if (f == nullptr) {
     return false;
   }
 

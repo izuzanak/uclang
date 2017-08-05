@@ -156,17 +156,17 @@ built_in_class_s vg_class =
   bic_vg_consts,
   bic_vg_init,
   bic_vg_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s vg_methods[] =
@@ -1099,17 +1099,17 @@ built_in_class_s vg_paint_class =
   bic_vg_paint_consts,
   bic_vg_paint_init,
   bic_vg_paint_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s vg_paint_methods[] =
@@ -1417,17 +1417,17 @@ built_in_class_s vg_path_class =
   bic_vg_path_consts,
   bic_vg_path_init,
   bic_vg_path_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s vg_path_methods[] =
@@ -1695,7 +1695,7 @@ bool bic_vg_path_method_CloseSubpath_0(interpreter_thread_s &it,unsigned stack_b
   VGPath path = (VGPath)dst_location->v_data_ptr;
 
   VGubyte segment = VG_CLOSE_PATH;
-  vgAppendPathData(path,1,&segment,NULL);
+  vgAppendPathData(path,1,&segment,nullptr);
 
   BIC_SET_RESULT_DESTINATION();
 

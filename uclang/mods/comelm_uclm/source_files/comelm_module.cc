@@ -128,17 +128,17 @@ built_in_class_s elm_comm_class =
   bic_elm_comm_consts,
   bic_elm_comm_init,
   bic_elm_comm_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s elm_comm_methods[] =
@@ -274,14 +274,14 @@ void bic_elm_comm_consts(location_array_s &const_locations)
 
 void bic_elm_comm_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (CElmCommProc *)NULL;
+  location_ptr->v_data_ptr = (CElmCommProc *)nullptr;
 }/*}}}*/
 
 void bic_elm_comm_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   CElmCommProc *ecp_ptr = (CElmCommProc *)location_ptr->v_data_ptr;
 
-  if (ecp_ptr != NULL)
+  if (ecp_ptr != nullptr)
   {
     delete ecp_ptr;
   }
@@ -558,17 +558,17 @@ built_in_class_s elm_packet_class =
   bic_elm_packet_consts,
   bic_elm_packet_init,
   bic_elm_packet_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s elm_packet_methods[] =
@@ -658,7 +658,7 @@ void bic_elm_packet_consts(location_array_s &const_locations)
 
 void bic_elm_packet_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (pointer)NULL;
+  location_ptr->v_data_ptr = (pointer)nullptr;
 }/*}}}*/
 
 void bic_elm_packet_clear(interpreter_thread_s &it,location_s *location_ptr)

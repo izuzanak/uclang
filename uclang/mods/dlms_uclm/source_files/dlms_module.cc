@@ -160,17 +160,17 @@ built_in_class_s dlms_server_class =
   bic_dlms_server_consts,
   bic_dlms_server_init,
   bic_dlms_server_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s dlms_server_methods[] =
@@ -320,14 +320,14 @@ void bic_dlms_server_consts(location_array_s &const_locations)
 
 void bic_dlms_server_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (CGXDLMSBase *)NULL;
+  location_ptr->v_data_ptr = (CGXDLMSBase *)nullptr;
 }/*}}}*/
 
 void bic_dlms_server_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   CGXDLMSBase *dlmss_ptr = (CGXDLMSBase *)location_ptr->v_data_ptr;
 
-  if (dlmss_ptr != NULL)
+  if (dlmss_ptr != nullptr)
   {
     delete dlmss_ptr;
   }
@@ -687,17 +687,17 @@ built_in_class_s dlms_object_class =
   bic_dlms_object_consts,
   bic_dlms_object_init,
   bic_dlms_object_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s dlms_object_methods[] =
@@ -928,14 +928,14 @@ void bic_dlms_object_consts(location_array_s &const_locations)
 
 void bic_dlms_object_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (dlms_object_s *)NULL;
+  location_ptr->v_data_ptr = (dlms_object_s *)nullptr;
 }/*}}}*/
 
 void bic_dlms_object_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   dlms_object_s *dlmso_ptr = (dlms_object_s *)location_ptr->v_data_ptr;
 
-  if (dlmso_ptr != NULL)
+  if (dlmso_ptr != nullptr)
   {
     dlmso_ptr->clear(it);
     cfree(dlmso_ptr);

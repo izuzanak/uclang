@@ -304,7 +304,7 @@ bool jit_pa_fun_parameter(jit_parser_s &_this)
   var_type_s &var_type = tmp_var_types.pop();
 
   // - fill variable record -
-  var_records.last().set(var_type,NULL);
+  var_records.last().set(var_type,nullptr);
 
   // - store parameter record index -
   fun_param_idxs.push(var_records.used - 1);
@@ -523,7 +523,7 @@ bool jit_pa_variable(jit_parser_s &_this)
   var_type_s &var_type = tmp_var_types.last();
 
   // - fill variable record -
-  var_records.last().set(var_type,NULL);
+  var_records.last().set(var_type,nullptr);
 
   // - reset tmp variable type pointer level -
   var_type.pointer_level = 0;
@@ -2026,7 +2026,7 @@ bool jit_pa_function_call(jit_parser_s &_this)
   }
 
   // - call function -
-  jit_value_t tmp_value = jit_insn_call(jit_function,NULL,(jit_function_t)fun_record.jit_function,0,jit_params,fun_param_cnt,0);
+  jit_value_t tmp_value = jit_insn_call(jit_function,nullptr,(jit_function_t)fun_record.jit_function,0,jit_params,fun_param_cnt,0);
 
   // - remove parameters from node stack -
   exp_node_stack.used -= fun_param_cnt;
@@ -2101,7 +2101,7 @@ bool jit_pa_const_octal_char(jit_parser_s &_this)
 
   // - retrieve char number -
   char_num_data[char_num_end] = '\0';
-  int const_char = strtol(char_num_data + 2,NULL,8);
+  int const_char = strtol(char_num_data + 2,nullptr,8);
   char_num_data[char_num_end] = '\'';
 
   // - push constant to expression stack -
@@ -2130,7 +2130,7 @@ bool jit_pa_const_hex_char(jit_parser_s &_this)
 
   // - retrieve char number -
   char_num_data[char_num_end] = '\0';
-  int const_char = strtol(char_num_data + 3,NULL,16);
+  int const_char = strtol(char_num_data + 3,nullptr,16);
   char_num_data[char_num_end] = '\'';
 
   // - push constant to expression stack -
@@ -2221,7 +2221,7 @@ bool jit_pa_const_oct_i32(jit_parser_s &_this)
   // - retrieve constant integer -
   char tmp_char = num_data[num_end];
   num_data[num_end] = '\0';
-  int const_int = strtoll(num_data,NULL,8);
+  int const_int = strtoll(num_data,nullptr,8);
   num_data[num_end] = tmp_char;
 
   // - push constant to expression stack -
@@ -2251,7 +2251,7 @@ bool jit_pa_const_dec_i32(jit_parser_s &_this)
   // - retrieve constant integer -
   char tmp_char = num_data[num_end];
   num_data[num_end] = '\0';
-  int const_int = strtoll(num_data,NULL,10);
+  int const_int = strtoll(num_data,nullptr,10);
   num_data[num_end] = tmp_char;
 
   // - push constant to expression stack -
@@ -2281,7 +2281,7 @@ bool jit_pa_const_hex_i32(jit_parser_s &_this)
   // - retrieve constant integer -
   char tmp_char = num_data[num_end];
   num_data[num_end] = '\0';
-  int const_int = strtoll(num_data,NULL,16);
+  int const_int = strtoll(num_data,nullptr,16);
   num_data[num_end] = tmp_char;
 
   // - push constant to expression stack -
@@ -2311,7 +2311,7 @@ bool jit_pa_const_oct_i64(jit_parser_s &_this)
   // - retrieve constant integer -
   char tmp_char = num_data[num_end];
   num_data[num_end] = '\0';
-  long long int const_int = strtoll(num_data,NULL,8);
+  long long int const_int = strtoll(num_data,nullptr,8);
   num_data[num_end] = tmp_char;
 
   // - push constant to expression stack -
@@ -2341,7 +2341,7 @@ bool jit_pa_const_dec_i64(jit_parser_s &_this)
   // - retrieve constant integer -
   char tmp_char = num_data[num_end];
   num_data[num_end] = '\0';
-  long long int const_int = strtoll(num_data,NULL,10);
+  long long int const_int = strtoll(num_data,nullptr,10);
   num_data[num_end] = tmp_char;
 
   // - push constant to expression stack -
@@ -2371,7 +2371,7 @@ bool jit_pa_const_hex_i64(jit_parser_s &_this)
   // - retrieve constant integer -
   char tmp_char = num_data[num_end];
   num_data[num_end] = '\0';
-  long long int const_int = strtoll(num_data,NULL,16);
+  long long int const_int = strtoll(num_data,nullptr,16);
   num_data[num_end] = tmp_char;
 
   // - push constant to expression stack -
@@ -2401,7 +2401,7 @@ bool jit_pa_const_f32(jit_parser_s &_this)
   // - retrieve constant float -
   char tmp_char = float_num_data[float_num_end];
   float_num_data[float_num_end] = '\0';
-  float const_float = strtof(float_num_data,NULL);
+  float const_float = strtof(float_num_data,nullptr);
   float_num_data[float_num_end] = tmp_char;
 
   // - push constant to expression stack -
@@ -2431,7 +2431,7 @@ bool jit_pa_const_f64(jit_parser_s &_this)
   // - retrieve constant float -
   char tmp_char = float_num_data[float_num_end];
   float_num_data[float_num_end] = '\0';
-  double const_float = strtod(float_num_data,NULL);
+  double const_float = strtod(float_num_data,nullptr);
   float_num_data[float_num_end] = tmp_char;
 
   // - push constant to expression stack -

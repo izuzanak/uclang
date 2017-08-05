@@ -13,17 +13,17 @@ built_in_class_s list_class =
   bic_list_consts,
   bic_list_init,
   bic_list_clear,
-  NULL,
+  nullptr,
   bic_list_length,
   bic_list_item,
   bic_list_first_idx,
   bic_list_next_idx,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
   bic_list_pack,
   bic_list_unpack,
-  NULL,
-  NULL
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s list_methods[] =

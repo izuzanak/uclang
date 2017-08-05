@@ -75,17 +75,17 @@ built_in_class_s uv_loop_class =
   bic_uv_loop_consts,
   bic_uv_loop_init,
   bic_uv_loop_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s uv_loop_methods[] =
@@ -144,14 +144,14 @@ void bic_uv_loop_consts(location_array_s &const_locations)
 
 void bic_uv_loop_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (uv_loop_t *)NULL;
+  location_ptr->v_data_ptr = (uv_loop_t *)nullptr;
 }/*}}}*/
 
 void bic_uv_loop_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   uv_loop_t *uvl_ptr = (uv_loop_t *)location_ptr->v_data_ptr;
 
-  if (uvl_ptr != NULL)
+  if (uvl_ptr != nullptr)
   {
     // - close uv loop -
     uv_loop_close(uvl_ptr);

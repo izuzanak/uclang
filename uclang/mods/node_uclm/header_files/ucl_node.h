@@ -27,7 +27,7 @@ struct node_callback_s
 
 inline void node_callback_s::init()
 {/*{{{*/
-  callback_ptr = NULL;
+  callback_ptr = nullptr;
   param_cnt = 0;
 }/*}}}*/
 

@@ -223,7 +223,9 @@ void docu_source_s::find_comments()
     {
       // - end of input -
       if (ret_term == 1)
+      {
         break;
+      }
 
       // - empty comment -
       if (old_input_idx == input_idx)

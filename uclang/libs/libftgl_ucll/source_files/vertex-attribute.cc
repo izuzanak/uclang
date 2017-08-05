@@ -91,20 +91,20 @@ vertex_attribute_parse( char *format )
     char *name;
     vertex_attribute_t *attr;
     char *p = strchr(format, ':');
-    if( p != NULL)
+    if( p != nullptr)
     {
         name = strndup(format, p-format);
         if( *(++p) == '\0' ) 
         {
             free( name );
-            return NULL;
+            return nullptr;
         }
         size = *p - '0';
 
         if( *(++p) == '\0' ) 
         {
             free( name );
-            return NULL;
+            return nullptr;
         }
         ctype = *p;
 
@@ -119,7 +119,7 @@ vertex_attribute_parse( char *format )
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 
     switch( ctype )
@@ -135,7 +135,7 @@ vertex_attribute_parse( char *format )
     // - ERROR -
     default:
       free(name);
-      return NULL;
+      return nullptr;
     }
 
     attr = vertex_attribute_new( name, size, type, normalized, 0, 0 );

@@ -160,17 +160,17 @@ built_in_class_s zlib_class =
   bic_zlib_consts,
   bic_zlib_init,
   bic_zlib_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s zlib_methods[] =
@@ -370,17 +370,17 @@ built_in_class_s gz_file_class =
   bic_gz_file_consts,
   bic_gz_file_init,
   bic_gz_file_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_gz_file_next_item,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gz_file_methods[] =
@@ -473,7 +473,7 @@ built_in_variable_s gz_file_variables[] =
   gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;\
 \
   /* - ERROR - */\
-  if (gzf_ptr == NULL)\
+  if (gzf_ptr == nullptr)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
@@ -497,7 +497,7 @@ built_in_variable_s gz_file_variables[] =
   gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;\
 \
   /* - ERROR - */\
-  if (gzf_ptr == NULL)\
+  if (gzf_ptr == nullptr)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
@@ -559,7 +559,7 @@ built_in_variable_s gz_file_variables[] =
     return false;\
   }\
 \
-  dst_location->v_data_ptr = (gzFile_s *)NULL;\
+  dst_location->v_data_ptr = (gzFile_s *)nullptr;\
 /*}}}*/
 
 #define BIC_GZ_FILE_READLN() \
@@ -594,7 +594,7 @@ built_in_variable_s gz_file_variables[] =
   gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;\
   \
   /* - ERROR - */\
-  if (gzf_ptr == NULL)\
+  if (gzf_ptr == nullptr)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
@@ -654,14 +654,14 @@ void bic_gz_file_consts(location_array_s &const_locations)
 
 void bic_gz_file_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (gzFile_s *)NULL;
+  location_ptr->v_data_ptr = (gzFile_s *)nullptr;
 }/*}}}*/
 
 void bic_gz_file_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   gzFile_s *gzf_ptr = (gzFile_s *)location_ptr->v_data_ptr;
 
-  if (gzf_ptr != NULL)
+  if (gzf_ptr != nullptr)
   {
     gzclose(gzf_ptr);
   }
@@ -674,10 +674,10 @@ location_s *bic_gz_file_next_item(interpreter_thread_s &it,location_s *location_
   gzFile_s *gzf_ptr = (gzFile_s *)location_ptr->v_data_ptr;
 
   // - ERROR -
-  if (gzf_ptr == NULL)
+  if (gzf_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_NOT_OPENED,source_pos,(location_s *)it.blank_location);
-    return NULL;
+    return nullptr;
   }
 
   BIC_GZ_FILE_READLN();
@@ -688,7 +688,7 @@ location_s *bic_gz_file_next_item(interpreter_thread_s &it,location_s *location_
     line_buffer.clear();
 
     exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_READ_ERROR,source_pos,(location_s *)it.blank_location);
-    return NULL;
+    return nullptr;
   }
 
   if (gzeof(gzf_ptr) && line_buffer.used == 0)
@@ -698,19 +698,18 @@ location_s *bic_gz_file_next_item(interpreter_thread_s &it,location_s *location_
     ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
     return ((location_s *)it.blank_location);
   }
-  else {
-    line_buffer.push('\0');
 
-    // - return data string -
-    string_s *string_ptr = it.get_new_string_ptr();
-    string_ptr->data = line_buffer.data;
-    string_ptr->size = line_buffer.used;
+  line_buffer.push('\0');
 
-    // - create result location -
-    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+  // - return data string -
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->data = line_buffer.data;
+  string_ptr->size = line_buffer.used;
 
-    return new_location;
-  }
+  // - create result location -
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+
+  return new_location;
 }/*}}}*/
 
 bool bic_gz_file_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -752,7 +751,7 @@ bool bic_gz_file_method_GzFile_2(interpreter_thread_s &it,unsigned stack_base,ul
   gzFile_s *gzf_ptr = gzopen(file_name->data,file_mode->data);
 
   // - ERROR -
-  if (gzf_ptr == NULL)
+  if (gzf_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_OPEN_ERROR,operands[c_source_pos_idx],src_0_location);
     return false;
@@ -790,7 +789,7 @@ bool bic_gz_file_method_seek_2(interpreter_thread_s &it,unsigned stack_base,uli 
   gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (gzf_ptr == NULL)
+  if (gzf_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -819,7 +818,7 @@ bool bic_gz_file_method_tell_0(interpreter_thread_s &it,unsigned stack_base,uli 
   gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (gzf_ptr == NULL)
+  if (gzf_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -841,7 +840,7 @@ bool bic_gz_file_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli
   gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (gzf_ptr == NULL)
+  if (gzf_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -941,7 +940,7 @@ bool bic_gz_file_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli 
   gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (gzf_ptr == NULL)
+  if (gzf_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;

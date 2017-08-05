@@ -40,7 +40,7 @@ static PP_Bool inst_OnCreate(PP_Instance instance,uint32_t argc,const char* argn
  */
 static void inst_OnDestroy(PP_Instance instance)
 {/*{{{*/
-  NACL_CALL_CALLBACK_DELEGATE(nacl_destroy_dlg,NULL,0,);
+  NACL_CALL_CALLBACK_DELEGATE(nacl_destroy_dlg,nullptr,0,);
 }/*}}}*/
 
 /**
@@ -49,7 +49,7 @@ static void inst_OnDestroy(PP_Instance instance)
  */
 static void inst_OnChangeView(PP_Instance instance,PP_Resource view_resource)
 {/*{{{*/
-  NACL_CALL_CALLBACK_DELEGATE(nacl_change_view_dlg,NULL,0,);
+  NACL_CALL_CALLBACK_DELEGATE(nacl_change_view_dlg,nullptr,0,);
 }/*}}}*/
 
 /**
@@ -60,7 +60,7 @@ static void inst_OnChangeView(PP_Instance instance,PP_Resource view_resource)
  */
 static void inst_OnChangeFocus(PP_Instance instance,PP_Bool has_focus)
 {/*{{{*/
-  NACL_CALL_CALLBACK_DELEGATE(nacl_change_focus_dlg,NULL,0,);
+  NACL_CALL_CALLBACK_DELEGATE(nacl_change_focus_dlg,nullptr,0,);
 }/*}}}*/
 
 /**
@@ -85,7 +85,7 @@ PP_EXPORT int32_t PPP_InitializeModule(PP_Module a_module_id,PPB_GetInterface ge
 }/*}}}*/
 
 /**
- * Returns an interface pointer for the interface of the given name, or NULL
+ * Returns an interface pointer for the interface of the given name, or nullptr
  * if the interface is not supported.
  */
 PP_EXPORT const void* PPP_GetInterface(const char* interface_name)
@@ -102,7 +102,7 @@ PP_EXPORT const void* PPP_GetInterface(const char* interface_name)
     };
     return &instance_interface;
   }
-  return NULL;
+  return nullptr;
 }/*}}}*/
 
 // - Called before the plugin module is unloaded. -

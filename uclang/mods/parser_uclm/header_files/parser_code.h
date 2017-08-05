@@ -668,8 +668,9 @@ inline unsigned short reg_parser_s::process_char(char *&c_ptr)
 
       return new_char;
     }
+
     // - process char represented by hexadecimal number -
-    else if (*c_ptr == 'x')
+    if (*c_ptr == 'x')
     {
       c_ptr++;
       unsigned short new_char = 0;
@@ -708,50 +709,46 @@ inline unsigned short reg_parser_s::process_char(char *&c_ptr)
 
       return new_char;
     }
-    else
+
+    switch (*c_ptr++)
     {
-      switch (*c_ptr++)
-      {
-      case 'a':
-        return '\a';
-      case 'b':
-        return '\b';
-      case 'f':
-        return '\f';
-      case 'n':
-        return '\n';
-      case 'r':
-        return '\r';
-      case 't':
-        return '\t';
-      case 'v':
-        return '\v';
-      case '\\':
-        return '\\';
-      case '?':
-        return'?';
-      case '\'':
-        return '\'';
-      case '"':
-        return'"';
-      case '>':
-        return '>';
-      case '}':
-        return '}';
-      case ']':
-        return ']';
-      case '|':
-        return '|';
-      default:
-        cassert(0);
-        return 0xffff;
-      }
+    case 'a':
+      return '\a';
+    case 'b':
+      return '\b';
+    case 'f':
+      return '\f';
+    case 'n':
+      return '\n';
+    case 'r':
+      return '\r';
+    case 't':
+      return '\t';
+    case 'v':
+      return '\v';
+    case '\\':
+      return '\\';
+    case '?':
+      return'?';
+    case '\'':
+      return '\'';
+    case '"':
+      return'"';
+    case '>':
+      return '>';
+    case '}':
+      return '}';
+    case ']':
+      return ']';
+    case '|':
+      return '|';
+    default:
+      cassert(0);
+      return 0xffff;
     }
   }
-  else
-  {
-    return *c_ptr++;
-  }
+
+  return *c_ptr++;
 }/*}}}*/
 
 inline bool reg_parser_s::process_reg_exp(string_s &source_string)

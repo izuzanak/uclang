@@ -7,14 +7,14 @@ include "ucl_nacl.h"
 nacl_c g_nacl;
 
 // - nacl related variables -
-PPB_Var* ppb_var_iface = NULL;
-PPB_Core *ppb_core_iface = NULL;
-PPB_Instance *ppb_inst_iface = NULL;
-PPB_Console* ppb_console_iface = NULL;
-PPB_Messaging* ppb_message_iface = NULL;
-PPB_NetAddress *ppb_net_addr_iface = NULL;
-PPB_TCPSocket *ppb_tcp_socket_iface = NULL;
-PPB_Graphics3D *ppb_graphics_3d_iface = NULL;
+PPB_Var* ppb_var_iface = nullptr;
+PPB_Core *ppb_core_iface = nullptr;
+PPB_Instance *ppb_inst_iface = nullptr;
+PPB_Console* ppb_console_iface = nullptr;
+PPB_Messaging* ppb_message_iface = nullptr;
+PPB_NetAddress *ppb_net_addr_iface = nullptr;
+PPB_TCPSocket *ppb_tcp_socket_iface = nullptr;
+PPB_Graphics3D *ppb_graphics_3d_iface = nullptr;
 
 // - nacl graphics 3d context -
 PP_Resource pp_3d_context = 0;

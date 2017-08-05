@@ -173,13 +173,13 @@ inline int fd_flags_rb_tree_s::__compare_value(fd_flags_s &a_first,fd_flags_s &a
 
 inline void ws_context_s::init()
 {/*{{{*/
-  it_ptr = NULL;
+  it_ptr = nullptr;
   source_pos = 0;
   ret_code = c_run_return_code_OK;
 
-  context = NULL;
-  protocols = NULL;
-  user_data_ptr = NULL;
+  context = nullptr;
+  protocols = nullptr;
+  user_data_ptr = nullptr;
 
   prot_names.init();
   prot_dlgs.init();
@@ -191,19 +191,19 @@ inline void ws_context_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - destroy websocket context -
-  if (context != NULL)
+  if (context != nullptr)
   {
     libwebsocket_context_destroy(context);
   }
 
   // - release protocols -
-  if (protocols != NULL)
+  if (protocols != nullptr)
   {
     cfree(protocols);
   }
 
   // - release user data location -
-  if (user_data_ptr != NULL)
+  if (user_data_ptr != nullptr)
   {
     it.release_location_ptr(user_data_ptr);
   }
@@ -241,12 +241,12 @@ inline unsigned ws_context_s::get_protocol_idx(libwebsocket *a_wsi)
 
 inline void ws_conn_s::init()
 {/*{{{*/
-  wsc_ptr = NULL;
+  wsc_ptr = nullptr;
   prot_idx = c_idx_not_exist;
-  ws_ptr = NULL;
-  user_data_ptr = NULL;
+  ws_ptr = nullptr;
+  user_data_ptr = nullptr;
   data_buffer.init();
-  data_in = NULL;
+  data_in = nullptr;
   data_len = 0;
 }/*}}}*/
 
@@ -254,7 +254,7 @@ inline void ws_conn_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release user data location -
-  if (user_data_ptr != NULL)
+  if (user_data_ptr != nullptr)
   {
     it.release_location_ptr(user_data_ptr);
   }
@@ -270,9 +270,9 @@ inline void ws_conn_s::clear(interpreter_thread_s &it)
 
 inline void ws_client_s::init()
 {/*{{{*/
-  wsc_location = NULL;
-  ws_ptr = NULL;
-  wscl_udp_ptr = NULL;
+  wsc_location = nullptr;
+  ws_ptr = nullptr;
+  wscl_udp_ptr = nullptr;
   connected = false;
 }/*}}}*/
 
@@ -280,13 +280,13 @@ inline void ws_client_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release websocket context -
-  if (wsc_location != NULL)
+  if (wsc_location != nullptr)
   {
     it.release_location_ptr(wsc_location);
   }
 
   // - relese websocket user data -
-  if (!connected && wscl_udp_ptr != NULL)
+  if (!connected && wscl_udp_ptr != nullptr)
   {
     free(wscl_udp_ptr);
   }

@@ -13,17 +13,17 @@ built_in_class_s dict_class =
   bic_dict_consts,
   bic_dict_init,
   bic_dict_clear,
-  NULL,
+  nullptr,
   bic_dict_length,
   bic_dict_item,
   bic_dict_first_idx,
   bic_dict_next_idx,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
   bic_dict_pack,
   bic_dict_unpack,
-  NULL,
-  NULL
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s dict_methods[] =
@@ -250,7 +250,7 @@ built_in_variable_s dict_variables[] =
         location_s *val_location = it.get_location_value(ptr[1]);\
         \
         /* - push key and value locations to dictionary - */\
-        pointer_map_s insert_map = {key_location,NULL};\
+        pointer_map_s insert_map = {key_location,nullptr};\
         unsigned index = TARGET_PTR->unique_insert(insert_map);\
         \
         /* - ERROR - */\
@@ -286,7 +286,7 @@ built_in_variable_s dict_variables[] =
     it.release_location_ptr(val_reference);\
     \
     /* - push key and value locations to dictionary - */\
-    pointer_map_s insert_map = {key_location,NULL};\
+    pointer_map_s insert_map = {key_location,nullptr};\
     unsigned map_idx = TARGET_PTR->unique_insert(insert_map);\
     \
     /* - ERROR - */\
@@ -484,10 +484,8 @@ unsigned bic_dict_first_idx(location_s *location_ptr)
   {
     return tree_ptr->get_min_value_idx(tree_ptr->root_idx);
   }
-  else
-  {
-    return c_idx_not_exist;
-  }
+
+  return c_idx_not_exist;
 }/*}}}*/
 
 unsigned bic_dict_next_idx(location_s *location_ptr,unsigned index)
@@ -556,7 +554,7 @@ bool bic_dict_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_
     pointer *l_ptr_end = loc_stack.data + loc_stack.used;
     do
     {
-      pointer_map_s insert_map = {l_ptr[0],NULL};
+      pointer_map_s insert_map = {l_ptr[0],nullptr};
 
       unsigned index = tree_ptr->unique_insert(insert_map);
 
@@ -567,7 +565,7 @@ bool bic_dict_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_
 
       pointer_map_s &map = tree_ptr->data[index].object;
 
-      if (map.value != NULL)
+      if (map.value != nullptr)
       {
         return false;
       }
@@ -643,7 +641,7 @@ bool bic_dict_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stac
   tree_ptr->it_ptr = &it;
   tree_ptr->source_pos = operands[c_source_pos_idx];
 
-  pointer_map_s insert_map = {(pointer)src_0_location,NULL};
+  pointer_map_s insert_map = {(pointer)src_0_location,nullptr};
   unsigned index = tree_ptr->unique_insert(insert_map);
 
   if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
@@ -653,7 +651,7 @@ bool bic_dict_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stac
 
   pointer_map_s &map = tree_ptr->data[index].object;
 
-  if (map.value == NULL)
+  if (map.value == nullptr)
   {
     src_0_location->v_reference_cnt.atomic_inc();
 
@@ -818,7 +816,7 @@ bool bic_dict_method_store_ref_2(interpreter_thread_s &it,unsigned stack_base,ul
   tree_ptr->it_ptr = &it;
   tree_ptr->source_pos = operands[c_source_pos_idx];
 
-  pointer_map_s insert_map = {(pointer)src_0_location,NULL};
+  pointer_map_s insert_map = {(pointer)src_0_location,nullptr};
   unsigned index = tree_ptr->unique_insert(insert_map);
 
   if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
@@ -857,7 +855,7 @@ bool bic_dict_method_has_key_1(interpreter_thread_s &it,unsigned stack_base,uli 
   tree_ptr->it_ptr = &it;
   tree_ptr->source_pos = operands[c_source_pos_idx];
 
-  pointer_map_s search_map = {(pointer)src_0_location,NULL};
+  pointer_map_s search_map = {(pointer)src_0_location,nullptr};
   unsigned index = tree_ptr->get_idx(search_map);
 
   if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
@@ -884,7 +882,7 @@ bool bic_dict_method_remove_key_1(interpreter_thread_s &it,unsigned stack_base,u
   tree_ptr->it_ptr = &it;
   tree_ptr->source_pos = operands[c_source_pos_idx];
 
-  pointer_map_s search_map = {(pointer)src_0_location,NULL};
+  pointer_map_s search_map = {(pointer)src_0_location,nullptr};
   unsigned index = tree_ptr->get_idx(search_map);
 
   if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
@@ -975,7 +973,7 @@ bool bic_dict_method_next_key_1(interpreter_thread_s &it,unsigned stack_base,uli
   tree_ptr->it_ptr = &it;
   tree_ptr->source_pos = operands[c_source_pos_idx];
 
-  pointer_map_s search_map = {(pointer)src_0_location,NULL};
+  pointer_map_s search_map = {(pointer)src_0_location,nullptr};
   unsigned index = tree_ptr->get_idx(search_map);
 
   if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
@@ -1021,7 +1019,7 @@ bool bic_dict_method_prev_key_1(interpreter_thread_s &it,unsigned stack_base,uli
   tree_ptr->it_ptr = &it;
   tree_ptr->source_pos = operands[c_source_pos_idx];
 
-  pointer_map_s search_map = {(pointer)src_0_location,NULL};
+  pointer_map_s search_map = {(pointer)src_0_location,nullptr};
   unsigned index = tree_ptr->get_idx(search_map);
 
   if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
@@ -1067,7 +1065,7 @@ bool bic_dict_method_lee_key_1(interpreter_thread_s &it,unsigned stack_base,uli 
   tree_ptr->it_ptr = &it;
   tree_ptr->source_pos = operands[c_source_pos_idx];
 
-  pointer_map_s search_map = {(pointer)src_0_location,NULL};
+  pointer_map_s search_map = {(pointer)src_0_location,nullptr};
   unsigned index = tree_ptr->get_lee_idx(search_map);
 
   if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
@@ -1103,7 +1101,7 @@ bool bic_dict_method_gre_key_1(interpreter_thread_s &it,unsigned stack_base,uli 
   tree_ptr->it_ptr = &it;
   tree_ptr->source_pos = operands[c_source_pos_idx];
 
-  pointer_map_s search_map = {(pointer)src_0_location,NULL};
+  pointer_map_s search_map = {(pointer)src_0_location,nullptr};
   unsigned index = tree_ptr->get_gre_idx(search_map);
 
   if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)

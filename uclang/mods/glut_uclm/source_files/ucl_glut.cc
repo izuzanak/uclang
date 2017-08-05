@@ -21,7 +21,7 @@ glut_c g_glut;
 #define GLUT_CALL_CALLBACK_DELEGATE(NAME,PARAM_DATA,PARAM_CNT,PARAM_CODE) \
 {/*{{{*/\
   if (glut_s::main_ret_code == c_run_return_code_OK &&\
-      glut_s::glut_ptr->NAME ## _dlg != NULL)\
+      glut_s::glut_ptr->NAME ## _dlg != nullptr)\
   {\
     interpreter_thread_s &it = *glut_s::it_ptr;\
     delegate_s *delegate_ptr = (delegate_s *)glut_s::glut_ptr->NAME ## _dlg->v_data_ptr;\
@@ -29,7 +29,7 @@ glut_c g_glut;
     PARAM_CODE;\
 \
     /* - call delegate method - */\
-    location_s *trg_location = NULL;\
+    location_s *trg_location = nullptr;\
     BIC_CALL_DELEGATE(it,delegate_ptr,PARAM_DATA,PARAM_CNT,trg_location,glut_s::main_source_pos,\
       glut_s::main_ret_code = c_run_return_code_EXCEPTION;\
       glutLeaveMainLoop();\
@@ -41,7 +41,7 @@ glut_c g_glut;
 
 void glut_s::display_func()
 {/*{{{*/
-  GLUT_CALL_CALLBACK_DELEGATE(display,NULL,0,);
+  GLUT_CALL_CALLBACK_DELEGATE(display,nullptr,0,);
 }/*}}}*/
 
 void glut_s::reshape_func(int width,int height)
@@ -151,7 +151,7 @@ void glut_s::special_func(int key,int x,int y)
 
 void glut_s::idle_func()
 {/*{{{*/
-  GLUT_CALL_CALLBACK_DELEGATE(idle,NULL,0,);
+  GLUT_CALL_CALLBACK_DELEGATE(idle,nullptr,0,);
 }/*}}}*/
 
 void glut_s::timer_func(int value)

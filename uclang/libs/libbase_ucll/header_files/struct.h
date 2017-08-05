@@ -319,7 +319,11 @@ inlines ui_array_s
 
 inline unsigned ui_array_s::map_name(unsigned a_name_idx)
 {/*{{{*/
-  if (a_name_idx >= used) return c_idx_not_exist;
+  if (a_name_idx >= used)
+  {
+    return c_idx_not_exist;
+  }
+
   return data[a_name_idx];
 }/*}}}*/
 
@@ -395,8 +399,8 @@ inlines string_rb_tree_s
 
 inline int string_rb_tree_s::__compare_value(string_s &a_first,string_s &a_second)
 {/*{{{*/
-  if (a_first.size < a_second.size) return -1;
-  if (a_first.size > a_second.size) return 1;
+  if (a_first.size < a_second.size) { return -1; }
+  if (a_first.size > a_second.size) { return 1; }
   return memcmp(a_first.data,a_second.data,a_first.size - 1);
 }/*}}}*/
 

@@ -181,18 +181,18 @@ struct fuse_file_filler_s
 inline void fuse_channel_s::init()
 {/*{{{*/
   mountpoint.init();
-  fuse_chan_ptr = NULL;
+  fuse_chan_ptr = nullptr;
   attached = false;
 }/*}}}*/
 
 inline void fuse_channel_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (fuse_chan_ptr != NULL)
+  if (fuse_chan_ptr != nullptr)
   {
     // - if channel is attached to handle -
     if (attached)
     {
-      fuse_unmount(mountpoint.data,NULL);
+      fuse_unmount(mountpoint.data,nullptr);
     }
     else
     {
@@ -226,7 +226,7 @@ inline void fuse_operations_s::clear(interpreter_thread_s &it)
     do {
 
       // - if delegate is set -
-      if (*d_ptr != NULL)
+      if (*d_ptr != nullptr)
       {
         it.release_location_ptr((location_s *)*d_ptr);
       }
@@ -244,37 +244,37 @@ inline void fuse_operations_s::clear(interpreter_thread_s &it)
 
 inline void fuse_handle_s::init()
 {/*{{{*/
-  it_ptr = NULL;
+  it_ptr = nullptr;
   source_pos = 0;
   ret_code = c_run_return_code_OK;
 
-  fuse_channel_ptr = NULL;
-  fuse_operations_ptr = NULL;
-  private_data_ptr = NULL;
-  fuse_ptr = NULL;
+  fuse_channel_ptr = nullptr;
+  fuse_operations_ptr = nullptr;
+  private_data_ptr = nullptr;
+  fuse_ptr = nullptr;
 }/*}}}*/
 
 inline void fuse_handle_s::clear(interpreter_thread_s &it)
 {/*{{{*/
   // - release channel location -
-  if (fuse_channel_ptr != NULL)
+  if (fuse_channel_ptr != nullptr)
   {
     it.release_location_ptr(fuse_channel_ptr);
   }
 
   // - release operations location -
-  if (fuse_operations_ptr != NULL)
+  if (fuse_operations_ptr != nullptr)
   {
     it.release_location_ptr(fuse_operations_ptr);
   }
 
   // - release private data location -
-  if (private_data_ptr != NULL)
+  if (private_data_ptr != nullptr)
   {
     it.release_location_ptr(private_data_ptr);
   }
 
-  if (fuse_ptr != NULL)
+  if (fuse_ptr != nullptr)
   {
     fuse_destroy(fuse_ptr);
   }
@@ -300,8 +300,8 @@ inline fuse_c::~fuse_c()
 
 inline void fuse_dir_filler_s::init()
 {/*{{{*/
-  buffer = NULL;
-  filler = NULL;
+  buffer = nullptr;
+  filler = nullptr;
   offset = 0;
 }/*}}}*/
 
@@ -316,7 +316,7 @@ inline void fuse_dir_filler_s::clear(interpreter_thread_s &it)
 
 inline void fuse_file_filler_s::init()
 {/*{{{*/
-  buffer = NULL;
+  buffer = nullptr;
   size = 0;
   offset = 0;
   writed = 0;

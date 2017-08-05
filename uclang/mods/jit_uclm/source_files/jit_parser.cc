@@ -431,7 +431,10 @@ void jit_parser_s::create_signature(unsigned a_name_length,char *a_name_data,uns
       if (pointer_level > 0)
       {
         *b_ptr++ = ' ';
-        while (pointer_level-- > 0) *b_ptr++ = '*';
+        while (pointer_level-- > 0)
+        {
+          *b_ptr++ = '*';
+        }
       }
 
       b_ptr += snprintf(b_ptr,b_ptr_end - b_ptr,"%c",(pt_ptr + 1) >= pt_ptr_end ? ')' : ',');

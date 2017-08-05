@@ -618,16 +618,16 @@ built_in_class_s blank_class =
   bic_blank_init,
   bic_blank_clear,
   bic_blank_compare,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_blank_pack,
   bic_blank_unpack,
-  NULL,
-  NULL
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s blank_methods[] =
@@ -795,16 +795,16 @@ built_in_class_s char_class =
   bic_char_init,
   bic_char_clear,
   bic_char_compare,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_char_pack,
   bic_char_unpack,
-  NULL,
-  NULL
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s char_methods[] =
@@ -1914,16 +1914,16 @@ built_in_class_s integer_class =
   bic_integer_init,
   bic_integer_clear,
   bic_integer_compare,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_integer_pack,
   bic_integer_unpack,
-  NULL,
-  NULL
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s integer_methods[] =
@@ -2990,7 +2990,7 @@ bool bic_integer_method_Integer_1(interpreter_thread_s &it,unsigned stack_base,u
   {
     string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
-    char *end_ptr = NULL;
+    char *end_ptr = nullptr;
     dst_location->v_data_ptr = (long long int)strtoll(string_ptr->data,&end_ptr,0);
 
     if (string_ptr->size <= 1 || (string_ptr->data + string_ptr->size - 1) != end_ptr)
@@ -3048,7 +3048,7 @@ bool bic_integer_method_Integer_2(interpreter_thread_s &it,unsigned stack_base,u
       return false;
     }
 
-    char *end_ptr = NULL;
+    char *end_ptr = nullptr;
     dst_location->v_data_ptr = (long long int)strtoll(string_ptr->data,&end_ptr,base);
 
     if (string_ptr->size <= 1 || (string_ptr->data + string_ptr->size - 1) != end_ptr)
@@ -3133,16 +3133,16 @@ built_in_class_s float_class =
   bic_float_init,
   bic_float_clear,
   bic_float_compare,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_float_pack,
   bic_float_unpack,
-  NULL,
-  NULL
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s float_methods[] =
@@ -3990,7 +3990,7 @@ bool bic_float_method_Float_1(interpreter_thread_s &it,unsigned stack_base,uli *
   {
     string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
-    char *end_ptr = NULL;
+    char *end_ptr = nullptr;
     dst_location->v_data_ptr = (double)strtod(string_ptr->data,&end_ptr);
 
     if (string_ptr->size <= 1 || (string_ptr->data + string_ptr->size - 1) != end_ptr)
@@ -4184,12 +4184,12 @@ built_in_class_s string_class =
   bic_string_item,
   bic_string_first_idx,
   bic_string_next_idx,
-  NULL,
+  nullptr,
   bic_string_from_slice,
   bic_string_pack,
   bic_string_unpack,
-  NULL,
-  NULL
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s string_methods[] =
@@ -4462,8 +4462,8 @@ int bic_string_compare(location_s *first_loc,location_s *second_loc)
   string_s *first = (string_s *)first_loc->v_data_ptr;
   string_s *second = (string_s *)second_loc->v_data_ptr;
 
-  if (first->size < second->size) return -1;
-  if (first->size > second->size) return 1;
+  if (first->size < second->size) { return -1; }
+  if (first->size > second->size) { return 1; }
   return memcmp(first->data,second->data,first->size - 1);
 }/*}}}*/
 
@@ -4780,7 +4780,7 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
               format_buffer.push('0');
             }
 
-            long long int value = strtoll(old_fe_ptr,NULL,10);
+            long long int value = strtoll(old_fe_ptr,nullptr,10);
             dot_done ? precision = value : width = value;
 
             flags_done = true;
@@ -4876,7 +4876,10 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
             unsigned old_used = buffer.used;
 
             int max_length = c_number_format_size;
-            if (width >= max_length) max_length = width + 1;
+            if (width >= max_length)
+            {
+              max_length = width + 1;
+            }
 
             buffer.push_blanks(max_length);
 
@@ -4928,8 +4931,8 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
             unsigned old_used = buffer.used;
 
             int max_length = c_number_format_size;
-            if (width >= max_length) max_length = width + 1;
-            if (precision >= max_length) max_length = precision + 1;
+            if (width >= max_length) { max_length = width + 1; }
+            if (precision >= max_length) { max_length = precision + 1; }
 
             buffer.push_blanks(max_length);
 
@@ -4981,7 +4984,10 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
             unsigned old_used = buffer.used;
 
             int max_length = c_number_format_size + 1 + precision;
-            if (width >= max_length) max_length = width + 1;
+            if (width >= max_length)
+            {
+              max_length = width + 1;
+            }
 
             buffer.push_blanks(max_length);
 
@@ -5031,7 +5037,10 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
 
             // - retrieve maximal count of characters -
             int max_length = argument->size;
-            if (width >= max_length) max_length = width + 1;
+            if (width >= max_length)
+            {
+              max_length = width + 1;
+            }
 
             buffer.push_blanks(max_length);
 
@@ -5869,17 +5878,17 @@ built_in_class_s array_class =
   bic_array_consts,
   bic_array_init,
   bic_array_clear,
-  NULL,
+  nullptr,
   bic_array_length,
   bic_array_item,
   bic_array_first_idx,
   bic_array_next_idx,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
   bic_array_pack,
   bic_array_unpack,
-  NULL,
-  NULL
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s array_methods[] =
@@ -7159,7 +7168,10 @@ bool bic_array_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *
     do
     {
       BIC_CALL_PRINT(it,*e_ptr,operands[c_source_pos_idx],return false;);
-      if (++e_ptr >= e_ptr_end) break;
+      if (++e_ptr >= e_ptr_end)
+      {
+        break;
+      }
       putchar(',');
     }
     while(true);
@@ -7184,16 +7196,16 @@ built_in_class_s error_class =
   bic_error_init,
   bic_error_clear,
   bic_error_compare,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s error_methods[] =
@@ -7380,17 +7392,17 @@ built_in_class_s exception_class =
   bic_exception_consts,
   bic_exception_init,
   bic_exception_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s exception_methods[] =
@@ -7914,16 +7926,16 @@ built_in_class_s type_class =
   bic_type_init,
   bic_type_clear,
   bic_type_compare,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s type_methods[] =
@@ -8128,17 +8140,17 @@ built_in_class_s mutex_class =
   bic_mutex_consts,
   bic_mutex_init,
   bic_mutex_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s mutex_methods[] =
@@ -8355,17 +8367,17 @@ built_in_class_s thread_class =
   bic_thread_consts,
   bic_thread_init,
   bic_thread_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s thread_methods[] =
@@ -8499,7 +8511,7 @@ bool bic_thread_method_join_0(interpreter_thread_s &it,unsigned stack_base,uli *
   else
   {
     // - set proper return value -
-    if (return_location != NULL)
+    if (return_location != nullptr)
     {
       BIC_SET_RESULT(return_location);
     }
@@ -8534,7 +8546,7 @@ bool bic_thread_method_try_join_0(interpreter_thread_s &it,unsigned stack_base,u
   else
   {
     // - set proper return value -
-    if (return_location != NULL)
+    if (return_location != nullptr)
     {
       BIC_SET_RESULT(return_location);
     }
@@ -8613,17 +8625,17 @@ built_in_class_s delegate_class =
   bic_delegate_consts,
   bic_delegate_init,
   bic_delegate_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s delegate_methods[] =
@@ -8670,7 +8682,7 @@ void bic_delegate_consts(location_array_s &const_locations)
 
 void bic_delegate_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (delegate_s *)NULL;
+  location_ptr->v_data_ptr = (delegate_s *)nullptr;
 }/*}}}*/
 
 void bic_delegate_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -8678,16 +8690,16 @@ void bic_delegate_clear(interpreter_thread_s &it,location_s *location_ptr)
   delegate_s *delegate_ptr = (delegate_s *)location_ptr->v_data_ptr;
 
   // - if delegate exist -
-  if (delegate_ptr != NULL)
+  if (delegate_ptr != nullptr)
   {
     // - release delegate object -
-    if (delegate_ptr->object_location != NULL)
+    if (delegate_ptr->object_location != nullptr)
     {
       it.release_location_ptr(delegate_ptr->object_location);
     }
 
     // - release delegate partial application parameters -
-    if (delegate_ptr->papply != NULL)
+    if (delegate_ptr->papply != nullptr)
     {
       pointer_array_s *papply_params = (pointer_array_s *)delegate_ptr->papply;
 
@@ -8816,11 +8828,11 @@ bool bic_delegate_method_Delegate_3(interpreter_thread_s &it,unsigned stack_base
       return false;
     }
 
-    delegate_ptr->object_location = NULL;
+    delegate_ptr->object_location = nullptr;
     delegate_ptr->name_idx_ri = method_ri;
     delegate_ptr->orig_param_cnt = param_cnt;
     delegate_ptr->param_cnt = param_cnt;
-    delegate_ptr->papply = NULL;
+    delegate_ptr->papply = nullptr;
   }/*}}}*/
 
   // - process method delegate -
@@ -8858,7 +8870,7 @@ bool bic_delegate_method_Delegate_3(interpreter_thread_s &it,unsigned stack_base
     delegate_ptr->name_idx_ri = name_idx;
     delegate_ptr->orig_param_cnt = param_cnt;
     delegate_ptr->param_cnt = param_cnt;
-    delegate_ptr->papply = NULL;
+    delegate_ptr->papply = nullptr;
   }/*}}}*/
 
   // - set object pointer to result -
@@ -8901,7 +8913,7 @@ bool bic_delegate_method_call_1(interpreter_thread_s &it,unsigned stack_base,uli
   }
 
   // - call delegate method -
-  location_s *trg_location = NULL;
+  location_s *trg_location = nullptr;
   BIC_CALL_DELEGATE(it,delegate_ptr,params_ptr->data,params_ptr->used,trg_location,operands[c_source_pos_idx],return false);
 
   pointer &res_location = it.data_stack[res_loc_idx];
@@ -8947,7 +8959,7 @@ bool bic_delegate_method_papply_1(interpreter_thread_s &it,unsigned stack_base,u
   delegate_s *new_dlg_ptr = (delegate_s *)cmalloc(sizeof(delegate_s));
 
   // - retrieve object location -
-  if (orig_dlg_ptr->object_location != NULL)
+  if (orig_dlg_ptr->object_location != nullptr)
   {
     orig_dlg_ptr->object_location->v_reference_cnt.atomic_inc();
   }
@@ -8964,7 +8976,7 @@ bool bic_delegate_method_papply_1(interpreter_thread_s &it,unsigned stack_base,u
   new_papply_params->init();
 
   // - copy original partial application parameters -
-  if (orig_dlg_ptr->papply != NULL)
+  if (orig_dlg_ptr->papply != nullptr)
   {
     pointer_array_s *orig_papply_params = (pointer_array_s *)orig_dlg_ptr->papply;
 
@@ -9026,17 +9038,17 @@ built_in_class_s buffer_class =
   bic_buffer_consts,
   bic_buffer_init,
   bic_buffer_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s buffer_methods[] =
@@ -9073,7 +9085,7 @@ void bic_buffer_consts(location_array_s &const_locations)
 
 void bic_buffer_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (buffer_s *)NULL;
+  location_ptr->v_data_ptr = (buffer_s *)nullptr;
 }/*}}}*/
 
 void bic_buffer_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -9081,16 +9093,16 @@ void bic_buffer_clear(interpreter_thread_s &it,location_s *location_ptr)
   buffer_s *b_ptr = (buffer_s *)location_ptr->v_data_ptr;
 
   // - if buffer exist -
-  if (b_ptr != NULL)
+  if (b_ptr != nullptr)
   {
-    if (b_ptr->owner_ptr != NULL)
+    if (b_ptr->owner_ptr != nullptr)
     {
       it.release_location_ptr(b_ptr->owner_ptr);
     }
     else
     {
       // - if buffer owns data -
-      if (b_ptr->data != NULL)
+      if (b_ptr->data != nullptr)
       {
         // - release data -
         cfree(b_ptr->data);

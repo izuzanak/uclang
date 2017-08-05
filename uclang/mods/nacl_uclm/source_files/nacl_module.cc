@@ -161,17 +161,17 @@ built_in_class_s nacl_class =
   bic_nacl_consts,
   bic_nacl_init,
   bic_nacl_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s nacl_methods[] =
@@ -256,7 +256,7 @@ built_in_variable_s nacl_variables[] =
   BIC_NACL_DELEGATE_CHECK(src_0_location,PARAM_CNT);\
 \
   /* - release previous delegate - */\
-  if (DLG_PTR_NAME != NULL)\
+  if (DLG_PTR_NAME != nullptr)\
   {\
     it.release_location_ptr(DLG_PTR_NAME);\
   }\
@@ -276,35 +276,35 @@ void bic_nacl_consts(location_array_s &const_locations)
 
 void bic_nacl_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (void *)NULL;
+  location_ptr->v_data_ptr = (void *)nullptr;
 }/*}}}*/
 
 void bic_nacl_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  cassert(nacl_it_ptr != NULL);
+  cassert(nacl_it_ptr != nullptr);
 
   // - reset nacl interpreter thread pointer -
-  nacl_it_ptr = NULL;
+  nacl_it_ptr = nullptr;
 
   // - release nacl instance destroy delegate -
-  if (nacl_destroy_dlg != NULL)
+  if (nacl_destroy_dlg != nullptr)
   {
     it.release_location_ptr(nacl_destroy_dlg);
-    nacl_destroy_dlg = NULL;
+    nacl_destroy_dlg = nullptr;
   }
 
   // - release nacl instance change view delegate -
-  if (nacl_change_view_dlg != NULL)
+  if (nacl_change_view_dlg != nullptr)
   {
     it.release_location_ptr(nacl_change_view_dlg);
-    nacl_change_view_dlg = NULL;
+    nacl_change_view_dlg = nullptr;
   }
 
   // - release nacl instance change focus delegate -
-  if (nacl_change_focus_dlg != NULL)
+  if (nacl_change_focus_dlg != nullptr)
   {
     it.release_location_ptr(nacl_change_focus_dlg);
-    nacl_change_focus_dlg = NULL;
+    nacl_change_focus_dlg = nullptr;
   }
 }/*}}}*/
 
@@ -312,7 +312,7 @@ bool bic_nacl_method_Nacl_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 {/*{{{*/
 
   // - ERROR -
-  if (nacl_it_ptr != NULL)
+  if (nacl_it_ptr != nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_NACL_OBJECT_ALREADY_CREATED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -457,7 +457,7 @@ bool bic_nacl_method_Get3D_2(interpreter_thread_s &it,unsigned stack_base,uli *o
   // - set 3d context as current graphic context -
   glSetCurrentContextPPAPI(pp_3d_context);
 
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_nacl_3d,NULL);
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_nacl_3d,nullptr);
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -493,17 +493,17 @@ built_in_class_s nacl_3d_class =
   bic_nacl_3d_consts,
   bic_nacl_3d_init,
   bic_nacl_3d_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s nacl_3d_methods[] =
@@ -540,7 +540,7 @@ void bic_nacl_3d_consts(location_array_s &const_locations)
 
 void bic_nacl_3d_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (void *)NULL;
+  location_ptr->v_data_ptr = (void *)nullptr;
 }/*}}}*/
 
 void bic_nacl_3d_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -634,17 +634,17 @@ built_in_class_s core_class =
   bic_core_consts,
   bic_core_init,
   bic_core_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s core_methods[] =
@@ -742,16 +742,16 @@ built_in_class_s time_class =
   bic_time_init,
   bic_time_clear,
   bic_time_compare,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s time_methods[] =
@@ -1153,17 +1153,17 @@ built_in_class_s console_class =
   bic_console_consts,
   bic_console_init,
   bic_console_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s console_methods[] =
@@ -1381,17 +1381,17 @@ built_in_class_s message_class =
   bic_message_consts,
   bic_message_init,
   bic_message_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s message_methods[] =
@@ -1505,17 +1505,17 @@ built_in_class_s net_address_class =
   bic_net_address_consts,
   bic_net_address_init,
   bic_net_address_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s net_address_methods[] =

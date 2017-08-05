@@ -713,17 +713,17 @@ built_in_class_s sys_class =
   bic_sys_consts,
   bic_sys_init,
   bic_sys_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s sys_methods[] =
@@ -905,7 +905,7 @@ built_in_variable_s sys_variables[] =
   FILE *f = fopen(file_name->data,file_mode->data);\
   \
   /* - ERROR - */\
-  if (f == NULL)\
+  if (f == nullptr)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_FILE_OPEN_ERROR,operands[c_source_pos_idx],src_0_location);\
     return false;\
@@ -936,7 +936,7 @@ built_in_variable_s sys_variables[] =
   FILE *f = POPEN_FNAME(command->data,type->data);\
   \
   /* - ERROR - */\
-  if (f == NULL)\
+  if (f == nullptr)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_PIPE_OPEN_ERROR,operands[c_source_pos_idx],src_0_location);\
     return false;\
@@ -1020,7 +1020,7 @@ bool bic_sys_method_sleep_1(interpreter_thread_s &it,unsigned stack_base,uli *op
   ts.tv_sec = delay / 1000;
   ts.tv_nsec = (delay % 1000) * 1000000L;
 
-  nanosleep(&ts,NULL);
+  nanosleep(&ts,nullptr);
 #elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
   ::Sleep(delay);
 #else
@@ -1223,7 +1223,7 @@ bool bic_sys_method_pipe_0(interpreter_thread_s &it,unsigned stack_base,uli *ope
   FILE *fr = fdopen(pipefd[0],"r");
 
   // - ERROR -
-  if (fr == NULL)
+  if (fr == nullptr)
   {
     close(pipefd[0]);
     close(pipefd[1]);
@@ -1236,7 +1236,7 @@ bool bic_sys_method_pipe_0(interpreter_thread_s &it,unsigned stack_base,uli *ope
   FILE *fw = fdopen(pipefd[1],"w");
 
   // - ERROR -
-  if (fw == NULL)
+  if (fw == nullptr)
   {
     fclose(fr);
     close(pipefd[1]);
@@ -1424,7 +1424,7 @@ bool bic_sys_method_listdir_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
   // - open directory -
   DIR *dir = opendir(dir_path->data);
-  if (dir == NULL)
+  if (dir == nullptr)
   {
     result = false;
   }
@@ -1433,7 +1433,7 @@ bool bic_sys_method_listdir_1(interpreter_thread_s &it,unsigned stack_base,uli *
     struct dirent *entry;
 
     // - read directory entries -
-    while ((entry = readdir(dir)) != NULL)
+    while ((entry = readdir(dir)) != nullptr)
     {
       char *name = entry->d_name;
 
@@ -1651,7 +1651,7 @@ bool bic_sys_method_getcwd_0(interpreter_thread_s &it,unsigned stack_base,uli *o
   string_ptr->create(1024);
   do
   {
-    if (getcwd(string_ptr->data,string_ptr->size) != NULL)
+    if (getcwd(string_ptr->data,string_ptr->size) != nullptr)
     {
       string_ptr->size = strlen(string_ptr->data) + 1;
       break;
@@ -1661,7 +1661,7 @@ bool bic_sys_method_getcwd_0(interpreter_thread_s &it,unsigned stack_base,uli *o
   }
   while(true);
 #elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
-  unsigned path_length = GetCurrentDirectory(0,NULL) - 1;
+  unsigned path_length = GetCurrentDirectory(0,nullptr) - 1;
   string_ptr->create(path_length);
   GetCurrentDirectory(string_ptr->size,string_ptr->data);
 #else
@@ -1748,7 +1748,7 @@ bool bic_sys_method_getenv_1(interpreter_thread_s &it,unsigned stack_base,uli *o
   return false;
 #endif
 
-  if (result != NULL)
+  if (result != nullptr)
   {
     // - create result string location -
     string_s *new_string_ptr = it.get_new_string_ptr();
@@ -1903,7 +1903,7 @@ bool bic_sys_method_time_0(interpreter_thread_s &it,unsigned stack_base,uli *ope
   timeval tv;
 
   // - ERROR -
-  if (gettimeofday(&tv,NULL) != 0)
+  if (gettimeofday(&tv,nullptr) != 0)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SYS_GET_TIME_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1958,17 +1958,17 @@ built_in_class_s pipe_class =
   bic_pipe_consts,
   bic_pipe_init,
   bic_pipe_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_stream_next_item,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s pipe_methods[] =
@@ -2056,7 +2056,7 @@ built_in_variable_s pipe_variables[] =
   FILE *f = (FILE *)dst_location->v_data_ptr;\
 \
   /* - ERROR - */\
-  if (f == NULL)\
+  if (f == nullptr)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_STREAM_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
@@ -2080,7 +2080,7 @@ built_in_variable_s pipe_variables[] =
   FILE *f = (FILE *)dst_location->v_data_ptr;\
 \
   /* - ERROR - */\
-  if (f == NULL)\
+  if (f == nullptr)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_STREAM_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
@@ -2143,7 +2143,7 @@ built_in_variable_s pipe_variables[] =
     return false;\
   }\
 \
-  dst_location->v_data_ptr = (FILE *)NULL;\
+  dst_location->v_data_ptr = (FILE *)nullptr;\
 /*}}}*/
 
 void bic_pipe_consts(location_array_s &const_locations)
@@ -2152,7 +2152,7 @@ void bic_pipe_consts(location_array_s &const_locations)
 
 void bic_pipe_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (FILE *)NULL;
+  location_ptr->v_data_ptr = (FILE *)nullptr;
 }/*}}}*/
 
 void bic_pipe_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2162,7 +2162,7 @@ void bic_pipe_clear(interpreter_thread_s &it,location_s *location_ptr)
   FILE *f = (FILE *)location_ptr->v_data_ptr;
 
   // - if pipe file pointer is not null -
-  if (f != NULL)
+  if (f != nullptr)
   {
     PCLOSE_FNAME(f);
   }
@@ -2203,7 +2203,7 @@ bool bic_pipe_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *o
   FILE *f = (FILE *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (f == NULL)
+  if (f == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PIPE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -2282,17 +2282,17 @@ built_in_class_s file_class =
   bic_file_consts,
   bic_file_init,
   bic_file_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_stream_next_item,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s file_methods[] =
@@ -2404,7 +2404,7 @@ built_in_variable_s file_variables[] =
     return false;\
   }\
 \
-  dst_location->v_data_ptr = (FILE *)NULL;\
+  dst_location->v_data_ptr = (FILE *)nullptr;\
 /*}}}*/
 
 void bic_file_consts(location_array_s &const_locations)
@@ -2446,7 +2446,7 @@ void bic_file_consts(location_array_s &const_locations)
 
 void bic_file_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (FILE *)NULL;
+  location_ptr->v_data_ptr = (FILE *)nullptr;
 }/*}}}*/
 
 void bic_file_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2456,7 +2456,7 @@ void bic_file_clear(interpreter_thread_s &it,location_s *location_ptr)
   FILE *f = (FILE *)location_ptr->v_data_ptr;
 
   // - if file pointer is not null or standard stream pointer -
-  if (f != NULL && f != stdin && f != stdout && f != stderr)
+  if (f != nullptr && f != stdin && f != stdout && f != stderr)
   {
     fclose(f);
   }
@@ -2515,7 +2515,7 @@ bool bic_file_method_seek_2(interpreter_thread_s &it,unsigned stack_base,uli *op
   FILE *f = (FILE *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (f == NULL)
+  if (f == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -2542,7 +2542,7 @@ bool bic_file_method_tell_0(interpreter_thread_s &it,unsigned stack_base,uli *op
   FILE *f = (FILE *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (f == NULL)
+  if (f == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -2571,7 +2571,7 @@ bool bic_file_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *o
   FILE *f = (FILE *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (f == NULL)
+  if (f == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -2651,17 +2651,17 @@ built_in_class_s socket_addr_class =
   bic_socket_addr_consts,
   bic_socket_addr_init,
   bic_socket_addr_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s socket_addr_methods[] =
@@ -2708,14 +2708,14 @@ void bic_socket_addr_consts(location_array_s &const_locations)
 
 void bic_socket_addr_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (sockaddr_in *)NULL;
+  location_ptr->v_data_ptr = (sockaddr_in *)nullptr;
 }/*}}}*/
 
 void bic_socket_addr_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   sockaddr_in *addr_ptr = (sockaddr_in *)location_ptr->v_data_ptr;
 
-  if (addr_ptr != NULL)
+  if (addr_ptr != nullptr)
   {
     cfree(addr_ptr);
   }
@@ -2761,7 +2761,7 @@ bool bic_socket_addr_method_SocketAddr_2(interpreter_thread_s &it,unsigned stack
   struct hostent *host = gethostbyname(string_ptr->data);
 
   // - ERROR -
-  if (host == NULL)
+  if (host == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SOCKET_ADDRESS_RESOLVE_ERROR,operands[c_source_pos_idx],src_0_location);
     return false;
@@ -2790,7 +2790,7 @@ bool bic_socket_addr_method_name_0(interpreter_thread_s &it,unsigned stack_base,
   string_ptr->create(256);
 
   if (getnameinfo((sockaddr *)addr_ptr,sizeof(sockaddr_in),string_ptr->data,
-        string_ptr->size - 1,NULL,0,NI_NUMERICHOST | NI_NUMERICSERV) == 0)
+        string_ptr->size - 1,nullptr,0,NI_NUMERICHOST | NI_NUMERICSERV) == 0)
   {
     // - set string size -
     string_ptr->size = strlen(string_ptr->data) + 1;
@@ -2852,17 +2852,17 @@ built_in_class_s socket_class =
   bic_socket_consts,
   bic_socket_init,
   bic_socket_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s socket_methods[] =
@@ -3691,7 +3691,7 @@ bool bic_socket_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli 
     FILE *f = (FILE *)dst_location->v_data_ptr;\
     \
     /* - ERROR - */\
-    if (f == NULL)\
+    if (f == nullptr)\
     {\
       exception_s::throw_exception(it,module.error_base + c_error_STREAM_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       return false;\
@@ -3736,10 +3736,10 @@ location_s *bic_stream_next_item(interpreter_thread_s &it,location_s *location_p
   FILE *f = (FILE *)location_ptr->v_data_ptr;
 
   // - ERROR -
-  if (f == NULL)
+  if (f == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_STREAM_NOT_OPENED,source_pos,(location_s *)it.blank_location);
-    return NULL;
+    return nullptr;
   }
 
   BIC_STREAM_READLN();
@@ -3750,7 +3750,7 @@ location_s *bic_stream_next_item(interpreter_thread_s &it,location_s *location_p
     line_buffer.clear();
 
     exception_s::throw_exception(it,module.error_base + c_error_STREAM_READ_ERROR,source_pos,(location_s *)it.blank_location);
-    return NULL;
+    return nullptr;
   }
 
   if ((feof(f) && line_buffer.used == 0))
@@ -3760,20 +3760,18 @@ location_s *bic_stream_next_item(interpreter_thread_s &it,location_s *location_p
     ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
     return ((location_s *)it.blank_location);
   }
-  else
-  {
-    line_buffer.push('\0');
 
-    // - return data string -
-    string_s *string_ptr = it.get_new_string_ptr();
-    string_ptr->data = line_buffer.data;
-    string_ptr->size = line_buffer.used;
+  line_buffer.push('\0');
 
-    // - create result location -
-    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+  // - return data string -
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->data = line_buffer.data;
+  string_ptr->size = line_buffer.used;
 
-    return new_location;
-  }
+  // - create result location -
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+
+  return new_location;
 }/*}}}*/
 
 bool bic_stream_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -3809,7 +3807,7 @@ bool bic_stream_method_flush_0(interpreter_thread_s &it,unsigned stack_base,uli 
   FILE *f = (FILE *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (f == NULL)
+  if (f == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_STREAM_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -3864,7 +3862,7 @@ bool bic_stream_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *
   FILE *f = (FILE *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (f == NULL)
+  if (f == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_STREAM_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -3915,7 +3913,7 @@ bool bic_stream_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli
   FILE *f = (FILE *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (f == NULL)
+  if (f == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_STREAM_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -4021,7 +4019,7 @@ location_s *bic_fd_next_item(interpreter_thread_s &it,location_s *location_ptr,u
   if (fd == -1)
   {
     exception_s::throw_exception(it,module.error_base + c_error_FD_NOT_OPENED,source_pos,(location_s *)it.blank_location);
-    return NULL;
+    return nullptr;
   }
 
   BIC_FD_READLN();
@@ -4032,7 +4030,7 @@ location_s *bic_fd_next_item(interpreter_thread_s &it,location_s *location_ptr,u
     line_buffer.clear();
 
     exception_s::throw_exception(it,module.error_base + c_error_FD_READ_ERROR,source_pos,(location_s *)it.blank_location);
-    return NULL;
+    return nullptr;
   }
 
   if (read_cnt == 0 && line_buffer.used == 0)
@@ -4042,20 +4040,18 @@ location_s *bic_fd_next_item(interpreter_thread_s &it,location_s *location_ptr,u
     ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
     return ((location_s *)it.blank_location);
   }
-  else
-  {
-    line_buffer.push('\0');
 
-    // - return data string -
-    string_s *string_ptr = it.get_new_string_ptr();
-    string_ptr->data = line_buffer.data;
-    string_ptr->size = line_buffer.used;
+  line_buffer.push('\0');
 
-    // - create result location -
-    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+  // - return data string -
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->data = line_buffer.data;
+  string_ptr->size = line_buffer.used;
 
-    return new_location;
-  }
+  // - create result location -
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+
+  return new_location;
 }/*}}}*/
 
 bool bic_fd_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -4392,17 +4388,17 @@ built_in_class_s regex_class =
   bic_regex_consts,
   bic_regex_init,
   bic_regex_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s regex_methods[] =
@@ -4459,7 +4455,7 @@ void bic_regex_consts(location_array_s &const_locations)
 
 void bic_regex_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (regex_t *)NULL;
+  location_ptr->v_data_ptr = (regex_t *)nullptr;
 }/*}}}*/
 
 void bic_regex_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -4469,7 +4465,7 @@ void bic_regex_clear(interpreter_thread_s &it,location_s *location_ptr)
   regex_t *re = (regex_t *)location_ptr->v_data_ptr;
 
   // - if regex pointer is not null release it -
-  if (re != NULL)
+  if (re != nullptr)
   {
     regfree(re);
     cfree(re);
@@ -4548,7 +4544,7 @@ bool bic_regex_method_match_1(interpreter_thread_s &it,unsigned stack_base,uli *
   regex_t *re = (regex_t *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (re == NULL)
+  if (re == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_REGEX_NOT_COMPILED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -4618,7 +4614,7 @@ bool bic_regex_method_match_2(interpreter_thread_s &it,unsigned stack_base,uli *
   regex_t *re = (regex_t *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (re == NULL)
+  if (re == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_REGEX_NOT_COMPILED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -4711,7 +4707,7 @@ bool bic_regex_method_match_from_2(interpreter_thread_s &it,unsigned stack_base,
   regex_t *re = (regex_t *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (re == NULL)
+  if (re == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_REGEX_NOT_COMPILED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -4785,7 +4781,7 @@ bool bic_regex_method_split_1(interpreter_thread_s &it,unsigned stack_base,uli *
   regex_t *re = (regex_t *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (re == NULL)
+  if (re == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_REGEX_NOT_COMPILED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -4896,17 +4892,17 @@ built_in_class_s signal_class =
   bic_signal_consts,
   bic_signal_init,
   bic_signal_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s signal_methods[] =
@@ -5283,17 +5279,17 @@ built_in_class_s poll_class =
   bic_poll_consts,
   bic_poll_init,
   bic_poll_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s poll_methods[] =
@@ -5367,7 +5363,7 @@ void bic_poll_consts(location_array_s &const_locations)
 
 void bic_poll_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (poll_s *)NULL;
+  location_ptr->v_data_ptr = (poll_s *)nullptr;
 }/*}}}*/
 
 void bic_poll_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -5376,7 +5372,7 @@ void bic_poll_clear(interpreter_thread_s &it,location_s *location_ptr)
   // - retrieve poll pointer -
   poll_s *poll_ptr = (poll_s *)location_ptr->v_data_ptr;
 
-  if (poll_ptr != NULL)
+  if (poll_ptr != nullptr)
   {
     poll_ptr->clear(it);
     cfree(poll_ptr);
@@ -5424,7 +5420,7 @@ bool bic_poll_method_Poll_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 
   // - allocate pollfd structures -
   nfds_t nfds = array_ptr->used >> 1;
-  pollfd *fds = NULL;
+  pollfd *fds = nullptr;
 
   if (array_ptr->used > 0)
   {
@@ -5593,17 +5589,17 @@ built_in_class_s timer_class =
   bic_timer_consts,
   bic_timer_init,
   bic_timer_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s timer_methods[] =
@@ -5655,7 +5651,7 @@ void bic_timer_consts(location_array_s &const_locations)
 
 void bic_timer_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (timer_s *)NULL;
+  location_ptr->v_data_ptr = (timer_s *)nullptr;
 }/*}}}*/
 
 void bic_timer_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -5665,7 +5661,7 @@ void bic_timer_clear(interpreter_thread_s &it,location_s *location_ptr)
   timer_s *timer_ptr = (timer_s *)location_ptr->v_data_ptr;
 
   // - if timer pointer is not null release it -
-  if (timer_ptr != NULL)
+  if (timer_ptr != nullptr)
   {
     timer_ptr->clear(it);
     cfree(timer_ptr);
@@ -5878,17 +5874,17 @@ built_in_class_s clock_class =
   bic_clock_consts,
   bic_clock_init,
   bic_clock_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s clock_methods[] =

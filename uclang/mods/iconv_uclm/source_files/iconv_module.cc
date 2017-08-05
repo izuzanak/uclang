@@ -83,17 +83,17 @@ built_in_class_s iconv_class =
   bic_iconv_consts,
   bic_iconv_init,
   bic_iconv_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s iconv_methods[] =
@@ -135,7 +135,7 @@ void bic_iconv_consts(location_array_s &const_locations)
 
 void bic_iconv_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (iconv_s *)NULL;
+  location_ptr->v_data_ptr = (iconv_s *)nullptr;
 }/*}}}*/
 
 void bic_iconv_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -143,7 +143,7 @@ void bic_iconv_clear(interpreter_thread_s &it,location_s *location_ptr)
   iconv_s *ic_ptr = (iconv_s *)location_ptr->v_data_ptr;
 
   // - if iconv object exists -
-  if (ic_ptr != NULL)
+  if (ic_ptr != nullptr)
   {
     ic_ptr->clear(it);
     cfree(ic_ptr);
@@ -275,7 +275,7 @@ bool bic_iconv_method_convert_1(interpreter_thread_s &it,unsigned stack_base,uli
           output.clear();
 
           // - reset conversion state -
-          iconv(ic_ptr->ic_ptr,NULL,NULL,NULL,NULL);
+          iconv(ic_ptr->ic_ptr,nullptr,nullptr,nullptr,nullptr);
 
           exception_s::throw_exception(it,module.error_base + c_error_ICONV_CONVERT_INVALID_INPUT,operands[c_source_pos_idx],(location_s *)it.blank_location);
           return false;

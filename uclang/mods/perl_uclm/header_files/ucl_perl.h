@@ -97,12 +97,12 @@ class perl_c
 
 inline void perl_interpreter_s::init()
 {/*{{{*/
-  interpreter = NULL;
+  interpreter = nullptr;
 }/*}}}*/
 
 inline void perl_interpreter_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (interpreter != NULL)
+  if (interpreter != nullptr)
   {
     // - set perl context -
     PerlInterpreter *my_perl = interpreter;
@@ -123,15 +123,15 @@ inline void perl_interpreter_s::clear(interpreter_thread_s &it)
 
 inline void perl_value_s::init()
 {/*{{{*/
-  pi_loc = NULL;
-  sv = NULL;
+  pi_loc = nullptr;
+  sv = nullptr;
 }/*}}}*/
 
 inline void perl_value_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release value -
-  if (sv != NULL)
+  if (sv != nullptr)
   {
     perl_interpreter_s *pi_ptr = (perl_interpreter_s *)pi_loc->v_data_ptr;
 
@@ -144,7 +144,7 @@ inline void perl_value_s::clear(interpreter_thread_s &it)
   }
 
   // - release perl interpreter location -
-  if (pi_loc != NULL)
+  if (pi_loc != nullptr)
   {
     it.release_location_ptr(pi_loc);
   }
@@ -158,15 +158,15 @@ inline void perl_value_s::clear(interpreter_thread_s &it)
 
 inline void perl_reference_s::init()
 {/*{{{*/
-  pi_loc = NULL;
-  sv = NULL;
+  pi_loc = nullptr;
+  sv = nullptr;
 }/*}}}*/
 
 inline void perl_reference_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release value -
-  if (sv != NULL)
+  if (sv != nullptr)
   {
     perl_interpreter_s *pi_ptr = (perl_interpreter_s *)pi_loc->v_data_ptr;
 
@@ -191,7 +191,7 @@ inline void perl_reference_s::clear(interpreter_thread_s &it)
   }
 
   // - release perl interpreter location -
-  if (pi_loc != NULL)
+  if (pi_loc != nullptr)
   {
     it.release_location_ptr(pi_loc);
   }
@@ -208,9 +208,9 @@ inline SV *perl_reference_s::get(PerlInterpreter *my_perl)
       SV **sv_ptr = av_fetch((AV *)sv,(long long int)v_key_ptr,0);
 
       // - ERROR -
-      if (sv_ptr == NULL)
+      if (sv_ptr == nullptr)
       {
-        return NULL;
+        return nullptr;
       }
 
       SvREFCNT_inc(*sv_ptr);
@@ -220,9 +220,9 @@ inline SV *perl_reference_s::get(PerlInterpreter *my_perl)
     {/*{{{*/
       HE *he = hv_fetch_ent((HV *)sv,(SV *)v_key_ptr,1,0);
 
-      if (he == NULL)
+      if (he == nullptr)
       {
-        return NULL;
+        return nullptr;
       }
 
       SV *sv = HeVAL(he);
@@ -245,7 +245,7 @@ inline bool perl_reference_s::set(PerlInterpreter *my_perl,SV *sv_value)
       SV **sv_res = av_store((AV *)sv,(long long int)v_key_ptr,sv_value);
 
       // - ERROR -
-      if (sv_res == NULL)
+      if (sv_res == nullptr)
       {
         SvREFCNT_dec(sv_value);
         return false;
@@ -259,7 +259,7 @@ inline bool perl_reference_s::set(PerlInterpreter *my_perl,SV *sv_value)
       HE *he_res = hv_store_ent((HV *)sv,(SV *)v_key_ptr,sv_value,0);
 
       // - ERROR -
-      if (he_res == NULL)
+      if (he_res == nullptr)
       {
         SvREFCNT_dec(sv_value);
         return false;
@@ -280,7 +280,7 @@ inline perl_c::perl_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"perl_init()\n"););
 
-  PERL_SYS_INIT3(0,NULL,NULL);
+  PERL_SYS_INIT3(0,nullptr,nullptr);
 }/*}}}*/
 
 inline perl_c::~perl_c()

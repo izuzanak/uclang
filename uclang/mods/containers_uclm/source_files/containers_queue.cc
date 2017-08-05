@@ -13,17 +13,17 @@ built_in_class_s queue_class =
   bic_queue_consts,
   bic_queue_init,
   bic_queue_clear,
-  NULL,
+  nullptr,
   bic_queue_length,
   bic_queue_item,
   bic_queue_first_idx,
   bic_queue_next_idx,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
   bic_queue_pack,
   bic_queue_unpack,
-  NULL,
-  NULL
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s queue_methods[] =
@@ -437,10 +437,8 @@ unsigned bic_queue_next_idx(location_s *location_ptr,unsigned index)
   {
     return index;
   }
-  else
-  {
-    return c_idx_not_exist;
-  }
+
+  return c_idx_not_exist;
 }/*}}}*/
 
 bool bic_queue_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack)

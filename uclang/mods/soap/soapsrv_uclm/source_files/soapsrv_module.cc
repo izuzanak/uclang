@@ -108,17 +108,17 @@ built_in_class_s calc_service_class =
   bic_calc_service_consts,
   bic_calc_service_init,
   bic_calc_service_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s calc_service_methods[] =
@@ -234,7 +234,7 @@ built_in_variable_s calc_service_variables[] =
   BIC_GSOAP_DELEGATE_CHECK(src_0_location,PARAM_CNT);\
 \
   /* - release previous delegate - */\
-  if (se_ptr->DLG_PTR_NAME != NULL)\
+  if (se_ptr->DLG_PTR_NAME != nullptr)\
   {\
     it.release_location_ptr(se_ptr->DLG_PTR_NAME);\
   }\
@@ -254,14 +254,14 @@ void bic_calc_service_consts(location_array_s &const_locations)
 
 void bic_calc_service_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (soap_env_s *)NULL;
+  location_ptr->v_data_ptr = (soap_env_s *)nullptr;
 }/*}}}*/
 
 void bic_calc_service_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   soap_env_s *se_ptr = (soap_env_s *)location_ptr->v_data_ptr;
 
-  if (se_ptr != NULL)
+  if (se_ptr != nullptr)
   {
     se_ptr->clear(it);
     cfree(se_ptr);
@@ -308,7 +308,7 @@ bool bic_calc_service_method_CalcService_1(interpreter_thread_s &it,unsigned sta
   se_ptr->soap_ptr->user = se_ptr;
   se_ptr->soap_ptr->bind_flags |= SO_REUSEADDR;
 
-  se_ptr->socket = soap_bind(se_ptr->soap_ptr,NULL,port,100);
+  se_ptr->socket = soap_bind(se_ptr->soap_ptr,nullptr,port,100);
 
   // - ERROR -
   if (se_ptr->socket < 0)
@@ -468,17 +468,17 @@ built_in_class_s soap_fault_class =
   bic_soap_fault_consts,
   bic_soap_fault_init,
   bic_soap_fault_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s soap_fault_methods[] =
@@ -515,14 +515,14 @@ void bic_soap_fault_consts(location_array_s &const_locations)
 
 void bic_soap_fault_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (soap_fault_s *)NULL;
+  location_ptr->v_data_ptr = (soap_fault_s *)nullptr;
 }/*}}}*/
 
 void bic_soap_fault_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   soap_fault_s *sf_ptr = (soap_fault_s *)location_ptr->v_data_ptr;
 
-  if (sf_ptr != NULL)
+  if (sf_ptr != nullptr)
   {
     sf_ptr->clear(it);
     cfree(sf_ptr);

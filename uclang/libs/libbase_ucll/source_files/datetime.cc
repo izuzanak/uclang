@@ -69,7 +69,10 @@ void datetime_s::from_nanosec(long long unsigned a_nanosec)
 
 bool datetime_s::to_nanosec(long long unsigned &a_nanosec)
 {/*{{{*/
-  if (year < 1970) return false;
+  if (year < 1970)
+  {
+    return false;
+  }
 
   unsigned tmp_year = year - 1601;
 

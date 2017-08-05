@@ -238,17 +238,17 @@ built_in_class_s v8_engine_class =
   bic_v8_engine_consts,
   bic_v8_engine_init,
   bic_v8_engine_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s v8_engine_methods[] =
@@ -377,17 +377,17 @@ built_in_class_s v8_context_class =
   bic_v8_context_consts,
   bic_v8_context_init,
   bic_v8_context_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s v8_context_methods[] =
@@ -439,21 +439,21 @@ void bic_v8_context_consts(location_array_s &const_locations)
 
 void bic_v8_context_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (v8_htype)NULL;
+  location_ptr->v_data_ptr = (v8_htype)nullptr;
 }/*}}}*/
 
 void bic_v8_context_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   v8_htype context_hnd = (v8_htype)location_ptr->v_data_ptr;
 
-  if (context_hnd != NULL)
+  if (context_hnd != nullptr)
   {
     Persistent<Context> per_context = *((Persistent<Context> *)&context_hnd);
     per_context.Dispose();
 
     // - clean all context junk -
     V8::ContextDisposedNotification();
-    while(!V8::IdleNotification(1000));
+    while(!V8::IdleNotification(1000)) {};
   }
 }/*}}}*/
 
@@ -565,17 +565,17 @@ built_in_class_s v8_script_class =
   bic_v8_script_consts,
   bic_v8_script_init,
   bic_v8_script_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s v8_script_methods[] =
@@ -617,14 +617,14 @@ void bic_v8_script_consts(location_array_s &const_locations)
 
 void bic_v8_script_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (v8_htype)NULL;
+  location_ptr->v_data_ptr = (v8_htype)nullptr;
 }/*}}}*/
 
 void bic_v8_script_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   v8_htype hnd_value = (v8_htype)location_ptr->v_data_ptr;
 
-  if (hnd_value != NULL)
+  if (hnd_value != nullptr)
   {
     Persistent<Script> per_script = *((Persistent<Script> *)&hnd_value);
     per_script.Dispose();
@@ -743,17 +743,17 @@ built_in_class_s v8_heap_stat_class =
   bic_v8_heap_stat_consts,
   bic_v8_heap_stat_init,
   bic_v8_heap_stat_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s v8_heap_stat_methods[] =
@@ -815,14 +815,14 @@ void bic_v8_heap_stat_consts(location_array_s &const_locations)
 
 void bic_v8_heap_stat_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (HeapStatistics *)NULL;
+  location_ptr->v_data_ptr = (HeapStatistics *)nullptr;
 }/*}}}*/
 
 void bic_v8_heap_stat_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   HeapStatistics *hs_ptr = (HeapStatistics *)location_ptr->v_data_ptr;
 
-  if (hs_ptr != NULL)
+  if (hs_ptr != nullptr)
   {
     delete hs_ptr;
   }
@@ -954,15 +954,15 @@ built_in_class_s v8_object_class =
   bic_v8_object_consts,
   bic_v8_object_init,
   bic_v8_object_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_v8_object_invoke,
   bic_v8_object_member
 };/*}}}*/
@@ -1056,14 +1056,14 @@ void bic_v8_object_consts(location_array_s &const_locations)
 
 void bic_v8_object_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (v8_htype)NULL;
+  location_ptr->v_data_ptr = (v8_htype)nullptr;
 }/*}}}*/
 
 void bic_v8_object_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   v8_htype hnd_value = (v8_htype)location_ptr->v_data_ptr;
 
-  if (hnd_value != NULL)
+  if (hnd_value != nullptr)
   {
     Persistent<Value> per_value = *((Persistent<Value> *)&hnd_value);
     per_value.Dispose();
@@ -1298,7 +1298,7 @@ bool bic_v8_object_method_value_0(interpreter_thread_s &it,unsigned stack_base,u
   location_s *location_ptr = v8_c::v8_object_value(it,hnd_dst,operands[c_source_pos_idx]);
 
   // - ERROR -
-  if (location_ptr == NULL)
+  if (location_ptr == nullptr)
   {
     // - if exception was already thrown -
     if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
@@ -1720,15 +1720,15 @@ built_in_class_s v8_reference_class =
   bic_v8_reference_consts,
   bic_v8_reference_init,
   bic_v8_reference_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_v8_object_invoke,
   bic_v8_object_member
 };/*}}}*/
@@ -1827,14 +1827,14 @@ void bic_v8_reference_consts(location_array_s &const_locations)
 
 void bic_v8_reference_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (v8_reference_s *)NULL;
+  location_ptr->v_data_ptr = (v8_reference_s *)nullptr;
 }/*}}}*/
 
 void bic_v8_reference_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   v8_reference_s *v8_ref_ptr = (v8_reference_s *)location_ptr->v_data_ptr;
 
-  if (v8_ref_ptr != NULL)
+  if (v8_ref_ptr != nullptr)
   {
     v8_ref_ptr->clear(it);
     cfree(v8_ref_ptr);

@@ -164,17 +164,17 @@ built_in_class_s prolog_module_class =
   bic_prolog_module_consts,
   bic_prolog_module_init,
   bic_prolog_module_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
   bic_prolog_module_invoke,
-  NULL
+  nullptr
 };/*}}}*/
 
 built_in_method_s prolog_module_methods[] =
@@ -543,17 +543,17 @@ built_in_class_s prolog_frame_class =
   bic_prolog_frame_consts,
   bic_prolog_frame_init,
   bic_prolog_frame_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s prolog_frame_methods[] =
@@ -653,17 +653,17 @@ built_in_class_s prolog_atom_class =
   bic_prolog_atom_consts,
   bic_prolog_atom_init,
   bic_prolog_atom_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s prolog_atom_methods[] =
@@ -802,17 +802,17 @@ built_in_class_s prolog_functor_class =
   bic_prolog_functor_consts,
   bic_prolog_functor_init,
   bic_prolog_functor_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s prolog_functor_methods[] =
@@ -1019,17 +1019,17 @@ built_in_class_s prolog_term_class =
   bic_prolog_term_consts,
   bic_prolog_term_init,
   bic_prolog_term_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s prolog_term_methods[] =
@@ -1135,7 +1135,7 @@ bool bic_prolog_term_method_value_0(interpreter_thread_s &it,unsigned stack_base
     prolog_c::prolog_term_value(it,term,operands[c_source_pos_idx]);
 
   // - ERROR -
-  if (location_ptr == NULL)
+  if (location_ptr == nullptr)
   {
     // - if exception was already thrown -
     if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
@@ -1182,17 +1182,17 @@ built_in_class_s prolog_pred_class =
   bic_prolog_pred_consts,
   bic_prolog_pred_init,
   bic_prolog_pred_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s prolog_pred_methods[] =
@@ -1273,7 +1273,7 @@ bool bic_prolog_pred_method_name_0(interpreter_thread_s &it,unsigned stack_base,
   predicate_t pred = (predicate_t)dst_location->v_data_ptr;
 
   atom_t atom;
-  PL_predicate_info(pred,&atom,NULL,NULL);
+  PL_predicate_info(pred,&atom,nullptr,nullptr);
   PL_register_atom(atom);
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_prolog_atom,atom);
@@ -1290,7 +1290,7 @@ bool bic_prolog_pred_method_arity_0(interpreter_thread_s &it,unsigned stack_base
   predicate_t pred = (predicate_t)dst_location->v_data_ptr;
 
   int arity;
-  PL_predicate_info(pred,NULL,&arity,NULL);
+  PL_predicate_info(pred,nullptr,&arity,nullptr);
   long long int result = arity;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
@@ -1319,7 +1319,7 @@ bool bic_prolog_pred_method_call_1(interpreter_thread_s &it,unsigned stack_base,
 
   int arity;
   module_t plmod;
-  PL_predicate_info(pred,NULL,&arity,&plmod);
+  PL_predicate_info(pred,nullptr,&arity,&plmod);
 
   // - ERROR -
   if (array_ptr->used != (unsigned)arity)
@@ -1384,7 +1384,7 @@ bool bic_prolog_pred_method_query_1(interpreter_thread_s &it,unsigned stack_base
 
   int arity;
   module_t plmod;
-  PL_predicate_info(pred,NULL,&arity,&plmod);
+  PL_predicate_info(pred,nullptr,&arity,&plmod);
 
   // - ERROR -
   if (array_ptr->used != (unsigned)arity)
@@ -1443,17 +1443,17 @@ built_in_class_s prolog_query_class =
   bic_prolog_query_consts,
   bic_prolog_query_init,
   bic_prolog_query_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s prolog_query_methods[] =

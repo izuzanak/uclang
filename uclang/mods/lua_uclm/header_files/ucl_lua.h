@@ -73,13 +73,13 @@ class lua_s
 
 inline void lua_value_s::init()
 {/*{{{*/
-  lua_state_loc = NULL;
+  lua_state_loc = nullptr;
   ref = LUA_NOREF;
 }/*}}}*/
 
 inline void lua_value_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (lua_state_loc != NULL)
+  if (lua_state_loc != nullptr)
   {
     lua_State *L = (lua_State *)lua_state_loc->v_data_ptr;
     luaL_unref(L,LUA_REGISTRYINDEX,ref);
@@ -96,14 +96,14 @@ inline void lua_value_s::clear(interpreter_thread_s &it)
 
 inline void lua_reference_s::init()
 {/*{{{*/
-  lua_state_loc = NULL;
+  lua_state_loc = nullptr;
   obj_ref = LUA_NOREF;
   key_ref = LUA_NOREF;
 }/*}}}*/
 
 inline void lua_reference_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (lua_state_loc != NULL)
+  if (lua_state_loc != nullptr)
   {
     lua_State *L = (lua_State *)lua_state_loc->v_data_ptr;
     luaL_unref(L,LUA_REGISTRYINDEX,obj_ref);

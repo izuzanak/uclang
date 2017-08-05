@@ -205,17 +205,17 @@ built_in_class_s imx_egl_class =
   bic_imx_egl_consts,
   bic_imx_egl_init,
   bic_imx_egl_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s imx_egl_methods[] =
@@ -363,14 +363,14 @@ void bic_imx_egl_consts(location_array_s &const_locations)
 
 void bic_imx_egl_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (imx_egl_s *)NULL;
+  location_ptr->v_data_ptr = (imx_egl_s *)nullptr;
 }/*}}}*/
 
 void bic_imx_egl_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   imx_egl_s *ie_ptr = (imx_egl_s *)location_ptr->v_data_ptr;
 
-  if (ie_ptr != NULL)
+  if (ie_ptr != nullptr)
   {
     ie_ptr->clear(it);
     cfree(ie_ptr);
@@ -454,11 +454,11 @@ bool bic_imx_egl_method_ImxEgl_3(interpreter_thread_s &it,unsigned stack_base,ul
 #if defined(EGL_API_FB)
   EGLNativeDisplayType native_display = fbGetDisplayByIndex(0);
 #else
-  EGLNativeDisplayType native_display = XOpenDisplay(NULL);
+  EGLNativeDisplayType native_display = XOpenDisplay(nullptr);
 #endif
 
   // - ERROR -
-  if (native_display == NULL)
+  if (native_display == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_IMX_EGL_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -468,7 +468,7 @@ bool bic_imx_egl_method_ImxEgl_3(interpreter_thread_s &it,unsigned stack_base,ul
   EGLDisplay display = eglGetDisplay(native_display);
 
   // - ERROR -
-  if (!eglInitialize(display,NULL,NULL))
+  if (!eglInitialize(display,nullptr,nullptr))
   {
     eglTerminate(display);
 
@@ -535,7 +535,7 @@ bool bic_imx_egl_method_ImxEgl_3(interpreter_thread_s &it,unsigned stack_base,ul
   }
 
   // - create window surface -
-  EGLSurface surface = eglCreateWindowSurface(display,config,native_window,NULL);
+  EGLSurface surface = eglCreateWindowSurface(display,config,native_window,nullptr);
 
   // - ERROR -
   if (surface == EGL_NO_SURFACE)
@@ -566,7 +566,7 @@ bool bic_imx_egl_method_ImxEgl_3(interpreter_thread_s &it,unsigned stack_base,ul
       }
       break;
     case EGL_OPENVG_API:
-      context = eglCreateContext(display,config,EGL_NO_CONTEXT,NULL);
+      context = eglCreateContext(display,config,EGL_NO_CONTEXT,nullptr);
       break;
   }
 
@@ -617,7 +617,7 @@ bool bic_imx_egl_method_set_as_global_0(interpreter_thread_s &it,unsigned stack_
   global_egl_mutex.lock();
 
   // - ERROR -
-  if (global_egl_ptr != NULL)
+  if (global_egl_ptr != nullptr)
   {
     global_egl_mutex.unlock();
 
@@ -765,7 +765,7 @@ bool bic_imx_egl_method_global_lock_0(interpreter_thread_s &it,unsigned stack_ba
     }
 
     // - sleep some time -
-    nanosleep(&ts,NULL);
+    nanosleep(&ts,nullptr);
 
   } while(1);
 
@@ -885,17 +885,17 @@ built_in_class_s imx_fb_class =
   bic_imx_fb_consts,
   bic_imx_fb_init,
   bic_imx_fb_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s imx_fb_methods[] =
@@ -952,14 +952,14 @@ void bic_imx_fb_consts(location_array_s &const_locations)
 
 void bic_imx_fb_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (imx_fb_s *)NULL;
+  location_ptr->v_data_ptr = (imx_fb_s *)nullptr;
 }/*}}}*/
 
 void bic_imx_fb_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   imx_fb_s *if_ptr = (imx_fb_s *)location_ptr->v_data_ptr;
 
-  if (if_ptr != NULL)
+  if (if_ptr != nullptr)
   {
     if_ptr->clear(it);
     cfree(if_ptr);
@@ -1120,17 +1120,17 @@ built_in_class_s imx_ipu_class =
   bic_imx_ipu_consts,
   bic_imx_ipu_init,
   bic_imx_ipu_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s imx_ipu_methods[] =
@@ -1177,14 +1177,14 @@ void bic_imx_ipu_consts(location_array_s &const_locations)
 
 void bic_imx_ipu_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (imx_ipu_s *)NULL;
+  location_ptr->v_data_ptr = (imx_ipu_s *)nullptr;
 }/*}}}*/
 
 void bic_imx_ipu_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   imx_ipu_s *ii_ptr = (imx_ipu_s *)location_ptr->v_data_ptr;
 
-  if (ii_ptr != NULL)
+  if (ii_ptr != nullptr)
   {
     ii_ptr->clear(it);
     cfree(ii_ptr);

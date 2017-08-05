@@ -181,17 +181,17 @@ built_in_class_s sys_prop_class =
   bic_sys_prop_consts,
   bic_sys_prop_init,
   bic_sys_prop_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s sys_prop_methods[] =
@@ -243,7 +243,7 @@ void bic_sys_prop_consts(location_array_s &const_locations)
 
 void bic_sys_prop_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (prop_info *)NULL;
+  location_ptr->v_data_ptr = (prop_info *)nullptr;
 }/*}}}*/
 
 void bic_sys_prop_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -299,7 +299,7 @@ bool bic_sys_prop_method_SysProp_1(interpreter_thread_s &it,unsigned stack_base,
   }
 
   // - ERORR -
-  if (prop_info_ptr == NULL)
+  if (prop_info_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SYS_PROP_NOT_EXIST,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -351,7 +351,7 @@ bool bic_sys_prop_method_value_0(interpreter_thread_s &it,unsigned stack_base,ul
   prop_info *prop_info_ptr = (prop_info *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (prop_info_ptr == NULL)
+  if (prop_info_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SYS_PROP_NOT_SELECTED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -362,7 +362,7 @@ bool bic_sys_prop_method_value_0(interpreter_thread_s &it,unsigned stack_base,ul
   value_ptr->create(PROP_VALUE_MAX);
 
   // - read property value -
-  value_ptr->size = 1 + __system_property_read(prop_info_ptr,NULL,value_ptr->data);
+  value_ptr->size = 1 + __system_property_read(prop_info_ptr,nullptr,value_ptr->data);
 
   BIC_SET_RESULT_STRING(value_ptr);
 
@@ -378,7 +378,7 @@ bool bic_sys_prop_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli
   prop_info *prop_info_ptr = (prop_info *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (prop_info_ptr == NULL)
+  if (prop_info_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SYS_PROP_NOT_SELECTED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -449,17 +449,17 @@ built_in_class_s log_class =
   bic_log_consts,
   bic_log_init,
   bic_log_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s log_methods[] =
@@ -575,14 +575,14 @@ void bic_log_consts(location_array_s &const_locations)
 
 void bic_log_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (log_s *)NULL;
+  location_ptr->v_data_ptr = (log_s *)nullptr;
 }/*}}}*/
 
 void bic_log_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   log_s *log_ptr = (log_s *)location_ptr->v_data_ptr;
 
-  if (log_ptr != NULL)
+  if (log_ptr != nullptr)
   {
     log_ptr->clear(it);
     cfree(log_ptr);
@@ -711,17 +711,17 @@ built_in_class_s activity_class =
   bic_activity_consts,
   bic_activity_init,
   bic_activity_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s activity_methods[] =
@@ -852,7 +852,7 @@ built_in_variable_s activity_variables[] =
   BIC_ACTIVITY_DELEGATE_CHECK(src_0_location,PARAM_CNT);\
 \
   /* - release previous delegate - */\
-  if (DLG_PTR_NAME != NULL)\
+  if (DLG_PTR_NAME != nullptr)\
   {\
     it.release_location_ptr(DLG_PTR_NAME);\
   }\
@@ -901,14 +901,14 @@ void bic_activity_consts(location_array_s &const_locations)
 
 void bic_activity_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (activity_c *)NULL;
+  location_ptr->v_data_ptr = (activity_c *)nullptr;
 }/*}}}*/
 
 void bic_activity_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   activity_c *act_ptr = (activity_c *)location_ptr->v_data_ptr;
 
-  if (act_ptr != NULL)
+  if (act_ptr != nullptr)
   {
     cassert(act_ptr == &g_activity);
 
@@ -936,14 +936,14 @@ bool bic_activity_method_Activity_0(interpreter_thread_s &it,unsigned stack_base
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - ERROR -
-  if (g_activity.event_loop_ptr == NULL)
+  if (g_activity.event_loop_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_ACTIVITY_CONNECTION_DOES_NOT_EXIST,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
   // - ERROR -
-  if (g_activity.it_ptr != NULL)
+  if (g_activity.it_ptr != nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_ACTIVITY_OBJECT_ALREADY_CREATED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1105,17 +1105,17 @@ built_in_class_s event_class =
   bic_event_consts,
   bic_event_init,
   bic_event_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s event_methods[] =
@@ -1213,17 +1213,17 @@ built_in_class_s sensor_manager_class =
   bic_sensor_manager_consts,
   bic_sensor_manager_init,
   bic_sensor_manager_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s sensor_manager_methods[] =
@@ -1320,7 +1320,7 @@ bool bic_sensor_manager_method_default_sensor_1(interpreter_thread_s &it,unsigne
 
   ASensorRef sensor_ref = ASensorManager_getDefaultSensor(ASensorManager_getInstance(),type);
 
-  if (sensor_ref != NULL)
+  if (sensor_ref != nullptr)
   {
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_sensor,sensor_ref);
     BIC_SET_RESULT(new_location);
@@ -1340,10 +1340,10 @@ bool bic_sensor_manager_method_create_event_queue_0(interpreter_thread_s &it,uns
   ASensorEventQueue *queue_ptr = ASensorManager_createEventQueue(
         ASensorManager_getInstance(),
         ALooper_prepare(0),
-        LOOPER_ID_USER,NULL,NULL);
+        LOOPER_ID_USER,nullptr,nullptr);
 
   // - ERROR -
-  if (queue_ptr == NULL)
+  if (queue_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SENSOR_MANAGER_CANNOT_CREATE_EVENT_QUEUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1385,17 +1385,17 @@ built_in_class_s sensor_class =
   bic_sensor_consts,
   bic_sensor_init,
   bic_sensor_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s sensor_methods[] =
@@ -1475,7 +1475,7 @@ void bic_sensor_consts(location_array_s &const_locations)
 
 void bic_sensor_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ASensorRef)NULL;
+  location_ptr->v_data_ptr = (ASensorRef)nullptr;
 }/*}}}*/
 
 void bic_sensor_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1592,17 +1592,17 @@ built_in_class_s sensor_event_queue_class =
   bic_sensor_event_queue_consts,
   bic_sensor_event_queue_init,
   bic_sensor_event_queue_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s sensor_event_queue_methods[] =
@@ -1659,14 +1659,14 @@ void bic_sensor_event_queue_consts(location_array_s &const_locations)
 
 void bic_sensor_event_queue_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ASensorEventQueue *)NULL;
+  location_ptr->v_data_ptr = (ASensorEventQueue *)nullptr;
 }/*}}}*/
 
 void bic_sensor_event_queue_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   ASensorEventQueue *queue_ptr = (ASensorEventQueue *)location_ptr->v_data_ptr;
 
-  if (queue_ptr != NULL)
+  if (queue_ptr != nullptr)
   {
     ASensorManager_destroyEventQueue(ASensorManager_getInstance(),queue_ptr);
   }
@@ -1856,17 +1856,17 @@ built_in_class_s sensor_event_class =
   bic_sensor_event_consts,
   bic_sensor_event_init,
   bic_sensor_event_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s sensor_event_methods[] =
@@ -1983,14 +1983,14 @@ void bic_sensor_event_consts(location_array_s &const_locations)
 
 void bic_sensor_event_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ASensorEvent *)NULL;
+  location_ptr->v_data_ptr = (ASensorEvent *)nullptr;
 }/*}}}*/
 
 void bic_sensor_event_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   ASensorEvent *event_ptr = (ASensorEvent *)location_ptr->v_data_ptr;
 
-  if (event_ptr != NULL)
+  if (event_ptr != nullptr)
   {
     cfree(event_ptr);
   }

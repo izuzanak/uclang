@@ -131,17 +131,17 @@ built_in_class_s fget_target_class =
   bic_fget_target_consts,
   bic_fget_target_init,
   bic_fget_target_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s fget_target_methods[] =
@@ -221,14 +221,14 @@ void bic_fget_target_consts(location_array_s &const_locations)
 
 void bic_fget_target_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (fget_target_s *)NULL;
+  location_ptr->v_data_ptr = (fget_target_s *)nullptr;
 }/*}}}*/
 
 void bic_fget_target_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   fget_target_s *ft_ptr = (fget_target_s *)location_ptr->v_data_ptr;
 
-  if (ft_ptr != NULL)
+  if (ft_ptr != nullptr)
   {
     ft_ptr->clear(it);
     cfree(ft_ptr);
@@ -291,7 +291,10 @@ bool bic_fget_target_method_FgetTarget_3(interpreter_thread_s &it,unsigned stack
   // - ERROR -
   if (file_fd == -1 || fstat(file_fd,&file_st) == -1)
   {
-    if (file_fd != -1) close(file_fd);
+    if (file_fd != -1)
+    {
+      close(file_fd);
+    }
 
     exception_s::throw_exception(it,module.error_base + c_error_FGET_TARGET_CANNOT_OPEN_TARGET_FILE,operands[c_source_pos_idx],src_0_location);
     return false;
@@ -303,7 +306,10 @@ bool bic_fget_target_method_FgetTarget_3(interpreter_thread_s &it,unsigned stack
   // - ERROR -
   if (map_fd == -1 || fstat(map_fd,&map_st) == -1)
   {
-    if (map_fd != -1) close(map_fd);
+    if (map_fd != -1)
+    {
+      close(map_fd);
+    }
 
     exception_s::throw_exception(it,module.error_base + c_error_FGET_TARGET_CANNOT_OPEN_MAP_FILE,operands[c_source_pos_idx],src_1_location);
     return false;
@@ -324,14 +330,14 @@ bool bic_fget_target_method_FgetTarget_3(interpreter_thread_s &it,unsigned stack
   }
 
   // - map files to memory -
-  void *file_ptr = mmap(NULL,file_size,PROT_READ | PROT_WRITE,MAP_SHARED,file_fd,0);
-  void *map_ptr = mmap(NULL,map_size,PROT_READ | PROT_WRITE,MAP_SHARED,map_fd,0);
+  void *file_ptr = mmap(nullptr,file_size,PROT_READ | PROT_WRITE,MAP_SHARED,file_fd,0);
+  void *map_ptr = mmap(nullptr,map_size,PROT_READ | PROT_WRITE,MAP_SHARED,map_fd,0);
 
   // - ERROR -
   if (file_ptr == MAP_FAILED || map_ptr == MAP_FAILED)
   {
-    if (file_ptr != MAP_FAILED) munmap(file_ptr,file_size);
-    if (map_ptr != MAP_FAILED) munmap(map_ptr,map_size);
+    if (file_ptr != MAP_FAILED) { munmap(file_ptr,file_size); }
+    if (map_ptr != MAP_FAILED) { munmap(map_ptr,map_size); }
 
     close(file_fd);
     close(map_fd);

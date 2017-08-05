@@ -96,7 +96,7 @@ struct thread_s
 inline unsigned thread_s::create(void *a_thread_function,void *a_parameters)
 {/*{{{*/
 #if THREAD_LIB == THREAD_LIB_PTHREAD
-  int ret = pthread_create(&thread,NULL,(void *(*)(void *))a_thread_function,a_parameters);
+  int ret = pthread_create(&thread,nullptr,(void *(*)(void *))a_thread_function,a_parameters);
   switch (ret)
   {
   case 0:
@@ -109,8 +109,8 @@ inline unsigned thread_s::create(void *a_thread_function,void *a_parameters)
     return c_error_UNKNOWN;
   }
 #elif THREAD_LIB == THREAD_LIB_DSP_TSK
-  tsk_handle = TSK_create((Fxn)a_thread_function,NULL,a_parameters);
-  if (tsk_handle != NULL)
+  tsk_handle = TSK_create((Fxn)a_thread_function,nullptr,a_parameters);
+  if (tsk_handle != nullptr)
   {
     return c_error_OK;
   }

@@ -241,13 +241,19 @@ unsigned string_s::get_print_size_between(unsigned f_idx,unsigned s_idx)
 {/*{{{*/
   debug_assert(f_idx < size && s_idx < size);
 
-  if (f_idx >= s_idx) return 0;
+  if (f_idx >= s_idx)
+  {
+    return 0;
+  }
 
   unsigned char_cnt = s_idx - f_idx;
   unsigned utf32_data[char_cnt];
 
   int utf32_cnt = utf8_to_utf32(data + f_idx,utf32_data,char_cnt);
-  if (utf32_cnt < 0) return 0;
+  if (utf32_cnt < 0)
+  {
+    return 0;
+  }
 
   unsigned *c_ptr = utf32_data;
   unsigned *c_ptr_end = c_ptr + utf32_cnt;
@@ -271,7 +277,10 @@ unsigned string_s::get_print_size_between(unsigned f_idx,unsigned s_idx)
 
 unsigned string_s::get_character_line(unsigned c_idx)
 {/*{{{*/
-  if (size <= c_idx) return 0;
+  if (size <= c_idx)
+  {
+    return 0;
+  }
 
   char *c_ptr = data;
   char *c_ptr_end = c_ptr + c_idx;

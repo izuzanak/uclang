@@ -118,20 +118,20 @@ class ssh2_c
 
 inline void ssh2_session_s::init()
 {/*{{{*/
-  session = NULL;
-  sock_ptr = NULL;
+  session = nullptr;
+  sock_ptr = nullptr;
   state = SSH2_SESSION_STATE_DISCONNECTED;
 }/*}}}*/
 
 inline void ssh2_session_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (session != NULL)
+  if (session != nullptr)
   {
     libssh2_session_disconnect(session,"Connection shutdown");
     libssh2_session_free(session);
   }
 
-  if (sock_ptr != NULL)
+  if (sock_ptr != nullptr)
   {
     it.release_location_ptr(sock_ptr);
   }
@@ -147,18 +147,18 @@ inline void ssh2_session_s::clear(interpreter_thread_s &it)
 
 inline void sftp_session_s::init()
 {/*{{{*/
-  session = NULL;
-  ssh2s_ptr = NULL;
+  session = nullptr;
+  ssh2s_ptr = nullptr;
 }/*}}}*/
 
 inline void sftp_session_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (session != NULL)
+  if (session != nullptr)
   {
     libssh2_sftp_shutdown(session);
   }
 
-  if (ssh2s_ptr != NULL)
+  if (ssh2s_ptr != nullptr)
   {
     it.release_location_ptr(ssh2s_ptr);
   }
@@ -172,20 +172,20 @@ inline void sftp_session_s::clear(interpreter_thread_s &it)
 
 inline void sftp_handle_s::init()
 {/*{{{*/
-  handle = NULL;
-  sftps_ptr = NULL;
+  handle = nullptr;
+  sftps_ptr = nullptr;
   buff_idx = 0;
   buffer.init();
 }/*}}}*/
 
 inline void sftp_handle_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (handle != NULL)
+  if (handle != nullptr)
   {
     libssh2_sftp_close_handle(handle);
   }
 
-  if (sftps_ptr != NULL)
+  if (sftps_ptr != nullptr)
   {
     it.release_location_ptr(sftps_ptr);
   }
@@ -231,8 +231,8 @@ inline ssize_t sftp_handle_s::buff_read(bc_array_s &a_target,size_t a_count)
       a_target.reserve(to_read);
       ssize_t read_cnt = libssh2_sftp_read(handle,a_target.data + a_target.used,to_read);
 
-      if (read_cnt < 0) return read_cnt;
-      if (read_cnt == 0) return a_count - to_read;
+      if (read_cnt < 0) { return read_cnt; }
+      if (read_cnt == 0) { return a_count - to_read; }
 
       a_target.used += read_cnt;
       to_read -= read_cnt;
@@ -250,8 +250,8 @@ inline ssize_t sftp_handle_s::buff_read(bc_array_s &a_target,size_t a_count)
       buffer.copy_resize(c_buff_size);
       ssize_t read_cnt = libssh2_sftp_read(handle,buffer.data,c_buff_size);
 
-      if (read_cnt < 0) return read_cnt;
-      if (read_cnt == 0) return a_count - to_read;
+      if (read_cnt < 0) { return read_cnt; }
+      if (read_cnt == 0) { return a_count - to_read; }
 
       buffer.used += read_cnt;
     }
@@ -265,19 +265,19 @@ inline ssize_t sftp_handle_s::buff_read(bc_array_s &a_target,size_t a_count)
 
 inline void ssh2_channel_s::init()
 {/*{{{*/
-  channel = NULL;
-  ssh2s_ptr = NULL;
+  channel = nullptr;
+  ssh2s_ptr = nullptr;
 }/*}}}*/
 
 inline void ssh2_channel_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (channel != NULL)
+  if (channel != nullptr)
   {
     libssh2_channel_close(channel);
     libssh2_channel_free(channel);
   }
 
-  if (ssh2s_ptr != NULL)
+  if (ssh2s_ptr != nullptr)
   {
     it.release_location_ptr(ssh2s_ptr);
   }

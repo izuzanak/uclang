@@ -117,17 +117,17 @@ built_in_class_s modem_manager_class =
   bic_modem_manager_consts,
   bic_modem_manager_init,
   bic_modem_manager_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s modem_manager_methods[] =
@@ -184,14 +184,14 @@ void bic_modem_manager_consts(location_array_s &const_locations)
 
 void bic_modem_manager_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ModemManager *)NULL;
+  location_ptr->v_data_ptr = (ModemManager *)nullptr;
 }/*}}}*/
 
 void bic_modem_manager_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   ModemManager *mm_ptr = (ModemManager *)location_ptr->v_data_ptr;
 
-  if (mm_ptr != NULL)
+  if (mm_ptr != nullptr)
   {
     mm_ptr->Close();
 
@@ -447,17 +447,17 @@ built_in_class_s mm_device_info_class =
   bic_mm_device_info_consts,
   bic_mm_device_info_init,
   bic_mm_device_info_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s mm_device_info_methods[] =
@@ -522,14 +522,14 @@ void bic_mm_device_info_consts(location_array_s &const_locations)
 
 void bic_mm_device_info_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (device_info_s *)NULL;
+  location_ptr->v_data_ptr = (device_info_s *)nullptr;
 }/*}}}*/
 
 void bic_mm_device_info_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   device_info_s *di_ptr = (device_info_s *)location_ptr->v_data_ptr;
 
-  if (di_ptr != NULL)
+  if (di_ptr != nullptr)
   {
     di_ptr->clear(it);
     cfree(di_ptr);
@@ -600,17 +600,17 @@ built_in_class_s mm_network_info_class =
   bic_mm_network_info_consts,
   bic_mm_network_info_init,
   bic_mm_network_info_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s mm_network_info_methods[] =
@@ -734,14 +734,14 @@ void bic_mm_network_info_consts(location_array_s &const_locations)
 
 void bic_mm_network_info_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (network_info_s *)NULL;
+  location_ptr->v_data_ptr = (network_info_s *)nullptr;
 }/*}}}*/
 
 void bic_mm_network_info_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   network_info_s *ni_ptr = (network_info_s *)location_ptr->v_data_ptr;
 
-  if (ni_ptr != NULL)
+  if (ni_ptr != nullptr)
   {
     ni_ptr->clear(it);
     cfree(ni_ptr);

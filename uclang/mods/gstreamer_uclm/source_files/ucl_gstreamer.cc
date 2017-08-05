@@ -12,7 +12,7 @@ gstreamer_c g_gstreamer;
 
 void gstreamer_c::on_pad_add_video(GstElement *element,GstPad *new_pad,gpointer data)
 {/*{{{*/
-  GstCaps *pad_caps = gst_pad_query_caps(new_pad,NULL);
+  GstCaps *pad_caps = gst_pad_query_caps(new_pad,nullptr);
   GstStructure *pad_struct = gst_caps_get_structure(pad_caps,0);
   const gchar *pad_type = gst_structure_get_name(pad_struct);
 

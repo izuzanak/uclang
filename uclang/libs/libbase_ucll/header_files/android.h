@@ -78,8 +78,8 @@ public:
 
 #define ACTIVITY_CALL_CALLBACK_DELEGATE(NAME,PARAM_DATA,PARAM_CNT,PARAM_CODE,ERR_CODE) \
 {/*{{{*/\
-  if (g_activity.it_ptr != NULL &&\
-      NAME != NULL)\
+  if (g_activity.it_ptr != nullptr &&\
+      NAME != nullptr)\
   {\
     interpreter_thread_s &it = *g_activity.it_ptr;\
     delegate_s *delegate_ptr = (delegate_s *)(NAME)->v_data_ptr;\
@@ -87,7 +87,7 @@ public:
     PARAM_CODE;\
 \
     /* - call delegate method - */\
-    location_s *trg_location = NULL;\
+    location_s *trg_location = nullptr;\
     BIC_CALL_DELEGATE(it,delegate_ptr,PARAM_DATA,PARAM_CNT,trg_location,g_activity.loop_source_pos,\
       g_activity.loop_ret_code = c_run_return_code_EXCEPTION;\
       ERR_CODE;\
@@ -98,8 +98,8 @@ public:
 
 #define ACTIVITY_CALL_CALLBACK_DELEGATE_INTEGER(NAME,PARAM_DATA,PARAM_CNT,PARAM_CODE,ERR_CODE) \
 {/*{{{*/\
-  if (g_activity.it_ptr != NULL &&\
-      NAME != NULL)\
+  if (g_activity.it_ptr != nullptr &&\
+      NAME != nullptr)\
   {\
     interpreter_thread_s &it = *g_activity.it_ptr;\
     delegate_s *delegate_ptr = (delegate_s *)(NAME)->v_data_ptr;\
@@ -107,7 +107,7 @@ public:
     PARAM_CODE;\
 \
     /* - call delegate method - */\
-    location_s *trg_location = NULL;\
+    location_s *trg_location = nullptr;\
     BIC_CALL_DELEGATE(it,delegate_ptr,PARAM_DATA,PARAM_CNT,trg_location,g_activity.loop_source_pos,\
       g_activity.loop_ret_code = c_run_return_code_EXCEPTION;\
       ERR_CODE;\
@@ -122,7 +122,7 @@ public:
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_RETURN_INTEGER,g_activity.loop_source_pos,(location_s *)it.blank_location);\
 \
       /* - if delegate is static - */\
-      if (delegate_ptr->object_location == NULL)\
+      if (delegate_ptr->object_location == nullptr)\
       {\
         new_exception->params.push(delegate_ptr->name_idx_ri);\
       }\
@@ -151,9 +151,9 @@ public:
 
 inline activity_c::activity_c()
 {/*{{{*/
-  app = NULL;
-  event_loop_ptr = NULL;
-  event = NULL;
+  app = nullptr;
+  event_loop_ptr = nullptr;
+  event = nullptr;
 
   display = EGL_NO_CONTEXT;
   surface = EGL_NO_DISPLAY;
@@ -169,14 +169,14 @@ inline void activity_c::init()
 {/*{{{*/
   event_loop = false;
 
-  it_ptr = NULL;
+  it_ptr = nullptr;
 
-  resize_dlg = NULL;
-  display_dlg = NULL;
-  input_dlg = NULL;
-  command_dlg = NULL;
-  sensor_dlg = NULL;
-  idle_dlg = NULL;
+  resize_dlg = nullptr;
+  display_dlg = nullptr;
+  input_dlg = nullptr;
+  command_dlg = nullptr;
+  sensor_dlg = nullptr;
+  idle_dlg = nullptr;
 }/*}}}*/
 
 inline void activity_c::clear(interpreter_thread_s &it)
@@ -184,7 +184,7 @@ inline void activity_c::clear(interpreter_thread_s &it)
 
 #define ANDROID_RELEASE_DELEGATE(NAME) \
 {/*{{{*/\
-  if (NAME != NULL)\
+  if (NAME != nullptr)\
   {\
     it.release_location_ptr(NAME);\
   }\

@@ -79,7 +79,10 @@ methods string_array_s
 
 unsigned string_array_s::get_idx_char_ptr(unsigned a_length,const char *a_data)
 {/*{{{*/
-  if (used == 0) return c_idx_not_exist;
+  if (used == 0)
+  {
+    return c_idx_not_exist;
+  }
 
   string_s *ptr = data;
   string_s *ptr_end = ptr + used;

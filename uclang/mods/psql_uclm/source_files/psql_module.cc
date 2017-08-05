@@ -107,17 +107,17 @@ built_in_class_s psql_class =
   bic_psql_consts,
   bic_psql_init,
   bic_psql_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s psql_methods[] =
@@ -182,17 +182,17 @@ built_in_class_s psql_conn_class =
   bic_psql_conn_consts,
   bic_psql_conn_init,
   bic_psql_conn_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s psql_conn_methods[] =
@@ -239,14 +239,14 @@ void bic_psql_conn_consts(location_array_s &const_locations)
 
 void bic_psql_conn_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (PGconn *)NULL;
+  location_ptr->v_data_ptr = (PGconn *)nullptr;
 }/*}}}*/
 
 void bic_psql_conn_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   PGconn *conn_ptr = (PGconn *)location_ptr->v_data_ptr;
 
-  if (conn_ptr != NULL)
+  if (conn_ptr != nullptr)
   {
     PQfinish(conn_ptr);
   }
@@ -322,7 +322,7 @@ bool bic_psql_conn_method_execute_1(interpreter_thread_s &it,unsigned stack_base
   PGconn *conn_ptr = (PGconn *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (conn_ptr == NULL)
+  if (conn_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -381,7 +381,7 @@ bool bic_psql_conn_method_execute_1(interpreter_thread_s &it,unsigned stack_base
           case INT4OID:
             {
               char *data = PQgetvalue(res_ptr,tuple_idx,field_idx);
-              long long int value = strtoll(data,NULL,10);
+              long long int value = strtoll(data,nullptr,10);
 
               BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
               field_array_ptr->push(new_location);
@@ -391,7 +391,7 @@ bool bic_psql_conn_method_execute_1(interpreter_thread_s &it,unsigned stack_base
           case FLOAT8OID:
             {
               char *data = PQgetvalue(res_ptr,tuple_idx,field_idx);
-              double value = strtod(data,NULL);
+              double value = strtod(data,nullptr);
 
               BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);
               field_array_ptr->push(new_location);
@@ -448,7 +448,7 @@ bool bic_psql_conn_method_prepare_1(interpreter_thread_s &it,unsigned stack_base
   PGconn *conn_ptr = (PGconn *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (conn_ptr == NULL)
+  if (conn_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -513,17 +513,17 @@ built_in_class_s psql_statement_class =
   bic_psql_statement_consts,
   bic_psql_statement_init,
   bic_psql_statement_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s psql_statement_methods[] =
@@ -560,14 +560,14 @@ void bic_psql_statement_consts(location_array_s &const_locations)
 
 void bic_psql_statement_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (psql_stmt_s *)NULL;
+  location_ptr->v_data_ptr = (psql_stmt_s *)nullptr;
 }/*}}}*/
 
 void bic_psql_statement_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   psql_stmt_s *stmt_ptr = (psql_stmt_s *)location_ptr->v_data_ptr;
 
-  if (stmt_ptr != NULL)
+  if (stmt_ptr != nullptr)
   {
     stmt_ptr->clear(it);
     cfree(stmt_ptr);
@@ -629,7 +629,7 @@ bool bic_psql_statement_method_next_item_0(interpreter_thread_s &it,unsigned sta
         case INT4OID:
           {
             char *data = PQgetvalue(res_ptr,tuple_idx,field_idx);
-            long long int value = strtoll(data,NULL,10);
+            long long int value = strtoll(data,nullptr,10);
 
             BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
             field_array_ptr->push(new_location);
@@ -639,7 +639,7 @@ bool bic_psql_statement_method_next_item_0(interpreter_thread_s &it,unsigned sta
         case FLOAT8OID:
           {
             char *data = PQgetvalue(res_ptr,tuple_idx,field_idx);
-            double value = strtod(data,NULL);
+            double value = strtod(data,nullptr);
 
             BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);
             field_array_ptr->push(new_location);

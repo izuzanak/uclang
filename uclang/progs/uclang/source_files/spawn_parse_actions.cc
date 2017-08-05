@@ -73,7 +73,7 @@ bool pa_spawn_redirect_from_fd(spawn_parser_s &_this)
   lalr_stack_element_s &lse = lalr_stack.last();
 
   char *fd_data = source_string.data + lse.terminal_start;
-  long long int fd = strtoll(fd_data,NULL,10);
+  long long int fd = strtoll(fd_data,nullptr,10);
 
   // - ERROR -
   if (dup2(fd,fd_stack.pop()) == -1)
@@ -103,7 +103,7 @@ bool pa_spawn_redirect_to_fd(spawn_parser_s &_this)
   lalr_stack_element_s &lse = lalr_stack.last();
 
   char *fd_data = source_string.data + lse.terminal_start;
-  long long int fd = strtoll(fd_data,NULL,10);
+  long long int fd = strtoll(fd_data,nullptr,10);
 
   // - ERROR -
   if (dup2(fd,fd_stack.pop()) == -1)
@@ -139,7 +139,9 @@ bool pa_spawn_redirect_from_file(spawn_parser_s &_this)
 
   // - ERROR -
   if (fd == -1)
+  {
     return false;
+  }
 
   // - ERROR -
   if (dup2(fd,fd_stack.pop()) == -1)
@@ -151,7 +153,9 @@ bool pa_spawn_redirect_from_file(spawn_parser_s &_this)
 
   // - ERROR -
   if (close(fd) == -1)
+  {
     return false;
+  }
 
   debug_message_6(
     char *end_ptr = source_string.data + lse.terminal_end;
@@ -181,7 +185,9 @@ bool pa_spawn_redirect_to_file(spawn_parser_s &_this)
 
   // - ERROR -
   if (fd == -1)
+  {
     return false;
+  }
 
   // - ERROR -
   if (dup2(fd,fd_stack.pop()) == -1)
@@ -193,7 +199,9 @@ bool pa_spawn_redirect_to_file(spawn_parser_s &_this)
 
   // - ERROR -
   if (close(fd) == -1)
+  {
     return false;
+  }
 
   debug_message_6(
     char *end_ptr = source_string.data + lse.terminal_end;
@@ -223,7 +231,9 @@ bool pa_spawn_append_to_file(spawn_parser_s &_this)
 
   // - ERROR -
   if (fd == -1)
+  {
     return false;
+  }
 
   // - ERROR -
   if (dup2(fd,fd_stack.pop()) == -1)
@@ -235,7 +245,9 @@ bool pa_spawn_append_to_file(spawn_parser_s &_this)
 
   // - ERROR -
   if (close(fd) == -1)
+  {
     return false;
+  }
 
   debug_message_6(
     char *end_ptr = source_string.data + lse.terminal_end;
@@ -264,7 +276,9 @@ bool pa_spawn_redirect_all_to_file(spawn_parser_s &_this)
 
   // - ERROR -
   if (fd == -1)
+  {
     return false;
+  }
 
   // - ERROR -
   if (dup2(fd,STDOUT_FILENO) == -1 ||
@@ -277,7 +291,9 @@ bool pa_spawn_redirect_all_to_file(spawn_parser_s &_this)
 
   // - ERROR -
   if (close(fd) == -1)
+  {
     return false;
+  }
 
   debug_message_6(
     char *end_ptr = source_string.data + lse.terminal_end;
@@ -306,7 +322,9 @@ bool pa_spawn_append_all_to_file(spawn_parser_s &_this)
 
   // - ERROR -
   if (fd == -1)
+  {
     return false;
+  }
 
   // - ERROR -
   if (dup2(fd,STDOUT_FILENO) == -1 ||
@@ -319,7 +337,9 @@ bool pa_spawn_append_all_to_file(spawn_parser_s &_this)
 
   // - ERROR -
   if (close(fd) == -1)
+  {
     return false;
+  }
 
   debug_message_6(
     char *end_ptr = source_string.data + lse.terminal_end;
@@ -378,7 +398,7 @@ bool pa_spawn_fd(spawn_parser_s &_this)
   lalr_stack_element_s &lse = lalr_stack.last();
 
   char *fd_data = source_string.data + lse.terminal_start;
-  long long int fd = strtoll(fd_data,NULL,10);
+  long long int fd = strtoll(fd_data,nullptr,10);
 
   fd_stack.push(fd);
 

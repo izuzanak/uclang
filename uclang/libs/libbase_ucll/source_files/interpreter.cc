@@ -187,7 +187,7 @@ bool interpreter_thread_s::create_new_object_blank_constructor(location_s *new_l
       }
 
       // - launch class initialization begin code -
-      if (!run_expression_code(e_class_record.init_begin_code.data,new_stack_base,NULL))
+      if (!run_expression_code(e_class_record.init_begin_code.data,new_stack_base,nullptr))
       {
         release_stack_from(new_stack_base);
 
@@ -195,7 +195,7 @@ bool interpreter_thread_s::create_new_object_blank_constructor(location_s *new_l
       }
 
       // - launch class initialization run time code -
-      if (!run_expression_code(e_class_record.init_run_time_code.data,new_stack_base,NULL))
+      if (!run_expression_code(e_class_record.init_run_time_code.data,new_stack_base,nullptr))
       {
         release_stack_from(new_stack_base);
 
@@ -258,7 +258,7 @@ bool interpreter_thread_s::create_new_object_blank_constructor(location_s *new_l
     }
 
     // - launch method begin code -
-    if (!run_expression_code(method_record.begin_code.data,new_stack_base,NULL))
+    if (!run_expression_code(method_record.begin_code.data,new_stack_base,nullptr))
     {
       release_stack_from(new_stack_base);
 
@@ -390,7 +390,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
     // - process expression -
     case c_fg_type_expression:
     {/*{{{*/
-      if (!run_expression_code(code + fg_ptr[c_fg_expression_idx],stack_base,NULL))
+      if (!run_expression_code(code + fg_ptr[c_fg_expression_idx],stack_base,nullptr))
       {
         FG_HANDLE_EXCEPTION()
       }
@@ -907,7 +907,7 @@ bool interpreter_thread_s::call_method(uli *code,unsigned stack_base)
   {
     class_record_s &class_record = INTERPRETER->class_records[call_location->v_type];
 
-    if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->invoke_caller != NULL)
+    if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->invoke_caller != nullptr)
     {
       // - call object invoke caller -
       if (!class_record.bi_class_ptr->invoke_caller(*this,code,stack_base,code + icl_source_pos))
@@ -1015,7 +1015,7 @@ bool interpreter_thread_s::call_method(uli *code,unsigned stack_base)
         }
 
         // - launching of method begin code -
-        if (!run_expression_code(method_record.begin_code.data,new_stack_base,NULL))
+        if (!run_expression_code(method_record.begin_code.data,new_stack_base,nullptr))
         {
           release_stack_from(new_stack_base);
 
@@ -1063,7 +1063,7 @@ bool interpreter_thread_s::handle_signal(int signal_number)
   sn_location->v_data_ptr = (long long int)signal_number;
 
   // - call delegate method -
-  location_s *trg_location = NULL;
+  location_s *trg_location = nullptr;
 
   // FIXME TODO set properly SOURCE_POS, now set to zero
   BIC_CALL_DELEGATE((*this),delegate_ptr,(pointer *)&sn_location,1,trg_location,0,
@@ -1172,7 +1172,7 @@ void interpreter_s::create_from_script_parser(script_parser_s &sp)
   signal_handler_locations.clear();
 
   // - pointer to interpreter main thread -
-  main_thread_ptr = NULL;
+  main_thread_ptr = nullptr;
 
   // - count of created threads -
   thread_cnt.atomic_set(0);
@@ -1705,7 +1705,7 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
     }
 
     // - launch static begin code -
-    thread->run_expression_code(static_begin_code.data,0,NULL);
+    thread->run_expression_code(static_begin_code.data,0,nullptr);
     if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
     {
       // - print exception message -
@@ -1715,7 +1715,7 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
     else
     {
       // - launch static run time code -
-      thread->run_expression_code(static_run_time_code.data,0,NULL);
+      thread->run_expression_code(static_run_time_code.data,0,nullptr);
       if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
       {
         // - print exception message -
@@ -1786,7 +1786,7 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
         }
 
         // - launch method begin code -
-        thread->run_expression_code(method_record.begin_code.data,1,NULL);
+        thread->run_expression_code(method_record.begin_code.data,1,nullptr);
         if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
         {
           // - print exception message -
@@ -1836,7 +1836,7 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
   }
 
   // - remove pointer to interpreter main thread -
-  main_thread_ptr = NULL;
+  main_thread_ptr = nullptr;
 
   // - release thread locations -
   thread->release_location_ptr((location_s *)thread->thread_location);
@@ -1870,7 +1870,7 @@ void *new_thread_function(void *nt_start_info)
   sigaddset(&signal_set,SIGHUP);
 
   // - block term signals by this thread -
-  cassert(pthread_sigmask(SIG_BLOCK,&signal_set,NULL) == 0);
+  cassert(pthread_sigmask(SIG_BLOCK,&signal_set,nullptr) == 0);
 #endif
 
   // - acquire pointer to thread and its method -
@@ -1879,12 +1879,12 @@ void *new_thread_function(void *nt_start_info)
   cfree(nt_start_info);
 
   // - pointer to location of return value -
-  location_s *return_location = NULL;
+  location_s *return_location = nullptr;
 
   try
   {
     // - launch method begin code -
-    thread->run_expression_code(method_record_ptr->begin_code.data,1,NULL);
+    thread->run_expression_code(method_record_ptr->begin_code.data,1,nullptr);
     if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
     {
       // - print exception message -

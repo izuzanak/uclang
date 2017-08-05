@@ -68,7 +68,7 @@ class ftgl_c
 
 inline void gl_vertex_buffer_s::init()
 {/*{{{*/
-  buffer_ptr = NULL;
+  buffer_ptr = nullptr;
   vert_attr_cnt = 0;
   vert_item_cnt = 0;
   vert_item_types.init();;
@@ -79,7 +79,7 @@ inline void gl_vertex_buffer_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release vertex buffer pointer -
-  if (buffer_ptr != NULL)
+  if (buffer_ptr != nullptr)
   {
     vertex_buffer_delete(buffer_ptr);
   }
@@ -96,21 +96,21 @@ inline void gl_vertex_buffer_s::clear(interpreter_thread_s &it)
 
 inline void gl_font_s::init()
 {/*{{{*/
-  atlas_ptr = NULL;
-  font_ptr = NULL;
+  atlas_ptr = nullptr;
+  font_ptr = nullptr;
 }/*}}}*/
 
 inline void gl_font_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release texture font -
-  if (font_ptr != NULL)
+  if (font_ptr != nullptr)
   {
     texture_font_delete(font_ptr);
   }
 
   // - release texture atlas -
-  if (atlas_ptr != NULL)
+  if (atlas_ptr != nullptr)
   {
     texture_atlas_delete(atlas_ptr);
   }
@@ -124,8 +124,8 @@ inline void gl_font_s::clear(interpreter_thread_s &it)
 
 inline void gl_font_buffer_s::init()
 {/*{{{*/
-  font_ptr = NULL;
-  buffer_ptr = NULL;
+  font_ptr = nullptr;
+  buffer_ptr = nullptr;
 
   pos_x = 0;
   pos_y = 0;
@@ -135,13 +135,13 @@ inline void gl_font_buffer_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - relese font pointer -
-  if (font_ptr != NULL)
+  if (font_ptr != nullptr)
   {
     it.release_location_ptr(font_ptr);
   }
 
   // - release vertex buffer pointer -
-  if (buffer_ptr != NULL)
+  if (buffer_ptr != nullptr)
   {
     vertex_buffer_delete(buffer_ptr);
   }

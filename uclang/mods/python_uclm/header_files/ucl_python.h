@@ -63,18 +63,18 @@ class python_c
 
 inline void py_reference_s::init()
 {/*{{{*/
-  pyo_obj = NULL;
-  pyo_key = NULL;
+  pyo_obj = nullptr;
+  pyo_key = nullptr;
 }/*}}}*/
 
 inline void py_reference_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (pyo_obj != NULL)
+  if (pyo_obj != nullptr)
   {
     Py_DECREF(pyo_obj);
   }
 
-  if (pyo_key != NULL)
+  if (pyo_key != nullptr)
   {
     Py_DECREF(pyo_key);
   }
@@ -125,7 +125,7 @@ inline python_c::~python_c()
   Py_Finalize();
 
   // - release python dynamic library -
-  if (dl_handle != NULL)
+  if (dl_handle != nullptr)
   {
     dlclose(dl_handle);
   }

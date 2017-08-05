@@ -70,12 +70,12 @@ inline void cv_window_s::clear(interpreter_thread_s &it)
 
 inline void cv_writer_s::init()
 {/*{{{*/
-  writer_ptr = NULL;
+  writer_ptr = nullptr;
 }/*}}}*/
 
 inline void cv_writer_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (writer_ptr != NULL)
+  if (writer_ptr != nullptr)
   {
     // - if video writer is opened -
     if (writer_ptr->isOpened())
@@ -97,7 +97,7 @@ inline opencv_c::opencv_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"cvInitSystem()\n"););
 
-  cvInitSystem(0,NULL);
+  cvInitSystem(0,nullptr);
 }/*}}}*/
 
 inline opencv_c::~opencv_c()

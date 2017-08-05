@@ -180,17 +180,17 @@ built_in_class_s av_format_class =
   bic_av_format_consts,
   bic_av_format_init,
   bic_av_format_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s av_format_methods[] =
@@ -295,7 +295,7 @@ void bic_av_format_consts(location_array_s &const_locations)
 
 void bic_av_format_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (av_format_s *)NULL;
+  location_ptr->v_data_ptr = (av_format_s *)nullptr;
 }/*}}}*/
 
 void bic_av_format_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -303,7 +303,7 @@ void bic_av_format_clear(interpreter_thread_s &it,location_s *location_ptr)
   av_format_s *avf_ptr = (av_format_s *)location_ptr->v_data_ptr;
 
   // - if format exists -
-  if (avf_ptr != NULL)
+  if (avf_ptr != nullptr)
   {
     avf_ptr->clear(it);
     cfree(avf_ptr);
@@ -345,7 +345,7 @@ bool bic_av_format_method_AvFormat_1(interpreter_thread_s &it,unsigned stack_bas
   AVFormatContext *format_ctx = avformat_alloc_context();
 
   // - ERROR -
-  if (avformat_open_input(&format_ctx,string_ptr->data,NULL,NULL) != 0)
+  if (avformat_open_input(&format_ctx,string_ptr->data,nullptr,nullptr) != 0)
   {
     avformat_free_context(format_ctx);
 
@@ -354,7 +354,7 @@ bool bic_av_format_method_AvFormat_1(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - ERROR -
-  if (avformat_find_stream_info(format_ctx,NULL) < 0)
+  if (avformat_find_stream_info(format_ctx,nullptr) < 0)
   {
     avformat_close_input(&format_ctx);
 
@@ -472,7 +472,7 @@ bool bic_av_format_method_stream_decode_1(interpreter_thread_s &it,unsigned stac
   }
 
   // - ERROR -
-  if (avf_ptr->codec_ctxs[stream_idx] != NULL)
+  if (avf_ptr->codec_ctxs[stream_idx] != nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_AV_FORMAT_STREAM_ALREADY_IN_DECODED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -482,14 +482,14 @@ bool bic_av_format_method_stream_decode_1(interpreter_thread_s &it,unsigned stac
   AVCodec *codec;
 
   // - ERROR -
-  if ((codec = avcodec_find_decoder(stream->codec->codec_id)) == NULL)
+  if ((codec = avcodec_find_decoder(stream->codec->codec_id)) == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_AV_FORMAT_CANNOT_FIND_STREAM_DECODER,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
   // - ERROR -
-  if (avcodec_open2(stream->codec,codec,NULL) < 0)
+  if (avcodec_open2(stream->codec,codec,nullptr) < 0)
   {
     exception_s::throw_exception(it,module.error_base + c_error_AV_FORMAT_CANNOT_INITIALIZE_CODEC_CONTEXT,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -566,7 +566,7 @@ bool bic_av_format_method_next_frame_0(interpreter_thread_s &it,unsigned stack_b
 
     // - retrieve codec context -
     AVCodecContext *codec_ctx = codec_ctxs[packet.stream_index];
-    if (codec_ctx == NULL)
+    if (codec_ctx == nullptr)
     {
       BIC_AV_FORMAT_FREE_PACKET();
     }
@@ -653,17 +653,17 @@ built_in_class_s av_stream_class =
   bic_av_stream_consts,
   bic_av_stream_init,
   bic_av_stream_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s av_stream_methods[] =
@@ -705,7 +705,7 @@ void bic_av_stream_consts(location_array_s &const_locations)
 
 void bic_av_stream_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (av_stream_s *)NULL;
+  location_ptr->v_data_ptr = (av_stream_s *)nullptr;
 }/*}}}*/
 
 void bic_av_stream_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -713,7 +713,7 @@ void bic_av_stream_clear(interpreter_thread_s &it,location_s *location_ptr)
   av_stream_s *avs_ptr = (av_stream_s *)location_ptr->v_data_ptr;
 
   // - if stream exists -
-  if (avs_ptr != NULL)
+  if (avs_ptr != nullptr)
   {
     avs_ptr->clear(it);
     cfree(avs_ptr);
@@ -794,17 +794,17 @@ built_in_class_s av_video_frame_class =
   bic_av_video_frame_consts,
   bic_av_video_frame_init,
   bic_av_video_frame_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s av_video_frame_methods[] =
@@ -856,7 +856,7 @@ void bic_av_video_frame_consts(location_array_s &const_locations)
 
 void bic_av_video_frame_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (av_frame_s *)NULL;
+  location_ptr->v_data_ptr = (av_frame_s *)nullptr;
 }/*}}}*/
 
 void bic_av_video_frame_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -864,7 +864,7 @@ void bic_av_video_frame_clear(interpreter_thread_s &it,location_s *location_ptr)
   av_frame_s *avfr_ptr = (av_frame_s *)location_ptr->v_data_ptr;
 
   // - if frame exists -
-  if (avfr_ptr != NULL)
+  if (avfr_ptr != nullptr)
   {
     avfr_ptr->clear(it);
     cfree(avfr_ptr);
@@ -999,17 +999,17 @@ built_in_class_s av_audio_frame_class =
   bic_av_audio_frame_consts,
   bic_av_audio_frame_init,
   bic_av_audio_frame_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s av_audio_frame_methods[] =
@@ -1041,7 +1041,7 @@ void bic_av_audio_frame_consts(location_array_s &const_locations)
 
 void bic_av_audio_frame_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (av_frame_s *)NULL;
+  location_ptr->v_data_ptr = (av_frame_s *)nullptr;
 }/*}}}*/
 
 void bic_av_audio_frame_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1049,7 +1049,7 @@ void bic_av_audio_frame_clear(interpreter_thread_s &it,location_s *location_ptr)
   av_frame_s *avfr_ptr = (av_frame_s *)location_ptr->v_data_ptr;
 
   // - if frame exists -
-  if (avfr_ptr != NULL)
+  if (avfr_ptr != nullptr)
   {
     avfr_ptr->clear(it);
     cfree(avfr_ptr);
@@ -1100,17 +1100,17 @@ built_in_class_s av_picture_class =
   bic_av_picture_consts,
   bic_av_picture_init,
   bic_av_picture_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s av_picture_methods[] =
@@ -1205,7 +1205,7 @@ void bic_av_picture_consts(location_array_s &const_locations)
 
 void bic_av_picture_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (av_picture_s *)NULL;
+  location_ptr->v_data_ptr = (av_picture_s *)nullptr;
 }/*}}}*/
 
 void bic_av_picture_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1213,7 +1213,7 @@ void bic_av_picture_clear(interpreter_thread_s &it,location_s *location_ptr)
   av_picture_s *avp_ptr = (av_picture_s *)location_ptr->v_data_ptr;
 
   // - if frame exists -
-  if (avp_ptr != NULL)
+  if (avp_ptr != nullptr)
   {
     avp_ptr->clear(it);
     cfree(avp_ptr);
@@ -1455,17 +1455,17 @@ built_in_class_s av_converter_class =
   bic_av_converter_consts,
   bic_av_converter_init,
   bic_av_converter_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s av_converter_methods[] =
@@ -1512,7 +1512,7 @@ void bic_av_converter_consts(location_array_s &const_locations)
 
 void bic_av_converter_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (SwsContext *)NULL;
+  location_ptr->v_data_ptr = (SwsContext *)nullptr;
 }/*}}}*/
 
 void bic_av_converter_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1520,7 +1520,7 @@ void bic_av_converter_clear(interpreter_thread_s &it,location_s *location_ptr)
   SwsContext *avc_ptr = (SwsContext *)location_ptr->v_data_ptr;
 
   // - if converter exists -
-  if (avc_ptr != NULL)
+  if (avc_ptr != nullptr)
   {
     sws_freeContext(avc_ptr);
   }
@@ -1633,7 +1633,7 @@ bool bic_av_converter_method_scale_2(interpreter_thread_s &it,unsigned stack_bas
   *avc_ptr = sws_getCachedContext(*avc_ptr,
     src_width,src_height,src_format,
     trg_width,trg_height,trg_format,
-    SWS_BICUBIC,NULL,NULL,NULL);
+    SWS_BICUBIC,nullptr,nullptr,nullptr);
 
   // - scale source picture to target -
   sws_scale(*avc_ptr,src_pic->data,src_pic->linesize,0,src_height,trg_pic->data,trg_pic->linesize);
@@ -1773,7 +1773,7 @@ bool bic_av_converter_method_scale_4(interpreter_thread_s &it,unsigned stack_bas
   *avc_ptr = sws_getCachedContext(*avc_ptr,
       src_width,src_height,src_format,
       trg_width,trg_height,trg_format,
-      SWS_BICUBIC,NULL,NULL,NULL);
+      SWS_BICUBIC,nullptr,nullptr,nullptr);
 
   // - scale source picture to target -
   sws_scale(*avc_ptr,src_pic->data,src_pic->linesize,0,src_height,trg_pic->data,trg_pic->linesize);

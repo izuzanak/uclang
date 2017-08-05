@@ -1275,7 +1275,10 @@ bool graph_s::is_strongly_connected_graph_tarjans()
 
 bool graph_s::is_regular_graph()
 {/*{{{*/
-  if (vertices.count == 0) return true;
+  if (vertices.count == 0)
+  {
+    return true;
+  }
 
   unsigned stack[vertices.get_descent_stack_size()];
   unsigned *stack_ptr = stack;

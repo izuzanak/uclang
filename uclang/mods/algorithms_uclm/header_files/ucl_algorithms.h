@@ -84,18 +84,18 @@ struct range_s
 
 inline void iterable_s::init()
 {/*{{{*/
-  location = NULL;
+  location = nullptr;
   type = c_idx_not_exist;
   index = 0;
-  item_reference = NULL;
-  item_location = NULL;
+  item_reference = nullptr;
+  item_location = nullptr;
 }/*}}}*/
 
 inline void iterable_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release item reference -
-  if (item_reference != NULL)
+  if (item_reference != nullptr)
   {
     it.release_location_ptr(item_reference);
   }
@@ -110,7 +110,7 @@ inline void iterable_s::clear(interpreter_thread_s &it)
 inline void filter_s::init()
 {/*{{{*/
   type = c_idx_not_exist;
-  map_loc = NULL;
+  map_loc = nullptr;
   iterable.init();
 }/*}}}*/
 
@@ -118,13 +118,13 @@ inline void filter_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release iterable location -
-  if (iterable.location != NULL)
+  if (iterable.location != nullptr)
   {
     it.release_location_ptr(iterable.location);
   }
 
   // - release map location -
-  if (map_loc != NULL)
+  if (map_loc != nullptr)
   {
     it.release_location_ptr(map_loc);
   }
@@ -140,10 +140,10 @@ inline void filter_s::clear(interpreter_thread_s &it)
 
 inline void range_s::init()
 {/*{{{*/
-  start_location = NULL;
-  end_location = NULL;
-  step_location = NULL;
-  actual_location = NULL;
+  start_location = nullptr;
+  end_location = nullptr;
+  step_location = nullptr;
+  actual_location = nullptr;
 }/*}}}*/
 
 inline void range_s::clear(interpreter_thread_s &it)
@@ -151,7 +151,7 @@ inline void range_s::clear(interpreter_thread_s &it)
 
 #define RELEASE_LOCATION_PTR(LOCATION_PTR) \
 {/*{{{*/\
-  if (LOCATION_PTR != NULL)\
+  if (LOCATION_PTR != nullptr)\
   {\
     it.release_location_ptr(LOCATION_PTR);\
   }\

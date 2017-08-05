@@ -41,7 +41,7 @@ struct jit_function_s
 
 inline void jit_context_s::init()
 {/*{{{*/
-  context = NULL;
+  context = nullptr;
 
   ucl_signatures.init();
   fun_names.init();
@@ -52,7 +52,7 @@ inline void jit_context_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release jit context -
-  if (context != NULL)
+  if (context != nullptr)
   {
     jit_context_destroy(context);
   }
@@ -70,14 +70,14 @@ inline void jit_context_s::clear(interpreter_thread_s &it)
 
 inline void jit_function_s::init()
 {/*{{{*/
-  jc_ptr = NULL;
+  jc_ptr = nullptr;
 }/*}}}*/
 
 inline void jit_function_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release jit context pointer -
-  if (jc_ptr != NULL)
+  if (jc_ptr != nullptr)
   {
     it.release_location_ptr(jc_ptr);
   }

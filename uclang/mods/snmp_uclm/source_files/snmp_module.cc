@@ -250,17 +250,17 @@ built_in_class_s snmp_session_class =
   bic_snmp_session_consts,
   bic_snmp_session_init,
   bic_snmp_session_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s snmp_session_methods[] =
@@ -307,7 +307,7 @@ void bic_snmp_session_consts(location_array_s &const_locations)
 
 void bic_snmp_session_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (snmp_session_s *)NULL;
+  location_ptr->v_data_ptr = (snmp_session_s *)nullptr;
 }/*}}}*/
 
 void bic_snmp_session_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -315,7 +315,7 @@ void bic_snmp_session_clear(interpreter_thread_s &it,location_s *location_ptr)
   snmp_session_s *snmps_ptr = (snmp_session_s *)location_ptr->v_data_ptr;
 
   // - if session exists -
-  if (snmps_ptr != NULL)
+  if (snmps_ptr != nullptr)
   {
     snmps_ptr->clear(it);
     cfree(snmps_ptr);
@@ -398,7 +398,7 @@ bool bic_snmp_session_method_SnmpSession_1(interpreter_thread_s &it,unsigned sta
   snmp_session_s *snmps_ptr = (snmp_session_s *)cmalloc(sizeof(snmp_session_s));
   snmps_ptr->init();
 
-  int arg_res = snmp_parse_args(argc,argv,&snmps_ptr->session,"",NULL);
+  int arg_res = snmp_parse_args(argc,argv,&snmps_ptr->session,"",nullptr);
 
   // - ERROR -
   if (arg_res != argc)
@@ -417,7 +417,7 @@ bool bic_snmp_session_method_SnmpSession_1(interpreter_thread_s &it,unsigned sta
   snmps_ptr->ss = snmp_open(&snmps_ptr->session);
 
   // - ERROR -
-  if (snmps_ptr->ss == NULL)
+  if (snmps_ptr->ss == nullptr)
   {
     snmps_ptr->clear(it);
     cfree(snmps_ptr);
@@ -528,7 +528,7 @@ bool bic_snmp_session_method_set_list_2(interpreter_thread_s &it,unsigned stack_
 
       // - ERROR -
       if (snmp_pdu_add_variable(req_pdu,snmpo_ptr->data,snmpo_ptr->length,
-          value_type,value_ptr,value_size) == NULL)
+          value_type,value_ptr,value_size) == nullptr)
       {
         snmp_free_pdu(req_pdu);
 
@@ -539,7 +539,7 @@ bool bic_snmp_session_method_set_list_2(interpreter_thread_s &it,unsigned stack_
     } while(++v_ptr,++o_ptr < o_ptr_end);
 
     // - response protocol data unit -
-    netsnmp_pdu *resp_pdu = NULL;
+    netsnmp_pdu *resp_pdu = nullptr;
 
     // - send request -
     int status = snmp_synch_response(snmps_ptr->ss,req_pdu,&resp_pdu);
@@ -547,7 +547,7 @@ bool bic_snmp_session_method_set_list_2(interpreter_thread_s &it,unsigned stack_
     // - ERROR -
     if (status != STAT_SUCCESS || resp_pdu->errstat != SNMP_ERR_NOERROR)
     {
-      if (resp_pdu != NULL) {
+      if (resp_pdu != nullptr) {
         snmp_free_pdu(resp_pdu);
       }
 
@@ -555,7 +555,7 @@ bool bic_snmp_session_method_set_list_2(interpreter_thread_s &it,unsigned stack_
       return false;
     }
 
-    if (resp_pdu != NULL) {
+    if (resp_pdu != nullptr) {
       snmp_free_pdu(resp_pdu);
     }
   }
@@ -620,7 +620,7 @@ bool bic_snmp_session_method_get_list_1(interpreter_thread_s &it,unsigned stack_
     } while(++ptr < ptr_end);
 
     // - response protocol data unit -
-    netsnmp_pdu *resp_pdu = NULL;
+    netsnmp_pdu *resp_pdu = nullptr;
 
     // - send request -
     int status = snmp_synch_response(snmps_ptr->ss,req_pdu,&resp_pdu);
@@ -628,7 +628,7 @@ bool bic_snmp_session_method_get_list_1(interpreter_thread_s &it,unsigned stack_
     // - ERROR -
     if (status != STAT_SUCCESS || resp_pdu->errstat != SNMP_ERR_NOERROR)
     {
-      if (resp_pdu != NULL) {
+      if (resp_pdu != nullptr) {
         snmp_free_pdu(resp_pdu);
       }
 
@@ -638,7 +638,7 @@ bool bic_snmp_session_method_get_list_1(interpreter_thread_s &it,unsigned stack_
 
     // - process retrieved variables -
     netsnmp_variable_list *var_ptr = resp_pdu->variables;
-    while (var_ptr != NULL)
+    while (var_ptr != nullptr)
     {
       switch (var_ptr->type)
       {
@@ -677,7 +677,7 @@ bool bic_snmp_session_method_get_list_1(interpreter_thread_s &it,unsigned stack_
       var_ptr = var_ptr->next_variable;
     }
 
-    if (resp_pdu != NULL) {
+    if (resp_pdu != nullptr) {
       snmp_free_pdu(resp_pdu);
     }
   }
@@ -715,17 +715,17 @@ built_in_class_s snmp_agent_class =
   bic_snmp_agent_consts,
   bic_snmp_agent_init,
   bic_snmp_agent_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s snmp_agent_methods[] =
@@ -916,7 +916,7 @@ void bic_snmp_agent_consts(location_array_s &const_locations)
 
 void bic_snmp_agent_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (snmp_agent_s *)NULL;
+  location_ptr->v_data_ptr = (snmp_agent_s *)nullptr;
 }/*}}}*/
 
 void bic_snmp_agent_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -924,7 +924,7 @@ void bic_snmp_agent_clear(interpreter_thread_s &it,location_s *location_ptr)
   snmp_agent_s *snmpa_ptr = (snmp_agent_s *)location_ptr->v_data_ptr;
 
   // - if agent exists -
-  if (snmpa_ptr != NULL)
+  if (snmpa_ptr != nullptr)
   {
     snmpa_ptr->clear(it);
     cfree(snmpa_ptr);
@@ -1108,7 +1108,7 @@ bool bic_snmp_agent_method_add_object_3(interpreter_thread_s &it,unsigned stack_
   // - create new object description -
   snmp_object_s object;
   object.init();
-  object.set(*name_ptr,value_type,NULL);
+  object.set(*name_ptr,value_type,nullptr);
 
   // - ERROR -
   if (snmpa_ptr->objects.get_idx(object) != c_idx_not_exist)
@@ -1120,8 +1120,8 @@ bool bic_snmp_agent_method_add_object_3(interpreter_thread_s &it,unsigned stack_
   }
 
   // - create handler registration info -
-  netsnmp_handler_registration *reginfo = NULL;
-  reginfo = netsnmp_create_handler_registration(name_ptr->data,NULL,snmpo_ptr->data,snmpo_ptr->length,HANDLER_CAN_RWRITE);
+  netsnmp_handler_registration *reginfo = nullptr;
+  reginfo = netsnmp_create_handler_registration(name_ptr->data,nullptr,snmpo_ptr->data,snmpo_ptr->length,HANDLER_CAN_RWRITE);
 
   // - create watcher info -
   netsnmp_watcher_info *watchinfo = SNMP_MALLOC_TYPEDEF(netsnmp_watcher_info);
@@ -1154,13 +1154,13 @@ bool bic_snmp_agent_method_add_object_3(interpreter_thread_s &it,unsigned stack_
     break;
   }
 
-  watchinfo->data_size_p = NULL;
+  watchinfo->data_size_p = nullptr;
 
   // - create handler -
-  netsnmp_mib_handler *handler = NULL;
+  netsnmp_mib_handler *handler = nullptr;
 
   // - ERROR -
-  if ((handler = netsnmp_get_watcher_handler()) == NULL)
+  if ((handler = netsnmp_get_watcher_handler()) == nullptr)
   {
     object.clear();
 
@@ -1314,17 +1314,17 @@ built_in_class_s snmp_obj_class =
   bic_snmp_obj_consts,
   bic_snmp_obj_init,
   bic_snmp_obj_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s snmp_obj_methods[] =
@@ -1376,7 +1376,7 @@ void bic_snmp_obj_consts(location_array_s &const_locations)
 
 void bic_snmp_obj_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (snmp_obj_s *)NULL;
+  location_ptr->v_data_ptr = (snmp_obj_s *)nullptr;
 }/*}}}*/
 
 void bic_snmp_obj_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1384,7 +1384,7 @@ void bic_snmp_obj_clear(interpreter_thread_s &it,location_s *location_ptr)
   snmp_obj_s *snmpo_ptr = (snmp_obj_s *)location_ptr->v_data_ptr;
 
   // - if obj exists -
-  if (snmpo_ptr != NULL)
+  if (snmpo_ptr != nullptr)
   {
     snmpo_ptr->clear(it);
     cfree(snmpo_ptr);
@@ -1568,17 +1568,17 @@ built_in_class_s snmp_oid_class =
   bic_snmp_oid_consts,
   bic_snmp_oid_init,
   bic_snmp_oid_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s snmp_oid_methods[] =
@@ -1620,7 +1620,7 @@ void bic_snmp_oid_consts(location_array_s &const_locations)
 
 void bic_snmp_oid_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (snmp_oid_s *)NULL;
+  location_ptr->v_data_ptr = (snmp_oid_s *)nullptr;
 }/*}}}*/
 
 void bic_snmp_oid_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1628,7 +1628,7 @@ void bic_snmp_oid_clear(interpreter_thread_s &it,location_s *location_ptr)
   snmp_oid_s *snmpo_ptr = (snmp_oid_s *)location_ptr->v_data_ptr;
 
   // - if oid exists -
-  if (snmpo_ptr != NULL)
+  if (snmpo_ptr != nullptr)
   {
     snmpo_ptr->clear(it);
     cfree(snmpo_ptr);
@@ -1672,7 +1672,7 @@ bool bic_snmp_oid_method_SnmpOid_1(interpreter_thread_s &it,unsigned stack_base,
   snmpo_ptr->init();
 
   // - ERROR -
-  if (snmp_parse_oid(string_ptr->data,snmpo_ptr->data,&snmpo_ptr->length) == NULL)
+  if (snmp_parse_oid(string_ptr->data,snmpo_ptr->data,&snmpo_ptr->length) == nullptr)
   {
     snmpo_ptr->clear(it);
     cfree(snmpo_ptr);

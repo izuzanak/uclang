@@ -269,17 +269,17 @@ built_in_class_s ato_aru_class =
   bic_ato_aru_consts,
   bic_ato_aru_init,
   bic_ato_aru_clear,
-  NULL,
+  nullptr,
   bic_ato_aru_length,
   bic_ato_aru_item,
   bic_ato_aru_first_idx,
   bic_ato_aru_next_idx,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ato_aru_methods[] =
@@ -736,14 +736,14 @@ void bic_ato_aru_consts(location_array_s &const_locations)
 
 void bic_ato_aru_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ato_aru_s *)NULL;
+  location_ptr->v_data_ptr = (ato_aru_s *)nullptr;
 }/*}}}*/
 
 void bic_ato_aru_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   ato_aru_s *aa_ptr = (ato_aru_s *)location_ptr->v_data_ptr;
 
-  if (aa_ptr != NULL)
+  if (aa_ptr != nullptr)
   {
     aa_ptr->clear(it);
     cfree(aa_ptr);
@@ -920,7 +920,7 @@ bool bic_ato_aru_method_create_5(interpreter_thread_s &it,unsigned stack_base,ul
 
   // - initialize record variables -
   aa_ptr->record_count = 0;
-  aa_ptr->records = NULL;
+  aa_ptr->records = nullptr;
 
   // - fill sFILEARCH_HEAD structure -
   sFILEARCH_HEAD &head = aa_ptr->head;
@@ -938,7 +938,7 @@ bool bic_ato_aru_method_create_5(interpreter_thread_s &it,unsigned stack_base,ul
   std_head.i32PK_Variable = primary_key;
 
   // - retrieve actual year -
-  time_t t = time(NULL);
+  time_t t = time(nullptr);
   struct tm tm = *localtime(&t);
   std_head.u16Year = tm.tm_year + 1900;
 
@@ -1376,17 +1376,17 @@ built_in_class_s ato_aru_record_class =
   bic_ato_aru_record_consts,
   bic_ato_aru_record_init,
   bic_ato_aru_record_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ato_aru_record_methods[] =
@@ -1433,14 +1433,14 @@ void bic_ato_aru_record_consts(location_array_s &const_locations)
 
 void bic_ato_aru_record_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ato_aru_record_s *)NULL;
+  location_ptr->v_data_ptr = (ato_aru_record_s *)nullptr;
 }/*}}}*/
 
 void bic_ato_aru_record_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   ato_aru_record_s *aar_ptr = (ato_aru_record_s *)location_ptr->v_data_ptr;
 
-  if (aar_ptr != NULL)
+  if (aar_ptr != nullptr)
   {
     aar_ptr->clear(it);
     cfree(aar_ptr);
@@ -1641,17 +1641,17 @@ built_in_class_s optim_speed_profile_class =
   bic_optim_speed_profile_consts,
   bic_optim_speed_profile_init,
   bic_optim_speed_profile_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s optim_speed_profile_methods[] =
@@ -1713,14 +1713,14 @@ void bic_optim_speed_profile_consts(location_array_s &const_locations)
 
 void bic_optim_speed_profile_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (optim_speed_profile_s *)NULL;
+  location_ptr->v_data_ptr = (optim_speed_profile_s *)nullptr;
 }/*}}}*/
 
 void bic_optim_speed_profile_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   optim_speed_profile_s *osp_ptr = (optim_speed_profile_s *)location_ptr->v_data_ptr;
 
-  if (osp_ptr != NULL)
+  if (osp_ptr != nullptr)
   {
     osp_ptr->clear(it);
     cfree(osp_ptr);
@@ -1941,17 +1941,17 @@ built_in_class_s optim_line_section_class =
   bic_optim_line_section_consts,
   bic_optim_line_section_init,
   bic_optim_line_section_clear,
-  NULL,
+  nullptr,
   bic_optim_line_section_length,
   bic_optim_line_section_item,
   bic_optim_line_section_first_idx,
   bic_optim_line_section_next_idx,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s optim_line_section_methods[] =
@@ -2076,14 +2076,14 @@ void bic_optim_line_section_consts(location_array_s &const_locations)
 
 void bic_optim_line_section_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (optim_line_section_s *)NULL;
+  location_ptr->v_data_ptr = (optim_line_section_s *)nullptr;
 }/*}}}*/
 
 void bic_optim_line_section_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   optim_line_section_s *ols_ptr = (optim_line_section_s *)location_ptr->v_data_ptr;
 
-  if (ols_ptr != NULL)
+  if (ols_ptr != nullptr)
   {
     ols_ptr->clear(it);
     cfree(ols_ptr);
@@ -2408,17 +2408,17 @@ built_in_class_s optim_line_segment_class =
   bic_optim_line_segment_consts,
   bic_optim_line_segment_init,
   bic_optim_line_segment_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s optim_line_segment_methods[] =
@@ -2586,14 +2586,14 @@ void bic_optim_line_segment_consts(location_array_s &const_locations)
 
 void bic_optim_line_segment_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (optim_line_segment_s *)NULL;
+  location_ptr->v_data_ptr = (optim_line_segment_s *)nullptr;
 }/*}}}*/
 
 void bic_optim_line_segment_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   optim_line_segment_s *olseg_ptr = (optim_line_segment_s *)location_ptr->v_data_ptr;
 
-  if (olseg_ptr != NULL)
+  if (olseg_ptr != nullptr)
   {
     olseg_ptr->clear(it);
     cfree(olseg_ptr);
@@ -2768,17 +2768,17 @@ built_in_class_s ato_loco_class =
   bic_ato_loco_consts,
   bic_ato_loco_init,
   bic_ato_loco_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ato_loco_methods[] =
@@ -2857,14 +2857,14 @@ void bic_ato_loco_consts(location_array_s &const_locations)
 
 void bic_ato_loco_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ato_loco_s *)NULL;
+  location_ptr->v_data_ptr = (ato_loco_s *)nullptr;
 }/*}}}*/
 
 void bic_ato_loco_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   ato_loco_s *loco_ptr = (ato_loco_s *)location_ptr->v_data_ptr;
 
-  if (loco_ptr != NULL)
+  if (loco_ptr != nullptr)
   {
     loco_ptr->clear(it);
     cfree(loco_ptr);
@@ -3124,17 +3124,17 @@ built_in_class_s ato_train_class =
   bic_ato_train_consts,
   bic_ato_train_init,
   bic_ato_train_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ato_train_methods[] =
@@ -3208,14 +3208,14 @@ void bic_ato_train_consts(location_array_s &const_locations)
 
 void bic_ato_train_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ato_train_s *)NULL;
+  location_ptr->v_data_ptr = (ato_train_s *)nullptr;
 }/*}}}*/
 
 void bic_ato_train_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   ato_train_s *train_ptr = (ato_train_s *)location_ptr->v_data_ptr;
 
-  if (train_ptr != NULL)
+  if (train_ptr != nullptr)
   {
     train_ptr->clear(it);
     cfree(train_ptr);
@@ -3387,17 +3387,17 @@ built_in_class_s ato_trip_class =
   bic_ato_trip_consts,
   bic_ato_trip_init,
   bic_ato_trip_clear,
-  NULL,
+  nullptr,
   bic_ato_trip_length,
   bic_ato_trip_item,
   bic_ato_trip_first_idx,
   bic_ato_trip_next_idx,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ato_trip_methods[] =
@@ -3718,14 +3718,14 @@ void bic_ato_trip_consts(location_array_s &const_locations)
 
 void bic_ato_trip_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ato_trip_s *)NULL;
+  location_ptr->v_data_ptr = (ato_trip_s *)nullptr;
 }/*}}}*/
 
 void bic_ato_trip_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   ato_trip_s *trip_ptr = (ato_trip_s *)location_ptr->v_data_ptr;
 
-  if (trip_ptr != NULL)
+  if (trip_ptr != nullptr)
   {
     trip_ptr->clear(it);
     cfree(trip_ptr);
@@ -4062,17 +4062,17 @@ built_in_class_s ato_trip_sec_class =
   bic_ato_trip_sec_consts,
   bic_ato_trip_sec_init,
   bic_ato_trip_sec_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ato_trip_sec_methods[] =
@@ -4164,14 +4164,14 @@ void bic_ato_trip_sec_consts(location_array_s &const_locations)
 
 void bic_ato_trip_sec_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ato_trip_sec_s *)NULL;
+  location_ptr->v_data_ptr = (ato_trip_sec_s *)nullptr;
 }/*}}}*/
 
 void bic_ato_trip_sec_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   ato_trip_sec_s *ats_ptr = (ato_trip_sec_s *)location_ptr->v_data_ptr;
 
-  if (ats_ptr != NULL)
+  if (ats_ptr != nullptr)
   {
     ats_ptr->clear(it);
     cfree(ats_ptr);
@@ -4247,17 +4247,17 @@ built_in_class_s ato_line_sec_class =
   bic_ato_line_sec_consts,
   bic_ato_line_sec_init,
   bic_ato_line_sec_clear,
-  NULL,
+  nullptr,
   bic_ato_line_sec_length,
   bic_ato_line_sec_item,
   bic_ato_line_sec_first_idx,
   bic_ato_line_sec_next_idx,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ato_line_sec_methods[] =
@@ -4556,14 +4556,14 @@ void bic_ato_line_sec_consts(location_array_s &const_locations)
 
 void bic_ato_line_sec_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ato_line_sec_s *)NULL;
+  location_ptr->v_data_ptr = (ato_line_sec_s *)nullptr;
 }/*}}}*/
 
 void bic_ato_line_sec_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   ato_line_sec_s *als_ptr = (ato_line_sec_s *)location_ptr->v_data_ptr;
 
-  if (als_ptr != NULL)
+  if (als_ptr != nullptr)
   {
     als_ptr->clear(it);
     cfree(als_ptr);
@@ -5012,17 +5012,17 @@ built_in_class_s ato_line_sec_point_class =
   bic_ato_line_sec_point_consts,
   bic_ato_line_sec_point_init,
   bic_ato_line_sec_point_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ato_line_sec_point_methods[] =
@@ -5059,14 +5059,14 @@ void bic_ato_line_sec_point_consts(location_array_s &const_locations)
 
 void bic_ato_line_sec_point_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ato_line_sec_point_s *)NULL;
+  location_ptr->v_data_ptr = (ato_line_sec_point_s *)nullptr;
 }/*}}}*/
 
 void bic_ato_line_sec_point_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   ato_line_sec_point_s *alsp_ptr = (ato_line_sec_point_s *)location_ptr->v_data_ptr;
 
-  if (alsp_ptr != NULL)
+  if (alsp_ptr != nullptr)
   {
     alsp_ptr->clear(it);
     cfree(alsp_ptr);

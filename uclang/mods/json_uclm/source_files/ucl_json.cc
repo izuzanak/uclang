@@ -548,8 +548,8 @@ bool json_parser_s::parse_source(interpreter_thread_s &a_it,string_s &a_string)
 
   old_input_idx = 0;
 
-  true_location = NULL;
-  false_location = NULL;
+  true_location = nullptr;
+  false_location = nullptr;
 
   lalr_stack.clear();
   lalr_stack.push(0);
@@ -642,13 +642,13 @@ void json_parser_s::release_locations()
   interpreter_thread_s &it = *((interpreter_thread_s *)it_ptr);
 
   // - release true location -
-  if (true_location != NULL)
+  if (true_location != nullptr)
   {
     it.release_location_ptr((location_s *)true_location);
   }
 
   // - release false location -
-  if (false_location != NULL)
+  if (false_location != nullptr)
   {
     it.release_location_ptr((location_s *)false_location);
   }
@@ -659,7 +659,7 @@ void json_parser_s::release_locations()
     pointer *il_ptr = integer_locations.data;
     pointer *il_ptr_end = il_ptr + integer_locations.used;
     do {
-      if (*il_ptr != NULL)
+      if (*il_ptr != nullptr)
       {
         it.release_location_ptr((location_s *)*il_ptr);
       }
@@ -672,7 +672,7 @@ void json_parser_s::release_locations()
     pointer *fl_ptr = float_locations.data;
     pointer *fl_ptr_end = fl_ptr + float_locations.used;
     do {
-      if (*fl_ptr != NULL)
+      if (*fl_ptr != nullptr)
       {
         it.release_location_ptr((location_s *)*fl_ptr);
       }
@@ -685,7 +685,7 @@ void json_parser_s::release_locations()
     pointer *sl_ptr = string_locations.data;
     pointer *sl_ptr_end = sl_ptr + string_locations.used;
     do {
-      if (*sl_ptr != NULL)
+      if (*sl_ptr != nullptr)
       {
         it.release_location_ptr((location_s *)*sl_ptr);
       }

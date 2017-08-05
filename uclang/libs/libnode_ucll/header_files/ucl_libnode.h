@@ -128,7 +128,7 @@ inline UclNode::UclNode()
 {/*{{{*/
   parser.init();
   interpreter.init();
-  thread = NULL;
+  thread = nullptr;
 }/*}}}*/
 
 inline UclNode::~UclNode()

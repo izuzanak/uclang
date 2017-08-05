@@ -78,14 +78,14 @@ struct bitmap_s
 
 inline void bitmap_s::init()
 {/*{{{*/
-  data = NULL;
+  data = nullptr;
 }/*}}}*/
 
 inline void bitmap_s::clear()
 {/*{{{*/
-  if (data != NULL) {
+  if (data != nullptr) {
     cfree(data);
-    data = NULL;
+    data = nullptr;
   }
 }/*}}}*/
 

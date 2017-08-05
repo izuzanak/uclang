@@ -205,17 +205,17 @@ built_in_class_s jit_context_class =
   bic_jit_context_consts,
   bic_jit_context_init,
   bic_jit_context_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s jit_context_methods[] =
@@ -294,7 +294,7 @@ void bic_jit_context_consts(location_array_s &const_locations)
 
 void bic_jit_context_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (jit_context_s *)NULL;
+  location_ptr->v_data_ptr = (jit_context_s *)nullptr;
 }/*}}}*/
 
 void bic_jit_context_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -302,7 +302,7 @@ void bic_jit_context_clear(interpreter_thread_s &it,location_s *location_ptr)
   jit_context_s *jc_ptr = (jit_context_s *)location_ptr->v_data_ptr;
 
   // - if jit context object exists -
-  if (jc_ptr != NULL)
+  if (jc_ptr != nullptr)
   {
     jc_ptr->clear(it);
     cfree(jc_ptr);
@@ -332,7 +332,7 @@ bool bic_jit_context_method_JitContext_0(interpreter_thread_s &it,unsigned stack
   jc_ptr->init();
 
   // - ERROR -
-  if ((jc_ptr->context = jit_context_create()) == NULL)
+  if ((jc_ptr->context = jit_context_create()) == nullptr)
   {
     jc_ptr->clear(it);
     cfree(jc_ptr);
@@ -435,7 +435,7 @@ bool bic_jit_context_method_create_fun_1(interpreter_thread_s &it,unsigned stack
   }
 
   // FIXME debug output
-  //jit_dump_function(stdout,(jit_function_t)parser.jit_function,NULL);
+  //jit_dump_function(stdout,(jit_function_t)parser.jit_function,nullptr);
 
   // - compile function -
   jit_function_compile((jit_function_t)parser.jit_function);
@@ -508,17 +508,17 @@ built_in_class_s jit_function_class =
   bic_jit_function_consts,
   bic_jit_function_init,
   bic_jit_function_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s jit_function_methods[] =
@@ -560,7 +560,7 @@ void bic_jit_function_consts(location_array_s &const_locations)
 
 void bic_jit_function_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (jit_function_s *)NULL;
+  location_ptr->v_data_ptr = (jit_function_s *)nullptr;
 }/*}}}*/
 
 void bic_jit_function_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -568,7 +568,7 @@ void bic_jit_function_clear(interpreter_thread_s &it,location_s *location_ptr)
   jit_function_s *jf_ptr = (jit_function_s *)location_ptr->v_data_ptr;
 
   // - if jit function object exists -
-  if (jf_ptr != NULL)
+  if (jf_ptr != nullptr)
   {
     jf_ptr->clear(it);
     cfree(jf_ptr);

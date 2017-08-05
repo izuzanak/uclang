@@ -23,14 +23,14 @@ void *fuse_handle_s::cb_fuse_init(struct fuse_conn_info *conn)
   location_s *dlg_location = (location_s *)fops_ptr->fuse_ops_dlgs[c_fuse_init];
 
   // - if init delegate is set -
-  if (dlg_location != NULL)
+  if (dlg_location != nullptr)
   {
     interpreter_thread_s &it = *fhnd_ptr->it_ptr;
     delegate_s *delegate_ptr = (delegate_s *)dlg_location->v_data_ptr;
 
     // - call delegate method -
-    location_s *trg_location = NULL;
-    BIC_CALL_DELEGATE(it,delegate_ptr,NULL,0,trg_location,fhnd_ptr->source_pos,
+    location_s *trg_location = nullptr;
+    BIC_CALL_DELEGATE(it,delegate_ptr,nullptr,0,trg_location,fhnd_ptr->source_pos,
         fhnd_ptr->ret_code = c_run_return_code_EXCEPTION;
 
         // - exit from fuse event loop -
@@ -59,7 +59,7 @@ void *fuse_handle_s::cb_fuse_init(struct fuse_conn_info *conn)
   PARAM_CODE;\
 \
   /* - call delegate method - */\
-  location_s *trg_location = NULL;\
+  location_s *trg_location = nullptr;\
   BIC_CALL_DELEGATE(it,delegate_ptr,PARAM_DATA,PARAM_CNT,trg_location,fhnd_ptr->source_pos,\
       fhnd_ptr->ret_code = c_run_return_code_EXCEPTION;\
 \

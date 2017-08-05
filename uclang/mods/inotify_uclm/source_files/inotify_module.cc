@@ -101,17 +101,17 @@ built_in_class_s inotify_class =
   bic_inotify_consts,
   bic_inotify_init,
   bic_inotify_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s inotify_methods[] =
@@ -425,17 +425,17 @@ built_in_class_s inotify_watch_class =
   bic_inotify_watch_consts,
   bic_inotify_watch_init,
   bic_inotify_watch_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s inotify_watch_methods[] =
@@ -496,14 +496,14 @@ void bic_inotify_watch_consts(location_array_s &const_locations)
 
 void bic_inotify_watch_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (inotify_watch_s *)NULL;
+  location_ptr->v_data_ptr = (inotify_watch_s *)nullptr;
 }/*}}}*/
 
 void bic_inotify_watch_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   inotify_watch_s *iw_ptr = (inotify_watch_s *)location_ptr->v_data_ptr;
 
-  if (iw_ptr != NULL)
+  if (iw_ptr != nullptr)
   {
     iw_ptr->clear(it);
     cfree(iw_ptr);
@@ -577,17 +577,17 @@ built_in_class_s inotify_event_class =
   bic_inotify_event_consts,
   bic_inotify_event_init,
   bic_inotify_event_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s inotify_event_methods[] =
@@ -653,14 +653,14 @@ void bic_inotify_event_consts(location_array_s &const_locations)
 
 void bic_inotify_event_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (inotify_event_s *)NULL;
+  location_ptr->v_data_ptr = (inotify_event_s *)nullptr;
 }/*}}}*/
 
 void bic_inotify_event_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   inotify_event_s *ie_ptr = (inotify_event_s *)location_ptr->v_data_ptr;
 
-  if (ie_ptr != NULL)
+  if (ie_ptr != nullptr)
   {
     ie_ptr->clear(it);
     cfree(ie_ptr);

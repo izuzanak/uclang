@@ -67,17 +67,17 @@ built_in_class_s cipher_rc4_class =
   bic_cipher_rc4_consts,
   bic_cipher_rc4_init,
   bic_cipher_rc4_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s cipher_rc4_methods[] =
@@ -119,7 +119,7 @@ void bic_cipher_rc4_consts(location_array_s &const_locations)
 
 void bic_cipher_rc4_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (cipher_s *)NULL;
+  location_ptr->v_data_ptr = (cipher_s *)nullptr;
 }/*}}}*/
 
 void bic_cipher_rc4_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -127,7 +127,7 @@ void bic_cipher_rc4_clear(interpreter_thread_s &it,location_s *location_ptr)
   cipher_s *cipher_ptr = (cipher_s *)location_ptr->v_data_ptr;
 
   // - if cipher exists -
-  if (cipher_ptr != NULL)
+  if (cipher_ptr != nullptr)
   {
     cipher_ptr->clear();
     cfree(cipher_ptr);

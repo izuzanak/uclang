@@ -13,17 +13,17 @@ built_in_class_s stack_class =
   bic_stack_consts,
   bic_stack_init,
   bic_stack_clear,
-  NULL,
+  nullptr,
   bic_stack_length,
   bic_stack_item,
   bic_stack_first_idx,
   bic_stack_next_idx,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
   bic_stack_pack,
   bic_stack_unpack,
-  NULL,
-  NULL
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s stack_methods[] =

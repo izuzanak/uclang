@@ -44,7 +44,7 @@ extern unsigned c_rm_class_dict;
 {/*{{{*/\
   if (mono_c::mono_exc)\
   {\
-    return NULL;\
+    return nullptr;\
   }\
 }/*}}}*/
 
@@ -154,7 +154,7 @@ class mono_c
 
 inline void mono_property_s::init()
 {/*{{{*/
-  mono_prop = NULL;
+  mono_prop = nullptr;
   gchandle = 0;
 }/*}}}*/
 
@@ -206,7 +206,7 @@ inline MonoObject *mono_reference_s::get_item()
     long long int ll_idx;
     if (!mono_c::int_value(mono_key,ll_idx))
     {
-      return NULL;
+      return nullptr;
     }
 
     uintptr_t idx = ll_idx;
@@ -214,7 +214,7 @@ inline MonoObject *mono_reference_s::get_item()
 
     if (idx >= length)
     {
-      return NULL;
+      return nullptr;
     }
 
     return mono_array_get(mono_array,MonoObject *,idx);
@@ -224,13 +224,13 @@ inline MonoObject *mono_reference_s::get_item()
     long long int ll_idx;
     if (!mono_c::int_value(mono_key,ll_idx))
     {
-      return NULL;
+      return nullptr;
     }
 
     int idx = ll_idx;
     void *params[1] = {&idx};
 
-    mono_c::mono_exc = NULL;
+    mono_c::mono_exc = nullptr;
     MonoObject *mono_result = mono_property_get_value(mono_c::list_item,
         mono_obj,params,&mono_c::mono_exc);
 
@@ -240,7 +240,7 @@ inline MonoObject *mono_reference_s::get_item()
   }
   if (mono_class == mono_c::dict_class)
   {
-    mono_c::mono_exc = NULL;
+    mono_c::mono_exc = nullptr;
     MonoObject *mono_result = mono_property_get_value(mono_c::dict_item,
         mono_obj,(void **)&mono_key,&mono_c::mono_exc);
 
@@ -249,7 +249,7 @@ inline MonoObject *mono_reference_s::get_item()
     return mono_result;
   }
 
-  return NULL;
+  return nullptr;
 }/*}}}*/
 
 inline bool mono_reference_s::set_item(MonoObject *mono_value)
@@ -291,7 +291,7 @@ inline bool mono_reference_s::set_item(MonoObject *mono_value)
     int idx = ll_idx;
     void *params[2] = {&idx,mono_value};
 
-    mono_c::mono_exc = NULL;
+    mono_c::mono_exc = nullptr;
     mono_property_set_value(mono_c::list_item,mono_obj,params,&mono_c::mono_exc);
     BIC_MONO_CHECK_EXCEPTION_RETURN_FALSE();
 
@@ -301,7 +301,7 @@ inline bool mono_reference_s::set_item(MonoObject *mono_value)
   {
     void *params[2] = {mono_key,mono_value};
 
-    mono_c::mono_exc = NULL;
+    mono_c::mono_exc = nullptr;
     mono_property_set_value(mono_c::dict_item,mono_obj,params,&mono_c::mono_exc);
     BIC_MONO_CHECK_EXCEPTION_RETURN_FALSE();
 

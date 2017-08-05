@@ -236,14 +236,14 @@ extern uctcn_c g_uctcn;
 
 inline void pv_list_s::init()
 {/*{{{*/
-  pVariable = NULL;
+  pVariable = nullptr;
 }/*}}}*/
 
 inline void pv_list_s::clear()
 {/*{{{*/
 
   // - if variable pointer exists -
-  if (pVariable != NULL)
+  if (pVariable != nullptr)
   {
     cfree(pVariable);
   }
@@ -301,14 +301,14 @@ inline void traffic_store_s::clear(interpreter_thread_s &it)
 
 inline void traffic_port_s::init()
 {/*{{{*/
-  ts_ptr = NULL;
+  ts_ptr = nullptr;
 }/*}}}*/
 
 inline void traffic_port_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release traffic store -
-  if (ts_ptr != NULL)
+  if (ts_ptr != nullptr)
   {
     it.release_location_ptr(ts_ptr);
   }
@@ -322,8 +322,8 @@ inline void traffic_port_s::clear(interpreter_thread_s &it)
 
 inline void proc_var_set_s::init()
 {/*{{{*/
-  tp_ptr = NULL;
-  var_data = NULL;
+  tp_ptr = nullptr;
+  var_data = nullptr;
   name_array.init();
   list_array.init();
 }/*}}}*/
@@ -332,13 +332,13 @@ inline void proc_var_set_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release traffic port -
-  if (tp_ptr != NULL)
+  if (tp_ptr != nullptr)
   {
     it.release_location_ptr(tp_ptr);
   }
 
   // - release variable data -
-  if (var_data != NULL)
+  if (var_data != nullptr)
   {
     cfree(var_data);
   }
@@ -355,14 +355,14 @@ inline void proc_var_set_s::clear(interpreter_thread_s &it)
 
 inline void proc_variable_s::init()
 {/*{{{*/
-  pvs_ptr = NULL;
+  pvs_ptr = nullptr;
 }/*}}}*/
 
 inline void proc_variable_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release process variable set -
-  if (pvs_ptr != NULL)
+  if (pvs_ptr != nullptr)
   {
     it.release_location_ptr(pvs_ptr);
   }

@@ -114,18 +114,18 @@ void on_completion_callback(void *user_data,int result);
 
 inline void callback_data_s::init()
 {/*{{{*/
-  delegate_ptr = NULL;
-  user_data_ptr = NULL;
+  delegate_ptr = nullptr;
+  user_data_ptr = nullptr;
 }/*}}}*/
 
 inline void callback_data_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (delegate_ptr != NULL)
+  if (delegate_ptr != nullptr)
   {
     it.release_location_ptr(delegate_ptr);
   }
 
-  if (user_data_ptr != NULL)
+  if (user_data_ptr != nullptr)
   {
     it.release_location_ptr(user_data_ptr);
   }

@@ -224,7 +224,7 @@ int inst_static_call(inst_params_s *params)
       }
 
       // - launching of method begin code -
-      if (!it.run_expression_code(method_record.begin_code.data,new_stack_base,NULL))
+      if (!it.run_expression_code(method_record.begin_code.data,new_stack_base,nullptr))
       {
         it.release_stack_from(new_stack_base);
 
@@ -391,7 +391,7 @@ int inst_new_object(inst_params_s *params)
       }
 
       // - launch class initializing begin code -
-      if (!it.run_expression_code(e_class_record.init_begin_code.data,new_stack_base,NULL))
+      if (!it.run_expression_code(e_class_record.init_begin_code.data,new_stack_base,nullptr))
       {
         it.release_stack_from(new_stack_base);
 
@@ -399,7 +399,7 @@ int inst_new_object(inst_params_s *params)
       }
 
       // - launch class initializing run time code -
-      if (!it.run_expression_code(e_class_record.init_run_time_code.data,new_stack_base,NULL))
+      if (!it.run_expression_code(e_class_record.init_run_time_code.data,new_stack_base,nullptr))
       {
         it.release_stack_from(new_stack_base);
 
@@ -486,7 +486,7 @@ int inst_new_object(inst_params_s *params)
     }
 
     // - launching of method begin code -
-    if (!it.run_expression_code(method_record.begin_code.data,new_stack_base,NULL))
+    if (!it.run_expression_code(method_record.begin_code.data,new_stack_base,nullptr))
     {
       it.release_stack_from(new_stack_base);
 
@@ -857,7 +857,7 @@ int inst_object_member_select(inst_params_s *params)
   {
     class_record_s &class_record = IT_INTERPRETER->class_records[object_location->v_type];
 
-    if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->member_caller != NULL)
+    if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->member_caller != nullptr)
     {
       // - call object member caller -
       if (!class_record.bi_class_ptr->member_caller(it,code,stack_base))
@@ -913,10 +913,8 @@ int inst_object_member_select(inst_params_s *params)
         code += ioms_size;
         return c_run_return_code_OK;
       }
-      else
-      {
-        element_location = IT_INTERPRETER->static_location_ptrs.data + (element_ri_ep.element_position);
-      }
+
+      element_location = IT_INTERPRETER->static_location_ptrs.data + (element_ri_ep.element_position);
     }
     else
     {
@@ -1256,7 +1254,7 @@ int inst_slice_range(inst_params_s *params)
   class_record_s &class_record = IT_INTERPRETER->class_records[src_location->v_type];
 
   // - test if location type is built in class, and if it has defined built in function -
-  if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->from_slice_caller != NULL)
+  if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->from_slice_caller != nullptr)
   {
     // - convert slice array to object -
     location_s *new_location = class_record.bi_class_ptr->from_slice_caller(it,src_location,*array_ptr);

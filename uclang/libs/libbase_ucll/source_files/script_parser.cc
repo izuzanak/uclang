@@ -503,7 +503,10 @@ unsigned script_parser_s::resolve_namespace_idx_by_name_idx(unsigned a_name_idx)
 
 unsigned script_parser_s::get_parent_namespace_namespace_idx_by_name_idx(unsigned a_name_idx,unsigned a_namespace_idx)
 {/*{{{*/
-  if (a_namespace_idx == c_idx_not_exist) return c_idx_not_exist;
+  if (a_namespace_idx == c_idx_not_exist)
+  {
+    return c_idx_not_exist;
+  }
 
   // - search in namespaces enclosed in parent namespace  -
   ui_array_s &pnn_records_idxs = namespace_records[a_namespace_idx].namespace_record_idxs;
@@ -531,7 +534,10 @@ unsigned script_parser_s::get_nested_enclosing_class_idx_by_name_idx(unsigned a_
   {
     // - test parent class name -
     class_record_s &parent_class = class_records[a_class_idx];
-    if (parent_class.name_idx == a_name_idx) return a_class_idx;
+    if (parent_class.name_idx == a_name_idx)
+    {
+      return a_class_idx;
+    }
 
     // - search in parent class members -
     {

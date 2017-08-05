@@ -214,17 +214,17 @@ built_in_class_s fuse_channel_class =
   bic_fuse_channel_consts,
   bic_fuse_channel_init,
   bic_fuse_channel_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s fuse_channel_methods[] =
@@ -286,7 +286,7 @@ built_in_variable_s fuse_channel_variables[] =
   }\
 \
   /* - set terminating pointer - */\
-  argv[argc] = NULL;\
+  argv[argc] = nullptr;\
 /*}}}*/
 
 void bic_fuse_channel_consts(location_array_s &const_locations)
@@ -295,14 +295,14 @@ void bic_fuse_channel_consts(location_array_s &const_locations)
 
 void bic_fuse_channel_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (fuse_channel_s *)NULL;
+  location_ptr->v_data_ptr = (fuse_channel_s *)nullptr;
 }/*}}}*/
 
 void bic_fuse_channel_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   fuse_channel_s *fch_ptr = (fuse_channel_s *)location_ptr->v_data_ptr;
 
-  if (fch_ptr != NULL)
+  if (fch_ptr != nullptr)
   {
     fch_ptr->clear(it);
     cfree(fch_ptr);
@@ -354,7 +354,7 @@ bool bic_fuse_channel_method_FuseChannel_2(interpreter_thread_s &it,unsigned sta
   fch_ptr->fuse_chan_ptr = fuse_mount(mountpoint->data,&fargs);
 
   // - ERROR -
-  if (fch_ptr->fuse_chan_ptr == NULL)
+  if (fch_ptr->fuse_chan_ptr == nullptr)
   {
     fch_ptr->clear(it);
     cfree(fch_ptr);
@@ -401,17 +401,17 @@ built_in_class_s fuse_ops_class =
   bic_fuse_ops_consts,
   bic_fuse_ops_init,
   bic_fuse_ops_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s fuse_ops_methods[] =
@@ -549,14 +549,14 @@ void bic_fuse_ops_consts(location_array_s &const_locations)
 
 void bic_fuse_ops_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (fuse_operations_s *)NULL;
+  location_ptr->v_data_ptr = (fuse_operations_s *)nullptr;
 }/*}}}*/
 
 void bic_fuse_ops_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   fuse_operations_s *fops_ptr = (fuse_operations_s *)location_ptr->v_data_ptr;
 
-  if (fops_ptr != NULL)
+  if (fops_ptr != nullptr)
   {
     fops_ptr->clear(it);
     cfree(fops_ptr);
@@ -610,7 +610,7 @@ bool bic_fuse_ops_method_FuseOps_1(interpreter_thread_s &it,unsigned stack_base,
 
   // - initialize operations delegates -
   fops_ptr->fuse_ops_dlgs.copy_resize(c_fuse_ops_count);
-  fops_ptr->fuse_ops_dlgs.fill(NULL);
+  fops_ptr->fuse_ops_dlgs.fill(nullptr);
 
 #define BIC_FUSE_OPS_INSTALL_CALLBACK(NAME,PARAM_CNT) \
 /*{{{*/\
@@ -632,7 +632,7 @@ bool bic_fuse_ops_method_FuseOps_1(interpreter_thread_s &it,unsigned stack_base,
       }\
 \
       /* - ERROR - */\
-      if (fops_ptr->fuse_ops_dlgs[c_fuse_ ## NAME] != NULL)\
+      if (fops_ptr->fuse_ops_dlgs[c_fuse_ ## NAME] != nullptr)\
       {\
         fops_ptr->clear(it);\
         cfree(fops_ptr);\
@@ -748,17 +748,17 @@ built_in_class_s fuse_handle_class =
   bic_fuse_handle_consts,
   bic_fuse_handle_init,
   bic_fuse_handle_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s fuse_handle_methods[] =
@@ -937,14 +937,14 @@ void bic_fuse_handle_consts(location_array_s &const_locations)
 
 void bic_fuse_handle_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (fuse_handle_s *)NULL;
+  location_ptr->v_data_ptr = (fuse_handle_s *)nullptr;
 }/*}}}*/
 
 void bic_fuse_handle_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   fuse_handle_s *fhnd_ptr = (fuse_handle_s *)location_ptr->v_data_ptr;
 
-  if (fhnd_ptr != NULL)
+  if (fhnd_ptr != nullptr)
   {
     fhnd_ptr->clear(it);
     cfree(fhnd_ptr);
@@ -1007,7 +1007,7 @@ bool bic_fuse_handle_method_FuseHandle_3(interpreter_thread_s &it,unsigned stack
   fhnd_ptr->fuse_ptr = fuse_new(fch_ptr->fuse_chan_ptr,&fargs,&fops_ptr->fuse_ops,sizeof(fops_ptr->fuse_ops),dst_location);
 
   // - ERROR -
-  if (fhnd_ptr->fuse_ptr == NULL)
+  if (fhnd_ptr->fuse_ptr == nullptr)
   {
     fhnd_ptr->clear(it);
     cfree(fhnd_ptr);
@@ -1043,9 +1043,12 @@ bool bic_fuse_handle_method_get_handle_0(interpreter_thread_s &it,unsigned stack
   struct fuse_context *fctx_ptr = fuse_get_context();
 
   // - ERROR -
-  if (fctx_ptr == NULL || fctx_ptr->private_data == NULL)
+  if (fctx_ptr == nullptr || fctx_ptr->private_data == nullptr)
   {
-    if (fctx_ptr) free(fctx_ptr);
+    if (fctx_ptr)
+    {
+      free(fctx_ptr);
+    }
 
     exception_s::throw_exception(it,module.error_base + c_error_FUSE_HANDLE_GET_OUTSIDE_OF_FILESYS_OPERATION,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1082,7 +1085,7 @@ bool bic_fuse_handle_method_loop_0(interpreter_thread_s &it,unsigned stack_base,
   fuse_handle_s *fhnd_ptr = (fuse_handle_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (fhnd_ptr->it_ptr != NULL)
+  if (fhnd_ptr->it_ptr != nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_FUSE_HANDLE_LOOP_ALREADY_RUNNING,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1101,7 +1104,7 @@ bool bic_fuse_handle_method_loop_0(interpreter_thread_s &it,unsigned stack_base,
   }
 
   // - reset fuse handle it pointer -
-  fhnd_ptr->it_ptr = NULL;
+  fhnd_ptr->it_ptr = nullptr;
 
   // - if exception occurred -
   if (fhnd_ptr->ret_code == c_run_return_code_EXCEPTION)
@@ -1145,17 +1148,17 @@ built_in_class_s fuse_stat_class =
   bic_fuse_stat_consts,
   bic_fuse_stat_init,
   bic_fuse_stat_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s fuse_stat_methods[] =
@@ -1373,17 +1376,17 @@ built_in_class_s fuse_file_info_class =
   bic_fuse_file_info_consts,
   bic_fuse_file_info_init,
   bic_fuse_file_info_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s fuse_file_info_methods[] =
@@ -1466,17 +1469,17 @@ built_in_class_s fuse_dir_filler_class =
   bic_fuse_dir_filler_consts,
   bic_fuse_dir_filler_init,
   bic_fuse_dir_filler_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s fuse_dir_filler_methods[] =
@@ -1525,7 +1528,7 @@ void bic_fuse_dir_filler_clear(interpreter_thread_s &it,location_s *location_ptr
 {/*{{{*/
   fuse_dir_filler_s *fdf_ptr = (fuse_dir_filler_s *)location_ptr->v_data_ptr;
 
-  if (fdf_ptr != NULL)
+  if (fdf_ptr != nullptr)
   {
     fdf_ptr->clear(it);
     cfree(fdf_ptr);
@@ -1580,7 +1583,7 @@ bool bic_fuse_dir_filler_method_fill_dir_1(interpreter_thread_s &it,unsigned sta
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
-  if (fdf_ptr->filler(fdf_ptr->buffer,string_ptr->data,NULL,0) != 0)
+  if (fdf_ptr->filler(fdf_ptr->buffer,string_ptr->data,nullptr,0) != 0)
   {
     exception_s::throw_exception(it,module.error_base + c_error_FUSE_DIR_FILLER_FILL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1621,17 +1624,17 @@ built_in_class_s fuse_file_filler_class =
   bic_fuse_file_filler_consts,
   bic_fuse_file_filler_init,
   bic_fuse_file_filler_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s fuse_file_filler_methods[] =
@@ -1704,7 +1707,7 @@ void bic_fuse_file_filler_clear(interpreter_thread_s &it,location_s *location_pt
 {/*{{{*/
   fuse_file_filler_s *fff_ptr = (fuse_file_filler_s *)location_ptr->v_data_ptr;
 
-  if (fff_ptr != NULL)
+  if (fff_ptr != nullptr)
   {
     fff_ptr->clear(it);
     cfree(fff_ptr);

@@ -95,8 +95,8 @@ class av_c
 
 inline void av_format_s::init()
 {/*{{{*/
-  format_ctx = NULL;
-  codec_ctxs = NULL;
+  format_ctx = nullptr;
+  codec_ctxs = nullptr;
   packet.size = 0;
   proc_size = 0;
 }/*}}}*/
@@ -111,10 +111,10 @@ inline void av_format_s::clear(interpreter_thread_s &it)
   }
 
   // - if format context exists -
-  if (format_ctx != NULL)
+  if (format_ctx != nullptr)
   {
     // - if codec context array exists -
-    if (codec_ctxs != NULL)
+    if (codec_ctxs != nullptr)
     {
       // - for each codec context -
       if (format_ctx->nb_streams > 0)
@@ -124,7 +124,7 @@ inline void av_format_s::clear(interpreter_thread_s &it)
         do {
 
           // - if codec context exists -
-          if (*cc_ptr != NULL)
+          if (*cc_ptr != nullptr)
           {
             avcodec_close(*cc_ptr);
           }
@@ -136,7 +136,7 @@ inline void av_format_s::clear(interpreter_thread_s &it)
     }
 
     // - release format context -
-    if (format_ctx->iformat != NULL)
+    if (format_ctx->iformat != nullptr)
     {
       avformat_close_input(&format_ctx);
     }
@@ -155,13 +155,13 @@ inline void av_format_s::clear(interpreter_thread_s &it)
 
 inline void av_stream_s::init()
 {/*{{{*/
-  format_ctx_ptr = NULL;
+  format_ctx_ptr = nullptr;
   stream_idx = 0;
 }/*}}}*/
 
 inline void av_stream_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (format_ctx_ptr != NULL)
+  if (format_ctx_ptr != nullptr)
   {
     it.release_location_ptr(format_ctx_ptr);
   }
@@ -175,13 +175,13 @@ inline void av_stream_s::clear(interpreter_thread_s &it)
 
 inline void av_frame_s::init()
 {/*{{{*/
-  frame = NULL;
+  frame = nullptr;
   stream_idx = 0;
 }/*}}}*/
 
 inline void av_frame_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (frame != NULL)
+  if (frame != nullptr)
   {
     av_frame_free(&frame);
   }
@@ -225,7 +225,7 @@ inline av_c::~av_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"libav_exit()\n"););
 
-  av_lockmgr_register(NULL);
+  av_lockmgr_register(nullptr);
 }/*}}}*/
 
 #endif

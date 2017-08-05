@@ -94,17 +94,17 @@ built_in_class_s ltg_jit_state_class =
   bic_ltg_jit_state_consts,
   bic_ltg_jit_state_init,
   bic_ltg_jit_state_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ltg_jit_state_methods[] =
@@ -183,7 +183,7 @@ void bic_ltg_jit_state_consts(location_array_s &const_locations)
 
 void bic_ltg_jit_state_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (jit_state_s *)NULL;
+  location_ptr->v_data_ptr = (jit_state_s *)nullptr;
 }/*}}}*/
 
 void bic_ltg_jit_state_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -191,7 +191,7 @@ void bic_ltg_jit_state_clear(interpreter_thread_s &it,location_s *location_ptr)
   jit_state_s *js_ptr = (jit_state_s *)location_ptr->v_data_ptr;
 
   // - if jit state object exists -
-  if (js_ptr != NULL)
+  if (js_ptr != nullptr)
   {
     js_ptr->clear(it);
     cfree(js_ptr);

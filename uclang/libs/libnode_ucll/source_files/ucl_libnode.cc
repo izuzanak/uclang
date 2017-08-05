@@ -4,7 +4,7 @@ include "ucl_libnode.h"
 @end
 
 // - global interpreter pointer -
-interpreter_s *interpreter_ptr = NULL;
+interpreter_s *interpreter_ptr = nullptr;
 
 // - UclNode global init object -
 UclNode g_UclNode;
@@ -35,7 +35,7 @@ bool UclNode::Initialize(const char **a_modules)
   {
     // - read modules path environment variable -
     char *mp_value = getenv("UCLANG_MODS_PATH");
-    if (mp_value != NULL)
+    if (mp_value != nullptr)
     {
       // - set modules path to value of environment variable -
       mods_path.set(strlen(mp_value),mp_value);
@@ -225,7 +225,7 @@ bool UclNode::Initialize(const char **a_modules)
       if (interpreter.static_begin_code.used != 0)
       {
         // - launch static begin code -
-        thread->run_expression_code(interpreter.static_begin_code.data,0,NULL);
+        thread->run_expression_code(interpreter.static_begin_code.data,0,nullptr);
         if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
         {
           // - print exception message -
@@ -240,7 +240,7 @@ bool UclNode::Initialize(const char **a_modules)
       if (interpreter.static_run_time_code.used != 0)
       {
         // - launch static run time code -
-        thread->run_expression_code(interpreter.static_run_time_code.data,0,NULL);
+        thread->run_expression_code(interpreter.static_run_time_code.data,0,nullptr);
         if (((location_s *)thread->exception_location)->v_type != c_bi_class_blank)
         {
           // - print exception message -
@@ -276,13 +276,13 @@ bool UclNode::Clear()
   // - release ucl variables -
   UclVar::Release(interpreter);
 
-  if (thread != NULL)
+  if (thread != nullptr)
   {
     // - release location from stack -
     thread->release_stack_from(0);
 
     // - remove pointer to interpreter main thread -
-    interpreter.main_thread_ptr = NULL;
+    interpreter.main_thread_ptr = nullptr;
 
     // - release thread locations -
     thread->release_location_ptr((location_s *)thread->thread_location);
@@ -300,7 +300,7 @@ bool UclNode::Clear()
   interpreter.release_constant_and_static_locations();
 
   // - remove global pointer to interpreter -
-  interpreter_ptr = NULL;
+  interpreter_ptr = nullptr;
 
   // - release interpreter -
   interpreter.clear();

@@ -185,7 +185,7 @@ location_s *ruby_c::ruby_value_value(interpreter_thread_s &it,VALUE rv_value,uli
       // - ERROR -
       if (status)
       {
-        return NULL;
+        return nullptr;
       }
 
       long long int value = rb_big2ll(rv_value);
@@ -237,10 +237,10 @@ location_s *ruby_c::ruby_value_value(interpreter_thread_s &it,VALUE rv_value,uli
           location_s *item_location = ruby_value_value(it,rv_item,source_pos);
 
           // - ERROR -
-          if (item_location == NULL)
+          if (item_location == nullptr)
           {
             it.release_location_ptr(arr_location);
-            return NULL;
+            return nullptr;
           }
 
           // - insert item to array -
@@ -276,24 +276,24 @@ location_s *ruby_c::ruby_value_value(interpreter_thread_s &it,VALUE rv_value,uli
           location_s *key_location = ruby_value_value(it,rv_key,source_pos);
 
           // - ERROR -
-          if (key_location == NULL)
+          if (key_location == nullptr)
           {
             it.release_location_ptr(dict_location);
-            return NULL;
+            return nullptr;
           }
 
           location_s *value_location = ruby_value_value(it,rv_value,source_pos);
 
           // - ERROR -
-          if (value_location == NULL)
+          if (value_location == nullptr)
           {
             it.release_location_ptr(key_location);
             it.release_location_ptr(dict_location);
 
-            return NULL;
+            return nullptr;
           }
 
-          pointer_map_s insert_map = {key_location,NULL};
+          pointer_map_s insert_map = {key_location,nullptr};
           unsigned index = tree_ptr->unique_insert(insert_map);
 
           if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
@@ -302,18 +302,18 @@ location_s *ruby_c::ruby_value_value(interpreter_thread_s &it,VALUE rv_value,uli
             it.release_location_ptr(value_location);
             it.release_location_ptr(dict_location);
 
-            return NULL;
+            return nullptr;
           }
 
           pointer_map_s &map = tree_ptr->data[index].object;
 
-          if (map.value != NULL)
+          if (map.value != nullptr)
           {
             it.release_location_ptr(key_location);
             it.release_location_ptr(value_location);
             it.release_location_ptr(dict_location);
 
-            return NULL;
+            return nullptr;
           }
 
           map.value = (pointer)value_location;
@@ -333,7 +333,7 @@ location_s *ruby_c::ruby_value_value(interpreter_thread_s &it,VALUE rv_value,uli
     
   case T_DATA:
   default:
-    return NULL;
+    return nullptr;
   }
 }/*}}}*/
 

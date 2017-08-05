@@ -73,7 +73,7 @@ vertex_buffer_new( const char *format )
     vertex_attribute_delete(self->attributes[del_index]);\
   } while(++del_index < index);\
 \
-  if (attribute != NULL)\
+  if (attribute != nullptr)\
   {\
     vertex_attribute_delete(attribute);\
   }\
@@ -89,7 +89,7 @@ vertex_buffer_new( const char *format )
         GLuint attribute_size = 0;
         end = (char *) (strchr(start+1, ','));
 
-        if (end == NULL)
+        if (end == nullptr)
         {
             desc = strdup( start );
         }
@@ -101,10 +101,10 @@ vertex_buffer_new( const char *format )
         start = end+1;
         free(desc);
 
-        if (attribute == NULL)
+        if (attribute == nullptr)
         {
           VERTEX_BUFFER_NEW_ERROR();
-          return NULL;
+          return nullptr;
         }
 
         attribute->pointer = pointer;
@@ -123,7 +123,7 @@ vertex_buffer_new( const char *format )
         // - ERROR -
         default:
           VERTEX_BUFFER_NEW_ERROR();
-          return NULL;
+          return nullptr;
         }
         stride  += attribute->size*attribute_size;
         pointer += attribute->size*attribute_size;

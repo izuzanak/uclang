@@ -20,7 +20,7 @@ int connection_func(void *cls,struct MHD_Connection *connection,
   // - connection pointer -
   http_conn_s *conn_ptr;
 
-  if (*con_cls == NULL)
+  if (*con_cls == nullptr)
   {
     // - create http_connection object -
     conn_ptr = (http_conn_s *)cmalloc(sizeof(http_conn_s));
@@ -35,18 +35,14 @@ int connection_func(void *cls,struct MHD_Connection *connection,
     {
     // - GET, PUT -
     case 3:
-      if (memcmp("GET",method,3) == 0)
-        conn_type = c_conn_type_GET;
-      else
-        conn_type = c_conn_type_PUT;
+      conn_type = memcmp("GET",method,3) == 0 ?
+        c_conn_type_GET : c_conn_type_PUT;
       break;
 
     // - HEAD, POST -
     case 4:
-      if (memcmp("HEAD",method,4) == 0)
-        conn_type = c_conn_type_HEAD;
-      else
-        conn_type = c_conn_type_POST;
+      conn_type = memcmp("HEAD",method,4) == 0 ?
+        c_conn_type_HEAD : c_conn_type_POST;
       break;
 
     // - TRACE -
@@ -61,10 +57,8 @@ int connection_func(void *cls,struct MHD_Connection *connection,
 
     // - CONNECT, OPTIONS -
     case 7:
-      if (memcmp("CONNECT",method,7) == 0)
-        conn_type = c_conn_type_CONNECT;
-      else
-        conn_type = c_conn_type_OPTIONS;
+      conn_type = memcmp("CONNECT",method,7) == 0 ?
+        c_conn_type_CONNECT : c_conn_type_OPTIONS;
       break;
 
     // - unrecognized connection type -
@@ -104,7 +98,7 @@ int connection_func(void *cls,struct MHD_Connection *connection,
   pointer *param_data = (pointer *)&conn_location;
 
   // - call delegate method -
-  location_s *trg_location = NULL;
+  location_s *trg_location = nullptr;
   BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,srv_ptr->source_pos,
     srv_ptr->ret_code = c_run_return_code_EXCEPTION;
     return MHD_NO;
@@ -154,7 +148,7 @@ void completed_func(void *cls,struct MHD_Connection *connection,
   location_s *conn_location = (location_s *)*con_cls;
 
   // - if connection object exists -
-  if (conn_location != NULL)
+  if (conn_location != nullptr)
   {
     http_conn_s *conn_ptr = (http_conn_s *)conn_location->v_data_ptr;
     conn_ptr->srv_ptr->it_ptr->release_location_ptr(conn_location);

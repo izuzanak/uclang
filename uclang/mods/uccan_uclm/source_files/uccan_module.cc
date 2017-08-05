@@ -144,17 +144,17 @@ built_in_class_s can_obj_dict_class =
   bic_can_obj_dict_consts,
   bic_can_obj_dict_init,
   bic_can_obj_dict_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s can_obj_dict_methods[] =
@@ -239,14 +239,14 @@ void bic_can_obj_dict_consts(location_array_s &const_locations)
 
 void bic_can_obj_dict_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (can_obj_dict_s *)NULL;
+  location_ptr->v_data_ptr = (can_obj_dict_s *)nullptr;
 }/*}}}*/
 
 void bic_can_obj_dict_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   can_obj_dict_s *cod_ptr = (can_obj_dict_s *)location_ptr->v_data_ptr;
 
-  if (cod_ptr != NULL)
+  if (cod_ptr != nullptr)
   {
     cod_ptr->clear(it);
     cfree(cod_ptr);
@@ -487,17 +487,17 @@ built_in_class_s can_object_class =
   bic_can_object_consts,
   bic_can_object_init,
   bic_can_object_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s can_object_methods[] =
@@ -626,14 +626,14 @@ void bic_can_object_consts(location_array_s &const_locations)
 
 void bic_can_object_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (can_object_s *)NULL;
+  location_ptr->v_data_ptr = (can_object_s *)nullptr;
 }/*}}}*/
 
 void bic_can_object_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   can_object_s *co_ptr = (can_object_s *)location_ptr->v_data_ptr;
 
-  if (co_ptr != NULL)
+  if (co_ptr != nullptr)
   {
     co_ptr->clear(it);
     cfree(co_ptr);
@@ -860,7 +860,7 @@ bool bic_can_object_method_read_0(interpreter_thread_s &it,unsigned stack_base,u
 {/*{{{*/\
   TYPE cod_value;\
   U32 size = sizeof(TYPE);\
-  result = cod_ptr->dict_ptr->Read(co_ptr->handle,&cod_value,size,0,false,NULL);\
+  result = cod_ptr->dict_ptr->Read(co_ptr->handle,&cod_value,size,0,false,nullptr);\
   value = cod_value;\
 }/*}}}*/
 
@@ -910,7 +910,7 @@ bool bic_can_object_method_read_0(interpreter_thread_s &it,unsigned stack_base,u
         string_s *string_ptr = it.get_new_string_ptr();
         string_ptr->create(size);
 
-        U32 result = cod_ptr->dict_ptr->Read(co_ptr->handle,string_ptr->data,size,0,false,NULL);
+        U32 result = cod_ptr->dict_ptr->Read(co_ptr->handle,string_ptr->data,size,0,false,nullptr);
 
         // - ERROR -
         if (result != SDO_ABORT_OK || size != obj_map->size)

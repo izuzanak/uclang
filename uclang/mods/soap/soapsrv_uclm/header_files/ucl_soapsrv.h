@@ -55,23 +55,23 @@ struct soap_fault_s
 
 inline void soap_env_s::init()
 {/*{{{*/
-  soap_ptr = NULL;
+  soap_ptr = nullptr;
   socket = -1;
 
-  it_ptr = NULL;
+  it_ptr = nullptr;
   proc_source_pos = 0;
   proc_ret_code = c_run_return_code_OK;
 
-  ns__add_dlg = NULL;
-  ns__sub_dlg = NULL;
-  ns__sqrt_dlg = NULL;
+  ns__add_dlg = nullptr;
+  ns__sub_dlg = nullptr;
+  ns__sqrt_dlg = nullptr;
 }/*}}}*/
 
 inline void soap_env_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release soap pointer -
-  if (soap_ptr != NULL)
+  if (soap_ptr != nullptr)
   {
     soap_end(soap_ptr);
     soap_done(soap_ptr);
@@ -80,7 +80,7 @@ inline void soap_env_s::clear(interpreter_thread_s &it)
 
 #define RELEASE_DELEGATE(DELEGATE) \
 {/*{{{*/\
-  if (DELEGATE != NULL)\
+  if (DELEGATE != nullptr)\
   {\
     it.release_location_ptr(DELEGATE);\
   }\
@@ -99,21 +99,21 @@ inline void soap_env_s::clear(interpreter_thread_s &it)
 
 inline void soap_fault_s::init()
 {/*{{{*/
-  string_ptr = NULL;
-  detail_ptr = NULL;
+  string_ptr = nullptr;
+  detail_ptr = nullptr;
 }/*}}}*/
 
 inline void soap_fault_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release string pointer -
-  if (string_ptr != NULL)
+  if (string_ptr != nullptr)
   {
     it.release_location_ptr(string_ptr);
   }
 
   // - release detail pointer -
-  if (detail_ptr != NULL)
+  if (detail_ptr != nullptr)
   {
     it.release_location_ptr(detail_ptr);
   }

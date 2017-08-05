@@ -149,17 +149,17 @@ built_in_class_s http_server_class =
   bic_http_server_consts,
   bic_http_server_init,
   bic_http_server_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s http_server_methods[] =
@@ -216,14 +216,14 @@ void bic_http_server_consts(location_array_s &const_locations)
 
 void bic_http_server_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (http_server_s *)NULL;
+  location_ptr->v_data_ptr = (http_server_s *)nullptr;
 }/*}}}*/
 
 void bic_http_server_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   http_server_s *srv_ptr = (http_server_s *)location_ptr->v_data_ptr;
 
-  if (srv_ptr != NULL)
+  if (srv_ptr != nullptr)
   {
     srv_ptr->clear(it);
     cfree(srv_ptr);
@@ -284,13 +284,13 @@ bool bic_http_server_method_HttpServer_2(interpreter_thread_s &it,unsigned stack
 
   // - start http server -
   MHD_Daemon *daemon_ptr = MHD_start_daemon(
-      MHD_NO_FLAG,port,NULL,NULL,
+      MHD_NO_FLAG,port,nullptr,nullptr,
       &connection_func,dst_location,
-      MHD_OPTION_NOTIFY_COMPLETED,completed_func,NULL,
+      MHD_OPTION_NOTIFY_COMPLETED,completed_func,nullptr,
       MHD_OPTION_END);
 
   // - ERROR -
-  if (daemon_ptr == NULL)
+  if (daemon_ptr == nullptr)
   {
     srv_ptr->clear(it);
     cfree(srv_ptr);
@@ -561,17 +561,17 @@ built_in_class_s http_conn_class =
   bic_http_conn_consts,
   bic_http_conn_init,
   bic_http_conn_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s http_conn_methods[] =
@@ -721,14 +721,14 @@ void bic_http_conn_consts(location_array_s &const_locations)
 
 void bic_http_conn_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (http_conn_s *)NULL;
+  location_ptr->v_data_ptr = (http_conn_s *)nullptr;
 }/*}}}*/
 
 void bic_http_conn_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   http_conn_s *conn_ptr = (http_conn_s *)location_ptr->v_data_ptr;
 
-  if (conn_ptr != NULL)
+  if (conn_ptr != nullptr)
   {
     conn_ptr->clear(it);
     cfree(conn_ptr);
@@ -877,7 +877,7 @@ bool bic_http_conn_method_values_1(interpreter_thread_s &it,unsigned stack_base,
   // - retrieve key value locations -
   conn_ptr->key_value_arr_ptr = array_ptr;
   MHD_get_connection_values(conn_ptr->connection_ptr,(MHD_ValueKind)vals_type,&conn_key_value_func,conn_ptr);
-  conn_ptr->key_value_arr_ptr = NULL;
+  conn_ptr->key_value_arr_ptr = nullptr;
 
   return true;
 }/*}}}*/
@@ -952,17 +952,17 @@ built_in_class_s http_resp_class =
   bic_http_resp_consts,
   bic_http_resp_init,
   bic_http_resp_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s http_resp_methods[] =
@@ -1159,14 +1159,14 @@ void bic_http_resp_consts(location_array_s &const_locations)
 
 void bic_http_resp_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (MHD_Response *)NULL;
+  location_ptr->v_data_ptr = (MHD_Response *)nullptr;
 }/*}}}*/
 
 void bic_http_resp_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   MHD_Response *resp_ptr = (MHD_Response *)location_ptr->v_data_ptr;
 
-  if (resp_ptr != NULL)
+  if (resp_ptr != nullptr)
   {
     MHD_destroy_response(resp_ptr);
   }
@@ -1208,7 +1208,7 @@ bool bic_http_resp_method_HttpResp_1(interpreter_thread_s &it,unsigned stack_bas
       string_ptr->size - 1,string_ptr->data,MHD_RESPMEM_MUST_COPY);
 
   // - ERROR -
-  if (resp_ptr == NULL)
+  if (resp_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_HTTP_RESP_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1292,7 +1292,7 @@ bool bic_http_resp_method_HttpResp_2(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - ERROR -
-  if (resp_ptr == NULL)
+  if (resp_ptr == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_HTTP_RESP_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;

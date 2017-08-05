@@ -32,7 +32,7 @@ void gtk_c::dlg_data_release(gpointer delegate_data)
 
   // - retrieve object delegate indexes -
   ui_list_s *obj_dlg_idxs = (ui_list_s *)delegate_data;
-  debug_assert(obj_dlg_idxs != NULL);
+  debug_assert(obj_dlg_idxs != nullptr);
 
   if (obj_dlg_idxs->first_idx != c_idx_not_exist)
   {
@@ -89,7 +89,7 @@ void gtk_c::callback_handler(gpointer delegate_idx,...)
 #define GTK_C_CALLBACK_HANDLER_OBJECT_PARAMETER(CLASS) \
 {/*{{{*/\
   gpointer g_obj = va_arg(vlist,gpointer);\
-  if (g_obj == NULL)\
+  if (g_obj == nullptr)\
   {\
     *param_ptr++ = it.blank_location;\
     continue;\
@@ -151,7 +151,7 @@ void gtk_c::callback_handler(gpointer delegate_idx,...)
   *param_ptr++ = delegate.data_loc;
 
   // - call delegate method -
-  location_s *trg_location = NULL;
+  location_s *trg_location = nullptr;
   BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,gtk_c::main_source_pos,
       gtk_c::main_ret_code = c_run_return_code_EXCEPTION;
 
@@ -216,7 +216,7 @@ gpointer gtk_c::create_g_object(interpreter_thread_s &it,GType g_type,pointer_ar
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_WRONG_ARRAY_SIZE,source_pos,(location_s *)it.blank_location);
     new_exception->params.push(0);
 
-    return NULL;
+    return nullptr;
   }
 
   guint param_cnt = array_ptr->used >> 1;
@@ -258,7 +258,7 @@ gpointer gtk_c::create_g_object(interpreter_thread_s &it,GType g_type,pointer_ar
         new_exception->params.push(0);
         new_exception->params.push(p_ptr - params);
 
-        return NULL;
+        return nullptr;
       }
 
       string_s *string_ptr = (string_s *)name_location->v_data_ptr;
@@ -272,11 +272,13 @@ gpointer gtk_c::create_g_object(interpreter_thread_s &it,GType g_type,pointer_ar
         exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_G_VALUE_CREATE_ERROR,source_pos,(location_s *)it.blank_location);
         new_exception->params.push(p_ptr - params);
 
-        return NULL;
+        return nullptr;
       }
 
     } while((a_ptr += 2),++p_ptr < p_ptr_end);
   }
+
+  // FIXME TODO replace g_object_newv by g_object_new_with_properties
 
   // - create new g_object -
   gpointer g_obj = g_object_newv(g_type,param_cnt,params);
@@ -287,7 +289,7 @@ gpointer gtk_c::create_g_object(interpreter_thread_s &it,GType g_type,pointer_ar
     BIC_GTK_CREATE_G_OBJECT_RELEASE_PARAMS();
 
     exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_CREATE_ERROR,source_pos,(location_s *)it.blank_location);
-    return NULL;
+    return nullptr;
   }
 
   // - acquire floating reference to object -
@@ -345,7 +347,7 @@ GValue *gtk_c::create_g_value(interpreter_thread_s &it,location_s *location_ptr,
 
     // - ERROR -
     default:
-      return NULL;
+      return nullptr;
     }
   }
 }/*}}}*/
@@ -356,7 +358,7 @@ location_s *gtk_c::g_value_value(interpreter_thread_s &it,GType g_type,GValue *g
   {
   case G_TYPE_INVALID:
   case G_TYPE_INTERFACE:
-    return NULL;
+    return nullptr;
   case G_TYPE_NONE:
     {/*{{{*/
       ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
@@ -463,12 +465,12 @@ location_s *gtk_c::g_value_value(interpreter_thread_s &it,GType g_type,GValue *g
   case G_TYPE_POINTER:
   case G_TYPE_BOXED:
   case G_TYPE_PARAM:
-    return NULL;
+    return nullptr;
   case G_TYPE_OBJECT:
     {/*{{{*/
       gpointer g_obj = g_value_get_object(g_value);
 
-      if (g_obj == NULL)
+      if (g_obj == nullptr)
         return (location_s *)it.blank_location;
 
       g_object_ref(g_obj);
@@ -491,7 +493,7 @@ location_s *gtk_c::g_value_value(interpreter_thread_s &it,GType g_type,GValue *g
         {
           gpointer g_obj = g_value_get_object(g_value);
 
-          if (g_obj == NULL)
+          if (g_obj == nullptr)
             return (location_s *)it.blank_location;
 
           g_object_ref(g_obj);
@@ -500,7 +502,7 @@ location_s *gtk_c::g_value_value(interpreter_thread_s &it,GType g_type,GValue *g
         }
       }
 
-      return NULL;
+      return nullptr;
     }/*}}}*/
   }
 }/*}}}*/

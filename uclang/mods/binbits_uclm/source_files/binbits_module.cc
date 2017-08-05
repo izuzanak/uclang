@@ -182,17 +182,17 @@ built_in_class_s bin_array_class =
   bic_bin_array_consts,
   bic_bin_array_init,
   bic_bin_array_clear,
-  NULL,
+  nullptr,
   bic_bin_array_length,
   bic_bin_array_item,
   bic_bin_array_first_idx,
   bic_bin_array_next_idx,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
   bic_bin_array_pack,
   bic_bin_array_unpack,
-  NULL,
-  NULL
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s bin_array_methods[] =
@@ -688,14 +688,14 @@ void bic_bin_array_consts(location_array_s &const_locations)
 
 void bic_bin_array_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (bin_array_s *)NULL;
+  location_ptr->v_data_ptr = (bin_array_s *)nullptr;
 }/*}}}*/
 
 void bic_bin_array_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   bin_array_s *ba_ptr = (bin_array_s *)location_ptr->v_data_ptr;
 
-  if (ba_ptr != NULL)
+  if (ba_ptr != nullptr)
   {
     ba_ptr->clear(it);
     cfree(ba_ptr);
@@ -795,7 +795,7 @@ bool bic_bin_array_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_a
   stream.from_end(sizeof(unsigned),(char *)&type,order_bytes);
 
   // - binary array container pointer -
-  void *cont = NULL;
+  void *cont = nullptr;
 
 #define BIC_BIN_ARRAY_UNPACK(ARRAY_TYPE,TYPE) \
 {/*{{{*/\
@@ -1081,7 +1081,7 @@ bool bic_bin_array_method_BinArray_1(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - binary array container pointer -
-  void *cont = NULL;
+  void *cont = nullptr;
 
   switch (type)
   {
@@ -1156,7 +1156,7 @@ bool bic_bin_array_method_BinArray_2(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - binary array container pointer -
-  void *cont = NULL;
+  void *cont = nullptr;
 
   switch (type)
   {
@@ -1737,7 +1737,7 @@ bool bic_bin_array_method_head_1(interpreter_thread_s &it,unsigned stack_base,ul
   bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
 
   // - binary array container pointer -
-  void *cont = NULL;
+  void *cont = nullptr;
 
 #define BIC_BIN_ARRAY_METHOD_HEAD(ARRAY_TYPE) \
 {/*{{{*/\
@@ -1820,7 +1820,7 @@ bool bic_bin_array_method_tail_1(interpreter_thread_s &it,unsigned stack_base,ul
   bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
 
   // - binary array container pointer -
-  void *cont = NULL;
+  void *cont = nullptr;
 
 #define BIC_BIN_ARRAY_METHOD_TAIL(ARRAY_TYPE) \
 {/*{{{*/\
@@ -1907,7 +1907,7 @@ bool bic_bin_array_method_range_2(interpreter_thread_s &it,unsigned stack_base,u
   bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
 
   // - binary array container pointer -
-  void *cont = NULL;
+  void *cont = nullptr;
 
 #define BIC_BIN_ARRAY_METHOD_RANGE(ARRAY_TYPE) \
 {/*{{{*/\
@@ -2573,17 +2573,17 @@ built_in_class_s bin_array_ref_class =
   bic_bin_array_ref_consts,
   bic_bin_array_ref_init,
   bic_bin_array_ref_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s bin_array_ref_methods[] =
@@ -2620,14 +2620,14 @@ void bic_bin_array_ref_consts(location_array_s &const_locations)
 
 void bic_bin_array_ref_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (bin_array_ref_s *)NULL;
+  location_ptr->v_data_ptr = (bin_array_ref_s *)nullptr;
 }/*}}}*/
 
 void bic_bin_array_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   bin_array_ref_s *bar_ptr = (bin_array_ref_s *)location_ptr->v_data_ptr;
 
-  if (bar_ptr != NULL)
+  if (bar_ptr != nullptr)
   {
     ((bin_array_s *)bar_ptr->ba_location->v_data_ptr)->release_reference(it,bar_ptr);
   }
@@ -2815,17 +2815,17 @@ built_in_class_s bin_dict_class =
   bic_bin_dict_consts,
   bic_bin_dict_init,
   bic_bin_dict_clear,
-  NULL,
+  nullptr,
   bic_bin_dict_length,
   bic_bin_dict_item,
   bic_bin_dict_first_idx,
   bic_bin_dict_next_idx,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
   bic_bin_dict_pack,
   bic_bin_dict_unpack,
-  NULL,
-  NULL
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s bin_dict_methods[] =
@@ -3075,14 +3075,14 @@ void bic_bin_dict_consts(location_array_s &const_locations)
 
 void bic_bin_dict_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (bin_dict_s *)NULL;
+  location_ptr->v_data_ptr = (bin_dict_s *)nullptr;
 }/*}}}*/
 
 void bic_bin_dict_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   bin_dict_s *bd_ptr = (bin_dict_s *)location_ptr->v_data_ptr;
 
-  if (bd_ptr != NULL)
+  if (bd_ptr != nullptr)
   {
     bd_ptr->clear(it);
     cfree(bd_ptr);
@@ -3148,10 +3148,8 @@ unsigned bic_bin_dict_first_idx(location_s *location_ptr)
   {\
     return tree_ptr->get_min_value_idx(tree_ptr->root_idx);\
   }\
-  else\
-  {\
-    return c_idx_not_exist;\
-  }\
+\
+  return c_idx_not_exist;\
 }/*}}}*/
 
   switch (bd_ptr->type)
@@ -3249,7 +3247,7 @@ bool bic_bin_dict_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_ar
   stream.from_end(sizeof(unsigned),(char *)&type,order_bytes);
 
   // - binary array container pointer -
-  void *cont = NULL;
+  void *cont = nullptr;
 
 #define BIC_BIN_DICT_UNPACK(MAP_NAME,KEY_TYPE,VALUE_TYPE) \
 {/*{{{*/\
@@ -3397,7 +3395,7 @@ bool bic_bin_dict_method_BinDict_1(interpreter_thread_s &it,unsigned stack_base,
   }
 
   // - binary dict container pointer -
-  void *cont = NULL;
+  void *cont = nullptr;
 
   switch (type)
   {
@@ -4476,17 +4474,17 @@ built_in_class_s bin_dict_ref_class =
   bic_bin_dict_ref_consts,
   bic_bin_dict_ref_init,
   bic_bin_dict_ref_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s bin_dict_ref_methods[] =
@@ -4528,14 +4526,14 @@ void bic_bin_dict_ref_consts(location_array_s &const_locations)
 
 void bic_bin_dict_ref_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (bin_dict_ref_s *)NULL;
+  location_ptr->v_data_ptr = (bin_dict_ref_s *)nullptr;
 }/*}}}*/
 
 void bic_bin_dict_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   bin_dict_ref_s *bdr_ptr = (bin_dict_ref_s *)location_ptr->v_data_ptr;
 
-  if (bdr_ptr != NULL)
+  if (bdr_ptr != nullptr)
   {
     ((bin_dict_s *)bdr_ptr->bd_location->v_data_ptr)->release_reference(it,bdr_ptr);
   }

@@ -74,7 +74,7 @@ fn_t pas_s::callback(u32_t event,u16_t type,void *data,u32_t data_size)
         if (pas_s::paused)
         {
           // - send empty set of samples -
-          ret_val = pas_sendaudio(PKT_TYPE_XPDO_AUDIO_A,PKT_STATUS_ANNOUNCE,audio_section,priority,NULL,0);
+          ret_val = pas_sendaudio(PKT_TYPE_XPDO_AUDIO_A,PKT_STATUS_ANNOUNCE,audio_section,priority,nullptr,0);
         }
         else
         {

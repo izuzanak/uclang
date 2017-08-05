@@ -3811,7 +3811,7 @@ void UclVar::Release(interpreter_s &a_interpreter)
       location_s **tmp_location_ptr = &(((UclVar *)*uv_ptr)->location_ptr);
 
       it.release_location_ptr(*tmp_location_ptr);
-      *tmp_location_ptr = NULL;
+      *tmp_location_ptr = nullptr;
     } while(++uv_ptr < uv_ptr_end);
   }
 

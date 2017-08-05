@@ -267,17 +267,17 @@ built_in_class_s final_automata_class =
   bic_final_automata_consts,
   bic_final_automata_init,
   bic_final_automata_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s final_automata_methods[] =
@@ -319,14 +319,14 @@ void bic_final_automata_consts(location_array_s &const_locations)
 
 void bic_final_automata_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (final_automata_s *)NULL;
+  location_ptr->v_data_ptr = (final_automata_s *)nullptr;
 }/*}}}*/
 
 void bic_final_automata_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   final_automata_s *fa_ptr = (final_automata_s *)location_ptr->v_data_ptr;
 
-  if (fa_ptr != NULL)
+  if (fa_ptr != nullptr)
   {
     fa_ptr->clear();
     cfree(fa_ptr);
@@ -488,17 +488,17 @@ built_in_class_s fa_source_class =
   bic_fa_source_consts,
   bic_fa_source_init,
   bic_fa_source_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s fa_source_methods[] =
@@ -582,14 +582,14 @@ void bic_fa_source_consts(location_array_s &const_locations)
 
 void bic_fa_source_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (fa_source_s *)NULL;
+  location_ptr->v_data_ptr = (fa_source_s *)nullptr;
 }/*}}}*/
 
 void bic_fa_source_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   fa_source_s *fs_ptr = (fa_source_s *)location_ptr->v_data_ptr;
 
-  if (fs_ptr != NULL)
+  if (fs_ptr != nullptr)
   {
     fs_ptr->clear(it);
     cfree(fs_ptr);
@@ -678,17 +678,17 @@ built_in_class_s parser_class =
   bic_parser_consts,
   bic_parser_init,
   bic_parser_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s parser_methods[] =
@@ -730,14 +730,14 @@ void bic_parser_consts(location_array_s &const_locations)
 
 void bic_parser_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (parser_s *)NULL;
+  location_ptr->v_data_ptr = (parser_s *)nullptr;
 }/*}}}*/
 
 void bic_parser_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   parser_s *parser_ptr = (parser_s *)location_ptr->v_data_ptr;
 
-  if (parser_ptr != NULL)
+  if (parser_ptr != nullptr)
   {
     parser_ptr->clear();
     cfree(parser_ptr);
@@ -911,17 +911,17 @@ built_in_class_s parse_state_class =
   bic_parse_state_consts,
   bic_parse_state_init,
   bic_parse_state_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s parse_state_methods[] =
@@ -973,14 +973,14 @@ void bic_parse_state_consts(location_array_s &const_locations)
 
 void bic_parse_state_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (parse_state_s *)NULL;
+  location_ptr->v_data_ptr = (parse_state_s *)nullptr;
 }/*}}}*/
 
 void bic_parse_state_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   parse_state_s *ps_ptr = (parse_state_s *)location_ptr->v_data_ptr;
 
-  if (ps_ptr != NULL)
+  if (ps_ptr != nullptr)
   {
     ps_ptr->clear(it);
     cfree(ps_ptr);

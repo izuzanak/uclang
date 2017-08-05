@@ -71,21 +71,21 @@ struct dynlib_s
 inline void dynlib_s::init()
 {/*{{{*/
 #if DYNAMIC_TYPE == DYNAMIC_TYPE_POSIX
-  lib_ptr = NULL;
+  lib_ptr = nullptr;
 #elif DYNAMIC_TYPE == DYNAMIC_TYPE_WINDOWS
-  lib_ptr = NULL;
+  lib_ptr = nullptr;
 #endif
 }/*}}}*/
 
 inline void dynlib_s::clear()
 {/*{{{*/
 #if DYNAMIC_TYPE == DYNAMIC_TYPE_POSIX
-  if (lib_ptr != NULL)
+  if (lib_ptr != nullptr)
   {
     dlclose(lib_ptr);
   }
 #elif DYNAMIC_TYPE == DYNAMIC_TYPE_WINDOWS
-  if (lib_ptr != NULL)
+  if (lib_ptr != nullptr)
   {
     FreeLibrary(lib_ptr);
   }
@@ -113,10 +113,10 @@ inline bool dynlib_s::open(const char *a_file)
 
 #if DYNAMIC_TYPE == DYNAMIC_TYPE_POSIX
   lib_ptr = dlopen(a_file,RTLD_LAZY);
-  return lib_ptr != NULL;
+  return lib_ptr != nullptr;
 #elif DYNAMIC_TYPE == DYNAMIC_TYPE_WINDOWS
   lib_ptr = LoadLibrary(a_file);
-  return lib_ptr != NULL;
+  return lib_ptr != nullptr;
 #else
   return false;
 #endif
@@ -126,10 +126,10 @@ inline bool dynlib_s::get_symbol_addr(const char *a_symbol_name,void **a_addr_pt
 {/*{{{*/
 #if DYNAMIC_TYPE == DYNAMIC_TYPE_POSIX
   *a_addr_ptr = dlsym(lib_ptr,a_symbol_name);
-  return *a_addr_ptr != NULL;
+  return *a_addr_ptr != nullptr;
 #elif DYNAMIC_TYPE == DYNAMIC_TYPE_WINDOWS
   *a_addr_ptr = (void *)GetProcAddress(lib_ptr,a_symbol_name);
-  return *a_addr_ptr != NULL;
+  return *a_addr_ptr != nullptr;
 #else
   return false;
 #endif
@@ -138,9 +138,9 @@ inline bool dynlib_s::get_symbol_addr(const char *a_symbol_name,void **a_addr_pt
 inline bool dynlib_s::is_loaded()
 {/*{{{*/
 #if DYNAMIC_TYPE == DYNAMIC_TYPE_POSIX
-  return lib_ptr != NULL;
+  return lib_ptr != nullptr;
 #elif DYNAMIC_TYPE == DYNAMIC_TYPE_WINDOWS
-  return lib_ptr != NULL;
+  return lib_ptr != nullptr;
 #else
   return false;
 #endif
@@ -153,7 +153,7 @@ inline const char *dynlib_s::get_error()
 #elif DYNAMIC_TYPE == DYNAMIC_TYPE_WINDOWS
   return "Unknown error";
 #else
-  return NULL;
+  return nullptr;
 #endif
 }/*}}}*/
 

@@ -31,15 +31,15 @@ struct soap_env_s
 
 inline void soap_env_s::init()
 {/*{{{*/
-  soap_ptr = NULL;
-  endpoint_ptr = NULL;
+  soap_ptr = nullptr;
+  endpoint_ptr = nullptr;
 }/*}}}*/
 
 inline void soap_env_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release soap pointer -
-  if (soap_ptr != NULL)
+  if (soap_ptr != nullptr)
   {
     soap_end(soap_ptr);
     soap_done(soap_ptr);
@@ -47,7 +47,7 @@ inline void soap_env_s::clear(interpreter_thread_s &it)
   }
 
   // - release endpoint location -
-  if (endpoint_ptr != NULL)
+  if (endpoint_ptr != nullptr)
   {
     it.release_location_ptr(endpoint_ptr);
   }

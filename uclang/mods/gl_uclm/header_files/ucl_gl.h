@@ -87,8 +87,8 @@ class gl_c
 
 inline void gl_attribute_s::init()
 {/*{{{*/
-  program_ptr = NULL;
-  name_ptr = NULL;
+  program_ptr = nullptr;
+  name_ptr = nullptr;
   index = 0;
   size = 0;
   type = GL_NONE;
@@ -98,13 +98,13 @@ inline void gl_attribute_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release name pointer -
-  if (program_ptr != NULL)
+  if (program_ptr != nullptr)
   {
     it.release_location_ptr(program_ptr);
   }
 
   // - release name pointer -
-  if (name_ptr != NULL)
+  if (name_ptr != nullptr)
   {
     it.release_location_ptr(name_ptr);
   }
@@ -118,8 +118,8 @@ inline void gl_attribute_s::clear(interpreter_thread_s &it)
 
 inline void gl_uniform_s::init()
 {/*{{{*/
-  program_ptr = NULL;
-  name_ptr = NULL;
+  program_ptr = nullptr;
+  name_ptr = nullptr;
   index = 0;
   size = 0;
   type = GL_NONE;
@@ -129,13 +129,13 @@ inline void gl_uniform_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release name pointer -
-  if (program_ptr != NULL)
+  if (program_ptr != nullptr)
   {
     it.release_location_ptr(program_ptr);
   }
 
   // - release name pointer -
-  if (name_ptr != NULL)
+  if (name_ptr != nullptr)
   {
     it.release_location_ptr(name_ptr);
   }

@@ -524,17 +524,17 @@ built_in_class_s system_class =
   bic_system_consts,
   bic_system_init,
   bic_system_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s system_methods[] =
@@ -684,16 +684,16 @@ built_in_class_s time_class =
   bic_time_init,
   bic_time_clear,
   bic_time_compare,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s time_methods[] =
@@ -815,7 +815,7 @@ void bic_time_consts(location_array_s &const_locations)
 
 void bic_time_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (Time *)NULL;
+  location_ptr->v_data_ptr = (Time *)nullptr;
 }/*}}}*/
 
 void bic_time_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -825,7 +825,7 @@ void bic_time_clear(interpreter_thread_s &it,location_s *location_ptr)
   Time *time_ptr = (Time *)location_ptr->v_data_ptr;
 
   // - if time object pointer is not null -
-  if (time_ptr != NULL)
+  if (time_ptr != nullptr)
   {
     delete time_ptr;
   }
@@ -1261,17 +1261,17 @@ built_in_class_s cfg_file_class =
   bic_cfg_file_consts,
   bic_cfg_file_init,
   bic_cfg_file_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s cfg_file_methods[] =
@@ -1353,7 +1353,7 @@ void bic_cfg_file_consts(location_array_s &const_locations)
 
 void bic_cfg_file_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (CfgFile *)NULL;
+  location_ptr->v_data_ptr = (CfgFile *)nullptr;
 }/*}}}*/
 
 void bic_cfg_file_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -1363,7 +1363,7 @@ void bic_cfg_file_clear(interpreter_thread_s &it,location_s *location_ptr)
   CfgFile *cfg_file_ptr = (CfgFile *)location_ptr->v_data_ptr;
 
   // - if config file object pointer is not null -
-  if (cfg_file_ptr != NULL)
+  if (cfg_file_ptr != nullptr)
   {
     delete cfg_file_ptr;
   }
@@ -1478,8 +1478,8 @@ bool bic_cfg_file_method_EnumSections_0(interpreter_thread_s &it,unsigned stack_
   sect_names.init();
 
   int sect_idx = 0;
-  const char *sect_name = NULL;
-  while ((sect_name = cfg_file_ptr->EnumSections(sect_idx)) != NULL)
+  const char *sect_name = nullptr;
+  while ((sect_name = cfg_file_ptr->EnumSections(sect_idx)) != nullptr)
   {
     // - insert section name to section names array -
     sect_names.push_blank();
@@ -1599,8 +1599,8 @@ bool bic_cfg_file_method_EnumEntries_0(interpreter_thread_s &it,unsigned stack_b
   entry_names.init();
 
   int entry_idx = 0;
-  const char *entry_name = NULL;
-  while ((entry_name = cfg_file_ptr->EnumEntries(entry_idx)) != NULL)
+  const char *entry_name = nullptr;
+  while ((entry_name = cfg_file_ptr->EnumEntries(entry_idx)) != nullptr)
   {
     // - insert entry name to entry names array -
     entry_names.push_blank();
@@ -1833,17 +1833,17 @@ built_in_class_s ucf_log_class =
   bic_ucf_log_consts,
   bic_ucf_log_init,
   bic_ucf_log_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ucf_log_methods[] =
@@ -1940,7 +1940,7 @@ built_in_variable_s ucf_log_variables[] =
     return false;\
   }\
 \
-  LogFile *file_log_ptr = NULL;\
+  LogFile *file_log_ptr = nullptr;\
 \
   try\
   {\
@@ -1999,14 +1999,14 @@ void bic_ucf_log_consts(location_array_s &const_locations)
 
 void bic_ucf_log_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (ucf_log_s *)NULL;
+  location_ptr->v_data_ptr = (ucf_log_s *)nullptr;
 }/*}}}*/
 
 void bic_ucf_log_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   ucf_log_s *log_ptr = (ucf_log_s *)location_ptr->v_data_ptr;
 
-  if (log_ptr != NULL)
+  if (log_ptr != nullptr)
   {
     log_ptr->log_set_ptr->RemoveAll();
     delete log_ptr->log_set_ptr;
@@ -2197,7 +2197,7 @@ bool bic_ucf_log_method_add_nvm_2(interpreter_thread_s &it,unsigned stack_base,u
     return false;
   }
 
-  LogNvm *nvm_log_ptr = NULL;
+  LogNvm *nvm_log_ptr = nullptr;
 
   try
   {
@@ -2293,7 +2293,7 @@ bool bic_ucf_log_method_write_3(interpreter_thread_s &it,unsigned stack_base,uli
     return false;
   }
 
-  char *source_ptr = NULL;
+  char *source_ptr = nullptr;
   Time log_time;
 
   // - retrieve source and log time -
@@ -2359,17 +2359,17 @@ built_in_class_s ucf_mutex_class =
   bic_ucf_mutex_consts,
   bic_ucf_mutex_init,
   bic_ucf_mutex_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ucf_mutex_methods[] =
@@ -2426,7 +2426,7 @@ void bic_ucf_mutex_consts(location_array_s &const_locations)
 
 void bic_ucf_mutex_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (Mutex *)NULL;
+  location_ptr->v_data_ptr = (Mutex *)nullptr;
 }/*}}}*/
 
 void bic_ucf_mutex_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2434,7 +2434,7 @@ void bic_ucf_mutex_clear(interpreter_thread_s &it,location_s *location_ptr)
   Mutex *mutex_ptr = (Mutex *)location_ptr->v_data_ptr;
 
   // - if mutex object exists -
-  if (mutex_ptr != NULL)
+  if (mutex_ptr != nullptr)
   {
     delete mutex_ptr;
   }
@@ -2633,17 +2633,17 @@ built_in_class_s ucf_led_class =
   bic_ucf_led_consts,
   bic_ucf_led_init,
   bic_ucf_led_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s ucf_led_methods[] =
@@ -2695,7 +2695,7 @@ void bic_ucf_led_consts(location_array_s &const_locations)
 
 void bic_ucf_led_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (Led *)NULL;
+  location_ptr->v_data_ptr = (Led *)nullptr;
 }/*}}}*/
 
 void bic_ucf_led_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2703,7 +2703,7 @@ void bic_ucf_led_clear(interpreter_thread_s &it,location_s *location_ptr)
   Led *led_ptr = (Led *)location_ptr->v_data_ptr;
 
   // - if led object exists -
-  if (led_ptr != NULL)
+  if (led_ptr != nullptr)
   {
     delete led_ptr;
   }
@@ -2843,17 +2843,17 @@ built_in_class_s serial_class =
   bic_serial_consts,
   bic_serial_init,
   bic_serial_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s serial_methods[] =
@@ -2954,7 +2954,7 @@ void bic_serial_consts(location_array_s &const_locations)
 
 void bic_serial_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (SerialPort *)NULL;
+  location_ptr->v_data_ptr = (SerialPort *)nullptr;
 }/*}}}*/
 
 void bic_serial_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -2964,7 +2964,7 @@ void bic_serial_clear(interpreter_thread_s &it,location_s *location_ptr)
   SerialPort *serial_ptr = (SerialPort *)location_ptr->v_data_ptr;
 
   // - if serial port object pointer is not null -
-  if (serial_ptr != NULL)
+  if (serial_ptr != nullptr)
   {
     delete serial_ptr;
   }
@@ -3257,17 +3257,17 @@ built_in_class_s var_store_class =
   bic_var_store_consts,
   bic_var_store_init,
   bic_var_store_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s var_store_methods[] =
@@ -3540,14 +3540,14 @@ void bic_var_store_consts(location_array_s &const_locations)
 
 void bic_var_store_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (VarStore *)NULL;
+  location_ptr->v_data_ptr = (VarStore *)nullptr;
 }/*}}}*/
 
 void bic_var_store_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   VarStore *vs_ptr = (VarStore *)location_ptr->v_data_ptr;
 
-  if (vs_ptr != NULL)
+  if (vs_ptr != nullptr)
   {
     delete vs_ptr;
   }
@@ -3988,17 +3988,17 @@ built_in_class_s var_slot_class =
   bic_var_slot_consts,
   bic_var_slot_init,
   bic_var_slot_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s var_slot_methods[] =
@@ -4780,7 +4780,7 @@ void bic_var_slot_consts(location_array_s &const_locations)
 
 void bic_var_slot_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (varstore_slot_s *)NULL;
+  location_ptr->v_data_ptr = (varstore_slot_s *)nullptr;
 }/*}}}*/
 
 void bic_var_slot_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -4788,7 +4788,7 @@ void bic_var_slot_clear(interpreter_thread_s &it,location_s *location_ptr)
   varstore_slot_s *vss_ptr = (varstore_slot_s *)location_ptr->v_data_ptr;
 
   // - if varstore slot exists -
-  if (vss_ptr != NULL)
+  if (vss_ptr != nullptr)
   {
     it.release_location_ptr(vss_ptr->vs_ptr);
     cfree(vss_ptr);
@@ -5116,17 +5116,17 @@ built_in_class_s nvm_segment_class =
   bic_nvm_segment_consts,
   bic_nvm_segment_init,
   bic_nvm_segment_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s nvm_segment_methods[] =
@@ -5188,7 +5188,7 @@ void bic_nvm_segment_consts(location_array_s &const_locations)
 
 void bic_nvm_segment_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (nvm_segment_s *)NULL;
+  location_ptr->v_data_ptr = (nvm_segment_s *)nullptr;
 }/*}}}*/
 
 void bic_nvm_segment_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -5196,9 +5196,9 @@ void bic_nvm_segment_clear(interpreter_thread_s &it,location_s *location_ptr)
   nvm_segment_s *ns_ptr = (nvm_segment_s *)location_ptr->v_data_ptr;
 
   // - if varstore slot exists -
-  if (ns_ptr != NULL)
+  if (ns_ptr != nullptr)
   {
-    if (ns_ptr->ram_ptr != NULL)
+    if (ns_ptr->ram_ptr != nullptr)
     {
       cfree(ns_ptr->ram_ptr);
     }
@@ -5244,7 +5244,7 @@ bool bic_nvm_segment_method_NvmSegment_1(interpreter_thread_s &it,unsigned stack
   // - create new segment -
   nvm_segment_s *ns_ptr = (nvm_segment_s *)cmalloc(sizeof(nvm_segment_s));
   ns_ptr->ns_ptr = new NvmSegment();
-  ns_ptr->ram_ptr = NULL;
+  ns_ptr->ram_ptr = nullptr;
 
   try
   {
@@ -5498,17 +5498,17 @@ built_in_class_s msg_queue_class =
   bic_msg_queue_consts,
   bic_msg_queue_init,
   bic_msg_queue_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s msg_queue_methods[] =
@@ -5575,14 +5575,14 @@ void bic_msg_queue_consts(location_array_s &const_locations)
 
 void bic_msg_queue_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (MsgQueue *)NULL;
+  location_ptr->v_data_ptr = (MsgQueue *)nullptr;
 }/*}}}*/
 
 void bic_msg_queue_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   MsgQueue *mq_ptr = (MsgQueue *)location_ptr->v_data_ptr;
 
-  if (mq_ptr != NULL)
+  if (mq_ptr != nullptr)
   {
     delete mq_ptr;
   }
@@ -5879,17 +5879,17 @@ built_in_class_s bcc_class =
   bic_bcc_consts,
   bic_bcc_init,
   bic_bcc_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s bcc_methods[] =
@@ -6049,17 +6049,17 @@ built_in_class_s crc_class =
   bic_crc_consts,
   bic_crc_init,
   bic_crc_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s crc_methods[] =
@@ -6139,7 +6139,7 @@ void bic_crc_consts(location_array_s &const_locations)
 
 void bic_crc_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (crc_s *)NULL;
+  location_ptr->v_data_ptr = (crc_s *)nullptr;
 }/*}}}*/
 
 void bic_crc_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -6147,7 +6147,7 @@ void bic_crc_clear(interpreter_thread_s &it,location_s *location_ptr)
   crc_s *crc_ptr = (crc_s *)location_ptr->v_data_ptr;
 
   // - if crc pointer exist -
-  if (crc_ptr != NULL)
+  if (crc_ptr != nullptr)
   {
     cfree(crc_ptr);
   }
@@ -6357,17 +6357,17 @@ built_in_class_s md5_class =
   bic_md5_consts,
   bic_md5_init,
   bic_md5_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s md5_methods[] =
@@ -6419,7 +6419,7 @@ void bic_md5_consts(location_array_s &const_locations)
 
 void bic_md5_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (MD5Digest *)NULL;
+  location_ptr->v_data_ptr = (MD5Digest *)nullptr;
 }/*}}}*/
 
 void bic_md5_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -6427,7 +6427,7 @@ void bic_md5_clear(interpreter_thread_s &it,location_s *location_ptr)
   MD5Digest *md5_ptr = (MD5Digest *)location_ptr->v_data_ptr;
 
   // - if md5 pointer exist -
-  if (md5_ptr != NULL)
+  if (md5_ptr != nullptr)
   {
     delete md5_ptr;
   }

@@ -57,7 +57,7 @@ class Main
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8467)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8479)
 
 Assignment operator `=`. Object of class `Thread` is replaced by method parameter.
 
@@ -88,7 +88,7 @@ obj: New value
 
 <a name="join#0" />
 
-### Method [`join#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8481)
+### Method [`join#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8493)
 
 Method waits for thread specified by object of class `Thread` to terminate.
 
@@ -109,7 +109,7 @@ obj.join(): Thread return: Data
 
 <a name="try_join#0" />
 
-### Method [`try_join#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8516)
+### Method [`try_join#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8528)
 
 Method tries to join thread specified by object of class `Thread`. Method returns
 immediately even if thread was not yet terminated.
@@ -134,7 +134,7 @@ obj.try_join(): Thread return: Data
 
 <a name="detach#0" />
 
-### Method [`detach#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8551)
+### Method [`detach#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8563)
 
 Method marks thread specified by object of class `Thread` as detached.
 When detached thread terminates its resources are released without need for
@@ -157,7 +157,7 @@ obj.detach(): <blank>
 
 <a name="yield#0" />
 
-### Method `static` [`yield#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8575)
+### Method `static` [`yield#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8587)
 
 Method suspend thread execution in favor of other threads running in system.
 
@@ -176,7 +176,7 @@ Thread.yield(): <blank>
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8586)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8598)
 
 Convert object of class `Thread` to object of class `String`.
 This method returns name of class `Thread`.
@@ -196,7 +196,7 @@ Thread.to_string(): Thread
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8595)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8607)
 
 Print string representation of object of class `Thread` to standard output.
 This method prints name of class `Thread`.

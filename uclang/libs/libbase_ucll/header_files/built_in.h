@@ -369,7 +369,7 @@ enum
       class_record_s &class_record = ((interpreter_s *)IT.interpreter_ptr)->class_records[first_loc->v_type];\
       \
       /* - test if location type is built in class, and if it has defined built in function - */\
-      if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->compare_caller != NULL)\
+      if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->compare_caller != nullptr)\
       {\
         result = (long long int)class_record.bi_class_ptr->compare_caller(first_loc,second_loc);\
       }\
@@ -486,7 +486,7 @@ enum
     class_record_s &class_record = ((interpreter_s *)IT.interpreter_ptr)->class_records[location->v_type];\
     \
     /* - test if location type is built in class, and if it has defined built in function - */\
-    if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->length_caller != NULL)\
+    if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->length_caller != nullptr)\
     {\
       TRG_LENGTH = (long long int)class_record.bi_class_ptr->length_caller(location);\
     }\
@@ -538,7 +538,7 @@ enum
     class_record_s &class_record = ((interpreter_s *)IT.interpreter_ptr)->class_records[location->v_type];\
     \
     /* - test if location type is built in class, and if it has defined built in function - */\
-    if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->item_caller != NULL)\
+    if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->item_caller != nullptr)\
     {\
       TRG_LOCATION_PTR = class_record.bi_class_ptr->item_caller(IT,location,SRC_INDEX);\
     }\
@@ -583,7 +583,7 @@ enum
     class_record_s &class_record = ((interpreter_s *)IT.interpreter_ptr)->class_records[location->v_type];\
     \
     /* - test if location type is built in class, and if it has defined built in function - */\
-    if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->first_idx_caller != NULL)\
+    if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->first_idx_caller != nullptr)\
     {\
       TRG_INDEX = (long long int)class_record.bi_class_ptr->first_idx_caller(location);\
     }\
@@ -644,7 +644,7 @@ enum
     class_record_s &class_record = ((interpreter_s *)IT.interpreter_ptr)->class_records[location->v_type];\
     \
     /* - test if location type is built in class, and if it has defined built in function - */\
-    if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->next_idx_caller != NULL)\
+    if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->next_idx_caller != nullptr)\
     {\
       TRG_INDEX = (long long int)class_record.bi_class_ptr->next_idx_caller(location,SRC_INDEX);\
     }\
@@ -711,11 +711,11 @@ enum
     class_record_s &class_record = ((interpreter_s *)IT.interpreter_ptr)->class_records[location->v_type];\
     \
     /* - test if location type is built in class, and if it has defined built in function - */\
-    if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->next_item_caller != NULL)\
+    if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->next_item_caller != nullptr)\
     {\
       TRG_LOCATION_PTR = class_record.bi_class_ptr->next_item_caller(IT,location,SOURCE_POS);\
       \
-      if (TRG_LOCATION_PTR == NULL)\
+      if (TRG_LOCATION_PTR == nullptr)\
       {\
         ERR_CODE;\
       }\
@@ -752,7 +752,7 @@ enum
 {/*{{{*/\
   unsigned param_idx = PARAM_IDX;\
 \
-  if (DELEGATE_PTR->papply != NULL)\
+  if (DELEGATE_PTR->papply != nullptr)\
   {\
     pointer_array_s *papply_params = (pointer_array_s *)DELEGATE_PTR->papply;\
 \
@@ -796,7 +796,7 @@ enum
     IT.data_stack.push(IT.blank_location);\
     \
     /* - if delegate is static - */\
-    if (DELEGATE_PTR->object_location == NULL)\
+    if (DELEGATE_PTR->object_location == nullptr)\
     {/*{{{*/\
       uli tmp_code[5 + DELEGATE_PTR->orig_param_cnt];\
       tmp_code[0] = i_static_call;\
@@ -810,7 +810,7 @@ enum
       \
       /* - call static method - */\
       uli *code_ptr = tmp_code;\
-      inst_params_s params = {&(IT),&code_ptr,new_stack_base,NULL};\
+      inst_params_s params = {&(IT),&code_ptr,new_stack_base,nullptr};\
       if (inst_static_call(&params) != c_run_return_code_OK)\
       {\
         IT.release_stack_from(new_stack_base);\
@@ -841,7 +841,7 @@ enum
       \
       /* - call method - */\
       uli *code_ptr = tmp_code;\
-      inst_params_s params = {&(IT),&code_ptr,new_stack_base,NULL};\
+      inst_params_s params = {&(IT),&code_ptr,new_stack_base,nullptr};\
       if (inst_call(&params) != c_run_return_code_OK)\
       {\
         IT.release_stack_from(new_stack_base);\

@@ -112,7 +112,7 @@ location_s *prolog_c::prolog_term_value(interpreter_thread_s &it,term_t term,uli
       // - ERROR -
       if (!PL_get_atom(term,&atom))
       {
-        return NULL;
+        return nullptr;
       }
 
       size_t length;
@@ -138,7 +138,7 @@ location_s *prolog_c::prolog_term_value(interpreter_thread_s &it,term_t term,uli
       // - ERROR -
       if (!PL_get_int64(term,&value))
       {
-        return NULL;
+        return nullptr;
       }
 
       BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
@@ -151,7 +151,7 @@ location_s *prolog_c::prolog_term_value(interpreter_thread_s &it,term_t term,uli
       // - ERROR -
       if (!PL_get_float(term,&value))
       {
-        return NULL;
+        return nullptr;
       }
 
       BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);
@@ -171,16 +171,16 @@ location_s *prolog_c::prolog_term_value(interpreter_thread_s &it,term_t term,uli
         if (!PL_get_list(list,head,list))
         {
           it.release_location_ptr(arr_location);
-          return NULL;
+          return nullptr;
         }
 
         location_s *item_location = prolog_c::prolog_term_value(it,head,source_pos);
 
         // - ERROR -
-        if (item_location == NULL)
+        if (item_location == nullptr)
         {
           it.release_location_ptr(arr_location);
-          return NULL;
+          return nullptr;
         }
 
         // - insert item to array -
@@ -195,7 +195,7 @@ location_s *prolog_c::prolog_term_value(interpreter_thread_s &it,term_t term,uli
   case PL_TERM:
   case PL_DICT:
   default:
-    return NULL;
+    return nullptr;
   }
 }/*}}}*/
 

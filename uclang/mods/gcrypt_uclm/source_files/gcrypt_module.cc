@@ -79,17 +79,17 @@ built_in_class_s gcrypt_cipher_class =
   bic_gcrypt_cipher_consts,
   bic_gcrypt_cipher_init,
   bic_gcrypt_cipher_clear,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s gcrypt_cipher_methods[] =
@@ -273,7 +273,7 @@ void bic_gcrypt_cipher_consts(location_array_s &const_locations)
 
 void bic_gcrypt_cipher_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (gcrypt_cipher_s *)NULL;
+  location_ptr->v_data_ptr = (gcrypt_cipher_s *)nullptr;
 }/*}}}*/
 
 void bic_gcrypt_cipher_clear(interpreter_thread_s &it,location_s *location_ptr)
@@ -281,7 +281,7 @@ void bic_gcrypt_cipher_clear(interpreter_thread_s &it,location_s *location_ptr)
   gcrypt_cipher_s *gc_ptr = (gcrypt_cipher_s *)location_ptr->v_data_ptr;
 
   // - if gcrypt cipher object exists -
-  if (gc_ptr != NULL)
+  if (gc_ptr != nullptr)
   {
     gc_ptr->clear(it);
     cfree(gc_ptr);

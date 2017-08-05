@@ -92,15 +92,15 @@ inline unsigned mutex_s::init()
   pthread_mutexattr_destroy(&attr);
   return c_error_OK;
 #elif MUTEX_TYPE == MUTEX_TYPE_WINDOWS
-  if ((handle = CreateMutex(NULL,FALSE,NULL)) == NULL)
+  if ((handle = CreateMutex(nullptr,FALSE,nullptr)) == nullptr)
   {
     return c_error_UNKNOWN;
   }
 
   return c_error_OK;
 #elif MUTEX_TYPE == MUTEX_TYPE_DSP_LOCK
-  lck_handle = LCK_create(NULL);
-  if (lck_handle != NULL)
+  lck_handle = LCK_create(nullptr);
+  if (lck_handle != nullptr)
   {
     return c_error_OK;
   }

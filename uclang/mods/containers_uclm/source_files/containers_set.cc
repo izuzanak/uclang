@@ -13,17 +13,17 @@ built_in_class_s set_class =
   bic_set_consts,
   bic_set_init,
   bic_set_clear,
-  NULL,
+  nullptr,
   bic_set_length,
   bic_set_item,
   bic_set_first_idx,
   bic_set_next_idx,
-  NULL,
-  NULL,
+  nullptr,
+  nullptr,
   bic_set_pack,
   bic_set_unpack,
-  NULL,
-  NULL
+  nullptr,
+  nullptr
 };/*}}}*/
 
 built_in_method_s set_methods[] =
@@ -749,10 +749,8 @@ unsigned bic_set_first_idx(location_s *location_ptr)
   {
     return tree_ptr->get_min_value_idx(tree_ptr->root_idx);
   }
-  else
-  {
-    return c_idx_not_exist;
-  }
+
+  return c_idx_not_exist;
 }/*}}}*/
 
 unsigned bic_set_next_idx(location_s *location_ptr,unsigned index)

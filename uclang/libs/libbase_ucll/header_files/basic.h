@@ -14,6 +14,10 @@
 #define unlikely(x) x
 #endif
 
+#if __cplusplus < 201103
+#define nullptr NULL
+#endif
+
 // - system type selection -
 #define SYSTEM_TYPE_UNIX        1 // - for system calls use unix environment
 #define SYSTEM_TYPE_WINDOWS     2 // - for system calls use windows environment
@@ -395,7 +399,7 @@ extern struct timeval stv;
 inline void tm_mark_time()
 {/*{{{*/
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
-  gettimeofday(&tv,NULL);
+  gettimeofday(&tv,nullptr);
 #endif
 }/*}}}*/
 
@@ -403,7 +407,7 @@ inline void tm_mark_time()
 inline long long int tm_time_diff()
 {/*{{{*/
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
-  gettimeofday(&stv,NULL);
+  gettimeofday(&stv,nullptr);
   return stv.tv_usec - tv.tv_usec + (stv.tv_sec - tv.tv_sec)*1000000;
 #else
   return 0;
@@ -431,7 +435,10 @@ inline void cfree(void *a_location)
 // - memcpy with byte order change on request -
 inline void memcpy_bo(void *a_dst,const void *a_src,size_t a_cnt,bool a_ob)
 {/*{{{*/
-  if (a_cnt <= 0) return;
+  if (a_cnt <= 0)
+  {
+    return;
+  }
 
   if (a_ob)
   {

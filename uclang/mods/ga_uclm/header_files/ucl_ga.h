@@ -61,25 +61,25 @@ class ga_s
 
 inline void ga_real_genome_s::init()
 {/*{{{*/
-  it_ptr = NULL;
+  it_ptr = nullptr;
   source_pos = 0;
   ret_code = c_run_return_code_OK;
 
-  genome_ptr = NULL;
-  objective_dlg = NULL;
+  genome_ptr = nullptr;
+  objective_dlg = nullptr;
 }/*}}}*/
 
 inline void ga_real_genome_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release objective delegate -
-  if (objective_dlg != NULL)
+  if (objective_dlg != nullptr)
   {
     it.release_location_ptr(objective_dlg);
   }
 
   // - release genome pointer -
-  if (genome_ptr != NULL)
+  if (genome_ptr != nullptr)
   {
     delete genome_ptr;
   }
@@ -93,21 +93,21 @@ inline void ga_real_genome_s::clear(interpreter_thread_s &it)
 
 inline void ga_steady_state_s::init()
 {/*{{{*/
-  ga_ptr = NULL;
-  ga_genome_loc = NULL;
+  ga_ptr = nullptr;
+  ga_genome_loc = nullptr;
 }/*}}}*/
 
 inline void ga_steady_state_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
   // - release genetic algorithm pointer -
-  if (ga_ptr != NULL)
+  if (ga_ptr != nullptr)
   {
     delete ga_ptr;
   }
 
   // - release genome location -
-  if (ga_genome_loc != NULL)
+  if (ga_genome_loc != nullptr)
   {
     it.release_location_ptr(ga_genome_loc);
   }

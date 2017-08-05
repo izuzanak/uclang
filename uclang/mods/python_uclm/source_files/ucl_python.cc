@@ -30,12 +30,12 @@ PyObject *python_c::create_py_object(interpreter_thread_s &it,location_s *locati
   else if (location_ptr->v_type == c_rm_class_set)
   {/*{{{*/
     pointer_tree_s *tree_ptr = (pointer_tree_s *)location_ptr->v_data_ptr;
-    PyObject *pyo_set = PySet_New(NULL);
+    PyObject *pyo_set = PySet_New(nullptr);
 
     // - ERROR -
-    if (pyo_set == NULL)
+    if (pyo_set == nullptr)
     {
-      return NULL;
+      return nullptr;
     }
 
     if (tree_ptr->count != 0)
@@ -51,11 +51,11 @@ PyObject *python_c::create_py_object(interpreter_thread_s &it,location_s *locati
         PyObject *pyo_item = create_py_object(it,item_location);
 
         // - ERROR -
-        if (pyo_item == NULL)
+        if (pyo_item == nullptr)
         {
           Py_DECREF(pyo_set);
 
-          return NULL;
+          return nullptr;
         }
 
         // - ERROR -
@@ -64,7 +64,7 @@ PyObject *python_c::create_py_object(interpreter_thread_s &it,location_s *locati
           Py_DECREF(pyo_item);
           Py_DECREF(pyo_set);
 
-          return NULL;
+          return nullptr;
         }
 
         Py_DECREF(pyo_item);
@@ -82,9 +82,9 @@ PyObject *python_c::create_py_object(interpreter_thread_s &it,location_s *locati
     PyObject *pyo_dict = PyDict_New();
 
     // - ERROR -
-    if (pyo_dict == NULL)
+    if (pyo_dict == nullptr)
     {
-      return NULL;
+      return nullptr;
     }
 
     if (tree_ptr->root_idx != c_idx_not_exist)
@@ -102,23 +102,23 @@ PyObject *python_c::create_py_object(interpreter_thread_s &it,location_s *locati
         PyObject *pyo_key = create_py_object(it,key_location);
 
         // - ERROR -
-        if (pyo_key == NULL)
+        if (pyo_key == nullptr)
         {
           Py_DECREF(pyo_dict);
 
-          return NULL;
+          return nullptr;
         }
 
         location_s *value_location = it.get_location_value(node.object.value);
         PyObject *pyo_value = create_py_object(it,value_location);
 
         // - ERROR -
-        if (pyo_value == NULL)
+        if (pyo_value == nullptr)
         {
           Py_DECREF(pyo_key);
           Py_DECREF(pyo_dict);
 
-          return NULL;
+          return nullptr;
         }
 
         // - ERROR -
@@ -128,7 +128,7 @@ PyObject *python_c::create_py_object(interpreter_thread_s &it,location_s *locati
           Py_DECREF(pyo_value);
           Py_DECREF(pyo_dict);
 
-          return NULL;
+          return nullptr;
         }
 
         Py_DECREF(pyo_key);
@@ -180,9 +180,9 @@ PyObject *python_c::create_py_object(interpreter_thread_s &it,location_s *locati
         PyObject *pyo_list = PyList_New(array_ptr->used);
 
         // - ERROR -
-        if (pyo_list == NULL)
+        if (pyo_list == nullptr)
         {
-          return NULL;
+          return nullptr;
         }
 
         if (array_ptr->used != 0)
@@ -192,11 +192,11 @@ PyObject *python_c::create_py_object(interpreter_thread_s &it,location_s *locati
             PyObject *pyo_item = create_py_object(it,it.get_location_value(array_ptr->data[idx]));
 
             // - ERROR -
-            if (pyo_item == NULL)
+            if (pyo_item == nullptr)
             {
               Py_DECREF(pyo_list);
 
-              return NULL;
+              return nullptr;
             }
 
             // - set python list item -
@@ -210,7 +210,7 @@ PyObject *python_c::create_py_object(interpreter_thread_s &it,location_s *locati
 
     // - ERROR -
     default:
-      return NULL;
+      return nullptr;
     }
   }
 }/*}}}*/
@@ -236,9 +236,9 @@ PyObject *python_c::create_py_tuple(interpreter_thread_s &it,location_s *locatio
     PyObject *pyo_tuple = PyTuple_New(array_ptr->used);
 
     // - ERROR -
-    if (pyo_tuple == NULL)
+    if (pyo_tuple == nullptr)
     {
-      return NULL;
+      return nullptr;
     }
 
     if (array_ptr->used > 0)
@@ -248,11 +248,11 @@ PyObject *python_c::create_py_tuple(interpreter_thread_s &it,location_s *locatio
         PyObject *pyo_item = create_py_object(it,it.get_location_value(array_ptr->data[idx]));
 
         // - ERROR -
-        if (pyo_item == NULL)
+        if (pyo_item == nullptr)
         {
           Py_DECREF(pyo_tuple);
 
-          return NULL;
+          return nullptr;
         }
 
         // - set python tuple item -
@@ -270,19 +270,19 @@ PyObject *python_c::create_py_tuple(interpreter_thread_s &it,location_s *locatio
     PyObject *pyo_tuple = PyTuple_New(1);
 
     // - ERROR -
-    if (pyo_tuple == NULL)
+    if (pyo_tuple == nullptr)
     {
-      return NULL;
+      return nullptr;
     }
 
     PyObject *pyo_obj = create_py_object(it,location_ptr);
 
     // - ERROR -
-    if (pyo_obj == NULL)
+    if (pyo_obj == nullptr)
     {
       Py_DECREF(pyo_tuple);
 
-      return NULL;
+      return nullptr;
     }
 
     // - set python tuple item -
@@ -347,19 +347,19 @@ location_s *python_c::py_object_value(interpreter_thread_s &it,PyObject *pyo_obj
         PyObject *pyo_item = PyList_GetItem(pyo_obj,idx);
 
         // - ERROR -
-        if (pyo_item == NULL)
+        if (pyo_item == nullptr)
         {
           it.release_location_ptr(arr_location);
-          return NULL;
+          return nullptr;
         }
 
         location_s *item_location = py_object_value(it,pyo_item,source_pos);
 
         // - ERROR -
-        if (item_location == NULL)
+        if (item_location == nullptr)
         {
           it.release_location_ptr(arr_location);
-          return NULL;
+          return nullptr;
         }
 
         // - insert item to array -
@@ -391,16 +391,16 @@ location_s *python_c::py_object_value(interpreter_thread_s &it,PyObject *pyo_obj
         if (_PySet_Next(pyo_obj,&idx,&pyo_key) == -1)
         {
           it.release_location_ptr(set_location);
-          return NULL;
+          return nullptr;
         }
 
         location_s *key_location = py_object_value(it,pyo_key,source_pos);
 
         // - ERROR -
-        if (key_location == NULL)
+        if (key_location == nullptr)
         {
           it.release_location_ptr(set_location);
-          return NULL;
+          return nullptr;
         }
 
         // - insert key to set -
@@ -412,7 +412,7 @@ location_s *python_c::py_object_value(interpreter_thread_s &it,PyObject *pyo_obj
         if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
         {
           it.release_location_ptr(set_location);
-          return NULL;
+          return nullptr;
         }
 
       } while(++cnt < size);
@@ -443,30 +443,30 @@ location_s *python_c::py_object_value(interpreter_thread_s &it,PyObject *pyo_obj
         if (PyDict_Next(pyo_obj,&idx,&pyo_key,&pyo_value) == -1)
         {
           it.release_location_ptr(dict_location);
-          return NULL;
+          return nullptr;
         }
 
         location_s *key_location = py_object_value(it,pyo_key,source_pos);
 
         // - ERROR -
-        if (key_location == NULL)
+        if (key_location == nullptr)
         {
           it.release_location_ptr(dict_location);
-          return NULL;
+          return nullptr;
         }
 
         location_s *value_location = py_object_value(it,pyo_value,source_pos);
 
         // - ERROR -
-        if (value_location == NULL)
+        if (value_location == nullptr)
         {
           it.release_location_ptr(key_location);
           it.release_location_ptr(dict_location);
 
-          return NULL;
+          return nullptr;
         }
 
-        pointer_map_s insert_map = {key_location,NULL};
+        pointer_map_s insert_map = {key_location,nullptr};
         unsigned index = tree_ptr->unique_insert(insert_map);
 
         if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
@@ -475,18 +475,18 @@ location_s *python_c::py_object_value(interpreter_thread_s &it,PyObject *pyo_obj
           it.release_location_ptr(value_location);
           it.release_location_ptr(dict_location);
 
-          return NULL;
+          return nullptr;
         }
 
         pointer_map_s &map = tree_ptr->data[index].object;
 
-        if (map.value != NULL)
+        if (map.value != nullptr)
         {
           it.release_location_ptr(key_location);
           it.release_location_ptr(value_location);
           it.release_location_ptr(dict_location);
 
-          return NULL;
+          return nullptr;
         }
 
         map.value = (pointer)value_location;
@@ -497,6 +497,6 @@ location_s *python_c::py_object_value(interpreter_thread_s &it,PyObject *pyo_obj
     return dict_location;
   }/*}}}*/
 
-  return NULL;
+  return nullptr;
 }/*}}}*/
 

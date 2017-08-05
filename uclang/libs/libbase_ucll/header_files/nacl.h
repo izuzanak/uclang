@@ -22,8 +22,8 @@ extern location_s *nacl_change_focus_dlg;
 
 #define NACL_CALL_CALLBACK_DELEGATE(NAME,PARAM_DATA,PARAM_CNT,PARAM_CODE) \
 {/*{{{*/\
-  if (nacl_it_ptr != NULL &&\
-      NAME != NULL)\
+  if (nacl_it_ptr != nullptr &&\
+      NAME != nullptr)\
   {\
     interpreter_thread_s &it = *nacl_it_ptr;\
     delegate_s *delegate_ptr = (delegate_s *)(NAME)->v_data_ptr;\
@@ -32,7 +32,7 @@ extern location_s *nacl_change_focus_dlg;
     PARAM_CODE;\
 \
     /* - call delegate method - */\
-    location_s *trg_location = NULL;\
+    location_s *trg_location = nullptr;\
     BIC_CALL_DELEGATE(it,delegate_ptr,PARAM_DATA,PARAM_CNT,trg_location,source_pos,\
 \
       /* - print exception message - */\

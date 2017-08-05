@@ -216,7 +216,11 @@ inline void string_s::clear()
 inline void string_s::create(unsigned a_length)
 {/*{{{*/
   clear();
-  if (a_length == 0) return;
+
+  if (a_length == 0)
+  {
+    return;
+  }
 
   data = (char *)cmalloc((a_length + 1)*sizeof(char));
 
@@ -227,7 +231,11 @@ inline void string_s::create(unsigned a_length)
 inline void string_s::set(unsigned a_length,const char *a_data)
 {/*{{{*/
   clear();
-  if (a_length == 0) return;
+
+  if (a_length == 0)
+  {
+    return;
+  }
 
   data = (char *)cmalloc((a_length + 1)*sizeof(char));
   memcpy(data,a_data,a_length*sizeof(char));
@@ -276,7 +284,11 @@ inline string_s &string_s::operator=(string_s &a_src)
 {/*{{{*/
   clear();
 
-  if (a_src.data == &c_string_terminating_char) return *this;
+  if (a_src.data == &c_string_terminating_char)
+  {
+    return *this;
+  }
+
   data = (char *)cmalloc(a_src.size*sizeof(char));
   memcpy(data,a_src.data,(a_src.size - 1)*sizeof(char));
   data[a_src.size - 1] = '\0';
@@ -287,15 +299,15 @@ inline string_s &string_s::operator=(string_s &a_src)
 
 inline bool string_s::operator==(string_s &a_second)
 {/*{{{*/
-  if (size != a_second.size) return false;
-  if (data == &c_string_terminating_char) return true;
+  if (size != a_second.size) { return false; }
+  if (data == &c_string_terminating_char) { return true; }
   return (memcmp(data,a_second.data,(size - 1)*sizeof(char)) == 0);
 }/*}}}*/
 
 inline bool string_s::compare_char_ptr(unsigned a_length,const char *a_data)
 {/*{{{*/
-  if (size != a_length + 1) return false;
-  if (a_length == 0) return true;
+  if (size != a_length + 1) { return false; }
+  if (a_length == 0) { return true; }
   return (memcmp(data,a_data,a_length*sizeof(char)) == 0);
 }/*}}}*/
 
@@ -306,9 +318,16 @@ inline unsigned string_s::print()
 
 inline bool string_s::load_text_file(const char *a_file)
 {/*{{{*/
-  if (a_file == NULL) return false;
+  if (a_file == nullptr)
+  {
+    return false;
+  }
+
   FILE *f = fopen(a_file,"r");
-  if (f == NULL) return false;
+  if (f == nullptr)
+  {
+    return false;
+  }
 
   fseek(f,0,SEEK_END);
   unsigned file_size = ftell(f);
@@ -333,9 +352,16 @@ inline bool string_s::load_text_file(const char *a_file)
 
 inline bool string_s::save_text_file(const char *a_file)
 {/*{{{*/
-  if (a_file == NULL) return false;
+  if (a_file == nullptr)
+  {
+    return false;
+  }
+
   FILE *f = fopen(a_file,"w");
-  if (f == NULL) return false;
+  if (f == nullptr)
+  {
+    return false;
+  }
 
   if (size > 1)
   {

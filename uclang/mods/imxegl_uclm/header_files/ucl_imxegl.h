@@ -150,7 +150,7 @@ inline void imx_egl_s::init()
   texture_locs.init();
 
   native_window = 0;
-  native_display = NULL;
+  native_display = nullptr;
 }/*}}}*/
 
 inline void imx_egl_s::clear(interpreter_thread_s &it)
@@ -164,7 +164,7 @@ inline void imx_egl_s::clear(interpreter_thread_s &it)
 
     // - reset global egl pointer -
     global_egl_mutex.lock();
-    global_egl_ptr = NULL;
+    global_egl_ptr = nullptr;
     global_egl_mutex.unlock();
   }
 
@@ -240,7 +240,7 @@ inline void imx_fb_s::clear(interpreter_thread_s &it)
 inline void imx_ipu_s::init()
 {/*{{{*/
   fd = -1;
-  fb_location = NULL;
+  fb_location = nullptr;
   prepared = false;
   buffer_idx = 1;
 }/*}}}*/
@@ -254,7 +254,7 @@ inline void imx_ipu_s::clear(interpreter_thread_s &it)
     close(fd);
   }
 
-  if (fb_location != NULL)
+  if (fb_location != nullptr)
   {
     // - disable ipu operations on framebuffer -
     imx_fb_s *if_ptr = (imx_fb_s *)fb_location->v_data_ptr;
@@ -283,7 +283,7 @@ inline imxegl_c::imxegl_c()
   // - initialize global egl -
   global_egl_terminate.atomic_set(0);
   global_egl_mutex.init();
-  global_egl_ptr = NULL;
+  global_egl_ptr = nullptr;
 }/*}}}*/
 
 inline imxegl_c::~imxegl_c()
