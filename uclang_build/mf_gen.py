@@ -1,8 +1,9 @@
 #!/usr/bin/python
-#VERSION #3
+#VERSION #4
 
 import sys,os
 import re
+import json
 
 from mf_cfg import *
 
@@ -555,6 +556,15 @@ class project_c:
     while p_idx < len(self.processed):
       string += "$(%s_OBJECT)%s%s:\\\n" % (self.abbr,os.sep,self.objects[p_idx])
       string += "   $(%s_PROC)%s%s\n" % (self.abbr,os.sep,self.processed[p_idx])
+
+      # create compile command
+      source_path = os.sep.join([configuration.make_dir,configuration.proc_dir,self.proc_dir,self.processed[p_idx]])
+      object_path = os.sep.join([configuration.make_dir,configuration.object_dir,self.object_dir,self.objects[p_idx]])
+      cmp_cmds.append({
+        "directory":configuration.make_dir,
+        "command":"/usr/bin/c++ -c %s %s %s -o %s" % (self.cpp_options,self.cpp_defines,source_path,object_path),
+        "file":"%s" % source_path
+      })
 
       if self.conf.compiler_type == self.conf.C_COMPILER_GCC:
         string += self.conf.str_message("Compiling : %s : %s" % (self.project_name,self.processed[p_idx]))
@@ -2809,6 +2819,9 @@ if cfg_ref[CFG_TARGET]:
     )
 # }}}
 
+# list of compilation commands
+cmp_cmds = [];
+
 # compilation target selection
 if len(sys.argv) > 1:
     selection = sys.argv[1::]
@@ -2860,4 +2873,9 @@ for comp in config:
 
 print configuration.str_set_path()
 print configuration.str_clean()
+
+# write compile commands to file
+ccf = open('compile_commands.json','w')
+ccf.write(json.dumps(cmp_cmds,indent=2))
+ccf.close()
 
