@@ -220,17 +220,18 @@ gpointer gtk_c::create_g_object(interpreter_thread_s &it,GType g_type,pointer_ar
   }
 
   guint param_cnt = array_ptr->used >> 1;
-  GParameter params[param_cnt];
+  const char *names[param_cnt];
+  GValue params[param_cnt];
 
 #define BIC_GTK_CREATE_G_OBJECT_RELEASE_PARAMS() \
 {/*{{{*/\
   if (param_cnt > 0)\
   {\
-    GParameter *rp_ptr = params;\
-    GParameter *rp_ptr_end = rp_ptr + param_cnt;\
+    GValue *rp_ptr = params;\
+    GValue *rp_ptr_end = rp_ptr + param_cnt;\
 \
     do {\
-      g_value_unset(&rp_ptr->value);\
+      g_value_unset(rp_ptr);\
     } while(++rp_ptr < rp_ptr_end);\
   }\
 }/*}}}*/
@@ -241,8 +242,7 @@ gpointer gtk_c::create_g_object(interpreter_thread_s &it,GType g_type,pointer_ar
     // - clear parameter values -
     memset(params,0,sizeof(params));
 
-    GParameter *p_ptr = params;
-    GParameter *p_ptr_end = p_ptr + param_cnt;
+    unsigned p_idx = 0;
     pointer *a_ptr = array_ptr->data;
 
     do {
@@ -256,32 +256,30 @@ gpointer gtk_c::create_g_object(interpreter_thread_s &it,GType g_type,pointer_ar
 
         exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_EXPECTED_STRING,source_pos,(location_s *)it.blank_location);
         new_exception->params.push(0);
-        new_exception->params.push(p_ptr - params);
+        new_exception->params.push(p_idx);
 
         return nullptr;
       }
 
       string_s *string_ptr = (string_s *)name_location->v_data_ptr;
-      p_ptr->name = string_ptr->data;
+      names[p_idx] = string_ptr->data;
 
       // - ERROR -
-      if (!gtk_c::create_g_value(it,value_location,&p_ptr->value))
+      if (!gtk_c::create_g_value(it,value_location,params + p_idx))
       {
         BIC_GTK_CREATE_G_OBJECT_RELEASE_PARAMS();
 
         exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_G_VALUE_CREATE_ERROR,source_pos,(location_s *)it.blank_location);
-        new_exception->params.push(p_ptr - params);
+        new_exception->params.push(p_idx);
 
         return nullptr;
       }
 
-    } while((a_ptr += 2),++p_ptr < p_ptr_end);
+    } while((a_ptr += 2),++p_idx < param_cnt);
   }
 
-  // FIXME TODO replace g_object_newv by g_object_new_with_properties
-
   // - create new g_object -
-  gpointer g_obj = g_object_newv(g_type,param_cnt,params);
+  gpointer g_obj = g_object_new_with_properties(g_type,param_cnt,names,params);
 
   // - ERROR -
   if (!g_obj)
