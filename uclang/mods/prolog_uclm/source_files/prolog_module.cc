@@ -262,7 +262,7 @@ built_in_variable_s prolog_module_variables[] =
   {\
     terms = PL_new_term_refs(arity);\
 \
-    int idx = 0;\
+    size_t idx = 0;\
     do {\
       location_s *item_location = it.get_location_value(array_ptr->data[idx]);\
 \
@@ -960,7 +960,7 @@ bool bic_prolog_functor_method_term_1(interpreter_thread_s &it,unsigned stack_ba
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
   // - retrieve functor arity -
-  int arity = PL_functor_arity(ftor);
+  size_t arity = PL_functor_arity(ftor);
 
   term_t term = PL_new_term_ref();
 
@@ -1289,7 +1289,7 @@ bool bic_prolog_pred_method_arity_0(interpreter_thread_s &it,unsigned stack_base
 
   predicate_t pred = (predicate_t)dst_location->v_data_ptr;
 
-  int arity;
+  size_t arity;
   PL_predicate_info(pred,nullptr,&arity,nullptr);
   long long int result = arity;
 
@@ -1317,12 +1317,12 @@ bool bic_prolog_pred_method_call_1(interpreter_thread_s &it,unsigned stack_base,
   predicate_t pred = (predicate_t)dst_location->v_data_ptr;
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
-  int arity;
+  size_t arity;
   module_t plmod;
   PL_predicate_info(pred,nullptr,&arity,&plmod);
 
   // - ERROR -
-  if (array_ptr->used != (unsigned)arity)
+  if (array_ptr->used != arity)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PROLOG_PRED_INVALID_TERM_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(arity);
@@ -1382,12 +1382,12 @@ bool bic_prolog_pred_method_query_1(interpreter_thread_s &it,unsigned stack_base
   predicate_t pred = (predicate_t)dst_location->v_data_ptr;
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
-  int arity;
+  size_t arity;
   module_t plmod;
   PL_predicate_info(pred,nullptr,&arity,&plmod);
 
   // - ERROR -
-  if (array_ptr->used != (unsigned)arity)
+  if (array_ptr->used != arity)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PROLOG_PRED_INVALID_TERM_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(arity);

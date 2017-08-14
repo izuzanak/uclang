@@ -52,8 +52,6 @@ inline prolog_c::prolog_c()
 inline prolog_c::~prolog_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"prolog_exit()\n"););
-
-  cassert(PL_cleanup(0));
 }/*}}}*/
 
 #endif
