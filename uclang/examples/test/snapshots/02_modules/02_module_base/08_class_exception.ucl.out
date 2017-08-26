@@ -32,10 +32,10 @@ except_3.get_file_name() -> 08_class_exception.ucl
 
 === Exception method get_line#0 ================================================
 
-except_0.get_line() -> 24
-except_1.get_line() -> 25
-except_2.get_line() -> 26
-except_3.get_line() -> 39
+except_0.get_line() -> 25
+except_1.get_line() -> 26
+except_2.get_line() -> 27
+except_3.get_line() -> 40
 
 === Exception method error_print#0 =============================================
 
