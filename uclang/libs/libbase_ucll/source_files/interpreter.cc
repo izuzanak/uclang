@@ -930,6 +930,16 @@ bool interpreter_thread_s::call_method(uli *code,unsigned stack_base)
   {
     method_record_s &method_record = INTERPRETER->method_records[method_ri];
 
+    if (method_record.modifiers & c_modifier_built_in)
+    {
+      // - call built in method -
+      if (!method_record.bi_method_caller(*this,stack_base,code + icl_source_pos))
+      {
+        return false;
+      }
+    }
+    else
+    {
     // - if method is private, then test calling -
     if (method_record.modifiers & c_modifier_private)
     {
@@ -943,16 +953,6 @@ bool interpreter_thread_s::call_method(uli *code,unsigned stack_base)
       }
     }
 
-    if (method_record.modifiers & c_modifier_built_in)
-    {
-      // - call built in method -
-      if (!method_record.bi_method_caller(*this,stack_base,code + icl_source_pos))
-      {
-        return false;
-      }
-    }
-    else
-    {
       // - creation of new thread -
       if (method_record.modifiers & c_modifier_parallel)
       {
