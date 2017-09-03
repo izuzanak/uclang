@@ -647,7 +647,7 @@ int inst_object_reference_copy(inst_params_s *params)
 
   // -----
 
-  debug_message_5(fprintf(stderr,"interpreter: instruction: i_reference_copy: %lu <- %lu, %lu\n",stack_base + code[iorc_stack_trg],stack_base + code[iorc_stack_dst],stack_base + code[iorc_stack_src]));
+  debug_message_5(fprintf(stderr,"interpreter: instruction: i_object_reference_copy: %lu <- %lu, %lu\n",stack_base + code[iorc_stack_trg],stack_base + code[iorc_stack_dst],stack_base + code[iorc_stack_src]));
 
   pointer *object_location = &it.data_stack[stack_base + code[iorc_stack_src]];
   pointer &trg_location = it.data_stack[stack_base + code[iorc_stack_trg]];
