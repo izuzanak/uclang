@@ -525,64 +525,82 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_array_s &s
     // - close spawner fifo -
     close(fd);
 
-    // - check spawner stop request -
-    if (!g_spawner_running.value() ||
-        strcmp("uclang-spawner-stop",line_buffer.data) == 0)
-    {
-      line_buffer.clear();
+    // - command begin pointer -
+    char *cmd_begin = line_buffer.data;
+    char *buffer_end = line_buffer.data + line_buffer.used;
 
-      // - delete spawner fifo -
-      if (remove(spawner_path) != 0)
+    do {
+
+      // - find command end pointer -
+      char *cmd_end = strchrnul(cmd_begin,'\n');
+      *cmd_end = '\0';
+
+      if (cmd_begin < cmd_end)
       {
-        fprintf(stderr,"%s: Cannot remove spawner fifo \"%s\"\n",proc_name,spawner_path);
+        // - check spawner stop request -
+        if (!g_spawner_running.value() ||
+            strcmp("uclang-spawner-stop",cmd_begin) == 0)
+        {
+          line_buffer.clear();
 
-        return -1;
+          // - delete spawner fifo -
+          if (remove(spawner_path) != 0)
+          {
+            fprintf(stderr,"%s: Cannot remove spawner fifo \"%s\"\n",proc_name,spawner_path);
+
+            return -1;
+          }
+
+          return 0;
+        }
+
+        // - fork process in order to create spawn -
+        pid_t pid = fork();
+        if (pid == -1)
+        {
+          fprintf(stderr,"%s: Cannot fork in order to create spawn\n",proc_name);
+
+          return -1;
+        }
+
+        // - process is spawned child process -
+        if (pid == 0)
+        {
+          // - retrieve spawn command string -
+          string_s spawn_cmd;
+          spawn_cmd.size = (cmd_end - cmd_begin) + 1;
+          spawn_cmd.data = cmd_begin;
+
+          // - create spawn parser -
+          spawn_parser_s spawn_parser;
+          spawn_parser.init();
+
+          // - parse spawn command -
+          if (!spawn_parser.parse_source(spawn_cmd) ||
+              spawn_parser.arguments.used == 0)
+          {
+            spawn_parser.clear();
+            line_buffer.clear();
+
+            fprintf(stderr,"%s: Invalid spawn command\n",proc_name);
+
+            return -1;
+          }
+
+          // - retrieve spawn arguments -
+          spawn_args.swap(spawn_parser.arguments);
+
+          spawn_parser.clear();
+          line_buffer.clear();
+
+          return 1;
+        }
       }
 
-      return 0;
-    }
+      // - set begin of next command -
+      cmd_begin = cmd_end + 1;
 
-    // - fork process in order to create spawn -
-    pid_t pid = fork();
-    if (pid == -1)
-    {
-      fprintf(stderr,"%s: Cannot fork in order to create spawn\n",proc_name);
-
-      return -1;
-    }
-
-    // - process is spawned child process -
-    if (pid == 0)
-    {
-      // - retrieve spawn command string -
-      string_s spawn_cmd;
-      spawn_cmd.size = line_buffer.used;
-      spawn_cmd.data = line_buffer.data;
-
-      // - create spawn parser -
-      spawn_parser_s spawn_parser;
-      spawn_parser.init();
-
-      // - parse spawn command -
-      if (!spawn_parser.parse_source(spawn_cmd) ||
-          spawn_parser.arguments.used == 0)
-      {
-        spawn_parser.clear();
-        spawn_cmd.clear();
-
-        fprintf(stderr,"%s: Invalid spawn command\n",proc_name);
-
-        return -1;
-      }
-
-      // - retrieve spawn arguments -
-      spawn_args.swap(spawn_parser.arguments);
-
-      spawn_parser.clear();
-      spawn_cmd.clear();
-
-      return 1;
-    }
+    } while(cmd_begin < buffer_end);
 
     line_buffer.clear();
 
