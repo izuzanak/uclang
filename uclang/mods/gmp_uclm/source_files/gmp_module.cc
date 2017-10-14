@@ -16,7 +16,7 @@ built_in_module_s module =
   gmp_classes,         // Classes
 
   0,                   // Error base index
-  1,                   // Error count
+  2,                   // Error count
   gmp_error_strings,   // Error strings
 
   gmp_initialize,      // Initialize function
@@ -35,6 +35,7 @@ built_in_class_s *gmp_classes[] =
 // - GMP error strings -
 const char *gmp_error_strings[] =
 {/*{{{*/
+  "error_GMP_INTEGER_BASE_OUT_OF_RANGE",
   "error_GMP_INTEGER_CONVERT_INVALID_STRING",
 };/*}}}*/
 
@@ -66,6 +67,13 @@ bool gmp_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
+  case c_error_GMP_INTEGER_BASE_OUT_OF_RANGE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nGmpInteger number base %" HOST_LL_FORMAT "d, is out of range <2, 62>\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_GMP_INTEGER_CONVERT_INVALID_STRING:
   {
     string_s *string_ptr = (string_s *)((location_s *)exception.obj_location)->v_data_ptr;
@@ -326,10 +334,59 @@ bool bic_gmp_integer_method_GmpInteger_1(interpreter_thread_s &it,unsigned stack
 
 bool bic_gmp_integer_method_GmpInteger_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
-  // FIXME TODO continue ...
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
+  switch (src_0_location->v_type)
+  {
+  case c_bi_class_string:
+  {
+    if (src_1_location->v_type != c_bi_class_integer)
+    {
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      BIC_EXCEPTION_PUSH_METHOD_RI("GmpInteger#2");
+      new_exception->params.push(2);
+      new_exception->params.push(src_0_location->v_type);
+      new_exception->params.push(src_1_location->v_type);
+
+      return false;
+    }
+
+    string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+    long long int base = (long long int)src_1_location->v_data_ptr;
+
+    if (base < 2 || base > 62)
+    {
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GMP_INTEGER_BASE_OUT_OF_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      new_exception->params.push(base);
+
+      return false;
+    }
+
+    // - ERROR -
+    if (mpz_set_str(*((mpz_t *)dst_location->v_data_ptr),string_ptr->data,base))
+    {
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GMP_INTEGER_CONVERT_INVALID_STRING,operands[c_source_pos_idx],src_0_location);
+      new_exception->params.push(base);
+
+      return false;
+    }
+  }
+  break;
+
+  // - ERROR -
+  default:
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("GmpInteger#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  return true;
 }/*}}}*/
 
 bool bic_gmp_integer_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
