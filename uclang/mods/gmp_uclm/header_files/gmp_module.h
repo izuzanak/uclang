@@ -21,7 +21,7 @@ extern built_in_class_s *gmp_classes[];
 // - GMP error identifiers -
 enum
 {
-  c_error_GMP_DUMMY_ERROR = 0,
+  c_error_GMP_INTEGER_CONVERT_INVALID_STRING = 0,
 };
 
 // - GMP error strings -

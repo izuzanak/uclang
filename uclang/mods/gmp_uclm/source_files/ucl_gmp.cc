@@ -32,3 +32,21 @@ void gmp_c::setf(string_s &a_target,const char *a_format,...)
   }
 }/*}}}*/
 
+void gmp_c::mpz_set_lli(mpz_t &a_mpz,long long int a_value)
+{/*{{{*/
+  if (a_value >= LONG_MIN && a_value <= LONG_MAX)
+  {
+    mpz_set_si(a_mpz,(long int)a_value);
+  }
+  else if (a_value >= 0 && a_value <= ULONG_MAX)
+  {
+    mpz_set_ui(a_mpz,(unsigned long int)a_value);
+  }
+  else
+  {
+    char buffer[32];
+    snprintf(buffer,32,"%" HOST_LL_FORMAT "d",a_value);
+    mpz_set_str(a_mpz,buffer,10);
+  }
+}/*}}}*/
+

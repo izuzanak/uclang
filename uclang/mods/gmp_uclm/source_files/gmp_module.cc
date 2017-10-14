@@ -35,7 +35,7 @@ built_in_class_s *gmp_classes[] =
 // - GMP error strings -
 const char *gmp_error_strings[] =
 {/*{{{*/
-  "error_GMP_DUMMY_ERROR",
+  "error_GMP_INTEGER_CONVERT_INVALID_STRING",
 };/*}}}*/
 
 // - GMP initialize -
@@ -66,13 +66,27 @@ bool gmp_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_GMP_DUMMY_ERROR:
+  case c_error_GMP_INTEGER_CONVERT_INVALID_STRING:
+  {
+    string_s *string_ptr = (string_s *)((location_s *)exception.obj_location)->v_data_ptr;
+
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nGMP dummy error\n");
+    fprintf(stderr,"\nGmpInteger conversion, invalid string literal \"%s\"",string_ptr->data);
+
+    if (exception.params[0] != 0)
+    {
+      fprintf(stderr," for base %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    }
+    else
+    {
+      fprintf(stderr,"\n");
+    }
+
     fprintf(stderr," ---------------------------------------- \n");
-    break;
+  }
+  break;
   default:
     return false;
   }
@@ -255,10 +269,59 @@ bool bic_gmp_integer_method_GmpInteger_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_gmp_integer_method_GmpInteger_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  
-  // FIXME TODO continue ...
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  mpz_t *mpz_ptr = (mpz_t *)dst_location->v_data_ptr;
+
+  switch (src_0_location->v_type)
+  {
+  case c_bi_class_char:
+    mpz_set_si(*mpz_ptr,(char)src_0_location->v_data_ptr);
+    break;
+  case c_bi_class_integer:
+    gmp_c::mpz_set_lli(*mpz_ptr,(long long int)src_0_location->v_data_ptr);
+    break;
+  case c_bi_class_float:
+    mpz_set_d(*mpz_ptr,(double)src_0_location->v_data_ptr);
+    break;
+  case c_bi_class_string:
+
+    // - ERROR -
+    if (mpz_set_str(*mpz_ptr,((string_s *)src_0_location->v_data_ptr)->data,0))
+    {
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GMP_INTEGER_CONVERT_INVALID_STRING,operands[c_source_pos_idx],src_0_location);
+      new_exception->params.push(0);
+
+      return false;
+    }
+    break;
+  default:
+    if (src_0_location->v_type == c_bi_class_gmp_integer)
+    {
+      mpz_set(*mpz_ptr,*((mpz_t *)src_0_location->v_data_ptr));
+    }
+    else if (src_0_location->v_type == c_bi_class_gmp_rational)
+    {
+      mpz_set_q(*mpz_ptr,*((mpq_t *)src_0_location->v_data_ptr));
+    }
+    else if (src_0_location->v_type == c_bi_class_gmp_fixed_point)
+    {
+      mpz_set_f(*mpz_ptr,*((mpf_t *)src_0_location->v_data_ptr));
+    }
+    else
+    {
+      // - ERROR -
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      BIC_EXCEPTION_PUSH_METHOD_RI("GmpInteger#1");
+      new_exception->params.push(1);
+      new_exception->params.push(src_0_location->v_type);
+
+      return false;
+    }
+  }
+
+  return true;
 }/*}}}*/
 
 bool bic_gmp_integer_method_GmpInteger_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)

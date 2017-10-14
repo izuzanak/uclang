@@ -18,6 +18,7 @@ class gmp_c
   inline ~gmp_c();
 
   static void setf(string_s &a_target,const char *a_format,...);
+  static void mpz_set_lli(mpz_t &a_mpz,long long int a_value);
 };
 
 /*
