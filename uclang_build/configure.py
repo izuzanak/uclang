@@ -24,6 +24,7 @@ c_packages = [
   ["MOD_PARSER"    ,"true"      ,[]],
   ["MOD_MATH"      ,"dirs"      ,["/usr/include/glm"]],
   ["MOD_GSL"       ,"pkg-config",["gsl >= 2.1"]],
+  ["MOD_GMP"       ,"files"     ,["/usr/include/i386-linux-gnu/gmp.h"]],
   ["MOD_PSQL"      ,"pkg-config",["libpq >= 9.4.1"]],
   ["MOD_SQLITE"    ,"pkg-config",["sqlite3 >= 3.8.7.1"]],
   ["MOD_HTTP"      ,"pkg-config",["libmicrohttpd >= 0.9.37"]],
