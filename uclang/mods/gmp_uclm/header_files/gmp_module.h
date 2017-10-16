@@ -21,7 +21,7 @@ extern built_in_class_s *gmp_classes[];
 // - GMP error identifiers -
 enum
 {
-  c_error_GMP_INTEGER_BASE_OUT_OF_RANGE = 0,
+  c_error_GMP_NUMBER_BASE_OUT_OF_RANGE = 0,
   c_error_GMP_NUMBER_CONVERT_INVALID_STRING,
 };
 
@@ -54,11 +54,13 @@ extern built_in_class_s gmp_integer_class;
 void bic_gmp_integer_consts(location_array_s &const_locations);
 void bic_gmp_integer_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_gmp_integer_clear(interpreter_thread_s &it,location_s *location_ptr);
+int bic_gmp_integer_compare(location_s *first_loc,location_s *second_loc);
 
 bool bic_gmp_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_integer_method_GmpInteger_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_integer_method_GmpInteger_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_integer_method_GmpInteger_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gmp_integer_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_integer_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_integer_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -70,11 +72,13 @@ extern built_in_class_s gmp_rational_class;
 void bic_gmp_rational_consts(location_array_s &const_locations);
 void bic_gmp_rational_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_gmp_rational_clear(interpreter_thread_s &it,location_s *location_ptr);
+int bic_gmp_rational_compare(location_s *first_loc,location_s *second_loc);
 
 bool bic_gmp_rational_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_rational_method_GmpRational_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_rational_method_GmpRational_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_rational_method_GmpRational_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gmp_rational_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_rational_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_rational_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -86,10 +90,13 @@ extern built_in_class_s gmp_fixed_point_class;
 void bic_gmp_fixed_point_consts(location_array_s &const_locations);
 void bic_gmp_fixed_point_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_gmp_fixed_point_clear(interpreter_thread_s &it,location_s *location_ptr);
+int bic_gmp_fixed_point_compare(location_s *first_loc,location_s *second_loc);
 
 bool bic_gmp_fixed_point_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_fixed_point_method_GmpFixedPoint_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_fixed_point_method_GmpFixedPoint_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gmp_fixed_point_method_GmpFixedPoint_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gmp_fixed_point_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_fixed_point_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_fixed_point_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

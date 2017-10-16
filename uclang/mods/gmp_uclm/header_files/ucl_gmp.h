@@ -20,6 +20,8 @@ class gmp_c
   static void setf(string_s &a_target,const char *a_format,...);
   static void mpz_set_lli(mpz_t &a_mpz,long long int a_value);
   static void mpq_set_lli(mpq_t &a_mpq,long long int a_value);
+  static void mpq_set_lli_lli(mpq_t &a_mpq,long long int a_value,long long int a_denom);
+  static void mpf_set_lli(mpf_t &a_mpf,long long int a_value);
 };
 
 /*
