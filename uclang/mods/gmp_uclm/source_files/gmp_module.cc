@@ -196,8 +196,8 @@ built_in_class_s gmp_integer_class =
   nullptr,
   nullptr,
   nullptr,
-  nullptr,
-  nullptr,
+  bic_gmp_integer_pack,
+  bic_gmp_integer_unpack,
   nullptr,
   nullptr
 };/*}}}*/
@@ -269,6 +269,62 @@ int bic_gmp_integer_compare(location_s *first_loc,location_s *second_loc)
   mpz_t *second_ptr = (mpz_t *)second_loc->v_data_ptr;
 
   return mpz_cmp(*first_ptr,*second_ptr);
+}/*}}}*/
+
+bool bic_gmp_integer_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack)
+{/*{{{*/
+  mpz_t *mpz_ptr = (mpz_t *)location_ptr->v_data_ptr;
+
+  size_t count;
+  stream.reserve((mpz_sizeinbase(*mpz_ptr,2) + 7)/8);
+  mpz_export(stream.data + stream.used,&count,1,1,1,0,*mpz_ptr);
+  stream.used += count;
+
+  // - store number sign -
+  if (count > 0)
+  {
+    stream.push(mpz_sgn(*mpz_ptr));
+  }
+
+  stream.append(sizeof(size_t),(const char *)&count);
+
+  return true;
+}/*}}}*/
+
+bool bic_gmp_integer_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack,bool order_bytes,unsigned source_pos)
+{/*{{{*/
+  mpz_t *mpz_ptr = (mpz_t *)cmalloc(sizeof(mpz_t));
+  mpz_init(*mpz_ptr);
+  location_ptr->v_data_ptr = mpz_ptr;
+
+  if (stream.used < sizeof(size_t))
+  {
+    return false;
+  }
+
+  size_t count;
+  stream.from_end(sizeof(size_t),(char *)&count,order_bytes);
+
+  if (count > 0)
+  {
+    if (stream.used < sizeof(char) + count)
+    {
+      return false;
+    }
+
+    char sign = stream.pop();
+
+    mpz_import(*mpz_ptr,count,1,1,1,0,stream.data + (stream.used - count));
+    stream.used -= count;
+
+    // - apply negative sign -
+    if (sign < 0)
+    {
+      mpz_neg(*mpz_ptr,*mpz_ptr);
+    }
+  }
+
+  return true;
 }/*}}}*/
 
 bool bic_gmp_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -564,7 +620,7 @@ bool bic_gmp_rational_method_GmpRational_0(interpreter_thread_s &it,unsigned sta
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  mpq_set_d(*((mpq_t *)dst_location->v_data_ptr),0.0);
+  mpq_set_si(*((mpq_t *)dst_location->v_data_ptr),0,1);
 
   return true;
 }/*}}}*/
