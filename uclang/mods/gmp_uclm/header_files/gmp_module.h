@@ -75,6 +75,8 @@ void bic_gmp_rational_consts(location_array_s &const_locations);
 void bic_gmp_rational_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_gmp_rational_clear(interpreter_thread_s &it,location_s *location_ptr);
 int bic_gmp_rational_compare(location_s *first_loc,location_s *second_loc);
+bool bic_gmp_rational_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack);
+bool bic_gmp_rational_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack,bool order_bytes,unsigned source_pos);
 
 bool bic_gmp_rational_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_rational_method_GmpRational_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

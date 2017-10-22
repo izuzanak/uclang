@@ -527,8 +527,8 @@ built_in_class_s gmp_rational_class =
   nullptr,
   nullptr,
   nullptr,
-  nullptr,
-  nullptr,
+  bic_gmp_rational_pack,
+  bic_gmp_rational_unpack,
   nullptr,
   nullptr
 };/*}}}*/
@@ -600,6 +600,86 @@ int bic_gmp_rational_compare(location_s *first_loc,location_s *second_loc)
   mpq_t *second_ptr = (mpq_t *)second_loc->v_data_ptr;
 
   return mpq_cmp(*first_ptr,*second_ptr);
+}/*}}}*/
+
+bool bic_gmp_rational_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack)
+{/*{{{*/
+  mpq_t *mpq_ptr = (mpq_t *)location_ptr->v_data_ptr;
+
+  // - store numerator -
+  size_t num_count;
+  stream.reserve((mpz_sizeinbase(mpq_numref(*mpq_ptr),2) + 7)/8);
+  mpz_export(stream.data + stream.used,&num_count,1,1,1,0,mpq_numref(*mpq_ptr));
+  stream.used += num_count;
+
+  // - store number sign -
+  if (num_count > 0)
+  {
+    stream.push(mpz_sgn(mpq_numref(*mpq_ptr)));
+
+    // - store denominator -
+    size_t den_count;
+    stream.reserve((mpz_sizeinbase(mpq_denref(*mpq_ptr),2) + 7)/8);
+    mpz_export(stream.data + stream.used,&den_count,1,1,1,0,mpq_denref(*mpq_ptr));
+    stream.used += den_count;
+
+    stream.append(sizeof(size_t),(const char *)&den_count);
+  }
+
+  stream.append(sizeof(size_t),(const char *)&num_count);
+
+  return true;
+}/*}}}*/
+
+bool bic_gmp_rational_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack,bool order_bytes,unsigned source_pos)
+{/*{{{*/
+  mpq_t *mpq_ptr = (mpq_t *)cmalloc(sizeof(mpq_t));
+  mpq_init(*mpq_ptr);
+  location_ptr->v_data_ptr = mpq_ptr;
+
+  if (stream.used < sizeof(size_t))
+  {
+    return false;
+  }
+
+  size_t num_count;
+  stream.from_end(sizeof(size_t),(char *)&num_count,order_bytes);
+
+  if (num_count > 0)
+  {
+    if (stream.used < sizeof(size_t) + sizeof(char) + num_count)
+    {
+      return false;
+    }
+
+    size_t den_count;
+    stream.from_end(sizeof(size_t),(char *)&den_count,order_bytes);
+
+    if (stream.used < den_count + sizeof(char) + num_count)
+    {
+      return false;
+    }
+
+    mpz_import(mpq_denref(*mpq_ptr),den_count,1,1,1,0,stream.data + (stream.used - den_count));
+    stream.used -= den_count;
+
+    char sign = stream.pop();
+
+    mpz_import(mpq_numref(*mpq_ptr),num_count,1,1,1,0,stream.data + (stream.used - num_count));
+    stream.used -= num_count;
+
+    // - apply negative sign -
+    if (sign < 0)
+    {
+      mpz_neg(mpq_numref(*mpq_ptr),mpq_numref(*mpq_ptr));
+    }
+  }
+  else
+  {
+    mpq_set_si(*mpq_ptr,0,1);
+  }
+
+  return true;
 }/*}}}*/
 
 bool bic_gmp_rational_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
