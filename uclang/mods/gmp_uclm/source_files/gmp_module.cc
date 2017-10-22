@@ -192,7 +192,7 @@ built_in_class_s gmp_integer_class =
 {/*{{{*/
   "GmpInteger",
   c_modifier_public | c_modifier_final,
-  7, gmp_integer_methods,
+  11, gmp_integer_methods,
   0, gmp_integer_variables,
   bic_gmp_integer_consts,
   bic_gmp_integer_init,
@@ -216,6 +216,26 @@ built_in_method_s gmp_integer_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_gmp_integer_operator_binary_equal
+  },
+  {
+    "operator_binary_plus_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_gmp_integer_operator_binary_plus_equal
+  },
+  {
+    "operator_binary_minus_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_gmp_integer_operator_binary_minus_equal
+  },
+  {
+    "operator_binary_asterisk_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_gmp_integer_operator_binary_asterisk_equal
+  },
+  {
+    "operator_binary_slash_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_gmp_integer_operator_binary_slash_equal
   },
   {
     "GmpInteger#0",
@@ -345,6 +365,97 @@ bool bic_gmp_integer_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+#define BIC_GMP_INTEGER_BINARY_EQUAL(OPERATION,NAME) \
+{/*{{{*/\
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+  \
+  mpz_t *res_ptr = (mpz_t *)cmalloc(sizeof(mpz_t));\
+  mpz_init(*res_ptr);\
+  \
+  mpz_t *mpz_ptr = (mpz_t *)((location_s *)dst_location)->v_data_ptr;\
+  \
+  switch (src_0_location->v_type) {\
+  case c_bi_class_char:\
+    gmp_c::OPERATION ## _lli(*res_ptr,*mpz_ptr,(char)src_0_location->v_data_ptr);\
+    break;\
+  case c_bi_class_integer:\
+    gmp_c::OPERATION ## _lli(*res_ptr,*mpz_ptr,(long long int)src_0_location->v_data_ptr);\
+    break;\
+  case c_bi_class_float:\
+    gmp_c::OPERATION ## _lli(*res_ptr,*mpz_ptr,(double)src_0_location->v_data_ptr);\
+    break;\
+  default:\
+    if (src_0_location->v_type == c_bi_class_gmp_integer)\
+    {\
+      OPERATION(*res_ptr,*mpz_ptr,*((mpz_t *)src_0_location->v_data_ptr));\
+    }\
+    else if (src_0_location->v_type == c_bi_class_gmp_rational)\
+    {\
+      mpz_set_q(*res_ptr,*((mpq_t *)src_0_location->v_data_ptr));\
+      OPERATION(*res_ptr,*mpz_ptr,*res_ptr);\
+    }\
+    else if (src_0_location->v_type == c_bi_class_mpfr_fixed)\
+    {\
+      mpfr_get_z(*res_ptr,*((mpfr_t *)src_0_location->v_data_ptr),MPFR_RNDD);\
+      \
+      /* - ERROR - */\
+      if (mpfr_erangeflag_p())\
+      {\
+        exception_s::throw_exception(it,module.error_base + c_error_MPFR_RANGE_ERROR_FLAG,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+        return false;\
+      }\
+      \
+      OPERATION(*res_ptr,*mpz_ptr,*res_ptr);\
+    }\
+    else\
+    {\
+      mpz_clear(*res_ptr);\
+      \
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
+      new_exception->params.push(1);\
+      new_exception->params.push(src_0_location->v_type);\
+      \
+      return false;\
+    }\
+  }\
+  \
+  BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_gmp_integer,res_ptr,2);\
+  \
+  BIC_SET_DESTINATION(new_location);\
+  BIC_SET_RESULT(new_location);\
+}/*}}}*/
+
+bool bic_gmp_integer_operator_binary_plus_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_GMP_INTEGER_BINARY_EQUAL(mpz_add,"operator_binary_plus_equal#1");
+
+  return true;
+}/*}}}*/
+
+bool bic_gmp_integer_operator_binary_minus_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_GMP_INTEGER_BINARY_EQUAL(mpz_sub,"operator_binary_minus_equal#1");
+
+  return true;
+}/*}}}*/
+
+bool bic_gmp_integer_operator_binary_asterisk_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_GMP_INTEGER_BINARY_EQUAL(mpz_mul,"operator_binary_asterisk_equal#1");
+
+  return true;
+}/*}}}*/
+
+bool bic_gmp_integer_operator_binary_slash_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_GMP_INTEGER_BINARY_EQUAL(mpz_div,"operator_binary_slash_equal#1");
 
   return true;
 }/*}}}*/
