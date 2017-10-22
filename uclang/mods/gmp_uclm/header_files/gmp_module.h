@@ -10,7 +10,7 @@ include "ucl_gmp.h"
 extern unsigned c_bi_class_gmp;
 extern unsigned c_bi_class_gmp_integer;
 extern unsigned c_bi_class_gmp_rational;
-extern unsigned c_bi_class_gmp_fixed_point;
+extern unsigned c_bi_class_mpfr_fixed;
 
 // - GMP module -
 extern built_in_module_s module;
@@ -87,23 +87,23 @@ bool bic_gmp_rational_method_compare_1(interpreter_thread_s &it,unsigned stack_b
 bool bic_gmp_rational_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_rational_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
-// - class GMP_FIXED_POINT -
-extern built_in_variable_s gmp_fixed_point_variables[];
-extern built_in_method_s gmp_fixed_point_methods[];
-extern built_in_class_s gmp_fixed_point_class;
+// - class MPFR_FIXED -
+extern built_in_variable_s mpfr_fixed_variables[];
+extern built_in_method_s mpfr_fixed_methods[];
+extern built_in_class_s mpfr_fixed_class;
 
-void bic_gmp_fixed_point_consts(location_array_s &const_locations);
-void bic_gmp_fixed_point_init(interpreter_thread_s &it,location_s *location_ptr);
-void bic_gmp_fixed_point_clear(interpreter_thread_s &it,location_s *location_ptr);
-int bic_gmp_fixed_point_compare(location_s *first_loc,location_s *second_loc);
+void bic_mpfr_fixed_consts(location_array_s &const_locations);
+void bic_mpfr_fixed_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_mpfr_fixed_clear(interpreter_thread_s &it,location_s *location_ptr);
+int bic_mpfr_fixed_compare(location_s *first_loc,location_s *second_loc);
 
-bool bic_gmp_fixed_point_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_gmp_fixed_point_method_GmpFixedPoint_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_gmp_fixed_point_method_GmpFixedPoint_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_gmp_fixed_point_method_GmpFixedPoint_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_gmp_fixed_point_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_gmp_fixed_point_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_gmp_fixed_point_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mpfr_fixed_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mpfr_fixed_method_MpfrFixed_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mpfr_fixed_method_MpfrFixed_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mpfr_fixed_method_MpfrFixed_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mpfr_fixed_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mpfr_fixed_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mpfr_fixed_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 

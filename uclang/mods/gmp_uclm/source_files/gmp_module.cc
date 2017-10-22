@@ -7,7 +7,7 @@ include "gmp_module.h"
 unsigned c_bi_class_gmp = c_idx_not_exist;
 unsigned c_bi_class_gmp_integer = c_idx_not_exist;
 unsigned c_bi_class_gmp_rational = c_idx_not_exist;
-unsigned c_bi_class_gmp_fixed_point = c_idx_not_exist;
+unsigned c_bi_class_mpfr_fixed = c_idx_not_exist;
 
 // - GMP module -
 built_in_module_s module =
@@ -29,7 +29,7 @@ built_in_class_s *gmp_classes[] =
   &gmp_class,
   &gmp_integer_class,
   &gmp_rational_class,
-  &gmp_fixed_point_class,
+  &mpfr_fixed_class,
 };/*}}}*/
 
 // - GMP error strings -
@@ -54,8 +54,8 @@ bool gmp_initialize(script_parser_s &sp)
   // - initialize gmp_rational class identifier -
   c_bi_class_gmp_rational = class_base_idx++;
 
-  // - initialize gmp_fixed_point class identifier -
-  c_bi_class_gmp_fixed_point = class_base_idx++;
+  // - initialize mpfr_fixed class identifier -
+  c_bi_class_mpfr_fixed = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -393,7 +393,7 @@ bool bic_gmp_integer_method_GmpInteger_1(interpreter_thread_s &it,unsigned stack
     {
       mpz_set_q(*mpz_ptr,*((mpq_t *)src_0_location->v_data_ptr));
     }
-    else if (src_0_location->v_type == c_bi_class_gmp_fixed_point)
+    else if (src_0_location->v_type == c_bi_class_mpfr_fixed)
     {
       mpfr_get_z(*mpz_ptr,*((mpfr_t *)src_0_location->v_data_ptr),MPFR_RNDD);
 
@@ -762,7 +762,7 @@ bool bic_gmp_rational_method_GmpRational_1(interpreter_thread_s &it,unsigned sta
     {
       mpq_set(*mpq_ptr,*((mpq_t *)src_0_location->v_data_ptr));
     }
-    else if (src_0_location->v_type == c_bi_class_gmp_fixed_point)
+    else if (src_0_location->v_type == c_bi_class_mpfr_fixed)
     {
       mpf_t tmp_mpf;
       mpf_init(tmp_mpf);
@@ -924,17 +924,17 @@ bool bic_gmp_rational_method_print_0(interpreter_thread_s &it,unsigned stack_bas
   return true;
 }/*}}}*/
 
-// - class GMP_FIXED_POINT -
-built_in_class_s gmp_fixed_point_class =
+// - class MPFR_FIXED -
+built_in_class_s mpfr_fixed_class =
 {/*{{{*/
-  "GmpFixedPoint",
+  "MpfrFixed",
   c_modifier_public | c_modifier_final,
-  7, gmp_fixed_point_methods,
-  0, gmp_fixed_point_variables,
-  bic_gmp_fixed_point_consts,
-  bic_gmp_fixed_point_init,
-  bic_gmp_fixed_point_clear,
-  bic_gmp_fixed_point_compare,
+  7, mpfr_fixed_methods,
+  0, mpfr_fixed_variables,
+  bic_mpfr_fixed_consts,
+  bic_mpfr_fixed_init,
+  bic_mpfr_fixed_clear,
+  bic_mpfr_fixed_compare,
   nullptr,
   nullptr,
   nullptr,
@@ -947,68 +947,68 @@ built_in_class_s gmp_fixed_point_class =
   nullptr
 };/*}}}*/
 
-built_in_method_s gmp_fixed_point_methods[] =
+built_in_method_s mpfr_fixed_methods[] =
 {/*{{{*/
   {
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
-    bic_gmp_fixed_point_operator_binary_equal
+    bic_mpfr_fixed_operator_binary_equal
   },
   {
-    "GmpFixedPoint#0",
+    "MpfrFixed#0",
     c_modifier_public | c_modifier_final,
-    bic_gmp_fixed_point_method_GmpFixedPoint_0
+    bic_mpfr_fixed_method_MpfrFixed_0
   },
   {
-    "GmpFixedPoint#1",
+    "MpfrFixed#1",
     c_modifier_public | c_modifier_final,
-    bic_gmp_fixed_point_method_GmpFixedPoint_1
+    bic_mpfr_fixed_method_MpfrFixed_1
   },
   {
-    "GmpFixedPoint#2",
+    "MpfrFixed#2",
     c_modifier_public | c_modifier_final,
-    bic_gmp_fixed_point_method_GmpFixedPoint_2
+    bic_mpfr_fixed_method_MpfrFixed_2
   },
   {
     "compare#1",
     c_modifier_public | c_modifier_final,
-    bic_gmp_fixed_point_method_compare_1
+    bic_mpfr_fixed_method_compare_1
   },
   {
     "to_string#0",
     c_modifier_public | c_modifier_final,
-    bic_gmp_fixed_point_method_to_string_0
+    bic_mpfr_fixed_method_to_string_0
   },
   {
     "print#0",
     c_modifier_public | c_modifier_final,
-    bic_gmp_fixed_point_method_print_0
+    bic_mpfr_fixed_method_print_0
   },
 };/*}}}*/
 
-built_in_variable_s gmp_fixed_point_variables[] =
+built_in_variable_s mpfr_fixed_variables[] =
 {/*{{{*/
 };/*}}}*/
 
-void bic_gmp_fixed_point_consts(location_array_s &const_locations)
+void bic_mpfr_fixed_consts(location_array_s &const_locations)
 {/*{{{*/
 }/*}}}*/
 
-void bic_gmp_fixed_point_init(interpreter_thread_s &it,location_s *location_ptr)
+void bic_mpfr_fixed_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   mpfr_t *mpfr_ptr = (mpfr_t *)cmalloc(sizeof(mpfr_t));
   mpfr_init(*mpfr_ptr);
   location_ptr->v_data_ptr = mpfr_ptr;
 }/*}}}*/
 
-void bic_gmp_fixed_point_clear(interpreter_thread_s &it,location_s *location_ptr)
+void bic_mpfr_fixed_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   mpfr_t *mpfr_ptr = (mpfr_t *)location_ptr->v_data_ptr;
   mpfr_clear(*mpfr_ptr);
   cfree(mpfr_ptr);
 }/*}}}*/
 
-int bic_gmp_fixed_point_compare(location_s *first_loc,location_s *second_loc)
+int bic_mpfr_fixed_compare(location_s *first_loc,location_s *second_loc)
 {/*{{{*/
   mpfr_t *first_ptr = (mpfr_t *)first_loc->v_data_ptr;
   mpfr_t *second_ptr = (mpfr_t *)second_loc->v_data_ptr;
@@ -1016,7 +1016,7 @@ int bic_gmp_fixed_point_compare(location_s *first_loc,location_s *second_loc)
   return mpfr_cmp(*first_ptr,*second_ptr);
 }/*}}}*/
 
-bool bic_gmp_fixed_point_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_mpfr_fixed_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -1030,7 +1030,7 @@ bool bic_gmp_fixed_point_operator_binary_equal(interpreter_thread_s &it,unsigned
   return true;
 }/*}}}*/
 
-bool bic_gmp_fixed_point_method_GmpFixedPoint_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_mpfr_fixed_method_MpfrFixed_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
@@ -1039,7 +1039,7 @@ bool bic_gmp_fixed_point_method_GmpFixedPoint_0(interpreter_thread_s &it,unsigne
   return true;
 }/*}}}*/
 
-bool bic_gmp_fixed_point_method_GmpFixedPoint_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_mpfr_fixed_method_MpfrFixed_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
@@ -1063,7 +1063,7 @@ bool bic_gmp_fixed_point_method_GmpFixedPoint_1(interpreter_thread_s &it,unsigne
     if (mpfr_set_str(*mpfr_ptr,((string_s *)src_0_location->v_data_ptr)->data,0,MPFR_RNDD))
     {
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GMP_NUMBER_CONVERT_INVALID_STRING,operands[c_source_pos_idx],src_0_location);
-      new_exception->params.push(c_bi_class_gmp_fixed_point);
+      new_exception->params.push(c_bi_class_mpfr_fixed);
       new_exception->params.push(0);
 
       return false;
@@ -1078,7 +1078,7 @@ bool bic_gmp_fixed_point_method_GmpFixedPoint_1(interpreter_thread_s &it,unsigne
     {
       mpfr_set_q(*mpfr_ptr,*((mpq_t *)src_0_location->v_data_ptr),MPFR_RNDD);
     }
-    else if (src_0_location->v_type == c_bi_class_gmp_fixed_point)
+    else if (src_0_location->v_type == c_bi_class_mpfr_fixed)
     {
       mpfr_set(*mpfr_ptr,*((mpfr_t *)src_0_location->v_data_ptr),MPFR_RNDD);
     }
@@ -1086,7 +1086,7 @@ bool bic_gmp_fixed_point_method_GmpFixedPoint_1(interpreter_thread_s &it,unsigne
     {
       // - ERROR -
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-      BIC_EXCEPTION_PUSH_METHOD_RI("GmpFixedPoint#1");
+      BIC_EXCEPTION_PUSH_METHOD_RI("MpfrFixed#1");
       new_exception->params.push(1);
       new_exception->params.push(src_0_location->v_type);
 
@@ -1097,7 +1097,7 @@ bool bic_gmp_fixed_point_method_GmpFixedPoint_1(interpreter_thread_s &it,unsigne
   return true;
 }/*}}}*/
 
-bool bic_gmp_fixed_point_method_GmpFixedPoint_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_mpfr_fixed_method_MpfrFixed_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
@@ -1110,7 +1110,7 @@ bool bic_gmp_fixed_point_method_GmpFixedPoint_2(interpreter_thread_s &it,unsigne
     if (src_1_location->v_type != c_bi_class_integer)
     {
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-      BIC_EXCEPTION_PUSH_METHOD_RI("GmpFixedPoint#2");
+      BIC_EXCEPTION_PUSH_METHOD_RI("MpfrFixed#2");
       new_exception->params.push(2);
       new_exception->params.push(src_0_location->v_type);
       new_exception->params.push(src_1_location->v_type);
@@ -1124,7 +1124,7 @@ bool bic_gmp_fixed_point_method_GmpFixedPoint_2(interpreter_thread_s &it,unsigne
     if (base < 2 || base > 62)
     {
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GMP_NUMBER_BASE_OUT_OF_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-      new_exception->params.push(c_bi_class_gmp_fixed_point);
+      new_exception->params.push(c_bi_class_mpfr_fixed);
       new_exception->params.push(base);
 
       return false;
@@ -1134,7 +1134,7 @@ bool bic_gmp_fixed_point_method_GmpFixedPoint_2(interpreter_thread_s &it,unsigne
     if (mpfr_set_str(*((mpfr_t *)dst_location->v_data_ptr),string_ptr->data,base,MPFR_RNDD))
     {
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GMP_NUMBER_CONVERT_INVALID_STRING,operands[c_source_pos_idx],src_0_location);
-      new_exception->params.push(c_bi_class_gmp_fixed_point);
+      new_exception->params.push(c_bi_class_mpfr_fixed);
       new_exception->params.push(base);
 
       return false;
@@ -1145,7 +1145,7 @@ bool bic_gmp_fixed_point_method_GmpFixedPoint_2(interpreter_thread_s &it,unsigne
   // - ERROR -
   default:
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("GmpFixedPoint#2");
+    BIC_EXCEPTION_PUSH_METHOD_RI("MpfrFixed#2");
     new_exception->params.push(2);
     new_exception->params.push(src_0_location->v_type);
     new_exception->params.push(src_1_location->v_type);
@@ -1156,7 +1156,7 @@ bool bic_gmp_fixed_point_method_GmpFixedPoint_2(interpreter_thread_s &it,unsigne
   return true;
 }/*}}}*/
 
-bool bic_gmp_fixed_point_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_mpfr_fixed_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -1164,7 +1164,7 @@ bool bic_gmp_fixed_point_method_compare_1(interpreter_thread_s &it,unsigned stac
 
   long long int result;
 
-  if (src_0_location->v_type == c_bi_class_gmp_fixed_point)
+  if (src_0_location->v_type == c_bi_class_mpfr_fixed)
   {
     mpfr_t *first_ptr = (mpfr_t *)dst_location->v_data_ptr;
     mpfr_t *second_ptr = (mpfr_t *)src_0_location->v_data_ptr;
@@ -1173,7 +1173,7 @@ bool bic_gmp_fixed_point_method_compare_1(interpreter_thread_s &it,unsigned stac
   }
   else
   {
-    result = c_bi_class_gmp_fixed_point < src_0_location->v_type ? -1 : 1;
+    result = c_bi_class_mpfr_fixed < src_0_location->v_type ? -1 : 1;
   }
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
@@ -1181,7 +1181,7 @@ bool bic_gmp_fixed_point_method_compare_1(interpreter_thread_s &it,unsigned stac
   return true;
 }/*}}}*/
 
-bool bic_gmp_fixed_point_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_mpfr_fixed_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING(
     gmp_c::mpfr_setf(*string_ptr,"%Rf",*((mpf_t *)dst_location->v_data_ptr))
@@ -1190,7 +1190,7 @@ bool bic_gmp_fixed_point_method_to_string_0(interpreter_thread_s &it,unsigned st
   return true;
 }/*}}}*/
 
-bool bic_gmp_fixed_point_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_mpfr_fixed_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
