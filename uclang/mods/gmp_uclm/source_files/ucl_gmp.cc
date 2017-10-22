@@ -6,7 +6,7 @@ include "ucl_gmp.h"
 // - gmp global init object -
 gmp_c g_gmp;
 
-void gmp_c::setf(string_s &a_target,const char *a_format,...)
+void gmp_c::mpfr_setf(string_s &a_target,const char *a_format,...)
 {/*{{{*/
   a_target.clear();
 
@@ -16,7 +16,7 @@ void gmp_c::setf(string_s &a_target,const char *a_format,...)
   a_target.data = (char *)cmalloc(init_size*sizeof(char));
 
   va_start(ap,a_format);
-  int length = gmp_vsnprintf(a_target.data,init_size,a_format,ap);
+  int length = mpfr_vsnprintf(a_target.data,init_size,a_format,ap);
   va_end(ap);
 
   a_target.size = length + 1;
@@ -27,7 +27,7 @@ void gmp_c::setf(string_s &a_target,const char *a_format,...)
     a_target.data = (char *)cmalloc(a_target.size*sizeof(char));
 
     va_start(ap,a_format);
-    gmp_vsnprintf(a_target.data,a_target.size,a_format,ap);
+    mpfr_vsnprintf(a_target.data,a_target.size,a_format,ap);
     va_end(ap);
   }
 }/*}}}*/
@@ -109,6 +109,24 @@ void gmp_c::mpf_set_lli(mpf_t &a_mpf,long long int a_value)
     char buffer[32];
     snprintf(buffer,32,"%" HOST_LL_FORMAT "d",a_value);
     mpf_set_str(a_mpf,buffer,10);
+  }
+}/*}}}*/
+
+void gmp_c::mpfr_set_lli(mpfr_t &a_mpfr,long long int a_value)
+{/*{{{*/
+  if (a_value >= LONG_MIN && a_value <= LONG_MAX)
+  {
+    mpfr_set_si(a_mpfr,a_value,MPFR_RNDD);
+  }
+  else if (a_value >= 0 && a_value <= ULONG_MAX)
+  {
+    mpfr_set_ui(a_mpfr,a_value,MPFR_RNDD);
+  }
+  else
+  {
+    char buffer[32];
+    snprintf(buffer,32,"%" HOST_LL_FORMAT "d",a_value);
+    mpfr_set_str(a_mpfr,buffer,10,MPFR_RNDD);
   }
 }/*}}}*/
 

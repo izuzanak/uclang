@@ -7,6 +7,7 @@ include "script_parser.h"
 @end
 
 #include <gmp.h>
+#include <mpfr.h>
 
 /*
  * definition of class gmp_c
@@ -17,11 +18,13 @@ class gmp_c
   inline gmp_c();
   inline ~gmp_c();
 
-  static void setf(string_s &a_target,const char *a_format,...);
+  static void mpfr_setf(string_s &a_target,const char *a_format,...);
+
   static void mpz_set_lli(mpz_t &a_mpz,long long int a_value);
   static void mpq_set_lli(mpq_t &a_mpq,long long int a_value);
   static void mpq_set_lli_lli(mpq_t &a_mpq,long long int a_value,long long int a_denom);
   static void mpf_set_lli(mpf_t &a_mpf,long long int a_value);
+  static void mpfr_set_lli(mpfr_t &a_mpfr,long long int a_value);
 };
 
 /*
@@ -37,7 +40,6 @@ inline gmp_c::~gmp_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"gmp_exit()\n"););
 }/*}}}*/
-
 
 #endif
 

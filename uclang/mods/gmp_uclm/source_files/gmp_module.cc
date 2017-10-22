@@ -387,7 +387,15 @@ bool bic_gmp_integer_method_GmpInteger_1(interpreter_thread_s &it,unsigned stack
     }
     else if (src_0_location->v_type == c_bi_class_gmp_fixed_point)
     {
-      mpz_set_f(*mpz_ptr,*((mpf_t *)src_0_location->v_data_ptr));
+      mpfr_get_z(*mpz_ptr,*((mpfr_t *)src_0_location->v_data_ptr),MPFR_RNDD);
+
+      // - ERROR -
+      if (mpfr_erangeflag_p())
+      {
+        // FIXME TODO throw proper exception
+        BIC_TODO_ERROR(__FILE__,__LINE__);
+        return false;
+      }
     }
     else
     {
@@ -491,7 +499,7 @@ bool bic_gmp_integer_method_compare_1(interpreter_thread_s &it,unsigned stack_ba
 bool bic_gmp_integer_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING(
-    gmp_c::setf(*string_ptr,"%Zd",*((mpz_t *)dst_location->v_data_ptr))
+    gmp_c::mpfr_setf(*string_ptr,"%Zd",*((mpz_t *)dst_location->v_data_ptr))
   );
 
   return true;
@@ -749,7 +757,22 @@ bool bic_gmp_rational_method_GmpRational_1(interpreter_thread_s &it,unsigned sta
     }
     else if (src_0_location->v_type == c_bi_class_gmp_fixed_point)
     {
-      mpq_set_f(*mpq_ptr,*((mpf_t *)src_0_location->v_data_ptr));
+      mpf_t tmp_mpf;
+      mpf_init(tmp_mpf);
+      mpfr_get_f(tmp_mpf,*((mpfr_t *)src_0_location->v_data_ptr),MPFR_RNDD);
+
+      // - ERROR -
+      if (mpfr_erangeflag_p())
+      {
+        mpf_clear(tmp_mpf);
+
+        // FIXME TODO throw proper exception
+        BIC_TODO_ERROR(__FILE__,__LINE__);
+        return false;
+      }
+
+      mpq_set_f(*mpq_ptr,tmp_mpf);
+      mpf_clear(tmp_mpf);
     }
     else
     {
@@ -876,7 +899,7 @@ bool bic_gmp_rational_method_compare_1(interpreter_thread_s &it,unsigned stack_b
 bool bic_gmp_rational_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING(
-    gmp_c::setf(*string_ptr,"%Qd",*((mpq_t *)dst_location->v_data_ptr))
+    gmp_c::mpfr_setf(*string_ptr,"%Qd",*((mpq_t *)dst_location->v_data_ptr))
   );
 
   return true;
@@ -967,24 +990,24 @@ void bic_gmp_fixed_point_consts(location_array_s &const_locations)
 
 void bic_gmp_fixed_point_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  mpf_t *mpf_ptr = (mpf_t *)cmalloc(sizeof(mpf_t));
-  mpf_init(*mpf_ptr);
-  location_ptr->v_data_ptr = mpf_ptr;
+  mpfr_t *mpfr_ptr = (mpfr_t *)cmalloc(sizeof(mpfr_t));
+  mpfr_init(*mpfr_ptr);
+  location_ptr->v_data_ptr = mpfr_ptr;
 }/*}}}*/
 
 void bic_gmp_fixed_point_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  mpf_t *mpf_ptr = (mpf_t *)location_ptr->v_data_ptr;
-  mpf_clear(*mpf_ptr);
-  cfree(mpf_ptr);
+  mpfr_t *mpfr_ptr = (mpfr_t *)location_ptr->v_data_ptr;
+  mpfr_clear(*mpfr_ptr);
+  cfree(mpfr_ptr);
 }/*}}}*/
 
 int bic_gmp_fixed_point_compare(location_s *first_loc,location_s *second_loc)
 {/*{{{*/
-  mpf_t *first_ptr = (mpf_t *)first_loc->v_data_ptr;
-  mpf_t *second_ptr = (mpf_t *)second_loc->v_data_ptr;
+  mpfr_t *first_ptr = (mpfr_t *)first_loc->v_data_ptr;
+  mpfr_t *second_ptr = (mpfr_t *)second_loc->v_data_ptr;
 
-  return mpf_cmp(*first_ptr,*second_ptr);
+  return mpfr_cmp(*first_ptr,*second_ptr);
 }/*}}}*/
 
 bool bic_gmp_fixed_point_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -1005,7 +1028,7 @@ bool bic_gmp_fixed_point_method_GmpFixedPoint_0(interpreter_thread_s &it,unsigne
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  mpf_set_d(*((mpf_t *)dst_location->v_data_ptr),0.0);
+  mpfr_set_si(*((mpfr_t *)dst_location->v_data_ptr),0,MPFR_RNDD);
 
   return true;
 }/*}}}*/
@@ -1015,23 +1038,23 @@ bool bic_gmp_fixed_point_method_GmpFixedPoint_1(interpreter_thread_s &it,unsigne
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
-  mpf_t *mpf_ptr = (mpf_t *)dst_location->v_data_ptr;
+  mpfr_t *mpfr_ptr = (mpfr_t *)dst_location->v_data_ptr;
 
   switch (src_0_location->v_type)
   {
   case c_bi_class_char:
-    mpf_set_si(*mpf_ptr,(char)src_0_location->v_data_ptr);
+    mpfr_set_si(*mpfr_ptr,(char)src_0_location->v_data_ptr,MPFR_RNDD);
     break;
   case c_bi_class_integer:
-    gmp_c::mpf_set_lli(*mpf_ptr,(long long int)src_0_location->v_data_ptr);
+    gmp_c::mpfr_set_lli(*mpfr_ptr,(long long int)src_0_location->v_data_ptr);
     break;
   case c_bi_class_float:
-    mpf_set_d(*mpf_ptr,(double)src_0_location->v_data_ptr);
+    mpfr_set_d(*mpfr_ptr,(double)src_0_location->v_data_ptr,MPFR_RNDD);
     break;
   case c_bi_class_string:
 
     // - ERROR -
-    if (mpf_set_str(*mpf_ptr,((string_s *)src_0_location->v_data_ptr)->data,0))
+    if (mpfr_set_str(*mpfr_ptr,((string_s *)src_0_location->v_data_ptr)->data,0,MPFR_RNDD))
     {
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GMP_NUMBER_CONVERT_INVALID_STRING,operands[c_source_pos_idx],src_0_location);
       new_exception->params.push(c_bi_class_gmp_fixed_point);
@@ -1043,15 +1066,15 @@ bool bic_gmp_fixed_point_method_GmpFixedPoint_1(interpreter_thread_s &it,unsigne
   default:
     if (src_0_location->v_type == c_bi_class_gmp_integer)
     {
-      mpf_set_z(*mpf_ptr,*((mpz_t *)src_0_location->v_data_ptr));
+      mpfr_set_z(*mpfr_ptr,*((mpz_t *)src_0_location->v_data_ptr),MPFR_RNDD);
     }
     else if (src_0_location->v_type == c_bi_class_gmp_rational)
     {
-      mpf_set_q(*mpf_ptr,*((mpq_t *)src_0_location->v_data_ptr));
+      mpfr_set_q(*mpfr_ptr,*((mpq_t *)src_0_location->v_data_ptr),MPFR_RNDD);
     }
     else if (src_0_location->v_type == c_bi_class_gmp_fixed_point)
     {
-      mpf_set(*mpf_ptr,*((mpf_t *)src_0_location->v_data_ptr));
+      mpfr_set(*mpfr_ptr,*((mpfr_t *)src_0_location->v_data_ptr),MPFR_RNDD);
     }
     else
     {
@@ -1102,7 +1125,7 @@ bool bic_gmp_fixed_point_method_GmpFixedPoint_2(interpreter_thread_s &it,unsigne
     }
 
     // - ERROR -
-    if (mpf_set_str(*((mpf_t *)dst_location->v_data_ptr),string_ptr->data,base))
+    if (mpfr_set_str(*((mpfr_t *)dst_location->v_data_ptr),string_ptr->data,base,MPFR_RNDD))
     {
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GMP_NUMBER_CONVERT_INVALID_STRING,operands[c_source_pos_idx],src_0_location);
       new_exception->params.push(c_bi_class_gmp_fixed_point);
@@ -1137,10 +1160,10 @@ bool bic_gmp_fixed_point_method_compare_1(interpreter_thread_s &it,unsigned stac
 
   if (src_0_location->v_type == c_bi_class_gmp_fixed_point)
   {
-    mpf_t *first_ptr = (mpf_t *)dst_location->v_data_ptr;
-    mpf_t *second_ptr = (mpf_t *)src_0_location->v_data_ptr;
+    mpfr_t *first_ptr = (mpfr_t *)dst_location->v_data_ptr;
+    mpfr_t *second_ptr = (mpfr_t *)src_0_location->v_data_ptr;
 
-    result = mpf_cmp(*first_ptr,*second_ptr);
+    result = mpfr_cmp(*first_ptr,*second_ptr);
   }
   else
   {
@@ -1155,7 +1178,7 @@ bool bic_gmp_fixed_point_method_compare_1(interpreter_thread_s &it,unsigned stac
 bool bic_gmp_fixed_point_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING(
-    gmp_c::setf(*string_ptr,"%Ff",*((mpf_t *)dst_location->v_data_ptr))
+    gmp_c::mpfr_setf(*string_ptr,"%Rf",*((mpf_t *)dst_location->v_data_ptr))
   );
 
   return true;
@@ -1167,7 +1190,7 @@ bool bic_gmp_fixed_point_method_print_0(interpreter_thread_s &it,unsigned stack_
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - print value to standard output -
-  gmp_printf("%Ff",*((mpf_t *)dst_location->v_data_ptr));
+  mpfr_out_str(stdout,10,0,*((mpfr_t *)dst_location->v_data_ptr),MPFR_RNDD);
 
   BIC_SET_RESULT_DESTINATION();
 
