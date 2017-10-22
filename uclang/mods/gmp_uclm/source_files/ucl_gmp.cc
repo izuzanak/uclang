@@ -94,39 +94,3 @@ void gmp_c::mpq_set_lli_lli(mpq_t &a_mpq,long long int a_value,long long int a_d
   mpq_canonicalize(a_mpq);
 }/*}}}*/
 
-void gmp_c::mpf_set_lli(mpf_t &a_mpf,long long int a_value)
-{/*{{{*/
-  if (a_value >= LONG_MIN && a_value <= LONG_MAX)
-  {
-    mpf_set_si(a_mpf,a_value);
-  }
-  else if (a_value >= 0 && a_value <= ULONG_MAX)
-  {
-    mpf_set_ui(a_mpf,a_value);
-  }
-  else
-  {
-    char buffer[32];
-    snprintf(buffer,32,"%" HOST_LL_FORMAT "d",a_value);
-    mpf_set_str(a_mpf,buffer,10);
-  }
-}/*}}}*/
-
-void gmp_c::mpfr_set_lli(mpfr_t &a_mpfr,long long int a_value)
-{/*{{{*/
-  if (a_value >= LONG_MIN && a_value <= LONG_MAX)
-  {
-    mpfr_set_si(a_mpfr,a_value,MPFR_RNDD);
-  }
-  else if (a_value >= 0 && a_value <= ULONG_MAX)
-  {
-    mpfr_set_ui(a_mpfr,a_value,MPFR_RNDD);
-  }
-  else
-  {
-    char buffer[32];
-    snprintf(buffer,32,"%" HOST_LL_FORMAT "d",a_value);
-    mpfr_set_str(a_mpfr,buffer,10,MPFR_RNDD);
-  }
-}/*}}}*/
-

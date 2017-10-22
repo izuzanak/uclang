@@ -16,7 +16,7 @@ built_in_module_s module =
   gmp_classes,         // Classes
 
   0,                   // Error base index
-  2,                   // Error count
+  3,                   // Error count
   gmp_error_strings,   // Error strings
 
   gmp_initialize,      // Initialize function
@@ -37,6 +37,7 @@ const char *gmp_error_strings[] =
 {/*{{{*/
   "error_GMP_NUMBER_BASE_OUT_OF_RANGE",
   "error_GMP_NUMBER_CONVERT_INVALID_STRING",
+  "error_MPFR_RANGE_ERROR_FLAG",
 };/*}}}*/
 
 // - GMP initialize -
@@ -97,6 +98,13 @@ bool gmp_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
   }
   break;
+  case c_error_MPFR_RANGE_ERROR_FLAG:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMPFR, range error flag was set\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   default:
     return false;
   }
@@ -392,8 +400,7 @@ bool bic_gmp_integer_method_GmpInteger_1(interpreter_thread_s &it,unsigned stack
       // - ERROR -
       if (mpfr_erangeflag_p())
       {
-        // FIXME TODO throw proper exception
-        BIC_TODO_ERROR(__FILE__,__LINE__);
+        exception_s::throw_exception(it,module.error_base + c_error_MPFR_RANGE_ERROR_FLAG,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
     }
@@ -766,8 +773,7 @@ bool bic_gmp_rational_method_GmpRational_1(interpreter_thread_s &it,unsigned sta
       {
         mpf_clear(tmp_mpf);
 
-        // FIXME TODO throw proper exception
-        BIC_TODO_ERROR(__FILE__,__LINE__);
+        exception_s::throw_exception(it,module.error_base + c_error_MPFR_RANGE_ERROR_FLAG,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
 
@@ -1046,7 +1052,7 @@ bool bic_gmp_fixed_point_method_GmpFixedPoint_1(interpreter_thread_s &it,unsigne
     mpfr_set_si(*mpfr_ptr,(char)src_0_location->v_data_ptr,MPFR_RNDD);
     break;
   case c_bi_class_integer:
-    gmp_c::mpfr_set_lli(*mpfr_ptr,(long long int)src_0_location->v_data_ptr);
+    mpfr_set_sj(*mpfr_ptr,(long long int)src_0_location->v_data_ptr,MPFR_RNDD);
     break;
   case c_bi_class_float:
     mpfr_set_d(*mpfr_ptr,(double)src_0_location->v_data_ptr,MPFR_RNDD);

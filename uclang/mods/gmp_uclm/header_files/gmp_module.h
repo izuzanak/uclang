@@ -23,6 +23,7 @@ enum
 {
   c_error_GMP_NUMBER_BASE_OUT_OF_RANGE = 0,
   c_error_GMP_NUMBER_CONVERT_INVALID_STRING,
+  c_error_MPFR_RANGE_ERROR_FLAG,
 };
 
 // - GMP error strings -

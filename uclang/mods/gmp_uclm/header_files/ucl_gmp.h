@@ -6,6 +6,7 @@
 include "script_parser.h"
 @end
 
+#include <stdint.h>
 #include <gmp.h>
 #include <mpfr.h>
 
@@ -23,8 +24,6 @@ class gmp_c
   static void mpz_set_lli(mpz_t &a_mpz,long long int a_value);
   static void mpq_set_lli(mpq_t &a_mpq,long long int a_value);
   static void mpq_set_lli_lli(mpq_t &a_mpq,long long int a_value,long long int a_denom);
-  static void mpf_set_lli(mpf_t &a_mpf,long long int a_value);
-  static void mpfr_set_lli(mpfr_t &a_mpfr,long long int a_value);
 };
 
 /*
