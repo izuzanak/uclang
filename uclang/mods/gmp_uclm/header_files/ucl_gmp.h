@@ -26,6 +26,7 @@ class gmp_c
   static void mpz_sub_lli(mpz_t &a_res,mpz_t &a_mpz,long long int a_value);
   static void mpz_mul_lli(mpz_t &a_res,mpz_t &a_mpz,long long int a_value);
   static void mpz_div_lli(mpz_t &a_res,mpz_t &a_mpz,long long int a_value);
+  static void mpz_mod_lli(mpz_t &a_res,mpz_t &a_mpz,long long int a_value);
 
   static void mpq_set_lli(mpq_t &a_mpq,long long int a_value);
   static void mpq_set_lli_lli(mpq_t &a_mpq,long long int a_value,long long int a_denom);

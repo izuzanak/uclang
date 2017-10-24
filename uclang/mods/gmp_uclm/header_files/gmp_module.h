@@ -23,7 +23,8 @@ enum
 {
   c_error_GMP_NUMBER_BASE_OUT_OF_RANGE = 0,
   c_error_GMP_NUMBER_CONVERT_INVALID_STRING,
-  c_error_MPFR_RANGE_ERROR_FLAG,
+  c_error_GMP_NEGATIVE_SHIFT_COUNT,
+  c_error_MPFR_RANGE_ERROR,
 };
 
 // - GMP error strings -
@@ -64,6 +65,9 @@ bool bic_gmp_integer_operator_binary_plus_equal(interpreter_thread_s &it,unsigne
 bool bic_gmp_integer_operator_binary_minus_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_integer_operator_binary_asterisk_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_integer_operator_binary_slash_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gmp_integer_operator_binary_percent_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gmp_integer_operator_binary_double_ls_br_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gmp_integer_operator_binary_double_rs_br_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_integer_method_GmpInteger_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_integer_method_GmpInteger_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_integer_method_GmpInteger_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);

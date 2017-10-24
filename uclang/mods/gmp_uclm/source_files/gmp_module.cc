@@ -16,7 +16,7 @@ built_in_module_s module =
   gmp_classes,         // Classes
 
   0,                   // Error base index
-  3,                   // Error count
+  4,                   // Error count
   gmp_error_strings,   // Error strings
 
   gmp_initialize,      // Initialize function
@@ -37,7 +37,8 @@ const char *gmp_error_strings[] =
 {/*{{{*/
   "error_GMP_NUMBER_BASE_OUT_OF_RANGE",
   "error_GMP_NUMBER_CONVERT_INVALID_STRING",
-  "error_MPFR_RANGE_ERROR_FLAG",
+  "error_GMP_NEGATIVE_SHIFT_COUNT",
+  "error_MPFR_RANGE_ERROR",
 };/*}}}*/
 
 // - GMP initialize -
@@ -98,11 +99,18 @@ bool gmp_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
   }
   break;
-  case c_error_MPFR_RANGE_ERROR_FLAG:
+  case c_error_GMP_NEGATIVE_SHIFT_COUNT:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nMPFR, range error flag was set\n");
+    fprintf(stderr,"\nGmp, negative shift count %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_MPFR_RANGE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMpfr, range error\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -192,7 +200,7 @@ built_in_class_s gmp_integer_class =
 {/*{{{*/
   "GmpInteger",
   c_modifier_public | c_modifier_final,
-  11, gmp_integer_methods,
+  14, gmp_integer_methods,
   0, gmp_integer_variables,
   bic_gmp_integer_consts,
   bic_gmp_integer_init,
@@ -238,6 +246,21 @@ built_in_method_s gmp_integer_methods[] =
     bic_gmp_integer_operator_binary_slash_equal
   },
   {
+    "operator_binary_percent_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_gmp_integer_operator_binary_percent_equal
+  },
+  {
+    "operator_binary_double_ls_br_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_gmp_integer_operator_binary_double_ls_br_equal
+  },
+  {
+    "operator_binary_double_rs_br_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_gmp_integer_operator_binary_double_rs_br_equal
+  },
+  {
     "GmpInteger#0",
     c_modifier_public | c_modifier_final,
     bic_gmp_integer_method_GmpInteger_0
@@ -272,6 +295,134 @@ built_in_method_s gmp_integer_methods[] =
 built_in_variable_s gmp_integer_variables[] =
 {/*{{{*/
 };/*}}}*/
+
+#define BIC_GMP_INTEGER_BINARY_EQUAL(OPERATION,NAME) \
+{/*{{{*/\
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+  \
+  mpz_t *res_ptr = (mpz_t *)cmalloc(sizeof(mpz_t));\
+  mpz_init(*res_ptr);\
+  \
+  mpz_t *mpz_ptr = (mpz_t *)((location_s *)dst_location)->v_data_ptr;\
+  \
+  switch (src_0_location->v_type) {\
+  case c_bi_class_char:\
+    gmp_c::OPERATION ## _lli(*res_ptr,*mpz_ptr,(char)src_0_location->v_data_ptr);\
+    break;\
+  case c_bi_class_integer:\
+    gmp_c::OPERATION ## _lli(*res_ptr,*mpz_ptr,(long long int)src_0_location->v_data_ptr);\
+    break;\
+  case c_bi_class_float:\
+    gmp_c::OPERATION ## _lli(*res_ptr,*mpz_ptr,(double)src_0_location->v_data_ptr);\
+    break;\
+  default:\
+    if (src_0_location->v_type == c_bi_class_gmp_integer)\
+    {\
+      OPERATION(*res_ptr,*mpz_ptr,*((mpz_t *)src_0_location->v_data_ptr));\
+    }\
+    else if (src_0_location->v_type == c_bi_class_gmp_rational)\
+    {\
+      mpz_set_q(*res_ptr,*((mpq_t *)src_0_location->v_data_ptr));\
+      OPERATION(*res_ptr,*mpz_ptr,*res_ptr);\
+    }\
+    else if (src_0_location->v_type == c_bi_class_mpfr_fixed)\
+    {\
+      mpfr_get_z(*res_ptr,*((mpfr_t *)src_0_location->v_data_ptr),MPFR_RNDD);\
+      \
+      /* - ERROR - */\
+      if (mpfr_erangeflag_p())\
+      {\
+        exception_s::throw_exception(it,module.error_base + c_error_MPFR_RANGE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+        return false;\
+      }\
+      \
+      OPERATION(*res_ptr,*mpz_ptr,*res_ptr);\
+    }\
+    else\
+    {\
+      mpz_clear(*res_ptr);\
+      cfree(res_ptr);\
+      \
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
+      new_exception->params.push(1);\
+      new_exception->params.push(src_0_location->v_type);\
+      \
+      return false;\
+    }\
+  }\
+  \
+  BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_gmp_integer,res_ptr,2);\
+  \
+  BIC_SET_DESTINATION(new_location);\
+  BIC_SET_RESULT(new_location);\
+}/*}}}*/
+
+#define BIC_GMP_INTEGER_BINARY_SHIFT_EQUAL(OPERATION,NAME) \
+{/*{{{*/\
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+  \
+  mpz_t *res_ptr = (mpz_t *)cmalloc(sizeof(mpz_t));\
+  mpz_init(*res_ptr);\
+  \
+  mpz_t *mpz_ptr = (mpz_t *)((location_s *)dst_location)->v_data_ptr;\
+  \
+  switch (src_0_location->v_type) {\
+  case c_bi_class_char:\
+  {\
+    char shift_count = (char)src_0_location->v_data_ptr;\
+    if (shift_count < 0)\
+    {\
+      mpz_clear(*res_ptr);\
+      cfree(res_ptr);\
+      \
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GMP_NEGATIVE_SHIFT_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      new_exception->params.push((long long int)shift_count);\
+      \
+      return false;\
+    }\
+    \
+    OPERATION(*res_ptr,*mpz_ptr,shift_count);\
+  }\
+  break;\
+  case c_bi_class_integer:\
+  {\
+    long long int shift_count = (long long int)src_0_location->v_data_ptr;\
+    if (shift_count < 0)\
+    {\
+      mpz_clear(*res_ptr);\
+      cfree(res_ptr);\
+      \
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GMP_NEGATIVE_SHIFT_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      new_exception->params.push(shift_count);\
+      \
+      return false;\
+    }\
+    \
+    OPERATION(*res_ptr,*mpz_ptr,shift_count);\
+  }\
+  break;\
+  default:\
+    mpz_clear(*res_ptr);\
+    cfree(res_ptr);\
+    \
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
+    new_exception->params.push(1);\
+    new_exception->params.push(src_0_location->v_type);\
+    \
+    return false;\
+  }\
+  \
+  BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_gmp_integer,res_ptr,2);\
+  \
+  BIC_SET_DESTINATION(new_location);\
+  BIC_SET_RESULT(new_location);\
+}/*}}}*/
 
 void bic_gmp_integer_consts(location_array_s &const_locations)
 {/*{{{*/
@@ -369,69 +520,6 @@ bool bic_gmp_integer_operator_binary_equal(interpreter_thread_s &it,unsigned sta
   return true;
 }/*}}}*/
 
-#define BIC_GMP_INTEGER_BINARY_EQUAL(OPERATION,NAME) \
-{/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  \
-  mpz_t *res_ptr = (mpz_t *)cmalloc(sizeof(mpz_t));\
-  mpz_init(*res_ptr);\
-  \
-  mpz_t *mpz_ptr = (mpz_t *)((location_s *)dst_location)->v_data_ptr;\
-  \
-  switch (src_0_location->v_type) {\
-  case c_bi_class_char:\
-    gmp_c::OPERATION ## _lli(*res_ptr,*mpz_ptr,(char)src_0_location->v_data_ptr);\
-    break;\
-  case c_bi_class_integer:\
-    gmp_c::OPERATION ## _lli(*res_ptr,*mpz_ptr,(long long int)src_0_location->v_data_ptr);\
-    break;\
-  case c_bi_class_float:\
-    gmp_c::OPERATION ## _lli(*res_ptr,*mpz_ptr,(double)src_0_location->v_data_ptr);\
-    break;\
-  default:\
-    if (src_0_location->v_type == c_bi_class_gmp_integer)\
-    {\
-      OPERATION(*res_ptr,*mpz_ptr,*((mpz_t *)src_0_location->v_data_ptr));\
-    }\
-    else if (src_0_location->v_type == c_bi_class_gmp_rational)\
-    {\
-      mpz_set_q(*res_ptr,*((mpq_t *)src_0_location->v_data_ptr));\
-      OPERATION(*res_ptr,*mpz_ptr,*res_ptr);\
-    }\
-    else if (src_0_location->v_type == c_bi_class_mpfr_fixed)\
-    {\
-      mpfr_get_z(*res_ptr,*((mpfr_t *)src_0_location->v_data_ptr),MPFR_RNDD);\
-      \
-      /* - ERROR - */\
-      if (mpfr_erangeflag_p())\
-      {\
-        exception_s::throw_exception(it,module.error_base + c_error_MPFR_RANGE_ERROR_FLAG,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-        return false;\
-      }\
-      \
-      OPERATION(*res_ptr,*mpz_ptr,*res_ptr);\
-    }\
-    else\
-    {\
-      mpz_clear(*res_ptr);\
-      \
-      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-      BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-      new_exception->params.push(1);\
-      new_exception->params.push(src_0_location->v_type);\
-      \
-      return false;\
-    }\
-  }\
-  \
-  BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_gmp_integer,res_ptr,2);\
-  \
-  BIC_SET_DESTINATION(new_location);\
-  BIC_SET_RESULT(new_location);\
-}/*}}}*/
-
 bool bic_gmp_integer_operator_binary_plus_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_GMP_INTEGER_BINARY_EQUAL(mpz_add,"operator_binary_plus_equal#1");
@@ -456,6 +544,27 @@ bool bic_gmp_integer_operator_binary_asterisk_equal(interpreter_thread_s &it,uns
 bool bic_gmp_integer_operator_binary_slash_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_GMP_INTEGER_BINARY_EQUAL(mpz_div,"operator_binary_slash_equal#1");
+
+  return true;
+}/*}}}*/
+
+bool bic_gmp_integer_operator_binary_percent_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_GMP_INTEGER_BINARY_EQUAL(mpz_mod,"operator_binary_percent_equal#1");
+
+  return true;
+}/*}}}*/
+
+bool bic_gmp_integer_operator_binary_double_ls_br_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_GMP_INTEGER_BINARY_SHIFT_EQUAL(mpz_mul_2exp,"operator_binary_double_ls_br_equal#1");
+
+  return true;
+}/*}}}*/
+
+bool bic_gmp_integer_operator_binary_double_rs_br_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_GMP_INTEGER_BINARY_SHIFT_EQUAL(mpz_div_2exp,"operator_binary_double_rs_br_equal#1");
 
   return true;
 }/*}}}*/
@@ -511,7 +620,7 @@ bool bic_gmp_integer_method_GmpInteger_1(interpreter_thread_s &it,unsigned stack
       // - ERROR -
       if (mpfr_erangeflag_p())
       {
-        exception_s::throw_exception(it,module.error_base + c_error_MPFR_RANGE_ERROR_FLAG,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        exception_s::throw_exception(it,module.error_base + c_error_MPFR_RANGE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
     }
@@ -884,7 +993,7 @@ bool bic_gmp_rational_method_GmpRational_1(interpreter_thread_s &it,unsigned sta
       {
         mpf_clear(tmp_mpf);
 
-        exception_s::throw_exception(it,module.error_base + c_error_MPFR_RANGE_ERROR_FLAG,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        exception_s::throw_exception(it,module.error_base + c_error_MPFR_RANGE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
 
