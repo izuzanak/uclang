@@ -164,8 +164,8 @@ bool bic_mpfr_fixed_operator_binary_plus_equal(interpreter_thread_s &it,unsigned
 bool bic_mpfr_fixed_operator_binary_minus_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mpfr_fixed_operator_binary_asterisk_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mpfr_fixed_operator_binary_slash_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_mpfr_fixed_operator_binary_double_ls_br_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_mpfr_fixed_operator_binary_double_rs_br_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mpfr_fixed_operator_binary_double_ls_br_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mpfr_fixed_operator_binary_double_rs_br_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mpfr_fixed_operator_binary_double_ampersand(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mpfr_fixed_operator_binary_double_pipe(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mpfr_fixed_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -174,12 +174,12 @@ bool bic_mpfr_fixed_operator_binary_rs_br(interpreter_thread_s &it,unsigned stac
 bool bic_mpfr_fixed_operator_binary_ls_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mpfr_fixed_operator_binary_rs_br_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mpfr_fixed_operator_binary_ls_br_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mpfr_fixed_operator_binary_double_rs_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mpfr_fixed_operator_binary_double_ls_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mpfr_fixed_operator_binary_plus(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mpfr_fixed_operator_binary_minus(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mpfr_fixed_operator_binary_asterisk(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mpfr_fixed_operator_binary_slash(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_mpfr_fixed_operator_binary_double_rs_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_mpfr_fixed_operator_binary_double_ls_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mpfr_fixed_operator_unary_post_double_plus(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mpfr_fixed_operator_unary_post_double_minus(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mpfr_fixed_operator_unary_pre_double_plus(interpreter_thread_s &it,unsigned stack_base,uli *operands);
