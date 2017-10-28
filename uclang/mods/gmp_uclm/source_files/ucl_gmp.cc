@@ -6,7 +6,7 @@ include "ucl_gmp.h"
 // - gmp global init object -
 gmp_c g_gmp;
 
-void gmp_c::mpfr_setf(string_s &a_target,const char *a_format,...)
+void gmp_c::setf(string_s &a_target,const char *a_format,...)
 {/*{{{*/
   a_target.clear();
 
@@ -32,7 +32,7 @@ void gmp_c::mpfr_setf(string_s &a_target,const char *a_format,...)
   }
 }/*}}}*/
 
-void gmp_c::mpz_set_lli(mpz_t &a_mpz,long long int a_value)
+void gmp_c::mpz_set_lli(mpz_ptr a_mpz,long long int a_value)
 {/*{{{*/
   if (a_value >= LONG_MIN && a_value <= LONG_MAX)
   {
@@ -50,7 +50,7 @@ void gmp_c::mpz_set_lli(mpz_t &a_mpz,long long int a_value)
   }
 }/*}}}*/
 
-void gmp_c::mpz_add_lli(mpz_t &a_res,mpz_t &a_mpz,long long int a_value)
+void gmp_c::mpz_add_lli(mpz_ptr a_res,mpz_srcptr a_mpz,long long int a_value)
 {/*{{{*/
   if (a_value >= 0 && a_value <= ULONG_MAX)
   {
@@ -63,7 +63,7 @@ void gmp_c::mpz_add_lli(mpz_t &a_res,mpz_t &a_mpz,long long int a_value)
   }
 }/*}}}*/
 
-void gmp_c::mpz_sub_lli(mpz_t &a_res,mpz_t &a_mpz,long long int a_value)
+void gmp_c::mpz_sub_lli(mpz_ptr a_res,mpz_srcptr a_mpz,long long int a_value)
 {/*{{{*/
   if (a_value >= 0 && a_value <= ULONG_MAX)
   {
@@ -76,7 +76,7 @@ void gmp_c::mpz_sub_lli(mpz_t &a_res,mpz_t &a_mpz,long long int a_value)
   }
 }/*}}}*/
 
-void gmp_c::mpz_mul_lli(mpz_t &a_res,mpz_t &a_mpz,long long int a_value)
+void gmp_c::mpz_mul_lli(mpz_ptr a_res,mpz_srcptr a_mpz,long long int a_value)
 {/*{{{*/
   if (a_value >= LONG_MIN && a_value <= LONG_MAX)
   {
@@ -93,7 +93,7 @@ void gmp_c::mpz_mul_lli(mpz_t &a_res,mpz_t &a_mpz,long long int a_value)
   }
 }/*}}}*/
 
-void gmp_c::mpz_div_lli(mpz_t &a_res,mpz_t &a_mpz,long long int a_value)
+void gmp_c::mpz_div_lli(mpz_ptr a_res,mpz_srcptr a_mpz,long long int a_value)
 {/*{{{*/
   if (a_value >= 0 && a_value <= ULONG_MAX)
   {
@@ -106,7 +106,7 @@ void gmp_c::mpz_div_lli(mpz_t &a_res,mpz_t &a_mpz,long long int a_value)
   }
 }/*}}}*/
 
-void gmp_c::mpz_mod_lli(mpz_t &a_res,mpz_t &a_mpz,long long int a_value)
+void gmp_c::mpz_mod_lli(mpz_ptr a_res,mpz_srcptr a_mpz,long long int a_value)
 {/*{{{*/
   if (a_value >= 0 && a_value <= ULONG_MAX)
   {
@@ -119,7 +119,28 @@ void gmp_c::mpz_mod_lli(mpz_t &a_res,mpz_t &a_mpz,long long int a_value)
   }
 }/*}}}*/
 
-void gmp_c::mpq_set_lli(mpq_t &a_mpq,long long int a_value)
+int gmp_c::mpz_cmp_lli(mpz_ptr a_mpz,long long int a_value)
+{/*{{{*/
+  if (a_value >= LONG_MIN && a_value <= LONG_MAX)
+  {
+    return mpz_cmp_si(a_mpz,a_value);
+  }
+
+  if (a_value >= 0 && a_value <= ULONG_MAX)
+  {
+    return mpz_cmp_ui(a_mpz,a_value);
+  }
+
+  mpz_t tmp_mpz;
+  mpz_init(tmp_mpz);
+  mpz_set_lli(tmp_mpz,a_value);
+  int result = mpz_cmp(a_mpz,tmp_mpz);
+  mpz_clear(tmp_mpz);
+
+  return result;
+}/*}}}*/
+
+void gmp_c::mpq_set_lli(mpq_ptr a_mpq,long long int a_value)
 {/*{{{*/
   if (a_value >= LONG_MIN && a_value <= LONG_MAX)
   {
@@ -137,7 +158,7 @@ void gmp_c::mpq_set_lli(mpq_t &a_mpq,long long int a_value)
   }
 }/*}}}*/
 
-void gmp_c::mpq_set_lli_lli(mpq_t &a_mpq,long long int a_value,long long int a_denom)
+void gmp_c::mpq_set_lli_lli(mpq_ptr a_mpq,long long int a_value,long long int a_denom)
 {/*{{{*/
   do
   {
@@ -161,5 +182,157 @@ void gmp_c::mpq_set_lli_lli(mpq_t &a_mpq,long long int a_value,long long int a_d
   } while(0);
 
   mpq_canonicalize(a_mpq);
+}/*}}}*/
+
+void gmp_c::mpq_add_lli(mpq_ptr a_res,mpq_srcptr a_mpq,long long int a_value)
+{/*{{{*/
+  if (a_value >= 0 && a_value <= ULONG_MAX)
+  {
+    mpq_set(a_res,a_mpq);
+    mpz_addmul_ui(mpq_numref(a_res),mpq_denref(a_res),a_value);
+  }
+  else
+  {
+    mpq_set_lli(a_res,a_value);
+    mpq_add(a_res,a_mpq,a_res);
+  }
+}/*}}}*/
+
+void gmp_c::mpq_sub_lli(mpq_ptr a_res,mpq_srcptr a_mpq,long long int a_value)
+{/*{{{*/
+  if (a_value >= 0 && a_value <= ULONG_MAX)
+  {
+    mpq_set(a_res,a_mpq);
+    mpz_submul_ui(mpq_numref(a_res),mpq_denref(a_res),a_value);
+  }
+  else
+  {
+    mpq_set_lli(a_res,a_value);
+    mpq_sub(a_res,a_mpq,a_res);
+  }
+}/*}}}*/
+
+void gmp_c::mpq_mul_lli(mpq_ptr a_res,mpq_srcptr a_mpq,long long int a_value)
+{/*{{{*/
+  mpz_mul_lli(mpq_numref(a_res),mpq_numref(a_mpq),a_value);
+  mpz_set(mpq_denref(a_res),mpq_denref(a_mpq));
+  mpq_canonicalize(a_res);
+}/*}}}*/
+
+void gmp_c::mpq_mul_z(mpq_ptr a_res,mpq_srcptr a_mpq,mpz_srcptr a_mpz)
+{/*{{{*/
+  mpz_mul(mpq_numref(a_res),mpq_numref(a_mpq),a_mpz);
+  mpz_set(mpq_denref(a_res),mpq_denref(a_mpq));
+  mpq_canonicalize(a_res);
+}/*}}}*/
+
+int gmp_c::mpq_cmp_lli(mpq_ptr a_mpq,long long int a_value)
+{/*{{{*/
+  if (a_value >= LONG_MIN && a_value <= LONG_MAX)
+  {
+    return mpq_cmp_si(a_mpq,a_value,1);
+  }
+
+  if (a_value >= 0 && a_value <= ULONG_MAX)
+  {
+    return mpq_cmp_ui(a_mpq,a_value,1);
+  }
+
+  mpz_t tmp_mpz;
+  mpz_init(tmp_mpz);
+  mpz_set_lli(tmp_mpz,a_value);
+  int result = mpq_cmp_z(a_mpq,tmp_mpz);
+  mpz_clear(tmp_mpz);
+
+  return result;
+}/*}}}*/
+
+void gmp_c::mpfr_add_lli(mpfr_ptr a_res,mpfr_srcptr a_mpfr,long long int a_value,mpfr_rnd_t a_rnd)
+{/*{{{*/
+  if (a_value >= LONG_MIN && a_value <= LONG_MAX)
+  {
+    mpfr_add_si(a_res,a_mpfr,a_value,a_rnd);
+  }
+  else if (a_value >= 0 && a_value <= ULONG_MAX)
+  {
+    mpfr_add_ui(a_res,a_mpfr,a_value,a_rnd);
+  }
+  else
+  {
+    mpfr_set_sj(a_res,a_value,a_rnd);
+    mpfr_add(a_res,a_mpfr,a_res,a_rnd);
+  }
+}/*}}}*/
+
+void gmp_c::mpfr_sub_lli(mpfr_ptr a_res,mpfr_srcptr a_mpfr,long long int a_value,mpfr_rnd_t a_rnd)
+{/*{{{*/
+  if (a_value >= LONG_MIN && a_value <= LONG_MAX)
+  {
+    mpfr_sub_si(a_res,a_mpfr,a_value,a_rnd);
+  }
+  else if (a_value >= 0 && a_value <= ULONG_MAX)
+  {
+    mpfr_sub_ui(a_res,a_mpfr,a_value,a_rnd);
+  }
+  else
+  {
+    mpfr_set_sj(a_res,a_value,a_rnd);
+    mpfr_sub(a_res,a_mpfr,a_res,a_rnd);
+  }
+}/*}}}*/
+
+void gmp_c::mpfr_mul_lli(mpfr_ptr a_res,mpfr_srcptr a_mpfr,long long int a_value,mpfr_rnd_t a_rnd)
+{/*{{{*/
+  if (a_value >= LONG_MIN && a_value <= LONG_MAX)
+  {
+    mpfr_mul_si(a_res,a_mpfr,a_value,a_rnd);
+  }
+  else if (a_value >= 0 && a_value <= ULONG_MAX)
+  {
+    mpfr_mul_ui(a_res,a_mpfr,a_value,a_rnd);
+  }
+  else
+  {
+    mpfr_set_sj(a_res,a_value,a_rnd);
+    mpfr_mul(a_res,a_mpfr,a_res,a_rnd);
+  }
+}/*}}}*/
+
+void gmp_c::mpfr_div_lli(mpfr_ptr a_res,mpfr_srcptr a_mpfr,long long int a_value,mpfr_rnd_t a_rnd)
+{/*{{{*/
+  if (a_value >= LONG_MIN && a_value <= LONG_MAX)
+  {
+    mpfr_div_si(a_res,a_mpfr,a_value,a_rnd);
+  }
+  else if (a_value >= 0 && a_value <= ULONG_MAX)
+  {
+    mpfr_div_ui(a_res,a_mpfr,a_value,a_rnd);
+  }
+  else
+  {
+    mpfr_set_sj(a_res,a_value,a_rnd);
+    mpfr_div(a_res,a_mpfr,a_res,a_rnd);
+  }
+}/*}}}*/
+
+int gmp_c::mpfr_cmp_lli(mpfr_ptr a_mpfr,long long int a_value)
+{/*{{{*/
+  if (a_value >= LONG_MIN && a_value <= LONG_MAX)
+  {
+    return mpfr_cmp_si(a_mpfr,a_value);
+  }
+
+  if (a_value >= 0 && a_value <= ULONG_MAX)
+  {
+    return mpfr_cmp_ui(a_mpfr,a_value);
+  }
+
+  mpz_t tmp_mpz;
+  mpz_init(tmp_mpz);
+  mpz_set_lli(tmp_mpz,a_value);
+  int result = mpfr_cmp_z(a_mpfr,tmp_mpz);
+  mpz_clear(tmp_mpz);
+
+  return result;
 }/*}}}*/
 
