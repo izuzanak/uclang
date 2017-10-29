@@ -3430,7 +3430,7 @@ built_in_class_s mpfr_fixed_class =
 {/*{{{*/
   "MpfrFixed",
   c_modifier_public | c_modifier_final,
-  34, mpfr_fixed_methods,
+  46, mpfr_fixed_methods,
   0, mpfr_fixed_variables,
   bic_mpfr_fixed_consts,
   bic_mpfr_fixed_init,
@@ -3604,6 +3604,66 @@ built_in_method_s mpfr_fixed_methods[] =
     "MpfrFixed#2",
     c_modifier_public | c_modifier_final,
     bic_mpfr_fixed_method_MpfrFixed_2
+  },
+  {
+    "sin#0",
+    c_modifier_public | c_modifier_final,
+    bic_mpfr_fixed_method_sin_0
+  },
+  {
+    "cos#0",
+    c_modifier_public | c_modifier_final,
+    bic_mpfr_fixed_method_cos_0
+  },
+  {
+    "tan#0",
+    c_modifier_public | c_modifier_final,
+    bic_mpfr_fixed_method_tan_0
+  },
+  {
+    "asin#0",
+    c_modifier_public | c_modifier_final,
+    bic_mpfr_fixed_method_asin_0
+  },
+  {
+    "acos#0",
+    c_modifier_public | c_modifier_final,
+    bic_mpfr_fixed_method_acos_0
+  },
+  {
+    "atan#0",
+    c_modifier_public | c_modifier_final,
+    bic_mpfr_fixed_method_atan_0
+  },
+  {
+    "exp#0",
+    c_modifier_public | c_modifier_final,
+    bic_mpfr_fixed_method_exp_0
+  },
+  {
+    "log#0",
+    c_modifier_public | c_modifier_final,
+    bic_mpfr_fixed_method_log_0
+  },
+  {
+    "pow#1",
+    c_modifier_public | c_modifier_final,
+    bic_mpfr_fixed_method_pow_1
+  },
+  {
+    "sqrt#0",
+    c_modifier_public | c_modifier_final,
+    bic_mpfr_fixed_method_sqrt_0
+  },
+  {
+    "cbrt#0",
+    c_modifier_public | c_modifier_final,
+    bic_mpfr_fixed_method_cbrt_0
+  },
+  {
+    "hypot#1",
+    c_modifier_public | c_modifier_final,
+    bic_mpfr_fixed_method_hypot_1
   },
   {
     "compare#1",
@@ -3958,6 +4018,79 @@ built_in_variable_s mpfr_fixed_variables[] =
   BIC_SET_RESULT(new_location);\
 }/*}}}*/
 
+#define BIC_MPFR_FIXED_BINARY_SHIFT(OPERATION,NAME) \
+/*{{{*/\
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
+  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+  \
+  mpfr_t *res_ptr = (mpfr_t *)cmalloc(sizeof(mpfr_t));\
+  mpfr_init(*res_ptr);\
+  \
+  mpfr_t *mpfr_ptr = (mpfr_t *)((location_s *)dst_location)->v_data_ptr;\
+  \
+  switch (src_0_location->v_type) {\
+  case c_bi_class_char:\
+  {\
+    char shift_count = (char)src_0_location->v_data_ptr;\
+    if (shift_count < 0)\
+    {\
+      mpfr_clear(*res_ptr);\
+      cfree(res_ptr);\
+      \
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_NEGATIVE_SHIFT_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      new_exception->params.push((long long int)shift_count);\
+      \
+      return false;\
+    }\
+    \
+    mpfr_ ## OPERATION(*res_ptr,*mpfr_ptr,shift_count,MPFR_RNDD);\
+  }\
+  break;\
+  case c_bi_class_integer:\
+  {\
+    long long int shift_count = (long long int)src_0_location->v_data_ptr;\
+    if (shift_count < 0)\
+    {\
+      mpfr_clear(*res_ptr);\
+      cfree(res_ptr);\
+      \
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_NEGATIVE_SHIFT_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      new_exception->params.push(shift_count);\
+      \
+      return false;\
+    }\
+    \
+    mpfr_ ## OPERATION(*res_ptr,*mpfr_ptr,shift_count,MPFR_RNDD);\
+  }\
+  break;\
+  default:\
+    mpfr_clear(*res_ptr);\
+    cfree(res_ptr);\
+    \
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
+    new_exception->params.push(1);\
+    new_exception->params.push(src_0_location->v_type);\
+    \
+    return false;\
+  }\
+/*}}}*/
+
+#define BIC_MPFR_FIXED_FUNCTION_UNARY(OPERATION) \
+{/*{{{*/\
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  \
+  mpfr_t *res_ptr = (mpfr_t *)cmalloc(sizeof(mpfr_t));\
+  mpfr_init(*res_ptr);\
+  \
+  mpfr_ ## OPERATION(*res_ptr,*((mpfr_t *)dst_location->v_data_ptr),MPFR_RNDD);\
+  \
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_mpfr_fixed,res_ptr);\
+  BIC_SET_RESULT(new_location);\
+}/*}}}*/
+
 void bic_mpfr_fixed_consts(location_array_s &const_locations)
 {/*{{{*/
 }/*}}}*/
@@ -4033,65 +4166,6 @@ bool bic_mpfr_fixed_operator_binary_asterisk_equal(interpreter_thread_s &it,unsi
 
   return true;
 }/*}}}*/
-
-#define BIC_MPFR_FIXED_BINARY_SHIFT(OPERATION,NAME) \
-/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  \
-  mpfr_t *res_ptr = (mpfr_t *)cmalloc(sizeof(mpfr_t));\
-  mpfr_init(*res_ptr);\
-  \
-  mpfr_t *mpfr_ptr = (mpfr_t *)((location_s *)dst_location)->v_data_ptr;\
-  \
-  switch (src_0_location->v_type) {\
-  case c_bi_class_char:\
-  {\
-    char shift_count = (char)src_0_location->v_data_ptr;\
-    if (shift_count < 0)\
-    {\
-      mpfr_clear(*res_ptr);\
-      cfree(res_ptr);\
-      \
-      exception_s *new_exception = exception_s::throw_exception(it,c_error_NEGATIVE_SHIFT_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-      new_exception->params.push((long long int)shift_count);\
-      \
-      return false;\
-    }\
-    \
-    mpfr_ ## OPERATION(*res_ptr,*mpfr_ptr,shift_count,MPFR_RNDD);\
-  }\
-  break;\
-  case c_bi_class_integer:\
-  {\
-    long long int shift_count = (long long int)src_0_location->v_data_ptr;\
-    if (shift_count < 0)\
-    {\
-      mpfr_clear(*res_ptr);\
-      cfree(res_ptr);\
-      \
-      exception_s *new_exception = exception_s::throw_exception(it,c_error_NEGATIVE_SHIFT_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-      new_exception->params.push(shift_count);\
-      \
-      return false;\
-    }\
-    \
-    mpfr_ ## OPERATION(*res_ptr,*mpfr_ptr,shift_count,MPFR_RNDD);\
-  }\
-  break;\
-  default:\
-    mpfr_clear(*res_ptr);\
-    cfree(res_ptr);\
-    \
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-    new_exception->params.push(1);\
-    new_exception->params.push(src_0_location->v_type);\
-    \
-    return false;\
-  }\
-/*}}}*/
 
 bool bic_mpfr_fixed_operator_binary_double_ls_br_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
@@ -4488,6 +4562,191 @@ bool bic_mpfr_fixed_method_MpfrFixed_2(interpreter_thread_s &it,unsigned stack_b
 
     return false;
   }
+
+  return true;
+}/*}}}*/
+
+bool bic_mpfr_fixed_method_sin_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_MPFR_FIXED_FUNCTION_UNARY(sin);
+
+  return true;
+}/*}}}*/
+
+bool bic_mpfr_fixed_method_cos_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_MPFR_FIXED_FUNCTION_UNARY(cos);
+
+  return true;
+}/*}}}*/
+
+bool bic_mpfr_fixed_method_tan_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_MPFR_FIXED_FUNCTION_UNARY(tan);
+
+  return true;
+}/*}}}*/
+
+bool bic_mpfr_fixed_method_asin_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_MPFR_FIXED_FUNCTION_UNARY(asin);
+
+  return true;
+}/*}}}*/
+
+bool bic_mpfr_fixed_method_acos_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_MPFR_FIXED_FUNCTION_UNARY(acos);
+
+  return true;
+}/*}}}*/
+
+bool bic_mpfr_fixed_method_atan_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_MPFR_FIXED_FUNCTION_UNARY(atan);
+
+  return true;
+}/*}}}*/
+
+bool bic_mpfr_fixed_method_exp_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_MPFR_FIXED_FUNCTION_UNARY(exp);
+
+  return true;
+}/*}}}*/
+
+bool bic_mpfr_fixed_method_log_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_MPFR_FIXED_FUNCTION_UNARY(log);
+
+  return true;
+}/*}}}*/
+
+bool bic_mpfr_fixed_method_pow_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  mpfr_t *res_ptr = (mpfr_t *)cmalloc(sizeof(mpfr_t));
+  mpfr_init(*res_ptr);
+
+  mpfr_t *mpfr_ptr = (mpfr_t *)dst_location->v_data_ptr;
+
+  switch (src_0_location->v_type) {
+  case c_bi_class_char:
+    mpfr_pow_si(*res_ptr,*mpfr_ptr,(char)src_0_location->v_data_ptr,MPFR_RNDD);
+    break;
+  case c_bi_class_integer:
+    gmp_c::mpfr_pow_lli(*res_ptr,*mpfr_ptr,(long long int)src_0_location->v_data_ptr,MPFR_RNDD);
+    break;
+  case c_bi_class_float:
+    mpfr_set_d(*res_ptr,(double)src_0_location->v_data_ptr,MPFR_RNDD);
+    mpfr_pow(*res_ptr,*mpfr_ptr,*res_ptr,MPFR_RNDD);
+    break;
+  default:
+    if (src_0_location->v_type == c_bi_class_gmp_integer)
+    {
+      mpfr_pow_z(*res_ptr,*mpfr_ptr,*((mpz_t *)src_0_location->v_data_ptr),MPFR_RNDD);
+    }
+    else if (src_0_location->v_type == c_bi_class_gmp_rational)
+    {
+      mpfr_set_q(*res_ptr,*((mpq_t *)src_0_location->v_data_ptr),MPFR_RNDD);
+      mpfr_pow(*res_ptr,*mpfr_ptr,*res_ptr,MPFR_RNDD);
+    }
+    else if (src_0_location->v_type == c_bi_class_mpfr_fixed)
+    {
+      mpfr_pow(*res_ptr,*mpfr_ptr,*((mpfr_t *)src_0_location->v_data_ptr),MPFR_RNDD);
+    }
+    else
+    {
+      mpfr_clear(*res_ptr);
+      cfree(res_ptr);
+
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      BIC_EXCEPTION_PUSH_METHOD_RI("pow#1");
+      new_exception->params.push(1);
+      new_exception->params.push(src_0_location->v_type);
+
+      return false;
+    }
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_mpfr_fixed,res_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_mpfr_fixed_method_sqrt_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_MPFR_FIXED_FUNCTION_UNARY(sqrt);
+
+  return true;
+}/*}}}*/
+
+bool bic_mpfr_fixed_method_cbrt_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_MPFR_FIXED_FUNCTION_UNARY(cbrt);
+
+  return true;
+}/*}}}*/
+
+bool bic_mpfr_fixed_method_hypot_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  mpfr_t *res_ptr = (mpfr_t *)cmalloc(sizeof(mpfr_t));
+  mpfr_init(*res_ptr);
+
+  mpfr_t *mpfr_ptr = (mpfr_t *)dst_location->v_data_ptr;
+
+  switch (src_0_location->v_type) {
+  case c_bi_class_char:
+    mpfr_set_si(*res_ptr,(char)src_0_location->v_data_ptr,MPFR_RNDD);
+    mpfr_hypot(*res_ptr,*mpfr_ptr,*res_ptr,MPFR_RNDD);
+    break;
+  case c_bi_class_integer:
+    mpfr_set_sj(*res_ptr,(long long int)src_0_location->v_data_ptr,MPFR_RNDD);
+    mpfr_hypot(*res_ptr,*mpfr_ptr,*res_ptr,MPFR_RNDD);
+    break;
+  case c_bi_class_float:
+    mpfr_set_d(*res_ptr,(double)src_0_location->v_data_ptr,MPFR_RNDD);
+    mpfr_hypot(*res_ptr,*mpfr_ptr,*res_ptr,MPFR_RNDD);
+    break;
+  default:
+    if (src_0_location->v_type == c_bi_class_gmp_integer)
+    {
+      mpfr_set_z(*res_ptr,*((mpz_t *)src_0_location->v_data_ptr),MPFR_RNDD);
+      mpfr_hypot(*res_ptr,*mpfr_ptr,*res_ptr,MPFR_RNDD);
+    }
+    else if (src_0_location->v_type == c_bi_class_gmp_rational)
+    {
+      mpfr_set_q(*res_ptr,*((mpq_t *)src_0_location->v_data_ptr),MPFR_RNDD);
+      mpfr_hypot(*res_ptr,*mpfr_ptr,*res_ptr,MPFR_RNDD);
+    }
+    else if (src_0_location->v_type == c_bi_class_mpfr_fixed)
+    {
+      mpfr_hypot(*res_ptr,*mpfr_ptr,*((mpfr_t *)src_0_location->v_data_ptr),MPFR_RNDD);
+    }
+    else
+    {
+      mpfr_clear(*res_ptr);
+      cfree(res_ptr);
+
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      BIC_EXCEPTION_PUSH_METHOD_RI("hypot#1");
+      new_exception->params.push(1);
+      new_exception->params.push(src_0_location->v_type);
+
+      return false;
+    }
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_mpfr_fixed,res_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
