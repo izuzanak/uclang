@@ -3442,8 +3442,8 @@ built_in_class_s mpfr_fixed_class =
   nullptr,
   nullptr,
   nullptr,
-  nullptr,
-  nullptr,
+  bic_mpfr_fixed_pack,
+  bic_mpfr_fixed_unpack,
   nullptr,
   nullptr
 };/*}}}*/
@@ -4115,6 +4115,88 @@ int bic_mpfr_fixed_compare(location_s *first_loc,location_s *second_loc)
   mpfr_t *second_ptr = (mpfr_t *)second_loc->v_data_ptr;
 
   return mpfr_cmp(*first_ptr,*second_ptr);
+}/*}}}*/
+
+bool bic_mpfr_fixed_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack)
+{/*{{{*/
+  mpfr_t *mpfr_ptr = (mpfr_t *)location_ptr->v_data_ptr;
+
+  mpz_t significand;
+  mpz_init(significand);
+  mpfr_exp_t exponent = mpfr_get_z_2exp(significand,*mpfr_ptr);
+
+  // - store significand -
+  size_t count;
+  stream.reserve((mpz_sizeinbase(significand,2) + 7)/8);
+  mpz_export(stream.data + stream.used,&count,1,1,1,0,significand);
+  stream.used += count;
+
+  // - store significand sign -
+  if (count > 0)
+  {
+    stream.push(mpz_sgn(significand));
+  }
+
+  stream.append(sizeof(size_t),(const char *)&count);
+  stream.append(sizeof(mpfr_exp_t),(const char *)&exponent);
+
+  mpz_clear(significand);
+
+  return true;
+}/*}}}*/
+
+bool bic_mpfr_fixed_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_s &stream,pointer_array_s &loc_stack,bool order_bytes,unsigned source_pos)
+{/*{{{*/
+  mpfr_t *mpfr_ptr = (mpfr_t *)cmalloc(sizeof(mpfr_t));
+  mpfr_init(*mpfr_ptr);
+  location_ptr->v_data_ptr = mpfr_ptr;
+
+  if (stream.used < sizeof(mpfr_exp_t) + sizeof(size_t))
+  {
+    return false;
+  }
+
+  mpfr_exp_t exponent;
+  stream.from_end(sizeof(mpfr_exp_t),(char *)&exponent,order_bytes);
+
+  mpz_t significand;
+  mpz_init(significand);
+
+  if (stream.used < sizeof(size_t))
+  {
+    mpz_clear(significand);
+
+    return false;
+  }
+
+  size_t count;
+  stream.from_end(sizeof(size_t),(char *)&count,order_bytes);
+
+  if (count > 0)
+  {
+    if (stream.used < sizeof(char) + count)
+    {
+      mpz_clear(significand);
+
+      return false;
+    }
+
+    char sign = stream.pop();
+
+    mpz_import(significand,count,1,1,1,0,stream.data + (stream.used - count));
+    stream.used -= count;
+
+    // - apply negative sign -
+    if (sign < 0)
+    {
+      mpz_neg(significand,significand);
+    }
+  }
+
+  mpfr_set_z_2exp(*mpfr_ptr,significand,exponent,MPFR_RNDD);
+  mpz_clear(significand);
+
+  return true;
 }/*}}}*/
 
 bool bic_mpfr_fixed_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
