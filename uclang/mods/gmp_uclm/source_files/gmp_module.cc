@@ -4162,13 +4162,6 @@ bool bic_mpfr_fixed_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_
   mpz_t significand;
   mpz_init(significand);
 
-  if (stream.used < sizeof(size_t))
-  {
-    mpz_clear(significand);
-
-    return false;
-  }
-
   size_t count;
   stream.from_end(sizeof(size_t),(char *)&count,order_bytes);
 
