@@ -145,6 +145,8 @@ bool bic_gmp_rational_operator_unary_pre_exclamation(interpreter_thread_s &it,un
 bool bic_gmp_rational_method_GmpRational_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_rational_method_GmpRational_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_rational_method_GmpRational_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gmp_rational_method_num_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_gmp_rational_method_den_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_rational_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_rational_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_gmp_rational_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

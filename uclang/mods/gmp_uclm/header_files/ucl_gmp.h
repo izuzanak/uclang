@@ -31,6 +31,9 @@ class gmp_c
 
   static void mpq_set_lli(mpq_ptr a_mpq,long long int a_value);
   static void mpq_set_lli_lli(mpq_ptr a_mpq,long long int a_value,long long int a_denom);
+  static void mpq_set_z_lli(mpq_ptr a_mpq,mpz_srcptr a_value,long long int a_denom);
+  static void mpq_set_lli_z(mpq_ptr a_mpq,long long int a_value,mpz_srcptr a_denom);
+  static void mpq_set_z_z(mpq_ptr a_mpq,mpz_srcptr a_value,mpz_srcptr a_denom);
   static int mpq_cmp_lli(mpq_ptr a_mpq,long long int a_value);
   static void mpq_add_lli(mpq_ptr a_res,mpq_srcptr a_mpq,long long int a_value);
   static void mpq_sub_lli(mpq_ptr a_res,mpq_srcptr a_mpq,long long int a_value);

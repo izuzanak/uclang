@@ -1863,7 +1863,7 @@ built_in_class_s gmp_rational_class =
 {/*{{{*/
   "GmpRational",
   c_modifier_public | c_modifier_final,
-  34, gmp_rational_methods,
+  36, gmp_rational_methods,
   0, gmp_rational_variables,
   bic_gmp_rational_consts,
   bic_gmp_rational_init,
@@ -2037,6 +2037,16 @@ built_in_method_s gmp_rational_methods[] =
     "GmpRational#2",
     c_modifier_public | c_modifier_final,
     bic_gmp_rational_method_GmpRational_2
+  },
+  {
+    "num#0",
+    c_modifier_public | c_modifier_final,
+    bic_gmp_rational_method_num_0
+  },
+  {
+    "den#0",
+    c_modifier_public | c_modifier_final,
+    bic_gmp_rational_method_den_0
   },
   {
     "compare#1",
@@ -3307,73 +3317,120 @@ bool bic_gmp_rational_method_GmpRational_2(interpreter_thread_s &it,unsigned sta
   switch (src_0_location->v_type)
   {
   case c_bi_class_integer:
-  {
-    if (src_1_location->v_type != c_bi_class_integer)
+  {/*{{{*/
+    if (src_1_location->v_type == c_bi_class_integer)
     {
-      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-      BIC_EXCEPTION_PUSH_METHOD_RI("GmpRational#2");
-      new_exception->params.push(2);
-      new_exception->params.push(src_0_location->v_type);
-      new_exception->params.push(src_1_location->v_type);
+      gmp_c::mpq_set_lli_lli(*mpq_ptr,
+          (long long int)src_0_location->v_data_ptr,
+          (long long int)src_1_location->v_data_ptr);
 
-      return false;
+      return true;
     }
 
-    gmp_c::mpq_set_lli_lli(*mpq_ptr,
-        (long long int)src_0_location->v_data_ptr,
-        (long long int)src_1_location->v_data_ptr);
-  }
-  break;
+    if (src_1_location->v_type == c_bi_class_gmp_integer)
+    {
+      gmp_c::mpq_set_lli_z(*mpq_ptr,
+          (long long int)src_0_location->v_data_ptr,
+          *((mpz_t *)src_1_location->v_data_ptr));
 
+      return true;
+    }
+  }/*}}}*/
+  break;
   case c_bi_class_string:
-  {
-    if (src_1_location->v_type != c_bi_class_integer)
+  {/*{{{*/
+    if (src_1_location->v_type == c_bi_class_integer)
     {
-      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-      BIC_EXCEPTION_PUSH_METHOD_RI("GmpRational#2");
-      new_exception->params.push(2);
-      new_exception->params.push(src_0_location->v_type);
-      new_exception->params.push(src_1_location->v_type);
+      string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+      long long int base = (long long int)src_1_location->v_data_ptr;
 
-      return false;
+      if (base < 2 || base > 62)
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GMP_NUMBER_BASE_OUT_OF_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(c_bi_class_gmp_rational);
+        new_exception->params.push(base);
+
+        return false;
+      }
+
+      // - ERROR -
+      if (mpq_set_str(*mpq_ptr,string_ptr->data,base))
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GMP_NUMBER_CONVERT_INVALID_STRING,operands[c_source_pos_idx],src_0_location);
+        new_exception->params.push(c_bi_class_gmp_rational);
+        new_exception->params.push(base);
+
+        return false;
+      }
+
+      mpq_canonicalize(*mpq_ptr);
+
+      return true;
     }
-
-    string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-    long long int base = (long long int)src_1_location->v_data_ptr;
-
-    if (base < 2 || base > 62)
-    {
-      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GMP_NUMBER_BASE_OUT_OF_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-      new_exception->params.push(c_bi_class_gmp_rational);
-      new_exception->params.push(base);
-
-      return false;
-    }
-
-    // - ERROR -
-    if (mpq_set_str(*mpq_ptr,string_ptr->data,base))
-    {
-      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GMP_NUMBER_CONVERT_INVALID_STRING,operands[c_source_pos_idx],src_0_location);
-      new_exception->params.push(c_bi_class_gmp_rational);
-      new_exception->params.push(base);
-
-      return false;
-    }
-
-    mpq_canonicalize(*mpq_ptr);
-  }
+  }/*}}}*/
   break;
-
-  // - ERROR -
   default:
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("GmpRational#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
+  {/*{{{*/
+    if (src_0_location->v_type == c_bi_class_gmp_integer)
+    {
+      if (src_1_location->v_type == c_bi_class_integer)
+      {
+        gmp_c::mpq_set_z_lli(*mpq_ptr,
+            *((mpz_t *)src_0_location->v_data_ptr),
+            (long long int)src_1_location->v_data_ptr);
 
-    return false;
+        return true;
+      }
+  
+      if (src_1_location->v_type == c_bi_class_gmp_integer)
+      {
+        gmp_c::mpq_set_z_z(*mpq_ptr,
+            *((mpz_t *)src_0_location->v_data_ptr),
+            *((mpz_t *)src_1_location->v_data_ptr));
+
+        return true;
+      }
+    }
+  }/*}}}*/
   }
+
+  exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+  BIC_EXCEPTION_PUSH_METHOD_RI("GmpRational#2");
+  new_exception->params.push(2);
+  new_exception->params.push(src_0_location->v_type);
+  new_exception->params.push(src_1_location->v_type);
+
+  return false;
+}/*}}}*/
+
+bool bic_gmp_rational_method_num_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  mpq_t *mpq_ptr = (mpq_t *)dst_location->v_data_ptr;
+
+  mpz_t *res_ptr = (mpz_t *)cmalloc(sizeof(mpz_t));
+  mpz_init_set(*res_ptr,mpq_numref(*mpq_ptr));
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_gmp_integer,*res_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_gmp_rational_method_den_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  mpq_t *mpq_ptr = (mpq_t *)dst_location->v_data_ptr;
+
+  mpz_t *res_ptr = (mpz_t *)cmalloc(sizeof(mpz_t));
+  mpz_init_set(*res_ptr,mpq_denref(*mpq_ptr));
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_gmp_integer,*res_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/

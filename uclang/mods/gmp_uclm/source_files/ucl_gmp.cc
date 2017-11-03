@@ -184,6 +184,27 @@ void gmp_c::mpq_set_lli_lli(mpq_ptr a_mpq,long long int a_value,long long int a_
   mpq_canonicalize(a_mpq);
 }/*}}}*/
 
+void gmp_c::mpq_set_z_lli(mpq_ptr a_mpq,mpz_srcptr a_value,long long int a_denom)
+{/*{{{*/
+  mpz_set(mpq_numref(a_mpq),a_value);
+  mpz_set_lli(mpq_denref(a_mpq),a_denom);
+  mpq_canonicalize(a_mpq);
+}/*}}}*/
+
+void gmp_c::mpq_set_lli_z(mpq_ptr a_mpq,long long int a_value,mpz_srcptr a_denom)
+{/*{{{*/
+  mpz_set_lli(mpq_numref(a_mpq),a_value);
+  mpz_set(mpq_denref(a_mpq),a_denom);
+  mpq_canonicalize(a_mpq);
+}/*}}}*/
+
+void gmp_c::mpq_set_z_z(mpq_ptr a_mpq,mpz_srcptr a_value,mpz_srcptr a_denom)
+{/*{{{*/
+  mpz_set(mpq_numref(a_mpq),a_value);
+  mpz_set(mpq_denref(a_mpq),a_denom);
+  mpq_canonicalize(a_mpq);
+}/*}}}*/
+
 int gmp_c::mpq_cmp_lli(mpq_ptr a_mpq,long long int a_value)
 {/*{{{*/
   if (a_value >= LONG_MIN && a_value <= LONG_MAX)
