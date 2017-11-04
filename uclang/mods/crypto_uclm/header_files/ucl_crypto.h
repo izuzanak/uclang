@@ -24,6 +24,18 @@ class crypto_c
 };
 
 /*
+ * definition of structure crypto_digest_s
+ */
+
+struct crypto_digest_s
+{
+  EVP_MD_CTX *md_ctx;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
  * inline methods of class crypto_c
  */
 
@@ -43,6 +55,27 @@ inline crypto_c::~crypto_c()
   EVP_cleanup();
   CRYPTO_cleanup_all_ex_data();
   ERR_free_strings();
+}/*}}}*/
+
+/*
+ * inline methods of structure crypto_digest_s
+ */
+
+inline void crypto_digest_s::init()
+{/*{{{*/
+  md_ctx = nullptr;
+}/*}}}*/
+
+inline void crypto_digest_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+
+  // - release crypt digest md_ctx -
+  if (md_ctx != nullptr)
+  {
+    EVP_MD_CTX_destroy(md_ctx);
+  }
+
+  init();
 }/*}}}*/
 
 #endif

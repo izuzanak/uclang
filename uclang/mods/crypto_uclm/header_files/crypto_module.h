@@ -20,6 +20,10 @@ enum
 {
   c_error_CRYPTO_INVALID_BASE_DATA_SIZE = 0,
   c_error_CRYPTO_INVALID_BASE_DATA,
+  c_error_CRYPTO_DIGEST_INVALID_ALGORITHM_NAME,
+  c_error_CRYPTO_DIGEST_CREATE_INIT_ERROR,
+  c_error_CRYPTO_DIGEST_UPDATE_ERROR,
+  c_error_CRYPTO_DIGEST_VALUE_ERROR,
 };
 
 // - CRYPTO error strings -
@@ -47,6 +51,22 @@ bool bic_crypto_method_encode_base64_1(interpreter_thread_s &it,unsigned stack_b
 bool bic_crypto_method_decode_base64_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_crypto_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_crypto_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class CRYPTO_DIGEST -
+extern built_in_variable_s crypto_digest_variables[];
+extern built_in_method_s crypto_digest_methods[];
+extern built_in_class_s crypto_digest_class;
+
+void bic_crypto_digest_consts(location_array_s &const_locations);
+void bic_crypto_digest_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_crypto_digest_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_crypto_digest_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_digest_method_CryptoDigest_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_digest_method_update_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_digest_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_digest_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_digest_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 
