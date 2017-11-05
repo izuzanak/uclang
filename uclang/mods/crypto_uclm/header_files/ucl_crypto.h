@@ -29,7 +29,19 @@ class crypto_c
 
 struct crypto_digest_s
 {
-  EVP_MD_CTX *md_ctx;
+  EVP_MD_CTX *context;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
+ * definition of structure crypto_cipher_s
+ */
+
+struct crypto_cipher_s
+{
+  EVP_CIPHER_CTX *context;
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
@@ -63,16 +75,37 @@ inline crypto_c::~crypto_c()
 
 inline void crypto_digest_s::init()
 {/*{{{*/
-  md_ctx = nullptr;
+  context = nullptr;
 }/*}}}*/
 
 inline void crypto_digest_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
-  // - release crypt digest md_ctx -
-  if (md_ctx != nullptr)
+  // - release crypto digest context -
+  if (context != nullptr)
   {
-    EVP_MD_CTX_destroy(md_ctx);
+    EVP_MD_CTX_destroy(context);
+  }
+
+  init();
+}/*}}}*/
+
+/*
+ * inline methods of structure crypto_cipher_s
+ */
+
+inline void crypto_cipher_s::init()
+{/*{{{*/
+  context = nullptr;
+}/*}}}*/
+
+inline void crypto_cipher_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+
+  // - release crypto cipher context -
+  if (context != nullptr)
+  {
+    EVP_CIPHER_CTX_free(context);
   }
 
   init();
