@@ -36,6 +36,7 @@ C_MODULE_FTP        = index; index += 1
 C_MODULE_SSH2       = index; index += 1
 C_MODULE_GCRYPT     = index; index += 1
 C_MODULE_CRYPTO     = index; index += 1
+C_MODULE_LOCALE     = index; index += 1
 C_MODULE_ICONV      = index; index += 1
 C_MODULE_UTF8PROC   = index; index += 1
 C_MODULE_JIT        = index; index += 1
@@ -125,6 +126,7 @@ c_cfg = [
     ["MOD_SSH2"      ,c_enabled[C_MODULE_SSH2]      ,C_UCLANG_DIR + "mods/ssh2_uclm"        ,None],
     ["MOD_GCRYPT"    ,c_enabled[C_MODULE_GCRYPT]    ,C_UCLANG_DIR + "mods/gcrypt_uclm"      ,None],
     ["MOD_CRYPTO"    ,c_enabled[C_MODULE_CRYPTO]    ,C_UCLANG_DIR + "mods/crypto_uclm"      ,None],
+    ["MOD_LOCALE"    ,c_enabled[C_MODULE_LOCALE]    ,C_UCLANG_DIR + "mods/locale_uclm"      ,None],
     ["MOD_ICONV"     ,c_enabled[C_MODULE_ICONV]     ,C_UCLANG_DIR + "mods/iconv_uclm"       ,None],
     ["MOD_UTF8PROC"  ,c_enabled[C_MODULE_UTF8PROC]  ,C_UCLANG_DIR + "mods/utf8proc_uclm"    ,None],
     ["MOD_JIT"       ,c_enabled[C_MODULE_JIT]       ,C_UCLANG_DIR + "mods/jit_uclm"         ,None],
