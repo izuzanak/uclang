@@ -13,7 +13,6 @@ extern "C" {
 #include "libswscale/swscale.h"
 }
 
-
 extern "C" {
 
 // - mutex lock callback function -

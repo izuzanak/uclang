@@ -103,6 +103,5 @@ inline gsl_c::~gsl_c()
   debug_message_2(fprintf(stderr,"gsl_exit()\n"););
 }/*}}}*/
 
-
 #endif
 

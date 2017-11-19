@@ -58,7 +58,6 @@ inline void mpg_handle_s::init()
   init_format();
 }/*}}}*/
 
-
 inline void mpg_handle_s::init_format()
 {/*{{{*/
   rate = -1;

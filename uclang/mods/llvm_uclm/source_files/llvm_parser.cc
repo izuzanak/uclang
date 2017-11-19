@@ -193,7 +193,6 @@ state_9_label:
    CLOSE_LLVM_TYPE_CHAR(c_var_type_i8);
    return c_var_type_i8;
 
-
 // - STATE 10 -
 state_10_label:
    CLOSE_LLVM_TYPE_CHAR(c_idx_not_exist);

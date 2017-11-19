@@ -38,7 +38,6 @@ include "script_parser.h"
 const int value_on  = 1;
 const int value_off = 0;
 
-
 /*
  * definition of generated structures
  */

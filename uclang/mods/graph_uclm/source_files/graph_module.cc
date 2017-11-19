@@ -1115,7 +1115,6 @@ bool bic_graph_method_degree_sequence_0(interpreter_thread_s &it,unsigned stack_
     } while(++ptr < ptr_end);
   }
 
-
   degree_sequence.clear();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);

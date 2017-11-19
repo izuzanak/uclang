@@ -1322,7 +1322,6 @@ void bic_pas_device_consts(location_array_s &const_locations)
     CREATE_PAS_EVENT_TYPE_BIC_STATIC(PKT_EVT_LOG);
   }
 
-
   // - device types -
   {
     const_locations.push_blanks(7);

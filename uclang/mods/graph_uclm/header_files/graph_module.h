@@ -6,7 +6,6 @@
 include "ucl_graph.h"
 @end
 
-
 // - GRAPH indexes of built in classes -
 extern unsigned c_bi_class_graph;
 extern unsigned c_bi_class_graph_vertex;

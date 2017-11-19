@@ -963,7 +963,6 @@ bool bic_av_video_frame_method_pgm_data_0(interpreter_thread_s &it,unsigned stac
     s_ptr += s_line_size;
   } while(ptr < ptr_end);
 
-
   BIC_SET_RESULT_STRING(string_ptr);
 
   return true;

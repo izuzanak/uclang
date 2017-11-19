@@ -105,4 +105,3 @@ inline void parse_state_s::clear(interpreter_thread_s &it)
 
 #endif
 
-

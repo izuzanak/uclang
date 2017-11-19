@@ -1223,7 +1223,6 @@ bool bic_image_method_io_fill_1(interpreter_thread_s &it,unsigned stack_base,uli
       long long int components;
       it.retrieve_integer(src_0_location,components);
 
-
       switch (img_ptr->pixel_format)
       {
       case c_image_pixel_format_GRAY8:
