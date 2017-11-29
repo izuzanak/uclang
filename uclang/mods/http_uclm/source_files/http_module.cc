@@ -232,8 +232,6 @@ void bic_http_server_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_http_server_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -310,7 +308,6 @@ bool bic_http_server_method_HttpServer_2(interpreter_thread_s &it,unsigned stack
 
 bool bic_http_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve server pointer -
@@ -387,7 +384,6 @@ bool bic_http_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_http_server_method_timeout_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve server pointer -
@@ -414,7 +410,6 @@ bool bic_http_server_method_timeout_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_http_server_method_process_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve server pointer -
@@ -438,7 +433,6 @@ bool bic_http_server_method_process_0(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_DESTINATION();
 
   return true;
@@ -446,7 +440,6 @@ bool bic_http_server_method_process_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_http_server_method_process_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -525,7 +518,6 @@ bool bic_http_server_method_process_1(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_DESTINATION();
 
   return true;
@@ -542,8 +534,6 @@ bool bic_http_server_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_http_server_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("HttpServer");
 
   BIC_SET_RESULT_BLANK();
@@ -662,7 +652,6 @@ built_in_variable_s http_conn_variables[] =
 
 #define BIC_HTTP_CONN_STRING_VARIABLE(VARIABLE) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
 \
   http_conn_s *conn_ptr = (http_conn_s *)dst_location->v_data_ptr;\
@@ -737,8 +726,6 @@ void bic_http_conn_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_http_conn_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -751,7 +738,6 @@ bool bic_http_conn_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 
 bool bic_http_conn_method_id_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = (long long int)dst_location->v_data_ptr;
@@ -763,7 +749,6 @@ bool bic_http_conn_method_id_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_http_conn_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   http_conn_s *conn_ptr = (http_conn_s *)dst_location->v_data_ptr;
@@ -792,7 +777,6 @@ bool bic_http_conn_method_version_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_http_conn_method_upload_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   http_conn_s *conn_ptr = (http_conn_s *)dst_location->v_data_ptr;
@@ -819,7 +803,6 @@ bool bic_http_conn_method_upload_data_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_http_conn_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   http_conn_s *conn_ptr = (http_conn_s *)dst_location->v_data_ptr;
@@ -833,7 +816,6 @@ bool bic_http_conn_method_user_data_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_http_conn_method_values_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -884,7 +866,6 @@ bool bic_http_conn_method_values_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_http_conn_method_queue_response_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -933,8 +914,6 @@ bool bic_http_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_http_conn_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("HttpConn");
 
   BIC_SET_RESULT_BLANK();
@@ -1174,8 +1153,6 @@ void bic_http_resp_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_http_resp_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1306,7 +1283,6 @@ bool bic_http_resp_method_HttpResp_2(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_http_resp_method_add_header_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1342,7 +1318,6 @@ bool bic_http_resp_method_add_header_2(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_http_resp_method_add_footer_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1387,8 +1362,6 @@ bool bic_http_resp_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_http_resp_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("HttpResp");
 
   BIC_SET_RESULT_BLANK();

@@ -273,8 +273,6 @@ void bic_lua_state_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_lua_state_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -309,7 +307,6 @@ bool bic_lua_state_method_LuaState_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_lua_state_method_do_string_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -352,7 +349,6 @@ bool bic_lua_state_method_do_string_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_lua_state_method_new_value_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -381,7 +377,6 @@ bool bic_lua_state_method_new_value_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_lua_state_method_get_global_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   lua_State *L = (lua_State *)dst_location->v_data_ptr;
@@ -404,7 +399,6 @@ bool bic_lua_state_method_get_global_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_lua_state_method_get_global_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -440,8 +434,6 @@ bool bic_lua_state_method_get_global_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_lua_state_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   double result = *lua_version(nullptr);
 
   BIC_SIMPLE_SET_RES(c_bi_class_float,result);
@@ -460,8 +452,6 @@ bool bic_lua_state_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_lua_state_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("LuaState");
 
   BIC_SET_RESULT_BLANK();
@@ -557,7 +547,6 @@ void bic_lua_value_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_lua_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   location_s *lua_state_loc = *((location_s **)dst_location->v_data_ptr);
@@ -648,7 +637,6 @@ bool bic_lua_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base
   {
     case 0:
       {
-        pointer &res_location = it.data_stack[res_loc_idx];
         BIC_SET_RESULT_BLANK();
       }
       break;
@@ -664,7 +652,6 @@ bool bic_lua_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base
 
         BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_lua_value,lv_ptr);
 
-        pointer &res_location = it.data_stack[res_loc_idx];
         BIC_SET_RESULT(new_location);
       }
       break;
@@ -692,7 +679,6 @@ bool bic_lua_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base
 
         BIC_CREATE_NEW_LOCATION(arr_location,c_bi_class_array,array_ptr);
 
-        pointer &res_location = it.data_stack[res_loc_idx];
         BIC_SET_RESULT(arr_location);
       }
       break;
@@ -750,8 +736,6 @@ bool bic_lua_value_member(interpreter_thread_s &it,uli *code,unsigned stack_base
 
 bool bic_lua_value_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -764,7 +748,6 @@ bool bic_lua_value_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 
 bool bic_lua_value_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -814,7 +797,6 @@ bool bic_lua_value_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned
 
 bool bic_lua_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   location_s *lua_state_loc = *((location_s **)dst_location->v_data_ptr);
@@ -849,7 +831,6 @@ bool bic_lua_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_lua_value_method_keys_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   location_s *lua_state_loc = *((location_s **)dst_location->v_data_ptr);
@@ -900,7 +881,6 @@ bool bic_lua_value_method_keys_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_lua_value_method_items_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   location_s *lua_state_loc = *((location_s **)dst_location->v_data_ptr);
@@ -949,7 +929,6 @@ bool bic_lua_value_method_items_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_lua_value_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   location_s *lua_state_loc = *((location_s **)dst_location->v_data_ptr);
@@ -977,7 +956,6 @@ bool bic_lua_value_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_lua_value_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   location_s *lua_state_loc = *((location_s **)dst_location->v_data_ptr);
@@ -1086,7 +1064,6 @@ void bic_lua_reference_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_lua_reference_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 

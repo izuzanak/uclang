@@ -404,7 +404,6 @@ void bic_py_object_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_py_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - method name reference -
@@ -488,8 +487,6 @@ bool bic_py_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base
   }
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_py_object,pyo_result);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -541,8 +538,6 @@ bool bic_py_object_member(interpreter_thread_s &it,uli *code,unsigned stack_base
 
 bool bic_py_object_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -555,7 +550,6 @@ bool bic_py_object_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 
 bool bic_py_object_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -615,7 +609,6 @@ bool bic_py_object_method_PyObject_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_py_object_method_module_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   if (src_0_location->v_type != c_bi_class_string)
@@ -648,7 +641,6 @@ bool bic_py_object_method_module_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_py_object_method_tuple_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - create python tuple object -
@@ -669,7 +661,6 @@ bool bic_py_object_method_tuple_1(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_py_object_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
@@ -704,7 +695,6 @@ bool bic_py_object_method_value_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_py_object_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
@@ -735,7 +725,6 @@ bool bic_py_object_method_get_type_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_py_object_method_has_attr_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -773,7 +762,6 @@ bool bic_py_object_method_has_attr_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_py_object_method_get_attr_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -819,7 +807,6 @@ bool bic_py_object_method_get_attr_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_py_object_method_set_attr_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -871,7 +858,6 @@ bool bic_py_object_method_set_attr_2(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_py_object_method_del_attr_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -916,7 +902,6 @@ bool bic_py_object_method_del_attr_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_py_object_method_call_attr_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -990,7 +975,6 @@ bool bic_py_object_method_call_attr_2(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_py_object_method_get_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1036,7 +1020,6 @@ bool bic_py_object_method_get_item_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_py_object_method_set_item_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1088,7 +1071,6 @@ bool bic_py_object_method_set_item_2(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_py_object_method_del_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1133,7 +1115,6 @@ bool bic_py_object_method_del_item_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_py_object_method_dir_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
@@ -1164,7 +1145,6 @@ bool bic_py_object_method_dir_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_py_object_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
@@ -1194,7 +1174,6 @@ bool bic_py_object_method_length_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_py_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
@@ -1238,8 +1217,6 @@ bool bic_py_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 bool bic_py_object_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   PyObject *pyo_dst = python_c::create_py_object(it,dst_location);
 
   // - ERROR -
@@ -1396,7 +1373,6 @@ void bic_py_attr_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_py_attr_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1430,7 +1406,6 @@ bool bic_py_attr_ref_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_py_attr_ref_method_get_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PyObject *pyo_result = ((py_reference_s *)dst_location->v_data_ptr)->get_attr();
@@ -1450,7 +1425,6 @@ bool bic_py_attr_ref_method_get_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_py_attr_ref_method_set_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1620,7 +1594,6 @@ void bic_py_item_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_py_item_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1654,7 +1627,6 @@ bool bic_py_item_ref_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_py_item_ref_method_get_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PyObject *pyo_result = ((py_reference_s *)dst_location->v_data_ptr)->get_item();
@@ -1674,7 +1646,6 @@ bool bic_py_item_ref_method_get_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_py_item_ref_method_set_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 

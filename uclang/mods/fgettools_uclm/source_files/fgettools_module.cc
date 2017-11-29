@@ -204,7 +204,6 @@ built_in_variable_s fget_target_variables[] =
 
 #define BIC_FGET_TARGET_RETRIEVE_INTEGER(VALUE) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
 \
   fget_target_s *ft_ptr = (fget_target_s *)dst_location->v_data_ptr;\
@@ -237,8 +236,6 @@ void bic_fget_target_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_fget_target_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -373,7 +370,6 @@ bool bic_fget_target_method_FgetTarget_3(interpreter_thread_s &it,unsigned stack
 
 bool bic_fget_target_method_index_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -430,7 +426,6 @@ bool bic_fget_target_method_index_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_fget_target_method_received_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -539,7 +534,6 @@ bool bic_fget_target_method_received_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_fget_target_method_update_data_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -609,7 +603,6 @@ bool bic_fget_target_method_done_cnt_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_fget_target_method_done_percent_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   fget_target_s *ft_ptr = (fget_target_s *)dst_location->v_data_ptr;
@@ -631,8 +624,6 @@ bool bic_fget_target_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_fget_target_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("FgetTarget");
 
   BIC_SET_RESULT_BLANK();

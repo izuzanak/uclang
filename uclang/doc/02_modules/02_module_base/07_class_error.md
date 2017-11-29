@@ -28,7 +28,7 @@ Class describing objects identifying various error types.
 
 <a name="Error#0" />
 
-### Constructor [`Error#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7333)
+### Constructor [`Error#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7185)
 
 Creates default object of class `Error`.
 
@@ -48,7 +48,7 @@ obj: error_OK
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7275)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7131)
 
 Assignment operator `=`. Object of class `Error` is replaced by method parameter.
 
@@ -75,7 +75,7 @@ obj: New value
 
 <a name="operator_binary_double_equal#1" />
 
-### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7289)
+### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7143)
 
 Comparison operator `==`. Compares object of class `Error` with method parameter and return `1` if objects has same value or `0` otherwise.
 
@@ -105,7 +105,7 @@ obj_0 == obj_2: 1
 
 <a name="operator_binary_exclamation_equal#1" />
 
-### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7311)
+### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7164)
 
 Comparison operator `!=`. Compares object of class `Error` with method parameter and return `0` if objects has same value or `1` otherwise.
 
@@ -139,7 +139,7 @@ obj_0 != obj_2: 0
 
 <a name="compare#1" />
 
-### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7338)
+### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7190)
 
 Compare object of class `Error` with method parameter.
 
@@ -170,7 +170,7 @@ obj_0.compare(obj_0): 0
 
 <a name="to_string#0" />
 
-### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7363)
+### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7214)
 
 Convert object of class `Error` to object of class `String`.
 
@@ -190,7 +190,7 @@ obj.to_string(): error_OK
 
 <a name="print#0" />
 
-### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7372)
+### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7223)
 
 Print string representation of object of class `Error` to standard output.
 

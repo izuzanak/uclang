@@ -120,16 +120,32 @@ enum
 // - set destination macros -
 #define BIC_SET_DESTINATION(LOCATION_PTR) \
   {/*{{{*/\
+    pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     it.release_location_ptr((location_s *)dst_location);\
     dst_location = (pointer)LOCATION_PTR;\
   }/*}}}*/
 
 // - set result macros -
-#define BIC_SET_RESULT(LOCATION_PTR) \
+#define __BIC_SET_RESULT(LOCATION_PTR,CODE) \
   {/*{{{*/\
+    pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
     it.release_location_ptr((location_s *)res_location);\
     res_location = (pointer)LOCATION_PTR;\
+    \
+    CODE;\
   }/*}}}*/
+
+#define BIC_SET_RESULT(LOCATION_PTR) \
+  __BIC_SET_RESULT(LOCATION_PTR,);
+
+#define BIC_SET_RESULT_SWAP(LOCATION_PTR) \
+  __BIC_SET_RESULT(LOCATION_PTR,\
+      pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+      \
+      pointer tmp_location = res_location;\
+      res_location = dst_location;\
+      dst_location = tmp_location;\
+  );
 
 #define BIC_SET_RESULT_BLANK() \
   {/*{{{*/\
@@ -149,8 +165,10 @@ enum
     BIC_SET_RESULT(new_location);\
   }/*}}}*/
 
-#define BIC_SIMPLE_SET_RES(CLASS_IDX,VALUE) \
+#define __BIC_SIMPLE_SET_RES(CLASS_IDX,VALUE,CODE) \
   {/*{{{*/\
+    pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
+    \
     if (((location_s *)res_location)->v_type == CLASS_IDX &&\
         ((location_s *)res_location)->v_reference_cnt.value() == 1)\
     {\
@@ -158,9 +176,25 @@ enum
     }\
     else {\
       BIC_CREATE_NEW_LOCATION(new_location,CLASS_IDX,VALUE);\
-      BIC_SET_RESULT(new_location);\
+      \
+      it.release_location_ptr((location_s *)res_location);\
+      res_location = (pointer)new_location;\
     }\
+    \
+    CODE;\
   }/*}}}*/
+
+#define BIC_SIMPLE_SET_RES(CLASS_IDX,VALUE) \
+  __BIC_SIMPLE_SET_RES(CLASS_IDX,VALUE,);
+
+#define BIC_SIMPLE_SET_RES_SWAP(CLASS_IDX,VALUE) \
+  __BIC_SIMPLE_SET_RES(CLASS_IDX,VALUE,\
+      pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+      \
+      pointer tmp_location = res_location;\
+      res_location = dst_location;\
+      dst_location = tmp_location;\
+  );
 
 #define BIC_SET_RESULT_CONT_INDEX(INDEX) \
   {/*{{{*/\
@@ -175,6 +209,9 @@ enum
 
 #define BIC_SIMPLE_SET_DST_AND_RES(CLASS_IDX,VALUE) \
   {/*{{{*/\
+    pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+    pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
+    \
     if (((location_s *)dst_location)->v_reference_cnt.value() == 1)\
     {\
       ((location_s *)dst_location)->v_data_ptr = (VALUE);\
@@ -201,7 +238,9 @@ enum
     }\
     else {\
       ((location_s *)dst_location)->v_reference_cnt.atomic_inc();\
-      BIC_SET_RESULT(dst_location);\
+      \
+      it.release_location_ptr((location_s *)res_location);\
+      res_location = (pointer)dst_location;\
     }\
   }/*}}}*/
 

@@ -736,7 +736,6 @@ void bic_vg_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_vg_method_Clear_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
   location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
@@ -772,7 +771,6 @@ bool bic_vg_method_Clear_4(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_vg_method_ClearColor_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   if (src_0_location->v_type != c_rm_class_vec4)
@@ -795,7 +793,6 @@ bool bic_vg_method_ClearColor_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_vg_method_StrokeLineWidth_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   double line_width;
@@ -819,7 +816,6 @@ bool bic_vg_method_StrokeLineWidth_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_vg_method_StrokeCapStyle_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int cap_style;
@@ -857,7 +853,6 @@ bool bic_vg_method_StrokeCapStyle_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_vg_method_StrokeJoinStyle_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int join_style;
@@ -895,7 +890,6 @@ bool bic_vg_method_StrokeJoinStyle_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_vg_method_StrokeDashPattern_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   if (src_0_location->v_type != c_bi_class_array)
@@ -941,8 +935,6 @@ bool bic_vg_method_StrokeDashPattern_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_vg_method_LoadIdentity_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   vgLoadIdentity();
 
   BIC_SET_RESULT_BLANK();
@@ -952,7 +944,6 @@ bool bic_vg_method_LoadIdentity_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_vg_method_Translate_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
@@ -980,7 +971,6 @@ bool bic_vg_method_Translate_2(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_vg_method_Scale_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
@@ -1008,7 +998,6 @@ bool bic_vg_method_Scale_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_vg_method_Shear_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
@@ -1036,7 +1025,6 @@ bool bic_vg_method_Shear_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_vg_method_Rotate_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   double angle;
@@ -1060,8 +1048,6 @@ bool bic_vg_method_Rotate_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_vg_method_Finish_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   vgFinish();
 
   BIC_SET_RESULT_BLANK();
@@ -1080,8 +1066,6 @@ bool bic_vg_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_vg_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Vg");
 
   BIC_SET_RESULT_BLANK();
@@ -1186,8 +1170,6 @@ void bic_vg_paint_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_vg_paint_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1251,7 +1233,6 @@ bool bic_vg_paint_method_VgPaint_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_vg_paint_method_Type_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1292,7 +1273,6 @@ bool bic_vg_paint_method_Type_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_vg_paint_method_Color_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1318,7 +1298,6 @@ bool bic_vg_paint_method_Color_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_vg_paint_method_Set_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1351,7 +1330,6 @@ bool bic_vg_paint_method_Set_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_vg_paint_method_Get_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int paint_mode;
@@ -1398,8 +1376,6 @@ bool bic_vg_paint_method_to_string_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_vg_paint_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("VgPaint");
 
   BIC_SET_RESULT_BLANK();
@@ -1514,8 +1490,6 @@ void bic_vg_path_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_vg_path_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1567,7 +1541,6 @@ bool bic_vg_path_method_VgPath_2(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_vg_path_method_MoveTo_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1594,7 +1567,6 @@ bool bic_vg_path_method_MoveTo_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_vg_path_method_MoveTo_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1628,7 +1600,6 @@ bool bic_vg_path_method_MoveTo_2(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_vg_path_method_LineTo_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1655,7 +1626,6 @@ bool bic_vg_path_method_LineTo_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_vg_path_method_LineTo_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1689,7 +1659,6 @@ bool bic_vg_path_method_LineTo_2(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_vg_path_method_CloseSubpath_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   VGPath path = (VGPath)dst_location->v_data_ptr;
@@ -1704,7 +1673,6 @@ bool bic_vg_path_method_CloseSubpath_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_vg_path_method_Draw_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1746,8 +1714,6 @@ bool bic_vg_path_method_to_string_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_vg_path_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("VgPath");
 
   BIC_SET_RESULT_BLANK();

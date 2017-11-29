@@ -28,7 +28,7 @@ Class describing blank value.
 
 <a name="Blank#0" />
 
-### Constructor [`Blank#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L741)
+### Constructor [`Blank#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L737)
 
 Creates default object of class `Blank`.
 
@@ -75,7 +75,7 @@ obj: New value
 
 <a name="operator_binary_double_equal#1" />
 
-### Operator `static` [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L717)
+### Operator `static` [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L715)
 
 Comparison operator `==`. Compares object of class `Blank` with method parameter and return `1` if objects has same value or `0` otherwise.
 
@@ -105,7 +105,7 @@ obj_0 == obj_2: 1
 
 <a name="operator_binary_exclamation_equal#1" />
 
-### Operator `static` [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L729)
+### Operator `static` [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L726)
 
 Comparison operator `!=`. Compares object of class `Blank` with method parameter and return `0` if objects has same value or `1` otherwise.
 
@@ -139,7 +139,7 @@ obj_0 != obj_2: 0
 
 <a name="compare#1" />
 
-### Method `spec` `static` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L746)
+### Method `spec` `static` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L742)
 
 Compare object of class `Blank` with method parameter.
 
@@ -170,7 +170,7 @@ obj_0.compare(obj_0): 0
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L767)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L762)
 
 Convert object of class `Blank` to object of class `String`.
 
@@ -189,7 +189,7 @@ Blank.to_string(): <blank>
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L776)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L771)
 
 Print string representation of object of class `Blank` to standard output.
 

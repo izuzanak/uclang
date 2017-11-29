@@ -238,7 +238,6 @@ built_in_variable_s nacl_variables[] =
 
 #define BIC_NACL_DELEGATE(NAME,DLG_PTR_NAME,PARAM_CNT) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
 \
@@ -341,7 +340,6 @@ bool bic_nacl_method_OnChangeFocus_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_nacl_method_CallOnMainThread_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -386,7 +384,6 @@ bool bic_nacl_method_CallOnMainThread_3(interpreter_thread_s &it,unsigned stack_
 
 bool bic_nacl_method_Get3D_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -474,8 +471,6 @@ bool bic_nacl_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_nacl_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Nacl");
 
   BIC_SET_RESULT_BLANK();
@@ -566,7 +561,6 @@ bool bic_nacl_3d_method_SetCurrentContext_0(interpreter_thread_s &it,unsigned st
 
 bool bic_nacl_3d_method_SwapBuffers_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -615,8 +609,6 @@ bool bic_nacl_3d_method_to_string_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_nacl_3d_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Nacl3D");
 
   BIC_SET_RESULT_BLANK();
@@ -691,8 +683,6 @@ void bic_core_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_core_method_time_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   PP_Time time = ppb_core_iface->GetTime();
 
   BIC_SIMPLE_SET_RES(c_bi_class_time,time);
@@ -702,8 +692,6 @@ bool bic_core_method_time_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_core_method_time_ticks_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   double ticks = ppb_core_iface->GetTimeTicks();
 
   BIC_SIMPLE_SET_RES(c_bi_class_float,ticks);
@@ -722,8 +710,6 @@ bool bic_core_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_core_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Core");
 
   BIC_SET_RESULT_BLANK();
@@ -845,8 +831,6 @@ int bic_time_compare(location_s *first_loc,location_s *second_loc)
 
 bool bic_time_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -974,7 +958,6 @@ bool bic_time_method_Time_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_time_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PP_Time time = (PP_Time)dst_location->v_data_ptr;
@@ -986,7 +969,6 @@ bool bic_time_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_time_method_seconds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PP_Time time = (PP_Time)dst_location->v_data_ptr;
@@ -999,7 +981,6 @@ bool bic_time_method_seconds_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_time_method_minutes_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PP_Time time = (PP_Time)dst_location->v_data_ptr;
@@ -1012,7 +993,6 @@ bool bic_time_method_minutes_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_time_method_hours_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PP_Time time = (PP_Time)dst_location->v_data_ptr;
@@ -1025,7 +1005,6 @@ bool bic_time_method_hours_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_time_method_days_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PP_Time time = (PP_Time)dst_location->v_data_ptr;
@@ -1038,7 +1017,6 @@ bool bic_time_method_days_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_time_method_datetime_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PP_Time time = (PP_Time)dst_location->v_data_ptr;
@@ -1084,7 +1062,6 @@ bool bic_time_method_datetime_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_time_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1126,7 +1103,6 @@ bool bic_time_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_time_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PP_Time time = (PP_Time)dst_location->v_data_ptr;
@@ -1227,7 +1203,6 @@ built_in_variable_s console_variables[] =
 
 #define CONSOLE_LOG(CLASS_IDX,NAME,LOGLEVEL) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
 \
   /* - ERROR - */\
@@ -1296,7 +1271,6 @@ bool bic_console_method_log_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_console_method_log_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
@@ -1362,8 +1336,6 @@ bool bic_console_method_to_string_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_console_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Console");
 
   BIC_SET_RESULT_BLANK();
@@ -1449,7 +1421,6 @@ void bic_message_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_message_method_post_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -1486,8 +1457,6 @@ bool bic_message_method_to_string_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_message_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Message");
 
   BIC_SET_RESULT_BLANK();
@@ -1600,8 +1569,6 @@ void bic_net_address_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_net_address_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1693,7 +1660,6 @@ bool bic_net_address_method_NetAddress_2(interpreter_thread_s &it,unsigned stack
 
 bool bic_net_address_method_family_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PP_Resource pp_res = (PP_Resource)dst_location->v_data_ptr;
@@ -1706,7 +1672,6 @@ bool bic_net_address_method_family_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_net_address_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PP_Resource pp_res = (PP_Resource)dst_location->v_data_ptr;
@@ -1724,7 +1689,6 @@ bool bic_net_address_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_net_address_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PP_Resource pp_res = (PP_Resource)dst_location->v_data_ptr;

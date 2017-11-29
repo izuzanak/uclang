@@ -392,8 +392,6 @@ void bic_mono_assembly_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_mono_assembly_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -610,7 +608,6 @@ bool bic_mono_assembly_method_MonoAssembly_2(interpreter_thread_s &it,unsigned s
 
 bool bic_mono_assembly_method_get_class_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
@@ -663,8 +660,6 @@ bool bic_mono_assembly_method_to_string_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_mono_assembly_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("MonoAssembly");
 
   BIC_SET_RESULT_BLANK();
@@ -764,8 +759,6 @@ void bic_mono_class_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_mono_class_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -778,7 +771,6 @@ bool bic_mono_class_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 
 bool bic_mono_class_method__name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve class name -
@@ -794,7 +786,6 @@ bool bic_mono_class_method__name_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_mono_class_method__namespace_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve class namespace -
@@ -810,7 +801,6 @@ bool bic_mono_class_method__namespace_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_mono_class_method__new_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -853,7 +843,6 @@ bool bic_mono_class_method__new_1(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_mono_class_method_fields_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   MonoClass *mono_class = (MonoClass *)dst_location->v_data_ptr;
@@ -885,7 +874,6 @@ bool bic_mono_class_method_fields_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_mono_class_method_methods_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   MonoClass *mono_class = (MonoClass *)dst_location->v_data_ptr;
@@ -917,7 +905,6 @@ bool bic_mono_class_method_methods_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_mono_class_method_properties_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   MonoClass *mono_class = (MonoClass *)dst_location->v_data_ptr;
@@ -958,8 +945,6 @@ bool bic_mono_class_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_mono_class_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("MonoClass");
 
   BIC_SET_RESULT_BLANK();
@@ -1059,7 +1044,6 @@ void bic_mono_object_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_mono_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - method name reference -
@@ -1127,8 +1111,6 @@ bool bic_mono_object_invoke(interpreter_thread_s &it,uli *code,unsigned stack_ba
   guint32 gchandle = mono_c::gchandle_new(mono_result);
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_mono_object,gchandle);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -1182,8 +1164,6 @@ bool bic_mono_object_member(interpreter_thread_s &it,uli *code,unsigned stack_ba
 
 bool bic_mono_object_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1196,7 +1176,6 @@ bool bic_mono_object_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_mono_object_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1265,7 +1244,6 @@ bool bic_mono_object_method_MonoObject_1(interpreter_thread_s &it,unsigned stack
 
 bool bic_mono_object_method__array_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -1296,7 +1274,6 @@ bool bic_mono_object_method__array_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_mono_object_method__value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   MonoObject *mono_dst = mono_c::create_mono_object(it,dst_location);
@@ -1330,7 +1307,6 @@ bool bic_mono_object_method__value_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_mono_object_method__class_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   MonoObject *mono_dst = mono_c::create_mono_object(it,dst_location);
@@ -1353,7 +1329,6 @@ bool bic_mono_object_method__class_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_mono_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   MonoObject *mono_dst = mono_c::create_mono_object(it,dst_location);
@@ -1393,7 +1368,6 @@ bool bic_mono_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_mono_object_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   MonoObject *mono_dst = mono_c::create_mono_object(it,dst_location);
@@ -1515,7 +1489,6 @@ void bic_mono_property_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_mono_property_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1644,7 +1617,6 @@ void bic_mono_item_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_mono_item_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 

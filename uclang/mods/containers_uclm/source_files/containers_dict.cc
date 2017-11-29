@@ -582,15 +582,11 @@ bool bic_dict_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_
 
 bool bic_dict_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
 
   BIC_SET_DESTINATION(src_0_location);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(src_0_location);
 
   return true;
@@ -598,7 +594,6 @@ bool bic_dict_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_dict_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -607,7 +602,6 @@ bool bic_dict_operator_binary_double_equal(interpreter_thread_s &it,unsigned sta
   BIC_DICT_COMPARE(operands[c_source_pos_idx]);
   result = result == 0;
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -615,7 +609,6 @@ bool bic_dict_operator_binary_double_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_dict_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -624,7 +617,6 @@ bool bic_dict_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigne
   BIC_DICT_COMPARE(operands[c_source_pos_idx]);
   result = result != 0;
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -632,7 +624,6 @@ bool bic_dict_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigne
 
 bool bic_dict_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -665,7 +656,6 @@ bool bic_dict_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stac
   pointer *value_location = &tree_ptr->data[index].object.value;
   location_s *new_ref_location = it.get_new_reference((location_s **)value_location);
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_ref_location);
 
   return true;
@@ -701,8 +691,7 @@ bool bic_dict_method_Dict_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 }/*}}}*/
 
 bool bic_dict_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
+{
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;
@@ -727,15 +716,13 @@ bool bic_dict_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 
   tree_ptr->clear();
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_DESTINATION();
 
   return true;
-}/*}}}*/
+}
 
 bool bic_dict_method_keys_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;
@@ -763,8 +750,6 @@ bool bic_dict_method_keys_0(interpreter_thread_s &it,unsigned stack_base,uli *op
   }
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -772,7 +757,6 @@ bool bic_dict_method_keys_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_dict_method_items_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;
@@ -797,8 +781,6 @@ bool bic_dict_method_items_0(interpreter_thread_s &it,unsigned stack_base,uli *o
   }
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -806,7 +788,6 @@ bool bic_dict_method_items_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_dict_method_store_ref_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   pointer &src_1_location = it.data_stack[stack_base + operands[c_src_1_op_idx]];
@@ -838,7 +819,6 @@ bool bic_dict_method_store_ref_2(interpreter_thread_s &it,unsigned stack_base,ul
 
   map.value = (pointer)new_ref_location;
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_DESTINATION();
 
   return true;
@@ -846,7 +826,6 @@ bool bic_dict_method_store_ref_2(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_dict_method_has_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -865,7 +844,6 @@ bool bic_dict_method_has_key_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
   long long int result = index != c_idx_not_exist;
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -873,7 +851,6 @@ bool bic_dict_method_has_key_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_dict_method_remove_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -904,7 +881,6 @@ bool bic_dict_method_remove_key_1(interpreter_thread_s &it,unsigned stack_base,u
   it.release_location_ptr((location_s *)node.object.value);
   tree_ptr->remove(index);
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_DESTINATION();
 
   return true;
@@ -912,7 +888,6 @@ bool bic_dict_method_remove_key_1(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_dict_method_first_key_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;
@@ -924,12 +899,10 @@ bool bic_dict_method_first_key_0(interpreter_thread_s &it,unsigned stack_base,ul
     location_s *location_ptr = (location_s *)tree_ptr->data[min_value_idx].object.key;
     location_ptr->v_reference_cnt.atomic_inc();
 
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT(location_ptr)
   }
   else
   {
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT_BLANK();
   }
 
@@ -938,7 +911,6 @@ bool bic_dict_method_first_key_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_dict_method_last_key_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;
@@ -950,12 +922,10 @@ bool bic_dict_method_last_key_0(interpreter_thread_s &it,unsigned stack_base,uli
     location_s *location_ptr = (location_s *)tree_ptr->data[max_value_idx].object.key;
     location_ptr->v_reference_cnt.atomic_inc();
 
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT(location_ptr)
   }
   else
   {
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT_BLANK();
   }
 
@@ -964,7 +934,6 @@ bool bic_dict_method_last_key_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_dict_method_next_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -990,12 +959,10 @@ bool bic_dict_method_next_key_1(interpreter_thread_s &it,unsigned stack_base,uli
       location_s *location_ptr = (location_s *)tree_ptr->data[next_value_idx].object.key;
       location_ptr->v_reference_cnt.atomic_inc();
 
-      pointer &res_location = it.data_stack[res_loc_idx];
       BIC_SET_RESULT(location_ptr)
     }
     else
     {
-      pointer &res_location = it.data_stack[res_loc_idx];
       BIC_SET_RESULT_BLANK();
     }
   }
@@ -1010,7 +977,6 @@ bool bic_dict_method_next_key_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_dict_method_prev_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1036,12 +1002,10 @@ bool bic_dict_method_prev_key_1(interpreter_thread_s &it,unsigned stack_base,uli
       location_s *location_ptr = (location_s *)tree_ptr->data[prev_value_idx].object.key;
       location_ptr->v_reference_cnt.atomic_inc();
 
-      pointer &res_location = it.data_stack[res_loc_idx];
       BIC_SET_RESULT(location_ptr)
     }
     else
     {
-      pointer &res_location = it.data_stack[res_loc_idx];
       BIC_SET_RESULT_BLANK();
     }
   }
@@ -1056,7 +1020,6 @@ bool bic_dict_method_prev_key_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_dict_method_lee_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1078,12 +1041,10 @@ bool bic_dict_method_lee_key_1(interpreter_thread_s &it,unsigned stack_base,uli 
     location_s *location_ptr = (location_s *)tree_ptr->data[index].object.key;
     location_ptr->v_reference_cnt.atomic_inc();
 
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT(location_ptr)
   }
   else
   {
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT_BLANK();
   }
 
@@ -1092,7 +1053,6 @@ bool bic_dict_method_lee_key_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_dict_method_gre_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1114,12 +1074,10 @@ bool bic_dict_method_gre_key_1(interpreter_thread_s &it,unsigned stack_base,uli 
     location_s *location_ptr = (location_s *)tree_ptr->data[index].object.key;
     location_ptr->v_reference_cnt.atomic_inc();
 
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT(location_ptr)
   }
   else
   {
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT_BLANK();
   }
 
@@ -1128,7 +1086,6 @@ bool bic_dict_method_gre_key_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_dict_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1136,7 +1093,6 @@ bool bic_dict_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
   BIC_DICT_COMPARE(operands[c_source_pos_idx]);
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -1144,7 +1100,6 @@ bool bic_dict_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_dict_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1166,7 +1121,6 @@ bool bic_dict_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *op
   location_s *element_location = (location_s *)tree_ptr->data[index].object.key;
   element_location->v_reference_cnt.atomic_inc();
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(element_location);
 
   return true;
@@ -1174,7 +1128,6 @@ bool bic_dict_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_dict_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;
@@ -1183,12 +1136,10 @@ bool bic_dict_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,ul
   {
     long long int result = tree_ptr->get_min_value_idx(tree_ptr->root_idx);
 
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
   }
   else
   {
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT_BLANK();
   }
 
@@ -1197,7 +1148,6 @@ bool bic_dict_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_dict_method_last_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;
@@ -1206,12 +1156,10 @@ bool bic_dict_method_last_idx_0(interpreter_thread_s &it,unsigned stack_base,uli
   {
     long long int result = tree_ptr->get_max_value_idx(tree_ptr->root_idx);
 
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
   }
   else
   {
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT_BLANK();
   }
 
@@ -1220,7 +1168,6 @@ bool bic_dict_method_last_idx_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_dict_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1241,7 +1188,6 @@ bool bic_dict_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli
 
   long long int next_idx = tree_ptr->get_next_idx(index);
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_CONT_INDEX(next_idx);
 
   return true;
@@ -1249,7 +1195,6 @@ bool bic_dict_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_dict_method_prev_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1270,7 +1215,6 @@ bool bic_dict_method_prev_idx_1(interpreter_thread_s &it,unsigned stack_base,uli
 
   long long int prev_idx = tree_ptr->get_prev_idx(index);
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_CONT_INDEX(prev_idx);
 
   return true;
@@ -1278,12 +1222,10 @@ bool bic_dict_method_prev_idx_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_dict_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = ((pointer_map_tree_s *)dst_location->v_data_ptr)->count;
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -1291,7 +1233,6 @@ bool bic_dict_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;
@@ -1381,7 +1322,6 @@ bool bic_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
   // - release string array -
   strings.clear();
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_STRING(string_ptr);
 
   return true;
@@ -1389,7 +1329,6 @@ bool bic_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_dict_method_to_string_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1488,7 +1427,6 @@ bool bic_dict_method_to_string_1(interpreter_thread_s &it,unsigned stack_base,ul
   // - release string array -
   strings.clear();
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_STRING(string_ptr);
 
   return true;
@@ -1496,7 +1434,6 @@ bool bic_dict_method_to_string_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_dict_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   pointer_map_tree_s *tree_ptr = ((pointer_map_tree_s *)dst_location->v_data_ptr);
@@ -1539,7 +1476,6 @@ bool bic_dict_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 
   putchar(']');
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_DESTINATION();
 
   return true;

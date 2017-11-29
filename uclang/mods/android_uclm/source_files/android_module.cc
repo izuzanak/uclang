@@ -252,8 +252,6 @@ void bic_sys_prop_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_sys_prop_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -313,7 +311,6 @@ bool bic_sys_prop_method_SysProp_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_sys_prop_method_get_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -344,7 +341,6 @@ bool bic_sys_prop_method_get_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_sys_prop_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve property info pointer -
@@ -371,7 +367,6 @@ bool bic_sys_prop_method_value_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_sys_prop_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve property info pointer -
@@ -430,8 +425,6 @@ bool bic_sys_prop_method_to_string_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_sys_prop_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("SysProp");
 
   BIC_SET_RESULT_BLANK();
@@ -521,7 +514,6 @@ built_in_variable_s log_variables[] =
 
 #define BIC_LOG_MESSAGE_LOG(NAME,PRIORITY) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
 \
@@ -591,8 +583,6 @@ void bic_log_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_log_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -634,7 +624,6 @@ bool bic_log_method_Log_1(interpreter_thread_s &it,unsigned stack_base,uli *oper
 
 bool bic_log_method_write_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
   location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
@@ -692,8 +681,6 @@ bool bic_log_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_log_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Log");
 
   BIC_SET_RESULT_BLANK();
@@ -834,7 +821,6 @@ built_in_variable_s activity_variables[] =
 
 #define BIC_ACTIVITY_DELEGATE(NAME,DLG_PTR_NAME,PARAM_CNT) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
 \
@@ -919,8 +905,6 @@ void bic_activity_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_activity_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -963,8 +947,6 @@ bool bic_activity_method_Activity_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_activity_method_width_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - if display width is set -
   if (g_activity.width != 0)
   {
@@ -982,8 +964,6 @@ bool bic_activity_method_width_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_activity_method_height_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - if display height is set -
   if (g_activity.height != 0)
   {
@@ -1031,7 +1011,6 @@ bool bic_activity_method_on_idle_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_activity_method_event_loop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
 
   // - ERROR -
   if (g_activity.event_loop)
@@ -1058,7 +1037,6 @@ bool bic_activity_method_event_loop_0(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_BLANK();
 
   return true;
@@ -1066,8 +1044,6 @@ bool bic_activity_method_event_loop_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_activity_method_post_redisplay_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   g_activity.app->redrawNeeded = 1;
 
   BIC_SET_RESULT_BLANK();
@@ -1086,8 +1062,6 @@ bool bic_activity_method_to_string_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_activity_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Activity");
 
   BIC_SET_RESULT_BLANK();
@@ -1174,8 +1148,6 @@ void bic_event_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_event_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   long long int result = AInputEvent_getType(g_activity.event);
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
@@ -1194,8 +1166,6 @@ bool bic_event_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_event_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Event");
 
   BIC_SET_RESULT_BLANK();
@@ -1275,8 +1245,6 @@ void bic_sensor_manager_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_sensor_manager_method_sensor_list_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   ASensorList list;
   int count = ASensorManager_getSensorList(ASensorManager_getInstance(),&list);
 
@@ -1302,7 +1270,6 @@ bool bic_sensor_manager_method_sensor_list_0(interpreter_thread_s &it,unsigned s
 
 bool bic_sensor_manager_method_default_sensor_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int type;
@@ -1335,8 +1302,6 @@ bool bic_sensor_manager_method_default_sensor_1(interpreter_thread_s &it,unsigne
 
 bool bic_sensor_manager_method_create_event_queue_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   ASensorEventQueue *queue_ptr = ASensorManager_createEventQueue(
         ASensorManager_getInstance(),
         ALooper_prepare(0),
@@ -1366,8 +1331,6 @@ bool bic_sensor_manager_method_to_string_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_sensor_manager_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("SensorManager");
 
   BIC_SET_RESULT_BLANK();
@@ -1484,8 +1447,6 @@ void bic_sensor_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_sensor_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1498,7 +1459,6 @@ bool bic_sensor_operator_binary_equal(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_sensor_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   const char *name = ASensor_getName((ASensorRef)dst_location->v_data_ptr);
@@ -1513,7 +1473,6 @@ bool bic_sensor_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_sensor_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = ASensor_getType((ASensorRef)dst_location->v_data_ptr);
@@ -1525,7 +1484,6 @@ bool bic_sensor_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_sensor_method_vendor_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   const char *name = ASensor_getVendor((ASensorRef)dst_location->v_data_ptr);
@@ -1540,7 +1498,6 @@ bool bic_sensor_method_vendor_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_sensor_method_resolution_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   double result = ASensor_getResolution((ASensorRef)dst_location->v_data_ptr);
@@ -1552,7 +1509,6 @@ bool bic_sensor_method_resolution_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_sensor_method_min_delay_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = ASensor_getMinDelay((ASensorRef)dst_location->v_data_ptr);
@@ -1573,8 +1529,6 @@ bool bic_sensor_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_sensor_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Sensor");
 
   BIC_SET_RESULT_BLANK();
@@ -1674,8 +1628,6 @@ void bic_sensor_event_queue_clear(interpreter_thread_s &it,location_s *location_
 
 bool bic_sensor_event_queue_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1688,7 +1640,6 @@ bool bic_sensor_event_queue_operator_binary_equal(interpreter_thread_s &it,unsig
 
 bool bic_sensor_event_queue_method_enable_sensor_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1720,7 +1671,6 @@ bool bic_sensor_event_queue_method_enable_sensor_1(interpreter_thread_s &it,unsi
 
 bool bic_sensor_event_queue_method_disable_sensor_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1752,7 +1702,6 @@ bool bic_sensor_event_queue_method_disable_sensor_1(interpreter_thread_s &it,uns
 
 bool bic_sensor_event_queue_method_event_rate_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1789,7 +1738,6 @@ bool bic_sensor_event_queue_method_event_rate_2(interpreter_thread_s &it,unsigne
 
 bool bic_sensor_event_queue_method_has_events_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ASensorEventQueue *queue_ptr = (ASensorEventQueue *)dst_location->v_data_ptr;
@@ -1803,7 +1751,6 @@ bool bic_sensor_event_queue_method_has_events_0(interpreter_thread_s &it,unsigne
 
 bool bic_sensor_event_queue_method_get_event_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ASensorEventQueue *queue_ptr = (ASensorEventQueue *)dst_location->v_data_ptr;
@@ -1837,8 +1784,6 @@ bool bic_sensor_event_queue_method_to_string_0(interpreter_thread_s &it,unsigned
 
 bool bic_sensor_event_queue_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("SensorEventQueue");
 
   BIC_SET_RESULT_BLANK();
@@ -1998,8 +1943,6 @@ void bic_sensor_event_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_sensor_event_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -2012,7 +1955,6 @@ bool bic_sensor_event_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
 bool bic_sensor_event_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = ((ASensorEvent *)dst_location->v_data_ptr)->version;
@@ -2024,7 +1966,6 @@ bool bic_sensor_event_method_version_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_sensor_event_method_sensor_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = ((ASensorEvent *)dst_location->v_data_ptr)->sensor;
@@ -2036,7 +1977,6 @@ bool bic_sensor_event_method_sensor_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_sensor_event_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = ((ASensorEvent *)dst_location->v_data_ptr)->type;
@@ -2048,7 +1988,6 @@ bool bic_sensor_event_method_get_type_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_sensor_event_method_time_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = ((ASensorEvent *)dst_location->v_data_ptr)->timestamp;
@@ -2060,7 +1999,6 @@ bool bic_sensor_event_method_time_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_sensor_event_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   double result = ((ASensorEvent *)dst_location->v_data_ptr)->temperature;
@@ -2072,7 +2010,6 @@ bool bic_sensor_event_method_value_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_sensor_event_method_vector_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ASensorVector &vector = ((ASensorEvent *)dst_location->v_data_ptr)->vector;
@@ -2105,7 +2042,6 @@ bool bic_sensor_event_method_vector_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_sensor_event_method_vec_x_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   double result = ((ASensorEvent *)dst_location->v_data_ptr)->vector.x;
@@ -2117,7 +2053,6 @@ bool bic_sensor_event_method_vec_x_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_sensor_event_method_vec_y_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   double result = ((ASensorEvent *)dst_location->v_data_ptr)->vector.y;
@@ -2129,7 +2064,6 @@ bool bic_sensor_event_method_vec_y_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_sensor_event_method_vec_z_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   double result = ((ASensorEvent *)dst_location->v_data_ptr)->vector.z;
@@ -2141,7 +2075,6 @@ bool bic_sensor_event_method_vec_z_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_sensor_event_method_vec_status_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = ((ASensorEvent *)dst_location->v_data_ptr)->vector.status;
@@ -2162,8 +2095,6 @@ bool bic_sensor_event_method_to_string_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_sensor_event_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("SensorEvent");
 
   BIC_SET_RESULT_BLANK();

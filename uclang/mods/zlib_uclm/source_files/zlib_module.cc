@@ -217,7 +217,6 @@ void bic_zlib_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_zlib_method_compress_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
@@ -275,7 +274,6 @@ bool bic_zlib_method_compress_2(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_zlib_method_uncompress_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
@@ -351,8 +349,6 @@ bool bic_zlib_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_zlib_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("ZLib");
 
   BIC_SET_RESULT_BLANK();
@@ -587,7 +583,6 @@ built_in_variable_s gz_file_variables[] =
 
 #define BIC_FD_NEXT_ITEM() \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   \
   /* - retrieve pointer to gz file - */\
@@ -714,8 +709,6 @@ location_s *bic_gz_file_next_item(interpreter_thread_s &it,location_s *location_
 
 bool bic_gz_file_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -764,7 +757,6 @@ bool bic_gz_file_method_GzFile_2(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_gz_file_method_seek_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -811,7 +803,6 @@ bool bic_gz_file_method_seek_2(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_gz_file_method_tell_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve pointer to gz file -
@@ -833,7 +824,6 @@ bool bic_gz_file_method_tell_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_gz_file_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve pointer to file -
@@ -855,7 +845,6 @@ bool bic_gz_file_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_gz_file_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -879,7 +868,6 @@ bool bic_gz_file_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_gz_file_method_write_close_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -904,7 +892,6 @@ bool bic_gz_file_method_write_close_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_gz_file_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   BIC_GZ_FILE_METHOD_READ_0();
@@ -919,7 +906,6 @@ bool bic_gz_file_method_readln_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_gz_file_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -984,7 +970,6 @@ bool bic_gz_file_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_gz_file_method_read_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   BIC_GZ_FILE_METHOD_READ_0();
@@ -1009,8 +994,6 @@ bool bic_gz_file_method_to_string_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_gz_file_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GzFile");
 
   BIC_SET_RESULT_BLANK();

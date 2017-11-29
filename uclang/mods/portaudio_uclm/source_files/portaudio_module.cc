@@ -334,8 +334,6 @@ void bic_port_audio_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_port_audio_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   long long int result = Pa_GetVersion();
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
@@ -345,8 +343,6 @@ bool bic_port_audio_method_version_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_port_audio_method_version_text_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   const char *version_str = Pa_GetVersionText();
 
   string_s *string_ptr = it.get_new_string_ptr();
@@ -359,8 +355,6 @@ bool bic_port_audio_method_version_text_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_port_audio_method_host_api_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   PaHostApiIndex index = Pa_GetDefaultHostApi();
 
   // - ERROR -
@@ -379,8 +373,6 @@ bool bic_port_audio_method_host_api_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_port_audio_method_all_apis_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - create result array -
   pointer_array_s *array_ptr = it.get_new_array_ptr();
 
@@ -408,8 +400,6 @@ bool bic_port_audio_method_all_apis_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_port_audio_method_input_device_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   PaDeviceIndex index = Pa_GetDefaultInputDevice();
 
   // - ERROR -
@@ -436,8 +426,6 @@ bool bic_port_audio_method_input_device_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_port_audio_method_output_device_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   PaDeviceIndex index = Pa_GetDefaultOutputDevice();
 
   // - ERROR -
@@ -464,8 +452,6 @@ bool bic_port_audio_method_output_device_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_port_audio_method_all_devices_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - create result array -
   pointer_array_s *array_ptr = it.get_new_array_ptr();
 
@@ -510,8 +496,6 @@ bool bic_port_audio_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_port_audio_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("PortAudio");
 
   BIC_SET_RESULT_BLANK();
@@ -610,8 +594,6 @@ void bic_pa_host_api_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_pa_host_api_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -624,7 +606,6 @@ bool bic_pa_host_api_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_pa_host_api_method_index_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PaHostApiTypeId type_id = ((PaHostApiInfo *)dst_location->v_data_ptr)->type;
@@ -637,7 +618,6 @@ bool bic_pa_host_api_method_index_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_pa_host_api_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = ((PaHostApiInfo *)dst_location->v_data_ptr)->structVersion;
@@ -649,7 +629,6 @@ bool bic_pa_host_api_method_version_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_pa_host_api_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = ((PaHostApiInfo *)dst_location->v_data_ptr)->type;
@@ -661,7 +640,6 @@ bool bic_pa_host_api_method_get_type_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_pa_host_api_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   const char *name = ((PaHostApiInfo *)dst_location->v_data_ptr)->name;
@@ -676,7 +654,6 @@ bool bic_pa_host_api_method_name_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_pa_host_api_method_input_device_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PaDeviceIndex index = ((PaHostApiInfo *)dst_location->v_data_ptr)->defaultInputDevice;
@@ -712,7 +689,6 @@ bool bic_pa_host_api_method_input_device_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_pa_host_api_method_output_device_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PaDeviceIndex index = ((PaHostApiInfo *)dst_location->v_data_ptr)->defaultOutputDevice;
@@ -757,8 +733,6 @@ bool bic_pa_host_api_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_pa_host_api_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("PaHostApi");
 
   BIC_SET_RESULT_BLANK();
@@ -869,7 +843,6 @@ built_in_variable_s pa_device_variables[] =
 
 #define BIC_PA_DEVICE_RETRIEVE_INTEGER_VALUE(NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
 \
   pa_device_s *pad_ptr = (pa_device_s *)dst_location->v_data_ptr;\
@@ -882,7 +855,6 @@ built_in_variable_s pa_device_variables[] =
 
 #define BIC_PA_DEVICE_RETRIEVE_FLOAT_VALUE(NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
 \
   pa_device_s *pad_ptr = (pa_device_s *)dst_location->v_data_ptr;\
@@ -915,8 +887,6 @@ void bic_pa_device_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_pa_device_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -929,7 +899,6 @@ bool bic_pa_device_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 
 bool bic_pa_device_method_index_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   pa_device_s *pad_ptr = (pa_device_s *)dst_location->v_data_ptr;
@@ -947,7 +916,6 @@ bool bic_pa_device_method_version_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_pa_device_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   pa_device_s *pad_ptr = (pa_device_s *)dst_location->v_data_ptr;
@@ -963,7 +931,6 @@ bool bic_pa_device_method_name_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_pa_device_method_host_api_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   pa_device_s *pad_ptr = (pa_device_s *)dst_location->v_data_ptr;
@@ -1020,8 +987,6 @@ bool bic_pa_device_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_pa_device_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("PaDevice");
 
   BIC_SET_RESULT_BLANK();
@@ -1101,8 +1066,6 @@ void bic_pa_parameters_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_pa_parameters_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1168,8 +1131,6 @@ bool bic_pa_parameters_method_to_string_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_pa_parameters_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("PaParameters");
 
   BIC_SET_RESULT_BLANK();
@@ -1280,8 +1241,6 @@ void bic_pa_stream_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_pa_stream_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1378,7 +1337,6 @@ bool bic_pa_stream_method_PaStream_4(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_pa_stream_method_start_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   pa_stream_s *pas_ptr = (pa_stream_s *)dst_location->v_data_ptr;
@@ -1397,7 +1355,6 @@ bool bic_pa_stream_method_start_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_pa_stream_method_stop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   pa_stream_s *pas_ptr = (pa_stream_s *)dst_location->v_data_ptr;
@@ -1416,7 +1373,6 @@ bool bic_pa_stream_method_stop_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_pa_stream_method_read_available_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   pa_stream_s *pas_ptr = (pa_stream_s *)dst_location->v_data_ptr;
@@ -1444,7 +1400,6 @@ bool bic_pa_stream_method_read_available_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_pa_stream_method_write_available_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   pa_stream_s *pas_ptr = (pa_stream_s *)dst_location->v_data_ptr;
@@ -1472,7 +1427,6 @@ bool bic_pa_stream_method_write_available_0(interpreter_thread_s &it,unsigned st
 
 bool bic_pa_stream_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1528,7 +1482,6 @@ bool bic_pa_stream_method_read_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_pa_stream_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1590,8 +1543,6 @@ bool bic_pa_stream_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_pa_stream_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("PaStream");
 
   BIC_SET_RESULT_BLANK();

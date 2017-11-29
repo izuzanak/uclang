@@ -255,8 +255,6 @@ void bic_can_obj_dict_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_can_obj_dict_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -269,7 +267,6 @@ bool bic_can_obj_dict_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
 bool bic_can_obj_dict_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -401,7 +398,6 @@ bool bic_can_obj_dict_method_CanObjDict_4(interpreter_thread_s &it,unsigned stac
 
 bool bic_can_obj_dict_method_FindObj_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -428,7 +424,6 @@ bool bic_can_obj_dict_method_FindObj_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_can_obj_dict_method_FindObj_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -468,8 +463,6 @@ bool bic_can_obj_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_can_obj_dict_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("CanObjDict");
 
   BIC_SET_RESULT_BLANK();
@@ -642,8 +635,6 @@ void bic_can_object_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_can_object_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -656,7 +647,6 @@ bool bic_can_object_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 
 #define BIC_CAN_OBJECT_METHOD_GET_VALUE(VALUE) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
 \
   can_object_s *co_ptr = (can_object_s *)dst_location->v_data_ptr;\
@@ -689,7 +679,6 @@ bool bic_can_object_method_get_type_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_can_object_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -826,7 +815,6 @@ bool bic_can_object_method_write_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_can_object_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   can_object_s *co_ptr = (can_object_s *)dst_location->v_data_ptr;
@@ -953,8 +941,6 @@ bool bic_can_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_can_object_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("CanObject");
 
   BIC_SET_RESULT_BLANK();

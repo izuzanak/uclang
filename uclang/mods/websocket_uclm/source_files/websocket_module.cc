@@ -305,8 +305,6 @@ void bic_ws_context_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_ws_context_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -466,8 +464,6 @@ bool bic_ws_context_method_WsContext_2(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_ws_context_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - retrieve websockets library version -
   const char *version = lws_get_library_version();
 
@@ -481,7 +477,6 @@ bool bic_ws_context_method_version_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_ws_context_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ws_context_s *wsc_ptr = (ws_context_s *)dst_location->v_data_ptr;
@@ -495,7 +490,6 @@ bool bic_ws_context_method_user_data_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_ws_context_method_client_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -568,7 +562,6 @@ bool bic_ws_context_method_client_4(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_ws_context_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ws_context_s *wsc_ptr = (ws_context_s *)dst_location->v_data_ptr;
@@ -608,7 +601,6 @@ bool bic_ws_context_method_get_fds_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_ws_context_method_process_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -639,7 +631,6 @@ bool bic_ws_context_method_process_1(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_DESTINATION();
 
   return true;
@@ -647,7 +638,6 @@ bool bic_ws_context_method_process_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_ws_context_method_protocol_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -681,7 +671,6 @@ bool bic_ws_context_method_protocol_idx_1(interpreter_thread_s &it,unsigned stac
 
 bool bic_ws_context_method_callback_on_writable_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -726,8 +715,6 @@ bool bic_ws_context_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_ws_context_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("WsContext");
 
   BIC_SET_RESULT_BLANK();
@@ -1016,8 +1003,6 @@ void bic_ws_conn_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_ws_conn_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1030,7 +1015,6 @@ bool bic_ws_conn_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_ws_conn_method_reason_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ws_conn_s *wscn_ptr = (ws_conn_s *)dst_location->v_data_ptr;
@@ -1043,7 +1027,6 @@ bool bic_ws_conn_method_reason_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_ws_conn_method_received_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ws_conn_s *wscn_ptr = (ws_conn_s *)dst_location->v_data_ptr;
@@ -1060,7 +1043,6 @@ bool bic_ws_conn_method_received_data_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_ws_conn_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ws_conn_s *wscn_ptr = (ws_conn_s *)dst_location->v_data_ptr;
@@ -1074,7 +1056,6 @@ bool bic_ws_conn_method_user_data_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_ws_conn_method_ctx_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ws_conn_s *wscn_ptr = (ws_conn_s *)dst_location->v_data_ptr;
@@ -1089,7 +1070,6 @@ bool bic_ws_conn_method_ctx_user_data_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_ws_conn_method_protocol_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ws_conn_s *wscn_ptr = (ws_conn_s *)dst_location->v_data_ptr;
@@ -1108,7 +1088,6 @@ bool bic_ws_conn_method_protocol_name_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_ws_conn_method_callback_on_writable_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ws_conn_s *wscn_ptr = (ws_conn_s *)dst_location->v_data_ptr;
@@ -1123,7 +1102,6 @@ bool bic_ws_conn_method_callback_on_writable_0(interpreter_thread_s &it,unsigned
 
 bool bic_ws_conn_method_set_timeout_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1186,7 +1164,6 @@ bool bic_ws_conn_method_set_timeout_2(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_ws_conn_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1205,7 +1182,6 @@ bool bic_ws_conn_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_ws_conn_method_write_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1238,8 +1214,6 @@ bool bic_ws_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_ws_conn_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("WsConn");
 
   BIC_SET_RESULT_BLANK();
@@ -1326,8 +1300,6 @@ void bic_ws_client_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_ws_client_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1340,7 +1312,6 @@ bool bic_ws_client_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 
 bool bic_ws_client_method_connected_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ws_client_s *wscl_ptr = (ws_client_s *)dst_location->v_data_ptr;
@@ -1354,7 +1325,6 @@ bool bic_ws_client_method_connected_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_ws_client_method_callback_on_writable_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ws_client_s *wscl_ptr = (ws_client_s *)dst_location->v_data_ptr;
@@ -1385,8 +1355,6 @@ bool bic_ws_client_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_ws_client_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("WsClient");
 
   BIC_SET_RESULT_BLANK();
@@ -1461,7 +1429,6 @@ void bic_ws_base64_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_ws_base64_method_encode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   if (src_0_location->v_type != c_bi_class_string)
@@ -1505,7 +1472,6 @@ bool bic_ws_base64_method_encode_1(interpreter_thread_s &it,unsigned stack_base,
 bool bic_ws_base64_method_decode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   if (src_0_location->v_type != c_bi_class_string)
@@ -1561,8 +1527,6 @@ bool bic_ws_base64_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_ws_base64_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("WsBase64");
 
   BIC_SET_RESULT_BLANK();

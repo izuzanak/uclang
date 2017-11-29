@@ -249,8 +249,6 @@ void bic_gl_vertex_buffer_clear(interpreter_thread_s &it,location_s *location_pt
 
 bool bic_gl_vertex_buffer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -360,7 +358,6 @@ bool bic_gl_vertex_buffer_method_GlVertexBuffer_1(interpreter_thread_s &it,unsig
 
 bool bic_gl_vertex_buffer_method_get_format_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_vertex_buffer_s *vb_ptr = (gl_vertex_buffer_s *)dst_location->v_data_ptr;
@@ -377,7 +374,6 @@ bool bic_gl_vertex_buffer_method_get_format_0(interpreter_thread_s &it,unsigned 
 
 bool bic_gl_vertex_buffer_method_push_back_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -537,7 +533,6 @@ bool bic_gl_vertex_buffer_method_push_back_2(interpreter_thread_s &it,unsigned s
 
 bool bic_gl_vertex_buffer_method_render_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -564,7 +559,6 @@ bool bic_gl_vertex_buffer_method_render_1(interpreter_thread_s &it,unsigned stac
 
 bool bic_gl_vertex_buffer_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_vertex_buffer_s *vb_ptr = (gl_vertex_buffer_s *)dst_location->v_data_ptr;
@@ -587,8 +581,6 @@ bool bic_gl_vertex_buffer_method_to_string_0(interpreter_thread_s &it,unsigned s
 
 bool bic_gl_vertex_buffer_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GlVertexBuffer");
 
   BIC_SET_RESULT_BLANK();
@@ -773,8 +765,6 @@ void bic_gl_font_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_gl_font_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -851,7 +841,6 @@ bool bic_gl_font_method_GlFont_4(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_gl_font_method_height_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_font_s *glf_ptr = (gl_font_s *)dst_location->v_data_ptr;
@@ -866,7 +855,6 @@ bool bic_gl_font_method_height_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_gl_font_method_linegap_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_font_s *glf_ptr = (gl_font_s *)dst_location->v_data_ptr;
@@ -881,7 +869,6 @@ bool bic_gl_font_method_linegap_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_gl_font_method_ascender_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_font_s *glf_ptr = (gl_font_s *)dst_location->v_data_ptr;
@@ -896,7 +883,6 @@ bool bic_gl_font_method_ascender_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_gl_font_method_descender_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_font_s *glf_ptr = (gl_font_s *)dst_location->v_data_ptr;
@@ -911,7 +897,6 @@ bool bic_gl_font_method_descender_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_gl_font_method_buffer_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -967,7 +952,6 @@ bool bic_gl_font_method_buffer_2(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_gl_font_method_measure_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1040,7 +1024,6 @@ bool bic_gl_font_method_measure_1(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_gl_font_method_bind_texture_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_font_s *glf_ptr = (gl_font_s *)dst_location->v_data_ptr;
@@ -1064,8 +1047,6 @@ bool bic_gl_font_method_to_string_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_gl_font_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GlFont");
 
   BIC_SET_RESULT_BLANK();
@@ -1167,8 +1148,6 @@ void bic_gl_font_buffer_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_gl_font_buffer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1181,7 +1160,6 @@ bool bic_gl_font_buffer_operator_binary_equal(interpreter_thread_s &it,unsigned 
 
 bool bic_gl_font_buffer_method_set_pos_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1214,7 +1192,6 @@ bool bic_gl_font_buffer_method_set_pos_2(interpreter_thread_s &it,unsigned stack
 
 bool bic_gl_font_buffer_method_get_pos_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_font_buffer_s *glfb_ptr = (gl_font_buffer_s *)dst_location->v_data_ptr;
@@ -1244,7 +1221,6 @@ bool bic_gl_font_buffer_method_get_pos_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_gl_font_buffer_method_push_text_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1328,7 +1304,6 @@ bool bic_gl_font_buffer_method_push_text_1(interpreter_thread_s &it,unsigned sta
 
 bool bic_gl_font_buffer_method_render_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_font_buffer_s *glfb_ptr = (gl_font_buffer_s *)dst_location->v_data_ptr;
@@ -1344,7 +1319,6 @@ bool bic_gl_font_buffer_method_render_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_gl_font_buffer_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_font_buffer_s *glfb_ptr = (gl_font_buffer_s *)dst_location->v_data_ptr;
@@ -1367,8 +1341,6 @@ bool bic_gl_font_buffer_method_to_string_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_gl_font_buffer_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GlFontBuffer");
 
   BIC_SET_RESULT_BLANK();

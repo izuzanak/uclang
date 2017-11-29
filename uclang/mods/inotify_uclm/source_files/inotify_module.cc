@@ -241,8 +241,6 @@ void bic_inotify_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_inotify_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -275,7 +273,6 @@ bool bic_inotify_method_Inotify_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_inotify_method_add_watch_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -329,7 +326,6 @@ bool bic_inotify_method_add_watch_2(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_inotify_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   int ntfy_fd = (int)dst_location->v_data_ptr;
@@ -385,7 +381,6 @@ bool bic_inotify_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_inotify_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = (int)dst_location->v_data_ptr;
@@ -406,8 +401,6 @@ bool bic_inotify_method_to_string_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_inotify_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Inotify");
 
   BIC_SET_RESULT_BLANK();
@@ -478,7 +471,6 @@ built_in_variable_s inotify_watch_variables[] =
 
 #define BIC_INOTIFY_WATCH_RETRIEVE_INTEGER(NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
 \
   inotify_watch_s *iw_ptr = (inotify_watch_s *)dst_location->v_data_ptr;\
@@ -512,8 +504,6 @@ void bic_inotify_watch_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_inotify_watch_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -536,7 +526,6 @@ bool bic_inotify_watch_method_mask_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_inotify_watch_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   inotify_watch_s *iw_ptr = (inotify_watch_s *)dst_location->v_data_ptr;
@@ -558,8 +547,6 @@ bool bic_inotify_watch_method_to_string_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_inotify_watch_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("InotifyWatch");
 
   BIC_SET_RESULT_BLANK();
@@ -635,7 +622,6 @@ built_in_variable_s inotify_event_variables[] =
 
 #define BIC_INOTIFY_EVENT_RETRIEVE_INTEGER(NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
 \
   inotify_event_s *ie_ptr = (inotify_event_s *)dst_location->v_data_ptr;\
@@ -669,8 +655,6 @@ void bic_inotify_event_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_inotify_event_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -698,7 +682,6 @@ bool bic_inotify_event_method_cookie_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_inotify_event_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   inotify_event_s *ie_ptr = (inotify_event_s *)dst_location->v_data_ptr;
@@ -720,8 +703,6 @@ bool bic_inotify_event_method_to_string_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_inotify_event_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("InotifyEvent");
 
   BIC_SET_RESULT_BLANK();

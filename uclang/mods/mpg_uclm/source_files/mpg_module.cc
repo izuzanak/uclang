@@ -338,8 +338,6 @@ void bic_mpg_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_mpg_method_decoders_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - retrieve decoders list -
   const char **decoders = mpg123_decoders();
 
@@ -350,8 +348,6 @@ bool bic_mpg_method_decoders_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_mpg_method_supported_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - retrieve decoders list -
   const char **decoders = mpg123_supported_decoders();
 
@@ -362,7 +358,6 @@ bool bic_mpg_method_supported_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_mpg_method_feature_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int feature;
@@ -395,8 +390,6 @@ bool bic_mpg_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_mpg_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Mpg");
 
   BIC_SET_RESULT_BLANK();
@@ -601,7 +594,6 @@ built_in_variable_s mpg_handle_variables[] =
 
 #define BIC_MPG_HANDLE_GET_FORMAT_PROPERTY(PROPERTY) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
 \
   mpg_handle_s *mh_ptr = (mpg_handle_s *)dst_location->v_data_ptr;\
@@ -771,8 +763,6 @@ void bic_mpg_handle_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_mpg_handle_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -852,7 +842,6 @@ bool bic_mpg_handle_method_MpgHandle_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_mpg_handle_method_open_file_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -893,7 +882,6 @@ bool bic_mpg_handle_method_open_file_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_mpg_handle_method_open_feed_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   mpg_handle_s *mh_ptr = (mpg_handle_s *)dst_location->v_data_ptr;
@@ -921,7 +909,6 @@ bool bic_mpg_handle_method_open_feed_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_mpg_handle_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = ((mpg_handle_s *)dst_location->v_data_ptr)->type;
@@ -933,7 +920,6 @@ bool bic_mpg_handle_method_get_type_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_mpg_handle_method_set_param_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1011,7 +997,6 @@ bool bic_mpg_handle_method_set_param_2(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_mpg_handle_method_get_param_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1080,7 +1065,6 @@ bool bic_mpg_handle_method_get_param_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_mpg_handle_method_volume_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1112,7 +1096,6 @@ bool bic_mpg_handle_method_volume_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_mpg_handle_method_volume_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   mpg_handle_s *mh_ptr = (mpg_handle_s *)dst_location->v_data_ptr;
@@ -1150,7 +1133,6 @@ bool bic_mpg_handle_method_encoding_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_mpg_handle_method_feed_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1189,7 +1171,6 @@ bool bic_mpg_handle_method_feed_1(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_mpg_handle_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1307,7 +1288,6 @@ bool bic_mpg_handle_method_read_1(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_mpg_handle_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   mpg_handle_s *mh_ptr = (mpg_handle_s *)dst_location->v_data_ptr;
@@ -1345,8 +1325,6 @@ bool bic_mpg_handle_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_mpg_handle_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("MpgHandle");
 
   BIC_SET_RESULT_BLANK();

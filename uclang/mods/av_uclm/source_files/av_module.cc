@@ -312,8 +312,6 @@ void bic_av_format_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_av_format_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -380,7 +378,6 @@ bool bic_av_format_method_AvFormat_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_av_format_method_stream_cnt_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve av format -
@@ -395,7 +392,6 @@ bool bic_av_format_method_stream_cnt_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_av_format_method_stream_info_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -443,7 +439,6 @@ bool bic_av_format_method_stream_info_1(interpreter_thread_s &it,unsigned stack_
 
 bool bic_av_format_method_stream_decode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -505,7 +500,6 @@ bool bic_av_format_method_stream_decode_1(interpreter_thread_s &it,unsigned stac
 
 bool bic_av_format_method_next_frame_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   av_format_s *avf_ptr = (av_format_s *)dst_location->v_data_ptr;
@@ -634,8 +628,6 @@ bool bic_av_format_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_av_format_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("AvFormat");
 
   BIC_SET_RESULT_BLANK();
@@ -722,8 +714,6 @@ void bic_av_stream_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_av_stream_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -736,7 +726,6 @@ bool bic_av_stream_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 
 bool bic_av_stream_method_index_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   av_stream_s *avs_ptr = (av_stream_s *)dst_location->v_data_ptr;
@@ -751,7 +740,6 @@ bool bic_av_stream_method_index_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_av_stream_method_codec_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   av_stream_s *avs_ptr = (av_stream_s *)dst_location->v_data_ptr;
@@ -775,8 +763,6 @@ bool bic_av_stream_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_av_stream_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("AvStream");
 
   BIC_SET_RESULT_BLANK();
@@ -873,8 +859,6 @@ void bic_av_video_frame_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_av_video_frame_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -887,7 +871,6 @@ bool bic_av_video_frame_operator_binary_equal(interpreter_thread_s &it,unsigned 
 
 bool bic_av_video_frame_method_width_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   av_frame_s *avfr_ptr = (av_frame_s *)dst_location->v_data_ptr;
@@ -901,7 +884,6 @@ bool bic_av_video_frame_method_width_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_av_video_frame_method_height_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   av_frame_s *avfr_ptr = (av_frame_s *)dst_location->v_data_ptr;
@@ -915,7 +897,6 @@ bool bic_av_video_frame_method_height_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_av_video_frame_method_format_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   av_frame_s *avfr_ptr = (av_frame_s *)dst_location->v_data_ptr;
@@ -929,7 +910,6 @@ bool bic_av_video_frame_method_format_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_av_video_frame_method_pgm_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   av_frame_s *avfr_ptr = (av_frame_s *)dst_location->v_data_ptr;
@@ -979,8 +959,6 @@ bool bic_av_video_frame_method_to_string_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_av_video_frame_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("AvVideoFrame");
 
   BIC_SET_RESULT_BLANK();
@@ -1057,8 +1035,6 @@ void bic_av_audio_frame_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_av_audio_frame_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1080,8 +1056,6 @@ bool bic_av_audio_frame_method_to_string_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_av_audio_frame_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("AvAudioFrame");
 
   BIC_SET_RESULT_BLANK();
@@ -1221,8 +1195,6 @@ void bic_av_picture_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_av_picture_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1296,7 +1268,6 @@ bool bic_av_picture_method_AvPicture_3(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_av_picture_method_width_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   av_picture_s *avp_ptr = (av_picture_s *)dst_location->v_data_ptr;
@@ -1310,7 +1281,6 @@ bool bic_av_picture_method_width_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_av_picture_method_height_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   av_picture_s *avp_ptr = (av_picture_s *)dst_location->v_data_ptr;
@@ -1324,7 +1294,6 @@ bool bic_av_picture_method_height_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_av_picture_method_format_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   av_picture_s *avp_ptr = (av_picture_s *)dst_location->v_data_ptr;
@@ -1338,7 +1307,6 @@ bool bic_av_picture_method_format_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_av_picture_method_buffer_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   av_picture_s *avp_ptr = (av_picture_s *)dst_location->v_data_ptr;
@@ -1376,7 +1344,6 @@ bool bic_av_picture_method_buffer_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_av_picture_method_bmp_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   av_picture_s *avp_ptr = (av_picture_s *)dst_location->v_data_ptr;
@@ -1435,8 +1402,6 @@ bool bic_av_picture_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_av_picture_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("AvPicture");
 
   BIC_SET_RESULT_BLANK();
@@ -1527,8 +1492,6 @@ void bic_av_converter_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_av_converter_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1546,7 +1509,6 @@ bool bic_av_converter_method_AvConverter_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_av_converter_method_scale_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1644,7 +1606,6 @@ bool bic_av_converter_method_scale_2(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_av_converter_method_scale_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1791,8 +1752,6 @@ bool bic_av_converter_method_to_string_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_av_converter_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("AvConverter");
 
   BIC_SET_RESULT_BLANK();

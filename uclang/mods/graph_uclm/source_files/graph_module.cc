@@ -610,15 +610,11 @@ bool bic_graph_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array
 
 bool bic_graph_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
 
   BIC_SET_DESTINATION(src_0_location);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(src_0_location);
 
   return true;
@@ -758,14 +754,12 @@ bool bic_graph_method_Graph_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_graph_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
   long long int result = graph_ptr->type;
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -773,7 +767,6 @@ bool bic_graph_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_graph_method_duplicate_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
@@ -787,8 +780,6 @@ bool bic_graph_method_duplicate_0(interpreter_thread_s &it,unsigned stack_base,u
   dup_graph_ptr->duplicate(*graph_ptr);
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_graph,dup_graph_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -796,7 +787,6 @@ bool bic_graph_method_duplicate_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_graph_method_subgraph_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -811,7 +801,7 @@ bool bic_graph_method_subgraph_1(interpreter_thread_s &it,unsigned stack_base,ul
     return false;
   }
 
-  graph_s *graph_ptr = (graph_s *)((location_s *)dst_location)->v_data_ptr;
+  graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
   bool *e_used = (bool *)cmalloc(graph_ptr->edges.used*sizeof(bool));
   memset(e_used,false,graph_ptr->edges.used*sizeof(bool));
@@ -878,8 +868,6 @@ bool bic_graph_method_subgraph_1(interpreter_thread_s &it,unsigned stack_base,ul
 
   // - create result location -
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_subgraph,sg_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -887,7 +875,6 @@ bool bic_graph_method_subgraph_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_graph_method_subgraph_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -905,7 +892,7 @@ bool bic_graph_method_subgraph_2(interpreter_thread_s &it,unsigned stack_base,ul
     return false;
   }
 
-  graph_s *graph_ptr = (graph_s *)((location_s *)dst_location)->v_data_ptr;
+  graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
   bool *v_used = (bool *)cmalloc(graph_ptr->vertices.used*sizeof(bool));
   memset(v_used,false,graph_ptr->vertices.used*sizeof(bool));
@@ -1029,8 +1016,6 @@ bool bic_graph_method_subgraph_2(interpreter_thread_s &it,unsigned stack_base,ul
 
   // - create result location -
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_subgraph,sg_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -1038,7 +1023,6 @@ bool bic_graph_method_subgraph_2(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_graph_method_generate_connected_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
   location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
@@ -1082,8 +1066,6 @@ bool bic_graph_method_generate_connected_3(interpreter_thread_s &it,unsigned sta
   }
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_graph,graph_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -1091,7 +1073,6 @@ bool bic_graph_method_generate_connected_3(interpreter_thread_s &it,unsigned sta
 
 bool bic_graph_method_degree_sequence_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
@@ -1118,8 +1099,6 @@ bool bic_graph_method_degree_sequence_0(interpreter_thread_s &it,unsigned stack_
   degree_sequence.clear();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -1127,10 +1106,9 @@ bool bic_graph_method_degree_sequence_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_graph_method_minimum_spanning_tree_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  graph_s *graph_ptr = (graph_s *)((location_s *)dst_location)->v_data_ptr;
+  graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
   ui_array_s edge_idxs;
   edge_idxs.init();
@@ -1151,12 +1129,10 @@ bool bic_graph_method_minimum_spanning_tree_0(interpreter_thread_s &it,unsigned 
     // - create result location -
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_subgraph,sg_ptr);
 
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT(new_location);
   }
   else
   {
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT_BLANK();
   }
 
@@ -1167,7 +1143,6 @@ bool bic_graph_method_minimum_spanning_tree_0(interpreter_thread_s &it,unsigned 
 
 bool bic_graph_method_shortest_path_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1188,7 +1163,7 @@ bool bic_graph_method_shortest_path_2(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
-  graph_s *graph_ptr = (graph_s *)((location_s *)dst_location)->v_data_ptr;
+  graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
   graph_ptr->ucl_prepare(it,operands[c_source_pos_idx]);
 
   // - ERROR -
@@ -1274,8 +1249,6 @@ bool bic_graph_method_shortest_path_2(interpreter_thread_s &it,unsigned stack_ba
 
   // - create result location -
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_graph_paths,gp_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -1283,7 +1256,6 @@ bool bic_graph_method_shortest_path_2(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_graph_method_BFS_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1304,7 +1276,7 @@ bool bic_graph_method_BFS_2(interpreter_thread_s &it,unsigned stack_base,uli *op
     return false;
   }
 
-  graph_s *graph_ptr = (graph_s *)((location_s *)dst_location)->v_data_ptr;
+  graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
   // - ERROR -
   if (!graph_ptr->ucl_check_vertex_idx(src_vertex_idx))
@@ -1375,8 +1347,6 @@ bool bic_graph_method_BFS_2(interpreter_thread_s &it,unsigned stack_base,uli *op
 
   // - create result location -
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_subgraph,sg_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -1384,7 +1354,6 @@ bool bic_graph_method_BFS_2(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_graph_method_DFS_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1405,7 +1374,7 @@ bool bic_graph_method_DFS_2(interpreter_thread_s &it,unsigned stack_base,uli *op
     return false;
   }
 
-  graph_s *graph_ptr = (graph_s *)((location_s *)dst_location)->v_data_ptr;
+  graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
   // - ERROR -
   if (!graph_ptr->ucl_check_vertex_idx(src_vertex_idx))
@@ -1476,8 +1445,6 @@ bool bic_graph_method_DFS_2(interpreter_thread_s &it,unsigned stack_base,uli *op
 
   // - create result location -
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_subgraph,sg_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -1485,10 +1452,9 @@ bool bic_graph_method_DFS_2(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_graph_method_strongly_connected_components_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  graph_s *graph_ptr = (graph_s *)((location_s *)dst_location)->v_data_ptr;
+  graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
   // - ERROR -
   if (graph_ptr->type != c_graph_type_digraph)
@@ -1529,8 +1495,6 @@ bool bic_graph_method_strongly_connected_components_0(interpreter_thread_s &it,u
 
   // - create result location -
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -1538,14 +1502,12 @@ bool bic_graph_method_strongly_connected_components_0(interpreter_thread_s &it,u
 
 bool bic_graph_method_is_weakly_connected_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
   long long int result = graph_ptr->is_weakly_connected_graph();
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -1553,7 +1515,6 @@ bool bic_graph_method_is_weakly_connected_0(interpreter_thread_s &it,unsigned st
 
 bool bic_graph_method_is_strongly_connected_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
@@ -1567,7 +1528,6 @@ bool bic_graph_method_is_strongly_connected_0(interpreter_thread_s &it,unsigned 
 
   long long int result = graph_ptr->is_strongly_connected_graph_tarjans();
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -1575,7 +1535,6 @@ bool bic_graph_method_is_strongly_connected_0(interpreter_thread_s &it,unsigned 
 
 bool bic_graph_method_vertex_add_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1590,7 +1549,6 @@ bool bic_graph_method_vertex_add_1(interpreter_thread_s &it,unsigned stack_base,
     return false;
   }
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,vertex_idx);
 
   return true;
@@ -1598,7 +1556,6 @@ bool bic_graph_method_vertex_add_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_graph_method_vertex_remove_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1642,7 +1599,6 @@ bool bic_graph_method_vertex_remove_1(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_DESTINATION();
 
   return true;
@@ -1650,7 +1606,6 @@ bool bic_graph_method_vertex_remove_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_graph_method_vertex_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1667,7 +1622,7 @@ bool bic_graph_method_vertex_1(interpreter_thread_s &it,unsigned stack_base,uli 
     return false;
   }
 
-  graph_s *graph_ptr = (graph_s *)((location_s *)dst_location)->v_data_ptr;
+  graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
   // - ERROR -
   if (!graph_ptr->ucl_check_vertex_idx(vertex_idx))
@@ -1691,8 +1646,6 @@ bool bic_graph_method_vertex_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
   // - create result location -
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_graph_vertex,gv_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -1700,14 +1653,12 @@ bool bic_graph_method_vertex_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_graph_method_vertex_cnt_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
   long long int result = graph_ptr->vertices.count;
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -1715,7 +1666,6 @@ bool bic_graph_method_vertex_cnt_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_graph_method_vertex_idxs_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
@@ -1741,8 +1691,6 @@ bool bic_graph_method_vertex_idxs_0(interpreter_thread_s &it,unsigned stack_base
   }
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -1750,7 +1698,6 @@ bool bic_graph_method_vertex_idxs_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_graph_method_vertex_idxs_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1790,8 +1737,6 @@ bool bic_graph_method_vertex_idxs_1(interpreter_thread_s &it,unsigned stack_base
   vertex_idxs.clear();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -1799,7 +1744,6 @@ bool bic_graph_method_vertex_idxs_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_graph_method_vertex_values_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1825,8 +1769,6 @@ bool bic_graph_method_vertex_values_1(interpreter_thread_s &it,unsigned stack_ba
     pointer_array_s *array_ptr = it.get_new_array_ptr();
 
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
-
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT(new_location);
 
     // - process all vertices from array -
@@ -1878,7 +1820,6 @@ bool bic_graph_method_vertex_values_1(interpreter_thread_s &it,unsigned stack_ba
     location_s *value_location = (location_s *)graph_ptr->vertices[vertex_idx].value;
     value_location->v_reference_cnt.atomic_inc();
 
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT(value_location);
   }
 
@@ -1887,7 +1828,6 @@ bool bic_graph_method_vertex_values_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_graph_method_edge_add_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1939,7 +1879,6 @@ bool bic_graph_method_edge_add_3(interpreter_thread_s &it,unsigned stack_base,ul
     return false;
   }
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,edge_idx);
 
   return true;
@@ -1947,7 +1886,6 @@ bool bic_graph_method_edge_add_3(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_graph_method_edge_remove_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1984,7 +1922,6 @@ bool bic_graph_method_edge_remove_1(interpreter_thread_s &it,unsigned stack_base
     return false;
   }
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_DESTINATION();
 
   return true;
@@ -1992,7 +1929,6 @@ bool bic_graph_method_edge_remove_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_graph_method_edge_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -2009,7 +1945,7 @@ bool bic_graph_method_edge_1(interpreter_thread_s &it,unsigned stack_base,uli *o
     return false;
   }
 
-  graph_s *graph_ptr = (graph_s *)((location_s *)dst_location)->v_data_ptr;
+  graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
   // - ERROR -
   if (!graph_ptr->ucl_check_edge_idx(edge_idx))
@@ -2033,8 +1969,6 @@ bool bic_graph_method_edge_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 
   // - create result location -
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_graph_edge,ge_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -2042,14 +1976,12 @@ bool bic_graph_method_edge_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_graph_method_edge_cnt_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
   long long int result = graph_ptr->edges.count;
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -2057,7 +1989,6 @@ bool bic_graph_method_edge_cnt_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_graph_method_edge_idxs_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
@@ -2083,8 +2014,6 @@ bool bic_graph_method_edge_idxs_0(interpreter_thread_s &it,unsigned stack_base,u
   }
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -2092,7 +2021,6 @@ bool bic_graph_method_edge_idxs_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_graph_method_edge_idxs_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -2132,8 +2060,6 @@ bool bic_graph_method_edge_idxs_1(interpreter_thread_s &it,unsigned stack_base,u
   edge_idxs.clear();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -2141,7 +2067,6 @@ bool bic_graph_method_edge_idxs_1(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_graph_method_edge_values_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -2167,8 +2092,6 @@ bool bic_graph_method_edge_values_1(interpreter_thread_s &it,unsigned stack_base
     pointer_array_s *array_ptr = it.get_new_array_ptr();
 
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
-
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT(new_location);
 
     // - process all edges from array -
@@ -2220,7 +2143,6 @@ bool bic_graph_method_edge_values_1(interpreter_thread_s &it,unsigned stack_base
     location_s *value_location = (location_s *)graph_ptr->edges[edge_idx].value;
     value_location->v_reference_cnt.atomic_inc();
 
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT(value_location);
   }
 
@@ -2229,7 +2151,6 @@ bool bic_graph_method_edge_values_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_graph_method_get_dot_code_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
@@ -2245,7 +2166,6 @@ bool bic_graph_method_get_dot_code_0(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_STRING(string_ptr);
 
   return true;
@@ -2262,11 +2182,9 @@ bool bic_graph_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_graph_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
 
   printf("Graph");
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_BLANK();
 
   return true;
@@ -2383,7 +2301,6 @@ built_in_variable_s graph_vertex_variables[] =
 
 #define BIC_GRAPH_VERTEX_IN_OUT_IDXS(VERTEX_IDX) \
 {/*{{{*/\
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
 \
   graph_vertex_s *gv_ptr = (graph_vertex_s *)dst_location->v_data_ptr;\
@@ -2432,7 +2349,6 @@ built_in_variable_s graph_vertex_variables[] =
     while(ei_idx != c_idx_not_exist);\
   }\
 \
-  pointer &res_location = it.data_stack[res_loc_idx];\
   BIC_SET_RESULT(array_location);\
 \
   return true;\
@@ -2460,15 +2376,11 @@ void bic_graph_vertex_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_graph_vertex_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
 
   BIC_SET_DESTINATION(src_0_location);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(src_0_location);
 
   return true;
@@ -2476,14 +2388,12 @@ bool bic_graph_vertex_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
 bool bic_graph_vertex_method_index_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_vertex_s *gv_ptr = (graph_vertex_s *)dst_location->v_data_ptr;
 
   long long int result = gv_ptr->vertex_idx;
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -2491,7 +2401,6 @@ bool bic_graph_vertex_method_index_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_graph_vertex_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_vertex_s *gv_ptr = (graph_vertex_s *)dst_location->v_data_ptr;
@@ -2502,7 +2411,6 @@ bool bic_graph_vertex_method_value_0(interpreter_thread_s &it,unsigned stack_bas
   location_s *value_location = (location_s *)graph_ptr->vertices[gv_ptr->vertex_idx].value;
   value_location->v_reference_cnt.atomic_inc();
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(value_location);
 
   return true;
@@ -2510,7 +2418,6 @@ bool bic_graph_vertex_method_value_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_graph_vertex_method_degree_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_vertex_s *gv_ptr = (graph_vertex_s *)dst_location->v_data_ptr;
@@ -2520,7 +2427,6 @@ bool bic_graph_vertex_method_degree_0(interpreter_thread_s &it,unsigned stack_ba
 
   long long int result = graph_ptr->vertices[gv_ptr->vertex_idx].get_degree();
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -2528,7 +2434,6 @@ bool bic_graph_vertex_method_degree_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_graph_vertex_method_out_degree_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_vertex_s *gv_ptr = (graph_vertex_s *)dst_location->v_data_ptr;
@@ -2538,7 +2443,6 @@ bool bic_graph_vertex_method_out_degree_0(interpreter_thread_s &it,unsigned stac
 
   long long int result = graph_ptr->vertices[gv_ptr->vertex_idx].output_degree;
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -2546,7 +2450,6 @@ bool bic_graph_vertex_method_out_degree_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_graph_vertex_method_in_degree_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_vertex_s *gv_ptr = (graph_vertex_s *)dst_location->v_data_ptr;
@@ -2556,7 +2459,6 @@ bool bic_graph_vertex_method_in_degree_0(interpreter_thread_s &it,unsigned stack
 
   long long int result = graph_ptr->vertices[gv_ptr->vertex_idx].input_degree;
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -2564,7 +2466,6 @@ bool bic_graph_vertex_method_in_degree_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_graph_vertex_method_adjacent_idxs_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_vertex_s *gv_ptr = (graph_vertex_s *)dst_location->v_data_ptr;
@@ -2594,8 +2495,6 @@ bool bic_graph_vertex_method_adjacent_idxs_0(interpreter_thread_s &it,unsigned s
   vertex_idxs.clear();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -2603,7 +2502,6 @@ bool bic_graph_vertex_method_adjacent_idxs_0(interpreter_thread_s &it,unsigned s
 
 bool bic_graph_vertex_method_incident_idxs_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_vertex_s *gv_ptr = (graph_vertex_s *)dst_location->v_data_ptr;
@@ -2633,8 +2531,6 @@ bool bic_graph_vertex_method_incident_idxs_0(interpreter_thread_s &it,unsigned s
   edge_idxs.clear();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -2642,7 +2538,6 @@ bool bic_graph_vertex_method_incident_idxs_0(interpreter_thread_s &it,unsigned s
 
 bool bic_graph_vertex_method_edge_idxs_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_vertex_s *gv_ptr = (graph_vertex_s *)dst_location->v_data_ptr;
@@ -2673,8 +2568,6 @@ bool bic_graph_vertex_method_edge_idxs_0(interpreter_thread_s &it,unsigned stack
   }
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -2701,11 +2594,8 @@ bool bic_graph_vertex_method_to_string_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_graph_vertex_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-
   printf("GraphVertex");
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_BLANK();
 
   return true;
@@ -2817,15 +2707,11 @@ void bic_graph_edge_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_graph_edge_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
 
   BIC_SET_DESTINATION(src_0_location);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(src_0_location);
 
   return true;
@@ -2833,14 +2719,12 @@ bool bic_graph_edge_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 
 bool bic_graph_edge_method_index_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_edge_s *ge_ptr = (graph_edge_s *)dst_location->v_data_ptr;
 
   long long int result = ge_ptr->edge_idx;
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -2848,7 +2732,6 @@ bool bic_graph_edge_method_index_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_graph_edge_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_edge_s *ge_ptr = (graph_edge_s *)dst_location->v_data_ptr;
@@ -2859,7 +2742,6 @@ bool bic_graph_edge_method_value_0(interpreter_thread_s &it,unsigned stack_base,
   location_s *value_location = (location_s *)graph_ptr->edges[ge_ptr->edge_idx].value;
   value_location->v_reference_cnt.atomic_inc();
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(value_location);
 
   return true;
@@ -2867,7 +2749,6 @@ bool bic_graph_edge_method_value_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_graph_edge_method_source_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_edge_s *ge_ptr = (graph_edge_s *)dst_location->v_data_ptr;
@@ -2877,7 +2758,6 @@ bool bic_graph_edge_method_source_idx_0(interpreter_thread_s &it,unsigned stack_
 
   long long int result = graph_ptr->edges[ge_ptr->edge_idx].src_vertex_idx;
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -2885,7 +2765,6 @@ bool bic_graph_edge_method_source_idx_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_graph_edge_method_target_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_edge_s *ge_ptr = (graph_edge_s *)dst_location->v_data_ptr;
@@ -2895,7 +2774,6 @@ bool bic_graph_edge_method_target_idx_0(interpreter_thread_s &it,unsigned stack_
 
   long long int result = graph_ptr->edges[ge_ptr->edge_idx].trg_vertex_idx;
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -2903,7 +2781,6 @@ bool bic_graph_edge_method_target_idx_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_graph_edge_method_opposite_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -2950,7 +2827,6 @@ bool bic_graph_edge_method_opposite_idx_1(interpreter_thread_s &it,unsigned stac
     return false;
   }
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -2967,11 +2843,8 @@ bool bic_graph_edge_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_graph_edge_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-
   printf("GraphEdge");
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_BLANK();
 
   return true;
@@ -3045,15 +2918,11 @@ void bic_subgraph_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_subgraph_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
 
   BIC_SET_DESTINATION(src_0_location);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(src_0_location);
 
   return true;
@@ -3070,11 +2939,8 @@ bool bic_subgraph_method_to_string_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_subgraph_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-
   printf("Subgraph");
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_BLANK();
 
   return true;
@@ -3168,15 +3034,11 @@ void bic_graph_paths_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_graph_paths_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
 
   BIC_SET_DESTINATION(src_0_location);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(src_0_location);
 
   return true;
@@ -3184,7 +3046,6 @@ bool bic_graph_paths_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_graph_paths_method_lengths_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_paths_s *gp_ptr = (graph_paths_s *)dst_location->v_data_ptr;
@@ -3192,7 +3053,6 @@ bool bic_graph_paths_method_lengths_0(interpreter_thread_s &it,unsigned stack_ba
   location_s *lengths_arr = (location_s *)gp_ptr->lengths_arr;
   lengths_arr->v_reference_cnt.atomic_inc();
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(lengths_arr);
 
   return true;
@@ -3200,14 +3060,12 @@ bool bic_graph_paths_method_lengths_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_graph_paths_method_source_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_paths_s *gp_ptr = (graph_paths_s *)dst_location->v_data_ptr;
 
   long long int result = gp_ptr->src_vertex_idx;
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -3215,7 +3073,6 @@ bool bic_graph_paths_method_source_idx_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_graph_paths_method_raw_paths_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   graph_paths_s *gp_ptr = (graph_paths_s *)dst_location->v_data_ptr;
@@ -3237,8 +3094,6 @@ bool bic_graph_paths_method_raw_paths_0(interpreter_thread_s &it,unsigned stack_
   }
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -3246,7 +3101,6 @@ bool bic_graph_paths_method_raw_paths_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_graph_paths_method_path_to_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -3282,7 +3136,6 @@ bool bic_graph_paths_method_path_to_1(interpreter_thread_s &it,unsigned stack_ba
   // - if there is no path to target vertex -
   if (length_location->v_type == c_bi_class_blank)
   {
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT_BLANK();
   }
 
@@ -3328,7 +3181,6 @@ bool bic_graph_paths_method_path_to_1(interpreter_thread_s &it,unsigned stack_ba
       } while(v_idx != gp_ptr->src_vertex_idx);
     }
 
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT(array_location);
   }
 
@@ -3346,11 +3198,8 @@ bool bic_graph_paths_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_graph_paths_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-
   printf("GraphPaths");
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_BLANK();
 
   return true;

@@ -200,8 +200,6 @@ void bic_gst_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_gst_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   guint major;
   guint minor;
   guint micro;
@@ -234,8 +232,6 @@ bool bic_gst_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_gst_method_version_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - retrieve gstreamer version -
   gchar *version = gst_version_string();
 
@@ -250,7 +246,6 @@ bool bic_gst_method_version_string_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_gst_method_pipeline_video_uri_imxegl_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
@@ -333,8 +328,6 @@ bool bic_gst_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_gst_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Gst");
 
   BIC_SET_RESULT_BLANK();
@@ -430,8 +423,6 @@ void bic_gst_pipeline_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_gst_pipeline_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -444,7 +435,6 @@ bool bic_gst_pipeline_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
 bool bic_gst_pipeline_method_set_state_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -487,7 +477,6 @@ bool bic_gst_pipeline_method_set_state_1(interpreter_thread_s &it,unsigned stack
 
 bool bic_gst_pipeline_method_get_state_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gst_pipeline_s *gstp_ptr = (gst_pipeline_s *)dst_location->v_data_ptr;
@@ -503,7 +492,6 @@ bool bic_gst_pipeline_method_get_state_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_gst_pipeline_method_main_loop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gst_pipeline_s *gstp_ptr = (gst_pipeline_s *)dst_location->v_data_ptr;
@@ -604,7 +592,6 @@ bool bic_gst_pipeline_method_main_loop_0(interpreter_thread_s &it,unsigned stack
 
   } while (running);
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_DESTINATION();
 
   return true;
@@ -612,7 +599,6 @@ bool bic_gst_pipeline_method_main_loop_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_gst_pipeline_method_stop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gst_pipeline_s *gstp_ptr = (gst_pipeline_s *)dst_location->v_data_ptr;
@@ -640,8 +626,6 @@ bool bic_gst_pipeline_method_to_string_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_gst_pipeline_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GstPipeline");
 
   BIC_SET_RESULT_BLANK();

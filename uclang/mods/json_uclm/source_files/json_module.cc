@@ -186,7 +186,6 @@ void bic_json_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_json_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -391,7 +390,6 @@ bool bic_json_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_json_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
@@ -683,7 +681,6 @@ bool bic_json_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_json_method_parse_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -738,11 +735,8 @@ bool bic_json_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_json_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-
   printf("Json");
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_BLANK();
 
   return true;

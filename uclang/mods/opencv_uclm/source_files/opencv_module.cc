@@ -317,7 +317,6 @@ void bic_cv_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_cv_method_wait_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int delay;
@@ -351,8 +350,6 @@ bool bic_cv_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_cv_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Cv");
 
   BIC_SET_RESULT_BLANK();
@@ -485,8 +482,6 @@ void bic_cv_mat_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_cv_mat_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -507,7 +502,6 @@ bool bic_cv_mat_method_CvMat_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_cv_mat_method_read_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
@@ -551,7 +545,6 @@ bool bic_cv_mat_method_read_2(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_cv_mat_method_write_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -601,7 +594,6 @@ bool bic_cv_mat_method_write_2(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_cv_mat_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
@@ -645,7 +637,6 @@ bool bic_cv_mat_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_cv_mat_method_encode_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -708,8 +699,6 @@ bool bic_cv_mat_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_cv_mat_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("CvMat");
 
   BIC_SET_RESULT_BLANK();
@@ -804,8 +793,6 @@ void bic_cv_window_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_cv_window_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -860,7 +847,6 @@ bool bic_cv_window_method_CvWindow_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_cv_window_method_show_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -907,8 +893,6 @@ bool bic_cv_window_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_cv_window_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("CvWindow");
 
   BIC_SET_RESULT_BLANK();
@@ -1273,8 +1257,6 @@ void bic_cv_capture_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_cv_capture_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1342,7 +1324,6 @@ bool bic_cv_capture_method_CvCapture_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_cv_capture_method_grab_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   VideoCapture *vc_ptr = (VideoCapture *)dst_location->v_data_ptr;
@@ -1356,7 +1337,6 @@ bool bic_cv_capture_method_grab_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_cv_capture_method_retrieve_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   VideoCapture *vc_ptr = (VideoCapture *)dst_location->v_data_ptr;
@@ -1379,7 +1359,6 @@ bool bic_cv_capture_method_retrieve_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_cv_capture_method_retrieve_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1411,7 +1390,6 @@ bool bic_cv_capture_method_retrieve_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_cv_capture_method_width_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   VideoCapture *vc_ptr = (VideoCapture *)dst_location->v_data_ptr;
@@ -1424,7 +1402,6 @@ bool bic_cv_capture_method_width_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_cv_capture_method_height_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   VideoCapture *vc_ptr = (VideoCapture *)dst_location->v_data_ptr;
@@ -1437,7 +1414,6 @@ bool bic_cv_capture_method_height_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_cv_capture_method_get_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1464,7 +1440,6 @@ bool bic_cv_capture_method_get_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_cv_capture_method_set_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1510,8 +1485,6 @@ bool bic_cv_capture_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_cv_capture_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("CvCapture");
 
   BIC_SET_RESULT_BLANK();
@@ -1607,8 +1580,6 @@ void bic_cv_writer_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_cv_writer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1693,7 +1664,6 @@ bool bic_cv_writer_method_CvWriter_6(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_cv_writer_method_width_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   cv_writer_s *vw_ptr = (cv_writer_s *)dst_location->v_data_ptr;
@@ -1707,7 +1677,6 @@ bool bic_cv_writer_method_width_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_cv_writer_method_height_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   cv_writer_s *vw_ptr = (cv_writer_s *)dst_location->v_data_ptr;
@@ -1721,7 +1690,6 @@ bool bic_cv_writer_method_height_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_cv_writer_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1774,8 +1742,6 @@ bool bic_cv_writer_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_cv_writer_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("CvWriter");
 
   BIC_SET_RESULT_BLANK();

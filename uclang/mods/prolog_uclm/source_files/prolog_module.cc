@@ -293,7 +293,6 @@ void bic_prolog_module_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_prolog_module_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - method name reference -
@@ -359,8 +358,6 @@ bool bic_prolog_module_invoke(interpreter_thread_s &it,uli *code,unsigned stack_
     );
 
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_prolog_query,(fid_t)fid);
-
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT(new_location);
   }
 
@@ -379,8 +376,6 @@ bool bic_prolog_module_invoke(interpreter_thread_s &it,uli *code,unsigned stack_
     PL_close_foreign_frame(fid);
 
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_prolog_term,term);
-
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT(new_location);
   }
 
@@ -389,8 +384,6 @@ bool bic_prolog_module_invoke(interpreter_thread_s &it,uli *code,unsigned stack_
 
 bool bic_prolog_module_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -438,7 +431,6 @@ bool bic_prolog_module_method_PrologModule_1(interpreter_thread_s &it,unsigned s
 
 bool bic_prolog_module_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   atom_t atom = PL_module_name((module_t)dst_location->v_data_ptr);
@@ -452,7 +444,6 @@ bool bic_prolog_module_method_name_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_prolog_module_method_pred_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -480,7 +471,6 @@ bool bic_prolog_module_method_pred_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_prolog_module_method_pred_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -524,8 +514,6 @@ bool bic_prolog_module_method_to_string_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_prolog_module_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("PrologModule");
 
   BIC_SET_RESULT_BLANK();
@@ -601,8 +589,6 @@ void bic_prolog_frame_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_prolog_frame_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -634,8 +620,6 @@ bool bic_prolog_frame_method_to_string_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_prolog_frame_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("PrologFrame");
 
   BIC_SET_RESULT_BLANK();
@@ -716,8 +700,6 @@ void bic_prolog_atom_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_prolog_atom_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -756,7 +738,6 @@ bool bic_prolog_atom_method_PrologAtom_1(interpreter_thread_s &it,unsigned stack
 
 bool bic_prolog_atom_method_text_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   atom_t atom = (atom_t)dst_location->v_data_ptr;
@@ -783,8 +764,6 @@ bool bic_prolog_atom_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_prolog_atom_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("PrologAtom");
 
   BIC_SET_RESULT_BLANK();
@@ -873,8 +852,6 @@ void bic_prolog_functor_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_prolog_functor_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -916,7 +893,6 @@ bool bic_prolog_functor_method_PrologFunctor_2(interpreter_thread_s &it,unsigned
 
 bool bic_prolog_functor_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   atom_t atom = PL_functor_name((functor_t)dst_location->v_data_ptr);
@@ -930,7 +906,6 @@ bool bic_prolog_functor_method_name_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_prolog_functor_method_arity_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int arity = PL_functor_arity((functor_t)dst_location->v_data_ptr);
@@ -942,7 +917,6 @@ bool bic_prolog_functor_method_arity_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_prolog_functor_method_term_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1000,8 +974,6 @@ bool bic_prolog_functor_method_to_string_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_prolog_functor_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("PrologFunctor");
 
   BIC_SET_RESULT_BLANK();
@@ -1085,8 +1057,6 @@ void bic_prolog_term_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_prolog_term_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1126,7 +1096,6 @@ bool bic_prolog_term_method_PrologTerm_1(interpreter_thread_s &it,unsigned stack
 
 bool bic_prolog_term_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   term_t term = (term_t)dst_location->v_data_ptr;
@@ -1163,8 +1132,6 @@ bool bic_prolog_term_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_prolog_term_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("PrologTerm");
 
   BIC_SET_RESULT_BLANK();
@@ -1253,8 +1220,6 @@ void bic_prolog_pred_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_prolog_pred_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1267,7 +1232,6 @@ bool bic_prolog_pred_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_prolog_pred_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   predicate_t pred = (predicate_t)dst_location->v_data_ptr;
@@ -1284,7 +1248,6 @@ bool bic_prolog_pred_method_name_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_prolog_pred_method_arity_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   predicate_t pred = (predicate_t)dst_location->v_data_ptr;
@@ -1300,7 +1263,6 @@ bool bic_prolog_pred_method_arity_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_prolog_pred_method_call_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1365,7 +1327,6 @@ bool bic_prolog_pred_method_call_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_prolog_pred_method_query_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1424,8 +1385,6 @@ bool bic_prolog_pred_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_prolog_pred_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("PrologPred");
 
   BIC_SET_RESULT_BLANK();
@@ -1503,8 +1462,6 @@ void bic_prolog_query_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_prolog_query_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1517,8 +1474,6 @@ bool bic_prolog_query_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
 bool bic_prolog_query_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   if (!PL_next_solution(prolog_c::qid))
   {
     // - ERROR -
@@ -1549,8 +1504,6 @@ bool bic_prolog_query_method_to_string_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_prolog_query_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("PrologQuery");
 
   BIC_SET_RESULT_BLANK();

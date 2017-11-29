@@ -154,8 +154,6 @@ bool bic_docu_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_docu_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Docu");
 
   BIC_SET_RESULT_BLANK();
@@ -254,7 +252,6 @@ built_in_variable_s docu_source_variables[] =
 
 #define BIC_DOCU_SOURCE_ITEM(NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
 \
@@ -328,8 +325,6 @@ unsigned bic_docu_source_next_idx(location_s *location_ptr,unsigned index)
 
 bool bic_docu_source_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -389,7 +384,6 @@ bool bic_docu_source_method_item_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_docu_source_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   docu_source_s *ds_ptr = (docu_source_s *)dst_location->v_data_ptr;
@@ -408,7 +402,6 @@ bool bic_docu_source_method_first_idx_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_docu_source_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -441,7 +434,6 @@ bool bic_docu_source_method_next_idx_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_docu_source_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   docu_source_s *ds_ptr = (docu_source_s *)dst_location->v_data_ptr;
@@ -464,8 +456,6 @@ bool bic_docu_source_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_docu_source_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("DocuSource");
 
   BIC_SET_RESULT_BLANK();
@@ -556,8 +546,6 @@ void bic_docu_comment_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_docu_comment_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -570,7 +558,6 @@ bool bic_docu_comment_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
 bool bic_docu_comment_method_start_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   docu_comment_s *dc_ptr = (docu_comment_s *)dst_location->v_data_ptr;
@@ -585,7 +572,6 @@ bool bic_docu_comment_method_start_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_docu_comment_method_end_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   docu_comment_s *dc_ptr = (docu_comment_s *)dst_location->v_data_ptr;
@@ -600,7 +586,6 @@ bool bic_docu_comment_method_end_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_docu_comment_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   docu_comment_s *dc_ptr = (docu_comment_s *)dst_location->v_data_ptr;
@@ -627,8 +612,6 @@ bool bic_docu_comment_method_to_string_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_docu_comment_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("DocuComment");
 
   BIC_SET_RESULT_BLANK();
@@ -777,8 +760,6 @@ void bic_docu_parsed_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_docu_parsed_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -791,7 +772,6 @@ bool bic_docu_parsed_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_docu_parsed_method_parse_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -840,7 +820,6 @@ bool bic_docu_parsed_method_parse_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_docu_parsed_method_create_brief_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -879,7 +858,6 @@ bool bic_docu_parsed_method_create_brief_1(interpreter_thread_s &it,unsigned sta
 
 bool bic_docu_parsed_method_after_member_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   docu_parsed_s *dp_ptr = (docu_parsed_s *)dst_location->v_data_ptr;
@@ -893,7 +871,6 @@ bool bic_docu_parsed_method_after_member_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_docu_parsed_method_comm_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   docu_parsed_s *dp_ptr = (docu_parsed_s *)dst_location->v_data_ptr;
@@ -907,7 +884,6 @@ bool bic_docu_parsed_method_comm_type_0(interpreter_thread_s &it,unsigned stack_
 
 #define BIC_DOCU_PARSER_GET_LOCATION(NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
 \
   docu_parsed_s *dp_ptr = (docu_parsed_s *)dst_location->v_data_ptr;\
@@ -960,8 +936,6 @@ bool bic_docu_parsed_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_docu_parsed_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("DocuParsed");
 
   BIC_SET_RESULT_BLANK();

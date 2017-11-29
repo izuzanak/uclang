@@ -335,8 +335,6 @@ void bic_final_automata_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_final_automata_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -428,7 +426,6 @@ bool bic_final_automata_method_FinalAutomata_1(interpreter_thread_s &it,unsigned
 
 bool bic_final_automata_method_get_source_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -469,8 +466,6 @@ bool bic_final_automata_method_to_string_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_final_automata_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("FinalAutomata");
 
   BIC_SET_RESULT_BLANK();
@@ -546,7 +541,6 @@ built_in_variable_s fa_source_variables[] =
 
 #define BIC_FA_SOURCE_NEXT_ITEM() \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
 \
   fa_source_s *fs_ptr = (fa_source_s *)dst_location->v_data_ptr;\
@@ -598,8 +592,6 @@ void bic_fa_source_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_fa_source_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -617,7 +609,6 @@ bool bic_fa_source_method_next_terminal_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_fa_source_method_old_input_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   fa_source_s *fs_ptr = (fa_source_s *)dst_location->v_data_ptr;
@@ -631,7 +622,6 @@ bool bic_fa_source_method_old_input_idx_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_fa_source_method_input_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   fa_source_s *fs_ptr = (fa_source_s *)dst_location->v_data_ptr;
@@ -659,8 +649,6 @@ bool bic_fa_source_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_fa_source_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("FaSource");
 
   BIC_SET_RESULT_BLANK();
@@ -746,8 +734,6 @@ void bic_parser_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_parser_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -810,7 +796,6 @@ bool bic_parser_method_Parser_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_parser_method_parse_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -875,7 +860,6 @@ bool bic_parser_method_parse_2(interpreter_thread_s &it,unsigned stack_base,uli 
   // - release parser state -
   it.release_location_ptr(ps_location);
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_DESTINATION();
 
   return true;
@@ -892,8 +876,6 @@ bool bic_parser_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_parser_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Parser");
 
   BIC_SET_RESULT_BLANK();
@@ -989,8 +971,6 @@ void bic_parse_state_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_parse_state_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1003,7 +983,6 @@ bool bic_parse_state_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_parse_state_method_rule_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   parse_state_s *ps_ptr = (parse_state_s *)dst_location->v_data_ptr;
@@ -1024,7 +1003,6 @@ bool bic_parse_state_method_rule_idx_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_parse_state_method_rule_body_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1078,7 +1056,6 @@ bool bic_parse_state_method_rule_body_1(interpreter_thread_s &it,unsigned stack_
 
 bool bic_parse_state_method_old_input_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   parse_state_s *ps_ptr = (parse_state_s *)dst_location->v_data_ptr;
@@ -1099,7 +1076,6 @@ bool bic_parse_state_method_old_input_idx_0(interpreter_thread_s &it,unsigned st
 
 bool bic_parse_state_method_input_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   parse_state_s *ps_ptr = (parse_state_s *)dst_location->v_data_ptr;
@@ -1129,8 +1105,6 @@ bool bic_parse_state_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_parse_state_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("ParseState");
 
   BIC_SET_RESULT_BLANK();

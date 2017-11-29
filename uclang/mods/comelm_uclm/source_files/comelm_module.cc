@@ -201,7 +201,6 @@ built_in_variable_s elm_comm_variables[] =
 
 #define BIC_ELM_COMM_READ_LOAD_PROFILE(NAME,DELTA_VALUES) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);\
@@ -289,8 +288,6 @@ void bic_elm_comm_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_elm_comm_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -349,7 +346,6 @@ bool bic_elm_comm_method_ElmComm_3(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_elm_comm_method_check_sync_time_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -395,7 +391,6 @@ bool bic_elm_comm_method_check_sync_time_1(interpreter_thread_s &it,unsigned sta
 
 bool bic_elm_comm_method_read_identification_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve comm proc object pointer -
@@ -443,7 +438,6 @@ bool bic_elm_comm_method_read_identification_0(interpreter_thread_s &it,unsigned
 
 bool bic_elm_comm_method_read_actual_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve comm proc object pointer -
@@ -486,7 +480,6 @@ bool bic_elm_comm_method_read_delta_2(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_elm_comm_method_write_init_speed_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -539,8 +532,6 @@ bool bic_elm_comm_method_to_string_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_elm_comm_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("ElmComm");
 
   BIC_SET_RESULT_BLANK();
@@ -667,8 +658,6 @@ void bic_elm_packet_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_elm_packet_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -695,8 +684,6 @@ bool bic_elm_packet_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_elm_packet_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("ElmPacket");
 
   BIC_SET_RESULT_BLANK();

@@ -201,8 +201,6 @@ void bic_modem_manager_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_modem_manager_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -257,7 +255,6 @@ bool bic_modem_manager_method_ModemManager_1(interpreter_thread_s &it,unsigned s
 
 bool bic_modem_manager_method_device_info_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   DeviceInfo di;
@@ -302,7 +299,6 @@ bool bic_modem_manager_method_device_info_0(interpreter_thread_s &it,unsigned st
 
 bool bic_modem_manager_method_network_info_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   NetworkInfo ni;
@@ -349,7 +345,6 @@ bool bic_modem_manager_method_network_info_0(interpreter_thread_s &it,unsigned s
 
 bool bic_modem_manager_method_subscriber_id_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   std::string sub_id;
@@ -377,7 +372,6 @@ bool bic_modem_manager_method_subscriber_id_0(interpreter_thread_s &it,unsigned 
 
 bool bic_modem_manager_method_at_command_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -428,8 +422,6 @@ bool bic_modem_manager_method_to_string_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_modem_manager_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("ModemManager");
 
   BIC_SET_RESULT_BLANK();
@@ -505,7 +497,6 @@ built_in_variable_s mm_device_info_variables[] =
 
 #define BIC_MM_DEVICE_INFO_GET_VALUE(NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
 \
   location_s *tmp_location = ((device_info_s *)dst_location->v_data_ptr)->NAME;\
@@ -538,8 +529,6 @@ void bic_mm_device_info_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_mm_device_info_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -581,8 +570,6 @@ bool bic_mm_device_info_method_to_string_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_mm_device_info_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("MMDeviceInfo");
 
   BIC_SET_RESULT_BLANK();
@@ -750,8 +737,6 @@ void bic_mm_network_info_clear(interpreter_thread_s &it,location_s *location_ptr
 
 bool bic_mm_network_info_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -764,7 +749,6 @@ bool bic_mm_network_info_operator_binary_equal(interpreter_thread_s &it,unsigned
 
 #define BIC_MM_NETWORK_INFO_GET_VALUE_INTEGER(NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
 \
   long long int result = ((network_info_s *)dst_location->v_data_ptr)->NAME;\
@@ -776,7 +760,6 @@ bool bic_mm_network_info_operator_binary_equal(interpreter_thread_s &it,unsigned
 
 #define BIC_MM_NETWORK_INFO_GET_VALUE_STRING(NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
 \
   location_s *tmp_location = ((network_info_s *)dst_location->v_data_ptr)->NAME;\
@@ -823,8 +806,6 @@ bool bic_mm_network_info_method_to_string_0(interpreter_thread_s &it,unsigned st
 
 bool bic_mm_network_info_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("MMNetworkInfo");
 
   BIC_SET_RESULT_BLANK();

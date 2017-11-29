@@ -324,8 +324,6 @@ void bic_snmp_session_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_snmp_session_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -433,7 +431,6 @@ bool bic_snmp_session_method_SnmpSession_1(interpreter_thread_s &it,unsigned sta
 
 bool bic_snmp_session_method_set_list_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -567,7 +564,6 @@ bool bic_snmp_session_method_set_list_2(interpreter_thread_s &it,unsigned stack_
 
 bool bic_snmp_session_method_get_list_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -696,8 +692,6 @@ bool bic_snmp_session_method_to_string_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_snmp_session_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("SnmpSession");
 
   BIC_SET_RESULT_BLANK();
@@ -829,7 +823,6 @@ built_in_variable_s snmp_agent_variables[] =
 
 #define BIC_SNMP_AGENT_ITEM(NAME) \
   {/*{{{*/\
-    pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
     \
@@ -933,8 +926,6 @@ void bic_snmp_agent_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_snmp_agent_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1060,7 +1051,6 @@ bool bic_snmp_agent_method_SnmpAgent_2(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_snmp_agent_method_add_object_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1195,7 +1185,6 @@ bool bic_snmp_agent_method_add_object_3(interpreter_thread_s &it,unsigned stack_
 
 bool bic_snmp_agent_method_check_and_process_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1233,7 +1222,6 @@ bool bic_snmp_agent_method_item_1(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_snmp_agent_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   snmp_agent_s *snmpa_ptr = (snmp_agent_s *)dst_location->v_data_ptr;
@@ -1243,12 +1231,10 @@ bool bic_snmp_agent_method_first_idx_0(interpreter_thread_s &it,unsigned stack_b
   {
     long long int result = objects.get_min_value_idx(objects.root_idx);
 
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
   }
   else
   {
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT_BLANK();
   }
 
@@ -1257,7 +1243,6 @@ bool bic_snmp_agent_method_first_idx_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_snmp_agent_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1278,7 +1263,6 @@ bool bic_snmp_agent_method_next_idx_1(interpreter_thread_s &it,unsigned stack_ba
 
   long long int next_idx = objects.get_next_idx(index);
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_CONT_INDEX(next_idx);
 
   return true;
@@ -1295,8 +1279,6 @@ bool bic_snmp_agent_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_snmp_agent_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("SnmpAgent");
 
   BIC_SET_RESULT_BLANK();
@@ -1393,8 +1375,6 @@ void bic_snmp_obj_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_snmp_obj_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1407,7 +1387,6 @@ bool bic_snmp_obj_operator_binary_equal(interpreter_thread_s &it,unsigned stack_
 
 bool bic_snmp_obj_method_get_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   snmp_obj_s *snmpo_ptr = (snmp_obj_s *)dst_location->v_data_ptr;
@@ -1423,7 +1402,6 @@ bool bic_snmp_obj_method_get_name_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_snmp_obj_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   snmp_obj_s *snmpo_ptr = (snmp_obj_s *)dst_location->v_data_ptr;
@@ -1437,7 +1415,6 @@ bool bic_snmp_obj_method_get_type_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_snmp_obj_method_set_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1499,7 +1476,6 @@ bool bic_snmp_obj_method_set_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_snmp_obj_method_get_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   snmp_obj_s *snmpo_ptr = (snmp_obj_s *)dst_location->v_data_ptr;
@@ -1549,8 +1525,6 @@ bool bic_snmp_obj_method_to_string_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_snmp_obj_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("SnmpObj");
 
   BIC_SET_RESULT_BLANK();
@@ -1637,8 +1611,6 @@ void bic_snmp_oid_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_snmp_oid_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1688,7 +1660,6 @@ bool bic_snmp_oid_method_SnmpOid_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_snmp_oid_method_items_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   snmp_oid_s *snmpo_ptr = (snmp_oid_s *)dst_location->v_data_ptr;
@@ -1724,8 +1695,6 @@ bool bic_snmp_oid_method_to_string_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_snmp_oid_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("SnmpOid");
 
   BIC_SET_RESULT_BLANK();

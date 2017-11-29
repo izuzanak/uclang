@@ -486,8 +486,6 @@ void bic_ssh2_session_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_ssh2_session_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -563,7 +561,6 @@ bool bic_ssh2_session_method_Ssh2Session_1(interpreter_thread_s &it,unsigned sta
 
 bool bic_ssh2_session_method_hostkey_hash_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -613,7 +610,6 @@ bool bic_ssh2_session_method_hostkey_hash_1(interpreter_thread_s &it,unsigned st
 
 bool bic_ssh2_session_method_userauth_list_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -655,7 +651,6 @@ bool bic_ssh2_session_method_userauth_list_1(interpreter_thread_s &it,unsigned s
 
 bool bic_ssh2_session_method_userauth_password_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -705,7 +700,6 @@ bool bic_ssh2_session_method_userauth_password_2(interpreter_thread_s &it,unsign
 
 bool bic_ssh2_session_method_userauth_fake_interactive_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -751,7 +745,6 @@ bool bic_ssh2_session_method_userauth_fake_interactive_2(interpreter_thread_s &i
 
 bool bic_ssh2_session_method_userauth_publickey_fromfile_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -813,7 +806,6 @@ bool bic_ssh2_session_method_userauth_publickey_fromfile_4(interpreter_thread_s 
 
 bool bic_ssh2_session_method_sftp_session_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve ssh2 session -
@@ -856,7 +848,6 @@ bool bic_ssh2_session_method_sftp_session_0(interpreter_thread_s &it,unsigned st
 
 bool bic_ssh2_session_method_exec_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -890,7 +881,6 @@ bool bic_ssh2_session_method_exec_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_ssh2_session_method_shell_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   BIC_SSH2_SESSION_CHANNEL_OPEN_BEGIN();
@@ -919,8 +909,6 @@ bool bic_ssh2_session_method_to_string_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_ssh2_session_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Ssh2Session");
 
   BIC_SET_RESULT_BLANK();
@@ -1065,8 +1053,6 @@ void bic_sftp_session_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_sftp_session_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1079,7 +1065,6 @@ bool bic_sftp_session_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
 bool bic_sftp_session_method_mkdir_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1119,7 +1104,6 @@ bool bic_sftp_session_method_mkdir_2(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_sftp_session_method_rmdir_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1154,7 +1138,6 @@ bool bic_sftp_session_method_rmdir_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_sftp_session_method_listdir_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1247,7 +1230,6 @@ bool bic_sftp_session_method_listdir_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_sftp_session_method_remove_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1282,7 +1264,6 @@ bool bic_sftp_session_method_remove_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_sftp_session_method_open_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1351,8 +1332,6 @@ bool bic_sftp_session_method_to_string_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_sftp_session_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("SftpSession");
 
   BIC_SET_RESULT_BLANK();
@@ -1465,7 +1444,6 @@ built_in_variable_s sftp_handle_variables[] =
 
 #define BIC_SFTP_HANDLE_NEXT_ITEM() \
   {/*{{{*/\
-    pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     \
     /* - retrieve sftp handle - */\
@@ -1580,8 +1558,6 @@ location_s *bic_sftp_handle_next_item(interpreter_thread_s &it,location_s *locat
 
 bool bic_sftp_handle_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1594,7 +1570,6 @@ bool bic_sftp_handle_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_sftp_handle_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve sftp handle -
@@ -1631,7 +1606,6 @@ bool bic_sftp_handle_method_close_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_sftp_handle_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1686,7 +1660,6 @@ bool bic_sftp_handle_method_write_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_sftp_handle_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve sftp handle -
@@ -1755,7 +1728,6 @@ bool bic_sftp_handle_method_readln_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_sftp_handle_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1845,8 +1817,6 @@ bool bic_sftp_handle_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_sftp_handle_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("SftpHandle");
 
   BIC_SET_RESULT_BLANK();
@@ -1927,7 +1897,6 @@ built_in_variable_s ssh2_channel_variables[] =
 
 #define BIC_SSH2_CHANNEL_READ(FUNCTION) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
 \
   /* - retrieve ssh2 channel - */\
@@ -2005,8 +1974,6 @@ void bic_ssh2_channel_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_ssh2_channel_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -2019,7 +1986,6 @@ bool bic_ssh2_channel_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
 bool bic_ssh2_channel_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -2054,7 +2020,6 @@ bool bic_ssh2_channel_method_write_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_ssh2_channel_method_flush_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve ssh2 channel -
@@ -2074,7 +2039,6 @@ bool bic_ssh2_channel_method_flush_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_ssh2_channel_method_send_eof_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve ssh2 channel -
@@ -2113,8 +2077,6 @@ bool bic_ssh2_channel_method_to_string_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_ssh2_channel_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Ssh2Channel");
 
   BIC_SET_RESULT_BLANK();

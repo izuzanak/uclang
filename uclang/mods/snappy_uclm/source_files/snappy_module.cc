@@ -140,7 +140,6 @@ void bic_snappy_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_snappy_method_compress_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -176,7 +175,6 @@ bool bic_snappy_method_compress_1(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_snappy_method_uncompress_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -232,8 +230,6 @@ bool bic_snappy_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_snappy_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Snappy");
 
   BIC_SET_RESULT_BLANK();

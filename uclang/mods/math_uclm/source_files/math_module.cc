@@ -238,7 +238,6 @@ bool math_print_exception(interpreter_s &it,exception_s &exception)
 
 #define MATH_VEC_RETRIEVE_ELEMENT(VEC_TYPE,ELEMENT_NAME) \
   {/*{{{*/\
-    pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     \
     double result = ((glm::VEC_TYPE *)dst_location->v_data_ptr)->ELEMENT_NAME;\
@@ -250,11 +249,10 @@ bool math_print_exception(interpreter_s &it,exception_s &exception)
 
 #define BIC_VEC_BINARY_EQUAL_OPS_FLOAT_VEC(VEC_TYPE,OPERATOR,NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
 \
-  glm::VEC_TYPE &vec_dst = *((glm::VEC_TYPE *)((location_s *)dst_location)->v_data_ptr);\
+  glm::VEC_TYPE &vec_dst = *((glm::VEC_TYPE *)dst_location->v_data_ptr);\
   glm::VEC_TYPE *vec_res_ptr;\
 \
   double scalar;\
@@ -289,7 +287,6 @@ bool math_print_exception(interpreter_s &it,exception_s &exception)
 
 #define BIC_VEC_BINARY_OPS_FLOAT_VEC(VEC_TYPE,OPERATOR,NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
 \
@@ -324,7 +321,6 @@ bool math_print_exception(interpreter_s &it,exception_s &exception)
 
 #define BIC_VEC_UNARY_FUNCTION(VEC_TYPE,FUNCTION,NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
 \
   glm::VEC_TYPE &vec_dst = *((glm::VEC_TYPE *)dst_location->v_data_ptr);\
@@ -338,7 +334,6 @@ bool math_print_exception(interpreter_s &it,exception_s &exception)
 
 #define BIC_VEC_BINARY_FUNCTION_OPS_VEC(VEC_TYPE,FUNCTION,NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
 \
@@ -457,8 +452,6 @@ bool bic_math_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_math_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Math");
 
   BIC_SET_RESULT_BLANK();
@@ -635,8 +628,6 @@ bool bic_vec2_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_
 
 bool bic_vec2_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -756,7 +747,6 @@ bool bic_vec2_method_y_0(interpreter_thread_s &it,unsigned stack_base,uli *opera
 
 bool bic_vec2_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   glm::vec2 *v2_ptr = (glm::vec2 *)dst_location->v_data_ptr;
@@ -794,7 +784,6 @@ bool bic_vec2_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_vec2_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   glm::vec2 &v2 = *((glm::vec2 *)dst_location->v_data_ptr);
@@ -985,8 +974,6 @@ bool bic_vec3_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_
 
 bool bic_vec3_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1114,7 +1101,6 @@ bool bic_vec3_method_z_0(interpreter_thread_s &it,unsigned stack_base,uli *opera
 
 bool bic_vec3_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   glm::vec3 *v3_ptr = (glm::vec3 *)dst_location->v_data_ptr;
@@ -1136,7 +1122,6 @@ bool bic_vec3_method_dot_1(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_vec3_method_cross_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1181,7 +1166,6 @@ bool bic_vec3_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_vec3_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   glm::vec3 &v3 = *((glm::vec3 *)dst_location->v_data_ptr);
@@ -1372,8 +1356,6 @@ bool bic_vec4_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array_
 
 bool bic_vec4_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1509,7 +1491,6 @@ bool bic_vec4_method_w_0(interpreter_thread_s &it,unsigned stack_base,uli *opera
 
 bool bic_vec4_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   glm::vec4 *v4_ptr = (glm::vec4 *)dst_location->v_data_ptr;
@@ -1547,7 +1528,6 @@ bool bic_vec4_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_vec4_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   glm::vec4 &v4 = *((glm::vec4 *)dst_location->v_data_ptr);
@@ -1712,11 +1692,10 @@ built_in_variable_s mat4_variables[] =
 
 #define BIC_MAT4_BINARY_EQUAL_OPS_FLOAT_MAT4(OPERATOR,NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
 \
-  glm::mat4 &m4_dst = *((glm::mat4 *)((location_s *)dst_location)->v_data_ptr);\
+  glm::mat4 &m4_dst = *((glm::mat4 *)dst_location->v_data_ptr);\
   glm::mat4 *m4_res_ptr;\
 \
   double scalar;\
@@ -1751,7 +1730,6 @@ built_in_variable_s mat4_variables[] =
 
 #define BIC_MAT4_BINARY_OPS_FLOAT_MAT4(OPERATOR,NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
 \
@@ -1804,8 +1782,6 @@ void bic_mat4_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_mat4_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1848,7 +1824,6 @@ bool bic_mat4_operator_binary_minus(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_mat4_operator_binary_asterisk(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1944,7 +1919,6 @@ bool bic_mat4_method_Mat4_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_mat4_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   glm::mat4 &m4 = *((glm::mat4 *)dst_location->v_data_ptr);
@@ -1961,7 +1935,6 @@ bool bic_mat4_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_mat4_method_row_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -2000,7 +1973,6 @@ bool bic_mat4_method_row_1(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_mat4_method_col_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -2039,7 +2011,6 @@ bool bic_mat4_method_col_1(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_mat4_method_translate_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -2066,7 +2037,6 @@ bool bic_mat4_method_translate_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_mat4_method_rotate_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -2098,7 +2068,6 @@ bool bic_mat4_method_rotate_2(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_mat4_method_scale_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -2125,7 +2094,6 @@ bool bic_mat4_method_scale_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_mat4_method_ortho_6(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
   location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
@@ -2166,7 +2134,6 @@ bool bic_mat4_method_ortho_6(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_mat4_method_perspective_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
   location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
@@ -2201,7 +2168,6 @@ bool bic_mat4_method_perspective_4(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_mat4_method_perspective_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
   location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
@@ -2239,7 +2205,6 @@ bool bic_mat4_method_perspective_5(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_mat4_method_look_at_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
   location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
@@ -2310,7 +2275,6 @@ bool bic_mat4_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_mat4_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   glm::mat4 &m4 = *((glm::mat4 *)dst_location->v_data_ptr);
@@ -2408,7 +2372,6 @@ built_in_variable_s primes_variables[] =
 
 #define BIC_PRIMES_ITEM(NAME) \
   {/*{{{*/\
-    pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
     \
@@ -2492,8 +2455,6 @@ unsigned bic_primes_next_idx(location_s *location_ptr,unsigned index)
 
 bool bic_primes_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -2554,7 +2515,6 @@ bool bic_primes_method_Primes_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_primes_method_prime_factors_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -2638,7 +2598,6 @@ bool bic_primes_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_primes_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   primes_s *primes_ptr = (primes_s *)dst_location->v_data_ptr;
@@ -2657,7 +2616,6 @@ bool bic_primes_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_primes_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -2702,8 +2660,6 @@ bool bic_primes_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_primes_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Primes");
 
   BIC_SET_RESULT_BLANK();

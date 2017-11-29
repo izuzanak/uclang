@@ -307,7 +307,6 @@ void bic_gl_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_gl_method_ClearColor_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
   location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
@@ -343,7 +342,6 @@ bool bic_gl_method_ClearColor_4(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_gl_method_Clear_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int mask;
@@ -367,7 +365,6 @@ bool bic_gl_method_Clear_1(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_gl_method_BlendFunc_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
@@ -395,7 +392,6 @@ bool bic_gl_method_BlendFunc_2(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_gl_method_Enable_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int cap;
@@ -419,7 +415,6 @@ bool bic_gl_method_Enable_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_gl_method_Disable_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int cap;
@@ -443,7 +438,6 @@ bool bic_gl_method_Disable_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_gl_method_IsEnabled_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int cap;
@@ -467,7 +461,6 @@ bool bic_gl_method_IsEnabled_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_gl_method_Viewport_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
   location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
@@ -510,8 +503,6 @@ bool bic_gl_method_Viewport_4(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_gl_method_Finish_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   glFinish();
 
   BIC_SET_RESULT_BLANK();
@@ -530,8 +521,6 @@ bool bic_gl_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_gl_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Gl");
 
   BIC_SET_RESULT_BLANK();
@@ -626,8 +615,6 @@ void bic_gl_shader_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_gl_shader_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -744,7 +731,6 @@ bool bic_gl_shader_method_GlShader_2(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_gl_shader_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int shader = (long long int)dst_location->v_data_ptr;
@@ -761,7 +747,6 @@ bool bic_gl_shader_method_get_type_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_gl_shader_method_source_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int shader = (long long int)dst_location->v_data_ptr;
@@ -798,8 +783,6 @@ bool bic_gl_shader_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_gl_shader_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GlShader");
 
   BIC_SET_RESULT_BLANK();
@@ -900,8 +883,6 @@ void bic_gl_program_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_gl_program_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1005,7 +986,6 @@ bool bic_gl_program_method_GlProgram_2(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_gl_program_method_active_atributes_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int program = (long long int)dst_location->v_data_ptr;
@@ -1068,7 +1048,6 @@ bool bic_gl_program_method_active_atributes_0(interpreter_thread_s &it,unsigned 
 
 bool bic_gl_program_method_active_uniforms_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int program = (long long int)dst_location->v_data_ptr;
@@ -1131,7 +1110,6 @@ bool bic_gl_program_method_active_uniforms_0(interpreter_thread_s &it,unsigned s
 
 bool bic_gl_program_method_use_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int program = (long long int)dst_location->v_data_ptr;
@@ -1154,8 +1132,6 @@ bool bic_gl_program_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_gl_program_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GlProgram");
 
   BIC_SET_RESULT_BLANK();
@@ -1252,8 +1228,6 @@ void bic_gl_attribute_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_gl_attribute_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1266,7 +1240,6 @@ bool bic_gl_attribute_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
 bool bic_gl_attribute_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_attribute_s *gla_ptr = (gl_attribute_s *)dst_location->v_data_ptr;
@@ -1281,7 +1254,6 @@ bool bic_gl_attribute_method_name_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_gl_attribute_method_index_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_attribute_s *gla_ptr = (gl_attribute_s *)dst_location->v_data_ptr;
@@ -1295,7 +1267,6 @@ bool bic_gl_attribute_method_index_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_gl_attribute_method_size_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_attribute_s *gla_ptr = (gl_attribute_s *)dst_location->v_data_ptr;
@@ -1309,7 +1280,6 @@ bool bic_gl_attribute_method_size_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_gl_attribute_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_attribute_s *gla_ptr = (gl_attribute_s *)dst_location->v_data_ptr;
@@ -1332,8 +1302,6 @@ bool bic_gl_attribute_method_to_string_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_gl_attribute_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GlAttribute");
 
   BIC_SET_RESULT_BLANK();
@@ -1435,8 +1403,6 @@ void bic_gl_uniform_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_gl_uniform_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1449,7 +1415,6 @@ bool bic_gl_uniform_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 
 bool bic_gl_uniform_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_uniform_s *glu_ptr = (gl_uniform_s *)dst_location->v_data_ptr;
@@ -1464,7 +1429,6 @@ bool bic_gl_uniform_method_name_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_gl_uniform_method_index_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_uniform_s *glu_ptr = (gl_uniform_s *)dst_location->v_data_ptr;
@@ -1478,7 +1442,6 @@ bool bic_gl_uniform_method_index_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_gl_uniform_method_size_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_uniform_s *glu_ptr = (gl_uniform_s *)dst_location->v_data_ptr;
@@ -1492,7 +1455,6 @@ bool bic_gl_uniform_method_size_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_gl_uniform_method_get_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_uniform_s *glu_ptr = (gl_uniform_s *)dst_location->v_data_ptr;
@@ -1506,7 +1468,6 @@ bool bic_gl_uniform_method_get_type_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_gl_uniform_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1628,8 +1589,6 @@ bool bic_gl_uniform_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_gl_uniform_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GlUniform");
 
   BIC_SET_RESULT_BLANK();
@@ -1741,8 +1700,6 @@ void bic_gl_texture_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_gl_texture_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1861,7 +1818,6 @@ bool bic_gl_texture_method_GlTexture_4(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_gl_texture_method_width_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_texture_s *glt_ptr = (gl_texture_s *)dst_location->v_data_ptr;
@@ -1875,7 +1831,6 @@ bool bic_gl_texture_method_width_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_gl_texture_method_height_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_texture_s *glt_ptr = (gl_texture_s *)dst_location->v_data_ptr;
@@ -1889,7 +1844,6 @@ bool bic_gl_texture_method_height_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_gl_texture_method_format_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_texture_s *glt_ptr = (gl_texture_s *)dst_location->v_data_ptr;
@@ -1903,7 +1857,6 @@ bool bic_gl_texture_method_format_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_gl_texture_method_update_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1948,7 +1901,6 @@ bool bic_gl_texture_method_update_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_gl_texture_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_texture_s *glt_ptr = (gl_texture_s *)dst_location->v_data_ptr;
@@ -1970,7 +1922,6 @@ bool bic_gl_texture_method_clear_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_gl_texture_method_bind_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gl_texture_s *glt_ptr = (gl_texture_s *)dst_location->v_data_ptr;
@@ -1993,8 +1944,6 @@ bool bic_gl_texture_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_gl_texture_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GlTexture");
 
   BIC_SET_RESULT_BLANK();

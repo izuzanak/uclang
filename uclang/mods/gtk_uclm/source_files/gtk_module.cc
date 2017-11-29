@@ -890,7 +890,6 @@ void bic_gtk_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_gtk_method_main_loop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
 
   // - ERROR -
   if (gtk_c::main_loop)
@@ -917,7 +916,6 @@ bool bic_gtk_method_main_loop_0(interpreter_thread_s &it,unsigned stack_base,uli
     return false;
   }
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_BLANK();
 
   return true;
@@ -925,8 +923,6 @@ bool bic_gtk_method_main_loop_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_gtk_method_quit_main_loop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - ERROR -
   if (!gtk_c::main_loop)
   {
@@ -955,8 +951,6 @@ bool bic_gtk_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_gtk_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Gtk");
 
   BIC_SET_RESULT_BLANK();
@@ -1107,8 +1101,6 @@ void bic_gtk_g_object_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_gtk_g_object_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1191,7 +1183,6 @@ bool bic_gtk_g_object_method_GtkGObject_2(interpreter_thread_s &it,unsigned stac
 
 bool bic_gtk_g_object_method_list_properties_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gpointer g_obj = (gpointer)dst_location->v_data_ptr;
@@ -1232,7 +1223,6 @@ bool bic_gtk_g_object_method_list_properties_0(interpreter_thread_s &it,unsigned
 
 bool bic_gtk_g_object_method_prop_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1287,7 +1277,6 @@ bool bic_gtk_g_object_method_prop_2(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_gtk_g_object_method_prop_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1340,7 +1329,6 @@ bool bic_gtk_g_object_method_prop_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1432,7 +1420,6 @@ bool bic_gtk_g_object_method_signal_connect_3(interpreter_thread_s &it,unsigned 
 
 bool bic_gtk_g_object_method_signal_emit_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1542,7 +1529,6 @@ bool bic_gtk_g_object_method_signal_emit_2(interpreter_thread_s &it,unsigned sta
     return false;
   }
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(ret_location);
 
   return true;
@@ -1559,8 +1545,6 @@ bool bic_gtk_g_object_method_to_string_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_gtk_g_object_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GtkGObject");
 
   BIC_SET_RESULT_BLANK();
@@ -1630,8 +1614,6 @@ void bic_gtk_clipboard_consts(location_array_s &const_locations)
 
 bool bic_gtk_clipboard_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1678,7 +1660,6 @@ bool bic_gtk_clipboard_method_GtkClipboard_1(interpreter_thread_s &it,unsigned s
 
 bool bic_gtk_clipboard_method_wait_for_text_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gpointer g_obj = (gpointer)dst_location->v_data_ptr;
@@ -1692,12 +1673,10 @@ bool bic_gtk_clipboard_method_wait_for_text_0(interpreter_thread_s &it,unsigned 
     string_ptr->set(strlen(text),text);
     g_free(text);
 
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT_STRING(string_ptr);
   }
   else
   {
-    pointer &res_location = it.data_stack[res_loc_idx];
     BIC_SET_RESULT_BLANK();
   }
 
@@ -1715,8 +1694,6 @@ bool bic_gtk_clipboard_method_to_string_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_gtk_clipboard_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GtkClipboard");
 
   BIC_SET_RESULT_BLANK();
@@ -1794,8 +1771,6 @@ void bic_gtk_widget_consts(location_array_s &const_locations)
 
 bool bic_gtk_widget_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1829,7 +1804,6 @@ bool bic_gtk_widget_method_GtkWidget_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_gtk_widget_method_show_all_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gpointer g_obj = (gpointer)dst_location->v_data_ptr;
@@ -1852,8 +1826,6 @@ bool bic_gtk_widget_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_gtk_widget_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GtkWidget");
 
   BIC_SET_RESULT_BLANK();
@@ -1932,8 +1904,6 @@ void bic_gtk_container_consts(location_array_s &const_locations)
 
 bool bic_gtk_container_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1967,7 +1937,6 @@ bool bic_gtk_container_method_GtkContainer_1(interpreter_thread_s &it,unsigned s
 
 bool bic_gtk_container_method_add_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -2012,8 +1981,6 @@ bool bic_gtk_container_method_to_string_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_gtk_container_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GtkContainer");
 
   BIC_SET_RESULT_BLANK();
@@ -2088,8 +2055,6 @@ void bic_gtk_grid_consts(location_array_s &const_locations)
 
 bool bic_gtk_grid_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -2130,7 +2095,6 @@ bool bic_gtk_grid_method_GtkGrid_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_gtk_grid_method_attach_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -2192,8 +2156,6 @@ bool bic_gtk_grid_method_to_string_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_gtk_grid_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GtkGrid");
 
   BIC_SET_RESULT_BLANK();
@@ -2278,8 +2240,6 @@ void bic_gtk_window_consts(location_array_s &const_locations)
 
 bool bic_gtk_window_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -2320,7 +2280,6 @@ bool bic_gtk_window_method_GtkWindow_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_gtk_window_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gpointer g_obj = (gpointer)dst_location->v_data_ptr;
@@ -2333,7 +2292,6 @@ bool bic_gtk_window_method_close_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_gtk_window_method_dialog_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -2445,8 +2403,6 @@ bool bic_gtk_window_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_gtk_window_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GtkWindow");
 
   BIC_SET_RESULT_BLANK();
@@ -2542,8 +2498,6 @@ void bic_gtk_dialog_consts(location_array_s &const_locations)
 
 bool bic_gtk_dialog_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -2577,7 +2531,6 @@ bool bic_gtk_dialog_method_GtkDialog_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_gtk_dialog_method_add_button_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -2608,7 +2561,6 @@ bool bic_gtk_dialog_method_add_button_2(interpreter_thread_s &it,unsigned stack_
 
 bool bic_gtk_dialog_method_run_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gpointer g_obj = (gpointer)dst_location->v_data_ptr;
@@ -2621,7 +2573,6 @@ bool bic_gtk_dialog_method_run_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_gtk_dialog_method_get_filename_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gpointer g_obj = (gpointer)dst_location->v_data_ptr;
@@ -2656,7 +2607,6 @@ bool bic_gtk_dialog_method_get_filename_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_gtk_dialog_method_get_filenames_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   gpointer g_obj = (gpointer)dst_location->v_data_ptr;
@@ -2710,8 +2660,6 @@ bool bic_gtk_dialog_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_gtk_dialog_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GtkDialog");
 
   BIC_SET_RESULT_BLANK();
@@ -2792,8 +2740,6 @@ void bic_gtk_handler_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_gtk_handler_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -2806,7 +2752,6 @@ bool bic_gtk_handler_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_gtk_handler_method_disconnect_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long delegate_idx = (long long int)dst_location->v_data_ptr;
@@ -2846,8 +2791,6 @@ bool bic_gtk_handler_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_gtk_handler_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GtkHandler");
 
   BIC_SET_RESULT_BLANK();

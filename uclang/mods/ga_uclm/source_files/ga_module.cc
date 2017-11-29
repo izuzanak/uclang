@@ -282,8 +282,6 @@ void bic_ga_real_genome_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_ga_real_genome_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -364,7 +362,6 @@ bool bic_ga_real_genome_method_GaRealGenome_4(interpreter_thread_s &it,unsigned 
 
 bool bic_ga_real_genome_method_evolve_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -452,7 +449,6 @@ bool bic_ga_real_genome_method_evolve_4(interpreter_thread_s &it,unsigned stack_
   // - retrieve best individual -
   genome = ga.statistics().bestIndividual();
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_DESTINATION();
 
   return true;
@@ -460,7 +456,6 @@ bool bic_ga_real_genome_method_evolve_4(interpreter_thread_s &it,unsigned stack_
 
 bool bic_ga_real_genome_method_steady_state_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -542,8 +537,6 @@ bool bic_ga_real_genome_method_steady_state_4(interpreter_thread_s &it,unsigned 
   ga_ptr->initialize();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_ga_steady_state,gss_ptr);
-
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -552,8 +545,6 @@ bool bic_ga_real_genome_method_steady_state_4(interpreter_thread_s &it,unsigned 
 bool bic_ga_real_genome_method_values_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   ga_real_genome_s *grg_ptr = (ga_real_genome_s *)dst_location->v_data_ptr;
 
   // - retrieve genome -
@@ -567,8 +558,6 @@ bool bic_ga_real_genome_method_values_0(interpreter_thread_s &it,unsigned stack_
 bool bic_ga_real_genome_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   ga_real_genome_s *grg_ptr = (ga_real_genome_s *)dst_location->v_data_ptr;
 
   // - retrieve genome -
@@ -590,8 +579,6 @@ bool bic_ga_real_genome_method_to_string_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_ga_real_genome_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GaRealGenome");
 
   BIC_SET_RESULT_BLANK();
@@ -675,8 +662,6 @@ void bic_ga_tmp_real_genome_clear(interpreter_thread_s &it,location_s *location_
 
 bool bic_ga_tmp_real_genome_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -690,8 +675,6 @@ bool bic_ga_tmp_real_genome_operator_binary_equal(interpreter_thread_s &it,unsig
 bool bic_ga_tmp_real_genome_method_values_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   GARealGenome *genome_ptr = (GARealGenome *)dst_location->v_data_ptr;
 
   BIC_GA_REAL_GENOME_RETRIEVE_VALUES();
@@ -702,8 +685,6 @@ bool bic_ga_tmp_real_genome_method_values_0(interpreter_thread_s &it,unsigned st
 bool bic_ga_tmp_real_genome_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   GARealGenome *genome_ptr = (GARealGenome *)dst_location->v_data_ptr;
 
   BIC_GA_REAL_GENOME_RETRIEVE_DATA();
@@ -714,8 +695,6 @@ bool bic_ga_tmp_real_genome_method_data_0(interpreter_thread_s &it,unsigned stac
 bool bic_ga_tmp_real_genome_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - retrieve genome size -
   long long int result = ((GARealGenome *)dst_location->v_data_ptr)->length();
 
@@ -735,8 +714,6 @@ bool bic_ga_tmp_real_genome_method_to_string_0(interpreter_thread_s &it,unsigned
 
 bool bic_ga_tmp_real_genome_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GaTmpRealGenome");
 
   BIC_SET_RESULT_BLANK();
@@ -827,8 +804,6 @@ void bic_ga_steady_state_clear(interpreter_thread_s &it,location_s *location_ptr
 
 bool bic_ga_steady_state_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -842,8 +817,6 @@ bool bic_ga_steady_state_operator_binary_equal(interpreter_thread_s &it,unsigned
 bool bic_ga_steady_state_method_done_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   ga_steady_state_s *gss_ptr = (ga_steady_state_s *)dst_location->v_data_ptr;
 
   long long int result = gss_ptr->ga_ptr->done();
@@ -855,7 +828,6 @@ bool bic_ga_steady_state_method_done_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_ga_steady_state_method_step_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ga_steady_state_s *gss_ptr = (ga_steady_state_s *)dst_location->v_data_ptr;
@@ -879,7 +851,6 @@ bool bic_ga_steady_state_method_step_0(interpreter_thread_s &it,unsigned stack_b
     }
   }
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_DESTINATION();
 
   return true;
@@ -888,8 +859,6 @@ bool bic_ga_steady_state_method_step_0(interpreter_thread_s &it,unsigned stack_b
 bool bic_ga_steady_state_method_best_individual_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   ga_steady_state_s *gss_ptr = (ga_steady_state_s *)dst_location->v_data_ptr;
   ga_real_genome_s *grg_ptr = (ga_real_genome_s *)gss_ptr->ga_genome_loc->v_data_ptr;
 
@@ -912,8 +881,6 @@ bool bic_ga_steady_state_method_to_string_0(interpreter_thread_s &it,unsigned st
 
 bool bic_ga_steady_state_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GasteadyState");
 
   BIC_SET_RESULT_BLANK();

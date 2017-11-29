@@ -170,8 +170,6 @@ bool bic_gmp_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_gmp_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Gmp");
 
   BIC_SET_RESULT_BLANK();
@@ -427,14 +425,13 @@ built_in_variable_s gmp_integer_variables[] =
 
 #define BIC_GMP_INTEGER_BINARY_ADD_SUB_EQUAL(OPERATION,NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
   \
   mpz_t *res_ptr = (mpz_t *)cmalloc(sizeof(mpz_t));\
   mpz_init(*res_ptr);\
   \
-  mpz_t *mpz_ptr = (mpz_t *)((location_s *)dst_location)->v_data_ptr;\
+  mpz_t *mpz_ptr = (mpz_t *)dst_location->v_data_ptr;\
   \
   switch (src_0_location->v_type) {\
   case c_bi_class_char:\
@@ -483,14 +480,13 @@ built_in_variable_s gmp_integer_variables[] =
 
 #define BIC_GMP_INTEGER_BINARY_SHIFT(OPERATION,NAME) \
 /*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
   \
   mpz_t *res_ptr = (mpz_t *)cmalloc(sizeof(mpz_t));\
   mpz_init(*res_ptr);\
   \
-  mpz_t *mpz_ptr = (mpz_t *)((location_s *)dst_location)->v_data_ptr;\
+  mpz_t *mpz_ptr = (mpz_t *)dst_location->v_data_ptr;\
   \
   switch (src_0_location->v_type) {\
   case c_bi_class_char:\
@@ -542,14 +538,13 @@ built_in_variable_s gmp_integer_variables[] =
 
 #define BIC_GMP_INTEGER_BINARY_BIT_LOGIC(OPERATION,NAME) \
 /*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
   \
   mpz_t *res_ptr = (mpz_t *)cmalloc(sizeof(mpz_t));\
   mpz_init(*res_ptr);\
   \
-  mpz_t *mpz_ptr = (mpz_t *)((location_s *)dst_location)->v_data_ptr;\
+  mpz_t *mpz_ptr = (mpz_t *)dst_location->v_data_ptr;\
   \
   switch (src_0_location->v_type) {\
   case c_bi_class_char:\
@@ -582,7 +577,6 @@ built_in_variable_s gmp_integer_variables[] =
 
 #define BIC_GMP_INTEGER_BINARY_LOGIC(OPERATOR,NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
   \
@@ -702,11 +696,10 @@ built_in_variable_s gmp_integer_variables[] =
 
 #define BIC_GMP_INTEGER_BINARY_ADD_SUB_MUL(OPERATION,NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
   \
-  mpz_t *mpz_ptr = (mpz_t *)((location_s *)dst_location)->v_data_ptr;\
+  mpz_t *mpz_ptr = (mpz_t *)dst_location->v_data_ptr;\
   \
   switch (src_0_location->v_type) {\
   case c_bi_class_char:\
@@ -782,32 +775,26 @@ built_in_variable_s gmp_integer_variables[] =
 
 #define BIC_GMP_INTEGER_POST_UNARY_INC_DEC(OPERATION) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   \
   mpz_t *res_ptr = (mpz_t *)cmalloc(sizeof(mpz_t));\
   mpz_init(*res_ptr);\
   \
-  mpz_t *mpz_ptr = (mpz_t *)((location_s *)dst_location)->v_data_ptr;\
+  mpz_t *mpz_ptr = (mpz_t *)dst_location->v_data_ptr;\
   mpz_ ## OPERATION ## _ui(*res_ptr,*mpz_ptr,1);\
   \
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_gmp_integer,res_ptr);\
-  BIC_SET_RESULT(new_location);\
-  \
-  pointer tmp_location = res_location;\
-  res_location = dst_location;\
-  dst_location = tmp_location;\
+  BIC_SET_RESULT_SWAP(new_location);\
 }/*}}}*/
 
 #define BIC_GMP_INTEGER_PRE_UNARY_INC_DEC(OPERATION) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   \
   mpz_t *res_ptr = (mpz_t *)cmalloc(sizeof(mpz_t));\
   mpz_init(*res_ptr);\
   \
-  mpz_t *mpz_ptr = (mpz_t *)((location_s *)dst_location)->v_data_ptr;\
+  mpz_t *mpz_ptr = (mpz_t *)dst_location->v_data_ptr;\
   mpz_ ## OPERATION ## _ui(*res_ptr,*mpz_ptr,1);\
   \
   BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_gmp_integer,res_ptr,2);\
@@ -818,7 +805,6 @@ built_in_variable_s gmp_integer_variables[] =
 
 #define BIC_GMP_INTEGER_PRE_UNARY_TMP_RESULT(OPERATION) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   \
   mpz_t *res_ptr = (mpz_t *)cmalloc(sizeof(mpz_t));\
@@ -916,8 +902,6 @@ bool bic_gmp_integer_unpack(interpreter_thread_s &it,location_s *location_ptr,bc
 
 bool bic_gmp_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -944,14 +928,13 @@ bool bic_gmp_integer_operator_binary_minus_equal(interpreter_thread_s &it,unsign
 
 bool bic_gmp_integer_operator_binary_asterisk_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   mpz_t *res_ptr = (mpz_t *)cmalloc(sizeof(mpz_t));
   mpz_init(*res_ptr);
 
-  mpz_t *mpz_ptr = (mpz_t *)((location_s *)dst_location)->v_data_ptr;
+  mpz_t *mpz_ptr = (mpz_t *)dst_location->v_data_ptr;
 
   switch (src_0_location->v_type) {
   case c_bi_class_char:
@@ -1014,14 +997,13 @@ bool bic_gmp_integer_operator_binary_asterisk_equal(interpreter_thread_s &it,uns
 
 bool bic_gmp_integer_operator_binary_slash_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   mpz_t *res_ptr = (mpz_t *)cmalloc(sizeof(mpz_t));
   mpz_init(*res_ptr);
 
-  mpz_t *mpz_ptr = (mpz_t *)((location_s *)dst_location)->v_data_ptr;
+  mpz_t *mpz_ptr = (mpz_t *)dst_location->v_data_ptr;
 
   switch (src_0_location->v_type) {
   case c_bi_class_char:
@@ -1161,14 +1143,13 @@ bool bic_gmp_integer_operator_binary_slash_equal(interpreter_thread_s &it,unsign
 
 bool bic_gmp_integer_operator_binary_percent_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   mpz_t *res_ptr = (mpz_t *)cmalloc(sizeof(mpz_t));
   mpz_init(*res_ptr);
 
-  mpz_t *mpz_ptr = (mpz_t *)((location_s *)dst_location)->v_data_ptr;
+  mpz_t *mpz_ptr = (mpz_t *)dst_location->v_data_ptr;
 
   switch (src_0_location->v_type) {
   case c_bi_class_char:
@@ -1310,7 +1291,6 @@ bool bic_gmp_integer_operator_binary_circumflex(interpreter_thread_s &it,unsigne
 
 bool bic_gmp_integer_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1325,7 +1305,6 @@ bool bic_gmp_integer_operator_binary_double_equal(interpreter_thread_s &it,unsig
 
 bool bic_gmp_integer_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1341,7 +1320,6 @@ bool bic_gmp_integer_operator_binary_exclamation_equal(interpreter_thread_s &it,
 
 bool bic_gmp_integer_operator_binary_rs_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1357,7 +1335,6 @@ bool bic_gmp_integer_operator_binary_rs_br(interpreter_thread_s &it,unsigned sta
 
 bool bic_gmp_integer_operator_binary_ls_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1373,7 +1350,6 @@ bool bic_gmp_integer_operator_binary_ls_br(interpreter_thread_s &it,unsigned sta
 
 bool bic_gmp_integer_operator_binary_rs_br_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1389,7 +1365,6 @@ bool bic_gmp_integer_operator_binary_rs_br_equal(interpreter_thread_s &it,unsign
 
 bool bic_gmp_integer_operator_binary_ls_br_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1446,11 +1421,10 @@ bool bic_gmp_integer_operator_binary_asterisk(interpreter_thread_s &it,unsigned 
 
 bool bic_gmp_integer_operator_binary_slash(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
-  mpz_t *mpz_ptr = (mpz_t *)((location_s *)dst_location)->v_data_ptr;
+  mpz_t *mpz_ptr = (mpz_t *)dst_location->v_data_ptr;
 
   switch (src_0_location->v_type) {
   case c_bi_class_char:
@@ -1582,7 +1556,6 @@ bool bic_gmp_integer_operator_binary_slash(interpreter_thread_s &it,unsigned sta
 
 bool bic_gmp_integer_operator_binary_percent(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1653,7 +1626,6 @@ bool bic_gmp_integer_operator_unary_pre_double_minus(interpreter_thread_s &it,un
 
 bool bic_gmp_integer_operator_unary_pre_plus(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   dst_location->v_reference_cnt.atomic_inc();
@@ -1672,7 +1644,6 @@ bool bic_gmp_integer_operator_unary_pre_minus(interpreter_thread_s &it,unsigned 
 
 bool bic_gmp_integer_operator_unary_pre_exclamation(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = mpz_sgn(*((mpz_t *)dst_location->v_data_ptr)) == 0;
@@ -1813,7 +1784,6 @@ bool bic_gmp_integer_method_GmpInteger_2(interpreter_thread_s &it,unsigned stack
 
 bool bic_gmp_integer_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1847,7 +1817,6 @@ bool bic_gmp_integer_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_gmp_integer_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - print value to standard output -
@@ -2071,14 +2040,13 @@ built_in_variable_s gmp_rational_variables[] =
 
 #define BIC_GMP_RATIONAL_BINARY_ADD_SUB_EQUAL(OPERATION,NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
   \
   mpq_t *res_ptr = (mpq_t *)cmalloc(sizeof(mpq_t));\
   mpq_init(*res_ptr);\
   \
-  mpq_t *mpq_ptr = (mpq_t *)((location_s *)dst_location)->v_data_ptr;\
+  mpq_t *mpq_ptr = (mpq_t *)dst_location->v_data_ptr;\
   \
   switch (src_0_location->v_type) {\
   case c_bi_class_char:\
@@ -2132,14 +2100,13 @@ built_in_variable_s gmp_rational_variables[] =
 
 #define BIC_GMP_RATIONAL_BINARY_SHIFT(OPERATION,NAME) \
 /*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
   \
   mpq_t *res_ptr = (mpq_t *)cmalloc(sizeof(mpq_t));\
   mpq_init(*res_ptr);\
   \
-  mpq_t *mpq_ptr = (mpq_t *)((location_s *)dst_location)->v_data_ptr;\
+  mpq_t *mpq_ptr = (mpq_t *)dst_location->v_data_ptr;\
   \
   switch (src_0_location->v_type) {\
   case c_bi_class_char:\
@@ -2191,7 +2158,6 @@ built_in_variable_s gmp_rational_variables[] =
 
 #define BIC_GMP_RATIONAL_BINARY_LOGIC(OPERATOR,NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
   \
@@ -2323,7 +2289,6 @@ built_in_variable_s gmp_rational_variables[] =
 
 #define BIC_GMP_RATIONAL_BINARY_ADD_SUB(OPERATION,NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
   \
@@ -2403,33 +2368,27 @@ built_in_variable_s gmp_rational_variables[] =
 
 #define BIC_GMP_RATIONAL_POST_UNARY_INC_DEC(OPERATION) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   \
   mpq_t *res_ptr = (mpq_t *)cmalloc(sizeof(mpq_t));\
   mpq_init(*res_ptr);\
   \
-  mpq_t *mpq_ptr = (mpq_t *)((location_s *)dst_location)->v_data_ptr;\
+  mpq_t *mpq_ptr = (mpq_t *)dst_location->v_data_ptr;\
   mpz_ ## OPERATION(mpq_numref(*res_ptr),mpq_numref(*mpq_ptr),mpq_denref(*mpq_ptr));\
   mpz_set(mpq_denref(*res_ptr),mpq_denref(*mpq_ptr));\
   \
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_gmp_rational,res_ptr);\
-  BIC_SET_RESULT(new_location);\
-  \
-  pointer tmp_location = res_location;\
-  res_location = dst_location;\
-  dst_location = tmp_location;\
+  BIC_SET_RESULT_SWAP(new_location);\
 }/*}}}*/
 
 #define BIC_GMP_RATIONAL_PRE_UNARY_INC_DEC(OPERATION) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   \
   mpq_t *res_ptr = (mpq_t *)cmalloc(sizeof(mpq_t));\
   mpq_init(*res_ptr);\
   \
-  mpq_t *mpq_ptr = (mpq_t *)((location_s *)dst_location)->v_data_ptr;\
+  mpq_t *mpq_ptr = (mpq_t *)dst_location->v_data_ptr;\
   mpz_ ## OPERATION(mpq_numref(*res_ptr),mpq_numref(*mpq_ptr),mpq_denref(*mpq_ptr));\
   mpz_set(mpq_denref(*res_ptr),mpq_denref(*mpq_ptr));\
   \
@@ -2547,8 +2506,6 @@ bool bic_gmp_rational_unpack(interpreter_thread_s &it,location_s *location_ptr,b
 
 bool bic_gmp_rational_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -2575,14 +2532,13 @@ bool bic_gmp_rational_operator_binary_minus_equal(interpreter_thread_s &it,unsig
 
 bool bic_gmp_rational_operator_binary_asterisk_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   mpq_t *res_ptr = (mpq_t *)cmalloc(sizeof(mpq_t));
   mpq_init(*res_ptr);
 
-  mpq_t *mpq_ptr = (mpq_t *)((location_s *)dst_location)->v_data_ptr;
+  mpq_t *mpq_ptr = (mpq_t *)dst_location->v_data_ptr;
 
   switch (src_0_location->v_type) {
   case c_bi_class_char:
@@ -2637,14 +2593,13 @@ bool bic_gmp_rational_operator_binary_asterisk_equal(interpreter_thread_s &it,un
 
 bool bic_gmp_rational_operator_binary_slash_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   mpq_t *res_ptr = (mpq_t *)cmalloc(sizeof(mpq_t));
   mpq_init(*res_ptr);
 
-  mpq_t *mpq_ptr = (mpq_t *)((location_s *)dst_location)->v_data_ptr;
+  mpq_t *mpq_ptr = (mpq_t *)dst_location->v_data_ptr;
 
   switch (src_0_location->v_type) {
   case c_bi_class_char:
@@ -2818,7 +2773,6 @@ bool bic_gmp_rational_operator_binary_double_pipe(interpreter_thread_s &it,unsig
 
 bool bic_gmp_rational_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -2833,7 +2787,6 @@ bool bic_gmp_rational_operator_binary_double_equal(interpreter_thread_s &it,unsi
 
 bool bic_gmp_rational_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -2849,7 +2802,6 @@ bool bic_gmp_rational_operator_binary_exclamation_equal(interpreter_thread_s &it
 
 bool bic_gmp_rational_operator_binary_rs_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -2865,7 +2817,6 @@ bool bic_gmp_rational_operator_binary_rs_br(interpreter_thread_s &it,unsigned st
 
 bool bic_gmp_rational_operator_binary_ls_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -2881,7 +2832,6 @@ bool bic_gmp_rational_operator_binary_ls_br(interpreter_thread_s &it,unsigned st
 
 bool bic_gmp_rational_operator_binary_rs_br_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -2897,7 +2847,6 @@ bool bic_gmp_rational_operator_binary_rs_br_equal(interpreter_thread_s &it,unsig
 
 bool bic_gmp_rational_operator_binary_ls_br_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -2947,7 +2896,6 @@ bool bic_gmp_rational_operator_binary_minus(interpreter_thread_s &it,unsigned st
 
 bool bic_gmp_rational_operator_binary_asterisk(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -3028,7 +2976,6 @@ bool bic_gmp_rational_operator_binary_asterisk(interpreter_thread_s &it,unsigned
 
 bool bic_gmp_rational_operator_binary_slash(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -3194,7 +3141,6 @@ bool bic_gmp_rational_operator_unary_pre_double_minus(interpreter_thread_s &it,u
 
 bool bic_gmp_rational_operator_unary_pre_plus(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   dst_location->v_reference_cnt.atomic_inc();
@@ -3206,7 +3152,6 @@ bool bic_gmp_rational_operator_unary_pre_plus(interpreter_thread_s &it,unsigned 
 
 bool bic_gmp_rational_operator_unary_pre_minus(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   mpq_t *res_ptr = (mpq_t *)cmalloc(sizeof(mpq_t));
@@ -3222,7 +3167,6 @@ bool bic_gmp_rational_operator_unary_pre_minus(interpreter_thread_s &it,unsigned
 
 bool bic_gmp_rational_operator_unary_pre_exclamation(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = mpq_sgn(*((mpq_t *)dst_location->v_data_ptr)) == 0;
@@ -3405,7 +3349,6 @@ bool bic_gmp_rational_method_GmpRational_2(interpreter_thread_s &it,unsigned sta
 
 bool bic_gmp_rational_method_num_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   mpq_t *mpq_ptr = (mpq_t *)dst_location->v_data_ptr;
@@ -3421,7 +3364,6 @@ bool bic_gmp_rational_method_num_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_gmp_rational_method_den_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   mpq_t *mpq_ptr = (mpq_t *)dst_location->v_data_ptr;
@@ -3437,7 +3379,6 @@ bool bic_gmp_rational_method_den_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_gmp_rational_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -3471,7 +3412,6 @@ bool bic_gmp_rational_method_to_string_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_gmp_rational_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - print value to standard output -
@@ -3745,14 +3685,13 @@ built_in_variable_s mpfr_fixed_variables[] =
 
 #define BIC_MPFR_FIXED_BINARY_ADD_SUB_MUL(OPERATION,NAME) \
 /*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
   \
   mpfr_t *res_ptr = (mpfr_t *)cmalloc(sizeof(mpfr_t));\
   mpfr_init(*res_ptr);\
   \
-  mpfr_t *mpfr_ptr = (mpfr_t *)((location_s *)dst_location)->v_data_ptr;\
+  mpfr_t *mpfr_ptr = (mpfr_t *)dst_location->v_data_ptr;\
   \
   switch (src_0_location->v_type) {\
   case c_bi_class_char:\
@@ -3794,14 +3733,13 @@ built_in_variable_s mpfr_fixed_variables[] =
 
 #define BIC_MPFR_FIXED_BINARY_DIV(NAME) \
 /*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
   \
   mpfr_t *res_ptr = (mpfr_t *)cmalloc(sizeof(mpfr_t));\
   mpfr_init(*res_ptr);\
   \
-  mpfr_t *mpfr_ptr = (mpfr_t *)((location_s *)dst_location)->v_data_ptr;\
+  mpfr_t *mpfr_ptr = (mpfr_t *)dst_location->v_data_ptr;\
   \
   switch (src_0_location->v_type) {\
   case c_bi_class_char:\
@@ -3921,7 +3859,6 @@ built_in_variable_s mpfr_fixed_variables[] =
 
 #define BIC_MFPR_FIXED_BINARY_LOGIC(OPERATOR,NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
   \
@@ -4041,32 +3978,26 @@ built_in_variable_s mpfr_fixed_variables[] =
 
 #define BIC_MPFR_FIXED_POST_UNARY_INC_DEC(OPERATION) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   \
   mpfr_t *res_ptr = (mpfr_t *)cmalloc(sizeof(mpfr_t));\
   mpfr_init(*res_ptr);\
   \
-  mpfr_t *mpfr_ptr = (mpfr_t *)((location_s *)dst_location)->v_data_ptr;\
+  mpfr_t *mpfr_ptr = (mpfr_t *)dst_location->v_data_ptr;\
   mpfr_ ## OPERATION ## _si(*res_ptr,*mpfr_ptr,1,MPFR_RNDD);\
   \
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_mpfr_fixed,res_ptr);\
-  BIC_SET_RESULT(new_location);\
-  \
-  pointer tmp_location = res_location;\
-  res_location = dst_location;\
-  dst_location = tmp_location;\
+  BIC_SET_RESULT_SWAP(new_location);\
 }/*}}}*/
 
 #define BIC_MPFR_FIXED_PRE_UNARY_INC_DEC(OPERATION) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   \
   mpfr_t *res_ptr = (mpfr_t *)cmalloc(sizeof(mpfr_t));\
   mpfr_init(*res_ptr);\
   \
-  mpfr_t *mpfr_ptr = (mpfr_t *)((location_s *)dst_location)->v_data_ptr;\
+  mpfr_t *mpfr_ptr = (mpfr_t *)dst_location->v_data_ptr;\
   mpfr_ ## OPERATION ## _si(*res_ptr,*mpfr_ptr,1,MPFR_RNDD);\
   \
   BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_mpfr_fixed,res_ptr,2);\
@@ -4077,14 +4008,13 @@ built_in_variable_s mpfr_fixed_variables[] =
 
 #define BIC_MPFR_FIXED_BINARY_SHIFT(OPERATION,NAME) \
 /*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
   \
   mpfr_t *res_ptr = (mpfr_t *)cmalloc(sizeof(mpfr_t));\
   mpfr_init(*res_ptr);\
   \
-  mpfr_t *mpfr_ptr = (mpfr_t *)((location_s *)dst_location)->v_data_ptr;\
+  mpfr_t *mpfr_ptr = (mpfr_t *)dst_location->v_data_ptr;\
   \
   switch (src_0_location->v_type) {\
   case c_bi_class_char:\
@@ -4136,7 +4066,6 @@ built_in_variable_s mpfr_fixed_variables[] =
 
 #define BIC_MPFR_FIXED_FUNCTION_UNARY(OPERATION) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   \
   mpfr_t *res_ptr = (mpfr_t *)cmalloc(sizeof(mpfr_t));\
@@ -4251,8 +4180,6 @@ bool bic_mpfr_fixed_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_
 
 bool bic_mpfr_fixed_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -4351,7 +4278,6 @@ bool bic_mpfr_fixed_operator_binary_double_pipe(interpreter_thread_s &it,unsigne
 
 bool bic_mpfr_fixed_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -4366,7 +4292,6 @@ bool bic_mpfr_fixed_operator_binary_double_equal(interpreter_thread_s &it,unsign
 
 bool bic_mpfr_fixed_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -4382,7 +4307,6 @@ bool bic_mpfr_fixed_operator_binary_exclamation_equal(interpreter_thread_s &it,u
 
 bool bic_mpfr_fixed_operator_binary_rs_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -4398,7 +4322,6 @@ bool bic_mpfr_fixed_operator_binary_rs_br(interpreter_thread_s &it,unsigned stac
 
 bool bic_mpfr_fixed_operator_binary_ls_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -4414,7 +4337,6 @@ bool bic_mpfr_fixed_operator_binary_ls_br(interpreter_thread_s &it,unsigned stac
 
 bool bic_mpfr_fixed_operator_binary_rs_br_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -4430,7 +4352,6 @@ bool bic_mpfr_fixed_operator_binary_rs_br_equal(interpreter_thread_s &it,unsigne
 
 bool bic_mpfr_fixed_operator_binary_ls_br_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -4534,7 +4455,6 @@ bool bic_mpfr_fixed_operator_unary_pre_double_minus(interpreter_thread_s &it,uns
 
 bool bic_mpfr_fixed_operator_unary_pre_plus(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   dst_location->v_reference_cnt.atomic_inc();
@@ -4546,7 +4466,6 @@ bool bic_mpfr_fixed_operator_unary_pre_plus(interpreter_thread_s &it,unsigned st
 
 bool bic_mpfr_fixed_operator_unary_pre_minus(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   mpfr_t *res_ptr = (mpfr_t *)cmalloc(sizeof(mpfr_t));
@@ -4562,7 +4481,6 @@ bool bic_mpfr_fixed_operator_unary_pre_minus(interpreter_thread_s &it,unsigned s
 
 bool bic_mpfr_fixed_operator_unary_pre_exclamation(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = mpfr_sgn(*((mpfr_t *)dst_location->v_data_ptr)) == 0;
@@ -4756,7 +4674,6 @@ bool bic_mpfr_fixed_method_log_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_mpfr_fixed_method_pow_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -4826,7 +4743,6 @@ bool bic_mpfr_fixed_method_cbrt_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_mpfr_fixed_method_hypot_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -4885,7 +4801,6 @@ bool bic_mpfr_fixed_method_hypot_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_mpfr_fixed_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -4919,7 +4834,6 @@ bool bic_mpfr_fixed_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_mpfr_fixed_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - print value to standard output -

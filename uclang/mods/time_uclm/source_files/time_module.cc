@@ -194,8 +194,6 @@ int bic_time_compare(location_s *first_loc,location_s *second_loc)
 
 bool bic_time_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -336,7 +334,6 @@ bool bic_time_method_Time_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_time_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = (long long unsigned)dst_location->v_data_ptr;
@@ -348,7 +345,6 @@ bool bic_time_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_time_method_nano_sec_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = (long long unsigned)dst_location->v_data_ptr;
@@ -360,7 +356,6 @@ bool bic_time_method_nano_sec_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_time_method_micro_sec_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = ((long long unsigned)dst_location->v_data_ptr)/1000LLU;
@@ -372,7 +367,6 @@ bool bic_time_method_micro_sec_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_time_method_milli_sec_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = ((long long unsigned)dst_location->v_data_ptr)/1000000LLU;
@@ -384,7 +378,6 @@ bool bic_time_method_milli_sec_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_time_method_seconds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = ((long long unsigned)dst_location->v_data_ptr)/1000000000LLU;
@@ -396,7 +389,6 @@ bool bic_time_method_seconds_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_time_method_minutes_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = ((long long unsigned)dst_location->v_data_ptr)/60000000000LLU;
@@ -408,7 +400,6 @@ bool bic_time_method_minutes_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_time_method_hours_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = ((long long unsigned)dst_location->v_data_ptr)/3600000000000LLU;
@@ -420,7 +411,6 @@ bool bic_time_method_hours_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_time_method_days_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = ((long long unsigned)dst_location->v_data_ptr)/86400000000000LLU;
@@ -432,7 +422,6 @@ bool bic_time_method_days_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_time_method_datetime_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long unsigned nanosec = (long long unsigned)dst_location->v_data_ptr;
@@ -475,7 +464,6 @@ bool bic_time_method_datetime_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_time_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -517,7 +505,6 @@ bool bic_time_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_time_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long unsigned nanosec = (long long unsigned)dst_location->v_data_ptr;

@@ -383,8 +383,6 @@ void bic_ftp_session_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_ftp_session_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -437,7 +435,6 @@ bool bic_ftp_session_method_FtpSession_1(interpreter_thread_s &it,unsigned stack
 
 bool bic_ftp_session_method_login_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -480,7 +477,6 @@ bool bic_ftp_session_method_login_2(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_ftp_session_method_mkdir_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -515,7 +511,6 @@ bool bic_ftp_session_method_mkdir_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_ftp_session_method_rmdir_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -550,7 +545,6 @@ bool bic_ftp_session_method_rmdir_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_ftp_session_method_listdir_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -632,7 +626,6 @@ bool bic_ftp_session_method_listdir_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_ftp_session_method_chdir_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -667,7 +660,6 @@ bool bic_ftp_session_method_chdir_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_ftp_session_method_getcwd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve ftp session -
@@ -696,7 +688,6 @@ bool bic_ftp_session_method_getcwd_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_ftp_session_method_get_file_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -736,7 +727,6 @@ bool bic_ftp_session_method_get_file_2(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_ftp_session_method_put_file_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -776,7 +766,6 @@ bool bic_ftp_session_method_put_file_2(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_ftp_session_method_remove_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -811,7 +800,6 @@ bool bic_ftp_session_method_remove_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_ftp_session_method_rename_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -851,7 +839,6 @@ bool bic_ftp_session_method_rename_2(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_ftp_session_method_open_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -913,8 +900,6 @@ bool bic_ftp_session_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_ftp_session_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("FtpSession");
 
   BIC_SET_RESULT_BLANK();
@@ -1023,7 +1008,6 @@ built_in_variable_s ftp_handle_variables[] =
 
 #define BIC_FTP_HANDLE_NEXT_ITEM() \
   {/*{{{*/\
-    pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     \
     /* - retrieve ftp handle - */\
@@ -1138,8 +1122,6 @@ location_s *bic_ftp_handle_next_item(interpreter_thread_s &it,location_s *locati
 
 bool bic_ftp_handle_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1152,7 +1134,6 @@ bool bic_ftp_handle_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 
 bool bic_ftp_handle_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve ftp handle -
@@ -1190,7 +1171,6 @@ bool bic_ftp_handle_method_close_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_ftp_handle_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1232,7 +1212,6 @@ bool bic_ftp_handle_method_write_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_ftp_handle_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve ftp handle -
@@ -1306,7 +1285,6 @@ bool bic_ftp_handle_method_readln_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_ftp_handle_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1385,8 +1363,6 @@ bool bic_ftp_handle_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_ftp_handle_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("FtpHandle");
 
   BIC_SET_RESULT_BLANK();

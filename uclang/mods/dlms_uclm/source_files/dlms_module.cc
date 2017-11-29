@@ -252,7 +252,6 @@ built_in_variable_s dlms_server_variables[] =
 
 #define BIC_DLMS_SERVER_ITEM(NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
 \
@@ -335,8 +334,6 @@ void bic_dlms_server_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_dlms_server_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -539,7 +536,6 @@ bool bic_dlms_server_method_DlmsServer_4(interpreter_thread_s &it,unsigned stack
 
 bool bic_dlms_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   CGXDLMSBase *dlmss_ptr = (CGXDLMSBase *)dst_location->v_data_ptr;
@@ -574,13 +570,11 @@ bool bic_dlms_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_dlms_server_method_process_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   CGXDLMSBase *dlmss_ptr = (CGXDLMSBase *)dst_location->v_data_ptr;
   dlmss_ptr->m_Media.ListenerStep();
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_DESTINATION();
 
   return true;
@@ -593,7 +587,6 @@ bool bic_dlms_server_method_item_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_dlms_server_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   CGXDLMSObjectCollection &items = ((CGXDLMSBase *)dst_location->v_data_ptr)->m_Items;
@@ -612,7 +605,6 @@ bool bic_dlms_server_method_first_idx_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_dlms_server_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -645,7 +637,6 @@ bool bic_dlms_server_method_next_idx_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_dlms_server_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   CGXDLMSObjectCollection &items = ((CGXDLMSBase *)dst_location->v_data_ptr)->m_Items;
@@ -668,8 +659,6 @@ bool bic_dlms_server_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_dlms_server_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("DlmsServer");
 
   BIC_SET_RESULT_BLANK();
@@ -944,8 +933,6 @@ void bic_dlms_object_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_dlms_object_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -958,7 +945,6 @@ bool bic_dlms_object_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_dlms_object_method_code_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   dlms_object_s *dlmso_ptr = (dlms_object_s *)dst_location->v_data_ptr;
@@ -978,7 +964,6 @@ bool bic_dlms_object_method_code_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_dlms_object_method_object_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   dlms_object_s *dlmso_ptr = (dlms_object_s *)dst_location->v_data_ptr;
@@ -993,7 +978,6 @@ bool bic_dlms_object_method_object_type_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_dlms_object_method_data_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   dlms_object_s *dlmso_ptr = (dlms_object_s *)dst_location->v_data_ptr;
@@ -1026,7 +1010,6 @@ bool bic_dlms_object_method_data_type_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_dlms_object_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   dlms_object_s *dlmso_ptr = (dlms_object_s *)dst_location->v_data_ptr;
@@ -1121,7 +1104,6 @@ bool bic_dlms_object_method_value_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_dlms_object_method_value_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1257,8 +1239,6 @@ bool bic_dlms_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_dlms_object_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("DlmsObject");
 
   BIC_SET_RESULT_BLANK();

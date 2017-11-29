@@ -161,8 +161,6 @@ void bic_uv_loop_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_uv_loop_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -197,8 +195,6 @@ bool bic_uv_loop_method_to_string_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_uv_loop_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("UvLoop");
 
   BIC_SET_RESULT_BLANK();

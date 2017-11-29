@@ -346,8 +346,6 @@ void bic_pas_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_pas_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -430,8 +428,6 @@ bool bic_pas_method_Pas_5(interpreter_thread_s &it,unsigned stack_base,uli *oper
 
 bool bic_pas_method_master_ip_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - lock pas data mutex -
   pas_s::mutex.lock();
 
@@ -483,7 +479,6 @@ bool bic_pas_method_master_ip_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_pas_method_master_ip_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -546,8 +541,6 @@ bool bic_pas_method_master_ip_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_pas_method_device_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - create pas device object -
   pas_device_s *pd_ptr = (pas_device_s *)cmalloc(sizeof(pas_device_s));
   pd_ptr->init();
@@ -569,7 +562,6 @@ bool bic_pas_method_device_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_pas_method_device_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -601,8 +593,6 @@ bool bic_pas_method_device_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_pas_method_update_device_status_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - lock pas data mutex -
   pas_s::mutex.lock();
 
@@ -619,7 +609,6 @@ bool bic_pas_method_update_device_status_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_pas_method_samples_append_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -689,7 +678,6 @@ bool bic_pas_method_samples_append_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_pas_method_samples_append_sine_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -786,7 +774,6 @@ bool bic_pas_method_samples_append_sine_3(interpreter_thread_s &it,unsigned stac
 
 bool bic_pas_method_samples_append_silence_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -834,8 +821,6 @@ bool bic_pas_method_samples_append_silence_1(interpreter_thread_s &it,unsigned s
 
 bool bic_pas_method_samples_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - lock pas data mutex -
   pas_s::mutex.lock();
 
@@ -854,8 +839,6 @@ bool bic_pas_method_samples_clear_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_pas_method_samples_count_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - lock pas data mutex -
   pas_s::mutex.lock();
 
@@ -872,8 +855,6 @@ bool bic_pas_method_samples_count_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_pas_method_hold_delay_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - lock pas data mutex -
   pas_s::mutex.lock();
 
@@ -889,7 +870,6 @@ bool bic_pas_method_hold_delay_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_pas_method_hold_delay_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -920,8 +900,6 @@ bool bic_pas_method_hold_delay_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_pas_method_holding_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - lock pas data mutex -
   pas_s::mutex.lock();
 
@@ -937,8 +915,6 @@ bool bic_pas_method_holding_0(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_pas_method_audio_section_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - lock pas data mutex -
   pas_s::mutex.lock();
 
@@ -954,7 +930,6 @@ bool bic_pas_method_audio_section_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_pas_method_audio_section_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -985,8 +960,6 @@ bool bic_pas_method_audio_section_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_pas_method_priority_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - lock pas data mutex -
   pas_s::mutex.lock();
 
@@ -1002,7 +975,6 @@ bool bic_pas_method_priority_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_pas_method_priority_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1033,8 +1005,6 @@ bool bic_pas_method_priority_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_pas_method_volume_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - lock pas data mutex -
   pas_s::mutex.lock();
 
@@ -1050,7 +1020,6 @@ bool bic_pas_method_volume_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_pas_method_volume_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1090,7 +1059,6 @@ bool bic_pas_method_volume_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_pas_method_pause_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1121,8 +1089,6 @@ bool bic_pas_method_pause_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_pas_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - retrieve pas version -
   const char *version = pas_version(nullptr);
 
@@ -1136,7 +1102,6 @@ bool bic_pas_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_pas_method_debug_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int level;
@@ -1170,8 +1135,6 @@ bool bic_pas_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_pas_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Pas");
 
   BIC_SET_RESULT_BLANK();
@@ -1363,8 +1326,6 @@ void bic_pas_device_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_pas_device_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1411,7 +1372,6 @@ bool bic_pas_device_method_PasDevice_2(interpreter_thread_s &it,unsigned stack_b
 
 #define BIC_PAS_DEVICE_GET_INTEGER(STRUCT_NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
 \
   long long int result = ((pas_device_s *)dst_location->v_data_ptr)->STRUCT_NAME;\
@@ -1423,7 +1383,6 @@ bool bic_pas_device_method_PasDevice_2(interpreter_thread_s &it,unsigned stack_b
 
 #define BIC_PAS_DEVICE_SET_INTEGER(VAR_NAME,STRUCT_NAME,NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
 \
@@ -1464,7 +1423,6 @@ bool bic_pas_device_method_status_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_pas_device_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   const char *version = (const char *)((pas_device_s *)dst_location->v_data_ptr)->ident.version;
@@ -1504,7 +1462,6 @@ bool bic_pas_device_method_status_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_pas_device_method_version_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1559,8 +1516,6 @@ bool bic_pas_device_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_pas_device_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("PasDevice");
 
   BIC_SET_RESULT_BLANK();

@@ -131,8 +131,6 @@ bool bic_pigpio_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_pigpio_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("PiGpio");
 
   BIC_SET_RESULT_BLANK();

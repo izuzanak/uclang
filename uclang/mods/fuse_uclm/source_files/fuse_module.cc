@@ -311,8 +311,6 @@ void bic_fuse_channel_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_fuse_channel_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -382,8 +380,6 @@ bool bic_fuse_channel_method_to_string_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_fuse_channel_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("FuseChannel");
 
   BIC_SET_RESULT_BLANK();
@@ -565,8 +561,6 @@ void bic_fuse_ops_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_fuse_ops_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -729,8 +723,6 @@ bool bic_fuse_ops_method_to_string_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_fuse_ops_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("FuseOps");
 
   BIC_SET_RESULT_BLANK();
@@ -953,8 +945,6 @@ void bic_fuse_handle_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_fuse_handle_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1038,8 +1028,6 @@ bool bic_fuse_handle_method_FuseHandle_3(interpreter_thread_s &it,unsigned stack
 
 bool bic_fuse_handle_method_get_handle_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   struct fuse_context *fctx_ptr = fuse_get_context();
 
   // - ERROR -
@@ -1064,7 +1052,6 @@ bool bic_fuse_handle_method_get_handle_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_fuse_handle_method_private_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   fuse_handle_s *fhnd_ptr = (fuse_handle_s *)dst_location->v_data_ptr;
@@ -1078,7 +1065,6 @@ bool bic_fuse_handle_method_private_data_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_fuse_handle_method_loop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve fuse handle -
@@ -1112,7 +1098,6 @@ bool bic_fuse_handle_method_loop_0(interpreter_thread_s &it,unsigned stack_base,
     return false;
   }
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_DESTINATION();
 
   return true;
@@ -1129,8 +1114,6 @@ bool bic_fuse_handle_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_fuse_handle_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("FuseHandle");
 
   BIC_SET_RESULT_BLANK();
@@ -1234,7 +1217,6 @@ built_in_variable_s fuse_stat_variables[] =
 
 #define BIC_FUSE_STAT_SET_VALUE(NAME,VALUE) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
 \
@@ -1294,8 +1276,6 @@ void bic_fuse_stat_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_fuse_stat_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1357,8 +1337,6 @@ bool bic_fuse_stat_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_fuse_stat_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("FuseStat");
 
   BIC_SET_RESULT_BLANK();
@@ -1427,8 +1405,6 @@ void bic_fuse_file_info_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_fuse_file_info_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1450,8 +1426,6 @@ bool bic_fuse_file_info_method_to_string_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_fuse_file_info_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("FuseFileInfo");
 
   BIC_SET_RESULT_BLANK();
@@ -1537,8 +1511,6 @@ void bic_fuse_dir_filler_clear(interpreter_thread_s &it,location_s *location_ptr
 
 bool bic_fuse_dir_filler_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1551,7 +1523,6 @@ bool bic_fuse_dir_filler_operator_binary_equal(interpreter_thread_s &it,unsigned
 
 bool bic_fuse_dir_filler_method_offset_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   fuse_dir_filler_s *fdf_ptr = (fuse_dir_filler_s *)dst_location->v_data_ptr;
@@ -1565,7 +1536,6 @@ bool bic_fuse_dir_filler_method_offset_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_fuse_dir_filler_method_fill_dir_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1605,8 +1575,6 @@ bool bic_fuse_dir_filler_method_to_string_0(interpreter_thread_s &it,unsigned st
 
 bool bic_fuse_dir_filler_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("FuseDirFiller");
 
   BIC_SET_RESULT_BLANK();
@@ -1682,7 +1650,6 @@ built_in_variable_s fuse_file_filler_variables[] =
 
 #define BIC_FUSE_FILE_FILLER_GET_VALUE(NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
 \
   fuse_file_filler_s *fff_ptr = (fuse_file_filler_s *)dst_location->v_data_ptr;\
@@ -1716,8 +1683,6 @@ void bic_fuse_file_filler_clear(interpreter_thread_s &it,location_s *location_pt
 
 bool bic_fuse_file_filler_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1745,7 +1710,6 @@ bool bic_fuse_file_filler_method_writed_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_fuse_file_filler_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1794,8 +1758,6 @@ bool bic_fuse_file_filler_method_to_string_0(interpreter_thread_s &it,unsigned s
 
 bool bic_fuse_file_filler_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("FuseFileFiller");
 
   BIC_SET_RESULT_BLANK();

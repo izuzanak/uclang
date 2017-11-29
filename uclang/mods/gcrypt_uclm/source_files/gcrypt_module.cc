@@ -290,8 +290,6 @@ void bic_gcrypt_cipher_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_gcrypt_cipher_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -367,7 +365,6 @@ bool bic_gcrypt_cipher_method_GcryptCipher_4(interpreter_thread_s &it,unsigned s
 
 bool bic_gcrypt_cipher_method_setiv_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -401,7 +398,6 @@ bool bic_gcrypt_cipher_method_setiv_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_gcrypt_cipher_method_setctr_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -435,7 +431,6 @@ bool bic_gcrypt_cipher_method_setctr_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_gcrypt_cipher_method_encrypt_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -477,7 +472,6 @@ bool bic_gcrypt_cipher_method_encrypt_1(interpreter_thread_s &it,unsigned stack_
 
 bool bic_gcrypt_cipher_method_decrypt_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -528,8 +522,6 @@ bool bic_gcrypt_cipher_method_to_string_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_gcrypt_cipher_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("GcryptCipher");
 
   BIC_SET_RESULT_BLANK();

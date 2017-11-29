@@ -163,8 +163,6 @@ bool bic_psql_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_psql_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("PSql");
 
   BIC_SET_RESULT_BLANK();
@@ -254,8 +252,6 @@ void bic_psql_conn_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_psql_conn_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -304,7 +300,6 @@ bool bic_psql_conn_method_PSqlConn_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_psql_conn_method_execute_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -430,7 +425,6 @@ bool bic_psql_conn_method_execute_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_psql_conn_method_prepare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -494,8 +488,6 @@ bool bic_psql_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_psql_conn_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("PSqlConn");
 
   BIC_SET_RESULT_BLANK();
@@ -576,8 +568,6 @@ void bic_psql_statement_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_psql_statement_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -590,7 +580,6 @@ bool bic_psql_statement_operator_binary_equal(interpreter_thread_s &it,unsigned 
 
 bool bic_psql_statement_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   psql_stmt_s *stmt_ptr = (psql_stmt_s *)dst_location->v_data_ptr;
@@ -686,8 +675,6 @@ bool bic_psql_statement_method_to_string_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_psql_statement_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("PSqlStatement");
 
   BIC_SET_RESULT_BLANK();

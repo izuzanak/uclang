@@ -249,8 +249,6 @@ void bic_ddb_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_ddb_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -310,7 +308,6 @@ bool bic_ddb_method_DDB_2(interpreter_thread_s &it,unsigned stack_base,uli *oper
 
 bool bic_ddb_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   DDB *ddb_ptr = (DDB *)dst_location->v_data_ptr;
@@ -325,7 +322,6 @@ bool bic_ddb_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_ddb_method_nEventDescs_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   DDB *ddb_ptr = (DDB *)dst_location->v_data_ptr;
@@ -340,7 +336,6 @@ bool bic_ddb_method_nEventDescs_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_ddb_method_nTraceDescs_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   DDB *ddb_ptr = (DDB *)dst_location->v_data_ptr;
@@ -355,7 +350,6 @@ bool bic_ddb_method_nTraceDescs_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_ddb_method_nSnapDescs_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   DDB *ddb_ptr = (DDB *)dst_location->v_data_ptr;
@@ -370,7 +364,6 @@ bool bic_ddb_method_nSnapDescs_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_ddb_method_GetTraceStorage_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -459,8 +452,6 @@ bool bic_ddb_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_ddb_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("DDB");
 
   BIC_SET_RESULT_BLANK();
@@ -605,7 +596,6 @@ built_in_variable_s trace_storage_variables[] =
 
 #define BIC_TRACE_STORAGE_ITEM(NAME) \
   {/*{{{*/\
-    pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
     \
@@ -708,8 +698,6 @@ void bic_trace_storage_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_trace_storage_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -727,7 +715,6 @@ bool bic_trace_storage_operator_binary_le_br_re_br(interpreter_thread_s &it,unsi
 
 bool bic_trace_storage_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   trace_storage_s *ts_ptr = (trace_storage_s *)dst_location->v_data_ptr;
@@ -744,7 +731,6 @@ bool bic_trace_storage_method_name_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_trace_storage_method_capacity_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   trace_storage_s *ts_ptr = (trace_storage_s *)dst_location->v_data_ptr;
@@ -758,7 +744,6 @@ bool bic_trace_storage_method_capacity_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_trace_storage_method_recIdHead_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   trace_storage_s *ts_ptr = (trace_storage_s *)dst_location->v_data_ptr;
@@ -772,7 +757,6 @@ bool bic_trace_storage_method_recIdHead_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_trace_storage_method_recIdTail_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   trace_storage_s *ts_ptr = (trace_storage_s *)dst_location->v_data_ptr;
@@ -791,7 +775,6 @@ bool bic_trace_storage_method_Read_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_trace_storage_method_Erase_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   trace_storage_s *ts_ptr = (trace_storage_s *)dst_location->v_data_ptr;
@@ -816,7 +799,6 @@ bool bic_trace_storage_method_Erase_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_trace_storage_method_Write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -871,7 +853,6 @@ bool bic_trace_storage_method_Write_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_trace_storage_method_Write_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -941,7 +922,6 @@ bool bic_trace_storage_method_Write_2(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_trace_storage_method_Find_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1031,7 +1011,6 @@ bool bic_trace_storage_method_Find_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_trace_storage_method_FindId_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1103,7 +1082,6 @@ bool bic_trace_storage_method_item_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_trace_storage_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   trace_storage_s *ts_ptr = (trace_storage_s *)dst_location->v_data_ptr;
@@ -1124,7 +1102,6 @@ bool bic_trace_storage_method_first_idx_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_trace_storage_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1157,7 +1134,6 @@ bool bic_trace_storage_method_next_idx_1(interpreter_thread_s &it,unsigned stack
 
 bool bic_trace_storage_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   trace_storage_s *ts_ptr = (trace_storage_s *)dst_location->v_data_ptr;
@@ -1180,8 +1156,6 @@ bool bic_trace_storage_method_to_string_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_trace_storage_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("TraceStorage");
 
   BIC_SET_RESULT_BLANK();
@@ -1275,8 +1249,6 @@ void bic_trace_record_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_trace_record_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1289,7 +1261,6 @@ bool bic_trace_record_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
 bool bic_trace_record_method_GetId_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   trace_record_s *tr_ptr = (trace_record_s *)dst_location->v_data_ptr;
@@ -1303,7 +1274,6 @@ bool bic_trace_record_method_GetId_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_trace_record_method_GetTime_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   trace_record_s *tr_ptr = (trace_record_s *)dst_location->v_data_ptr;
@@ -1317,7 +1287,6 @@ bool bic_trace_record_method_GetTime_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_trace_record_method_GetData_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   trace_record_s *tr_ptr = (trace_record_s *)dst_location->v_data_ptr;
@@ -1339,8 +1308,6 @@ bool bic_trace_record_method_to_string_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_trace_record_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("TraceRecord");
 
   BIC_SET_RESULT_BLANK();

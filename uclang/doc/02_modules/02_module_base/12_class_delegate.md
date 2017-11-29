@@ -54,7 +54,7 @@ class Main
 
 <a name="Delegate#3" />
 
-### Constructor [`Delegate#3`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8738)
+### Constructor [`Delegate#3`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8555)
 
 Creates object of class `Delegate` referring to method
 of object given as first parameter, with name given by second parameter,
@@ -82,7 +82,7 @@ obj: Delegate
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8724)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8543)
 
 Assignment operator `=`. Object of class `Delegate` is replaced by method parameter.
 
@@ -113,7 +113,7 @@ obj: New value
 
 <a name="call#1" />
 
-### Method [`call#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8882)
+### Method [`call#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8699)
 
 Calls method identified by object of class `Delegate`. Parameters 
 of called method are retrieved from object of class `Array`, which is given as
@@ -141,7 +141,7 @@ res: 3
 
 <a name="papply#1" />
 
-### Method [`papply#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8925)
+### Method [`papply#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8740)
 
 Partially apply parameters of method identified by object of class `Delegate`. Parameters 
 of partially applied method are retrieved from object of class `Array`, which is given as
@@ -170,7 +170,7 @@ method: [1,2]
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L9011)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8825)
 
 Convert object of class `Delegate` to object of class `String`.
 This method returns name of class `Delegate`.
@@ -190,7 +190,7 @@ Delegate.to_string(): Delegate
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L9020)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8834)
 
 Print string representation of object of class `Delegate` to standard output.
 This method prints name of class `Delegate`.

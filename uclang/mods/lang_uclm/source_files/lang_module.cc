@@ -255,8 +255,6 @@ void bic_lang_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_lang_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->set(strlen(c_name_str),c_name_str);
 
@@ -267,8 +265,6 @@ bool bic_lang_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_lang_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->set(strlen(c_version_str),c_version_str);
 
@@ -279,8 +275,6 @@ bool bic_lang_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_lang_method_classes_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   namespace_record_s &namespace_record = ((interpreter_s *)it.interpreter_ptr)->namespace_records[0];
   ui_array_s &class_record_idxs = namespace_record.class_record_idxs;
 
@@ -310,7 +304,6 @@ bool bic_lang_method_classes_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_lang_method_cls_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -382,8 +375,6 @@ bool bic_lang_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_lang_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("%s %s",c_name_str,c_version_str);
 
   BIC_SET_RESULT_BLANK();
@@ -502,8 +493,6 @@ void bic_class_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_class_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -526,7 +515,6 @@ bool bic_class_ref_method_ClassRef_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_class_ref_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
@@ -545,7 +533,6 @@ bool bic_class_ref_method_name_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_class_ref_method_is_built_in_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   class_records_s &class_records = ((interpreter_s *)it.interpreter_ptr)->class_records;
@@ -560,7 +547,6 @@ bool bic_class_ref_method_is_built_in_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_class_ref_method_parent_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   class_records_s &class_records = ((interpreter_s *)it.interpreter_ptr)->class_records;
@@ -582,7 +568,6 @@ bool bic_class_ref_method_parent_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_class_ref_method_classes_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   class_records_s &class_records = ((interpreter_s *)it.interpreter_ptr)->class_records;
@@ -618,7 +603,6 @@ bool bic_class_ref_method_classes_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_class_ref_method_methods_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   class_records_s &class_records = ((interpreter_s *)it.interpreter_ptr)->class_records;
@@ -654,7 +638,6 @@ bool bic_class_ref_method_methods_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_class_ref_method_vars_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   class_records_s &class_records = ((interpreter_s *)it.interpreter_ptr)->class_records;
@@ -690,7 +673,6 @@ bool bic_class_ref_method_vars_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_class_ref_method_cls_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -760,7 +742,6 @@ bool bic_class_ref_method_cls_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_class_ref_method_method_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -831,7 +812,6 @@ bool bic_class_ref_method_method_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_class_ref_method_variable_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -911,8 +891,6 @@ bool bic_class_ref_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_class_ref_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("ClassRef");
 
   BIC_SET_RESULT_BLANK();
@@ -1011,8 +989,6 @@ void bic_namespace_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_namespace_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1025,8 +1001,6 @@ bool bic_namespace_ref_operator_binary_equal(interpreter_thread_s &it,unsigned s
 
 bool bic_namespace_ref_method_global_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   BIC_SIMPLE_SET_RES(c_bi_class_namespace_ref,0);
 
   return true;
@@ -1034,7 +1008,6 @@ bool bic_namespace_ref_method_global_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_namespace_ref_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
@@ -1053,7 +1026,6 @@ bool bic_namespace_ref_method_name_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_namespace_ref_method_namespaces_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   namespace_records_s &namespace_records = ((interpreter_s *)it.interpreter_ptr)->namespace_records;
@@ -1089,7 +1061,6 @@ bool bic_namespace_ref_method_namespaces_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_namespace_ref_method_classes_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   namespace_records_s &namespace_records = ((interpreter_s *)it.interpreter_ptr)->namespace_records;
@@ -1125,7 +1096,6 @@ bool bic_namespace_ref_method_classes_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_namespace_ref_method_nspace_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1195,7 +1165,6 @@ bool bic_namespace_ref_method_nspace_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_namespace_ref_method_cls_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1275,8 +1244,6 @@ bool bic_namespace_ref_method_to_string_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_namespace_ref_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("NamespaceRef");
 
   BIC_SET_RESULT_BLANK();
@@ -1370,8 +1337,6 @@ void bic_method_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_method_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1384,7 +1349,6 @@ bool bic_method_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 
 bool bic_method_ref_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
@@ -1403,7 +1367,6 @@ bool bic_method_ref_method_name_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_method_ref_method_is_static_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   method_records_s &method_records = ((interpreter_s *)it.interpreter_ptr)->method_records;
@@ -1418,7 +1381,6 @@ bool bic_method_ref_method_is_static_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_method_ref_method_parent_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   method_records_s &method_records = ((interpreter_s *)it.interpreter_ptr)->method_records;
@@ -1440,7 +1402,6 @@ bool bic_method_ref_method_parent_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_method_ref_method_params_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   method_records_s &method_records = ((interpreter_s *)it.interpreter_ptr)->method_records;
@@ -1476,7 +1437,6 @@ bool bic_method_ref_method_params_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_method_ref_method_param_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1556,8 +1516,6 @@ bool bic_method_ref_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_method_ref_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("MethodRef");
 
   BIC_SET_RESULT_BLANK();
@@ -1636,8 +1594,6 @@ void bic_var_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_var_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1650,7 +1606,6 @@ bool bic_var_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_var_ref_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
@@ -1669,7 +1624,6 @@ bool bic_var_ref_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_var_ref_method_parent_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   variable_records_s &variable_records = ((interpreter_s *)it.interpreter_ptr)->variable_records;
@@ -1700,8 +1654,6 @@ bool bic_var_ref_method_to_string_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_var_ref_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("VarRef");
 
   BIC_SET_RESULT_BLANK();
@@ -1780,8 +1732,6 @@ void bic_param_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_param_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1794,7 +1744,6 @@ bool bic_param_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 
 bool bic_param_ref_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
@@ -1813,7 +1762,6 @@ bool bic_param_ref_method_name_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_param_ref_method_parent_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   variable_records_s &variable_records = ((interpreter_s *)it.interpreter_ptr)->variable_records;
@@ -1844,8 +1792,6 @@ bool bic_param_ref_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_param_ref_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("ParamRef");
 
   BIC_SET_RESULT_BLANK();

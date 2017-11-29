@@ -38,7 +38,7 @@ c_packages = [
   ["MOD_FTP"       ,"files"     ,["/usr/include/ftplib.h"]],
   ["MOD_SSH2"      ,"pkg-config",["libssh2 >= 1.4.3"]],
   ["MOD_GCRYPT"    ,"files"     ,["/usr/include/gcrypt.h"]],
-  ["MOD_CRYPTO"    ,"pkg-config" ,["libcrypto >= 1.0.2m"]],
+  ["MOD_CRYPTO"    ,"pkg-config",["libcrypto >= 1.0.2m"]],
   ["MOD_LOCALE"    ,"files"     ,["/usr/include/locale.h","/usr/include/libintl.h"]],
   ["MOD_ICONV"     ,"files"     ,["/usr/include/iconv.h"]],
   ["MOD_UTF8PROC"  ,"files"     ,["/usr/include/utf8proc.h"]],

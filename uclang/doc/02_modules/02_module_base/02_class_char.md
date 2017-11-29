@@ -63,7 +63,7 @@ Class describing single byte characters.
 
 <a name="Char#0" />
 
-### Constructor [`Char#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1826)
+### Constructor [`Char#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1797)
 
 Creates default object of class `Char`.
 
@@ -79,7 +79,7 @@ obj: 0
 
 <a name="Char#1" />
 
-### Constructor [`Char#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1831)
+### Constructor [`Char#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1802)
 
 Creates object of class `Char` from method parameter.
 
@@ -104,7 +104,7 @@ obj: A
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1072)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1065)
 
 Assignment operator `=`. Object of class `Char` is replaced by method parameter.
 
@@ -131,7 +131,7 @@ obj: New value
 
 <a name="operator_binary_plus_equal#1" />
 
-### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1398)
+### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1375)
 
 Add and assign operator `+=`. Operator adds value of method parameter to value of object of class `Char`.
 
@@ -164,7 +164,7 @@ obj: 49
 
 <a name="operator_binary_minus_equal#1" />
 
-### Operator [`operator_binary_minus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1405)
+### Operator [`operator_binary_minus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1382)
 
 Subtract and assign operator `-=`. Operator subtracts value of method parameter from value of object of class `Char`.
 
@@ -197,7 +197,7 @@ obj: 88
 
 <a name="operator_binary_asterisk_equal#1" />
 
-### Operator [`operator_binary_asterisk_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1412)
+### Operator [`operator_binary_asterisk_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1389)
 
 Multiply and assign operator `*=`. Operator multiplies value of object of class `Char` by value of method parameter.
 
@@ -230,7 +230,7 @@ obj: -69
 
 <a name="operator_binary_slash_equal#1" />
 
-### Operator [`operator_binary_slash_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1419)
+### Operator [`operator_binary_slash_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1396)
 
 Divide and assign operator `/=`. Operator divides value of object of class `Char` by value of method parameter.
 
@@ -263,7 +263,7 @@ obj: 10
 
 <a name="operator_binary_percent_equal#1" />
 
-### Operator [`operator_binary_percent_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1487)
+### Operator [`operator_binary_percent_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1463)
 
 Modulus and assign operator `%=`. Operator computes modulus of value of object of class `Char` divided by value of method parameter.
 
@@ -292,7 +292,7 @@ obj: 69
 
 <a name="operator_binary_double_ls_br_equal#1" />
 
-### Operator [`operator_binary_double_ls_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1494)
+### Operator [`operator_binary_double_ls_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1470)
 
 Left shift and assign operator `<<=`. Value of object of class `Char` is shifted to left by count of bits given by method parameter.
 
@@ -322,7 +322,7 @@ obj: 80
 
 <a name="operator_binary_double_rs_br_equal#1" />
 
-### Operator [`operator_binary_double_rs_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1501)
+### Operator [`operator_binary_double_rs_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1477)
 
 Right shift and assign operator `>>=`. Value of object of class `Char` is shifted to right by count of bits given by method parameter.
 
@@ -352,7 +352,7 @@ obj: 4
 
 <a name="operator_binary_ampersand_equal#1" />
 
-### Operator [`operator_binary_ampersand_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1508)
+### Operator [`operator_binary_ampersand_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1484)
 
 Bitwise AND and assign operator `&=`. Value of
 object of class `Char` is modified according to value given by
@@ -384,7 +384,7 @@ obj: 65
 
 <a name="operator_binary_pipe_equal#1" />
 
-### Operator [`operator_binary_pipe_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1515)
+### Operator [`operator_binary_pipe_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1491)
 
 Bitwise OR and assign operator `|=`. Value of
 object of class `Char` is modified according to value given by
@@ -416,7 +416,7 @@ obj: 127
 
 <a name="operator_binary_circumflex_equal#1" />
 
-### Operator [`operator_binary_circumflex_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1522)
+### Operator [`operator_binary_circumflex_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1498)
 
 Bitwise XOR and assign operator `^=`. Value of
 object of class `Char` is modified according to value given by
@@ -448,7 +448,7 @@ obj: 62
 
 <a name="operator_binary_double_ampersand#1" />
 
-### Operator [`operator_binary_double_ampersand#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1529)
+### Operator [`operator_binary_double_ampersand#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1505)
 
 Logical AND operator `&&`.  If object of class
 `Char` is non-zero and value of method parameter is also non-zero
@@ -482,7 +482,7 @@ obj_1 && 1: 1
 
 <a name="operator_binary_double_pipe#1" />
 
-### Operator [`operator_binary_double_pipe#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1536)
+### Operator [`operator_binary_double_pipe#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1512)
 
 Logical OR operator `||`.  If object of class
 `Char` is non-zero or value of method parameter is non-zero
@@ -516,7 +516,7 @@ obj_1 || 1: 1
 
 <a name="operator_binary_ampersand#1" />
 
-### Operator [`operator_binary_ampersand#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1543)
+### Operator [`operator_binary_ampersand#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1519)
 
 Bitwise AND operator `&`. Bit in result value is set, if it exists in object of class `Char` and in method parameter.
 
@@ -542,7 +542,7 @@ obj & 123: 65
 
 <a name="operator_binary_pipe#1" />
 
-### Operator [`operator_binary_pipe#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1550)
+### Operator [`operator_binary_pipe#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1526)
 
 Bitwise OR operator `|`. Bit in result value is set, if it exists in object of class `Char` or in method parameter.
 
@@ -568,7 +568,7 @@ obj | 123: 127
 
 <a name="operator_binary_circumflex#1" />
 
-### Operator [`operator_binary_circumflex#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1557)
+### Operator [`operator_binary_circumflex#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1533)
 
 Bitwise XOR operator `^`. Bit in result value is set, if it exists in object of class `Char` or in method parameter, but not both.
 
@@ -594,7 +594,7 @@ obj ^ 123: 62
 
 <a name="operator_binary_double_equal#1" />
 
-### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1564)
+### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1540)
 
 Comparison operator `==`. Compares object of class `Char` with method parameter and return `1` if objects has same value or `0` otherwise.
 
@@ -624,7 +624,7 @@ obj_0 == obj_2: 1
 
 <a name="operator_binary_exclamation_equal#1" />
 
-### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1579)
+### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1554)
 
 Comparison operator `!=`. Compares object of class `Char` with method parameter and return `0` if objects has same value or `1` otherwise.
 
@@ -654,7 +654,7 @@ obj_0 != obj_2: 0
 
 <a name="operator_binary_rs_br#1" />
 
-### Operator [`operator_binary_rs_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1595)
+### Operator [`operator_binary_rs_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1569)
 
 Greater test operator `>`. Test if value of object of class `Char` is greater than value of method parameter.
 
@@ -686,7 +686,7 @@ obj > 12.234: 1
 
 <a name="operator_binary_ls_br#1" />
 
-### Operator [`operator_binary_ls_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1602)
+### Operator [`operator_binary_ls_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1576)
 
 Lesser test operator `<`. Test if value of object of class `Char` is lesser than value of method parameter.
 
@@ -718,7 +718,7 @@ obj < 12.234: 0
 
 <a name="operator_binary_rs_br_equal#1" />
 
-### Operator [`operator_binary_rs_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1609)
+### Operator [`operator_binary_rs_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1583)
 
 Greater or equal test operator `>=`. Test if value of object of class `Char` is greater or equal than value of method parameter.
 
@@ -750,7 +750,7 @@ obj >= 12.234: 1
 
 <a name="operator_binary_ls_br_equal#1" />
 
-### Operator [`operator_binary_ls_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1616)
+### Operator [`operator_binary_ls_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1590)
 
 Lesser or equal test operator `<=`. Test if value of object of class `Char` is lesser or equal than value of method parameter.
 
@@ -782,7 +782,7 @@ obj <= 12.234: 0
 
 <a name="operator_binary_double_rs_br#1" />
 
-### Operator [`operator_binary_double_rs_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1623)
+### Operator [`operator_binary_double_rs_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1597)
 
 Right shift operator `>>`. Value of object of class `Char` is shifted to right by count of bits given by method parameter.
 
@@ -812,7 +812,7 @@ res: 17
 
 <a name="operator_binary_double_ls_br#1" />
 
-### Operator [`operator_binary_double_ls_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1630)
+### Operator [`operator_binary_double_ls_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1604)
 
 Left shift operator `<<`. Value of object of class `Char` is shifted to left by count of bits given by method parameter.
 
@@ -842,7 +842,7 @@ res: 276
 
 <a name="operator_binary_plus#1" />
 
-### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1637)
+### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1611)
 
 Add operator `+`. Operator adds value of method parameter to value of object of class `Char`.
 
@@ -875,7 +875,7 @@ res: 81.234000
 
 <a name="operator_binary_minus#1" />
 
-### Operator [`operator_binary_minus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1644)
+### Operator [`operator_binary_minus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1618)
 
 Subtract operator `-`. Operator subtracts value of method parameter from value of object of class `Char`.
 
@@ -908,7 +908,7 @@ res: 56.766000
 
 <a name="operator_binary_asterisk#1" />
 
-### Operator [`operator_binary_asterisk#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1651)
+### Operator [`operator_binary_asterisk#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1625)
 
 Multiply operator `*`. It multiplies value of object of class `Char` by value of method parameter.
 
@@ -941,7 +941,7 @@ res: 24.468000
 
 <a name="operator_binary_slash#1" />
 
-### Operator [`operator_binary_slash#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1658)
+### Operator [`operator_binary_slash#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1632)
 
 Divide operator `/`. Operator divides value of object of class `Char` by value of method parameter.
 
@@ -974,7 +974,7 @@ res: 27.251185
 
 <a name="operator_binary_percent#1" />
 
-### Operator [`operator_binary_percent#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1730)
+### Operator [`operator_binary_percent#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1703)
 
 Modulus operator `%`. Operator computes modulus of value of object of class `Char` divided by value of method parameter.
 
@@ -1004,7 +1004,7 @@ res: 69
 
 <a name="operator_unary_post_double_plus#0" />
 
-### Operator [`operator_unary_post_double_plus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1765)
+### Operator [`operator_unary_post_double_plus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1737)
 
 Post increment operator `++`. Increase value of object of class `Char` by one.
 
@@ -1028,7 +1028,7 @@ obj: f
 
 <a name="operator_unary_post_double_minus#0" />
 
-### Operator [`operator_unary_post_double_minus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1772)
+### Operator [`operator_unary_post_double_minus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1744)
 
 Post decrement operator `--`. Decrease value of object of class `Char` by one.
 
@@ -1052,7 +1052,7 @@ obj: d
 
 <a name="operator_unary_pre_double_plus#0" />
 
-### Operator [`operator_unary_pre_double_plus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1779)
+### Operator [`operator_unary_pre_double_plus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1751)
 
 Pre increment operator `++`. Increase value of object of class `Char` by one.
 
@@ -1076,7 +1076,7 @@ obj: f
 
 <a name="operator_unary_pre_double_minus#0" />
 
-### Operator [`operator_unary_pre_double_minus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1786)
+### Operator [`operator_unary_pre_double_minus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1758)
 
 Pre decrement operator `--`. Decrease value of object of class `Char` by one.
 
@@ -1100,7 +1100,7 @@ obj: d
 
 <a name="operator_unary_pre_plus#0" />
 
-### Operator [`operator_unary_pre_plus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1793)
+### Operator [`operator_unary_pre_plus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1765)
 
 Unary operator `+`. Return value of object of class `Char`.
 
@@ -1123,7 +1123,7 @@ obj: 101
 
 <a name="operator_unary_pre_minus#0" />
 
-### Operator [`operator_unary_pre_minus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1800)
+### Operator [`operator_unary_pre_minus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1772)
 
 Unary negative operator `-`. Return negative value of object of class `Char`.
 
@@ -1146,7 +1146,7 @@ obj: -101
 
 <a name="operator_unary_pre_exclamation#0" />
 
-### Operator [`operator_unary_pre_exclamation#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1807)
+### Operator [`operator_unary_pre_exclamation#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1779)
 
 Logical NOT operator `!`. Reverse logical state of value of object of class `Char`.
 
@@ -1169,7 +1169,7 @@ obj: 0
 
 <a name="operator_unary_pre_tilde#0" />
 
-### Operator [`operator_unary_pre_tilde#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1819)
+### Operator [`operator_unary_pre_tilde#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1790)
 
 Bitwise complement operator `~`. Return binary complement of value of object of class `Char`.
 
@@ -1196,7 +1196,7 @@ obj: -102
 
 <a name="compare#1" />
 
-### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1858)
+### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1829)
 
 Compare object of class `Char` with method parameter.
 
@@ -1227,7 +1227,7 @@ obj_0.compare(obj_0): 0
 
 <a name="to_string#0" />
 
-### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1883)
+### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1853)
 
 Convert object of class `Char` to object of class `String`.
 
@@ -1247,7 +1247,7 @@ obj.to_string(): e
 
 <a name="print#0" />
 
-### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1893)
+### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L1863)
 
 Print string representation of object of class `Char` to standard output.
 

@@ -232,7 +232,6 @@ void bic_utf8proc_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_utf8proc_method_to_lower_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   if (src_0_location->v_type != c_bi_class_string)
@@ -260,7 +259,6 @@ bool bic_utf8proc_method_to_lower_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_utf8proc_method_to_upper_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   if (src_0_location->v_type != c_bi_class_string)
@@ -288,8 +286,6 @@ bool bic_utf8proc_method_to_upper_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_utf8proc_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   const char *version = utf8proc_version();
 
   string_s *string_ptr = it.get_new_string_ptr();
@@ -311,8 +307,6 @@ bool bic_utf8proc_method_to_string_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_utf8proc_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Utf8Proc");
 
   BIC_SET_RESULT_BLANK();
@@ -429,8 +423,6 @@ int bic_unicode_char_compare(location_s *first_loc,location_s *second_loc)
 
 bool bic_unicode_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -468,7 +460,6 @@ bool bic_unicode_char_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
 bool bic_unicode_char_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -483,7 +474,6 @@ bool bic_unicode_char_operator_binary_double_equal(interpreter_thread_s &it,unsi
 
 bool bic_unicode_char_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -553,7 +543,6 @@ bool bic_unicode_char_method_UnicodeChar_1(interpreter_thread_s &it,unsigned sta
 
 bool bic_unicode_char_method_to_lower_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   utf8proc_int32_t result =
@@ -566,7 +555,6 @@ bool bic_unicode_char_method_to_lower_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_unicode_char_method_to_upper_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   utf8proc_int32_t result =
@@ -579,7 +567,6 @@ bool bic_unicode_char_method_to_upper_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_unicode_char_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = (utf8proc_int32_t)dst_location->v_data_ptr;
@@ -591,7 +578,6 @@ bool bic_unicode_char_method_value_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_unicode_char_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -632,7 +618,6 @@ bool bic_unicode_char_method_to_string_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_unicode_char_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   utf8proc_uint8_t buffer[4];
@@ -797,7 +782,6 @@ built_in_variable_s unicode_string_variables[] =
 
 #define BIC_UNICODE_STRING_ITEM(NAME) \
   {/*{{{*/\
-    pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
     \
@@ -823,8 +807,7 @@ built_in_variable_s unicode_string_variables[] =
 
 #define BIC_UNICODE_STRING_OPERATOR_BINARY_PLUS(NAME) \
 /*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
 \
   /* - ERROR - */\
@@ -839,7 +822,7 @@ built_in_variable_s unicode_string_variables[] =
     return false;\
   }\
 \
-  ui_array_s *first_ptr = (ui_array_s *)((location_s *)dst_location)->v_data_ptr;\
+  ui_array_s *first_ptr = (ui_array_s *)dst_location->v_data_ptr;\
   unsigned f_length = first_ptr->used;\
 \
   ui_array_s *result_ptr;\
@@ -881,8 +864,7 @@ built_in_variable_s unicode_string_variables[] =
 
 #define BIC_UNICODE_STRING_OPERATOR_BINARY_ASTERISK(NAME) \
 /*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
 \
   long long int mult;\
@@ -898,7 +880,7 @@ built_in_variable_s unicode_string_variables[] =
     return false;\
   }\
 \
-  ui_array_s *source_ptr = (ui_array_s *)((location_s *)dst_location)->v_data_ptr;\
+  ui_array_s *source_ptr = (ui_array_s *)dst_location->v_data_ptr;\
   unsigned s_length = source_ptr->used;\
 \
   /* - create unicode string - */\
@@ -1025,8 +1007,6 @@ location_s *bic_unicode_string_from_slice(interpreter_thread_s &it,location_s *l
 
 bool bic_unicode_string_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1063,7 +1043,6 @@ bool bic_unicode_string_operator_binary_asterisk_equal(interpreter_thread_s &it,
 
 bool bic_unicode_string_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1085,7 +1064,6 @@ bool bic_unicode_string_operator_binary_double_equal(interpreter_thread_s &it,un
 
 bool bic_unicode_string_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1200,7 +1178,6 @@ bool bic_unicode_string_method_UnicodeString_1(interpreter_thread_s &it,unsigned
 
 bool bic_unicode_string_method_to_lower_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ui_array_s *source_ptr = (ui_array_s *)dst_location->v_data_ptr;
@@ -1219,7 +1196,6 @@ bool bic_unicode_string_method_to_lower_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_unicode_string_method_to_upper_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ui_array_s *source_ptr = (ui_array_s *)dst_location->v_data_ptr;
@@ -1238,7 +1214,6 @@ bool bic_unicode_string_method_to_upper_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_unicode_string_method_head_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1290,7 +1265,6 @@ bool bic_unicode_string_method_head_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_unicode_string_method_tail_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1342,7 +1316,6 @@ bool bic_unicode_string_method_tail_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_unicode_string_method_range_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
@@ -1410,7 +1383,6 @@ bool bic_unicode_string_method_range_2(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_unicode_string_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1467,10 +1439,9 @@ bool bic_unicode_string_method_item_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_unicode_string_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  ui_array_s *ustring_ptr = (ui_array_s *)((location_s *)dst_location)->v_data_ptr;
+  ui_array_s *ustring_ptr = (ui_array_s *)dst_location->v_data_ptr;
 
   if (ustring_ptr->used != 0)
   {
@@ -1486,7 +1457,6 @@ bool bic_unicode_string_method_first_idx_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_unicode_string_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1519,7 +1489,6 @@ bool bic_unicode_string_method_next_idx_1(interpreter_thread_s &it,unsigned stac
 
 bool bic_unicode_string_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = ((ui_array_s *)dst_location->v_data_ptr)->used;
@@ -1531,7 +1500,6 @@ bool bic_unicode_string_method_length_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_unicode_string_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ui_array_s *ustring_ptr = (ui_array_s *)dst_location->v_data_ptr;
@@ -1561,7 +1529,6 @@ bool bic_unicode_string_method_to_string_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_unicode_string_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   utf8proc_s::unicode_print(*((ui_array_s *)dst_location->v_data_ptr));

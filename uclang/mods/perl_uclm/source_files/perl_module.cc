@@ -276,7 +276,6 @@ built_in_variable_s perl_interpreter_variables[] =
 
 #define BIC_PERL_INTERPRETER_METHOD_GET_XV(XV,xv) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
 \
@@ -347,8 +346,6 @@ void bic_perl_interpreter_clear(interpreter_thread_s &it,location_s *location_pt
 
 bool bic_perl_interpreter_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -449,7 +446,6 @@ bool bic_perl_interpreter_method_PerlInterpreter_1(interpreter_thread_s &it,unsi
 
 bool bic_perl_interpreter_method_new_value_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -509,8 +505,6 @@ bool bic_perl_interpreter_method_to_string_0(interpreter_thread_s &it,unsigned s
 
 bool bic_perl_interpreter_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("PerlInterpreter");
 
   BIC_SET_RESULT_BLANK();
@@ -638,7 +632,6 @@ void bic_perl_value_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_perl_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   location_s *pi_loc = ((perl_value_s *)dst_location->v_data_ptr)->pi_loc;
@@ -719,8 +712,6 @@ bool bic_perl_value_invoke(interpreter_thread_s &it,uli *code,unsigned stack_bas
   SPAGAIN;
 
   // - retrieve result location -
-  pointer &res_location = it.data_stack[res_loc_idx];
-
   switch (result_cnt)
   {
   case 0:
@@ -841,8 +832,6 @@ bool bic_perl_value_member(interpreter_thread_s &it,uli *code,unsigned stack_bas
 
 bool bic_perl_value_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -855,7 +844,6 @@ bool bic_perl_value_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 
 bool bic_perl_value_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -945,7 +933,6 @@ bool bic_perl_value_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigne
 
 bool bic_perl_value_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   perl_value_s *pv_ptr = (perl_value_s *)dst_location->v_data_ptr;
@@ -996,8 +983,6 @@ bool bic_perl_value_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_perl_value_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("PerlValue");
 
   BIC_SET_RESULT_BLANK();
@@ -1083,7 +1068,6 @@ void bic_perl_reference_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_perl_reference_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 

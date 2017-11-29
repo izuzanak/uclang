@@ -379,8 +379,6 @@ void bic_imx_egl_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_imx_egl_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -611,7 +609,6 @@ bool bic_imx_egl_method_ImxEgl_3(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_imx_egl_method_set_as_global_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   global_egl_mutex.lock();
@@ -637,7 +634,6 @@ bool bic_imx_egl_method_set_as_global_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_imx_egl_method_gen_textures_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -703,7 +699,6 @@ bool bic_imx_egl_method_gen_textures_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_imx_egl_method_get_texture_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -740,8 +735,6 @@ bool bic_imx_egl_method_get_texture_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_imx_egl_method_global_lock_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - reference to interpreter terminate -
   atomic_s &terminate = ((interpreter_s *)it.interpreter_ptr)->terminate;
 
@@ -776,8 +769,6 @@ bool bic_imx_egl_method_global_lock_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_imx_egl_method_global_unlock_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - global egl mutex unlock -
   unsigned ret = global_egl_mutex.unlock();
 
@@ -795,8 +786,6 @@ bool bic_imx_egl_method_global_unlock_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_imx_egl_method_global_terminate_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   // - set global egl terminate -
   global_egl_terminate.atomic_set(1);
 
@@ -807,7 +796,6 @@ bool bic_imx_egl_method_global_terminate_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_imx_egl_method_MakeCurrent_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   imx_egl_s *ie_ptr = (imx_egl_s *)dst_location->v_data_ptr;
@@ -826,7 +814,6 @@ bool bic_imx_egl_method_MakeCurrent_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_imx_egl_method_SwapBuffers_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   imx_egl_s *ie_ptr = (imx_egl_s *)dst_location->v_data_ptr;
@@ -845,8 +832,6 @@ bool bic_imx_egl_method_SwapBuffers_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_imx_egl_method_GetError_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   long long int result = eglGetError();
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
@@ -865,8 +850,6 @@ bool bic_imx_egl_method_to_string_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_imx_egl_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("ImxEgl");
 
   BIC_SET_RESULT_BLANK();
@@ -968,8 +951,6 @@ void bic_imx_fb_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_imx_fb_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1033,7 +1014,6 @@ bool bic_imx_fb_method_ImxFb_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_imx_fb_method_width_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   imx_fb_s *if_ptr = (imx_fb_s *)dst_location->v_data_ptr;
@@ -1047,7 +1027,6 @@ bool bic_imx_fb_method_width_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_imx_fb_method_height_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   imx_fb_s *if_ptr = (imx_fb_s *)dst_location->v_data_ptr;
@@ -1061,7 +1040,6 @@ bool bic_imx_fb_method_height_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_imx_fb_method_bits_per_pixel_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   imx_fb_s *if_ptr = (imx_fb_s *)dst_location->v_data_ptr;
@@ -1075,7 +1053,6 @@ bool bic_imx_fb_method_bits_per_pixel_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_imx_fb_method_wait_on_vsync_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   imx_fb_s *if_ptr = (imx_fb_s *)dst_location->v_data_ptr;
@@ -1099,8 +1076,6 @@ bool bic_imx_fb_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_imx_fb_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("ImxFb");
 
   BIC_SET_RESULT_BLANK();
@@ -1193,8 +1168,6 @@ void bic_imx_ipu_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_imx_ipu_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1259,7 +1232,6 @@ bool bic_imx_ipu_method_ImxIpu_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_imx_ipu_method_prepare_rotation_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   imx_ipu_s *ii_ptr = (imx_ipu_s *)dst_location->v_data_ptr;
@@ -1354,7 +1326,6 @@ bool bic_imx_ipu_method_prepare_rotation_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_imx_ipu_method_execute_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   imx_ipu_s *ii_ptr = (imx_ipu_s *)dst_location->v_data_ptr;
@@ -1415,8 +1386,6 @@ bool bic_imx_ipu_method_to_string_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_imx_ipu_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("ImxIpu");
 
   BIC_SET_RESULT_BLANK();

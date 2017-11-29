@@ -260,7 +260,6 @@ void bic_crypto_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_crypto_method_random_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int size;
@@ -289,7 +288,6 @@ bool bic_crypto_method_random_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_crypto_method_encode_base16_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -330,7 +328,6 @@ bool bic_crypto_method_encode_base16_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_crypto_method_decode_base16_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -411,7 +408,6 @@ bool bic_crypto_method_decode_base16_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_crypto_method_encode_base64_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -448,7 +444,6 @@ bool bic_crypto_method_encode_base64_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_crypto_method_decode_base64_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -517,8 +512,6 @@ bool bic_crypto_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_crypto_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Crypto");
 
   BIC_SET_RESULT_BLANK();
@@ -597,8 +590,6 @@ void bic_crypto_digest_info_clear(interpreter_thread_s &it,location_s *location_
 
 bool bic_crypto_digest_info_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -641,7 +632,6 @@ bool bic_crypto_digest_info_method_CryptoDigestInfo_1(interpreter_thread_s &it,u
 
 bool bic_crypto_digest_info_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   const char *name = EVP_MD_name((EVP_MD *)dst_location->v_data_ptr);
@@ -665,8 +655,6 @@ bool bic_crypto_digest_info_method_to_string_0(interpreter_thread_s &it,unsigned
 
 bool bic_crypto_digest_info_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("CryptoDigestInfo");
 
   BIC_SET_RESULT_BLANK();
@@ -758,8 +746,6 @@ void bic_crypto_digest_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_crypto_digest_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -835,7 +821,6 @@ bool bic_crypto_digest_method_CryptoDigest_1(interpreter_thread_s &it,unsigned s
 
 bool bic_crypto_digest_method_update_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -867,7 +852,6 @@ bool bic_crypto_digest_method_update_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_crypto_digest_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   crypto_digest_s *cd_ptr = (crypto_digest_s *)dst_location->v_data_ptr;
@@ -936,8 +920,6 @@ bool bic_crypto_digest_method_to_string_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_crypto_digest_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("CryptoDigest");
 
   BIC_SET_RESULT_BLANK();
@@ -1031,8 +1013,6 @@ void bic_crypto_cipher_info_clear(interpreter_thread_s &it,location_s *location_
 
 bool bic_crypto_cipher_info_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1075,7 +1055,6 @@ bool bic_crypto_cipher_info_method_CryptoCipherInfo_1(interpreter_thread_s &it,u
 
 bool bic_crypto_cipher_info_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   const char *name = EVP_CIPHER_name((EVP_CIPHER *)dst_location->v_data_ptr);
@@ -1090,7 +1069,6 @@ bool bic_crypto_cipher_info_method_name_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_crypto_cipher_info_method_block_size_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = EVP_CIPHER_block_size((EVP_CIPHER *)dst_location->v_data_ptr);
@@ -1102,7 +1080,6 @@ bool bic_crypto_cipher_info_method_block_size_0(interpreter_thread_s &it,unsigne
 
 bool bic_crypto_cipher_info_method_key_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = EVP_CIPHER_key_length((EVP_CIPHER *)dst_location->v_data_ptr);
@@ -1114,7 +1091,6 @@ bool bic_crypto_cipher_info_method_key_length_0(interpreter_thread_s &it,unsigne
 
 bool bic_crypto_cipher_info_method_iv_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   long long int result = EVP_CIPHER_iv_length((EVP_CIPHER *)dst_location->v_data_ptr);
@@ -1135,8 +1111,6 @@ bool bic_crypto_cipher_info_method_to_string_0(interpreter_thread_s &it,unsigned
 
 bool bic_crypto_cipher_info_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("CryptoCipherInfo");
 
   BIC_SET_RESULT_BLANK();
@@ -1298,7 +1272,6 @@ built_in_variable_s crypto_encrypt_variables[] =
 
 #define BIC_CRYPTO_ENCRYPT_DECRYPT_METHOD_UPDATE(TYPE,NAME) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
   \
@@ -1344,7 +1317,6 @@ built_in_variable_s crypto_encrypt_variables[] =
 
 #define BIC_CRYPTO_ENCRYPT_DECRYPT_METHOD_FINALIZE(TYPE) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   \
   crypto_cipher_s *cc_ptr = (crypto_cipher_s *)dst_location->v_data_ptr;\
@@ -1423,8 +1395,6 @@ void bic_crypto_encrypt_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_crypto_encrypt_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1467,8 +1437,6 @@ bool bic_crypto_encrypt_method_to_string_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_crypto_encrypt_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("CryptoEncrypt");
 
   BIC_SET_RESULT_BLANK();
@@ -1560,8 +1528,6 @@ void bic_crypto_decrypt_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_crypto_decrypt_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -1604,8 +1570,6 @@ bool bic_crypto_decrypt_method_to_string_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_crypto_decrypt_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("CryptoDecrypt");
 
   BIC_SET_RESULT_BLANK();

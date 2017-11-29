@@ -461,7 +461,6 @@ built_in_variable_s glut_variables[] =
 
 #define BIC_GLUT_DELEGATE(NAME,GLUT_NAME,FUN_PTR_NAME,DLG_PTR_NAME,PARAM_CNT,ADDITIONAL_CHECK) \
 {/*{{{*/\
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
 \
   /* - ERROR - */\
@@ -694,8 +693,6 @@ void bic_glut_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_glut_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -742,7 +739,6 @@ bool bic_glut_method_Glut_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_glut_method_InitWindowSize_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
@@ -773,7 +769,6 @@ bool bic_glut_method_InitWindowSize_2(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_glut_method_InitWindowPosition_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
@@ -804,7 +799,6 @@ bool bic_glut_method_InitWindowPosition_2(interpreter_thread_s &it,unsigned stac
 
 bool bic_glut_method_InitDisplayMode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int mode;
@@ -831,7 +825,6 @@ bool bic_glut_method_InitDisplayMode_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_glut_method_CreateWindow_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - ERROR -
@@ -933,7 +926,6 @@ bool bic_glut_method_IdleFunc_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_glut_method_TimerFunc_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
   location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
@@ -982,8 +974,6 @@ bool bic_glut_method_TimerFunc_3(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_glut_method_GetModifiers_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   long long int result = glutGetModifiers();
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
@@ -993,7 +983,6 @@ bool bic_glut_method_GetModifiers_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_glut_method_Get_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   long long int state;
@@ -1028,8 +1017,6 @@ bool bic_glut_method_Get_1(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_glut_method_PostRedisplay_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   BIC_GLUT_CONTEXT_CHECK();
   BIC_GLUT_WINDOW_CHECK();
 
@@ -1042,8 +1029,6 @@ bool bic_glut_method_PostRedisplay_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_glut_method_SwapBuffers_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   BIC_GLUT_CONTEXT_CHECK();
   BIC_GLUT_WINDOW_CHECK();
 
@@ -1056,8 +1041,6 @@ bool bic_glut_method_SwapBuffers_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_glut_method_MainLoop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  unsigned res_loc_idx = stack_base + operands[c_res_op_idx];
-
   BIC_GLUT_CONTEXT_CHECK();
   BIC_GLUT_WINDOW_CHECK();
 
@@ -1084,7 +1067,6 @@ bool bic_glut_method_MainLoop_0(interpreter_thread_s &it,unsigned stack_base,uli
     return false;
   }
 
-  pointer &res_location = it.data_stack[res_loc_idx];
   BIC_SET_RESULT_BLANK();
 
   return true;
@@ -1092,8 +1074,6 @@ bool bic_glut_method_MainLoop_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_glut_method_LeaveMainLoop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   BIC_GLUT_CONTEXT_CHECK();
 
   glutLeaveMainLoop();
@@ -1114,8 +1094,6 @@ bool bic_glut_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_glut_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Glut");
 
   BIC_SET_RESULT_BLANK();

@@ -311,8 +311,6 @@ void bic_jit_context_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_jit_context_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -348,7 +346,6 @@ bool bic_jit_context_method_JitContext_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_jit_context_method_create_fun_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -489,8 +486,6 @@ bool bic_jit_context_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_jit_context_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("JitContext");
 
   BIC_SET_RESULT_BLANK();
@@ -577,8 +572,6 @@ void bic_jit_function_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_jit_function_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -591,7 +584,6 @@ bool bic_jit_function_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
 bool bic_jit_function_method_signature_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   jit_function_s *jf_ptr = (jit_function_s *)dst_location->v_data_ptr;
@@ -607,7 +599,6 @@ bool bic_jit_function_method_signature_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_jit_function_method_call_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -926,8 +917,6 @@ bool bic_jit_function_method_to_string_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_jit_function_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("JitFunction");
 
   BIC_SET_RESULT_BLANK();

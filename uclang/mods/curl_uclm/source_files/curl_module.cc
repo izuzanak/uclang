@@ -195,7 +195,6 @@ void bic_curl_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_curl_method_GET_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   if (src_0_location->v_type != c_bi_class_string)
@@ -267,7 +266,6 @@ bool bic_curl_method_GET_1(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_curl_method_PUT_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
@@ -352,7 +350,6 @@ bool bic_curl_method_PUT_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_curl_method_DELETE_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   if (src_0_location->v_type != c_bi_class_string)
@@ -425,7 +422,6 @@ bool bic_curl_method_DELETE_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_curl_method_HEAD_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   if (src_0_location->v_type != c_bi_class_string)
@@ -508,8 +504,6 @@ bool bic_curl_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_curl_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("Curl");
 
   BIC_SET_RESULT_BLANK();
@@ -690,8 +684,6 @@ void bic_curl_result_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_curl_result_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-  pointer &dst_location = it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   src_0_location->v_reference_cnt.atomic_add(2);
@@ -704,7 +696,6 @@ bool bic_curl_result_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_curl_result_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   curl_result_s *res_ptr = (curl_result_s *)dst_location->v_data_ptr;
@@ -718,7 +709,6 @@ bool bic_curl_result_method_data_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_curl_result_method_info_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -800,8 +790,6 @@ bool bic_curl_result_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_curl_result_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  pointer &res_location = it.data_stack[stack_base + operands[c_res_op_idx]];
-
   printf("CurlResult");
 
   BIC_SET_RESULT_BLANK();
