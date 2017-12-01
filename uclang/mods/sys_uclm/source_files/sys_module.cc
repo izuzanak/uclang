@@ -4301,7 +4301,7 @@ built_in_class_s regex_class =
 {/*{{{*/
   "Regex",
   c_modifier_public | c_modifier_final,
-  8, regex_methods,
+  9, regex_methods,
   0, regex_variables,
   bic_regex_consts,
   bic_regex_init,
@@ -4350,6 +4350,11 @@ built_in_method_s regex_methods[] =
     "split#1",
     c_modifier_public | c_modifier_final,
     bic_regex_method_split_1
+  },
+  {
+    "replace#2",
+    c_modifier_public | c_modifier_final,
+    bic_regex_method_replace_2
   },
   {
     "to_string#0",
@@ -4763,6 +4768,90 @@ bool bic_regex_method_split_1(interpreter_thread_s &it,unsigned stack_base,uli *
   }
 
   BIC_SET_RESULT(array_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_regex_method_replace_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string ||
+      src_1_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("replace#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  regex_t *re = (regex_t *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (re == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_REGEX_NOT_COMPILED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - retrieve string pointers -
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+  string_s *newstr_ptr = (string_s *)src_1_location->v_data_ptr;
+
+  // - create target buffer -
+  bc_array_s buffer;
+  buffer.init();
+
+  // - replace regex matches by new string -
+  {
+    regmatch_t regmatch;
+
+    unsigned pos = 0;
+    do {
+      unsigned old_pos = pos;
+
+      // - search for substring -
+      if (regexec(re,string_ptr->data + pos,1,&regmatch,0) == 0)
+      {
+        pos += regmatch.rm_so;
+      }
+      else
+      {
+        pos = string_ptr->size - 1;
+      }
+
+      // - append part of original string to result -
+      buffer.append(pos - old_pos,string_ptr->data + old_pos);
+
+      if (pos >= string_ptr->size - 1)
+      {
+        break;
+      }
+
+      // - append new string to result -
+      buffer.append(newstr_ptr->size - 1,newstr_ptr->data);
+
+      // - jump over substring -
+      pos += regmatch.rm_eo - regmatch.rm_so;
+
+    } while(true);
+  }
+
+  // - insert terminating character to buffer -
+  buffer.push('\0');
+
+  // - create result string -
+  string_s *result_ptr = it.get_new_string_ptr();
+  result_ptr->data = buffer.data;
+  result_ptr->size = buffer.used;
+
+  BIC_SET_RESULT_STRING(result_ptr);
 
   return true;
 }/*}}}*/
