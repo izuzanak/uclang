@@ -83,6 +83,7 @@ c_packages = [
   ["MOD_PERL"      ,"false",     []],
   ["MOD_RUBY"      ,"pkg-config",["ruby-2.3 >= 2.3.0"]],
   ["MOD_PROLOG"    ,"pkg-config",["swipl >= 7.2.3"]],
+  ["MOD_RUST"      ,"false",     []],
   ["MOD_UV"        ,"false"     ,[]],
   ["MOD_ZLIB"      ,"pkg-config",["zlib >= 1.2.8"]],
   ["MOD_SNAPPY"    ,"files",     ["/usr/include/snappy.h"]],

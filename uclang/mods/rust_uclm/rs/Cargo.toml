@@ -1,0 +1,10 @@
+[package]
+name = "rust_ruclm"
+version = "0.1.0"
+authors = ["Jiří Zuzaňák <zuzanakjiri@gmail.com>"]
+
+[dependencies]
+
+[lib]
+name = "rust_ruclm"
+crate-type = ["cdylib"]

@@ -18,6 +18,23 @@ include "script_parser.h"
 methods exception_s
 @end
 
+extern "C" {
+exception_s *exception_s_throw_exception(interpreter_thread_s &it,unsigned a_type,unsigned a_pos,location_s *obj_location_ptr)
+{/*{{{*/
+  return exception_s::throw_exception(it,a_type,a_pos,obj_location_ptr);
+}/*}}}*/
+
+void exception_s_push_method_ri_class_idx(interpreter_thread_s &it,exception_s *new_exception,unsigned a_class_idx,const char *a_method_name)
+{/*{{{*/
+  BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,a_class_idx,a_method_name);
+}/*}}}*/
+
+void exception_s_push_parameter(exception_s *a_this,lli a_param)
+{/*{{{*/
+  a_this->params.push(a_param);
+}/*}}}*/
+}
+
 exception_s *exception_s::throw_exception(interpreter_thread_s &it,unsigned a_type,unsigned a_pos,location_s *obj_location_ptr)
 {/*{{{*/
   exception_s *new_exception = (exception_s *)cmalloc(sizeof(exception_s));
@@ -68,6 +85,23 @@ methods pointer_map_tree_s
 @begin
 methods interpreter_thread_s
 @end
+
+extern "C" {
+location_s *interpreter_thread_s_get_new_location_ptr(interpreter_thread_s *a_this)
+{/*{{{*/
+  return a_this->get_new_location_ptr();
+}/*}}}*/
+
+string_s *interpreter_thread_s_get_new_string_ptr(interpreter_thread_s *a_this)
+{/*{{{*/
+  return a_this->get_new_string_ptr();
+}/*}}}*/
+
+void interpreter_thread_s_release_location_ptr(interpreter_thread_s *a_this,location_s *location_ptr)
+{/*{{{*/
+  a_this->release_location_ptr(location_ptr);  
+}/*}}}*/
+}
 
 void interpreter_thread_s::release_stack_from(unsigned stack_base)
 {/*{{{*/

@@ -14,6 +14,13 @@ const char c_string_terminating_char = '\0';
  * methods of structure string_s
  */
 
+extern "C" {
+void string_s_set(string_s *a_this,unsigned a_length,const char *a_data)
+{/*{{{*/
+  a_this->set(a_length,a_data);
+}/*}}}*/
+}
+
 void string_s::mult_char_ptr(unsigned a_length,const char *a_data,unsigned a_mult)
 {/*{{{*/
   if (a_length == 0 || a_mult == 0)
