@@ -41,6 +41,8 @@ void bic_rust_string_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_rust_string_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_rust_string_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_rust_string_operator_unary_post_double_plus(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_rust_string_operator_unary_pre_double_plus(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_rust_string_method_RustString_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_rust_string_method_RustString_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_rust_string_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

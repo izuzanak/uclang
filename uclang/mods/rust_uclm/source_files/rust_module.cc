@@ -70,7 +70,7 @@ built_in_class_s rust_string_class =
 {/*{{{*/
   "RustString",
   c_modifier_public | c_modifier_final,
-  6, rust_string_methods,
+  8, rust_string_methods,
   0, rust_string_variables,
   bic_rust_string_consts,
   bic_rust_string_init,
@@ -94,6 +94,16 @@ built_in_method_s rust_string_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_rust_string_operator_binary_equal
+  },
+  {
+    "operator_unary_post_double_plus#0",
+    c_modifier_public | c_modifier_final,
+    bic_rust_string_operator_unary_post_double_plus
+  },
+  {
+    "operator_unary_pre_double_plus#0",
+    c_modifier_public | c_modifier_final,
+    bic_rust_string_operator_unary_pre_double_plus
   },
   {
     "RustString#0",

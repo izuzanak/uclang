@@ -260,14 +260,30 @@ pub struct UclModule
 #[repr(C)]
 pub struct UclLocationArray {}
 
+#[allow(unused_macros)]
+macro_rules! bic_todo_error
+{
+    ($it:expr,$operands:expr) => {
+        let string = interpreter_thread_s_get_new_string_ptr($it);
+        string_s_set(string,file!().len() as u32,file!().as_ptr());
+        bic_create_new_location!($it,new_location,c_bi_class_string,ptr,string as c_pointer,0);
+
+        let new_exception = exception_s_throw_exception($it,UclError::TODO_EXCEPTION as u32,*$operands.offset(c_source_pos_idx),new_location);
+        exception_s_push_parameter(new_exception,line!() as i64);
+    }
+}
+
 // - create new location macros -
 macro_rules! bic_create_new_location
 {
-    ($it:expr,$name:ident,$class_idx:expr,$type:ident,$value:expr) => {
+    ($it:expr,$name:ident,$class_idx:expr,$type:ident,$value:expr,$ref_cnt:expr) => {
         let $name = interpreter_thread_s_get_new_location_ptr($it);
         (*$name).v_type = $class_idx;
-        atomic_s_atomic_set(&mut (*$name).v_reference_cnt,1);
+        atomic_s_atomic_set(&mut (*$name).v_reference_cnt,$ref_cnt);
         (*$name).v_data_ptr.$type = $value;
+    };
+    ($it:expr,$name:ident,$class_idx:expr,$type:ident,$value:expr) => {
+        bic_create_new_location!($it,$name,$class_idx,$type,$value,1)
     };
 }
 
@@ -289,9 +305,17 @@ macro_rules! bic_set_result
         interpreter_thread_s_release_location_ptr($it,*res_location);
         *res_location = $location_ptr;
     };
-    ($it:expr,$stack_base:expr,$operands:expr,$location_ptr:expr,$code:tt) => {
-        bic_set_result!($it,$stack_base,$operands,$location_ptr);
-        $code
+}//}}}
+
+macro_rules! bic_set_result_swap
+{//{{{
+    ($it:expr,$stack_base:expr,$operands:expr,$location_ptr:expr) => {
+        let ref mut res_location = bic_stack_location!($it,$stack_base,$operands,c_res_op_idx);
+        let ref mut dst_location = bic_stack_location_value!($it,$stack_base,$operands,c_dst_op_idx);
+
+        interpreter_thread_s_release_location_ptr($it,*res_location);
+        *res_location = *dst_location;
+        *dst_location = $location_ptr;
     };
 }//}}}
 
@@ -327,10 +351,6 @@ macro_rules! bic_simple_set_res
             interpreter_thread_s_release_location_ptr($it,*res_location);
             *res_location = new_location;
         }
-    };
-    ($it:expr,$stack_base:expr,$operands:expr,$class_idx:expr,$type:ident,$value:expr,$code:tt) => {
-        bic_simple_set_res!($it,$stack_base,$operands,$class_idx,$type,$value);
-        $code
     };
 }//}}}
 
@@ -388,6 +408,39 @@ pub extern "C" fn bic_rust_string_operator_binary_equal(it:*mut UclIThread,stack
 
         bic_set_destination!(it,stack_base,operands,src_0_location);
         bic_set_result!(it,stack_base,operands,src_0_location);
+    }
+
+    true
+}/*}}}*/
+
+#[no_mangle]
+pub extern "C" fn bic_rust_string_operator_unary_post_double_plus(it:*mut UclIThread,stack_base:c_ui,operands:*mut c_uli) -> c_bool
+{/*{{{*/
+    unsafe {
+        let dst_location = bic_stack_location_value!(it,stack_base,operands,c_dst_op_idx);
+        let ref string = *((*dst_location).v_data_ptr.ptr as *const String);
+
+        let result = Box::into_raw(Box::new(string.clone() + " ++"));
+
+        bic_create_new_location!(it,new_location,c_bi_class_rust_string,ptr,result as c_pointer);
+        bic_set_result_swap!(it,stack_base,operands,new_location);
+    }
+
+    true
+}/*}}}*/
+
+#[no_mangle]
+pub extern "C" fn bic_rust_string_operator_unary_pre_double_plus(it:*mut UclIThread,stack_base:c_ui,operands:*mut c_uli) -> c_bool
+{/*{{{*/
+    unsafe {
+        let dst_location = bic_stack_location_value!(it,stack_base,operands,c_dst_op_idx);
+        let ref string = *((*dst_location).v_data_ptr.ptr as *const String);
+
+        let result = Box::into_raw(Box::new(string.clone() + " ++"));
+
+        bic_create_new_location!(it,new_location,c_bi_class_rust_string,ptr,result as c_pointer,2);
+        bic_set_destination!(it,stack_base,operands,new_location);
+        bic_set_result!(it,stack_base,operands,new_location);
     }
 
     true
