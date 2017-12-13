@@ -4169,7 +4169,7 @@ built_in_variable_s var_slot_variables[] =
       string_s *string_ptr = (string_s *)SRC_LOCATION->v_data_ptr;\
       \
       /* - ERROR - */\
-      if ((int)string_ptr->size > size)\
+      if ((int)string_ptr->size + 1 > size)\
       {\
         exception_s::throw_exception(it,module.error_base + c_error_VAR_SLOT_WRITE_STRING_TOO_LONG,operands[c_source_pos_idx],(location_s *)it.blank_location);\
         return false;\
@@ -4177,7 +4177,7 @@ built_in_variable_s var_slot_variables[] =
       \
       char data[c_vs_max_str_size];\
       data[0] = string_ptr->size - 1;\
-      memcpy(data + 1,string_ptr->data,string_ptr->size - 1);\
+      memcpy(data + 1,string_ptr->data,string_ptr->size);\
       \
       vs_ptr->Write(vss_ptr->slot_idx,INDEX,data,string_ptr->size,0,0,false);\
     }\
@@ -4367,7 +4367,7 @@ built_in_variable_s var_slot_variables[] =
           string_s *string_ptr = (string_s *)it.get_location_value(*p_ptr)->v_data_ptr;\
           \
           /* - ERROR - */\
-          if ((int)string_ptr->size > size)\
+          if ((int)string_ptr->size + 1 > size)\
           {\
             cfree(buffer);\
             \
@@ -4376,7 +4376,7 @@ built_in_variable_s var_slot_variables[] =
           }\
           \
           ptr[0] = string_ptr->size - 1;\
-          memcpy(ptr + 1,string_ptr->data,string_ptr->size - 1);\
+          memcpy(ptr + 1,string_ptr->data,string_ptr->size);\
           \
         } while(++p_ptr,(ptr += size) < ptr_end);\
         \
