@@ -3347,7 +3347,7 @@ built_in_variable_s var_store_variables[] =
   case TREAL:   size_test = varSize == 4; break;\
   case TLREAL:  size_test = varSize == 8; break;\
   case TSTRING: \
-    size_test = varSize >= 1 && varSize <= c_vs_max_str_size;\
+    size_test = varSize >= 2 && varSize <= c_vs_max_str_size;\
     break;\
   }\
   /*}}}*/
