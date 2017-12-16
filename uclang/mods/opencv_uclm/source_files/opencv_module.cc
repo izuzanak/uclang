@@ -438,7 +438,7 @@ built_in_variable_s cv_mat_variables[] =
     ERROR_CODE;\
   }\
 \
-  vector<int> params;\
+  std::vector<int> params;\
 \
   if (array_ptr->used != 0)\
   {\
@@ -661,7 +661,7 @@ bool bic_cv_mat_method_encode_2(interpreter_thread_s &it,unsigned stack_base,uli
   BIC_CV_MAT_IMWRITE_PARAMETERS(return false);
 
   bool error = false;
-  vector<unsigned char> data;
+  std::vector<unsigned char> data;
 
   try
   {
@@ -1003,7 +1003,7 @@ built_in_variable_s cv_capture_variables[] =
   { "PROP_CONVERT_RGB", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "PROP_WHITE_BALANCE_BLUE_U", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "PROP_RECTIFICATION", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "PROP_MONOCROME", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_MONOCHROME", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "PROP_SHARPNESS", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "PROP_AUTO_EXPOSURE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "PROP_GAMMA", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -1134,7 +1134,7 @@ void bic_cv_capture_consts(location_array_s &const_locations)
     CREATE_CV_CAPTURE_PROP_ID_BIC_STATIC(CV_CAP_PROP_CONVERT_RGB);
     CREATE_CV_CAPTURE_PROP_ID_BIC_STATIC(CV_CAP_PROP_WHITE_BALANCE_BLUE_U);
     CREATE_CV_CAPTURE_PROP_ID_BIC_STATIC(CV_CAP_PROP_RECTIFICATION);
-    CREATE_CV_CAPTURE_PROP_ID_BIC_STATIC(CV_CAP_PROP_MONOCROME);
+    CREATE_CV_CAPTURE_PROP_ID_BIC_STATIC(CV_CAP_PROP_MONOCHROME);
     CREATE_CV_CAPTURE_PROP_ID_BIC_STATIC(CV_CAP_PROP_SHARPNESS);
     CREATE_CV_CAPTURE_PROP_ID_BIC_STATIC(CV_CAP_PROP_AUTO_EXPOSURE);
     CREATE_CV_CAPTURE_PROP_ID_BIC_STATIC(CV_CAP_PROP_GAMMA);
