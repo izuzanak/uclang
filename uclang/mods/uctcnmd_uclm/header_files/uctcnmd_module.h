@@ -1,0 +1,138 @@
+
+#ifndef __UCTCNMD_MODULE_H
+#define __UCTCNMD_MODULE_H
+
+@begin
+include "ucl_uctcnmd.h"
+@end
+
+// - UCTCNMD indexes of built in classes -
+extern unsigned c_bi_class_tcn_message;
+extern unsigned c_bi_class_tcn_address;
+extern unsigned c_bi_class_tcn_am_address;
+extern unsigned c_bi_class_tcn_caller;
+extern unsigned c_bi_class_tcn_replier;
+extern unsigned c_bi_class_tcn_handler;
+
+// - UCTCNMD module -
+extern built_in_module_s module;
+
+// - UCTCNMD classes -
+extern built_in_class_s *uctcnmd_classes[];
+
+// - UCTCNMD error identifiers -
+enum
+{
+  c_error_UCTCNMD_DUMMY_ERROR = 0,
+};
+
+// - UCTCNMD error strings -
+extern const char *uctcnmd_error_strings[];
+
+// - UCTCNMD initialize -
+bool uctcnmd_initialize(script_parser_s &sp);
+
+// - UCTCNMD print exception -
+bool uctcnmd_print_exception(interpreter_s &it,exception_s &exception);
+
+// - class TCN_MESSAGE -
+extern built_in_variable_s tcn_message_variables[];
+extern built_in_method_s tcn_message_methods[];
+extern built_in_class_s tcn_message_class;
+
+void bic_tcn_message_consts(location_array_s &const_locations);
+void bic_tcn_message_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_tcn_message_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_tcn_message_method_Main_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_message_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_message_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class TCN_ADDRESS -
+extern built_in_variable_s tcn_address_variables[];
+extern built_in_method_s tcn_address_methods[];
+extern built_in_class_s tcn_address_class;
+
+void bic_tcn_address_consts(location_array_s &const_locations);
+void bic_tcn_address_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_tcn_address_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_tcn_address_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_address_method_TcnAddress_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_address_method_addr_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_address_method_node_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_address_method_group_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_address_method_function_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_address_method_station_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_address_method_next_station_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_address_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_address_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class TCN_AM_ADDRESS -
+extern built_in_variable_s tcn_am_address_variables[];
+extern built_in_method_s tcn_am_address_methods[];
+extern built_in_class_s tcn_am_address_class;
+
+void bic_tcn_am_address_consts(location_array_s &const_locations);
+void bic_tcn_am_address_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_tcn_am_address_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_tcn_am_address_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_am_address_method_gni_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_am_address_method_snu_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_am_address_method_node_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_am_address_method_group_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_am_address_method_function_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_am_address_method_station_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_am_address_method_next_station_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_am_address_method_topo_counter_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_am_address_method_topo_valid_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_am_address_method_topo_rsv_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_am_address_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_am_address_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class TCN_CALLER -
+extern built_in_variable_s tcn_caller_variables[];
+extern built_in_method_s tcn_caller_methods[];
+extern built_in_class_s tcn_caller_class;
+
+void bic_tcn_caller_consts(location_array_s &const_locations);
+void bic_tcn_caller_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_tcn_caller_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_tcn_caller_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_caller_method_TcnCaller_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_caller_method_CallRequest_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_caller_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_caller_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class TCN_REPLIER -
+extern built_in_variable_s tcn_replier_variables[];
+extern built_in_method_s tcn_replier_methods[];
+extern built_in_class_s tcn_replier_class;
+
+void bic_tcn_replier_consts(location_array_s &const_locations);
+void bic_tcn_replier_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_tcn_replier_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_tcn_replier_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_replier_method_TcnReplier_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_replier_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_replier_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class TCN_HANDLER -
+extern built_in_variable_s tcn_handler_variables[];
+extern built_in_method_s tcn_handler_methods[];
+extern built_in_class_s tcn_handler_class;
+
+void bic_tcn_handler_consts(location_array_s &const_locations);
+void bic_tcn_handler_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_tcn_handler_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_tcn_handler_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_handler_method_Cancel_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_handler_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_handler_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+#endif
+

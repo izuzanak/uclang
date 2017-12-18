@@ -1365,6 +1365,36 @@ if cfg_ref[CFG_TARGET]:
     )
 # }}}
 
+# uctcnmd module
+cfg_ref = c_cfg[C_MODULE_UCTCNMD]
+# {{{
+if cfg_ref[CFG_TARGET]:
+    cfg_ref[CFG_MODULE] = module_c(
+      configuration,
+      cfg_ref[CFG_DIR],
+      cfg_ref[CFG_NAME],
+      [ 
+        "header_files",
+        os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
+        os.sep.join(["..","..","..","ext_libs","ucframework","1.60","build","include"]),
+        os.sep.join(["..","..","..","ext_libs","uctcn","2.27","build","include"])
+      ],
+      [ 
+        "source_files",
+      ],
+      [ 
+        os.sep.join(["..","..","libs","libbase_ucll"]),
+        os.sep.join(["..","..","..","ext_libs","ucframework","1.60","build","lib"]),
+        os.sep.join(["..","..","..","ext_libs","uctcn","2.27","build","lib"])
+      ],
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
+      [],
+      [],
+    )
+# }}}
+
 # uccan module
 cfg_ref = c_cfg[C_MODULE_UCCAN]
 # {{{

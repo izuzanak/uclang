@@ -11,7 +11,7 @@ include "script_parser.h"
 #include <microhttpd.h>
 
 /*
-\* contants and definitions
+ * contants and definitions
  */
 
 extern unsigned c_bi_class_http_conn;

@@ -47,7 +47,7 @@ rules:
 
   <program> -> <term_list> ->> {}
 
-  <term_list> -> <term> <term_list> ->> {}
+  <term_list> -> <term_list> <term> ->> {}
   <term_list> -> <term> ->> {}
 
   <term> -> number ->> {print("number("..rule_body(0)..")");}
