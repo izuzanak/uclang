@@ -9,16 +9,17 @@ unsigned c_bi_class_tcn_address = c_idx_not_exist;
 unsigned c_bi_class_tcn_am_address = c_idx_not_exist;
 unsigned c_bi_class_tcn_caller = c_idx_not_exist;
 unsigned c_bi_class_tcn_replier = c_idx_not_exist;
-unsigned c_bi_class_tcn_handler = c_idx_not_exist;
+unsigned c_bi_class_tcn_call_handler = c_idx_not_exist;
+unsigned c_bi_class_tcn_repl_handler = c_idx_not_exist;
 
 // - UCTCNMD module -
 built_in_module_s module =
 {/*{{{*/
-  6,                       // Class count
+  7,                       // Class count
   uctcnmd_classes,         // Classes
 
   0,                       // Error base index
-  1,                       // Error count
+  13,                      // Error count
   uctcnmd_error_strings,   // Error strings
 
   uctcnmd_initialize,      // Initialize function
@@ -33,13 +34,26 @@ built_in_class_s *uctcnmd_classes[] =
   &tcn_am_address_class,
   &tcn_caller_class,
   &tcn_replier_class,
-  &tcn_handler_class,
+  &tcn_call_handler_class,
+  &tcn_repl_handler_class,
 };/*}}}*/
 
 // - UCTCNMD error strings -
 const char *uctcnmd_error_strings[] =
 {/*{{{*/
-  "error_UCTCNMD_DUMMY_ERROR",
+  "error_TCN_MESSAGE_WRONG_U8_VALUE_RANGE",
+  "error_TCN_ADDRESS_INVALID_ADDRESS_TYPE",
+  "error_TCN_CALLER_WRONG_CALLBACK_DELEGATE",
+  "error_TCN_CALLER_REGISTER_ERROR",
+  "error_TCN_CALLER_CALL_REQUEST_INVALID_TIMEOUT",
+  "error_TCN_CALLER_CALL_REQUEST_ERROR",
+  "error_TCN_REPLIER_WRONG_CALLBACK_DELEGATE",
+  "error_TCN_REPLIER_WRONG_CLOSE_DELEGATE",
+  "error_TCN_REPLIER_REQUEST_INVALID_INSTANCE_COUNT",
+  "error_TCN_REPLIER_REGISTER_ERROR",
+  "error_TCN_CALL_HANDLER_CANCEL_ERROR",
+  "error_TCN_REPL_HANDLER_REPLY_REQUEST_ERROR",
+  "error_TCN_REPL_HANDLER_CANCEL_ERROR",
 };/*}}}*/
 
 // - UCTCNMD initialize -
@@ -62,8 +76,11 @@ bool uctcnmd_initialize(script_parser_s &sp)
   // - initialize tcn_replier class identifier -
   c_bi_class_tcn_replier = class_base_idx++;
 
-  // - initialize tcn_handler class identifier -
-  c_bi_class_tcn_handler = class_base_idx++;
+  // - initialize tcn_call_handler class identifier -
+  c_bi_class_tcn_call_handler = class_base_idx++;
+
+  // - initialize tcn_repl_handler class identifier -
+  c_bi_class_tcn_repl_handler = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -76,11 +93,99 @@ bool uctcnmd_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_UCTCNMD_DUMMY_ERROR:
+  case c_error_TCN_MESSAGE_WRONG_U8_VALUE_RANGE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTcn message data dummy error\n");
+    fprintf(stderr,"\nInvalid value of parameter %" HOST_LL_FORMAT "d, out of U8 range\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TCN_ADDRESS_INVALID_ADDRESS_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid TCN address type\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TCN_CALLER_WRONG_CALLBACK_DELEGATE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong type of callback delegate for tcn caller\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TCN_CALLER_REGISTER_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while registering caller: %s\n",c_msg_res_strings[exception.params[0]]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TCN_CALLER_CALL_REQUEST_INVALID_TIMEOUT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTcn call request invalid timeout value\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TCN_CALLER_CALL_REQUEST_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while requesting call: %s\n",c_msg_res_strings[exception.params[0]]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TCN_REPLIER_WRONG_CALLBACK_DELEGATE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong type of callback delegate for tcn replier\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TCN_REPLIER_WRONG_CLOSE_DELEGATE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong type of close delegate for tcn replier\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TCN_REPLIER_REQUEST_INVALID_INSTANCE_COUNT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTcn replier register invalid instance count\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TCN_REPLIER_REGISTER_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while registering replier: %s",c_msg_res_strings[exception.params[0]]);
+    if (exception.params[0] == msg_ami_err)
+    {
+      fprintf(stderr,": %s",amiGetResultText((AM_RESULT)exception.params[1]));
+    }
+    fprintf(stderr,"\n ---------------------------------------- \n");
+    break;
+  case c_error_TCN_CALL_HANDLER_CANCEL_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while cancelling call session: %s\n",c_msg_res_strings[exception.params[0]]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TCN_REPL_HANDLER_REPLY_REQUEST_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while requesting reply: %s\n",c_msg_res_strings[exception.params[0]]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TCN_REPL_HANDLER_CANCEL_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while cancelling reply session: %s\n",c_msg_res_strings[exception.params[0]]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -95,8 +200,8 @@ built_in_class_s tcn_message_class =
 {/*{{{*/
   "TcnMessage",
   c_modifier_public | c_modifier_final,
-  3, tcn_message_methods,
-  4, tcn_message_variables,
+  4, tcn_message_methods,
+  12, tcn_message_variables,
   bic_tcn_message_consts,
   bic_tcn_message_init,
   bic_tcn_message_clear,
@@ -115,6 +220,11 @@ built_in_class_s tcn_message_class =
 
 built_in_method_s tcn_message_methods[] =
 {/*{{{*/
+  {
+    "RpcMain#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_tcn_message_method_RpcMain_0
+  },
   {
     "Main#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
@@ -135,20 +245,29 @@ built_in_method_s tcn_message_methods[] =
 built_in_variable_s tcn_message_variables[] =
 {/*{{{*/
 
-  // - message service type constants -
-  { "BLOCK_SERVICE", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "UNBLOCK_SERVICE", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "BLOCK_SERVICE_REPLIER_FUNCTION", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "UNBLOCK_SERVICE_REPLIER_FUNCTION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  // - txn message constants -
+  { "AM_MAX_FCT_ID", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_MAX_DIR_ENTRS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_MAX_GROUP", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_SAME_STATION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_UNKNOWN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_MANAGER_FCT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_AGENT_FCT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_ROUTER_FCT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_SAME_NODE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_SYSTEM_ADDR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_ANY_TOPO", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_ADD_REM_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
 
-#define UCTCNMD_CHECK_INTEGER_U8_RANGE(VALUE) \
+#define UCTCNMD_CHECK_INTEGER_U8_RANGE(VALUE,INDEX) \
 {/*{{{*/\
   if ((VALUE) < 0 || (VALUE) > 255)\
   {\
-    /* FIXME TODO throw proper exception ... */\
-    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TCN_MESSAGE_WRONG_U8_VALUE_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(INDEX);\
+    \
     return false;\
   }\
 }/*}}}*/
@@ -156,21 +275,29 @@ built_in_variable_s tcn_message_variables[] =
 void bic_tcn_message_consts(location_array_s &const_locations)
 {/*{{{*/
 
-  // - insert message service type constants -
+  // - insert tcn message constants -
   {
-    const_locations.push_blanks(4);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 4);
+    const_locations.push_blanks(12);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 12);
 
-#define CREATE_TCN_MESSAGE_SERVICE_TYPE_BIC_STATIC(VALUE)\
+#define CREATE_TCN_MESSAGE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
   cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
-    CREATE_TCN_MESSAGE_SERVICE_TYPE_BIC_STATIC(msg_block_service);
-    CREATE_TCN_MESSAGE_SERVICE_TYPE_BIC_STATIC(msg_unblock_service);
-    CREATE_TCN_MESSAGE_SERVICE_TYPE_BIC_STATIC(msg_block_rpl_fct);
-    CREATE_TCN_MESSAGE_SERVICE_TYPE_BIC_STATIC(msg_unblock_rpl_fct);
+    CREATE_TCN_MESSAGE_BIC_STATIC(AM_MAX_FCT_ID);
+    CREATE_TCN_MESSAGE_BIC_STATIC(AM_MAX_DIR_ENTRS);
+    CREATE_TCN_MESSAGE_BIC_STATIC(AM_MAX_GROUP);
+    CREATE_TCN_MESSAGE_BIC_STATIC(AM_SAME_STATION);
+    CREATE_TCN_MESSAGE_BIC_STATIC(AM_UNKNOWN);
+    CREATE_TCN_MESSAGE_BIC_STATIC(AM_MANAGER_FCT);
+    CREATE_TCN_MESSAGE_BIC_STATIC(AM_AGENT_FCT);
+    CREATE_TCN_MESSAGE_BIC_STATIC(AM_ROUTER_FCT);
+    CREATE_TCN_MESSAGE_BIC_STATIC(AM_SAME_NODE);
+    CREATE_TCN_MESSAGE_BIC_STATIC(AM_SYSTEM_ADDR);
+    CREATE_TCN_MESSAGE_BIC_STATIC(AM_ANY_TOPO);
+    CREATE_TCN_MESSAGE_BIC_STATIC(AM_ADD_REM_ERR);
   }
 
 }/*}}}*/
@@ -185,12 +312,22 @@ void bic_tcn_message_clear(interpreter_thread_s &it,location_s *location_ptr)
   cassert(0);
 }/*}}}*/
 
+bool bic_tcn_message_method_RpcMain_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  RpcMain();
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
 bool bic_tcn_message_method_Main_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   tcn_message_s::it_ptr = &it;
   tcn_message_s::source_pos = operands[c_source_pos_idx];
   tcn_message_s::ret_code = c_run_return_code_OK;
 
+  RpcMain();
   msgMain();
 
   // - if exception occurred -
@@ -391,15 +528,14 @@ bool bic_tcn_address_method_TcnAddress_4(interpreter_thread_s &it,unsigned stack
   // - ERROR -
   if (addr_type < 0 || addr_type > msg_addr_grp_system)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_TCN_ADDRESS_INVALID_ADDRESS_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
   // - ERROR -
-  UCTCNMD_CHECK_INTEGER_U8_RANGE(node_group);
-  UCTCNMD_CHECK_INTEGER_U8_RANGE(function_station);
-  UCTCNMD_CHECK_INTEGER_U8_RANGE(next_station);
+  UCTCNMD_CHECK_INTEGER_U8_RANGE(node_group,2);
+  UCTCNMD_CHECK_INTEGER_U8_RANGE(function_station,3);
+  UCTCNMD_CHECK_INTEGER_U8_RANGE(next_station,4);
 
   // - create tcn_address object -
   SMsgAddress *ta_ptr = (SMsgAddress *)cmalloc(sizeof(SMsgAddress));
@@ -584,8 +720,8 @@ built_in_variable_s tcn_am_address_variables[] =
 {/*{{{*/\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
 \
-  unsigned am_addr = (unsigned)dst_location->v_data_ptr;\
-  AM_ADDRESS *am_ptr = (AM_ADDRESS *)&am_addr;\
+  unsigned am_address = (unsigned)dst_location->v_data_ptr;\
+  AM_ADDRESS *am_ptr = (AM_ADDRESS *)&am_address;\
 \
   BIC_SIMPLE_SET_RES(c_bi_class_integer,am_ptr->NAME);\
 }/*}}}*/
@@ -734,9 +870,9 @@ built_in_method_s tcn_caller_methods[] =
     bic_tcn_caller_operator_binary_equal
   },
   {
-    "TcnCaller#3",
+    "TcnCaller#2",
     c_modifier_public | c_modifier_final,
-    bic_tcn_caller_method_TcnCaller_3
+    bic_tcn_caller_method_TcnCaller_2
   },
   {
     "CallRequest#3",
@@ -791,68 +927,46 @@ bool bic_tcn_caller_operator_binary_equal(interpreter_thread_s &it,unsigned stac
   return true;
 }/*}}}*/
 
-bool bic_tcn_caller_method_TcnCaller_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_tcn_caller_method_TcnCaller_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
 
   long long int function;
-  long long int service_type;
 
   if (!it.retrieve_integer(src_0_location,function) ||
-      !it.retrieve_integer(src_1_location,service_type) ||
-      src_2_location->v_type != c_bi_class_delegate)
+      src_1_location->v_type != c_bi_class_delegate)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("TcnCaller#3");
-    new_exception->params.push(3);
+    BIC_EXCEPTION_PUSH_METHOD_RI("TcnCaller#2");
+    new_exception->params.push(2);
     new_exception->params.push(src_0_location->v_type);
     new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
 
     return false;
   }
 
   // - ERROR -
-  UCTCNMD_CHECK_INTEGER_U8_RANGE(function);
-
-  const SMsgCallerPars *params;
-
-  switch (service_type)
-  {
-  case msg_block_service:
-    params = c_caller_params + 0;
-    break;
-  case msg_unblock_service:
-    params = c_caller_params + 1;
-    break;
-
-  // - ERROR -
-  default:
-
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
-    return false;
-  }
+  UCTCNMD_CHECK_INTEGER_U8_RANGE(function,1);
 
   // - retrieve delegate pointer -
-  delegate_s *delegate_ptr = (delegate_s *)src_2_location->v_data_ptr;
+  delegate_s *delegate_ptr = (delegate_s *)src_1_location->v_data_ptr;
 
   // - ERROR -
-  if (delegate_ptr->param_cnt != 4)
+  if (delegate_ptr->param_cnt != 1)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_TCN_CALLER_WRONG_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
   // - ERROR -
-  if (msgRegCaller(function,params) != msg_ok)
+  EMsgRes msg_res = msgRegCaller(function,&c_caller_params);
+  if (msg_res != msg_ok)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TCN_CALLER_REGISTER_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(msg_res);
+
     return false;
   }
 
@@ -861,11 +975,10 @@ bool bic_tcn_caller_method_TcnCaller_3(interpreter_thread_s &it,unsigned stack_b
   tc_ptr->init();
 
   tc_ptr->function = function;
-  tc_ptr->params = params;
 
   // - register callback delegate -
-  src_2_location->v_reference_cnt.atomic_inc();
-  tc_ptr->callback_dlg = src_2_location;
+  src_1_location->v_reference_cnt.atomic_inc();
+  tc_ptr->callback_dlg = src_1_location;
 
   // - set tcn_caller destination location -
   dst_location->v_data_ptr = (tcn_caller_s *)tc_ptr;
@@ -899,8 +1012,7 @@ bool bic_tcn_caller_method_CallRequest_3(interpreter_thread_s &it,unsigned stack
   // - ERROR -
   if (timeout < 0 || timeout > 65535)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_TCN_CALLER_CALL_REQUEST_INVALID_TIMEOUT,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -908,8 +1020,8 @@ bool bic_tcn_caller_method_CallRequest_3(interpreter_thread_s &it,unsigned stack
   SMsgAddress *ta_ptr = (SMsgAddress *)src_0_location->v_data_ptr;
   string_s *string_ptr = (string_s *)src_1_location->v_data_ptr;
 
-  // - create tcn_handler object -
-  tcn_handler_s *th_ptr = (tcn_handler_s *)cmalloc(sizeof(tcn_handler_s));
+  // - create tcn_call_handler object -
+  tcn_call_handler_s *th_ptr = (tcn_call_handler_s *)cmalloc(sizeof(tcn_call_handler_s));
   th_ptr->init();
 
   // - store reference to tcn caller -
@@ -918,19 +1030,22 @@ bool bic_tcn_caller_method_CallRequest_3(interpreter_thread_s &it,unsigned stack
 
   // - store reference to message data -
   src_1_location->v_reference_cnt.atomic_inc();
-  th_ptr->msg_data_loc = src_1_location;
+  th_ptr->msg_req_loc = src_1_location;
 
-  // - create tcn_handler location -
-  BIC_CREATE_NEW_LOCATION(th_location,c_bi_class_tcn_handler,th_ptr);
+  // - create tcn_call_handler location -
+  BIC_CREATE_NEW_LOCATION(th_location,c_bi_class_tcn_call_handler,th_ptr);
+
+  EMsgRes msg_res = msgCallRequestEx(tc_ptr->function,ta_ptr,
+      string_ptr->data,string_ptr->size - 1,timeout,th_location,&th_ptr->th_ptr);
 
   // - ERROR -
-  if (msgCallRequestEx(tc_ptr->function,ta_ptr,string_ptr->data,string_ptr->size - 1,
-        timeout,th_location,&th_ptr->th_ptr) != msg_ok)
+  if (msg_res != msg_ok)
   {
     it.release_location_ptr(th_location);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TCN_CALLER_CALL_REQUEST_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(msg_res);
+
     return false;
   }
 
@@ -963,7 +1078,7 @@ built_in_class_s tcn_replier_class =
 {/*{{{*/
   "TcnReplier",
   c_modifier_public | c_modifier_final,
-  4, tcn_replier_methods,
+  5, tcn_replier_methods,
   0, tcn_replier_variables,
   bic_tcn_replier_consts,
   bic_tcn_replier_init,
@@ -987,6 +1102,11 @@ built_in_method_s tcn_replier_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_tcn_replier_operator_binary_equal
+  },
+  {
+    "TcnReplier#3",
+    c_modifier_public | c_modifier_final,
+    bic_tcn_replier_method_TcnReplier_3
   },
   {
     "TcnReplier#4",
@@ -1041,6 +1161,82 @@ bool bic_tcn_replier_operator_binary_equal(interpreter_thread_s &it,unsigned sta
   return true;
 }/*}}}*/
 
+bool bic_tcn_replier_method_TcnReplier_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
+
+  long long int function;
+  long long int instance_cnt;
+
+  if (!it.retrieve_integer(src_0_location,function) ||
+      !it.retrieve_integer(src_1_location,instance_cnt) ||
+      src_2_location->v_type != c_bi_class_delegate)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("TcnReplier#3");
+    new_exception->params.push(3);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+    new_exception->params.push(src_2_location->v_type);
+
+    return false;
+  }
+
+  // - ERROR -
+  UCTCNMD_CHECK_INTEGER_U8_RANGE(function,1);
+
+  // - ERROR -
+  if (instance_cnt < 1 || instance_cnt > 255)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TCN_REPLIER_REQUEST_INVALID_INSTANCE_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - retrieve delegate pointer -
+  delegate_s *delegate_ptr = (delegate_s *)src_2_location->v_data_ptr;
+
+  // - ERROR -
+  if (delegate_ptr->param_cnt != 1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TCN_REPLIER_WRONG_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  AM_RESULT am_res = AM_OK;
+  EMsgRes msg_res = msgRegReplierEx(function,instance_cnt,&c_replier_params,&am_res);
+
+  // - ERROR -
+  if (msg_res != msg_ok || am_res != AM_OK)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TCN_REPLIER_REGISTER_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(msg_res);
+    new_exception->params.push(am_res);
+
+    return false;
+  }
+
+  // - store replier location -
+  tcn_message_s::replier_locs[function] = dst_location;
+
+  // - create tcn_replier object -
+  tcn_replier_s *tr_ptr = (tcn_replier_s *)cmalloc(sizeof(tcn_replier_s));
+  tr_ptr->init();
+
+  tr_ptr->function = function;
+
+  // - register callback delegate -
+  src_2_location->v_reference_cnt.atomic_inc();
+  tr_ptr->callback_dlg = src_2_location;
+
+  // - set tcn_replier destination location -
+  dst_location->v_data_ptr = (tcn_replier_s *)tr_ptr;
+
+  return true;
+}/*}}}*/
+
 bool bic_tcn_replier_method_TcnReplier_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -1051,11 +1247,10 @@ bool bic_tcn_replier_method_TcnReplier_4(interpreter_thread_s &it,unsigned stack
 
   long long int function;
   long long int instance_cnt;
-  long long int service_type;
 
   if (!it.retrieve_integer(src_0_location,function) ||
       !it.retrieve_integer(src_1_location,instance_cnt) ||
-      !it.retrieve_integer(src_2_location,service_type) ||
+      src_2_location->v_type != c_bi_class_delegate ||
       src_3_location->v_type != c_bi_class_delegate)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -1070,57 +1265,64 @@ bool bic_tcn_replier_method_TcnReplier_4(interpreter_thread_s &it,unsigned stack
   }
 
   // - ERROR -
-  UCTCNMD_CHECK_INTEGER_U8_RANGE(function);
+  UCTCNMD_CHECK_INTEGER_U8_RANGE(function,1);
 
   // - ERROR -
   if (instance_cnt < 1 || instance_cnt > 255)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_TCN_REPLIER_REQUEST_INVALID_INSTANCE_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
+
+  // - retrieve callback delegate pointer -
+  delegate_s *callback_dlg_ptr = (delegate_s *)src_2_location->v_data_ptr;
 
   // - ERROR -
-  if (service_type < 0 || service_type > msg_unblock_rpl_fct)
+  if (callback_dlg_ptr->param_cnt != 1)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_TCN_REPLIER_WRONG_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
-  const SMsgReplierParsEx *params = c_replier_params + service_type;
-
-  // FIXME TODO check callback delegate
-
-  AM_RESULT am_res;
-  EMsgRes msg_res = msgRegReplierEx(function,instance_cnt,params,&am_res);
+  // - retrieve close delegate pointer -
+  delegate_s *close_dlg_ptr = (delegate_s *)src_3_location->v_data_ptr;
 
   // - ERROR -
-  if (msg_res != msg_ok)
+  if (close_dlg_ptr->param_cnt != 1)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_TCN_REPLIER_WRONG_CLOSE_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
+  AM_RESULT am_res = AM_OK;
+  EMsgRes msg_res = msgRegReplierEx(function,instance_cnt,&c_replier_params,&am_res);
+
   // - ERROR -
-  if (am_res != AM_OK)
+  if (msg_res != msg_ok || am_res != AM_OK)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TCN_REPLIER_REGISTER_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(msg_res);
+    new_exception->params.push(am_res);
+
     return false;
   }
+
+  // - store replier location -
+  tcn_message_s::replier_locs[function] = dst_location;
 
   // - create tcn_replier object -
   tcn_replier_s *tr_ptr = (tcn_replier_s *)cmalloc(sizeof(tcn_replier_s));
   tr_ptr->init();
 
   tr_ptr->function = function;
-  tr_ptr->params = params;
 
   // - register callback delegate -
+  src_2_location->v_reference_cnt.atomic_inc();
+  tr_ptr->callback_dlg = src_2_location;
+
+  // - register close delegate -
   src_3_location->v_reference_cnt.atomic_inc();
-  tr_ptr->callback_dlg = src_3_location;
+  tr_ptr->close_dlg = src_3_location;
 
   // - set tcn_replier destination location -
   dst_location->v_data_ptr = (tcn_replier_s *)tr_ptr;
@@ -1146,16 +1348,16 @@ bool bic_tcn_replier_method_print_0(interpreter_thread_s &it,unsigned stack_base
   return true;
 }/*}}}*/
 
-// - class TCN_HANDLER -
-built_in_class_s tcn_handler_class =
+// - class TCN_CALL_HANDLER -
+built_in_class_s tcn_call_handler_class =
 {/*{{{*/
-  "TcnHandler",
+  "TcnCallHandler",
   c_modifier_public | c_modifier_final,
-  4, tcn_handler_methods,
-  0, tcn_handler_variables,
-  bic_tcn_handler_consts,
-  bic_tcn_handler_init,
-  bic_tcn_handler_clear,
+  8, tcn_call_handler_methods,
+  0, tcn_call_handler_variables,
+  bic_tcn_call_handler_consts,
+  bic_tcn_call_handler_init,
+  bic_tcn_call_handler_clear,
   nullptr,
   nullptr,
   nullptr,
@@ -1169,46 +1371,66 @@ built_in_class_s tcn_handler_class =
   nullptr
 };/*}}}*/
 
-built_in_method_s tcn_handler_methods[] =
+built_in_method_s tcn_call_handler_methods[] =
 {/*{{{*/
   {
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
-    bic_tcn_handler_operator_binary_equal
+    bic_tcn_call_handler_operator_binary_equal
   },
   {
     "Cancel#0",
     c_modifier_public | c_modifier_final,
-    bic_tcn_handler_method_Cancel_0
+    bic_tcn_call_handler_method_Cancel_0
+  },
+  {
+    "served#0",
+    c_modifier_public | c_modifier_final,
+    bic_tcn_call_handler_method_served_0
+  },
+  {
+    "am_address#0",
+    c_modifier_public | c_modifier_final,
+    bic_tcn_call_handler_method_am_address_0
+  },
+  {
+    "data#0",
+    c_modifier_public | c_modifier_final,
+    bic_tcn_call_handler_method_data_0
+  },
+  {
+    "status#0",
+    c_modifier_public | c_modifier_final,
+    bic_tcn_call_handler_method_status_0
   },
   {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_tcn_handler_method_to_string_0
+    bic_tcn_call_handler_method_to_string_0
   },
   {
     "print#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_tcn_handler_method_print_0
+    bic_tcn_call_handler_method_print_0
   },
 };/*}}}*/
 
-built_in_variable_s tcn_handler_variables[] =
+built_in_variable_s tcn_call_handler_variables[] =
 {/*{{{*/
 };/*}}}*/
 
-void bic_tcn_handler_consts(location_array_s &const_locations)
+void bic_tcn_call_handler_consts(location_array_s &const_locations)
 {/*{{{*/
 }/*}}}*/
 
-void bic_tcn_handler_init(interpreter_thread_s &it,location_s *location_ptr)
+void bic_tcn_call_handler_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (tcn_handler_s *)nullptr;
+  location_ptr->v_data_ptr = (tcn_call_handler_s *)nullptr;
 }/*}}}*/
 
-void bic_tcn_handler_clear(interpreter_thread_s &it,location_s *location_ptr)
+void bic_tcn_call_handler_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  tcn_handler_s *th_ptr = (tcn_handler_s *)location_ptr->v_data_ptr;
+  tcn_call_handler_s *th_ptr = (tcn_call_handler_s *)location_ptr->v_data_ptr;
 
   if (th_ptr != nullptr)
   {
@@ -1217,7 +1439,7 @@ void bic_tcn_handler_clear(interpreter_thread_s &it,location_s *location_ptr)
   }
 }/*}}}*/
 
-bool bic_tcn_handler_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_tcn_call_handler_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -1229,17 +1451,19 @@ bool bic_tcn_handler_operator_binary_equal(interpreter_thread_s &it,unsigned sta
   return true;
 }/*}}}*/
 
-bool bic_tcn_handler_method_Cancel_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_tcn_call_handler_method_Cancel_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  tcn_handler_s *th_ptr = (tcn_handler_s *)dst_location->v_data_ptr;
+  tcn_call_handler_s *th_ptr = (tcn_call_handler_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (msgCancSession(th_ptr->th_ptr) != msg_ok)
+  EMsgRes msg_res = msgCancSession(th_ptr->th_ptr);
+  if (msg_res != msg_ok)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TCN_CALL_HANDLER_CANCEL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(msg_res);
+
     return false;
   }
   else
@@ -1253,18 +1477,315 @@ bool bic_tcn_handler_method_Cancel_0(interpreter_thread_s &it,unsigned stack_bas
   return true;
 }/*}}}*/
 
-bool bic_tcn_handler_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_tcn_call_handler_method_served_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = ((tcn_call_handler_s *)dst_location->v_data_ptr)->served;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_tcn_call_handler_method_am_address_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  unsigned result = ((tcn_call_handler_s *)dst_location->v_data_ptr)->am_address;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_tcn_am_address,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_tcn_call_handler_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  location_s *msg_resp_loc = ((tcn_call_handler_s *)dst_location->v_data_ptr)->msg_resp_loc;
+
+  if (msg_resp_loc != nullptr)
+  {
+    msg_resp_loc->v_reference_cnt.atomic_inc();
+    BIC_SET_RESULT(msg_resp_loc);
+  }
+  else
+  {
+    BIC_SET_RESULT_BLANK();
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_tcn_call_handler_method_status_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = ((tcn_call_handler_s *)dst_location->v_data_ptr)->status;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_tcn_call_handler_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
-    string_ptr->set(strlen("TcnHandler"),"TcnHandler")
+    string_ptr->set(strlen("TcnCallHandler"),"TcnCallHandler")
   );
 
   return true;
 }/*}}}*/
 
-bool bic_tcn_handler_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_tcn_call_handler_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  printf("TcnHandler");
+  printf("TcnCallHandler");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class TCN_REPL_HANDLER -
+built_in_class_s tcn_repl_handler_class =
+{/*{{{*/
+  "TcnReplHandler",
+  c_modifier_public | c_modifier_final,
+  9, tcn_repl_handler_methods,
+  0, tcn_repl_handler_variables,
+  bic_tcn_repl_handler_consts,
+  bic_tcn_repl_handler_init,
+  bic_tcn_repl_handler_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s tcn_repl_handler_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_tcn_repl_handler_operator_binary_equal
+  },
+  {
+    "ReplyRequest#2",
+    c_modifier_public | c_modifier_final ,
+    bic_tcn_repl_handler_method_ReplyRequest_2
+  },
+  {
+    "Cancel#0",
+    c_modifier_public | c_modifier_final ,
+    bic_tcn_repl_handler_method_Cancel_0
+  },
+  {
+    "am_address#0",
+    c_modifier_public | c_modifier_final ,
+    bic_tcn_repl_handler_method_am_address_0
+  },
+  {
+    "data#0",
+    c_modifier_public | c_modifier_final,
+    bic_tcn_repl_handler_method_data_0
+  },
+  {
+    "closed#0",
+    c_modifier_public | c_modifier_final,
+    bic_tcn_repl_handler_method_closed_0
+  },
+  {
+    "status#0",
+    c_modifier_public | c_modifier_final,
+    bic_tcn_repl_handler_method_status_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_tcn_repl_handler_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_tcn_repl_handler_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s tcn_repl_handler_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_tcn_repl_handler_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_tcn_repl_handler_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (tcn_repl_handler_s *)nullptr;
+}/*}}}*/
+
+void bic_tcn_repl_handler_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  tcn_repl_handler_s *th_ptr = (tcn_repl_handler_s *)location_ptr->v_data_ptr;
+
+  if (th_ptr != nullptr)
+  {
+    th_ptr->clear(it);
+    cfree(th_ptr);
+  }
+}/*}}}*/
+
+bool bic_tcn_repl_handler_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_tcn_repl_handler_method_ReplyRequest_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  long long int status;
+
+  if (src_0_location->v_type != c_bi_class_string ||
+      !it.retrieve_integer(src_1_location,status))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("ReplyRequest#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  tcn_repl_handler_s *th_ptr = (tcn_repl_handler_s *)dst_location->v_data_ptr;
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  EMsgRes msg_res = msgReplyRequest(string_ptr->data,string_ptr->size - 1,(AM_RESULT)status,dst_location,th_ptr->th_ptr);
+  if (msg_res != msg_ok)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TCN_REPL_HANDLER_REPLY_REQUEST_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(msg_res);
+
+    return false;
+  }
+
+  // - increase reference counter of repl handler -
+  dst_location->v_reference_cnt.atomic_inc();
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_tcn_repl_handler_method_Cancel_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  tcn_repl_handler_s *th_ptr = (tcn_repl_handler_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  EMsgRes msg_res = msgCancSession(th_ptr->th_ptr);
+  if (msg_res != msg_ok)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TCN_REPL_HANDLER_CANCEL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(msg_res);
+
+    return false;
+  }
+  else
+  {
+    // - callback will not be called for cancelled session -
+    it.release_location_ptr(dst_location);
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_tcn_repl_handler_method_am_address_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  unsigned result = ((tcn_repl_handler_s *)dst_location->v_data_ptr)->am_address;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_tcn_am_address,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_tcn_repl_handler_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  location_s *msg_req_loc = ((tcn_repl_handler_s *)dst_location->v_data_ptr)->msg_req_loc;
+
+  if (msg_req_loc != nullptr)
+  {
+    msg_req_loc->v_reference_cnt.atomic_inc();
+    BIC_SET_RESULT(msg_req_loc);
+  }
+  else
+  {
+    BIC_SET_RESULT_BLANK();
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_tcn_repl_handler_method_closed_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = ((tcn_repl_handler_s *)dst_location->v_data_ptr)->closed;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_tcn_repl_handler_method_status_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = ((tcn_repl_handler_s *)dst_location->v_data_ptr)->status;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_tcn_repl_handler_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("TcnReplHandler"),"TcnReplHandler")
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_tcn_repl_handler_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("TcnReplHandler");
 
   BIC_SET_RESULT_BLANK();
 
