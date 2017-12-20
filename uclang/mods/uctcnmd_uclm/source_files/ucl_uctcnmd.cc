@@ -23,25 +23,25 @@ const char *c_msg_res_strings[] =
 // - uctcnmd global init object -
 uctcnmd_c g_uctcnmd;
 
-// - static members of structure tcn_message_s -
+// - static members of structure tcn_msg_s -
 
-interpreter_thread_s *tcn_message_s::it_ptr = nullptr;
-unsigned tcn_message_s::source_pos;
-unsigned tcn_message_s::ret_code;
+interpreter_thread_s *tcn_msg_s::it_ptr = nullptr;
+unsigned tcn_msg_s::source_pos;
+unsigned tcn_msg_s::ret_code;
 
-pointer tcn_message_s::replier_locs[256];
+pointer tcn_msg_s::replier_locs[256];
 
 /*
- * methods of structure tcn_message_s
+ * methods of structure tcn_msg_s
  */
 
-void tcn_message_s::caller_block_callback(const AM_ADDRESS *psReplier,void *pReplyMsg,U32 u32ReplyMsgLen,AM_RESULT eStatus,void *pCallerRef)
+void tcn_msg_s::caller_block_callback(const AM_ADDRESS *psReplier,void *pReplyMsg,U32 u32ReplyMsgLen,AM_RESULT eStatus,void *pCallerRef)
 {/*{{{*/
   location_s *th_location = (location_s *)pCallerRef;
   tcn_call_handler_s *th_ptr = (tcn_call_handler_s *)th_location->v_data_ptr;
   tcn_caller_s *tc_ptr = (tcn_caller_s *)th_ptr->tcn_caller_loc->v_data_ptr;
 
-  interpreter_thread_s &it = *tcn_message_s::it_ptr;
+  interpreter_thread_s &it = *tcn_msg_s::it_ptr;
   delegate_s *delegate_ptr = (delegate_s *)tc_ptr->callback_dlg->v_data_ptr;
 
   // - fill call handler with response values -
@@ -69,8 +69,8 @@ void tcn_message_s::caller_block_callback(const AM_ADDRESS *psReplier,void *pRep
 
   // - call delegate method -
   location_s *trg_location = nullptr;
-  BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,tcn_message_s::source_pos,
-    tcn_message_s::ret_code = c_run_return_code_EXCEPTION;
+  BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,tcn_msg_s::source_pos,
+    tcn_msg_s::ret_code = c_run_return_code_EXCEPTION;
     return;
   );
   it.release_location_ptr(trg_location);
@@ -78,11 +78,11 @@ void tcn_message_s::caller_block_callback(const AM_ADDRESS *psReplier,void *pRep
   return;
 }/*}}}*/
 
-void tcn_message_s::replier_unblock_function_callback(U8 u8ReplierFct,AM_ADDRESS *psCallerAddr,void *pCallMsgAdr,U32 u32CallMsgSize,void *pHandlerRef)
+void tcn_msg_s::replier_unblock_function_callback(U8 u8ReplierFct,AM_ADDRESS *psCallerAddr,void *pCallMsgAdr,U32 u32CallMsgSize,void *pHandlerRef)
 {/*{{{*/
-  interpreter_thread_s &it = *tcn_message_s::it_ptr;
+  interpreter_thread_s &it = *tcn_msg_s::it_ptr;
 
-  location_s *tr_location = (location_s *)tcn_message_s::replier_locs[u8ReplierFct];
+  location_s *tr_location = (location_s *)tcn_msg_s::replier_locs[u8ReplierFct];
   tcn_replier_s *tr_ptr = (tcn_replier_s *)tr_location->v_data_ptr;
   delegate_s *delegate_ptr = (delegate_s *)tr_ptr->callback_dlg->v_data_ptr;
 
@@ -118,8 +118,8 @@ void tcn_message_s::replier_unblock_function_callback(U8 u8ReplierFct,AM_ADDRESS
 
   // - call delegate method -
   location_s *trg_location = nullptr;
-  BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,tcn_message_s::source_pos,
-    tcn_message_s::ret_code = c_run_return_code_EXCEPTION;
+  BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,tcn_msg_s::source_pos,
+    tcn_msg_s::ret_code = c_run_return_code_EXCEPTION;
     return;
   );
   it.release_location_ptr(trg_location);
@@ -127,13 +127,13 @@ void tcn_message_s::replier_unblock_function_callback(U8 u8ReplierFct,AM_ADDRESS
   return;
 }/*}}}*/
 
-void tcn_message_s::replier_close_callback(void *pReplierRef,AM_RESULT eStatus)
+void tcn_msg_s::replier_close_callback(void *pReplierRef,AM_RESULT eStatus)
 {/*{{{*/
   location_s *th_location = (location_s *)pReplierRef;
   tcn_repl_handler_s *th_ptr = (tcn_repl_handler_s *)th_location->v_data_ptr;
   tcn_replier_s *tr_ptr = (tcn_replier_s *)th_ptr->tcn_replier_loc->v_data_ptr;
 
-  interpreter_thread_s &it = *tcn_message_s::it_ptr;
+  interpreter_thread_s &it = *tcn_msg_s::it_ptr;
 
   if (tr_ptr->close_dlg != nullptr)
   {
@@ -153,8 +153,8 @@ void tcn_message_s::replier_close_callback(void *pReplierRef,AM_RESULT eStatus)
 
     // - call delegate method -
     location_s *trg_location = nullptr;
-    BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,tcn_message_s::source_pos,
-      tcn_message_s::ret_code = c_run_return_code_EXCEPTION;
+    BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,tcn_msg_s::source_pos,
+      tcn_msg_s::ret_code = c_run_return_code_EXCEPTION;
       return;
     );
     it.release_location_ptr(trg_location);

@@ -7,7 +7,7 @@ include "ucl_uctcnmd.h"
 @end
 
 // - UCTCNMD indexes of built in classes -
-extern unsigned c_bi_class_tcn_message;
+extern unsigned c_bi_class_tcn_msg;
 extern unsigned c_bi_class_tcn_address;
 extern unsigned c_bi_class_tcn_am_address;
 extern unsigned c_bi_class_tcn_caller;
@@ -24,7 +24,7 @@ extern built_in_class_s *uctcnmd_classes[];
 // - UCTCNMD error identifiers -
 enum
 {
-  c_error_TCN_MESSAGE_WRONG_U8_VALUE_RANGE = 0,
+  c_error_TCN_MSG_WRONG_U8_VALUE_RANGE = 0,
   c_error_TCN_ADDRESS_INVALID_ADDRESS_TYPE,
   c_error_TCN_CALLER_WRONG_CALLBACK_DELEGATE,
   c_error_TCN_CALLER_REGISTER_ERROR,
@@ -48,19 +48,19 @@ bool uctcnmd_initialize(script_parser_s &sp);
 // - UCTCNMD print exception -
 bool uctcnmd_print_exception(interpreter_s &it,exception_s &exception);
 
-// - class TCN_MESSAGE -
-extern built_in_variable_s tcn_message_variables[];
-extern built_in_method_s tcn_message_methods[];
-extern built_in_class_s tcn_message_class;
+// - class TCN_MSG -
+extern built_in_variable_s tcn_msg_variables[];
+extern built_in_method_s tcn_msg_methods[];
+extern built_in_class_s tcn_msg_class;
 
-void bic_tcn_message_consts(location_array_s &const_locations);
-void bic_tcn_message_init(interpreter_thread_s &it,location_s *location_ptr);
-void bic_tcn_message_clear(interpreter_thread_s &it,location_s *location_ptr);
+void bic_tcn_msg_consts(location_array_s &const_locations);
+void bic_tcn_msg_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_tcn_msg_clear(interpreter_thread_s &it,location_s *location_ptr);
 
-bool bic_tcn_message_method_RpcMain_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_tcn_message_method_Main_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_tcn_message_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_tcn_message_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_msg_method_RpcMain_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_msg_method_Main_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_msg_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcn_msg_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 // - class TCN_ADDRESS -
 extern built_in_variable_s tcn_address_variables[];

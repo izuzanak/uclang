@@ -4,7 +4,7 @@ include "uctcnmd_module.h"
 @end
 
 // - UCTCNMD indexes of built in classes -
-unsigned c_bi_class_tcn_message = c_idx_not_exist;
+unsigned c_bi_class_tcn_msg = c_idx_not_exist;
 unsigned c_bi_class_tcn_address = c_idx_not_exist;
 unsigned c_bi_class_tcn_am_address = c_idx_not_exist;
 unsigned c_bi_class_tcn_caller = c_idx_not_exist;
@@ -29,7 +29,7 @@ built_in_module_s module =
 // - UCTCNMD classes -
 built_in_class_s *uctcnmd_classes[] =
 {/*{{{*/
-  &tcn_message_class,
+  &tcn_msg_class,
   &tcn_address_class,
   &tcn_am_address_class,
   &tcn_caller_class,
@@ -41,7 +41,7 @@ built_in_class_s *uctcnmd_classes[] =
 // - UCTCNMD error strings -
 const char *uctcnmd_error_strings[] =
 {/*{{{*/
-  "error_TCN_MESSAGE_WRONG_U8_VALUE_RANGE",
+  "error_TCN_MSG_WRONG_U8_VALUE_RANGE",
   "error_TCN_ADDRESS_INVALID_ADDRESS_TYPE",
   "error_TCN_CALLER_WRONG_CALLBACK_DELEGATE",
   "error_TCN_CALLER_REGISTER_ERROR",
@@ -61,8 +61,8 @@ bool uctcnmd_initialize(script_parser_s &sp)
 {/*{{{*/
   unsigned class_base_idx = sp.class_records.used - module.class_cnt;
 
-  // - initialize tcn_message class identifier -
-  c_bi_class_tcn_message = class_base_idx++;
+  // - initialize tcn_msg class identifier -
+  c_bi_class_tcn_msg = class_base_idx++;
 
   // - initialize tcn_address class identifier -
   c_bi_class_tcn_address = class_base_idx++;
@@ -93,7 +93,7 @@ bool uctcnmd_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_TCN_MESSAGE_WRONG_U8_VALUE_RANGE:
+  case c_error_TCN_MSG_WRONG_U8_VALUE_RANGE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
@@ -195,16 +195,16 @@ bool uctcnmd_print_exception(interpreter_s &it,exception_s &exception)
   return true;
 }/*}}}*/
 
-// - class TCN_MESSAGE -
-built_in_class_s tcn_message_class =
+// - class TCN_MSG -
+built_in_class_s tcn_msg_class =
 {/*{{{*/
-  "TcnMessage",
+  "TcnMsg",
   c_modifier_public | c_modifier_final,
-  4, tcn_message_methods,
-  12, tcn_message_variables,
-  bic_tcn_message_consts,
-  bic_tcn_message_init,
-  bic_tcn_message_clear,
+  4, tcn_msg_methods,
+  12, tcn_msg_variables,
+  bic_tcn_msg_consts,
+  bic_tcn_msg_init,
+  bic_tcn_msg_clear,
   nullptr,
   nullptr,
   nullptr,
@@ -218,31 +218,31 @@ built_in_class_s tcn_message_class =
   nullptr
 };/*}}}*/
 
-built_in_method_s tcn_message_methods[] =
+built_in_method_s tcn_msg_methods[] =
 {/*{{{*/
   {
     "RpcMain#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_tcn_message_method_RpcMain_0
+    bic_tcn_msg_method_RpcMain_0
   },
   {
     "Main#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_tcn_message_method_Main_0
+    bic_tcn_msg_method_Main_0
   },
   {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_tcn_message_method_to_string_0
+    bic_tcn_msg_method_to_string_0
   },
   {
     "print#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_tcn_message_method_print_0
+    bic_tcn_msg_method_print_0
   },
 };/*}}}*/
 
-built_in_variable_s tcn_message_variables[] =
+built_in_variable_s tcn_msg_variables[] =
 {/*{{{*/
 
   // - txn message constants -
@@ -265,54 +265,54 @@ built_in_variable_s tcn_message_variables[] =
 {/*{{{*/\
   if ((VALUE) < 0 || (VALUE) > 255)\
   {\
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TCN_MESSAGE_WRONG_U8_VALUE_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TCN_MSG_WRONG_U8_VALUE_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(INDEX);\
     \
     return false;\
   }\
 }/*}}}*/
 
-void bic_tcn_message_consts(location_array_s &const_locations)
+void bic_tcn_msg_consts(location_array_s &const_locations)
 {/*{{{*/
 
-  // - insert tcn message constants -
+  // - insert tcn msg constants -
   {
     const_locations.push_blanks(12);
     location_s *cv_ptr = const_locations.data + (const_locations.used - 12);
 
-#define CREATE_TCN_MESSAGE_BIC_STATIC(VALUE)\
+#define CREATE_TCN_MSG_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
   cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
-    CREATE_TCN_MESSAGE_BIC_STATIC(AM_MAX_FCT_ID);
-    CREATE_TCN_MESSAGE_BIC_STATIC(AM_MAX_DIR_ENTRS);
-    CREATE_TCN_MESSAGE_BIC_STATIC(AM_MAX_GROUP);
-    CREATE_TCN_MESSAGE_BIC_STATIC(AM_SAME_STATION);
-    CREATE_TCN_MESSAGE_BIC_STATIC(AM_UNKNOWN);
-    CREATE_TCN_MESSAGE_BIC_STATIC(AM_MANAGER_FCT);
-    CREATE_TCN_MESSAGE_BIC_STATIC(AM_AGENT_FCT);
-    CREATE_TCN_MESSAGE_BIC_STATIC(AM_ROUTER_FCT);
-    CREATE_TCN_MESSAGE_BIC_STATIC(AM_SAME_NODE);
-    CREATE_TCN_MESSAGE_BIC_STATIC(AM_SYSTEM_ADDR);
-    CREATE_TCN_MESSAGE_BIC_STATIC(AM_ANY_TOPO);
-    CREATE_TCN_MESSAGE_BIC_STATIC(AM_ADD_REM_ERR);
+    CREATE_TCN_MSG_BIC_STATIC(AM_MAX_FCT_ID);
+    CREATE_TCN_MSG_BIC_STATIC(AM_MAX_DIR_ENTRS);
+    CREATE_TCN_MSG_BIC_STATIC(AM_MAX_GROUP);
+    CREATE_TCN_MSG_BIC_STATIC(AM_SAME_STATION);
+    CREATE_TCN_MSG_BIC_STATIC(AM_UNKNOWN);
+    CREATE_TCN_MSG_BIC_STATIC(AM_MANAGER_FCT);
+    CREATE_TCN_MSG_BIC_STATIC(AM_AGENT_FCT);
+    CREATE_TCN_MSG_BIC_STATIC(AM_ROUTER_FCT);
+    CREATE_TCN_MSG_BIC_STATIC(AM_SAME_NODE);
+    CREATE_TCN_MSG_BIC_STATIC(AM_SYSTEM_ADDR);
+    CREATE_TCN_MSG_BIC_STATIC(AM_ANY_TOPO);
+    CREATE_TCN_MSG_BIC_STATIC(AM_ADD_REM_ERR);
   }
 
 }/*}}}*/
 
-void bic_tcn_message_init(interpreter_thread_s &it,location_s *location_ptr)
+void bic_tcn_msg_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   cassert(0);
 }/*}}}*/
 
-void bic_tcn_message_clear(interpreter_thread_s &it,location_s *location_ptr)
+void bic_tcn_msg_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   cassert(0);
 }/*}}}*/
 
-bool bic_tcn_message_method_RpcMain_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_tcn_msg_method_RpcMain_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   RpcMain();
 
@@ -321,17 +321,17 @@ bool bic_tcn_message_method_RpcMain_0(interpreter_thread_s &it,unsigned stack_ba
   return true;
 }/*}}}*/
 
-bool bic_tcn_message_method_Main_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_tcn_msg_method_Main_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  tcn_message_s::it_ptr = &it;
-  tcn_message_s::source_pos = operands[c_source_pos_idx];
-  tcn_message_s::ret_code = c_run_return_code_OK;
+  tcn_msg_s::it_ptr = &it;
+  tcn_msg_s::source_pos = operands[c_source_pos_idx];
+  tcn_msg_s::ret_code = c_run_return_code_OK;
 
   RpcMain();
   msgMain();
 
   // - if exception occurred -
-  if (tcn_message_s::ret_code == c_run_return_code_EXCEPTION)
+  if (tcn_msg_s::ret_code == c_run_return_code_EXCEPTION)
   {
     return false;
   }
@@ -341,18 +341,18 @@ bool bic_tcn_message_method_Main_0(interpreter_thread_s &it,unsigned stack_base,
   return true;
 }/*}}}*/
 
-bool bic_tcn_message_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_tcn_msg_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
-    string_ptr->set(strlen("TcnMessage"),"TcnMessage")
+    string_ptr->set(strlen("TcnMsg"),"TcnMsg")
   );
 
   return true;
 }/*}}}*/
 
-bool bic_tcn_message_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_tcn_msg_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  printf("TcnMessage");
+  printf("TcnMsg");
 
   BIC_SET_RESULT_BLANK();
 
@@ -1219,7 +1219,7 @@ bool bic_tcn_replier_method_TcnReplier_3(interpreter_thread_s &it,unsigned stack
   }
 
   // - store replier location -
-  tcn_message_s::replier_locs[function] = dst_location;
+  tcn_msg_s::replier_locs[function] = dst_location;
 
   // - create tcn_replier object -
   tcn_replier_s *tr_ptr = (tcn_replier_s *)cmalloc(sizeof(tcn_replier_s));
@@ -1308,7 +1308,7 @@ bool bic_tcn_replier_method_TcnReplier_4(interpreter_thread_s &it,unsigned stack
   }
 
   // - store replier location -
-  tcn_message_s::replier_locs[function] = dst_location;
+  tcn_msg_s::replier_locs[function] = dst_location;
 
   // - create tcn_replier object -
   tcn_replier_s *tr_ptr = (tcn_replier_s *)cmalloc(sizeof(tcn_replier_s));

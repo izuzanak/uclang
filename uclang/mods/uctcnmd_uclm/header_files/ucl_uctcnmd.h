@@ -22,10 +22,10 @@ extern unsigned c_bi_class_tcn_repl_handler;
 extern const char *c_msg_res_strings[];
 
 /*
- * definition of structure tcn_message_s
+ * definition of structure tcn_msg_s
  */
 
-struct tcn_message_s
+struct tcn_msg_s
 {
   static interpreter_thread_s *it_ptr;
   static unsigned source_pos;
@@ -43,15 +43,15 @@ struct tcn_message_s
 const SMsgCallerPars c_caller_params =
 {
   msg_block_service,
-  { .pfCallerReply = tcn_message_s::caller_block_callback }
+  { .pfCallerReply = tcn_msg_s::caller_block_callback }
 };
 
 // - replier static parameters -
 const SMsgReplierParsEx c_replier_params =
 {
   msg_unblock_rpl_fct,
-  { .pfCallRcvEx = tcn_message_s::replier_unblock_function_callback },
-  tcn_message_s::replier_close_callback
+  { .pfCallRcvEx = tcn_msg_s::replier_unblock_function_callback },
+  tcn_msg_s::replier_close_callback
 };
 
 /*
