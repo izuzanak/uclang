@@ -201,7 +201,7 @@ built_in_class_s tcn_msg_class =
   "TcnMsg",
   c_modifier_public | c_modifier_final,
   4, tcn_msg_methods,
-  12, tcn_msg_variables,
+  12 + 119, tcn_msg_variables,
   bic_tcn_msg_consts,
   bic_tcn_msg_init,
   bic_tcn_msg_clear,
@@ -245,7 +245,7 @@ built_in_method_s tcn_msg_methods[] =
 built_in_variable_s tcn_msg_variables[] =
 {/*{{{*/
 
-  // - txn message constants -
+  // - tcn message constants -
   { "AM_MAX_FCT_ID", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "AM_MAX_DIR_ENTRS", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "AM_MAX_GROUP", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -258,6 +258,127 @@ built_in_variable_s tcn_msg_variables[] =
   { "AM_SYSTEM_ADDR", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "AM_ANY_TOPO", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "AM_ADD_REM_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - tcn message result codes constants -
+  { "AM_OK", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_FAILURE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_BUS_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_CONN_OVF", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_CONN_TMO_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_SEND_TMO_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REPLY_TMO_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_ALIVE_TMO_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_NO_LOC_MEM_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_NO_REM_MEM_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_CANC_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_ALREADY_USED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_ADDR_FMT_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_NO_REPLY_EXP_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_NR_OF_CALLS_OVF", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REPLY_LEN_OVF", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_DUPL_LINK_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_MY_DEV_UNKNOWN_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_NO_READY_INST_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_NR_OF_INST_OVF", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_CALL_LEN_OVF", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_UNKNOWN_DEST_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_INAUG_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_TRY_LATER_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_FIN_NOT_REG_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_GW_FIN_NOT_REG_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_GW_ORI_REG_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REPEAT_TMO_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_ADDRESSING", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_MAX_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_DUPL_START_MSNGR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_SEND_POOL_FULL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_RECEIVE_POOL_FULL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_INIT_POOL_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_CREATE_THREAD_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_TRY_LATER_ALIVE_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_AMI_NOT_INIT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_RECV_CNF_NOT_DEF", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REPL_CNF_NOT_DEF", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_LOC_ERRORS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_LOC_NEXT_NOT_FOUND", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_LOC_TOPO_CNT_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_LOC_NOT_NODE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_LOC_ROUT_FCT_NSET", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_LOC_ST_AND_NEXT_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_LOC_FC_AND_NEXT_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_LOC_UNDEFINED_BUS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_LOC_BAD_DEV_ADDR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_LOC_ST_NOT_FOUND", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_LOC_FCT_NOT_FOUND", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_LOC_UNKNOWN_MTC", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_LOC_BAD_PCK_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_LOC_DT_PCK_SIZE_OVR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_LOC_BAD_LAST_PCK_SZ", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_LOC_BAD_PACKET", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_LOC_BAD_PACK_STATE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_LOC_PACK_NO_STATE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_LOC_STOP_COMM", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_ERRORS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_NEXT_NOT_FOUND", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_TOPO_CNT_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_NOT_NODE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_ROUT_FCT_NSET", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_ST_AND_NEXT_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_FC_AND_NEXT_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_UNDEFINED_BUS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_BAD_DEV_ADDR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_ST_NOT_FOUND", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_FCT_NOT_FOUND", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_UNKNOWN_MTC", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_BAD_PCK_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_DT_PCK_SIZE_OVR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_BAD_LAST_PCK_SZ", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_BAD_PACKET", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_BAD_PACK_STATE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_PACK_NO_STATE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_STOP_COMM", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_NOT_MANAGER", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_CANC_CALL_NOT_FOUND", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REPL_INST_NOT_FOUND", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_ADD_FCT_TO_FUNDI_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_SAME_FCT_ALR_DEF", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_FCT_NOT_BOUND", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_STATION_ID_NOT_SET", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_INVALID_TOPO", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_BUF_NOT_FOUND", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REQ_IN_PROGRESS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_MSNGR_NOT_RUN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_ZERO_IN_MSG_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_OUT_MSG_NULL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_SESS_QUEUE_OVERFLOW", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_GROUP_NOT_IMPLEMENTED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_AMI_AMA_FAILED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_CALL_CNF_NULL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_INVALID_STATION_ID", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_RETURN_PATH_BAD", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_BAD_NET_HEADER", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_INVALID_EVENT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_INVALID_STATE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_NO_REPLY_REQ_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_RESULT_BUFF_TOO_SMALL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_NOT_SUPPORTED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_CM_CANCEL_WRONG_REF", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_CM_REQ_NO_FREE_REF", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_CM_CONF_WRONG_REF", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_CM_CONN_NO_MEM", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_CM_CONN_NO_FREE_REF", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_CM_RECV_WRONG_REF", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_CM_DATA_TOO_BIG", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_CM_INIT_MEM_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_CM_REQ_NO_MEM", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_CM_REQ_COMP_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_CM_REQ_DECOMP_ERR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_BAD_REPLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_ST_ID_DIFFERENT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_STADI_DIFFERENT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_REM_FUNDI_DIFFERENT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_ST_RD_ONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AM_BAD_CALL", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
 
@@ -275,7 +396,7 @@ built_in_variable_s tcn_msg_variables[] =
 void bic_tcn_msg_consts(location_array_s &const_locations)
 {/*{{{*/
 
-  // - insert tcn msg constants -
+  // - insert tcn message constants -
   {
     const_locations.push_blanks(12);
     location_s *cv_ptr = const_locations.data + (const_locations.used - 12);
@@ -298,6 +419,138 @@ void bic_tcn_msg_consts(location_array_s &const_locations)
     CREATE_TCN_MSG_BIC_STATIC(AM_SYSTEM_ADDR);
     CREATE_TCN_MSG_BIC_STATIC(AM_ANY_TOPO);
     CREATE_TCN_MSG_BIC_STATIC(AM_ADD_REM_ERR);
+  }
+
+  // - insert tcn message result codes constants -
+  {
+    const_locations.push_blanks(119);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 119);
+
+#define CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_OK);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_FAILURE);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_BUS_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_CONN_OVF);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_CONN_TMO_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_SEND_TMO_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REPLY_TMO_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_ALIVE_TMO_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_NO_LOC_MEM_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_NO_REM_MEM_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_CANC_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_ALREADY_USED);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_ADDR_FMT_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_NO_REPLY_EXP_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_NR_OF_CALLS_OVF);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REPLY_LEN_OVF);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_DUPL_LINK_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_MY_DEV_UNKNOWN_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_NO_READY_INST_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_NR_OF_INST_OVF);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_CALL_LEN_OVF);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_UNKNOWN_DEST_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_INAUG_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_TRY_LATER_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_FIN_NOT_REG_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_GW_FIN_NOT_REG_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_GW_ORI_REG_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REPEAT_TMO_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_ADDRESSING);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_MAX_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_DUPL_START_MSNGR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_SEND_POOL_FULL);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_RECEIVE_POOL_FULL);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_INIT_POOL_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_CREATE_THREAD_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_TRY_LATER_ALIVE_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_AMI_NOT_INIT);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_RECV_CNF_NOT_DEF);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REPL_CNF_NOT_DEF);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_LOC_ERRORS);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_LOC_NEXT_NOT_FOUND);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_LOC_TOPO_CNT_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_LOC_NOT_NODE);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_LOC_ROUT_FCT_NSET);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_LOC_ST_AND_NEXT_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_LOC_FC_AND_NEXT_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_LOC_UNDEFINED_BUS);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_LOC_BAD_DEV_ADDR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_LOC_ST_NOT_FOUND);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_LOC_FCT_NOT_FOUND);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_LOC_UNKNOWN_MTC);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_LOC_BAD_PCK_SIZE);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_LOC_DT_PCK_SIZE_OVR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_LOC_BAD_LAST_PCK_SZ);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_LOC_BAD_PACKET);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_LOC_BAD_PACK_STATE);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_LOC_PACK_NO_STATE);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_LOC_STOP_COMM);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_ERRORS);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_NEXT_NOT_FOUND);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_TOPO_CNT_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_NOT_NODE);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_ROUT_FCT_NSET);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_ST_AND_NEXT_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_FC_AND_NEXT_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_UNDEFINED_BUS);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_BAD_DEV_ADDR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_ST_NOT_FOUND);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_FCT_NOT_FOUND);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_UNKNOWN_MTC);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_BAD_PCK_SIZE);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_DT_PCK_SIZE_OVR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_BAD_LAST_PCK_SZ);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_BAD_PACKET);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_BAD_PACK_STATE);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_PACK_NO_STATE);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_STOP_COMM);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_NOT_MANAGER);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_CANC_CALL_NOT_FOUND);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REPL_INST_NOT_FOUND);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_ADD_FCT_TO_FUNDI_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_SAME_FCT_ALR_DEF);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_FCT_NOT_BOUND);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_STATION_ID_NOT_SET);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_INVALID_TOPO);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_BUF_NOT_FOUND);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REQ_IN_PROGRESS);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_MSNGR_NOT_RUN);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_ZERO_IN_MSG_SIZE);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_OUT_MSG_NULL);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_SESS_QUEUE_OVERFLOW);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_GROUP_NOT_IMPLEMENTED);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_AMI_AMA_FAILED);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_CALL_CNF_NULL);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_INVALID_STATION_ID);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_RETURN_PATH_BAD);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_BAD_NET_HEADER);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_INVALID_EVENT);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_INVALID_STATE);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_NO_REPLY_REQ_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_RESULT_BUFF_TOO_SMALL);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_NOT_SUPPORTED);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_CM_CANCEL_WRONG_REF);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_CM_REQ_NO_FREE_REF);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_CM_CONF_WRONG_REF);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_CM_CONN_NO_MEM);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_CM_CONN_NO_FREE_REF);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_CM_RECV_WRONG_REF);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_CM_DATA_TOO_BIG);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_CM_INIT_MEM_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_CM_REQ_NO_MEM);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_CM_REQ_COMP_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_CM_REQ_DECOMP_ERR);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_BAD_REPLY);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_ST_ID_DIFFERENT);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_STADI_DIFFERENT);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_REM_FUNDI_DIFFERENT);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_ST_RD_ONLY);
+    CREATE_TCN_MSG_RESULT_CODE_BIC_STATIC(AM_BAD_CALL);
   }
 
 }/*}}}*/
