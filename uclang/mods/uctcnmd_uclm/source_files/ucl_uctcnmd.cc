@@ -41,6 +41,9 @@ void tcn_msg_s::caller_block_callback(const AM_ADDRESS *psReplier,void *pReplyMs
   tcn_call_handler_s *th_ptr = (tcn_call_handler_s *)th_location->v_data_ptr;
   tcn_caller_s *tc_ptr = (tcn_caller_s *)th_ptr->tcn_caller_loc->v_data_ptr;
 
+  // - remove handler from caller list -
+  tc_ptr->handler_list.remove(th_ptr->th_idx);
+
   interpreter_thread_s &it = *tcn_msg_s::it_ptr;
   delegate_s *delegate_ptr = (delegate_s *)tc_ptr->callback_dlg->v_data_ptr;
 
@@ -94,7 +97,6 @@ void tcn_msg_s::replier_unblock_function_callback(U8 u8ReplierFct,AM_ADDRESS *ps
   th_ptr->th_ptr = pHandlerRef;
 
   // - store reference to tcn replier -
-  tr_location->v_reference_cnt.atomic_inc();
   th_ptr->tcn_replier_loc = tr_location;
 
   th_ptr->am_address = *((unsigned *)psCallerAddr);
@@ -110,8 +112,11 @@ void tcn_msg_s::replier_unblock_function_callback(U8 u8ReplierFct,AM_ADDRESS *ps
 
   // - callback parameters -
 
-  // - tcn handler location: will be increased and possibly released by delegate call -
-  BIC_CREATE_NEW_LOCATION_REFS(th_location,c_bi_class_tcn_repl_handler,th_ptr,0);
+  // - tcn handler location -
+  BIC_CREATE_NEW_LOCATION(th_location,c_bi_class_tcn_repl_handler,th_ptr);
+
+  // - store handler to tcn replier -
+  th_ptr->th_idx = tr_ptr->handler_list.append(th_location);
 
   const unsigned param_cnt = 1;
   pointer *param_data = (pointer *)&th_location;
@@ -132,6 +137,9 @@ void tcn_msg_s::replier_close_callback(void *pReplierRef,AM_RESULT eStatus)
   location_s *th_location = (location_s *)pReplierRef;
   tcn_repl_handler_s *th_ptr = (tcn_repl_handler_s *)th_location->v_data_ptr;
   tcn_replier_s *tr_ptr = (tcn_replier_s *)th_ptr->tcn_replier_loc->v_data_ptr;
+
+  // - remove handler from replier list -
+  tr_ptr->handler_list.remove(th_ptr->th_idx);
 
   interpreter_thread_s &it = *tcn_msg_s::it_ptr;
 

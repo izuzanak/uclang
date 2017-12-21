@@ -1278,7 +1278,6 @@ bool bic_tcn_caller_method_CallRequest_3(interpreter_thread_s &it,unsigned stack
   th_ptr->init();
 
   // - store reference to tcn caller -
-  dst_location->v_reference_cnt.atomic_inc();
   th_ptr->tcn_caller_loc = dst_location;
 
   // - store reference to message data -
@@ -1302,7 +1301,10 @@ bool bic_tcn_caller_method_CallRequest_3(interpreter_thread_s &it,unsigned stack
     return false;
   }
 
+  // - store handler to tcn caller -
   th_location->v_reference_cnt.atomic_inc();
+  th_ptr->th_idx = tc_ptr->handler_list.append(th_location);
+
   BIC_SET_RESULT(th_location);
 
   return true;
@@ -1721,6 +1723,10 @@ bool bic_tcn_call_handler_method_Cancel_0(interpreter_thread_s &it,unsigned stac
   }
   else
   {
+    // - remove handler from caller list -
+    tcn_caller_s *tc_ptr = (tcn_caller_s *)th_ptr->tcn_caller_loc->v_data_ptr;
+    tc_ptr->handler_list.remove(th_ptr->th_idx);
+
     // - callback will not be called for cancelled session -
     it.release_location_ptr(dst_location);
   }
@@ -1941,9 +1947,6 @@ bool bic_tcn_repl_handler_method_ReplyRequest_2(interpreter_thread_s &it,unsigne
     return false;
   }
 
-  // - increase reference counter of repl handler -
-  dst_location->v_reference_cnt.atomic_inc();
-
   BIC_SET_RESULT_DESTINATION();
 
   return true;
@@ -1966,6 +1969,10 @@ bool bic_tcn_repl_handler_method_Cancel_0(interpreter_thread_s &it,unsigned stac
   }
   else
   {
+    // - remove handler from replier list -
+    tcn_replier_s *tr_ptr = (tcn_replier_s *)th_ptr->tcn_replier_loc->v_data_ptr;
+    tr_ptr->handler_list.remove(th_ptr->th_idx);
+
     // - callback will not be called for cancelled session -
     it.release_location_ptr(dst_location);
   }

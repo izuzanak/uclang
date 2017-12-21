@@ -62,6 +62,7 @@ struct tcn_caller_s
 {
   U8 function;
   location_s *callback_dlg;
+  pointer_list_s handler_list;
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
@@ -76,6 +77,7 @@ struct tcn_replier_s
   U8 function;
   location_s *callback_dlg;
   location_s *close_dlg;
+  pointer_list_s handler_list;
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
@@ -88,6 +90,7 @@ struct tcn_replier_s
 struct tcn_call_handler_s
 {
   void *th_ptr;
+  unsigned th_idx;
   location_s *tcn_caller_loc;
   location_s *msg_req_loc;
 
@@ -107,6 +110,7 @@ struct tcn_call_handler_s
 struct tcn_repl_handler_s
 {
   void *th_ptr;
+  unsigned th_idx;
   location_s *tcn_replier_loc;
   unsigned am_address;
   location_s *msg_req_loc;
@@ -142,10 +146,28 @@ extern uctcnmd_c g_uctcnmd;
 inline void tcn_caller_s::init()
 {/*{{{*/
   callback_dlg = nullptr;
+  handler_list.init();
 }/*}}}*/
 
 inline void tcn_caller_s::clear(interpreter_thread_s &it)
 {/*{{{*/
+  unsigned th_idx = handler_list.first_idx;
+  while (th_idx != c_idx_not_exist)
+  {
+    location_s *th_location = (location_s *)handler_list[th_idx];
+
+    // - cancel caller session -
+    cassert(msgCancSession(((tcn_call_handler_s *)th_location->v_data_ptr)->th_ptr) == msg_ok);
+
+    // - release handler location -
+    it.release_location_ptr(th_location);
+
+    th_idx = handler_list.next_idx(th_idx);
+  }
+
+  handler_list.clear();
+
+  // - unregister caller -
   cassert(msgUnregCaller(function) == msg_ok);
 
   if (callback_dlg != nullptr)
@@ -164,10 +186,28 @@ inline void tcn_replier_s::init()
 {/*{{{*/
   callback_dlg = nullptr;
   close_dlg = nullptr;
+  handler_list.init();
 }/*}}}*/
 
 inline void tcn_replier_s::clear(interpreter_thread_s &it)
 {/*{{{*/
+  unsigned th_idx = handler_list.first_idx;
+  while (th_idx != c_idx_not_exist)
+  {
+    location_s *th_location = (location_s *)handler_list[th_idx];
+
+    // - cancel replier session -
+    cassert(msgCancSession(((tcn_repl_handler_s *)th_location->v_data_ptr)->th_ptr) == msg_ok);
+
+    // - release handler location -
+    it.release_location_ptr(th_location);
+
+    th_idx = handler_list.next_idx(th_idx);
+  }
+
+  handler_list.clear();
+
+  // - unregister caller -
   cassert(msgUnregReplier(function) == msg_ok);
 
   if (callback_dlg != nullptr)
@@ -200,11 +240,6 @@ inline void tcn_call_handler_s::init()
 
 inline void tcn_call_handler_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (tcn_caller_loc != nullptr)
-  {
-    it.release_location_ptr(tcn_caller_loc);
-  }
-
   if (msg_req_loc != nullptr)
   {
     it.release_location_ptr(msg_req_loc);
@@ -236,11 +271,6 @@ inline void tcn_repl_handler_s::init()
 
 inline void tcn_repl_handler_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (tcn_replier_loc != nullptr)
-  {
-    it.release_location_ptr(tcn_replier_loc);
-  }
-
   if (msg_req_loc != nullptr)
   {
     it.release_location_ptr(msg_req_loc);
