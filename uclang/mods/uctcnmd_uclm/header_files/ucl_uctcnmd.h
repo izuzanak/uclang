@@ -43,14 +43,14 @@ struct tcn_msg_s
 const SMsgCallerPars c_caller_params =
 {
   msg_block_service,
-  { .pfCallerReply = tcn_msg_s::caller_block_callback }
+  { tcn_msg_s::caller_block_callback }
 };
 
 // - replier static parameters -
 const SMsgReplierParsEx c_replier_params =
 {
   msg_unblock_rpl_fct,
-  { .pfCallRcvEx = tcn_msg_s::replier_unblock_function_callback },
+  { (PfMsgReplierCall) tcn_msg_s::replier_unblock_function_callback },
   tcn_msg_s::replier_close_callback
 };
 
