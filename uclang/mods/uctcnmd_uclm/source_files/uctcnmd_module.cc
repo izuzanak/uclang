@@ -581,6 +581,7 @@ bool bic_tcn_msg_method_Main_0(interpreter_thread_s &it,unsigned stack_base,uli 
   tcn_msg_s::ret_code = c_run_return_code_OK;
 
   RpcMain();
+  as_msngr_run();
   msgMain();
 
   // - if exception occurred -
