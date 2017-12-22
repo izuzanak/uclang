@@ -504,6 +504,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
 
 #define FG_TYPE_FOR_LOOP_RELEASE() \
 {/*{{{*/\
+\
   /* - free item variable - */\
   pointer &res_location = data_stack[res_loc_idx];\
   release_location_ptr((location_s *)res_location);\
@@ -516,6 +517,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
 
 #define FG_TYPE_FOR_LOOP_EXCEPTION(EXIT) \
 {/*{{{*/\
+\
   /* - exception handler search - */\
   fg_idx = catch_exception(method_record,stack_base,fg_idx,start_fg_idx);\
   if (fg_idx != c_idx_not_exist)\
@@ -536,6 +538,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
 
 #define FG_TYPE_FOR_LOOP_RETURN() \
 {/*{{{*/\
+\
   FG_TYPE_FOR_LOOP_RELEASE();\
   \
   /* - remove parameters from stack - */\
@@ -549,10 +552,19 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
 
 #define FG_TYPE_FOR_LOOP_BODY() \
 {/*{{{*/\
+\
   /* - test if loop body was defined - */\
   if (fg_ptr[c_fg_for_loop_body] != c_idx_not_exist)\
   {\
-    int ret_value = run_method_code(method_record,stack_base,return_trg_idx,fg_ptr[c_fg_for_loop_body]);\
+    int ret_value;\
+    \
+    try {\
+      ret_value = run_method_code(method_record,stack_base,return_trg_idx,fg_ptr[c_fg_for_loop_body]);\
+    }\
+    catch (int)\
+    {\
+      FG_TYPE_FOR_LOOP_RETURN();\
+    }\
     \
     switch (ret_value)\
     {\
@@ -822,7 +834,16 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
           if (code_idx != c_idx_not_exist && last_code_idx != code_idx)
           {
             // - execute switch case code -
-            int ret_value = run_method_code(method_record,stack_base,return_trg_idx,code_idx);
+            int ret_value;
+
+            try {
+              ret_value = run_method_code(method_record,stack_base,return_trg_idx,code_idx);
+            }
+            catch (int)
+            {
+              FG_TYPE_SWITCH_RETURN();
+            }
+
             switch (ret_value)
             {
             case c_run_return_code_OK:
@@ -874,7 +895,16 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
             if (*ci_ptr != c_idx_not_exist)
             {
               // - execute default case code -
-              int ret_value = run_method_code(method_record,stack_base,return_trg_idx,*ci_ptr);
+              int ret_value;
+
+              try {
+                ret_value = run_method_code(method_record,stack_base,return_trg_idx,*ci_ptr);
+              }
+              catch (int)
+              {
+                FG_TYPE_SWITCH_RETURN();
+              }
+
               switch (ret_value)
               {
               case c_run_return_code_OK:
