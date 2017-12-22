@@ -1609,7 +1609,7 @@ built_in_class_s range_class =
 {/*{{{*/
   "Range",
   c_modifier_public | c_modifier_final,
-  6, range_methods,
+  7, range_methods,
   0, range_variables,
   bic_range_consts,
   bic_range_init,
@@ -1633,6 +1633,11 @@ built_in_method_s range_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_range_operator_binary_equal
+  },
+  {
+    "Range#1",
+    c_modifier_public | c_modifier_final,
+    bic_range_method_Range_1
   },
   {
     "Range#2",
@@ -1726,15 +1731,23 @@ built_in_variable_s range_variables[] =
     it.release_stack_from(new_stack_base);\
   }\
 \
-  /* - compare actual value with end value - */\
-  long long int result;\
-  BIC_CALL_COMPARE(it,range_ptr->actual_location,range_ptr->end_location,SOURCE_POS,ERROR_CODE);\
-\
-  /* - if actual value is greater than end value - */\
-  if ((range_ptr->type == c_range_type_ascending) ? result > 0 : result < 0)\
+  switch (range_ptr->type)\
   {\
-    it.release_location_ptr(range_ptr->actual_location);\
-    range_ptr->actual_location = nullptr;\
+  case c_range_type_ascending:\
+  case c_range_type_descending:\
+  {\
+    /* - compare actual value with end value - */\
+    long long int result;\
+    BIC_CALL_COMPARE(it,range_ptr->actual_location,range_ptr->end_location,SOURCE_POS,ERROR_CODE);\
+\
+    /* - if actual value is greater than end value - */\
+    if ((range_ptr->type == c_range_type_ascending) ? result > 0 : result < 0)\
+    {\
+      it.release_location_ptr(range_ptr->actual_location);\
+      range_ptr->actual_location = nullptr;\
+    }\
+  }\
+  break;\
   }\
 }/*}}}*/
 
@@ -1783,6 +1796,37 @@ bool bic_range_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
 
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_range_method_Range_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - create range object -
+  range_s *range_ptr = (range_s *)cmalloc(sizeof(range_s));
+  range_ptr->init();
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+  range_ptr->start_location = src_0_location;
+  range_ptr->actual_location = src_0_location;
+
+  ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
+  range_ptr->end_location = (location_s *)it.blank_location;
+
+  uli *tmp_code = range_ptr->tmp_code;
+  tmp_code[0] = i_call;
+  tmp_code[1] = 1;
+  range_ptr->type = c_range_type_infinite;
+  tmp_code[2] = c_built_in_method_idxs[c_operator_unary_post_double_plus];
+  tmp_code[3] = 0;
+  tmp_code[4] = 0;
+  tmp_code[5] = 1;
+
+  // - set object pointer to result -
+  dst_location->v_data_ptr = (range_s *)range_ptr;
 
   return true;
 }/*}}}*/

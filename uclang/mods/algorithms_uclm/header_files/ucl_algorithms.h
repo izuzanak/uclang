@@ -26,7 +26,8 @@ enum
 // - range type identifiers -
 enum
 {
-  c_range_type_ascending = 0,
+  c_range_type_infinite = 0,
+  c_range_type_ascending,
   c_range_type_descending,
 };
 
