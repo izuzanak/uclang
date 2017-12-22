@@ -1981,6 +1981,17 @@ result = Algo.filter(new Range(1,10),:(value) return value & 1;);
 result = Algo.zip([\"Hello\",new Range(1,10)]);
 (\"result: %s\\n\" % $result).print();
 "
+),/*}}}*/
+        "tuple_zip#1", new MethodDescr
+(/*{{{*/
+"Creates object of type %s containing objects of type %s that are composed from
+elements of input iterable objects." % [doc_class_ref("Array"),doc_class_ref("Array")],
+["Object of class %s containing iterable objects." % doc_class_ref("Array")],
+"Object of type %s containing objects of type %s that are composed from
+elements of input iterable objects." % [doc_class_ref("Array"),doc_class_ref("Array")],"
+result = Algo.tuple_zip([\"Hello\",new Range(1,10)]);
+(\"result: %s\\n\" % $result).print();
+"
 )/*}}}*/
       ]);/*}}}*/
     }

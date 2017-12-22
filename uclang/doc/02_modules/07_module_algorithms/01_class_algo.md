@@ -15,6 +15,7 @@ iterable types.
   * Method [`reduce#3`](#reduce%233)
   * Method [`filter#2`](#filter%232)
   * Method [`zip#1`](#zip%231)
+  * Method [`tuple_zip#1`](#tuple_zip%231)
   * Method [`to_string#0`](#to_string%230)
   * Method [`print#0`](#print%230)
 
@@ -50,7 +51,7 @@ class Main
 
 <a name="all_true#1" />
 
-### Method `static` [`all_true#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L306)
+### Method `static` [`all_true#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L311)
 
 Test if all elements in iterable object are true.
 
@@ -79,7 +80,7 @@ result: 1
 
 <a name="any_true#1" />
 
-### Method `static` [`any_true#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L359)
+### Method `static` [`any_true#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L364)
 
 Test if any element in iterable object is true.
 
@@ -108,7 +109,7 @@ result: 1
 
 <a name="map#2" />
 
-### Method `static` [`map#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L412)
+### Method `static` [`map#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L417)
 
 Creates object of type `Array` containing elements from input iterable object
 transformed by given map function.
@@ -141,7 +142,7 @@ result: [[0],[0,0],[0,0,0],[0,0,0,0],[0,0,0,0,0]]
 
 <a name="reduce#3" />
 
-### Method `static` [`reduce#3`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L622)
+### Method `static` [`reduce#3`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L627)
 
 Reduces all elements of iterable type object to one value.
 
@@ -174,7 +175,7 @@ result: 55
 
 <a name="filter#2" />
 
-### Method `static` [`filter#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L702)
+### Method `static` [`filter#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L707)
 
 Creates object of type `Array` containing elements from input iterable object
 for which filter function returns true.
@@ -207,7 +208,7 @@ result: [1,3,5,7,9]
 
 <a name="zip#1" />
 
-### Method `static` [`zip#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L935)
+### Method `static` [`zip#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L940)
 
 Creates object of type `Array` containing interleaved elements from input iterable objects.
 
@@ -229,9 +230,35 @@ result = Algo.zip(["Hello",new Range(1,10)]);
 result: [H,1,e,2,l,3,l,4,o,5]
 ```
 
+<a name="tuple_zip#1" />
+
+### Method `static` [`tuple_zip#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1108)
+
+Creates object of type `Array` containing objects of type `Array` that are composed from
+elements of input iterable objects.
+
+**Parameters:**
+
+1. Object of class `Array` containing iterable objects.
+
+**Return:**
+
+Object of type `Array` containing objects of type `Array` that are composed from
+elements of input iterable objects.
+
+**Example:**
+
+```cpp
+result = Algo.tuple_zip(["Hello",new Range(1,10)]);
+("result: %s\n" % $result).print();
+```
+```
+result: [[H,1],[e,2],[l,3],[l,4],[o,5]]
+```
+
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1103)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1283)
 
 Convert object of class `Algo` to object of class `String`.
 This method returns name of class `Algo`.
@@ -251,7 +278,7 @@ Algo.to_string(): Algo
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1112)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1292)
 
 Print string representation of object of class `Algo` to standard output.
 This method prints name of class `Algo`.
