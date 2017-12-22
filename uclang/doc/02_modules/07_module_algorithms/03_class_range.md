@@ -8,6 +8,7 @@ Class allowing creation of lazy object sequences.
 
 * Constructors
 
+  * Constructor [`Range#1`](#Range%231)
   * Constructor [`Range#2`](#Range%232)
   * Constructor [`Range#3`](#Range%233)
 
@@ -25,9 +26,31 @@ Class allowing creation of lazy object sequences.
 
 ## Constructors
 
+<a name="Range#1" />
+
+### Constructor [`Range#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1803)
+
+Creates object of class `Range`, representing infinite sequence, starting by method parameter.
+
+**Parameters:**
+
+1. First value in generated sequence.
+
+**Example:**
+
+```cpp
+obj = new Range(10);
+("obj: %s\n" % $obj[:10:]).print();
+("obj: %s\n" % $obj[:10:]).print();
+```
+```
+obj: [10,11,12,13,14,15,16,17,18,19,20]
+obj: [21,22,23,24,25,26,27,28,29,30,31]
+```
+
 <a name="Range#2" />
 
-### Constructor [`Range#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1790)
+### Constructor [`Range#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1834)
 
 Creates object of class `Range`, based on first and last values of requested
 sequence.
@@ -51,7 +74,7 @@ obj: [1,2,3,4,5,6,7,8,9,10]
 
 <a name="Range#3" />
 
-### Constructor [`Range#3`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1842)
+### Constructor [`Range#3`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1886)
 
 Creates object of class `Range`, based on first, last and step value
 of requested sequence.
@@ -80,7 +103,7 @@ obj: [0,-2,-4,-6,-8,-10,-12,-14,-16,-18]
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1778)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1791)
 
 Assignment operator `=`. Object of class `Range` is replaced by method parameter.
 
@@ -111,7 +134,7 @@ obj: New value
 
 <a name="next_item#0" />
 
-### Method `spec` [`next_item#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1890)
+### Method `spec` [`next_item#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1934)
 
 Retrieve next element from iterable object `Range`.
 
@@ -139,7 +162,7 @@ element: 20
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1912)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1956)
 
 Convert object of class `Range` to object of class `String`.
 This method returns name of class `Range`.
@@ -159,7 +182,7 @@ Range.to_string(): Range
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1921)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1965)
 
 Print string representation of object of class `Range` to standard output.
 This method prints name of class `Range`.

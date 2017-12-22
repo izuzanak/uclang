@@ -2037,6 +2037,15 @@ while (Blank != (element = obj.next_item()))
     {
       class_Range["methods"] = new Dict(
       [/*{{{*/
+        "Range#1", new MethodDescr
+(/*{{{*/
+"Creates object of class `%s`, representing infinite sequence, starting by method parameter." % m_target_name,
+["First value in generated sequence."],new Blank(),"
+obj = new Range(10);
+(\"obj: %s\\n\" % $obj[:10:]).print();
+(\"obj: %s\\n\" % $obj[:10:]).print();
+"
+),/*}}}*/
         "Range#2", new MethodDescr
 (/*{{{*/
 "Creates object of class `%s`, based on first and last values of requested
