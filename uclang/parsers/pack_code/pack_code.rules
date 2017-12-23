@@ -24,6 +24,7 @@ terminals:
   float {'f'}
   double {'d'}
   string {'s'}
+  zero_term_string {'z'}
 
   end {'\0'}
 
@@ -70,4 +71,5 @@ rules:
   <term> -> float ->> {print("float");}
   <term> -> double ->> {print("double");}
   <term> -> string ->> {print("string");}
+  <term> -> zero_term_string ->> {print("zero_term_string");}
 

@@ -342,16 +342,19 @@ unsigned pcd_terminal_recognize(char **a_ptr)
   if (in_char == 115)
     goto state_19_label;
 
+  if (in_char == 122)
+    goto state_20_label;
+
   return c_idx_not_exist;
 
 // - STATE 1 -
 state_1_label:
-  PCD_CLOSE_CHAR(18)
-  return 18;
+  PCD_CLOSE_CHAR(19);
+  return 19;
 
 // - STATE 2 -
 state_2_label:
-  PCD_CLOSE_CHAR(0)
+  PCD_CLOSE_CHAR(0);
   PCD_GET_NEXT_CHAR();
 
   if (in_char >= 48 && in_char < 58)
@@ -361,88 +364,93 @@ state_2_label:
 
 // - STATE 3 -
 state_3_label:
-  PCD_CLOSE_CHAR(2)
+  PCD_CLOSE_CHAR(2);
   return 2;
 
 // - STATE 4 -
 state_4_label:
-  PCD_CLOSE_CHAR(1)
+  PCD_CLOSE_CHAR(1);
   return 1;
 
 // - STATE 5 -
 state_5_label:
-  PCD_CLOSE_CHAR(3)
+  PCD_CLOSE_CHAR(3);
   return 3;
 
 // - STATE 6 -
 state_6_label:
-  PCD_CLOSE_CHAR(6)
+  PCD_CLOSE_CHAR(6);
   return 6;
 
 // - STATE 7 -
 state_7_label:
-  PCD_CLOSE_CHAR(8)
+  PCD_CLOSE_CHAR(8);
   return 8;
 
 // - STATE 8 -
 state_8_label:
-  PCD_CLOSE_CHAR(10)
+  PCD_CLOSE_CHAR(10);
   return 10;
 
 // - STATE 9 -
 state_9_label:
-  PCD_CLOSE_CHAR(12)
+  PCD_CLOSE_CHAR(12);
   return 12;
 
 // - STATE 10 -
 state_10_label:
-  PCD_CLOSE_CHAR(14)
+  PCD_CLOSE_CHAR(14);
   return 14;
 
 // - STATE 11 -
 state_11_label:
-  PCD_CLOSE_CHAR(5)
+  PCD_CLOSE_CHAR(5);
   return 5;
 
 // - STATE 12 -
 state_12_label:
-  PCD_CLOSE_CHAR(4)
+  PCD_CLOSE_CHAR(4);
   return 4;
 
 // - STATE 13 -
 state_13_label:
-  PCD_CLOSE_CHAR(16)
+  PCD_CLOSE_CHAR(16);
   return 16;
 
 // - STATE 14 -
 state_14_label:
-  PCD_CLOSE_CHAR(15)
+  PCD_CLOSE_CHAR(15);
   return 15;
 
 // - STATE 15 -
 state_15_label:
-  PCD_CLOSE_CHAR(7)
+  PCD_CLOSE_CHAR(7);
   return 7;
 
 // - STATE 16 -
 state_16_label:
-  PCD_CLOSE_CHAR(9)
+  PCD_CLOSE_CHAR(9);
   return 9;
 
 // - STATE 17 -
 state_17_label:
-  PCD_CLOSE_CHAR(11)
+  PCD_CLOSE_CHAR(11);
   return 11;
 
 // - STATE 18 -
 state_18_label:
-  PCD_CLOSE_CHAR(13)
+  PCD_CLOSE_CHAR(13);
   return 13;
 
 // - STATE 19 -
 state_19_label:
-  PCD_CLOSE_CHAR(17)
+  PCD_CLOSE_CHAR(17);
   return 17;
+
+// - STATE 20 -
+state_20_label:
+  PCD_CLOSE_CHAR(18);
+  return 18;
 
 }/*}}}*/
 

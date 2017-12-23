@@ -13,7 +13,7 @@ built_in_module_s module =
   pack_classes,          // Classes
 
   0,                     // Error base index
-  11,                    // Error count
+  13,                    // Error count
   pack_error_strings,    // Error strings
 
   pack_initialize,       // Initialize function
@@ -39,6 +39,8 @@ const char *pack_error_strings[] =
   "error_PACK_CODE_WRONG_ARGUMENT_TYPE",
   "error_PACK_CODE_WRONG_FORMAT_STRING",
   "error_PACK_CODE_NOT_ALL_ARGUMENTS_CONVERTED",
+  "error_PACK_CODE_STRING_LENGTH_EXCEEDS_TARGET_SIZE",
+  "error_PACK_CODE_STRING_NOT_TERMINATED_BY_ZERO",
   "error_PACK_DECODE_NOT_ENOUGH_DATA_BYTES",
 };/*}}}*/
 
@@ -157,6 +159,20 @@ bool pack_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nNot all arguments converted during pack code\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PACK_CODE_STRING_LENGTH_EXCEEDS_TARGET_SIZE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nString length exceeds count of target bytes\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PACK_CODE_STRING_NOT_TERMINATED_BY_ZERO:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMissing terminating zero for zero terminated string\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_PACK_DECODE_NOT_ENOUGH_DATA_BYTES:
@@ -589,6 +605,7 @@ bool bic_pack_method_code_2(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 #define PC_PROCESS_ELEMENT(TYPE,CLASS_TYPE,RETRIEVE_CODE) \
   {/*{{{*/\
+    count == 0 && (count = 1);\
     data_size = count*sizeof(TYPE);\
     \
     if (data_size > c_temp_size)\
@@ -663,7 +680,7 @@ bool bic_pack_method_code_2(interpreter_thread_s &it,unsigned stack_base,uli *op
     char *old_f_ptr;
 
     bool change_byte_order = false;
-    unsigned count = 1;
+    unsigned count = 0;
 
     const unsigned c_temp_size = 512;
     char temp_buffer[c_temp_size];
@@ -687,6 +704,34 @@ bool bic_pack_method_code_2(interpreter_thread_s &it,unsigned stack_base,uli *op
 
         return false;
       }
+
+#define BIC_PACK_METHOD_CODE_WRITE_STRING_FIXED_COUNT() \
+{/*{{{*/\
+  \
+  /* - ERROR - */\
+  if (string_length > count)\
+  {\
+    PC_CLEAR_DATA();\
+    \
+    exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_STRING_LENGTH_EXCEEDS_TARGET_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  unsigned old_used = buffer.used;\
+  buffer.push_blanks(count);\
+  \
+  /* - copy string data - */\
+  if (string_length > 0)\
+  {\
+    memcpy(buffer.data + old_used,string_ptr->data,string_length);\
+  }\
+  \
+  /* - fill rest by zeroes - */\
+  if (string_length < count)\
+  {\
+    memset(buffer.data + old_used + string_length,0,count - string_length);\
+  }\
+}/*}}}*/
 
       // - test end of format string -
       if (ret_term != PCD_TERM_END)
@@ -780,72 +825,120 @@ bool bic_pack_method_code_2(interpreter_thread_s &it,unsigned stack_base,uli *op
         goto PCD_WRITE_DATA;
         case PCD_TERM_STRING:
         {/*{{{*/
-          if (count > 0)
+
+          // - ERROR -
+          if (array_ptr->used <= element_idx)
           {
-            unsigned val_idx = 0;
-            do
-            {
-              // - ERROR -
-              if (array_ptr->used <= element_idx)
-              {
-                PC_CLEAR_DATA();
+            PC_CLEAR_DATA();
 
-                exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_NOT_ENOUGH_ARGUMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-                return false;
-              }
-
-              // - retrieve argument -
-              location_s *element_location = it.get_location_value(array_ptr->data[element_idx++]);
-
-              // - ERROR -
-              if (element_location->v_type != c_bi_class_string)
-              {
-                PC_CLEAR_DATA();
-
-                exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-                new_exception->params.push(element_idx);
-                new_exception->params.push(c_bi_class_string);
-                new_exception->params.push(element_location->v_type);
-
-                return false;
-              }
-
-              // - retrieve string -
-              string_s *string_ptr = (string_s *)element_location->v_data_ptr;
-              unsigned string_length = string_ptr->size - 1;
-
-              unsigned old_used = buffer.used;
-              buffer.push_blanks(sizeof(unsigned));
-
-              if (change_byte_order)
-              {
-                // - copy string length with reversed byte order -
-                char *ptr = (char *)&string_length;
-                char *ptr_end = ptr + sizeof(unsigned);
-                char *t_ptr = buffer.data + old_used + sizeof(unsigned);
-                do
-                {
-                  *(--t_ptr) = *ptr;
-                }
-                while(++ptr < ptr_end);
-              }
-              else
-              {
-                // - copy string length with preserved byte order -
-                *((unsigned *)(buffer.data + old_used)) = string_length;
-              }
-
-              // - copy string data -
-              if (string_length > 0)
-              {
-                old_used = buffer.used;
-                buffer.push_blanks(string_length);
-                memcpy(buffer.data + old_used,string_ptr->data,string_length);
-              }
-
-            }
-            while(++val_idx < count);
+            exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_NOT_ENOUGH_ARGUMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            return false;
           }
+
+          // - retrieve argument -
+          location_s *element_location = it.get_location_value(array_ptr->data[element_idx++]);
+
+          // - ERROR -
+          if (element_location->v_type != c_bi_class_string)
+          {
+            PC_CLEAR_DATA();
+
+            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            new_exception->params.push(element_idx);
+            new_exception->params.push(c_bi_class_string);
+            new_exception->params.push(element_location->v_type);
+
+            return false;
+          }
+
+          // - retrieve string -
+          string_s *string_ptr = (string_s *)element_location->v_data_ptr;
+          unsigned string_length = string_ptr->size - 1;
+
+          if (count == 0)
+          {
+            unsigned old_used = buffer.used;
+            buffer.push_blanks(sizeof(unsigned));
+
+            if (change_byte_order)
+            {
+              // - copy string length with reversed byte order -
+              char *ptr = (char *)&string_length;
+              char *ptr_end = ptr + sizeof(unsigned);
+              char *t_ptr = buffer.data + old_used + sizeof(unsigned);
+              do
+              {
+                *(--t_ptr) = *ptr;
+              }
+              while(++ptr < ptr_end);
+            }
+            else
+            {
+              // - copy string length with preserved byte order -
+              *((unsigned *)(buffer.data + old_used)) = string_length;
+            }
+
+            // - copy string data -
+            if (string_length > 0)
+            {
+              old_used = buffer.used;
+              buffer.push_blanks(string_length);
+              memcpy(buffer.data + old_used,string_ptr->data,string_length);
+            }
+          }
+          else
+          {
+            BIC_PACK_METHOD_CODE_WRITE_STRING_FIXED_COUNT();
+          }
+
+          count = 0;
+        }/*}}}*/
+        break;
+        case PCD_TERM_ZERO_TERM_STRING:
+        {/*{{{*/
+
+          // - ERROR -
+          if (array_ptr->used <= element_idx)
+          {
+            PC_CLEAR_DATA();
+
+            exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_NOT_ENOUGH_ARGUMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            return false;
+          }
+
+          // - retrieve argument -
+          location_s *element_location = it.get_location_value(array_ptr->data[element_idx++]);
+
+          // - ERROR -
+          if (element_location->v_type != c_bi_class_string)
+          {
+            PC_CLEAR_DATA();
+
+            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            new_exception->params.push(element_idx);
+            new_exception->params.push(c_bi_class_string);
+            new_exception->params.push(element_location->v_type);
+
+            return false;
+          }
+
+          // - retrieve string -
+          string_s *string_ptr = (string_s *)element_location->v_data_ptr;
+          unsigned string_length = string_ptr->size - 1;
+
+          if (count == 0)
+          {
+            // - copy string data -
+            unsigned old_used = buffer.used;
+            buffer.push_blanks(string_length + 1);
+            memcpy(buffer.data + old_used,string_ptr->data,string_length + 1);
+          }
+          else
+          {
+            BIC_PACK_METHOD_CODE_WRITE_STRING_FIXED_COUNT();
+          }
+
+          count = 0;
         }/*}}}*/
         break;
 PCD_WRITE_DATA:
@@ -881,7 +974,7 @@ PCD_WRITE_DATA:
             data_buffer = temp_buffer;
           }
 
-          count = 1;
+          count = 0;
         }/*}}}*/
         break;
         default:
@@ -951,6 +1044,7 @@ bool bic_pack_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *
 
 #define PD_PROCESS_ELEMENT(TYPE,CLASS_TYPE,RETRIEVE_CODE) \
   {/*{{{*/\
+    count == 0 && (count = 1);\
     data_size = count*sizeof(TYPE);\
     \
     if (data_size > 0)\
@@ -1025,7 +1119,7 @@ bool bic_pack_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *
       }\
     }\
     \
-    count = 1;\
+    count = 0;\
   }/*}}}*/
 
   char *ds_ptr = data_string_ptr->data;
@@ -1037,7 +1131,7 @@ bool bic_pack_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *
     char *old_f_ptr;
 
     bool change_byte_order = false;
-    unsigned count = 1;
+    unsigned count = 0;
 
     const unsigned c_temp_size = 512;
     char temp_buffer[c_temp_size];
@@ -1154,67 +1248,117 @@ bool bic_pack_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *
         break;
         case PCD_TERM_STRING:
         {/*{{{*/
-          if (count > 0)
+          unsigned string_length;
+
+          if (count == 0)
           {
-            unsigned val_idx = 0;
-            do
+            // - ERROR -
+            if ((unsigned)(ds_ptr_end - ds_ptr) < sizeof(unsigned))
             {
-              // - ERROR -
-              if ((unsigned)(ds_ptr_end - ds_ptr) < sizeof(unsigned))
-              {
-                PD_CLEAR_DATA();
+              PD_CLEAR_DATA();
 
-                exception_s::throw_exception(it,module.error_base + c_error_PACK_DECODE_NOT_ENOUGH_DATA_BYTES,operands[c_source_pos_idx],(location_s *)it.blank_location);
-                return false;
-              }
-
-              unsigned string_length;
-
-              if (change_byte_order)
-              {
-                // - copy string length with reversed byte order -
-                char *sl_ptr_end = ds_ptr + sizeof(unsigned);
-                char *ptr = (char *)&string_length + sizeof(unsigned);
-                do
-                {
-                  *(--ptr) = *ds_ptr;
-                }
-                while(++ds_ptr < sl_ptr_end);
-              }
-              else
-              {
-                // - copy string length with preserved byte order -
-                string_length = *((unsigned *)ds_ptr);
-                ds_ptr += sizeof(unsigned);
-              }
-
-              // - ERROR -
-              if ((unsigned)(ds_ptr_end - ds_ptr) < string_length)
-              {
-                PD_CLEAR_DATA();
-
-                exception_s::throw_exception(it,module.error_base + c_error_PACK_DECODE_NOT_ENOUGH_DATA_BYTES,operands[c_source_pos_idx],(location_s *)it.blank_location);
-                return false;
-              }
-
-              // - create string -
-              string_s *string_ptr = it.get_new_string_ptr();
-
-              // - copy string data -
-              if (string_length > 0)
-              {
-                string_ptr->create(string_length);
-                memcpy(string_ptr->data,ds_ptr,string_length);
-                ds_ptr += string_length;
-              }
-
-              // - create new location and push it to result array -
-              BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
-              array_ptr->push(new_location);
-
+              exception_s::throw_exception(it,module.error_base + c_error_PACK_DECODE_NOT_ENOUGH_DATA_BYTES,operands[c_source_pos_idx],(location_s *)it.blank_location);
+              return false;
             }
-            while(++val_idx < count);
+
+            if (change_byte_order)
+            {
+              // - copy string length with reversed byte order -
+              char *sl_ptr_end = ds_ptr + sizeof(unsigned);
+              char *ptr = (char *)&string_length + sizeof(unsigned);
+              do
+              {
+                *(--ptr) = *ds_ptr;
+              }
+              while(++ds_ptr < sl_ptr_end);
+            }
+            else
+            {
+              // - copy string length with preserved byte order -
+              string_length = *((unsigned *)ds_ptr);
+              ds_ptr += sizeof(unsigned);
+            }
           }
+          else
+          {
+            string_length = count;
+          }
+
+          // - ERROR -
+          if ((unsigned)(ds_ptr_end - ds_ptr) < string_length)
+          {
+            PD_CLEAR_DATA();
+
+            exception_s::throw_exception(it,module.error_base + c_error_PACK_DECODE_NOT_ENOUGH_DATA_BYTES,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            return false;
+          }
+
+          // - create string -
+          string_s *string_ptr = it.get_new_string_ptr();
+
+          // - copy string data -
+          if (string_length > 0)
+          {
+            string_ptr->create(string_length);
+            memcpy(string_ptr->data,ds_ptr,string_length);
+            ds_ptr += string_length;
+          }
+
+          // - create new location and push it to result array -
+          BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+          array_ptr->push(new_location);
+
+          count = 0;
+        }/*}}}*/
+        break;
+        case PCD_TERM_ZERO_TERM_STRING:
+        {/*{{{*/
+          unsigned string_length;
+
+          if (count == 0)
+          {
+            char *ptr = ds_ptr;
+            while (ptr < ds_ptr_end && *ptr != '\0') { ++ptr; }
+
+            // - ERROR -
+            if (ptr >= ds_ptr_end)
+            {
+              PD_CLEAR_DATA();
+              
+              exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_STRING_NOT_TERMINATED_BY_ZERO,operands[c_source_pos_idx],(location_s *)it.blank_location);
+              return false;
+            }
+
+            string_length = ptr - ds_ptr;
+            count = string_length + 1;
+          }
+          else
+          {
+            char *ptr = ds_ptr;
+            char *ptr_end = ptr + count;
+            while (ptr < ptr_end && *ptr != '\0') { ++ptr; }
+
+            string_length = ptr - ds_ptr;
+          }
+
+          // - create string -
+          string_s *string_ptr = it.get_new_string_ptr();
+
+          // - copy string data -
+          if (string_length > 0)
+          {
+            string_ptr->create(string_length);
+            memcpy(string_ptr->data,ds_ptr,string_length);
+          }
+
+          // - remove bytes from data string -
+          ds_ptr += count;
+
+          // - create new location and push it to result array -
+          BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+          array_ptr->push(new_location);
+
+          count = 0;
         }/*}}}*/
         break;
         default:
