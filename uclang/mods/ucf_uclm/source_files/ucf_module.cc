@@ -3354,10 +3354,10 @@ built_in_variable_s var_store_variables[] =
 
 #define BIC_VAR_STORE_CHECK_INDEX() \
   /*{{{*/\
-  VarStore *vs_ptr = (VarStore *)dst_location->v_data_ptr;\
+  VarStore *varstore = ((var_store_s *)dst_location->v_data_ptr)->varstore;\
   \
   VarStore::StoreInfo vsInfo;\
-  vs_ptr->GetStoreInfo(&vsInfo);\
+  varstore->GetStoreInfo(&vsInfo);\
   \
   /* - ERROR - */\
   if (index < 0 || index >= vsInfo.slots) {\
@@ -3388,37 +3388,20 @@ built_in_variable_s var_store_variables[] =
         return false;\
       }\
       \
-      /* - retrieve varstore pointer and slot name - */\
-      VarStore *vs_ptr = (VarStore *)dst_location->v_data_ptr;\
+      string_rb_tree_s &slot_name_map = ((var_store_s *)dst_location->v_data_ptr)->slot_name_map;\
       string_s *name_ptr = (string_s *)src_0_location->v_data_ptr;\
       \
-      VarStore::StoreInfo vsInfo;\
-      vs_ptr->GetStoreInfo(&vsInfo);\
+      /* - retrieve slot name map index - */\
+      unsigned idx = slot_name_map.get_idx(*name_ptr);\
       \
-      /* - find slot index by its name - */\
-      int idx = 0;\
-      if (vsInfo.slots > 0 && name_ptr->size <= c_vs_slot_info_name_size)\
+      /* - ERROR - */\
+      if (idx == c_idx_not_exist)\
       {\
-        VarStore::SlotInfo vssInfo;\
-        \
-        do {\
-          vs_ptr->GetSlotInfo(idx,&vssInfo);\
-          \
-          if (memcmp(name_ptr->data,vssInfo.name,name_ptr->size) == 0)\
-          {\
-            break;\
-          }\
-        } while(++idx < vsInfo.slots);\
-        \
-        /* - ERROR - */\
-        if (idx >= vsInfo.slots)\
-        {\
-          exception_s::throw_exception(it,module.error_base + c_error_VAR_STORE_SLOT_NAME_NOT_FOUND,operands[c_source_pos_idx],src_0_location);\
-          return false;\
-        }\
+        exception_s::throw_exception(it,module.error_base + c_error_VAR_STORE_SLOT_NAME_NOT_FOUND,operands[c_source_pos_idx],src_0_location);\
+        return false;\
       }\
       \
-      index = (long long int)idx;\
+      index = idx ? idx - 1 : 0;\
     }\
     else {\
       BIC_VAR_STORE_CHECK_INDEX();\
@@ -3473,16 +3456,17 @@ void bic_var_store_consts(location_array_s &const_locations)
 
 void bic_var_store_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (VarStore *)nullptr;
+  location_ptr->v_data_ptr = (var_store_s *)nullptr;
 }/*}}}*/
 
 void bic_var_store_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  VarStore *vs_ptr = (VarStore *)location_ptr->v_data_ptr;
+  var_store_s *vs_ptr = (var_store_s *)location_ptr->v_data_ptr;
 
   if (vs_ptr != nullptr)
   {
-    delete vs_ptr;
+    vs_ptr->clear(it);
+    cfree(vs_ptr);
   }
 }/*}}}*/
 
@@ -3533,25 +3517,28 @@ bool bic_var_store_method_VarStore_2(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  VarStore *new_vs_ptr = new VarStore();
+  VarStore *varstore = new VarStore();
 
   try
   {
-    new_vs_ptr->Open(String(vs_name_ptr->data),cl_name_ptr->data);
+    varstore->Open(String(vs_name_ptr->data),cl_name_ptr->data);
   }
 
   // - ERROR -
   catch (Exception e)
   {
-    delete new_vs_ptr;
+    delete varstore;
 
     exception_s::throw_exception(it,module.error_base + c_error_VAR_STORE_OPEN_ERROR,operands[c_source_pos_idx],src_0_location);
     return false;
   }
 
+  string_rb_tree_s slot_name_map;
+  slot_name_map.init();
+
   // - check varstore slots -
   VarStore::StoreInfo vsInfo;
-  new_vs_ptr->GetStoreInfo(&vsInfo);
+  varstore->GetStoreInfo(&vsInfo);
 
   if (vsInfo.slots > 0)
   {
@@ -3560,7 +3547,7 @@ bool bic_var_store_method_VarStore_2(interpreter_thread_s &it,unsigned stack_bas
     int s_idx = 0;
     do
     {
-      new_vs_ptr->GetSlotInfo(s_idx,&vssInfo);
+      varstore->GetSlotInfo(s_idx,&vssInfo);
 
       int varType = vssInfo.varType;
       int varSize = vssInfo.varSize;
@@ -3571,7 +3558,7 @@ bool bic_var_store_method_VarStore_2(interpreter_thread_s &it,unsigned stack_bas
       // - ERROR -
       if (!size_test)
       {
-        delete new_vs_ptr;
+        delete varstore;
 
         exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_VAR_STORE_UNKNOWN_TYPE_SIZE_COMBINATION,operands[c_source_pos_idx],(location_s *)it.blank_location);
         new_exception->params.push(varType);
@@ -3580,12 +3567,30 @@ bool bic_var_store_method_VarStore_2(interpreter_thread_s &it,unsigned stack_bas
         return false;
       }
 
+      // - insert slot name to slot name map -
+      string_s tmp_name_str;
+      tmp_name_str.data = vssInfo.name;
+      tmp_name_str.size = (vssInfo.name[c_vs_slot_info_name_size - 1] == '\0' ?
+        strlen(vssInfo.name) : c_vs_slot_info_name_size) + 1;
+
+      slot_name_map.insert(tmp_name_str);
     }
     while(++s_idx < vsInfo.slots);
   }
 
+  // - create var_store object -
+  var_store_s *vs_ptr = (var_store_s *)cmalloc(sizeof(var_store_s));
+  vs_ptr->init();
+
+  // - set varstore pointer -
+  vs_ptr->varstore = varstore;
+
+  // - set varstore slot name map -
+  vs_ptr->slot_name_map.swap(slot_name_map);
+  slot_name_map.clear();
+
   // - set destination data pointer -
-  dst_location->v_data_ptr = (VarStore *)new_vs_ptr;
+  dst_location->v_data_ptr = (var_store_s *)vs_ptr;
 
   return true;
 }/*}}}*/
@@ -3627,6 +3632,9 @@ bool bic_var_store_method_VarStore_5(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
+  string_rb_tree_s slot_name_map;
+  slot_name_map.init();
+
   VarStore::SlotInfo *SlotInfos = (VarStore::SlotInfo *)cmalloc(slots_ptr->used*sizeof(VarStore::SlotInfo));
 
   unsigned s_idx = 0;
@@ -3638,6 +3646,7 @@ bool bic_var_store_method_VarStore_5(interpreter_thread_s &it,unsigned stack_bas
     if (slot_location->v_type != c_bi_class_array)
     {
       cfree(SlotInfos);
+      slot_name_map.clear();
 
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_VAR_STORE_CREATE_WRONG_SLOT_DESCRIPTION,operands[c_source_pos_idx],(location_s *)it.blank_location);
       new_exception->params.push(s_idx);
@@ -3651,6 +3660,7 @@ bool bic_var_store_method_VarStore_5(interpreter_thread_s &it,unsigned stack_bas
     if (slot_ptr->used < 6)
     {
       cfree(SlotInfos);
+      slot_name_map.clear();
 
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_VAR_STORE_CREATE_WRONG_SLOT_DESCRIPTION,operands[c_source_pos_idx],(location_s *)it.blank_location);
       new_exception->params.push(s_idx);
@@ -3674,6 +3684,7 @@ bool bic_var_store_method_VarStore_5(interpreter_thread_s &it,unsigned stack_bas
         slot_nVars_loc->v_type != c_bi_class_integer)
     {
       cfree(SlotInfos);
+      slot_name_map.clear();
 
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_VAR_STORE_CREATE_WRONG_SLOT_DESCRIPTION,operands[c_source_pos_idx],(location_s *)it.blank_location);
       new_exception->params.push(s_idx);
@@ -3695,6 +3706,7 @@ bool bic_var_store_method_VarStore_5(interpreter_thread_s &it,unsigned stack_bas
     if (!size_test)
     {
       cfree(SlotInfos);
+      slot_name_map.clear();
 
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_VAR_STORE_UNKNOWN_TYPE_SIZE_COMBINATION,operands[c_source_pos_idx],(location_s *)it.blank_location);
       new_exception->params.push(varType);
@@ -3707,6 +3719,7 @@ bool bic_var_store_method_VarStore_5(interpreter_thread_s &it,unsigned stack_bas
     if (nVars <= 0)
     {
       cfree(SlotInfos);
+      slot_name_map.clear();
 
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_VAR_STORE_CREATE_WRONG_VARIABLE_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
       new_exception->params.push(nVars);
@@ -3718,6 +3731,7 @@ bool bic_var_store_method_VarStore_5(interpreter_thread_s &it,unsigned stack_bas
     if (s_name_ptr->size - 1 > c_vs_slot_info_name_size)
     {
       cfree(SlotInfos);
+      slot_name_map.clear();
 
       exception_s::throw_exception(it,module.error_base + c_error_VAR_STORE_CREATE_SLOT_NAME_TOO_LONG,operands[c_source_pos_idx],slot_name_loc);
       return false;
@@ -3733,6 +3747,8 @@ bool bic_var_store_method_VarStore_5(interpreter_thread_s &it,unsigned stack_bas
     SlotInfo.varSize = varSize;
     SlotInfo.nVars = nVars;
 
+    // - insert slot name to slot name map -
+    slot_name_map.insert(*s_name_ptr);
   }
   while(++s_idx < slots_ptr->used);
 
@@ -3745,23 +3761,25 @@ bool bic_var_store_method_VarStore_5(interpreter_thread_s &it,unsigned stack_bas
   if (cl_name_ptr->size - 1 > c_vs_client_info_name_size)
   {
     cfree(SlotInfos);
+    slot_name_map.clear();
 
     exception_s::throw_exception(it,module.error_base + c_error_VAR_STORE_CLIENT_NAME_TOO_LONG,operands[c_source_pos_idx],src_4_location);
     return false;
   }
 
-  VarStore *new_vs_ptr = new VarStore();
+  VarStore *varstore = new VarStore();
 
   try
   {
-    new_vs_ptr->Create(String(vs_name_ptr->data),SlotInfos,slots_ptr->used,clients,events,cl_name_ptr->data);
+    varstore->Create(String(vs_name_ptr->data),SlotInfos,slots_ptr->used,clients,events,cl_name_ptr->data);
   }
 
   // - ERROR -
   catch (Exception e)
   {
-    delete new_vs_ptr;
+    delete varstore;
     cfree(SlotInfos);
+    slot_name_map.clear();
 
     exception_s::throw_exception(it,module.error_base + c_error_VAR_STORE_CREATE_ERROR,operands[c_source_pos_idx],src_0_location);
     return false;
@@ -3769,8 +3787,18 @@ bool bic_var_store_method_VarStore_5(interpreter_thread_s &it,unsigned stack_bas
 
   cfree(SlotInfos);
 
+  // - create var_store object -
+  var_store_s *vs_ptr = (var_store_s *)cmalloc(sizeof(var_store_s));
+  vs_ptr->init();
+
+  vs_ptr->varstore = varstore;
+
+  // - set varstore slot name map -
+  vs_ptr->slot_name_map.swap(slot_name_map);
+  slot_name_map.clear();
+
   // - set destination data pointer -
-  dst_location->v_data_ptr = (VarStore *)new_vs_ptr;
+  dst_location->v_data_ptr = (var_store_s *)vs_ptr;
 
   return true;
 }/*}}}*/
@@ -3780,11 +3808,11 @@ bool bic_var_store_method_clear_slots_0(interpreter_thread_s &it,unsigned stack_
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve varstore pointer -
-  VarStore *vs_ptr = (VarStore *)dst_location->v_data_ptr;
+  VarStore *varstore = ((var_store_s *)dst_location->v_data_ptr)->varstore;
 
   // - retrieve varstore info -
   VarStore::StoreInfo vsInfo;
-  vs_ptr->GetStoreInfo(&vsInfo);
+  varstore->GetStoreInfo(&vsInfo);
 
   // - clear all varstore slots -
   int s_idx = 0;
@@ -3793,14 +3821,14 @@ bool bic_var_store_method_clear_slots_0(interpreter_thread_s &it,unsigned stack_
     VarStore::SlotInfo vssInfo;
 
     do {
-      vs_ptr->GetSlotInfo(s_idx,&vssInfo);
+      varstore->GetSlotInfo(s_idx,&vssInfo);
 
       if (vssInfo.nVars >= 1)
       {
         // - erase slot variables (all indexes) -
         int v_idx = 0;
         do {
-          vs_ptr->Write(s_idx,v_idx,c_zeroes,vssInfo.varSize,0,0,false);
+          varstore->Write(s_idx,v_idx,c_zeroes,vssInfo.varSize,0,0,false);
         } while(++v_idx < vssInfo.nVars);
       }
     } while(++s_idx < vsInfo.slots);
@@ -3820,10 +3848,10 @@ bool bic_var_store_method_first_idx_0(interpreter_thread_s &it,unsigned stack_ba
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  VarStore *vs_ptr = (VarStore *)dst_location->v_data_ptr;
+  VarStore *varstore = ((var_store_s *)dst_location->v_data_ptr)->varstore;
 
   VarStore::StoreInfo vsInfo;
-  vs_ptr->GetStoreInfo(&vsInfo);
+  varstore->GetStoreInfo(&vsInfo);
 
   if (vsInfo.slots > 0)
   {
@@ -3873,10 +3901,10 @@ bool bic_var_store_method_length_0(interpreter_thread_s &it,unsigned stack_base,
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  VarStore *vs_ptr = (VarStore *)dst_location->v_data_ptr;
+  VarStore *varstore = ((var_store_s *)dst_location->v_data_ptr)->varstore;
 
   VarStore::StoreInfo vsInfo;
-  vs_ptr->GetStoreInfo(&vsInfo);
+  varstore->GetStoreInfo(&vsInfo);
 
   long long int result = vsInfo.slots;
 
@@ -4022,10 +4050,10 @@ built_in_variable_s var_slot_variables[] =
 #define BIC_VAR_SLOT_CHECK_INDEX() \
   /*{{{*/\
   varstore_slot_s *vss_ptr = (varstore_slot_s *)dst_location->v_data_ptr;\
-  VarStore *vs_ptr = (VarStore *)vss_ptr->vs_ptr->v_data_ptr;\
+  VarStore *varstore = ((var_store_s *)vss_ptr->vs_ptr->v_data_ptr)->varstore;\
   \
   VarStore::SlotInfo vssInfo;\
-  vs_ptr->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);\
+  varstore->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);\
   \
   /* - ERROR - */\
   if (index < 0 || index >= vssInfo.nVars) {\
@@ -4068,55 +4096,55 @@ built_in_variable_s var_slot_variables[] =
       case TBOOL:\
       {\
         unsigned char data = value;\
-        vs_ptr->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
+        varstore->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
       }\
       break;\
       case TSINT:\
       {\
         signed char data = value;\
-        vs_ptr->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
+        varstore->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
       }\
       break;\
       case TINT:\
       {\
         short data = value;\
-        vs_ptr->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
+        varstore->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
       }\
       break;\
       case TDINT:\
       {\
         int data = value;\
-        vs_ptr->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
+        varstore->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
       }\
       break;\
       case TLINT:\
       {\
         long long int data = value;\
-        vs_ptr->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
+        varstore->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
       }\
       break;\
       case TUSINT:\
       {\
         unsigned char data = value;\
-        vs_ptr->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
+        varstore->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
       }\
       break;\
       case TUINT:\
       {\
         unsigned short data = value;\
-        vs_ptr->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
+        varstore->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
       }\
       break;\
       case TUDINT:\
       {\
         unsigned data = value;\
-        vs_ptr->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
+        varstore->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
       }\
       break;\
       case TULINT:\
       {\
         long long unsigned data = value;\
-        vs_ptr->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
+        varstore->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
       }\
       break;\
       }\
@@ -4142,13 +4170,13 @@ built_in_variable_s var_slot_variables[] =
       case TREAL:\
       {\
         float data = value;\
-        vs_ptr->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
+        varstore->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
       }\
       break;\
       case TLREAL:\
       {\
         double data = value;\
-        vs_ptr->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
+        varstore->Write(vss_ptr->slot_idx,INDEX,&data,size,0,0,false);\
       }\
       break;\
       }\
@@ -4179,7 +4207,7 @@ built_in_variable_s var_slot_variables[] =
       data[0] = string_ptr->size - 1;\
       memcpy(data + 1,string_ptr->data,string_ptr->size);\
       \
-      vs_ptr->Write(vss_ptr->slot_idx,INDEX,data,string_ptr->size,0,0,false);\
+      varstore->Write(vss_ptr->slot_idx,INDEX,data,string_ptr->size,0,0,false);\
     }\
     break;\
     \
@@ -4313,7 +4341,7 @@ built_in_variable_s var_slot_variables[] =
           break;\
         }\
         \
-        vs_ptr->WriteBlock(vss_ptr->slot_idx,0,count,buffer,count*size,0,0,false);\
+        varstore->WriteBlock(vss_ptr->slot_idx,0,count,buffer,count*size,0,0,false);\
         cfree(buffer);\
       }\
       break;\
@@ -4342,7 +4370,7 @@ built_in_variable_s var_slot_variables[] =
           break;\
         }\
         \
-        vs_ptr->WriteBlock(vss_ptr->slot_idx,0,count,buffer,count*size,0,0,false);\
+        varstore->WriteBlock(vss_ptr->slot_idx,0,count,buffer,count*size,0,0,false);\
         cfree(buffer);\
       }\
       break;\
@@ -4380,7 +4408,7 @@ built_in_variable_s var_slot_variables[] =
           \
         } while(++p_ptr,(ptr += size) < ptr_end);\
         \
-        vs_ptr->WriteBlock(vss_ptr->slot_idx,0,count,buffer,count*size,0,0,false);\
+        varstore->WriteBlock(vss_ptr->slot_idx,0,count,buffer,count*size,0,0,false);\
         \
         cfree(buffer);\
       }\
@@ -4417,14 +4445,14 @@ built_in_variable_s var_slot_variables[] =
       case TBOOL:\
       {\
         unsigned char data;\
-        vs_ptr->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
+        varstore->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
         result = data & 0x01;\
       }\
       break;\
       case TSINT:\
       {\
         signed char data;\
-        vs_ptr->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
+        varstore->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
         \
         result = data;\
       }\
@@ -4432,49 +4460,49 @@ built_in_variable_s var_slot_variables[] =
       case TINT:\
       {\
         short data;\
-        vs_ptr->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
+        varstore->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
         result = data;\
       }\
       break;\
       case TDINT:\
       {\
         int data;\
-        vs_ptr->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
+        varstore->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
         result = data;\
       }\
       break;\
       case TLINT:\
       {\
         long long int data;\
-        vs_ptr->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
+        varstore->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
         result = data;\
       }\
       break;\
       case TUSINT:\
       {\
         unsigned char data;\
-        vs_ptr->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
+        varstore->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
         result = data;\
       }\
       break;\
       case TUINT:\
       {\
         unsigned short data;\
-        vs_ptr->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
+        varstore->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
         result = data;\
       }\
       break;\
       case TUDINT:\
       {\
         unsigned data;\
-        vs_ptr->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
+        varstore->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
         result = data;\
       }\
       break;\
       case TULINT:\
       {\
         long long unsigned data;\
-        vs_ptr->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
+        varstore->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
         result = data;\
       }\
       break;\
@@ -4494,14 +4522,14 @@ built_in_variable_s var_slot_variables[] =
       case TREAL:\
       {\
         float data;\
-        vs_ptr->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
+        varstore->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
         result = data;\
       }\
       break;\
       case TLREAL:\
       {\
         double data;\
-        vs_ptr->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
+        varstore->Read(vss_ptr->slot_idx,INDEX,&data,size,0,0);\
         result = data;\
       }\
       break;\
@@ -4514,7 +4542,7 @@ built_in_variable_s var_slot_variables[] =
     case TSTRING:\
     {\
       char data[c_vs_max_str_size];\
-      vs_ptr->Read(vss_ptr->slot_idx,INDEX,data,size,0,0);\
+      varstore->Read(vss_ptr->slot_idx,INDEX,data,size,0,0);\
       \
       string_s *string_ptr = it.get_new_string_ptr();\
       string_ptr->set(data[0],data + 1);\
@@ -4576,7 +4604,7 @@ built_in_variable_s var_slot_variables[] =
       pointer_array_s *array_ptr = it.get_new_array_ptr();\
       \
       void *buffer = cmalloc(count*size);\
-      vs_ptr->ReadBlock(vss_ptr->slot_idx,0,count,buffer,count*size,0,0);\
+      varstore->ReadBlock(vss_ptr->slot_idx,0,count,buffer,count*size,0,0);\
       \
       switch (vssInfo.varType)\
       {\
@@ -4622,7 +4650,7 @@ built_in_variable_s var_slot_variables[] =
       pointer_array_s *array_ptr = it.get_new_array_ptr();\
       \
       void *buffer = cmalloc(count*size);\
-      vs_ptr->ReadBlock(vss_ptr->slot_idx,0,count,buffer,count*size,0,0);\
+      varstore->ReadBlock(vss_ptr->slot_idx,0,count,buffer,count*size,0,0);\
       \
       switch (vssInfo.varType)\
       {\
@@ -4646,7 +4674,7 @@ built_in_variable_s var_slot_variables[] =
       pointer_array_s *array_ptr = it.get_new_array_ptr();\
       \
       char *buffer = (char *)cmalloc(count*size*sizeof(char));\
-      vs_ptr->ReadBlock(vss_ptr->slot_idx,0,count,buffer,count*size*sizeof(char),0,0);\
+      varstore->ReadBlock(vss_ptr->slot_idx,0,count,buffer,count*size*sizeof(char),0,0);\
       \
       char *ptr = buffer;\
       char *ptr_end = ptr + count*size;\
@@ -4756,10 +4784,10 @@ bool bic_var_slot_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli
 
   // - retrieve varstore slot, and varstore pointers -
   varstore_slot_s *vss_ptr = (varstore_slot_s *)dst_location->v_data_ptr;
-  VarStore *vs_ptr = (VarStore *)vss_ptr->vs_ptr->v_data_ptr;
+  VarStore *varstore = ((var_store_s *)vss_ptr->vs_ptr->v_data_ptr)->varstore;
 
   VarStore::SlotInfo vssInfo;
-  vs_ptr->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);
+  varstore->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);
 
   // - copy varstore slot name to target string -
   string_s *string_ptr = it.get_new_string_ptr();
@@ -4782,10 +4810,10 @@ bool bic_var_slot_method_varType_0(interpreter_thread_s &it,unsigned stack_base,
 
   // - retrieve varstore slot, and varstore pointers -
   varstore_slot_s *vss_ptr = (varstore_slot_s *)dst_location->v_data_ptr;
-  VarStore *vs_ptr = (VarStore *)vss_ptr->vs_ptr->v_data_ptr;
+  VarStore *varstore = ((var_store_s *)vss_ptr->vs_ptr->v_data_ptr)->varstore;
 
   VarStore::SlotInfo vssInfo;
-  vs_ptr->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);
+  varstore->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);
 
   // - retrieve varstore slot variable type -
   long long int result = vssInfo.varType;
@@ -4801,10 +4829,10 @@ bool bic_var_slot_method_varSize_0(interpreter_thread_s &it,unsigned stack_base,
 
   // - retrieve varstore slot, and varstore pointers -
   varstore_slot_s *vss_ptr = (varstore_slot_s *)dst_location->v_data_ptr;
-  VarStore *vs_ptr = (VarStore *)vss_ptr->vs_ptr->v_data_ptr;
+  VarStore *varstore = ((var_store_s *)vss_ptr->vs_ptr->v_data_ptr)->varstore;
 
   VarStore::SlotInfo vssInfo;
-  vs_ptr->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);
+  varstore->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);
 
   // - retrieve varstore slot variable size -
   long long int result = vssInfo.varSize;
@@ -4820,16 +4848,16 @@ bool bic_var_slot_method_clear_0(interpreter_thread_s &it,unsigned stack_base,ul
 
   // - retrieve varstore slot, and varstore pointers -
   varstore_slot_s *vss_ptr = (varstore_slot_s *)dst_location->v_data_ptr;
-  VarStore *vs_ptr = (VarStore *)vss_ptr->vs_ptr->v_data_ptr;
+  VarStore *varstore = ((var_store_s *)vss_ptr->vs_ptr->v_data_ptr)->varstore;
 
   VarStore::SlotInfo vssInfo;
-  vs_ptr->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);
+  varstore->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);
 
   if (vssInfo.nVars >= 1)
   {
     int idx = 0;
     do {
-      vs_ptr->Write(vss_ptr->slot_idx,idx,c_zeroes,vssInfo.varSize,0,0,false);
+      varstore->Write(vss_ptr->slot_idx,idx,c_zeroes,vssInfo.varSize,0,0,false);
     } while(++idx < vssInfo.nVars);
   }
 
@@ -4845,10 +4873,10 @@ bool bic_var_slot_method_write_1(interpreter_thread_s &it,unsigned stack_base,ul
 
   // - retrieve varstore slot, and varstore pointers -
   varstore_slot_s *vss_ptr = (varstore_slot_s *)dst_location->v_data_ptr;
-  VarStore *vs_ptr = (VarStore *)vss_ptr->vs_ptr->v_data_ptr;
+  VarStore *varstore = ((var_store_s *)vss_ptr->vs_ptr->v_data_ptr)->varstore;
 
   VarStore::SlotInfo vssInfo;
-  vs_ptr->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);
+  varstore->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);
 
   if (vssInfo.nVars == 1)
   {
@@ -4899,10 +4927,10 @@ bool bic_var_slot_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli
 
   // - retrieve varstore slot, and varstore pointers -
   varstore_slot_s *vss_ptr = (varstore_slot_s *)dst_location->v_data_ptr;
-  VarStore *vs_ptr = (VarStore *)vss_ptr->vs_ptr->v_data_ptr;
+  VarStore *varstore = ((var_store_s *)vss_ptr->vs_ptr->v_data_ptr)->varstore;
 
   VarStore::SlotInfo vssInfo;
-  vs_ptr->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);
+  varstore->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);
 
   if (vssInfo.nVars == 1)
   {
@@ -4931,10 +4959,10 @@ bool bic_var_slot_method_first_idx_0(interpreter_thread_s &it,unsigned stack_bas
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   varstore_slot_s *vss_ptr = (varstore_slot_s *)dst_location->v_data_ptr;
-  VarStore *vs_ptr = (VarStore *)vss_ptr->vs_ptr->v_data_ptr;
+  VarStore *varstore = ((var_store_s *)vss_ptr->vs_ptr->v_data_ptr)->varstore;
 
   VarStore::SlotInfo vssInfo;
-  vs_ptr->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);
+  varstore->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);
 
   if (vssInfo.nVars > 0)
   {
@@ -4985,10 +5013,10 @@ bool bic_var_slot_method_length_0(interpreter_thread_s &it,unsigned stack_base,u
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   varstore_slot_s *vss_ptr = (varstore_slot_s *)dst_location->v_data_ptr;
-  VarStore *vs_ptr = (VarStore *)vss_ptr->vs_ptr->v_data_ptr;
+  VarStore *varstore = ((var_store_s *)vss_ptr->vs_ptr->v_data_ptr)->varstore;
 
   VarStore::SlotInfo vssInfo;
-  vs_ptr->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);
+  varstore->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);
 
   long long int result = vssInfo.nVars;
 

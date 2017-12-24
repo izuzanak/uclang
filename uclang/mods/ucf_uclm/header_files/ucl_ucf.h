@@ -60,6 +60,19 @@ struct ucf_log_s
 };
 
 /*
+ * definition of structure var_store_s
+ */
+
+struct var_store_s
+{
+  VarStore *varstore;
+  string_rb_tree_s slot_name_map;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
  * definition of structure varstore_slot_s
  */
 
@@ -95,6 +108,28 @@ struct crc_s
   unsigned size;
   long long unsigned value;
 };
+
+/*
+ * inline methods of structure var_store_s
+ */
+
+inline void var_store_s::init()
+{/*{{{*/
+  varstore = nullptr;
+  slot_name_map.init();
+}/*}}}*/
+
+inline void var_store_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+  if (varstore != nullptr)
+  {
+    delete varstore;
+  }
+
+  slot_name_map.clear();
+
+  init();
+}/*}}}*/
 
 #endif
 
