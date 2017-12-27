@@ -10,6 +10,7 @@ include "ucl_http.h"
 extern unsigned c_bi_class_http_server;
 extern unsigned c_bi_class_http_conn;
 extern unsigned c_bi_class_http_resp;
+extern unsigned c_bi_class_http_post_proc;
 
 // - HTTP module -
 extern built_in_module_s module;
@@ -29,6 +30,10 @@ enum
   c_error_HTTP_RESP_UNKNOWN_DATA_SOURCE_IDENTIFIER,
   c_error_HTTP_RESP_CANNOT_READ_SOURCE_FILE,
   c_error_HTTP_RESP_CANNOT_ADD_HEADER_FOOTER,
+  c_error_HTTP_POST_PROC_BUFFER_TOO_SMALL,
+  c_error_HTTP_POST_PROC_WRONG_CALLBACK_DELEGATE,
+  c_error_HTTP_POST_PROC_CREATE_ERROR,
+  c_error_HTTP_POST_PROC_INTERNAL_ERROR,
 };
 
 // - HTTP error strings -
@@ -77,6 +82,7 @@ bool bic_http_conn_method_upload_data_0(interpreter_thread_s &it,unsigned stack_
 bool bic_http_conn_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_values_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_queue_response_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_http_conn_method_post_processor_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -96,6 +102,24 @@ bool bic_http_resp_method_add_header_2(interpreter_thread_s &it,unsigned stack_b
 bool bic_http_resp_method_add_footer_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_resp_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_resp_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class HTTP_POST_PROC -
+extern built_in_variable_s http_post_proc_variables[];
+extern built_in_method_s http_post_proc_methods[];
+extern built_in_class_s http_post_proc_class;
+
+void bic_http_post_proc_consts(location_array_s &const_locations);
+void bic_http_post_proc_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_http_post_proc_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_http_post_proc_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_http_post_proc_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_http_post_proc_method_process_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_http_post_proc_method_key_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_http_post_proc_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_http_post_proc_method_offset_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_http_post_proc_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_http_post_proc_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 

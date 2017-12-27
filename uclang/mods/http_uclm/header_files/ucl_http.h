@@ -78,6 +78,29 @@ struct http_conn_s
 };
 
 /*
+ * definition of structure http_post_proc_s
+ */
+
+struct http_post_proc_s
+{
+  interpreter_thread_s *it_ptr;
+  unsigned source_pos;
+  unsigned ret_code;
+
+  MHD_PostProcessor *post_proc;
+  location_s *user_data_ptr;
+  location_s *callback_dlg;
+
+  const char *key;
+  const char *data;
+  uint64_t offset;
+  size_t size;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
  * definition of global functions
  */
 
@@ -90,6 +113,10 @@ int conn_key_value_func (void *cls,enum MHD_ValueKind kind,
 
 void completed_func(void *cls,struct MHD_Connection *connection,
     void **con_cls,enum MHD_RequestTerminationCode toe);
+
+int post_proc_func(void *coninfo_cls,enum MHD_ValueKind kind,
+    const char *key,const char *filename,const char *content_type,
+    const char *transfer_encoding,const char *data,uint64_t off,size_t size);
 
 /*
  * inline methods of structure http_server_s
@@ -147,6 +174,38 @@ inline void http_conn_s::clear(interpreter_thread_s &it)
   if (user_data_ptr != nullptr)
   {
     it.release_location_ptr(user_data_ptr);
+  }
+
+  init();
+}/*}}}*/
+
+/*
+ * inline methods of structure http_post_proc_s
+ */
+
+inline void http_post_proc_s::init()
+{/*{{{*/
+  post_proc = nullptr;
+  user_data_ptr = nullptr;
+  callback_dlg = nullptr;
+}/*}}}*/
+
+inline void http_post_proc_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+  if (post_proc != nullptr)
+  {
+    MHD_destroy_post_processor(post_proc);
+  }
+
+  // - release user data location -
+  if (user_data_ptr != nullptr)
+  {
+    it.release_location_ptr(user_data_ptr);
+  }
+
+  if (callback_dlg != nullptr)
+  {
+    it.release_location_ptr(callback_dlg);
   }
 
   init();

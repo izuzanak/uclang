@@ -155,3 +155,33 @@ void completed_func(void *cls,struct MHD_Connection *connection,
   }
 }/*}}}*/
 
+int post_proc_func(void *coninfo_cls,enum MHD_ValueKind kind,
+    const char *key,const char *filename,const char *content_type,
+    const char *transfer_encoding,const char *data,uint64_t off,size_t size)
+{/*{{{*/
+  location_s *pp_location = (location_s *)coninfo_cls;
+  http_post_proc_s *pp_ptr = (http_post_proc_s *)pp_location->v_data_ptr;
+
+  interpreter_thread_s &it = *pp_ptr->it_ptr;
+  delegate_s *delegate_ptr = (delegate_s *)pp_ptr->callback_dlg->v_data_ptr;
+
+  // - update post processor properties -
+  pp_ptr->key = key;
+  pp_ptr->data = data;
+  pp_ptr->offset = off;
+  pp_ptr->size = size;
+
+  const unsigned param_cnt = 1;
+  pointer *param_data = (pointer *)&pp_location;
+
+  // - call delegate method -
+  location_s *trg_location = nullptr;
+  BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,pp_ptr->source_pos,
+    pp_ptr->ret_code = c_run_return_code_EXCEPTION;
+    return MHD_NO;
+  );
+  it.release_location_ptr(trg_location);
+
+  return MHD_YES;
+}/*}}}*/
+

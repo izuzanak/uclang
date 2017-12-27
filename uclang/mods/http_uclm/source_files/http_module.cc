@@ -7,15 +7,16 @@ include "http_module.h"
 unsigned c_bi_class_http_server = c_idx_not_exist;
 unsigned c_bi_class_http_conn = c_idx_not_exist;
 unsigned c_bi_class_http_resp = c_idx_not_exist;
+unsigned c_bi_class_http_post_proc = c_idx_not_exist;
 
 // - HTTP module -
 built_in_module_s module =
 {/*{{{*/
-  3,                     // Class count
+  4,                     // Class count
   http_classes,          // Classes
 
   0,                     // Error base index
-  9,                     // Error count
+  13,                    // Error count
   http_error_strings,    // Error strings
 
   http_initialize,       // Initialize function
@@ -28,6 +29,7 @@ built_in_class_s *http_classes[] =
   &http_server_class,
   &http_conn_class,
   &http_resp_class,
+  &http_post_proc_class,
 };/*}}}*/
 
 // - HTTP error strings -
@@ -42,6 +44,10 @@ const char *http_error_strings[] =
   "error_HTTP_RESP_UNKNOWN_DATA_SOURCE_IDENTIFIER",
   "error_HTTP_RESP_CANNOT_READ_SOURCE_FILE",
   "error_HTTP_RESP_CANNOT_ADD_HEADER_FOOTER",
+  "error_HTTP_POST_PROC_BUFFER_TOO_SMALL",
+  "error_HTTP_POST_PROC_WRONG_CALLBACK_DELEGATE",
+  "error_HTTP_POST_PROC_CREATE_ERROR",
+  "error_HTTP_POST_PROC_INTERNAL_ERROR",
 };/*}}}*/
 
 // - HTTP initialize -
@@ -57,6 +63,9 @@ bool http_initialize(script_parser_s &sp)
 
   // - initialize http_resp class identifier -
   c_bi_class_http_resp = class_base_idx++;
+
+  // - initialize http_post_proc class identifier -
+  c_bi_class_http_post_proc = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -130,6 +139,34 @@ bool http_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nCannot add header or footer to response\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_HTTP_POST_PROC_BUFFER_TOO_SMALL:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nHTTP post processor buffer is too small\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_HTTP_POST_PROC_WRONG_CALLBACK_DELEGATE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong type of delegate for HTTP post processor\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_HTTP_POST_PROC_CREATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while creating HTTP post processor\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_HTTP_POST_PROC_INTERNAL_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInternal error of HTTP post processor\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -546,7 +583,7 @@ built_in_class_s http_conn_class =
 {/*{{{*/
   "HttpConn",
   c_modifier_public | c_modifier_final,
-  12, http_conn_methods,
+  13, http_conn_methods,
   8 + 5, http_conn_variables,
   bic_http_conn_consts,
   bic_http_conn_init,
@@ -615,6 +652,11 @@ built_in_method_s http_conn_methods[] =
     "queue_response#2",
     c_modifier_public | c_modifier_final,
     bic_http_conn_method_queue_response_2
+  },
+  {
+    "post_processor#2",
+    c_modifier_public | c_modifier_final,
+    bic_http_conn_method_post_processor_2
   },
   {
     "to_string#0",
@@ -884,7 +926,7 @@ bool bic_http_conn_method_queue_response_2(interpreter_thread_s &it,unsigned sta
     return false;
   }
 
-  // - receive connection and response pointers -
+  // - retrieve connection and response pointers -
   http_conn_s *conn_ptr = (http_conn_s *)dst_location->v_data_ptr;
   MHD_Response *resp_ptr = (MHD_Response *)src_1_location->v_data_ptr;
 
@@ -899,6 +941,76 @@ bool bic_http_conn_method_queue_response_2(interpreter_thread_s &it,unsigned sta
   }
 
   BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_http_conn_method_post_processor_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  long long int buffer_size;
+
+  if (!it.retrieve_integer(src_0_location,buffer_size) ||
+      src_1_location->v_type != c_bi_class_delegate)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("post_processor#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  // - retrieve connection pointer -
+  http_conn_s *conn_ptr = (http_conn_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (buffer_size < 256)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_HTTP_POST_PROC_BUFFER_TOO_SMALL,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - retrieve delegate pointer -
+  delegate_s *delegate_ptr = (delegate_s *)src_1_location->v_data_ptr;
+
+  // - ERROR -
+  if (delegate_ptr->param_cnt != 1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_HTTP_POST_PROC_WRONG_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - create http_post_proc object -
+  http_post_proc_s *pp_ptr = (http_post_proc_s *)cmalloc(sizeof(http_post_proc_s));
+  pp_ptr->init();
+
+  BIC_CREATE_NEW_LOCATION(pp_location,c_bi_class_http_post_proc,pp_ptr);
+
+  // - create http post processor -
+  pp_ptr->post_proc = MHD_create_post_processor(conn_ptr->connection_ptr,
+    buffer_size,post_proc_func,pp_location);
+
+  // - ERROR -
+  if (pp_ptr->post_proc == nullptr)
+  {
+    it.release_location_ptr(pp_location);
+
+    exception_s::throw_exception(it,module.error_base + c_error_HTTP_POST_PROC_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
+  pp_ptr->user_data_ptr = (location_s *)it.blank_location;
+
+  src_1_location->v_reference_cnt.atomic_inc();
+  pp_ptr->callback_dlg = src_1_location;
+
+  BIC_SET_RESULT(pp_location);
 
   return true;
 }/*}}}*/
@@ -1363,6 +1475,222 @@ bool bic_http_resp_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 bool bic_http_resp_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   printf("HttpResp");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class HTTP_POST_PROC -
+built_in_class_s http_post_proc_class =
+{/*{{{*/
+  "HttpPostProc",
+  c_modifier_public | c_modifier_final,
+  8, http_post_proc_methods,
+  0, http_post_proc_variables,
+  bic_http_post_proc_consts,
+  bic_http_post_proc_init,
+  bic_http_post_proc_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s http_post_proc_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_http_post_proc_operator_binary_equal
+  },
+  {
+    "user_data#0",
+    c_modifier_public | c_modifier_final,
+    bic_http_post_proc_method_user_data_0
+  },
+  {
+    "process#1",
+    c_modifier_public | c_modifier_final,
+    bic_http_post_proc_method_process_1
+  },
+  {
+    "key#0",
+    c_modifier_public | c_modifier_final,
+    bic_http_post_proc_method_key_0
+  },
+  {
+    "data#0",
+    c_modifier_public | c_modifier_final,
+    bic_http_post_proc_method_data_0
+  },
+  {
+    "offset#0",
+    c_modifier_public | c_modifier_final,
+    bic_http_post_proc_method_offset_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_http_post_proc_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_http_post_proc_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s http_post_proc_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_http_post_proc_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_http_post_proc_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (http_post_proc_s *)nullptr;
+}/*}}}*/
+
+void bic_http_post_proc_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  http_post_proc_s *pp_ptr = (http_post_proc_s *)location_ptr->v_data_ptr;
+
+  if (pp_ptr != nullptr)
+  {
+    pp_ptr->clear(it);
+    cfree(pp_ptr);
+  }
+}/*}}}*/
+
+bool bic_http_post_proc_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_http_post_proc_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  http_post_proc_s *pp_ptr = (http_post_proc_s *)dst_location->v_data_ptr;
+
+  location_s *new_ref_location = it.get_new_reference(&pp_ptr->user_data_ptr);
+
+  BIC_SET_RESULT(new_ref_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_http_post_proc_method_process_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("process#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  // - retrieve post processor pointer -
+  http_post_proc_s *pp_ptr = (http_post_proc_s *)dst_location->v_data_ptr;
+  pp_ptr->it_ptr = &it;
+  pp_ptr->source_pos = operands[c_source_pos_idx];
+  pp_ptr->ret_code = c_run_return_code_OK;
+
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  int res = MHD_post_process(pp_ptr->post_proc,string_ptr->data,string_ptr->size - 1);
+
+  // - if exception occurred -
+  if (pp_ptr->ret_code == c_run_return_code_EXCEPTION)
+  {
+    return false;
+  }
+
+  // - ERROR -
+  if (res != MHD_YES)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_HTTP_POST_PROC_INTERNAL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_http_post_proc_method_key_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  http_post_proc_s *pp_ptr = (http_post_proc_s *)dst_location->v_data_ptr;
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->set(strlen(pp_ptr->key),pp_ptr->key);
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_http_post_proc_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  http_post_proc_s *pp_ptr = (http_post_proc_s *)dst_location->v_data_ptr;
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->set(pp_ptr->size,pp_ptr->data);
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_http_post_proc_method_offset_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = ((http_post_proc_s *)dst_location->v_data_ptr)->offset;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_http_post_proc_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("HttpPostProc"),"HttpPostProc");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_http_post_proc_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("HttpPostProc");
 
   BIC_SET_RESULT_BLANK();
 
