@@ -381,6 +381,7 @@ class UclVar
   static unsigned c_bi_mni_user_data_0;
   static unsigned c_bi_mni_values_1;
   static unsigned c_bi_mni_queue_response_2;
+  static unsigned c_bi_mni_post_processor_2;
   static unsigned c_bi_mni_HttpResp_1;
   static unsigned c_bi_mni_HttpResp_2;
   static unsigned c_bi_mni_add_header_2;
@@ -537,6 +538,8 @@ class UclVar
   static unsigned c_bi_mni_reduce_3;
   static unsigned c_bi_mni_filter_2;
   static unsigned c_bi_mni_zip_1;
+  static unsigned c_bi_mni_tuple_zip_1;
+  static unsigned c_bi_mni_Range_1;
   static unsigned c_bi_mni_Range_2;
   static unsigned c_bi_mni_Range_3;
   static unsigned c_bi_mni_create_nice_2;
@@ -720,7 +723,6 @@ class UclVar
   static unsigned c_bi_vni_TYPE_POST;
   static unsigned c_bi_vni_TYPE_PUT;
   static unsigned c_bi_vni_TYPE_TRACE;
-  static unsigned c_bi_vni_VALS_RESPONSE_HEADER;
   static unsigned c_bi_vni_VALS_HEADER;
   static unsigned c_bi_vni_VALS_COOKIE;
   static unsigned c_bi_vni_VALS_POSTDATA;
@@ -760,10 +762,7 @@ class UclVar
   static unsigned c_bi_vni_HTTP_GONE;
   static unsigned c_bi_vni_HTTP_LENGTH_REQUIRED;
   static unsigned c_bi_vni_HTTP_PRECONDITION_FAILED;
-  static unsigned c_bi_vni_HTTP_REQUEST_ENTITY_TOO_LARGE;
-  static unsigned c_bi_vni_HTTP_REQUEST_URI_TOO_LONG;
   static unsigned c_bi_vni_HTTP_UNSUPPORTED_MEDIA_TYPE;
-  static unsigned c_bi_vni_HTTP_REQUESTED_RANGE_NOT_SATISFIABLE;
   static unsigned c_bi_vni_HTTP_EXPECTATION_FAILED;
   static unsigned c_bi_vni_HTTP_UNPROCESSABLE_ENTITY;
   static unsigned c_bi_vni_HTTP_LOCKED;
@@ -2267,7 +2266,6 @@ class UclVar
     static UclVar TYPE_POST;
     static UclVar TYPE_PUT;
     static UclVar TYPE_TRACE;
-    static UclVar VALS_RESPONSE_HEADER;
     static UclVar VALS_HEADER;
     static UclVar VALS_COOKIE;
     static UclVar VALS_POSTDATA;
@@ -2330,10 +2328,7 @@ class UclVar
     static UclVar HTTP_GONE;
     static UclVar HTTP_LENGTH_REQUIRED;
     static UclVar HTTP_PRECONDITION_FAILED;
-    static UclVar HTTP_REQUEST_ENTITY_TOO_LARGE;
-    static UclVar HTTP_REQUEST_URI_TOO_LONG;
     static UclVar HTTP_UNSUPPORTED_MEDIA_TYPE;
-    static UclVar HTTP_REQUESTED_RANGE_NOT_SATISFIABLE;
     static UclVar HTTP_EXPECTATION_FAILED;
     static UclVar HTTP_UNPROCESSABLE_ENTITY;
     static UclVar HTTP_LOCKED;
@@ -3411,6 +3406,7 @@ class UclVar
     static unsigned c_bi_mi_reduce_3;
     static unsigned c_bi_mi_filter_2;
     static unsigned c_bi_mi_zip_1;
+    static unsigned c_bi_mi_tuple_zip_1;
     static unsigned c_bi_mi_to_string_0;
     static unsigned c_bi_mi_print_0;
 
@@ -3443,6 +3439,11 @@ class UclVar
     inline static UclVar zip(UclVar op_0)
     {/*{{{*/
       return __static_call_1(c_bi_mi_zip_1,op_0);
+    }/*}}}*/
+
+    inline static UclVar tuple_zip(UclVar op_0)
+    {/*{{{*/
+      return __static_call_1(c_bi_mi_tuple_zip_1,op_0);
     }/*}}}*/
 
     inline static UclVar to_string()
@@ -3510,6 +3511,11 @@ class UclVar
     }/*}}}*/
 
   };/*}}}*/
+
+  inline static UclVar Range(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_Range,c_bi_mni_Range_1,op_0);
+  }/*}}}*/
 
   inline static UclVar Range(UclVar op_0,UclVar op_1)
   {/*{{{*/
@@ -4613,6 +4619,11 @@ class UclVar
     return __call_2(c_bi_mni_queue_response_2,op_0,op_1);
   }/*}}}*/
 
+  inline UclVar post_processor(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_post_processor_2,op_0,op_1);
+  }/*}}}*/
+
   inline UclVar add_header(UclVar op_0,UclVar op_1)
   {/*{{{*/
     return __call_2(c_bi_mni_add_header_2,op_0,op_1);
@@ -5201,6 +5212,11 @@ class UclVar
   inline UclVar zip(UclVar op_0)
   {/*{{{*/
     return __call_1(c_bi_mni_zip_1,op_0);
+  }/*}}}*/
+
+  inline UclVar tuple_zip(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_tuple_zip_1,op_0);
   }/*}}}*/
 
   inline UclVar create_nice(UclVar op_0,UclVar op_1)

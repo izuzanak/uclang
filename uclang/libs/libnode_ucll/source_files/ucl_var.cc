@@ -319,6 +319,7 @@ unsigned UclVar::c_bi_mni_upload_data_0;
 unsigned UclVar::c_bi_mni_user_data_0;
 unsigned UclVar::c_bi_mni_values_1;
 unsigned UclVar::c_bi_mni_queue_response_2;
+unsigned UclVar::c_bi_mni_post_processor_2;
 unsigned UclVar::c_bi_mni_HttpResp_1;
 unsigned UclVar::c_bi_mni_HttpResp_2;
 unsigned UclVar::c_bi_mni_add_header_2;
@@ -475,6 +476,8 @@ unsigned UclVar::c_bi_mni_map_2;
 unsigned UclVar::c_bi_mni_reduce_3;
 unsigned UclVar::c_bi_mni_filter_2;
 unsigned UclVar::c_bi_mni_zip_1;
+unsigned UclVar::c_bi_mni_tuple_zip_1;
+unsigned UclVar::c_bi_mni_Range_1;
 unsigned UclVar::c_bi_mni_Range_2;
 unsigned UclVar::c_bi_mni_Range_3;
 unsigned UclVar::c_bi_mni_create_nice_2;
@@ -658,7 +661,6 @@ unsigned UclVar::c_bi_vni_TYPE_OPTIONS;
 unsigned UclVar::c_bi_vni_TYPE_POST;
 unsigned UclVar::c_bi_vni_TYPE_PUT;
 unsigned UclVar::c_bi_vni_TYPE_TRACE;
-unsigned UclVar::c_bi_vni_VALS_RESPONSE_HEADER;
 unsigned UclVar::c_bi_vni_VALS_HEADER;
 unsigned UclVar::c_bi_vni_VALS_COOKIE;
 unsigned UclVar::c_bi_vni_VALS_POSTDATA;
@@ -698,10 +700,7 @@ unsigned UclVar::c_bi_vni_HTTP_CONFLICT;
 unsigned UclVar::c_bi_vni_HTTP_GONE;
 unsigned UclVar::c_bi_vni_HTTP_LENGTH_REQUIRED;
 unsigned UclVar::c_bi_vni_HTTP_PRECONDITION_FAILED;
-unsigned UclVar::c_bi_vni_HTTP_REQUEST_ENTITY_TOO_LARGE;
-unsigned UclVar::c_bi_vni_HTTP_REQUEST_URI_TOO_LONG;
 unsigned UclVar::c_bi_vni_HTTP_UNSUPPORTED_MEDIA_TYPE;
-unsigned UclVar::c_bi_vni_HTTP_REQUESTED_RANGE_NOT_SATISFIABLE;
 unsigned UclVar::c_bi_vni_HTTP_EXPECTATION_FAILED;
 unsigned UclVar::c_bi_vni_HTTP_UNPROCESSABLE_ENTITY;
 unsigned UclVar::c_bi_vni_HTTP_LOCKED;
@@ -1042,6 +1041,7 @@ unsigned UclVar::Algo::c_bi_mi_map_2;
 unsigned UclVar::Algo::c_bi_mi_reduce_3;
 unsigned UclVar::Algo::c_bi_mi_filter_2;
 unsigned UclVar::Algo::c_bi_mi_zip_1;
+unsigned UclVar::Algo::c_bi_mi_tuple_zip_1;
 unsigned UclVar::Algo::c_bi_mi_to_string_0;
 unsigned UclVar::Algo::c_bi_mi_print_0;
 unsigned UclVar::Filter::c_bi_mi_map_2;
@@ -1245,7 +1245,6 @@ UclVar UclVar::HttpConn::TYPE_OPTIONS = UclVar(NO_INIT());
 UclVar UclVar::HttpConn::TYPE_POST = UclVar(NO_INIT());
 UclVar UclVar::HttpConn::TYPE_PUT = UclVar(NO_INIT());
 UclVar UclVar::HttpConn::TYPE_TRACE = UclVar(NO_INIT());
-UclVar UclVar::HttpConn::VALS_RESPONSE_HEADER = UclVar(NO_INIT());
 UclVar UclVar::HttpConn::VALS_HEADER = UclVar(NO_INIT());
 UclVar UclVar::HttpConn::VALS_COOKIE = UclVar(NO_INIT());
 UclVar UclVar::HttpConn::VALS_POSTDATA = UclVar(NO_INIT());
@@ -1285,10 +1284,7 @@ UclVar UclVar::HttpResp::HTTP_CONFLICT = UclVar(NO_INIT());
 UclVar UclVar::HttpResp::HTTP_GONE = UclVar(NO_INIT());
 UclVar UclVar::HttpResp::HTTP_LENGTH_REQUIRED = UclVar(NO_INIT());
 UclVar UclVar::HttpResp::HTTP_PRECONDITION_FAILED = UclVar(NO_INIT());
-UclVar UclVar::HttpResp::HTTP_REQUEST_ENTITY_TOO_LARGE = UclVar(NO_INIT());
-UclVar UclVar::HttpResp::HTTP_REQUEST_URI_TOO_LONG = UclVar(NO_INIT());
 UclVar UclVar::HttpResp::HTTP_UNSUPPORTED_MEDIA_TYPE = UclVar(NO_INIT());
-UclVar UclVar::HttpResp::HTTP_REQUESTED_RANGE_NOT_SATISFIABLE = UclVar(NO_INIT());
 UclVar UclVar::HttpResp::HTTP_EXPECTATION_FAILED = UclVar(NO_INIT());
 UclVar UclVar::HttpResp::HTTP_UNPROCESSABLE_ENTITY = UclVar(NO_INIT());
 UclVar UclVar::HttpResp::HTTP_LOCKED = UclVar(NO_INIT());
@@ -1640,6 +1636,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
 
   /*}}}*/
 
+
   // - retrieve method name indexes -
   /*{{{*/
 
@@ -1895,6 +1892,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_match_2,"match#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_match_from_2,"match_from#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_split_1,"split#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_replace_2,"replace#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
 #endif
@@ -2042,6 +2040,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_user_data_0,"user_data#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_values_1,"values#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_queue_response_2,"queue_response#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_post_processor_2,"post_processor#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_HttpResp_1,"HttpResp#1");
@@ -2458,6 +2457,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_reduce_3,"reduce#3");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_filter_2,"filter#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_zip_1,"zip#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_tuple_zip_1,"tuple_zip#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_map_2,"map#2");
@@ -2465,6 +2465,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_next_item_0,"next_item#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Range_1,"Range#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Range_2,"Range#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Range_3,"Range#3");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_next_item_0,"next_item#0");
@@ -2499,6 +2500,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
   }
 
   /*}}}*/
+
 
   // - retrieve variable name indexes -
   /*{{{*/
@@ -2725,7 +2727,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_POST,"TYPE_POST");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_PUT,"TYPE_PUT");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_TYPE_TRACE,"TYPE_TRACE");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_VALS_RESPONSE_HEADER,"VALS_RESPONSE_HEADER");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_VALS_HEADER,"VALS_HEADER");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_VALS_COOKIE,"VALS_COOKIE");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_VALS_POSTDATA,"VALS_POSTDATA");
@@ -2765,10 +2766,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_HTTP_GONE,"HTTP_GONE");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_HTTP_LENGTH_REQUIRED,"HTTP_LENGTH_REQUIRED");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_HTTP_PRECONDITION_FAILED,"HTTP_PRECONDITION_FAILED");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_HTTP_REQUEST_ENTITY_TOO_LARGE,"HTTP_REQUEST_ENTITY_TOO_LARGE");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_HTTP_REQUEST_URI_TOO_LONG,"HTTP_REQUEST_URI_TOO_LONG");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_HTTP_UNSUPPORTED_MEDIA_TYPE,"HTTP_UNSUPPORTED_MEDIA_TYPE");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_HTTP_REQUESTED_RANGE_NOT_SATISFIABLE,"HTTP_REQUESTED_RANGE_NOT_SATISFIABLE");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_HTTP_EXPECTATION_FAILED,"HTTP_EXPECTATION_FAILED");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_HTTP_UNPROCESSABLE_ENTITY,"HTTP_UNPROCESSABLE_ENTITY");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_HTTP_LOCKED,"HTTP_LOCKED");
@@ -2982,6 +2980,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
   }
 
   /*}}}*/
+
 
   // - retrieve static method indexes -
   /*{{{*/
@@ -3256,6 +3255,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Algo,c_bi_class_Algo,c_bi_mi_reduce_3,c_bi_mni_reduce_3);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Algo,c_bi_class_Algo,c_bi_mi_filter_2,c_bi_mni_filter_2);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Algo,c_bi_class_Algo,c_bi_mi_zip_1,c_bi_mni_zip_1);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Algo,c_bi_class_Algo,c_bi_mi_tuple_zip_1,c_bi_mni_tuple_zip_1);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Algo,c_bi_class_Algo,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Algo,c_bi_class_Algo,c_bi_mi_print_0,c_bi_mni_print_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Filter,c_bi_class_Filter,c_bi_mi_map_2,c_bi_mni_map_2);
@@ -3533,7 +3533,6 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(HttpConn,c_bi_class_HttpConn,TYPE_POST);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpConn,c_bi_class_HttpConn,TYPE_PUT);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpConn,c_bi_class_HttpConn,TYPE_TRACE);
-    UCLVAR_RETRIEVE_STATIC_CONST(HttpConn,c_bi_class_HttpConn,VALS_RESPONSE_HEADER);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpConn,c_bi_class_HttpConn,VALS_HEADER);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpConn,c_bi_class_HttpConn,VALS_COOKIE);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpConn,c_bi_class_HttpConn,VALS_POSTDATA);
@@ -3573,10 +3572,7 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,HTTP_GONE);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,HTTP_LENGTH_REQUIRED);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,HTTP_PRECONDITION_FAILED);
-    UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,HTTP_REQUEST_ENTITY_TOO_LARGE);
-    UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,HTTP_REQUEST_URI_TOO_LONG);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,HTTP_UNSUPPORTED_MEDIA_TYPE);
-    UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,HTTP_REQUESTED_RANGE_NOT_SATISFIABLE);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,HTTP_EXPECTATION_FAILED);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,HTTP_UNPROCESSABLE_ENTITY);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,HTTP_LOCKED);
