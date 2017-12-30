@@ -81,6 +81,7 @@ Some of implemented modules are:
 [`ruby`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/ruby_uclm),
 [`prolog`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/prolog_uclm),
 [`zlib`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/zlib_uclm),
+[`zip`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/zip_uclm),
 [`snappy`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/snappy_uclm),
 [`fuse`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/fuse_uclm),
 [`android`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/android_uclm)

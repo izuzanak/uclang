@@ -850,6 +850,11 @@ built_in_method_s zip_file_methods[] =
     bic_zip_file_operator_binary_equal
   },
   {
+    "close#0",
+    c_modifier_public | c_modifier_final,
+    bic_zip_file_method_close_0
+  },
+  {
     "read#0",
     c_modifier_public | c_modifier_final,
     bic_zip_file_method_read_0
@@ -858,11 +863,6 @@ built_in_method_s zip_file_methods[] =
     "read#1",
     c_modifier_public | c_modifier_final,
     bic_zip_file_method_read_1
-  },
-  {
-    "close#0",
-    c_modifier_public | c_modifier_final,
-    bic_zip_file_method_close_0
   },
   {
     "read_close#0",
@@ -1000,6 +1000,20 @@ bool bic_zip_file_operator_binary_equal(interpreter_thread_s &it,unsigned stack_
   return true;
 }/*}}}*/
 
+bool bic_zip_file_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  BIC_ZIP_FILE_RETRIEVE_FROM(dst_location);
+  BIC_ZIP_ARCHIVE_RETRIEVE_FROM(zf_ptr->archive_loc);
+
+  BIC_ZIP_FILE_METHOD_CLOSE_0();
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
 bool bic_zip_file_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -1062,20 +1076,6 @@ bool bic_zip_file_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
   BIC_SET_RESULT(new_location);
-
-  return true;
-}/*}}}*/
-
-bool bic_zip_file_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  BIC_ZIP_FILE_RETRIEVE_FROM(dst_location);
-  BIC_ZIP_ARCHIVE_RETRIEVE_FROM(zf_ptr->archive_loc);
-
-  BIC_ZIP_FILE_METHOD_CLOSE_0();
-
-  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

@@ -91,9 +91,9 @@ void bic_zip_file_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_zip_file_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_zip_file_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_zip_file_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_zip_file_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_zip_file_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_zip_file_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_zip_file_method_read_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_zip_file_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_zip_file_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
