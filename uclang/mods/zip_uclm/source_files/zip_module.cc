@@ -6,15 +6,16 @@ include "zip_module.h"
 // - ZIP indexes of built in classes -
 unsigned c_bi_class_zip_archive = c_idx_not_exist;
 unsigned c_bi_class_zip_index = c_idx_not_exist;
+unsigned c_bi_class_zip_file = c_idx_not_exist;
 
 // - ZIP module -
 built_in_module_s module =
 {/*{{{*/
-  2,                   // Class count
+  3,                   // Class count
   zip_classes,         // Classes
 
   0,                   // Error base index
-  2,                   // Error count
+  12,                  // Error count
   zip_error_strings,   // Error strings
 
   zip_initialize,      // Initialize function
@@ -26,13 +27,24 @@ built_in_class_s *zip_classes[] =
 {/*{{{*/
   &zip_archive_class,
   &zip_index_class,
+  &zip_file_class,
 };/*}}}*/
 
 // - ZIP error strings -
 const char *zip_error_strings[] =
 {/*{{{*/
   "error_ZIP_ARCHIVE_OPEN_ERROR",
+  "error_ZIP_ARCHIVE_CLOSE_ERROR",
   "error_ZIP_ARCHIVE_NOT_OPENED",
+  "error_ZIP_ARCHIVE_INDEX_EXCEEDS_RANGE",
+  "error_ZIP_ARCHIVE_FILE_NAME_NOT_FOUND",
+  "error_ZIP_INDEX_FILE_NAME_ERROR",
+  "error_ZIP_INDEX_FILE_STAT_ERROR",
+  "error_ZIP_FILE_OPEN_ERROR",
+  "error_ZIP_FILE_CLOSE_ERROR",
+  "error_ZIP_FILE_NOT_OPENED",
+  "error_ZIP_FILE_READ_NEGATIVE_BYTE_COUNT",
+  "error_ZIP_FILE_READ_ERROR",
 };/*}}}*/
 
 // - ZIP initialize -
@@ -45,6 +57,9 @@ bool zip_initialize(script_parser_s &sp)
 
   // - initialize zip_index class identifier -
   c_bi_class_zip_index = class_base_idx++;
+
+  // - initialize zip_file class identifier -
+  c_bi_class_zip_file = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -61,7 +76,14 @@ bool zip_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while opening zip archive: %s\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr,"\nCannot open zip archive: %s\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_ZIP_ARCHIVE_CLOSE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot close zip archive\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_ZIP_ARCHIVE_NOT_OPENED:
@@ -69,6 +91,69 @@ bool zip_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nZip archive is not opened\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_ZIP_ARCHIVE_INDEX_EXCEEDS_RANGE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nIndex %" HOST_LL_FORMAT "d exceeds zip archive range\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_ZIP_ARCHIVE_FILE_NAME_NOT_FOUND:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFile with name \"%s\" was not found in zip archive\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_ZIP_INDEX_FILE_NAME_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot retrieve name of zip file at index %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_ZIP_INDEX_FILE_STAT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot retrieve stats of zip file at index %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_ZIP_FILE_OPEN_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot open zip file at index %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_ZIP_FILE_CLOSE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot close zip file\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_ZIP_FILE_NOT_OPENED:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nZip file is not opened\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_ZIP_FILE_READ_NEGATIVE_BYTE_COUNT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot read %" HOST_LL_FORMAT "d bytes from zip file\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_ZIP_FILE_READ_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while reading from zip file\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -221,8 +306,9 @@ built_in_variable_s zip_archive_variables[] =
   /* - ERROR - */\
   if (index < 0 || index >= entry_cnt)\
   {\
-    /* FIXME TODO throw proper exception */\
-    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ZIP_ARCHIVE_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(index);\
+    \
     return false;\
   }\
 /*}}}*/
@@ -254,8 +340,7 @@ built_in_variable_s zip_archive_variables[] =
     /* - ERROR - */\
     if ((index = zip_name_locate(za_ptr,name_ptr->data,0)) == -1)\
     {\
-      /* FIXME TODO throw proper exception */\
-      BIC_TODO_ERROR(__FILE__,__LINE__);\
+      exception_s::throw_exception(it,module.error_base + c_error_ZIP_ARCHIVE_FILE_NAME_NOT_FOUND,operands[c_source_pos_idx],src_0_location);\
       return false;\
     }\
   }\
@@ -407,8 +492,7 @@ bool bic_zip_archive_method_close_0(interpreter_thread_s &it,unsigned stack_base
   // - ERROR -
   if (zip_close(za_ptr) != 0)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_ZIP_ARCHIVE_CLOSE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -526,7 +610,7 @@ built_in_class_s zip_index_class =
 {/*{{{*/
   "ZipIndex",
   c_modifier_public | c_modifier_final,
-  6, zip_index_methods,
+  7, zip_index_methods,
   0, zip_index_variables,
   bic_zip_index_consts,
   bic_zip_index_init,
@@ -565,6 +649,11 @@ built_in_method_s zip_index_methods[] =
     "size#0",
     c_modifier_public | c_modifier_final,
     bic_zip_index_method_size_0
+  },
+  {
+    "open#0",
+    c_modifier_public | c_modifier_final,
+    bic_zip_index_method_open_0
   },
   {
     "to_string#0",
@@ -638,8 +727,9 @@ bool bic_zip_index_method_name_0(interpreter_thread_s &it,unsigned stack_base,ul
   // - ERROR -
   if (name == nullptr)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ZIP_INDEX_FILE_NAME_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(zi_ptr->index);
+
     return false;
   }
 
@@ -665,14 +755,48 @@ bool bic_zip_index_method_size_0(interpreter_thread_s &it,unsigned stack_base,ul
   if (zip_stat_index(za_ptr,zi_ptr->index,0,&stat) != 0 ||
       (stat.valid & ZIP_STAT_SIZE) == 0)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ZIP_INDEX_FILE_STAT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(zi_ptr->index);
+
     return false;
   }
 
   long long int result = stat.size;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_zip_index_method_open_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  zip_index_s *zi_ptr = (zip_index_s *)dst_location->v_data_ptr;
+
+  BIC_ZIP_ARCHIVE_RETRIEVE_FROM(zi_ptr->archive_loc);
+
+  zip_file_t *file = zip_fopen_index(za_ptr,zi_ptr->index,0); 
+
+  // - ERROR -
+  if (file == nullptr)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ZIP_FILE_OPEN_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(zi_ptr->index);
+
+    return false;
+  }
+
+  // - create new zip file object -
+  zip_file_s *zf_ptr = (zip_file_s *)cmalloc(sizeof(zip_file_s));
+
+  zi_ptr->archive_loc->v_reference_cnt.atomic_inc();
+  zf_ptr->archive_loc = zi_ptr->archive_loc;
+
+  zf_ptr->file = file;
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_zip_file,zf_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
@@ -689,6 +813,295 @@ bool bic_zip_index_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 bool bic_zip_index_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   printf("ZipIndex");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class ZIP_FILE -
+built_in_class_s zip_file_class =
+{/*{{{*/
+  "ZipFile",
+  c_modifier_public | c_modifier_final,
+  7, zip_file_methods,
+  0, zip_file_variables,
+  bic_zip_file_consts,
+  bic_zip_file_init,
+  bic_zip_file_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s zip_file_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_zip_file_operator_binary_equal
+  },
+  {
+    "read#0",
+    c_modifier_public | c_modifier_final,
+    bic_zip_file_method_read_0
+  },
+  {
+    "read#1",
+    c_modifier_public | c_modifier_final,
+    bic_zip_file_method_read_1
+  },
+  {
+    "close#0",
+    c_modifier_public | c_modifier_final,
+    bic_zip_file_method_close_0
+  },
+  {
+    "read_close#0",
+    c_modifier_public | c_modifier_final,
+    bic_zip_file_method_read_close_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_zip_file_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_zip_file_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s zip_file_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+#define BIC_ZIP_FILE_RETRIEVE_FROM(LOCATION) \
+/*{{{*/\
+  zip_file_s *zf_ptr = (zip_file_s *)LOCATION->v_data_ptr;\
+  \
+  /* - ERROR - */\
+  if (zf_ptr == nullptr)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_ZIP_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+/*}}}*/
+
+#define BIC_ZIP_FILE_METHOD_READ_0() \
+/*{{{*/\
+  BIC_ZIP_FILE_RETRIEVE_FROM(dst_location);\
+  BIC_ZIP_ARCHIVE_RETRIEVE_FROM(zf_ptr->archive_loc);\
+\
+  const unsigned c_buffer_add = 1024;\
+\
+  /* - target data buffer - */\
+  bc_array_s data_buffer;\
+  data_buffer.init();\
+\
+  zip_int64_t read_cnt;\
+  do\
+  {\
+    unsigned old_used = data_buffer.used;\
+    data_buffer.push_blanks(c_buffer_add);\
+    read_cnt = zip_fread(zf_ptr->file,data_buffer.data + old_used,c_buffer_add);\
+  }\
+  while(read_cnt >= c_buffer_add);\
+\
+  /* - ERROR - */\
+  if (read_cnt == -1)\
+  {\
+    data_buffer.clear();\
+\
+    exception_s::throw_exception(it,module.error_base + c_error_ZIP_FILE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  data_buffer.used = (data_buffer.used - c_buffer_add) + read_cnt;\
+\
+  /* - was any data read from file - */\
+  if (data_buffer.used == 0)\
+  {\
+    data_buffer.clear();\
+\
+    BIC_SET_RESULT_BLANK();\
+  }\
+  else\
+  {\
+    data_buffer.push('\0');\
+\
+    /* - return data string - */\
+    string_s *string_ptr = it.get_new_string_ptr();\
+    string_ptr->data = data_buffer.data;\
+    string_ptr->size = data_buffer.used;\
+\
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);\
+    BIC_SET_RESULT(new_location);\
+  }\
+/*}}}*/
+
+#define BIC_ZIP_FILE_METHOD_CLOSE_0() \
+/*{{{*/\
+\
+  /* - ERROR - */\
+  if (zip_fclose(zf_ptr->file) != 0)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_ZIP_FILE_CLOSE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  zf_ptr->file = nullptr;\
+\
+  /* - release zip file object - */\
+  zf_ptr->clear(it);\
+  cfree(zf_ptr);\
+\
+  dst_location->v_data_ptr = (zip_file_s *)nullptr;\
+/*}}}*/
+
+void bic_zip_file_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_zip_file_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (zip_file_s *)nullptr;
+}/*}}}*/
+
+void bic_zip_file_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  zip_file_s *zf_ptr = (zip_file_s *)location_ptr->v_data_ptr;
+
+  if (zf_ptr != nullptr)
+  {
+    zf_ptr->clear(it);
+    cfree(zf_ptr);
+  }
+}/*}}}*/
+
+bool bic_zip_file_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_zip_file_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+ 
+  BIC_ZIP_FILE_METHOD_READ_0();
+
+  return true;
+}/*}}}*/
+
+bool bic_zip_file_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int byte_cnt;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,byte_cnt))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("read#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  BIC_ZIP_FILE_RETRIEVE_FROM(dst_location);
+  BIC_ZIP_ARCHIVE_RETRIEVE_FROM(zf_ptr->archive_loc);
+
+  // - ERROR -
+  if (byte_cnt < 0)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ZIP_FILE_READ_NEGATIVE_BYTE_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(byte_cnt);
+
+    return false;
+  }
+
+  // - target data string -
+  string_s data_string;
+  data_string.init();
+  data_string.create(byte_cnt);
+
+  unsigned read_cnt = zip_fread(zf_ptr->file,data_string.data,byte_cnt);
+
+  // - ERROR -
+  if (read_cnt < byte_cnt)
+  {
+    data_string.clear();
+
+    exception_s::throw_exception(it,module.error_base + c_error_ZIP_FILE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - return data string -
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->swap(data_string);
+  data_string.clear();
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_zip_file_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  BIC_ZIP_FILE_RETRIEVE_FROM(dst_location);
+  BIC_ZIP_ARCHIVE_RETRIEVE_FROM(zf_ptr->archive_loc);
+
+  BIC_ZIP_FILE_METHOD_CLOSE_0();
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_zip_file_method_read_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  BIC_ZIP_FILE_METHOD_READ_0();
+  BIC_ZIP_FILE_METHOD_CLOSE_0();
+
+  return true;
+}/*}}}*/
+
+bool bic_zip_file_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("ZipFile"),"ZipFile");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_zip_file_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("ZipFile");
 
   BIC_SET_RESULT_BLANK();
 
