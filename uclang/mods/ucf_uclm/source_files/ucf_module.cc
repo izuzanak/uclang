@@ -3570,8 +3570,7 @@ bool bic_var_store_method_VarStore_2(interpreter_thread_s &it,unsigned stack_bas
       // - insert slot name to slot name map -
       string_s tmp_name_str;
       tmp_name_str.data = vssInfo.name;
-      tmp_name_str.size = (vssInfo.name[c_vs_slot_info_name_size - 1] == '\0' ?
-        strlen(vssInfo.name) : c_vs_slot_info_name_size) + 1;
+      tmp_name_str.size = strnlen(vssInfo.name,c_vs_slot_info_name_size) + 1;
 
       slot_name_map.insert(tmp_name_str);
     }
