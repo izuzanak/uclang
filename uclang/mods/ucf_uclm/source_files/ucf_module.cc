@@ -4789,14 +4789,10 @@ bool bic_var_slot_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli
   varstore->GetSlotInfo(vss_ptr->slot_idx,&vssInfo);
 
   // - copy varstore slot name to target string -
+  unsigned name_length = strnlen(vssInfo.name,c_vs_slot_info_name_size);
+
   string_s *string_ptr = it.get_new_string_ptr();
-
-  unsigned name_length = c_vs_slot_info_name_size;
-  string_ptr->create(name_length);
-
-  memcpy(string_ptr->data,vssInfo.name,name_length);
-  string_ptr->data[name_length] = '\0';
-  string_ptr->size = strlen(string_ptr->data) + 1;
+  string_ptr->set(name_length,vssInfo.name);
 
   BIC_SET_RESULT_STRING(string_ptr);
 
