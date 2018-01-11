@@ -57,7 +57,6 @@ inline crypto_c::crypto_c()
 
   ERR_load_crypto_strings();
   OpenSSL_add_all_algorithms();
-  OPENSSL_config(nullptr);
 }/*}}}*/
 
 inline crypto_c::~crypto_c()
