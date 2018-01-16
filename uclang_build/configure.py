@@ -71,6 +71,7 @@ c_packages = [
   ["MOD_DDB"       ,"false"     ,[]],
   ["MOD_CONTAINERS","true"      ,[]],
   ["MOD_ALGORITHMS","true"      ,[]],
+  ["MOD_VALIDATOR" ,"true"      ,[]],
   ["MOD_BINBITS"   ,"true"      ,[]],
   ["MOD_GRAPH"     ,"true"      ,[]],
   ["MOD_JSON"      ,"true"      ,[]],

@@ -1,0 +1,400 @@
+
+@begin
+include "validator_module.h"
+@end
+
+// - VALIDATOR indexes of built in classes -
+unsigned c_bi_class_validator = c_idx_not_exist;
+
+// - VALIDATOR indexes of remote classes -
+unsigned c_rm_class_dict = c_idx_not_exist;
+
+// - VALIDATOR module -
+built_in_module_s module =
+{/*{{{*/
+  1,                         // Class count
+  validator_classes,         // Classes
+
+  0,                         // Error base index
+  9,                         // Error count
+  validator_error_strings,   // Error strings
+
+  validator_initialize,      // Initialize function
+  validator_print_exception, // Print exceptions function
+};/*}}}*/
+
+// - VALIDATOR classes -
+built_in_class_s *validator_classes[] =
+{/*{{{*/
+  &validator_class,
+};/*}}}*/
+
+// - VALIDATOR error strings -
+const char *validator_error_strings[] =
+{/*{{{*/
+  "error_VALIDATOR_DUMMY_ERROR",
+  "error_VALIDATOR_EXPECTED_DICT_AS_PROPERTIERS",
+  "error_VALIDATOR_EXPECTED_STRING_AS_PROPERTY_ID",
+  "error_VALIDATOR_EXPECTED_TYPE_AS_TYPE_ID",
+  "error_VALIDATOR_EXPECTED_INTEGER_AS_LENGTH",
+  "error_VALIDATOR_INVALID_PROPERTY",
+  "error_VALIDATOR_INVALID_VALUE_TYPE",
+  "error_VALIDATOR_INVALID_VALUE_LENGTH",
+  "error_VALIDATOR_INVALID_VALUE",
+};/*}}}*/
+
+// - VALIDATOR initialize -
+bool validator_initialize(script_parser_s &sp)
+{/*{{{*/
+  unsigned class_base_idx = sp.class_records.used - module.class_cnt;
+
+  // - initialize validator class identifier -
+  c_bi_class_validator = class_base_idx++;
+
+  // - retrieve remote dict class index -
+  c_rm_class_dict = sp.resolve_class_idx_by_name("Dict",c_idx_not_exist);
+
+  // - ERROR -
+  if (c_rm_class_dict == c_idx_not_exist)
+  {
+    sp.error_code.push(ei_module_cannot_find_remote_class);
+    sp.error_code.push(sp.module_names_positions[sp.module_idx].ui_first);
+    sp.error_code.push(sp.module_idx);
+
+    return false;
+  }
+
+  return true;
+}/*}}}*/
+
+// - VALIDATOR print exception -
+bool validator_print_exception(interpreter_s &it,exception_s &exception)
+{/*{{{*/
+  unsigned source_pos = GET_SRC_POS(exception.position);
+  source_s &source = it.sources[GET_SRC_IDX(exception.position)];
+
+  ui_array_s class_stack;
+  class_stack.init();
+
+  switch (exception.type - module.error_base)
+  {
+  case c_error_VALIDATOR_DUMMY_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nValidator dummy error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_VALIDATOR_EXPECTED_DICT_AS_PROPERTIERS:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nExpected Dict as value properties\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_VALIDATOR_EXPECTED_STRING_AS_PROPERTY_ID:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nExpected String as property identifier\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_VALIDATOR_EXPECTED_TYPE_AS_TYPE_ID:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nExpected Type as type identifier\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_VALIDATOR_EXPECTED_INTEGER_AS_LENGTH:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nExpected Integer as length\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_VALIDATOR_INVALID_PROPERTY:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nUnrecognized property \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_VALIDATOR_INVALID_VALUE_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid value type\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_VALIDATOR_INVALID_VALUE_LENGTH:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid value length\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_VALIDATOR_INVALID_VALUE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid value\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  default:
+    class_stack.clear();
+    return false;
+  }
+
+  class_stack.clear();
+
+  return true;
+}/*}}}*/
+
+// - class VALIDATOR -
+built_in_class_s validator_class =
+{/*{{{*/
+  "Validator",
+  c_modifier_public | c_modifier_final,
+  6, validator_methods,
+  0, validator_variables,
+  bic_validator_consts,
+  bic_validator_init,
+  bic_validator_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s validator_methods[] =
+{/*{{{*/
+  {
+    "Validator#1",
+    c_modifier_public | c_modifier_final,
+    bic_validator_method_Validator_1
+  },
+  {
+    "validate#2",
+    c_modifier_public | c_modifier_final,
+    bic_validator_method_validate_2
+  },
+  {
+    "value_stack#0",
+    c_modifier_public | c_modifier_final,
+    bic_validator_method_value_stack_0
+  },
+  {
+    "props_stack#0",
+    c_modifier_public | c_modifier_final,
+    bic_validator_method_props_stack_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_validator_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_validator_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s validator_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_validator_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_validator_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (validator_s *)nullptr;
+}/*}}}*/
+
+void bic_validator_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  validator_s *val_ptr = (validator_s *)location_ptr->v_data_ptr;
+
+  if (val_ptr != nullptr)
+  {
+    val_ptr->clear(it);
+    cfree(val_ptr);
+  }
+}/*}}}*/
+
+bool bic_validator_method_Validator_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type != c_rm_class_dict)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("Validator#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  // - create validator object -
+  validator_s *val_ptr = (validator_s *)cmalloc(sizeof(validator_s));
+  val_ptr->init();
+
+  src_0_location->v_reference_cnt.atomic_inc();
+  val_ptr->schema = src_0_location;
+
+  // - set validator destination location -
+  dst_location->v_data_ptr = (validator_s *)val_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_validator_method_validate_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("validate#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  validator_s *val_ptr = (validator_s *)dst_location->v_data_ptr;
+
+  pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)val_ptr->schema->v_data_ptr;
+  pointer_map_s search_map = {(pointer)src_0_location,nullptr};
+  unsigned index = tree_ptr->get_idx(search_map);
+
+  if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+  {
+    return false;
+  }
+
+  // - ERROR -
+  if (index == c_idx_not_exist)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  val_ptr->it_ptr = &it;
+  val_ptr->source_pos = operands[c_source_pos_idx];
+  val_ptr->error_base = module.error_base;
+
+  // - release value stack -
+  if (val_ptr->value_stack != nullptr)
+  {
+    it.release_location_ptr(val_ptr->value_stack);
+  }
+
+  // - release props stack -
+  if (val_ptr->props_stack != nullptr)
+  {
+    it.release_location_ptr(val_ptr->props_stack);
+  }
+
+  // - create value stack -
+  {
+    pointer_array_s *array_ptr = it.get_new_array_ptr();
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+    val_ptr->value_stack = new_location;
+  }
+
+  // - create props stack -
+  {
+    pointer_array_s *array_ptr = it.get_new_array_ptr();
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+    val_ptr->props_stack = new_location;
+  }
+
+  // - ERROR -
+  if (!val_ptr->validate_pair(src_1_location,it.get_location_value(tree_ptr->data[index].object.value)))
+  {
+    src_0_location->v_reference_cnt.atomic_inc();
+    ((pointer_array_s *)val_ptr->props_stack->v_data_ptr)->push(src_0_location);
+
+    // FIXME TODO reverse props and value stacks
+
+    return false;
+  }
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_validator_method_value_stack_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  location_s *value_stack = ((validator_s *)dst_location->v_data_ptr)->value_stack;
+
+  if (value_stack != nullptr)
+  {
+    value_stack->v_reference_cnt.atomic_inc();
+    BIC_SET_RESULT(value_stack);
+  }
+  else
+  {
+    BIC_SET_RESULT_BLANK();
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_validator_method_props_stack_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  location_s *props_stack = ((validator_s *)dst_location->v_data_ptr)->props_stack;
+
+  if (props_stack != nullptr)
+  {
+    props_stack->v_reference_cnt.atomic_inc();
+    BIC_SET_RESULT(props_stack);
+  }
+  else
+  {
+    BIC_SET_RESULT_BLANK();
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_validator_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("Validator"),"Validator");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_validator_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("Validator");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+

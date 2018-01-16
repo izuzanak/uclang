@@ -298,44 +298,55 @@ bool bic_pack_method_pack_1(interpreter_thread_s &it,unsigned stack_base,uli *op
     // - retrieve location from stack -
     location_s *location = it.get_location_value((location_s *)loc_stack.pop());
 
-    // - retrieve location class record -
-    class_record_s &class_record = ((interpreter_s *)it.interpreter_ptr)->class_records[location->v_type];
-
-    if (class_record.modifiers & c_modifier_built_in)
+    if (location->v_type == c_bi_class_type)
     {
-      // - ERROR -
-      if (class_record.bi_class_ptr->pack_caller == nullptr)
-      {
-        PACK_RELEASE();
+      // - translate class index to class position -
+      unsigned class_pos = class_pack.pack_class_name(it,(unsigned)location->v_data_ptr);
 
-        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_BUILT_IN_NOT_DEFINED_PACK,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        new_exception->params.push(location->v_type);
-
-        return false;
-      }
-
-      // - ERROR -
-      if (!class_record.bi_class_ptr->pack_caller(location,value_stream,loc_stack))
-      {
-        PACK_RELEASE();
-
-        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_ERROR_WHILE_PACKING_OBJECT,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        new_exception->params.push(location->v_type);
-
-        return false;
-      }
+      // - insert class identification to value stream -
+      value_stream.append(sizeof(unsigned),(const char *)&class_pos);
     }
     else
     {
-      // - ERROR -
-      if (!bi_object_pack(location,value_stream,loc_stack))
+      // - retrieve location class record -
+      class_record_s &class_record = ((interpreter_s *)it.interpreter_ptr)->class_records[location->v_type];
+
+      if (class_record.modifiers & c_modifier_built_in)
       {
-        PACK_RELEASE();
+        // - ERROR -
+        if (class_record.bi_class_ptr->pack_caller == nullptr)
+        {
+          PACK_RELEASE();
 
-        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_ERROR_WHILE_PACKING_OBJECT,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        new_exception->params.push(location->v_type);
+          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_BUILT_IN_NOT_DEFINED_PACK,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          new_exception->params.push(location->v_type);
 
-        return false;
+          return false;
+        }
+
+        // - ERROR -
+        if (!class_record.bi_class_ptr->pack_caller(location,value_stream,loc_stack))
+        {
+          PACK_RELEASE();
+
+          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_ERROR_WHILE_PACKING_OBJECT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          new_exception->params.push(location->v_type);
+
+          return false;
+        }
+      }
+      else
+      {
+        // - ERROR -
+        if (!bi_object_pack(location,value_stream,loc_stack))
+        {
+          PACK_RELEASE();
+
+          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_ERROR_WHILE_PACKING_OBJECT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          new_exception->params.push(location->v_type);
+
+          return false;
+        }
       }
     }
 
@@ -490,60 +501,83 @@ bool bic_pack_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,uli *
     // - retrieve location class record -
     class_record_s &class_record = ((interpreter_s *)it.interpreter_ptr)->class_records[class_idx];
 
-    if (class_record.modifiers & c_modifier_built_in)
+    if (class_idx == c_bi_class_type)
     {
       // - ERROR -
-      if (class_record.bi_class_ptr->unpack_caller == nullptr)
-      {
-        UNPACK_RELEASE();
+      UNPACK_ERROR_TEST(value_stream.used < sizeof(unsigned));
 
-        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_BUILT_IN_NOT_DEFINED_UNPACK,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        new_exception->params.push(class_idx);
+      // - retrieve class position -
+      unsigned class_pos;
+      value_stream.from_end(sizeof(unsigned),(char *)&class_pos,order_bytes);
 
-        return false;
-      }
-
-      // - construct new location -
-      BIC_CREATE_NEW_LOCATION(new_location,class_idx,0);
+      // - retrieve class index -
+      unsigned class_idx = class_unpack.get_class_idx(class_pos);
 
       // - ERROR -
-      if (!class_record.bi_class_ptr->unpack_caller(it,new_location,value_stream,loc_stack,order_bytes,operands[c_source_pos_idx]))
-      {
-        UNPACK_RELEASE();
+      UNPACK_ERROR_TEST(class_idx == c_idx_not_exist);
 
-        it.release_location_ptr(new_location);
-
-        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_ERROR_WHILE_UNPACKING_OBJECT,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        new_exception->params.push(class_idx);
-
-        return false;
-      }
+      // - construct new location -
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_type,class_idx);
 
       // - insert new location to location stack -
       loc_stack.push((pointer)new_location);
     }
     else
     {
-      // - construct new location -
-      BIC_CREATE_NEW_LOCATION(new_location,class_idx,0);
-
-      // - ERROR -
-      if (!bi_object_unpack(it,new_location,value_stream,loc_stack,order_bytes,operands[c_source_pos_idx]))
+      if (class_record.modifiers & c_modifier_built_in)
       {
-        UNPACK_RELEASE();
+        // - ERROR -
+        if (class_record.bi_class_ptr->unpack_caller == nullptr)
+        {
+          UNPACK_RELEASE();
 
-        it.release_location_ptr(new_location);
+          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_BUILT_IN_NOT_DEFINED_UNPACK,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          new_exception->params.push(class_idx);
 
-        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_ERROR_WHILE_UNPACKING_OBJECT,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        new_exception->params.push(class_idx);
+          return false;
+        }
 
-        return false;
+        // - construct new location -
+        BIC_CREATE_NEW_LOCATION(new_location,class_idx,0);
+
+        // - ERROR -
+        if (!class_record.bi_class_ptr->unpack_caller(it,new_location,value_stream,loc_stack,order_bytes,operands[c_source_pos_idx]))
+        {
+          UNPACK_RELEASE();
+
+          it.release_location_ptr(new_location);
+
+          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_ERROR_WHILE_UNPACKING_OBJECT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          new_exception->params.push(class_idx);
+
+          return false;
+        }
+
+        // - insert new location to location stack -
+        loc_stack.push((pointer)new_location);
       }
+      else
+      {
+        // - construct new location -
+        BIC_CREATE_NEW_LOCATION(new_location,class_idx,0);
 
-      // - insert new location to location stack -
-      loc_stack.push((pointer)new_location);
+        // - ERROR -
+        if (!bi_object_unpack(it,new_location,value_stream,loc_stack,order_bytes,operands[c_source_pos_idx]))
+        {
+          UNPACK_RELEASE();
+
+          it.release_location_ptr(new_location);
+
+          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_ERROR_WHILE_UNPACKING_OBJECT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          new_exception->params.push(class_idx);
+
+          return false;
+        }
+
+        // - insert new location to location stack -
+        loc_stack.push((pointer)new_location);
+      }
     }
-
   }
   while(value_stream.used != 0);
 

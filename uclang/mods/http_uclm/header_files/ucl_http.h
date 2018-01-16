@@ -185,6 +185,10 @@ inline void http_conn_s::clear(interpreter_thread_s &it)
 
 inline void http_post_proc_s::init()
 {/*{{{*/
+  it_ptr = nullptr;
+  source_pos = 0;
+  ret_code = c_run_return_code_OK;
+
   post_proc = nullptr;
   user_data_ptr = nullptr;
   callback_dlg = nullptr;
