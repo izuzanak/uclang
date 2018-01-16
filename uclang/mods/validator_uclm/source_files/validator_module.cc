@@ -32,7 +32,7 @@ built_in_class_s *validator_classes[] =
 // - VALIDATOR error strings -
 const char *validator_error_strings[] =
 {/*{{{*/
-  "error_VALIDATOR_ENTRY_IDENTIFIER_NOT_FOUND",
+  "error_VALIDATOR_ENTRY_NOT_FOUND",
   "error_VALIDATOR_WRONG_PROPERTIES_ARRAY_SIZE",
   "error_VALIDATOR_INVALID_PROPERTY_ID",
   "error_VALIDATOR_INVALID_PROPERTY_TYPE",
@@ -77,11 +77,11 @@ bool validator_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_VALIDATOR_ENTRY_IDENTIFIER_NOT_FOUND:
+  case c_error_VALIDATOR_ENTRY_NOT_FOUND:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nCannot found validation entry identifier \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr,"\nCannot find validation entry \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_VALIDATOR_WRONG_PROPERTIES_ARRAY_SIZE:
@@ -270,8 +270,11 @@ bool bic_validator_method_validate_2(interpreter_thread_s &it,unsigned stack_bas
   }
 
   validator_s *val_ptr = (validator_s *)dst_location->v_data_ptr;
-
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)val_ptr->schema->v_data_ptr;
+
+  tree_ptr->it_ptr = &it;
+  tree_ptr->source_pos = operands[c_source_pos_idx];
+
   pointer_map_s search_map = {(pointer)src_0_location,nullptr};
   unsigned index = tree_ptr->get_idx(search_map);
 
@@ -283,7 +286,7 @@ bool bic_validator_method_validate_2(interpreter_thread_s &it,unsigned stack_bas
   // - ERROR -
   if (index == c_idx_not_exist)
   {
-    exception_s::throw_exception(it,module.error_base + c_error_VALIDATOR_ENTRY_IDENTIFIER_NOT_FOUND,operands[c_source_pos_idx],src_0_location);
+    exception_s::throw_exception(it,module.error_base + c_error_VALIDATOR_ENTRY_NOT_FOUND,operands[c_source_pos_idx],src_0_location);
     return false;
   }
 
