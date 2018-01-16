@@ -24,9 +24,6 @@ const char *c_prop_names[c_prop_name_cnt] =
   "length >=",
   "regex",
   "items",
-  "opt-items",
-  "all-keys",
-  "all-items",
 };/*}}}*/
 
 // - validator global init object -
@@ -40,10 +37,10 @@ string_rb_tree_s validator_c::c_prop_map;
 
 #define BIC_VALIDATE_TODO_ERROR(FILE_NAME,LINE) \
 {/*{{{*/\
-  string_s *string_ptr = it_ptr->get_new_string_ptr();\
+  string_s *string_ptr = it.get_new_string_ptr();\
   string_ptr->set(strlen(FILE_NAME),FILE_NAME);\
   \
-  location_s *new_location = it_ptr->get_new_location_ptr();\
+  location_s *new_location = it.get_new_location_ptr();\
   new_location->v_type = c_bi_class_string;\
   new_location->v_reference_cnt.atomic_set(0);\
   new_location->v_data_ptr = string_ptr;\
@@ -52,36 +49,69 @@ string_rb_tree_s validator_c::c_prop_map;
   new_exception->params.push(LINE);\
 }/*}}}*/
 
+#define VALIDATOR_VALIDATE_PAIR_REFERENCE(VALUE,PROPS_REF,ERR_CODE) \
+{/*{{{*/\
+  \
+  /* FIXME TODO continue */\
+  cassert(0);\
+}/*}}}*/
+
+#define VALIDATOR_VALIDATE_PAIR_CALL(VALUE,PROPS,ERR_CODE) \
+{/*{{{*/\
+  if (PROPS->v_type == c_bi_class_string)\
+  {\
+    VALIDATOR_VALIDATE_PAIR_REFERENCE(VALUE,PROPS,ERR_CODE);\
+  }\
+  else\
+  {\
+    if (!validate_pair(VALUE,PROPS))\
+    {\
+      ERR_CODE;\
+    }\
+  }\
+}/*}}}*/
+
 bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
 {/*{{{*/
   interpreter_thread_s &it = *it_ptr;
 
   // - ERROR -
-  if (a_props->v_type != c_rm_class_dict)
+  if (a_props->v_type != c_bi_class_array)
   {
-    exception_s::throw_exception(it,error_base + c_error_VALIDATOR_EXPECTED_DICT_AS_PROPERTIERS,source_pos,(location_s *)it_ptr->blank_location);
+    exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_PROPERTY_TYPE,source_pos,(location_s *)it.blank_location);
     return false;
   }
 
-  pointer_map_tree_s *props_tree = (pointer_map_tree_s *)a_props->v_data_ptr;
+  pointer_array_s *props_array = (pointer_array_s *)a_props->v_data_ptr;
 
-  if (props_tree->root_idx != c_idx_not_exist)
+  // - ERROR -
+  if (props_array->used & 0x01)
   {
-    unsigned stack[props_tree->get_descent_stack_size()];
-    unsigned *stack_ptr = stack;
+    exception_s::throw_exception(it,error_base + c_error_VALIDATOR_WRONG_PROPERTIES_ARRAY_SIZE,source_pos,(location_s *)it.blank_location);
+    return false;
+  }
 
-    unsigned t_idx = props_tree->get_stack_min_value_idx(props_tree->root_idx,&stack_ptr);
+  if (props_array->used != 0)
+  {
+    pointer *prop_ptr = props_array->data;
+    pointer *prop_ptr_end = prop_ptr + props_array->used;
+
     do {
-      pointer_map_s &map = props_tree->data[t_idx].object;
 
       // - retrieve property key and value -
-      location_s *prop_key = (location_s *)map.key;
-      location_s *prop_value = (location_s *)it_ptr->get_location_value(map.value);
+      location_s *prop_key = it.get_location_value(prop_ptr[0]);
+      location_s *prop_value = it.get_location_value(prop_ptr[1]);
+
+#define VALIDATE_STACKS_PUSH_PROP_KEY() \
+/*{{{*/\
+  prop_key->v_reference_cnt.atomic_inc();\
+  ((pointer_array_s *)props_stack->v_data_ptr)->push(prop_key);\
+/*}}}*/
 
       // - ERROR -
       if (prop_key->v_type != c_bi_class_string)
       {
-        exception_s::throw_exception(it,error_base + c_error_VALIDATOR_EXPECTED_STRING_AS_PROPERTY_ID,source_pos,(location_s *)it_ptr->blank_location);
+        exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_PROPERTY_TYPE,source_pos,(location_s *)it.blank_location);
         return false;
       }
 
@@ -94,14 +124,18 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
         // - ERROR -
         if (prop_value->v_type != c_bi_class_type)
         {
-          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_EXPECTED_TYPE_AS_TYPE_ID,source_pos,(location_s *)it_ptr->blank_location);
+          VALIDATE_STACKS_PUSH_PROP_KEY();
+
+          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_PROPERTY_TYPE,source_pos,(location_s *)it.blank_location);
           return false;
         }
 
         // - ERROR -
         if (a_value->v_type != (unsigned)prop_value->v_data_ptr)
         {
-          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_VALUE_TYPE,source_pos,(location_s *)it_ptr->blank_location);
+          VALIDATE_STACKS_PUSH_PROP_KEY();
+
+          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_VALUE_TYPE,source_pos,(location_s *)it.blank_location);
           return false;
         }
       }/*}}}*/
@@ -142,7 +176,9 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
         // - ERROR -
         if (!ok)
         {
-          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_VALUE,source_pos,(location_s *)it_ptr->blank_location);
+          VALIDATE_STACKS_PUSH_PROP_KEY();
+
+          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_VALUE,source_pos,(location_s *)it.blank_location);
           return false;
         }
       }/*}}}*/
@@ -158,7 +194,7 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
         // - ERROR -
         if (prop_value->v_type != c_bi_class_integer)
         {
-          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_EXPECTED_INTEGER_AS_LENGTH,source_pos,(location_s *)it_ptr->blank_location);
+          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_PROPERTY_TYPE,source_pos,(location_s *)it.blank_location);
           return false;
         }
 
@@ -193,21 +229,144 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
         // - ERROR -
         if (!ok)
         {
-          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_VALUE_LENGTH,source_pos,(location_s *)it_ptr->blank_location);
+          VALIDATE_STACKS_PUSH_PROP_KEY();
+
+          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_VALUE_LENGTH,source_pos,(location_s *)it.blank_location);
           return false;
+        }
+      }/*}}}*/
+      break;
+      case prop_regex:
+      {/*{{{*/
+
+        // - ERROR -
+        if (prop_value->v_type != c_bi_class_string)
+        {
+          VALIDATE_STACKS_PUSH_PROP_KEY();
+
+          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_PROPERTY_TYPE,source_pos,(location_s *)it.blank_location);
+          return false;
+        }
+
+        // - ERROR -
+        if (a_value->v_type != c_bi_class_string)
+        {
+          VALIDATE_STACKS_PUSH_PROP_KEY();
+
+          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_VALUE_TYPE,source_pos,(location_s *)it.blank_location);
+          return false;
+        }
+
+        // - retrieve regular expression index -
+        string_s *string_ptr = (string_s *)prop_value->v_data_ptr;
+        unsigned regex_idx = regex_map.unique_insert(*string_ptr);
+
+        regex_t *regex_ptr;
+        if (regex_idx >= regex_list.used)
+        {
+          while (regex_list.used < regex_idx) regex_list.push(nullptr);
+
+          // - compile new regular expresion -
+          regex_ptr = (regex_t *)cmalloc(sizeof(regex_t));
+
+          // - ERROR -
+          if (regcomp(regex_ptr,string_ptr->data,0) != 0)
+          {
+            cfree(regex_ptr);
+
+            VALIDATE_STACKS_PUSH_PROP_KEY();
+
+            exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_REGULAR_EXPRESSION,source_pos,(location_s *)it.blank_location);
+            return false;
+          }
+
+          regex_list.push(regex_ptr);
+        }
+        else
+        {
+          regex_ptr = (regex_t *)regex_list[regex_idx];
+        }
+
+        // - ERROR -
+        regmatch_t regmatch;
+        if (regexec(regex_ptr,((string_s *)a_value->v_data_ptr)->data,1,&regmatch,0) != 0)
+        {
+          VALIDATE_STACKS_PUSH_PROP_KEY();
+
+          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_VALUE,source_pos,(location_s *)it.blank_location);
+          return false;
+        }
+      }/*}}}*/
+      break;
+      case prop_items:
+      {/*{{{*/
+        
+        // - ERROR -
+        if (prop_value->v_type != c_bi_class_array)
+        {
+          VALIDATE_STACKS_PUSH_PROP_KEY();
+
+          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_PROPERTY_TYPE,source_pos,(location_s *)it.blank_location);
+          return false;
+        }
+
+        pointer_array_s *item_array = (pointer_array_s *)prop_value->v_data_ptr;
+
+        // - ERROR -
+        if (item_array->used & 0x01)
+        {
+          VALIDATE_STACKS_PUSH_PROP_KEY();
+
+          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_WRONG_PROPERTIES_ARRAY_SIZE,source_pos,(location_s *)it.blank_location);
+          return false;
+        }
+
+        if (item_array->used != 0)
+        {
+          pointer *i_ptr = item_array->data;
+          pointer *i_ptr_end = i_ptr + item_array->used;
+          do {
+            location_s *item_key = it.get_location_value(i_ptr[0]);
+            location_s *item_props = it.get_location_value(i_ptr[1]);
+
+#define VALIDATE_STACKS_PUSH_ITEMS() \
+/*{{{*/\
+  item_key->v_reference_cnt.atomic_add(2);\
+  ((pointer_array_s *)value_stack->v_data_ptr)->push(item_key);\
+  ((pointer_array_s *)props_stack->v_data_ptr)->push(item_key);\
+  \
+  VALIDATE_STACKS_PUSH_PROP_KEY();\
+/*}}}*/
+
+            location_s *trg_location;
+            BIC_CALL_OPERATOR_BINARY_LE_BR_RE_BR(it,a_value,item_key,trg_location,source_pos,
+              VALIDATE_STACKS_PUSH_ITEMS();
+
+              return false;
+            );
+
+            VALIDATOR_VALIDATE_PAIR_CALL(it.get_location_value(trg_location),item_props,
+              it.release_location_ptr(trg_location);
+
+              VALIDATE_STACKS_PUSH_ITEMS();
+
+              return false;
+            );
+
+            it.release_location_ptr(trg_location);
+          } while((i_ptr += 2) < i_ptr_end);
         }
       }/*}}}*/
       break;
 
       // - ERROR -
       default:
+        VALIDATE_STACKS_PUSH_PROP_KEY();
 
-        exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_PROPERTY,source_pos,prop_key);
+        exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_PROPERTY_ID,source_pos,prop_key);
         return false;
       }
-
-      t_idx = props_tree->get_stack_next_idx(t_idx,&stack_ptr,stack);
-    } while(t_idx != c_idx_not_exist);
+    } while((prop_ptr += 2) < prop_ptr_end);
   }
 
   return true;

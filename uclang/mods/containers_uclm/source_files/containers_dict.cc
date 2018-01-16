@@ -691,7 +691,7 @@ bool bic_dict_method_Dict_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 }/*}}}*/
 
 bool bic_dict_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{
+{/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;
@@ -719,7 +719,7 @@ bool bic_dict_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *o
   BIC_SET_RESULT_DESTINATION();
 
   return true;
-}
+}/*}}}*/
 
 bool bic_dict_method_keys_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/

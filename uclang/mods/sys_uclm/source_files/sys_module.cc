@@ -4884,7 +4884,7 @@ built_in_class_s signal_class =
   2
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
-  + 34
+  + 33
 #endif
 
   , signal_variables,
@@ -4970,7 +4970,6 @@ built_in_variable_s signal_variables[] =
   { "SIGPOLL", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SIGPWR", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SIGSYS", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "SIGUNUSED", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SIGRTMIN", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SIGRTMAX", c_modifier_public | c_modifier_static | c_modifier_static_const },
 #endif
@@ -5026,7 +5025,6 @@ void bic_signal_consts(location_array_s &const_locations)
     CREATE_SIGNAL_NUMERAL_IDENTIFIER(SIGPOLL);
     CREATE_SIGNAL_NUMERAL_IDENTIFIER(SIGPWR);
     CREATE_SIGNAL_NUMERAL_IDENTIFIER(SIGSYS);
-    CREATE_SIGNAL_NUMERAL_IDENTIFIER(SIGUNUSED);
     CREATE_SIGNAL_NUMERAL_IDENTIFIER(SIGRTMIN);
     CREATE_SIGNAL_NUMERAL_IDENTIFIER(SIGRTMAX);
 #endif

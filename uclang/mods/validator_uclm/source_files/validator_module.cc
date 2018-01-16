@@ -16,7 +16,7 @@ built_in_module_s module =
   validator_classes,         // Classes
 
   0,                         // Error base index
-  9,                         // Error count
+  8,                         // Error count
   validator_error_strings,   // Error strings
 
   validator_initialize,      // Initialize function
@@ -32,12 +32,11 @@ built_in_class_s *validator_classes[] =
 // - VALIDATOR error strings -
 const char *validator_error_strings[] =
 {/*{{{*/
-  "error_VALIDATOR_DUMMY_ERROR",
-  "error_VALIDATOR_EXPECTED_DICT_AS_PROPERTIERS",
-  "error_VALIDATOR_EXPECTED_STRING_AS_PROPERTY_ID",
-  "error_VALIDATOR_EXPECTED_TYPE_AS_TYPE_ID",
-  "error_VALIDATOR_EXPECTED_INTEGER_AS_LENGTH",
-  "error_VALIDATOR_INVALID_PROPERTY",
+  "error_VALIDATOR_ENTRY_IDENTIFIER_NOT_FOUND",
+  "error_VALIDATOR_WRONG_PROPERTIES_ARRAY_SIZE",
+  "error_VALIDATOR_INVALID_PROPERTY_ID",
+  "error_VALIDATOR_INVALID_PROPERTY_TYPE",
+  "error_VALIDATOR_INVALID_REGULAR_EXPRESSION",
   "error_VALIDATOR_INVALID_VALUE_TYPE",
   "error_VALIDATOR_INVALID_VALUE_LENGTH",
   "error_VALIDATOR_INVALID_VALUE",
@@ -78,46 +77,39 @@ bool validator_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_VALIDATOR_DUMMY_ERROR:
+  case c_error_VALIDATOR_ENTRY_IDENTIFIER_NOT_FOUND:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nValidator dummy error\n");
+    fprintf(stderr,"\nCannot found validation entry identifier \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_VALIDATOR_EXPECTED_DICT_AS_PROPERTIERS:
+  case c_error_VALIDATOR_WRONG_PROPERTIES_ARRAY_SIZE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nExpected Dict as value properties\n");
+    fprintf(stderr,"\nWrong size of properties array\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_VALIDATOR_EXPECTED_STRING_AS_PROPERTY_ID:
+  case c_error_VALIDATOR_INVALID_PROPERTY_ID:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nExpected String as property identifier\n");
+    fprintf(stderr,"\nUnrecognized property identifier \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_VALIDATOR_EXPECTED_TYPE_AS_TYPE_ID:
+  case c_error_VALIDATOR_INVALID_PROPERTY_TYPE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nExpected Type as type identifier\n");
+    fprintf(stderr,"\nInvalid property type\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_VALIDATOR_EXPECTED_INTEGER_AS_LENGTH:
+  case c_error_VALIDATOR_INVALID_REGULAR_EXPRESSION:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nExpected Integer as length\n");
-    fprintf(stderr," ---------------------------------------- \n");
-    break;
-  case c_error_VALIDATOR_INVALID_PROPERTY:
-    fprintf(stderr," ---------------------------------------- \n");
-    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
-    print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nUnrecognized property \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr,"\nInvalid property regular expression\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_VALIDATOR_INVALID_VALUE_TYPE:
@@ -291,8 +283,7 @@ bool bic_validator_method_validate_2(interpreter_thread_s &it,unsigned stack_bas
   // - ERROR -
   if (index == c_idx_not_exist)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_VALIDATOR_ENTRY_IDENTIFIER_NOT_FOUND,operands[c_source_pos_idx],src_0_location);
     return false;
   }
 

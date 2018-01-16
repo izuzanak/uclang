@@ -931,5 +931,38 @@ enum
     IT.release_stack_from(new_stack_base);\
   }/*}}}*/
 
+#define BIC_CALL_OPERATOR_BINARY_LE_BR_RE_BR(IT,LOCATION_PTR,SRC_LOCATION_PTR,TRG_LOCATION_PTR,SOURCE_POS,ERR_CODE) \
+  {/*{{{*/\
+    unsigned new_stack_base = IT.data_stack.used;\
+    \
+    ((location_s *)IT.blank_location)->v_reference_cnt.atomic_inc();\
+    IT.data_stack.push(IT.blank_location);\
+    \
+    location_s *location = (location_s *)(LOCATION_PTR);\
+    location->v_reference_cnt.atomic_inc();\
+    IT.data_stack.push((pointer)location);\
+    \
+    location_s *src_location = (location_s *)(SRC_LOCATION_PTR);\
+    src_location->v_reference_cnt.atomic_inc();\
+    IT.data_stack.push((pointer)src_location);\
+    \
+    uli tmp_code[7] = {i_call,2,c_built_in_method_idxs[c_operator_binary_le_br_re_br],SOURCE_POS,0,1,2};\
+    \
+    if (!IT.call_method(tmp_code,new_stack_base))\
+    {\
+      IT.release_stack_from(new_stack_base);\
+      \
+      ERR_CODE;\
+    }\
+    \
+    /* - get result value - */\
+    location_s *ret_location = (location_s *)IT.data_stack[new_stack_base];\
+    \
+    ret_location->v_reference_cnt.atomic_inc();\
+    TRG_LOCATION_PTR = ret_location;\
+    \
+    IT.release_stack_from(new_stack_base);\
+  }/*}}}*/
+
 #endif
 

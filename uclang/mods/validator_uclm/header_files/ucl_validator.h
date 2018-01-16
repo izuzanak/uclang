@@ -6,13 +6,15 @@
 include "script_parser.h"
 @end
 
+#include <regex.h>
+
 /*
  * basic definitions and constants
  */
 
 extern unsigned c_rm_class_dict;
 
-const unsigned c_prop_name_cnt = 18;
+const unsigned c_prop_name_cnt = 15;
 extern const char *c_prop_names[c_prop_name_cnt];
 
 enum {
@@ -31,20 +33,16 @@ enum {
   prop_length_greater_equal,
   prop_regex,
   prop_items,
-  prop_opt_items,
-  prop_all_keys,
-  prop_all_items,
 };
 
 // - VALIDATOR error identifiers -
 enum
 {
-  c_error_VALIDATOR_DUMMY_ERROR = 0,
-  c_error_VALIDATOR_EXPECTED_DICT_AS_PROPERTIERS,
-  c_error_VALIDATOR_EXPECTED_STRING_AS_PROPERTY_ID,
-  c_error_VALIDATOR_EXPECTED_TYPE_AS_TYPE_ID,
-  c_error_VALIDATOR_EXPECTED_INTEGER_AS_LENGTH,
-  c_error_VALIDATOR_INVALID_PROPERTY,
+  c_error_VALIDATOR_ENTRY_IDENTIFIER_NOT_FOUND = 0,
+  c_error_VALIDATOR_WRONG_PROPERTIES_ARRAY_SIZE,
+  c_error_VALIDATOR_INVALID_PROPERTY_ID,
+  c_error_VALIDATOR_INVALID_PROPERTY_TYPE,
+  c_error_VALIDATOR_INVALID_REGULAR_EXPRESSION,
   c_error_VALIDATOR_INVALID_VALUE_TYPE,
   c_error_VALIDATOR_INVALID_VALUE_LENGTH,
   c_error_VALIDATOR_INVALID_VALUE,
@@ -77,6 +75,9 @@ struct validator_s
   location_s *schema;
   location_s *value_stack;
   location_s *props_stack;
+
+  string_rb_tree_s regex_map;
+  pointer_array_s regex_list;
 
   bool validate_pair(location_s *a_value,location_s *a_props);
 
@@ -121,6 +122,9 @@ inline void validator_s::init()
   schema = nullptr;
   value_stack = nullptr;
   props_stack = nullptr;
+
+  regex_map.init();
+  regex_list.init();
 }/*}}}*/
 
 inline void validator_s::clear(interpreter_thread_s &it)
@@ -139,6 +143,26 @@ inline void validator_s::clear(interpreter_thread_s &it)
   {
     it.release_location_ptr(props_stack);
   }
+
+  regex_map.clear();
+
+  // - release regular expressions -
+  if (regex_list.used != 0)
+  {
+    pointer *r_ptr = regex_list.data;
+    pointer *r_ptr_end = r_ptr + regex_list.used;
+    do {
+      
+      // - if regular expression exist -
+      if (*r_ptr != nullptr)
+      {
+        regfree((regex_t *)*r_ptr);
+        cfree(*r_ptr);
+      }
+    } while(++r_ptr < r_ptr_end);
+  }
+
+  regex_list.clear();
 
   init();
 }/*}}}*/
