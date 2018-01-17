@@ -16,7 +16,7 @@ built_in_module_s module =
   http_classes,          // Classes
 
   0,                     // Error base index
-  13,                    // Error count
+  15,                    // Error count
   http_error_strings,    // Error strings
 
   http_initialize,       // Initialize function
@@ -39,6 +39,8 @@ const char *http_error_strings[] =
   "error_HTTP_SERVER_CANNOT_START_DAEMON",
   "error_HTTP_SERVER_INTERNAL_ERROR",
   "error_HTTP_CONN_UNKNOWN_VALUES_TYPE",
+  "error_HTTP_CONN_ALREADY_SUSPENDED",
+  "error_HTTP_CONN_NOT_SUSPENDED",
   "error_HTTP_CONN_CANNOT_QUEUE_RESPONSE",
   "error_HTTP_RESP_CREATE_ERROR",
   "error_HTTP_RESP_UNKNOWN_DATA_SOURCE_IDENTIFIER",
@@ -104,6 +106,20 @@ bool http_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nUnknown type of requested HTTP connection values\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_HTTP_CONN_ALREADY_SUSPENDED:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nHTTP connection is already suspended\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_HTTP_CONN_NOT_SUSPENDED:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nHTTP connection is not suspended\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_HTTP_CONN_CANNOT_QUEUE_RESPONSE:
@@ -319,7 +335,7 @@ bool bic_http_server_method_HttpServer_2(interpreter_thread_s &it,unsigned stack
 
   // - start http server -
   MHD_Daemon *daemon_ptr = MHD_start_daemon(
-      MHD_NO_FLAG,port,nullptr,nullptr,
+      MHD_USE_SUSPEND_RESUME,port,nullptr,nullptr,
       &connection_func,dst_location,
       MHD_OPTION_NOTIFY_COMPLETED,completed_func,nullptr,
       MHD_OPTION_END);
@@ -583,7 +599,7 @@ built_in_class_s http_conn_class =
 {/*{{{*/
   "HttpConn",
   c_modifier_public | c_modifier_final,
-  13, http_conn_methods,
+  15, http_conn_methods,
   8 + 5, http_conn_variables,
   bic_http_conn_consts,
   bic_http_conn_init,
@@ -647,6 +663,16 @@ built_in_method_s http_conn_methods[] =
     "values#1",
     c_modifier_public | c_modifier_final,
     bic_http_conn_method_values_1
+  },
+  {
+    "suspend#0",
+    c_modifier_public | c_modifier_final,
+    bic_http_conn_method_suspend_0
+  },
+  {
+    "resume#0",
+    c_modifier_public | c_modifier_final,
+    bic_http_conn_method_resume_0
   },
   {
     "queue_response#2",
@@ -823,7 +849,9 @@ bool bic_http_conn_method_upload_data_0(interpreter_thread_s &it,unsigned stack_
 
   http_conn_s *conn_ptr = (http_conn_s *)dst_location->v_data_ptr;
 
-  if (*conn_ptr->upload_data_size > 0)
+  // - if upload data are available and are not empty -
+  if (conn_ptr->upload_data != nullptr &&
+      *conn_ptr->upload_data_size > 0)
   {
     // - create uploaded data string -
     string_s *string_ptr = it.get_new_string_ptr();
@@ -902,6 +930,57 @@ bool bic_http_conn_method_values_1(interpreter_thread_s &it,unsigned stack_base,
   conn_ptr->key_value_arr_ptr = array_ptr;
   MHD_get_connection_values(conn_ptr->connection_ptr,(MHD_ValueKind)vals_type,&conn_key_value_func,conn_ptr);
   conn_ptr->key_value_arr_ptr = nullptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_http_conn_method_suspend_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  // - retrieve connection pointer -
+  http_conn_s *conn_ptr = (http_conn_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (conn_ptr->suspend_idx != c_idx_not_exist)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_HTTP_CONN_ALREADY_SUSPENDED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - suspend connection -
+  MHD_suspend_connection(conn_ptr->connection_ptr);
+
+  // - add suspended connection to server -
+  conn_ptr->suspend_idx = conn_ptr->srv_ptr->suspended_conns.append(dst_location);
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_http_conn_method_resume_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  // - retrieve connection pointer -
+  http_conn_s *conn_ptr = (http_conn_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (conn_ptr->suspend_idx == c_idx_not_exist)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_HTTP_CONN_NOT_SUSPENDED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - resume connection -
+  MHD_resume_connection(conn_ptr->connection_ptr);
+
+  // - remove suspended connection from server -
+  conn_ptr->srv_ptr->suspended_conns.remove(conn_ptr->suspend_idx);
+  conn_ptr->suspend_idx = c_idx_not_exist;
+
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

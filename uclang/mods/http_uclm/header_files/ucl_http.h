@@ -49,6 +49,7 @@ struct http_server_s
 
   MHD_Daemon *daemon_ptr;
   location_s *connection_dlg;
+  pointer_list_s suspended_conns;
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
@@ -66,6 +67,7 @@ struct http_conn_s
   MHD_Connection *connection_ptr;
   pointer_array_s *key_value_arr_ptr;
   location_s *user_data_ptr;
+  unsigned suspend_idx;
 
   const char *url;
   const char *method;
@@ -130,10 +132,31 @@ inline void http_server_s::init()
 
   daemon_ptr = nullptr;
   connection_dlg = nullptr;
+  suspended_conns.init();
 }/*}}}*/
 
 inline void http_server_s::clear(interpreter_thread_s &it)
 {/*{{{*/
+
+  // - resume suspended connections -
+  if (suspended_conns.count != 0)
+  {
+    unsigned sc_idx = suspended_conns.first_idx;
+    do {
+
+      // - retrieve suspended connection -
+      http_conn_s *conn_ptr = (http_conn_s *)((location_s *)suspended_conns[sc_idx])->v_data_ptr;
+
+      // - resume suspended connection -
+      MHD_resume_connection(conn_ptr->connection_ptr);
+      conn_ptr->suspend_idx = c_idx_not_exist;
+
+      sc_idx = suspended_conns.next_idx(sc_idx);
+    } while(sc_idx != c_idx_not_exist);
+  }
+
+  suspended_conns.clear();
+
   if (daemon_ptr != nullptr)
   {
     MHD_stop_daemon(daemon_ptr);
@@ -159,6 +182,7 @@ inline void http_conn_s::init()
   connection_ptr = nullptr;
   key_value_arr_ptr = nullptr;
   user_data_ptr = nullptr;
+  suspend_idx = c_idx_not_exist;
 
   url = nullptr;
   method = nullptr;

@@ -25,6 +25,8 @@ enum
   c_error_HTTP_SERVER_CANNOT_START_DAEMON,
   c_error_HTTP_SERVER_INTERNAL_ERROR,
   c_error_HTTP_CONN_UNKNOWN_VALUES_TYPE,
+  c_error_HTTP_CONN_ALREADY_SUSPENDED,
+  c_error_HTTP_CONN_NOT_SUSPENDED,
   c_error_HTTP_CONN_CANNOT_QUEUE_RESPONSE,
   c_error_HTTP_RESP_CREATE_ERROR,
   c_error_HTTP_RESP_UNKNOWN_DATA_SOURCE_IDENTIFIER,
@@ -81,6 +83,8 @@ bool bic_http_conn_method_version_0(interpreter_thread_s &it,unsigned stack_base
 bool bic_http_conn_method_upload_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_values_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_http_conn_method_suspend_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_http_conn_method_resume_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_queue_response_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_post_processor_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
