@@ -35,6 +35,7 @@ c_packages = [
   ["MOD_UCTCNMD"   ,"dirs"      ,["../ext_libs/ucframework/1.60","../ext_libs/uctcn/2.27"]],
   ["MOD_UCCAN"     ,"dirs"      ,["../ext_libs/ucframework/1.60","../ext_libs/uccanopen/1.14"]],
   ["MOD_UCMM"      ,"dirs"      ,["../ext_libs/ucmm/trunk"]],
+  ["MOD_UCGCG"     ,"dirs"      ,["../ext_libs/ucframework/2.12"]],
   ["MOD_ADAPTRAIN" ,"dirs"      ,["../ext_libs/ucframework/1.60","../ext_libs/unicon","../ext_libs/adaptrain"]],
   ["MOD_FTP"       ,"files"     ,["/usr/include/ftplib.h"]],
   ["MOD_SSH2"      ,"pkg-config",["libssh2 >= 1.4.3"]],

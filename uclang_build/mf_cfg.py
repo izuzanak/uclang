@@ -32,6 +32,7 @@ C_MODULE_UCTCN      = index; index += 1
 C_MODULE_UCTCNMD    = index; index += 1
 C_MODULE_UCCAN      = index; index += 1
 C_MODULE_UCMM       = index; index += 1
+C_MODULE_UCGCG      = index; index += 1
 C_MODULE_ADAPTRAIN  = index; index += 1
 C_MODULE_FTP        = index; index += 1
 C_MODULE_SSH2       = index; index += 1
@@ -126,6 +127,7 @@ c_cfg = [
     ["MOD_UCTCNMD"   ,c_enabled[C_MODULE_UCTCNMD]   ,C_UCLANG_DIR + "mods/uctcnmd_uclm"     ,None],
     ["MOD_UCCAN"     ,c_enabled[C_MODULE_UCCAN]     ,C_UCLANG_DIR + "mods/uccan_uclm"       ,None],
     ["MOD_UCMM"      ,c_enabled[C_MODULE_UCMM]      ,C_UCLANG_DIR + "mods/ucmm_uclm"        ,None],
+    ["MOD_UCGCG"     ,c_enabled[C_MODULE_UCGCG]     ,C_UCLANG_DIR + "mods/ucgcg_uclm"       ,None],
     ["MOD_ADAPTRAIN" ,c_enabled[C_MODULE_ADAPTRAIN] ,C_UCLANG_DIR + "mods/adaptrain_uclm"   ,None],
     ["MOD_FTP"       ,c_enabled[C_MODULE_FTP]       ,C_UCLANG_DIR + "mods/ftp_uclm"         ,None],
     ["MOD_SSH2"      ,c_enabled[C_MODULE_SSH2]      ,C_UCLANG_DIR + "mods/ssh2_uclm"        ,None],
