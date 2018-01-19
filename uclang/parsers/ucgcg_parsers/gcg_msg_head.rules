@@ -1,0 +1,25 @@
+
+#vim: set syntax=rules:
+
+init_code: {}
+
+terminals:
+  lc_br {'{'}
+  header {"\"MDHeader\""}
+  _SKIP_ {w.w*}
+
+  $ !!! FIXME comment this terminal before production
+  _END_ {'\0'}
+
+nonterminals:
+  $ !!! FIXME comment this rule before production
+  <start>
+
+  <head>
+
+rules:
+  $ !!! FIXME comment this rule before production
+  <start> -> <head> _END_ ->> {}
+
+  <head> -> lc_br header ->> {}
+

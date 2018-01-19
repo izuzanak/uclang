@@ -1,0 +1,29 @@
+
+#vim: set syntax=rules:
+
+init_code: {}
+
+terminals:
+  fcs {"\"SCFdm\""}
+  crc {(<09>+<af>+<AF>).(<09>+<af>+<AF>)*}
+  rc_br {'\}'}
+  comma {','}
+  colon {':'}
+
+  _SKIP_ {w.w*}
+
+  $ !!! FIXME comment this terminal before production
+  _END_ {'\0'}
+
+nonterminals:
+  $ !!! FIXME comment this nonterminal before production
+  <start>
+
+  <tail>
+
+rules:
+  $ !!! FIXME comment this rule before production
+  <start> -> <tail> _END_ ->> {}
+
+  <tail> -> rc_br crc colon fcs comma rc_br ->> {}
+

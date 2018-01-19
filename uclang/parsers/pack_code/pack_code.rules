@@ -37,7 +37,7 @@ nonterminals:
   <program>
   <term_list>
   <term>
-  
+
 rules:
 
   <start> -> <end_check> ->> {}
