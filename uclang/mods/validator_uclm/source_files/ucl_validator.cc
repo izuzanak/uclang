@@ -25,6 +25,7 @@ const char *c_prop_names[c_prop_name_cnt] =
   "ref",
   "regex",
   "items",
+  "all-items",
 };/*}}}*/
 
 // - validator global init object -
@@ -270,7 +271,7 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
       break;
       case prop_reference:
       {/*{{{*/
-        
+
         // - ERROR -
         if (prop_value->v_type != c_bi_class_string)
         {
@@ -351,7 +352,7 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
       break;
       case prop_items:
       {/*{{{*/
-        
+
         // - ERROR -
         if (prop_value->v_type != c_bi_class_array)
         {
@@ -407,6 +408,123 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
             it.release_location_ptr(trg_location);
           } while((i_ptr += 2) < i_ptr_end);
         }
+      }/*}}}*/
+      break;
+      case prop_all_items:
+      {/*{{{*/
+        if (a_value->v_type == c_bi_class_array)
+        {/*{{{*/
+          pointer_array_s *array_ptr = (pointer_array_s *)a_value->v_data_ptr;
+
+          if (array_ptr->used != 0)
+          {
+            pointer *i_ptr = array_ptr->data;
+            pointer *i_ptr_end = i_ptr + array_ptr->used;
+            do {
+              location_s *item_location = it.get_location_value(*i_ptr);
+
+              VALIDATE_PAIR_CALL(item_location,prop_value,
+                long long int index = i_ptr - array_ptr->data;
+
+                BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_integer,index,2);
+                ((pointer_array_s *)value_stack->v_data_ptr)->push(new_location);
+                ((pointer_array_s *)props_stack->v_data_ptr)->push(new_location);
+
+                VALIDATE_STACKS_PUSH_PROP_KEY();
+
+                return false;
+              );
+            } while(++i_ptr < i_ptr_end);
+          }
+        }/*}}}*/
+        else if (a_value->v_type == c_rm_class_dict)
+        {/*{{{*/
+          pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)a_value->v_data_ptr;
+
+          if (tree_ptr->root_idx != c_idx_not_exist)
+          {
+            unsigned stack[tree_ptr->get_descent_stack_size()];
+            unsigned *stack_ptr = stack;
+
+            unsigned t_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);
+            do
+            {
+              pointer_map_s &map = tree_ptr->data[t_idx].object;
+
+              VALIDATE_PAIR_CALL(it.get_location_value(map.value),prop_value,
+                location_s *key_location = (location_s *)map.key;
+
+                key_location->v_reference_cnt.atomic_add(2);
+                ((pointer_array_s *)value_stack->v_data_ptr)->push(key_location);
+                ((pointer_array_s *)props_stack->v_data_ptr)->push(key_location);
+
+                VALIDATE_STACKS_PUSH_PROP_KEY();
+
+                return false;
+              );
+
+              t_idx = tree_ptr->get_stack_next_idx(t_idx,&stack_ptr,stack);
+            }
+            while(t_idx != c_idx_not_exist);
+          }
+        }/*}}}*/
+        else
+        {/*{{{*/
+          unsigned iter_type = it.get_iterable_type(a_value);
+
+          // - ERROR -
+          if (iter_type != c_iter_first_idx_next_idx_item)
+          {
+            VALIDATE_STACKS_PUSH_PROP_KEY();
+
+            exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_VALUE,source_pos,(location_s *)it.blank_location);
+            return false;
+          }
+
+          long long int index;
+          location_s *item_reference;
+          location_s *item_location;
+
+          // - retrieve first index -
+          BIC_CALL_FIRST_IDX(it,a_value,index,source_pos,
+            VALIDATE_STACKS_PUSH_PROP_KEY();
+
+            return false;
+          );
+
+          while (index != c_idx_not_exist)
+          {
+            // - retrieve item location -
+            BIC_CALL_ITEM(it,a_value,index,item_reference,source_pos,
+              VALIDATE_STACKS_PUSH_PROP_KEY();
+
+              return false;
+            );
+            item_location = it.get_location_value(item_reference);
+
+            VALIDATE_PAIR_CALL(item_location,prop_value,
+              it.release_location_ptr(item_reference);
+
+              BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_integer,index,2);
+
+              ((pointer_array_s *)value_stack->v_data_ptr)->push(new_location);
+              ((pointer_array_s *)props_stack->v_data_ptr)->push(new_location);
+
+              VALIDATE_STACKS_PUSH_PROP_KEY();
+
+              return false;
+            );
+
+            it.release_location_ptr(item_reference);
+
+            // - retrieve next index -
+            BIC_CALL_NEXT_IDX(it,a_value,index,index,source_pos,
+              VALIDATE_STACKS_PUSH_PROP_KEY();
+
+              return false;
+            );
+          }
+        }/*}}}*/
       }/*}}}*/
       break;
 

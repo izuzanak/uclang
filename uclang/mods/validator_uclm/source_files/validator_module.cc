@@ -326,7 +326,33 @@ bool bic_validator_method_validate_2(interpreter_thread_s &it,unsigned stack_bas
     src_0_location->v_reference_cnt.atomic_inc();
     ((pointer_array_s *)val_ptr->props_stack->v_data_ptr)->push(src_0_location);
 
-    // FIXME TODO reverse props and value stacks
+    pointer_array_s new_array;
+    new_array.init();
+
+#define BIC_VALIDATOR_METHOD_VALIDATE_REVERSE_STACK(LOCATION) \
+{/*{{{*/\
+  pointer_array_s *array_ptr = (pointer_array_s *)LOCATION->v_data_ptr;\
+  if (array_ptr->used > 1)\
+  {\
+    new_array.used = 0;\
+    \
+    pointer *ptr = array_ptr->data + array_ptr->used;\
+    pointer *ptr_end = array_ptr->data;\
+    do {\
+      new_array.push(*--ptr);\
+    } while(ptr > ptr_end);\
+    \
+    array_ptr->swap(new_array);\
+  }\
+}/*}}}*/
+
+    // - reverse value stack -
+    BIC_VALIDATOR_METHOD_VALIDATE_REVERSE_STACK(val_ptr->value_stack);
+
+    // - reverse props stack -
+    BIC_VALIDATOR_METHOD_VALIDATE_REVERSE_STACK(val_ptr->props_stack);
+
+    new_array.clear();
 
     return false;
   }

@@ -14,7 +14,7 @@ include "script_parser.h"
 
 extern unsigned c_rm_class_dict;
 
-const unsigned c_prop_name_cnt = 16;
+const unsigned c_prop_name_cnt = 17;
 extern const char *c_prop_names[c_prop_name_cnt];
 
 enum {
@@ -34,6 +34,7 @@ enum {
   prop_reference,
   prop_regex,
   prop_items,
+  prop_all_items,
 };
 
 // - VALIDATOR error identifiers -
