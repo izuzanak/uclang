@@ -309,6 +309,9 @@ state_25_label:
    if (in_char == 105)
       goto state_30_label;
 
+   if (in_char == 107)
+      goto state_31_label;
+
    return c_idx_not_exist;
 
 // - STATE 26 -
@@ -317,7 +320,7 @@ state_26_label:
    GET_NEXT_CHAR();
 
    if (in_char == 115)
-      goto state_31_label;
+      goto state_32_label;
 
    return c_idx_not_exist;
 
@@ -327,7 +330,7 @@ state_27_label:
    GET_NEXT_CHAR();
 
    if (in_char == 116)
-      goto state_32_label;
+      goto state_33_label;
 
    return c_idx_not_exist;
 
@@ -337,7 +340,7 @@ state_28_label:
    GET_NEXT_CHAR();
 
    if (in_char == 120)
-      goto state_33_label;
+      goto state_34_label;
 
    return c_idx_not_exist;
 
@@ -352,32 +355,12 @@ state_30_label:
    GET_NEXT_CHAR();
 
    if (in_char == 116)
-      goto state_34_label;
+      goto state_35_label;
 
    return c_idx_not_exist;
 
 // - STATE 31 -
 state_31_label:
-   CLOSE_CHAR(15);
-   return 15;
-
-// - STATE 32 -
-state_32_label:
-   CLOSE_CHAR(c_idx_not_exist);
-   GET_NEXT_CHAR();
-
-   if (in_char == 104)
-      goto state_35_label;
-
-   return c_idx_not_exist;
-
-// - STATE 33 -
-state_33_label:
-   CLOSE_CHAR(14);
-   return 14;
-
-// - STATE 34 -
-state_34_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
@@ -386,13 +369,33 @@ state_34_label:
 
    return c_idx_not_exist;
 
+// - STATE 32 -
+state_32_label:
+   CLOSE_CHAR(15);
+   return 15;
+
+// - STATE 33 -
+state_33_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 104)
+      goto state_37_label;
+
+   return c_idx_not_exist;
+
+// - STATE 34 -
+state_34_label:
+   CLOSE_CHAR(14);
+   return 14;
+
 // - STATE 35 -
 state_35_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 32)
-      goto state_37_label;
+   if (in_char == 101)
+      goto state_38_label;
 
    return c_idx_not_exist;
 
@@ -401,8 +404,8 @@ state_36_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 109)
-      goto state_38_label;
+   if (in_char == 121)
+      goto state_39_label;
 
    return c_idx_not_exist;
 
@@ -411,17 +414,8 @@ state_37_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 33)
-      goto state_39_label;
-
-   if (in_char == 60)
+   if (in_char == 32)
       goto state_40_label;
-
-   if (in_char == 61)
-      goto state_41_label;
-
-   if (in_char == 62)
-      goto state_42_label;
 
    return c_idx_not_exist;
 
@@ -430,8 +424,8 @@ state_38_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 115)
-      goto state_43_label;
+   if (in_char == 109)
+      goto state_41_label;
 
    return c_idx_not_exist;
 
@@ -440,63 +434,107 @@ state_39_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 61)
-      goto state_44_label;
+   if (in_char == 115)
+      goto state_42_label;
 
    return c_idx_not_exist;
 
 // - STATE 40 -
 state_40_label:
-   CLOSE_CHAR(9);
+   CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
+
+   if (in_char == 33)
+      goto state_43_label;
+
+   if (in_char == 60)
+      goto state_44_label;
 
    if (in_char == 61)
       goto state_45_label;
 
-   return 9;
+   if (in_char == 62)
+      goto state_46_label;
+
+   return c_idx_not_exist;
 
 // - STATE 41 -
 state_41_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 61)
-      goto state_46_label;
+   if (in_char == 115)
+      goto state_47_label;
 
    return c_idx_not_exist;
 
 // - STATE 42 -
 state_42_label:
+   CLOSE_CHAR(17);
+   return 17;
+
+// - STATE 43 -
+state_43_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 61)
+      goto state_48_label;
+
+   return c_idx_not_exist;
+
+// - STATE 44 -
+state_44_label:
+   CLOSE_CHAR(9);
+   GET_NEXT_CHAR();
+
+   if (in_char == 61)
+      goto state_49_label;
+
+   return 9;
+
+// - STATE 45 -
+state_45_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 61)
+      goto state_50_label;
+
+   return c_idx_not_exist;
+
+// - STATE 46 -
+state_46_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
    if (in_char == 61)
-      goto state_47_label;
+      goto state_51_label;
 
    return 10;
 
-// - STATE 43 -
-state_43_label:
+// - STATE 47 -
+state_47_label:
    CLOSE_CHAR(16);
    return 16;
 
-// - STATE 44 -
-state_44_label:
+// - STATE 48 -
+state_48_label:
    CLOSE_CHAR(8);
    return 8;
 
-// - STATE 45 -
-state_45_label:
+// - STATE 49 -
+state_49_label:
    CLOSE_CHAR(11);
    return 11;
 
-// - STATE 46 -
-state_46_label:
+// - STATE 50 -
+state_50_label:
    CLOSE_CHAR(7);
    return 7;
 
-// - STATE 47 -
-state_47_label:
+// - STATE 51 -
+state_51_label:
    CLOSE_CHAR(12);
    return 12;
 
@@ -990,6 +1028,46 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
             );
           }
         }/*}}}*/
+      }/*}}}*/
+      break;
+      case prop_all_keys:
+      {/*{{{*/
+        
+        // - ERROR -
+        if (a_value->v_type != c_rm_class_dict)
+        {
+          VALIDATE_STACKS_PUSH_PROP_KEY();
+
+          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_VALUE,source_pos,(location_s *)it.blank_location);
+          return false;
+        }
+
+        pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)a_value->v_data_ptr;
+
+        if (tree_ptr->root_idx != c_idx_not_exist)
+        {
+          unsigned stack[tree_ptr->get_descent_stack_size()];
+          unsigned *stack_ptr = stack;
+
+          unsigned t_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);
+          do
+          {
+            location_s *key_location = (location_s *)tree_ptr->data[t_idx].object.key;
+
+            VALIDATE_PAIR_CALL(key_location,prop_value,
+              key_location->v_reference_cnt.atomic_add(2);
+              ((pointer_array_s *)value_stack->v_data_ptr)->push(key_location);
+              ((pointer_array_s *)props_stack->v_data_ptr)->push(key_location);
+
+              VALIDATE_STACKS_PUSH_PROP_KEY();
+
+              return false;
+            );
+
+            t_idx = tree_ptr->get_stack_next_idx(t_idx,&stack_ptr,stack);
+          }
+          while(t_idx != c_idx_not_exist);
+        }
       }/*}}}*/
       break;
 

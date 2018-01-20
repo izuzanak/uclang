@@ -35,6 +35,7 @@ enum {
   prop_regex,
   prop_items,
   prop_all_items,
+  prop_all_keys,
 };
 
 // - VALIDATOR error identifiers -

@@ -1,0 +1,68 @@
+#vim: set syntax=rules:
+
+init_code: {}
+
+terminals:
+
+  type {"type"}
+  equal {"=="}
+  not_equal {"!="}
+  lt {"<"}
+  gt {">"}
+  le {"<="}
+  ge {">="}
+  length_equal {"length =="}
+  length_not_equal {"length !="}
+  length_lt {"length <"}
+  length_gt {"length >"}
+  length_le {"length <="}
+  length_ge {"length >="}
+  ref {"ref"}
+  regex {"regex"}
+  items {"items"}
+  all_items {"all-items"}
+  all_keys {"all-keys"}
+
+  $ !!! FIXME comment this terminal before production
+   _SKIP_ {w.w*}
+  _END_ {'\0'}
+
+nonterminals:
+  <start>
+  <end_check>
+  <program>
+  <term_list>
+  <term>
+
+rules:
+
+  <start> -> <end_check> ->> {}
+
+  $ !!! FIXME comment these two rules before production
+  <end_check> -> <program> _END_ ->> {}
+  <end_check> -> _END_ ->> {}
+
+  <program> -> <term_list> ->> {}
+
+  <term_list> -> <term_list> <term> ->> {}
+  <term_list> -> <term> ->> {}
+
+  <term> -> type ->> {print("type");}
+  <term> -> equal ->> {print("equal");}
+  <term> -> not_equal ->> {print("not_equal");}
+  <term> -> lt ->> {print("lt");}
+  <term> -> gt ->> {print("gt");}
+  <term> -> le ->> {print("le");}
+  <term> -> ge ->> {print("ge");}
+  <term> -> length_equal ->> {print("length_equal");}
+  <term> -> length_not_equal ->> {print("length_not_equal");}
+  <term> -> length_lt ->> {print("length_lt");}
+  <term> -> length_gt ->> {print("length_gt");}
+  <term> -> length_le ->> {print("length_le");}
+  <term> -> length_ge ->> {print("length_ge");}
+  <term> -> ref ->> {print("ref");}
+  <term> -> regex ->> {print("regex");}
+  <term> -> items ->> {print("items");}
+  <term> -> all_items ->> {print("all_items");}
+  <term> -> all_keys ->> {print("all_keys");}
+
