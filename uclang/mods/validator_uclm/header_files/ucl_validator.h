@@ -19,7 +19,7 @@ extern const char *c_prop_names[c_prop_name_cnt];
 
 enum {
   prop_type = 0,
-  prop_equal = 2,
+  prop_equal,
   prop_not_equal,
   prop_lesser,
   prop_greater,
@@ -51,20 +51,6 @@ enum
 };
 
 /*
- * definition of class validator_c
- */
-
-class validator_c
-{
-  public:
-  static string_rb_tree_s c_prop_map;
-
-  public:
-  inline validator_c();
-  inline ~validator_c();
-};
-
-/*
  * definition of structure validator_s
  */
 
@@ -81,35 +67,12 @@ struct validator_s
   string_rb_tree_s regex_map;
   pointer_array_s regex_list;
 
+  unsigned recognize_property(const char *string);
   bool validate_pair(location_s *a_value,location_s *a_props);
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
 };
-
-/*
- * inline methods of class validator_c
- */
-
-inline validator_c::validator_c()
-{/*{{{*/
-  debug_message_2(fprintf(stderr,"validator_init()\n"););
-
-  c_prop_map.init();
-
-  const char **pn_ptr = c_prop_names;
-  const char **pn_ptr_end = pn_ptr + c_prop_name_cnt;
-  do {
-    c_prop_map.get_idx_char_ptr_insert(strlen(*pn_ptr),*pn_ptr);
-  } while(++pn_ptr < pn_ptr_end);
-}/*}}}*/
-
-inline validator_c::~validator_c()
-{/*{{{*/
-  debug_message_2(fprintf(stderr,"validator_exit()\n"););
-
-  c_prop_map.clear();
-}/*}}}*/
 
 /*
  * inline methods of structure validator_s

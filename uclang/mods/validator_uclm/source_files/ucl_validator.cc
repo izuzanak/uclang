@@ -28,14 +28,479 @@ const char *c_prop_names[c_prop_name_cnt] =
   "all-items",
 };/*}}}*/
 
-// - validator global init object -
-validator_c g_validator;
-
-string_rb_tree_s validator_c::c_prop_map;
-
 /*
  * methods of structure validator_s
  */
+
+unsigned validator_s::recognize_property(const char *string)
+{/*{{{*/
+#define GET_NEXT_CHAR() \
+{\
+   in_char = string[input_idx];\
+}
+
+#define CLOSE_CHAR(RET_TERM_IDX) \
+{\
+   if (in_char == '\0') {\
+      return RET_TERM_IDX;\
+   }\
+\
+   input_idx++;\
+}
+
+   unsigned input_idx = 0;
+   unsigned char in_char;
+
+// - STATE 0 -
+   GET_NEXT_CHAR();
+
+   if (in_char == 33)
+      goto state_1_label;
+
+   if (in_char == 60)
+      goto state_2_label;
+
+   if (in_char == 61)
+      goto state_3_label;
+
+   if (in_char == 62)
+      goto state_4_label;
+
+   if (in_char == 97)
+      goto state_5_label;
+
+   if (in_char == 105)
+      goto state_6_label;
+
+   if (in_char == 108)
+      goto state_7_label;
+
+   if (in_char == 114)
+      goto state_8_label;
+
+   if (in_char == 116)
+      goto state_9_label;
+
+   return c_idx_not_exist;
+
+// - STATE 1 -
+state_1_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 61)
+      goto state_10_label;
+
+   return c_idx_not_exist;
+
+// - STATE 2 -
+state_2_label:
+   CLOSE_CHAR(3);
+   GET_NEXT_CHAR();
+
+   if (in_char == 61)
+      goto state_11_label;
+
+   return 3;
+
+// - STATE 3 -
+state_3_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 61)
+      goto state_12_label;
+
+   return c_idx_not_exist;
+
+// - STATE 4 -
+state_4_label:
+   CLOSE_CHAR(4);
+   GET_NEXT_CHAR();
+
+   if (in_char == 61)
+      goto state_13_label;
+
+   return 4;
+
+// - STATE 5 -
+state_5_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 108)
+      goto state_14_label;
+
+   return c_idx_not_exist;
+
+// - STATE 6 -
+state_6_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 116)
+      goto state_15_label;
+
+   return c_idx_not_exist;
+
+// - STATE 7 -
+state_7_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 101)
+      goto state_16_label;
+
+   return c_idx_not_exist;
+
+// - STATE 8 -
+state_8_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 101)
+      goto state_17_label;
+
+   return c_idx_not_exist;
+
+// - STATE 9 -
+state_9_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 121)
+      goto state_18_label;
+
+   return c_idx_not_exist;
+
+// - STATE 10 -
+state_10_label:
+   CLOSE_CHAR(2);
+   return 2;
+
+// - STATE 11 -
+state_11_label:
+   CLOSE_CHAR(5);
+   return 5;
+
+// - STATE 12 -
+state_12_label:
+   CLOSE_CHAR(1);
+   return 1;
+
+// - STATE 13 -
+state_13_label:
+   CLOSE_CHAR(6);
+   return 6;
+
+// - STATE 14 -
+state_14_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 108)
+      goto state_19_label;
+
+   return c_idx_not_exist;
+
+// - STATE 15 -
+state_15_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 101)
+      goto state_20_label;
+
+   return c_idx_not_exist;
+
+// - STATE 16 -
+state_16_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 110)
+      goto state_21_label;
+
+   return c_idx_not_exist;
+
+// - STATE 17 -
+state_17_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 102)
+      goto state_22_label;
+
+   if (in_char == 103)
+      goto state_23_label;
+
+   return c_idx_not_exist;
+
+// - STATE 18 -
+state_18_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 112)
+      goto state_24_label;
+
+   return c_idx_not_exist;
+
+// - STATE 19 -
+state_19_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 45)
+      goto state_25_label;
+
+   return c_idx_not_exist;
+
+// - STATE 20 -
+state_20_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 109)
+      goto state_26_label;
+
+   return c_idx_not_exist;
+
+// - STATE 21 -
+state_21_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 103)
+      goto state_27_label;
+
+   return c_idx_not_exist;
+
+// - STATE 22 -
+state_22_label:
+   CLOSE_CHAR(13);
+   return 13;
+
+// - STATE 23 -
+state_23_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 101)
+      goto state_28_label;
+
+   return c_idx_not_exist;
+
+// - STATE 24 -
+state_24_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 101)
+      goto state_29_label;
+
+   return c_idx_not_exist;
+
+// - STATE 25 -
+state_25_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 105)
+      goto state_30_label;
+
+   return c_idx_not_exist;
+
+// - STATE 26 -
+state_26_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 115)
+      goto state_31_label;
+
+   return c_idx_not_exist;
+
+// - STATE 27 -
+state_27_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 116)
+      goto state_32_label;
+
+   return c_idx_not_exist;
+
+// - STATE 28 -
+state_28_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 120)
+      goto state_33_label;
+
+   return c_idx_not_exist;
+
+// - STATE 29 -
+state_29_label:
+   CLOSE_CHAR(0);
+   return 0;
+
+// - STATE 30 -
+state_30_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 116)
+      goto state_34_label;
+
+   return c_idx_not_exist;
+
+// - STATE 31 -
+state_31_label:
+   CLOSE_CHAR(15);
+   return 15;
+
+// - STATE 32 -
+state_32_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 104)
+      goto state_35_label;
+
+   return c_idx_not_exist;
+
+// - STATE 33 -
+state_33_label:
+   CLOSE_CHAR(14);
+   return 14;
+
+// - STATE 34 -
+state_34_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 101)
+      goto state_36_label;
+
+   return c_idx_not_exist;
+
+// - STATE 35 -
+state_35_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 32)
+      goto state_37_label;
+
+   return c_idx_not_exist;
+
+// - STATE 36 -
+state_36_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 109)
+      goto state_38_label;
+
+   return c_idx_not_exist;
+
+// - STATE 37 -
+state_37_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 33)
+      goto state_39_label;
+
+   if (in_char == 60)
+      goto state_40_label;
+
+   if (in_char == 61)
+      goto state_41_label;
+
+   if (in_char == 62)
+      goto state_42_label;
+
+   return c_idx_not_exist;
+
+// - STATE 38 -
+state_38_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 115)
+      goto state_43_label;
+
+   return c_idx_not_exist;
+
+// - STATE 39 -
+state_39_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 61)
+      goto state_44_label;
+
+   return c_idx_not_exist;
+
+// - STATE 40 -
+state_40_label:
+   CLOSE_CHAR(9);
+   GET_NEXT_CHAR();
+
+   if (in_char == 61)
+      goto state_45_label;
+
+   return 9;
+
+// - STATE 41 -
+state_41_label:
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 61)
+      goto state_46_label;
+
+   return c_idx_not_exist;
+
+// - STATE 42 -
+state_42_label:
+   CLOSE_CHAR(10);
+   GET_NEXT_CHAR();
+
+   if (in_char == 61)
+      goto state_47_label;
+
+   return 10;
+
+// - STATE 43 -
+state_43_label:
+   CLOSE_CHAR(16);
+   return 16;
+
+// - STATE 44 -
+state_44_label:
+   CLOSE_CHAR(8);
+   return 8;
+
+// - STATE 45 -
+state_45_label:
+   CLOSE_CHAR(11);
+   return 11;
+
+// - STATE 46 -
+state_46_label:
+   CLOSE_CHAR(7);
+   return 7;
+
+// - STATE 47 -
+state_47_label:
+   CLOSE_CHAR(12);
+   return 12;
+
+}/*}}}*/
 
 #define BIC_VALIDATE_TODO_ERROR(FILE_NAME,LINE) \
 {/*{{{*/\
@@ -148,7 +613,7 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
         return false;
       }
 
-      unsigned prop_id = validator_c::c_prop_map.get_idx(*((string_s *)prop_key->v_data_ptr));
+      unsigned prop_id = recognize_property(((string_s *)prop_key->v_data_ptr)->data);
       switch (prop_id)
       {
       case prop_type:
