@@ -55,11 +55,19 @@ state_1_label:
 // - STATE 2 -
 state_2_label:
    CLOSE_CHAR(0);
+   GET_NEXT_CHAR();
+
+   if (in_char >= 9 && in_char < 11)
+      goto state_2_label;
+
+   if (in_char == 32)
+      goto state_2_label;
+
    return 0;
 
 // - STATE 3 -
 state_3_label:
-   CLOSE_CHAR(2);
+   CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
    if (in_char >= 9 && in_char < 11)
@@ -68,7 +76,10 @@ state_3_label:
    if (in_char == 32)
       goto state_3_label;
 
-   return 2;
+   if (in_char == 123)
+      goto state_2_label;
+
+   return c_idx_not_exist;
 
 // - STATE 4 -
 state_4_label:
@@ -184,94 +195,118 @@ unsigned gcg_msg_s::tail_recognize(const char *string,int &input_idx)
    GET_PREV_CHAR();
 
    if (in_char >= 9 && in_char < 11)
-      goto state_6_label;
-
-   if (in_char == 32)
-      goto state_6_label;
-
-   if (in_char == 34)
-      goto state_1_label;
-
-   if (in_char == 44)
-      goto state_2_label;
-
-   if (in_char >= 48 && in_char < 58)
-      goto state_3_label;
-
-   if (in_char == 58)
       goto state_4_label;
 
+   if (in_char == 32)
+      goto state_4_label;
+
+   if (in_char >= 48 && in_char < 58)
+      goto state_1_label;
+
+   if (in_char == 58)
+      goto state_2_label;
+
    if (in_char >= 65 && in_char < 71)
-      goto state_3_label;
+      goto state_1_label;
 
    if (in_char >= 97 && in_char < 103)
-      goto state_3_label;
+      goto state_1_label;
 
    if (in_char == 125)
-      goto state_5_label;
+      goto state_3_label;
 
    return c_idx_not_exist;
 
 // - STATE 1 -
 state_1_label:
-   CLOSE_PREV_CHAR(c_idx_not_exist);
-   GET_PREV_CHAR();
-
-   if (in_char == 83)
-      goto state_7_label;
-
-   return c_idx_not_exist;
-
-// - STATE 2 -
-state_2_label:
-   CLOSE_PREV_CHAR(3);
-   return 3;
-
-// - STATE 3 -
-state_3_label:
    CLOSE_PREV_CHAR(1);
    GET_PREV_CHAR();
 
    if (in_char >= 48 && in_char < 58)
-      goto state_3_label;
+      goto state_1_label;
 
    if (in_char >= 65 && in_char < 71)
-      goto state_3_label;
+      goto state_1_label;
 
    if (in_char >= 97 && in_char < 103)
-      goto state_3_label;
+      goto state_1_label;
 
    return 1;
 
-// - STATE 4 -
-state_4_label:
-   CLOSE_PREV_CHAR(4);
-   return 4;
-
-// - STATE 5 -
-state_5_label:
-   CLOSE_PREV_CHAR(2);
-   return 2;
-
-// - STATE 6 -
-state_6_label:
-   CLOSE_PREV_CHAR(5);
+// - STATE 2 -
+state_2_label:
+   CLOSE_PREV_CHAR(c_idx_not_exist);
    GET_PREV_CHAR();
 
    if (in_char >= 9 && in_char < 11)
-      goto state_6_label;
+      goto state_2_label;
 
    if (in_char == 32)
+      goto state_2_label;
+
+   if (in_char == 34)
+      goto state_5_label;
+
+   return c_idx_not_exist;
+
+// - STATE 3 -
+state_3_label:
+   CLOSE_PREV_CHAR(0);
+   GET_PREV_CHAR();
+
+   if (in_char >= 9 && in_char < 11)
+      goto state_3_label;
+
+   if (in_char == 32)
+      goto state_3_label;
+
+   return 0;
+
+// - STATE 4 -
+state_4_label:
+   CLOSE_PREV_CHAR(c_idx_not_exist);
+   GET_PREV_CHAR();
+
+   if (in_char >= 9 && in_char < 11)
+      goto state_4_label;
+
+   if (in_char == 32)
+      goto state_4_label;
+
+   if (in_char == 58)
+      goto state_2_label;
+
+   if (in_char == 125)
+      goto state_3_label;
+
+   return c_idx_not_exist;
+
+// - STATE 5 -
+state_5_label:
+   CLOSE_PREV_CHAR(c_idx_not_exist);
+   GET_PREV_CHAR();
+
+   if (in_char == 83)
       goto state_6_label;
 
-   return 5;
+   return c_idx_not_exist;
+
+// - STATE 6 -
+state_6_label:
+   CLOSE_PREV_CHAR(c_idx_not_exist);
+   GET_PREV_CHAR();
+
+   if (in_char == 67)
+      goto state_7_label;
+
+   return c_idx_not_exist;
 
 // - STATE 7 -
 state_7_label:
    CLOSE_PREV_CHAR(c_idx_not_exist);
    GET_PREV_CHAR();
 
-   if (in_char == 67)
+   if (in_char == 70)
       goto state_8_label;
 
    return c_idx_not_exist;
@@ -281,7 +316,7 @@ state_8_label:
    CLOSE_PREV_CHAR(c_idx_not_exist);
    GET_PREV_CHAR();
 
-   if (in_char == 70)
+   if (in_char == 100)
       goto state_9_label;
 
    return c_idx_not_exist;
@@ -291,7 +326,7 @@ state_9_label:
    CLOSE_PREV_CHAR(c_idx_not_exist);
    GET_PREV_CHAR();
 
-   if (in_char == 100)
+   if (in_char == 109)
       goto state_10_label;
 
    return c_idx_not_exist;
@@ -301,7 +336,7 @@ state_10_label:
    CLOSE_PREV_CHAR(c_idx_not_exist);
    GET_PREV_CHAR();
 
-   if (in_char == 109)
+   if (in_char == 34)
       goto state_11_label;
 
    return c_idx_not_exist;
@@ -311,15 +346,29 @@ state_11_label:
    CLOSE_PREV_CHAR(c_idx_not_exist);
    GET_PREV_CHAR();
 
-   if (in_char == 34)
+   if (in_char >= 9 && in_char < 11)
+      goto state_11_label;
+
+   if (in_char == 32)
+      goto state_11_label;
+
+   if (in_char == 44)
       goto state_12_label;
 
    return c_idx_not_exist;
 
 // - STATE 12 -
 state_12_label:
-   CLOSE_PREV_CHAR(0);
-   return 0;
+   CLOSE_PREV_CHAR(2);
+   GET_PREV_CHAR();
+
+   if (in_char >= 9 && in_char < 11)
+      goto state_12_label;
+
+   if (in_char == 32)
+      goto state_12_label;
+
+   return 2;
 
 }/*}}}*/
 
@@ -328,30 +377,13 @@ void gcg_msg_s::head_find(const char *string,unsigned &data_begin)
   data_begin = c_idx_not_exist;
 
   unsigned input_idx = 0;
-  unsigned old_input_idx = 0;
   unsigned term;
- 
-#define MSG_HEAD_RETRIEVE_TERM() \
-{/*{{{*/\
-  old_input_idx = input_idx;\
-  term = head_recognize(string,input_idx);\
-  if (term == c_idx_not_exist) return;\
-\
-  /* - skip whitespace - */\
-  if (term == head_term_whitespace)\
-  {\
-    old_input_idx = input_idx;\
-    term = head_recognize(string,input_idx);\
-    if (term == c_idx_not_exist) return;\
-  }\
-}/*}}}*/
 
-  // - check bracket -
-  MSG_HEAD_RETRIEVE_TERM();
+  term = head_recognize(string,input_idx);
   if (term != head_term_bracket) return;
 
-  // - check header -
-  MSG_HEAD_RETRIEVE_TERM();
+  unsigned old_input_idx = input_idx;
+  term = head_recognize(string,input_idx);
   if (term != head_term_header) return;
 
   data_begin = old_input_idx;
@@ -363,53 +395,26 @@ void gcg_msg_s::tail_find(const char *string,unsigned length,unsigned &crc_begin
   crc_begin = c_idx_not_exist;
 
   int input_idx = length - 1;
-  int old_input_idx = input_idx;
   unsigned term;
 
-#define MSG_TAIL_RETRIEVE_TERM() \
-{/*{{{*/\
-  old_input_idx = input_idx;\
-  term = tail_recognize(string,input_idx);\
-  if (term == c_idx_not_exist) return;\
-  \
-  /* - skip whitespace - */\
-  if (term == tail_term_whitespace)\
-  {\
-    old_input_idx = input_idx;\
-    term = tail_recognize(string,input_idx);\
-    if (term == c_idx_not_exist) return;\
-  }\
-}/*}}}*/
-
-  // - check bracket -
-  MSG_TAIL_RETRIEVE_TERM();
+  term = tail_recognize(string,input_idx);
   if (term != tail_term_bracket) return;
 
-  // - check crc -
-  MSG_TAIL_RETRIEVE_TERM();
+  int old_input_idx = input_idx;
+  term = tail_recognize(string,input_idx);
   if (term != tail_term_crc) return;
 
   // - check crc size -
   if (old_input_idx - input_idx != 8) return;
   crc_begin = input_idx + 1;
 
-  // - check colon -
-  MSG_TAIL_RETRIEVE_TERM();
-  if (term != tail_term_colon) return;
+  term = tail_recognize(string,input_idx);
+  if (term != tail_term_colon_fcs_comma) return;
 
-  // - check fsc -
-  MSG_TAIL_RETRIEVE_TERM();
-  if (term != tail_term_fsc) return;
-
-  // - check comma -
-  MSG_TAIL_RETRIEVE_TERM();
-  if (term != tail_term_comma) return;
-
-  // - check bracket -
-  MSG_TAIL_RETRIEVE_TERM();
+  old_input_idx = input_idx;
+  term = tail_recognize(string,input_idx);
   if (term != tail_term_bracket) return;
-  data_end = input_idx + 1;
 
-  return;
+  data_end = old_input_idx;
 }/*}}}*/
 

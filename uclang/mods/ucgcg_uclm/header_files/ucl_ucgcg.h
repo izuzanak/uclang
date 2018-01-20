@@ -17,16 +17,12 @@ using namespace Ucf2;
 enum {
   head_term_bracket = 0,
   head_term_header,
-  head_term_whitespace,
 };
 
 enum {
-  tail_term_fsc = 0,
+  tail_term_bracket = 0,
   tail_term_crc,
-  tail_term_bracket,
-  tail_term_comma,
-  tail_term_colon,
-  tail_term_whitespace,
+  tail_term_colon_fcs_comma,
 };
 
 struct gcg_msg_s

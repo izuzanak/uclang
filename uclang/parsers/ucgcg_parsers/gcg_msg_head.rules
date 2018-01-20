@@ -4,9 +4,8 @@
 init_code: {}
 
 terminals:
-  lc_br {'{'}
+  lc_br {w*.'{'.w*}
   header {"\"MDHeader\""}
-  _SKIP_ {w.w*}
 
   $ !!! FIXME comment this terminal before production
   _END_ {'\0'}
