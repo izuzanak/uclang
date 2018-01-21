@@ -22,6 +22,7 @@ enum
   c_error_CURL_CANNOT_CREATE_SESSION = 0,
   c_error_CURL_ERROR_WHILE_PERFORMING_GET_REQUEST,
   c_error_CURL_ERROR_WHILE_PERFORMING_PUT_REQUEST,
+  c_error_CURL_ERROR_WHILE_PERFORMING_POST_REQUEST,
   c_error_CURL_ERROR_WHILE_PERFORMING_DELETE_REQUEST,
   c_error_CURL_ERROR_WHILE_PERFORMING_HEAD_REQUEST,
   c_error_CURL_RESULT_UNSUPPORTED_INFO_VALUE_TYPE,
@@ -48,6 +49,7 @@ void bic_curl_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_curl_method_GET_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_method_PUT_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curl_method_POST_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_method_DELETE_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_method_HEAD_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

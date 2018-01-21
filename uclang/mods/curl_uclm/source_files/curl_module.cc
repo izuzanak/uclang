@@ -14,7 +14,7 @@ built_in_module_s module =
   curl_classes,         // Classes
 
   0,                    // Error base index
-  7,                    // Error count
+  8,                    // Error count
   curl_error_strings,   // Error strings
 
   curl_initialize,      // Initialize function
@@ -34,6 +34,7 @@ const char *curl_error_strings[] =
   "error_CURL_CANNOT_CREATE_SESSION",
   "error_CURL_ERROR_WHILE_PERFORMING_GET_REQUEST",
   "error_CURL_ERROR_WHILE_PERFORMING_PUT_REQUEST",
+  "error_CURL_ERROR_WHILE_PERFORMING_POST_REQUEST",
   "error_CURL_ERROR_WHILE_PERFORMING_DELETE_REQUEST",
   "error_CURL_ERROR_WHILE_PERFORMING_HEAD_REQUEST",
   "error_CURL_RESULT_UNSUPPORTED_INFO_VALUE_TYPE",
@@ -83,6 +84,13 @@ bool curl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nError while performing HTTP PUT request\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_CURL_ERROR_WHILE_PERFORMING_POST_REQUEST:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while performing HTTP POST request\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_CURL_ERROR_WHILE_PERFORMING_DELETE_REQUEST:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -123,7 +131,7 @@ built_in_class_s curl_class =
 {/*{{{*/
   "Curl",
   c_modifier_public | c_modifier_final,
-  6, curl_methods,
+  7, curl_methods,
   0, curl_variables,
   bic_curl_consts,
   bic_curl_init,
@@ -152,6 +160,11 @@ built_in_method_s curl_methods[] =
     "PUT#2",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_curl_method_PUT_2
+  },
+  {
+    "POST#2",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_curl_method_POST_2
   },
   {
     "DELETE#1",
@@ -308,7 +321,6 @@ bool bic_curl_method_PUT_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
   curl_easy_setopt(curl_ptr,CURLOPT_WRITEFUNCTION,cb_write_buffer);
   curl_easy_setopt(curl_ptr,CURLOPT_WRITEDATA,&write_buffer);
   curl_easy_setopt(curl_ptr,CURLOPT_UPLOAD,1L);
-  curl_easy_setopt(curl_ptr,CURLOPT_PUT,1L);
   curl_easy_setopt(curl_ptr,CURLOPT_INFILESIZE_LARGE,(curl_off_t)(data_ptr->size - 1));
 
   // - ERROR -
@@ -318,6 +330,89 @@ bool bic_curl_method_PUT_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
     curl_easy_cleanup(curl_ptr);
 
     exception_s::throw_exception(it,module.error_base + c_error_CURL_ERROR_WHILE_PERFORMING_PUT_REQUEST,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - push terminating character -
+  write_buffer.push('\0');
+
+  // - create result string -
+  string_s *res_data_ptr = it.get_new_string_ptr();
+
+  res_data_ptr->size = write_buffer.used;
+  res_data_ptr->data = write_buffer.data;
+
+  // - create curl_result object -
+  curl_result_s *res_ptr = (curl_result_s *)cmalloc(sizeof(curl_result_s));
+  res_ptr->init();
+
+  // - set curl pointer -
+  res_ptr->curl_ptr = curl_ptr;
+
+  // - set result data location -
+  BIC_CREATE_NEW_LOCATION(data_location,c_bi_class_string,res_data_ptr);
+  res_ptr->data_ptr = data_location;
+
+  // - set result location -
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_curl_result,res_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_curl_method_POST_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_string ||
+      src_1_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_curl,"POST#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  string_s *address_ptr = (string_s *)src_0_location->v_data_ptr;
+  string_s *data_ptr = (string_s *)src_1_location->v_data_ptr;
+
+  // - create curl session -
+  CURL *curl_ptr = curl_easy_init();
+
+  // - ERROR -
+  if (curl_ptr == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CURL_CANNOT_CREATE_SESSION,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - create read buffer -
+  read_buffer_s read_buffer;
+  read_buffer.init(*data_ptr);
+
+  // - create write buffer -
+  bc_array_s write_buffer;
+  write_buffer.init();
+
+  curl_easy_setopt(curl_ptr,CURLOPT_URL,address_ptr->data);
+  curl_easy_setopt(curl_ptr,CURLOPT_READFUNCTION,cb_read_buffer);
+  curl_easy_setopt(curl_ptr,CURLOPT_READDATA,&read_buffer);
+  curl_easy_setopt(curl_ptr,CURLOPT_WRITEFUNCTION,cb_write_buffer);
+  curl_easy_setopt(curl_ptr,CURLOPT_WRITEDATA,&write_buffer);
+  curl_easy_setopt(curl_ptr,CURLOPT_POST,1L);
+  curl_easy_setopt(curl_ptr,CURLOPT_POSTFIELDSIZE_LARGE,(curl_off_t)(data_ptr->size - 1));
+
+  // - ERROR -
+  if (curl_easy_perform(curl_ptr) != CURLE_OK)
+  {
+    write_buffer.clear();
+    curl_easy_cleanup(curl_ptr);
+
+    exception_s::throw_exception(it,module.error_base + c_error_CURL_ERROR_WHILE_PERFORMING_POST_REQUEST,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
