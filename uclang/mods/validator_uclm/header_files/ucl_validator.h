@@ -68,7 +68,7 @@ struct validator_s
   string_rb_tree_s regex_map;
   pointer_array_s regex_list;
 
-  unsigned recognize_property(const char *string);
+  static unsigned recognize_property(const char *a_string);
   bool validate_pair(location_s *a_value,location_s *a_props);
 
   inline void init();

@@ -32,11 +32,11 @@ const char *c_prop_names[c_prop_name_cnt] =
  * methods of structure validator_s
  */
 
-unsigned validator_s::recognize_property(const char *string)
+unsigned validator_s::recognize_property(const char *a_string)
 {/*{{{*/
 #define GET_NEXT_CHAR() \
 {\
-   in_char = string[input_idx];\
+   in_char = a_string[input_idx];\
 }
 
 #define CLOSE_CHAR(RET_TERM_IDX) \
