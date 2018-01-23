@@ -62,6 +62,7 @@ struct curl_props_s
 struct curl_multi_s
 {
   CURLM *curlm_ptr;
+  location_s *callback_dlg;
   long long int timer_time;
   fd_flags_rb_tree_s poll_fds;
   pointer_list_s curl_list;
@@ -186,6 +187,7 @@ inline long long int curl_multi_s::get_stamp()
 inline void curl_multi_s::init()
 {/*{{{*/
   curlm_ptr = nullptr;
+  callback_dlg = nullptr;;
   timer_time = 0;
   poll_fds.init();
   curl_list.init();
@@ -222,6 +224,12 @@ inline void curl_multi_s::clear(interpreter_thread_s &it)
   if (curlm_ptr != nullptr)
   {
     curl_multi_cleanup(curlm_ptr);
+  }
+
+  // - release callback delegate -
+  if (callback_dlg != nullptr)
+  {
+    it.release_location_ptr(callback_dlg);
   }
 
   poll_fds.clear();

@@ -1204,11 +1204,8 @@ bool bic_tcn_caller_method_TcnCaller_2(interpreter_thread_s &it,unsigned stack_b
   // - ERROR -
   UCTCNMD_CHECK_INTEGER_U8_RANGE(function,1);
 
-  // - retrieve delegate pointer -
-  delegate_s *delegate_ptr = (delegate_s *)src_1_location->v_data_ptr;
-
   // - ERROR -
-  if (delegate_ptr->param_cnt != 1)
+  if (((delegate_s *)src_1_location->v_data_ptr)->param_cnt != 1)
   {
     exception_s::throw_exception(it,module.error_base + c_error_TCN_CALLER_WRONG_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1451,11 +1448,8 @@ bool bic_tcn_replier_method_TcnReplier_3(interpreter_thread_s &it,unsigned stack
     return false;
   }
 
-  // - retrieve delegate pointer -
-  delegate_s *delegate_ptr = (delegate_s *)src_2_location->v_data_ptr;
-
   // - ERROR -
-  if (delegate_ptr->param_cnt != 1)
+  if (((delegate_s *)src_2_location->v_data_ptr)->param_cnt != 1)
   {
     exception_s::throw_exception(it,module.error_base + c_error_TCN_REPLIER_WRONG_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;

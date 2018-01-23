@@ -452,9 +452,9 @@ built_in_method_s curl_multi_methods[] =
     bic_curl_multi_operator_binary_equal
   },
   {
-    "CurlMulti#0",
+    "CurlMulti#1",
     c_modifier_public | c_modifier_final,
-    bic_curl_multi_method_CurlMulti_0
+    bic_curl_multi_method_CurlMulti_1
   },
   {
     "GET#2",
@@ -682,9 +682,28 @@ bool bic_curl_multi_operator_binary_equal(interpreter_thread_s &it,unsigned stac
   return true;
 }/*}}}*/
 
-bool bic_curl_multi_method_CurlMulti_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_curl_multi_method_CurlMulti_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_delegate)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("CurlMulti#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  // - ERROR -
+  if (((delegate_s *)src_0_location->v_data_ptr)->param_cnt != 1)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
 
   CURLM *curlm_ptr = curl_multi_init();
 
@@ -700,6 +719,10 @@ bool bic_curl_multi_method_CurlMulti_0(interpreter_thread_s &it,unsigned stack_b
   cm_ptr->init();
 
   cm_ptr->curlm_ptr = curlm_ptr;
+
+  // - register callback delegate -
+  src_0_location->v_reference_cnt.atomic_inc();
+  cm_ptr->callback_dlg = src_0_location;
 
   curl_multi_setopt(curlm_ptr,CURLMOPT_SOCKETFUNCTION,curl_multi_s::socket_callback);
   curl_multi_setopt(curlm_ptr,CURLMOPT_SOCKETDATA,cm_ptr);
@@ -898,9 +921,6 @@ bool bic_curl_multi_method_process_0(interpreter_thread_s &it,unsigned stack_bas
   // - if there are any messages in completed transfers queue -
   if (msg != nullptr)
   {
-    pointer_array_s *array_ptr = it.get_new_array_ptr();
-    array_ptr->init_size(1 + msg_cnt);
-
     do {
       CURL *curl_ptr = msg->easy_handle;
 
@@ -944,24 +964,32 @@ bool bic_curl_multi_method_process_0(interpreter_thread_s &it,unsigned stack_bas
       res_ptr->user_loc = curl_props->user_loc;
       curl_props->user_loc = nullptr;
 
-      // - push result location to array -
-      BIC_CREATE_NEW_LOCATION(res_location,c_bi_class_curl_result,res_ptr);
-      array_ptr->push(res_location);
-
       // - release curl properties -
       curl_props->clear(it);
       cfree(curl_props);
 
+      {
+        delegate_s *delegate_ptr = (delegate_s *)cm_ptr->callback_dlg->v_data_ptr;
+
+        // - create result location -
+        BIC_CREATE_NEW_LOCATION_REFS(res_location,c_bi_class_curl_result,res_ptr,0);
+
+        const unsigned param_cnt = 1;
+        pointer *param_data = (pointer *)&res_location;
+
+        // - call delegate method -
+        location_s *trg_location = nullptr;
+        BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,operands[c_source_pos_idx],
+          return false;
+        );
+        it.release_location_ptr(trg_location);
+      }
+
       msg = curl_multi_info_read(cm_ptr->curlm_ptr,&msg_cnt);
     } while(msg != nullptr);
+  }
 
-    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
-    BIC_SET_RESULT(new_location);
-  }
-  else
-  {
-    BIC_SET_RESULT_BLANK();
-  }
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
