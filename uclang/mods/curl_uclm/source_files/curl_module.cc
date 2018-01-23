@@ -5,12 +5,13 @@ include "curl_module.h"
 
 // - CURL indexes of built in classes -
 unsigned c_bi_class_curl = c_idx_not_exist;
+unsigned c_bi_class_curl_multi = c_idx_not_exist;
 unsigned c_bi_class_curl_result = c_idx_not_exist;
 
 // - CURL module -
 built_in_module_s module =
 {/*{{{*/
-  2,                    // Class count
+  3,                    // Class count
   curl_classes,         // Classes
 
   0,                    // Error base index
@@ -25,6 +26,7 @@ built_in_module_s module =
 built_in_class_s *curl_classes[] =
 {/*{{{*/
   &curl_class,
+  &curl_multi_class,
   &curl_result_class,
 };/*}}}*/
 
@@ -32,11 +34,11 @@ built_in_class_s *curl_classes[] =
 const char *curl_error_strings[] =
 {/*{{{*/
   "error_CURL_CANNOT_CREATE_SESSION",
-  "error_CURL_ERROR_WHILE_PERFORMING_GET_REQUEST",
-  "error_CURL_ERROR_WHILE_PERFORMING_PUT_REQUEST",
-  "error_CURL_ERROR_WHILE_PERFORMING_POST_REQUEST",
-  "error_CURL_ERROR_WHILE_PERFORMING_DELETE_REQUEST",
-  "error_CURL_ERROR_WHILE_PERFORMING_HEAD_REQUEST",
+  "error_CURL_ERROR_WHILE_PERFORMING_HTTP_REQUEST",
+  "error_CURL_MULTI_CANNOT_CREATE_SESSION",
+  "error_CURL_MULTI_CANNOT_ADD_HANDLER",
+  "error_CURL_MULTI_SOCKET_ACTION_ERROR",
+  "error_CURL_MULTI_POLL_ERROR",
   "error_CURL_RESULT_UNSUPPORTED_INFO_VALUE_TYPE",
   "error_CURL_RESULT_ERROR_WHILE_GET_INFO",
 };/*}}}*/
@@ -48,6 +50,9 @@ bool curl_initialize(script_parser_s &sp)
 
   // - initialize curl class identifier -
   c_bi_class_curl = class_base_idx++;
+
+  // - initialize curl_multi class identifier -
+  c_bi_class_curl_multi = class_base_idx++;
 
   // - initialize curl_result class identifier -
   c_bi_class_curl_result = class_base_idx++;
@@ -70,39 +75,39 @@ bool curl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nCannot create cURL session\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_CURL_ERROR_WHILE_PERFORMING_GET_REQUEST:
+  case c_error_CURL_ERROR_WHILE_PERFORMING_HTTP_REQUEST:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while performing HTTP GET request\n");
+    fprintf(stderr,"\nError while performing HTTP request\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_CURL_ERROR_WHILE_PERFORMING_PUT_REQUEST:
+  case c_error_CURL_MULTI_CANNOT_CREATE_SESSION:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while performing HTTP PUT request\n");
+    fprintf(stderr,"\nCannot create cURL multi session\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_CURL_ERROR_WHILE_PERFORMING_POST_REQUEST:
+  case c_error_CURL_MULTI_CANNOT_ADD_HANDLER:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while performing HTTP POST request\n");
+    fprintf(stderr,"\nCannot add curl easy handler to multi handler\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_CURL_ERROR_WHILE_PERFORMING_DELETE_REQUEST:
+  case c_error_CURL_MULTI_SOCKET_ACTION_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while performing HTTP DELETE request\n");
+    fprintf(stderr,"\nError while performing curl multi handle socket action\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_CURL_ERROR_WHILE_PERFORMING_HEAD_REQUEST:
+  case c_error_CURL_MULTI_POLL_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while performing HTTP HEAD request\n");
+    fprintf(stderr,"\nError while polling curl multi handle file descriptors\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_CURL_RESULT_UNSUPPORTED_INFO_VALUE_TYPE:
@@ -192,6 +197,162 @@ built_in_variable_s curl_variables[] =
 {/*{{{*/
 };/*}}}*/
 
+#define BIC_CURL_GET_DELETE_HEAD_METHODS(NAME,OPTIONS) \
+{/*{{{*/\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+  \
+  if (src_0_location->v_type != c_bi_class_string)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_curl,NAME);\
+    new_exception->params.push(1);\
+    new_exception->params.push(src_0_location->v_type);\
+    \
+    return false;\
+  }\
+  \
+  string_s *address_ptr = (string_s *)src_0_location->v_data_ptr;\
+  \
+  /* - create curl session - */\
+  CURL *curl_ptr = curl_easy_init();\
+  \
+  /* - ERROR - */\
+  if (curl_ptr == nullptr)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_CURL_CANNOT_CREATE_SESSION,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  /* - create write buffer - */\
+  bc_array_s write_buffer;\
+  write_buffer.init();\
+  \
+  curl_easy_setopt(curl_ptr,CURLOPT_URL,address_ptr->data);\
+  curl_easy_setopt(curl_ptr,CURLOPT_WRITEFUNCTION,cb_write_buffer);\
+  curl_easy_setopt(curl_ptr,CURLOPT_WRITEDATA,&write_buffer);\
+  OPTIONS;\
+  curl_easy_setopt(curl_ptr,CURLOPT_PRIVATE,nullptr);\
+  \
+  /* - ERROR - */\
+  if (curl_easy_perform(curl_ptr) != CURLE_OK)\
+  {\
+    write_buffer.clear();\
+    curl_easy_cleanup(curl_ptr);\
+    \
+    exception_s::throw_exception(it,module.error_base + c_error_CURL_ERROR_WHILE_PERFORMING_HTTP_REQUEST,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  /* - push terminating character - */\
+  write_buffer.push('\0');\
+  \
+  /* - create result string - */\
+  string_s *res_data_ptr = it.get_new_string_ptr();\
+  \
+  res_data_ptr->size = write_buffer.used;\
+  res_data_ptr->data = write_buffer.data;\
+  \
+  /* - create curl_result object - */\
+  curl_result_s *res_ptr = (curl_result_s *)cmalloc(sizeof(curl_result_s));\
+  res_ptr->init();\
+  \
+  /* - set curl pointer - */\
+  res_ptr->curl_ptr = curl_ptr;\
+  \
+  /* - set result data location - */\
+  BIC_CREATE_NEW_LOCATION(data_location,c_bi_class_string,res_data_ptr);\
+  res_ptr->data_loc = data_location;\
+  \
+  /* - set result location - */\
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_curl_result,res_ptr);\
+  BIC_SET_RESULT(new_location);\
+  \
+  return true;\
+}/*}}}*/
+
+#define BIC_CURL_PUT_POST_METHODS(NAME,OPTIONS) \
+{/*{{{*/\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);\
+  \
+  if (src_0_location->v_type != c_bi_class_string ||\
+      src_1_location->v_type != c_bi_class_string)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_curl,NAME);\
+    new_exception->params.push(2);\
+    new_exception->params.push(src_0_location->v_type);\
+    new_exception->params.push(src_1_location->v_type);\
+    \
+    return false;\
+  }\
+  \
+  string_s *address_ptr = (string_s *)src_0_location->v_data_ptr;\
+  string_s *data_ptr = (string_s *)src_1_location->v_data_ptr;\
+  \
+  /* - create curl session - */\
+  CURL *curl_ptr = curl_easy_init();\
+  \
+  /* - ERROR - */\
+  if (curl_ptr == nullptr)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_CURL_CANNOT_CREATE_SESSION,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  /* - create read buffer - */\
+  read_buffer_s read_buffer;\
+  read_buffer.init(*data_ptr);\
+  \
+  /* - create write buffer - */\
+  bc_array_s write_buffer;\
+  write_buffer.init();\
+  \
+  curl_easy_setopt(curl_ptr,CURLOPT_URL,address_ptr->data);\
+  curl_easy_setopt(curl_ptr,CURLOPT_READFUNCTION,cb_read_buffer);\
+  curl_easy_setopt(curl_ptr,CURLOPT_READDATA,&read_buffer);\
+  curl_easy_setopt(curl_ptr,CURLOPT_WRITEFUNCTION,cb_write_buffer);\
+  curl_easy_setopt(curl_ptr,CURLOPT_WRITEDATA,&write_buffer);\
+  OPTIONS;\
+  curl_easy_setopt(curl_ptr,CURLOPT_PRIVATE,nullptr);\
+  \
+  /* - ERROR - */\
+  if (curl_easy_perform(curl_ptr) != CURLE_OK)\
+  {\
+    write_buffer.clear();\
+    curl_easy_cleanup(curl_ptr);\
+    \
+    exception_s::throw_exception(it,module.error_base + c_error_CURL_ERROR_WHILE_PERFORMING_HTTP_REQUEST,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  /* - push terminating character - */\
+  write_buffer.push('\0');\
+  \
+  /* - create result string - */\
+  string_s *res_data_ptr = it.get_new_string_ptr();\
+  \
+  res_data_ptr->size = write_buffer.used;\
+  res_data_ptr->data = write_buffer.data;\
+  \
+  /* - create curl_result object - */\
+  curl_result_s *res_ptr = (curl_result_s *)cmalloc(sizeof(curl_result_s));\
+  res_ptr->init();\
+  \
+  /* - set curl pointer - */\
+  res_ptr->curl_ptr = curl_ptr;\
+  \
+  /* - set result data location - */\
+  BIC_CREATE_NEW_LOCATION(data_location,c_bi_class_string,res_data_ptr);\
+  res_ptr->data_loc = data_location;\
+  \
+  /* - set result location - */\
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_curl_result,res_ptr);\
+  BIC_SET_RESULT(new_location);\
+  \
+  return true;\
+}/*}}}*/
+
 void bic_curl_consts(location_array_s &const_locations)
 {/*{{{*/
 }/*}}}*/
@@ -208,384 +369,38 @@ void bic_curl_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_curl_method_GET_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_curl,"GET#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
-  string_s *address_ptr = (string_s *)src_0_location->v_data_ptr;
-
-  // - create curl session -
-  CURL *curl_ptr = curl_easy_init();
-
-  // - ERROR -
-  if (curl_ptr == nullptr)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_CURL_CANNOT_CREATE_SESSION,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - create write buffer -
-  bc_array_s write_buffer;
-  write_buffer.init();
-
-  curl_easy_setopt(curl_ptr,CURLOPT_URL,address_ptr->data);
-  curl_easy_setopt(curl_ptr,CURLOPT_WRITEFUNCTION,cb_write_buffer);
-  curl_easy_setopt(curl_ptr,CURLOPT_WRITEDATA,&write_buffer);
-
-  // - ERROR -
-  if (curl_easy_perform(curl_ptr) != CURLE_OK)
-  {
-    write_buffer.clear();
-    curl_easy_cleanup(curl_ptr);
-
-    exception_s::throw_exception(it,module.error_base + c_error_CURL_ERROR_WHILE_PERFORMING_GET_REQUEST,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - push terminating character -
-  write_buffer.push('\0');
-
-  // - create result string -
-  string_s *res_data_ptr = it.get_new_string_ptr();
-
-  res_data_ptr->size = write_buffer.used;
-  res_data_ptr->data = write_buffer.data;
-
-  // - create curl_result object -
-  curl_result_s *res_ptr = (curl_result_s *)cmalloc(sizeof(curl_result_s));
-  res_ptr->init();
-
-  // - set curl pointer -
-  res_ptr->curl_ptr = curl_ptr;
-
-  // - set result data location -
-  BIC_CREATE_NEW_LOCATION(data_location,c_bi_class_string,res_data_ptr);
-  res_ptr->data_ptr = data_location;
-
-  // - set result location -
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_curl_result,res_ptr);
-  BIC_SET_RESULT(new_location);
-
-  return true;
+  BIC_CURL_GET_DELETE_HEAD_METHODS("GET#1",);
 }/*}}}*/
 
 bool bic_curl_method_PUT_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string ||
-      src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_curl,"PUT#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
-
-  string_s *address_ptr = (string_s *)src_0_location->v_data_ptr;
-  string_s *data_ptr = (string_s *)src_1_location->v_data_ptr;
-
-  // - create curl session -
-  CURL *curl_ptr = curl_easy_init();
-
-  // - ERROR -
-  if (curl_ptr == nullptr)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_CURL_CANNOT_CREATE_SESSION,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - create read buffer -
-  read_buffer_s read_buffer;
-  read_buffer.init(*data_ptr);
-
-  // - create write buffer -
-  bc_array_s write_buffer;
-  write_buffer.init();
-
-  curl_easy_setopt(curl_ptr,CURLOPT_URL,address_ptr->data);
-  curl_easy_setopt(curl_ptr,CURLOPT_READFUNCTION,cb_read_buffer);
-  curl_easy_setopt(curl_ptr,CURLOPT_READDATA,&read_buffer);
-  curl_easy_setopt(curl_ptr,CURLOPT_WRITEFUNCTION,cb_write_buffer);
-  curl_easy_setopt(curl_ptr,CURLOPT_WRITEDATA,&write_buffer);
-  curl_easy_setopt(curl_ptr,CURLOPT_UPLOAD,1L);
-  curl_easy_setopt(curl_ptr,CURLOPT_INFILESIZE_LARGE,(curl_off_t)(data_ptr->size - 1));
-
-  // - ERROR -
-  if (curl_easy_perform(curl_ptr) != CURLE_OK)
-  {
-    write_buffer.clear();
-    curl_easy_cleanup(curl_ptr);
-
-    exception_s::throw_exception(it,module.error_base + c_error_CURL_ERROR_WHILE_PERFORMING_PUT_REQUEST,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - push terminating character -
-  write_buffer.push('\0');
-
-  // - create result string -
-  string_s *res_data_ptr = it.get_new_string_ptr();
-
-  res_data_ptr->size = write_buffer.used;
-  res_data_ptr->data = write_buffer.data;
-
-  // - create curl_result object -
-  curl_result_s *res_ptr = (curl_result_s *)cmalloc(sizeof(curl_result_s));
-  res_ptr->init();
-
-  // - set curl pointer -
-  res_ptr->curl_ptr = curl_ptr;
-
-  // - set result data location -
-  BIC_CREATE_NEW_LOCATION(data_location,c_bi_class_string,res_data_ptr);
-  res_ptr->data_ptr = data_location;
-
-  // - set result location -
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_curl_result,res_ptr);
-  BIC_SET_RESULT(new_location);
-
-  return true;
+  BIC_CURL_PUT_POST_METHODS("PUT#2",
+    curl_easy_setopt(curl_ptr,CURLOPT_UPLOAD,1L);
+    curl_easy_setopt(curl_ptr,CURLOPT_INFILESIZE_LARGE,(curl_off_t)(data_ptr->size - 1));
+  );
 }/*}}}*/
 
 bool bic_curl_method_POST_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string ||
-      src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_curl,"POST#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
-
-  string_s *address_ptr = (string_s *)src_0_location->v_data_ptr;
-  string_s *data_ptr = (string_s *)src_1_location->v_data_ptr;
-
-  // - create curl session -
-  CURL *curl_ptr = curl_easy_init();
-
-  // - ERROR -
-  if (curl_ptr == nullptr)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_CURL_CANNOT_CREATE_SESSION,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - create read buffer -
-  read_buffer_s read_buffer;
-  read_buffer.init(*data_ptr);
-
-  // - create write buffer -
-  bc_array_s write_buffer;
-  write_buffer.init();
-
-  curl_easy_setopt(curl_ptr,CURLOPT_URL,address_ptr->data);
-  curl_easy_setopt(curl_ptr,CURLOPT_READFUNCTION,cb_read_buffer);
-  curl_easy_setopt(curl_ptr,CURLOPT_READDATA,&read_buffer);
-  curl_easy_setopt(curl_ptr,CURLOPT_WRITEFUNCTION,cb_write_buffer);
-  curl_easy_setopt(curl_ptr,CURLOPT_WRITEDATA,&write_buffer);
-  curl_easy_setopt(curl_ptr,CURLOPT_POST,1L);
-  curl_easy_setopt(curl_ptr,CURLOPT_POSTFIELDSIZE_LARGE,(curl_off_t)(data_ptr->size - 1));
-
-  // - ERROR -
-  if (curl_easy_perform(curl_ptr) != CURLE_OK)
-  {
-    write_buffer.clear();
-    curl_easy_cleanup(curl_ptr);
-
-    exception_s::throw_exception(it,module.error_base + c_error_CURL_ERROR_WHILE_PERFORMING_POST_REQUEST,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - push terminating character -
-  write_buffer.push('\0');
-
-  // - create result string -
-  string_s *res_data_ptr = it.get_new_string_ptr();
-
-  res_data_ptr->size = write_buffer.used;
-  res_data_ptr->data = write_buffer.data;
-
-  // - create curl_result object -
-  curl_result_s *res_ptr = (curl_result_s *)cmalloc(sizeof(curl_result_s));
-  res_ptr->init();
-
-  // - set curl pointer -
-  res_ptr->curl_ptr = curl_ptr;
-
-  // - set result data location -
-  BIC_CREATE_NEW_LOCATION(data_location,c_bi_class_string,res_data_ptr);
-  res_ptr->data_ptr = data_location;
-
-  // - set result location -
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_curl_result,res_ptr);
-  BIC_SET_RESULT(new_location);
-
-  return true;
+  BIC_CURL_PUT_POST_METHODS("POST#2",
+    curl_easy_setopt(curl_ptr,CURLOPT_POST,1L);
+    curl_easy_setopt(curl_ptr,CURLOPT_POSTFIELDSIZE_LARGE,(curl_off_t)(data_ptr->size - 1));
+  );
 }/*}}}*/
 
 bool bic_curl_method_DELETE_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_curl,"DELETE#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
-  string_s *address_ptr = (string_s *)src_0_location->v_data_ptr;
-
-  // - create curl session -
-  CURL *curl_ptr = curl_easy_init();
-
-  // - ERROR -
-  if (curl_ptr == nullptr)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_CURL_CANNOT_CREATE_SESSION,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - create write buffer -
-  bc_array_s write_buffer;
-  write_buffer.init();
-
-  curl_easy_setopt(curl_ptr,CURLOPT_URL,address_ptr->data);
-  curl_easy_setopt(curl_ptr,CURLOPT_WRITEFUNCTION,cb_write_buffer);
-  curl_easy_setopt(curl_ptr,CURLOPT_WRITEDATA,&write_buffer);
-  curl_easy_setopt(curl_ptr,CURLOPT_CUSTOMREQUEST,"DELETE");
-
-  // - ERROR -
-  if (curl_easy_perform(curl_ptr) != CURLE_OK)
-  {
-    write_buffer.clear();
-    curl_easy_cleanup(curl_ptr);
-
-    exception_s::throw_exception(it,module.error_base + c_error_CURL_ERROR_WHILE_PERFORMING_DELETE_REQUEST,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - push terminating character -
-  write_buffer.push('\0');
-
-  // - create result string -
-  string_s *res_data_ptr = it.get_new_string_ptr();
-
-  res_data_ptr->size = write_buffer.used;
-  res_data_ptr->data = write_buffer.data;
-
-  // - create curl_result object -
-  curl_result_s *res_ptr = (curl_result_s *)cmalloc(sizeof(curl_result_s));
-  res_ptr->init();
-
-  // - set curl pointer -
-  res_ptr->curl_ptr = curl_ptr;
-
-  // - set result data location -
-  BIC_CREATE_NEW_LOCATION(data_location,c_bi_class_string,res_data_ptr);
-  res_ptr->data_ptr = data_location;
-
-  // - set result location -
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_curl_result,res_ptr);
-  BIC_SET_RESULT(new_location);
-
-  return true;
+  BIC_CURL_GET_DELETE_HEAD_METHODS("DELETE#1",
+    curl_easy_setopt(curl_ptr,CURLOPT_CUSTOMREQUEST,"DELETE");
+  );
 }/*}}}*/
 
 bool bic_curl_method_HEAD_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_curl,"HEAD#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
-  string_s *address_ptr = (string_s *)src_0_location->v_data_ptr;
-
-  // - create curl session -
-  CURL *curl_ptr = curl_easy_init();
-
-  // - ERROR -
-  if (curl_ptr == nullptr)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_CURL_CANNOT_CREATE_SESSION,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - create write buffer -
-  bc_array_s write_buffer;
-  write_buffer.init();
-
-  curl_easy_setopt(curl_ptr,CURLOPT_URL,address_ptr->data);
-  curl_easy_setopt(curl_ptr,CURLOPT_WRITEFUNCTION,cb_write_buffer);
-  curl_easy_setopt(curl_ptr,CURLOPT_WRITEDATA,&write_buffer);
-  curl_easy_setopt(curl_ptr,CURLOPT_HEADER,1);
-  curl_easy_setopt(curl_ptr,CURLOPT_NOBODY,1);
-
-  // - ERROR -
-  if (curl_easy_perform(curl_ptr) != CURLE_OK)
-  {
-    write_buffer.clear();
-    curl_easy_cleanup(curl_ptr);
-
-    exception_s::throw_exception(it,module.error_base + c_error_CURL_ERROR_WHILE_PERFORMING_HEAD_REQUEST,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - push terminating character -
-  write_buffer.push('\0');
-
-  // - create result string -
-  string_s *res_data_ptr = it.get_new_string_ptr();
-
-  res_data_ptr->size = write_buffer.used;
-  res_data_ptr->data = write_buffer.data;
-
-  // - create curl_result object -
-  curl_result_s *res_ptr = (curl_result_s *)cmalloc(sizeof(curl_result_s));
-  res_ptr->init();
-
-  // - set curl pointer -
-  res_ptr->curl_ptr = curl_ptr;
-
-  // - set result data location -
-  BIC_CREATE_NEW_LOCATION(data_location,c_bi_class_string,res_data_ptr);
-  res_ptr->data_ptr = data_location;
-
-  // - set result location -
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_curl_result,res_ptr);
-  BIC_SET_RESULT(new_location);
-
-  return true;
+  BIC_CURL_GET_DELETE_HEAD_METHODS("HEAD#1",
+    curl_easy_setopt(curl_ptr,CURLOPT_HEADER,1);
+    curl_easy_setopt(curl_ptr,CURLOPT_NOBODY,1);
+  );
 }/*}}}*/
 
 bool bic_curl_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -606,12 +421,575 @@ bool bic_curl_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *o
   return true;
 }/*}}}*/
 
+// - class CURL_MULTI -
+built_in_class_s curl_multi_class =
+{/*{{{*/
+  "CurlMulti",
+  c_modifier_public | c_modifier_final,
+  12, curl_multi_methods,
+  0, curl_multi_variables,
+  bic_curl_multi_consts,
+  bic_curl_multi_init,
+  bic_curl_multi_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s curl_multi_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_curl_multi_operator_binary_equal
+  },
+  {
+    "CurlMulti#0",
+    c_modifier_public | c_modifier_final,
+    bic_curl_multi_method_CurlMulti_0
+  },
+  {
+    "GET#2",
+    c_modifier_public | c_modifier_final,
+    bic_curl_multi_method_GET_2
+  },
+  {
+    "PUT#3",
+    c_modifier_public | c_modifier_final,
+    bic_curl_multi_method_PUT_3
+  },
+  {
+    "POST#3",
+    c_modifier_public | c_modifier_final,
+    bic_curl_multi_method_POST_3
+  },
+  {
+    "DELETE#2",
+    c_modifier_public | c_modifier_final,
+    bic_curl_multi_method_DELETE_2
+  },
+  {
+    "HEAD#2",
+    c_modifier_public | c_modifier_final,
+    bic_curl_multi_method_HEAD_2
+  },
+  {
+    "get_fds#0",
+    c_modifier_public | c_modifier_final,
+    bic_curl_multi_method_get_fds_0
+  },
+  {
+    "timeout#0",
+    c_modifier_public | c_modifier_final,
+    bic_curl_multi_method_timeout_0
+  },
+  {
+    "process#0",
+    c_modifier_public | c_modifier_final,
+    bic_curl_multi_method_process_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_curl_multi_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_curl_multi_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s curl_multi_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+#define BIC_CURL_MULTI_GET_DELETE_HEAD_METHODS(NAME,OPTIONS) \
+{/*{{{*/\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);\
+  \
+  if (src_0_location->v_type != c_bi_class_string)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
+    new_exception->params.push(2);\
+    new_exception->params.push(src_0_location->v_type);\
+    new_exception->params.push(src_1_location->v_type);\
+    \
+    return false;\
+  }\
+  \
+  curl_multi_s *cm_ptr = (curl_multi_s *)dst_location->v_data_ptr;\
+  string_s *address_ptr = (string_s *)src_0_location->v_data_ptr;\
+  \
+  /* - create curl session - */\
+  CURL *curl_ptr = curl_easy_init();\
+  \
+  /* - ERROR - */\
+  if (curl_ptr == nullptr)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_CURL_CANNOT_CREATE_SESSION,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  /* - ERROR - */\
+  if (curl_multi_add_handle(cm_ptr->curlm_ptr,curl_ptr) != CURLM_OK)\
+  {\
+    curl_easy_cleanup(curl_ptr);\
+    \
+    exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_CANNOT_ADD_HANDLER,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  curl_props_s *curl_props = (curl_props_s *)cmalloc(sizeof(curl_props_s));\
+  curl_props->init();\
+  \
+  curl_props->curl_ptr = curl_ptr;\
+  \
+  /* - append curl to list - */\
+  curl_props->index = cm_ptr->curl_list.append(curl_ptr);\
+  \
+  /* - set user data location - */\
+  src_1_location->v_reference_cnt.atomic_inc();\
+  curl_props->user_loc = src_1_location;\
+  \
+  /* - setup curl easy - */\
+  curl_easy_setopt(curl_ptr,CURLOPT_URL,address_ptr->data);\
+  curl_easy_setopt(curl_ptr,CURLOPT_WRITEFUNCTION,cb_write_buffer);\
+  curl_easy_setopt(curl_ptr,CURLOPT_WRITEDATA,&curl_props->write_buffer);\
+  OPTIONS;\
+  curl_easy_setopt(curl_ptr,CURLOPT_PRIVATE,curl_props);\
+  \
+  BIC_SET_RESULT_DESTINATION();\
+  \
+  return true;\
+}/*}}}*/
+
+#define BIC_CURL_MULTI_PUT_POST_METHODS(NAME,OPTIONS) \
+{/*{{{*/\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);\
+  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);\
+  \
+  if (src_0_location->v_type != c_bi_class_string ||\
+      src_1_location->v_type != c_bi_class_string)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
+    new_exception->params.push(3);\
+    new_exception->params.push(src_0_location->v_type);\
+    new_exception->params.push(src_1_location->v_type);\
+    new_exception->params.push(src_2_location->v_type);\
+    \
+    return false;\
+  }\
+  \
+  curl_multi_s *cm_ptr = (curl_multi_s *)dst_location->v_data_ptr;\
+  string_s *address_ptr = (string_s *)src_0_location->v_data_ptr;\
+  string_s *data_ptr = (string_s *)src_1_location->v_data_ptr;\
+  \
+  /* - create curl session - */\
+  CURL *curl_ptr = curl_easy_init();\
+  \
+  /* - ERROR - */\
+  if (curl_ptr == nullptr)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_CURL_CANNOT_CREATE_SESSION,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  /* - ERROR - */\
+  if (curl_multi_add_handle(cm_ptr->curlm_ptr,curl_ptr) != CURLM_OK)\
+  {\
+    curl_easy_cleanup(curl_ptr);\
+    \
+    exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_CANNOT_ADD_HANDLER,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  curl_props_s *curl_props = (curl_props_s *)cmalloc(sizeof(curl_props_s));\
+  curl_props->init();\
+  \
+  curl_props->curl_ptr = curl_ptr;\
+  \
+  /* - append curl to list - */\
+  curl_props->index = cm_ptr->curl_list.append(curl_ptr);\
+  \
+  curl_props->read_buffer.init(*data_ptr);\
+  \
+  /* - set read data location - */\
+  src_1_location->v_reference_cnt.atomic_inc();\
+  curl_props->read_loc = src_1_location;\
+  \
+  /* - set user data location - */\
+  src_2_location->v_reference_cnt.atomic_inc();\
+  curl_props->user_loc = src_2_location;\
+  \
+  /* - setup curl easy - */\
+  curl_easy_setopt(curl_ptr,CURLOPT_URL,address_ptr->data);\
+  curl_easy_setopt(curl_ptr,CURLOPT_READFUNCTION,cb_read_buffer);\
+  curl_easy_setopt(curl_ptr,CURLOPT_READDATA,&curl_props->read_buffer);\
+  curl_easy_setopt(curl_ptr,CURLOPT_WRITEFUNCTION,cb_write_buffer);\
+  curl_easy_setopt(curl_ptr,CURLOPT_WRITEDATA,&curl_props->write_buffer);\
+  OPTIONS;\
+  curl_easy_setopt(curl_ptr,CURLOPT_PRIVATE,curl_props);\
+  \
+  BIC_SET_RESULT_DESTINATION();\
+  \
+  return true;\
+}/*}}}*/
+
+void bic_curl_multi_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_curl_multi_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (curl_multi_s *)nullptr;
+}/*}}}*/
+
+void bic_curl_multi_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  curl_multi_s *cm_ptr = (curl_multi_s *)location_ptr->v_data_ptr;
+
+  if (cm_ptr != nullptr)
+  {
+    cm_ptr->clear(it);
+    cfree(cm_ptr);
+  }
+}/*}}}*/
+
+bool bic_curl_multi_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_curl_multi_method_CurlMulti_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  CURLM *curlm_ptr = curl_multi_init();
+
+  // - ERROR -
+  if (curlm_ptr == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_CANNOT_CREATE_SESSION,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - create curl_multi object -
+  curl_multi_s *cm_ptr = (curl_multi_s *)cmalloc(sizeof(curl_multi_s));
+  cm_ptr->init();
+
+  cm_ptr->curlm_ptr = curlm_ptr;
+
+  curl_multi_setopt(curlm_ptr,CURLMOPT_SOCKETFUNCTION,curl_multi_s::socket_callback);
+  curl_multi_setopt(curlm_ptr,CURLMOPT_SOCKETDATA,cm_ptr);
+
+  curl_multi_setopt(curlm_ptr,CURLMOPT_TIMERFUNCTION,curl_multi_s::timer_callback);
+  curl_multi_setopt(curlm_ptr,CURLMOPT_TIMERDATA,cm_ptr);
+
+  // - set curl_multi destination location -
+  dst_location->v_data_ptr = (curl_multi_s *)cm_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_curl_multi_method_GET_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_CURL_MULTI_GET_DELETE_HEAD_METHODS("GET#2",);
+}/*}}}*/
+
+bool bic_curl_multi_method_PUT_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_CURL_MULTI_PUT_POST_METHODS("PUT#3",
+    curl_easy_setopt(curl_ptr,CURLOPT_UPLOAD,1L);
+    curl_easy_setopt(curl_ptr,CURLOPT_INFILESIZE_LARGE,(curl_off_t)(data_ptr->size - 1));
+  );
+}/*}}}*/
+
+bool bic_curl_multi_method_POST_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_CURL_MULTI_PUT_POST_METHODS("POST#3",
+    curl_easy_setopt(curl_ptr,CURLOPT_POST,1L);
+    curl_easy_setopt(curl_ptr,CURLOPT_POSTFIELDSIZE_LARGE,(curl_off_t)(data_ptr->size - 1));
+  );
+}/*}}}*/
+
+bool bic_curl_multi_method_DELETE_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_CURL_MULTI_GET_DELETE_HEAD_METHODS("DELETE#2",
+    curl_easy_setopt(curl_ptr,CURLOPT_CUSTOMREQUEST,"DELETE");
+  );
+}/*}}}*/
+
+bool bic_curl_multi_method_HEAD_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_CURL_MULTI_GET_DELETE_HEAD_METHODS("HEAD#2",
+    curl_easy_setopt(curl_ptr,CURLOPT_HEADER,1);
+    curl_easy_setopt(curl_ptr,CURLOPT_NOBODY,1);
+  );
+}/*}}}*/
+
+bool bic_curl_multi_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  curl_multi_s *cm_ptr = (curl_multi_s *)dst_location->v_data_ptr;
+  fd_flags_rb_tree_s &poll_fds = cm_ptr->poll_fds;
+
+  // - create result array -
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+  if (poll_fds.root_idx != c_idx_not_exist)
+  {
+    unsigned stack[poll_fds.get_descent_stack_size()];
+    unsigned *stack_ptr = stack;
+
+    unsigned ff_idx = poll_fds.get_stack_min_value_idx(poll_fds.root_idx,&stack_ptr);
+    do {
+      fd_flags_s &fd_flags = poll_fds[ff_idx];
+
+      {
+        BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,fd_flags.fd);
+        array_ptr->push(new_location);
+      }
+
+      {
+        BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,fd_flags.flags);
+        array_ptr->push(new_location);
+      }
+
+      ff_idx = poll_fds.get_stack_next_idx(ff_idx,&stack_ptr,stack);
+    } while(ff_idx != c_idx_not_exist);
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_curl_multi_method_timeout_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  curl_multi_s *cm_ptr = (curl_multi_s *)dst_location->v_data_ptr;
+
+  long long result;
+
+  if (cm_ptr->timer_time == 0)
+  {
+    result = LLONG_MAX;
+  }
+  else
+  {
+    long long int time = curl_multi_s::get_stamp();
+    result = cm_ptr->timer_time > time ? cm_ptr->timer_time - time : 0;
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_curl_multi_method_process_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  curl_multi_s *cm_ptr = (curl_multi_s *)dst_location->v_data_ptr;
+
+  // - check timeout value -
+  if (cm_ptr->timer_time != 0 && curl_multi_s::get_stamp() >= cm_ptr->timer_time)
+  {
+    // - ERROR -
+    int running;
+    if (curl_multi_socket_action(cm_ptr->curlm_ptr,CURL_SOCKET_TIMEOUT,0,&running) != CURLM_OK)
+    {
+      exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_SOCKET_ACTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+  }
+
+  // - process poll file descriptors -
+  fd_flags_rb_tree_s &poll_fds = cm_ptr->poll_fds;
+  if (poll_fds.root_idx != c_idx_not_exist)
+  {
+    // - prepare pollfd structures -
+    nfds_t nfds = poll_fds.count;
+    pollfd fds[nfds];
+
+    unsigned stack[poll_fds.get_descent_stack_size()];
+    unsigned *stack_ptr = stack;
+
+    unsigned ff_idx = poll_fds.get_stack_min_value_idx(poll_fds.root_idx,&stack_ptr);
+    pollfd *fd_ptr = fds;
+    do {
+      fd_flags_s &fd_flags = poll_fds[ff_idx];
+
+      fd_ptr->fd = fd_flags.fd;
+      fd_ptr->events = fd_flags.flags;
+      fd_ptr->revents = 0;
+
+      ff_idx = poll_fds.get_stack_next_idx(ff_idx,&stack_ptr,stack);
+    } while(++fd_ptr,ff_idx != c_idx_not_exist);
+
+    // - call poll function -
+    int res = poll(fds,nfds,0);
+
+    // - ERROR -
+    if (res == -1)
+    {
+      exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_POLL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
+    if (res > 0)
+    {
+      pollfd *fd_ptr = fds;
+      pollfd *fd_ptr_end = fd_ptr + nfds;
+      do {
+        if (fd_ptr->revents != 0)
+        {
+          int events = 0;
+
+          if (fd_ptr->revents & (POLLIN | POLLPRI))
+            events |= CURL_CSELECT_IN;
+
+          if (fd_ptr->revents & POLLOUT)
+            events |= CURL_CSELECT_OUT;
+
+          if (fd_ptr->revents & (POLLERR | POLLHUP | POLLNVAL))
+            events |= CURL_CSELECT_ERR;
+
+          // - ERROR -
+          int running;
+          if (curl_multi_socket_action(cm_ptr->curlm_ptr,fd_ptr->fd,events,&running) != CURLM_OK)
+          {
+            exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_SOCKET_ACTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            return false;
+          }
+        }
+      } while(++fd_ptr < fd_ptr_end);
+    }
+  }
+
+  int msg_cnt;
+  CURLMsg *msg = curl_multi_info_read(cm_ptr->curlm_ptr,&msg_cnt);
+
+  // - if there are any messages in completed transfers queue -
+  if (msg != nullptr)
+  {
+    pointer_array_s *array_ptr = it.get_new_array_ptr();
+    array_ptr->init_size(1 + msg_cnt);
+
+    do {
+      CURL *curl_ptr = msg->easy_handle;
+
+      // - retrieve curl properties -
+      curl_props_s *curl_props;
+      curl_easy_getinfo(curl_ptr,CURLINFO_PRIVATE,(char **)&curl_props);
+
+      // - reset private data -
+      curl_easy_setopt(curl_ptr,CURLOPT_PRIVATE,nullptr);
+
+      // - retrieve write buffer -
+      bc_array_s write_buffer;
+      write_buffer.init();
+      write_buffer.swap(curl_props->write_buffer);
+
+      // - push terminating character -
+      write_buffer.push('\0');
+
+      // - create result string -
+      string_s *res_data_ptr = it.get_new_string_ptr();
+
+      res_data_ptr->size = write_buffer.used;
+      res_data_ptr->data = write_buffer.data;
+      
+      // - remove curl from list -
+      cm_ptr->curl_list.remove(curl_props->index);
+
+      // - create curl_result object -
+      curl_result_s *res_ptr = (curl_result_s *)cmalloc(sizeof(curl_result_s));
+      res_ptr->init();
+
+      // - set result curl pointer -
+      res_ptr->curl_ptr = curl_ptr;
+      curl_props->curl_ptr = nullptr;
+
+      // - set result data location -
+      BIC_CREATE_NEW_LOCATION(data_location,c_bi_class_string,res_data_ptr);
+      res_ptr->data_loc = data_location;
+
+      // - set user data location -
+      res_ptr->user_loc = curl_props->user_loc;
+      curl_props->user_loc = nullptr;
+
+      // - push result location to array -
+      BIC_CREATE_NEW_LOCATION(res_location,c_bi_class_curl_result,res_ptr);
+      array_ptr->push(res_location);
+
+      // - release curl properties -
+      curl_props->clear(it);
+      cfree(curl_props);
+
+      msg = curl_multi_info_read(cm_ptr->curlm_ptr,&msg_cnt);
+    } while(msg != nullptr);
+
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+    BIC_SET_RESULT(new_location);
+  }
+  else
+  {
+    BIC_SET_RESULT_BLANK();
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_curl_multi_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("CurlMulti"),"CurlMulti");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_curl_multi_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("CurlMulti");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
 // - class CURL_RESULT -
 built_in_class_s curl_result_class =
 {/*{{{*/
   "CurlResult",
   c_modifier_public | c_modifier_final,
-  5, curl_result_methods,
+  6, curl_result_methods,
   43, curl_result_variables,
   bic_curl_result_consts,
   bic_curl_result_init,
@@ -640,6 +1018,11 @@ built_in_method_s curl_result_methods[] =
     "data#0",
     c_modifier_public | c_modifier_final,
     bic_curl_result_method_data_0
+  },
+  {
+    "user_data#0",
+    c_modifier_public | c_modifier_final,
+    bic_curl_result_method_user_data_0
   },
   {
     "info#1",
@@ -796,8 +1179,28 @@ bool bic_curl_result_method_data_0(interpreter_thread_s &it,unsigned stack_base,
   curl_result_s *res_ptr = (curl_result_s *)dst_location->v_data_ptr;
 
   // - set data as result -
-  res_ptr->data_ptr->v_reference_cnt.atomic_inc();
-  BIC_SET_RESULT(res_ptr->data_ptr);
+  res_ptr->data_loc->v_reference_cnt.atomic_inc();
+  BIC_SET_RESULT(res_ptr->data_loc);
+
+  return true;
+}/*}}}*/
+
+bool bic_curl_result_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  curl_result_s *res_ptr = (curl_result_s *)dst_location->v_data_ptr;
+
+  if (res_ptr->user_loc != nullptr)
+  {
+    // - set user data as result -
+    res_ptr->user_loc->v_reference_cnt.atomic_inc();
+    BIC_SET_RESULT(res_ptr->user_loc);
+  }
+  else
+  {
+    BIC_SET_RESULT_BLANK();
+  }
 
   return true;
 }/*}}}*/

@@ -7,10 +7,12 @@ include "script_parser.h"
 @end
 
 #include <curl/curl.h>
+#include <poll.h>
 
 /*
  * definition of structure read_buffer_s
  */
+
 struct read_buffer_s
 {
   string_s *string_ptr;
@@ -20,12 +22,67 @@ struct read_buffer_s
 };
 
 /*
+ * definition of generated structures
+ */
+
+// -- fd_flags_s --
+@begin
+struct
+<
+int:fd
+int:flags
+>
+fd_flags_s;
+@end
+
+// -- fd_flags_rb_tree_s --
+@begin
+safe_rb_tree<fd_flags_s> fd_flags_rb_tree_s;
+@end
+
+/*
+ * definition of structure curl_props_s
+ */
+struct curl_props_s
+{
+  CURL *curl_ptr;
+  unsigned index;
+  bc_array_s write_buffer;
+  read_buffer_s read_buffer;
+  location_s *read_loc;
+  location_s *user_loc;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
+ * definition of structure curl_multi_s
+ */
+struct curl_multi_s
+{
+  CURLM *curlm_ptr;
+  long long int timer_time;
+  fd_flags_rb_tree_s poll_fds;
+  pointer_list_s curl_list;
+
+  static int socket_callback(CURL *easy,curl_socket_t socket,int what,void *userp,void *socketp);
+  static int timer_callback(CURLM *multi,long timeout_ms,void *userp);
+
+  static inline long long int get_stamp();
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
  * definition of structure curl_result_s
  */
 struct curl_result_s
 {
   CURL *curl_ptr;
-  location_s *data_ptr;
+  location_s *data_loc;
+  location_s *user_loc;
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
@@ -60,13 +117,127 @@ inline void read_buffer_s::init(string_s &a_string)
 }/*}}}*/
 
 /*
+ * inline methods of generated structures
+ */
+
+// -- fd_flags_s --
+@begin
+inlines fd_flags_s
+@end
+
+// -- fd_flags_rb_tree_s --
+@begin
+inlines fd_flags_rb_tree_s
+@end
+
+inline int fd_flags_rb_tree_s::__compare_value(fd_flags_s &a_first,fd_flags_s &a_second)
+{/*{{{*/
+  return a_first.fd < a_second.fd ? -1 : a_first.fd > a_second.fd ? 1 : 0;
+}/*}}}*/
+
+/*
+ * inline methods of structure curl_props_s
+ */
+
+inline void curl_props_s::init()
+{/*{{{*/
+  curl_ptr = nullptr;
+  write_buffer.init();
+  read_loc = nullptr;
+  user_loc = nullptr;
+}/*}}}*/
+
+inline void curl_props_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+  if (curl_ptr != nullptr)
+  {
+    curl_easy_cleanup(curl_ptr);
+  }
+
+  write_buffer.clear();
+
+  // - release read data location -
+  if (read_loc != nullptr)
+  {
+    it.release_location_ptr(read_loc);
+  }
+
+  // - release user data location -
+  if (user_loc != nullptr)
+  {
+    it.release_location_ptr(user_loc);
+  }
+
+  init();
+}/*}}}*/
+
+/*
+ * inline methods of structure curl_multi_s
+ */
+
+inline long long int curl_multi_s::get_stamp()
+{/*{{{*/
+  timespec tv;
+  clock_gettime(CLOCK_MONOTONIC,&tv);
+
+  return 1000LL*tv.tv_sec + tv.tv_nsec/1000000LL;
+}/*}}}*/
+
+inline void curl_multi_s::init()
+{/*{{{*/
+  curlm_ptr = nullptr;
+  timer_time = 0;
+  poll_fds.init();
+  curl_list.init();
+}/*}}}*/
+
+inline void curl_multi_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+
+  // - release all running curl transactions -
+  if (curl_list.first_idx != c_idx_not_exist)
+  {
+    unsigned curl_idx = curl_list.first_idx;
+    do {
+      CURL *curl_ptr = (CURL *)curl_list[curl_idx];
+
+      // - retrieve curl properties -
+      curl_props_s *curl_props;
+      curl_easy_getinfo(curl_ptr,CURLINFO_PRIVATE,(char **)&curl_props);
+
+      // - remove curl easy from multi -
+      curl_multi_remove_handle(curlm_ptr,curl_ptr);
+
+      // - release curl properties -
+      curl_props->clear(it);
+      cfree(curl_props);
+
+      curl_idx = curl_list.next_idx(curl_idx);
+    } while(curl_idx != c_idx_not_exist);
+  }
+
+  curl_list.clear();
+
+  // - cleanup curl multi -
+  if (curlm_ptr != nullptr)
+  {
+    curl_multi_cleanup(curlm_ptr);
+  }
+
+  poll_fds.clear();
+
+  init();
+}/*}}}*/
+
+/*
  * inline methods of structure curl_result_s
  */
 
 inline void curl_result_s::init()
 {/*{{{*/
   curl_ptr = nullptr;
-  data_ptr = nullptr;
+  data_loc = nullptr;
+  user_loc = nullptr;
 }/*}}}*/
 
 inline void curl_result_s::clear(interpreter_thread_s &it)
@@ -79,9 +250,15 @@ inline void curl_result_s::clear(interpreter_thread_s &it)
   }
 
   // - release result data -
-  if (data_ptr != nullptr)
+  if (data_loc != nullptr)
   {
-    it.release_location_ptr(data_ptr);
+    it.release_location_ptr(data_loc);
+  }
+
+  // - release user data -
+  if (user_loc != nullptr)
+  {
+    it.release_location_ptr(user_loc);
   }
 
   init();

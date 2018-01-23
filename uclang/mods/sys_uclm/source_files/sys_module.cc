@@ -5515,6 +5515,7 @@ bool bic_poll_method_poll_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 
   switch (res)
   {
+    // - ERROR -
     case -1:
     {
       exception_s::throw_exception(it,module.error_base + c_error_POLL_POLL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);

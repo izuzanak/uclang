@@ -7,6 +7,84 @@ include "ucl_curl.h"
 curl_c g_curl;
 
 /*
+ * methods of generated structures
+ */
+
+// -- fd_flags_s --
+@begin
+methods fd_flags_s
+@end
+
+// -- fd_flags_rb_tree_s --
+@begin
+methods fd_flags_rb_tree_s
+@end
+
+/*
+ * methods of structure curl_multi_s
+ */
+
+int curl_multi_s::socket_callback(CURL *easy,curl_socket_t socket,int what,void *userp,void *socketp)
+{/*{{{*/
+  fd_flags_rb_tree_s &poll_fds = ((curl_multi_s *)userp)->poll_fds;
+  fd_flags_s fd_flags = {socket,0};
+
+  switch (what)
+  {
+
+  // - set poll fd -
+  case CURL_POLL_IN:
+  case CURL_POLL_OUT:
+  case CURL_POLL_INOUT:
+    {
+      switch (what)
+      {
+      case CURL_POLL_IN:
+        fd_flags.flags = POLLIN | POLLPRI;
+        break;
+      case CURL_POLL_OUT:
+        fd_flags.flags = POLLOUT;
+        break;
+      case CURL_POLL_INOUT:
+        fd_flags.flags = POLLIN | POLLPRI | POLLOUT;
+        break;
+      }
+
+      unsigned ff_idx = poll_fds.get_idx(fd_flags);
+      if (ff_idx != c_idx_not_exist)
+      {
+        poll_fds[ff_idx].flags = fd_flags.flags;
+      }
+      else
+      {
+        poll_fds.insert(fd_flags);
+      }
+    }
+    break;
+
+  // - remove poll fd -
+  case CURL_POLL_REMOVE:
+    {
+      unsigned ff_idx = poll_fds.get_idx(fd_flags);
+      cassert(ff_idx != c_idx_not_exist);
+
+      poll_fds.remove(ff_idx);
+    }
+    break;
+  }
+
+  return 0;
+}/*}}}*/
+
+int curl_multi_s::timer_callback(CURLM *multi,long timeout_ms,void *userp)
+{/*{{{*/
+  curl_multi_s *cm_ptr = (curl_multi_s *)userp;
+  cm_ptr->timer_time = timeout_ms == -1 ? 0 : get_stamp() + timeout_ms;
+
+  return 0;
+}/*}}}*/
+
+/*
  * flobal functions
  */
 
