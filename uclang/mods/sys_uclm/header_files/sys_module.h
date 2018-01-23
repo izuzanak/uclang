@@ -116,6 +116,7 @@ enum
 
   c_error_TIMER_NEGATIVE_DELAY,
   c_error_TIMER_WRONG_DELEGATE_PARAMETER_COUNT,
+  c_error_TIMER_INVALID_TIMER_RECORD_INDEX,
 
 #ifdef ENABLE_CLASS_CLOCK
   c_error_CLOCK_CANNOT_GET_RESOLUTION,
@@ -335,6 +336,7 @@ void bic_timer_clear(interpreter_thread_s &it,location_s *location_ptr);
 bool bic_timer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_timer_method_Timer_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_timer_method_schedule_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_timer_method_cancel_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_timer_method_remain_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_timer_method_process_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_timer_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

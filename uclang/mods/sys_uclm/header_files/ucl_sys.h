@@ -55,7 +55,7 @@ timer_record_s;
 
 // -- timer_record_rb_tree_s --
 @begin
-rb_tree<timer_record_s> timer_record_rb_tree_s;
+safe_rb_tree<timer_record_s> timer_record_rb_tree_s;
 @end
 
 #ifdef ENABLE_CLASS_POLL

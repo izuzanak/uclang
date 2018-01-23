@@ -53,7 +53,7 @@ built_in_module_s module =
   sys_classes,          // Classes
 
   0,                    // Error base index
-  35                    // Error count
+  36                    // Error count
 
 #ifdef ENABLE_CLASS_SOCKET
   + 14
@@ -180,6 +180,7 @@ const char *sys_error_strings[] =
 
   "error_TIMER_NEGATIVE_DELAY",
   "error_TIMER_WRONG_DELEGATE_PARAMETER_COUNT",
+  "error_TIMER_INVALID_TIMER_RECORD_INDEX",
 
 #ifdef ENABLE_CLASS_CLOCK
   "error_CLOCK_CANNOT_GET_RESOLUTION",
@@ -666,6 +667,13 @@ bool sys_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nWrong count of delegate parameters\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TIMER_INVALID_TIMER_RECORD_INDEX:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid timer record index %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
 
@@ -5571,7 +5579,7 @@ built_in_class_s timer_class =
 {/*{{{*/
   "Timer",
   c_modifier_public | c_modifier_final,
-  7, timer_methods,
+  8, timer_methods,
   0, timer_variables,
   bic_timer_consts,
   bic_timer_init,
@@ -5605,6 +5613,11 @@ built_in_method_s timer_methods[] =
     "schedule#3",
     c_modifier_public | c_modifier_final,
     bic_timer_method_schedule_3
+  },
+  {
+    "cancel#1",
+    c_modifier_public | c_modifier_final,
+    bic_timer_method_cancel_1
   },
   {
     "process#0",
@@ -5732,7 +5745,51 @@ bool bic_timer_method_schedule_3(interpreter_thread_s &it,unsigned stack_base,ul
   record.set(timer_s::get_stamp() + delay,src_1_location,src_2_location);
 
   // - insert record to timer records list -
-  timer_ptr->records.swap_insert(record);
+  long long int result = timer_ptr->records.swap_insert(record);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_timer_method_cancel_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int index;
+
+  if (!it.retrieve_integer(src_0_location,index))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("cancel#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  timer_record_rb_tree_s &records = ((timer_s *)dst_location->v_data_ptr)->records;
+
+  // - ERROR -
+  if (index >= records.used || !records.data[index].valid)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TIMER_INVALID_TIMER_RECORD_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(index);
+
+    return false;
+  }
+
+  timer_record_s &record = records.data[index].object;
+
+  // - release record callback delegate -
+  it.release_location_ptr((location_s *)record.callback_dlg);
+
+  // - release record callback parameter -
+  it.release_location_ptr((location_s *)record.parameter);
+
+  // - remove record from records list -
+  records.remove(index);
 
   BIC_SET_RESULT_DESTINATION();
 
