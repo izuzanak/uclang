@@ -76,14 +76,6 @@ int curl_multi_s::socket_callback(CURL *easy,curl_socket_t socket,int what,void 
   return 0;
 }/*}}}*/
 
-int curl_multi_s::timer_callback(CURLM *multi,long timeout_ms,void *userp)
-{/*{{{*/
-  curl_multi_s *cm_ptr = (curl_multi_s *)userp;
-  cm_ptr->timer_time = timeout_ms == -1 ? 0 : get_stamp() + timeout_ms;
-
-  return 0;
-}/*}}}*/
-
 /*
  * flobal functions
  */

@@ -15,7 +15,7 @@ built_in_module_s module =
   curl_classes,         // Classes
 
   0,                    // Error base index
-  8,                    // Error count
+  9,                    // Error count
   curl_error_strings,   // Error strings
 
   curl_initialize,      // Initialize function
@@ -35,6 +35,7 @@ const char *curl_error_strings[] =
 {/*{{{*/
   "error_CURL_CANNOT_CREATE_SESSION",
   "error_CURL_ERROR_WHILE_PERFORMING_HTTP_REQUEST",
+  "error_CURL_MULTI_WRONG_CALLBACK_DELEGATE",
   "error_CURL_MULTI_CANNOT_CREATE_SESSION",
   "error_CURL_MULTI_CANNOT_ADD_HANDLER",
   "error_CURL_MULTI_SOCKET_ACTION_ERROR",
@@ -72,7 +73,7 @@ bool curl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nCannot create cURL session\n");
+    fprintf(stderr,"\nCannot create curl session\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_CURL_ERROR_WHILE_PERFORMING_HTTP_REQUEST:
@@ -82,11 +83,18 @@ bool curl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nError while performing HTTP request\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_CURL_MULTI_WRONG_CALLBACK_DELEGATE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong type of delegate for curl multi handler\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_CURL_MULTI_CANNOT_CREATE_SESSION:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nCannot create cURL multi session\n");
+    fprintf(stderr,"\nCannot create curl multi session\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_CURL_MULTI_CANNOT_ADD_HANDLER:
@@ -100,14 +108,14 @@ bool curl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while performing curl multi handle socket action\n");
+    fprintf(stderr,"\nError while performing curl multi handler socket action\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_CURL_MULTI_POLL_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while polling curl multi handle file descriptors\n");
+    fprintf(stderr,"\nError while polling curl multi handler file descriptors\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_CURL_RESULT_UNSUPPORTED_INFO_VALUE_TYPE:
@@ -700,8 +708,7 @@ bool bic_curl_multi_method_CurlMulti_1(interpreter_thread_s &it,unsigned stack_b
   // - ERROR -
   if (((delegate_s *)src_0_location->v_data_ptr)->param_cnt != 1)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_WRONG_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -726,9 +733,6 @@ bool bic_curl_multi_method_CurlMulti_1(interpreter_thread_s &it,unsigned stack_b
 
   curl_multi_setopt(curlm_ptr,CURLMOPT_SOCKETFUNCTION,curl_multi_s::socket_callback);
   curl_multi_setopt(curlm_ptr,CURLMOPT_SOCKETDATA,cm_ptr);
-
-  curl_multi_setopt(curlm_ptr,CURLMOPT_TIMERFUNCTION,curl_multi_s::timer_callback);
-  curl_multi_setopt(curlm_ptr,CURLMOPT_TIMERDATA,cm_ptr);
 
   // - set curl_multi destination location -
   dst_location->v_data_ptr = (curl_multi_s *)cm_ptr;
@@ -817,17 +821,11 @@ bool bic_curl_multi_method_timeout_0(interpreter_thread_s &it,unsigned stack_bas
 
   curl_multi_s *cm_ptr = (curl_multi_s *)dst_location->v_data_ptr;
 
-  long long result;
+  // - retrieve curl timeout -
+  long timeout;
+  curl_multi_timeout(cm_ptr->curlm_ptr,&timeout);
 
-  if (cm_ptr->timer_time == 0)
-  {
-    result = LLONG_MAX;
-  }
-  else
-  {
-    long long int time = curl_multi_s::get_stamp();
-    result = cm_ptr->timer_time > time ? cm_ptr->timer_time - time : 0;
-  }
+  long long result = timeout != -1 ? timeout : LLONG_MAX;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
@@ -840,8 +838,11 @@ bool bic_curl_multi_method_process_0(interpreter_thread_s &it,unsigned stack_bas
 
   curl_multi_s *cm_ptr = (curl_multi_s *)dst_location->v_data_ptr;
 
-  // - check timeout value -
-  if (cm_ptr->timer_time != 0 && curl_multi_s::get_stamp() >= cm_ptr->timer_time)
+  // - retrieve curl timeout -
+  long timeout;
+  curl_multi_timeout(cm_ptr->curlm_ptr,&timeout);
+
+  if (timeout == 0)
   {
     // - ERROR -
     int running;

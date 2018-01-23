@@ -63,12 +63,10 @@ struct curl_multi_s
 {
   CURLM *curlm_ptr;
   location_s *callback_dlg;
-  long long int timer_time;
   fd_flags_rb_tree_s poll_fds;
   pointer_list_s curl_list;
 
   static int socket_callback(CURL *easy,curl_socket_t socket,int what,void *userp,void *socketp);
-  static int timer_callback(CURLM *multi,long timeout_ms,void *userp);
 
   static inline long long int get_stamp();
 
@@ -188,7 +186,6 @@ inline void curl_multi_s::init()
 {/*{{{*/
   curlm_ptr = nullptr;
   callback_dlg = nullptr;;
-  timer_time = 0;
   poll_fds.init();
   curl_list.init();
 }/*}}}*/
