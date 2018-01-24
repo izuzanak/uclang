@@ -5772,7 +5772,7 @@ bool bic_timer_method_cancel_1(interpreter_thread_s &it,unsigned stack_base,uli 
   timer_record_rb_tree_s &records = ((timer_s *)dst_location->v_data_ptr)->records;
 
   // - ERROR -
-  if (index >= records.used || !records.data[index].valid)
+  if (index < 0 || index >= records.used || !records.data[index].valid)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TIMER_INVALID_TIMER_RECORD_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(index);

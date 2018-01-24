@@ -26,6 +26,7 @@ enum
   c_error_CURL_MULTI_CANNOT_CREATE_SESSION,
   c_error_CURL_MULTI_CANNOT_ADD_HANDLER,
   c_error_CURL_MULTI_SOCKET_ACTION_ERROR,
+  c_error_CURL_MULTI_INVALID_REQUEST_INDEX,
   c_error_CURL_MULTI_POLL_ERROR,
   c_error_CURL_RESULT_UNSUPPORTED_INFO_VALUE_TYPE,
   c_error_CURL_RESULT_ERROR_WHILE_GET_INFO,
@@ -73,6 +74,7 @@ bool bic_curl_multi_method_PUT_3(interpreter_thread_s &it,unsigned stack_base,ul
 bool bic_curl_multi_method_POST_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_multi_method_DELETE_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_multi_method_HEAD_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curl_multi_method_cancel_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_multi_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_multi_method_timeout_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_multi_method_process_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
