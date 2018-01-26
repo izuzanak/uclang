@@ -5579,7 +5579,7 @@ built_in_class_s timer_class =
 {/*{{{*/
   "Timer",
   c_modifier_public | c_modifier_final,
-  8, timer_methods,
+  9, timer_methods,
   0, timer_variables,
   bic_timer_consts,
   bic_timer_init,
@@ -5628,6 +5628,11 @@ built_in_method_s timer_methods[] =
     "remain#0",
     c_modifier_public | c_modifier_final,
     bic_timer_method_remain_0
+  },
+  {
+    "timeout#0",
+    c_modifier_public | c_modifier_final,
+    bic_timer_method_timeout_0
   },
   {
     "to_string#0",
@@ -5809,6 +5814,7 @@ bool bic_timer_method_remain_0(interpreter_thread_s &it,unsigned stack_base,uli 
     timer_record_s &record = records.data[r_idx].object;
 
     long long int result = record.target_stamp - timer_s::get_stamp();
+    if (result < 0) result = 0;
 
     BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
   }
@@ -5816,6 +5822,33 @@ bool bic_timer_method_remain_0(interpreter_thread_s &it,unsigned stack_base,uli 
   {
     BIC_SET_RESULT_BLANK();
   }
+
+  return true;
+}/*}}}*/
+
+bool bic_timer_method_timeout_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  timer_s *timer_ptr = (timer_s *)dst_location->v_data_ptr;
+  timer_record_rb_tree_s &records = timer_ptr->records;
+
+  long long int result;
+
+  if (records.root_idx != c_idx_not_exist)
+  {
+    unsigned r_idx = records.get_min_value_idx(records.root_idx);
+    timer_record_s &record = records.data[r_idx].object;
+
+    result = record.target_stamp - timer_s::get_stamp();
+    if (result < 0) result = 0;
+  }
+  else
+  {
+    result = LLONG_MAX;
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/

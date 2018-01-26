@@ -338,6 +338,7 @@ bool bic_timer_method_Timer_0(interpreter_thread_s &it,unsigned stack_base,uli *
 bool bic_timer_method_schedule_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_timer_method_cancel_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_timer_method_remain_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_timer_method_timeout_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_timer_method_process_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_timer_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_timer_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

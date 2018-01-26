@@ -261,8 +261,8 @@ bool bic_time_method_Time_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 
       datetime_s dt;
 
-    char str[15];
-    memcpy(str,string_ptr->data,15);
+      char str[15];
+      memcpy(str,string_ptr->data,15);
 
 #define BIC_TIME_RETRIEVE_COMP(TARGET,START,END) \
 {/*{{{*/\
