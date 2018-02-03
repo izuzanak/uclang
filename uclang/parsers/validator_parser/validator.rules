@@ -22,6 +22,7 @@ terminals:
   items {"items"}
   all_items {"all-items"}
   all_keys {"all-keys"}
+  in {"in"}
 
   $ !!! FIXME comment this terminal before production
    _SKIP_ {w.w*}
@@ -65,4 +66,5 @@ rules:
   <term> -> items ->> {print("items");}
   <term> -> all_items ->> {print("all_items");}
   <term> -> all_keys ->> {print("all_keys");}
+  <term> -> in ->> {print("in");}
 

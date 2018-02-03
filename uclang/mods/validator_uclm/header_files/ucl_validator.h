@@ -12,6 +12,7 @@ include "script_parser.h"
  * basic definitions and constants
  */
 
+extern unsigned c_rm_class_set;
 extern unsigned c_rm_class_dict;
 
 const unsigned c_prop_name_cnt = 17;
@@ -36,6 +37,7 @@ enum {
   prop_items,
   prop_all_items,
   prop_all_keys,
+  prop_in,
 };
 
 // - VALIDATOR error identifiers -
