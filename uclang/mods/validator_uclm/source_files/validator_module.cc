@@ -17,7 +17,7 @@ built_in_module_s module =
   validator_classes,         // Classes
 
   0,                         // Error base index
-  8,                         // Error count
+  10,                        // Error count
   validator_error_strings,   // Error strings
 
   validator_initialize,      // Initialize function
@@ -37,7 +37,9 @@ const char *validator_error_strings[] =
   "error_VALIDATOR_WRONG_PROPERTIES_ARRAY_SIZE",
   "error_VALIDATOR_INVALID_PROPERTY_ID",
   "error_VALIDATOR_INVALID_PROPERTY_TYPE",
-  "error_VALIDATOR_INVALID_REGULAR_EXPRESSION",
+  "error_VALIDATOR_INVALID_PROPERTY_REGULAR_EXPRESSION",
+  "error_VALIDATOR_INVALID_PROPERTY_DELEGATE",
+  "error_VALIDATOR_INVALID_PROPERTY_DELEGATE_RETURN_VALUE",
   "error_VALIDATOR_INVALID_VALUE_TYPE",
   "error_VALIDATOR_INVALID_VALUE_LENGTH",
   "error_VALIDATOR_INVALID_VALUE",
@@ -110,11 +112,25 @@ bool validator_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nInvalid property type\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_VALIDATOR_INVALID_REGULAR_EXPRESSION:
+  case c_error_VALIDATOR_INVALID_PROPERTY_REGULAR_EXPRESSION:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nInvalid property regular expression\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_VALIDATOR_INVALID_PROPERTY_DELEGATE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid property delegate\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_VALIDATOR_INVALID_PROPERTY_DELEGATE_RETURN_VALUE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid return value of property delegate\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_VALIDATOR_INVALID_VALUE_TYPE:

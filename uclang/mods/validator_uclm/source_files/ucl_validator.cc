@@ -171,8 +171,11 @@ state_9_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 121)
+   if (in_char == 101)
       goto state_19_label;
+
+   if (in_char == 121)
+      goto state_20_label;
 
    return c_idx_not_exist;
 
@@ -202,14 +205,14 @@ state_14_label:
    GET_NEXT_CHAR();
 
    if (in_char == 108)
-      goto state_20_label;
+      goto state_21_label;
 
    return c_idx_not_exist;
 
 // - STATE 15 -
 state_15_label:
-   CLOSE_CHAR(18);
-   return 18;
+   CLOSE_CHAR(19);
+   return 19;
 
 // - STATE 16 -
 state_16_label:
@@ -217,7 +220,7 @@ state_16_label:
    GET_NEXT_CHAR();
 
    if (in_char == 101)
-      goto state_21_label;
+      goto state_22_label;
 
    return c_idx_not_exist;
 
@@ -227,7 +230,7 @@ state_17_label:
    GET_NEXT_CHAR();
 
    if (in_char == 110)
-      goto state_22_label;
+      goto state_23_label;
 
    return c_idx_not_exist;
 
@@ -237,10 +240,10 @@ state_18_label:
    GET_NEXT_CHAR();
 
    if (in_char == 102)
-      goto state_23_label;
+      goto state_24_label;
 
    if (in_char == 103)
-      goto state_24_label;
+      goto state_25_label;
 
    return c_idx_not_exist;
 
@@ -249,8 +252,8 @@ state_19_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 112)
-      goto state_25_label;
+   if (in_char == 115)
+      goto state_26_label;
 
    return c_idx_not_exist;
 
@@ -259,8 +262,8 @@ state_20_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 45)
-      goto state_26_label;
+   if (in_char == 112)
+      goto state_27_label;
 
    return c_idx_not_exist;
 
@@ -269,8 +272,8 @@ state_21_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 109)
-      goto state_27_label;
+   if (in_char == 45)
+      goto state_28_label;
 
    return c_idx_not_exist;
 
@@ -279,25 +282,25 @@ state_22_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 103)
-      goto state_28_label;
+   if (in_char == 109)
+      goto state_29_label;
 
    return c_idx_not_exist;
 
 // - STATE 23 -
 state_23_label:
-   CLOSE_CHAR(13);
-   return 13;
-
-// - STATE 24 -
-state_24_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 101)
-      goto state_29_label;
+   if (in_char == 103)
+      goto state_30_label;
 
    return c_idx_not_exist;
+
+// - STATE 24 -
+state_24_label:
+   CLOSE_CHAR(13);
+   return 13;
 
 // - STATE 25 -
 state_25_label:
@@ -305,7 +308,7 @@ state_25_label:
    GET_NEXT_CHAR();
 
    if (in_char == 101)
-      goto state_30_label;
+      goto state_31_label;
 
    return c_idx_not_exist;
 
@@ -314,10 +317,7 @@ state_26_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 105)
-      goto state_31_label;
-
-   if (in_char == 107)
+   if (in_char == 116)
       goto state_32_label;
 
    return c_idx_not_exist;
@@ -327,7 +327,7 @@ state_27_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 115)
+   if (in_char == 101)
       goto state_33_label;
 
    return c_idx_not_exist;
@@ -337,8 +337,11 @@ state_28_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 116)
+   if (in_char == 105)
       goto state_34_label;
+
+   if (in_char == 107)
+      goto state_35_label;
 
    return c_idx_not_exist;
 
@@ -347,92 +350,87 @@ state_29_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 120)
-      goto state_35_label;
+   if (in_char == 115)
+      goto state_36_label;
 
    return c_idx_not_exist;
 
 // - STATE 30 -
 state_30_label:
-   CLOSE_CHAR(0);
-   return 0;
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 116)
+      goto state_37_label;
+
+   return c_idx_not_exist;
 
 // - STATE 31 -
 state_31_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 116)
-      goto state_36_label;
+   if (in_char == 120)
+      goto state_38_label;
 
    return c_idx_not_exist;
 
 // - STATE 32 -
 state_32_label:
-   CLOSE_CHAR(c_idx_not_exist);
-   GET_NEXT_CHAR();
-
-   if (in_char == 101)
-      goto state_37_label;
-
-   return c_idx_not_exist;
+   CLOSE_CHAR(15);
+   return 15;
 
 // - STATE 33 -
 state_33_label:
-   CLOSE_CHAR(15);
-   return 15;
+   CLOSE_CHAR(0);
+   return 0;
 
 // - STATE 34 -
 state_34_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 104)
-      goto state_38_label;
+   if (in_char == 116)
+      goto state_39_label;
 
    return c_idx_not_exist;
 
 // - STATE 35 -
 state_35_label:
-   CLOSE_CHAR(14);
-   return 14;
-
-// - STATE 36 -
-state_36_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
    if (in_char == 101)
-      goto state_39_label;
+      goto state_40_label;
 
    return c_idx_not_exist;
+
+// - STATE 36 -
+state_36_label:
+   CLOSE_CHAR(16);
+   return 16;
 
 // - STATE 37 -
 state_37_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 121)
-      goto state_40_label;
+   if (in_char == 104)
+      goto state_41_label;
 
    return c_idx_not_exist;
 
 // - STATE 38 -
 state_38_label:
-   CLOSE_CHAR(c_idx_not_exist);
-   GET_NEXT_CHAR();
-
-   if (in_char == 32)
-      goto state_41_label;
-
-   return c_idx_not_exist;
+   CLOSE_CHAR(14);
+   return 14;
 
 // - STATE 39 -
 state_39_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 109)
+   if (in_char == 101)
       goto state_42_label;
 
    return c_idx_not_exist;
@@ -442,7 +440,7 @@ state_40_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 115)
+   if (in_char == 121)
       goto state_43_label;
 
    return c_idx_not_exist;
@@ -452,17 +450,8 @@ state_41_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 33)
+   if (in_char == 32)
       goto state_44_label;
-
-   if (in_char == 60)
-      goto state_45_label;
-
-   if (in_char == 61)
-      goto state_46_label;
-
-   if (in_char == 62)
-      goto state_47_label;
 
    return c_idx_not_exist;
 
@@ -471,78 +460,117 @@ state_42_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 115)
-      goto state_48_label;
+   if (in_char == 109)
+      goto state_45_label;
 
    return c_idx_not_exist;
 
 // - STATE 43 -
 state_43_label:
-   CLOSE_CHAR(17);
-   return 17;
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 115)
+      goto state_46_label;
+
+   return c_idx_not_exist;
 
 // - STATE 44 -
 state_44_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
+   if (in_char == 33)
+      goto state_47_label;
+
+   if (in_char == 60)
+      goto state_48_label;
+
    if (in_char == 61)
       goto state_49_label;
+
+   if (in_char == 62)
+      goto state_50_label;
 
    return c_idx_not_exist;
 
 // - STATE 45 -
 state_45_label:
-   CLOSE_CHAR(9);
-   GET_NEXT_CHAR();
-
-   if (in_char == 61)
-      goto state_50_label;
-
-   return 9;
-
-// - STATE 46 -
-state_46_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 61)
+   if (in_char == 115)
       goto state_51_label;
 
    return c_idx_not_exist;
 
+// - STATE 46 -
+state_46_label:
+   CLOSE_CHAR(18);
+   return 18;
+
 // - STATE 47 -
 state_47_label:
-   CLOSE_CHAR(10);
+   CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
    if (in_char == 61)
       goto state_52_label;
 
-   return 10;
+   return c_idx_not_exist;
 
 // - STATE 48 -
 state_48_label:
-   CLOSE_CHAR(16);
-   return 16;
+   CLOSE_CHAR(9);
+   GET_NEXT_CHAR();
+
+   if (in_char == 61)
+      goto state_53_label;
+
+   return 9;
 
 // - STATE 49 -
 state_49_label:
-   CLOSE_CHAR(8);
-   return 8;
+   CLOSE_CHAR(c_idx_not_exist);
+   GET_NEXT_CHAR();
+
+   if (in_char == 61)
+      goto state_54_label;
+
+   return c_idx_not_exist;
 
 // - STATE 50 -
 state_50_label:
-   CLOSE_CHAR(11);
-   return 11;
+   CLOSE_CHAR(10);
+   GET_NEXT_CHAR();
+
+   if (in_char == 61)
+      goto state_55_label;
+
+   return 10;
 
 // - STATE 51 -
 state_51_label:
-   CLOSE_CHAR(7);
-   return 7;
+   CLOSE_CHAR(17);
+   return 17;
 
 // - STATE 52 -
 state_52_label:
+   CLOSE_CHAR(8);
+   return 8;
+
+// - STATE 53 -
+state_53_label:
+   CLOSE_CHAR(11);
+   return 11;
+
+// - STATE 54 -
+state_54_label:
+   CLOSE_CHAR(7);
+   return 7;
+
+// - STATE 55 -
+state_55_label:
    CLOSE_CHAR(12);
    return 12;
 
@@ -839,7 +867,7 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
 
             VALIDATE_STACKS_PUSH_PROP_KEY();
 
-            exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_REGULAR_EXPRESSION,source_pos,(location_s *)it.blank_location);
+            exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_PROPERTY_REGULAR_EXPRESSION,source_pos,(location_s *)it.blank_location);
             return false;
           }
 
@@ -856,6 +884,65 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
         {
           VALIDATE_STACKS_PUSH_PROP_KEY();
 
+          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_VALUE,source_pos,(location_s *)it.blank_location);
+          return false;
+        }
+      }/*}}}*/
+      break;
+      case prop_test:
+      {/*{{{*/
+
+        // - ERROR -
+        if (prop_value->v_type != c_bi_class_delegate)
+        {
+          VALIDATE_STACKS_PUSH_PROP_KEY();
+
+          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_PROPERTY_TYPE,source_pos,(location_s *)it.blank_location);
+          return false;
+        }
+
+        delegate_s *delegate_ptr = (delegate_s *)prop_value->v_data_ptr;
+
+        // - ERROR -
+        if (delegate_ptr->param_cnt != 1)
+        {
+          VALIDATE_STACKS_PUSH_PROP_KEY();
+          
+          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_PROPERTY_DELEGATE,source_pos,(location_s *)it.blank_location);
+          return false;
+        }
+
+        // - callback parameters -
+        const unsigned param_cnt = 1;
+        pointer *param_data = (pointer *)&a_value;
+
+        // - call delegate method -
+        location_s *trg_location = nullptr;
+        BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,source_pos,
+          VALIDATE_STACKS_PUSH_PROP_KEY();
+
+          return false;
+        );
+
+        // - ERROR -
+        if (trg_location->v_type != c_bi_class_integer)
+        {
+          it.release_location_ptr(trg_location);
+
+          VALIDATE_STACKS_PUSH_PROP_KEY();
+          
+          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_PROPERTY_DELEGATE_RETURN_VALUE,source_pos,(location_s *)it.blank_location);
+          return false;
+        }
+
+        long long int result = (long long int)trg_location->v_data_ptr;
+        it.release_location_ptr(trg_location);
+
+        // - ERROR -
+        if (result == 0)
+        {
+          VALIDATE_STACKS_PUSH_PROP_KEY();
+          
           exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_VALUE,source_pos,(location_s *)it.blank_location);
           return false;
         }
