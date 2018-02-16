@@ -194,100 +194,92 @@ unsigned gcg_msg_s::tail_recognize(const char *string,int &input_idx)
 // - STATE 0 -
    GET_PREV_CHAR();
 
+   if (in_char == 0)
+      goto state_1_label;
+
    if (in_char >= 9 && in_char < 11)
-      goto state_4_label;
+      goto state_5_label;
 
    if (in_char == 32)
-      goto state_4_label;
+      goto state_5_label;
 
-   if (in_char >= 48 && in_char < 58)
-      goto state_1_label;
-
-   if (in_char == 58)
+   if (in_char == 34)
       goto state_2_label;
 
-   if (in_char >= 65 && in_char < 71)
-      goto state_1_label;
-
-   if (in_char >= 97 && in_char < 103)
-      goto state_1_label;
+   if (in_char == 58)
+      goto state_3_label;
 
    if (in_char == 125)
-      goto state_3_label;
+      goto state_4_label;
 
    return c_idx_not_exist;
 
 // - STATE 1 -
 state_1_label:
-   CLOSE_PREV_CHAR(1);
-   GET_PREV_CHAR();
-
-   if (in_char >= 48 && in_char < 58)
-      goto state_1_label;
-
-   if (in_char >= 65 && in_char < 71)
-      goto state_1_label;
-
-   if (in_char >= 97 && in_char < 103)
-      goto state_1_label;
-
-   return 1;
+   CLOSE_PREV_CHAR(3);
+   return 3;
 
 // - STATE 2 -
 state_2_label:
    CLOSE_PREV_CHAR(c_idx_not_exist);
    GET_PREV_CHAR();
 
-   if (in_char >= 9 && in_char < 11)
-      goto state_2_label;
+   if (in_char >= 48 && in_char < 58)
+      goto state_6_label;
 
-   if (in_char == 32)
-      goto state_2_label;
+   if (in_char >= 65 && in_char < 71)
+      goto state_6_label;
 
-   if (in_char == 34)
-      goto state_5_label;
+   if (in_char >= 97 && in_char < 103)
+      goto state_6_label;
 
    return c_idx_not_exist;
 
 // - STATE 3 -
 state_3_label:
-   CLOSE_PREV_CHAR(0);
-   GET_PREV_CHAR();
-
-   if (in_char >= 9 && in_char < 11)
-      goto state_3_label;
-
-   if (in_char == 32)
-      goto state_3_label;
-
-   return 0;
-
-// - STATE 4 -
-state_4_label:
    CLOSE_PREV_CHAR(c_idx_not_exist);
    GET_PREV_CHAR();
 
    if (in_char >= 9 && in_char < 11)
+      goto state_3_label;
+
+   if (in_char == 32)
+      goto state_3_label;
+
+   if (in_char == 34)
+      goto state_7_label;
+
+   return c_idx_not_exist;
+
+// - STATE 4 -
+state_4_label:
+   CLOSE_PREV_CHAR(0);
+   GET_PREV_CHAR();
+
+   if (in_char >= 9 && in_char < 11)
       goto state_4_label;
 
    if (in_char == 32)
       goto state_4_label;
 
-   if (in_char == 58)
-      goto state_2_label;
-
-   if (in_char == 125)
-      goto state_3_label;
-
-   return c_idx_not_exist;
+   return 0;
 
 // - STATE 5 -
 state_5_label:
    CLOSE_PREV_CHAR(c_idx_not_exist);
    GET_PREV_CHAR();
 
-   if (in_char == 83)
-      goto state_6_label;
+   if (in_char >= 9 && in_char < 11)
+      goto state_5_label;
+
+   if (in_char == 32)
+      goto state_5_label;
+
+   if (in_char == 58)
+      goto state_3_label;
+
+   if (in_char == 125)
+      goto state_4_label;
 
    return c_idx_not_exist;
 
@@ -296,8 +288,17 @@ state_6_label:
    CLOSE_PREV_CHAR(c_idx_not_exist);
    GET_PREV_CHAR();
 
-   if (in_char == 67)
-      goto state_7_label;
+   if (in_char == 34)
+      goto state_8_label;
+
+   if (in_char >= 48 && in_char < 58)
+      goto state_6_label;
+
+   if (in_char >= 65 && in_char < 71)
+      goto state_6_label;
+
+   if (in_char >= 97 && in_char < 103)
+      goto state_6_label;
 
    return c_idx_not_exist;
 
@@ -306,27 +307,22 @@ state_7_label:
    CLOSE_PREV_CHAR(c_idx_not_exist);
    GET_PREV_CHAR();
 
-   if (in_char == 70)
-      goto state_8_label;
+   if (in_char == 83)
+      goto state_9_label;
 
    return c_idx_not_exist;
 
 // - STATE 8 -
 state_8_label:
-   CLOSE_PREV_CHAR(c_idx_not_exist);
-   GET_PREV_CHAR();
-
-   if (in_char == 100)
-      goto state_9_label;
-
-   return c_idx_not_exist;
+   CLOSE_PREV_CHAR(1);
+   return 1;
 
 // - STATE 9 -
 state_9_label:
    CLOSE_PREV_CHAR(c_idx_not_exist);
    GET_PREV_CHAR();
 
-   if (in_char == 109)
+   if (in_char == 67)
       goto state_10_label;
 
    return c_idx_not_exist;
@@ -336,7 +332,7 @@ state_10_label:
    CLOSE_PREV_CHAR(c_idx_not_exist);
    GET_PREV_CHAR();
 
-   if (in_char == 34)
+   if (in_char == 70)
       goto state_11_label;
 
    return c_idx_not_exist;
@@ -346,27 +342,57 @@ state_11_label:
    CLOSE_PREV_CHAR(c_idx_not_exist);
    GET_PREV_CHAR();
 
-   if (in_char >= 9 && in_char < 11)
-      goto state_11_label;
-
-   if (in_char == 32)
-      goto state_11_label;
-
-   if (in_char == 44)
+   if (in_char == 100)
       goto state_12_label;
 
    return c_idx_not_exist;
 
 // - STATE 12 -
 state_12_label:
+   CLOSE_PREV_CHAR(c_idx_not_exist);
+   GET_PREV_CHAR();
+
+   if (in_char == 109)
+      goto state_13_label;
+
+   return c_idx_not_exist;
+
+// - STATE 13 -
+state_13_label:
+   CLOSE_PREV_CHAR(c_idx_not_exist);
+   GET_PREV_CHAR();
+
+   if (in_char == 34)
+      goto state_14_label;
+
+   return c_idx_not_exist;
+
+// - STATE 14 -
+state_14_label:
+   CLOSE_PREV_CHAR(c_idx_not_exist);
+   GET_PREV_CHAR();
+
+   if (in_char >= 9 && in_char < 11)
+      goto state_14_label;
+
+   if (in_char == 32)
+      goto state_14_label;
+
+   if (in_char == 44)
+      goto state_15_label;
+
+   return c_idx_not_exist;
+
+// - STATE 15 -
+state_15_label:
    CLOSE_PREV_CHAR(2);
    GET_PREV_CHAR();
 
    if (in_char >= 9 && in_char < 11)
-      goto state_12_label;
+      goto state_15_label;
 
    if (in_char == 32)
-      goto state_12_label;
+      goto state_15_label;
 
    return 2;
 
@@ -405,8 +431,8 @@ void gcg_msg_s::tail_find(const char *string,unsigned length,unsigned &crc_begin
   if (term != tail_term_crc) return;
 
   // - check crc size -
-  if (old_input_idx - input_idx != 8) return;
-  crc_begin = input_idx + 1;
+  if (old_input_idx - input_idx != 10) return;
+  crc_begin = input_idx + 2;
 
   term = tail_recognize(string,input_idx);
   if (term != tail_term_colon_fcs_comma) return;

@@ -268,7 +268,7 @@ bool bic_gcg_msg_method_GcgMsg_2(interpreter_thread_s &it,unsigned stack_base,ul
   gm_ptr->init();
 
   bc_array_s buffer;
-  buffer.init_size(header_ptr->size - 1 + body_ptr->size - 1 + (12 + 10 + 9 + 8 + 2));
+  buffer.init_size(header_ptr->size - 1 + body_ptr->size - 1 + (12 + 10 + 9 + 10 + 2));
 
   unsigned data_begin = 1;
   buffer.append(12,"{\"MDHeader\":");
@@ -282,8 +282,8 @@ bool bic_gcg_msg_method_GcgMsg_2(interpreter_thread_s &it,unsigned stack_base,ul
   unsigned crc_value = 0;
   Crc32(&crc_value,buffer.data + data_begin,data_size);
 
-  buffer.push_blanks(8);
-  snprintf(buffer.data + fcs_begin,9,"%08X",crc_value);
+  buffer.push_blanks(10);
+  snprintf(buffer.data + fcs_begin,11,"\"%08X\"",crc_value);
   buffer.append(2,"}\0");
 
   // - just assert -
