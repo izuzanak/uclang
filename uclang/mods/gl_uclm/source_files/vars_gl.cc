@@ -5,7 +5,7 @@ include "ucl_gl.h"
 
 built_in_variable_s gl_variables[] =
 {
-#if defined(UCBOX_IMX6) || defined(ANDROID) || defined(NACL)
+#if defined(UCBOX_IMX6) || defined(ANDROID) || defined(NACL) || defined(EMSCRIPTEN)
 /*{{{*/
   { "GL_ES_VERSION_2_0", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "GL_DEPTH_BUFFER_BIT", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -282,7 +282,9 @@ built_in_variable_s gl_variables[] =
   { "GL_RGB5_A1", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "GL_RGB565", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "GL_DEPTH_COMPONENT16", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#ifndef EMSCRIPTEN
   { "GL_STENCIL_INDEX", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#endif
   { "GL_STENCIL_INDEX8", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "GL_RENDERBUFFER_WIDTH", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "GL_RENDERBUFFER_HEIGHT", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -5195,7 +5197,7 @@ built_in_variable_s gl_variables[] =
 
 void bic_gl_consts(location_array_s &const_locations)
 {
-#if defined(UCBOX_IMX6) || defined(ANDROID) || defined(NACL)
+#if defined(UCBOX_IMX6) || defined(ANDROID) || defined(NACL) || defined(EMSCRIPTEN)
   // - insert gl basic constants -
   {/*{{{*/
     const_locations.push_blanks(303);
@@ -5482,7 +5484,9 @@ void bic_gl_consts(location_array_s &const_locations)
     CREATE_GL_BASIC_BIC_STATIC(GL_RGB5_A1);
     CREATE_GL_BASIC_BIC_STATIC(GL_RGB565);
     CREATE_GL_BASIC_BIC_STATIC(GL_DEPTH_COMPONENT16);
+#ifndef EMSCRIPTEN
     CREATE_GL_BASIC_BIC_STATIC(GL_STENCIL_INDEX);
+#endif
     CREATE_GL_BASIC_BIC_STATIC(GL_STENCIL_INDEX8);
     CREATE_GL_BASIC_BIC_STATIC(GL_RENDERBUFFER_WIDTH);
     CREATE_GL_BASIC_BIC_STATIC(GL_RENDERBUFFER_HEIGHT);

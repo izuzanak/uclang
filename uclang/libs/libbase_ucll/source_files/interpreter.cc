@@ -1924,7 +1924,7 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
 void *new_thread_function(void *nt_start_info)
 {/*{{{*/
 
-#ifdef LINUX
+#if defined(LINUX) && !defined(EMSCRIPTEN)
   sigset_t signal_set;
 
   // - set term signals to be blocked -

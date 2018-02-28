@@ -72,7 +72,9 @@ inline unsigned mutex_s::init()
   pthread_mutexattr_t attr;
   pthread_mutexattr_init(&attr);
 
+#ifndef EMSCRIPTEN
   pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE_NP);
+#endif
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
   int ret = pthread_mutexattr_setpshared(&attr,PTHREAD_PROCESS_SHARED);

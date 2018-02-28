@@ -8,14 +8,14 @@ include "script_parser.h"
 
 #define GLM_FORCE_RADIANS
 
-#if defined(LINUX) || defined(ANDROID) || defined(NACL)
+#if defined(LINUX) || defined(ANDROID) || defined(NACL) || defined(EMSCRIPTEN)
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #endif
 
 #define GL_GLEXT_PROTOTYPES
 
-#if defined(UCBOX_IMX6) || defined(ANDROID) || defined(NACL)
+#if defined(UCBOX_IMX6) || defined(ANDROID) || defined(NACL) || defined(EMSCRIPTEN)
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #elif defined(LINUX)

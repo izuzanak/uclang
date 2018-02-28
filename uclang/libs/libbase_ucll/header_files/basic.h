@@ -129,7 +129,11 @@
 
 // - dynamic library file extensions -
 #if DYNAMIC_TYPE == DYNAMIC_TYPE_POSIX
+#ifdef EMSCRIPTEN
+#define DYNAMIC_LIB_EXTENSION ".js"
+#else
 #define DYNAMIC_LIB_EXTENSION ".so"
+#endif
 #elif DYNAMIC_TYPE == DYNAMIC_TYPE_WINDOWS
 #define DYNAMIC_LIB_EXTENSION ".dll"
 #endif

@@ -218,11 +218,15 @@ built_in_class_s gl_class =
   c_modifier_public | c_modifier_final,
   10, gl_methods,
 
-  #if defined(UCBOX_IMX6) || defined(ANDROID) || defined(NACL)
-  303,
-  #elif defined(LINUX)
+#if defined(UCBOX_IMX6) || defined(ANDROID) || defined(NACL) || defined(EMSCRIPTEN)
+  302
+#ifndef EMSCRIPTEN
+  + 1
+#endif
+  ,
+#elif defined(LINUX)
   4876,
-  #endif
+#endif
 
   gl_variables,
   bic_gl_consts,
