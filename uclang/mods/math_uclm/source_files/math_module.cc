@@ -1768,7 +1768,7 @@ void bic_mat4_consts(location_array_s &const_locations)
 
 void bic_mat4_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  glm::mat4 *m4_ptr = new glm::mat4();
+  glm::mat4 *m4_ptr = new glm::mat4(1.0);
 
   location_ptr->v_data_ptr = (glm::mat4 *)m4_ptr;
 }/*}}}*/
