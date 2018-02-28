@@ -509,6 +509,7 @@ bool bic_av_format_method_next_frame_0(interpreter_thread_s &it,unsigned stack_b
 
   AVPacket &packet = avf_ptr->packet;
   AVPacket tmp_packet;
+  av_init_packet(&tmp_packet);
 
   // - initialize temporary packet -
   tmp_packet.side_data_elems = 0;

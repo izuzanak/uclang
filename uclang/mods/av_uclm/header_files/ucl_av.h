@@ -8,9 +8,8 @@ include "script_parser.h"
 @end
 
 extern "C" {
-#include "libavutil/mathematics.h"
-#include "libavformat/avformat.h"
-#include "libswscale/swscale.h"
+#include <libavformat/avformat.h>
+#include <libswscale/swscale.h>
 }
 
 extern "C" {
