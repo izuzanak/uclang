@@ -3069,7 +3069,7 @@ bool bic_socket_method_listen_2(interpreter_thread_s &it,unsigned stack_base,uli
   int yes = 1;
   setsockopt(fd,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(int));
 
-#if !defined(DISABLE_SO_DOMAIN)
+#ifndef DISABLE_SO_DOMAIN
   // - retrieve socket domain -
   int domain;
   socklen_t domain_len = sizeof(int);
@@ -3098,7 +3098,7 @@ bool bic_socket_method_listen_2(interpreter_thread_s &it,unsigned stack_base,uli
       exception_s::throw_exception(it,module.error_base + c_error_SOCKET_LISTEN_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
-#if !defined(DISABLE_SO_DOMAIN)
+#ifndef DISABLE_SO_DOMAIN
   }
   break;
 
@@ -3127,7 +3127,7 @@ bool bic_socket_method_accept_0(interpreter_thread_s &it,unsigned stack_base,uli
     return false;
   }
 
-#if !defined(DISABLE_SO_DOMAIN)
+#ifndef DISABLE_SO_DOMAIN
   // - retrieve socket domain -
   int domain;
   socklen_t domain_len = sizeof(int);
@@ -3186,7 +3186,7 @@ bool bic_socket_method_accept_0(interpreter_thread_s &it,unsigned stack_base,uli
 
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
     BIC_SET_RESULT(new_location);
-#if !defined(DISABLE_SO_DOMAIN)
+#ifndef DISABLE_SO_DOMAIN
   }
   break;
 
@@ -3258,7 +3258,7 @@ bool bic_socket_method_connect_1(interpreter_thread_s &it,unsigned stack_base,ul
     return false;
   }
 
-#if !defined(DISABLE_SO_DOMAIN)
+#ifndef DISABLE_SO_DOMAIN
   // - retrieve socket domain -
   int domain;
   socklen_t domain_len = sizeof(int);
@@ -3278,7 +3278,7 @@ bool bic_socket_method_connect_1(interpreter_thread_s &it,unsigned stack_base,ul
       exception_s::throw_exception(it,module.error_base + c_error_SOCKET_CONNECT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
-#if !defined(DISABLE_SO_DOMAIN)
+#ifndef DISABLE_SO_DOMAIN
   }
   break;
 
@@ -3319,7 +3319,7 @@ bool bic_socket_method_bind_1(interpreter_thread_s &it,unsigned stack_base,uli *
     return false;
   }
 
-#if !defined(DISABLE_SO_DOMAIN)
+#ifndef DISABLE_SO_DOMAIN
   // - retrieve socket domain -
   int domain;
   socklen_t domain_len = sizeof(int);
@@ -3339,7 +3339,7 @@ bool bic_socket_method_bind_1(interpreter_thread_s &it,unsigned stack_base,uli *
       exception_s::throw_exception(it,module.error_base + c_error_SOCKET_BIND_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
-#if !defined(DISABLE_SO_DOMAIN)
+#ifndef DISABLE_SO_DOMAIN
   }
   break;
 
@@ -6119,7 +6119,7 @@ bool bic_clock_method_settime_2(interpreter_thread_s &it,unsigned stack_base,uli
     return false;
   }
 
-#if defined(LINUX)
+#ifdef LINUX
   timespec tp;
   tp.tv_sec = time / 1000000000LL;
   tp.tv_nsec = time % 1000000000LL;

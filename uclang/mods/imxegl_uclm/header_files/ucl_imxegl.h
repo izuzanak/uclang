@@ -38,7 +38,7 @@ extern atomic_s global_egl_terminate;
 extern mutex_s global_egl_mutex;
 extern imx_egl_s *global_egl_ptr;
 
-#if defined(IPUROT_LINUX)
+#ifdef IPUROT_LINUX
 // - maximal size of block processed by ipu rotation -
 const unsigned c_max_rotate_size = 1024;
 
@@ -87,7 +87,7 @@ struct imx_egl_s
   inline void clear(interpreter_thread_s &it);
 };
 
-#if defined(IPUROT_LINUX)
+#ifdef IPUROT_LINUX
 /*
  * definition of structure imx_fb_s
  */
@@ -102,7 +102,7 @@ struct imx_fb_s
 };
 #endif
 
-#if defined(IPUROT_LINUX)
+#ifdef IPUROT_LINUX
 /*
  * definition of structure imx_ipu_s
  */
@@ -194,7 +194,7 @@ inline void imx_egl_s::clear(interpreter_thread_s &it)
     eglTerminate(display);
 
     // - destroy native window and display -
-#if defined(EGL_API_FB)
+#ifdef EGL_API_FB
     fbDestroyWindow(native_window);
     fbDestroyDisplay(native_display);
 #else
@@ -209,7 +209,7 @@ inline void imx_egl_s::clear(interpreter_thread_s &it)
   init();
 }/*}}}*/
 
-#if defined(IPUROT_LINUX)
+#ifdef IPUROT_LINUX
 /*
  * inline methods of structure imx_fb_s
  */
@@ -232,7 +232,7 @@ inline void imx_fb_s::clear(interpreter_thread_s &it)
 }/*}}}*/
 #endif
 
-#if defined(IPUROT_LINUX)
+#ifdef IPUROT_LINUX
 /*
  * inline methods of structure imx_ipu_s
  */
@@ -276,7 +276,7 @@ inline imxegl_c::imxegl_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"imxegl_init()\n"););
 
-#if !defined(EGL_API_FB)
+#ifndef EGL_API_FB
   XInitThreads();
 #endif
 

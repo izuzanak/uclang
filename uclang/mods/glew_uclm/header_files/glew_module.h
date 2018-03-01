@@ -6,7 +6,7 @@
 include "script_parser.h"
 @end
 
-#if defined(LINUX)
+#ifdef LINUX
 #include <GL/glew.h>
 #endif
 

@@ -110,7 +110,11 @@ built_in_class_s glut_class =
 {/*{{{*/
   "Glut",
   c_modifier_public | c_modifier_final,
-  25, glut_methods,
+  24
+#ifndef EMSCRIPTEN
+  + 1
+#endif
+  , glut_methods,
   162, glut_variables,
   bic_glut_consts,
   bic_glut_init,
@@ -240,11 +244,13 @@ built_in_method_s glut_methods[] =
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_glut_method_MainLoop_0
   },
+#ifndef EMSCRIPTEN
   {
     "LeaveMainLoop#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_glut_method_LeaveMainLoop_0
   },
+#endif
   {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
@@ -707,19 +713,24 @@ bool bic_glut_method_Glut_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
+#ifndef EMSCRIPTEN
   // - ERROR -
   if (glut_s::glut_ptr != nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_GLUT_OBJECT_ALREADY_CREATED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
+#endif
 
   // - dummy init arguments -
   int argc = 0;
   char *argv = nullptr;
 
   glutInit(&argc,&argv);
+
+#ifndef EMSCRIPTEN
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE,GLUT_ACTION_CONTINUE_EXECUTION);
+#endif
 
   // - create new glut object -
   glut_s *glut_ptr = (glut_s *)cmalloc(sizeof(glut_s));
@@ -1072,6 +1083,7 @@ bool bic_glut_method_MainLoop_0(interpreter_thread_s &it,unsigned stack_base,uli
   return true;
 }/*}}}*/
 
+#ifndef EMSCRIPTEN
 bool bic_glut_method_LeaveMainLoop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_GLUT_CONTEXT_CHECK();
@@ -1082,6 +1094,7 @@ bool bic_glut_method_LeaveMainLoop_0(interpreter_thread_s &it,unsigned stack_bas
 
   return true;
 }/*}}}*/
+#endif
 
 bool bic_glut_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/

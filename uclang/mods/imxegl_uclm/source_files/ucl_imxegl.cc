@@ -6,7 +6,7 @@ include "ucl_imxegl.h"
 // - imxegl global init object -
 imxegl_c g_imxegl;
 
-#if defined(IPUROT_LINUX)
+#ifdef IPUROT_LINUX
 // - read framebuffer properties -
 bool read_framebuffer_properties(int fd,struct framebuffer_props_s *props)
 {/*{{{*/

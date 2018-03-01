@@ -6,7 +6,9 @@
 include "script_parser.h"
 @end
 
-#if defined(LINUX)
+#ifdef EMSCRIPTEN
+#include <GL/glut.h>
+#elif defined(LINUX)
 #include <GL/freeglut.h>
 #endif
 

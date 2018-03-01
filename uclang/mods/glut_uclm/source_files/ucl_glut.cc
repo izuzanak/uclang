@@ -18,6 +18,17 @@ glut_c g_glut;
  * methods of structure glut_s
  */
 
+#ifdef EMSCRIPTEN
+#define GLUT_CALLBACK_ERROR_CODE \
+  /* FIXME TODO terminate empscripten glut main loop */\
+  exit(0)
+#else
+#define GLUT_CALLBACK_ERROR_CODE \
+  glut_s::main_ret_code = c_run_return_code_EXCEPTION;\
+  glutLeaveMainLoop();\
+  return;
+#endif
+
 #define GLUT_CALL_CALLBACK_DELEGATE(NAME,PARAM_DATA,PARAM_CNT,PARAM_CODE) \
 {/*{{{*/\
   if (glut_s::main_ret_code == c_run_return_code_OK &&\
@@ -31,9 +42,7 @@ glut_c g_glut;
     /* - call delegate method - */\
     location_s *trg_location = nullptr;\
     BIC_CALL_DELEGATE(it,delegate_ptr,PARAM_DATA,PARAM_CNT,trg_location,glut_s::main_source_pos,\
-      glut_s::main_ret_code = c_run_return_code_EXCEPTION;\
-      glutLeaveMainLoop();\
-      return;\
+      GLUT_CALLBACK_ERROR_CODE;\
     );\
     it.release_location_ptr(trg_location);\
   }\

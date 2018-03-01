@@ -6,7 +6,7 @@ include "imxegl_module.h"
 // - IMXEGL indexes of built in classes -
 unsigned c_bi_class_imx_egl = c_idx_not_exist;
 
-#if defined(IPUROT_LINUX)
+#ifdef IPUROT_LINUX
 unsigned c_bi_class_imx_fb = c_idx_not_exist;
 unsigned c_bi_class_imx_ipu = c_idx_not_exist;
 #endif
@@ -19,7 +19,7 @@ built_in_module_s module =
 {/*{{{*/
   1                       // Class count
 
-#if defined(IPUROT_LINUX)
+#ifdef IPUROT_LINUX
   + 2
 #endif
   ,
@@ -28,7 +28,7 @@ built_in_module_s module =
   0,                      // Error base index
   7                       // Error count
 
-#if defined(IPUROT_LINUX)
+#ifdef IPUROT_LINUX
   + 4
 #endif
   ,
@@ -43,7 +43,7 @@ built_in_class_s *imxegl_classes[] =
 {/*{{{*/
   &imx_egl_class,
 
-#if defined(IPUROT_LINUX)
+#ifdef IPUROT_LINUX
   &imx_fb_class,
   &imx_ipu_class,
 #endif
@@ -60,7 +60,7 @@ const char *imxegl_error_strings[] =
   "error_IMX_EGL_MAKE_CURRENT_ERROR",
   "error_IMX_EGL_SWAP_BUFFERS_ERROR",
 
-#if defined(IPUROT_LINUX)
+#ifdef IPUROT_LINUX
   "error_IMX_FB_FILE_OPEN_ERROR",
   "error_IMX_FB_CANNOT_READ_PROPERTIES",
   "error_IMX_IPU_FILE_OPEN_ERROR",
@@ -76,7 +76,7 @@ bool imxegl_initialize(script_parser_s &sp)
   // - initialize imx egl class identifier -
   c_bi_class_imx_egl = class_base_idx++;
 
-#if defined(IPUROT_LINUX)
+#ifdef IPUROT_LINUX
   // - initialize imx fb class identifier -
   c_bi_class_imx_fb = class_base_idx++;
 
@@ -158,7 +158,7 @@ bool imxegl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     break;
 
-#if defined(IPUROT_LINUX)
+#ifdef IPUROT_LINUX
   case c_error_IMX_FB_FILE_OPEN_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -449,7 +449,7 @@ bool bic_imx_egl_method_ImxEgl_3(interpreter_thread_s &it,unsigned stack_base,ul
   };
 
   // - create native display -
-#if defined(EGL_API_FB)
+#ifdef EGL_API_FB
   EGLNativeDisplayType native_display = fbGetDisplayByIndex(0);
 #else
   EGLNativeDisplayType native_display = XOpenDisplay(nullptr);
@@ -470,7 +470,7 @@ bool bic_imx_egl_method_ImxEgl_3(interpreter_thread_s &it,unsigned stack_base,ul
   {
     eglTerminate(display);
 
-#if defined(EGL_API_FB)
+#ifdef EGL_API_FB
     fbDestroyDisplay(native_display);
 #else
     XCloseDisplay(native_display);
@@ -492,7 +492,7 @@ bool bic_imx_egl_method_ImxEgl_3(interpreter_thread_s &it,unsigned stack_base,ul
   {
     eglTerminate(display);
 
-#if defined(EGL_API_FB)
+#ifdef EGL_API_FB
     fbDestroyDisplay(native_display);
 #else
     XCloseDisplay(native_display);
@@ -505,7 +505,7 @@ bool bic_imx_egl_method_ImxEgl_3(interpreter_thread_s &it,unsigned stack_base,ul
   // - create native window -
   EGLNativeWindowType native_window = (EGLNativeWindowType)0;
 
-#if defined(EGL_API_FB)
+#ifdef EGL_API_FB
   const char *vendor = eglQueryString(display,EGL_VENDOR);
   cassert(strcmp(vendor,"Vivante Corporation") == 0);
   native_window = fbCreateWindow(native_display,0,0,width,height);
@@ -522,7 +522,7 @@ bool bic_imx_egl_method_ImxEgl_3(interpreter_thread_s &it,unsigned stack_base,ul
   {
     eglTerminate(display);
 
-#if defined(EGL_API_FB)
+#ifdef EGL_API_FB
     fbDestroyDisplay(native_display);
 #else
     XCloseDisplay(native_display);
@@ -540,7 +540,7 @@ bool bic_imx_egl_method_ImxEgl_3(interpreter_thread_s &it,unsigned stack_base,ul
   {
     eglTerminate(display);
 
-#if defined(EGL_API_FB)
+#ifdef EGL_API_FB
     fbDestroyWindow(native_window);
     fbDestroyDisplay(native_display);
 #else
@@ -574,7 +574,7 @@ bool bic_imx_egl_method_ImxEgl_3(interpreter_thread_s &it,unsigned stack_base,ul
     eglDestroySurface(display,surface);
     eglTerminate(display);
 
-#if defined(EGL_API_FB)
+#ifdef EGL_API_FB
     fbDestroyWindow(native_window);
     fbDestroyDisplay(native_display);
 #else
@@ -857,7 +857,7 @@ bool bic_imx_egl_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli
   return true;
 }/*}}}*/
 
-#if defined(IPUROT_LINUX)
+#ifdef IPUROT_LINUX
 // - class IMX_FB -
 built_in_class_s imx_fb_class =
 {/*{{{*/
@@ -1084,7 +1084,7 @@ bool bic_imx_fb_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli 
 }/*}}}*/
 #endif
 
-#if defined(IPUROT_LINUX)
+#ifdef IPUROT_LINUX
 // - class IMX_IPU -
 built_in_class_s imx_ipu_class =
 {/*{{{*/

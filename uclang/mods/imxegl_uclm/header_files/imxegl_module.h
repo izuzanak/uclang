@@ -9,7 +9,7 @@ include "ucl_imxegl.h"
 // - IMXEGL indexes of built in classes -
 extern unsigned c_bi_class_imx_egl;
 
-#if defined(IPUROT_LINUX)
+#ifdef IPUROT_LINUX
 extern unsigned c_bi_class_imx_fb;
 extern unsigned c_bi_class_imx_ipu;
 #endif
@@ -31,7 +31,7 @@ enum
   c_error_IMX_EGL_MAKE_CURRENT_ERROR,
   c_error_IMX_EGL_SWAP_BUFFERS_ERROR,
 
-#if defined(IPUROT_LINUX)
+#ifdef IPUROT_LINUX
   c_error_IMX_FB_FILE_OPEN_ERROR,
   c_error_IMX_FB_CANNOT_READ_PROPERTIES,
   c_error_IMX_IPU_FILE_OPEN_ERROR,
@@ -71,7 +71,7 @@ bool bic_imx_egl_method_GetError_0(interpreter_thread_s &it,unsigned stack_base,
 bool bic_imx_egl_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_imx_egl_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
-#if defined(IPUROT_LINUX)
+#ifdef IPUROT_LINUX
 // - class IMX_FB -
 extern built_in_variable_s imx_fb_variables[];
 extern built_in_method_s imx_fb_methods[];
@@ -91,7 +91,7 @@ bool bic_imx_fb_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,
 bool bic_imx_fb_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 #endif
 
-#if defined(IPUROT_LINUX)
+#ifdef IPUROT_LINUX
 // - class IMX_IPU -
 extern built_in_variable_s imx_ipu_variables[];
 extern built_in_method_s imx_ipu_methods[];
