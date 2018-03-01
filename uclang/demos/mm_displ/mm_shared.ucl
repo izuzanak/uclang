@@ -1,0 +1,19 @@
+
+class Shared
+{/*{{{*/
+
+  // - create type dictionary from type strings -
+  static public type_dict(a_type_strs)
+  {/*{{{*/
+    type_dict = new Dict();
+
+    type_idx = 0;
+    for (str <- a_type_strs)
+    {
+      type_dict[str] = type_idx++;
+    }
+
+    return type_dict;
+  }/*}}}*/
+}/*}}}*/
+

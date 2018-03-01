@@ -1,0 +1,13 @@
+
+class TimerDelegate
+{/*{{{*/
+  public m_period;
+  public m_delegate;
+
+  public TimerDelegate(a_period,a_delegate)
+  {/*{{{*/
+    m_period   = a_period;
+    m_delegate = a_delegate;
+  }/*}}}*/
+}/*}}}*/
+

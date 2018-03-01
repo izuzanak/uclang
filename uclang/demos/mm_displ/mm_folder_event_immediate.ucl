@@ -1,0 +1,19 @@
+
+class FolderEventImmediate extends FolderEventBase
+{/*{{{*/
+  public FolderEventImmediate()
+  {/*{{{*/
+    this.FolderEventBase();
+  }/*}}}*/
+
+  static public json_create(a_descr)
+  {/*{{{*/
+    return new FolderEventImmediate();
+  }/*}}}*/
+
+  public check(a_folder)
+  {/*{{{*/
+    return 1;
+  }/*}}}*/
+}/*}}}*/
+

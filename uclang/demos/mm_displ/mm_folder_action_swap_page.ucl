@@ -1,0 +1,25 @@
+
+class FolderActionSwapPage extends FolderActionBase
+{/*{{{*/
+  private m_page_id;
+
+  public FolderActionSwapPage(a_page_id)
+  {/*{{{*/
+    this.FolderActionBase();
+
+    m_page_id = a_page_id;
+  }/*}}}*/
+
+  static public json_create(a_descr)
+  {/*{{{*/
+    page_id = a_descr["page_id"];
+
+    return new FolderActionSwapPage(page_id);
+  }/*}}}*/
+
+  public execute(a_folder)
+  {/*{{{*/
+    a_folder.action_swap_page(m_page_id);
+  }/*}}}*/
+}/*}}}*/
+

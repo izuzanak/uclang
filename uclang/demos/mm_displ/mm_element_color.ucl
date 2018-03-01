@@ -1,0 +1,71 @@
+
+class ElementColor extends ElementBase
+{/*{{{*/
+  private m_color;
+  private m_vert_buff;
+
+  public ElementColor(a_color)
+  {/*{{{*/
+    this.ElementBase();
+
+    m_color = a_color;
+  }/*}}}*/
+
+  public ElementColor()
+  {/*{{{*/
+    ElementColor(new Color(1,1,1));
+  }/*}}}*/
+
+  static public json_create(a_descr)
+  {/*{{{*/
+    return new ElementColor(new Color(a_descr["color"]));
+  }/*}}}*/
+
+  public get_shader_strs(a_vert_str,a_frag_str)
+  {/*{{{*/
+    a_frag_str.m_defs.push(
+"
+uniform %s vec4 eu_color;
+" % Browser.m_glsl_prec);
+
+    a_frag_str.m_body.push(
+"
+  %s vec4 color = eu_color;
+" % Browser.m_glsl_prec);
+  }/*}}}*/
+
+  public init_draw(a_page)
+  {/*{{{*/
+
+    // - display coordinates -
+    x0 = m_rect.x;
+    y0 = m_rect.y;
+    x1 = m_rect.x + m_rect.w;
+    y1 = m_rect.y + m_rect.h;
+
+    // - set display rectangle -
+    free m_displ_rect;
+    m_displ_rect = new Rect(x0,y0,x1,y1);
+
+    // - create vertex buffer -
+    m_vert_buff = new GlVertexBuffer("pa_vertex:3f");
+
+    // - write vertices to vertex buffer -
+    m_vert_buff.push_back([
+      x0,y0,0,
+      x0,y1,0,
+      x1,y1,0,
+      x1,y0,0
+    ],[
+      0,1,2,
+      0,2,3
+    ]);
+  }/*}}}*/
+
+  public draw()
+  {/*{{{*/
+    m_uniforms["eu_color"].write(new Vec4(m_color.data()));
+    m_vert_buff.render(Gl.GL_TRIANGLES);
+  }/*}}}*/
+}/*}}}*/
+

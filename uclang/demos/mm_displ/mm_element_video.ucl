@@ -1,0 +1,208 @@
+
+import av;
+
+class ElementVideo extends ElementBase
+{/*{{{*/
+  private m_source;
+  private m_alpha;
+
+  private m_keep_ratio;
+  private m_ratio_rect;
+
+  private m_video;
+  private m_converter;
+
+  private m_fw;
+  private m_fh;
+
+  private m_width;
+  private m_height;
+
+  private m_picture;
+  private m_texture;
+  private m_vert_buff;
+
+  public ElementVideo(a_source,a_alpha,a_keep_ratio)
+  {/*{{{*/
+    this.ElementBase();
+
+    m_source = a_source;
+    m_alpha = a_alpha;
+    m_keep_ratio = a_keep_ratio;
+
+    // - open source video format -
+    open_video();
+
+    // - create converter -
+    m_converter = new AvConverter();
+
+    // - fetch first picture -
+    fetch_picture(0);
+  }/*}}}*/
+
+  public ElementVideo(a_source,a_alpha)
+  {/*{{{*/
+    ElementVideo(a_source,a_alpha,1);
+  }/*}}}*/
+
+  public ElementVideo(a_source)
+  {/*{{{*/
+    ElementVideo(a_source,1);
+  }/*}}}*/
+
+  static public json_create(a_descr)
+  {/*{{{*/
+    
+    // - assure parameter types -
+    source = new String(a_descr["source"]);
+    alpha = new Float(a_descr["alpha"]);
+    keep_ratio = new Integer(a_descr["keep_ratio"]);
+
+    // - create video element -
+    return new ElementVideo(source,alpha,keep_ratio);
+  }/*}}}*/
+
+  public open_video()
+  {/*{{{*/
+    m_video = new AvFormat(m_source);
+    m_video.stream_decode(0);
+  }/*}}}*/
+
+  public fetch_picture(a_try_cnt)
+  {/*{{{*/
+    if (Blank == (frame = m_video.next_frame()))
+    {
+      if (a_try_cnt <= 0)
+      {
+        open_video();
+        fetch_picture(a_try_cnt + 1);
+      }
+      else
+      {
+        new Exception("Cannot open video source").throw();
+      }
+    }
+    else
+    {
+      // - store frame width and height -
+      m_fw = frame.width();
+      m_fh = frame.height();
+
+      if (Blank == m_width)
+      {
+        // - create picture according to frame size -
+        m_picture = m_converter.scale(frame,m_fw,m_fh,AvPicture.AV_PIX_FMT_RGBA);
+      }
+      else
+      {
+        // - create picture of requeste m_width and m_height -
+        m_picture = m_converter.scale(frame,m_width,m_height,AvPicture.AV_PIX_FMT_RGBA);
+      }
+
+      // - create texture from picture -
+      m_texture = new GlTexture(Gl.GL_RGBA,m_picture.width(),m_picture.height(),m_picture.buffer());
+    }
+  }/*}}}*/
+
+  public get_shader_strs(a_vert_str,a_frag_str)
+  {/*{{{*/
+    a_vert_str.m_defs.push("
+attribute vec2 ea_tex_coord;
+varying vec2 ev_tex_coord;
+");
+
+    a_vert_str.m_body.push(
+"
+  ev_tex_coord = ea_tex_coord.xy;
+");
+
+    a_frag_str.m_defs.push(
+"
+varying %s vec2 ev_tex_coord;
+uniform sampler2D eu_texture;
+uniform %s float eu_alpha;
+" % [Browser.m_glsl_prec,
+     Browser.m_glsl_prec]);
+
+    a_frag_str.m_body.push(
+"
+  %s vec4 color = texture2D(eu_texture,ev_tex_coord);
+  color.a *= eu_alpha;
+" % Browser.m_glsl_prec);
+  }/*}}}*/
+
+  public init_draw(a_page)
+  {/*{{{*/
+
+    // - if apect ratio should be keeped -
+    if (m_keep_ratio)
+    {
+      if (m_rect.w/m_fw < m_rect.h/m_fh)
+      {
+        m_width = m_rect.w;
+        m_height = m_fh*(m_rect.w/m_fw);
+        bx = 0.0;
+        by = (m_rect.h - m_height)/2.0;
+      }
+      else
+      {
+        m_width = m_fw*(m_rect.h/m_fh);
+        m_height = m_rect.h;
+        bx = (m_rect.w - m_width)/2.0;
+        by = 0.0;
+      }
+
+      // - create aspect ratio rectangle -
+      free m_ratio_rect;
+      m_ratio_rect = new Rect(m_rect.x + bx,m_rect.y + by,
+                              m_rect.w - 2*bx,m_rect.h - 2*by);
+    }
+
+    // - if aspect ratio should be ignored -
+    else
+    {
+      m_width = m_rect.w;
+      m_height = m_rect.h;
+      bx = 0.0;
+      by = 0.0;
+    }
+
+    // - display coordinates -
+    x0 = m_rect.x + bx;
+    y0 = m_rect.y + by;
+    x1 = m_rect.x + m_rect.w - bx;
+    y1 = m_rect.y + m_rect.h - by;
+
+    // - set display rectangle -
+    free m_displ_rect;
+    m_displ_rect = new Rect(x0,y0,x1,y1);
+
+    // - create vertex buffer -
+    m_vert_buff = new GlVertexBuffer("pa_vertex:3f,ea_tex_coord:2f");
+
+    // - write vertices to vertex buffer -
+    m_vert_buff.push_back([
+      x0,y0,0, 0,1,
+      x0,y1,0, 0,0,
+      x1,y1,0, 1,0,
+      x1,y0,0, 1,1
+    ],[
+      0,1,2,
+      0,2,3
+    ]);
+  }/*}}}*/
+
+  public draw()
+  {/*{{{*/
+    fetch_picture(0);
+    
+    if (Blank != m_texture)
+    {
+      m_uniforms["eu_texture"].write(0);
+      m_uniforms["eu_alpha"].write(m_alpha);
+      m_texture.bind();
+      m_vert_buff.render(Gl.GL_TRIANGLES);
+    }
+  }/*}}}*/
+}/*}}}*/
+

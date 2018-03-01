@@ -1,0 +1,39 @@
+
+import mm_folder_event_immediate;
+import mm_folder_event_timeout;
+
+class FolderEventBase
+{/*{{{*/
+  static public TYPE_CNT = 0;
+
+  static public TRANS_EVENT_IMMEDIATE = TYPE_CNT++;
+  static public TRANS_EVENT_TIMEOUT   = TYPE_CNT++;
+
+  static public m_type_strs = [
+    "TRANS_EVENT_IMMEDIATE",
+    "TRANS_EVENT_TIMEOUT"
+  ];
+
+  static public m_type_dict = Shared.type_dict(m_type_strs);
+
+  public FolderEventBase()
+  {/*{{{*/
+  }/*}}}*/
+
+  static public json_create(a_descr)
+  {/*{{{*/
+    switch (m_type_dict[a_descr["type"]])
+    {
+    case TRANS_EVENT_IMMEDIATE:
+      return FolderEventImmediate.json_create(a_descr);
+
+    case TRANS_EVENT_TIMEOUT:
+      return FolderEventTimeout.json_create(a_descr);
+
+    // - ERROR -
+    default:
+      new Exception("Unknown type \"%s\" of transition event" % a_descr["type"]).throw();
+    }
+  }/*}}}*/
+}/*}}}*/
+

@@ -1,0 +1,34 @@
+
+class FolderActionAnimation extends FolderActionBase
+{/*{{{*/
+  private m_anim_type;
+  private m_duration;
+
+  public FolderActionAnimation(a_anim_type,a_duration)
+  {/*{{{*/
+    this.FolderActionBase();
+
+    m_anim_type = a_anim_type;
+    m_duration = a_duration;
+  }/*}}}*/
+
+  static public json_create(a_descr)
+  {/*{{{*/
+    anim_type = AnimationPage.m_type_dict[a_descr["anim_type"]];
+    duration = new Integer(a_descr["duration"]);
+
+    // - ERROR -
+    if (Blank == anim_type)
+    {
+      new Exception("Unknown page animation type \"%s\"" % a_descr["anim_type"]).throw();
+    }
+
+    return new FolderActionAnimation(anim_type,duration);
+  }/*}}}*/
+
+  public execute(a_folder)
+  {/*{{{*/
+    a_folder.action_animation(m_anim_type,m_duration);
+  }/*}}}*/
+}/*}}}*/
+

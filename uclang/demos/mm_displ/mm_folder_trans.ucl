@@ -1,0 +1,80 @@
+
+import mm_folder_event_base;
+import mm_folder_action_base;
+
+class FolderTransition
+{/*{{{*/
+  private static m_trans_cnt = 0;
+
+  private m_order;
+  private m_events;
+  private m_actions;
+
+  public FolderTransition()
+  {/*{{{*/
+    m_order = m_trans_cnt++;
+    m_events = [];
+    m_actions = [];
+  }/*}}}*/
+
+  static public json_create(a_descr)
+  {/*{{{*/
+
+    // - create new transition -
+    trans = new FolderTransition();
+
+    // - process events -
+    for (event <- a_descr["events"])
+    {
+      trans.insert_event(FolderEventBase.json_create(event));
+    }
+
+    // - process actions -
+    for (action <- a_descr["actions"])
+    {
+      trans.insert_action(FolderActionBase.json_create(action));
+    }
+
+    return trans;
+  }/*}}}*/
+
+  public insert_event(a_event)
+  {/*{{{*/
+    m_events.push(a_event);
+  }/*}}}*/
+
+  public insert_action(a_action)
+  {/*{{{*/
+    m_actions.push(a_action);
+  }/*}}}*/
+
+  // - check transition execute events -
+  public check_events(a_folder)
+  {/*{{{*/
+    for (event <- m_events)
+    {
+      // - check if event was received -
+      if (event.check(a_folder))
+      {
+        return 1;
+      }
+    }
+
+    return 0;
+  }/*}}}*/
+
+  // - execute transition actions -
+  public execute_actions(a_folder)
+  {/*{{{*/
+    for (action <- m_actions)
+    {
+      action.execute(a_folder);
+    }
+  }/*}}}*/
+
+  public compare(a_second)
+  {/*{{{*/
+    return m_order.compare(a_second.m_order);
+  }/*}}}*/
+}/*}}}*/
+

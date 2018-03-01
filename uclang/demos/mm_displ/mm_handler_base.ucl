@@ -1,0 +1,15 @@
+
+import mm_timer_delegate;
+
+abstract class HandlerBase
+{/*{{{*/
+  public HandlerBase()
+  {/*{{{*/
+  }/*}}}*/
+
+  public get_dlg(a_name,a_param_cnt)
+  {/*{{{*/
+    return new Delegate(this,a_name,a_param_cnt);
+  }/*}}}*/
+}/*}}}*/
+

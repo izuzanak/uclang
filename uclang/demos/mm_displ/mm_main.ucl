@@ -1,0 +1,11 @@
+
+import mm_browser;
+
+class Main
+{/*{{{*/
+  static public main(argv)
+  {/*{{{*/
+    new Browser();
+  }/*}}}*/
+}/*}}}*/
+

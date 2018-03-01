@@ -1,0 +1,36 @@
+
+class AnimNodePage extends AnimNodeBase
+{/*{{{*/
+  public m_translate;
+  public m_rotation;
+  public m_alpha;
+
+  public AnimNodePage(a_duration,a_translate,a_rotation,a_alpha)
+  {/*{{{*/
+    this.AnimNodeBase(a_duration);
+
+    m_translate = a_translate;
+    m_rotation = a_rotation;
+    m_alpha = a_alpha;
+  }/*}}}*/
+
+  static public get_steady()
+  {/*{{{*/
+    return new AnimNodePage(0,new Vec3(),new Vec3(),1);
+  }/*}}}*/
+
+  public blend_to(a_ratio,a_trg_node)
+  {/*{{{*/
+    translate = (a_trg_node.m_translate - m_translate)*a_ratio + m_translate;
+    rotation  = (a_trg_node.m_rotation  - m_rotation )*a_ratio + m_rotation;
+    alpha     = (a_trg_node.m_alpha     - m_alpha    )*a_ratio + m_alpha;
+
+    return new AnimNodePage(0,translate,rotation,alpha);
+  }/*}}}*/
+
+  public to_string()
+  {/*{{{*/
+    return "%s(%s)" % [(type this).to_string(),[m_duration,m_trg_time,m_translate,m_rotation,m_alpha].to_string(",")];
+  }/*}}}*/
+}/*}}}*/
+

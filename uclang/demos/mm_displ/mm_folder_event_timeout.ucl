@@ -1,0 +1,24 @@
+
+class FolderEventTimeout extends FolderEventBase
+{/*{{{*/
+  private m_timeout;
+
+  public FolderEventTimeout(a_timeout)
+  {/*{{{*/
+    this.FolderEventBase();
+
+    m_timeout = a_timeout;
+  }/*}}}*/
+
+  static public json_create(a_descr)
+  {/*{{{*/
+    timeout = new Integer(a_descr["timeout"]);
+    return new FolderEventTimeout(timeout);
+  }/*}}}*/
+
+  public check(a_folder)
+  {/*{{{*/
+    return a_folder.event_timeout(m_timeout);
+  }/*}}}*/
+}/*}}}*/
+

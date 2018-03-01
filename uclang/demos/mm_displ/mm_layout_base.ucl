@@ -1,0 +1,60 @@
+
+import mm_layout_rows;
+import mm_layout_columns;
+import mm_layout_float;
+import mm_rect;
+
+class LayoutBase
+{/*{{{*/
+  static public TYPE_CNT = 0;
+
+  static public LAYOUT_ELEMENT = TYPE_CNT++;
+  static public LAYOUT_ROWS    = TYPE_CNT++;
+  static public LAYOUT_COLS    = TYPE_CNT++;
+  static public LAYOUT_FLOATS  = TYPE_CNT++;
+
+  static public m_type_strs = [
+    "LAYOUT_ELEMENT",
+    "LAYOUT_ROWS",
+    "LAYOUT_COLS",
+    "LAYOUT_FLOATS"
+  ];
+
+  static public m_type_dict = Shared.type_dict(m_type_strs);
+
+  public m_rect;
+  public m_prior;
+
+  public LayoutBase()
+  {/*{{{*/
+  }/*}}}*/
+
+  static public json_create(a_descr)
+  {/*{{{*/
+    switch (m_type_dict[a_descr["type"]])
+    {
+    case LAYOUT_ELEMENT:
+      return ElementBase.json_create(a_descr["element"]);
+
+    case LAYOUT_ROWS:
+      return LayoutRows.json_create(a_descr);
+
+    case LAYOUT_COLS:
+      return LayoutColumns.json_create(a_descr);
+
+    case LAYOUT_FLOATS:
+      return LayoutFloat.json_create(a_descr);
+
+    // - ERROR -
+    default:
+      new Exception("Unknown type of layout \"%s\" requested" % a_descr["type"]).throw();
+    }
+  }/*}}}*/
+
+  public emplace(a_rect)
+  {/*{{{*/
+    free m_rect;
+    m_rect = a_rect;
+  }/*}}}*/
+}/*}}}*/
+

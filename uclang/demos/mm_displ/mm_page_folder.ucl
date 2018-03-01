@@ -1,0 +1,233 @@
+
+import mm_page;
+import mm_anim_base;
+import mm_folder_node_base;
+import mm_folder_trans;
+
+class PageFolder
+{/*{{{*/
+  static private STATE_CNT = 0;
+  static private STATE_IN_NODE    = STATE_CNT++;
+  static private STATE_TRANSITION = STATE_CNT++;
+
+  private m_pages;
+  private m_page_map;
+
+  private m_src_page;
+  private m_src_anim;
+
+  private m_trg_page;
+  private m_trg_anim;
+
+  private m_graph;
+
+  private m_state;
+  private m_node_idx;
+  private m_node_time;
+
+  private m_trans_edges;
+
+  public PageFolder()
+  {/*{{{*/
+    m_pages = [];
+    m_page_map = new Dict();
+
+    m_src_anim = new AnimationPage();
+    m_trg_anim = new AnimationPage();
+
+    m_node_time = 0;
+  }/*}}}*/
+
+  static public json_create(a_descr)
+  {/*{{{*/
+    page_folder = new PageFolder();
+
+    graph = new Graph();
+    node_map = new Dict();
+
+    // - process nodes -
+    for (node <- a_descr["nodes"])
+    {
+      node_map[node["id"]] = graph.vertex_add(FolderNodeBase.json_create(node));
+    }
+
+    // - process transitions -
+    for (trans <- a_descr["transitions"])
+    {
+      graph.edge_add(
+        node_map[trans["src"]],node_map[trans["trg"]],
+        FolderTransition.json_create(trans));
+    }
+
+    // - update graph -
+    page_folder.set_graph(graph);
+
+    // - process pages -
+    for (page <- a_descr["pages"])
+    {
+      page_folder.insert(page["id"],Page.json_create(page));
+    }
+
+    return page_folder;
+  }/*}}}*/
+
+  public insert(a_id,a_page)
+  {/*{{{*/
+    m_pages.push(a_page);
+    m_page_map[a_id] = m_pages.length() - 1;
+  }/*}}}*/
+
+  public set_graph(a_graph)
+  {/*{{{*/
+    m_graph = a_graph;
+
+    // - find start node index -
+    try {
+      node_idxs = m_graph.vertex_idxs(new FolderNodeBase("start"));
+
+      // - set start node index -
+      change_node(node_idxs[0]);
+    }
+    catch (e)
+    {
+      new Exception("Cannot find index of scenario \"start\" node").throw();
+    }
+  }/*}}}*/
+
+  private change_node(a_node_idx)
+  {/*{{{*/
+    m_state = STATE_TRANSITION;
+    m_node_idx = a_node_idx;
+
+    m_trans_edges = [];
+    for (edge_idx <- m_graph.vertex(m_node_idx).out_idxs())
+    {
+      m_trans_edges.push(m_graph.edge(edge_idx));
+    }
+  }/*}}}*/
+
+  public event_timeout(a_timeout)
+  {/*{{{*/
+    return Browser.m_time >= m_node_time + a_timeout;
+  }/*}}}*/
+
+  public action_swap_page(a_page_id)
+  {/*{{{*/
+    m_src_page = m_trg_page;
+    m_trg_page = m_page_map[a_page_id];
+
+    // - wait on action to be comleted -
+    if (m_node_time < Browser.m_time)
+    {
+      m_node_time = Browser.m_time;
+    }
+  }/*}}}*/
+
+  public action_animation(a_anim_type,a_duration)
+  {/*{{{*/
+    AnimationPage.animate(m_src_anim,m_trg_anim,a_anim_type,a_duration);
+    
+    // - wait on action to be comleted -
+    if (m_node_time < (trg_time = Browser.m_time + a_duration))
+    {
+      m_node_time = trg_time;
+    }
+  }/*}}}*/
+
+  public init_shaders(a_vert_str,a_frag_str)
+  {/*{{{*/
+    for (page <- m_pages)
+    {
+      page.init_shaders(a_vert_str,a_frag_str);
+    }
+  }/*}}}*/
+
+  public emplace(a_rect)
+  {/*{{{*/
+    for (page <- m_pages)
+    {
+      page.emplace(a_rect);
+    }
+  }/*}}}*/
+
+  public init_draw()
+  {/*{{{*/
+    for (page <- m_pages)
+    {
+      page.init_draw();
+    }
+  }/*}}}*/
+
+  public draw(a_projection,a_view)
+  {/*{{{*/
+    
+    // - draw source page -
+    if (Blank != m_src_page)
+    {
+      // - retrieve actual animation node, update animation state -
+      anim_node = m_src_anim.get_actual();
+
+      // - display source page only when its animation is running -
+      if (m_src_anim.is_animating())
+      {
+        m_pages[m_src_page].draw(a_projection,a_view,anim_node);
+      }
+
+      // - otherwise stop displaying source page -
+      else
+      {
+        free m_src_page;
+      }
+    }
+
+    // - draw target page -
+    if (Blank != m_trg_page)
+    {
+      m_pages[m_trg_page].draw(a_projection,a_view,m_trg_anim.get_actual());
+    }
+  }/*}}}*/
+
+  public timer_tick()
+  {/*{{{*/
+    do {
+      action_flag = 0;
+
+      switch (m_state)
+      {
+      case STATE_IN_NODE:
+        {/*{{{*/
+          for (trans_edge <- m_trans_edges)
+          {
+            free transition;
+            transition = trans_edge.value();
+
+            // - check transition events -
+            if (transition.check_events(this))
+            {
+              // - change actual node -
+              change_node(trans_edge.target_idx());
+
+              // - execute transition actions -
+              transition.execute_actions(this);
+
+              // - set action flag -
+              action_flag = 1;
+            }
+          }
+        }/*}}}*/
+      case STATE_TRANSITION:
+        {/*{{{*/
+          if (Browser.m_time >= m_node_time)
+          {
+            // - update actual state -
+            m_state = STATE_IN_NODE;
+
+            // - set action flag -
+            action_flag = 1;
+          }
+        }/*}}}*/
+      }
+    } while(action_flag);
+  }/*}}}*/
+}/*}}}*/
+

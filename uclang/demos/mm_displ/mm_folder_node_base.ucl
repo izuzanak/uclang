@@ -1,0 +1,21 @@
+
+class FolderNodeBase
+{/*{{{*/
+  m_id;
+
+  public FolderNodeBase(a_id)
+  {/*{{{*/
+    m_id = a_id;
+  }/*}}}*/
+
+  static public json_create(a_descr)
+  {/*{{{*/
+    return new FolderNodeBase(a_descr["id"]);
+  }/*}}}*/
+
+  public compare(a_second)
+  {/*{{{*/
+    return m_id.compare(a_second.m_id);
+  }/*}}}*/
+}/*}}}*/
+

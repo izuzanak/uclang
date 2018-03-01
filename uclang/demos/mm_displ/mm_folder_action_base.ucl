@@ -1,0 +1,39 @@
+
+import mm_folder_action_animation;
+import mm_folder_action_swap_page;
+
+class FolderActionBase
+{/*{{{*/
+  static public TYPE_CNT = 0;
+
+  static public TRANS_ACTION_ANIMATION = TYPE_CNT++;
+  static public TRANS_ACTION_SWAP_PAGE = TYPE_CNT++;
+
+  static public m_type_strs = [
+    "TRANS_ACTION_ANIMATION",
+    "TRANS_ACTION_SWAP_PAGE"
+  ];
+
+  static public m_type_dict = Shared.type_dict(m_type_strs);
+
+  public FolderActionBase()
+  {/*{{{*/
+  }/*}}}*/
+
+  static public json_create(a_descr)
+  {/*{{{*/
+    switch (m_type_dict[a_descr["type"]])
+    {
+    case TRANS_ACTION_ANIMATION:
+      return FolderActionAnimation.json_create(a_descr);
+
+    case TRANS_ACTION_SWAP_PAGE:
+      return FolderActionSwapPage.json_create(a_descr);
+
+    // - ERROR -
+    default:
+      new Exception("Unknown type \"%s\" of transition action" % a_descr["type"]).throw();
+    }
+  }/*}}}*/
+}/*}}}*/
+

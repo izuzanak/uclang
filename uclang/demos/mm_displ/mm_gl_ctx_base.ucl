@@ -1,0 +1,34 @@
+
+//import mm_gl_ctx_android;
+import mm_gl_ctx_glut;
+import mm_handler_base;
+
+abstract class GlCtxBase extends HandlerBase
+{/*{{{*/
+  static public m_time;
+  public m_timer_dlgs;
+  public m_timer;
+
+  public GlCtxBase(a_timer_dlgs)
+  {/*{{{*/
+    this.HandlerBase();
+
+    m_timer_dlgs = a_timer_dlgs;
+    m_timer = new Timer();
+
+  }/*}}}*/
+
+  abstract public on_init();
+  abstract public on_display();
+  abstract public on_resize(a_width,a_height);
+
+  abstract public get_time();
+  abstract public post_redisplay();
+
+  public free_delegates()
+  {/*{{{*/
+    free m_timer_dlgs;
+    free m_timer;
+  }/*}}}*/
+}/*}}}*/
+

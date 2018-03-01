@@ -1,0 +1,25 @@
+
+class ShaderString
+{/*{{{*/
+  public m_defs;
+  public m_body;
+  public m_body_end;
+
+  public ShaderString(a_defs,a_body,a_body_end)
+  {/*{{{*/
+    m_defs = a_defs;
+    m_body = a_body;
+    m_body_end = a_body_end;
+  }/*}}}*/
+
+  public copy()
+  {/*{{{*/
+    return new ShaderString(m_defs[::],m_body[::],m_body_end[::]);
+  }/*}}}*/
+
+  public concatenate()
+  {/*{{{*/
+    return (m_defs + m_body + m_body_end).to_string("\n");
+  }/*}}}*/
+}/*}}}*/
+

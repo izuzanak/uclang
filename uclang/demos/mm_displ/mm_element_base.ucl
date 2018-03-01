@@ -1,0 +1,70 @@
+
+import mm_element_color;
+import mm_element_text;
+//import mm_element_video;
+import mm_element_image;
+
+import mm_color;
+import mm_layout_base;
+
+class ElementBase extends LayoutBase
+{/*{{{*/
+  static public TYPE_CNT = 0;
+
+  static public ELEMENT_COLOR = TYPE_CNT++;
+  static public ELEMENT_TEXT  = TYPE_CNT++;
+  static public ELEMENT_VIDEO = TYPE_CNT++;
+  static public ELEMENT_IMAGE = TYPE_CNT++;
+
+  static public m_type_strs = [
+    "ELEMENT_COLOR",
+    "ELEMENT_TEXT",
+    "ELEMENT_VIDEO",
+    "ELEMENT_IMAGE"
+  ];
+
+  static public m_type_dict = Shared.type_dict(m_type_strs);
+
+  public m_displ_rect;
+  public m_shader_program;
+  public m_uniforms;
+
+  public ElementBase()
+  {/*{{{*/
+    this.LayoutBase();
+  }/*}}}*/
+
+  static public json_create(a_descr)
+  {/*{{{*/
+    switch (m_type_dict[a_descr["type"]])
+    {
+    case ELEMENT_COLOR:
+      return ElementColor.json_create(a_descr);
+
+    case ELEMENT_TEXT:
+      return ElementText.json_create(a_descr);
+
+    case ELEMENT_VIDEO:
+      return ElementVideo.json_create(a_descr);
+
+    case ELEMENT_IMAGE:
+      return ElementImage.json_create(a_descr);
+
+    // - ERROR -
+    default:
+      new Exception("Unknown type of element \"%s\" requested" % a_descr["type"]).throw();
+    }
+  }/*}}}*/
+
+  public init_shader(a_shader_program)
+  {/*{{{*/
+    m_shader_program = a_shader_program;
+    m_uniforms = new Dict(m_shader_program.active_uniforms());
+  }/*}}}*/
+
+  public get_elements(a_array)
+  {/*{{{*/
+    a_array.push(this);
+  }/*}}}*/
+}/*}}}*/
+

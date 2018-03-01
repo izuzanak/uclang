@@ -1,0 +1,168 @@
+
+import mm_shared;
+
+import mm_gl_ctx_base;
+import mm_page_folder;
+import mm_shader_string;
+
+import sys;
+import containers;
+import graph;
+import json;
+import math;
+import ftgl;
+import gl;
+
+class Browser extends GlCtxGlut
+{/*{{{*/
+  static public m_base_dir;
+  static public m_glsl_prec;
+
+  private m_projection;
+  private m_view;
+
+  private m_page_folder;
+  private m_fps_count = 0;
+
+  public Browser()
+  {/*{{{*/
+
+    // - initialize according to opengl context -
+    switch (m_ctx_type)
+    {
+    case "GLUT","EMSCRIPTEN":
+    {
+      m_base_dir = "mm_data";
+      m_glsl_prec = m_ctx_type == "EMSCRIPTEN" ? "mediump" : "";
+
+      constr_dlg = new Delegate(this,"GlCtxGlut",1);
+    }
+
+    case "ANDROID":
+    {
+      m_base_dir = "/sdcard/ucl";
+      m_glsl_prec = "mediump";
+
+      constr_dlg = new Delegate(this,"GlCtxAndroid",1);
+    }
+
+    // - ERROR -
+    default:
+      new Exception("Unknown OpenGl context type").throw();  
+    }
+
+    // - create opengl context -
+    constr_dlg.call([[
+      new TimerDelegate(1000,get_dlg("on_second_tick",0)),
+      new TimerDelegate(10  ,get_dlg("on_timer_tick",0))]
+    ]);
+  }/*}}}*/
+
+  public on_init()
+  {/*{{{*/
+
+    // - create page folder -
+    //file = new File(m_base_dir + "/pg_test.json","r");
+    file = new File(m_base_dir + "/pg_test_1.json","r");
+    m_page_folder = PageFolder.json_create(Json.parse(file.read()));
+    file.close();
+
+    // - initialize elements shaders -
+    vert_str = new ShaderString(
+["
+uniform mat4 bu_model;
+uniform mat4 bu_view;
+uniform mat4 bu_projection;
+"],
+
+["
+void main()
+{
+"],
+
+["
+}
+"]);
+
+    frag_str = new ShaderString(
+[],
+
+["
+void main()
+{
+"],
+
+["
+  gl_FragColor = color;
+}
+"]);
+
+    // - initialize shaders -
+    m_page_folder.init_shaders(vert_str,frag_str);
+
+    // - set opengl clear color -
+    Gl.ClearColor(0,0,0,1);
+
+    // - enable blending -
+    Gl.Enable(Gl.GL_BLEND);
+    Gl.BlendFunc(Gl.GL_SRC_ALPHA,Gl.GL_ONE_MINUS_SRC_ALPHA);
+  }/*}}}*/
+
+  public on_term()
+  {/*{{{*/
+    free m_page_folder;
+  }/*}}}*/
+
+  public on_display()
+  {/*{{{*/
+
+    // - clear color and depth buffer -
+    Gl.Clear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
+
+    // - draw page folder -
+    m_page_folder.draw(m_projection,m_view);
+
+    // - increase fps counter -
+    m_fps_count++;
+  }/*}}}*/
+
+  public on_resize(a_width,a_height)
+  {/*{{{*/
+
+    // - change opengl viewport -
+    Gl.Viewport(0,0,a_width,a_height);
+
+    // - compute field of view and camera distance -
+    fov = Math.PI/3.0;
+    distance = 2.0/(2.0*(fov/2.0).tan());
+
+    // - create perspective projection -
+    m_projection = Mat4.perspective(fov,a_width,a_height,1,10);
+    m_view = Mat4.look_at(
+        new Vec3(0.0,0.0,distance),
+        new Vec3(0.0,0.0,0.0),
+        new Vec3(0.0,1.0,0.0));
+
+    // - emplace page folder -
+    m_page_folder.emplace(new Rect(0,0,a_width,a_height));
+
+    // - initialize page folder for drawing -
+    m_page_folder.init_draw();
+  }/*}}}*/
+
+  public on_second_tick()
+  {/*{{{*/
+
+    // - print fps counter -
+    File.stdout.write("FPS: %d\n" % m_fps_count);
+    m_fps_count = 0;
+  }/*}}}*/
+
+  public on_timer_tick()
+  {/*{{{*/
+
+    // - process animation tick -
+    m_page_folder.timer_tick();
+  }/*}}}*/
+}/*}}}*/
+

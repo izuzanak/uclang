@@ -1,0 +1,40 @@
+
+class Rect
+{/*{{{*/
+  public x;
+  public y;
+  public w;
+  public h;
+
+  public Rect()
+  {/*{{{*/
+    x = y = w = h = 0.0;
+  }/*}}}*/
+
+  public Rect(a_x,a_y,a_w,a_h)
+  {/*{{{*/
+    x = new Float(a_x);
+    y = new Float(a_y);
+    w = new Float(a_w);
+    h = new Float(a_h);
+  }/*}}}*/
+
+  public Rect(a_data)
+  {/*{{{*/
+    x = new Float(a_data[0]);
+    y = new Float(a_data[1]);
+    w = new Float(a_data[2]);
+    h = new Float(a_data[3]);
+  }/*}}}*/
+
+  public data()
+  {/*{{{*/
+    return [x,y,w,h];
+  }/*}}}*/
+
+  public to_string()
+  {/*{{{*/
+    return "%s(%f,%f,%f,%f)" % [(type this).to_string(),x,y,w,h];
+  }/*}}}*/
+}/*}}}*/
+

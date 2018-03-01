@@ -1,0 +1,31 @@
+
+abstract class LayoutVector extends LayoutBase
+{/*{{{*/
+  public m_layouts;
+  public m_prior_sum;
+
+  public LayoutVector()
+  {/*{{{*/
+    this.LayoutBase();
+
+    m_layouts = [];
+    m_prior_sum = 0.0;
+  }/*}}}*/
+
+  public insert(a_element,a_prior)
+  {/*{{{*/
+    a_element.m_prior = a_prior;
+
+    m_layouts.push(a_element);
+    m_prior_sum += a_prior;
+  }/*}}}*/
+
+  public get_elements(a_array)
+  {/*{{{*/
+    for (layout <- m_layouts)
+    {
+      layout.get_elements(a_array);
+    }
+  }/*}}}*/
+}/*}}}*/
+

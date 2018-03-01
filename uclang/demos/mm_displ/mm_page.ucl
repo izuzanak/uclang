@@ -1,0 +1,168 @@
+
+import mm_layout_base;
+import mm_element_base;
+
+class Page
+{/*{{{*/
+  private m_layouts;
+  private m_elements;
+
+  private m_rect;
+  private m_trans_2d;
+
+  public Page()
+  {/*{{{*/
+    m_layouts = [];
+    m_elements = [];
+  }/*}}}*/
+
+  static public json_create(a_descr)
+  {/*{{{*/
+    page = new Page();
+   
+    for (layout <- a_descr["layouts"])
+    {
+      page.insert(LayoutBase.json_create(layout));
+    }
+
+    return page;
+  }/*}}}*/
+
+  public insert(a_layout)
+  {/*{{{*/
+    m_layouts.push(a_layout);
+    a_layout.get_elements(m_elements);
+  }/*}}}*/
+
+  public init_shaders(a_vert_str,a_frag_str)
+  {/*{{{*/
+    page_vert_str = a_vert_str.copy();
+    page_frag_str = a_frag_str.copy();
+
+    page_vert_str.m_defs.push(
+"
+attribute vec3 pa_vertex;
+uniform vec3 pu_vertex;
+uniform mat4 pu_trans_2d;
+varying vec3 pv_position;
+");
+
+    page_vert_str.m_body.push(
+"
+  vec3 vertex = pa_vertex + pu_vertex;
+
+  pv_position = vertex;
+  gl_Position = bu_projection*(bu_view*(bu_model*(pu_trans_2d*vec4(vertex,1.0))));
+");
+
+    page_frag_str.m_defs.push(
+"
+uniform %s vec4 pu_displ_rect;
+uniform %s float pu_alpha;
+varying %s vec3 pv_position;
+" % [Browser.m_glsl_prec,
+     Browser.m_glsl_prec,
+     Browser.m_glsl_prec]);
+
+    page_frag_str.m_body.push(
+"
+  %s float x = pv_position.x;
+  %s float y = pv_position.y;
+
+  %s float x_dist = min(x - pu_displ_rect.x,pu_displ_rect.z - x);
+  %s float y_dist = min(y - pu_displ_rect.y,pu_displ_rect.w - y);
+  %s float dist = min(x_dist,y_dist);
+" % [Browser.m_glsl_prec,
+     Browser.m_glsl_prec,
+     Browser.m_glsl_prec,
+     Browser.m_glsl_prec,
+     Browser.m_glsl_prec]);
+
+    // - process all elements -
+    for (element <- m_elements)
+    {
+      free vert_str;
+      vert_str = page_vert_str.copy();
+
+      free frag_str;
+      frag_str = page_frag_str.copy();
+
+      // - retrieve element shader strings -
+      element.get_shader_strs(vert_str,frag_str);
+
+      frag_str.m_body.push(
+"
+  color.a *= max(min(dist,pu_alpha),0.0);
+");
+
+      vert_sh = new GlShader(Gl.GL_VERTEX_SHADER,vert_str.concatenate());
+      frag_sh = new GlShader(Gl.GL_FRAGMENT_SHADER,frag_str.concatenate());
+
+      // - compile shader program -
+      shader_prog = new GlProgram(vert_sh,frag_sh);
+
+      // - call init_shader of element -
+      element.init_shader(shader_prog);
+    }
+  }/*}}}*/
+
+  public emplace(a_rect)
+  {/*{{{*/
+    free m_rect;
+    m_rect = a_rect;
+
+    // - create transformation matrix -
+    x_max = m_rect.w/m_rect.h;
+    m_trans_2d = new Mat4()
+                  .translate(new Vec3(-x_max,-1.0,0.0))
+                  .scale(new Vec3(2*x_max/m_rect.w,2.0/m_rect.h,1.0));
+
+    for (layout <- m_layouts)
+    {
+      layout.emplace(a_rect);
+    }
+  }/*}}}*/
+
+  public init_draw()
+  {/*{{{*/
+    for (element <- m_elements)
+    {
+      // - call init_draw of element -
+      element.init_draw(this);
+    }
+  }/*}}}*/
+
+  public draw(a_projection,a_view,a_anim_node)
+  {/*{{{*/
+
+    // - compute model matrix -
+    model = new Mat4()
+            .translate(a_anim_node.m_translate);
+
+    // - if x rotation angle is set -
+    if (a_anim_node.m_rotation.x() != 0.0)
+    {
+      model = model.rotate(a_anim_node.m_rotation.x(),new Vec3(1,0,0));
+    }
+
+    // - if y rotation angle is set -
+    if (a_anim_node.m_rotation.y() != 0.0)
+    {
+      model = model.rotate(a_anim_node.m_rotation.y(),new Vec3(0,1,0));
+    }
+
+    // - draw all elements -
+    for (element <- m_elements)
+    {
+      element.m_shader_program.use();
+      element.m_uniforms["bu_model"].write(model);
+      element.m_uniforms["bu_view"].write(a_view);
+      element.m_uniforms["bu_projection"].write(a_projection);
+      element.m_uniforms["pu_trans_2d"].write(m_trans_2d);
+      element.m_uniforms["pu_displ_rect"].write(new Vec4(element.m_displ_rect.data()));
+      element.m_uniforms["pu_alpha"].write(a_anim_node.m_alpha);
+      element.draw();
+    }
+  }/*}}}*/
+}/*}}}*/
+

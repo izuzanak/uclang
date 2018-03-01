@@ -1,0 +1,109 @@
+
+import mm_anim_node_base;
+import mm_anim_page;
+
+abstract class AnimationBase
+{/*{{{*/
+  public m_node_queue;
+  public m_steady_node;
+
+  public AnimationBase(a_steady_node)
+  {/*{{{*/
+    m_node_queue = new Queue();
+    m_steady_node = a_steady_node;
+  }/*}}}*/
+
+  final public insert_base_node(a_node)
+  {/*{{{*/
+    if (m_node_queue.length() > 0)
+    {
+      // - insert target animation node -
+      last_node = m_node_queue.item(m_node_queue.last_idx());
+
+      a_node.m_trg_time = last_node.m_trg_time + a_node.m_duration;
+      m_node_queue.insert(a_node);
+    }
+    else
+    {
+      time = Browser.m_time;
+
+      // - insert both, source and target animation nodes -
+      m_steady_node.m_trg_time = time;
+      m_node_queue.insert(m_steady_node);
+    
+      a_node.m_trg_time = time + a_node.m_duration;
+      m_node_queue.insert(a_node);
+    }
+  }/*}}}*/
+
+  final public get_actual()
+  {/*{{{*/
+    time = Browser.m_time;
+
+    q_lenght = m_node_queue.length();
+
+    if (q_lenght <= 0)
+    {
+      // - return steady node -
+      return m_steady_node;
+    }
+
+    // - ERROR -
+    if (q_lenght < 2)
+    {
+      new Exception("Animation node queue mismatch").throw();
+    }
+
+    // - retrieve source and target indices -
+    src_idx = m_node_queue.first_idx();
+    trg_idx = m_node_queue.next_idx(src_idx);
+
+    do {
+      // - retrieve target node -
+      free trg_node;
+      trg_node = m_node_queue.item(trg_idx);
+
+      // - if target node time is valid -
+      if (time < trg_node.m_trg_time)
+      {
+        break;
+      }
+      else
+      {
+        // - retrieve new source and target indices -
+        src_idx = trg_idx;
+        trg_idx = m_node_queue.next_idx(src_idx);
+
+        // - remove old source node -
+        m_node_queue.next();
+
+        // - if next target index does not exists -
+        if (Blank == trg_idx)
+        {
+          // - remove old target node -
+          m_node_queue.next();
+
+          // - return steady node -
+          return m_steady_node;
+        }
+      }
+    } while(1);
+
+    // - retrieve source node -
+    src_node = m_node_queue.item(src_idx);
+
+    // - compute blend ratio -
+    ratio = new Float(time - src_node.m_trg_time) / trg_node.m_duration;
+
+    // - blend source and target nodes -
+    return this.blend_nodes(ratio,src_node,trg_node);
+  }/*}}}*/
+
+  final public is_animating()
+  {/*{{{*/
+    return m_node_queue.length() >= 2;
+  }/*}}}*/
+
+  abstract public blend_nodes(a_ratio,a_src_node,a_trg_node);
+}/*}}}*/
+

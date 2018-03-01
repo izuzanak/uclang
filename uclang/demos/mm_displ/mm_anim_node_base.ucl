@@ -1,0 +1,16 @@
+
+import mm_anim_node_page;
+
+abstract class AnimNodeBase
+{/*{{{*/
+  public m_duration;
+  public m_trg_time;
+
+  public AnimNodeBase(a_duration)
+  {/*{{{*/
+    m_duration = a_duration;
+  }/*}}}*/
+
+  abstract public to_string();
+}/*}}}*/
+

@@ -1,0 +1,35 @@
+
+import mm_layout_vec;
+
+class LayoutColumns extends LayoutVector
+{/*{{{*/
+  public LayoutColumns()
+  {/*{{{*/
+    this.LayoutVector();
+  }/*}}}*/
+
+  static public json_create(a_descr)
+  {/*{{{*/
+    cols = new LayoutColumns();
+
+    for (layout <- a_descr["layouts"])
+    {
+      cols.insert(LayoutBase.json_create(layout),layout["weight"]);
+    }
+
+    return cols;
+  }/*}}}*/
+
+  public emplace(a_rect)
+  {/*{{{*/
+    pos_x = a_rect.x;
+    for (layout <- m_layouts)
+    {
+      width = layout.m_prior*(a_rect.w/m_prior_sum);
+      layout.emplace(new Rect(pos_x,a_rect.y,width,a_rect.h));
+
+      pos_x += width;
+    }
+  }/*}}}*/
+}/*}}}*/
+

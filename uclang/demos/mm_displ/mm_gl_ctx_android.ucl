@@ -1,0 +1,126 @@
+
+import android;
+
+abstract class GlCtxAndroid extends GlCtxBase
+{/*{{{*/
+  static public m_ctx_type = "ANDROID";
+
+  private m_activity;
+
+  private m_base_time = Sys.time();
+  private m_running = 0;
+ 
+  // - timer callback delegate -
+  public m_timer_dlg = this.get_dlg("activity_on_timer",1);
+
+  public GlCtxAndroid(a_timer_dlgs)
+  {/*{{{*/
+    try {
+      this.GlCtxBase(a_timer_dlgs);
+
+      // - initialize activity -
+      m_activity = new Activity();
+
+      // - register callbacks -
+      m_activity.on_display(this.get_dlg("activity_on_display",0));
+      m_activity.on_resize(this.get_dlg("activity_on_resize",2));
+      m_activity.on_command(this.get_dlg("activity_on_command",1));
+
+      // - register timer callbacks -
+      timer_id = 0;
+      for (timer_dlg <- a_timer_dlgs)
+      {
+        // - register timer callback -
+        m_timer.schedule(timer_dlg.m_period,m_timer_dlg,timer_id++);
+      }
+
+      m_activity.on_idle(this.get_dlg("activity_on_idle",0));
+
+      // - enter event loop -
+      m_activity.event_loop();
+    }
+    catch (e)
+    {
+      // - release references to this -
+      this.free_delegates();
+      free m_activity;
+
+      e.throw();
+    }
+
+    // - release references to this -
+    this.free_delegates();
+    free m_activity;
+  }/*}}}*/
+
+  final public activity_on_display()
+  {/*{{{*/
+    this.get_time();
+    this.on_display();
+  }/*}}}*/
+
+  final public activity_on_resize(a_width,a_height)
+  {/*{{{*/
+    this.get_time();
+    this.on_resize(a_width,a_height);
+  }/*}}}*/
+
+  final public activity_on_command(a_cmd)
+  {/*{{{*/
+    switch (a_cmd)
+    {
+      case Activity.APP_CMD_INIT_WINDOW:
+      {
+        // - call init delegate -
+        this.get_time();
+        this.on_init();
+
+        // - set running flag -
+        m_running = 1;
+      }
+      case Activity.APP_CMD_TERM_WINDOW:
+      {
+        // - call term delegate -
+        this.get_time();
+        this.on_term();
+
+        // - clear running flag -
+        m_running = 0;
+      }
+    }
+  }/*}}}*/
+
+  final public activity_on_timer(a_timer_id)
+  {/*{{{*/
+    this.get_time();
+
+    timer_dlg = m_timer_dlgs[a_timer_id];
+    timer_dlg.m_delegate.call([]);
+
+    // - register next timer call -
+    m_timer.schedule(timer_dlg.m_period,m_timer_dlg,a_timer_id);
+  }/*}}}*/
+
+  final public activity_on_idle()
+  {/*{{{*/
+   
+    // - runing flag is set -
+    if (m_running)
+    {
+      m_timer.process();
+    }
+
+    m_activity.post_redisplay();
+  }/*}}}*/
+
+  final public get_time()
+  {/*{{{*/
+    m_time = (Sys.time() - m_base_time)/1000;
+  }/*}}}*/
+
+  final public post_redisplay()
+  {/*{{{*/
+    m_activity.post_redisplay();
+  }/*}}}*/
+}/*}}}*/
+

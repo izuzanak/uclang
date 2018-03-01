@@ -1,0 +1,84 @@
+
+class AnimationPage extends AnimationBase
+{/*{{{*/
+  static public TYPE_CNT = 0;
+
+  static public ANIM_ZOOM_IN        = TYPE_CNT++;
+  static public ANIM_SWIPE_LEFT     = TYPE_CNT++;
+  static public ANIM_FAR_SWIPE_LEFT = TYPE_CNT++;
+  static public ANIM_ROT_X_AXIS     = TYPE_CNT++;
+
+  static public m_type_strs = [
+    "ANIM_ZOOM_IN",
+    "ANIM_SWIPE_LEFT",
+    "ANIM_FAR_SWIPE_LEFT",
+    "ANIM_ROT_X_AXIS"
+  ];
+
+  static public m_type_dict = Shared.type_dict(m_type_strs);
+
+  public AnimationPage()
+  {/*{{{*/
+    this.AnimationBase(AnimNodePage.get_steady());
+  }/*}}}*/
+
+  public insert_node(a_duration,a_translate,a_rotation,a_alpha)
+  {/*{{{*/
+    new_node = new AnimNodePage(a_duration,a_translate,a_rotation,a_alpha);
+    insert_base_node(new_node);
+  }/*}}}*/
+
+  static public animate(a_src,a_trg,a_type,a_duration)
+  {/*{{{*/
+    switch (a_type)
+    {
+    case ANIM_ZOOM_IN:
+      {/*{{{*/
+        a_trg.insert_node(         0,new Vec3(0,0,-5),new Vec3(),1);
+        a_trg.insert_node(a_duration,new Vec3(      ),new Vec3(),1);
+      }/*}}}*/
+    case ANIM_SWIPE_LEFT:
+      {/*{{{*/
+        a_src.insert_node(         0,new Vec3(      ),new Vec3(),1);
+        a_src.insert_node(a_duration,new Vec3(-5,0,0),new Vec3(),1);
+
+        a_trg.insert_node(         0,new Vec3( 5,0,0),new Vec3(),1);
+        a_trg.insert_node(a_duration,new Vec3(      ),new Vec3(),1);
+      }/*}}}*/
+    case ANIM_FAR_SWIPE_LEFT:
+      {/*{{{*/
+        dur_quarter = a_duration/4.0;
+
+        a_src.insert_node(            0,new Vec3(       ),new Vec3(),1);
+        a_src.insert_node(  dur_quarter,new Vec3( 0,0,-1),new Vec3(),1);
+        a_src.insert_node(2*dur_quarter,new Vec3(-5,0,-1),new Vec3(),1);
+
+        a_trg.insert_node(            0,new Vec3( 5,0,-1),new Vec3(),1);
+        a_trg.insert_node(  dur_quarter,new Vec3( 5,0,-1),new Vec3(),1);
+        a_trg.insert_node(2*dur_quarter,new Vec3( 0,0,-1),new Vec3(),1);
+        a_trg.insert_node(  dur_quarter,new Vec3(       ),new Vec3(),1);
+      }/*}}}*/
+    case ANIM_ROT_X_AXIS:
+      {/*{{{*/
+        dur_sixth = a_duration/6.0;
+
+        a_src.insert_node(          0,new Vec3(       ),new Vec3(               ),1);
+        a_src.insert_node(  dur_sixth,new Vec3( 0,0,-1),new Vec3(               ),1);
+        a_src.insert_node(2*dur_sixth,new Vec3( 0,0,-1),new Vec3(  Math.PI/2,0,0),1);
+
+        a_trg.insert_node(          0,new Vec3(-5,0,-1),new Vec3(               ),1);
+        a_trg.insert_node(3*dur_sixth,new Vec3(-5,0,-1),new Vec3(               ),1);
+        a_trg.insert_node(          0,new Vec3( 0,0,-1),new Vec3(3*Math.PI/2,0,0),1);
+        a_trg.insert_node(2*dur_sixth,new Vec3( 0,0,-1),new Vec3(2*Math.PI  ,0,0),1);
+        a_trg.insert_node(          0,new Vec3( 0,0,-1),new Vec3(               ),1);
+        a_trg.insert_node(  dur_sixth,new Vec3( 0,0, 0),new Vec3(               ),1);
+      }/*}}}*/
+    }
+  }/*}}}*/
+
+  public blend_nodes(a_ratio,a_src_node,a_trg_node)
+  {/*{{{*/
+    return a_src_node.blend_to(a_ratio,a_trg_node);
+  }/*}}}*/
+}/*}}}*/
+

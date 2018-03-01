@@ -1,0 +1,133 @@
+
+import glut;
+import glew;
+
+abstract class GlCtxGlut extends GlCtxBase
+{/*{{{*/
+  static public m_ctx_type = "GLUT";
+  //static public m_ctx_type = "EMSCRIPTEN";
+
+  private m_glut;
+  private m_glew;
+ 
+  private m_base_time = Sys.time();
+
+  // - timer callback delegate -
+  public m_timer_dlg = this.get_dlg("glut_on_timer",1);
+
+  public GlCtxGlut(a_timer_dlgs)
+  {/*{{{*/
+    try {
+      this.GlCtxBase(a_timer_dlgs);
+
+      term_dlg = this.get_dlg("sig_on_term",1);
+      Signal.bind(Signal.SIGINT,term_dlg);
+      Signal.bind(Signal.SIGTERM,term_dlg);
+      Signal.bind(Signal.SIGHUP,term_dlg);
+
+      // - initialize glut -
+      m_glut = new Glut();
+
+      // - initialize window -
+      m_glut.InitWindowSize(800,600);
+      m_glut.InitWindowPosition(100,100);
+      m_glut.InitDisplayMode(Glut.GLUT_DOUBLE | Glut.GLUT_RGB | Glut.GLUT_DEPTH);
+
+      // - create window -
+      m_glut.CreateWindow("MMTrain window");
+
+      // - initialize glew -
+      m_glew = new Glew();
+
+      // - call init delegate -
+      this.get_time();
+      this.on_init();
+
+      // - register glut callbacks -
+      m_glut.DisplayFunc(this.get_dlg("glut_on_display",0));
+      m_glut.ReshapeFunc(this.get_dlg("glut_on_reshape",2));
+
+      // - register timer callbacks -
+      timer_id = 0;
+      for (timer_dlg <- a_timer_dlgs)
+      {
+        // - register timer callback -
+        m_timer.schedule(timer_dlg.m_period,m_timer_dlg,timer_id++);
+      }
+
+      // - register glut idle callback -
+      m_glut.IdleFunc(this.get_dlg("glut_on_idle",0));
+
+      // - enter glut main loop -
+      m_glut.MainLoop();
+    }
+    catch (e)
+    {
+      // - release references to this -
+      this.free_delegates();
+      free m_glut;
+      free m_timer_dlg;
+
+      e.throw();
+    }
+
+    // - release references to this -
+    this.free_delegates();
+    free m_glut;
+    free m_timer_dlg;
+  }/*}}}*/
+
+  final public sig_on_term(a_signum)
+  {/*{{{*/
+
+    // - leave glut main loop -
+    m_glut.LeaveMainLoop();
+
+    // - release references to this -
+    this.free_delegates();
+    free m_glut;
+    free m_timer_dlg;
+  }/*}}}*/
+
+  final public glut_on_display()
+  {/*{{{*/
+    this.get_time();
+    this.on_display();
+
+    m_glut.SwapBuffers();
+  }/*}}}*/
+
+  final public glut_on_reshape(a_width,a_height)
+  {/*{{{*/
+    this.get_time();
+    this.on_resize(a_width,a_height);
+  }/*}}}*/
+
+  final public glut_on_timer(a_timer_id)
+  {/*{{{*/
+    this.get_time();
+
+    timer_dlg = m_timer_dlgs[a_timer_id];
+    timer_dlg.m_delegate.call([]);
+
+    // - register next timer call -
+    m_timer.schedule(timer_dlg.m_period,m_timer_dlg,a_timer_id);
+  }/*}}}*/
+
+  final public glut_on_idle()
+  {/*{{{*/
+    m_timer.process();
+    m_glut.PostRedisplay();
+  }/*}}}*/
+
+  final public get_time()
+  {/*{{{*/
+    m_time = (Sys.time() - m_base_time)/1000;
+  }/*}}}*/
+
+  final public post_redisplay()
+  {/*{{{*/
+    m_glut.PostRedisplay();
+  }/*}}}*/
+}/*}}}*/
+

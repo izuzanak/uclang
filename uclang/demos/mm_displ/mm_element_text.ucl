@@ -1,0 +1,350 @@
+
+class ElementText extends ElementBase
+{/*{{{*/
+  static public TYPE_CNT = 0;
+  static public TYPE_STATIC         = TYPE_CNT++;
+  static public TYPE_ROT_RIGHT_LEFT = TYPE_CNT++;
+  static public TYPE_ROT_BOTTOM_UP  = TYPE_CNT++;
+
+  private m_color;
+  private m_bg_color;
+  
+  private m_text;
+  private m_type;
+  private m_speed;
+
+  private m_font;
+  private m_props;
+  private m_text_width;
+  private m_text_height;
+
+  private m_space_width;
+  private m_rows_space;
+
+  private m_x_pos;
+  private m_y_pos;
+  private m_period;
+
+  private m_bg_vert_buff;
+  private m_text_buff;
+
+  public ElementText(a_source,a_size,a_text,a_type,a_speed,a_color,a_bg_color)
+  {/*{{{*/
+    this.ElementBase();
+
+    m_text = a_text;
+    m_type = a_type;
+    m_speed = a_speed;
+
+    m_color = a_color;
+    m_bg_color = a_bg_color;
+
+    // FIXME TODO varying texture atlas size
+    source_file = [Browser.m_base_dir,"/",a_source].to_string("");
+    m_font = new GlFont(source_file,a_size,512,512);
+
+    // - create text buffer -
+    m_text_buff = m_font.buffer("pa_vertex","ea_tex_coord");
+
+    // - position text -
+    m_text_buff.set_pos(0,0);
+    m_text_buff.push_text(m_text);
+
+    // - retrieve text proportions -
+    m_props = m_font.measure(m_text);
+
+    m_text_height = m_props[1] - m_props[2];
+    m_text_width = m_props[0];
+
+    // - retrieve space width -
+    m_space_width = m_font.measure("  ")[0];
+
+    // - retrieve rows space -
+    m_rows_space = 2*m_font.height();
+  }/*}}}*/
+
+  public ElementText(a_source,a_size,a_text,a_type,a_speed)
+  {/*{{{*/
+    ElementText(a_source,a_size,a_text,a_type,a_speed,
+      new Color(0,0,0),
+      new Color(1,1,1)
+    );
+  }/*}}}*/
+
+  public ElementText(a_source,a_size,a_text,a_type)
+  {/*{{{*/
+    ElementText(a_source,a_size,a_text,a_type,
+      2*a_size/1000.0);
+  }/*}}}*/
+
+  public ElementText(a_source,a_size,a_text)
+  {/*{{{*/
+    ElementText(a_source,a_size,a_text,
+      TYPE_STATIC);
+  }/*}}}*/
+
+  static public json_create(a_descr)
+  {/*{{{*/
+
+    // - retrieve text string -
+    if (Blank == (text = a_descr["text"]))
+    {
+      if (Blank != (file_name = a_descr["text_file"]))
+      {
+        // - read text from file -
+        source_file = [Browser.m_base_dir,"/",file_name].to_string("");
+        file = new File(source_file,"r");
+        text_text = file.read();
+        file.close();
+      }
+      else
+      {
+        new Exception("No \"text\" or \"text_file\" member of %s was specified" % (type ElementText).to_string()).throw();
+      }
+    }
+    else
+    {
+      // - convert text to string -
+      text_text = new String(text);
+    }
+
+    // - retrieve text element text_type -
+    switch (a_descr["text_type"])
+    {
+    case "TYPE_STATIC":
+      text_type = TYPE_STATIC;
+    case "TYPE_ROT_RIGHT_LEFT":
+      text_type = TYPE_ROT_RIGHT_LEFT;
+    case "TYPE_ROT_BOTTOM_UP":
+      text_type = TYPE_ROT_BOTTOM_UP;
+
+    // - ERROR -
+    default:
+      new Exception("Unknown text_type \"%s\" of %s" % [a_descr["text_type"],(type ElementText).to_string()]).throw();
+    }
+
+    // - assure parameter types -
+    text_source = new String(a_descr["source"]);
+    text_size = new Integer(a_descr["size"]);
+    text_speed = new Float(a_descr["speed"]);
+    text_color = new Color(a_descr["color"]);
+    text_bg_color = new Color(a_descr["bg_color"]);
+
+    // - create text element -
+    return new ElementText(
+      text_source,text_size,text_text,
+      text_type,text_speed,
+      text_color,text_bg_color
+    );
+  }/*}}}*/
+
+  public get_shader_strs(a_vert_str,a_frag_str)
+  {/*{{{*/
+    a_vert_str.m_defs.push(
+"
+uniform bool eu_fg_flag;
+attribute vec2 ea_tex_coord;
+varying vec2 ev_tex_coord;
+");
+
+    a_vert_str.m_body.push(
+"
+  if (eu_fg_flag)
+  {
+    ev_tex_coord = ea_tex_coord.xy;
+  }
+");
+
+    a_frag_str.m_defs.push(
+"
+uniform bool eu_fg_flag;
+varying %s vec2 ev_tex_coord;
+uniform sampler2D eu_texture;
+uniform %s vec4 eu_color;
+" % [Browser.m_glsl_prec,
+     Browser.m_glsl_prec]);
+
+    a_frag_str.m_body.push(
+"
+  %s vec4 color;
+
+  if (eu_fg_flag)
+  {
+    color = eu_color;
+    color.a *= texture2D(eu_texture,ev_tex_coord).a;
+  }
+  else
+  {
+    color = eu_color;
+  }
+" % Browser.m_glsl_prec);
+  }/*}}}*/
+
+  public init_draw(a_page)
+  {/*{{{*/
+
+    // - display coordinates -
+    x0 = m_rect.x;
+    y0 = m_rect.y;
+    x1 = m_rect.x + m_rect.w;
+    y1 = m_rect.y + m_rect.h;
+
+    // - set display rectangle -
+    free m_displ_rect;
+    m_displ_rect = new Rect(x0,y0,x1,y1);
+
+    // - if background color is defined -
+    if (Blank != m_bg_color)
+    {
+      // - create vertex buffer -
+      m_bg_vert_buff = new GlVertexBuffer("pa_vertex:3f,ea_tex_coord:2f");
+
+      // - background color elements references -
+      r = m_bg_color.r;
+      g = m_bg_color.g;
+      b = m_bg_color.b;
+      a = m_bg_color.a;
+
+      // - write vertices to vertex buffer -
+      m_bg_vert_buff.push_back([
+        x0,y0,0, 0,0,
+        x0,y1,0, 0,0,
+        x1,y1,0, 0,0,
+        x1,y0,0, 0,0
+      ],[
+        0,1,2,
+        0,2,3
+      ]);
+    }
+
+    // - process text according to its type -
+    switch (m_type)
+    {
+      case TYPE_STATIC:
+      {/*{{{*/
+
+        // - fixed position -
+        m_x_pos = new Integer(m_rect.x + (m_rect.w - m_text_width)/2.0);
+        m_y_pos = new Integer(m_rect.y + (m_rect.h + m_text_height)/2.0 - m_props[1]);
+      }/*}}}*/
+
+      case TYPE_ROT_RIGHT_LEFT:
+      {/*{{{*/
+
+        // - fixed position -
+        m_y_pos = new Integer(m_rect.y + (m_rect.h + m_text_height)/2.0 - m_props[1]);
+
+        if (m_text_width <= m_rect.w)
+        {
+          // - fixed x position -
+          m_x_pos = new Integer(m_rect.x + (m_rect.w - m_text_width)/2.0);
+        }
+        else
+        {
+          // - variable x position -
+          m_x_pos = [m_rect.x + m_space_width,m_rect.x - m_text_width];
+
+          m_period = (m_x_pos[0] - m_x_pos[1]) / m_speed;
+          m_period = m_period < 0.0 ? -m_period : m_period;
+        }
+      }/*}}}*/
+
+      case TYPE_ROT_BOTTOM_UP:
+      {/*{{{*/
+        
+        // - fixed x position -
+        m_x_pos = new Integer(m_rect.x + (m_rect.w - m_text_width)/2.0);
+
+        if (m_text_height <= m_rect.h)
+        {
+          // - fixed y position -
+          m_y_pos = new Integer(m_rect.y + (m_rect.h + m_text_height)/2.0 - m_props[1]);
+        }
+        else
+        {
+          // - varying y position -
+          y_top = m_rect.y + m_rect.h - m_props[1];
+          m_y_pos = [y_top - m_rows_space,y_top + m_text_height];
+
+          m_period = (m_y_pos[0] - m_y_pos[1]) / m_speed;
+          m_period = m_period < 0.0 ? -m_period : m_period;
+        }
+      }/*}}}*/
+
+    // - ERROR -
+    default:
+      new Exception("Unknown type of %s" % (type this).to_string()).throw();
+    }
+
+  }/*}}}*/
+
+  public draw()
+  {/*{{{*/
+    time = Browser.m_time;
+
+    // - if background color is defined -
+    if (Blank != m_bg_color)
+    {
+      m_uniforms["eu_fg_flag"].write(0);
+      m_uniforms["pu_vertex"].write(new Vec3());
+      m_uniforms["eu_color"].write(new Vec4(m_bg_color.data()));
+      m_bg_vert_buff.render(Gl.GL_TRIANGLES);
+    }
+
+    m_uniforms["eu_fg_flag"].write(1);
+    m_uniforms["eu_texture"].write(0);
+    m_uniforms["eu_color"].write(new Vec4(m_color.data()));
+
+    if (type m_x_pos == type Integer)
+    {
+      // - fixed x position -
+      x_pos = m_x_pos;
+    }
+    else
+    {
+      // - varying x position -
+      actual = new Float(time % new Integer(m_period));
+      x_pos = m_x_pos[0] + (actual/m_period)*(m_x_pos[1] - m_x_pos[0]);
+
+      if ((m_rect.x + m_rect.w) - (x_pos + m_text_width) >= m_space_width)
+      {
+        // - second x position -
+        x_pos_second = x_pos + m_text_width + m_space_width;
+      }
+    }
+
+    if (type m_y_pos == type Integer)
+    {
+      // - fixed y position -
+      y_pos = m_y_pos;
+    }
+    else
+    {
+      // - varying y position -
+      actual = new Float(time % new Integer(m_period));
+      y_pos = m_y_pos[0] + (actual/m_period)*(m_y_pos[1] - m_y_pos[0]);
+
+      if ((m_rect.y + m_rect.h) - ((y_pos + m_props[2]) - m_text_height) >= m_rows_space)
+      {
+        // - second y position -
+        y_pos_second = y_pos - (m_text_height + m_rows_space);
+      }
+    }
+
+    m_uniforms["pu_vertex"].write(new Vec3(x_pos,y_pos,0));
+    m_text_buff.render();
+
+    if (Blank != x_pos_second)
+    {
+      m_uniforms["pu_vertex"].write(new Vec3(x_pos_second,y_pos,0));
+      m_text_buff.render();
+    }
+
+    if (Blank != y_pos_second)
+    {
+      m_uniforms["pu_vertex"].write(new Vec3(x_pos,y_pos_second,0));
+      m_text_buff.render();
+    }
+  }/*}}}*/
+}/*}}}*/
+

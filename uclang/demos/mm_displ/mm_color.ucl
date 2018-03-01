@@ -1,0 +1,49 @@
+
+class Color
+{/*{{{*/
+  public r;
+  public g;
+  public b;
+  public a;
+
+  public Color()
+  {/*{{{*/
+    r = g = b = 0.0;
+    a = 1.0;
+  }/*}}}*/
+
+  public Color(a_r,a_g,a_b)
+  {/*{{{*/
+    r = new Float(a_r);
+    g = new Float(a_g);
+    b = new Float(a_b);
+    a = 1.0;
+  }/*}}}*/
+
+  public Color(a_r,a_g,a_b,a_a)
+  {/*{{{*/
+    r = new Float(a_r);
+    g = new Float(a_g);
+    b = new Float(a_b);
+    a = new Float(a_a);
+  }/*}}}*/
+
+  public Color(a_data)
+  {/*{{{*/
+    r = new Float(a_data[0]);
+    g = new Float(a_data[1]);
+    b = new Float(a_data[2]);
+    a = a_data.length() > 3 ?  new Float(a_data[3]) : 1.0;
+  }/*}}}*/
+
+  public data()
+  {/*{{{*/
+    return [r,g,b,a];
+  }/*}}}*/
+
+  public to_string()
+  {/*{{{*/
+    return "%s(%f,%f,%f,%f)" % [(type this).to_string(),r,g,b,a];
+  }/*}}}*/
+}/*}}}*/
+

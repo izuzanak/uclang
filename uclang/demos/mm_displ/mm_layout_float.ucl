@@ -1,0 +1,66 @@
+
+class LayoutFloat extends LayoutBase
+{/*{{{*/
+  public m_layouts;
+  public m_relatives;
+
+  public LayoutFloat()
+  {/*{{{*/
+    this.LayoutBase();
+
+    m_layouts = [];
+    m_relatives = [];
+  }/*}}}*/
+
+  static public json_create(a_descr)
+  {/*{{{*/
+    floats = new LayoutFloat();
+
+    for (layout <- a_descr["layouts"])
+    {
+      floats.insert(LayoutBase.json_create(layout),new Rect(layout["rect"]));
+    }
+
+    return floats;
+  }/*}}}*/
+
+  public insert(a_element,a_rect)
+  {/*{{{*/
+    a_element.m_prior = 0.0;
+
+    m_layouts.push(a_element);
+    m_relatives.push(a_rect);
+  }/*}}}*/
+
+  public emplace(a_rect)
+  {/*{{{*/
+    l_idx = 0;
+    l_idx_end = m_layouts.length();
+
+    while (l_idx < l_idx_end)
+    {
+      free layout;
+      layout = m_layouts[l_idx];
+
+      free relative;
+      relative = m_relatives[l_idx];
+
+      layout.emplace(new Rect(
+        a_rect.x + a_rect.w*relative.x,
+        a_rect.y + a_rect.h*relative.y,
+        a_rect.w*relative.w,
+        a_rect.h*relative.h));
+
+      ++l_idx;
+    }
+  }/*}}}*/
+
+  public get_elements(a_array)
+  {/*{{{*/
+    for (layout <- m_layouts)
+    {
+      layout.get_elements(a_array);
+    }
+  }/*}}}*/
+}/*}}}*/
+
