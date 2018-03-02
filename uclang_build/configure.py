@@ -95,6 +95,7 @@ c_packages = [
   ["MOD_FUSE"      ,"pkg-config",["fuse >= 2.9.3"]],
   ["MOD_ANDROID"   ,"false"     ,[]],
   ["MOD_NACL"      ,"false"     ,[]],
+  ["MOD_EMSCRIPTEN","false"     ,[]],
 ]
 
 # - print begin of array -

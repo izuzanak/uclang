@@ -92,6 +92,7 @@ C_MODULE_PIGPIO     = index; index += 1
 C_MODULE_FUSE       = index; index += 1
 C_MODULE_ANDROID    = index; index += 1
 C_MODULE_NACL       = index; index += 1
+C_MODULE_EMSCRIPTEN = index; index += 1
 
 index = 0
 CFG_NAME   = index; index += 1
@@ -187,5 +188,6 @@ c_cfg = [
     ["MOD_FUSE"      ,c_enabled[C_MODULE_FUSE]      ,C_UCLANG_DIR + "mods/fuse_uclm"        ,None],
     ["MOD_ANDROID"   ,c_enabled[C_MODULE_ANDROID]   ,C_UCLANG_DIR + "mods/android_uclm"     ,None],
     ["MOD_NACL"      ,c_enabled[C_MODULE_NACL]      ,C_UCLANG_DIR + "mods/nacl_uclm"        ,None],
+    ["MOD_EMSCRIPTEN",c_enabled[C_MODULE_EMSCRIPTEN],C_UCLANG_DIR + "mods/emscripten_uclm"  ,None],
 ]
 
