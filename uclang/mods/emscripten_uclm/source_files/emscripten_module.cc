@@ -70,7 +70,7 @@ built_in_class_s emscripten_class =
 {/*{{{*/
   "Emscripten",
   c_modifier_public | c_modifier_final,
-  2, emscripten_methods,
+  5, emscripten_methods,
   0, emscripten_variables,
   bic_emscripten_consts,
   bic_emscripten_init,
@@ -90,6 +90,21 @@ built_in_class_s emscripten_class =
 
 built_in_method_s emscripten_methods[] =
 {/*{{{*/
+  {
+    "run_script#1",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_emscripten_method_run_script_1
+  },
+  {
+    "run_script_int#1",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_emscripten_method_run_script_int_1
+  },
+  {
+    "run_script_string#1",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_emscripten_method_run_script_string_1
+  },
   {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
@@ -118,6 +133,75 @@ void bic_emscripten_init(interpreter_thread_s &it,location_s *location_ptr)
 void bic_emscripten_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   cassert(0);
+}/*}}}*/
+
+bool bic_emscripten_method_run_script_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_emscripten,"run_script#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  emscripten_run_script(((string_s *)src_0_location->v_data_ptr)->data);
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_emscripten_method_run_script_int_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_emscripten,"run_script_int#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  long long int result = emscripten_run_script_int(((string_s *)src_0_location->v_data_ptr)->data);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_emscripten_method_run_script_string_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_emscripten,"run_script_string#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  char *result = emscripten_run_script_string(((string_s *)src_0_location->v_data_ptr)->data);
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->set(strlen(result),result);
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
 }/*}}}*/
 
 bool bic_emscripten_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)

@@ -110,7 +110,7 @@ built_in_class_s glut_class =
 {/*{{{*/
   "Glut",
   c_modifier_public | c_modifier_final,
-  24
+  25
 #ifndef EMSCRIPTEN
   + 1
 #endif
@@ -163,6 +163,11 @@ built_in_method_s glut_methods[] =
     "CreateWindow#1",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_glut_method_CreateWindow_1
+  },
+  {
+    "ReshapeWindow#2",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_glut_method_ReshapeWindow_2
   },
   {
     "DisplayFunc#1",
@@ -861,6 +866,36 @@ bool bic_glut_method_CreateWindow_1(interpreter_thread_s &it,unsigned stack_base
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   glut_s::window = glutCreateWindow(string_ptr->data);
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_glut_method_ReshapeWindow_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  long long int width;
+  long long int height;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,width) ||
+      !it.retrieve_integer(src_1_location,height))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_glut,"ReshapeWindow#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  BIC_GLUT_WINDOW_CHECK();
+
+  glutReshapeWindow(width,height);
 
   BIC_SET_RESULT_BLANK();
 

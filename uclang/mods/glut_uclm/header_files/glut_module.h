@@ -50,6 +50,7 @@ bool bic_glut_method_InitWindowSize_2(interpreter_thread_s &it,unsigned stack_ba
 bool bic_glut_method_InitWindowPosition_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_glut_method_InitDisplayMode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_glut_method_CreateWindow_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_glut_method_ReshapeWindow_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_glut_method_DisplayFunc_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_glut_method_ReshapeFunc_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_glut_method_KeyboardFunc_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);

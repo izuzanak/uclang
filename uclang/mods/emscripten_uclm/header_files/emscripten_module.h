@@ -39,6 +39,9 @@ void bic_emscripten_consts(location_array_s &const_locations);
 void bic_emscripten_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_emscripten_clear(interpreter_thread_s &it,location_s *location_ptr);
 
+bool bic_emscripten_method_run_script_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_emscripten_method_run_script_int_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_emscripten_method_run_script_string_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_emscripten_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_emscripten_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
