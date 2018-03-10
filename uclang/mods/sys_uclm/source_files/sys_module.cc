@@ -4056,6 +4056,7 @@ bool bic_fd_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *oper
   bc_array_s data_buffer;
   data_buffer.init();
 
+  int inq_cnt;
   long int read_cnt;
   do
   {
@@ -4072,8 +4073,16 @@ bool bic_fd_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *oper
       return false;
     }
 
+    // - ERROR -
+    if (ioctl(fd,TIOCINQ,&inq_cnt) == -1)
+    {
+      data_buffer.clear();
+
+      exception_s::throw_exception(it,module.error_base + c_error_FD_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
   }
-  while(read_cnt >= c_buffer_add);
+  while(inq_cnt > 0);
 
   data_buffer.used = (data_buffer.used - c_buffer_add) + read_cnt;
 
