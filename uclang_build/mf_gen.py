@@ -2765,8 +2765,8 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build + "-I/usr/include/ruby-2.3.0 -I/usr/include/i386-linux-gnu/ruby-2.3.0 ", # CXX options
-      opt_link + "-L/usr/lib/i386-linux-gnu -lruby-2.3 ", # CXX link options
+      opt_build + "-I/usr/include/ruby-2.5.0 -I/usr/include/i386-linux-gnu/ruby-2.5.0 ", # CXX options
+      opt_link + "-L/usr/lib/i386-linux-gnu -lruby-2.5 ", # CXX link options
       "", # CXX defines
       [],
       [],
