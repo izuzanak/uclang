@@ -659,7 +659,6 @@ class UclVar
   static unsigned c_bi_vni__SIGPOLL;
   static unsigned c_bi_vni__SIGPWR;
   static unsigned c_bi_vni__SIGSYS;
-  static unsigned c_bi_vni__SIGUNUSED;
   static unsigned c_bi_vni__SIGRTMIN;
   static unsigned c_bi_vni__SIGRTMAX;
   static unsigned c_bi_vni_POLLIN;
@@ -1769,7 +1768,6 @@ class UclVar
     static UclVar _SIGPOLL;
     static UclVar _SIGPWR;
     static UclVar _SIGSYS;
-    static UclVar _SIGUNUSED;
     static UclVar _SIGRTMIN;
     static UclVar _SIGRTMAX;
 #endif

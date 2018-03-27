@@ -597,7 +597,6 @@ unsigned UclVar::c_bi_vni__SIGIO;
 unsigned UclVar::c_bi_vni__SIGPOLL;
 unsigned UclVar::c_bi_vni__SIGPWR;
 unsigned UclVar::c_bi_vni__SIGSYS;
-unsigned UclVar::c_bi_vni__SIGUNUSED;
 unsigned UclVar::c_bi_vni__SIGRTMIN;
 unsigned UclVar::c_bi_vni__SIGRTMAX;
 unsigned UclVar::c_bi_vni_POLLIN;
@@ -1176,7 +1175,6 @@ UclVar UclVar::Signal::_SIGIO = UclVar(NO_INIT());
 UclVar UclVar::Signal::_SIGPOLL = UclVar(NO_INIT());
 UclVar UclVar::Signal::_SIGPWR = UclVar(NO_INIT());
 UclVar UclVar::Signal::_SIGSYS = UclVar(NO_INIT());
-UclVar UclVar::Signal::_SIGUNUSED = UclVar(NO_INIT());
 UclVar UclVar::Signal::_SIGRTMIN = UclVar(NO_INIT());
 UclVar UclVar::Signal::_SIGRTMAX = UclVar(NO_INIT());
 #endif
@@ -2628,7 +2626,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SIGPOLL,"SIGPOLL");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SIGPWR,"SIGPWR");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SIGSYS,"SIGSYS");
-    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SIGUNUSED,"SIGUNUSED");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SIGRTMIN,"SIGRTMIN");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni__SIGRTMAX,"SIGRTMAX");
 #endif
@@ -3434,7 +3431,6 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(Signal,c_bi_class_Signal,_SIGPOLL);
     UCLVAR_RETRIEVE_STATIC_CONST(Signal,c_bi_class_Signal,_SIGPWR);
     UCLVAR_RETRIEVE_STATIC_CONST(Signal,c_bi_class_Signal,_SIGSYS);
-    UCLVAR_RETRIEVE_STATIC_CONST(Signal,c_bi_class_Signal,_SIGUNUSED);
     UCLVAR_RETRIEVE_STATIC_CONST(Signal,c_bi_class_Signal,_SIGRTMIN);
     UCLVAR_RETRIEVE_STATIC_CONST(Signal,c_bi_class_Signal,_SIGRTMAX);
 #endif
