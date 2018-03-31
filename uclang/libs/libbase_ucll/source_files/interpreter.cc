@@ -1004,18 +1004,18 @@ bool interpreter_thread_s::call_method(uli *code,unsigned stack_base)
     }
     else
     {
-    // - if method is private, then test calling -
-    if (method_record.modifiers & c_modifier_private)
-    {
-      // - ERROR -
-      if (((location_s *)data_stack[stack_base])->v_type != method_record.parent_record)
+      // - if method is private, then test calling -
+      if (method_record.modifiers & c_modifier_private)
       {
-        exception_s *new_exception = exception_s::throw_exception(*this,c_error_CANNOT_ACCESS_PRIVATE_METHOD,code[icl_source_pos],(location_s *)blank_location);
-        new_exception->params.push(method_ri);
+        // - ERROR -
+        if (((location_s *)data_stack[stack_base])->v_type != method_record.parent_record)
+        {
+          exception_s *new_exception = exception_s::throw_exception(*this,c_error_CANNOT_ACCESS_PRIVATE_METHOD,code[icl_source_pos],(location_s *)blank_location);
+          new_exception->params.push(method_ri);
 
-        return false;
+          return false;
+        }
       }
-    }
 
       // - creation of new thread -
       if (method_record.modifiers & c_modifier_parallel)
