@@ -48,6 +48,7 @@ c_packages = [
   ["MOD_LIGHTNING" ,"false"     ,[]],
   ["MOD_LLVM"      ,"false"     ,[]],
   ["MOD_GA"        ,"dirs",      ["../ext_libs/galib/galib247/ga"]],
+  ["MOD_FANN"      ,"pkg-config",["fann >= 2.2.0"]],
   ["MOD_AV"        ,"pkg-config",["libavutil >= 54.3.0","libavformat >= 56.1.0","libavcodec >= 56.1.0","libswscale >= 3.0.0"]],
   ["MOD_AO"        ,"pkg-config",["ao >= 1.1.0"]],
   ["MOD_MPG"       ,"pkg-config",["libmpg123 >= 1.20.1"]],
