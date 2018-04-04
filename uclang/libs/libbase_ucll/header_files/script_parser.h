@@ -1262,7 +1262,7 @@ additions
    * \param a_number - reference to target number variable
    * \return true if number was successfuly retrieved
    */
-  inline bool retrieve_integer(location_s *location_ptr,long long int &a_number);
+  inline static bool retrieve_integer(location_s *location_ptr,long long int &a_number);
 
   /*!
    * \brief retrieve float number from location pointer
@@ -1270,7 +1270,7 @@ additions
    * \param a_number - reference to target number variable
    * \return true if number was successfuly retrieved
    */
-  inline bool retrieve_float(location_s *location_ptr,double &a_number);
+  inline static bool retrieve_float(location_s *location_ptr,double &a_number);
 
   /*!
    * \brief test value represented by location pointer
@@ -1278,7 +1278,7 @@ additions
    * \param a_result - reference to target bool variable
    * \return true if value was successfully tested
    */
-  inline bool test_value(location_s *location_ptr,bool &a_result);
+  inline static bool test_value(location_s *location_ptr,bool &a_result);
 
   /*!
    * \brief return location pointer (dereferencing references)

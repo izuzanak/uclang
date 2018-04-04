@@ -470,7 +470,7 @@ built_in_class_s fann_train_data_class =
 {/*{{{*/
   "FannTrainData",
   c_modifier_public | c_modifier_final,
-  2, fann_train_data_methods,
+  3, fann_train_data_methods,
   0, fann_train_data_variables,
   bic_fann_train_data_consts,
   bic_fann_train_data_init,
@@ -490,6 +490,11 @@ built_in_class_s fann_train_data_class =
 
 built_in_method_s fann_train_data_methods[] =
 {/*{{{*/
+  {
+    "FannTrainData#1",
+    c_modifier_public | c_modifier_final,
+    bic_fann_train_data_method_FannTrainData_1
+  },
   {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
@@ -517,12 +522,145 @@ void bic_fann_train_data_init(interpreter_thread_s &it,location_s *location_ptr)
 
 void bic_fann_train_data_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  fann_train_data *ft_ptr = (fann_train_data *)location_ptr->v_data_ptr;
+  fann_train_data *ftd_ptr = (fann_train_data *)location_ptr->v_data_ptr;
 
-  if (ft_ptr != nullptr)
+  if (ftd_ptr != nullptr)
   {
-    fann_destroy_train(ft_ptr);
+    fann_destroy_train(ftd_ptr);
   }
+}/*}}}*/
+
+bool bic_fann_train_data_method_FannTrainData_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_array)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("FannTrainData#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (array_ptr->used == 0 || array_ptr->used & 0x01)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  unsigned num_data = array_ptr->used >> 1;
+  unsigned num_input;
+  unsigned num_output;
+
+  pointer *a_ptr = array_ptr->data;
+  pointer *a_ptr_end = a_ptr + array_ptr->used;
+
+  // - retrieve num_input and num_output -
+  {/*{{{*/
+    location_s *input_loc = it.get_location_value(a_ptr[0]);
+    location_s *output_loc = it.get_location_value(a_ptr[1]);
+
+    // - ERROR -
+    if (input_loc->v_type != c_bi_class_array ||
+        output_loc->v_type != c_bi_class_array)
+    {
+      // FIXME TODO throw proper exception
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+      return false;
+    }
+
+    num_input = ((pointer_array_s *)input_loc->v_data_ptr)->used;
+    num_output = ((pointer_array_s *)output_loc->v_data_ptr)->used;
+
+    // - ERROR -
+    if (num_input == 0 || num_output == 0)
+    {
+      // FIXME TODO throw proper exception
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+      return false;
+    }
+  }/*}}}*/
+
+  do {
+    location_s *input_loc = it.get_location_value(a_ptr[0]);
+    location_s *output_loc = it.get_location_value(a_ptr[1]);
+
+    // - ERROR -
+    if (input_loc->v_type != c_bi_class_array ||
+        output_loc->v_type != c_bi_class_array)
+    {
+      // FIXME TODO throw proper exception
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+      return false;
+    }
+
+    pointer_array_s *input_array = (pointer_array_s *)input_loc->v_data_ptr;
+    pointer_array_s *output_array = (pointer_array_s *)output_loc->v_data_ptr;
+
+    // - ERROR -
+    if (input_array->used != num_input || output_array->used != num_output)
+    {
+      // FIXME TODO throw proper exception
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+      return false;
+    }
+
+    {
+      pointer *i_ptr = input_array->data;
+      pointer *i_ptr_end = i_ptr + input_array->used;
+      do {
+        location_s *item_location = it.get_location_value(*i_ptr);
+        double dummy;
+
+        // - ERROR -
+        if (!it.retrieve_float(item_location,dummy))
+        {
+          // FIXME TODO throw proper exception
+          BIC_TODO_ERROR(__FILE__,__LINE__);
+          return false;
+        }
+      } while(++i_ptr < i_ptr_end);
+    }
+
+    {
+      pointer *o_ptr = output_array->data;
+      pointer *o_ptr_end = o_ptr + output_array->used;
+      do {
+        location_s *item_location = it.get_location_value(*o_ptr);
+        double dummy;
+
+        // - ERROR -
+        if (!it.retrieve_float(item_location,dummy))
+        {
+          // FIXME TODO throw proper exception
+          BIC_TODO_ERROR(__FILE__,__LINE__);
+          return false;
+        }
+      } while(++o_ptr < o_ptr_end);
+    }
+
+  } while((a_ptr += 2) < a_ptr_end);
+
+  fann_c::train_data_cb_mutex.lock();
+  fann_c::train_data_array = array_ptr;
+
+  // - fill train data by callback -
+  fann_train_data *ftd_ptr = fann_create_train_from_callback(
+      num_data,num_input,num_output,fann_c::train_data_cb);
+
+  fann_c::train_data_cb_mutex.unlock();
+
+  // - set fann_train_data destination location -
+  dst_location->v_data_ptr = (fann_train_data *)ftd_ptr;
+
+  return true;
 }/*}}}*/
 
 bool bic_fann_train_data_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)

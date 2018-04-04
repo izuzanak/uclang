@@ -6,8 +6,6 @@
 include "ucl_fann.h"
 @end
 
-#include <doublefann.h>
-
 // - FANN indexes of built in classes -
 extern unsigned c_bi_class_fann_net;
 extern unsigned c_bi_class_fann_train_data;
@@ -58,6 +56,7 @@ void bic_fann_train_data_consts(location_array_s &const_locations);
 void bic_fann_train_data_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_fann_train_data_clear(interpreter_thread_s &it,location_s *location_ptr);
 
+bool bic_fann_train_data_method_FannTrainData_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fann_train_data_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fann_train_data_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
