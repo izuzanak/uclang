@@ -40,10 +40,20 @@ void bic_fann_net_consts(location_array_s &const_locations);
 void bic_fann_net_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_fann_net_clear(interpreter_thread_s &it,location_s *location_ptr);
 
+bool bic_fann_net_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fann_net_method_create_standard_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fann_net_method_create_sparse_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fann_net_method_create_shortcut_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fann_net_method_randomize_weights_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_net_method_init_weights_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_net_method_train_on_data_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_net_method_train_epoch_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_net_method_test_data_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_net_method_run_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_net_method_save_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_net_method_load_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_net_method_print_connections_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_net_method_print_parameters_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fann_net_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fann_net_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -56,7 +66,10 @@ void bic_fann_train_data_consts(location_array_s &const_locations);
 void bic_fann_train_data_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_fann_train_data_clear(interpreter_thread_s &it,location_s *location_ptr);
 
+bool bic_fann_train_data_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fann_train_data_method_FannTrainData_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_train_data_method_save_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_train_data_method_load_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fann_train_data_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fann_train_data_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

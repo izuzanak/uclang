@@ -17,7 +17,7 @@ class fann_c
   static mutex_s train_data_cb_mutex;
   static pointer_array_s *train_data_array;
 
-  static void train_data_cb(unsigned num_data,unsigned num_input,unsigned num_output,fann_type *input,fann_type *output);
+  static void train_data_cb(unsigned num_data,unsigned num_input,unsigned num_output,double *input,double *output);
 
   inline fann_c();
   inline ~fann_c();

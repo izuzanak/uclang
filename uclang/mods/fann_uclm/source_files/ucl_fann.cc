@@ -13,7 +13,7 @@ fann_c g_fann;
 mutex_s fann_c::train_data_cb_mutex;
 pointer_array_s *fann_c::train_data_array;
 
-void fann_c::train_data_cb(unsigned num_data,unsigned num_input,unsigned num_output,fann_type *input,fann_type *output)
+void fann_c::train_data_cb(unsigned num_data,unsigned num_input,unsigned num_output,double *input,double *output)
 {/*{{{*/
 
   // - fill set of inputs -
