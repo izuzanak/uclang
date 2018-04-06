@@ -19,7 +19,17 @@ extern built_in_class_s *fann_classes[];
 // - FANN error identifiers -
 enum
 {
-  c_error_FANN_DUMMY_ERROR = 0,
+  c_error_FANN_NET_CREATE_IN_OUT_LAYER_MISSING = 0,
+  c_error_FANN_NET_CREATE_LAYER_NEURON_COUNT_ERROR,
+  c_error_FANN_NET_TRAIN_DATA_IN_OUT_NEURON_COUNT_ERROR,
+  c_error_FANN_NET_RUN_INPUT_SIZE_ERROR,
+  c_error_FANN_NET_RUN_INPUT_VALUE_ERROR,
+  c_error_FANN_NET_SAVE_ERROR,
+  c_error_FANN_NET_LOAD_ERROR,
+  c_error_FANN_TRAIN_DATA_ARRAY_SIZE_ERROR,
+  c_error_FANN_TRAIN_DATA_IN_OUT_VALUES_ERROR,
+  c_error_FANN_TRAIN_DATA_SAVE_ERROR,
+  c_error_FANN_TRAIN_DATA_LOAD_ERROR,
 };
 
 // - FANN error strings -

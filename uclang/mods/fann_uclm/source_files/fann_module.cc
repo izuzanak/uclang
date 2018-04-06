@@ -14,7 +14,7 @@ built_in_module_s module =
   fann_classes,         // Classes
 
   0,                    // Error base index
-  1,                    // Error count
+  11,                   // Error count
   fann_error_strings,   // Error strings
 
   fann_initialize,      // Initialize function
@@ -31,7 +31,17 @@ built_in_class_s *fann_classes[] =
 // - FANN error strings -
 const char *fann_error_strings[] =
 {/*{{{*/
-  "error_FANN_DUMMY_ERROR",
+  "error_FANN_NET_CREATE_IN_OUT_LAYER_MISSING",
+  "error_FANN_NET_CREATE_LAYER_NEURON_COUNT_ERROR",
+  "error_FANN_NET_TRAIN_DATA_IN_OUT_NEURON_COUNT_ERROR",
+  "error_FANN_NET_RUN_INPUT_SIZE_ERROR",
+  "error_FANN_NET_RUN_INPUT_VALUE_ERROR",
+  "error_FANN_NET_SAVE_ERROR",
+  "error_FANN_NET_LOAD_ERROR",
+  "error_FANN_TRAIN_DATA_ARRAY_SIZE_ERROR",
+  "error_FANN_TRAIN_DATA_IN_OUT_VALUES_ERROR",
+  "error_FANN_TRAIN_DATA_SAVE_ERROR",
+  "error_FANN_TRAIN_DATA_LOAD_ERROR",
 };/*}}}*/
 
 // - FANN initialize -
@@ -59,11 +69,81 @@ bool fann_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_FANN_DUMMY_ERROR:
+  case c_error_FANN_NET_CREATE_IN_OUT_LAYER_MISSING:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nFann dummy error\n");
+    fprintf(stderr,"\nFannNet create, missing neuron counts for input and/or output layer\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FANN_NET_CREATE_LAYER_NEURON_COUNT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFannNet create, invalid count of neurons in layer %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FANN_NET_TRAIN_DATA_IN_OUT_NEURON_COUNT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFannNet and FannTrainData mismatch of in/out neuron counts\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FANN_NET_RUN_INPUT_SIZE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFannNet invalid size of input data\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FANN_NET_RUN_INPUT_VALUE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFannNet invalid input data value, expected real number\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FANN_NET_SAVE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while saving FannNet to file \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FANN_NET_LOAD_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while loading FannNet from file \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FANN_TRAIN_DATA_ARRAY_SIZE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid size of FannTrainData source array\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FANN_TRAIN_DATA_IN_OUT_VALUES_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid FannTrainData in/out values at index %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FANN_TRAIN_DATA_SAVE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while saving FannTrainData to file \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FANN_TRAIN_DATA_LOAD_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while loading FannTrainData from file \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -228,42 +308,43 @@ built_in_variable_s fann_net_variables[] =
 
 #define BIC_FANN_NET_CREATE_PROC_LAYERS_ARRAY() \
 {/*{{{*/\
-\
+  \
   /* - ERROR - */\
   if (array_ptr->used < 2)\
   {\
-    /* FIXME TODO throw proper exception */\
-    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    exception_s::throw_exception(it,module.error_base + c_error_FANN_NET_CREATE_IN_OUT_LAYER_MISSING,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-\
+  \
   pointer *p_ptr = array_ptr->data;\
   pointer *p_ptr_end = p_ptr + array_ptr->used;\
   unsigned *l_ptr = layers;\
   do {\
     location_s *item_location = it.get_location_value(*p_ptr);\
-\
+    \
     /* - ERROR - */\
     if (item_location->v_type != c_bi_class_integer)\
     {\
-      /* FIXME TODO throw proper exception */\
-      BIC_TODO_ERROR(__FILE__,__LINE__);\
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FANN_NET_CREATE_LAYER_NEURON_COUNT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      new_exception->params.push(l_ptr - layers);\
+      \
       return false;\
     }\
-\
+    \
     /* - retrieve layer neuron count - */\
     long long int neuron_count = (long long int)item_location->v_data_ptr;\
-\
+    \
     /* - ERROR - */\
     if (neuron_count <= 0 || neuron_count > UINT_MAX)\
     {\
-      /* FIXME TODO throw proper exception */\
-      BIC_TODO_ERROR(__FILE__,__LINE__);\
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FANN_NET_CREATE_LAYER_NEURON_COUNT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      new_exception->params.push(l_ptr - layers);\
+      \
       return false;\
     }\
-\
+    \
     *l_ptr = neuron_count;\
-\
+    \
   } while(++l_ptr,++p_ptr < p_ptr_end);\
 }/*}}}*/
 
@@ -276,8 +357,7 @@ built_in_variable_s fann_net_variables[] =
   if (fann_get_num_input(fann_ptr) != fann_num_input_train_data(ftd_ptr) ||\
       fann_get_num_output(fann_ptr) != fann_num_output_train_data(ftd_ptr))\
   {\
-    /* FIXME TODO throw proper exception */\
-    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    exception_s::throw_exception(it,module.error_base + c_error_FANN_NET_TRAIN_DATA_IN_OUT_NEURON_COUNT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
 /*}}}*/
@@ -654,8 +734,7 @@ bool bic_fann_net_method_run_1(interpreter_thread_s &it,unsigned stack_base,uli 
   // - ERROR -
   if (fann_get_num_input(fann_ptr) != array_ptr->used)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_FANN_NET_RUN_INPUT_SIZE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -670,8 +749,7 @@ bool bic_fann_net_method_run_1(interpreter_thread_s &it,unsigned stack_base,uli 
     // - ERROR -
     if (!it.retrieve_float(it.get_location_value(*p_ptr),*i_ptr))
     {
-      // FIXME TODO throw proper exception
-      BIC_TODO_ERROR(__FILE__,__LINE__);
+      exception_s::throw_exception(it,module.error_base + c_error_FANN_NET_RUN_INPUT_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
 
@@ -716,8 +794,7 @@ bool bic_fann_net_method_save_1(interpreter_thread_s &it,unsigned stack_base,uli
   // - ERROR -
   if (fann_save((fann *)dst_location->v_data_ptr,string_ptr->data) != 0)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_FANN_NET_SAVE_ERROR,operands[c_source_pos_idx],src_0_location);
     return false;
   }
 
@@ -745,8 +822,7 @@ bool bic_fann_net_method_load_1(interpreter_thread_s &it,unsigned stack_base,uli
   // - ERROR -
   if (fann_ptr == nullptr)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_FANN_NET_LOAD_ERROR,operands[c_source_pos_idx],src_0_location);
     return false;
   }
 
@@ -908,8 +984,7 @@ bool bic_fann_train_data_method_FannTrainData_1(interpreter_thread_s &it,unsigne
   // - ERROR -
   if (array_ptr->used == 0 || array_ptr->used & 0x01)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_FANN_TRAIN_DATA_ARRAY_SIZE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -929,8 +1004,9 @@ bool bic_fann_train_data_method_FannTrainData_1(interpreter_thread_s &it,unsigne
     if (input_loc->v_type != c_bi_class_array ||
         output_loc->v_type != c_bi_class_array)
     {
-      // FIXME TODO throw proper exception
-      BIC_TODO_ERROR(__FILE__,__LINE__);
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FANN_TRAIN_DATA_IN_OUT_VALUES_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      new_exception->params.push(0);
+
       return false;
     }
 
@@ -940,8 +1016,9 @@ bool bic_fann_train_data_method_FannTrainData_1(interpreter_thread_s &it,unsigne
     // - ERROR -
     if (num_input == 0 || num_output == 0)
     {
-      // FIXME TODO throw proper exception
-      BIC_TODO_ERROR(__FILE__,__LINE__);
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FANN_TRAIN_DATA_IN_OUT_VALUES_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      new_exception->params.push(0);
+
       return false;
     }
   }/*}}}*/
@@ -954,8 +1031,9 @@ bool bic_fann_train_data_method_FannTrainData_1(interpreter_thread_s &it,unsigne
     if (input_loc->v_type != c_bi_class_array ||
         output_loc->v_type != c_bi_class_array)
     {
-      // FIXME TODO throw proper exception
-      BIC_TODO_ERROR(__FILE__,__LINE__);
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FANN_TRAIN_DATA_IN_OUT_VALUES_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      new_exception->params.push((a_ptr - array_ptr->data) >> 1);
+
       return false;
     }
 
@@ -965,8 +1043,9 @@ bool bic_fann_train_data_method_FannTrainData_1(interpreter_thread_s &it,unsigne
     // - ERROR -
     if (input_array->used != num_input || output_array->used != num_output)
     {
-      // FIXME TODO throw proper exception
-      BIC_TODO_ERROR(__FILE__,__LINE__);
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FANN_TRAIN_DATA_IN_OUT_VALUES_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      new_exception->params.push((a_ptr - array_ptr->data) >> 1);
+
       return false;
     }
 
@@ -980,8 +1059,9 @@ bool bic_fann_train_data_method_FannTrainData_1(interpreter_thread_s &it,unsigne
         // - ERROR -
         if (!it.retrieve_float(item_location,dummy))
         {
-          // FIXME TODO throw proper exception
-          BIC_TODO_ERROR(__FILE__,__LINE__);
+          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FANN_TRAIN_DATA_IN_OUT_VALUES_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          new_exception->params.push((a_ptr - array_ptr->data) >> 1);
+
           return false;
         }
       } while(++i_ptr < i_ptr_end);
@@ -997,8 +1077,9 @@ bool bic_fann_train_data_method_FannTrainData_1(interpreter_thread_s &it,unsigne
         // - ERROR -
         if (!it.retrieve_float(item_location,dummy))
         {
-          // FIXME TODO throw proper exception
-          BIC_TODO_ERROR(__FILE__,__LINE__);
+          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FANN_TRAIN_DATA_IN_OUT_VALUES_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          new_exception->params.push((a_ptr - array_ptr->data) >> 1);
+
           return false;
         }
       } while(++o_ptr < o_ptr_end);
@@ -1041,8 +1122,7 @@ bool bic_fann_train_data_method_save_1(interpreter_thread_s &it,unsigned stack_b
   // - ERROR -
   if (fann_save_train((fann_train_data *)dst_location->v_data_ptr,string_ptr->data) != 0)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_FANN_TRAIN_DATA_SAVE_ERROR,operands[c_source_pos_idx],src_0_location);
     return false;
   }
 
@@ -1070,8 +1150,7 @@ bool bic_fann_train_data_method_load_1(interpreter_thread_s &it,unsigned stack_b
   // - ERROR -
   if (ftd_ptr == nullptr)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_FANN_TRAIN_DATA_LOAD_ERROR,operands[c_source_pos_idx],src_0_location);
     return false;
   }
 
