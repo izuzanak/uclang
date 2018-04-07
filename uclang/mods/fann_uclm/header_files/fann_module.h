@@ -26,6 +26,8 @@ enum
   c_error_FANN_NET_RUN_INPUT_VALUE_ERROR,
   c_error_FANN_NET_SAVE_ERROR,
   c_error_FANN_NET_LOAD_ERROR,
+  c_error_FANN_NET_INVALID_TRAINING_ALGORITHM,
+  c_error_FANN_NET_INVALID_LEARNING_MOMENTUM,
   c_error_FANN_TRAIN_DATA_ARRAY_SIZE_ERROR,
   c_error_FANN_TRAIN_DATA_IN_OUT_VALUES_ERROR,
   c_error_FANN_TRAIN_DATA_SAVE_ERROR,
@@ -62,6 +64,16 @@ bool bic_fann_net_method_test_data_1(interpreter_thread_s &it,unsigned stack_bas
 bool bic_fann_net_method_run_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fann_net_method_save_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fann_net_method_load_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_net_method_input_cnt_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_net_method_output_cnt_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_net_method_network_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_net_method_layer_array_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_net_method_algorithm_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_net_method_algorithm_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_net_method_rate_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_net_method_rate_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_net_method_momentum_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fann_net_method_momentum_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fann_net_method_print_connections_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fann_net_method_print_parameters_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fann_net_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

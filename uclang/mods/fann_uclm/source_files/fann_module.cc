@@ -14,7 +14,7 @@ built_in_module_s module =
   fann_classes,         // Classes
 
   0,                    // Error base index
-  11,                   // Error count
+  13,                   // Error count
   fann_error_strings,   // Error strings
 
   fann_initialize,      // Initialize function
@@ -38,6 +38,8 @@ const char *fann_error_strings[] =
   "error_FANN_NET_RUN_INPUT_VALUE_ERROR",
   "error_FANN_NET_SAVE_ERROR",
   "error_FANN_NET_LOAD_ERROR",
+  "error_FANN_NET_INVALID_TRAINING_ALGORITHM",
+  "error_FANN_NET_INVALID_LEARNING_MOMENTUM",
   "error_FANN_TRAIN_DATA_ARRAY_SIZE_ERROR",
   "error_FANN_TRAIN_DATA_IN_OUT_VALUES_ERROR",
   "error_FANN_TRAIN_DATA_SAVE_ERROR",
@@ -118,6 +120,20 @@ bool fann_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nError while loading FannNet from file \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_FANN_NET_INVALID_TRAINING_ALGORITHM:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFannNet invalid training algorithm\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FANN_NET_INVALID_LEARNING_MOMENTUM:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFannNet invalid learning momentum\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_FANN_TRAIN_DATA_ARRAY_SIZE_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -161,7 +177,7 @@ built_in_class_s fann_net_class =
 {/*{{{*/
   "FannNet",
   c_modifier_public | c_modifier_final,
-  16, fann_net_methods,
+  26, fann_net_methods,
   4 + 18 + 2 + 2 + 2, fann_net_variables,
   bic_fann_net_consts,
   bic_fann_net_init,
@@ -240,6 +256,56 @@ built_in_method_s fann_net_methods[] =
     "load#1",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_fann_net_method_load_1
+  },
+  {
+    "input_cnt#0",
+    c_modifier_public | c_modifier_final,
+    bic_fann_net_method_input_cnt_0
+  },
+  {
+    "output_cnt#0",
+    c_modifier_public | c_modifier_final,
+    bic_fann_net_method_output_cnt_0
+  },
+  {
+    "network_type#0",
+    c_modifier_public | c_modifier_final,
+    bic_fann_net_method_network_type_0
+  },
+  {
+    "layer_array#0",
+    c_modifier_public | c_modifier_final,
+    bic_fann_net_method_layer_array_0
+  },
+  {
+    "algorithm#0",
+    c_modifier_public | c_modifier_final,
+    bic_fann_net_method_algorithm_0
+  },
+  {
+    "algorithm#1",
+    c_modifier_public | c_modifier_final,
+    bic_fann_net_method_algorithm_1
+  },
+  {
+    "rate#0",
+    c_modifier_public | c_modifier_final,
+    bic_fann_net_method_rate_0
+  },
+  {
+    "rate#1",
+    c_modifier_public | c_modifier_final,
+    bic_fann_net_method_rate_1
+  },
+  {
+    "momentum#0",
+    c_modifier_public | c_modifier_final,
+    bic_fann_net_method_momentum_0
+  },
+  {
+    "momentum#1",
+    c_modifier_public | c_modifier_final,
+    bic_fann_net_method_momentum_1
   },
   {
     "print_connections#0",
@@ -828,6 +894,188 @@ bool bic_fann_net_method_load_1(interpreter_thread_s &it,unsigned stack_base,uli
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_fann_net,fann_ptr);
   BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_fann_net_method_input_cnt_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = fann_get_num_input((fann *)dst_location->v_data_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_fann_net_method_output_cnt_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = fann_get_num_output((fann *)dst_location->v_data_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_fann_net_method_network_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = fann_get_network_type((fann *)dst_location->v_data_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_fann_net_method_layer_array_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  fann *fann_ptr = (fann *)dst_location->v_data_ptr;
+
+  unsigned layer_count = fann_get_num_layers(fann_ptr);
+  unsigned layers[layer_count];
+
+  // - retrieve layers of fann -
+  fann_get_layer_array(fann_ptr,layers);
+
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+  if (layer_count != 0)
+  {
+    unsigned *l_ptr = layers;
+    unsigned *l_ptr_end = l_ptr + layer_count;
+    do {
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,*l_ptr);
+      array_ptr->push(new_location);
+    } while(++l_ptr < l_ptr_end);
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_fann_net_method_algorithm_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = fann_get_training_algorithm((fann *)dst_location->v_data_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_fann_net_method_algorithm_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int algorithm;
+
+  if (!it.retrieve_integer(src_0_location,algorithm))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("algorithm#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  // - ERROR -
+  if (algorithm < FANN_TRAIN_INCREMENTAL || algorithm > FANN_TRAIN_QUICKPROP)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_FANN_NET_INVALID_TRAINING_ALGORITHM,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  fann_set_training_algorithm((fann *)dst_location->v_data_ptr,(fann_train_enum)algorithm);
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_fann_net_method_rate_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  double result = fann_get_learning_rate((fann *)dst_location->v_data_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_fann_net_method_rate_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  double rate;
+
+  if (!it.retrieve_float(src_0_location,rate))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("rate#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  fann_set_learning_rate((fann *)dst_location->v_data_ptr,rate);
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_fann_net_method_momentum_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  double result = fann_get_learning_momentum((fann *)dst_location->v_data_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_fann_net_method_momentum_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  double momentum;
+
+  if (!it.retrieve_float(src_0_location,momentum))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("momentum#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  // - ERROR -
+  if (momentum < 0.0 || momentum > 1.0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_FANN_NET_INVALID_LEARNING_MOMENTUM,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  fann_set_learning_momentum((fann *)dst_location->v_data_ptr,momentum);
+
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
