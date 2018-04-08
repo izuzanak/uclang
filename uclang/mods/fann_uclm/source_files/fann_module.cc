@@ -1120,7 +1120,7 @@ bool bic_fann_net_method_print_0(interpreter_thread_s &it,unsigned stack_base,ul
   return true;
 }/*}}}*/
 
-// - class FANN_TREAIN_DATA -
+// - class FANN_TRAIN_DATA -
 built_in_class_s fann_train_data_class =
 {/*{{{*/
   "FannTrainData",

@@ -1242,19 +1242,19 @@ additions
    * \brief return new string of interpreter_thread
    * \return pointer to new string
    */
-  inline string_s *get_new_string_ptr();
+  inline static string_s *get_new_string_ptr();
 
   /*!
    * \brief return new array of interpreter_thread
    * \return pointer to new array
    */
-  inline pointer_array_s *get_new_array_ptr();
+  inline static pointer_array_s *get_new_array_ptr();
 
   /*!
    * \brief return new object of interpreter_thread
    * \return pointer to new object
    */
-  inline pointer_array_s *get_new_object_ptr();
+  inline static pointer_array_s *get_new_object_ptr();
 
   /*!
    * \brief retrieve integer number from location pointer

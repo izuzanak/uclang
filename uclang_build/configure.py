@@ -17,6 +17,7 @@ c_packages = [
   ["MOD_BASE"      ,"true"      ,[]],
   ["MOD_SYS"       ,"true"      ,[]],
   ["MOD_INOTIFY"   ,"files"     ,["/usr/include/sys/inotify.h"]],
+  ["MOD_READLINE"  ,"files"     ,["/usr/include/readline/readline.h"]],
   ["MOD_TIME"      ,"true"      ,[]],
   ["MOD_LANG"      ,"true"      ,[]],
   ["MOD_PACK"      ,"true"      ,[]],

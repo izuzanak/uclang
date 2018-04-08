@@ -52,6 +52,7 @@ Some of implemented modules are:
 [`gcrypt`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/gcrypt_uclm),
 [`iconv`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/iconv_uclm),
 [`jit`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/jit_uclm),
+[`fann`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/fann_uclm),
 [`av`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/av_uclm),
 [`ao`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/ao_uclm),
 [`mpg`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/mpg_uclm),
