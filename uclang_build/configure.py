@@ -65,6 +65,7 @@ c_packages = [
   ["MOD_GL"        ,"false"     ,[]],
   ["MOD_FTGL"      ,"false"     ,[]],
   ["MOD_VG"        ,"false"     ,[]],
+  ["MOD_SHIVAVG"   ,"false"     ,[]],
   ["MOD_IMXEGL"    ,"false"     ,[]],
   ["MOD_SNMP"      ,"false"     ,[]], # test
   ["MOD_COMELM"    ,"false"     ,[]],

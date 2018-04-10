@@ -152,7 +152,11 @@ built_in_class_s vg_class =
   "Vg",
   c_modifier_public | c_modifier_final,
   14, vg_methods,
-  230, vg_variables,
+  223
+#if defined(UCBOX_IMX6)
+  + 7
+#endif
+  , vg_variables,
   bic_vg_consts,
   bic_vg_init,
   bic_vg_clear,
@@ -263,8 +267,10 @@ built_in_variable_s vg_variables[] =
   { "VG_BLEND_MODE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_IMAGE_MODE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_SCISSOR_RECTS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#if defined(UCBOX_IMX6)
   { "VG_COLOR_TRANSFORM", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_COLOR_TRANSFORM_VALUES", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#endif
   { "VG_STROKE_LINE_WIDTH", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_STROKE_CAP_STYLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_STROKE_JOIN_STYLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -274,7 +280,9 @@ built_in_variable_s vg_variables[] =
   { "VG_STROKE_DASH_PHASE_RESET", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_TILE_FILL_COLOR", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_CLEAR_COLOR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#if defined(UCBOX_IMX6)
   { "VG_GLYPH_ORIGIN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#endif
   { "VG_MASKING", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_SCISSORING", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_PIXEL_LAYOUT", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -305,7 +313,9 @@ built_in_variable_s vg_variables[] =
   { "VG_MATRIX_IMAGE_USER_TO_SURFACE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_MATRIX_FILL_PAINT_TO_USER", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_MATRIX_STROKE_PAINT_TO_USER", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#if defined(UCBOX_IMX6)
   { "VG_MATRIX_GLYPH_USER_TO_SURFACE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#endif
   { "VG_CLEAR_MASK", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_FILL_MASK", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_SET_MASK", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -416,8 +426,10 @@ built_in_variable_s vg_variables[] =
   { "VG_lL_8", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_A_8", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_BW_1", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#if defined(UCBOX_IMX6)
   { "VG_A_1", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_A_4", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#endif
   { "VG_sXRGB_8888", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_sARGB_8888", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_sARGB_8888_PRE", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -466,7 +478,9 @@ built_in_variable_s vg_variables[] =
   { "VG_BLEND_DARKEN", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_BLEND_LIGHTEN", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_BLEND_ADDITIVE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#if defined(UCBOX_IMX6)
   { "VG_FONT_NUM_GLYPHS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#endif
   { "VG_IMAGE_FORMAT_QUERY", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_PATH_DATATYPE_QUERY", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VG_HARDWARE_ACCELERATED", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -482,8 +496,8 @@ void bic_vg_consts(location_array_s &const_locations)
 
   // - insert vg basic constants -
   {
-    const_locations.push_blanks(230);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 230);
+    const_locations.push_blanks(vg_class.variable_cnt);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - vg_class.variable_cnt);
 
 #define CREATE_VG_BASIC_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -509,8 +523,10 @@ void bic_vg_consts(location_array_s &const_locations)
     CREATE_VG_BASIC_BIC_STATIC(VG_BLEND_MODE);
     CREATE_VG_BASIC_BIC_STATIC(VG_IMAGE_MODE);
     CREATE_VG_BASIC_BIC_STATIC(VG_SCISSOR_RECTS);
+#if defined(UCBOX_IMX6)
     CREATE_VG_BASIC_BIC_STATIC(VG_COLOR_TRANSFORM);
     CREATE_VG_BASIC_BIC_STATIC(VG_COLOR_TRANSFORM_VALUES);
+#endif
     CREATE_VG_BASIC_BIC_STATIC(VG_STROKE_LINE_WIDTH);
     CREATE_VG_BASIC_BIC_STATIC(VG_STROKE_CAP_STYLE);
     CREATE_VG_BASIC_BIC_STATIC(VG_STROKE_JOIN_STYLE);
@@ -520,7 +536,9 @@ void bic_vg_consts(location_array_s &const_locations)
     CREATE_VG_BASIC_BIC_STATIC(VG_STROKE_DASH_PHASE_RESET);
     CREATE_VG_BASIC_BIC_STATIC(VG_TILE_FILL_COLOR);
     CREATE_VG_BASIC_BIC_STATIC(VG_CLEAR_COLOR);
+#if defined(UCBOX_IMX6)
     CREATE_VG_BASIC_BIC_STATIC(VG_GLYPH_ORIGIN);
+#endif
     CREATE_VG_BASIC_BIC_STATIC(VG_MASKING);
     CREATE_VG_BASIC_BIC_STATIC(VG_SCISSORING);
     CREATE_VG_BASIC_BIC_STATIC(VG_PIXEL_LAYOUT);
@@ -551,7 +569,9 @@ void bic_vg_consts(location_array_s &const_locations)
     CREATE_VG_BASIC_BIC_STATIC(VG_MATRIX_IMAGE_USER_TO_SURFACE);
     CREATE_VG_BASIC_BIC_STATIC(VG_MATRIX_FILL_PAINT_TO_USER);
     CREATE_VG_BASIC_BIC_STATIC(VG_MATRIX_STROKE_PAINT_TO_USER);
+#if defined(UCBOX_IMX6)
     CREATE_VG_BASIC_BIC_STATIC(VG_MATRIX_GLYPH_USER_TO_SURFACE);
+#endif
     CREATE_VG_BASIC_BIC_STATIC(VG_CLEAR_MASK);
     CREATE_VG_BASIC_BIC_STATIC(VG_FILL_MASK);
     CREATE_VG_BASIC_BIC_STATIC(VG_SET_MASK);
@@ -662,8 +682,10 @@ void bic_vg_consts(location_array_s &const_locations)
     CREATE_VG_BASIC_BIC_STATIC(VG_lL_8);
     CREATE_VG_BASIC_BIC_STATIC(VG_A_8);
     CREATE_VG_BASIC_BIC_STATIC(VG_BW_1);
+#if defined(UCBOX_IMX6)
     CREATE_VG_BASIC_BIC_STATIC(VG_A_1);
     CREATE_VG_BASIC_BIC_STATIC(VG_A_4);
+#endif
     CREATE_VG_BASIC_BIC_STATIC(VG_sXRGB_8888);
     CREATE_VG_BASIC_BIC_STATIC(VG_sARGB_8888);
     CREATE_VG_BASIC_BIC_STATIC(VG_sARGB_8888_PRE);
@@ -712,7 +734,9 @@ void bic_vg_consts(location_array_s &const_locations)
     CREATE_VG_BASIC_BIC_STATIC(VG_BLEND_DARKEN);
     CREATE_VG_BASIC_BIC_STATIC(VG_BLEND_LIGHTEN);
     CREATE_VG_BASIC_BIC_STATIC(VG_BLEND_ADDITIVE);
+#if defined(UCBOX_IMX6)
     CREATE_VG_BASIC_BIC_STATIC(VG_FONT_NUM_GLYPHS);
+#endif
     CREATE_VG_BASIC_BIC_STATIC(VG_IMAGE_FORMAT_QUERY);
     CREATE_VG_BASIC_BIC_STATIC(VG_PATH_DATATYPE_QUERY);
     CREATE_VG_BASIC_BIC_STATIC(VG_HARDWARE_ACCELERATED);
@@ -1589,7 +1613,7 @@ bool bic_vg_path_method_MoveTo_2(interpreter_thread_s &it,unsigned stack_base,ul
   VGPath path = (VGPath)dst_location->v_data_ptr;
 
   VGubyte segment = VG_MOVE_TO;
-  VGfloat coords[2] = {x,y};
+  VGfloat coords[2] = {(float)x,(float)y};
 
   vgAppendPathData(path,1,&segment,coords);
 
@@ -1648,7 +1672,7 @@ bool bic_vg_path_method_LineTo_2(interpreter_thread_s &it,unsigned stack_base,ul
   VGPath path = (VGPath)dst_location->v_data_ptr;
 
   VGubyte segment = VG_LINE_TO;
-  VGfloat coords[2] = {x,y};
+  VGfloat coords[2] = {(float)x,(float)y};
 
   vgAppendPathData(path,1,&segment,coords);
 
