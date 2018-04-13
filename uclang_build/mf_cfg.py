@@ -63,6 +63,7 @@ C_MODULE_GL         = index; index += 1
 C_MODULE_FTGL       = index; index += 1
 C_MODULE_VG         = index; index += 1
 C_MODULE_SHIVAVG    = index; index += 1
+C_MODULE_AMANITHVG  = index; index += 1
 C_MODULE_IMXEGL     = index; index += 1
 C_MODULE_SNMP       = index; index += 1
 C_MODULE_COMELM     = index; index += 1
@@ -163,6 +164,7 @@ c_cfg = [
     ["MOD_FTGL"      ,c_enabled[C_MODULE_FTGL]      ,C_UCLANG_DIR + "mods/ftgl_uclm"        ,None],
     ["MOD_VG"        ,c_enabled[C_MODULE_VG]        ,C_UCLANG_DIR + "mods/vg_uclm"          ,None],
     ["MOD_SHIVAVG"   ,c_enabled[C_MODULE_SHIVAVG]   ,C_UCLANG_DIR + "mods/shivavg_uclm"     ,None],
+    ["MOD_AMANITHVG" ,c_enabled[C_MODULE_AMANITHVG] ,C_UCLANG_DIR + "mods/amanithvg_uclm"   ,None],
     ["MOD_IMXEGL"    ,c_enabled[C_MODULE_IMXEGL]    ,C_UCLANG_DIR + "mods/imxegl_uclm"      ,None],
     ["MOD_SNMP"      ,c_enabled[C_MODULE_SNMP]      ,C_UCLANG_DIR + "mods/snmp_uclm"        ,None],
     ["MOD_COMELM"    ,c_enabled[C_MODULE_COMELM]    ,C_UCLANG_DIR + "mods/comelm_uclm"      ,None],

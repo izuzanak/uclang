@@ -6,8 +6,8 @@
 include "script_parser.h"
 @end
 
-#include <vg/openvg.h>
-#include <vg/vgu.h>
+#include <VG/openvg.h>
+#include <VG/vgu.h>
 
 /*
  * definition of class shivavg_c

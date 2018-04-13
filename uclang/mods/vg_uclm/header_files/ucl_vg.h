@@ -18,8 +18,8 @@ include "script_parser.h"
 #include <VG/vgext.h>
 #include <VG/vgu.h>
 #elif defined(LINUX)
-#include <vg/openvg.h>
-#include <vg/vgu.h>
+#include <VG/openvg.h>
+#include <VG/vgu.h>
 #endif
 
 /*
