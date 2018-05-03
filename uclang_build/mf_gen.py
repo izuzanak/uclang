@@ -1370,14 +1370,14 @@ if cfg_ref[CFG_TARGET]:
       [ 
         "header_files",
         os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
-        os.sep.join(["..","..","..","ext_libs","ucframework","2.12","build","include"]),
+        os.sep.join(["..","..","..","ext_libs","ucframework","2.15","build","include"]),
       ],
       [ 
         "source_files",
       ],
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
-        os.sep.join(["..","..","..","ext_libs","ucframework","2.12","build","lib"]),
+        os.sep.join(["..","..","..","ext_libs","ucframework","2.15","build","lib"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -1438,6 +1438,36 @@ if cfg_ref[CFG_TARGET]:
         os.sep.join(["..","..","libs","libbase_ucll"]),
         os.sep.join(["..","..","..","ext_libs","ucframework","1.60","build","lib"]),
         os.sep.join(["..","..","..","ext_libs","uctcn","2.27","build","lib"])
+      ],
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
+      [],
+      [],
+    )
+# }}}
+
+# uctrdp module
+cfg_ref = c_cfg[C_MODULE_UCTRDP]
+# {{{
+if cfg_ref[CFG_TARGET]:
+    cfg_ref[CFG_MODULE] = module_c(
+      configuration,
+      cfg_ref[CFG_DIR],
+      cfg_ref[CFG_NAME],
+      [ 
+        "header_files",
+        os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
+        os.sep.join(["..","..","..","ext_libs","ucframework","2.15","build","include"]),
+        os.sep.join(["..","..","..","ext_libs","uctrdp","1.8","build","include"])
+      ],
+      [ 
+        "source_files",
+      ],
+      [ 
+        os.sep.join(["..","..","libs","libbase_ucll"]),
+        os.sep.join(["..","..","..","ext_libs","ucframework","2.15","build","lib"]),
+        os.sep.join(["..","..","..","ext_libs","uctrdp","1.8","build","lib"])
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -1516,14 +1546,14 @@ if cfg_ref[CFG_TARGET]:
       [ 
         "header_files",
         os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
-        os.sep.join(["..","..","..","ext_libs","ucframework","2.12","build","include"]),
+        os.sep.join(["..","..","..","ext_libs","ucframework","2.15","build","include"]),
       ],
       [ 
         "source_files",
       ],
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
-        os.sep.join(["..","..","..","ext_libs","ucframework","2.12","build","lib"]),
+        os.sep.join(["..","..","..","ext_libs","ucframework","2.15","build","lib"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -2869,7 +2899,7 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"])
       ],
-      opt_build + "-I/usr/lib/i386-linux-gnu/perl/5.26.1/CORE ", # CXX options
+      opt_build + "-I/usr/lib/i386-linux-gnu/perl/5.26.2/CORE ", # CXX options
       opt_link + "-L/usr/lib/i386-linux-gnu -lperl ", # CXX link options
       "", # CXX defines
       [],

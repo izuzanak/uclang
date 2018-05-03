@@ -412,7 +412,7 @@ inline long long int tm_time_diff()
 {/*{{{*/
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
   gettimeofday(&stv,nullptr);
-  return stv.tv_usec - tv.tv_usec + (stv.tv_sec - tv.tv_sec)*1000000;
+  return stv.tv_usec - tv.tv_usec + (stv.tv_sec - tv.tv_sec)*1000000LL;
 #else
   return 0;
 #endif
