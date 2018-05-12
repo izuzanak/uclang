@@ -229,7 +229,7 @@ pub struct UclIThread
 impl UclIThread {
 
     fn get_stack_value(&mut self,stack_idx:isize) -> &mut *mut UclLocation
-    {/*{{{*/
+    {//{{{
         unsafe {
             let ref mut location = *self.data_stack.data.offset(stack_idx);
 
@@ -240,7 +240,7 @@ impl UclIThread {
                 &mut *location
             }
         }
-    }/*}}}*/
+    }//}}}
 }
 
 #[repr(C)]
@@ -262,7 +262,7 @@ pub struct UclLocationArray {}
 
 #[allow(unused_macros)]
 macro_rules! bic_todo_error
-{
+{//{{{
     ($it:expr,$operands:expr) => {
         let string = interpreter_thread_s_get_new_string_ptr($it);
         string_s_set(string,file!().len() as u32,file!().as_ptr());
@@ -271,11 +271,11 @@ macro_rules! bic_todo_error
         let new_exception = exception_s_throw_exception($it,UclError::TODO_EXCEPTION as u32,*$operands.offset(c_source_pos_idx),new_location);
         exception_s_push_parameter(new_exception,line!() as i64);
     }
-}
+}//}}}
 
 // - create new location macros -
 macro_rules! bic_create_new_location
-{
+{//{{{
     ($it:expr,$name:ident,$class_idx:expr,$type:ident,$value:expr,$ref_cnt:expr) => {
         let $name = interpreter_thread_s_get_new_location_ptr($it);
         (*$name).v_type = $class_idx;
@@ -285,7 +285,7 @@ macro_rules! bic_create_new_location
     ($it:expr,$name:ident,$class_idx:expr,$type:ident,$value:expr) => {
         bic_create_new_location!($it,$name,$class_idx,$type,$value,1)
     };
-}
+}//}}}
 
 // - set destination macros -
 macro_rules! bic_set_destination
@@ -400,7 +400,7 @@ pub extern "C" fn bic_rust_string_clear(_it:*mut UclIThread,location_ptr:*mut Uc
 
 #[no_mangle]
 pub extern "C" fn bic_rust_string_operator_binary_equal(it:*mut UclIThread,stack_base:c_ui,operands:*mut c_uli) -> c_bool
-{/*{{{*/
+{//{{{
     unsafe {
         let src_0_location = bic_stack_location_value!(it,stack_base,operands,c_src_0_op_idx);
 
@@ -411,11 +411,11 @@ pub extern "C" fn bic_rust_string_operator_binary_equal(it:*mut UclIThread,stack
     }
 
     true
-}/*}}}*/
+}//}}}
 
 #[no_mangle]
 pub extern "C" fn bic_rust_string_operator_unary_post_double_plus(it:*mut UclIThread,stack_base:c_ui,operands:*mut c_uli) -> c_bool
-{/*{{{*/
+{//{{{
     unsafe {
         let dst_location = bic_stack_location_value!(it,stack_base,operands,c_dst_op_idx);
         let ref string = *((*dst_location).v_data_ptr.ptr as *const String);
@@ -427,11 +427,11 @@ pub extern "C" fn bic_rust_string_operator_unary_post_double_plus(it:*mut UclITh
     }
 
     true
-}/*}}}*/
+}//}}}
 
 #[no_mangle]
 pub extern "C" fn bic_rust_string_operator_unary_pre_double_plus(it:*mut UclIThread,stack_base:c_ui,operands:*mut c_uli) -> c_bool
-{/*{{{*/
+{//{{{
     unsafe {
         let dst_location = bic_stack_location_value!(it,stack_base,operands,c_dst_op_idx);
         let ref string = *((*dst_location).v_data_ptr.ptr as *const String);
@@ -444,7 +444,7 @@ pub extern "C" fn bic_rust_string_operator_unary_pre_double_plus(it:*mut UclIThr
     }
 
     true
-}/*}}}*/
+}//}}}
 
 #[no_mangle]
 pub extern "C" fn bic_rust_string_method_RustString_0(_it:*mut UclIThread,_stack_base:c_ui,_operands:*mut c_uli) -> c_bool
@@ -490,7 +490,7 @@ pub extern "C" fn bic_rust_string_method_RustString_1(it:*mut UclIThread,stack_b
 
 #[no_mangle]
 pub extern "C" fn bic_rust_string_method_length_0(it:*mut UclIThread,stack_base:c_ui,operands:*mut c_uli) -> c_bool
-{/*{{{*/
+{//{{{
     unsafe {
         let dst_location = bic_stack_location_value!(it,stack_base,operands,c_dst_op_idx);
 
@@ -500,11 +500,11 @@ pub extern "C" fn bic_rust_string_method_length_0(it:*mut UclIThread,stack_base:
     }
 
     true
-}/*}}}*/
+}//}}}
 
 #[no_mangle]
 pub extern "C" fn bic_rust_string_method_to_string_0(it:*mut UclIThread,stack_base:c_ui,operands:*mut c_uli) -> c_bool
-{/*{{{*/
+{//{{{
     unsafe {
         let dst_location = bic_stack_location_value!(it,stack_base,operands,c_dst_op_idx);
 
@@ -517,11 +517,11 @@ pub extern "C" fn bic_rust_string_method_to_string_0(it:*mut UclIThread,stack_ba
     }
 
     true
-}/*}}}*/
+}//}}}
 
 #[no_mangle]
 pub extern "C" fn bic_rust_string_method_print_0(it:*mut UclIThread,stack_base:c_ui,operands:*mut c_uli) -> c_bool
-{/*{{{*/
+{//{{{
     unsafe {
         let dst_location = bic_stack_location_value!(it,stack_base,operands,c_dst_op_idx);
 
@@ -532,5 +532,5 @@ pub extern "C" fn bic_rust_string_method_print_0(it:*mut UclIThread,stack_base:c
     }
 
     true
-}/*}}}*/
+}//}}}
 

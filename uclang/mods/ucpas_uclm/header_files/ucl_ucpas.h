@@ -58,7 +58,7 @@ struct pas_device_s
  * definition of structure pas_s
  */
 
-struct  pas_s
+struct pas_s
 {
   public:
   static unsigned lib_status;
