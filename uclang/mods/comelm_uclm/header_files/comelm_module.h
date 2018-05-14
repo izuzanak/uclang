@@ -47,7 +47,7 @@ void bic_elm_comm_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_elm_comm_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_elm_comm_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_elm_comm_method_ElmComm_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_elm_comm_method_ElmComm_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_elm_comm_method_check_sync_time_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_elm_comm_method_read_identification_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_elm_comm_method_read_actual_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

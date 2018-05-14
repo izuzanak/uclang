@@ -149,9 +149,9 @@ built_in_method_s elm_comm_methods[] =
     bic_elm_comm_operator_binary_equal
   },
   {
-    "ElmComm#3",
+    "ElmComm#4",
     c_modifier_public | c_modifier_final,
-    bic_elm_comm_method_ElmComm_3
+    bic_elm_comm_method_ElmComm_4
   },
   {
     "check_sync_time#1",
@@ -298,20 +298,22 @@ bool bic_elm_comm_operator_binary_equal(interpreter_thread_s &it,unsigned stack_
   return true;
 }/*}}}*/
 
-bool bic_elm_comm_method_ElmComm_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_elm_comm_method_ElmComm_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
   location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
+  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
 
   long long int init_speed;
   long long int read_speed;
 
   // - ERROR -
   if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,init_speed) ||
-      !it.retrieve_integer(src_2_location,read_speed))
+      src_1_location->v_type != c_bi_class_string ||
+      !it.retrieve_integer(src_2_location,init_speed) ||
+      !it.retrieve_integer(src_3_location,read_speed))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("ElmComm#3");
@@ -326,11 +328,14 @@ bool bic_elm_comm_method_ElmComm_3(interpreter_thread_s &it,unsigned stack_base,
   // - retrieve comm port name -
   string_s *port_name = (string_s *)src_0_location->v_data_ptr;
 
+  // - retrieve device name -
+  string_s *device_name = (string_s *)src_1_location->v_data_ptr;
+
   // - create comm proc object -
   CElmCommProc *ecp_ptr = new CElmCommProc();
 
   // - initialize comm port object -
-  if (!ecp_ptr->Init(port_name->data,init_speed,read_speed))
+  if (!ecp_ptr->Init(port_name->data,device_name->data,init_speed,read_speed))
   {
     delete ecp_ptr;
 
