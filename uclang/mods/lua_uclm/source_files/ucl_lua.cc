@@ -68,7 +68,7 @@ bool lua_s::create_lua_object(interpreter_thread_s &it,lua_State *L,location_s *
         pointer_map_tree_s_node &node = tree_ptr->data[t_idx];
 
         // - ERROR -
-        if (!create_lua_object(it,L,it.get_location_value(node.object.key)))
+        if (!create_lua_object(it,L,(location_s *)node.object.key))
         {
           lua_pop(L,1);
           return false;

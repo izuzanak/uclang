@@ -37,7 +37,7 @@ Handle<Value> v8_c::create_v8_object(interpreter_thread_s &it,location_s *locati
       {
         pointer_map_tree_s_node &node = tree_ptr->data[t_idx];
 
-        location_s *key_location = it.get_location_value(node.object.key);
+        location_s *key_location = (location_s *)node.object.key;
         Handle<Value> hnd_key = create_v8_object(it,key_location);
 
         // - ERROR -

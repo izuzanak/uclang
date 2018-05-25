@@ -256,7 +256,7 @@ MonoObject *mono_c::create_mono_object(interpreter_thread_s &it,location_s *loca
       {
         pointer_map_tree_s_node &node = tree_ptr->data[t_idx];
 
-        location_s *key_location = it.get_location_value(node.object.key);
+        location_s *key_location = (location_s *)node.object.key;
         MonoObject *mono_key = create_mono_object(it,key_location);
 
         // - ERROR -

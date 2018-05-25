@@ -98,7 +98,7 @@ PyObject *python_c::create_py_object(interpreter_thread_s &it,location_s *locati
       {
         pointer_map_tree_s_node &node = tree_ptr->data[t_idx];
 
-        location_s *key_location = it.get_location_value(node.object.key);
+        location_s *key_location = (location_s *)node.object.key;
         PyObject *pyo_key = create_py_object(it,key_location);
 
         // - ERROR -

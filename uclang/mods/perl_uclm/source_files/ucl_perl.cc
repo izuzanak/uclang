@@ -63,7 +63,7 @@ SV *perl_c::create_perl_sv(interpreter_thread_s &it,PerlInterpreter *my_perl,loc
       {
         pointer_map_tree_s_node &node = tree_ptr->data[t_idx];
 
-        location_s *key_location = it.get_location_value(node.object.key);
+        location_s *key_location = (location_s *)node.object.key;
         SV *sv_key = create_perl_sv(it,my_perl,key_location);
 
         // - ERROR -

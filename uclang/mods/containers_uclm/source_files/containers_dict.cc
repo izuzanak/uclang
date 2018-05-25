@@ -739,7 +739,7 @@ bool bic_dict_method_keys_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
     do
     {
-      location_s *key_location = it.get_location_value(tree_ptr->data[t_idx].object.key);
+      location_s *key_location = (location_s *)tree_ptr->data[t_idx].object.key;
       key_location->v_reference_cnt.atomic_inc();
 
       array_ptr->push(key_location);
