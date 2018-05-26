@@ -99,7 +99,7 @@ built_in_class_s xml_class =
 {/*{{{*/
   "Xml",
   c_modifier_public | c_modifier_final,
-  3, xml_methods,
+  5, xml_methods,
   0, xml_variables,
   bic_xml_consts,
   bic_xml_init,
@@ -119,6 +119,16 @@ built_in_class_s xml_class =
 
 built_in_method_s xml_methods[] =
 {/*{{{*/
+  {
+    "create#1",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_xml_method_create_1
+  },
+  {
+    "create_nice#2",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_xml_method_create_nice_2
+  },
   {
     "parse#1",
     c_modifier_public | c_modifier_final | c_modifier_static,
@@ -152,6 +162,321 @@ void bic_xml_init(interpreter_thread_s &it,location_s *location_ptr)
 void bic_xml_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   cassert(0);
+}/*}}}*/
+
+bool bic_xml_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_xml_node)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_xml,"create#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  bc_array_s buffer;
+  buffer.init();
+
+  // - initialize create stack -
+  create_stack_s create_stack;
+  create_stack.init();
+
+  // - insert root node to create stack -
+  create_stack.push_blank();
+  create_stack.last().set(src_0_location->v_data_ptr,0);
+
+  do {
+
+    // - reference to last stack element -
+    cs_element_s &cs_elm = create_stack.last();
+
+    // - retrieve node pointer -
+    xml_node_s *node_ptr = (xml_node_s *)cs_elm.node_ptr;
+
+    // - format node open tag -
+    if (cs_elm.index == 0)
+    {
+      buffer.push('<');
+
+      string_s *name_ptr = (string_s *)node_ptr->name->v_data_ptr;
+      buffer.append(name_ptr->size - 1,name_ptr->data);
+
+      // - format node attributes -
+      if (node_ptr->attributes->v_type != c_bi_class_blank)
+      {
+        pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)node_ptr->attributes->v_data_ptr;
+        
+        if (tree_ptr->root_idx != c_idx_not_exist)
+        {
+          pointer_map_tree_s_node *tn_ptr = tree_ptr->data;
+          pointer_map_tree_s_node *tn_ptr_end = tn_ptr + tree_ptr->used;
+          do {
+
+            // - tree node is valid -
+            if (tn_ptr->valid)
+            {
+              buffer.push(' ');
+
+              string_s *key_ptr = (string_s *)((location_s *)tn_ptr->object.key)->v_data_ptr;
+              buffer.append(key_ptr->size - 1,key_ptr->data);
+
+              buffer.push('=');
+              buffer.push('"');
+
+              string_s *value_ptr = (string_s *)it.get_location_value(tn_ptr->object.value)->v_data_ptr;
+              xml_creator_s::append_string(value_ptr->data,value_ptr->size - 1,buffer);
+
+              buffer.push('"');
+            }
+          } while(++tn_ptr < tn_ptr_end);
+        }
+      }
+
+      buffer.push('>');
+    }
+
+    // - process node contents -
+    if (node_ptr->conts->v_type != c_bi_class_blank)
+    {
+      pointer_array_s *conts_array = (pointer_array_s *)node_ptr->conts->v_data_ptr;
+
+      if (cs_elm.index < conts_array->used)
+      {
+        location_s *item_location = it.get_location_value(conts_array->data[cs_elm.index++]);
+
+        if (item_location->v_type == c_bi_class_xml_node)
+        {
+          create_stack.push_blank();
+          create_stack.last().set(item_location->v_data_ptr,0);
+        }
+        else if (item_location->v_type == c_bi_class_string)
+        {
+          string_s *string_ptr = (string_s *)item_location->v_data_ptr;
+          xml_creator_s::append_string(string_ptr->data,string_ptr->size - 1,buffer);
+        }
+        else
+        {
+          cassert(0);
+        }
+
+        continue;
+      }
+    }
+
+    // - format node close tag -
+    {
+      buffer.push('<');
+      buffer.push('/');
+
+      string_s *name_ptr = (string_s *)node_ptr->name->v_data_ptr;
+      buffer.append(name_ptr->size - 1,name_ptr->data);
+
+      buffer.push('>');
+    }
+
+    create_stack.pop();
+
+  } while(create_stack.used > 0);
+
+  // - release create stack -
+  create_stack.clear();
+
+  // - push terminating character to buffer -
+  buffer.push('\0');
+
+  // - create result string from buffer -
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->size = buffer.used;
+  string_ptr->data = buffer.data;
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_xml_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_xml_node ||
+      src_1_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_xml,"create_nice#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+#define XML_CREATE_NICE_PUSH_TAB() \
+{/*{{{*/\
+  if ((indent_size += tab_str_ptr->size - 1) > indent_buffer.used)\
+  {\
+    indent_buffer.append(tab_str_ptr->size - 1,tab_str_ptr->data);\
+  }\
+}/*}}}*/
+
+#define XML_CREATE_NICE_POP_TAB() \
+{/*{{{*/\
+  indent_size -= tab_str_ptr->size - 1;\
+}/*}}}*/
+
+#define XML_CREATE_NICE_INDENT() \
+{/*{{{*/\
+  buffer.push('\n');\
+  xml_creator_s::append_string(indent_buffer.data,indent_size,buffer);\
+}/*}}}*/
+
+  // - retrieve tabulator pointer -
+  string_s *tab_str_ptr = (string_s *)src_1_location->v_data_ptr;
+
+  // - initialize indent buffer -
+  bc_array_s indent_buffer;
+  indent_buffer.init();
+
+  // - initialize actual indent size -
+  unsigned indent_size = 0;
+
+  bc_array_s buffer;
+  buffer.init();
+
+  // - initialize create stack -
+  create_stack_s create_stack;
+  create_stack.init();
+
+  // - insert root node to create stack -
+  create_stack.push_blank();
+  create_stack.last().set(src_0_location->v_data_ptr,0);
+
+  do {
+
+    // - reference to last stack element -
+    cs_element_s &cs_elm = create_stack.last();
+
+    // - retrieve node pointer -
+    xml_node_s *node_ptr = (xml_node_s *)cs_elm.node_ptr;
+
+    // - format node open tag -
+    if (cs_elm.index == 0)
+    {
+      // FIXME TODO only after node?
+      XML_CREATE_NICE_INDENT();
+
+      buffer.push('<');
+
+      string_s *name_ptr = (string_s *)node_ptr->name->v_data_ptr;
+      buffer.append(name_ptr->size - 1,name_ptr->data);
+
+      // - format node attributes -
+      if (node_ptr->attributes->v_type != c_bi_class_blank)
+      {
+        pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)node_ptr->attributes->v_data_ptr;
+        
+        if (tree_ptr->root_idx != c_idx_not_exist)
+        {
+          pointer_map_tree_s_node *tn_ptr = tree_ptr->data;
+          pointer_map_tree_s_node *tn_ptr_end = tn_ptr + tree_ptr->used;
+          do {
+
+            // - tree node is valid -
+            if (tn_ptr->valid)
+            {
+              buffer.push(' ');
+
+              string_s *key_ptr = (string_s *)((location_s *)tn_ptr->object.key)->v_data_ptr;
+              buffer.append(key_ptr->size - 1,key_ptr->data);
+
+              buffer.push('=');
+              buffer.push('"');
+
+              string_s *value_ptr = (string_s *)it.get_location_value(tn_ptr->object.value)->v_data_ptr;
+              xml_creator_s::append_string(value_ptr->data,value_ptr->size - 1,buffer);
+
+              buffer.push('"');
+            }
+          } while(++tn_ptr < tn_ptr_end);
+        }
+      }
+
+      buffer.push('>');
+    }
+
+    // - process node contents -
+    if (node_ptr->conts->v_type != c_bi_class_blank)
+    {
+      pointer_array_s *conts_array = (pointer_array_s *)node_ptr->conts->v_data_ptr;
+
+      if (cs_elm.index < conts_array->used)
+      {
+        location_s *item_location = it.get_location_value(conts_array->data[cs_elm.index++]);
+
+        if (item_location->v_type == c_bi_class_xml_node)
+        {
+          XML_CREATE_NICE_PUSH_TAB();
+
+          create_stack.push_blank();
+          create_stack.last().set(item_location->v_data_ptr,0);
+        }
+        else if (item_location->v_type == c_bi_class_string)
+        {
+          string_s *string_ptr = (string_s *)item_location->v_data_ptr;
+          xml_creator_s::append_string(string_ptr->data,string_ptr->size - 1,buffer);
+        }
+        else
+        {
+          cassert(0);
+        }
+
+        continue;
+      }
+    }
+
+    // - format node close tag -
+    {
+      // FIXME TODO only after node?
+      XML_CREATE_NICE_INDENT();
+
+      buffer.push('<');
+      buffer.push('/');
+
+      string_s *name_ptr = (string_s *)node_ptr->name->v_data_ptr;
+      buffer.append(name_ptr->size - 1,name_ptr->data);
+
+      buffer.push('>');
+    }
+
+    XML_CREATE_NICE_POP_TAB();
+
+    create_stack.pop();
+
+  } while(create_stack.used > 0);
+
+  // - release create stack -
+  create_stack.clear();
+
+  // - release indent buffer -
+  indent_buffer.clear();
+
+  // - push terminating character to buffer -
+  buffer.push('\0');
+
+  // - create result string from buffer -
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->size = buffer.used;
+  string_ptr->data = buffer.data;
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
 }/*}}}*/
 
 bool bic_xml_method_parse_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)

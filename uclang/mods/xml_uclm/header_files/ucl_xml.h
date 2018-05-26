@@ -23,6 +23,15 @@ extern unsigned c_bi_class_xml_node;
 extern unsigned c_rm_class_dict;
 
 /*
+ * definition of structure xml_creator_s
+ */
+
+struct xml_creator_s
+{
+  static void append_string(const char *a_data,unsigned a_size,bc_array_s &a_buffer);
+};
+
+/*
  * definition of structure xml_node_s
  */
 
@@ -52,6 +61,21 @@ class xml_c
 /*
  * definition of generated structures
  */
+
+// -- cs_element_s --
+@begin
+struct
+<
+pointer:node_ptr
+unsigned:index
+>
+cs_element_s;
+@end
+
+// -- create_stack_s --
+@begin
+array<cs_element_s> create_stack_s;
+@end
 
 // -- pointer_arrays_s --
 @begin
@@ -152,6 +176,16 @@ inline xml_c::~xml_c()
 /*
  * inline methods of generated structures
  */
+
+// -- cs_element_s --
+@begin
+inlines cs_element_s
+@end
+
+// -- create_stack_s --
+@begin
+inlines create_stack_s
+@end
 
 // -- pointer_arrays_s --
 @begin

@@ -7,8 +7,55 @@ include "ucl_xml.h"
 xml_c g_xml;
 
 /*
+ * methods of structure xml_creator_s
+ */
+
+void xml_creator_s::append_string(const char *a_data,unsigned a_size,bc_array_s &a_buffer)
+{/*{{{*/
+  if (a_size > 0)
+  {
+    const char *ptr = a_data;
+    const char *ptr_end = ptr + a_size;
+    do {
+
+      switch (*ptr)
+      {
+        case '<':
+          a_buffer.append(4,"&lt;");
+          break;
+        case '>':
+          a_buffer.append(4,"&gt;");
+          break;
+        case '&':
+          a_buffer.append(5,"&amp;");
+          break;
+        case '\'':
+          a_buffer.append(6,"&apos;");
+          break;
+        case '"':
+          a_buffer.append(6,"&quot;");
+          break;
+        default:
+          a_buffer.push(*ptr);
+      }
+
+    } while(++ptr < ptr_end);
+  }
+}/*}}}*/
+
+/*
  * methods of generated structures
  */
+
+// -- cs_element_s --
+@begin
+methods cs_element_s
+@end
+
+// -- create_stack_s --
+@begin
+methods create_stack_s
+@end
 
 // -- pointer_arrays_s --
 @begin
