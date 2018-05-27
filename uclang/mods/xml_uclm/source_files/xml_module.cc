@@ -355,7 +355,7 @@ bool bic_xml_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,u
 
   // - insert root node to create stack -
   create_stack.push_blank();
-  create_stack.last().set(src_0_location->v_data_ptr,0,true);
+  create_stack.last().set(src_0_location->v_data_ptr,0,false);
 
   do {
 
@@ -410,6 +410,8 @@ bool bic_xml_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,u
       }
 
       buffer.push('>');
+
+      cs_elm.after_node = true;
     }
 
     // - process node contents -
@@ -448,7 +450,7 @@ bool bic_xml_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,u
 
     // - format node close tag -
     {
-      if (cs_elm.after_node)
+      if (cs_elm.after_node && cs_elm.index > 0)
       {
         XML_CREATE_NICE_INDENT();
       }
@@ -575,7 +577,7 @@ built_in_class_s xml_node_class =
 {/*{{{*/
   "XmlNode",
   c_modifier_public | c_modifier_final,
-  9, xml_node_methods,
+  16, xml_node_methods,
   0, xml_node_variables,
   bic_xml_node_consts,
   bic_xml_node_init,
@@ -599,6 +601,41 @@ built_in_method_s xml_node_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_xml_node_operator_binary_equal
+  },
+  {
+    "XmlNode#1",
+    c_modifier_public | c_modifier_final,
+    bic_xml_node_method_XmlNode_1
+  },
+  {
+    "attr_#2",
+    c_modifier_public | c_modifier_final,
+    bic_xml_node_method_attr__2
+  },
+  {
+    "node#1",
+    c_modifier_public | c_modifier_final,
+    bic_xml_node_method_node_1
+  },
+  {
+    "node_#1",
+    c_modifier_public | c_modifier_final,
+    bic_xml_node_method_node__1
+  },
+  {
+    "node#2",
+    c_modifier_public | c_modifier_final,
+    bic_xml_node_method_node_2
+  },
+  {
+    "node_#2",
+    c_modifier_public | c_modifier_final,
+    bic_xml_node_method_node__2
+  },
+  {
+    "text_#1",
+    c_modifier_public | c_modifier_final,
+    bic_xml_node_method_text__1
   },
   {
     "name#0",
@@ -649,16 +686,106 @@ built_in_variable_s xml_node_variables[] =
 #define BIC_XML_NODE_MEMBER(MEMBER_NAME) \
 {/*{{{*/\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  \
+  xml_node_s *node_ptr = (xml_node_s *)dst_location->v_data_ptr;\
+  \
+  location_s *location = node_ptr->MEMBER_NAME;\
+  location->v_reference_cnt.atomic_inc();\
+  \
+  BIC_SET_RESULT(location);\
+  \
+  return true;\
+}/*}}}*/
+
+#define BIC_XML_NODE_METHOD_NODE_1(NAME,REF_CNT) \
+/*{{{*/\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+  \
+  if (src_0_location->v_type != c_bi_class_string)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
+    new_exception->params.push(1);\
+    new_exception->params.push(src_0_location->v_type);\
+    \
+    return false;\
+  }\
+  \
+  xml_node_s *node_ptr = (xml_node_s *)dst_location->v_data_ptr;\
+  \
+  pointer_array_s *nodes_array = xml_node_s::get_conts_array(it,node_ptr->nodes);\
+  pointer_array_s *conts_array = xml_node_s::get_conts_array(it,node_ptr->conts);\
+  \
+  /* - create xml node object - */\
+  xml_node_s *new_node_ptr = (xml_node_s *)cmalloc(sizeof(xml_node_s));\
+  new_node_ptr->init();\
+  \
+  src_0_location->v_reference_cnt.atomic_inc();\
+  new_node_ptr->name = src_0_location;\
+  \
+  location_s *blank_location = (location_s *)it.blank_location;\
+  blank_location->v_reference_cnt.atomic_add(4);\
+  \
+  new_node_ptr->attributes = blank_location;\
+  new_node_ptr->nodes = blank_location;\
+  new_node_ptr->texts = blank_location;\
+  new_node_ptr->conts = blank_location;\
+  \
+  BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_xml_node,new_node_ptr,REF_CNT);\
+  \
+  nodes_array->push(new_location);\
+  conts_array->push(new_location);\
+/*}}}*/
+
+#define BIC_XML_NODE_METHOD_NODE_2(NAME,REF_CNT) \
+/*{{{*/\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);\
+\
+  if (src_0_location->v_type != c_bi_class_string ||\
+      src_1_location->v_type != c_bi_class_string)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
+    new_exception->params.push(2);\
+    new_exception->params.push(src_0_location->v_type);\
+    new_exception->params.push(src_1_location->v_type);\
+\
+    return false;\
+  }\
 \
   xml_node_s *node_ptr = (xml_node_s *)dst_location->v_data_ptr;\
 \
-  location_s *location = node_ptr->MEMBER_NAME;\
-  location->v_reference_cnt.atomic_inc();\
+  pointer_array_s *nodes_array = xml_node_s::get_conts_array(it,node_ptr->nodes);\
+  pointer_array_s *conts_array = xml_node_s::get_conts_array(it,node_ptr->conts);\
 \
-  BIC_SET_RESULT(location);\
+  /* - create xml node object - */\
+  xml_node_s *new_node_ptr = (xml_node_s *)cmalloc(sizeof(xml_node_s));\
+  new_node_ptr->init();\
 \
-  return true;\
-}/*}}}*/
+  src_0_location->v_reference_cnt.atomic_inc();\
+  new_node_ptr->name = src_0_location;\
+\
+  location_s *blank_location = (location_s *)it.blank_location;\
+  blank_location->v_reference_cnt.atomic_add(2);\
+\
+  new_node_ptr->attributes = blank_location;\
+  new_node_ptr->nodes = blank_location;\
+\
+  pointer_array_s *new_texts_array = xml_node_s::get_conts_array(it,new_node_ptr->texts);\
+  pointer_array_s *new_conts_array = xml_node_s::get_conts_array(it,new_node_ptr->conts);\
+\
+  src_1_location->v_reference_cnt.atomic_add(2);\
+  new_texts_array->push(src_1_location);\
+  new_conts_array->push(src_1_location);\
+\
+  BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_xml_node,new_node_ptr,REF_CNT);\
+\
+  nodes_array->push(new_location);\
+  conts_array->push(new_location);\
+/*}}}*/
 
 void bic_xml_node_consts(location_array_s &const_locations)
 {/*{{{*/
@@ -689,6 +816,186 @@ bool bic_xml_node_operator_binary_equal(interpreter_thread_s &it,unsigned stack_
 
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_xml_node_method_XmlNode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("XmlNode#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  string_s *name_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (name_ptr->size <= 1)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - create xml node object -
+  xml_node_s *node_ptr = (xml_node_s *)cmalloc(sizeof(xml_node_s));
+  node_ptr->init();
+
+  src_0_location->v_reference_cnt.atomic_inc();
+  node_ptr->name = src_0_location;
+
+  location_s *blank_location = (location_s *)it.blank_location;
+  blank_location->v_reference_cnt.atomic_add(4);
+
+  node_ptr->attributes = blank_location;
+  node_ptr->nodes = blank_location;
+  node_ptr->texts = blank_location;
+  node_ptr->conts = blank_location;
+
+  // - set xml_node destination location -
+  dst_location->v_data_ptr = (xml_node_s *)node_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_xml_node_method_attr__2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_string ||
+      src_1_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("attr_#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  xml_node_s *node_ptr = (xml_node_s *)dst_location->v_data_ptr;
+  pointer_map_tree_s *tree_ptr;
+
+  // - if attributes does not exist -
+  if (node_ptr->attributes->v_type != c_rm_class_dict)
+  {
+    tree_ptr = (pointer_map_tree_s *)cmalloc(sizeof(pointer_map_tree_s));
+    tree_ptr->init();
+
+    BIC_CREATE_NEW_LOCATION(new_location,c_rm_class_dict,tree_ptr);
+
+    it.release_location_ptr(node_ptr->attributes);
+    node_ptr->attributes = new_location;
+  }
+  else
+  {
+    tree_ptr = (pointer_map_tree_s *)node_ptr->attributes->v_data_ptr;
+  }
+
+  tree_ptr->it_ptr = &it;
+  tree_ptr->source_pos = operands[c_source_pos_idx];
+
+  // - push key and value locations to dictionary -
+  pointer_map_s insert_map = {src_0_location,nullptr};
+  unsigned index = tree_ptr->unique_insert(insert_map);
+
+  // - ERROR -
+  if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+  {
+    return false;
+  }
+
+  pointer_map_s &map = tree_ptr->data[index].object;
+
+  if (map.value)
+  {
+    it.release_location_ptr((location_s *)map.value);
+  }
+  else
+  {
+    src_0_location->v_reference_cnt.atomic_inc();
+  }
+
+  src_1_location->v_reference_cnt.atomic_inc();
+  map.value = (pointer)src_1_location;
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_xml_node_method_node_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_XML_NODE_METHOD_NODE_1("node#1",3);
+
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_xml_node_method_node__1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_XML_NODE_METHOD_NODE_1("node_#1",2);
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_xml_node_method_node_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_XML_NODE_METHOD_NODE_2("node#2",3);
+
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_xml_node_method_node__2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_XML_NODE_METHOD_NODE_2("node_#2",2);
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_xml_node_method_text__1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("text_#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  xml_node_s *node_ptr = (xml_node_s *)dst_location->v_data_ptr;
+
+  pointer_array_s *texts_array = xml_node_s::get_conts_array(it,node_ptr->texts);
+  pointer_array_s *conts_array = xml_node_s::get_conts_array(it,node_ptr->conts);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+  texts_array->push(src_0_location);
+  conts_array->push(src_0_location);
+
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

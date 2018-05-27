@@ -43,6 +43,8 @@ struct xml_node_s
   location_s *texts;
   location_s *conts;
 
+  static inline pointer_array_s *get_conts_array(interpreter_thread_s &it,location_s *&a_location_ptr);
+
   inline void init();
   inline void clear(interpreter_thread_s &it);
 };
@@ -127,6 +129,30 @@ void xml_fatal_error(void *user,const char *msg,...);
 /*
  * inline methods of structure xml_node_s
  */
+
+inline pointer_array_s *xml_node_s::get_conts_array(interpreter_thread_s &it,location_s *&a_location_ptr)
+{/*{{{*/
+
+  // - if array does not exist -
+  if (a_location_ptr == nullptr ||
+      a_location_ptr->v_type != c_bi_class_array)
+  {
+    pointer_array_s *conts_array = it.get_new_array_ptr();
+
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,conts_array);
+
+    if (a_location_ptr != nullptr)
+    {
+      it.release_location_ptr(a_location_ptr);
+    }
+
+    a_location_ptr = new_location;
+
+    return conts_array;
+  }
+
+  return a_location_ptr->v_data_ptr;
+}/*}}}*/
 
 inline void xml_node_s::init()
 {/*{{{*/
