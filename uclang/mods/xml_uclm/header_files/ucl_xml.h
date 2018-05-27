@@ -68,6 +68,7 @@ struct
 <
 pointer:node_ptr
 unsigned:index
+bool:after_node
 >
 cs_element_s;
 @end

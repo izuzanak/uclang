@@ -188,7 +188,7 @@ bool bic_xml_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 
   // - insert root node to create stack -
   create_stack.push_blank();
-  create_stack.last().set(src_0_location->v_data_ptr,0);
+  create_stack.last().set(src_0_location->v_data_ptr,0,true);
 
   do {
 
@@ -252,7 +252,7 @@ bool bic_xml_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *o
         if (item_location->v_type == c_bi_class_xml_node)
         {
           create_stack.push_blank();
-          create_stack.last().set(item_location->v_data_ptr,0);
+          create_stack.last().set(item_location->v_data_ptr,0,true);
         }
         else if (item_location->v_type == c_bi_class_string)
         {
@@ -355,7 +355,7 @@ bool bic_xml_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,u
 
   // - insert root node to create stack -
   create_stack.push_blank();
-  create_stack.last().set(src_0_location->v_data_ptr,0);
+  create_stack.last().set(src_0_location->v_data_ptr,0,true);
 
   do {
 
@@ -368,8 +368,10 @@ bool bic_xml_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,u
     // - format node open tag -
     if (cs_elm.index == 0)
     {
-      // FIXME TODO only after node?
-      XML_CREATE_NICE_INDENT();
+      if (cs_elm.after_node)
+      {
+        XML_CREATE_NICE_INDENT();
+      }
 
       buffer.push('<');
 
@@ -424,12 +426,16 @@ bool bic_xml_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,u
           XML_CREATE_NICE_PUSH_TAB();
 
           create_stack.push_blank();
-          create_stack.last().set(item_location->v_data_ptr,0);
+          create_stack.last().set(item_location->v_data_ptr,0,cs_elm.after_node);
+
+          cs_elm.after_node = true;
         }
         else if (item_location->v_type == c_bi_class_string)
         {
           string_s *string_ptr = (string_s *)item_location->v_data_ptr;
           xml_creator_s::append_string(string_ptr->data,string_ptr->size - 1,buffer);
+
+          cs_elm.after_node = false;
         }
         else
         {
@@ -442,8 +448,10 @@ bool bic_xml_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,u
 
     // - format node close tag -
     {
-      // FIXME TODO only after node?
-      XML_CREATE_NICE_INDENT();
+      if (cs_elm.after_node)
+      {
+        XML_CREATE_NICE_INDENT();
+      }
 
       buffer.push('<');
       buffer.push('/');
