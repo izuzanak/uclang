@@ -12,7 +12,7 @@ xml_c g_xml;
 
 void xml_creator_s::append_string(const char *a_data,unsigned a_size,bc_array_s &a_buffer)
 {/*{{{*/
-  if (a_size > 0)
+  if (a_size != 0)
   {
     const char *ptr = a_data;
     const char *ptr_end = ptr + a_size;
@@ -40,6 +40,52 @@ void xml_creator_s::append_string(const char *a_data,unsigned a_size,bc_array_s 
       }
 
     } while(++ptr < ptr_end);
+  }
+}/*}}}*/
+
+/*
+ * methods of structure xml_node_s
+ */
+
+void xml_node_s::add_node_to_node_dict(interpreter_thread_s &it,pointer_map_tree_s &a_tree,
+    location_s *a_name,location_s *a_node)
+{/*{{{*/
+
+  // - push key and value locations to dictionary -
+  pointer_map_s insert_map = {a_name,nullptr};
+  unsigned index = a_tree.unique_insert(insert_map);
+  cassert(((location_s *)it.exception_location)->v_type == c_bi_class_blank);
+
+  pointer_map_s &map = a_tree.data[index].object;
+
+  if (map.value)
+  {
+    location_s *value_location = (location_s *)map.value;
+    
+    if (value_location->v_type == c_bi_class_array)
+    {
+      pointer_array_s *array_ptr = (pointer_array_s *)value_location->v_data_ptr;
+      array_ptr->push(a_node);
+    }
+    else if (value_location->v_type == c_bi_class_xml_node)
+    {
+      pointer_array_s *array_ptr = it.get_new_array_ptr();
+      array_ptr->push(value_location);
+      array_ptr->push(a_node);
+
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+
+      map.value = new_location;
+    }
+    else
+    {
+      cassert(0);
+    }
+  }
+  else
+  {
+    a_name->v_reference_cnt.atomic_inc();
+    map.value = (pointer)a_node;
   }
 }/*}}}*/
 
@@ -235,12 +281,10 @@ void xml_start_element(void *user,const xmlChar *name,const xmlChar **attrs)
 
       if (map.value)
       {
-        // - release old value -
         it.release_location_ptr((location_s *)map.value);
       }
       else
       {
-        // - key was used -
         attr_name->v_reference_cnt.atomic_inc();
       }
 
@@ -273,10 +317,10 @@ void xml_end_element(void *user,const xmlChar *name)
 {/*{{{*/
   sax_parser_s *sp = (sax_parser_s *)user;
   interpreter_thread_s &it = *((interpreter_thread_s *)sp->it_ptr);
+  pointer_array_s &attrs_stack = sp->attrs_stack;
   pointer_arrays_s &node_array_stack = sp->node_array_stack;
   pointer_arrays_s &text_array_stack = sp->text_array_stack;
   pointer_arrays_s &cont_array_stack = sp->cont_array_stack;
-  pointer_array_s &attrs_stack = sp->attrs_stack;
 
   // -----
 
@@ -289,6 +333,10 @@ void xml_end_element(void *user,const xmlChar *name)
 
   // - set node attributes -
   node_ptr->attributes = (location_s *)attrs_stack.pop();
+
+  // - set node dictionary -
+  ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
+  node_ptr->node_dict = (location_s *)it.blank_location;
 
   // - retrieve node array -
   pointer_array_s &node_array = node_array_stack.pop();

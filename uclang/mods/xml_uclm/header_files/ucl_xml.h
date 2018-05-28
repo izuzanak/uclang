@@ -39,11 +39,14 @@ struct xml_node_s
 {
   location_s *name;
   location_s *attributes;
+  location_s *node_dict;
   location_s *nodes;
   location_s *texts;
   location_s *conts;
 
   static inline pointer_array_s *get_conts_array(interpreter_thread_s &it,location_s *&a_location_ptr);
+  static void add_node_to_node_dict(interpreter_thread_s &it,pointer_map_tree_s &a_tree,
+      location_s *a_name,location_s *a_node);
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
@@ -158,6 +161,7 @@ inline void xml_node_s::init()
 {/*{{{*/
   name = nullptr;
   attributes = nullptr;
+  node_dict = nullptr;
   nodes = nullptr;
   texts = nullptr;
   conts = nullptr;
@@ -175,6 +179,7 @@ inline void xml_node_s::clear(interpreter_thread_s &it)
 
   RELEASE_XML_NODE_MEMBER(name);
   RELEASE_XML_NODE_MEMBER(attributes);
+  RELEASE_XML_NODE_MEMBER(node_dict);
   RELEASE_XML_NODE_MEMBER(nodes);
   RELEASE_XML_NODE_MEMBER(texts);
   RELEASE_XML_NODE_MEMBER(conts);

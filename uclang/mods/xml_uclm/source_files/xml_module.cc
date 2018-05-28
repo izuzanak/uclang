@@ -17,7 +17,7 @@ built_in_module_s module =
   xml_classes,          // Classes
 
   0,                    // Error base index
-  2,                    // Error count
+  5,                    // Error count
   xml_error_strings,    // Error strings
 
   xml_initialize,       // Initialize function
@@ -35,6 +35,9 @@ built_in_class_s *xml_classes[] =
 const char *xml_error_strings[] =
 {/*{{{*/
   "error_XML_ERROR_PARSING_DATA",
+  "error_XML_NODE_NAME_INVALID_VALUE_ERROR",
+  "error_XML_NODE_NODE_DICTIONARY_NOT_AVAILABLE",
+  "error_XML_NODE_ATTRIBUTE_INVALID_VALUE_ERROR",
   "error_XML_NODE_TEXT_VALUE_ERROR",
 };/*}}}*/
 
@@ -78,6 +81,27 @@ bool xml_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nError parsing XML data, not well formed document\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_XML_NODE_NAME_INVALID_VALUE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid value of XML node name\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_XML_NODE_NODE_DICTIONARY_NOT_AVAILABLE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nXML node dictionary is not available or updated\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_XML_NODE_ATTRIBUTE_INVALID_VALUE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid value of XML node attribute\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_XML_NODE_TEXT_VALUE_ERROR:
@@ -210,7 +234,7 @@ bool bic_xml_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *o
       if (node_ptr->attributes->v_type != c_bi_class_blank)
       {
         pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)node_ptr->attributes->v_data_ptr;
-        
+
         if (tree_ptr->root_idx != c_idx_not_exist)
         {
           pointer_map_tree_s_node *tn_ptr = tree_ptr->data;
@@ -382,7 +406,7 @@ bool bic_xml_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,u
       if (node_ptr->attributes->v_type != c_bi_class_blank)
       {
         pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)node_ptr->attributes->v_data_ptr;
-        
+
         if (tree_ptr->root_idx != c_idx_not_exist)
         {
           pointer_map_tree_s_node *tn_ptr = tree_ptr->data;
@@ -577,7 +601,7 @@ built_in_class_s xml_node_class =
 {/*{{{*/
   "XmlNode",
   c_modifier_public | c_modifier_final,
-  16, xml_node_methods,
+  19, xml_node_methods,
   0, xml_node_variables,
   bic_xml_node_consts,
   bic_xml_node_init,
@@ -603,9 +627,19 @@ built_in_method_s xml_node_methods[] =
     bic_xml_node_operator_binary_equal
   },
   {
+    "operator_binary_le_br_re_br#1",
+    c_modifier_public | c_modifier_final,
+    bic_xml_node_operator_binary_le_br_re_br
+  },
+  {
     "XmlNode#1",
     c_modifier_public | c_modifier_final,
     bic_xml_node_method_XmlNode_1
+  },
+  {
+    "update_node_dict#0",
+    c_modifier_public | c_modifier_final,
+    bic_xml_node_method_update_node_dict_0
   },
   {
     "attr_#2",
@@ -651,6 +685,11 @@ built_in_method_s xml_node_methods[] =
     "attributes#0",
     c_modifier_public | c_modifier_final,
     bic_xml_node_method_attributes_0
+  },
+  {
+    "node_dict#0",
+    c_modifier_public | c_modifier_final,
+    bic_xml_node_method_node_dict_0
   },
   {
     "nodes#0",
@@ -713,6 +752,14 @@ built_in_variable_s xml_node_variables[] =
   }\
   \
   xml_node_s *node_ptr = (xml_node_s *)dst_location->v_data_ptr;\
+  string_s *name_ptr = (string_s *)src_0_location->v_data_ptr;\
+  \
+  /* - ERROR - */\
+  if (name_ptr->size <= 1)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_XML_NODE_NAME_INVALID_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
   \
   pointer_array_s *nodes_array = xml_node_s::get_conts_array(it,node_ptr->nodes);\
   pointer_array_s *conts_array = xml_node_s::get_conts_array(it,node_ptr->conts);\
@@ -725,9 +772,10 @@ built_in_variable_s xml_node_variables[] =
   new_node_ptr->name = src_0_location;\
   \
   location_s *blank_location = (location_s *)it.blank_location;\
-  blank_location->v_reference_cnt.atomic_add(4);\
+  blank_location->v_reference_cnt.atomic_add(5);\
   \
   new_node_ptr->attributes = blank_location;\
+  new_node_ptr->node_dict = blank_location;\
   new_node_ptr->nodes = blank_location;\
   new_node_ptr->texts = blank_location;\
   new_node_ptr->conts = blank_location;\
@@ -743,7 +791,7 @@ built_in_variable_s xml_node_variables[] =
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);\
-\
+  \
   if (src_0_location->v_type != c_bi_class_string ||\
       src_1_location->v_type != c_bi_class_string)\
   {\
@@ -752,37 +800,46 @@ built_in_variable_s xml_node_variables[] =
     new_exception->params.push(2);\
     new_exception->params.push(src_0_location->v_type);\
     new_exception->params.push(src_1_location->v_type);\
-\
+    \
     return false;\
   }\
-\
+  \
   xml_node_s *node_ptr = (xml_node_s *)dst_location->v_data_ptr;\
-\
+  string_s *name_ptr = (string_s *)src_0_location->v_data_ptr;\
+  \
+  /* - ERROR - */\
+  if (name_ptr->size <= 1)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_XML_NODE_NAME_INVALID_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
   pointer_array_s *nodes_array = xml_node_s::get_conts_array(it,node_ptr->nodes);\
   pointer_array_s *conts_array = xml_node_s::get_conts_array(it,node_ptr->conts);\
-\
+  \
   /* - create xml node object - */\
   xml_node_s *new_node_ptr = (xml_node_s *)cmalloc(sizeof(xml_node_s));\
   new_node_ptr->init();\
-\
+  \
   src_0_location->v_reference_cnt.atomic_inc();\
   new_node_ptr->name = src_0_location;\
-\
+  \
   location_s *blank_location = (location_s *)it.blank_location;\
-  blank_location->v_reference_cnt.atomic_add(2);\
-\
+  blank_location->v_reference_cnt.atomic_add(3);\
+  \
   new_node_ptr->attributes = blank_location;\
+  new_node_ptr->node_dict = blank_location;\
   new_node_ptr->nodes = blank_location;\
-\
+  \
   pointer_array_s *new_texts_array = xml_node_s::get_conts_array(it,new_node_ptr->texts);\
   pointer_array_s *new_conts_array = xml_node_s::get_conts_array(it,new_node_ptr->conts);\
-\
+  \
   src_1_location->v_reference_cnt.atomic_add(2);\
   new_texts_array->push(src_1_location);\
   new_conts_array->push(src_1_location);\
-\
+  \
   BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_xml_node,new_node_ptr,REF_CNT);\
-\
+  \
   nodes_array->push(new_location);\
   conts_array->push(new_location);\
 /*}}}*/
@@ -820,6 +877,48 @@ bool bic_xml_node_operator_binary_equal(interpreter_thread_s &it,unsigned stack_
   return true;
 }/*}}}*/
 
+bool bic_xml_node_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  xml_node_s *node_ptr = (xml_node_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (node_ptr->node_dict->v_type != c_rm_class_dict)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_XML_NODE_NODE_DICTIONARY_NOT_AVAILABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)node_ptr->node_dict->v_data_ptr;
+
+  tree_ptr->it_ptr = &it;
+  tree_ptr->source_pos = operands[c_source_pos_idx];
+
+  pointer_map_s search_map = {(pointer)src_0_location,nullptr};
+  unsigned index = tree_ptr->get_idx(search_map);
+
+  if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+  {
+    return false;
+  }
+
+  if (index != c_idx_not_exist)
+  {
+    location_s *value_location = (location_s *)tree_ptr->data[index].object.value;
+
+    value_location->v_reference_cnt.atomic_inc();
+    BIC_SET_RESULT(value_location);
+  }
+  else
+  {
+    BIC_SET_RESULT_BLANK();
+  }
+
+  return true;
+}/*}}}*/
+
 bool bic_xml_node_method_XmlNode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -840,8 +939,7 @@ bool bic_xml_node_method_XmlNode_1(interpreter_thread_s &it,unsigned stack_base,
   // - ERROR -
   if (name_ptr->size <= 1)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_XML_NODE_NAME_INVALID_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -853,15 +951,73 @@ bool bic_xml_node_method_XmlNode_1(interpreter_thread_s &it,unsigned stack_base,
   node_ptr->name = src_0_location;
 
   location_s *blank_location = (location_s *)it.blank_location;
-  blank_location->v_reference_cnt.atomic_add(4);
+  blank_location->v_reference_cnt.atomic_add(5);
 
   node_ptr->attributes = blank_location;
+  node_ptr->node_dict = blank_location;
   node_ptr->nodes = blank_location;
   node_ptr->texts = blank_location;
   node_ptr->conts = blank_location;
 
   // - set xml_node destination location -
   dst_location->v_data_ptr = (xml_node_s *)node_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_xml_node_method_update_node_dict_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  pointer_array_s node_stack;
+  node_stack.init();
+
+  // - push node to node stack -
+  node_stack.push(dst_location->v_data_ptr);
+
+  do {
+    xml_node_s *node_ptr = (xml_node_s *)node_stack.pop();
+
+    // - create node dictionary -
+    pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)cmalloc(sizeof(pointer_map_tree_s));
+    tree_ptr->init();
+
+    tree_ptr->it_ptr = &it;
+    tree_ptr->source_pos = 0;
+
+    BIC_CREATE_NEW_LOCATION(new_location,c_rm_class_dict,tree_ptr);
+
+    it.release_location_ptr(node_ptr->node_dict);
+    node_ptr->node_dict = new_location;
+
+    // - contains another nodes -
+    if (node_ptr->nodes->v_type == c_bi_class_array)
+    {
+      pointer_array_s *nodes_array = (pointer_array_s *)node_ptr->nodes->v_data_ptr;
+
+      // - process all nodes -
+      if (nodes_array->used != 0)
+      {
+        pointer *n_ptr = nodes_array->data;
+        pointer *n_ptr_end = n_ptr + nodes_array->used;
+        do {
+          xml_node_s *node_ptr = (xml_node_s *)((location_s *)*n_ptr)->v_data_ptr;
+
+          // - add node to node dictionary -
+          xml_node_s::add_node_to_node_dict(it,*tree_ptr,node_ptr->name,(location_s *)*n_ptr);
+
+          // - push node to node stack -
+          node_stack.push(node_ptr);
+
+        } while(++n_ptr < n_ptr_end);
+      }
+    }
+
+  } while(node_stack.used > 0);
+
+  node_stack.clear();
+
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -885,6 +1041,15 @@ bool bic_xml_node_method_attr__2(interpreter_thread_s &it,unsigned stack_base,ul
   }
 
   xml_node_s *node_ptr = (xml_node_s *)dst_location->v_data_ptr;
+  string_s *name_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (name_ptr->size <= 1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_XML_NODE_ATTRIBUTE_INVALID_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
   pointer_map_tree_s *tree_ptr;
 
   // - if attributes does not exist -
@@ -1052,6 +1217,11 @@ bool bic_xml_node_method_text_0(interpreter_thread_s &it,unsigned stack_base,uli
 bool bic_xml_node_method_attributes_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_XML_NODE_MEMBER(attributes);
+}/*}}}*/
+
+bool bic_xml_node_method_node_dict_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_XML_NODE_MEMBER(node_dict);
 }/*}}}*/
 
 bool bic_xml_node_method_nodes_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)

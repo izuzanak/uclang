@@ -20,6 +20,9 @@ extern built_in_class_s *xml_classes[];
 enum
 {
   c_error_XML_ERROR_PARSING_DATA,
+  c_error_XML_NODE_NAME_INVALID_VALUE_ERROR,
+  c_error_XML_NODE_NODE_DICTIONARY_NOT_AVAILABLE,
+  c_error_XML_NODE_ATTRIBUTE_INVALID_VALUE_ERROR,
   c_error_XML_NODE_TEXT_VALUE_ERROR,
 };
 
@@ -57,7 +60,9 @@ void bic_xml_node_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_xml_node_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_xml_node_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_xml_node_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xml_node_method_XmlNode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_xml_node_method_update_node_dict_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xml_node_method_attr__2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xml_node_method_node_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xml_node_method_node__1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -67,6 +72,7 @@ bool bic_xml_node_method_text__1(interpreter_thread_s &it,unsigned stack_base,ul
 bool bic_xml_node_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xml_node_method_text_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xml_node_method_attributes_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_xml_node_method_node_dict_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xml_node_method_nodes_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xml_node_method_texts_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xml_node_method_content_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
