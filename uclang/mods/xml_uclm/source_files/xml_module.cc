@@ -451,10 +451,11 @@ bool bic_xml_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,u
         {
           XML_CREATE_NICE_PUSH_TAB();
 
-          create_stack.push_blank();
-          create_stack.last().set(item_location->v_data_ptr,0,cs_elm.after_node);
-
+          bool cs_elm_after_node = cs_elm.after_node;
           cs_elm.after_node = true;
+
+          create_stack.push_blank();
+          create_stack.last().set(item_location->v_data_ptr,0,cs_elm_after_node);
         }
         else if (item_location->v_type == c_bi_class_string)
         {
@@ -601,7 +602,7 @@ built_in_class_s xml_node_class =
 {/*{{{*/
   "XmlNode",
   c_modifier_public | c_modifier_final,
-  19, xml_node_methods,
+  20, xml_node_methods,
   0, xml_node_variables,
   bic_xml_node_consts,
   bic_xml_node_init,
@@ -670,6 +671,11 @@ built_in_method_s xml_node_methods[] =
     "text_#1",
     c_modifier_public | c_modifier_final,
     bic_xml_node_method_text__1
+  },
+  {
+    "append#1",
+    c_modifier_public | c_modifier_final,
+    bic_xml_node_method_append_1
   },
   {
     "name#0",
@@ -1158,6 +1164,35 @@ bool bic_xml_node_method_text__1(interpreter_thread_s &it,unsigned stack_base,ul
 
   src_0_location->v_reference_cnt.atomic_add(2);
   texts_array->push(src_0_location);
+  conts_array->push(src_0_location);
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_xml_node_method_append_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_xml_node)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("append#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  xml_node_s *node_ptr = (xml_node_s *)dst_location->v_data_ptr;
+
+  pointer_array_s *nodes_array = xml_node_s::get_conts_array(it,node_ptr->nodes);
+  pointer_array_s *conts_array = xml_node_s::get_conts_array(it,node_ptr->conts);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+  nodes_array->push(src_0_location);
   conts_array->push(src_0_location);
 
   BIC_SET_RESULT_DESTINATION();

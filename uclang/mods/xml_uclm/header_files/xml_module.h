@@ -69,6 +69,7 @@ bool bic_xml_node_method_node__1(interpreter_thread_s &it,unsigned stack_base,ul
 bool bic_xml_node_method_node_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xml_node_method_node__2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xml_node_method_text__1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_xml_node_method_append_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xml_node_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xml_node_method_text_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xml_node_method_attributes_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
