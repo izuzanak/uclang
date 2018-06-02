@@ -149,9 +149,9 @@ built_in_method_s xml_methods[] =
     bic_xml_method_create_1
   },
   {
-    "create_nice#2",
+    "create_nice#3",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_xml_method_create_nice_2
+    bic_xml_method_create_nice_3
   },
   {
     "parse#1",
@@ -323,35 +323,38 @@ bool bic_xml_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *o
   return true;
 }/*}}}*/
 
-bool bic_xml_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_xml_method_create_nice_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
 
   // - ERROR -
   if (src_0_location->v_type != c_bi_class_xml_node ||
-      src_1_location->v_type != c_bi_class_string)
+      src_1_location->v_type != c_bi_class_string ||
+      src_2_location->v_type != c_bi_class_string)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_xml,"create_nice#2");
-    new_exception->params.push(2);
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_xml,"create_nice#3");
+    new_exception->params.push(3);
     new_exception->params.push(src_0_location->v_type);
     new_exception->params.push(src_1_location->v_type);
+    new_exception->params.push(src_2_location->v_type);
 
     return false;
   }
 
 #define XML_CREATE_NICE_PUSH_TAB() \
 {/*{{{*/\
-  if ((indent_size += tab_str_ptr->size - 1) > indent_buffer.used)\
+  if ((indent_size += tabulator_ptr->size - 1) > indent_buffer.used)\
   {\
-    indent_buffer.append(tab_str_ptr->size - 1,tab_str_ptr->data);\
+    indent_buffer.append(tabulator_ptr->size - 1,tabulator_ptr->data);\
   }\
 }/*}}}*/
 
 #define XML_CREATE_NICE_POP_TAB() \
 {/*{{{*/\
-  indent_size -= tab_str_ptr->size - 1;\
+  indent_size -= tabulator_ptr->size - 1;\
 }/*}}}*/
 
 #define XML_CREATE_NICE_INDENT() \
@@ -360,15 +363,20 @@ bool bic_xml_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,u
   xml_creator_s::append_string(indent_buffer.data,indent_size,buffer);\
 }/*}}}*/
 
+  // - retrieve indentation pointer -
+  string_s *indent_ptr = (string_s *)src_1_location->v_data_ptr;
+
   // - retrieve tabulator pointer -
-  string_s *tab_str_ptr = (string_s *)src_1_location->v_data_ptr;
+  string_s *tabulator_ptr = (string_s *)src_2_location->v_data_ptr;
 
   // - initialize indent buffer -
   bc_array_s indent_buffer;
   indent_buffer.init();
 
+  indent_buffer.append(indent_ptr->size - 1,indent_ptr->data);
+
   // - initialize actual indent size -
-  unsigned indent_size = 0;
+  unsigned indent_size = indent_buffer.used;
 
   bc_array_s buffer;
   buffer.init();
@@ -602,7 +610,7 @@ built_in_class_s xml_node_class =
 {/*{{{*/
   "XmlNode",
   c_modifier_public | c_modifier_final,
-  20, xml_node_methods,
+  22, xml_node_methods,
   0, xml_node_variables,
   bic_xml_node_consts,
   bic_xml_node_init,
@@ -678,6 +686,11 @@ built_in_method_s xml_node_methods[] =
     bic_xml_node_method_append_1
   },
   {
+    "has_key#1",
+    c_modifier_public | c_modifier_final,
+    bic_xml_node_method_has_key_1
+  },
+  {
     "name#0",
     c_modifier_public | c_modifier_final,
     bic_xml_node_method_name_0
@@ -711,6 +724,11 @@ built_in_method_s xml_node_methods[] =
     "content#0",
     c_modifier_public | c_modifier_final,
     bic_xml_node_method_content_0
+  },
+  {
+    "contain#1",
+    c_modifier_public | c_modifier_final,
+    bic_xml_node_method_has_key_1
   },
   {
     "to_string#0",
@@ -1196,6 +1214,40 @@ bool bic_xml_node_method_append_1(interpreter_thread_s &it,unsigned stack_base,u
   conts_array->push(src_0_location);
 
   BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_xml_node_method_has_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  xml_node_s *node_ptr = (xml_node_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (node_ptr->node_dict->v_type != c_rm_class_dict)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_XML_NODE_NODE_DICTIONARY_NOT_AVAILABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)node_ptr->node_dict->v_data_ptr;
+
+  tree_ptr->it_ptr = &it;
+  tree_ptr->source_pos = operands[c_source_pos_idx];
+
+  pointer_map_s search_map = {(pointer)src_0_location,nullptr};
+  unsigned index = tree_ptr->get_idx(search_map);
+
+  if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+  {
+    return false;
+  }
+
+  long long int result = index != c_idx_not_exist;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
