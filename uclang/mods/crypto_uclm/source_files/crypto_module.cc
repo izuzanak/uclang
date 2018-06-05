@@ -5,8 +5,11 @@ include "crypto_module.h"
 
 // - CRYPTO indexes of built in classes -
 unsigned c_bi_class_crypto = c_idx_not_exist;
+unsigned c_bi_class_crypto_pkey = c_idx_not_exist;
 unsigned c_bi_class_crypto_digest_info = c_idx_not_exist;
 unsigned c_bi_class_crypto_digest = c_idx_not_exist;
+unsigned c_bi_class_crypto_digest_sign = c_idx_not_exist;
+unsigned c_bi_class_crypto_digest_verify = c_idx_not_exist;
 unsigned c_bi_class_crypto_cipher_info = c_idx_not_exist;
 unsigned c_bi_class_crypto_encrypt = c_idx_not_exist;
 unsigned c_bi_class_crypto_decrypt = c_idx_not_exist;
@@ -14,11 +17,11 @@ unsigned c_bi_class_crypto_decrypt = c_idx_not_exist;
 // - CRYPTO module -
 built_in_module_s module =
 {/*{{{*/
-  6,                      // Class count
+  9,                      // Class count
   crypto_classes,         // Classes
 
   0,                      // Error base index
-  12,                     // Error count
+  14,                     // Error count
   crypto_error_strings,   // Error strings
 
   crypto_initialize,      // Initialize function
@@ -29,8 +32,11 @@ built_in_module_s module =
 built_in_class_s *crypto_classes[] =
 {/*{{{*/
   &crypto_class,
+  &crypto_pkey_class,
   &crypto_digest_info_class,
   &crypto_digest_class,
+  &crypto_digest_sign_class,
+  &crypto_digest_verify_class,
   &crypto_cipher_info_class,
   &crypto_encrypt_class,
   &crypto_decrypt_class,
@@ -41,10 +47,12 @@ const char *crypto_error_strings[] =
 {/*{{{*/
   "error_CRYPTO_INVALID_BASE_DATA_SIZE",
   "error_CRYPTO_INVALID_BASE_DATA",
+  "error_CRYPTO_PKEY_CANNOT_READ_KEY_FROM_FILE",
   "error_CRYPTO_DIGEST_INVALID_ALGORITHM_NAME",
   "error_CRYPTO_DIGEST_CREATE_INIT_ERROR",
   "error_CRYPTO_DIGEST_UPDATE_ERROR",
   "error_CRYPTO_DIGEST_VALUE_ERROR",
+  "error_CRYPTO_DIGEST_VERIFY_ERROR",
   "error_CRYPTO_CIPHER_INVALID_ALGORITHM_NAME",
   "error_CRYPTO_CIPHER_INVALID_KEY_LENGTH",
   "error_CRYPTO_CIPHER_INVALID_INIT_VECTOR_LENGTH",
@@ -61,11 +69,20 @@ bool crypto_initialize(script_parser_s &sp)
   // - initialize crypto class identifier -
   c_bi_class_crypto = class_base_idx++;
 
+  // - initialize crypto_pkey class identifier -
+  c_bi_class_crypto_pkey = class_base_idx++;
+
   // - initialize crypto_digest_info class identifier -
   c_bi_class_crypto_digest_info = class_base_idx++;
 
   // - initialize crypto_digest class identifier -
   c_bi_class_crypto_digest = class_base_idx++;
+
+  // - initialize crypto_digest_sign class identifier -
+  c_bi_class_crypto_digest_sign = class_base_idx++;
+
+  // - initialize crypto_digest_verify class identifier -
+  c_bi_class_crypto_digest_verify = class_base_idx++;
 
   // - initialize crypto_cipher_info class identifier -
   c_bi_class_crypto_cipher_info = class_base_idx++;
@@ -101,6 +118,13 @@ bool crypto_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nInvalid base%" HOST_LL_FORMAT "d encoded data\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_CRYPTO_PKEY_CANNOT_READ_KEY_FROM_FILE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot read key from file: %s\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_CRYPTO_DIGEST_INVALID_ALGORITHM_NAME:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -127,6 +151,13 @@ bool crypto_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nError while retrieving message digest value\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CRYPTO_DIGEST_VERIFY_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while verifying message digest signature\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_CRYPTO_CIPHER_INVALID_ALGORITHM_NAME:
@@ -461,7 +492,7 @@ bool bic_crypto_method_decode_base64_1(interpreter_thread_s &it,unsigned stack_b
   unsigned s_length = source_ptr->size - 1;
 
   // - ERROR -
-  if (s_length % 3)
+  if (s_length & 0x03)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_INVALID_BASE_DATA_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(64);
@@ -513,6 +544,197 @@ bool bic_crypto_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,
 bool bic_crypto_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   printf("Crypto");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class CRYPTO_PKEY -
+built_in_class_s crypto_pkey_class =
+{/*{{{*/
+  "CryptoPKey",
+  c_modifier_public | c_modifier_final,
+  5, crypto_pkey_methods,
+  3, crypto_pkey_variables,
+  bic_crypto_pkey_consts,
+  bic_crypto_pkey_init,
+  bic_crypto_pkey_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s crypto_pkey_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_pkey_operator_binary_equal
+  },
+  {
+    "load_private#2",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_crypto_pkey_method_load_private_2
+  },
+  {
+    "load_public#2",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_crypto_pkey_method_load_public_2
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_crypto_pkey_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_crypto_pkey_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s crypto_pkey_variables[] =
+{/*{{{*/
+
+  // - crypto pkey type constants -
+  { "TYPE_RSA", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_DSA", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_EC", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+};/*}}}*/
+
+void bic_crypto_pkey_consts(location_array_s &const_locations)
+{/*{{{*/
+
+  // - insert crypto pkey type constants -
+  {
+    const_locations.push_blanks(3);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 3);
+
+#define CREATE_CRYPTO_PKEY_TYPE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_CRYPTO_PKEY_TYPE_BIC_STATIC(EVP_PKEY_RSA);
+    CREATE_CRYPTO_PKEY_TYPE_BIC_STATIC(EVP_PKEY_DSA);
+    CREATE_CRYPTO_PKEY_TYPE_BIC_STATIC(EVP_PKEY_EC);
+  }
+
+}/*}}}*/
+
+void bic_crypto_pkey_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (crypto_pkey_s *)nullptr;
+}/*}}}*/
+
+void bic_crypto_pkey_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  crypto_pkey_s *ck_ptr = (crypto_pkey_s *)location_ptr->v_data_ptr;
+
+  // - if crypto pkey object exists -
+  if (ck_ptr != nullptr)
+  {
+    ck_ptr->clear(it);
+    cfree(ck_ptr);
+  }
+}/*}}}*/
+
+bool bic_crypto_pkey_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+#define BIC_CRYPTO_PKEY_LOAD_KEY(NAME,FUNCTION,ISPUB) \
+{/*{{{*/\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);\
+  \
+  /* - ERROR - */\
+  if (src_0_location->v_type != c_bi_class_string ||\
+      src_1_location->v_type != c_bi_class_string)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_crypto,NAME);\
+    new_exception->params.push(2);\
+    new_exception->params.push(src_0_location->v_type);\
+    new_exception->params.push(src_1_location->v_type);\
+    \
+    return false;\
+  }\
+  \
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;\
+  \
+  /* - ERROR - */\
+  FILE *f = fopen(string_ptr->data,"r");\
+  if (f == nullptr)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_PKEY_CANNOT_READ_KEY_FROM_FILE,operands[c_source_pos_idx],src_0_location);\
+    return false;\
+  }\
+  \
+  EVP_PKEY *pkey = FUNCTION(f,nullptr,crypto_pkey_s::password_cb,src_1_location->v_data_ptr);\
+  fclose(f);\
+  \
+  /* - ERROR - */\
+  if (pkey == nullptr)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_PKEY_CANNOT_READ_KEY_FROM_FILE,operands[c_source_pos_idx],src_0_location);\
+    return false;\
+  }\
+  \
+  /* - create crypto_pkey_s object - */\
+  crypto_pkey_s *ck_ptr = (crypto_pkey_s *)cmalloc(sizeof(crypto_pkey_s));\
+  ck_ptr->init();\
+  \
+  ck_ptr->pkey = pkey;\
+  ck_ptr->ispub = ISPUB;\
+  \
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_crypto_pkey,ck_ptr);\
+  BIC_SET_RESULT(new_location);\
+  \
+  return true;\
+}/*}}}*/
+
+bool bic_crypto_pkey_method_load_private_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_CRYPTO_PKEY_LOAD_KEY("load_private#2",PEM_read_PrivateKey,false);
+}/*}}}*/
+
+bool bic_crypto_pkey_method_load_public_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_CRYPTO_PKEY_LOAD_KEY("load_public#2",PEM_read_PUBKEY,true);
+}/*}}}*/
+
+bool bic_crypto_pkey_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("CryptoPKey"),"CryptoPKey");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_pkey_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("CryptoPKey");
 
   BIC_SET_RESULT_BLANK();
 
@@ -921,6 +1143,481 @@ bool bic_crypto_digest_method_to_string_0(interpreter_thread_s &it,unsigned stac
 bool bic_crypto_digest_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   printf("CryptoDigest");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class CRYPTO_DIGEST_SIGN -
+built_in_class_s crypto_digest_sign_class =
+{/*{{{*/
+  "CryptoDigestSign",
+  c_modifier_public | c_modifier_final,
+  6, crypto_digest_sign_methods,
+  0, crypto_digest_sign_variables,
+  bic_crypto_digest_sign_consts,
+  bic_crypto_digest_sign_init,
+  bic_crypto_digest_sign_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s crypto_digest_sign_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_digest_sign_operator_binary_equal
+  },
+  {
+    "CryptoDigestSign#2",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_digest_sign_method_CryptoDigestSign_2
+  },
+  {
+    "update#1",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_digest_sign_method_update_1
+  },
+  {
+    "value#0",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_digest_sign_method_value_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_crypto_digest_sign_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_crypto_digest_sign_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s crypto_digest_sign_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+#define BIC_CRYPTO_DIGEST_SIGN_VERIFY_CONSTRUCTOR(NAME,TYPE) \
+{/*{{{*/\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);\
+  \
+  const EVP_MD *mdt_ptr = nullptr;\
+  \
+  if (src_0_location->v_type == c_bi_class_string)\
+  {\
+    mdt_ptr = EVP_get_digestbyname(((string_s *)src_0_location->v_data_ptr)->data);\
+    \
+    /* - ERROR - */\
+    if (mdt_ptr == nullptr)\
+    {\
+      exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_DIGEST_INVALID_ALGORITHM_NAME,operands[c_source_pos_idx],src_0_location);\
+      return false;\
+    }\
+  }\
+  else if (src_0_location->v_type == c_bi_class_crypto_digest_info)\
+  {\
+    mdt_ptr = (EVP_MD *)src_0_location->v_data_ptr;\
+  }\
+  \
+  /* - ERROR - */\
+  if (mdt_ptr == nullptr ||\
+      src_1_location->v_type != c_bi_class_crypto_pkey)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
+    new_exception->params.push(2);\
+    new_exception->params.push(src_0_location->v_type);\
+    new_exception->params.push(src_1_location->v_type);\
+    \
+    return false;\
+  }\
+  \
+  crypto_pkey_s *ck_ptr = (crypto_pkey_s *)src_1_location->v_data_ptr;\
+  \
+  /* - create crypto digest object - */\
+  crypto_digest_key_s *cd_ptr = (crypto_digest_key_s *)cmalloc(sizeof(crypto_digest_key_s));\
+  cd_ptr->init();\
+  \
+  /* - ERROR - */\
+  if ((cd_ptr->context = EVP_MD_CTX_create()) == nullptr)\
+  {\
+    cd_ptr->clear(it);\
+    cfree(cd_ptr);\
+    \
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_DIGEST_CREATE_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  /* - ERROR - */\
+  if (EVP_Digest ## TYPE ## Init(cd_ptr->context,nullptr,mdt_ptr,nullptr,ck_ptr->pkey) != 1)\
+  {\
+    cd_ptr->clear(it);\
+    cfree(cd_ptr);\
+    \
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_DIGEST_CREATE_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  /* - set key location - */\
+  src_1_location->v_reference_cnt.atomic_inc();\
+  cd_ptr->key_location = src_1_location;\
+  \
+  dst_location->v_data_ptr = (crypto_digest_key_s *)cd_ptr;\
+  \
+  return true;\
+}/*}}}*/
+
+#define BIC_CRYPTO_DIGEST_SIGN_VERIFY_UPDATE(TYPE) \
+{/*{{{*/\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+  \
+  /* - ERROR - */\
+  if (src_0_location->v_type != c_bi_class_string)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    BIC_EXCEPTION_PUSH_METHOD_RI("update#1");\
+    new_exception->params.push(1);\
+    new_exception->params.push(src_0_location->v_type);\
+    \
+    return false;\
+  }\
+  \
+  crypto_digest_key_s *cd_ptr = (crypto_digest_key_s *)dst_location->v_data_ptr;\
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;\
+  \
+  /* - ERROR - */\
+  if (EVP_Digest ## TYPE ## Update(cd_ptr->context,string_ptr->data,string_ptr->size - 1) != 1)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_DIGEST_UPDATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  BIC_SET_RESULT_DESTINATION();\
+  \
+  return true;\
+}/*}}}*/
+
+void bic_crypto_digest_sign_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_crypto_digest_sign_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (crypto_digest_key_s *)nullptr;
+}/*}}}*/
+
+void bic_crypto_digest_sign_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  crypto_digest_key_s *cd_ptr = (crypto_digest_key_s *)location_ptr->v_data_ptr;
+
+  // - if crypto digest object exists -
+  if (cd_ptr != nullptr)
+  {
+    cd_ptr->clear(it);
+    cfree(cd_ptr);
+  }
+}/*}}}*/
+
+bool bic_crypto_digest_sign_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_digest_sign_method_CryptoDigestSign_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_CRYPTO_DIGEST_SIGN_VERIFY_CONSTRUCTOR("CryptoDigestSign#2",Sign);
+}/*}}}*/
+
+bool bic_crypto_digest_sign_method_update_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_CRYPTO_DIGEST_SIGN_VERIFY_UPDATE(Sign);
+}/*}}}*/
+
+bool bic_crypto_digest_sign_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  crypto_digest_key_s *cd_ptr = (crypto_digest_key_s *)dst_location->v_data_ptr;
+  crypto_pkey_s *ck_ptr = (crypto_pkey_s *)cd_ptr->key_location->v_data_ptr;
+
+  // - ERROR -
+  EVP_MD_CTX *context_copy;
+  if ((context_copy = EVP_MD_CTX_create()) == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_DIGEST_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (EVP_DigestSignInit(context_copy,nullptr,EVP_MD_CTX_md(cd_ptr->context),nullptr,ck_ptr->pkey) != 1)
+  {
+    EVP_MD_CTX_destroy(context_copy);
+
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_DIGEST_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (EVP_MD_CTX_copy_ex(context_copy,cd_ptr->context) != 1)
+  {
+    EVP_MD_CTX_destroy(context_copy);
+
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_DIGEST_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  unsigned dg_length = 0;
+  if (EVP_DigestSignFinal(context_copy,nullptr,&dg_length) != 1)
+  {
+    EVP_MD_CTX_destroy(context_copy);
+
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_DIGEST_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - create result string -
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->create(dg_length);
+
+  // - ERROR -
+  if (EVP_DigestSignFinal(context_copy,(unsigned char *)string_ptr->data,&dg_length) != 1)
+  {
+    EVP_MD_CTX_destroy(context_copy);
+
+    string_ptr->clear();
+    cfree(string_ptr);
+
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_DIGEST_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  EVP_MD_CTX_destroy(context_copy);
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_digest_sign_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("CryptoDigestSign"),"CryptoDigestSign");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_digest_sign_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("CryptoDigestSign");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class CRYPTO_DIGEST_VERIFY -
+built_in_class_s crypto_digest_verify_class =
+{/*{{{*/
+  "CryptoDigestVerify",
+  c_modifier_public | c_modifier_final,
+  6, crypto_digest_verify_methods,
+  0, crypto_digest_verify_variables,
+  bic_crypto_digest_verify_consts,
+  bic_crypto_digest_verify_init,
+  bic_crypto_digest_verify_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s crypto_digest_verify_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_digest_verify_operator_binary_equal
+  },
+  {
+    "CryptoDigestVerify#2",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_digest_verify_method_CryptoDigestVerify_2
+  },
+  {
+    "update#1",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_digest_verify_method_update_1
+  },
+  {
+    "verify#1",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_digest_verify_method_verify_1
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_crypto_digest_verify_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_crypto_digest_verify_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s crypto_digest_verify_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_crypto_digest_verify_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_crypto_digest_verify_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (crypto_digest_key_s *)nullptr;
+}/*}}}*/
+
+void bic_crypto_digest_verify_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  crypto_digest_key_s *cd_ptr = (crypto_digest_key_s *)location_ptr->v_data_ptr;
+
+  // - if crypto digest object exists -
+  if (cd_ptr != nullptr)
+  {
+    cd_ptr->clear(it);
+    cfree(cd_ptr);
+  }
+}/*}}}*/
+
+bool bic_crypto_digest_verify_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_digest_verify_method_CryptoDigestVerify_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_CRYPTO_DIGEST_SIGN_VERIFY_CONSTRUCTOR("CryptoDigestVerify#2",Verify);
+}/*}}}*/
+
+bool bic_crypto_digest_verify_method_update_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_CRYPTO_DIGEST_SIGN_VERIFY_UPDATE(Verify);
+}/*}}}*/
+
+bool bic_crypto_digest_verify_method_verify_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("verify#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  crypto_digest_key_s *cd_ptr = (crypto_digest_key_s *)dst_location->v_data_ptr;
+  crypto_pkey_s *ck_ptr = (crypto_pkey_s *)cd_ptr->key_location->v_data_ptr;
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  EVP_MD_CTX *context_copy;
+  if ((context_copy = EVP_MD_CTX_create()) == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_DIGEST_VERIFY_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (EVP_DigestVerifyInit(context_copy,nullptr,EVP_MD_CTX_md(cd_ptr->context),nullptr,ck_ptr->pkey) != 1)
+  {
+    EVP_MD_CTX_destroy(context_copy);
+
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_DIGEST_VERIFY_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (EVP_MD_CTX_copy_ex(context_copy,cd_ptr->context) != 1)
+  {
+    EVP_MD_CTX_destroy(context_copy);
+
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_DIGEST_VERIFY_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  long long result = EVP_DigestVerifyFinal(context_copy,(const unsigned char *)string_ptr->data,string_ptr->size - 1);
+
+  EVP_MD_CTX_destroy(context_copy);
+
+  // - ERROR -
+  if (result & ~0x01)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_DIGEST_VERIFY_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_digest_verify_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("CryptoDigestVerify"),"CryptoDigestVerify");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_digest_verify_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("CryptoDigestVerify");
 
   BIC_SET_RESULT_BLANK();
 
@@ -1415,7 +2112,7 @@ bool bic_crypto_encrypt_method_CryptoEncrypt_3(interpreter_thread_s &it,unsigned
 bool bic_crypto_encrypt_method_update_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_CRYPTO_ENCRYPT_DECRYPT_METHOD_UPDATE(Encrypt,"update#1");
-  
+
   return true;
 }/*}}}*/
 
@@ -1548,7 +2245,7 @@ bool bic_crypto_decrypt_method_CryptoDescrypt_3(interpreter_thread_s &it,unsigne
 bool bic_crypto_decrypt_method_update_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_CRYPTO_ENCRYPT_DECRYPT_METHOD_UPDATE(Decrypt,"update#1");
-  
+
   return true;
 }/*}}}*/
 

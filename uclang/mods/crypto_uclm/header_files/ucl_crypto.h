@@ -8,6 +8,7 @@ include "script_parser.h"
 
 #include <openssl/conf.h>
 #include <openssl/evp.h>
+#include <openssl/pem.h>
 #include <openssl/err.h>
 #include <openssl/rand.h>
 
@@ -24,12 +25,40 @@ class crypto_c
 };
 
 /*
+ * definition of structure crypto_pkey_s
+ */
+
+struct crypto_pkey_s
+{
+  EVP_PKEY *pkey;
+  bool ispub;
+
+  static int password_cb(char *buf,int size,int rwflag,void *userdata);
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
  * definition of structure crypto_digest_s
  */
 
 struct crypto_digest_s
 {
   EVP_MD_CTX *context;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
+ * definition of structure crypto_digest_key_s
+ */
+
+struct crypto_digest_key_s
+{
+  EVP_MD_CTX *context;
+  location_s *key_location;
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
@@ -69,6 +98,27 @@ inline crypto_c::~crypto_c()
 }/*}}}*/
 
 /*
+ * inline methods of structure crypto_pkey_s
+ */
+
+inline void crypto_pkey_s::init()
+{/*{{{*/
+  pkey = nullptr;
+}/*}}}*/
+
+inline void crypto_pkey_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+
+  // - release crypto pkey -
+  if (pkey != nullptr)
+  {
+    EVP_PKEY_free(pkey);
+  }
+
+  init();
+}/*}}}*/
+
+/*
  * inline methods of structure crypto_digest_s
  */
 
@@ -84,6 +134,34 @@ inline void crypto_digest_s::clear(interpreter_thread_s &it)
   if (context != nullptr)
   {
     EVP_MD_CTX_destroy(context);
+  }
+
+  init();
+}/*}}}*/
+
+/*
+ * inline methods of structure crypto_digest_key_s
+ */
+
+inline void crypto_digest_key_s::init()
+{/*{{{*/
+  context = nullptr;
+  key_location = nullptr;
+}/*}}}*/
+
+inline void crypto_digest_key_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+
+  // - release crypto digest context -
+  if (context != nullptr)
+  {
+    EVP_MD_CTX_destroy(context);
+  }
+
+  // - release key reference -
+  if (key_location != nullptr)
+  {
+    it.release_location_ptr(key_location);
   }
 
   init();
