@@ -5835,7 +5835,7 @@ built_in_class_s wdg_module_class =
 {/*{{{*/
   "WdgModule",
   c_modifier_public | c_modifier_final,
-  9, wdg_module_methods,
+  10, wdg_module_methods,
   1, wdg_module_variables,
   bic_wdg_module_consts,
   bic_wdg_module_init,
@@ -5869,6 +5869,11 @@ built_in_method_s wdg_module_methods[] =
     "WdgModule#2",
     c_modifier_public | c_modifier_final,
     bic_wdg_module_method_WdgModule_2
+  },
+  {
+    "close#0",
+    c_modifier_public | c_modifier_final,
+    bic_wdg_module_method_close_0
   },
   {
     "register#2",
@@ -5941,6 +5946,7 @@ void bic_wdg_module_clear(interpreter_thread_s &it,location_s *location_ptr)
 
   if (wm_ptr != nullptr)
   {
+    wm_ptr->Abandon();
     delete wm_ptr;
   }
 }/*}}}*/
@@ -6047,6 +6053,18 @@ bool bic_wdg_module_method_WdgModule_2(interpreter_thread_s &it,unsigned stack_b
   }
 
   dst_location->v_data_ptr = (WdgModule *)wm_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_wdg_module_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  WdgModule *wm_ptr = (WdgModule *)dst_location->v_data_ptr;
+  wm_ptr->Close();
+
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

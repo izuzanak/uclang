@@ -342,6 +342,7 @@ void bic_wdg_module_clear(interpreter_thread_s &it,location_s *location_ptr);
 bool bic_wdg_module_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_wdg_module_method_WdgModule_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_wdg_module_method_WdgModule_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_wdg_module_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_wdg_module_method_register_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_wdg_module_method_trigger_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_wdg_module_method_restart_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
