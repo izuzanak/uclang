@@ -15,6 +15,7 @@ unsigned c_bi_class_var_store = c_idx_not_exist;
 unsigned c_bi_class_var_slot = c_idx_not_exist;
 unsigned c_bi_class_nvm_segment = c_idx_not_exist;
 unsigned c_bi_class_msg_queue = c_idx_not_exist;
+unsigned c_bi_class_wdg_module = c_idx_not_exist;
 unsigned c_bi_class_bcc = c_idx_not_exist;
 unsigned c_bi_class_crc = c_idx_not_exist;
 unsigned c_bi_class_md5 = c_idx_not_exist;
@@ -22,11 +23,11 @@ unsigned c_bi_class_md5 = c_idx_not_exist;
 // - UCF module -
 built_in_module_s module =
 {/*{{{*/
-  14,                   // Class count
+  15,                   // Class count
   ucf_classes,          // Classes
 
   0,                    // Error base index
-  49,                   // Error count
+  54,                   // Error count
   ucf_error_strings,    // Error strings
 
   ucf_initialize,       // Initialize function
@@ -47,6 +48,7 @@ built_in_class_s *ucf_classes[] =
   &var_slot_class,
   &nvm_segment_class,
   &msg_queue_class,
+  &wdg_module_class,
   &bcc_class,
   &crc_class,
   &md5_class,
@@ -102,6 +104,11 @@ const char *ucf_error_strings[] =
   "error_MSG_QUEUE_CREATE_ERROR",
   "error_MSG_QUEUE_WRITE_ERROR",
   "error_MSG_QUEUE_READ_ERROR",
+  "error_WDG_MODULE_OPEN_ERROR",
+  "error_WDG_MODULE_INVALID_USER_COUNT",
+  "error_WDG_MODULE_INVALID_TIMEOUT_VALUE",
+  "error_WDG_MODULE_CREATE_ERROR",
+  "error_WDG_MODULE_REGISTER_ERROR",
   "error_CRC_UNKNOWN_REQUESTED_SIZE",
   "error_CRC_WRONG_INITIAL_VALUE_ACCORDING_TO_SIZE",
 };/*}}}*/
@@ -143,6 +150,9 @@ bool ucf_initialize(script_parser_s &sp)
 
   // - initialize msg_queue class identifier -
   c_bi_class_msg_queue = class_base_idx++;
+
+  // - initialize wdg_module class identifier -
+  c_bi_class_wdg_module = class_base_idx++;
 
   // - initialize bcc class identifier -
   c_bi_class_bcc = class_base_idx++;
@@ -491,6 +501,41 @@ bool ucf_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nError while reading message from message queue\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_WDG_MODULE_OPEN_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while opening watchdog module \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_WDG_MODULE_INVALID_USER_COUNT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid count od watchdog module users %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_WDG_MODULE_INVALID_TIMEOUT_VALUE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid watchdog module timeout value %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_WDG_MODULE_CREATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while creating watchdog module \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_WDG_MODULE_REGISTER_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while registering client to watchdog daemon\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_CRC_UNKNOWN_REQUESTED_SIZE:
@@ -5779,6 +5824,345 @@ bool bic_msg_queue_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 bool bic_msg_queue_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   printf("MsgQueue");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class WDG_MODULE -
+built_in_class_s wdg_module_class =
+{/*{{{*/
+  "WdgModule",
+  c_modifier_public | c_modifier_final,
+  9, wdg_module_methods,
+  1, wdg_module_variables,
+  bic_wdg_module_consts,
+  bic_wdg_module_init,
+  bic_wdg_module_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s wdg_module_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_wdg_module_operator_binary_equal
+  },
+  {
+    "WdgModule#1",
+    c_modifier_public | c_modifier_final,
+    bic_wdg_module_method_WdgModule_1
+  },
+  {
+    "WdgModule#2",
+    c_modifier_public | c_modifier_final,
+    bic_wdg_module_method_WdgModule_2
+  },
+  {
+    "register#2",
+    c_modifier_public | c_modifier_final,
+    bic_wdg_module_method_register_2
+  },
+  {
+    "trigger#0",
+    c_modifier_public | c_modifier_final,
+    bic_wdg_module_method_trigger_0
+  },
+  {
+    "restart#1",
+    c_modifier_public | c_modifier_final,
+    bic_wdg_module_method_restart_1
+  },
+  {
+    "abandon#0",
+    c_modifier_public | c_modifier_final,
+    bic_wdg_module_method_abandon_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_wdg_module_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_wdg_module_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s wdg_module_variables[] =
+{/*{{{*/
+  {
+    "DEFAULT_NAME",
+    c_modifier_public | c_modifier_static | c_modifier_static_const
+  },
+};/*}}}*/
+
+void bic_wdg_module_consts(location_array_s &const_locations)
+{/*{{{*/
+  const_locations.push_blanks(1);
+  location_s *cv_ptr = const_locations.data + (const_locations.used - 1);
+
+#define CREATE_WDG_MODULE_BIC_STATIC_STRING(VALUE)\
+  {\
+    string_s *string_ptr = (string_s *)cmalloc(sizeof(string_s));\
+    string_ptr->init();\
+    string_ptr->set(strlen(VALUE),VALUE);\
+    \
+    cv_ptr->v_type = c_bi_class_string;\
+    cv_ptr->v_reference_cnt.atomic_set(1);\
+    cv_ptr->v_data_ptr = (string_s *)string_ptr;\
+    cv_ptr++;\
+  }
+
+  CREATE_WDG_MODULE_BIC_STATIC_STRING(WDG_MODULE_NAME);
+}/*}}}*/
+
+void bic_wdg_module_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (WdgModule *)nullptr;
+}/*}}}*/
+
+void bic_wdg_module_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  WdgModule *wm_ptr = (WdgModule *)location_ptr->v_data_ptr;
+
+  if (wm_ptr != nullptr)
+  {
+    delete wm_ptr;
+  }
+}/*}}}*/
+
+bool bic_wdg_module_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_wdg_module_method_WdgModule_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("WdgModule#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  // - create watchdog module object -
+  WdgModule *wm_ptr = new WdgModule();
+
+  try
+  {
+    wm_ptr->Open(string_ptr->data);
+  }
+
+  // - ERROR -
+  catch (Exception e)
+  {
+    delete wm_ptr;
+
+    exception_s::throw_exception(it,module.error_base + c_error_WDG_MODULE_OPEN_ERROR,operands[c_source_pos_idx],src_0_location);
+    return false;
+  }
+
+  dst_location->v_data_ptr = (WdgModule *)wm_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_wdg_module_method_WdgModule_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  long long int client_cnt;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,client_cnt) ||
+      src_1_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("WdgModule#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  // - ERROR -
+  if (client_cnt <= 0)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_WDG_MODULE_INVALID_USER_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(client_cnt);
+
+    return false;
+  }
+
+  string_s *string_ptr = (string_s *)src_1_location->v_data_ptr;
+
+  // - create watchdog module object -
+  WdgModule *wm_ptr = new WdgModule();
+
+  try
+  {
+    wm_ptr->Create(client_cnt,String(string_ptr->data));
+  }
+
+  // - ERROR -
+  catch (Exception e)
+  {
+    delete wm_ptr;
+
+    exception_s::throw_exception(it,module.error_base + c_error_WDG_MODULE_CREATE_ERROR,operands[c_source_pos_idx],src_1_location);
+    return false;
+  }
+
+  dst_location->v_data_ptr = (WdgModule *)wm_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_wdg_module_method_register_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  long long int timeout;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,timeout) ||
+      src_1_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("register#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  // - ERROR -
+  if (timeout < 0)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_WDG_MODULE_INVALID_TIMEOUT_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(timeout);
+  }
+
+  WdgModule *wm_ptr = (WdgModule *)dst_location->v_data_ptr;
+  string_s *string_ptr = (string_s *)src_1_location->v_data_ptr;
+
+  // - ERROR -
+  if (!wm_ptr->Register(timeout,string_ptr->data))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_WDG_MODULE_REGISTER_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_wdg_module_method_trigger_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  WdgModule *wm_ptr = (WdgModule *)dst_location->v_data_ptr;
+  wm_ptr->Trigger();
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_wdg_module_method_restart_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int timeout;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,timeout))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("restart#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  // - ERROR -
+  if (timeout < 0)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_WDG_MODULE_INVALID_TIMEOUT_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(timeout);
+  }
+
+  WdgModule *wm_ptr = (WdgModule *)dst_location->v_data_ptr;
+  wm_ptr->Restart(timeout);
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_wdg_module_method_abandon_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  WdgModule *wm_ptr = (WdgModule *)dst_location->v_data_ptr;
+  wm_ptr->Abandon();
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_wdg_module_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("WdgModule"),"WdgModule")
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_wdg_module_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("WdgModule");
 
   BIC_SET_RESULT_BLANK();
 

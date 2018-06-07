@@ -18,6 +18,7 @@ extern unsigned c_bi_class_var_store;
 extern unsigned c_bi_class_var_slot;
 extern unsigned c_bi_class_nvm_segment;
 extern unsigned c_bi_class_msg_queue;
+extern unsigned c_bi_class_wdg_module;
 extern unsigned c_bi_class_bcc;
 extern unsigned c_bi_class_crc;
 extern unsigned c_bi_class_md5;
@@ -78,6 +79,11 @@ enum
   c_error_MSG_QUEUE_CREATE_ERROR,
   c_error_MSG_QUEUE_WRITE_ERROR,
   c_error_MSG_QUEUE_READ_ERROR,
+  c_error_WDG_MODULE_OPEN_ERROR,
+  c_error_WDG_MODULE_INVALID_USER_COUNT,
+  c_error_WDG_MODULE_INVALID_TIMEOUT_VALUE,
+  c_error_WDG_MODULE_CREATE_ERROR,
+  c_error_WDG_MODULE_REGISTER_ERROR,
   c_error_CRC_UNKNOWN_REQUESTED_SIZE,
   c_error_CRC_WRONG_INITIAL_VALUE_ACCORDING_TO_SIZE,
 };
@@ -323,6 +329,25 @@ bool bic_msg_queue_method_read_pid_0(interpreter_thread_s &it,unsigned stack_bas
 bool bic_msg_queue_method_peek_msg_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_msg_queue_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_msg_queue_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class WDG_MODULE -
+extern built_in_variable_s wdg_module_variables[];
+extern built_in_method_s wdg_module_methods[];
+extern built_in_class_s wdg_module_class;
+
+void bic_wdg_module_consts(location_array_s &const_locations);
+void bic_wdg_module_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_wdg_module_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_wdg_module_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_wdg_module_method_WdgModule_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_wdg_module_method_WdgModule_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_wdg_module_method_register_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_wdg_module_method_trigger_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_wdg_module_method_restart_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_wdg_module_method_abandon_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_wdg_module_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_wdg_module_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 // - class BCC -
 extern built_in_variable_s bcc_variables[];
