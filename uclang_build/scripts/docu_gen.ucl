@@ -2104,7 +2104,7 @@ while (Blank != (element = obj.next_item()))
 ["Object of class %s." % doc_class_ref("Dict")],
 "Object of class %s containing `JSON` representation of method parameter." % doc_class_ref("String"),"
 obj = Json.create(%s);
-(\"obj: %%s\\n\" %% $obj).print();
+(\"obj: %%s\\n\" %% obj).print();
 " % get_property("Dict","create_example")
 ),/*}}}*/
         "create_nice#2", new MethodDescr
@@ -2116,7 +2116,20 @@ Output is formatted in Human readable format." % doc_class_ref("String"),
 "Object of class %s containing `JSON` representation of method parameter." % doc_class_ref("String"),"
 %s
 obj = Json.create_nice(dict,\"   \");
-(\"obj: %%s\\n\" %% $obj).print();
+(\"obj: %%s\\n\" %% obj).print();
+" % get_code("Dict","dict","create_example")
+),/*}}}*/
+        "create_nice#3", new MethodDescr
+(/*{{{*/
+"Create object of class %s containing `JSON` representation of method parameter.
+Output is formatted in Human readable format, and all but first line are indented by given string." % doc_class_ref("String"),
+["Object of class %s." % doc_class_ref("Dict"),
+ "Object of class %s, representing tabular string." % doc_class_ref("String"),
+ "Object of class %s, representing indentation string." % doc_class_ref("String")],
+"Object of class %s containing `JSON` representation of method parameter." % doc_class_ref("String"),"
+%s
+obj = Json.create_nice(dict,\"   \",\"|||\");
+(\"obj: %%s\\n\" %% obj).print();
 " % get_code("Dict","dict","create_example")
 ),/*}}}*/
         "parse#1", new MethodDescr

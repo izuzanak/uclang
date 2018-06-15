@@ -73,18 +73,12 @@ bool json_print_exception(interpreter_s &it,exception_s &exception)
   switch (exception.type - module.error_base)
   {
   case c_error_JSON_CREATE_UNSUPPORTED_CLASS:
-  {
-    class_record_s &class_record = it.class_records[exception.params[0]];
-
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nJSON create, unsupported class ");
-    print_class_sequence(it.class_symbol_names,it.class_records,class_stack,class_record.parent_record);
-    fprintf(stderr,"%s\n",it.class_symbol_names[class_record.name_idx].data);
+    fprintf(stderr,"\nJSON create, unsupported class\n");
     fprintf(stderr," ---------------------------------------- \n");
-  }
-  break;
+    break;
   case c_error_JSON_CREATE_NO_STRING_DICT_KEY:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -119,7 +113,7 @@ built_in_class_s json_class =
 {/*{{{*/
   "Json",
   c_modifier_public | c_modifier_final,
-  5, json_methods,
+  6, json_methods,
   0, json_variables,
   bic_json_consts,
   bic_json_init,
@@ -148,6 +142,11 @@ built_in_method_s json_methods[] =
     "create_nice#2",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_json_method_create_nice_2
+  },
+  {
+    "create_nice#3",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_json_method_create_nice_3
   },
   {
     "parse#1",
@@ -224,55 +223,53 @@ bool bic_json_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *
     {/*{{{*/
       pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)location_ptr->v_data_ptr;
 
-      if (cs_elm.initialize)
+      if (cs_elm.index == c_idx_not_exist)
       {
-        buffer.push('{');
+        cs_elm.index = 0;
+      }
 
-        cs_elm.index = tree_ptr->root_idx == c_idx_not_exist ?
-          c_idx_not_exist : tree_ptr->get_min_value_idx(tree_ptr->root_idx);
+      if (cs_elm.index < tree_ptr->used)
+      {
+        pointer_map_tree_s_node &node = tree_ptr->data[cs_elm.index++];
 
-        cs_elm.initialize = false;
+        if (node.valid)
+        {
+          buffer.push(cs_elm.initialize ? '{' : ',');
+          cs_elm.initialize = false;
+
+          location_s *key_location = (location_s *)node.object.key;
+          location_s *item_location = it.get_location_value(node.object.value);
+
+          // - ERROR -
+          if (key_location->v_type != c_bi_class_string)
+          {
+            buffer.clear();
+            create_stack.clear();
+
+            exception_s::throw_exception(it,module.error_base + c_error_JSON_CREATE_NO_STRING_DICT_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            return false;
+          }
+
+          // - retrieve key string -
+          string_s *string_ptr = (string_s *)key_location->v_data_ptr;
+
+          buffer.push('"');
+          json_creator_s::append_string(*string_ptr,buffer);
+          buffer.push('"');
+          buffer.push(':');
+
+          // - insert value object to create stack -
+          create_stack.push_blank();
+          create_stack.last().set(item_location,true,c_idx_not_exist);
+        }
       }
       else
       {
-        if (cs_elm.index != c_idx_not_exist)
+        if (cs_elm.initialize)
         {
-          buffer.push(',');
-        }
-      }
-
-      if (cs_elm.index != c_idx_not_exist)
-      {
-        pointer_map_tree_s_node &node = tree_ptr->data[cs_elm.index];
-        location_s *key_location = (location_s *)node.object.key;
-        location_s *item_location = it.get_location_value(node.object.value);
-
-        // - ERROR -
-        if (key_location->v_type != c_bi_class_string)
-        {
-          buffer.clear();
-          create_stack.clear();
-
-          exception_s::throw_exception(it,module.error_base + c_error_JSON_CREATE_NO_STRING_DICT_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);
-          return false;
+          buffer.push('{');
         }
 
-        // - retrieve key string -
-        string_s *string_ptr = (string_s *)key_location->v_data_ptr;
-
-        buffer.push('"');
-        json_creator_s::append_string(*string_ptr,buffer);
-        buffer.push('"');
-        buffer.push(':');
-
-        cs_elm.index = tree_ptr->get_next_idx(cs_elm.index);
-
-        // - insert value object to create stack -
-        create_stack.push_blank();
-        create_stack.last().set(item_location,true,c_idx_not_exist);
-      }
-      else
-      {
         buffer.push('}');
 
         create_stack.pop();
@@ -364,9 +361,7 @@ bool bic_json_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *
         buffer.clear();
         create_stack.clear();
 
-        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_JSON_CREATE_UNSUPPORTED_CLASS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        new_exception->params.push(location_ptr->v_type);
-
+        exception_s::throw_exception(it,module.error_base + c_error_JSON_CREATE_UNSUPPORTED_CLASS,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
     }
@@ -406,268 +401,78 @@ bool bic_json_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,
     return false;
   }
 
-#define JSON_CREATE_NICE_CLEAR() \
-{/*{{{*/\
-  create_stack.clear();\
-  buffer.clear();\
-  indent_buffer.clear();\
-}/*}}}*/
-
-#define JSON_CREATE_NICE_PUSH_TAB() \
-{/*{{{*/\
-  if ((indent_size += tab_str_ptr->size - 1) > indent_buffer.used)\
-  {\
-    indent_buffer.append(tab_str_ptr->size - 1,tab_str_ptr->data);\
-  }\
-}/*}}}*/
-
-#define JSON_CREATE_NICE_POP_TAB() \
-{/*{{{*/\
-  indent_size -= tab_str_ptr->size - 1;\
-}/*}}}*/
-
-#define JSON_CREATE_NICE_INDENT() \
-{/*{{{*/\
-  buffer.push('\n');\
-  buffer.append(indent_size,indent_buffer.data);\
-}/*}}}*/
-
   // - retrieve tabulator pointer -
-  string_s *tab_str_ptr = (string_s *)src_1_location->v_data_ptr;
+  string_s *tabulator_ptr = (string_s *)src_1_location->v_data_ptr;
 
-  // - initialize indent buffer -
-  bc_array_s indent_buffer;
-  indent_buffer.init();
+  // - create empty indentation string -
+  string_s indent;
+  indent.init();
 
-  // - initialize actual indent size -
-  unsigned indent_size = 0;
-
-  // - initialize character buffer -
   bc_array_s buffer;
   buffer.init();
 
-  // - initialize create stack -
-  create_stack_s create_stack;
-  create_stack.init();
+  unsigned error = json_creator_s::create_nice(it,src_0_location,*tabulator_ptr,indent,buffer);
+  indent.clear();
 
-  // - insert source location to create stack -
-  create_stack.push_blank();
-  create_stack.last().set(src_0_location,true,c_idx_not_exist);
+  // - ERROR -
+  if (error != c_idx_not_exist)
+  {
+    buffer.clear();
 
-  do {
+    exception_s::throw_exception(it,module.error_base + error,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
 
-    // - reference to last stack element -
-    cs_element_s &cs_elm = create_stack.last();
+  // - create result string from buffer -
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->size = buffer.used;
+  string_ptr->data = buffer.data;
 
-    // - retrieve location pointer -
-    location_s *location_ptr = (location_s *)cs_elm.location_ptr;
+  BIC_SET_RESULT_STRING(string_ptr);
 
-    // - process dictionary -
-    if (location_ptr->v_type == c_rm_class_dict)
-    {/*{{{*/
-      pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)location_ptr->v_data_ptr;
+  return true;
+}/*}}}*/
 
-      if (cs_elm.initialize)
-      {
-        buffer.push('{');
+bool bic_json_method_create_nice_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
 
-        // - if dictionary is not empty -
-        if (tree_ptr->count != 0)
-        {
-          // - push tabulator to indent -
-          JSON_CREATE_NICE_PUSH_TAB();
+  // - ERROR -
+  if (src_0_location->v_type != c_rm_class_dict ||
+      src_1_location->v_type != c_bi_class_string ||
+      src_2_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_json,"create_nice#3");
+    new_exception->params.push(3);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+    new_exception->params.push(src_2_location->v_type);
 
-          // - insert indentation -
-          JSON_CREATE_NICE_INDENT();
-        }
+    return false;
+  }
 
-        cs_elm.index = tree_ptr->root_idx == c_idx_not_exist ?
-          c_idx_not_exist : tree_ptr->get_min_value_idx(tree_ptr->root_idx);
+  // - retrieve tabulator pointer -
+  string_s *tabulator_ptr = (string_s *)src_1_location->v_data_ptr;
 
-        cs_elm.initialize = false;
-      }
-      else
-      {
-        if (cs_elm.index != c_idx_not_exist)
-        {
-          buffer.push(',');
+  // - retrieve indentation pointer -
+  string_s *indent_ptr = (string_s *)src_2_location->v_data_ptr;
 
-          // - insert indentation -
-          JSON_CREATE_NICE_INDENT();
-        }
-      }
+  bc_array_s buffer;
+  buffer.init();
 
-      if (cs_elm.index != c_idx_not_exist)
-      {
-        pointer_map_tree_s_node &node = tree_ptr->data[cs_elm.index];
-        location_s *key_location = (location_s *)node.object.key;
-        location_s *item_location = it.get_location_value(node.object.value);
+  unsigned error = json_creator_s::create_nice(it,src_0_location,*tabulator_ptr,*indent_ptr,buffer);
 
-        // - ERROR -
-        if (key_location->v_type != c_bi_class_string)
-        {
-          JSON_CREATE_NICE_CLEAR();
+  // - ERROR -
+  if (error != c_idx_not_exist)
+  {
+    buffer.clear();
 
-          exception_s::throw_exception(it,module.error_base + c_error_JSON_CREATE_NO_STRING_DICT_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);
-          return false;
-        }
-
-        // - retrieve key string -
-        string_s *string_ptr = (string_s *)key_location->v_data_ptr;
-
-        buffer.push('"');
-        json_creator_s::append_string(*string_ptr,buffer);
-        buffer.push('"');
-        buffer.push(':');
-        buffer.push(' ');
-
-        cs_elm.index = tree_ptr->get_next_idx(cs_elm.index);
-
-        // - insert value object to create stack -
-        create_stack.push_blank();
-        create_stack.last().set(item_location,true,c_idx_not_exist);
-      }
-      else
-      {
-        // - if dictionary is not empty -
-        if (tree_ptr->count != 0)
-        {
-          // - remove tabulator from indent -
-          JSON_CREATE_NICE_POP_TAB();
-
-          // - insert indentation -
-          JSON_CREATE_NICE_INDENT();
-        }
-
-        buffer.push('}');
-
-        create_stack.pop();
-      }
-    }/*}}}*/
-    else
-    {
-      switch (location_ptr->v_type)
-      {
-      case c_bi_class_blank:
-        {/*{{{*/
-          buffer.append(strlen("null"),"null");
-          create_stack.pop();
-        }/*}}}*/
-        break;
-
-      case c_bi_class_integer:
-        {/*{{{*/
-          long long int value = (long long int)location_ptr->v_data_ptr;
-
-          buffer.reserve(max_number_string_length);
-          buffer.used += snprintf(buffer.data + buffer.used,max_number_string_length,"%" HOST_LL_FORMAT "d",value);
-
-          create_stack.pop();
-        }/*}}}*/
-        break;
-
-      case c_bi_class_float:
-        {/*{{{*/
-          double value = (double)location_ptr->v_data_ptr;
-
-          buffer.reserve(max_number_string_length);
-          buffer.used += snprintf(buffer.data + buffer.used,max_number_string_length,"%f",value);
-
-          create_stack.pop();
-        }/*}}}*/
-        break;
-
-      case c_bi_class_string:
-        {/*{{{*/
-          string_s *string_ptr = (string_s *)location_ptr->v_data_ptr;
-
-          buffer.push('"');
-          json_creator_s::append_string(*string_ptr,buffer);
-          buffer.push('"');
-
-          create_stack.pop();
-        }/*}}}*/
-        break;
-
-      case c_bi_class_array:
-        {/*{{{*/
-          pointer_array_s *array_ptr = (pointer_array_s *)location_ptr->v_data_ptr;
-
-          if (cs_elm.initialize)
-          {
-            buffer.push('[');
-
-            // - if array is not empty -
-            if (array_ptr->used != 0)
-            {
-              // - push tabulator to indent -
-              JSON_CREATE_NICE_PUSH_TAB();
-
-              // - insert indentation -
-              JSON_CREATE_NICE_INDENT();
-            }
-
-            cs_elm.index = 0;
-            cs_elm.initialize = false;
-          }
-          else
-          {
-            if (cs_elm.index < array_ptr->used)
-            {
-              buffer.push(',');
-
-              // - insert indentation -
-              JSON_CREATE_NICE_INDENT();
-            }
-          }
-
-          if (cs_elm.index < array_ptr->used)
-          {
-            location_s *item_location = it.get_location_value(array_ptr->data[cs_elm.index++]);
-
-            // - insert value object to create stack -
-            create_stack.push_blank();
-            create_stack.last().set(item_location,true,c_idx_not_exist);
-          }
-          else
-          {
-            // - if array is not empty -
-            if (array_ptr->used != 0)
-            {
-              // - remove tabulator from indent -
-              JSON_CREATE_NICE_POP_TAB();
-
-              // - insert indentation -
-              JSON_CREATE_NICE_INDENT();
-            }
-
-            buffer.push(']');
-
-            create_stack.pop();
-          }
-        }/*}}}*/
-        break;
-
-      // - ERROR -
-      default:
-        JSON_CREATE_NICE_CLEAR();
-
-        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_JSON_CREATE_UNSUPPORTED_CLASS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        new_exception->params.push(location_ptr->v_type);
-
-        return false;
-      }
-    }
-  } while(create_stack.used > 0);
-
-  // - release create stack -
-  create_stack.clear();
-
-  // - release indent buffer -
-  indent_buffer.clear();
-
-  // - push terminating character to buffer -
-  buffer.push('\0');
+    exception_s::throw_exception(it,module.error_base + error,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
 
   // - create result string from buffer -
   string_s *string_ptr = it.get_new_string_ptr();

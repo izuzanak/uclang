@@ -97,6 +97,265 @@ void json_creator_s::append_string(string_s &a_string,bc_array_s &a_buffer)
   }
 }/*}}}*/
 
+unsigned json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_location,string_s &a_tabulator,string_s &a_indent,bc_array_s &a_buffer)
+{/*{{{*/
+
+#define JSON_CREATE_NICE_CLEAR() \
+{/*{{{*/\
+  create_stack.clear();\
+  indent_buffer.clear();\
+}/*}}}*/
+
+#define JSON_CREATE_NICE_PUSH_TAB() \
+{/*{{{*/\
+  if ((indent_size += a_tabulator.size - 1) > indent_buffer.used)\
+  {\
+    indent_buffer.append(a_tabulator.size - 1,a_tabulator.data);\
+  }\
+}/*}}}*/
+
+#define JSON_CREATE_NICE_POP_TAB() \
+{/*{{{*/\
+  indent_size -= a_tabulator.size - 1;\
+}/*}}}*/
+
+#define JSON_CREATE_NICE_INDENT() \
+{/*{{{*/\
+  a_buffer.push('\n');\
+  a_buffer.append(indent_size,indent_buffer.data);\
+}/*}}}*/
+
+  // - initialize indent buffer -
+  bc_array_s indent_buffer;
+  indent_buffer.init();
+
+  indent_buffer.append(a_indent.size - 1,a_indent.data);
+
+  // - initialize actual indent size -
+  unsigned indent_size = indent_buffer.used;
+
+  // - initialize create stack -
+  create_stack_s create_stack;
+  create_stack.init();
+
+  // - insert source location to create stack -
+  create_stack.push_blank();
+  create_stack.last().set(a_location,true,c_idx_not_exist);
+
+  do {
+
+    // - reference to last stack element -
+    cs_element_s &cs_elm = create_stack.last();
+
+    // - retrieve location pointer -
+    location_s *location_ptr = (location_s *)cs_elm.location_ptr;
+
+    // - process dictionary -
+    if (location_ptr->v_type == c_rm_class_dict)
+    {/*{{{*/
+      pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)location_ptr->v_data_ptr;
+
+      if (cs_elm.index == c_idx_not_exist)
+      {
+        cs_elm.index = 0;
+      }
+
+      if (cs_elm.index < tree_ptr->used)
+      {
+        pointer_map_tree_s_node &node = tree_ptr->data[cs_elm.index++];
+
+        if (node.valid)
+        {
+          if (cs_elm.initialize)
+          {
+            a_buffer.push('{');
+
+            // - push tabulator to indent -
+            JSON_CREATE_NICE_PUSH_TAB();
+
+            // - insert indentation -
+            JSON_CREATE_NICE_INDENT();
+          }
+          else
+          {
+            a_buffer.push(',');
+
+            // - insert indentation -
+            JSON_CREATE_NICE_INDENT();
+          }
+
+          cs_elm.initialize = false;
+
+          location_s *key_location = (location_s *)node.object.key;
+          location_s *item_location = it.get_location_value(node.object.value);
+
+          // - ERROR -
+          if (key_location->v_type != c_bi_class_string)
+          {
+            JSON_CREATE_NICE_CLEAR();
+
+            return c_error_JSON_CREATE_NO_STRING_DICT_KEY;
+          }
+
+          // - retrieve key string -
+          string_s *string_ptr = (string_s *)key_location->v_data_ptr;
+
+          a_buffer.push('"');
+          json_creator_s::append_string(*string_ptr,a_buffer);
+          a_buffer.push('"');
+          a_buffer.push(':');
+          a_buffer.push(' ');
+
+          // - insert value object to create stack -
+          create_stack.push_blank();
+          create_stack.last().set(item_location,true,c_idx_not_exist);
+        }
+      }
+      else
+      {
+        if (cs_elm.initialize)
+        {
+          a_buffer.push('{');
+        }
+        else
+        {
+          // - remove tabulator from indent -
+          JSON_CREATE_NICE_POP_TAB();
+
+          // - insert indentation -
+          JSON_CREATE_NICE_INDENT();
+        }
+
+        a_buffer.push('}');
+
+        create_stack.pop();
+      }
+    }/*}}}*/
+    else
+    {
+      switch (location_ptr->v_type)
+      {
+      case c_bi_class_blank:
+        {/*{{{*/
+          a_buffer.append(strlen("null"),"null");
+          create_stack.pop();
+        }/*}}}*/
+        break;
+
+      case c_bi_class_integer:
+        {/*{{{*/
+          long long int value = (long long int)location_ptr->v_data_ptr;
+
+          a_buffer.reserve(max_number_string_length);
+          a_buffer.used += snprintf(a_buffer.data + a_buffer.used,max_number_string_length,"%" HOST_LL_FORMAT "d",value);
+
+          create_stack.pop();
+        }/*}}}*/
+        break;
+
+      case c_bi_class_float:
+        {/*{{{*/
+          double value = (double)location_ptr->v_data_ptr;
+
+          a_buffer.reserve(max_number_string_length);
+          a_buffer.used += snprintf(a_buffer.data + a_buffer.used,max_number_string_length,"%f",value);
+
+          create_stack.pop();
+        }/*}}}*/
+        break;
+
+      case c_bi_class_string:
+        {/*{{{*/
+          string_s *string_ptr = (string_s *)location_ptr->v_data_ptr;
+
+          a_buffer.push('"');
+          json_creator_s::append_string(*string_ptr,a_buffer);
+          a_buffer.push('"');
+
+          create_stack.pop();
+        }/*}}}*/
+        break;
+
+      case c_bi_class_array:
+        {/*{{{*/
+          pointer_array_s *array_ptr = (pointer_array_s *)location_ptr->v_data_ptr;
+
+          if (cs_elm.initialize)
+          {
+            a_buffer.push('[');
+
+            // - if array is not empty -
+            if (array_ptr->used != 0)
+            {
+              // - push tabulator to indent -
+              JSON_CREATE_NICE_PUSH_TAB();
+
+              // - insert indentation -
+              JSON_CREATE_NICE_INDENT();
+            }
+
+            cs_elm.index = 0;
+            cs_elm.initialize = false;
+          }
+          else
+          {
+            if (cs_elm.index < array_ptr->used)
+            {
+              a_buffer.push(',');
+
+              // - insert indentation -
+              JSON_CREATE_NICE_INDENT();
+            }
+          }
+
+          if (cs_elm.index < array_ptr->used)
+          {
+            location_s *item_location = it.get_location_value(array_ptr->data[cs_elm.index++]);
+
+            // - insert value object to create stack -
+            create_stack.push_blank();
+            create_stack.last().set(item_location,true,c_idx_not_exist);
+          }
+          else
+          {
+            // - if array is not empty -
+            if (array_ptr->used != 0)
+            {
+              // - remove tabulator from indent -
+              JSON_CREATE_NICE_POP_TAB();
+
+              // - insert indentation -
+              JSON_CREATE_NICE_INDENT();
+            }
+
+            a_buffer.push(']');
+
+            create_stack.pop();
+          }
+        }/*}}}*/
+        break;
+
+      // - ERROR -
+      default:
+        JSON_CREATE_NICE_CLEAR();
+
+        return c_error_JSON_CREATE_UNSUPPORTED_CLASS;
+      }
+    }
+  } while(create_stack.used > 0);
+
+  // - release create stack -
+  create_stack.clear();
+
+  // - release indent buffer -
+  indent_buffer.clear();
+
+  // - push terminating character to buffer -
+  a_buffer.push('\0');
+
+  return c_idx_not_exist;
+}/*}}}*/
+
 /*
  * methods of generated structures
  */

@@ -15,14 +15,6 @@ extern built_in_module_s module;
 // - JSON classes -
 extern built_in_class_s *json_classes[];
 
-// - JSON error identifiers -
-enum
-{
-  c_error_JSON_CREATE_UNSUPPORTED_CLASS = 0,
-  c_error_JSON_CREATE_NO_STRING_DICT_KEY,
-  c_error_JSON_PARSE_ERROR,
-};
-
 // - JSON error strings -
 extern const char *json_error_strings[];
 
@@ -43,6 +35,7 @@ void bic_json_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_json_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_json_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_json_method_create_nice_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_json_method_parse_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_json_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_json_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
