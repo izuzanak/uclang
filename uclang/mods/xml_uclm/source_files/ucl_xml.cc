@@ -43,6 +43,168 @@ void xml_creator_s::append_string(const char *a_data,unsigned a_size,bc_array_s 
   }
 }/*}}}*/
 
+void xml_creator_s::create_nice(interpreter_thread_s &it,pointer a_node_ptr,string_s &a_tabulator,string_s &a_indent,bc_array_s &a_buffer)
+{/*{{{*/
+#define XML_CREATE_NICE_PUSH_TAB() \
+{/*{{{*/\
+  if ((indent_size += a_tabulator.size - 1) > indent_buffer.used)\
+  {\
+    indent_buffer.append(a_tabulator.size - 1,a_tabulator.data);\
+  }\
+}/*}}}*/
+
+#define XML_CREATE_NICE_POP_TAB() \
+{/*{{{*/\
+  indent_size -= a_tabulator.size - 1;\
+}/*}}}*/
+
+#define XML_CREATE_NICE_INDENT() \
+{/*{{{*/\
+  a_buffer.push('\n');\
+  xml_creator_s::append_string(indent_buffer.data,indent_size,a_buffer);\
+}/*}}}*/
+
+  // - initialize indent buffer -
+  bc_array_s indent_buffer;
+  indent_buffer.init();
+
+  indent_buffer.append(a_indent.size - 1,a_indent.data);
+
+  // - initialize actual indent size -
+  unsigned indent_size = indent_buffer.used;
+
+  // - initialize create stack -
+  create_stack_s create_stack;
+  create_stack.init();
+
+  // - insert root node to create stack -
+  create_stack.push_blank();
+  create_stack.last().set(a_node_ptr,0,false);
+
+  do {
+
+    // - reference to last stack element -
+    cs_element_s &cs_elm = create_stack.last();
+
+    // - retrieve node pointer -
+    xml_node_s *node_ptr = (xml_node_s *)cs_elm.node_ptr;
+
+    // - format node open tag -
+    if (cs_elm.index == 0)
+    {
+      if (cs_elm.after_node)
+      {
+        XML_CREATE_NICE_INDENT();
+      }
+
+      a_buffer.push('<');
+
+      string_s *name_ptr = (string_s *)node_ptr->name->v_data_ptr;
+      a_buffer.append(name_ptr->size - 1,name_ptr->data);
+
+      // - format node attributes -
+      if (node_ptr->attributes->v_type != c_bi_class_blank)
+      {
+        pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)node_ptr->attributes->v_data_ptr;
+
+        if (tree_ptr->root_idx != c_idx_not_exist)
+        {
+          pointer_map_tree_s_node *tn_ptr = tree_ptr->data;
+          pointer_map_tree_s_node *tn_ptr_end = tn_ptr + tree_ptr->used;
+          do {
+
+            // - tree node is valid -
+            if (tn_ptr->valid)
+            {
+              a_buffer.push(' ');
+
+              string_s *key_ptr = (string_s *)((location_s *)tn_ptr->object.key)->v_data_ptr;
+              a_buffer.append(key_ptr->size - 1,key_ptr->data);
+
+              a_buffer.push('=');
+              a_buffer.push('"');
+
+              string_s *value_ptr = (string_s *)it.get_location_value(tn_ptr->object.value)->v_data_ptr;
+              xml_creator_s::append_string(value_ptr->data,value_ptr->size - 1,a_buffer);
+
+              a_buffer.push('"');
+            }
+          } while(++tn_ptr < tn_ptr_end);
+        }
+      }
+
+      a_buffer.push('>');
+
+      cs_elm.after_node = true;
+    }
+
+    // - process node contents -
+    if (node_ptr->conts->v_type != c_bi_class_blank)
+    {
+      pointer_array_s *conts_array = (pointer_array_s *)node_ptr->conts->v_data_ptr;
+
+      if (cs_elm.index < conts_array->used)
+      {
+        location_s *item_location = it.get_location_value(conts_array->data[cs_elm.index++]);
+
+        if (item_location->v_type == c_bi_class_xml_node)
+        {
+          XML_CREATE_NICE_PUSH_TAB();
+
+          bool cs_elm_after_node = cs_elm.after_node;
+          cs_elm.after_node = true;
+
+          create_stack.push_blank();
+          create_stack.last().set(item_location->v_data_ptr,0,cs_elm_after_node);
+        }
+        else if (item_location->v_type == c_bi_class_string)
+        {
+          string_s *string_ptr = (string_s *)item_location->v_data_ptr;
+          xml_creator_s::append_string(string_ptr->data,string_ptr->size - 1,a_buffer);
+
+          cs_elm.after_node = false;
+        }
+        else
+        {
+          cassert(0);
+        }
+
+        continue;
+      }
+    }
+
+    // - format node close tag -
+    {
+      if (cs_elm.after_node && cs_elm.index > 0)
+      {
+        XML_CREATE_NICE_INDENT();
+      }
+
+      a_buffer.push('<');
+      a_buffer.push('/');
+
+      string_s *name_ptr = (string_s *)node_ptr->name->v_data_ptr;
+      a_buffer.append(name_ptr->size - 1,name_ptr->data);
+
+      a_buffer.push('>');
+    }
+
+    XML_CREATE_NICE_POP_TAB();
+
+    create_stack.pop();
+
+  } while(create_stack.used > 0);
+
+  // - release create stack -
+  create_stack.clear();
+
+  // - release indent buffer -
+  indent_buffer.clear();
+
+  // - push terminating character to buffer -
+  a_buffer.push('\0');
+}/*}}}*/
+
 /*
  * methods of structure xml_node_s
  */

@@ -29,6 +29,7 @@ extern unsigned c_rm_class_dict;
 struct xml_creator_s
 {
   static void append_string(const char *a_data,unsigned a_size,bc_array_s &a_buffer);
+  static void create_nice(interpreter_thread_s &it,pointer a_node_ptr,string_s &a_tabulator,string_s &a_indent,bc_array_s &a_buffer);
 };
 
 /*
