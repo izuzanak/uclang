@@ -772,7 +772,7 @@ built_in_variable_s unicode_string_variables[] =
   ui_array_s *ustring_ptr = (ui_array_s *)dst_location->v_data_ptr;\
   \
   /* - ERROR - */\
-  if (index < 0 || index >= (ustring_ptr->used)) {\
+  if (index < 0 || index >= (ustring_ptr->used - 1)) {\
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_UNICODE_STRING_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(index);\
     \
@@ -823,22 +823,24 @@ built_in_variable_s unicode_string_variables[] =
   }\
 \
   ui_array_s *first_ptr = (ui_array_s *)dst_location->v_data_ptr;\
-  unsigned f_length = first_ptr->used;\
+  unsigned f_length = first_ptr->used - 1;\
 \
   ui_array_s *result_ptr;\
 \
   if (src_0_location->v_type == c_bi_class_unicode_string)\
   {\
     ui_array_s *second_ptr = (ui_array_s *)src_0_location->v_data_ptr;\
-    unsigned s_length = second_ptr->used;\
+    unsigned s_length = second_ptr->used - 1;\
 \
     /* - create unicode string - */\
     result_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));\
-    result_ptr->init_size(f_length + s_length);\
+    result_ptr->init_size(f_length + s_length + 1);\
 \
     /* - construct result unicode string - */\
     memcpy(result_ptr->data,first_ptr->data,f_length*sizeof(unsigned));\
     memcpy(result_ptr->data + f_length,second_ptr->data,s_length*sizeof(unsigned));\
+\
+    result_ptr->data[f_length + s_length] = 0;\
     result_ptr->used = result_ptr->size;\
   }\
   else\
@@ -848,7 +850,7 @@ built_in_variable_s unicode_string_variables[] =
 \
     /* - create unicode string - */\
     result_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));\
-    result_ptr->init_size(f_length + s_length);\
+    result_ptr->init_size(f_length + s_length + 1);\
 \
     /* - construct result unicode string - */\
     memcpy(result_ptr->data,first_ptr->data,f_length*sizeof(unsigned));\
@@ -858,7 +860,8 @@ built_in_variable_s unicode_string_variables[] =
         (utf8proc_int32_t *)result_ptr->data + f_length,s_length,\
         (utf8proc_option_t)0);\
 \
-    result_ptr->used = f_length + cp_count;\
+    result_ptr->data[f_length + cp_count] = 0;\
+    result_ptr->used = f_length + cp_count + 1;\
   }\
 /*}}}*/
 
@@ -881,21 +884,42 @@ built_in_variable_s unicode_string_variables[] =
   }\
 \
   ui_array_s *source_ptr = (ui_array_s *)dst_location->v_data_ptr;\
-  unsigned s_length = source_ptr->used;\
+  unsigned s_length = source_ptr->used - 1;\
 \
   /* - create unicode string - */\
   ui_array_s *result_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));\
-  result_ptr->init();\
+  result_ptr->init_size(s_length*mult + 1);\
 \
   if (s_length != 0 && mult > 0)\
   {\
-    result_ptr->copy_resize(s_length*mult);\
-\
     /* - construct result unicode string - */\
     do {\
       memcpy(result_ptr->data + result_ptr->used,source_ptr->data,s_length*sizeof(unsigned));\
-    } while((result_ptr->used += s_length) < result_ptr->size);\
+    } while((result_ptr->used += s_length) < result_ptr->size - 1);\
   }\
+\
+  result_ptr->push(0);\
+/*}}}*/
+
+#define BIC_UNICODE_STRING_TRANSFORM_STRING(CODE_POINT_CODE) \
+/*{{{*/\
+\
+  /* - create target unicode string - */\
+  ui_array_s *target_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));\
+  target_ptr->init_size(source_ptr->used);\
+\
+  if (source_ptr->used > 1)\
+  {\
+    utf8proc_int32_t *s_ptr = (utf8proc_int32_t *)source_ptr->data;\
+    utf8proc_int32_t *s_ptr_end = s_ptr + source_ptr->used - 1;\
+    utf8proc_int32_t *t_ptr = (utf8proc_int32_t *)target_ptr->data;\
+    do {\
+      CODE_POINT_CODE;\
+    } while(++t_ptr,++s_ptr < s_ptr_end);\
+  }\
+\
+  target_ptr->data[source_ptr->used - 1] = 0;\
+  target_ptr->used = source_ptr->used;\
 /*}}}*/
 
 void bic_unicode_string_consts(location_array_s &const_locations)
@@ -927,10 +951,10 @@ int bic_unicode_string_compare(location_s *first_loc,location_s *second_loc)
   if (first->used < second->used) { return -1; }
   if (first->used > second->used) { return 1; }
 
-  if (first->used != 0)
+  if (first->used > 1)
   {
     utf8proc_int32_t *f_ptr = (utf8proc_int32_t *)first->data;
-    utf8proc_int32_t *f_ptr_end = f_ptr + first->used;
+    utf8proc_int32_t *f_ptr_end = f_ptr + first->used - 1;
     utf8proc_int32_t *s_ptr = (utf8proc_int32_t *)second->data;
 
     do {
@@ -950,7 +974,7 @@ int bic_unicode_string_compare(location_s *first_loc,location_s *second_loc)
 unsigned bic_unicode_string_length(location_s *location_ptr)
 {/*{{{*/
   ui_array_s *ustring_ptr = (ui_array_s *)location_ptr->v_data_ptr;
-  return ustring_ptr->used;
+  return ustring_ptr->used - 1;
 }/*}}}*/
 
 location_s *bic_unicode_string_item(interpreter_thread_s &it,location_s *location_ptr,unsigned index)
@@ -958,7 +982,7 @@ location_s *bic_unicode_string_item(interpreter_thread_s &it,location_s *locatio
   ui_array_s *ustring_ptr = (ui_array_s *)location_ptr->v_data_ptr;
 
   // FIXME TODO check index ...
-  cassert(index < ustring_ptr->used);
+  cassert(index < ustring_ptr->used - 1);
 
   utf8proc_int32_t result = (utf8proc_int32_t)ustring_ptr->data[index];
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_char,result);
@@ -969,7 +993,7 @@ location_s *bic_unicode_string_item(interpreter_thread_s &it,location_s *locatio
 unsigned bic_unicode_string_first_idx(location_s *location_ptr)
 {/*{{{*/
   ui_array_s *ustring_ptr = (ui_array_s *)location_ptr->v_data_ptr;
-  return ustring_ptr->used != 0 ? 0 : c_idx_not_exist;
+  return ustring_ptr->used > 1 ? 0 : c_idx_not_exist;
 }/*}}}*/
 
 unsigned bic_unicode_string_next_idx(location_s *location_ptr,unsigned index)
@@ -977,18 +1001,18 @@ unsigned bic_unicode_string_next_idx(location_s *location_ptr,unsigned index)
   ui_array_s *ustring_ptr = (ui_array_s *)location_ptr->v_data_ptr;
 
   // FIXME TODO check index ...
-  cassert(index < ustring_ptr->used);
+  cassert(index < ustring_ptr->used - 1);
 
-  return (index + 1 < ustring_ptr->used) ? index + 1 : c_idx_not_exist;
+  return (index + 1 < ustring_ptr->used - 1) ? index + 1 : c_idx_not_exist;
 }/*}}}*/
 
 location_s *bic_unicode_string_from_slice(interpreter_thread_s &it,location_s *location_ptr,pointer_array_s &slice_array)
 {/*{{{*/
   ui_array_s *ustring_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));
-  ustring_ptr->init_size(slice_array.used);
-  ustring_ptr->used = slice_array.used;
+  ustring_ptr->init_size(slice_array.used + 1);
+  ustring_ptr->used = ustring_ptr->size;
 
-  if (slice_array.used != 0)
+  if (slice_array.used > 0)
   {
     pointer *l_ptr = slice_array.data;
     pointer *l_ptr_end = l_ptr + slice_array.used;
@@ -999,6 +1023,8 @@ location_s *bic_unicode_string_from_slice(interpreter_thread_s &it,location_s *l
     }
     while(++c_ptr,++l_ptr < l_ptr_end);
   }
+
+  ustring_ptr->data[slice_array.used] = 0;
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_string,ustring_ptr);
 
@@ -1131,7 +1157,7 @@ bool bic_unicode_string_method_UnicodeString_1(interpreter_thread_s &it,unsigned
 
   // - create unicode string -
   ui_array_s *ustring_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));
-  ustring_ptr->init_size(source_length);
+  ustring_ptr->init_size(source_length + 1);
 
   utf8proc_ssize_t cp_count = utf8proc_decompose(
       (const utf8proc_uint8_t *)source_ptr->data,source_length,
@@ -1148,33 +1174,13 @@ bool bic_unicode_string_method_UnicodeString_1(interpreter_thread_s &it,unsigned
     return false;
   }
 
-  // - set count of code points -
-  ustring_ptr->used = cp_count;
+  ustring_ptr->data[cp_count] = 0;
+  ustring_ptr->used = cp_count + 1;
 
   dst_location->v_data_ptr = (ui_array_s *)ustring_ptr;
 
   return true;
 }/*}}}*/
-
-#define BIC_UNICODE_STRING_TRANSFORM_STRING(CODE_POINT_CODE) \
-/*{{{*/\
-\
-  /* - create target unicode string - */\
-  ui_array_s *target_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));\
-  target_ptr->init_size(source_ptr->used);\
-\
-  if (source_ptr->used != 0)\
-  {\
-    utf8proc_int32_t *s_ptr = (utf8proc_int32_t *)source_ptr->data;\
-    utf8proc_int32_t *s_ptr_end = s_ptr + source_ptr->used;\
-    utf8proc_int32_t *t_ptr = (utf8proc_int32_t *)target_ptr->data;\
-    do {\
-      CODE_POINT_CODE;\
-    } while(++t_ptr,++s_ptr < s_ptr_end);\
-  }\
-\
-  target_ptr->used = source_ptr->used;\
-/*}}}*/
 
 bool bic_unicode_string_method_to_lower_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
@@ -1237,11 +1243,11 @@ bool bic_unicode_string_method_head_1(interpreter_thread_s &it,unsigned stack_ba
 
   if (length < 0)
   {
-    length = ustring_ptr->used + length;
+    length = ustring_ptr->used - 1 + length;
   }
 
   // - ERROR -
-  if (length < 0 || length > ustring_ptr->used)
+  if (length < 0 || length > ustring_ptr->used - 1)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_UNICODE_STRING_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(original_length);
@@ -1251,11 +1257,12 @@ bool bic_unicode_string_method_head_1(interpreter_thread_s &it,unsigned stack_ba
 
   // - create unicode string -
   ui_array_s *new_ustring_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));
-  new_ustring_ptr->init_size(length);
+  new_ustring_ptr->init_size(length + 1);
 
   // - copy unicode string head -
   memcpy(new_ustring_ptr->data,ustring_ptr->data,length*sizeof(unsigned));
-  new_ustring_ptr->used = length;
+  new_ustring_ptr->data[length] = 0;
+  new_ustring_ptr->used = length + 1;
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_string,new_ustring_ptr);
   BIC_SET_RESULT(new_location);
@@ -1288,11 +1295,11 @@ bool bic_unicode_string_method_tail_1(interpreter_thread_s &it,unsigned stack_ba
 
   if (length < 0)
   {
-    length = ustring_ptr->used + length;
+    length = ustring_ptr->used - 1 + length;
   }
 
   // - ERROR -
-  if (length < 0 || length > ustring_ptr->used)
+  if (length < 0 || length > ustring_ptr->used - 1)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_UNICODE_STRING_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(original_length);
@@ -1302,11 +1309,12 @@ bool bic_unicode_string_method_tail_1(interpreter_thread_s &it,unsigned stack_ba
 
   // - create unicode string -
   ui_array_s *new_ustring_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));
-  new_ustring_ptr->init_size(length);
+  new_ustring_ptr->init_size(length + 1);
 
   // - copy unicode string tail -
-  memcpy(new_ustring_ptr->data,ustring_ptr->data + (ustring_ptr->used - length),length*sizeof(unsigned));
-  new_ustring_ptr->used = length;
+  memcpy(new_ustring_ptr->data,ustring_ptr->data + (ustring_ptr->used - 1 - length),length*sizeof(unsigned));
+  new_ustring_ptr->data[length] = 0;
+  new_ustring_ptr->used = length + 1;
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_string,new_ustring_ptr);
   BIC_SET_RESULT(new_location);
@@ -1342,20 +1350,20 @@ bool bic_unicode_string_method_range_2(interpreter_thread_s &it,unsigned stack_b
   long long int first_index = original_first_index;
   if (first_index < 0)
   {
-    first_index = ustring_ptr->used + first_index;
+    first_index = ustring_ptr->used - 1 + first_index;
   }
 
   // - adjust second_index parameter -
   long long int second_index = original_second_index;
   if (second_index < 0)
   {
-    second_index = ustring_ptr->used + second_index;
+    second_index = ustring_ptr->used - 1 + second_index;
   }
 
   // - ERROR -
   if (first_index > second_index ||
-      first_index < 0 || first_index >= ustring_ptr->used ||
-      second_index < 0 || second_index >= ustring_ptr->used)
+      first_index < 0 || first_index >= ustring_ptr->used - 1 ||
+      second_index < 0 || second_index >= ustring_ptr->used - 1)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_UNICODE_STRING_WRONG_RANGE_INDEXES,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(original_first_index);
@@ -1369,11 +1377,12 @@ bool bic_unicode_string_method_range_2(interpreter_thread_s &it,unsigned stack_b
 
   // - create unicode string -
   ui_array_s *new_ustring_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));
-  new_ustring_ptr->init_size(length);
+  new_ustring_ptr->init_size(length + 1);
 
   // - copy unicode string range -
   memcpy(new_ustring_ptr->data,ustring_ptr->data + first_index,length*sizeof(unsigned));
-  new_ustring_ptr->used = length;
+  new_ustring_ptr->data[length] = 0;
+  new_ustring_ptr->used = length + 1;
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_string,new_ustring_ptr);
   BIC_SET_RESULT(new_location);
@@ -1397,10 +1406,10 @@ bool bic_unicode_string_method_compare_1(interpreter_thread_s &it,unsigned stack
     {
       result = 0;
 
-      if (first->used != 0)
+      if (first->used > 1)
       {
         utf8proc_int32_t *f_ptr = (utf8proc_int32_t *)first->data;
-        utf8proc_int32_t *f_ptr_end = f_ptr + first->used;
+        utf8proc_int32_t *f_ptr_end = f_ptr + first->used - 1;
         utf8proc_int32_t *s_ptr = (utf8proc_int32_t *)second->data;
 
         do {
@@ -1443,7 +1452,7 @@ bool bic_unicode_string_method_first_idx_0(interpreter_thread_s &it,unsigned sta
 
   ui_array_s *ustring_ptr = (ui_array_s *)dst_location->v_data_ptr;
 
-  if (ustring_ptr->used != 0)
+  if (ustring_ptr->used > 1)
   {
     BIC_SIMPLE_SET_RES(c_bi_class_integer,0);
   }
@@ -1475,7 +1484,7 @@ bool bic_unicode_string_method_next_idx_1(interpreter_thread_s &it,unsigned stac
 
   BIC_UNICODE_STRING_CHECK_INDEX();
 
-  if (++index < ustring_ptr->used)
+  if (++index < ustring_ptr->used - 1)
   {
     BIC_SIMPLE_SET_RES(c_bi_class_integer,index);
   }
@@ -1491,7 +1500,7 @@ bool bic_unicode_string_method_length_0(interpreter_thread_s &it,unsigned stack_
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  long long int result = ((ui_array_s *)dst_location->v_data_ptr)->used;
+  long long int result = ((ui_array_s *)dst_location->v_data_ptr)->used - 1;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 

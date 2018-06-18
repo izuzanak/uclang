@@ -9,10 +9,10 @@ include "ucl_utf8proc.h"
 
 bool utf8proc_s::unicode_to_utf8(ui_array_s &a_ustring,bc_array_s &a_buffer)
 {/*{{{*/
-  if (a_ustring.used != 0)
+  if (a_ustring.used > 1)
   {
     utf8proc_int32_t *cp_ptr = (utf8proc_int32_t *)a_ustring.data;
-    utf8proc_int32_t *cp_ptr_end = cp_ptr + a_ustring.used;
+    utf8proc_int32_t *cp_ptr_end = cp_ptr + a_ustring.used - 1;
     do {
 
       // - ERROR -
@@ -34,14 +34,14 @@ bool utf8proc_s::unicode_to_utf8(ui_array_s &a_ustring,bc_array_s &a_buffer)
 
 void utf8proc_s::unicode_print(ui_array_s &a_ustring)
 {/*{{{*/
-  if (a_ustring.used != 0)
+  if (a_ustring.used > 1)
   {
     const utf8proc_ssize_t c_buff_size = 256;
     utf8proc_uint8_t buffer[c_buff_size];
     utf8proc_ssize_t buff_used = 0;
 
     utf8proc_int32_t *cp_ptr = (utf8proc_int32_t *)a_ustring.data;
-    utf8proc_int32_t *cp_ptr_end = cp_ptr + a_ustring.used;
+    utf8proc_int32_t *cp_ptr_end = cp_ptr + a_ustring.used - 1;
     do {
 
       // - check if code point is valid -
