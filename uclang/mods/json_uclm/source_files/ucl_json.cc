@@ -8,43 +8,43 @@ include "json_parse_actions.h"
  * constants and definitions
  */
 
-const unsigned json_rule_head_idxs[c_json_rule_cnt] = {14, 15, 16, 17, 17, 18, 19, 19, 20, 21, 22, 22, 23, 24, 24, 25, 25, 25, 25, 25, 25, 25, 25, 26, };
+const unsigned json_rule_head_idxs[c_json_rule_cnt] = {17, 18, 19, 20, 20, 21, 22, 22, 23, 24, 25, 25, 26, 27, 27, 28, 28, 28, 28, 28, 28, 28, 28, 29, };
 const unsigned json_rule_body_lengths[c_json_rule_cnt] = {1, 2, 2, 1, 2, 1, 3, 1, 3, 2, 1, 2, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, };
 
 const unsigned json_lalr_table[json_lalr_state_cnt*c_json_terminal_plus_nonterminal_cnt] =
 {/*{{{*/
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,    JSON_SHIFT(5),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,     JSON_GOTO(1),     JSON_GOTO(2),     JSON_GOTO(3),     JSON_GOTO(4),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,    JSON_SHIFT(6),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,    JSON_SHIFT(7),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-   JSON_SHIFT(11),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_REDUCE(3),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,     JSON_GOTO(8),     JSON_GOTO(9),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,    JSON_GOTO(10),
-   JSON_REDUCE(5),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_REDUCE(5),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_REDUCE(2),       json_blank,   JSON_REDUCE(2),   JSON_REDUCE(2),       json_blank,       json_blank,   JSON_REDUCE(2),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_REDUCE(4),       json_blank,       json_blank,   JSON_SHIFT(12),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_REDUCE(7),       json_blank,       json_blank,   JSON_REDUCE(7),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_SHIFT(13),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(23),       json_blank,  JSON_REDUCE(23),  JSON_REDUCE(23),  JSON_REDUCE(23),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-   JSON_SHIFT(11),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,    JSON_GOTO(14),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,    JSON_GOTO(10),
-   JSON_SHIFT(11),   JSON_SHIFT(17),   JSON_SHIFT(18),   JSON_SHIFT(21),   JSON_SHIFT(22),   JSON_SHIFT(23),    JSON_SHIFT(5),       json_blank,   JSON_SHIFT(26),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,    JSON_GOTO(19),     JSON_GOTO(3),     JSON_GOTO(4),       json_blank,       json_blank,    JSON_GOTO(20),    JSON_GOTO(24),    JSON_GOTO(25),       json_blank,    JSON_GOTO(15),    JSON_GOTO(16),
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_REDUCE(6),       json_blank,       json_blank,   JSON_REDUCE(6),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_REDUCE(8),       json_blank,       json_blank,   JSON_REDUCE(8),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(15),       json_blank,  JSON_REDUCE(15),  JSON_REDUCE(15),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(16),       json_blank,  JSON_REDUCE(16),  JSON_REDUCE(16),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(17),       json_blank,  JSON_REDUCE(17),  JSON_REDUCE(17),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(18),       json_blank,  JSON_REDUCE(18),  JSON_REDUCE(18),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(19),       json_blank,  JSON_REDUCE(19),  JSON_REDUCE(19),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(20),       json_blank,  JSON_REDUCE(20),  JSON_REDUCE(20),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(21),       json_blank,  JSON_REDUCE(21),  JSON_REDUCE(21),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(22),       json_blank,  JSON_REDUCE(22),  JSON_REDUCE(22),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_SHIFT(27),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-   JSON_SHIFT(11),   JSON_SHIFT(17),   JSON_SHIFT(18),   JSON_SHIFT(21),   JSON_SHIFT(22),   JSON_SHIFT(23),    JSON_SHIFT(5),       json_blank,   JSON_SHIFT(26),  JSON_REDUCE(10),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,    JSON_GOTO(19),     JSON_GOTO(3),     JSON_GOTO(4),       json_blank,       json_blank,    JSON_GOTO(20),    JSON_GOTO(24),    JSON_GOTO(25),    JSON_GOTO(28),    JSON_GOTO(29),    JSON_GOTO(16),
-  JSON_REDUCE(12),  JSON_REDUCE(12),  JSON_REDUCE(12),  JSON_REDUCE(12),  JSON_REDUCE(12),  JSON_REDUCE(12),  JSON_REDUCE(12),       json_blank,  JSON_REDUCE(12),  JSON_REDUCE(12),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_REDUCE(9),       json_blank,   JSON_REDUCE(9),   JSON_REDUCE(9),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(11),   JSON_SHIFT(30),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(14),  JSON_REDUCE(14),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
-   JSON_SHIFT(11),   JSON_SHIFT(17),   JSON_SHIFT(18),   JSON_SHIFT(21),   JSON_SHIFT(22),   JSON_SHIFT(23),    JSON_SHIFT(5),       json_blank,   JSON_SHIFT(26),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,    JSON_GOTO(19),     JSON_GOTO(3),     JSON_GOTO(4),       json_blank,       json_blank,    JSON_GOTO(20),    JSON_GOTO(24),    JSON_GOTO(25),       json_blank,    JSON_GOTO(31),    JSON_GOTO(16),
-       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(13),  JSON_REDUCE(13),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,    JSON_SHIFT(5),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,     JSON_GOTO(1),     JSON_GOTO(2),     JSON_GOTO(3),     JSON_GOTO(4),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,    JSON_SHIFT(6),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,    JSON_SHIFT(7),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+   JSON_SHIFT(11),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_REDUCE(3),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,     JSON_GOTO(8),     JSON_GOTO(9),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,    JSON_GOTO(10),
+   JSON_REDUCE(5),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_REDUCE(5),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_REDUCE(2),       json_blank,   JSON_REDUCE(2),   JSON_REDUCE(2),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_REDUCE(2),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_REDUCE(4),       json_blank,       json_blank,   JSON_SHIFT(12),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_REDUCE(7),       json_blank,       json_blank,   JSON_REDUCE(7),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_SHIFT(13),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(23),       json_blank,  JSON_REDUCE(23),  JSON_REDUCE(23),  JSON_REDUCE(23),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+   JSON_SHIFT(11),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,    JSON_GOTO(14),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,    JSON_GOTO(10),
+   JSON_SHIFT(11),   JSON_SHIFT(17),   JSON_SHIFT(18),   JSON_SHIFT(21),   JSON_SHIFT(22),   JSON_SHIFT(23),    JSON_SHIFT(5),       json_blank,   JSON_SHIFT(26),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,    JSON_GOTO(19),     JSON_GOTO(3),     JSON_GOTO(4),       json_blank,       json_blank,    JSON_GOTO(20),    JSON_GOTO(24),    JSON_GOTO(25),       json_blank,    JSON_GOTO(15),    JSON_GOTO(16),
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_REDUCE(6),       json_blank,       json_blank,   JSON_REDUCE(6),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_REDUCE(8),       json_blank,       json_blank,   JSON_REDUCE(8),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(15),       json_blank,  JSON_REDUCE(15),  JSON_REDUCE(15),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(16),       json_blank,  JSON_REDUCE(16),  JSON_REDUCE(16),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(17),       json_blank,  JSON_REDUCE(17),  JSON_REDUCE(17),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(18),       json_blank,  JSON_REDUCE(18),  JSON_REDUCE(18),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(19),       json_blank,  JSON_REDUCE(19),  JSON_REDUCE(19),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(20),       json_blank,  JSON_REDUCE(20),  JSON_REDUCE(20),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(21),       json_blank,  JSON_REDUCE(21),  JSON_REDUCE(21),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(22),       json_blank,  JSON_REDUCE(22),  JSON_REDUCE(22),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_SHIFT(27),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+   JSON_SHIFT(11),   JSON_SHIFT(17),   JSON_SHIFT(18),   JSON_SHIFT(21),   JSON_SHIFT(22),   JSON_SHIFT(23),    JSON_SHIFT(5),       json_blank,   JSON_SHIFT(26),  JSON_REDUCE(10),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,    JSON_GOTO(19),     JSON_GOTO(3),     JSON_GOTO(4),       json_blank,       json_blank,    JSON_GOTO(20),    JSON_GOTO(24),    JSON_GOTO(25),    JSON_GOTO(28),    JSON_GOTO(29),    JSON_GOTO(16),
+  JSON_REDUCE(12),  JSON_REDUCE(12),  JSON_REDUCE(12),  JSON_REDUCE(12),  JSON_REDUCE(12),  JSON_REDUCE(12),  JSON_REDUCE(12),       json_blank,  JSON_REDUCE(12),  JSON_REDUCE(12),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,   JSON_REDUCE(9),       json_blank,   JSON_REDUCE(9),   JSON_REDUCE(9),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(11),   JSON_SHIFT(30),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(14),  JSON_REDUCE(14),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
+   JSON_SHIFT(11),   JSON_SHIFT(17),   JSON_SHIFT(18),   JSON_SHIFT(21),   JSON_SHIFT(22),   JSON_SHIFT(23),    JSON_SHIFT(5),       json_blank,   JSON_SHIFT(26),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,    JSON_GOTO(19),     JSON_GOTO(3),     JSON_GOTO(4),       json_blank,       json_blank,    JSON_GOTO(20),    JSON_GOTO(24),    JSON_GOTO(25),       json_blank,    JSON_GOTO(31),    JSON_GOTO(16),
+       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,  JSON_REDUCE(13),  JSON_REDUCE(13),       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,       json_blank,
 };/*}}}*/
 
 /*
@@ -398,7 +398,7 @@ unsigned json_parser_s::recognize_terminal(unsigned &a_input_idx)
     a_input_idx++;\
   }
 
-   unsigned short in_char;
+   unsigned char in_char;
 
 // - STATE 0 -
    JSON_GET_NEXT_CHAR();
@@ -407,56 +407,62 @@ unsigned json_parser_s::recognize_terminal(unsigned &a_input_idx)
       goto state_1_label;
 
    if (in_char >= 9 && in_char < 11)
-      goto state_15_label;
+      goto state_17_label;
 
    if (in_char == 32)
-      goto state_15_label;
+      goto state_17_label;
 
    if (in_char == 34)
       goto state_2_label;
 
-   if (in_char == 44)
+   if (in_char == 35)
       goto state_3_label;
 
-   if (in_char == 45)
+   if (in_char == 44)
       goto state_4_label;
 
-   if (in_char == 48)
+   if (in_char == 45)
       goto state_5_label;
 
-   if (in_char >= 49 && in_char < 58)
+   if (in_char == 47)
       goto state_6_label;
 
-   if (in_char == 58)
+   if (in_char == 48)
       goto state_7_label;
 
-   if (in_char == 91)
+   if (in_char >= 49 && in_char < 58)
       goto state_8_label;
 
-   if (in_char == 93)
+   if (in_char == 58)
       goto state_9_label;
 
-   if (in_char == 102)
+   if (in_char == 91)
       goto state_10_label;
 
-   if (in_char == 110)
+   if (in_char == 93)
       goto state_11_label;
 
-   if (in_char == 116)
+   if (in_char == 102)
       goto state_12_label;
 
-   if (in_char == 123)
+   if (in_char == 110)
       goto state_13_label;
 
-   if (in_char == 125)
+   if (in_char == 116)
       goto state_14_label;
+
+   if (in_char == 123)
+      goto state_15_label;
+
+   if (in_char == 125)
+      goto state_16_label;
 
    return c_idx_not_exist;
 
 // - STATE 1 -
 state_1_label:
-   JSON_CLOSE_CHAR(13)
-   return 13;
+   JSON_CLOSE_CHAR(16);
+   return 16;
 
 // - STATE 2 -
 state_2_label:
@@ -467,147 +473,176 @@ state_2_label:
       goto state_2_label;
 
    if (in_char == 34)
-      goto state_16_label;
+      goto state_18_label;
 
    if (in_char >= 35 && in_char < 92)
       goto state_2_label;
 
    if (in_char == 92)
-      goto state_17_label;
+      goto state_19_label;
 
-   if (in_char >= 93 && in_char < 256)
+   if (in_char >= 93)
       goto state_2_label;
 
    return c_idx_not_exist;
 
 // - STATE 3 -
 state_3_label:
-   JSON_CLOSE_CHAR(10)
-   return 10;
+   JSON_CLOSE_CHAR(c_idx_not_exist);
+   JSON_GET_NEXT_CHAR();
+
+   if (in_char < 10)
+      goto state_3_label;
+
+   if (in_char == 10)
+      goto state_20_label;
+
+   if (in_char >= 11)
+      goto state_3_label;
+
+   return c_idx_not_exist;
 
 // - STATE 4 -
 state_4_label:
+   JSON_CLOSE_CHAR(10);
+   return 10;
+
+// - STATE 5 -
+state_5_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
 
    if (in_char == 48)
-      goto state_5_label;
+      goto state_7_label;
 
    if (in_char >= 49 && in_char < 58)
-      goto state_6_label;
+      goto state_8_label;
 
    return c_idx_not_exist;
-
-// - STATE 5 -
-state_5_label:
-   JSON_CLOSE_CHAR(1)
-   JSON_GET_NEXT_CHAR();
-
-   if (in_char == 46)
-      goto state_18_label;
-
-   if (in_char == 69)
-      goto state_19_label;
-
-   if (in_char == 101)
-      goto state_19_label;
-
-   return 1;
 
 // - STATE 6 -
 state_6_label:
-   JSON_CLOSE_CHAR(1)
+   JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
 
-   if (in_char == 46)
-      goto state_18_label;
+   if (in_char == 42)
+      goto state_21_label;
 
-   if (in_char >= 48 && in_char < 58)
-      goto state_6_label;
+   if (in_char == 47)
+      goto state_22_label;
 
-   if (in_char == 69)
-      goto state_19_label;
-
-   if (in_char == 101)
-      goto state_19_label;
-
-   return 1;
+   return c_idx_not_exist;
 
 // - STATE 7 -
 state_7_label:
-   JSON_CLOSE_CHAR(11)
-   return 11;
+   JSON_CLOSE_CHAR(1);
+   JSON_GET_NEXT_CHAR();
+
+   if (in_char == 46)
+      goto state_23_label;
+
+   if (in_char == 69)
+      goto state_24_label;
+
+   if (in_char == 101)
+      goto state_24_label;
+
+   return 1;
 
 // - STATE 8 -
 state_8_label:
-   JSON_CLOSE_CHAR(8)
-   return 8;
+   JSON_CLOSE_CHAR(1);
+   JSON_GET_NEXT_CHAR();
+
+   if (in_char == 46)
+      goto state_23_label;
+
+   if (in_char >= 48 && in_char < 58)
+      goto state_8_label;
+
+   if (in_char == 69)
+      goto state_24_label;
+
+   if (in_char == 101)
+      goto state_24_label;
+
+   return 1;
 
 // - STATE 9 -
 state_9_label:
-   JSON_CLOSE_CHAR(9)
-   return 9;
+   JSON_CLOSE_CHAR(11);
+   return 11;
 
 // - STATE 10 -
 state_10_label:
-   JSON_CLOSE_CHAR(c_idx_not_exist);
-   JSON_GET_NEXT_CHAR();
-
-   if (in_char == 97)
-      goto state_20_label;
-
-   return c_idx_not_exist;
+   JSON_CLOSE_CHAR(8);
+   return 8;
 
 // - STATE 11 -
 state_11_label:
-   JSON_CLOSE_CHAR(c_idx_not_exist);
-   JSON_GET_NEXT_CHAR();
-
-   if (in_char == 117)
-      goto state_21_label;
-
-   return c_idx_not_exist;
+   JSON_CLOSE_CHAR(9);
+   return 9;
 
 // - STATE 12 -
 state_12_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
 
-   if (in_char == 114)
-      goto state_22_label;
+   if (in_char == 97)
+      goto state_25_label;
 
    return c_idx_not_exist;
 
 // - STATE 13 -
 state_13_label:
-   JSON_CLOSE_CHAR(6)
-   return 6;
+   JSON_CLOSE_CHAR(c_idx_not_exist);
+   JSON_GET_NEXT_CHAR();
+
+   if (in_char == 117)
+      goto state_26_label;
+
+   return c_idx_not_exist;
 
 // - STATE 14 -
 state_14_label:
-   JSON_CLOSE_CHAR(7)
-   return 7;
+   JSON_CLOSE_CHAR(c_idx_not_exist);
+   JSON_GET_NEXT_CHAR();
+
+   if (in_char == 114)
+      goto state_27_label;
+
+   return c_idx_not_exist;
 
 // - STATE 15 -
 state_15_label:
-   JSON_CLOSE_CHAR(12)
-   JSON_GET_NEXT_CHAR();
-
-   if (in_char >= 9 && in_char < 11)
-      goto state_15_label;
-
-   if (in_char == 32)
-      goto state_15_label;
-
-   return 12;
+   JSON_CLOSE_CHAR(6);
+   return 6;
 
 // - STATE 16 -
 state_16_label:
-   JSON_CLOSE_CHAR(0)
-   return 0;
+   JSON_CLOSE_CHAR(7);
+   return 7;
 
 // - STATE 17 -
 state_17_label:
+   JSON_CLOSE_CHAR(12);
+   JSON_GET_NEXT_CHAR();
+
+   if (in_char >= 9 && in_char < 11)
+      goto state_17_label;
+
+   if (in_char == 32)
+      goto state_17_label;
+
+   return 12;
+
+// - STATE 18 -
+state_18_label:
+   JSON_CLOSE_CHAR(0);
+   return 0;
+
+// - STATE 19 -
+state_19_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
 
@@ -636,59 +671,28 @@ state_17_label:
       goto state_2_label;
 
    if (in_char == 117)
-      goto state_23_label;
-
-   return c_idx_not_exist;
-
-// - STATE 18 -
-state_18_label:
-   JSON_CLOSE_CHAR(2)
-   JSON_GET_NEXT_CHAR();
-
-   if (in_char >= 48 && in_char < 58)
-      goto state_18_label;
-
-   if (in_char == 69)
-      goto state_19_label;
-
-   if (in_char == 101)
-      goto state_19_label;
-
-   return 2;
-
-// - STATE 19 -
-state_19_label:
-   JSON_CLOSE_CHAR(c_idx_not_exist);
-   JSON_GET_NEXT_CHAR();
-
-   if (in_char == 43)
-      goto state_24_label;
-
-   if (in_char == 45)
-      goto state_24_label;
-
-   if (in_char >= 48 && in_char < 58)
-      goto state_25_label;
+      goto state_28_label;
 
    return c_idx_not_exist;
 
 // - STATE 20 -
 state_20_label:
-   JSON_CLOSE_CHAR(c_idx_not_exist);
-   JSON_GET_NEXT_CHAR();
-
-   if (in_char == 108)
-      goto state_26_label;
-
-   return c_idx_not_exist;
+   JSON_CLOSE_CHAR(13);
+   return 13;
 
 // - STATE 21 -
 state_21_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
 
-   if (in_char == 108)
-      goto state_27_label;
+   if (in_char < 42)
+      goto state_21_label;
+
+   if (in_char == 42)
+      goto state_29_label;
+
+   if (in_char >= 43)
+      goto state_21_label;
 
    return c_idx_not_exist;
 
@@ -697,54 +701,66 @@ state_22_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
 
-   if (in_char == 117)
-      goto state_28_label;
+   if (in_char < 10)
+      goto state_22_label;
+
+   if (in_char == 10)
+      goto state_30_label;
+
+   if (in_char >= 11)
+      goto state_22_label;
 
    return c_idx_not_exist;
 
 // - STATE 23 -
 state_23_label:
-   JSON_CLOSE_CHAR(c_idx_not_exist);
+   JSON_CLOSE_CHAR(2);
    JSON_GET_NEXT_CHAR();
 
    if (in_char >= 48 && in_char < 58)
-      goto state_29_label;
+      goto state_23_label;
 
-   if (in_char >= 65 && in_char < 71)
-      goto state_29_label;
+   if (in_char == 69)
+      goto state_24_label;
 
-   if (in_char >= 97 && in_char < 103)
-      goto state_29_label;
+   if (in_char == 101)
+      goto state_24_label;
 
-   return c_idx_not_exist;
+   return 2;
 
 // - STATE 24 -
 state_24_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
 
+   if (in_char == 43)
+      goto state_31_label;
+
+   if (in_char == 45)
+      goto state_31_label;
+
    if (in_char >= 48 && in_char < 58)
-      goto state_25_label;
+      goto state_32_label;
 
    return c_idx_not_exist;
 
 // - STATE 25 -
 state_25_label:
-   JSON_CLOSE_CHAR(2)
+   JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
-      goto state_25_label;
+   if (in_char == 108)
+      goto state_33_label;
 
-   return 2;
+   return c_idx_not_exist;
 
 // - STATE 26 -
 state_26_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
 
-   if (in_char == 115)
-      goto state_30_label;
+   if (in_char == 108)
+      goto state_34_label;
 
    return c_idx_not_exist;
 
@@ -753,8 +769,8 @@ state_27_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
 
-   if (in_char == 108)
-      goto state_31_label;
+   if (in_char == 117)
+      goto state_35_label;
 
    return c_idx_not_exist;
 
@@ -763,8 +779,14 @@ state_28_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
 
-   if (in_char == 101)
-      goto state_32_label;
+   if (in_char >= 48 && in_char < 58)
+      goto state_36_label;
+
+   if (in_char >= 65 && in_char < 71)
+      goto state_36_label;
+
+   if (in_char >= 97 && in_char < 103)
+      goto state_36_label;
 
    return c_idx_not_exist;
 
@@ -773,60 +795,136 @@ state_29_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
-      goto state_33_label;
+   if (in_char < 47)
+      goto state_21_label;
 
-   if (in_char >= 65 && in_char < 71)
-      goto state_33_label;
+   if (in_char == 47)
+      goto state_37_label;
 
-   if (in_char >= 97 && in_char < 103)
-      goto state_33_label;
+   if (in_char >= 48)
+      goto state_21_label;
 
    return c_idx_not_exist;
 
 // - STATE 30 -
 state_30_label:
-   JSON_CLOSE_CHAR(c_idx_not_exist);
-   JSON_GET_NEXT_CHAR();
-
-   if (in_char == 101)
-      goto state_34_label;
-
-   return c_idx_not_exist;
+   JSON_CLOSE_CHAR(14);
+   return 14;
 
 // - STATE 31 -
 state_31_label:
-   JSON_CLOSE_CHAR(5)
-   return 5;
+   JSON_CLOSE_CHAR(c_idx_not_exist);
+   JSON_GET_NEXT_CHAR();
+
+   if (in_char >= 48 && in_char < 58)
+      goto state_32_label;
+
+   return c_idx_not_exist;
 
 // - STATE 32 -
 state_32_label:
-   JSON_CLOSE_CHAR(3)
-   return 3;
+   JSON_CLOSE_CHAR(2);
+   JSON_GET_NEXT_CHAR();
+
+   if (in_char >= 48 && in_char < 58)
+      goto state_32_label;
+
+   return 2;
 
 // - STATE 33 -
 state_33_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
-      goto state_35_label;
-
-   if (in_char >= 65 && in_char < 71)
-      goto state_35_label;
-
-   if (in_char >= 97 && in_char < 103)
-      goto state_35_label;
+   if (in_char == 115)
+      goto state_38_label;
 
    return c_idx_not_exist;
 
 // - STATE 34 -
 state_34_label:
-   JSON_CLOSE_CHAR(4)
-   return 4;
+   JSON_CLOSE_CHAR(c_idx_not_exist);
+   JSON_GET_NEXT_CHAR();
+
+   if (in_char == 108)
+      goto state_39_label;
+
+   return c_idx_not_exist;
 
 // - STATE 35 -
 state_35_label:
+   JSON_CLOSE_CHAR(c_idx_not_exist);
+   JSON_GET_NEXT_CHAR();
+
+   if (in_char == 101)
+      goto state_40_label;
+
+   return c_idx_not_exist;
+
+// - STATE 36 -
+state_36_label:
+   JSON_CLOSE_CHAR(c_idx_not_exist);
+   JSON_GET_NEXT_CHAR();
+
+   if (in_char >= 48 && in_char < 58)
+      goto state_41_label;
+
+   if (in_char >= 65 && in_char < 71)
+      goto state_41_label;
+
+   if (in_char >= 97 && in_char < 103)
+      goto state_41_label;
+
+   return c_idx_not_exist;
+
+// - STATE 37 -
+state_37_label:
+   JSON_CLOSE_CHAR(15);
+   return 15;
+
+// - STATE 38 -
+state_38_label:
+   JSON_CLOSE_CHAR(c_idx_not_exist);
+   JSON_GET_NEXT_CHAR();
+
+   if (in_char == 101)
+      goto state_42_label;
+
+   return c_idx_not_exist;
+
+// - STATE 39 -
+state_39_label:
+   JSON_CLOSE_CHAR(5);
+   return 5;
+
+// - STATE 40 -
+state_40_label:
+   JSON_CLOSE_CHAR(3);
+   return 3;
+
+// - STATE 41 -
+state_41_label:
+   JSON_CLOSE_CHAR(c_idx_not_exist);
+   JSON_GET_NEXT_CHAR();
+
+   if (in_char >= 48 && in_char < 58)
+      goto state_43_label;
+
+   if (in_char >= 65 && in_char < 71)
+      goto state_43_label;
+
+   if (in_char >= 97 && in_char < 103)
+      goto state_43_label;
+
+   return c_idx_not_exist;
+
+// - STATE 42 -
+state_42_label:
+   JSON_CLOSE_CHAR(4);
+   return 4;
+
+// - STATE 43 -
+state_43_label:
    JSON_CLOSE_CHAR(c_idx_not_exist);
    JSON_GET_NEXT_CHAR();
 
@@ -880,7 +978,7 @@ bool json_parser_s::parse_source(interpreter_thread_s &a_it,string_s &a_string)
       }
 
       // - skipping of _SKIP_ terminals -
-      if (ret_term == 12)
+      if (ret_term >= 12 && ret_term <= 15)
       {
         ret_term = c_idx_not_exist;
       }
@@ -899,7 +997,7 @@ bool json_parser_s::parse_source(interpreter_thread_s &a_it,string_s &a_string)
     // - action JSON_SHIFT -
     if (parse_action < c_json_lalr_table_reduce_base)
     {
-      if (ret_term == 13)
+      if (ret_term == 16)
       {
         break;
       }

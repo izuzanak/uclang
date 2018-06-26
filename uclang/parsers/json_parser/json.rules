@@ -24,6 +24,9 @@ terminals:
    colon {':'}
 
    _SKIP_ {w.w*}
+   _SKIP__ {'#'.!'\n'*.'\n'}
+   _SKIP___ {"//".!'\n'*.'\n'}
+   _SKIP____ {"/*".(!'*'+('*'.!'/'))*."*/"}
    _END_ {'\0'}
 
 nonterminals:

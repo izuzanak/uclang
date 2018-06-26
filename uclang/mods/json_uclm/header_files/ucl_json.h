@@ -28,7 +28,7 @@ extern const unsigned json_rule_body_lengths[c_json_rule_cnt];
 #define JSON_GOTO(VALUE) VALUE
 
 const unsigned c_json_lalr_table_reduce_base = 0x80000000;
-const unsigned c_json_terminal_plus_nonterminal_cnt = 27;
+const unsigned c_json_terminal_plus_nonterminal_cnt = 30;
 const unsigned json_lalr_state_cnt = 32;
 
 extern const unsigned json_lalr_table[json_lalr_state_cnt*c_json_terminal_plus_nonterminal_cnt];
