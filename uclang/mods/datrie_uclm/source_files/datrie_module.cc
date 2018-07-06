@@ -6,6 +6,7 @@ include "datrie_module.h"
 // - DATRIE indexes of built in classes -
 unsigned c_bi_class_datrie_alpha_map = c_idx_not_exist;
 unsigned c_bi_class_datrie = c_idx_not_exist;
+unsigned c_bi_class_datrie_iterator = c_idx_not_exist;
 
 // - DATRIE indexes of remote classes -
 unsigned c_rm_class_unicode_char = c_idx_not_exist;
@@ -14,11 +15,11 @@ unsigned c_rm_class_unicode_string = c_idx_not_exist;
 // - DATRIE module -
 built_in_module_s module =
 {/*{{{*/
-  2,                      // Class count
+  3,                      // Class count
   datrie_classes,         // Classes
 
   0,                      // Error base index
-  4,                      // Error count
+  7,                      // Error count
   datrie_error_strings,   // Error strings
 
   datrie_initialize,      // Initialize function
@@ -30,6 +31,7 @@ built_in_class_s *datrie_classes[] =
 {/*{{{*/
   &datrie_alpha_map_class,
   &datrie_class,
+  &datrie_iterator_class,
 };/*}}}*/
 
 // - DATRIE error strings -
@@ -39,6 +41,9 @@ const char *datrie_error_strings[] =
   "error_DATRIE_ALPHA_MAP_ADD_RANGE_ERROR",
   "error_DATRIE_CREATE_ERROR",
   "error_DATRIE_STORE_ERROR",
+  "error_DATRIE_ITERATOR_CREATE_ERROR",
+  "error_DATRIE_ITERATOR_GET_KEY_ERROR",
+  "error_DATRIE_ITERATOR_GET_ITEM_ERROR",
 };/*}}}*/
 
 // - DATRIE initialize -
@@ -51,6 +56,9 @@ bool datrie_initialize(script_parser_s &sp)
 
   // - initialize datrie class identifier -
   c_bi_class_datrie = class_base_idx++;
+
+  // - initialize datrie_iterator class identifier -
+  c_bi_class_datrie_iterator = class_base_idx++;
 
   // - retrieve remote unicode_char class index -
   c_rm_class_unicode_char = sp.resolve_class_idx_by_name("UnicodeChar",c_idx_not_exist);
@@ -109,6 +117,27 @@ bool datrie_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nError while storing value to double array trie\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_DATRIE_ITERATOR_CREATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while creting double array trie iterator\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_DATRIE_ITERATOR_GET_KEY_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while retrieving double array trie iterator key\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_DATRIE_ITERATOR_GET_ITEM_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while retrieving double array trie iterator item\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -285,7 +314,7 @@ built_in_class_s datrie_class =
 {/*{{{*/
   "Datrie",
   c_modifier_public | c_modifier_final,
-  6, datrie_methods,
+  7, datrie_methods,
   0, datrie_variables,
   bic_datrie_consts,
   bic_datrie_init,
@@ -324,6 +353,11 @@ built_in_method_s datrie_methods[] =
     "retrieve#1",
     c_modifier_public | c_modifier_final,
     bic_datrie_method_retrieve_1
+  },
+  {
+    "iterator#0",
+    c_modifier_public | c_modifier_final,
+    bic_datrie_method_iterator_0
   },
   {
     "to_string#0",
@@ -509,6 +543,46 @@ bool bic_datrie_method_retrieve_1(interpreter_thread_s &it,unsigned stack_base,u
   return true;
 }/*}}}*/
 
+bool bic_datrie_method_iterator_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  datrie_s *dt_ptr = (datrie_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  TrieState *state_ptr = trie_root(dt_ptr->trie_ptr);
+  if (state_ptr == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_DATRIE_ITERATOR_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  TrieIterator *iter_ptr = trie_iterator_new(state_ptr);
+  if (iter_ptr == nullptr)
+  {
+    trie_state_free(state_ptr);
+
+    exception_s::throw_exception(it,module.error_base + c_error_DATRIE_ITERATOR_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - create datrie_iterator object -
+  datrie_iterator_s *di_ptr = (datrie_iterator_s *)cmalloc(sizeof(datrie_iterator_s));
+  di_ptr->init();
+
+  dst_location->v_reference_cnt.atomic_inc();
+  di_ptr->datrie_loc = dst_location;
+
+  di_ptr->state_ptr = state_ptr;
+  di_ptr->iter_ptr = iter_ptr;
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_datrie_iterator,di_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
 bool bic_datrie_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -521,6 +595,194 @@ bool bic_datrie_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,
 bool bic_datrie_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   printf("Datrie");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class DATRIE_ITERATOR -
+built_in_class_s datrie_iterator_class =
+{/*{{{*/
+  "DatrieIterator",
+  c_modifier_public | c_modifier_final,
+  6, datrie_iterator_methods,
+  0, datrie_iterator_variables,
+  bic_datrie_iterator_consts,
+  bic_datrie_iterator_init,
+  bic_datrie_iterator_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s datrie_iterator_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_datrie_iterator_operator_binary_equal
+  },
+  {
+    "key#0",
+    c_modifier_public | c_modifier_final,
+    bic_datrie_iterator_method_key_0
+  },
+  {
+    "item#0",
+    c_modifier_public | c_modifier_final,
+    bic_datrie_iterator_method_item_0
+  },
+  {
+    "next_item#0",
+    c_modifier_public | c_modifier_final,
+    bic_datrie_iterator_method_next_item_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_datrie_iterator_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_datrie_iterator_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s datrie_iterator_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+#define BIC_DATRIE_ITERATOR_METHOD_KEY() \
+{/*{{{*/\
+  ui_array_s *ustring_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));\
+  ustring_ptr->data = trie_iterator_get_key(di_ptr->iter_ptr);\
+  \
+  /* - ERROR - */\
+  if (ustring_ptr->data == nullptr)\
+  {\
+    cfree(ustring_ptr);\
+    \
+    exception_s::throw_exception(it,module.error_base + c_error_DATRIE_ITERATOR_GET_KEY_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  /* - retrieve key string size - */\
+  unsigned *c_ptr = ustring_ptr->data;\
+  while (*c_ptr++ != 0) {};\
+  \
+  ustring_ptr->size = c_ptr - ustring_ptr->data;\
+  ustring_ptr->used = ustring_ptr->size;\
+  \
+  BIC_CREATE_NEW_LOCATION(new_location,c_rm_class_unicode_string,ustring_ptr);\
+  BIC_SET_RESULT(new_location);\
+}/*}}}*/
+
+void bic_datrie_iterator_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_datrie_iterator_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (datrie_iterator_s *)nullptr;
+}/*}}}*/
+
+void bic_datrie_iterator_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  datrie_iterator_s *di_ptr = (datrie_iterator_s *)location_ptr->v_data_ptr;
+
+  if (di_ptr != nullptr)
+  {
+    di_ptr->clear(it);
+    cfree(di_ptr);
+  }
+}/*}}}*/
+
+bool bic_datrie_iterator_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_datrie_iterator_method_key_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  datrie_iterator_s *di_ptr = (datrie_iterator_s *)dst_location->v_data_ptr;
+
+  BIC_DATRIE_ITERATOR_METHOD_KEY();
+
+  return true;
+}/*}}}*/
+
+bool bic_datrie_iterator_method_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  datrie_iterator_s *di_ptr = (datrie_iterator_s *)dst_location->v_data_ptr;
+  datrie_s *dt_ptr = (datrie_s *)di_ptr->datrie_loc->v_data_ptr;
+
+  // - ERROR -
+  TrieData index = trie_iterator_get_data(di_ptr->iter_ptr);
+  if (index == TRIE_DATA_ERROR)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_DATRIE_ITERATOR_GET_ITEM_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  location_s *item_location = it.get_location_value((location_s *)dt_ptr->data_list[index]);
+
+  item_location->v_reference_cnt.atomic_inc();
+  BIC_SET_RESULT(item_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_datrie_iterator_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  datrie_iterator_s *di_ptr = (datrie_iterator_s *)dst_location->v_data_ptr;
+
+  if (trie_iterator_next(di_ptr->iter_ptr))
+  {
+    BIC_DATRIE_ITERATOR_METHOD_KEY();
+  }
+  else
+  {
+    BIC_SET_RESULT_BLANK();
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_datrie_iterator_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("DatrieIterator"),"DatrieIterator");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_datrie_iterator_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("DatrieIterator");
 
   BIC_SET_RESULT_BLANK();
 

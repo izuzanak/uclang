@@ -23,6 +23,20 @@ struct datrie_s
 };
 
 /*
+ * definition of structure datrie_iterator_s
+ */
+
+struct datrie_iterator_s
+{
+  location_s *datrie_loc;
+  TrieState *state_ptr;
+  TrieIterator *iter_ptr;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
  * inline methods of structure datrie_s
  */
 
@@ -58,6 +72,37 @@ inline void datrie_s::clear(interpreter_thread_s &it)
   }
 
   data_list.clear();
+
+  init();
+}/*}}}*/
+
+/*
+ * inline methods of structure datrie_iterator_s
+ */
+
+inline void datrie_iterator_s::init()
+{/*{{{*/
+  datrie_loc = nullptr;
+  state_ptr = nullptr;
+  iter_ptr = nullptr;
+}/*}}}*/
+
+inline void datrie_iterator_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+  if (iter_ptr != nullptr)
+  {
+    trie_iterator_free(iter_ptr);
+  }
+
+  if (state_ptr != nullptr)
+  {
+    trie_state_free(state_ptr);
+  }
+
+  if (datrie_loc != nullptr)
+  {
+    it.release_location_ptr(datrie_loc);
+  }
 
   init();
 }/*}}}*/
