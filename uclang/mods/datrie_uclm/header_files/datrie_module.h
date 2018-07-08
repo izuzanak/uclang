@@ -24,9 +24,10 @@ enum
   c_error_DATRIE_ALPHA_MAP_ADD_RANGE_ERROR,
   c_error_DATRIE_CREATE_ERROR,
   c_error_DATRIE_STORE_ERROR,
+  c_error_DATRIE_INVALID_KEY,
   c_error_DATRIE_ITERATOR_CREATE_ERROR,
   c_error_DATRIE_ITERATOR_GET_KEY_ERROR,
-  c_error_DATRIE_ITERATOR_GET_ITEM_ERROR,
+  c_error_DATRIE_ITERATOR_GET_VALUE_ERROR,
 };
 
 // - DATRIE error strings -
@@ -63,10 +64,16 @@ void bic_datrie_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_datrie_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_datrie_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_datrie_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_datrie_method_Datrie_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_datrie_method_store_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_datrie_method_retrieve_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_datrie_method_keys_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_datrie_method_items_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_datrie_method_iterator_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_datrie_method_has_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_datrie_method_remove_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_datrie_method_contain_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_datrie_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_datrie_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_datrie_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_datrie_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -81,7 +88,7 @@ void bic_datrie_iterator_clear(interpreter_thread_s &it,location_s *location_ptr
 
 bool bic_datrie_iterator_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_datrie_iterator_method_key_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_datrie_iterator_method_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_datrie_iterator_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_datrie_iterator_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_datrie_iterator_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_datrie_iterator_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
