@@ -24,10 +24,11 @@ enum
   c_error_DATRIE_ALPHA_MAP_ADD_RANGE_ERROR,
   c_error_DATRIE_CREATE_ERROR,
   c_error_DATRIE_STORE_ERROR,
+  c_error_DATRIE_RETRIEVE_ERROR,
   c_error_DATRIE_INVALID_KEY,
+  c_error_DATRIE_INVALID_KEY_TYPE,
+  c_error_DATRIE_SOURCE_NOT_DIVISIBLE_BY_TWO,
   c_error_DATRIE_ITERATOR_CREATE_ERROR,
-  c_error_DATRIE_ITERATOR_GET_KEY_ERROR,
-  c_error_DATRIE_ITERATOR_GET_VALUE_ERROR,
 };
 
 // - DATRIE error strings -
@@ -64,17 +65,21 @@ void bic_datrie_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_datrie_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_datrie_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_datrie_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_datrie_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_datrie_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_datrie_method_Datrie_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_datrie_method_keys_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_datrie_method_items_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_datrie_method_Datrie_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_datrie_method_keys_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_datrie_method_items_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_datrie_method_iterator_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_datrie_method_has_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_datrie_method_remove_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_datrie_method_contain_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_datrie_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_datrie_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_datrie_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_datrie_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_datrie_method_to_string_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_datrie_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 // - class DATRIE_ITERATOR -
