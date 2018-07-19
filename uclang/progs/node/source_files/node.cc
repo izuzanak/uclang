@@ -28,6 +28,7 @@ UclVar callback(UclVar a_conn)
   return UclVar();
 }/*}}}*/
 
+#if __cplusplus >= 201103
 UclVar node_to_dict(UclVar a_node)
 {/*{{{*/
   UclVar dict = UclVar::Dict({
@@ -36,6 +37,7 @@ UclVar node_to_dict(UclVar a_node)
 
   return dict;
 }/*}}}*/
+#endif
 
 UclVar parse_cb(UclVar a_state)
 {/*{{{*/
@@ -76,6 +78,7 @@ int main(int argc,char **argv)
     }
 
     // - slice range test -
+#if __cplusplus >= 201103
     {/*{{{*/
       UclVar array = {0,1,2,3,4,5,6,7,8,9};
       printf("array: %s\n",array.to_string().__str());
@@ -86,14 +89,17 @@ int main(int argc,char **argv)
         printf("val: %s\n",var.to_string().__str());
       })
     }/*}}}*/
+#endif
 
     // - for loop test -
     {/*{{{*/
+#if __cplusplus >= 201103
       UclVar dict = UclVar::Dict({1,2,3,4,5,6});
       UCL_FOR_LOOP(item,dict,
       {
         printf("key/val: %" HOST_LL_FORMAT "d:%" HOST_LL_FORMAT "d\n",item.__int(),dict[item].__int());
       })
+#endif
 
       // - file loop test -
       UclVar file = UclVar::File("node.log","r");
@@ -102,12 +108,14 @@ int main(int argc,char **argv)
         printf("item: %s\n",item.__str());
       })
 
+#if __cplusplus >= 201103
       // - array loop test -
       UclVar array = {0,1,2,3,4,5,6,7,8,9};
       UCL_FOR_LOOP(item,array,
       {
         printf("item: %" HOST_LL_FORMAT "d\n",item.__int());
       })
+#endif
     }/*}}}*/
 
     // - http server example -
@@ -188,6 +196,7 @@ int main(int argc,char **argv)
       test.__free();
     }/*}}}*/
 
+#if __cplusplus >= 201103
     // - module pack test -
     //{/*{{{*/
 
@@ -204,6 +213,7 @@ int main(int argc,char **argv)
     //    printf("unpacked array: %s\n",array.to_string().__str());
     //  }
     //}/*}}}*/
+#endif
 
     // - module algorithms test -
     {/*{{{*/
@@ -219,10 +229,11 @@ int main(int argc,char **argv)
 
     // - module curl test -
     //{/*{{{*/
-    //  UclVar res = UclVar::Curl::GET("localhost:8888");
+    //  UclVar res = UclVar::Curl::_GET("localhost:8888");
     //  printf("data: %s\n",res.data().__str());
     //}/*}}}*/
 
+#if __cplusplus >= 201103
     // - module xml test -
     //{/*{{{*/
     //  UclVar data = UclVar::File("trasa.gpx","r").read_close();
@@ -235,6 +246,7 @@ int main(int argc,char **argv)
     //    printf("node: %s\n",dict.to_string().__str());
     //  })
     //}/*}}}*/
+#endif
 
     // - module fpt test -
     //{/*{{{*/
@@ -293,6 +305,7 @@ int main(int argc,char **argv)
     //  });
     //}/*}}}*/
 
+#if __cplusplus >= 201103
     // - module parser test -
     {/*{{{*/
       UclVar fa = UclVar::FinalAutomata({"\"xxx\"","'y'.'y'*","\"zzz\""});
@@ -306,7 +319,9 @@ int main(int argc,char **argv)
       UclVar parser = UclVar::Parser(UclVar::File("new_reg.rules","r").read_close());
       parser.parse("('\\xff' + <\\nz>.d + \"Hello\\n\" + '\\n' + '\\\\' + 'X' + |0123| + |abc\\||)\0",UclVar::Delegate(parse_cb));
     }/*}}}*/
+#endif
 
+#if __cplusplus >= 201103
     // - module inotify test -
     //{/*{{{*/
     //  UclVar intf = UclVar::Inotify();
@@ -333,6 +348,7 @@ int main(int argc,char **argv)
     //    }
     //  } while(!exit);
     //}/*}}}*/
+#endif
 
     // - module time test -
     {/*{{{*/
