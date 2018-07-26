@@ -318,7 +318,7 @@ bool bic_can_obj_dict_method_CanObjDict_1(interpreter_thread_s &it,unsigned stac
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     delete dict_ptr;
 
@@ -377,7 +377,7 @@ bool bic_can_obj_dict_method_CanObjDict_4(interpreter_thread_s &it,unsigned stac
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     delete dict_ptr;
 

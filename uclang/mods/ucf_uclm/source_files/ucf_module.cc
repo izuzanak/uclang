@@ -1439,7 +1439,7 @@ bool bic_cfg_file_method_CfgFile_1(interpreter_thread_s &it,unsigned stack_base,
     // - construct config file object -
     dst_location->v_data_ptr = (CfgFile *)new CfgFile(filename);
   }
-  catch(Exception e)
+  catch (Exception &e)
   {
     exception_s::throw_exception(it,module.error_base + c_error_CFG_FILE_OPEN_ERROR,operands[c_source_pos_idx],src_0_location);
     return false;
@@ -1475,7 +1475,7 @@ bool bic_cfg_file_method_Open_1(interpreter_thread_s &it,unsigned stack_base,uli
     // - open configuration file -
     cfg_file_ptr->Open(filename);
   }
-  catch(Exception e)
+  catch (Exception &e)
   {
     exception_s::throw_exception(it,module.error_base + c_error_CFG_FILE_OPEN_ERROR,operands[c_source_pos_idx],src_0_location);
     return false;
@@ -1568,7 +1568,7 @@ bool bic_cfg_file_method_OpenSection_1(interpreter_thread_s &it,unsigned stack_b
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     exception_s::throw_exception(it,module.error_base + c_error_CFG_FILE_SECTION_NAME_ERROR,operands[c_source_pos_idx],src_0_location);
     return false;
@@ -1689,7 +1689,7 @@ bool bic_cfg_file_method_GetValue_1(interpreter_thread_s &it,unsigned stack_base
     new_string_ptr = it.get_new_string_ptr();
     new_string_ptr->set(value.Length(),value.Mem());
   }
-  catch(Exception e)
+  catch (Exception &e)
   {
     exception_s::throw_exception(it,module.error_base + c_error_CFG_FILE_ENTRY_NAME_ERROR,operands[c_source_pos_idx],src_0_location);
     return false;
@@ -1734,7 +1734,7 @@ bool bic_cfg_file_method_GetValue_2(interpreter_thread_s &it,unsigned stack_base
     new_string_ptr = it.get_new_string_ptr();
     new_string_ptr->set(value.Length(),value.Mem());
   }
-  catch(Exception e)
+  catch (Exception &e)
   {
     // - return default value -
     src_1_location->v_reference_cnt.atomic_inc();
@@ -1779,7 +1779,7 @@ bool bic_cfg_file_method_GetValueArray_1(interpreter_thread_s &it,unsigned stack
     // - retrieve entry values -
     cfg_file_ptr->GetMultiple(entry,values);
   }
-  catch(Exception e)
+  catch (Exception &e)
   {
     exception_s::throw_exception(it,module.error_base + c_error_CFG_FILE_ENTRY_NAME_ERROR,operands[c_source_pos_idx],src_0_location);
     return false;
@@ -1960,7 +1960,7 @@ built_in_variable_s ucf_log_variables[] =
   }\
 \
   /* - ERROR - */\
-  catch (Exception e)\
+  catch (Exception &e)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_UCF_LOG_CANNOT_CREATE_LOG_FILE,operands[c_source_pos_idx],src_0_location);\
     return false;\
@@ -2211,7 +2211,7 @@ bool bic_ucf_log_method_add_nvm_2(interpreter_thread_s &it,unsigned stack_base,u
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     exception_s::throw_exception(it,module.error_base + c_error_UCF_LOG_CANNOT_OPEN_LOG_NVM_SEGMENT,operands[c_source_pos_idx],src_0_location);
     return false;
@@ -2482,7 +2482,7 @@ bool bic_ucf_mutex_method_UcfMutex_1(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     delete mutex_ptr;
 
@@ -2529,7 +2529,7 @@ bool bic_ucf_mutex_method_UcfMutex_2(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     delete mutex_ptr;
 
@@ -2744,7 +2744,7 @@ bool bic_ucf_led_method_UcfLed_1(interpreter_thread_s &it,unsigned stack_base,ul
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     delete led_ptr;
 
@@ -2998,7 +2998,7 @@ bool bic_serial_method_Serial_1(interpreter_thread_s &it,unsigned stack_base,uli
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     delete serial_ptr;
 
@@ -3055,7 +3055,7 @@ bool bic_serial_method_SetFormat_5(interpreter_thread_s &it,unsigned stack_base,
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SERIAL_SETUP_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -3100,7 +3100,7 @@ bool bic_serial_method_Write_1(interpreter_thread_s &it,unsigned stack_base,uli 
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SERIAL_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -3149,7 +3149,7 @@ bool bic_serial_method_WriteAll_1(interpreter_thread_s &it,unsigned stack_base,u
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SERIAL_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -3190,7 +3190,7 @@ bool bic_serial_method_Read_0(interpreter_thread_s &it,unsigned stack_base,uli *
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     data_buffer.clear();
 
@@ -3571,7 +3571,7 @@ bool bic_var_store_method_VarStore_2(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     delete varstore;
 
@@ -3820,7 +3820,7 @@ bool bic_var_store_method_VarStore_5(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     delete varstore;
     cfree(SlotInfos);
@@ -5226,7 +5226,7 @@ bool bic_nvm_segment_method_NvmSegment_1(interpreter_thread_s &it,unsigned stack
   {
     ns_ptr->ns_ptr->Open(String(ns_name_ptr->data));
   }
-  catch (Exception e)
+  catch (Exception &e)
   {
     delete ns_ptr->ns_ptr;
     cfree(ns_ptr);
@@ -5281,7 +5281,7 @@ bool bic_nvm_segment_method_NvmSegment_2(interpreter_thread_s &it,unsigned stack
   {
     ns_ptr->ns_ptr->Create(String(ns_name_ptr->data),ns_ptr->ram_ptr,size);
   }
-  catch (Exception e)
+  catch (Exception &e)
   {
     cfree(ns_ptr->ram_ptr);
     delete ns_ptr->ns_ptr;
@@ -5370,7 +5370,7 @@ bool bic_nvm_segment_method_write_2(interpreter_thread_s &it,unsigned stack_base
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     exception_s::throw_exception(it,module.error_base + c_error_NVM_SEGMENT_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -5426,7 +5426,7 @@ bool bic_nvm_segment_method_read_2(interpreter_thread_s &it,unsigned stack_base,
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     string_ptr->clear();
     cfree(string_ptr);
@@ -5597,7 +5597,7 @@ bool bic_msg_queue_method_MsgQueue_1(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     delete mq_ptr;
 
@@ -5664,7 +5664,7 @@ bool bic_msg_queue_method_MsgQueue_3(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     delete mq_ptr;
 
@@ -5990,7 +5990,7 @@ bool bic_wdg_module_method_WdgModule_1(interpreter_thread_s &it,unsigned stack_b
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     delete wm_ptr;
 
@@ -6044,7 +6044,7 @@ bool bic_wdg_module_method_WdgModule_2(interpreter_thread_s &it,unsigned stack_b
   }
 
   // - ERROR -
-  catch (Exception e)
+  catch (Exception &e)
   {
     delete wm_ptr;
 

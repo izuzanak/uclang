@@ -711,7 +711,7 @@ class module_c:
 configuration = configuration_c()
 
 # set build and link compiler options
-opt_build = "-std=c++11 -O3 -DNDEBUG -fPIC " # -DNDEBUG
+opt_build = "-std=c++11 -O3 -DNDEBUG -fPIC -Wno-class-memaccess " # -DNDEBUG
 #opt_build = "-std=c++11 -O3 -msse4.2 -DNDEBUG -fPIC " # -DNDEBUG
 opt_link = ""
 
