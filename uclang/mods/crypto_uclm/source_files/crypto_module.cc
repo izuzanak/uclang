@@ -1590,7 +1590,7 @@ bool bic_crypto_digest_verify_method_verify_1(interpreter_thread_s &it,unsigned 
     return false;
   }
 
-  long long result = EVP_DigestVerifyFinal(context_copy,(const unsigned char *)string_ptr->data,string_ptr->size - 1);
+  long long result = EVP_DigestVerifyFinal(context_copy,(unsigned char *)string_ptr->data,string_ptr->size - 1);
 
   EVP_MD_CTX_destroy(context_copy);
 
