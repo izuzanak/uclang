@@ -466,7 +466,7 @@ built_in_variable_s gz_file_variables[] =
 /*{{{*/\
 \
   /* - retrieve pointer to gz file - */\
-  gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;\
+  gzFile gzf_ptr = (gzFile)dst_location->v_data_ptr;\
 \
   /* - ERROR - */\
   if (gzf_ptr == nullptr)\
@@ -490,7 +490,7 @@ built_in_variable_s gz_file_variables[] =
 /*{{{*/\
 \
   /* - retrieve pointer to gz file - */\
-  gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;\
+  gzFile gzf_ptr = (gzFile)dst_location->v_data_ptr;\
 \
   /* - ERROR - */\
   if (gzf_ptr == nullptr)\
@@ -555,7 +555,7 @@ built_in_variable_s gz_file_variables[] =
     return false;\
   }\
 \
-  dst_location->v_data_ptr = (gzFile_s *)nullptr;\
+  dst_location->v_data_ptr = (gzFile)nullptr;\
 /*}}}*/
 
 #define BIC_GZ_FILE_READLN() \
@@ -586,7 +586,7 @@ built_in_variable_s gz_file_variables[] =
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   \
   /* - retrieve pointer to gz file - */\
-  gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;\
+  gzFile gzf_ptr = (gzFile)dst_location->v_data_ptr;\
   \
   /* - ERROR - */\
   if (gzf_ptr == nullptr)\
@@ -649,12 +649,12 @@ void bic_gz_file_consts(location_array_s &const_locations)
 
 void bic_gz_file_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (gzFile_s *)nullptr;
+  location_ptr->v_data_ptr = (gzFile)nullptr;
 }/*}}}*/
 
 void bic_gz_file_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  gzFile_s *gzf_ptr = (gzFile_s *)location_ptr->v_data_ptr;
+  gzFile gzf_ptr = (gzFile)location_ptr->v_data_ptr;
 
   if (gzf_ptr != nullptr)
   {
@@ -666,7 +666,7 @@ location_s *bic_gz_file_next_item(interpreter_thread_s &it,location_s *location_
 {/*{{{*/
 
   // - retrieve pointer to gz file -
-  gzFile_s *gzf_ptr = (gzFile_s *)location_ptr->v_data_ptr;
+  gzFile gzf_ptr = (gzFile)location_ptr->v_data_ptr;
 
   // - ERROR -
   if (gzf_ptr == nullptr)
@@ -741,7 +741,7 @@ bool bic_gz_file_method_GzFile_2(interpreter_thread_s &it,unsigned stack_base,ul
   string_s *file_name = (string_s *)src_0_location->v_data_ptr;
   string_s *file_mode = (string_s *)src_1_location->v_data_ptr;
 
-  gzFile_s *gzf_ptr = gzopen(file_name->data,file_mode->data);
+  gzFile gzf_ptr = gzopen(file_name->data,file_mode->data);
 
   // - ERROR -
   if (gzf_ptr == nullptr)
@@ -750,7 +750,7 @@ bool bic_gz_file_method_GzFile_2(interpreter_thread_s &it,unsigned stack_base,ul
     return false;
   }
 
-  dst_location->v_data_ptr = (gzFile_s *)gzf_ptr;
+  dst_location->v_data_ptr = (gzFile)gzf_ptr;
 
   return true;
 }/*}}}*/
@@ -778,7 +778,7 @@ bool bic_gz_file_method_seek_2(interpreter_thread_s &it,unsigned stack_base,uli 
   }
 
   // - retrieve pointer to gz file -
-  gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;
+  gzFile gzf_ptr = (gzFile)dst_location->v_data_ptr;
 
   // - ERROR -
   if (gzf_ptr == nullptr)
@@ -806,7 +806,7 @@ bool bic_gz_file_method_tell_0(interpreter_thread_s &it,unsigned stack_base,uli 
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve pointer to gz file -
-  gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;
+  gzFile gzf_ptr = (gzFile)dst_location->v_data_ptr;
 
   // - ERROR -
   if (gzf_ptr == nullptr)
@@ -827,7 +827,7 @@ bool bic_gz_file_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve pointer to file -
-  gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;
+  gzFile gzf_ptr = (gzFile)dst_location->v_data_ptr;
 
   // - ERROR -
   if (gzf_ptr == nullptr)
@@ -923,7 +923,7 @@ bool bic_gz_file_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli 
   }
 
   // - retrieve pointer to gz file -
-  gzFile_s *gzf_ptr = (gzFile_s *)dst_location->v_data_ptr;
+  gzFile gzf_ptr = (gzFile)dst_location->v_data_ptr;
 
   // - ERROR -
   if (gzf_ptr == nullptr)
