@@ -15,7 +15,7 @@ built_in_module_s module =
   curl_classes,         // Classes
 
   0,                    // Error base index
-  10,                   // Error count
+  11,                   // Error count
   curl_error_strings,   // Error strings
 
   curl_initialize,      // Initialize function
@@ -35,6 +35,7 @@ const char *curl_error_strings[] =
 {/*{{{*/
   "error_CURL_CANNOT_CREATE_SESSION",
   "error_CURL_ERROR_WHILE_PERFORMING_HTTP_REQUEST",
+  "error_CURL_HTTP_HEADER_EXPECTED_STRING",
   "error_CURL_MULTI_WRONG_CALLBACK_DELEGATE",
   "error_CURL_MULTI_CANNOT_CREATE_SESSION",
   "error_CURL_MULTI_CANNOT_ADD_HANDLER",
@@ -82,6 +83,13 @@ bool curl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nError while performing HTTP request\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CURL_HTTP_HEADER_EXPECTED_STRING:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nExpected string as curl HTTP header\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_CURL_MULTI_WRONG_CALLBACK_DELEGATE:
@@ -442,7 +450,7 @@ built_in_class_s curl_multi_class =
 {/*{{{*/
   "CurlMulti",
   c_modifier_public | c_modifier_final,
-  13, curl_multi_methods,
+  14, curl_multi_methods,
   0, curl_multi_variables,
   bic_curl_multi_consts,
   bic_curl_multi_init,
@@ -496,6 +504,11 @@ built_in_method_s curl_multi_methods[] =
     "HEAD#2",
     c_modifier_public | c_modifier_final,
     bic_curl_multi_method_HEAD_2
+  },
+  {
+    "add_headers#2",
+    c_modifier_public | c_modifier_final,
+    bic_curl_multi_method_add_headers_2
   },
   {
     "cancel#1",
@@ -791,6 +804,87 @@ bool bic_curl_multi_method_HEAD_2(interpreter_thread_s &it,unsigned stack_base,u
   );
 }/*}}}*/
 
+bool bic_curl_multi_method_add_headers_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  long long int index;
+
+  if (!it.retrieve_integer(src_0_location,index) ||
+      src_1_location->v_type != c_bi_class_array)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("add_headers#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  curl_multi_s *cm_ptr = (curl_multi_s *)dst_location->v_data_ptr;
+  pointer_list_s &curl_list = cm_ptr->curl_list;
+
+  // - ERROR -
+  if (index < 0 || index >= curl_list.used || !curl_list.data[index].valid)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_INVALID_REQUEST_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(index);
+
+    return false;
+  }
+
+  pointer_array_s *array_ptr = (pointer_array_s *)src_1_location->v_data_ptr;
+
+  if (array_ptr->used != 0)
+  {
+    curl_slist *headers = nullptr;
+
+    pointer *s_ptr = array_ptr->data;
+    pointer *s_ptr_end = s_ptr + array_ptr->used;
+
+    do {
+      location_s *item_location = it.get_location_value(*s_ptr);
+
+      // - ERROR -
+      if (item_location->v_type != c_bi_class_string)
+      {
+        curl_slist_free_all(headers);
+
+        exception_s::throw_exception(it,module.error_base + c_error_CURL_HTTP_HEADER_EXPECTED_STRING,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+
+      // - append header to list -
+      string_s *string_ptr = (string_s *)item_location->v_data_ptr;
+      headers = curl_slist_append(headers,string_ptr->data);
+
+    } while(++s_ptr < s_ptr_end);
+
+    CURL *curl_ptr = (CURL *)curl_list[index];
+    curl_easy_setopt(curl_ptr,CURLOPT_HTTPHEADER,headers);
+
+    // - retrieve curl properties -
+    curl_props_s *curl_props;
+    curl_easy_getinfo(curl_ptr,CURLINFO_PRIVATE,(char **)&curl_props);
+
+    // - release old headers list -
+    if (curl_props->headers != nullptr)
+    {
+      curl_slist_free_all(curl_props->headers);
+    }
+
+    // - store headers list -
+    curl_props->headers = headers;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
 bool bic_curl_multi_method_cancel_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -1010,7 +1104,7 @@ bool bic_curl_multi_method_process_0(interpreter_thread_s &it,unsigned stack_bas
 
       res_data_ptr->size = write_buffer.used;
       res_data_ptr->data = write_buffer.data;
-      
+
       // - remove curl from list -
       cm_ptr->curl_list.remove(curl_props->index);
 

@@ -46,6 +46,7 @@ safe_rb_tree<fd_flags_s> fd_flags_rb_tree_s;
 struct curl_props_s
 {
   CURL *curl_ptr;
+  curl_slist *headers;
   unsigned index;
   bc_array_s write_buffer;
   read_buffer_s read_buffer;
@@ -141,6 +142,7 @@ inline int fd_flags_rb_tree_s::__compare_value(fd_flags_s &a_first,fd_flags_s &a
 inline void curl_props_s::init()
 {/*{{{*/
   curl_ptr = nullptr;
+  headers = nullptr;
   write_buffer.init();
   read_loc = nullptr;
   user_loc = nullptr;
@@ -148,9 +150,17 @@ inline void curl_props_s::init()
 
 inline void curl_props_s::clear(interpreter_thread_s &it)
 {/*{{{*/
+
+  // - release curl_ptr -
   if (curl_ptr != nullptr)
   {
     curl_easy_cleanup(curl_ptr);
+  }
+
+  // - release headers list -
+  if (headers != nullptr)
+  {
+    curl_slist_free_all(headers);
   }
 
   write_buffer.clear();
@@ -254,13 +264,13 @@ inline void curl_result_s::clear(interpreter_thread_s &it)
     curl_easy_cleanup(curl_ptr);
   }
 
-  // - release result data -
+  // - release result data location -
   if (data_loc != nullptr)
   {
     it.release_location_ptr(data_loc);
   }
 
-  // - release user data -
+  // - release user data location -
   if (user_loc != nullptr)
   {
     it.release_location_ptr(user_loc);

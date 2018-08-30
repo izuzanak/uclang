@@ -22,6 +22,7 @@ enum
 {
   c_error_CURL_CANNOT_CREATE_SESSION = 0,
   c_error_CURL_ERROR_WHILE_PERFORMING_HTTP_REQUEST,
+  c_error_CURL_HTTP_HEADER_EXPECTED_STRING,
   c_error_CURL_MULTI_WRONG_CALLBACK_DELEGATE,
   c_error_CURL_MULTI_CANNOT_CREATE_SESSION,
   c_error_CURL_MULTI_CANNOT_ADD_HANDLER,
@@ -74,6 +75,7 @@ bool bic_curl_multi_method_PUT_3(interpreter_thread_s &it,unsigned stack_base,ul
 bool bic_curl_multi_method_POST_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_multi_method_DELETE_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_multi_method_HEAD_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curl_multi_method_add_headers_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_multi_method_cancel_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_multi_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_multi_method_timeout_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
