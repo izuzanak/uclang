@@ -867,8 +867,8 @@ bool bic_trdp_md_gate_params_method_TrdpMdGateParams_4(interpreter_thread_s &it,
   }
 
   // - ERROR -
-  if (nslots < 0 || nslots > UINT16_MAX ||
-      nbufs  < 0 || nbufs  > UINT16_MAX ||
+  if (nslots < 0 || nslots > USHRT_MAX ||
+      nbufs  < 0 || nbufs  > USHRT_MAX ||
       nevts  < 0 || nevts  > UINT_MAX ||
       bufsz  < 0 || bufsz  > UINT_MAX)
   {
