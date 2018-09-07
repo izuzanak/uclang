@@ -45,6 +45,34 @@ struct trdp_md_gate_s
 };
 
 /*
+ * definition of structure trdp_md_address_s
+ */
+
+struct trdp_md_address_s
+{
+  location_s *dst_user_loc;
+  TRDP::IPx dst_host;
+  location_s *src_user_loc;
+  TRDP::IPx src_host;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
+ * definition of structure trdp_md_message_s
+ */
+
+struct trdp_md_message_s
+{
+  TRDP::MD::Message message;
+  location_s *data_location;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
  * inline methods of class uctrdp_c
  */
 
@@ -105,6 +133,55 @@ inline void trdp_md_gate_s::clear(interpreter_thread_s &it)
   if (md_location != nullptr)
   {
     it.release_location_ptr(md_location);
+  }
+
+  init();
+}/*}}}*/
+
+/*
+ * inline methods of structure trdp_md_address_s
+ */
+
+inline void trdp_md_address_s::init()
+{/*{{{*/
+  dst_user_loc = nullptr;
+  src_user_loc = nullptr;
+}/*}}}*/
+
+inline void trdp_md_address_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+
+  // - release dst_user location -
+  if (dst_user_loc != nullptr)
+  {
+    it.release_location_ptr(dst_user_loc);
+  }
+
+  // - release src_user location -
+  if (src_user_loc != nullptr)
+  {
+    it.release_location_ptr(src_user_loc);
+  }
+
+  init();
+}/*}}}*/
+
+/*
+ * inline methods of structure trdp_md_message_s
+ */
+
+inline void trdp_md_message_s::init()
+{/*{{{*/
+  data_location = nullptr;
+}/*}}}*/
+
+inline void trdp_md_message_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+
+  // - release data location -
+  if (data_location != nullptr)
+  {
+    it.release_location_ptr(data_location);
   }
 
   init();
