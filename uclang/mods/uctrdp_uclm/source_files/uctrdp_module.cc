@@ -18,7 +18,7 @@ built_in_module_s module =
   uctrdp_classes,         // Classes
 
   0,                      // Error base index
-  8,                      // Error count
+  11,                     // Error count
   uctrdp_error_strings,   // Error strings
 
   uctrdp_initialize,      // Initialize function
@@ -47,6 +47,9 @@ const char *uctrdp_error_strings[] =
   "error_TRDP_SET_COMPARS_ERROR",
   "error_TRDP_MD_INITIALIZE_ERROR",
   "error_TRDP_MD_GATE_OPEN_ERROR",
+  "error_TRDP_MD_ADDRESS_INVALID_ADDRESS",
+  "error_TRDP_MD_ADDRESS_INVALID_USER_NAME",
+  "error_TRDP_MD_MESSAGE_DATA_TOO_BIG",
 };/*}}}*/
 
 // - UCTRDP initialize -
@@ -142,6 +145,27 @@ bool uctrdp_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nError while openning TRDP message data gate\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_TRDP_MD_ADDRESS_INVALID_ADDRESS:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid TRDP message %s address\n",exception.params[0] ? "destination" : "source");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_MD_ADDRESS_INVALID_USER_NAME:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid TRDP message %s user (function) name\n",exception.params[0] ? "destination" : "source");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_MD_MESSAGE_DATA_TOO_BIG:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid TRDP message data, too big: %" HOST_LL_FORMAT "d bytes\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   default:
     class_stack.clear();
     return false;
@@ -158,7 +182,7 @@ built_in_class_s trdp_class =
   "Trdp",
   c_modifier_public | c_modifier_final,
   2, trdp_methods,
-  3 + 9 + 1 + 6 + 5 + 6, trdp_variables,
+  3 + 9 + 1 + 6 + 5 + 6 + 4, trdp_variables,
   bic_trdp_consts,
   bic_trdp_init,
   bic_trdp_clear,
@@ -233,6 +257,13 @@ built_in_variable_s trdp_variables[] =
   { "MT_REPLYCFM", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "MT_CONFIRM", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "MT_ERROR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - max data size constants -
+  { "MAX_PD_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_MD_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  { "MAX_USR_LEN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_HST_LEN", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
 
@@ -345,6 +376,24 @@ void bic_trdp_consts(location_array_s &const_locations)
     CREATE_TRDP_MESSAGE_TYPE_BIC_STATIC(TRDP::MT_REPLYCFM);
     CREATE_TRDP_MESSAGE_TYPE_BIC_STATIC(TRDP::MT_CONFIRM);
     CREATE_TRDP_MESSAGE_TYPE_BIC_STATIC(TRDP::MT_ERROR);
+  }
+
+  // - insert max data size constants -
+  {
+    const_locations.push_blanks(4);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 4);
+
+#define CREATE_TRDP_DATA_SIZE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_TRDP_DATA_SIZE_BIC_STATIC(TRDP::MAX_PD_SIZE);
+    CREATE_TRDP_DATA_SIZE_BIC_STATIC(TRDP::MAX_MD_SIZE);
+
+    CREATE_TRDP_DATA_SIZE_BIC_STATIC(TRDP::MAX_USR_LEN);
+    CREATE_TRDP_DATA_SIZE_BIC_STATIC(TRDP::MAX_HST_LEN);
   }
 
 }/*}}}*/
@@ -779,9 +828,9 @@ built_in_method_s trdp_md_gate_methods[] =
     bic_trdp_md_gate_operator_binary_equal
   },
   {
-    "Request#2",
+    "Request#3",
     c_modifier_public | c_modifier_final,
-    bic_trdp_md_gate_method_Request_2
+    bic_trdp_md_gate_method_Request_3
   },
   {
     "to_string#0",
@@ -831,27 +880,31 @@ bool bic_trdp_md_gate_operator_binary_equal(interpreter_thread_s &it,unsigned st
   return true;
 }/*}}}*/
 
-bool bic_trdp_md_gate_method_Request_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_trdp_md_gate_method_Request_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
 
-  if (src_0_location->v_type != c_bi_class_integer ||
-      src_1_location->v_type != c_bi_class_string)
+  long long int flags;
+  long long int nresp;
+
+  if (src_0_location->v_type != c_bi_class_trdp_md_message ||
+      !it.retrieve_integer(src_1_location,flags) ||
+      !it.retrieve_integer(src_2_location,nresp))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Request#2");
-    new_exception->params.push(2);
+    BIC_EXCEPTION_PUSH_METHOD_RI("Request#3");
+    new_exception->params.push(3);
     new_exception->params.push(src_0_location->v_type);
     new_exception->params.push(src_1_location->v_type);
+    new_exception->params.push(src_2_location->v_type);
 
     return false;
   }
 
   // FIXME TODO continue ...
-  BIC_TODO_ERROR(__FILE__,__LINE__); 
-  return false;
 
   BIC_SET_RESULT_DESTINATION();
 
@@ -1137,38 +1190,57 @@ bool bic_trdp_md_address_method_TrdpMdAddress_4(interpreter_thread_s &it,unsigne
     return false;
   }
 
-#define BIC_TRDP_MD_ADDRESS_CONSTRUCTOR_RETRIEVE_IP(LOCATION,TARGET)\
+#define BIC_TRDP_MD_ADDRESS_CONSTRUCTOR_RETRIEVE_IP(LOCATION,TARGET,DST_FLAG)\
 {/*{{{*/\
   if (LOCATION->v_type == c_bi_class_string)\
   {\
     /* - ERROR - */\
     if (!Str2IP(((string_s *)LOCATION->v_data_ptr)->data,TARGET))\
     {\
-      /* FIXME TODO throw proper exception */\
-      BIC_TODO_ERROR(__FILE__,__LINE__);\
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_ADDRESS_INVALID_ADDRESS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      new_exception->params.push(DST_FLAG);\
+      \
       return false;\
     }\
   }\
   else\
   {\
+    /* - ERROR - */\
+    if (lli_ ## TARGET < 0 || lli_ ## TARGET > UINT_MAX)\
+    {\
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_ADDRESS_INVALID_ADDRESS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      new_exception->params.push(DST_FLAG);\
+      \
+      return false;\
+    }\
+    \
     TARGET = lli_ ## TARGET;\
   }\
 }/*}}}*/
 
   // - retrieve destination ip addresses -
   unsigned dst_addr;
-  BIC_TRDP_MD_ADDRESS_CONSTRUCTOR_RETRIEVE_IP(src_1_location,dst_addr);
+  BIC_TRDP_MD_ADDRESS_CONSTRUCTOR_RETRIEVE_IP(src_1_location,dst_addr,1);
 
   // - retrieve source ip addresses -
   unsigned src_addr;
-  BIC_TRDP_MD_ADDRESS_CONSTRUCTOR_RETRIEVE_IP(src_3_location,src_addr);
+  BIC_TRDP_MD_ADDRESS_CONSTRUCTOR_RETRIEVE_IP(src_3_location,src_addr,0);
 
   // - ERROR -
-  if (((string_s *)src_0_location->v_data_ptr)->size - 1 > TRDP::MAX_USR_LEN ||
-      ((string_s *)src_2_location->v_data_ptr)->size - 1 > TRDP::MAX_USR_LEN)
+  if (((string_s *)src_0_location->v_data_ptr)->size - 1 > TRDP::MAX_USR_LEN)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_ADDRESS_INVALID_USER_NAME,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(1);
+
+    return false;
+  }
+
+  // - ERROR -
+  if (((string_s *)src_2_location->v_data_ptr)->size - 1 > TRDP::MAX_USR_LEN)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_ADDRESS_INVALID_USER_NAME,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(0);
+
     return false;
   }
 
@@ -1328,13 +1400,18 @@ bool bic_trdp_md_message_method_TrdpMdMessage_5(interpreter_thread_s &it,unsigne
     return false;
   }
 
+  trdp_md_address_s *tma_ptr = (trdp_md_address_s *)src_1_location->v_data_ptr;
+  string_s *dst_user_ptr = (string_s *)tma_ptr->dst_user_loc->v_data_ptr;
+  string_s *src_user_ptr = (string_s *)tma_ptr->src_user_loc->v_data_ptr;
+
   string_s *data_ptr = (string_s *)src_4_location->v_data_ptr;
 
   // - ERROR -
   if (data_ptr->size - 1 > TRDP::MAX_MD_SIZE)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_MESSAGE_DATA_TOO_BIG,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(data_ptr->size - 1);
+
     return false;
   }
 
@@ -1342,9 +1419,23 @@ bool bic_trdp_md_message_method_TrdpMdMessage_5(interpreter_thread_s &it,unsigne
   trdp_md_message_s *tmm_ptr = (trdp_md_message_s *)cmalloc(sizeof(trdp_md_message_s));
   tmm_ptr->init();
 
-  memset(&tmm_ptr->message,0,sizeof(tmm_ptr->message));
+  // - fill message structure -
+  TRDP::MD::Message &message = tmm_ptr->message;
+  memset(&message,0,sizeof(message));
 
-  // FIXME TODO continue ...
+  message.type = type;
+  message.comid = comm_id;
+  message.size = data_ptr->size - 1;
+  memcpy(message.dusr,dst_user_ptr->data,dst_user_ptr->size - 1);
+  message.dst = tma_ptr->dst_host;
+  memcpy(message.susr,src_user_ptr->data,src_user_ptr->size - 1);
+  message.src = tma_ptr->src_host;
+  // FIXME TODO continue ... message.topo
+  message.tmo = timeout;
+
+  // - set data location -
+  src_4_location->v_reference_cnt.atomic_inc();
+  tmm_ptr->data_location = src_4_location;
 
   // - set trdp_md destination location -
   dst_location->v_data_ptr = (trdp_md_message_s *)tmm_ptr;
