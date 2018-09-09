@@ -18,7 +18,7 @@ built_in_module_s module =
   uctrdp_classes,         // Classes
 
   0,                      // Error base index
-  11,                     // Error count
+  15,                     // Error count
   uctrdp_error_strings,   // Error strings
 
   uctrdp_initialize,      // Initialize function
@@ -47,9 +47,13 @@ const char *uctrdp_error_strings[] =
   "error_TRDP_SET_COMPARS_ERROR",
   "error_TRDP_MD_INITIALIZE_ERROR",
   "error_TRDP_MD_GATE_OPEN_ERROR",
+  "error_TRDP_MD_GATE_REQUEST_INVALID_SCOPE",
+  "error_TRDP_MD_GATE_REQUEST_INVALID_NUMBER_OF_RESPONSES",
+  "error_TRDP_MD_GATE_REQUEST_INVALID_NUMBER_OF_RETRIES",
   "error_TRDP_MD_ADDRESS_INVALID_ADDRESS",
   "error_TRDP_MD_ADDRESS_INVALID_USER_NAME",
   "error_TRDP_MD_MESSAGE_DATA_TOO_BIG",
+  "error_TRDP_MD_MESSAGE_INVALID_TYPE",
 };/*}}}*/
 
 // - UCTRDP initialize -
@@ -145,6 +149,27 @@ bool uctrdp_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nError while openning TRDP message data gate\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_TRDP_MD_GATE_REQUEST_INVALID_SCOPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid TRDP request communication scope\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_MD_GATE_REQUEST_INVALID_NUMBER_OF_RESPONSES:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP request, invalid number of requested responses\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_MD_GATE_REQUEST_INVALID_NUMBER_OF_RETRIES:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP request, invalid number of requested retries\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_TRDP_MD_ADDRESS_INVALID_ADDRESS:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -164,6 +189,13 @@ bool uctrdp_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nInvalid TRDP message data, too big: %" HOST_LL_FORMAT "d bytes\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_MD_MESSAGE_INVALID_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid TRDP message type\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -828,9 +860,9 @@ built_in_method_s trdp_md_gate_methods[] =
     bic_trdp_md_gate_operator_binary_equal
   },
   {
-    "Request#3",
+    "Request#5",
     c_modifier_public | c_modifier_final,
-    bic_trdp_md_gate_method_Request_3
+    bic_trdp_md_gate_method_Request_5
   },
   {
     "to_string#0",
@@ -880,27 +912,68 @@ bool bic_trdp_md_gate_operator_binary_equal(interpreter_thread_s &it,unsigned st
   return true;
 }/*}}}*/
 
-bool bic_trdp_md_gate_method_Request_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_trdp_md_gate_method_Request_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
   location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
+  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
+  location_s *src_4_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_4_op_idx]);
 
-  long long int flags;
+  long long int scope;
   long long int nresp;
+  long long int nretr;
+  long long int flags;
 
   if (src_0_location->v_type != c_bi_class_trdp_md_message ||
-      !it.retrieve_integer(src_1_location,flags) ||
-      !it.retrieve_integer(src_2_location,nresp))
+      !it.retrieve_integer(src_1_location,scope) ||
+      !it.retrieve_integer(src_2_location,nresp) ||
+      !it.retrieve_integer(src_3_location,nretr) ||
+      !it.retrieve_integer(src_4_location,flags))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Request#3");
-    new_exception->params.push(3);
+    BIC_EXCEPTION_PUSH_METHOD_RI("Request#5");
+    new_exception->params.push(5);
     new_exception->params.push(src_0_location->v_type);
     new_exception->params.push(src_1_location->v_type);
     new_exception->params.push(src_2_location->v_type);
+    new_exception->params.push(src_3_location->v_type);
+    new_exception->params.push(src_4_location->v_type);
 
+    return false;
+  }
+
+  trdp_md_message_s *tmm_ptr = (trdp_md_message_s *)src_0_location->v_data_ptr;
+
+  switch (scope)
+  {
+  case TRDP::CS_LOCAL:
+  case TRDP::CS_ETB:
+  case TRDP::CS_ETB_TOPO:
+  case TRDP::CS_OPT:
+  case TRDP::CS_OPT_TOPO:
+  case TRDP::CS_ETB_ZERO:
+    break;
+
+  // - ERROR -
+  default:
+    
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_GATE_REQUEST_INVALID_SCOPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (nresp < 0 || nresp > UINT_MAX)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_GATE_REQUEST_INVALID_NUMBER_OF_RESPONSES,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (nretr < 0 || nretr > UINT_MAX)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_GATE_REQUEST_INVALID_NUMBER_OF_RETRIES,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1397,6 +1470,22 @@ bool bic_trdp_md_message_method_TrdpMdMessage_5(interpreter_thread_s &it,unsigne
     new_exception->params.push(src_3_location->v_type);
     new_exception->params.push(src_4_location->v_type);
 
+    return false;
+  }
+
+  switch (type)
+  {
+  case TRDP::MT_NOTIFY:
+  case TRDP::MT_REQUEST:
+  case TRDP::MT_REPLY:
+  case TRDP::MT_REPLYCFM:
+  case TRDP::MT_CONFIRM:
+  case TRDP::MT_ERROR:
+    break;
+
+  // - ERROR -
+  default:
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_MESSAGE_INVALID_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 

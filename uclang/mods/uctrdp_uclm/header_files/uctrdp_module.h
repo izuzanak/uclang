@@ -31,9 +31,13 @@ enum
   c_error_TRDP_SET_COMPARS_ERROR,
   c_error_TRDP_MD_INITIALIZE_ERROR,
   c_error_TRDP_MD_GATE_OPEN_ERROR,
+  c_error_TRDP_MD_GATE_REQUEST_INVALID_SCOPE,
+  c_error_TRDP_MD_GATE_REQUEST_INVALID_NUMBER_OF_RESPONSES,
+  c_error_TRDP_MD_GATE_REQUEST_INVALID_NUMBER_OF_RETRIES,
   c_error_TRDP_MD_ADDRESS_INVALID_ADDRESS,
   c_error_TRDP_MD_ADDRESS_INVALID_USER_NAME,
   c_error_TRDP_MD_MESSAGE_DATA_TOO_BIG,
+  c_error_TRDP_MD_MESSAGE_INVALID_TYPE,
 };
 
 // - UCTRDP error strings -
@@ -86,7 +90,7 @@ void bic_trdp_md_gate_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_trdp_md_gate_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_trdp_md_gate_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_trdp_md_gate_method_Request_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_gate_method_Request_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_gate_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_gate_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
