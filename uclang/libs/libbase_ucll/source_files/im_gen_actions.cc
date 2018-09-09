@@ -128,7 +128,7 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
           return false;\
         }\
         \
-        /* - ERROR test if method is private, parent class must be im.class_idx - */\
+        /* - ERROR if method is private, parent class must be im.class_idx - */\
         if ((method_record.modifiers & c_modifier_private) && (method_record.parent_record != im.class_idx)) {\
           _this.error_code.push(ei_cannot_access_private_method);\
           _this.error_code.push(exp.nodes[exp_node_idx + 1]);\
@@ -228,7 +228,7 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
           return false;\
         }\
         \
-        /* - ERROR if method is private, then parent class must be im.class_idx - */\
+        /* - ERROR if method is private, parent class must be im.class_idx - */\
         if ((method_record.modifiers & c_modifier_private) && (method_record.parent_record != im.class_idx)) {\
           _this.error_code.push(ei_cannot_access_private_method);\
           _this.error_code.push(exp.nodes[exp_node_idx + 1]);\
