@@ -664,7 +664,7 @@ unsigned ltg_parser_s::recognize_terminal(unsigned &input_idx)
    if (in_char == 0)
       goto state_1_label;
 
-   if (in_char >= 9 && in_char < 11)
+   if (in_char >= 8 && in_char < 14)
       goto state_41_label;
 
    if (in_char == 32)
@@ -1446,7 +1446,7 @@ state_41_label:
    CLOSE_LTG_CHAR(66);
    GET_LTG_NEXT_CHAR();
 
-   if (in_char >= 9 && in_char < 11)
+   if (in_char >= 8 && in_char < 14)
       goto state_41_label;
 
    if (in_char == 32)

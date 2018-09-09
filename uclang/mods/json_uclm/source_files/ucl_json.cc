@@ -406,7 +406,7 @@ unsigned json_parser_s::recognize_terminal(unsigned &a_input_idx)
    if (in_char == 0)
       goto state_1_label;
 
-   if (in_char >= 9 && in_char < 11)
+   if (in_char >= 8 && in_char < 14)
       goto state_17_label;
 
    if (in_char == 32)
@@ -628,7 +628,7 @@ state_17_label:
    JSON_CLOSE_CHAR(12);
    JSON_GET_NEXT_CHAR();
 
-   if (in_char >= 9 && in_char < 11)
+   if (in_char >= 8 && in_char < 14)
       goto state_17_label;
 
    if (in_char == 32)

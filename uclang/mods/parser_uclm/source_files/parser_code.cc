@@ -579,7 +579,7 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
                 {
                   eq_match = true;
                 }
-                else if (move_char == ' ' || move_char == '\t' || move_char == '\n')
+                else if (move_char == ' ' || (move_char >= '\b' && move_char <= '\r' ))
                 {
                   match = true;
                 }
@@ -704,23 +704,23 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
                   *mt_ptr = move_ptr->value;
                 }
 
-                mt_ptr = moves.data + '\t';
-                if (*mt_ptr == c_idx_not_exist)
-                {
-                  *mt_ptr = move_ptr->value;
-                }
+                mt_ptr = moves.data + '\b';
+                unsigned *mt_ptr_end = moves.data + '\r';
 
-                mt_ptr = moves.data + '\n';
-                if (*mt_ptr == c_idx_not_exist)
+                do
                 {
-                  *mt_ptr = move_ptr->value;
+                  if (*mt_ptr == c_idx_not_exist)
+                  {
+                    *mt_ptr = move_ptr->value;
+                  }
                 }
+                while(++mt_ptr <= mt_ptr_end);
               }
               break;
               case reg_char_digit:
               {
                 unsigned *mt_ptr = moves.data + '0';
-                unsigned *mt_ptr_end = moves.data + '9' + 1;
+                unsigned *mt_ptr_end = moves.data + '9';
 
                 do
                 {
@@ -729,13 +729,13 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
                     *mt_ptr = move_ptr->value;
                   }
                 }
-                while(++mt_ptr < mt_ptr_end);
+                while(++mt_ptr <= mt_ptr_end);
               }
               break;
               case reg_char_letter:
               {
                 unsigned *mt_ptr = moves.data + 'a';
-                unsigned *mt_ptr_end = moves.data + 'z' + 1;
+                unsigned *mt_ptr_end = moves.data + 'z';
 
                 do
                 {
@@ -744,10 +744,10 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
                     *mt_ptr = move_ptr->value;
                   }
                 }
-                while(++mt_ptr < mt_ptr_end);
+                while(++mt_ptr <= mt_ptr_end);
 
                 mt_ptr = moves.data + 'A';
-                mt_ptr_end = moves.data + 'Z' + 1;
+                mt_ptr_end = moves.data + 'Z';
 
                 do
                 {
@@ -756,7 +756,7 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
                     *mt_ptr = move_ptr->value;
                   }
                 }
-                while(++mt_ptr < mt_ptr_end);
+                while(++mt_ptr <= mt_ptr_end);
               }
               break;
               default:
@@ -860,7 +860,7 @@ unsigned reg_parser_s::recognize_terminal(string_s &source_string,unsigned &inpu
   if (in_char == 0)
     goto state_1_label;
 
-  if (in_char >= 9 && in_char < 11)
+  if (in_char >= 8 && in_char < 14)
     goto state_17_label;
 
   if (in_char == 32)
@@ -1067,7 +1067,7 @@ state_17_label:
   CLOSE_CHAR(15);
   GET_NEXT_CHAR();
 
-  if (in_char >= 9 && in_char < 11)
+  if (in_char >= 8 && in_char < 14)
     goto state_17_label;
 
   if (in_char == 32)

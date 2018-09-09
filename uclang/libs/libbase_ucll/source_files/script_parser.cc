@@ -3550,7 +3550,7 @@ unsigned script_parser_s::recognize_terminal(unsigned &input_idx)
    if (in_char == 32)
       goto state_49_label;
 
-   if (in_char >= 9 && in_char < 11)
+   if (in_char >= 8 && in_char < 14)
       goto state_49_label;
 
    if (in_char == 41)
@@ -4531,7 +4531,7 @@ state_49_label:
    if (in_char == 32)
       goto state_49_label;
 
-   if (in_char >= 9 && in_char < 11)
+   if (in_char >= 8 && in_char < 14)
       goto state_49_label;
 
    return 89;

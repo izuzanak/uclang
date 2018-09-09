@@ -28,7 +28,7 @@ unsigned gcg_msg_s::head_recognize(const char *string,unsigned &input_idx)
 // - STATE 0 -
    GET_NEXT_CHAR();
 
-   if (in_char >= 9 && in_char < 11)
+   if (in_char >= 8 && in_char < 14)
       goto state_3_label;
 
    if (in_char == 32)
@@ -57,7 +57,7 @@ state_2_label:
    CLOSE_CHAR(0);
    GET_NEXT_CHAR();
 
-   if (in_char >= 9 && in_char < 11)
+   if (in_char >= 8 && in_char < 14)
       goto state_2_label;
 
    if (in_char == 32)
@@ -70,7 +70,7 @@ state_3_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char >= 9 && in_char < 11)
+   if (in_char >= 8 && in_char < 14)
       goto state_3_label;
 
    if (in_char == 32)
@@ -197,7 +197,7 @@ unsigned gcg_msg_s::tail_recognize(const char *string,int &input_idx)
    if (in_char == 0)
       goto state_1_label;
 
-   if (in_char >= 9 && in_char < 11)
+   if (in_char >= 8 && in_char < 14)
       goto state_5_label;
 
    if (in_char == 32)
@@ -240,7 +240,7 @@ state_3_label:
    CLOSE_PREV_CHAR(c_idx_not_exist);
    GET_PREV_CHAR();
 
-   if (in_char >= 9 && in_char < 11)
+   if (in_char >= 8 && in_char < 14)
       goto state_3_label;
 
    if (in_char == 32)
@@ -256,7 +256,7 @@ state_4_label:
    CLOSE_PREV_CHAR(0);
    GET_PREV_CHAR();
 
-   if (in_char >= 9 && in_char < 11)
+   if (in_char >= 8 && in_char < 14)
       goto state_4_label;
 
    if (in_char == 32)
@@ -269,7 +269,7 @@ state_5_label:
    CLOSE_PREV_CHAR(c_idx_not_exist);
    GET_PREV_CHAR();
 
-   if (in_char >= 9 && in_char < 11)
+   if (in_char >= 8 && in_char < 14)
       goto state_5_label;
 
    if (in_char == 32)
@@ -372,7 +372,7 @@ state_14_label:
    CLOSE_PREV_CHAR(c_idx_not_exist);
    GET_PREV_CHAR();
 
-   if (in_char >= 9 && in_char < 11)
+   if (in_char >= 8 && in_char < 14)
       goto state_14_label;
 
    if (in_char == 32)
@@ -388,7 +388,7 @@ state_15_label:
    CLOSE_PREV_CHAR(2);
    GET_PREV_CHAR();
 
-   if (in_char >= 9 && in_char < 11)
+   if (in_char >= 8 && in_char < 14)
       goto state_15_label;
 
    if (in_char == 32)

@@ -116,7 +116,7 @@ unsigned spawn_parser_s::recognize_terminal(unsigned &a_input_idx)
    if (in_char >= 1 && in_char < 9)
       goto state_2_label;
 
-   if (in_char >= 9 && in_char < 11)
+   if (in_char >= 8 && in_char < 14)
       goto state_9_label;
 
    if (in_char >= 11 && in_char < 32)
@@ -298,7 +298,7 @@ state_9_label:
    SPWN_CLOSE_CHAR(13);
    SPWN_GET_NEXT_CHAR();
 
-   if (in_char >= 9 && in_char < 11)
+   if (in_char >= 8 && in_char < 14)
       goto state_9_label;
 
    if (in_char == 32)

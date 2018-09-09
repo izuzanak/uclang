@@ -12,7 +12,7 @@ const unsigned c_base_char_cnt = 256;
 const unsigned c_def_special_char_cnt = 3;
 const unsigned c_no_char_base = c_base_char_cnt + c_def_special_char_cnt;
 
-const unsigned short reg_char_white =  c_base_char_cnt;     // 'w' {' ','\t','\n'}
+const unsigned short reg_char_white =  c_base_char_cnt;     // 'w' {' ','\b','\t','\n','\v','\f','\r'}
 const unsigned short reg_char_digit =  c_base_char_cnt + 1; // 'd' {'0' - '9'}
 const unsigned short reg_char_letter = c_base_char_cnt + 2; // 'l' {'a' - 'z','A' - 'Z'}
 
