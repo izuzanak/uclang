@@ -37,6 +37,8 @@ class uctrdp_c
 struct trdp_md_gate_s
 {
   location_s *md_location;
+  location_s *evt_snd_dlg;
+  location_s *evt_rcv_dlg;
   TRDP::MD::Gate gate;
   int gate_id;
 
@@ -67,6 +69,33 @@ struct trdp_md_message_s
 {
   TRDP::MD::Message message;
   location_s *data_location;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
+ * definition of structure trdp_md_call_s
+ */
+
+struct trdp_md_call_s
+{
+  location_s *gate_location;
+  TRDP::Handle handle;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
+ * definition of structure trdp_md_listener_s
+ */
+
+struct trdp_md_listener_s
+{
+  TRDP::MD::Listener listener;
+  location_s *gate_location;
+  TRDP::Handle handle;
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
@@ -116,6 +145,8 @@ inline void uctrdp_c::free_gate_id(int a_id)
 inline void trdp_md_gate_s::init()
 {/*{{{*/
   md_location = nullptr;
+  evt_snd_dlg = nullptr;
+  evt_rcv_dlg = nullptr;
   gate_id = INT_MIN;
 }/*}}}*/
 
@@ -127,6 +158,18 @@ inline void trdp_md_gate_s::clear(interpreter_thread_s &it)
   {
     ((TRDP::MD *)md_location->v_data_ptr)->CloseGate(gate);
     uctrdp_c::free_gate_id(gate_id);
+  }
+
+  // - release event send delegate -
+  if (evt_snd_dlg != nullptr)
+  {
+    it.release_location_ptr(evt_snd_dlg);
+  }
+
+  // - release event receive delegate -
+  if (evt_rcv_dlg != nullptr)
+  {
+    it.release_location_ptr(evt_rcv_dlg);
   }
 
   // - release md location -
@@ -182,6 +225,54 @@ inline void trdp_md_message_s::clear(interpreter_thread_s &it)
   if (data_location != nullptr)
   {
     it.release_location_ptr(data_location);
+  }
+
+  init();
+}/*}}}*/
+
+/*
+ * inline methods of structure trdp_md_call_s
+ */
+
+inline void trdp_md_call_s::init()
+{/*{{{*/
+  gate_location = nullptr;
+  handle = TRDP::TRDP_NULL_HANDLE;
+}/*}}}*/
+
+inline void trdp_md_call_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+
+  // - release gate location -
+  if (gate_location != nullptr)
+  {
+    it.release_location_ptr(gate_location);
+  }
+
+  init();
+}/*}}}*/
+
+/*
+ * inline methods of structure trdp_md_listener_s
+ */
+
+inline void trdp_md_listener_s::init()
+{/*{{{*/
+  gate_location = nullptr;
+  handle = TRDP::TRDP_NULL_HANDLE;
+}/*}}}*/
+
+inline void trdp_md_listener_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+
+  // - unregister listener - 
+  trdp_md_gate_s *tmg_ptr = (trdp_md_gate_s *)gate_location->v_data_ptr;
+  ((TRDP::MD *)tmg_ptr->md_location->v_data_ptr)->Cancel(handle);
+
+  // - release gate location -
+  if (gate_location != nullptr)
+  {
+    it.release_location_ptr(gate_location);
   }
 
   init();
