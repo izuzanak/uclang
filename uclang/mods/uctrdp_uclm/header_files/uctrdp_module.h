@@ -34,14 +34,21 @@ enum
   c_error_TRDP_SET_PERIOD_ERROR,
   c_error_TRDP_SET_COMPARS_ERROR,
   c_error_TRDP_MD_INITIALIZE_ERROR,
+  c_error_TRDP_MD_GATE_WRONG_CALLBACK_DELEGATE,
   c_error_TRDP_MD_GATE_OPEN_ERROR,
-  c_error_TRDP_MD_GATE_REQUEST_INVALID_SCOPE,
+  c_error_TRDP_MD_GATE_REQUEST_LISTEN_INVALID_SCOPE,
   c_error_TRDP_MD_GATE_REQUEST_INVALID_NUMBER_OF_RESPONSES,
   c_error_TRDP_MD_GATE_REQUEST_INVALID_NUMBER_OF_RETRIES,
+  c_error_TRDP_MD_GATE_REQUEST_ERROR,
+  c_error_TRDP_MD_GATE_LISTEN_ERROR,
   c_error_TRDP_MD_ADDRESS_INVALID_ADDRESS,
   c_error_TRDP_MD_ADDRESS_INVALID_USER_NAME,
   c_error_TRDP_MD_MESSAGE_DATA_TOO_BIG,
   c_error_TRDP_MD_MESSAGE_INVALID_TYPE,
+  c_error_TRDP_MD_EVENT_SEND_HANDLER_USER_DATA_ERROR,
+  c_error_TRDP_MD_EVENT_RECEIVE_MESSAGE_READ_ERROR,
+  c_error_TRDP_MD_EVENT_NOT_LONGER_EXISTS,
+  c_error_TRDP_MD_EVENT_MESSAGE_RELEASE_ERROR,
 };
 
 // - UCTRDP error strings -
@@ -199,11 +206,14 @@ void bic_trdp_md_event_receive_clear(interpreter_thread_s &it,location_s *locati
 bool bic_trdp_md_event_receive_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_event_receive_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_event_receive_method_listener_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_trdp_md_event_receive_method_Reply_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_trdp_md_event_receive_method_Confirm_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_event_receive_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_event_receive_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 // - class dummy TRDP_MD_EVENT -
 bool bic_trdp_md_event_method_msg_handle_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_event_method_result_code_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 

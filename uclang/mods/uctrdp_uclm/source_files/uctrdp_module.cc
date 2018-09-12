@@ -22,7 +22,7 @@ built_in_module_s module =
   uctrdp_classes,         // Classes
 
   0,                      // Error base index
-  15,                     // Error count
+  22,                     // Error count
   uctrdp_error_strings,   // Error strings
 
   uctrdp_initialize,      // Initialize function
@@ -54,14 +54,21 @@ const char *uctrdp_error_strings[] =
   "error_TRDP_SET_PERIOD_ERROR",
   "error_TRDP_SET_COMPARS_ERROR",
   "error_TRDP_MD_INITIALIZE_ERROR",
+  "error_TRDP_MD_GATE_WRONG_CALLBACK_DELEGATE",
   "error_TRDP_MD_GATE_OPEN_ERROR",
-  "error_TRDP_MD_GATE_REQUEST_INVALID_SCOPE",
+  "error_TRDP_MD_GATE_REQUEST_LISTEN_INVALID_SCOPE",
   "error_TRDP_MD_GATE_REQUEST_INVALID_NUMBER_OF_RESPONSES",
   "error_TRDP_MD_GATE_REQUEST_INVALID_NUMBER_OF_RETRIES",
+  "error_TRDP_MD_GATE_REQUEST_ERROR",
+  "error_TRDP_MD_GATE_LISTEN_ERROR",
   "error_TRDP_MD_ADDRESS_INVALID_ADDRESS",
   "error_TRDP_MD_ADDRESS_INVALID_USER_NAME",
   "error_TRDP_MD_MESSAGE_DATA_TOO_BIG",
   "error_TRDP_MD_MESSAGE_INVALID_TYPE",
+  "error_TRDP_MD_EVENT_SEND_HANDLER_USER_DATA_ERROR",
+  "error_TRDP_MD_EVENT_RECEIVE_MESSAGE_READ_ERROR",
+  "error_TRDP_MD_EVENT_NOT_LONGER_EXISTS",
+  "error_TRDP_MD_EVENT_MESSAGE_RELEASE_ERROR",
 };/*}}}*/
 
 // - UCTRDP initialize -
@@ -138,42 +145,49 @@ bool uctrdp_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nSet TRDP mode failed\n");
+    fprintf(stderr,"\nSet TRDP mode error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_SET_PERIOD_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nSet TRDP period failed\n");
+    fprintf(stderr,"\nSet TRDP period error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_SET_COMPARS_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nSet TRDP communication parameters failed\n");
+    fprintf(stderr,"\nSet TRDP communication parameters error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_INITIALIZE_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while initializing TRDP message data\n");
+    fprintf(stderr,"\nTRDP message data init error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_MD_GATE_WRONG_CALLBACK_DELEGATE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong type of delegate for TRDP message data gate\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_GATE_OPEN_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while openning TRDP message data gate\n");
+    fprintf(stderr,"\nTRDP message data gate open error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_TRDP_MD_GATE_REQUEST_INVALID_SCOPE:
+  case c_error_TRDP_MD_GATE_REQUEST_LISTEN_INVALID_SCOPE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nInvalid TRDP request communication scope\n");
+    fprintf(stderr,"\nInvalid TRDP request/listen communication scope\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_GATE_REQUEST_INVALID_NUMBER_OF_RESPONSES:
@@ -188,6 +202,20 @@ bool uctrdp_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nTRDP request, invalid number of requested retries\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_MD_GATE_REQUEST_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP request error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_MD_GATE_LISTEN_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP listen error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_ADDRESS_INVALID_ADDRESS:
@@ -216,6 +244,34 @@ bool uctrdp_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nInvalid TRDP message type\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_MD_EVENT_SEND_HANDLER_USER_DATA_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP send message, user data handle not found\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_MD_EVENT_RECEIVE_MESSAGE_READ_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP message data read error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_MD_EVENT_NOT_LONGER_EXISTS:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP message data event no longer exists\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_MD_EVENT_MESSAGE_RELEASE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP message release error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -605,11 +661,14 @@ bool bic_trdp_md_method_TrdpMd_1(interpreter_thread_s &it,unsigned stack_base,ul
   TRDP::MD *md_ptr = new TRDP::MD();
 
   // - ERROR -
-  if (md_ptr->Init(id) != TRDP::TRDP_OK)
+  int res = md_ptr->Init(id);
+  if (res != TRDP::TRDP_OK)
   {
     delete md_ptr;
 
-    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_INITIALIZE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_INITIALIZE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(res);
+
     return false;
   }
 
@@ -646,9 +705,12 @@ bool bic_trdp_md_method_SetMode_1(interpreter_thread_s &it,unsigned stack_base,u
   TRDP::MD *md_ptr = (TRDP::MD *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (md_ptr->SetMode(mode) != TRDP::TRDP_OK)
+  int res = md_ptr->SetMode(mode);
+  if (res != TRDP::TRDP_OK)
   {
-    exception_s::throw_exception(it,module.error_base + c_error_TRDP_SET_MODE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_SET_MODE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(res);
+
     return false;
   }
 
@@ -677,9 +739,12 @@ bool bic_trdp_md_method_SetPeriod_1(interpreter_thread_s &it,unsigned stack_base
   TRDP::MD *md_ptr = (TRDP::MD *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (md_ptr->SetPeriod(tick) != TRDP::TRDP_OK)
+  int res = md_ptr->SetPeriod(tick);
+  if (res != TRDP::TRDP_OK)
   {
-    exception_s::throw_exception(it,module.error_base + c_error_TRDP_SET_PERIOD_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_SET_PERIOD_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(res);
+
     return false;
   }
 
@@ -743,9 +808,12 @@ bool bic_trdp_md_method_SetComParsUdp_3(interpreter_thread_s &it,unsigned stack_
   TRDP::MD *md_ptr = (TRDP::MD *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (md_ptr->SetComPars(&pars,nullptr) != TRDP::TRDP_OK)
+  int res = md_ptr->SetComPars(&pars,nullptr);
+  if (res != TRDP::TRDP_OK)
   {
-    exception_s::throw_exception(it,module.error_base + c_error_TRDP_SET_COMPARS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_SET_COMPARS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(res);
+
     return false;
   }
 
@@ -761,9 +829,12 @@ bool bic_trdp_md_method_SetComParsTcp_3(interpreter_thread_s &it,unsigned stack_
   TRDP::MD *md_ptr = (TRDP::MD *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (md_ptr->SetComPars(nullptr,&pars) != TRDP::TRDP_OK)
+  int res = md_ptr->SetComPars(nullptr,&pars);
+  if (res != TRDP::TRDP_OK)
   {
-    exception_s::throw_exception(it,module.error_base + c_error_TRDP_SET_COMPARS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_SET_COMPARS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(res);
+
     return false;
   }
 
@@ -808,8 +879,7 @@ bool bic_trdp_md_method_OpenGate_5(interpreter_thread_s &it,unsigned stack_base,
   // - ERROR -
   if (evt_send_ptr->param_cnt != 1 || evt_receive_ptr->param_cnt != 1)
   {
-    // FIXME TODO throw proper exsception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_GATE_WRONG_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -825,14 +895,17 @@ bool bic_trdp_md_method_OpenGate_5(interpreter_thread_s &it,unsigned stack_base,
   int gate_id = uctrdp_c::new_gate_id();
 
   // - ERROR -
-  if (md_ptr->OpenGate(tmg_ptr->gate,*ipp_ptr,*opp_ptr,signum,gate_id) != TRDP::TRDP_OK)
+  int res = md_ptr->OpenGate(tmg_ptr->gate,*ipp_ptr,*opp_ptr,signum,gate_id);
+  if (res != TRDP::TRDP_OK)
   {
     uctrdp_c::free_gate_id(gate_id);
 
     tmg_ptr->clear(it);
     cfree(tmg_ptr);
 
-    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_GATE_OPEN_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_GATE_OPEN_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(res);
+
     return false;
   }
 
@@ -1018,8 +1091,7 @@ bool bic_trdp_md_gate_method_Listen_5(interpreter_thread_s &it,unsigned stack_ba
   // - ERROR -
   default:
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_GATE_REQUEST_LISTEN_INVALID_SCOPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1048,12 +1120,14 @@ bool bic_trdp_md_gate_method_Listen_5(interpreter_thread_s &it,unsigned stack_ba
   listener.ref = tml_location;
 
   // - ERROR -
-  if (md_ptr->Listen(&listener,&tml_ptr->handle) != TRDP::TRDP_OK)
+  int res = md_ptr->Listen(&listener,&tml_ptr->handle);
+  if (res != TRDP::TRDP_OK)
   {
     it.release_location_ptr(tml_location);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_GATE_LISTEN_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(res);
+
     return false;
   }
 
@@ -1121,7 +1195,7 @@ bool bic_trdp_md_gate_method_Request_6(interpreter_thread_s &it,unsigned stack_b
   // - ERROR -
   default:
 
-    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_GATE_REQUEST_INVALID_SCOPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_GATE_REQUEST_LISTEN_INVALID_SCOPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1144,13 +1218,15 @@ bool bic_trdp_md_gate_method_Request_6(interpreter_thread_s &it,unsigned stack_b
   tmc_ptr->init();
 
   // - ERROR -
-  if (tmg_ptr->gate.Request(tmm_ptr->message,dst_location,scope,nresp,nretr,flags,&tmc_ptr->handle,data_ptr->data) != TRDP::TRDP_OK)
+  int res = tmg_ptr->gate.Request(tmm_ptr->message,dst_location,scope,nresp,nretr,flags,&tmc_ptr->handle,data_ptr->data);
+  if (res != TRDP::TRDP_OK)
   {
     tmc_ptr->clear(it);
     cfree(tmc_ptr);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_GATE_REQUEST_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(res);
+
     return false;
   }
 
@@ -1217,15 +1293,6 @@ bool bic_trdp_md_gate_method_process_1(interpreter_thread_s &it,unsigned stack_b
             break;
           case TRDP::IND_MSG_RCV:
             {/*{{{*/
-
-              // - ERROR -
-              if (event.call->rc != TRDP::TRDP_OK)
-              {
-                // FIXME TODO throw proper exception
-                BIC_TODO_ERROR(__FILE__,__LINE__);
-                return false;
-              }
-
               delegate_ptr = (delegate_s *)tmg_ptr->evt_receive_dlg->v_data_ptr;
               event_class = c_bi_class_trdp_md_event_receive;
             }/*}}}*/
@@ -1273,10 +1340,12 @@ bool bic_trdp_md_gate_method_process_1(interpreter_thread_s &it,unsigned stack_b
           }
 
           // - ERROR -
-          if (tmg_ptr->gate.Release(event.hmsg) != TRDP::TRDP_OK)
+          int res = tmg_ptr->gate.Release(event.hmsg);
+          if (res != TRDP::TRDP_OK)
           {
-            // FIXME TODO throw proper exception
-            BIC_TODO_ERROR(__FILE__,__LINE__);
+            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_EVENT_MESSAGE_RELEASE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            new_exception->params.push(res);
+
             return false;
           }
         }/*}}}*/
@@ -2077,7 +2146,7 @@ built_in_class_s trdp_md_event_send_class =
 {/*{{{*/
   "TrdpMdEventSend",
   c_modifier_public | c_modifier_final,
-  5, trdp_md_event_send_methods,
+  6, trdp_md_event_send_methods,
   0, trdp_md_event_send_variables,
   bic_trdp_md_event_send_consts,
   bic_trdp_md_event_send_init,
@@ -2108,6 +2177,11 @@ built_in_method_s trdp_md_event_send_methods[] =
     bic_trdp_md_event_method_msg_handle_0
   },
   {
+    "result_code#0",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_md_event_method_result_code_0
+  },
+  {
     "user_data#0",
     c_modifier_public | c_modifier_final,
     bic_trdp_md_event_send_method_user_data_0
@@ -2127,6 +2201,20 @@ built_in_method_s trdp_md_event_send_methods[] =
 built_in_variable_s trdp_md_event_send_variables[] =
 {/*{{{*/
 };/*}}}*/
+
+#define BIC_TRDP_MD_EVENT_CHECK_AVAILABILITY() \
+/*{{{*/\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  \
+  TRDP::MD::Event *tme_ptr = (TRDP::MD::Event *)dst_location->v_data_ptr;\
+  \
+  /* - ERROR - */\
+  if (tme_ptr == nullptr)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_EVENT_NOT_LONGER_EXISTS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+/*}}}*/
 
 void bic_trdp_md_event_send_consts(location_array_s &const_locations)
 {/*{{{*/
@@ -2155,17 +2243,7 @@ bool bic_trdp_md_event_send_operator_binary_equal(interpreter_thread_s &it,unsig
 
 bool bic_trdp_md_event_send_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  TRDP::MD::Event *tme_ptr = (TRDP::MD::Event *)dst_location->v_data_ptr;
-
-  // - ERROR -
-  if (tme_ptr == nullptr)
-  {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
-    return false;
-  }
+  BIC_TRDP_MD_EVENT_CHECK_AVAILABILITY();
 
   trdp_md_gate_s *tmg_ptr = (trdp_md_gate_s *)((location_s *)tme_ptr->call->ref)->v_data_ptr;
 
@@ -2175,8 +2253,7 @@ bool bic_trdp_md_event_send_method_user_data_0(interpreter_thread_s &it,unsigned
   // - ERROR -
   if (handle_data_idx == c_idx_not_exist)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_EVENT_SEND_HANDLER_USER_DATA_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -2211,7 +2288,7 @@ built_in_class_s trdp_md_event_receive_class =
 {/*{{{*/
   "TrdpMdEventReceive",
   c_modifier_public | c_modifier_final,
-  6, trdp_md_event_receive_methods,
+  7, trdp_md_event_receive_methods,
   0, trdp_md_event_receive_variables,
   bic_trdp_md_event_receive_consts,
   bic_trdp_md_event_receive_init,
@@ -2240,6 +2317,11 @@ built_in_method_s trdp_md_event_receive_methods[] =
     "msg_handle#0",
     c_modifier_public | c_modifier_final,
     bic_trdp_md_event_method_msg_handle_0
+  },
+  {
+    "result_code#0",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_md_event_method_result_code_0
   },
   {
     "data#0",
@@ -2294,17 +2376,7 @@ bool bic_trdp_md_event_receive_operator_binary_equal(interpreter_thread_s &it,un
 
 bool bic_trdp_md_event_receive_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  TRDP::MD::Event *tme_ptr = (TRDP::MD::Event *)dst_location->v_data_ptr;
-
-  // - ERROR -
-  if (tme_ptr == nullptr)
-  {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
-    return false;
-  }
+  BIC_TRDP_MD_EVENT_CHECK_AVAILABILITY();
 
   trdp_md_listener_s *tml_ptr = (trdp_md_listener_s *)((location_s *)tme_ptr->call->ref)->v_data_ptr;
   trdp_md_gate_s *tmg_ptr = (trdp_md_gate_s *)tml_ptr->gate_location->v_data_ptr;
@@ -2313,13 +2385,15 @@ bool bic_trdp_md_event_receive_method_data_0(interpreter_thread_s &it,unsigned s
   data_ptr->create(tme_ptr->msg->size);
 
   // - ERROR -
-  if (tmg_ptr->gate.Read(tme_ptr->hmsg,data_ptr->data,tme_ptr->msg->size) != TRDP::TRDP_OK)
+  int res = tmg_ptr->gate.Read(tme_ptr->hmsg,data_ptr->data,tme_ptr->msg->size);
+  if (res != TRDP::TRDP_OK)
   {
     data_ptr->clear();
     cfree(data_ptr);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_EVENT_RECEIVE_MESSAGE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(res);
+
     return false;
   }
 
@@ -2330,17 +2404,7 @@ bool bic_trdp_md_event_receive_method_data_0(interpreter_thread_s &it,unsigned s
 
 bool bic_trdp_md_event_receive_method_listener_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  TRDP::MD::Event *tme_ptr = (TRDP::MD::Event *)dst_location->v_data_ptr;
-
-  // - ERROR -
-  if (tme_ptr == nullptr)
-  {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
-    return false;
-  }
+  BIC_TRDP_MD_EVENT_CHECK_AVAILABILITY();
 
   location_s *lst_location = (location_s *)tme_ptr->call->ref;
 
@@ -2372,19 +2436,20 @@ bool bic_trdp_md_event_receive_method_print_0(interpreter_thread_s &it,unsigned 
 
 bool bic_trdp_md_event_method_msg_handle_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  TRDP::MD::Event *tme_ptr = (TRDP::MD::Event *)dst_location->v_data_ptr;
-
-  // - ERROR -
-  if (tme_ptr == nullptr)
-  {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
-    return false;
-  }
+  BIC_TRDP_MD_EVENT_CHECK_AVAILABILITY();
 
   long long int result = tme_ptr->hmsg;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_trdp_md_event_method_result_code_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TRDP_MD_EVENT_CHECK_AVAILABILITY();
+
+  long long int result = tme_ptr->call->rc;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
