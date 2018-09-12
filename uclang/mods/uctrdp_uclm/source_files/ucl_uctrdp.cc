@@ -7,6 +7,20 @@ include "ucl_uctrdp.h"
 uctrdp_c g_uctrdp;
 
 /*
+ * methods of generated structures
+ */
+
+// -- handle_data_s --
+@begin
+methods handle_data_s
+@end
+
+// -- handle_data_rb_tree_s --
+@begin
+methods handle_data_rb_tree_s
+@end
+
+/*
  * static members of class uctrdp_c
  */
 

@@ -13,6 +13,25 @@ using namespace Ucf2;
 #include <uctrdp.h>
 
 /*
+ * definition of generated structures
+ */
+
+// -- handle_data_s --
+@begin
+struct
+<
+unsigned:handle
+pointer:user_data_loc
+>
+handle_data_s;
+@end
+
+// -- handle_data_rb_tree_s --
+@begin
+safe_rb_tree<handle_data_s> handle_data_rb_tree_s;
+@end
+
+/*
  * definition of class uctrdp_c
  */
 class uctrdp_c
@@ -37,8 +56,9 @@ class uctrdp_c
 struct trdp_md_gate_s
 {
   location_s *md_location;
-  location_s *evt_snd_dlg;
-  location_s *evt_rcv_dlg;
+  location_s *evt_send_dlg;
+  location_s *evt_receive_dlg;
+  handle_data_rb_tree_s handle_data;
   TRDP::MD::Gate gate;
   int gate_id;
 
@@ -94,12 +114,32 @@ struct trdp_md_call_s
 struct trdp_md_listener_s
 {
   TRDP::MD::Listener listener;
+  location_s *user_data_loc;
   location_s *gate_location;
   TRDP::Handle handle;
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
 };
+
+/*
+ * inline methods of generated structures
+ */
+
+// -- handle_data_s --
+@begin
+inlines handle_data_s
+@end
+
+// -- handle_data_rb_tree_s --
+@begin
+inlines handle_data_rb_tree_s
+@end
+
+inline int handle_data_rb_tree_s::__compare_value(handle_data_s &a_first,handle_data_s &a_second)
+{/*{{{*/
+  return a_first.handle < a_second.handle ? -1 : a_first.handle > a_second.handle ? 1 : 0;
+}/*}}}*/
 
 /*
  * inline methods of class uctrdp_c
@@ -145,8 +185,9 @@ inline void uctrdp_c::free_gate_id(int a_id)
 inline void trdp_md_gate_s::init()
 {/*{{{*/
   md_location = nullptr;
-  evt_snd_dlg = nullptr;
-  evt_rcv_dlg = nullptr;
+  evt_send_dlg = nullptr;
+  evt_receive_dlg = nullptr;
+  handle_data.init();
   gate_id = INT_MIN;
 }/*}}}*/
 
@@ -161,16 +202,33 @@ inline void trdp_md_gate_s::clear(interpreter_thread_s &it)
   }
 
   // - release event send delegate -
-  if (evt_snd_dlg != nullptr)
+  if (evt_send_dlg != nullptr)
   {
-    it.release_location_ptr(evt_snd_dlg);
+    it.release_location_ptr(evt_send_dlg);
   }
 
   // - release event receive delegate -
-  if (evt_rcv_dlg != nullptr)
+  if (evt_receive_dlg != nullptr)
   {
-    it.release_location_ptr(evt_rcv_dlg);
+    it.release_location_ptr(evt_receive_dlg);
   }
+
+  // - release user data of all handles -
+  if (handle_data.count != 0)
+  {
+    handle_data_rb_tree_s_node *hnd_ptr = handle_data.data;
+    handle_data_rb_tree_s_node *hnd_ptr_end = hnd_ptr + handle_data.used;
+
+    do {
+      if (hnd_ptr->valid)
+      {
+        // - release user data location -
+        it.release_location_ptr((location_s *)hnd_ptr->object.user_data_loc);
+      }
+    } while(++hnd_ptr < hnd_ptr_end);
+  }
+
+  handle_data.clear();
 
   // - release md location -
   if (md_location != nullptr)
@@ -258,6 +316,7 @@ inline void trdp_md_call_s::clear(interpreter_thread_s &it)
 
 inline void trdp_md_listener_s::init()
 {/*{{{*/
+  user_data_loc = nullptr;
   gate_location = nullptr;
   handle = TRDP::TRDP_NULL_HANDLE;
 }/*}}}*/
@@ -265,7 +324,13 @@ inline void trdp_md_listener_s::init()
 inline void trdp_md_listener_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
-  // - unregister listener - 
+  // - release user data location -
+  if (user_data_loc != nullptr)
+  {
+    it.release_location_ptr(user_data_loc);
+  }
+
+  // - unregister listener -
   trdp_md_gate_s *tmg_ptr = (trdp_md_gate_s *)gate_location->v_data_ptr;
   ((TRDP::MD *)tmg_ptr->md_location->v_data_ptr)->Cancel(handle);
 

@@ -96,8 +96,8 @@ void bic_trdp_md_gate_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_trdp_md_gate_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_trdp_md_gate_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_trdp_md_gate_method_Listen_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_trdp_md_gate_method_Request_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_gate_method_Listen_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_gate_method_Request_6(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_gate_method_process_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_gate_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_gate_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -169,6 +169,7 @@ void bic_trdp_md_listener_clear(interpreter_thread_s &it,location_s *location_pt
 bool bic_trdp_md_listener_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 //bool bic_trdp_md_listener_method_Enable_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 //bool bic_trdp_md_listener_method_Disable_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_listener_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_listener_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_listener_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -182,6 +183,7 @@ void bic_trdp_md_event_send_init(interpreter_thread_s &it,location_s *location_p
 void bic_trdp_md_event_send_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_trdp_md_event_send_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_event_send_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_event_send_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_event_send_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -195,8 +197,13 @@ void bic_trdp_md_event_receive_init(interpreter_thread_s &it,location_s *locatio
 void bic_trdp_md_event_receive_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_trdp_md_event_receive_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_event_receive_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_event_receive_method_listener_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_event_receive_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_event_receive_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class dummy TRDP_MD_EVENT -
+bool bic_trdp_md_event_method_msg_handle_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 

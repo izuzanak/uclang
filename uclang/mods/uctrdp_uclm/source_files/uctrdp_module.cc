@@ -802,11 +802,11 @@ bool bic_trdp_md_method_OpenGate_5(interpreter_thread_s &it,unsigned stack_base,
   }
 
   // - retrieve delegate pointers -
-  delegate_s *evt_snd_dlg_ptr = (delegate_s *)src_3_location->v_data_ptr;
-  delegate_s *evt_rcv_dlg_ptr = (delegate_s *)src_4_location->v_data_ptr;
+  delegate_s *evt_send_ptr = (delegate_s *)src_3_location->v_data_ptr;
+  delegate_s *evt_receive_ptr = (delegate_s *)src_4_location->v_data_ptr;
 
   // - ERROR -
-  if (evt_snd_dlg_ptr->param_cnt != 2 || evt_rcv_dlg_ptr->param_cnt != 2)
+  if (evt_send_ptr->param_cnt != 1 || evt_receive_ptr->param_cnt != 1)
   {
     // FIXME TODO throw proper exsception
     BIC_TODO_ERROR(__FILE__,__LINE__);
@@ -842,11 +842,11 @@ bool bic_trdp_md_method_OpenGate_5(interpreter_thread_s &it,unsigned stack_base,
 
   // - set reference to event send delegate -
   src_3_location->v_reference_cnt.atomic_inc();
-  tmg_ptr->evt_snd_dlg = src_3_location;
+  tmg_ptr->evt_send_dlg = src_3_location;
 
   // - set reference to event receive delegate -
   src_4_location->v_reference_cnt.atomic_inc();
-  tmg_ptr->evt_rcv_dlg = src_4_location;
+  tmg_ptr->evt_receive_dlg = src_4_location;
 
   // - set gate identifier -
   tmg_ptr->gate_id = gate_id;
@@ -906,14 +906,14 @@ built_in_method_s trdp_md_gate_methods[] =
     bic_trdp_md_gate_operator_binary_equal
   },
   {
-    "Listen#4",
+    "Listen#5",
     c_modifier_public | c_modifier_final,
-    bic_trdp_md_gate_method_Listen_4
+    bic_trdp_md_gate_method_Listen_5
   },
   {
-    "Request#5",
+    "Request#6",
     c_modifier_public | c_modifier_final,
-    bic_trdp_md_gate_method_Request_5
+    bic_trdp_md_gate_method_Request_6
   },
   {
     "process#1",
@@ -968,13 +968,14 @@ bool bic_trdp_md_gate_operator_binary_equal(interpreter_thread_s &it,unsigned st
   return true;
 }/*}}}*/
 
-bool bic_trdp_md_gate_method_Listen_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_trdp_md_gate_method_Listen_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
   location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
   location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
+  location_s *src_4_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_4_op_idx]);
 
   long long int scope;
   long long int flags;
@@ -986,12 +987,13 @@ bool bic_trdp_md_gate_method_Listen_4(interpreter_thread_s &it,unsigned stack_ba
       !it.retrieve_integer(src_3_location,comm_id))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Listen#4");
-    new_exception->params.push(4);
+    BIC_EXCEPTION_PUSH_METHOD_RI("Listen#5");
+    new_exception->params.push(5);
     new_exception->params.push(src_0_location->v_type);
     new_exception->params.push(src_1_location->v_type);
     new_exception->params.push(src_2_location->v_type);
     new_exception->params.push(src_3_location->v_type);
+    new_exception->params.push(src_4_location->v_type);
 
     return false;
   }
@@ -1015,7 +1017,7 @@ bool bic_trdp_md_gate_method_Listen_4(interpreter_thread_s &it,unsigned stack_ba
 
   // - ERROR -
   default:
-    
+
     // FIXME TODO throw proper exception
     BIC_TODO_ERROR(__FILE__,__LINE__);
     return false;
@@ -1031,7 +1033,7 @@ bool bic_trdp_md_gate_method_Listen_4(interpreter_thread_s &it,unsigned stack_ba
   TRDP::MD::Listener &listener = tml_ptr->listener;
   memset(&listener,0,sizeof(listener));
 
-  // FIXME TODO listener properties 
+  // FIXME TODO listener properties
   listener.hgate = tmg_ptr->gate.GetHandle();
   listener.flg = flags;
   //unsigned char red; //< redundancy group identifier
@@ -1055,6 +1057,10 @@ bool bic_trdp_md_gate_method_Listen_4(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
+  // - set user data reference -
+  src_4_location->v_reference_cnt.atomic_inc();
+  tml_ptr->user_data_loc = src_4_location;
+
   // - set gate location reference -
   dst_location->v_reference_cnt.atomic_inc();
   tml_ptr->gate_location = dst_location;
@@ -1064,7 +1070,7 @@ bool bic_trdp_md_gate_method_Listen_4(interpreter_thread_s &it,unsigned stack_ba
   return true;
 }/*}}}*/
 
-bool bic_trdp_md_gate_method_Request_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_trdp_md_gate_method_Request_6(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
@@ -1072,6 +1078,7 @@ bool bic_trdp_md_gate_method_Request_5(interpreter_thread_s &it,unsigned stack_b
   location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
   location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
   location_s *src_4_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_4_op_idx]);
+  location_s *src_5_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_5_op_idx]);
 
   long long int scope;
   long long int flags;
@@ -1085,13 +1092,14 @@ bool bic_trdp_md_gate_method_Request_5(interpreter_thread_s &it,unsigned stack_b
       !it.retrieve_integer(src_4_location,nretr))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Request#5");
-    new_exception->params.push(5);
+    BIC_EXCEPTION_PUSH_METHOD_RI("Request#6");
+    new_exception->params.push(6);
     new_exception->params.push(src_0_location->v_type);
     new_exception->params.push(src_1_location->v_type);
     new_exception->params.push(src_2_location->v_type);
     new_exception->params.push(src_3_location->v_type);
     new_exception->params.push(src_4_location->v_type);
+    new_exception->params.push(src_5_location->v_type);
 
     return false;
   }
@@ -1112,7 +1120,7 @@ bool bic_trdp_md_gate_method_Request_5(interpreter_thread_s &it,unsigned stack_b
 
   // - ERROR -
   default:
-    
+
     exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_GATE_REQUEST_INVALID_SCOPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -1136,7 +1144,7 @@ bool bic_trdp_md_gate_method_Request_5(interpreter_thread_s &it,unsigned stack_b
   tmc_ptr->init();
 
   // - ERROR -
-  if (tmg_ptr->gate.Request(tmm_ptr->message,nullptr,scope,nresp,nretr,flags,&tmc_ptr->handle,data_ptr->data) != TRDP::TRDP_OK)
+  if (tmg_ptr->gate.Request(tmm_ptr->message,dst_location,scope,nresp,nretr,flags,&tmc_ptr->handle,data_ptr->data) != TRDP::TRDP_OK)
   {
     tmc_ptr->clear(it);
     cfree(tmc_ptr);
@@ -1149,6 +1157,11 @@ bool bic_trdp_md_gate_method_Request_5(interpreter_thread_s &it,unsigned stack_b
   // - set gate location reference -
   dst_location->v_reference_cnt.atomic_inc();
   tmc_ptr->gate_location = dst_location;
+
+  // - store handle user data -
+  src_5_location->v_reference_cnt.atomic_inc();
+  handle_data_s handle_data{tmc_ptr->handle,src_5_location};
+  tmg_ptr->handle_data.insert(handle_data);
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_trdp_md_call,tmc_ptr);
   BIC_SET_RESULT(new_location);
@@ -1189,54 +1202,43 @@ bool bic_trdp_md_gate_method_process_1(interpreter_thread_s &it,unsigned stack_b
       switch (event.code)
       {
       case TRDP::IND_MSG_SND:
-        {/*{{{*/
-          delegate_s *delegate_ptr = (delegate_s *)tmg_ptr->evt_snd_dlg->v_data_ptr;
-
-          BIC_CREATE_NEW_LOCATION(event_location,c_bi_class_trdp_md_event_receive,&event);
-
-          // - create trdp_md_call object -
-          trdp_md_call_s *tmc_ptr = (trdp_md_call_s *)cmalloc(sizeof(trdp_md_call_s));
-          tmc_ptr->init();
-
-          // - set md gate reference -
-          dst_location->v_reference_cnt.atomic_inc();
-          tmc_ptr->gate_location = dst_location;
-
-          // - set message handle -
-          tmc_ptr->handle = event.hmsg;
-
-          BIC_CREATE_NEW_LOCATION_REFS(call_location,c_bi_class_trdp_md_call,tmc_ptr,0);
-
-          // - callback parameters -
-          const unsigned param_cnt = 2;
-          pointer param_data[2] = {event_location,call_location};
-
-          // - call delegate method -
-          location_s *trg_location = nullptr;
-          BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,operands[c_source_pos_idx],
-
-            // - reset event location -
-            event_location->v_data_ptr = (TRDP::MD::Event *)nullptr;
-            it.release_location_ptr(event_location);
-
-            return false;
-          );
-          it.release_location_ptr(trg_location);
-
-          // - reset event location -
-          event_location->v_data_ptr = (TRDP::MD::Event *)nullptr;
-          it.release_location_ptr(event_location);
-        }/*}}}*/
-        break;
       case TRDP::IND_MSG_RCV:
         {/*{{{*/
-          delegate_s *delegate_ptr = (delegate_s *)tmg_ptr->evt_rcv_dlg->v_data_ptr;
+          delegate_s *delegate_ptr;
+          unsigned event_class;
 
-          BIC_CREATE_NEW_LOCATION(event_location,c_bi_class_trdp_md_event_receive,&event);
+          switch (event.code)
+          {
+          case TRDP::IND_MSG_SND:
+            {/*{{{*/
+              delegate_ptr = (delegate_s *)tmg_ptr->evt_send_dlg->v_data_ptr;
+              event_class = c_bi_class_trdp_md_event_send;
+            }/*}}}*/
+            break;
+          case TRDP::IND_MSG_RCV:
+            {/*{{{*/
+
+              // - ERROR -
+              if (event.call->rc != TRDP::TRDP_OK)
+              {
+                // FIXME TODO throw proper exception
+                BIC_TODO_ERROR(__FILE__,__LINE__);
+                return false;
+              }
+
+              delegate_ptr = (delegate_s *)tmg_ptr->evt_receive_dlg->v_data_ptr;
+              event_class = c_bi_class_trdp_md_event_receive;
+            }/*}}}*/
+            break;
+          default:
+            cassert(0);
+          }
+
+          BIC_CREATE_NEW_LOCATION(event_location,event_class,&event);
 
           // - callback parameters -
-          const unsigned param_cnt = 2;
-          pointer param_data[2] = {event_location,event.call->ref};
+          const unsigned param_cnt = 1;
+          pointer *param_data = (pointer *)&event_location;
 
           // - call delegate method -
           location_s *trg_location = nullptr;
@@ -1253,6 +1255,30 @@ bool bic_trdp_md_gate_method_process_1(interpreter_thread_s &it,unsigned stack_b
           // - reset event location -
           event_location->v_data_ptr = (TRDP::MD::Event *)nullptr;
           it.release_location_ptr(event_location);
+
+          // - release handle user data -
+          if (event.code == TRDP::IND_MSG_SND)
+          {
+            handle_data_s handle_data{event.hmsg,nullptr};
+
+            unsigned handle_data_idx = tmg_ptr->handle_data.get_idx(handle_data);
+            if (handle_data_idx != c_idx_not_exist)
+            {
+              location_s *user_data_loc = (location_s *)tmg_ptr->handle_data[handle_data_idx].user_data_loc;
+              tmg_ptr->handle_data.remove(handle_data_idx);
+
+              // - release user data location -
+              it.release_location_ptr(user_data_loc);
+            }
+          }
+
+          // - ERROR -
+          if (tmg_ptr->gate.Release(event.hmsg) != TRDP::TRDP_OK)
+          {
+            // FIXME TODO throw proper exception
+            BIC_TODO_ERROR(__FILE__,__LINE__);
+            return false;
+          }
         }/*}}}*/
         break;
       }
@@ -1796,7 +1822,7 @@ bool bic_trdp_md_message_method_TrdpMdMessage_5(interpreter_thread_s &it,unsigne
   TRDP::MD::Message &message = tmm_ptr->message;
   memset(&message,0,sizeof(message));
 
-  // FIXME TODO message properties 
+  // FIXME TODO message properties
   message.type = type;
   message.comid = comm_id;
   message.size = data_ptr->size - 1;
@@ -1937,7 +1963,7 @@ built_in_class_s trdp_md_listener_class =
 {/*{{{*/
   "TrdpMdListener",
   c_modifier_public | c_modifier_final,
-  3, trdp_md_listener_methods,
+  4, trdp_md_listener_methods,
   0, trdp_md_listener_variables,
   bic_trdp_md_listener_consts,
   bic_trdp_md_listener_init,
@@ -1961,6 +1987,11 @@ built_in_method_s trdp_md_listener_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_trdp_md_listener_operator_binary_equal
+  },
+  {
+    "user_data#0",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_md_listener_method_user_data_0
   },
   {
     "to_string#0",
@@ -2010,6 +2041,19 @@ bool bic_trdp_md_listener_operator_binary_equal(interpreter_thread_s &it,unsigne
   return true;
 }/*}}}*/
 
+bool bic_trdp_md_listener_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  trdp_md_listener_s *tml_ptr = (trdp_md_listener_s *)dst_location->v_data_ptr;
+
+  location_s *new_ref_location = it.get_new_reference(&tml_ptr->user_data_loc);
+
+  BIC_SET_RESULT(new_ref_location);
+
+  return true;
+}/*}}}*/
+
 bool bic_trdp_md_listener_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -2033,7 +2077,7 @@ built_in_class_s trdp_md_event_send_class =
 {/*{{{*/
   "TrdpMdEventSend",
   c_modifier_public | c_modifier_final,
-  3, trdp_md_event_send_methods,
+  5, trdp_md_event_send_methods,
   0, trdp_md_event_send_variables,
   bic_trdp_md_event_send_consts,
   bic_trdp_md_event_send_init,
@@ -2057,6 +2101,16 @@ built_in_method_s trdp_md_event_send_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_trdp_md_event_send_operator_binary_equal
+  },
+  {
+    "msg_handle#0",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_md_event_method_msg_handle_0
+  },
+  {
+    "user_data#0",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_md_event_send_method_user_data_0
   },
   {
     "to_string#0",
@@ -2099,6 +2153,41 @@ bool bic_trdp_md_event_send_operator_binary_equal(interpreter_thread_s &it,unsig
   return true;
 }/*}}}*/
 
+bool bic_trdp_md_event_send_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  TRDP::MD::Event *tme_ptr = (TRDP::MD::Event *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (tme_ptr == nullptr)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  trdp_md_gate_s *tmg_ptr = (trdp_md_gate_s *)((location_s *)tme_ptr->call->ref)->v_data_ptr;
+
+  handle_data_s handle_data{tme_ptr->hmsg,nullptr};
+  unsigned handle_data_idx = tmg_ptr->handle_data.get_idx(handle_data);
+
+  // - ERROR -
+  if (handle_data_idx == c_idx_not_exist)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - retrieve user data location -
+  location_s *user_data_loc = it.get_new_reference((location_s **)&tmg_ptr->handle_data[handle_data_idx].user_data_loc);
+
+  BIC_SET_RESULT(user_data_loc);
+
+  return true;
+}/*}}}*/
+
 bool bic_trdp_md_event_send_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -2122,7 +2211,7 @@ built_in_class_s trdp_md_event_receive_class =
 {/*{{{*/
   "TrdpMdEventReceive",
   c_modifier_public | c_modifier_final,
-  3, trdp_md_event_receive_methods,
+  6, trdp_md_event_receive_methods,
   0, trdp_md_event_receive_variables,
   bic_trdp_md_event_receive_consts,
   bic_trdp_md_event_receive_init,
@@ -2146,6 +2235,21 @@ built_in_method_s trdp_md_event_receive_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_trdp_md_event_receive_operator_binary_equal
+  },
+  {
+    "msg_handle#0",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_md_event_method_msg_handle_0
+  },
+  {
+    "data#0",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_md_event_receive_method_data_0
+  },
+  {
+    "listener#0",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_md_event_receive_method_listener_0
   },
   {
     "to_string#0",
@@ -2188,6 +2292,64 @@ bool bic_trdp_md_event_receive_operator_binary_equal(interpreter_thread_s &it,un
   return true;
 }/*}}}*/
 
+bool bic_trdp_md_event_receive_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  TRDP::MD::Event *tme_ptr = (TRDP::MD::Event *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (tme_ptr == nullptr)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  trdp_md_listener_s *tml_ptr = (trdp_md_listener_s *)((location_s *)tme_ptr->call->ref)->v_data_ptr;
+  trdp_md_gate_s *tmg_ptr = (trdp_md_gate_s *)tml_ptr->gate_location->v_data_ptr;
+
+  string_s *data_ptr = it.get_new_string_ptr();
+  data_ptr->create(tme_ptr->msg->size);
+
+  // - ERROR -
+  if (tmg_ptr->gate.Read(tme_ptr->hmsg,data_ptr->data,tme_ptr->msg->size) != TRDP::TRDP_OK)
+  {
+    data_ptr->clear();
+    cfree(data_ptr);
+
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_SET_RESULT_STRING(data_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_trdp_md_event_receive_method_listener_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  TRDP::MD::Event *tme_ptr = (TRDP::MD::Event *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (tme_ptr == nullptr)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  location_s *lst_location = (location_s *)tme_ptr->call->ref;
+
+  lst_location->v_reference_cnt.atomic_inc();
+  BIC_SET_RESULT(lst_location);
+
+  return true;
+}/*}}}*/
+
 bool bic_trdp_md_event_receive_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -2202,6 +2364,29 @@ bool bic_trdp_md_event_receive_method_print_0(interpreter_thread_s &it,unsigned 
   printf("TrdpMdEventReceive");
 
   BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class dummy FD -
+
+bool bic_trdp_md_event_method_msg_handle_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  TRDP::MD::Event *tme_ptr = (TRDP::MD::Event *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (tme_ptr == nullptr)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  long long int result = tme_ptr->hmsg;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
