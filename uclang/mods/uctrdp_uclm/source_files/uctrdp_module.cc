@@ -4,7 +4,6 @@ include "uctrdp_module.h"
 @end
 
 // - UCTRDP indexes of built in classes -
-unsigned c_bi_class_trdp = c_idx_not_exist;
 unsigned c_bi_class_trdp_md = c_idx_not_exist;
 unsigned c_bi_class_trdp_md_gate = c_idx_not_exist;
 unsigned c_bi_class_trdp_md_gate_params = c_idx_not_exist;
@@ -17,7 +16,7 @@ unsigned c_bi_class_trdp_md_event = c_idx_not_exist;
 // - UCTRDP module -
 built_in_module_s module =
 {/*{{{*/
-  9,                      // Class count
+  8,                      // Class count
   uctrdp_classes,         // Classes
 
   0,                      // Error base index
@@ -31,7 +30,6 @@ built_in_module_s module =
 // - UCTRDP classes -
 built_in_class_s *uctrdp_classes[] =
 {/*{{{*/
-  &trdp_class,
   &trdp_md_class,
   &trdp_md_gate_class,
   &trdp_md_gate_params_class,
@@ -73,9 +71,6 @@ const char *uctrdp_error_strings[] =
 bool uctrdp_initialize(script_parser_s &sp)
 {/*{{{*/
   unsigned class_base_idx = sp.class_records.used - module.class_cnt;
-
-  // - initialize trdp class identifier -
-  c_bi_class_trdp = class_base_idx++;
 
   // - initialize trdp_md class identifier -
   c_bi_class_trdp_md = class_base_idx++;
@@ -279,16 +274,16 @@ bool uctrdp_print_exception(interpreter_s &it,exception_s &exception)
   return true;
 }/*}}}*/
 
-// - class TRDP -
-built_in_class_s trdp_class =
+// - class TRDP_MD -
+built_in_class_s trdp_md_class =
 {/*{{{*/
-  "Trdp",
+  "TrdpMd",
   c_modifier_public | c_modifier_final,
-  2, trdp_methods,
-  9 + 3 + 9 + 1 + 6 + 5 + 6 + 4, trdp_variables,
-  bic_trdp_consts,
-  bic_trdp_init,
-  bic_trdp_clear,
+  9, trdp_md_methods,
+  9 + 3 + 9 + 1 + 6 + 4 + 5 + 6, trdp_md_variables,
+  bic_trdp_md_consts,
+  bic_trdp_md_init,
+  bic_trdp_md_clear,
   nullptr,
   nullptr,
   nullptr,
@@ -302,21 +297,56 @@ built_in_class_s trdp_class =
   nullptr
 };/*}}}*/
 
-built_in_method_s trdp_methods[] =
+built_in_method_s trdp_md_methods[] =
 {/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_md_operator_binary_equal
+  },
+  {
+    "TrdpMd#1",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_md_method_TrdpMd_1
+  },
+  {
+    "SetMode#1",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_md_method_SetMode_1
+  },
+  {
+    "SetPeriod#1",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_md_method_SetPeriod_1
+  },
+  {
+    "SetComParsUdp#3",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_md_method_SetComParsUdp_3
+  },
+  {
+    "SetComParsTcp#3",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_md_method_SetComParsTcp_3
+  },
+  {
+    "OpenGate#5",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_md_method_OpenGate_5
+  },
   {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_trdp_method_to_string_0
+    bic_trdp_md_method_to_string_0
   },
   {
     "print#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_trdp_method_print_0
+    bic_trdp_md_method_print_0
   },
 };/*}}}*/
 
-built_in_variable_s trdp_variables[] =
+built_in_variable_s trdp_md_variables[] =
 {/*{{{*/
 
   // - trdp generic code constants -
@@ -357,6 +387,13 @@ built_in_variable_s trdp_variables[] =
   { "CS_OPT_TOPO", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "CS_ETB_ZERO", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
+  // - max data size constants -
+  { "MAX_PD_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_MD_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  { "MAX_USR_LEN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_HST_LEN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
   // - message/listener flag constants -
   { "MF_TCP", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "MF_UDP", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -372,16 +409,9 @@ built_in_variable_s trdp_variables[] =
   { "MT_CONFIRM", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "MT_ERROR", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
-  // - max data size constants -
-  { "MAX_PD_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "MAX_MD_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
-
-  { "MAX_USR_LEN", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "MAX_HST_LEN", c_modifier_public | c_modifier_static | c_modifier_static_const },
-
 };/*}}}*/
 
-void bic_trdp_consts(location_array_s &const_locations)
+void bic_trdp_md_consts(location_array_s &const_locations)
 {/*{{{*/
 
   // - insert trdp generic code constants -
@@ -477,6 +507,24 @@ void bic_trdp_consts(location_array_s &const_locations)
     CREATE_TRDP_CS_BIC_STATIC(TRDP::CS_ETB_ZERO);
   }
 
+  // - insert max data size constants -
+  {
+    const_locations.push_blanks(4);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 4);
+
+#define CREATE_TRDP_DATA_SIZE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_TRDP_DATA_SIZE_BIC_STATIC(TRDP::MAX_PD_SIZE);
+    CREATE_TRDP_DATA_SIZE_BIC_STATIC(TRDP::MAX_MD_SIZE);
+
+    CREATE_TRDP_DATA_SIZE_BIC_STATIC(TRDP::MAX_USR_LEN);
+    CREATE_TRDP_DATA_SIZE_BIC_STATIC(TRDP::MAX_HST_LEN);
+  }
+
   // - insert message/listener flag constants -
   {
     const_locations.push_blanks(5);
@@ -514,132 +562,6 @@ void bic_trdp_consts(location_array_s &const_locations)
     CREATE_TRDP_MESSAGE_TYPE_BIC_STATIC(TRDP::MT_ERROR);
   }
 
-  // - insert max data size constants -
-  {
-    const_locations.push_blanks(4);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 4);
-
-#define CREATE_TRDP_DATA_SIZE_BIC_STATIC(VALUE)\
-  cv_ptr->v_type = c_bi_class_integer;\
-  cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (long long int)VALUE;\
-  cv_ptr++;
-
-    CREATE_TRDP_DATA_SIZE_BIC_STATIC(TRDP::MAX_PD_SIZE);
-    CREATE_TRDP_DATA_SIZE_BIC_STATIC(TRDP::MAX_MD_SIZE);
-
-    CREATE_TRDP_DATA_SIZE_BIC_STATIC(TRDP::MAX_USR_LEN);
-    CREATE_TRDP_DATA_SIZE_BIC_STATIC(TRDP::MAX_HST_LEN);
-  }
-
-}/*}}}*/
-
-void bic_trdp_init(interpreter_thread_s &it,location_s *location_ptr)
-{/*{{{*/
-  cassert(0);
-}/*}}}*/
-
-void bic_trdp_clear(interpreter_thread_s &it,location_s *location_ptr)
-{/*{{{*/
-  cassert(0);
-}/*}}}*/
-
-bool bic_trdp_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  BIC_TO_STRING_WITHOUT_DEST(
-    string_ptr->set(strlen("Trdp"),"Trdp");
-  );
-
-  return true;
-}/*}}}*/
-
-bool bic_trdp_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  printf("Trdp");
-
-  BIC_SET_RESULT_BLANK();
-
-  return true;
-}/*}}}*/
-
-// - class TRDP_MD -
-built_in_class_s trdp_md_class =
-{/*{{{*/
-  "TrdpMd",
-  c_modifier_public | c_modifier_final,
-  9, trdp_md_methods,
-  0, trdp_md_variables,
-  bic_trdp_md_consts,
-  bic_trdp_md_init,
-  bic_trdp_md_clear,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr
-};/*}}}*/
-
-built_in_method_s trdp_md_methods[] =
-{/*{{{*/
-  {
-    "operator_binary_equal#1",
-    c_modifier_public | c_modifier_final,
-    bic_trdp_md_operator_binary_equal
-  },
-  {
-    "TrdpMd#1",
-    c_modifier_public | c_modifier_final,
-    bic_trdp_md_method_TrdpMd_1
-  },
-  {
-    "SetMode#1",
-    c_modifier_public | c_modifier_final,
-    bic_trdp_md_method_SetMode_1
-  },
-  {
-    "SetPeriod#1",
-    c_modifier_public | c_modifier_final,
-    bic_trdp_md_method_SetPeriod_1
-  },
-  {
-    "SetComParsUdp#3",
-    c_modifier_public | c_modifier_final,
-    bic_trdp_md_method_SetComParsUdp_3
-  },
-  {
-    "SetComParsTcp#3",
-    c_modifier_public | c_modifier_final,
-    bic_trdp_md_method_SetComParsTcp_3
-  },
-  {
-    "OpenGate#5",
-    c_modifier_public | c_modifier_final,
-    bic_trdp_md_method_OpenGate_5
-  },
-  {
-    "to_string#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_trdp_md_method_to_string_0
-  },
-  {
-    "print#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_trdp_md_method_print_0
-  },
-};/*}}}*/
-
-built_in_variable_s trdp_md_variables[] =
-{/*{{{*/
-};/*}}}*/
-
-void bic_trdp_md_consts(location_array_s &const_locations)
-{/*{{{*/
 }/*}}}*/
 
 void bic_trdp_md_init(interpreter_thread_s &it,location_s *location_ptr)
