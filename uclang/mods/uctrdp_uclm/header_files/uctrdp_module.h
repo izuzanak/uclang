@@ -15,8 +15,7 @@ extern unsigned c_bi_class_trdp_md_address;
 extern unsigned c_bi_class_trdp_md_message;
 extern unsigned c_bi_class_trdp_md_call;
 extern unsigned c_bi_class_trdp_md_listener;
-extern unsigned c_bi_class_trdp_md_event_send;
-extern unsigned c_bi_class_trdp_md_event_receive;
+extern unsigned c_bi_class_trdp_md_event;
 
 // - UCTRDP module -
 extern built_in_module_s module;
@@ -45,10 +44,10 @@ enum
   c_error_TRDP_MD_ADDRESS_INVALID_USER_NAME,
   c_error_TRDP_MD_MESSAGE_DATA_TOO_BIG,
   c_error_TRDP_MD_MESSAGE_INVALID_TYPE,
-  c_error_TRDP_MD_EVENT_SEND_HANDLER_USER_DATA_ERROR,
-  c_error_TRDP_MD_EVENT_RECEIVE_MESSAGE_READ_ERROR,
-  c_error_TRDP_MD_EVENT_NOT_LONGER_EXISTS,
-  c_error_TRDP_MD_EVENT_MESSAGE_RELEASE_ERROR,
+  c_error_TRDP_MD_EVENT_HANDLER_USER_DATA_ERROR,
+  c_error_TRDP_MD_EVENT_MESSAGE_READ_ERROR,
+  c_error_TRDP_MD_EVENT_REPLY_ERROR,
+  c_error_TRDP_MD_EVENT_CONFIRM_ERROR,
 };
 
 // - UCTRDP error strings -
@@ -180,41 +179,25 @@ bool bic_trdp_md_listener_method_user_data_0(interpreter_thread_s &it,unsigned s
 bool bic_trdp_md_listener_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_listener_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
-// - class TRDP_MD_EVENT_SEND -
-extern built_in_variable_s trdp_md_event_send_variables[];
-extern built_in_method_s trdp_md_event_send_methods[];
-extern built_in_class_s trdp_md_event_send_class;
+// - class TRDP_MD_EVENT -
+extern built_in_variable_s trdp_md_event_variables[];
+extern built_in_method_s trdp_md_event_methods[];
+extern built_in_class_s trdp_md_event_class;
 
-void bic_trdp_md_event_send_consts(location_array_s &const_locations);
-void bic_trdp_md_event_send_init(interpreter_thread_s &it,location_s *location_ptr);
-void bic_trdp_md_event_send_clear(interpreter_thread_s &it,location_s *location_ptr);
+void bic_trdp_md_event_consts(location_array_s &const_locations);
+void bic_trdp_md_event_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_trdp_md_event_clear(interpreter_thread_s &it,location_s *location_ptr);
 
-bool bic_trdp_md_event_send_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_trdp_md_event_send_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_trdp_md_event_send_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_trdp_md_event_send_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-
-// - class TRDP_MD_EVENT_RECEIVE -
-extern built_in_variable_s trdp_md_event_receive_variables[];
-extern built_in_method_s trdp_md_event_receive_methods[];
-extern built_in_class_s trdp_md_event_receive_class;
-
-void bic_trdp_md_event_receive_consts(location_array_s &const_locations);
-void bic_trdp_md_event_receive_init(interpreter_thread_s &it,location_s *location_ptr);
-void bic_trdp_md_event_receive_clear(interpreter_thread_s &it,location_s *location_ptr);
-
-bool bic_trdp_md_event_receive_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_trdp_md_event_receive_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_trdp_md_event_receive_method_listener_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_trdp_md_event_receive_method_Reply_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_trdp_md_event_receive_method_Confirm_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_trdp_md_event_receive_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_trdp_md_event_receive_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-
-// - class dummy TRDP_MD_EVENT -
+bool bic_trdp_md_event_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_event_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_event_method_msg_handle_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_event_method_msg_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_event_method_call_rc_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_event_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_event_method_Reply_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_event_method_Confirm_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_event_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_event_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 

@@ -12,13 +12,12 @@ unsigned c_bi_class_trdp_md_address = c_idx_not_exist;
 unsigned c_bi_class_trdp_md_message = c_idx_not_exist;
 unsigned c_bi_class_trdp_md_call = c_idx_not_exist;
 unsigned c_bi_class_trdp_md_listener = c_idx_not_exist;
-unsigned c_bi_class_trdp_md_event_send = c_idx_not_exist;
-unsigned c_bi_class_trdp_md_event_receive = c_idx_not_exist;
+unsigned c_bi_class_trdp_md_event = c_idx_not_exist;
 
 // - UCTRDP module -
 built_in_module_s module =
 {/*{{{*/
-  10,                     // Class count
+  9,                      // Class count
   uctrdp_classes,         // Classes
 
   0,                      // Error base index
@@ -40,8 +39,7 @@ built_in_class_s *uctrdp_classes[] =
   &trdp_md_message_class,
   &trdp_md_call_class,
   &trdp_md_listener_class,
-  &trdp_md_event_send_class,
-  &trdp_md_event_receive_class,
+  &trdp_md_event_class,
 };/*}}}*/
 
 // - UCTRDP error strings -
@@ -65,10 +63,10 @@ const char *uctrdp_error_strings[] =
   "error_TRDP_MD_ADDRESS_INVALID_USER_NAME",
   "error_TRDP_MD_MESSAGE_DATA_TOO_BIG",
   "error_TRDP_MD_MESSAGE_INVALID_TYPE",
-  "error_TRDP_MD_EVENT_SEND_HANDLER_USER_DATA_ERROR",
-  "error_TRDP_MD_EVENT_RECEIVE_MESSAGE_READ_ERROR",
-  "error_TRDP_MD_EVENT_NOT_LONGER_EXISTS",
-  "error_TRDP_MD_EVENT_MESSAGE_RELEASE_ERROR",
+  "error_TRDP_MD_EVENT_HANDLER_USER_DATA_ERROR",
+  "error_TRDP_MD_EVENT_MESSAGE_READ_ERROR",
+  "error_TRDP_MD_EVENT_REPLY_ERROR",
+  "error_TRDP_MD_EVENT_CONFIRM_ERROR",
 };/*}}}*/
 
 // - UCTRDP initialize -
@@ -100,11 +98,8 @@ bool uctrdp_initialize(script_parser_s &sp)
   // - initialize trdp_md_listener class identifier -
   c_bi_class_trdp_md_listener = class_base_idx++;
 
-  // - initialize trdp_md_event_send class identifier -
-  c_bi_class_trdp_md_event_send = class_base_idx++;
-
-  // - initialize trdp_md_event_receive class identifier -
-  c_bi_class_trdp_md_event_receive = class_base_idx++;
+  // - initialize trdp_md_event class identifier -
+  c_bi_class_trdp_md_event = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -187,28 +182,28 @@ bool uctrdp_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nInvalid TRDP request/listen communication scope\n");
+    fprintf(stderr,"\nInvalid TRDP message request/listen communication scope\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_GATE_REQUEST_INVALID_NUMBER_OF_RESPONSES:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP request, invalid number of requested responses\n");
+    fprintf(stderr,"\nTRDP message request, invalid number of requested responses\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_GATE_REQUEST_INVALID_NUMBER_OF_RETRIES:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP request, invalid number of requested retries\n");
+    fprintf(stderr,"\nTRDP message request, invalid number of requested retries\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_GATE_REQUEST_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP request error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr,"\nTRDP message request error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_GATE_LISTEN_ERROR:
@@ -246,32 +241,32 @@ bool uctrdp_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nInvalid TRDP message type\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_TRDP_MD_EVENT_SEND_HANDLER_USER_DATA_ERROR:
+  case c_error_TRDP_MD_EVENT_HANDLER_USER_DATA_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP send message, user data handle not found\n");
+    fprintf(stderr,"\nTRDP message user data handle error\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_TRDP_MD_EVENT_RECEIVE_MESSAGE_READ_ERROR:
+  case c_error_TRDP_MD_EVENT_MESSAGE_READ_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nTRDP message data read error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_TRDP_MD_EVENT_NOT_LONGER_EXISTS:
+  case c_error_TRDP_MD_EVENT_REPLY_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP message data event no longer exists\n");
+    fprintf(stderr,"\nTRDP message event reply error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_TRDP_MD_EVENT_MESSAGE_RELEASE_ERROR:
+  case c_error_TRDP_MD_EVENT_CONFIRM_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP message release error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr,"\nTRDP message event confirm error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -1132,8 +1127,6 @@ bool bic_trdp_md_gate_method_Listen_5(interpreter_thread_s &it,unsigned stack_ba
   trdp_md_listener_s *tml_ptr = (trdp_md_listener_s *)cmalloc(sizeof(trdp_md_listener_s));
   tml_ptr->init();
 
-  BIC_CREATE_NEW_LOCATION(tml_location,c_bi_class_trdp_md_listener,tml_ptr);
-
   // - fill listener structure -
   TRDP::MD::Listener &listener = tml_ptr->listener;
   memset(&listener,0,sizeof(listener));
@@ -1150,13 +1143,14 @@ bool bic_trdp_md_gate_method_Listen_5(interpreter_thread_s &it,unsigned stack_ba
   listener.src = tma_ptr->src_host;
   //Topo topo;         //< topo counters
   //unsigned ifidx;    //< interface index
-  listener.ref = tml_location;
+  listener.ref = nullptr;
 
   // - ERROR -
   int res = md_ptr->Listen(&listener,&tml_ptr->handle);
   if (res != TRDP::TRDP_OK)
   {
-    it.release_location_ptr(tml_location);
+    tml_ptr->clear(it);
+    cfree(tml_ptr);
 
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_GATE_LISTEN_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(res);
@@ -1172,7 +1166,8 @@ bool bic_trdp_md_gate_method_Listen_5(interpreter_thread_s &it,unsigned stack_ba
   dst_location->v_reference_cnt.atomic_inc();
   tml_ptr->gate_location = dst_location;
 
-  BIC_SET_RESULT(tml_location);
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_trdp_md_listener,tml_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
@@ -1251,7 +1246,7 @@ bool bic_trdp_md_gate_method_Request_6(interpreter_thread_s &it,unsigned stack_b
   tmc_ptr->init();
 
   // - ERROR -
-  int res = tmg_ptr->gate.Request(tmm_ptr->message,dst_location,scope,nresp,nretr,flags,&tmc_ptr->handle,data_ptr->data);
+  int res = tmg_ptr->gate.Request(tmm_ptr->message,nullptr,scope,nresp,nretr,flags,&tmc_ptr->handle,data_ptr->data);
   if (res != TRDP::TRDP_OK)
   {
     tmc_ptr->clear(it);
@@ -1313,28 +1308,21 @@ bool bic_trdp_md_gate_method_process_1(interpreter_thread_s &it,unsigned stack_b
       case TRDP::IND_MSG_SND:
       case TRDP::IND_MSG_RCV:
         {/*{{{*/
-          delegate_s *delegate_ptr;
-          unsigned event_class;
 
-          switch (event.code)
-          {
-          case TRDP::IND_MSG_SND:
-            {/*{{{*/
-              delegate_ptr = (delegate_s *)tmg_ptr->evt_send_dlg->v_data_ptr;
-              event_class = c_bi_class_trdp_md_event_send;
-            }/*}}}*/
-            break;
-          case TRDP::IND_MSG_RCV:
-            {/*{{{*/
-              delegate_ptr = (delegate_s *)tmg_ptr->evt_receive_dlg->v_data_ptr;
-              event_class = c_bi_class_trdp_md_event_receive;
-            }/*}}}*/
-            break;
-          default:
-            cassert(0);
-          }
+          // - create trdp_md_event object -
+          trdp_md_event_s *tme_ptr = (trdp_md_event_s *)cmalloc(sizeof(trdp_md_event_s));
+          tme_ptr->init();
 
-          BIC_CREATE_NEW_LOCATION(event_location,event_class,&event);
+          memcpy(&tme_ptr->event,&event,sizeof(TRDP::MD::Event));
+
+          // - set gate location reference -
+          dst_location->v_reference_cnt.atomic_inc();
+          tme_ptr->gate_location = dst_location;
+
+          BIC_CREATE_NEW_LOCATION_REFS(event_location,c_bi_class_trdp_md_event,tme_ptr,0);
+
+          delegate_s *delegate_ptr = (delegate_s *)(tme_ptr->event.code == TRDP::IND_MSG_SND ?
+              tmg_ptr->evt_send_dlg : tmg_ptr->evt_receive_dlg)->v_data_ptr;
 
           // - callback parameters -
           const unsigned param_cnt = 1;
@@ -1343,44 +1331,9 @@ bool bic_trdp_md_gate_method_process_1(interpreter_thread_s &it,unsigned stack_b
           // - call delegate method -
           location_s *trg_location = nullptr;
           BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,operands[c_source_pos_idx],
-
-            // - reset event location -
-            event_location->v_data_ptr = (TRDP::MD::Event *)nullptr;
-            it.release_location_ptr(event_location);
-
             return false;
           );
           it.release_location_ptr(trg_location);
-
-          // - reset event location -
-          event_location->v_data_ptr = (TRDP::MD::Event *)nullptr;
-          it.release_location_ptr(event_location);
-
-          // - release handle user data -
-          if (event.code == TRDP::IND_MSG_SND)
-          {
-            handle_data_s handle_data{event.hmsg,nullptr};
-
-            unsigned handle_data_idx = tmg_ptr->handle_data.get_idx(handle_data);
-            if (handle_data_idx != c_idx_not_exist)
-            {
-              location_s *user_data_loc = (location_s *)tmg_ptr->handle_data[handle_data_idx].user_data_loc;
-              tmg_ptr->handle_data.remove(handle_data_idx);
-
-              // - release user data location -
-              it.release_location_ptr(user_data_loc);
-            }
-          }
-
-          // - ERROR -
-          int res = tmg_ptr->gate.Release(event.hmsg);
-          if (res != TRDP::TRDP_OK)
-          {
-            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_EVENT_MESSAGE_RELEASE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-            new_exception->params.push(res);
-
-            return false;
-          }
         }/*}}}*/
         break;
       }
@@ -2174,16 +2127,16 @@ bool bic_trdp_md_listener_method_print_0(interpreter_thread_s &it,unsigned stack
   return true;
 }/*}}}*/
 
-// - class TRDP_MD_EVENT_SEND -
-built_in_class_s trdp_md_event_send_class =
+// - class TRDP_MD_EVENT -
+built_in_class_s trdp_md_event_class =
 {/*{{{*/
-  "TrdpMdEventSend",
+  "TrdpMdEvent",
   c_modifier_public | c_modifier_final,
-  7, trdp_md_event_send_methods,
-  0, trdp_md_event_send_variables,
-  bic_trdp_md_event_send_consts,
-  bic_trdp_md_event_send_init,
-  bic_trdp_md_event_send_clear,
+  10, trdp_md_event_methods,
+  0, trdp_md_event_variables,
+  bic_trdp_md_event_consts,
+  bic_trdp_md_event_init,
+  bic_trdp_md_event_clear,
   nullptr,
   nullptr,
   nullptr,
@@ -2197,159 +2150,17 @@ built_in_class_s trdp_md_event_send_class =
   nullptr
 };/*}}}*/
 
-built_in_method_s trdp_md_event_send_methods[] =
+built_in_method_s trdp_md_event_methods[] =
 {/*{{{*/
   {
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
-    bic_trdp_md_event_send_operator_binary_equal
-  },
-  {
-    "msg_handle#0",
-    c_modifier_public | c_modifier_final,
-    bic_trdp_md_event_method_msg_handle_0
-  },
-  {
-    "msg_type#0",
-    c_modifier_public | c_modifier_final,
-    bic_trdp_md_event_method_msg_type_0
-  },
-  {
-    "call_rc#0",
-    c_modifier_public | c_modifier_final,
-    bic_trdp_md_event_method_call_rc_0
+    bic_trdp_md_event_operator_binary_equal
   },
   {
     "user_data#0",
     c_modifier_public | c_modifier_final,
-    bic_trdp_md_event_send_method_user_data_0
-  },
-  {
-    "to_string#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_trdp_md_event_send_method_to_string_0
-  },
-  {
-    "print#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_trdp_md_event_send_method_print_0
-  },
-};/*}}}*/
-
-built_in_variable_s trdp_md_event_send_variables[] =
-{/*{{{*/
-};/*}}}*/
-
-#define BIC_TRDP_MD_EVENT_CHECK_AVAILABILITY() \
-/*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  \
-  TRDP::MD::Event *tme_ptr = (TRDP::MD::Event *)dst_location->v_data_ptr;\
-  \
-  /* - ERROR - */\
-  if (tme_ptr == nullptr)\
-  {\
-    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_EVENT_NOT_LONGER_EXISTS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    return false;\
-  }\
-/*}}}*/
-
-void bic_trdp_md_event_send_consts(location_array_s &const_locations)
-{/*{{{*/
-}/*}}}*/
-
-void bic_trdp_md_event_send_init(interpreter_thread_s &it,location_s *location_ptr)
-{/*{{{*/
-  location_ptr->v_data_ptr = (TRDP::MD::Event *)nullptr;
-}/*}}}*/
-
-void bic_trdp_md_event_send_clear(interpreter_thread_s &it,location_s *location_ptr)
-{/*{{{*/
-}/*}}}*/
-
-bool bic_trdp_md_event_send_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  src_0_location->v_reference_cnt.atomic_add(2);
-
-  BIC_SET_DESTINATION(src_0_location);
-  BIC_SET_RESULT(src_0_location);
-
-  return true;
-}/*}}}*/
-
-bool bic_trdp_md_event_send_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  BIC_TRDP_MD_EVENT_CHECK_AVAILABILITY();
-
-  trdp_md_gate_s *tmg_ptr = (trdp_md_gate_s *)((location_s *)tme_ptr->call->ref)->v_data_ptr;
-
-  handle_data_s handle_data{tme_ptr->hmsg,nullptr};
-  unsigned handle_data_idx = tmg_ptr->handle_data.get_idx(handle_data);
-
-  // - ERROR -
-  if (handle_data_idx == c_idx_not_exist)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_EVENT_SEND_HANDLER_USER_DATA_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - retrieve user data location -
-  location_s *user_data_loc = it.get_new_reference((location_s **)&tmg_ptr->handle_data[handle_data_idx].user_data_loc);
-
-  BIC_SET_RESULT(user_data_loc);
-
-  return true;
-}/*}}}*/
-
-bool bic_trdp_md_event_send_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  BIC_TO_STRING_WITHOUT_DEST(
-    string_ptr->set(strlen("TrdpMdEventSend"),"TrdpMdEventSend");
-  );
-
-  return true;
-}/*}}}*/
-
-bool bic_trdp_md_event_send_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  printf("TrdpMdEventSend");
-
-  BIC_SET_RESULT_BLANK();
-
-  return true;
-}/*}}}*/
-
-// - class TRDP_MD_EVENT_RECEIVE -
-built_in_class_s trdp_md_event_receive_class =
-{/*{{{*/
-  "TrdpMdEventReceive",
-  c_modifier_public | c_modifier_final,
-  9, trdp_md_event_receive_methods,
-  0, trdp_md_event_receive_variables,
-  bic_trdp_md_event_receive_consts,
-  bic_trdp_md_event_receive_init,
-  bic_trdp_md_event_receive_clear,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr
-};/*}}}*/
-
-built_in_method_s trdp_md_event_receive_methods[] =
-{/*{{{*/
-  {
-    "operator_binary_equal#1",
-    c_modifier_public | c_modifier_final,
-    bic_trdp_md_event_receive_operator_binary_equal
+    bic_trdp_md_event_method_user_data_0
   },
   {
     "msg_handle#0",
@@ -2369,48 +2180,55 @@ built_in_method_s trdp_md_event_receive_methods[] =
   {
     "data#0",
     c_modifier_public | c_modifier_final,
-    bic_trdp_md_event_receive_method_data_0
-  },
-  {
-    "listener#0",
-    c_modifier_public | c_modifier_final,
-    bic_trdp_md_event_receive_method_listener_0
+    bic_trdp_md_event_method_data_0
   },
   {
     "Reply#3",
     c_modifier_public | c_modifier_final,
-    bic_trdp_md_event_receive_method_Reply_3
+    bic_trdp_md_event_method_Reply_3
+  },
+  {
+    "Confirm#3",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_md_event_method_Confirm_0
   },
   {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_trdp_md_event_receive_method_to_string_0
+    bic_trdp_md_event_method_to_string_0
   },
   {
     "print#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_trdp_md_event_receive_method_print_0
+    bic_trdp_md_event_method_print_0
   },
 };/*}}}*/
 
-built_in_variable_s trdp_md_event_receive_variables[] =
+built_in_variable_s trdp_md_event_variables[] =
 {/*{{{*/
 };/*}}}*/
 
-void bic_trdp_md_event_receive_consts(location_array_s &const_locations)
+void bic_trdp_md_event_consts(location_array_s &const_locations)
 {/*{{{*/
 }/*}}}*/
 
-void bic_trdp_md_event_receive_init(interpreter_thread_s &it,location_s *location_ptr)
+void bic_trdp_md_event_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (TRDP::MD::Event *)nullptr;
+  location_ptr->v_data_ptr = (trdp_md_event_s *)nullptr;
 }/*}}}*/
 
-void bic_trdp_md_event_receive_clear(interpreter_thread_s &it,location_s *location_ptr)
+void bic_trdp_md_event_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
+  trdp_md_event_s *tme_ptr = (trdp_md_event_s *)location_ptr->v_data_ptr;
+
+  if (tme_ptr != nullptr)
+  {
+    tme_ptr->clear(it);
+    cfree(tme_ptr);
+  }
 }/*}}}*/
 
-bool bic_trdp_md_event_receive_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_trdp_md_event_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -2422,24 +2240,82 @@ bool bic_trdp_md_event_receive_operator_binary_equal(interpreter_thread_s &it,un
   return true;
 }/*}}}*/
 
-bool bic_trdp_md_event_receive_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_trdp_md_event_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  BIC_TRDP_MD_EVENT_CHECK_AVAILABILITY();
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  trdp_md_listener_s *tml_ptr = (trdp_md_listener_s *)((location_s *)tme_ptr->call->ref)->v_data_ptr;
-  trdp_md_gate_s *tmg_ptr = (trdp_md_gate_s *)tml_ptr->gate_location->v_data_ptr;
+  trdp_md_event_s *tme_ptr = (trdp_md_event_s *)dst_location->v_data_ptr;
+  trdp_md_gate_s *tmg_ptr = (trdp_md_gate_s *)tme_ptr->gate_location->v_data_ptr;
 
-  string_s *data_ptr = it.get_new_string_ptr();
-  data_ptr->create(tme_ptr->msg->size);
+  handle_data_s handle_data{tme_ptr->event.hmsg,nullptr};
+  unsigned handle_data_idx = tmg_ptr->handle_data.get_idx(handle_data);
 
   // - ERROR -
-  int res = tmg_ptr->gate.Read(tme_ptr->hmsg,data_ptr->data,tme_ptr->msg->size);
+  if (handle_data_idx == c_idx_not_exist)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_EVENT_HANDLER_USER_DATA_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - retrieve user data location -
+  location_s *user_data_loc = it.get_new_reference((location_s **)&tmg_ptr->handle_data[handle_data_idx].user_data_loc);
+
+  BIC_SET_RESULT(user_data_loc);
+
+  return true;
+}/*}}}*/
+
+bool bic_trdp_md_event_method_msg_handle_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = ((trdp_md_event_s *)dst_location->v_data_ptr)->event.hmsg;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_trdp_md_event_method_msg_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = ((trdp_md_event_s *)dst_location->v_data_ptr)->event.msg->type;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_trdp_md_event_method_call_rc_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = ((trdp_md_event_s *)dst_location->v_data_ptr)->event.call->rc;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_trdp_md_event_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  trdp_md_event_s *tme_ptr = (trdp_md_event_s *)dst_location->v_data_ptr;
+  trdp_md_gate_s *tmg_ptr = (trdp_md_gate_s *)tme_ptr->gate_location->v_data_ptr;
+
+  string_s *data_ptr = it.get_new_string_ptr();
+  data_ptr->create(tme_ptr->event.msg->size);
+
+  // - ERROR -
+  int res = tmg_ptr->gate.Read(tme_ptr->event.hmsg,data_ptr->data,tme_ptr->event.msg->size);
   if (res != TRDP::TRDP_OK)
   {
     data_ptr->clear();
     cfree(data_ptr);
 
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_EVENT_RECEIVE_MESSAGE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_EVENT_MESSAGE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(res);
 
     return false;
@@ -2450,22 +2326,9 @@ bool bic_trdp_md_event_receive_method_data_0(interpreter_thread_s &it,unsigned s
   return true;
 }/*}}}*/
 
-bool bic_trdp_md_event_receive_method_listener_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_trdp_md_event_method_Reply_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  BIC_TRDP_MD_EVENT_CHECK_AVAILABILITY();
-
-  location_s *lst_location = (location_s *)tme_ptr->call->ref;
-
-  lst_location->v_reference_cnt.atomic_inc();
-  BIC_SET_RESULT(lst_location);
-
-  return true;
-}/*}}}*/
-
-bool bic_trdp_md_event_receive_method_Reply_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  BIC_TRDP_MD_EVENT_CHECK_AVAILABILITY();
-
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
   location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
@@ -2485,8 +2348,8 @@ bool bic_trdp_md_event_receive_method_Reply_3(interpreter_thread_s &it,unsigned 
     return false;
   }
 
-  trdp_md_listener_s *tml_ptr = (trdp_md_listener_s *)((location_s *)tme_ptr->call->ref)->v_data_ptr;
-  trdp_md_gate_s *tmg_ptr = (trdp_md_gate_s *)tml_ptr->gate_location->v_data_ptr;
+  trdp_md_event_s *tme_ptr = (trdp_md_event_s *)dst_location->v_data_ptr;
+  trdp_md_gate_s *tmg_ptr = (trdp_md_gate_s *)tme_ptr->gate_location->v_data_ptr;
   trdp_md_message_s *tmm_ptr = (trdp_md_message_s *)src_0_location->v_data_ptr;
   string_s *data_ptr = (string_s *)tmm_ptr->data_location->v_data_ptr;
 
@@ -2498,20 +2361,21 @@ bool bic_trdp_md_event_receive_method_Reply_3(interpreter_thread_s &it,unsigned 
   tmc_ptr->init();
 
   // - ERROR -
-  int res = tmg_ptr->gate.Reply(tmm_ptr->message,tml_ptr->gate_location,tme_ptr->hmsg,&tmc_ptr->handle,data_ptr->data);
+  int res = tmg_ptr->gate.Reply(tmm_ptr->message,nullptr,tme_ptr->event.hmsg,&tmc_ptr->handle,data_ptr->data);
   if (res != TRDP::TRDP_OK)
   {
     tmc_ptr->clear(it);
     cfree(tmc_ptr);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_EVENT_REPLY_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(res);
+
     return false;
   }
 
   // - set gate location reference -
-  dst_location->v_reference_cnt.atomic_inc();
-  tmc_ptr->gate_location = dst_location;
+  tme_ptr->gate_location->v_reference_cnt.atomic_inc();
+  tmc_ptr->gate_location = tme_ptr->gate_location;
 
   // - store handle user data -
   src_2_location->v_reference_cnt.atomic_inc();
@@ -2524,55 +2388,81 @@ bool bic_trdp_md_event_receive_method_Reply_3(interpreter_thread_s &it,unsigned 
   return true;
 }/*}}}*/
 
-bool bic_trdp_md_event_receive_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_trdp_md_event_method_Confirm_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
+
+  long long int reply_status;
+
+  if (src_0_location->v_type != c_bi_class_trdp_md_message ||
+      !it.retrieve_integer(src_1_location,reply_status))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("Confirm#3");
+    new_exception->params.push(3);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+    new_exception->params.push(src_2_location->v_type);
+
+    return false;
+  }
+
+  trdp_md_event_s *tme_ptr = (trdp_md_event_s *)dst_location->v_data_ptr;
+  trdp_md_gate_s *tmg_ptr = (trdp_md_gate_s *)tme_ptr->gate_location->v_data_ptr;
+  trdp_md_message_s *tmm_ptr = (trdp_md_message_s *)src_0_location->v_data_ptr;
+
+  // - adjust message reply status -
+  tmm_ptr->message.res = reply_status;
+
+  // - create trdp_md_call object -
+  trdp_md_call_s *tmc_ptr = (trdp_md_call_s *)cmalloc(sizeof(trdp_md_call_s));
+  tmc_ptr->init();
+
+  // - ERROR -
+  int res = tmg_ptr->gate.Confirm(tmm_ptr->message,nullptr,tme_ptr->event.hmsg,&tmc_ptr->handle);
+  if (res != TRDP::TRDP_OK)
+  {
+    tmc_ptr->clear(it);
+    cfree(tmc_ptr);
+
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_EVENT_CONFIRM_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(res);
+
+    return false;
+  }
+
+  // - set gate location reference -
+  tme_ptr->gate_location->v_reference_cnt.atomic_inc();
+  tmc_ptr->gate_location = tme_ptr->gate_location;
+
+  // - store handle user data -
+  src_2_location->v_reference_cnt.atomic_inc();
+  handle_data_s handle_data{tmc_ptr->handle,src_2_location};
+  tmg_ptr->handle_data.insert(handle_data);
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_trdp_md_call,tmc_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_trdp_md_event_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
-    string_ptr->set(strlen("TrdpMdEventReceive"),"TrdpMdEventReceive");
+    string_ptr->set(strlen("TrdpMdEvent"),"TrdpMdEvent");
   );
 
   return true;
 }/*}}}*/
 
-bool bic_trdp_md_event_receive_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_trdp_md_event_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  printf("TrdpMdEventReceive");
+  printf("TrdpMdEvent");
 
   BIC_SET_RESULT_BLANK();
-
-  return true;
-}/*}}}*/
-
-// - class dummy FD -
-
-bool bic_trdp_md_event_method_msg_handle_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  BIC_TRDP_MD_EVENT_CHECK_AVAILABILITY();
-
-  long long int result = tme_ptr->hmsg;
-
-  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
-
-  return true;
-}/*}}}*/
-
-bool bic_trdp_md_event_method_msg_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  BIC_TRDP_MD_EVENT_CHECK_AVAILABILITY();
-
-  long long int result = tme_ptr->msg->type;
-
-  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
-
-  return true;
-}/*}}}*/
-
-bool bic_trdp_md_event_method_call_rc_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  BIC_TRDP_MD_EVENT_CHECK_AVAILABILITY();
-
-  long long int result = tme_ptr->call->rc;
-
-  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/

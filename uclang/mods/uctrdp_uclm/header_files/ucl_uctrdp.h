@@ -123,6 +123,19 @@ struct trdp_md_listener_s
 };
 
 /*
+ * definition of structure trdp_md_event_s
+ */
+
+struct trdp_md_event_s
+{
+  TRDP::MD::Event event;
+  location_s *gate_location;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
  * inline methods of generated structures
  */
 
@@ -335,6 +348,44 @@ inline void trdp_md_listener_s::clear(interpreter_thread_s &it)
     // - unregister listener -
     trdp_md_gate_s *tmg_ptr = (trdp_md_gate_s *)gate_location->v_data_ptr;
     ((TRDP::MD *)tmg_ptr->md_location->v_data_ptr)->Cancel(handle);
+
+    // - release gate location -
+    it.release_location_ptr(gate_location);
+  }
+
+  init();
+}/*}}}*/
+
+/*
+ * inline methods of structure trdp_md_event_s
+ */
+
+inline void trdp_md_event_s::init()
+{/*{{{*/
+  gate_location = nullptr;
+}/*}}}*/
+
+inline void trdp_md_event_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+  if (gate_location != nullptr)
+  {
+    trdp_md_gate_s *tmg_ptr = (trdp_md_gate_s *)gate_location->v_data_ptr;
+
+    // - release handle user data -
+    handle_data_s handle_data{event.hmsg,nullptr};
+
+    unsigned handle_data_idx = tmg_ptr->handle_data.get_idx(handle_data);
+    if (handle_data_idx != c_idx_not_exist)
+    {
+      location_s *user_data_loc = (location_s *)tmg_ptr->handle_data[handle_data_idx].user_data_loc;
+      tmg_ptr->handle_data.remove(handle_data_idx);
+
+      // - release user data location -
+      it.release_location_ptr(user_data_loc);
+    }
+
+    // - release message handle -
+    tmg_ptr->gate.Release(event.hmsg);
 
     // - release gate location -
     it.release_location_ptr(gate_location);
