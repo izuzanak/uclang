@@ -290,7 +290,7 @@ built_in_class_s trdp_class =
   "Trdp",
   c_modifier_public | c_modifier_final,
   2, trdp_methods,
-  3 + 9 + 1 + 6 + 5 + 6 + 4, trdp_variables,
+  9 + 3 + 9 + 1 + 6 + 5 + 6 + 4, trdp_variables,
   bic_trdp_consts,
   bic_trdp_init,
   bic_trdp_clear,
@@ -323,6 +323,17 @@ built_in_method_s trdp_methods[] =
 
 built_in_variable_s trdp_variables[] =
 {/*{{{*/
+
+  // - trdp generic code constants -
+  { "TRDP_OK", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TRDP_FAIL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TRDP_ABORT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TRDP_OUT_OF_MEMORY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TRDP_TIMEOUT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TRDP_SOCKET_ERROR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TRDP_TERMINATE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TRDP_PENDING", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TRDP_REM_ERROR", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
   // - trdp mode constants -
   { "MODE_UNKNOWN", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -377,6 +388,28 @@ built_in_variable_s trdp_variables[] =
 
 void bic_trdp_consts(location_array_s &const_locations)
 {/*{{{*/
+
+  // - insert trdp generic code constants -
+  {
+    const_locations.push_blanks(9);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 9);
+
+#define CREATE_TRDP_GENERIC_CODE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_TRDP_GENERIC_CODE_BIC_STATIC(TRDP::TRDP_OK);
+    CREATE_TRDP_GENERIC_CODE_BIC_STATIC(TRDP::TRDP_FAIL);
+    CREATE_TRDP_GENERIC_CODE_BIC_STATIC(TRDP::TRDP_ABORT);
+    CREATE_TRDP_GENERIC_CODE_BIC_STATIC(TRDP::TRDP_OUT_OF_MEMORY);
+    CREATE_TRDP_GENERIC_CODE_BIC_STATIC(TRDP::TRDP_TIMEOUT);
+    CREATE_TRDP_GENERIC_CODE_BIC_STATIC(TRDP::TRDP_SOCKET_ERROR);
+    CREATE_TRDP_GENERIC_CODE_BIC_STATIC(TRDP::TRDP_TERMINATE);
+    CREATE_TRDP_GENERIC_CODE_BIC_STATIC(TRDP::TRDP_PENDING);
+    CREATE_TRDP_GENERIC_CODE_BIC_STATIC(TRDP::TRDP_REM_ERROR);
+  }
 
   // - insert trdp mode constants -
   {
@@ -2146,7 +2179,7 @@ built_in_class_s trdp_md_event_send_class =
 {/*{{{*/
   "TrdpMdEventSend",
   c_modifier_public | c_modifier_final,
-  6, trdp_md_event_send_methods,
+  7, trdp_md_event_send_methods,
   0, trdp_md_event_send_variables,
   bic_trdp_md_event_send_consts,
   bic_trdp_md_event_send_init,
@@ -2177,9 +2210,14 @@ built_in_method_s trdp_md_event_send_methods[] =
     bic_trdp_md_event_method_msg_handle_0
   },
   {
-    "result_code#0",
+    "msg_type#0",
     c_modifier_public | c_modifier_final,
-    bic_trdp_md_event_method_result_code_0
+    bic_trdp_md_event_method_msg_type_0
+  },
+  {
+    "call_rc#0",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_md_event_method_call_rc_0
   },
   {
     "user_data#0",
@@ -2288,7 +2326,7 @@ built_in_class_s trdp_md_event_receive_class =
 {/*{{{*/
   "TrdpMdEventReceive",
   c_modifier_public | c_modifier_final,
-  7, trdp_md_event_receive_methods,
+  9, trdp_md_event_receive_methods,
   0, trdp_md_event_receive_variables,
   bic_trdp_md_event_receive_consts,
   bic_trdp_md_event_receive_init,
@@ -2319,9 +2357,14 @@ built_in_method_s trdp_md_event_receive_methods[] =
     bic_trdp_md_event_method_msg_handle_0
   },
   {
-    "result_code#0",
+    "msg_type#0",
     c_modifier_public | c_modifier_final,
-    bic_trdp_md_event_method_result_code_0
+    bic_trdp_md_event_method_msg_type_0
+  },
+  {
+    "call_rc#0",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_md_event_method_call_rc_0
   },
   {
     "data#0",
@@ -2332,6 +2375,11 @@ built_in_method_s trdp_md_event_receive_methods[] =
     "listener#0",
     c_modifier_public | c_modifier_final,
     bic_trdp_md_event_receive_method_listener_0
+  },
+  {
+    "Reply#3",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_md_event_receive_method_Reply_3
   },
   {
     "to_string#0",
@@ -2414,6 +2462,68 @@ bool bic_trdp_md_event_receive_method_listener_0(interpreter_thread_s &it,unsign
   return true;
 }/*}}}*/
 
+bool bic_trdp_md_event_receive_method_Reply_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TRDP_MD_EVENT_CHECK_AVAILABILITY();
+
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
+
+  long long int reply_status;
+
+  if (src_0_location->v_type != c_bi_class_trdp_md_message ||
+      !it.retrieve_integer(src_1_location,reply_status))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("Reply#3");
+    new_exception->params.push(3);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+    new_exception->params.push(src_2_location->v_type);
+
+    return false;
+  }
+
+  trdp_md_listener_s *tml_ptr = (trdp_md_listener_s *)((location_s *)tme_ptr->call->ref)->v_data_ptr;
+  trdp_md_gate_s *tmg_ptr = (trdp_md_gate_s *)tml_ptr->gate_location->v_data_ptr;
+  trdp_md_message_s *tmm_ptr = (trdp_md_message_s *)src_0_location->v_data_ptr;
+  string_s *data_ptr = (string_s *)tmm_ptr->data_location->v_data_ptr;
+
+  // - adjust message reply status -
+  tmm_ptr->message.res = reply_status;
+
+  // - create trdp_md_call object -
+  trdp_md_call_s *tmc_ptr = (trdp_md_call_s *)cmalloc(sizeof(trdp_md_call_s));
+  tmc_ptr->init();
+
+  // - ERROR -
+  int res = tmg_ptr->gate.Reply(tmm_ptr->message,tml_ptr->gate_location,tme_ptr->hmsg,&tmc_ptr->handle,data_ptr->data);
+  if (res != TRDP::TRDP_OK)
+  {
+    tmc_ptr->clear(it);
+    cfree(tmc_ptr);
+
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - set gate location reference -
+  dst_location->v_reference_cnt.atomic_inc();
+  tmc_ptr->gate_location = dst_location;
+
+  // - store handle user data -
+  src_2_location->v_reference_cnt.atomic_inc();
+  handle_data_s handle_data{tmc_ptr->handle,src_2_location};
+  tmg_ptr->handle_data.insert(handle_data);
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_trdp_md_call,tmc_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
 bool bic_trdp_md_event_receive_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -2445,7 +2555,18 @@ bool bic_trdp_md_event_method_msg_handle_0(interpreter_thread_s &it,unsigned sta
   return true;
 }/*}}}*/
 
-bool bic_trdp_md_event_method_result_code_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_trdp_md_event_method_msg_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TRDP_MD_EVENT_CHECK_AVAILABILITY();
+
+  long long int result = tme_ptr->msg->type;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_trdp_md_event_method_call_rc_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TRDP_MD_EVENT_CHECK_AVAILABILITY();
 

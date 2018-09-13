@@ -206,14 +206,15 @@ void bic_trdp_md_event_receive_clear(interpreter_thread_s &it,location_s *locati
 bool bic_trdp_md_event_receive_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_event_receive_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_event_receive_method_listener_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_trdp_md_event_receive_method_Reply_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_event_receive_method_Reply_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 //bool bic_trdp_md_event_receive_method_Confirm_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_event_receive_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_event_receive_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 // - class dummy TRDP_MD_EVENT -
 bool bic_trdp_md_event_method_msg_handle_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_trdp_md_event_method_result_code_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_event_method_msg_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_event_method_call_rc_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 
