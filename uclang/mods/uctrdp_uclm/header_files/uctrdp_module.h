@@ -18,7 +18,7 @@ extern built_in_class_s *uctrdp_classes[];
 // - UCTRDP error identifiers -
 enum
 {
-  c_error_TRDP_PD_DUMMY_ERROR = 0,
+  c_error_TRDP_PD_INITIALIZE_ERROR = 0,
 };
 
 // - UCTRDP error strings -

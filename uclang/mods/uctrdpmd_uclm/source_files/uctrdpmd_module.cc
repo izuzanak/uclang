@@ -110,46 +110,46 @@ bool uctrdpmd_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_TRDP_INVALID_PORT_VALUE:
+  case c_error_TRDP_MD_INVALID_PORT_VALUE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nInvalid TRDP port value: %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr,"\nInvalid TRDP message port value: %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_TRDP_INVALID_PARAMETER_VALUE:
+  case c_error_TRDP_MD_INVALID_PARAMETER_VALUE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nInvalid TRDP parameter value\n");
+    fprintf(stderr,"\nInvalid TRDP message parameter value\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_TRDP_SET_MODE_INVALID_MODE:
+  case c_error_TRDP_MD_SET_MODE_INVALID_MODE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nInvalid TRDP mode requested\n");
+    fprintf(stderr,"\nInvalid requested TRDP message mode\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_TRDP_SET_MODE_ERROR:
+  case c_error_TRDP_MD_SET_MODE_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nSet TRDP mode error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr,"\nSet TRDP message mode error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_TRDP_SET_PERIOD_ERROR:
+  case c_error_TRDP_MD_SET_PERIOD_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nSet TRDP period error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr,"\nSet TRDP message period error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_TRDP_SET_COMPARS_ERROR:
+  case c_error_TRDP_MD_SET_COMPARS_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nSet TRDP communication parameters error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr,"\nSet TRDP message communication parameters error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_INITIALIZE_ERROR:
@@ -648,7 +648,7 @@ bool bic_trdp_md_method_SetMode_1(interpreter_thread_s &it,unsigned stack_base,u
   // - ERROR -
   if (mode < TRDP::MODE_CONFIG || mode > TRDP::MODE_FULLOP)
   {
-    exception_s::throw_exception(it,module.error_base + c_error_TRDP_SET_MODE_INVALID_MODE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_SET_MODE_INVALID_MODE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -658,7 +658,7 @@ bool bic_trdp_md_method_SetMode_1(interpreter_thread_s &it,unsigned stack_base,u
   int res = md_ptr->SetMode(mode);
   if (res != TRDP::TRDP_OK)
   {
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_SET_MODE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_SET_MODE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(res);
 
     return false;
@@ -692,7 +692,7 @@ bool bic_trdp_md_method_SetPeriod_1(interpreter_thread_s &it,unsigned stack_base
   int res = md_ptr->SetPeriod(tick);
   if (res != TRDP::TRDP_OK)
   {
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_SET_PERIOD_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_SET_PERIOD_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(res);
 
     return false;
@@ -731,7 +731,7 @@ bool bic_trdp_md_method_SetPeriod_1(interpreter_thread_s &it,unsigned stack_base
   /* - ERROR - */\
   if (port < 0 || port > 65535)\
   {\
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_INVALID_PORT_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_INVALID_PORT_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(port);\
     \
     return false;\
@@ -741,7 +741,7 @@ bool bic_trdp_md_method_SetPeriod_1(interpreter_thread_s &it,unsigned stack_base
   if (qos < TRDP::QOS_DEF || qos > TRDP::QOS_P7 ||\
       ttl < 0)\
   {\
-    exception_s::throw_exception(it,module.error_base + c_error_TRDP_INVALID_PARAMETER_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_INVALID_PARAMETER_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
   \
@@ -761,7 +761,7 @@ bool bic_trdp_md_method_SetComParsUdp_3(interpreter_thread_s &it,unsigned stack_
   int res = md_ptr->SetComPars(&pars,nullptr);
   if (res != TRDP::TRDP_OK)
   {
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_SET_COMPARS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_SET_COMPARS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(res);
 
     return false;
@@ -782,7 +782,7 @@ bool bic_trdp_md_method_SetComParsTcp_3(interpreter_thread_s &it,unsigned stack_
   int res = md_ptr->SetComPars(nullptr,&pars);
   if (res != TRDP::TRDP_OK)
   {
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_SET_COMPARS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_SET_COMPARS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(res);
 
     return false;
@@ -1406,7 +1406,7 @@ bool bic_trdp_md_gate_params_method_TrdpMdGateParams_4(interpreter_thread_s &it,
       nevts  < 0 || nevts  > UINT_MAX ||
       bufsz  < 0 || bufsz  > UINT_MAX)
   {
-    exception_s::throw_exception(it,module.error_base + c_error_TRDP_INVALID_PARAMETER_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_INVALID_PARAMETER_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 

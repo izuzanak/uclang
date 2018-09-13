@@ -29,7 +29,7 @@ built_in_class_s *uctrdp_classes[] =
 // - UCTRDP error strings -
 const char *uctrdp_error_strings[] =
 {/*{{{*/
-  "error_TRDP_PD_DUMMY_ERROR",
+  "error_TRDP_PD_INITIALIZE_ERROR",
 };/*}}}*/
 
 // - UCTRDP initialize -
@@ -54,11 +54,11 @@ bool uctrdp_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_TRDP_PD_DUMMY_ERROR:
+  case c_error_TRDP_PD_INITIALIZE_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP process data dummy error\n");
+    fprintf(stderr,"\nTRDP process data init error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -313,10 +313,39 @@ bool bic_trdp_pd_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_trdp_pd_method_TrdpPd_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  
-  // FIXME TODO continue ...
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int id;
+
+  if (!it.retrieve_integer(src_0_location,id))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("TrdpPd#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  TRDP::PD *pd_ptr = new TRDP::PD();
+
+  // - ERROR -
+  int res = pd_ptr->Init(id);
+  if (res != TRDP::TRDP_OK)
+  {
+    delete pd_ptr;
+
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_PD_INITIALIZE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(res);
+
+    return false;
+  }
+
+  // - set trdp_md destination location -
+  dst_location->v_data_ptr = (TRDP::PD *)pd_ptr;
+
+  return true;
 }/*}}}*/
 
 bool bic_trdp_pd_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
