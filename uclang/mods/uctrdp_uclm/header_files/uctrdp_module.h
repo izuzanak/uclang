@@ -8,6 +8,8 @@ include "ucl_uctrdp.h"
 
 // - UCTRDP indexes of built in classes -
 extern unsigned c_bi_class_trdp_pd;
+extern unsigned c_bi_class_trdp_pd_address;
+extern unsigned c_bi_class_trdp_pd_port;
 
 // - UCTRDP module -
 extern built_in_module_s module;
@@ -22,6 +24,9 @@ enum
   c_error_TRDP_PD_SET_MODE_INVALID_MODE,
   c_error_TRDP_PD_SET_MODE_ERROR,
   c_error_TRDP_PD_SET_PERIOD_ERROR,
+  c_error_TRDP_PD_ADDRESS_INVALID_ADDRESS,
+  c_error_TRDP_PD_PORT_PUBLISH_ERROR,
+  c_error_TRDP_PD_PORT_SUBSCRIBE_ERROR,
 };
 
 // - UCTRDP error strings -
@@ -47,8 +52,40 @@ bool bic_trdp_pd_method_TrdpPd_1(interpreter_thread_s &it,unsigned stack_base,ul
 bool bic_trdp_pd_method_SetMode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_pd_method_SetPeriod_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_pd_method_RemoveAllPorts_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_method_Port_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_pd_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_pd_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class TRDP_PD_ADDRESS -
+extern built_in_variable_s trdp_pd_address_variables[];
+extern built_in_method_s trdp_pd_address_methods[];
+extern built_in_class_s trdp_pd_address_class;
+
+void bic_trdp_pd_address_consts(location_array_s &const_locations);
+void bic_trdp_pd_address_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_trdp_pd_address_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_trdp_pd_address_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_address_method_TrdpPdAddress_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_address_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_address_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class TRDP_PD_PORT -
+extern built_in_variable_s trdp_pd_port_variables[];
+extern built_in_method_s trdp_pd_port_methods[];
+extern built_in_class_s trdp_pd_port_class;
+
+void bic_trdp_pd_port_consts(location_array_s &const_locations);
+void bic_trdp_pd_port_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_trdp_pd_port_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_trdp_pd_port_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_port_method_Publish_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_port_method_Subscribe_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_port_method_Unpublish_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_port_method_Unsubscribe_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_port_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_port_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 

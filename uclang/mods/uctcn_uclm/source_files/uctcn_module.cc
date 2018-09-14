@@ -1711,7 +1711,7 @@ built_in_variable_s proc_var_set_variables[] =
     proc_variable_s *pv_ptr = (proc_variable_s *)cmalloc(sizeof(proc_variable_s));\
     pv_ptr->init();\
     \
-    /* - process variable set reference - */\
+    /* - set reference to process variable - */\
     dst_location->v_reference_cnt.atomic_inc();\
     pv_ptr->pvs_ptr = dst_location;\
     \

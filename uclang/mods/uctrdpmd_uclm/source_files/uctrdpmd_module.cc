@@ -1080,11 +1080,11 @@ bool bic_trdp_md_gate_method_Listen_5(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
-  // - set user data reference -
+  // - set reference to user data -
   src_4_location->v_reference_cnt.atomic_inc();
   tml_ptr->user_data_loc = src_4_location;
 
-  // - set gate location reference -
+  // - set refernce to gate -
   dst_location->v_reference_cnt.atomic_inc();
   tml_ptr->gate_location = dst_location;
 
@@ -1180,7 +1180,7 @@ bool bic_trdp_md_gate_method_Request_6(interpreter_thread_s &it,unsigned stack_b
     return false;
   }
 
-  // - set gate location reference -
+  // - set reference to gate -
   dst_location->v_reference_cnt.atomic_inc();
   tmc_ptr->gate_location = dst_location;
 
@@ -1237,7 +1237,7 @@ bool bic_trdp_md_gate_method_process_1(interpreter_thread_s &it,unsigned stack_b
 
           memcpy(&tme_ptr->event,&event,sizeof(TRDP::MD::Event));
 
-          // - set gate location reference -
+          // - set reference to gate -
           dst_location->v_reference_cnt.atomic_inc();
           tme_ptr->gate_location = dst_location;
 
@@ -1416,7 +1416,7 @@ bool bic_trdp_md_gate_params_method_TrdpMdGateParams_4(interpreter_thread_s &it,
   tmgp_ptr->nevts = nevts;
   tmgp_ptr->bufsz = bufsz;
 
-  // - set trdp_md destination location -
+  // - set trdp_md_gate_params destination location -
   dst_location->v_data_ptr = (TRDP::MD::Gate::Params *)tmgp_ptr;
 
   return true;
@@ -1622,7 +1622,7 @@ bool bic_trdp_md_address_method_TrdpMdAddress_4(interpreter_thread_s &it,unsigne
   src_2_location->v_reference_cnt.atomic_inc();
   tma_ptr->src_user_loc = src_2_location;
 
-  // - set trdp_md destination location -
+  // - set trdp_md_address destination location -
   dst_location->v_data_ptr = (trdp_md_address_s *)tma_ptr;
 
   return true;
@@ -1815,7 +1815,7 @@ bool bic_trdp_md_message_method_TrdpMdMessage_5(interpreter_thread_s &it,unsigne
   src_4_location->v_reference_cnt.atomic_inc();
   tmm_ptr->data_location = src_4_location;
 
-  // - set trdp_md destination location -
+  // - set trdp_md_message destination location -
   dst_location->v_data_ptr = (trdp_md_message_s *)tmm_ptr;
 
   return true;
@@ -2295,7 +2295,7 @@ bool bic_trdp_md_event_method_Reply_3(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
-  // - set gate location reference -
+  // - set reference to gate -
   tme_ptr->gate_location->v_reference_cnt.atomic_inc();
   tmc_ptr->gate_location = tme_ptr->gate_location;
 
@@ -2356,7 +2356,7 @@ bool bic_trdp_md_event_method_Confirm_0(interpreter_thread_s &it,unsigned stack_
     return false;
   }
 
-  // - set gate location reference -
+  // - set reference to gate -
   tme_ptr->gate_location->v_reference_cnt.atomic_inc();
   tmc_ptr->gate_location = tme_ptr->gate_location;
 

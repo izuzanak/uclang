@@ -346,8 +346,11 @@ inline void trdp_md_listener_s::clear(interpreter_thread_s &it)
   if (gate_location != nullptr)
   {
     // - unregister listener -
-    trdp_md_gate_s *tmg_ptr = (trdp_md_gate_s *)gate_location->v_data_ptr;
-    ((TRDP::MD *)tmg_ptr->md_location->v_data_ptr)->Cancel(handle);
+    if (handle != TRDP::TRDP_NULL_HANDLE)
+    {
+      trdp_md_gate_s *tmg_ptr = (trdp_md_gate_s *)gate_location->v_data_ptr;
+      ((TRDP::MD *)tmg_ptr->md_location->v_data_ptr)->Cancel(handle);
+    }
 
     // - release gate location -
     it.release_location_ptr(gate_location);
