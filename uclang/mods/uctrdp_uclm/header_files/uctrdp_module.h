@@ -19,6 +19,9 @@ extern built_in_class_s *uctrdp_classes[];
 enum
 {
   c_error_TRDP_PD_INITIALIZE_ERROR = 0,
+  c_error_TRDP_PD_SET_MODE_INVALID_MODE,
+  c_error_TRDP_PD_SET_MODE_ERROR,
+  c_error_TRDP_PD_SET_PERIOD_ERROR,
 };
 
 // - UCTRDP error strings -
@@ -41,6 +44,9 @@ void bic_trdp_pd_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_trdp_pd_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_pd_method_TrdpPd_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_method_SetMode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_method_SetPeriod_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_method_RemoveAllPorts_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_pd_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_pd_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

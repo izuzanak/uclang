@@ -43,13 +43,13 @@ built_in_class_s *uctrdpmd_classes[] =
 // - UCTRDPMD error strings -
 const char *uctrdpmd_error_strings[] =
 {/*{{{*/
-  "error_TRDP_INVALID_PORT_VALUE",
-  "error_TRDP_INVALID_PARAMETER_VALUE",
-  "error_TRDP_SET_MODE_INVALID_MODE",
-  "error_TRDP_SET_MODE_ERROR",
-  "error_TRDP_SET_PERIOD_ERROR",
-  "error_TRDP_SET_COMPARS_ERROR",
   "error_TRDP_MD_INITIALIZE_ERROR",
+  "error_TRDP_MD_INVALID_PORT_VALUE",
+  "error_TRDP_MD_INVALID_PARAMETER_VALUE",
+  "error_TRDP_MD_SET_MODE_INVALID_MODE",
+  "error_TRDP_MD_SET_MODE_ERROR",
+  "error_TRDP_MD_SET_PERIOD_ERROR",
+  "error_TRDP_MD_SET_COMPARS_ERROR",
   "error_TRDP_MD_GATE_WRONG_CALLBACK_DELEGATE",
   "error_TRDP_MD_GATE_OPEN_ERROR",
   "error_TRDP_MD_GATE_REQUEST_LISTEN_INVALID_SCOPE",
@@ -110,158 +110,158 @@ bool uctrdpmd_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
+  case c_error_TRDP_MD_INITIALIZE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP message data, init error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_TRDP_MD_INVALID_PORT_VALUE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nInvalid TRDP message port value: %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr,"\nTRDP message data, invalid port value: %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_INVALID_PARAMETER_VALUE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nInvalid TRDP message parameter value\n");
+    fprintf(stderr,"\nTRDP message data, invalid parameter value\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_SET_MODE_INVALID_MODE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nInvalid requested TRDP message mode\n");
+    fprintf(stderr,"\nTRDP message data, invalid requested mode\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_SET_MODE_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nSet TRDP message mode error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr,"\nTRDP message data, set mode error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_SET_PERIOD_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nSet TRDP message period error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr,"\nTRDP message data, set period error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_SET_COMPARS_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nSet TRDP message communication parameters error: %s\n",TRDP::GetResultStr(exception.params[0]));
-    fprintf(stderr," ---------------------------------------- \n");
-    break;
-  case c_error_TRDP_MD_INITIALIZE_ERROR:
-    fprintf(stderr," ---------------------------------------- \n");
-    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
-    print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP message data init error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr,"\nTRDP message data, set parameters error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_GATE_WRONG_CALLBACK_DELEGATE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nWrong type of delegate for TRDP message data gate\n");
+    fprintf(stderr,"\nTRDP message data, wrong type of delegate for gate\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_GATE_OPEN_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP message data gate open error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr,"\nTRDP message data, gate open error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_GATE_REQUEST_LISTEN_INVALID_SCOPE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nInvalid TRDP message request/listen communication scope\n");
+    fprintf(stderr,"\nTRDP message data, invalid request/listen communication scope\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_GATE_REQUEST_INVALID_NUMBER_OF_RESPONSES:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP message request, invalid number of requested responses\n");
+    fprintf(stderr,"\nTRDP message data, invalid number of requested responses\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_GATE_REQUEST_INVALID_NUMBER_OF_RETRIES:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP message request, invalid number of requested retries\n");
+    fprintf(stderr,"\nTRDP message data, invalid number of requested retries\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_GATE_REQUEST_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP message request error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr,"\nTRDP message data, request error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_GATE_LISTEN_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP listen error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr,"\nTRDP message data, listen error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_ADDRESS_INVALID_ADDRESS:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nInvalid TRDP message %s address\n",exception.params[0] ? "destination" : "source");
+    fprintf(stderr,"\nTRDP message data, invalid %s address\n",exception.params[0] ? "destination" : "source");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_ADDRESS_INVALID_USER_NAME:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nInvalid TRDP message %s user (function) name\n",exception.params[0] ? "destination" : "source");
+    fprintf(stderr,"\nTRDP message data, invalid %s user (function) name\n",exception.params[0] ? "destination" : "source");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_MESSAGE_DATA_TOO_BIG:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nInvalid TRDP message data, too big: %" HOST_LL_FORMAT "d bytes\n",exception.params[0]);
+    fprintf(stderr,"\nTRDP message data, too big message: %" HOST_LL_FORMAT "d bytes\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_MESSAGE_INVALID_TYPE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nInvalid TRDP message type\n");
+    fprintf(stderr,"\nTRDP message data, invalid type\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_EVENT_HANDLER_USER_DATA_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP message user data handle error\n");
+    fprintf(stderr,"\nTRDP message data, user data handle error\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_EVENT_MESSAGE_READ_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP message data read error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr,"\nTRDP message data, read error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_EVENT_REPLY_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP message event reply error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr,"\nTRDP message data, event reply error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_MD_EVENT_CONFIRM_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP message event confirm error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr,"\nTRDP message data, event confirm error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:

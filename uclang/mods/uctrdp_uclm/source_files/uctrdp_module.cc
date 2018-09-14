@@ -13,7 +13,7 @@ built_in_module_s module =
   uctrdp_classes,         // Classes
 
   0,                      // Error base index
-  1,                      // Error count
+  4,                      // Error count
   uctrdp_error_strings,   // Error strings
 
   uctrdp_initialize,      // Initialize function
@@ -30,6 +30,9 @@ built_in_class_s *uctrdp_classes[] =
 const char *uctrdp_error_strings[] =
 {/*{{{*/
   "error_TRDP_PD_INITIALIZE_ERROR",
+  "error_TRDP_PD_SET_MODE_INVALID_MODE",
+  "error_TRDP_PD_SET_MODE_ERROR",
+  "error_TRDP_PD_SET_PERIOD_ERROR",
 };/*}}}*/
 
 // - UCTRDP initialize -
@@ -58,7 +61,28 @@ bool uctrdp_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP process data init error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr,"\nTRDP process data, init error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_PD_SET_MODE_INVALID_MODE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP process data, invalid requested mode\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_PD_SET_MODE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP process data, set mode error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_PD_SET_PERIOD_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP process data, set period error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -76,8 +100,8 @@ built_in_class_s trdp_pd_class =
 {/*{{{*/
   "TrdpPd",
   c_modifier_public | c_modifier_final,
-  4, trdp_pd_methods,
-  9 + 3 + 9 + 1 + 6 + 4, trdp_pd_variables,
+  7, trdp_pd_methods,
+  9 + 3 + 9 + 1 + 6 + 4 + 9, trdp_pd_variables,
   bic_trdp_pd_consts,
   bic_trdp_pd_init,
   bic_trdp_pd_clear,
@@ -105,6 +129,21 @@ built_in_method_s trdp_pd_methods[] =
     "TrdpPd#1",
     c_modifier_public | c_modifier_final,
     bic_trdp_pd_method_TrdpPd_1
+  },
+  {
+    "SetMode#1",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_pd_method_SetMode_1
+  },
+  {
+    "SetPeriod#1",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_pd_method_SetPeriod_1
+  },
+  {
+    "RemoveAllPorts#0",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_pd_method_RemoveAllPorts_0
   },
   {
     "to_string#0",
@@ -165,6 +204,17 @@ built_in_variable_s trdp_pd_variables[] =
 
   { "MAX_USR_LEN", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "MAX_HST_LEN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - port flags constants -
+  { "PF_SOURCE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PF_SINK", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PF_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PF_REQUEST", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PF_CONSIST", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PF_DEMUX", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PF_VARSIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PF_FREEBIND", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PF_PROMISC", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
 
@@ -282,6 +332,28 @@ void bic_trdp_pd_consts(location_array_s &const_locations)
     CREATE_TRDP_DATA_SIZE_BIC_STATIC(TRDP::MAX_HST_LEN);
   }
 
+  // - insert port flags constants -
+  {
+    const_locations.push_blanks(9);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 9);
+
+#define CREATE_TRDP_PF_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_TRDP_PF_BIC_STATIC(TRDP::PF_SOURCE);
+    CREATE_TRDP_PF_BIC_STATIC(TRDP::PF_SINK);
+    CREATE_TRDP_PF_BIC_STATIC(TRDP::PF_TYPE);
+    CREATE_TRDP_PF_BIC_STATIC(TRDP::PF_REQUEST);
+    CREATE_TRDP_PF_BIC_STATIC(TRDP::PF_CONSIST);
+    CREATE_TRDP_PF_BIC_STATIC(TRDP::PF_DEMUX);
+    CREATE_TRDP_PF_BIC_STATIC(TRDP::PF_VARSIZE);
+    CREATE_TRDP_PF_BIC_STATIC(TRDP::PF_FREEBIND);
+    CREATE_TRDP_PF_BIC_STATIC(TRDP::PF_PROMISC);
+  }
+
 }/*}}}*/
 
 void bic_trdp_pd_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -344,6 +416,101 @@ bool bic_trdp_pd_method_TrdpPd_1(interpreter_thread_s &it,unsigned stack_base,ul
 
   // - set trdp_md destination location -
   dst_location->v_data_ptr = (TRDP::PD *)pd_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_trdp_pd_method_SetMode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int mode;
+
+  if (!it.retrieve_integer(src_0_location,mode))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("SetMode#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  // - ERROR -
+  if (mode < TRDP::MODE_CONFIG || mode > TRDP::MODE_FULLOP)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_PD_SET_MODE_INVALID_MODE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  TRDP::PD *pd_ptr = (TRDP::PD *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  int res = pd_ptr->SetMode(mode);
+  if (res != TRDP::TRDP_OK)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_PD_SET_MODE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(res);
+
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_trdp_pd_method_SetPeriod_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int tick;
+
+  if (!it.retrieve_integer(src_0_location,tick))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("SetPeriod#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  TRDP::PD *pd_ptr = (TRDP::PD *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  int res = pd_ptr->SetPeriod(tick);
+  if (res != TRDP::TRDP_OK)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_PD_SET_PERIOD_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(res);
+
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_trdp_pd_method_RemoveAllPorts_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  TRDP::PD *pd_ptr = (TRDP::PD *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  int res = pd_ptr->RemovePorts(nullptr,nullptr,0);
+  if (res != TRDP::TRDP_OK)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

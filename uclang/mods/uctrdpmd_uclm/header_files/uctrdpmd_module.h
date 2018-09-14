@@ -25,13 +25,13 @@ extern built_in_class_s *uctrdpmd_classes[];
 // - UCTRDPMD error identifiers -
 enum
 {
-  c_error_TRDP_MD_INVALID_PORT_VALUE = 0,
+  c_error_TRDP_MD_INITIALIZE_ERROR = 0,
+  c_error_TRDP_MD_INVALID_PORT_VALUE,
   c_error_TRDP_MD_INVALID_PARAMETER_VALUE,
   c_error_TRDP_MD_SET_MODE_INVALID_MODE,
   c_error_TRDP_MD_SET_MODE_ERROR,
   c_error_TRDP_MD_SET_PERIOD_ERROR,
   c_error_TRDP_MD_SET_COMPARS_ERROR,
-  c_error_TRDP_MD_INITIALIZE_ERROR,
   c_error_TRDP_MD_GATE_WRONG_CALLBACK_DELEGATE,
   c_error_TRDP_MD_GATE_OPEN_ERROR,
   c_error_TRDP_MD_GATE_REQUEST_LISTEN_INVALID_SCOPE,
