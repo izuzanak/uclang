@@ -24,9 +24,13 @@ enum
   c_error_TRDP_PD_SET_MODE_INVALID_MODE,
   c_error_TRDP_PD_SET_MODE_ERROR,
   c_error_TRDP_PD_SET_PERIOD_ERROR,
+  c_error_TRDP_PD_ADDRESS_INVALID_SCOPE,
   c_error_TRDP_PD_ADDRESS_INVALID_ADDRESS,
+  c_error_TRDP_PD_PORT_STATE_ERROR,
   c_error_TRDP_PD_PORT_PUBLISH_ERROR,
   c_error_TRDP_PD_PORT_SUBSCRIBE_ERROR,
+  c_error_TRDP_PD_PORT_GET_PORT_ERROR,
+  c_error_TRDP_PD_PORT_WRITE_READ_ERROR,
 };
 
 // - UCTRDP error strings -
@@ -84,6 +88,9 @@ bool bic_trdp_pd_port_method_Publish_0(interpreter_thread_s &it,unsigned stack_b
 bool bic_trdp_pd_port_method_Subscribe_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_pd_port_method_Unpublish_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_pd_port_method_Unsubscribe_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_port_method_write_size_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_port_method_Write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_port_method_Read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_pd_port_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_pd_port_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
