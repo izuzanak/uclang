@@ -89,8 +89,8 @@ void bic_trdp_md_gate_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_trdp_md_gate_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_trdp_md_gate_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_trdp_md_gate_method_Listen_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_trdp_md_gate_method_Request_6(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_gate_method_Listen_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_gate_method_Request_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_gate_method_process_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_gate_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_gate_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -119,7 +119,7 @@ void bic_trdp_md_address_init(interpreter_thread_s &it,location_s *location_ptr)
 void bic_trdp_md_address_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_trdp_md_address_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_trdp_md_address_method_TrdpMdAddress_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_address_method_TrdpMdAddress_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_address_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_address_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

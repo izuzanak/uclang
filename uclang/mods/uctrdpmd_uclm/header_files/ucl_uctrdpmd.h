@@ -72,6 +72,7 @@ struct trdp_md_gate_s
 
 struct trdp_md_address_s
 {
+  unsigned char scope;
   location_s *dst_user_loc;
   TRDP::IPx dst_host;
   location_s *src_user_loc;
@@ -87,6 +88,7 @@ struct trdp_md_address_s
 
 struct trdp_md_message_s
 {
+  unsigned char scope;
   TRDP::MD::Message message;
   location_s *data_location;
 

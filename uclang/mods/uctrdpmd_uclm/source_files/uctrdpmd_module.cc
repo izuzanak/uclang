@@ -929,14 +929,14 @@ built_in_method_s trdp_md_gate_methods[] =
     bic_trdp_md_gate_operator_binary_equal
   },
   {
-    "Listen#5",
+    "Listen#4",
     c_modifier_public | c_modifier_final,
-    bic_trdp_md_gate_method_Listen_5
+    bic_trdp_md_gate_method_Listen_4
   },
   {
-    "Request#6",
+    "Request#5",
     c_modifier_public | c_modifier_final,
-    bic_trdp_md_gate_method_Request_6
+    bic_trdp_md_gate_method_Request_5
   },
   {
     "process#1",
@@ -991,32 +991,28 @@ bool bic_trdp_md_gate_operator_binary_equal(interpreter_thread_s &it,unsigned st
   return true;
 }/*}}}*/
 
-bool bic_trdp_md_gate_method_Listen_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_trdp_md_gate_method_Listen_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
   location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
   location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-  location_s *src_4_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_4_op_idx]);
 
-  long long int scope;
   long long int flags;
   long long int comm_id;
 
   if (src_0_location->v_type != c_bi_class_trdp_md_address ||
-      !it.retrieve_integer(src_1_location,scope) ||
-      !it.retrieve_integer(src_2_location,flags) ||
-      !it.retrieve_integer(src_3_location,comm_id))
+      !it.retrieve_integer(src_1_location,flags) ||
+      !it.retrieve_integer(src_2_location,comm_id))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Listen#5");
-    new_exception->params.push(5);
+    BIC_EXCEPTION_PUSH_METHOD_RI("Listen#4");
+    new_exception->params.push(4);
     new_exception->params.push(src_0_location->v_type);
     new_exception->params.push(src_1_location->v_type);
     new_exception->params.push(src_2_location->v_type);
     new_exception->params.push(src_3_location->v_type);
-    new_exception->params.push(src_4_location->v_type);
 
     return false;
   }
@@ -1027,23 +1023,6 @@ bool bic_trdp_md_gate_method_Listen_5(interpreter_thread_s &it,unsigned stack_ba
   trdp_md_address_s *tma_ptr = (trdp_md_address_s *)src_0_location->v_data_ptr;
   string_s *dst_user_ptr = (string_s *)tma_ptr->dst_user_loc->v_data_ptr;
   string_s *src_user_ptr = (string_s *)tma_ptr->src_user_loc->v_data_ptr;
-
-  switch (scope)
-  {
-  case TRDP::CS_LOCAL:
-  case TRDP::CS_ETB:
-  case TRDP::CS_ETB_TOPO:
-  case TRDP::CS_OPT:
-  case TRDP::CS_OPT_TOPO:
-  case TRDP::CS_ETB_ZERO:
-    break;
-
-  // - ERROR -
-  default:
-
-    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_GATE_REQUEST_LISTEN_INVALID_SCOPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
 
   // - create trdp_md_listener object -
   trdp_md_listener_s *tml_ptr = (trdp_md_listener_s *)cmalloc(sizeof(trdp_md_listener_s));
@@ -1057,7 +1036,7 @@ bool bic_trdp_md_gate_method_Listen_5(interpreter_thread_s &it,unsigned stack_ba
   listener.hgate = tmg_ptr->gate.GetHandle();
   listener.flg = flags;
   //unsigned char red; //< redundancy group identifier
-  listener.scope = scope;
+  listener.scope = tma_ptr->scope;
   listener.comid = comm_id;
   memcpy(listener.dusr,dst_user_ptr->data,dst_user_ptr->size - 1);
   listener.dst = tma_ptr->dst_host;
@@ -1081,8 +1060,8 @@ bool bic_trdp_md_gate_method_Listen_5(interpreter_thread_s &it,unsigned stack_ba
   }
 
   // - set reference to user data -
-  src_4_location->v_reference_cnt.atomic_inc();
-  tml_ptr->user_data_loc = src_4_location;
+  src_3_location->v_reference_cnt.atomic_inc();
+  tml_ptr->user_data_loc = src_3_location;
 
   // - set refernce to gate -
   dst_location->v_reference_cnt.atomic_inc();
@@ -1094,7 +1073,7 @@ bool bic_trdp_md_gate_method_Listen_5(interpreter_thread_s &it,unsigned stack_ba
   return true;
 }/*}}}*/
 
-bool bic_trdp_md_gate_method_Request_6(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_trdp_md_gate_method_Request_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
@@ -1102,28 +1081,24 @@ bool bic_trdp_md_gate_method_Request_6(interpreter_thread_s &it,unsigned stack_b
   location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
   location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
   location_s *src_4_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_4_op_idx]);
-  location_s *src_5_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_5_op_idx]);
 
-  long long int scope;
   long long int flags;
   long long int nresp;
   long long int nretr;
 
   if (src_0_location->v_type != c_bi_class_trdp_md_message ||
-      !it.retrieve_integer(src_1_location,scope) ||
-      !it.retrieve_integer(src_2_location,flags) ||
-      !it.retrieve_integer(src_3_location,nresp) ||
-      !it.retrieve_integer(src_4_location,nretr))
+      !it.retrieve_integer(src_1_location,flags) ||
+      !it.retrieve_integer(src_2_location,nresp) ||
+      !it.retrieve_integer(src_3_location,nretr))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Request#6");
-    new_exception->params.push(6);
+    BIC_EXCEPTION_PUSH_METHOD_RI("Request#5");
+    new_exception->params.push(5);
     new_exception->params.push(src_0_location->v_type);
     new_exception->params.push(src_1_location->v_type);
     new_exception->params.push(src_2_location->v_type);
     new_exception->params.push(src_3_location->v_type);
     new_exception->params.push(src_4_location->v_type);
-    new_exception->params.push(src_5_location->v_type);
 
     return false;
   }
@@ -1131,23 +1106,6 @@ bool bic_trdp_md_gate_method_Request_6(interpreter_thread_s &it,unsigned stack_b
   trdp_md_gate_s *tmg_ptr = (trdp_md_gate_s *)dst_location->v_data_ptr;
   trdp_md_message_s *tmm_ptr = (trdp_md_message_s *)src_0_location->v_data_ptr;
   string_s *data_ptr = (string_s *)tmm_ptr->data_location->v_data_ptr;
-
-  switch (scope)
-  {
-  case TRDP::CS_LOCAL:
-  case TRDP::CS_ETB:
-  case TRDP::CS_ETB_TOPO:
-  case TRDP::CS_OPT:
-  case TRDP::CS_OPT_TOPO:
-  case TRDP::CS_ETB_ZERO:
-    break;
-
-  // - ERROR -
-  default:
-
-    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_GATE_REQUEST_LISTEN_INVALID_SCOPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
 
   // - ERROR -
   if (nresp < 0 || nresp > UINT_MAX)
@@ -1168,7 +1126,7 @@ bool bic_trdp_md_gate_method_Request_6(interpreter_thread_s &it,unsigned stack_b
   tmc_ptr->init();
 
   // - ERROR -
-  int res = tmg_ptr->gate.Request(tmm_ptr->message,nullptr,scope,nresp,nretr,flags,&tmc_ptr->handle,data_ptr->data);
+  int res = tmg_ptr->gate.Request(tmm_ptr->message,nullptr,tmm_ptr->scope,nresp,nretr,flags,&tmc_ptr->handle,data_ptr->data);
   if (res != TRDP::TRDP_OK)
   {
     tmc_ptr->clear(it);
@@ -1185,8 +1143,8 @@ bool bic_trdp_md_gate_method_Request_6(interpreter_thread_s &it,unsigned stack_b
   tmc_ptr->gate_location = dst_location;
 
   // - store handle user data -
-  src_5_location->v_reference_cnt.atomic_inc();
-  handle_data_s handle_data = {tmc_ptr->handle,src_5_location};
+  src_4_location->v_reference_cnt.atomic_inc();
+  handle_data_s handle_data = {tmc_ptr->handle,src_4_location};
   tmg_ptr->handle_data.insert(handle_data);
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_trdp_md_call,tmc_ptr);
@@ -1471,9 +1429,9 @@ built_in_method_s trdp_md_address_methods[] =
     bic_trdp_md_address_operator_binary_equal
   },
   {
-    "TrdpMdAddress#4",
+    "TrdpMdAddress#5",
     c_modifier_public | c_modifier_final,
-    bic_trdp_md_address_method_TrdpMdAddress_4
+    bic_trdp_md_address_method_TrdpMdAddress_5
   },
   {
     "to_string#0",
@@ -1523,30 +1481,51 @@ bool bic_trdp_md_address_operator_binary_equal(interpreter_thread_s &it,unsigned
   return true;
 }/*}}}*/
 
-bool bic_trdp_md_address_method_TrdpMdAddress_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_trdp_md_address_method_TrdpMdAddress_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
   location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
   location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
+  location_s *src_4_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_4_op_idx]);
 
+  long long int scope;
   long long int lli_dst_addr = 0;
   long long int lli_src_addr = 0;
 
-  if (src_0_location->v_type != c_bi_class_string ||
-      (!it.retrieve_integer(src_1_location,lli_dst_addr) && src_1_location->v_type != c_bi_class_string) ||
-      src_2_location->v_type != c_bi_class_string ||
-      (!it.retrieve_integer(src_3_location,lli_src_addr) && src_3_location->v_type != c_bi_class_string))
+  if (!it.retrieve_integer(src_0_location,scope) ||
+      src_1_location->v_type != c_bi_class_string ||
+      (!it.retrieve_integer(src_2_location,lli_dst_addr) && src_2_location->v_type != c_bi_class_string) ||
+      src_3_location->v_type != c_bi_class_string ||
+      (!it.retrieve_integer(src_4_location,lli_src_addr) && src_4_location->v_type != c_bi_class_string))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("TrdpMdAddress#4");
-    new_exception->params.push(4);
+    BIC_EXCEPTION_PUSH_METHOD_RI("TrdpMdAddress#5");
+    new_exception->params.push(5);
     new_exception->params.push(src_0_location->v_type);
     new_exception->params.push(src_1_location->v_type);
     new_exception->params.push(src_2_location->v_type);
     new_exception->params.push(src_3_location->v_type);
+    new_exception->params.push(src_4_location->v_type);
 
+    return false;
+  }
+
+  switch (scope)
+  {
+  case TRDP::CS_LOCAL:
+  case TRDP::CS_ETB:
+  case TRDP::CS_ETB_TOPO:
+  case TRDP::CS_OPT:
+  case TRDP::CS_OPT_TOPO:
+  case TRDP::CS_ETB_ZERO:
+    break;
+
+  // - ERROR -
+  default:
+
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_GATE_REQUEST_LISTEN_INVALID_SCOPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1580,14 +1559,14 @@ bool bic_trdp_md_address_method_TrdpMdAddress_4(interpreter_thread_s &it,unsigne
 
   // - retrieve destination ip addresses -
   unsigned dst_addr;
-  BIC_TRDP_MD_ADDRESS_CONSTRUCTOR_RETRIEVE_IP(src_1_location,dst_addr,1);
+  BIC_TRDP_MD_ADDRESS_CONSTRUCTOR_RETRIEVE_IP(src_2_location,dst_addr,1);
 
   // - retrieve source ip addresses -
   unsigned src_addr;
-  BIC_TRDP_MD_ADDRESS_CONSTRUCTOR_RETRIEVE_IP(src_3_location,src_addr,0);
+  BIC_TRDP_MD_ADDRESS_CONSTRUCTOR_RETRIEVE_IP(src_4_location,src_addr,0);
 
   // - ERROR -
-  if (((string_s *)src_0_location->v_data_ptr)->size - 1 > TRDP::MAX_USR_LEN)
+  if (((string_s *)src_1_location->v_data_ptr)->size - 1 > TRDP::MAX_USR_LEN)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_ADDRESS_INVALID_USER_NAME,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(1);
@@ -1596,7 +1575,7 @@ bool bic_trdp_md_address_method_TrdpMdAddress_4(interpreter_thread_s &it,unsigne
   }
 
   // - ERROR -
-  if (((string_s *)src_2_location->v_data_ptr)->size - 1 > TRDP::MAX_USR_LEN)
+  if (((string_s *)src_3_location->v_data_ptr)->size - 1 > TRDP::MAX_USR_LEN)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_MD_ADDRESS_INVALID_USER_NAME,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(0);
@@ -1608,19 +1587,22 @@ bool bic_trdp_md_address_method_TrdpMdAddress_4(interpreter_thread_s &it,unsigne
   trdp_md_address_s *tma_ptr = (trdp_md_address_s *)cmalloc(sizeof(trdp_md_address_s));
   tma_ptr->init();
 
+  // - set communication scope -
+  tma_ptr->scope = scope;
+
   // - set destination host and address -
   tma_ptr->dst_host.h = 0;
   tma_ptr->dst_host.ip = dst_addr;
 
-  src_0_location->v_reference_cnt.atomic_inc();
-  tma_ptr->dst_user_loc = src_0_location;
+  src_1_location->v_reference_cnt.atomic_inc();
+  tma_ptr->dst_user_loc = src_1_location;
 
   // - set source host and address -
   tma_ptr->src_host.h = 0;
   tma_ptr->src_host.ip = src_addr;
 
-  src_2_location->v_reference_cnt.atomic_inc();
-  tma_ptr->src_user_loc = src_2_location;
+  src_3_location->v_reference_cnt.atomic_inc();
+  tma_ptr->src_user_loc = src_3_location;
 
   // - set trdp_md_address destination location -
   dst_location->v_data_ptr = (trdp_md_address_s *)tma_ptr;
@@ -1794,6 +1776,9 @@ bool bic_trdp_md_message_method_TrdpMdMessage_5(interpreter_thread_s &it,unsigne
   // - create trdp_md_message object -
   trdp_md_message_s *tmm_ptr = (trdp_md_message_s *)cmalloc(sizeof(trdp_md_message_s));
   tmm_ptr->init();
+
+  // - set communication scope -
+  tmm_ptr->scope = tma_ptr->scope;
 
   // - fill message structure -
   TRDP::MD::Message &message = tmm_ptr->message;
