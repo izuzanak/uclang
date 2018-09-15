@@ -8,6 +8,7 @@ include "ucl_uctrdp.h"
 
 // - UCTRDP indexes of built in classes -
 extern unsigned c_bi_class_trdp_pd;
+extern unsigned c_bi_class_trdp_pd_page;
 extern unsigned c_bi_class_trdp_pd_address;
 extern unsigned c_bi_class_trdp_pd_port;
 
@@ -24,6 +25,7 @@ enum
   c_error_TRDP_PD_SET_MODE_INVALID_MODE,
   c_error_TRDP_PD_SET_MODE_ERROR,
   c_error_TRDP_PD_SET_PERIOD_ERROR,
+  c_error_TRDP_PD_REMOVE_PORTS_ERROR,
   c_error_TRDP_PD_ADDRESS_INVALID_SCOPE,
   c_error_TRDP_PD_ADDRESS_INVALID_ADDRESS,
   c_error_TRDP_PD_PORT_STATE_ERROR,
@@ -31,6 +33,8 @@ enum
   c_error_TRDP_PD_PORT_SUBSCRIBE_ERROR,
   c_error_TRDP_PD_PORT_GET_PORT_ERROR,
   c_error_TRDP_PD_PORT_WRITE_READ_ERROR,
+  c_error_TRDP_PD_PORT_INVALID_PAGE_SIZE,
+  c_error_TRDP_PD_PORT_RELEASE_PAGE_ERROR,
 };
 
 // - UCTRDP error strings -
@@ -59,6 +63,20 @@ bool bic_trdp_pd_method_RemoveAllPorts_0(interpreter_thread_s &it,unsigned stack
 bool bic_trdp_pd_method_Port_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_pd_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_pd_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class TRDP_PD_PAGE -
+extern built_in_variable_s trdp_pd_page_variables[];
+extern built_in_method_s trdp_pd_page_methods[];
+extern built_in_class_s trdp_pd_page_class;
+
+void bic_trdp_pd_page_consts(location_array_s &const_locations);
+void bic_trdp_pd_page_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_trdp_pd_page_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_trdp_pd_page_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_page_method_TrdpPdPage_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_page_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_page_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 // - class TRDP_PD_ADDRESS -
 extern built_in_variable_s trdp_pd_address_variables[];

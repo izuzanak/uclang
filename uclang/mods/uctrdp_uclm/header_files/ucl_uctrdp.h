@@ -13,6 +13,16 @@ using namespace Ucf2;
 #include <uctrdp.h>
 
 /*
+ * definition of structure trdp_pd_page_s
+ */
+
+struct trdp_pd_page_s
+{
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
  * definition of structure trdp_pd_address_s
  */
 
@@ -41,6 +51,19 @@ struct trdp_pd_port_s
   inline void init();
   inline void clear(interpreter_thread_s &it);
 };
+
+/*
+ * inline methods of structure trdp_pd_page_s
+ */
+
+inline void trdp_pd_page_s::init()
+{/*{{{*/
+}/*}}}*/
+
+inline void trdp_pd_page_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+  init();
+}/*}}}*/
 
 /*
  * inline methods of structure trdp_pd_address_s

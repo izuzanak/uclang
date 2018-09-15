@@ -5,17 +5,18 @@ include "uctrdp_module.h"
 
 // - UCTRDP indexes of built in classes -
 unsigned c_bi_class_trdp_pd = c_idx_not_exist;
+unsigned c_bi_class_trdp_pd_page = c_idx_not_exist;
 unsigned c_bi_class_trdp_pd_address = c_idx_not_exist;
 unsigned c_bi_class_trdp_pd_port = c_idx_not_exist;
 
 // - UCTRDP module -
 built_in_module_s module =
 {/*{{{*/
-  3,                      // Class count
+  4,                      // Class count
   uctrdp_classes,         // Classes
 
   0,                      // Error base index
-  11,                     // Error count
+  14,                     // Error count
   uctrdp_error_strings,   // Error strings
 
   uctrdp_initialize,      // Initialize function
@@ -26,6 +27,7 @@ built_in_module_s module =
 built_in_class_s *uctrdp_classes[] =
 {/*{{{*/
   &trdp_pd_class,
+  &trdp_pd_page_class,
   &trdp_pd_address_class,
   &trdp_pd_port_class,
 };/*}}}*/
@@ -37,6 +39,7 @@ const char *uctrdp_error_strings[] =
   "error_TRDP_PD_SET_MODE_INVALID_MODE",
   "error_TRDP_PD_SET_MODE_ERROR",
   "error_TRDP_PD_SET_PERIOD_ERROR",
+  "error_TRDP_PD_REMOVE_PORTS_ERROR",
   "error_TRDP_PD_ADDRESS_INVALID_SCOPE",
   "error_TRDP_PD_ADDRESS_INVALID_ADDRESS",
   "error_TRDP_PD_PORT_STATE_ERROR",
@@ -44,6 +47,8 @@ const char *uctrdp_error_strings[] =
   "error_TRDP_PD_PORT_SUBSCRIBE_ERROR",
   "error_TRDP_PD_PORT_GET_PORT_ERROR",
   "error_TRDP_PD_PORT_WRITE_READ_ERROR",
+  "error_TRDP_PD_PORT_INVALID_PAGE_SIZE",
+  "error_TRDP_PD_PORT_RELEASE_PAGE_ERROR",
 };/*}}}*/
 
 // - UCTRDP initialize -
@@ -53,6 +58,9 @@ bool uctrdp_initialize(script_parser_s &sp)
 
   // - initialize trdp_pd class identifier -
   c_bi_class_trdp_pd = class_base_idx++;
+
+  // - initialize trdp_pd_page class identifier -
+  c_bi_class_trdp_pd_page = class_base_idx++;
 
   // - initialize trdp_pd_address class identifier -
   c_bi_class_trdp_pd_address = class_base_idx++;
@@ -102,6 +110,13 @@ bool uctrdp_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nTRDP process data, set period error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_TRDP_PD_REMOVE_PORTS_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP process data, remove ports error: %s\n",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_TRDP_PD_ADDRESS_INVALID_SCOPE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -149,6 +164,20 @@ bool uctrdp_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nTRDP process data, port %s error: %s\n",exception.params[1] ? "write" : "read",TRDP::GetResultStr(exception.params[0]));
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_PD_PORT_INVALID_PAGE_SIZE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP process data, invalid port page size, expected %" HOST_LL_FORMAT "d bytes\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_PD_PORT_RELEASE_PAGE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP process data, release port page error: %s\n",TRDP::GetResultStr(exception.params[0]));
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -576,8 +605,9 @@ bool bic_trdp_pd_method_RemoveAllPorts_0(interpreter_thread_s &it,unsigned stack
   int res = pd_ptr->RemovePorts(nullptr,nullptr,0);
   if (res != TRDP::TRDP_OK)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_PD_REMOVE_PORTS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(res);
+
     return false;
   }
 
@@ -658,6 +688,115 @@ bool bic_trdp_pd_method_to_string_0(interpreter_thread_s &it,unsigned stack_base
 bool bic_trdp_pd_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   printf("TrdpPd");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class TRDP_PD_PAGE -
+built_in_class_s trdp_pd_page_class =
+{/*{{{*/
+  "TrdpPdPage",
+  c_modifier_public | c_modifier_final,
+  4, trdp_pd_page_methods,
+  0, trdp_pd_page_variables,
+  bic_trdp_pd_page_consts,
+  bic_trdp_pd_page_init,
+  bic_trdp_pd_page_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s trdp_pd_page_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_pd_page_operator_binary_equal
+  },
+  {
+    "TrdpPdAPage#4",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_pd_page_method_TrdpPdPage_4
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_trdp_pd_page_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_trdp_pd_page_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s trdp_pd_page_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_trdp_pd_page_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_trdp_pd_page_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (trdp_pd_page_s *)nullptr;
+}/*}}}*/
+
+void bic_trdp_pd_page_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  trdp_pd_page_s *pdpg_ptr = (trdp_pd_page_s *)location_ptr->v_data_ptr;
+
+  if (pdpg_ptr != nullptr)
+  {
+    pdpg_ptr->clear(it);
+    cfree(pdpg_ptr);
+  }
+}/*}}}*/
+
+bool bic_trdp_pd_page_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_trdp_pd_page_method_TrdpPdPage_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  
+  // FIXME TODO continue
+  BIC_TODO_ERROR(__FILE__,__LINE__);
+  return false;
+}/*}}}*/
+
+bool bic_trdp_pd_page_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("TrdpPdPage"),"TrdpPdPage");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_trdp_pd_page_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("TrdpPdPage");
 
   BIC_SET_RESULT_BLANK();
 
@@ -1206,8 +1345,9 @@ bool bic_trdp_pd_port_method_Write_1(interpreter_thread_s &it,unsigned stack_bas
   {
     pd_ptr->ReleasePage(&page,0);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_PD_PORT_INVALID_PAGE_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(page.size);
+
     return false;
   }
 
@@ -1218,8 +1358,9 @@ bool bic_trdp_pd_port_method_Write_1(interpreter_thread_s &it,unsigned stack_bas
   res = pd_ptr->ReleasePage(&page,0);
   if (res != TRDP::TRDP_OK)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_PD_PORT_RELEASE_PAGE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(res);
+
     return false;
   }
 
@@ -1273,8 +1414,9 @@ bool bic_trdp_pd_port_method_Read_0(interpreter_thread_s &it,unsigned stack_base
     string_ptr->clear();
     cfree(string_ptr);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_PD_PORT_RELEASE_PAGE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(res);
+
     return false;
   }
 
