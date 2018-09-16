@@ -25,6 +25,7 @@ c_packages = [
   ["MOD_PARSER"    ,"true"      ,[]],
   ["MOD_MATH"      ,"dirs"      ,["/usr/include/glm"]],
   ["MOD_GSL"       ,"pkg-config",["gsl >= 2.1"]],
+  ["MOD_FFTW"      ,"pkg-config",["fftw3 >= 3.3.8"]],
   ["MOD_GMP"       ,"files"     ,["/usr/include/i386-linux-gnu/gmp.h"]],
   ["MOD_DATRIE"    ,"pkg-config",["datrie-0.2 >= 0.2.10"]],
   ["MOD_PSQL"      ,"pkg-config",["libpq >= 9.4.1"]],

@@ -22,6 +22,7 @@ C_MODULE_CIPHER     = index; index += 1
 C_MODULE_PARSER     = index; index += 1
 C_MODULE_MATH       = index; index += 1
 C_MODULE_GSL        = index; index += 1
+C_MODULE_FFTW       = index; index += 1
 C_MODULE_GMP        = index; index += 1
 C_MODULE_DATRIE     = index; index += 1
 C_MODULE_PSQL       = index; index += 1
@@ -125,6 +126,7 @@ c_cfg = [
     ["MOD_PARSER"    ,c_enabled[C_MODULE_PARSER]    ,C_UCLANG_DIR + "mods/parser_uclm"      ,None],
     ["MOD_MATH"      ,c_enabled[C_MODULE_MATH]      ,C_UCLANG_DIR + "mods/math_uclm"        ,None],
     ["MOD_GSL"       ,c_enabled[C_MODULE_GSL]       ,C_UCLANG_DIR + "mods/gsl_uclm"         ,None],
+    ["MOD_FFTW"      ,c_enabled[C_MODULE_FFTW]      ,C_UCLANG_DIR + "mods/fftw_uclm"        ,None],
     ["MOD_GMP"       ,c_enabled[C_MODULE_GMP]       ,C_UCLANG_DIR + "mods/gmp_uclm"         ,None],
     ["MOD_DATRIE"    ,c_enabled[C_MODULE_DATRIE]    ,C_UCLANG_DIR + "mods/datrie_uclm"      ,None],
     ["MOD_PSQL"      ,c_enabled[C_MODULE_PSQL]      ,C_UCLANG_DIR + "mods/psql_uclm"        ,None],
