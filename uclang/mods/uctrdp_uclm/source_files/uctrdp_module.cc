@@ -904,14 +904,16 @@ bool bic_trdp_pd_page_method_TrdpPdPage_1(interpreter_thread_s &it,unsigned stac
   var_descr.type = ANY_STRUCTURED;
   var_descr.address = 0;
   var_descr.length = 0;
+  var_descr.size = 0;
 
   // - create page pass structure -
   trdp_pd_page_s::pass_s pass = {nullptr,0,0,0};
 
   // - ERROR -
   unsigned struct_vd_count;
+  unsigned struct_vd_idx;
   if (!pdpg_ptr->process_page_description(
-        it,pass,(pointer_array_s *)src_0_location->v_data_ptr,struct_vd_count,true))
+        it,pass,(pointer_array_s *)src_0_location->v_data_ptr,struct_vd_count,struct_vd_idx))
   {
     pdpg_ptr->clear(it);
     cfree(pdpg_ptr);
@@ -933,11 +935,12 @@ bool bic_trdp_pd_page_method_TrdpPdPage_1(interpreter_thread_s &it,unsigned stac
     trdp_var_descr_s *tvd_ptr = var_descrs.data;
     trdp_var_descr_s *tvd_ptr_end = tvd_ptr + var_descrs.used;
     do {
-      fprintf(stderr,"name: %p, type: %u, addr: %u, length: %u, count: %u\n",
+      fprintf(stderr,"name: %p, type: %u, addr: %u, length: %u, size: %u, count: %u\n",
           tvd_ptr->name_location,
           tvd_ptr->type,
           tvd_ptr->address,
           tvd_ptr->length,
+          tvd_ptr->size,
           tvd_ptr->count);
     } while(++tvd_ptr < tvd_ptr_end);
   }

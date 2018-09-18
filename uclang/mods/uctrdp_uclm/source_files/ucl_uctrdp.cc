@@ -22,7 +22,7 @@ methods trdp_var_descrs_s
  */
 
 bool trdp_pd_page_s::process_page_description(
-    interpreter_thread_s &it,pass_s &pass,pointer_array_s *array_ptr,unsigned &vd_count,bool create_vd)
+    interpreter_thread_s &it,pass_s &pass,pointer_array_s *array_ptr,unsigned &vd_count,unsigned &last_vd_idx)
 {/*{{{*/
 
   // - reset variable descriptor count -
@@ -41,6 +41,9 @@ bool trdp_pd_page_s::process_page_description(
     // - increase variable descriptor count -
     ++vd_count;
 
+    // - set last variable descriptor index -
+    last_vd_idx = var_descrs.used;
+
     // - ERROR -
     if (p_ptr_end - p_ptr < 2)
     {
@@ -57,7 +60,7 @@ bool trdp_pd_page_s::process_page_description(
       return false;
     }
 
-    // - align to byte -
+    // - align to bytes -
     if (type != TBOOL)
     {
       pass.address += !!pass.bit_pos;
@@ -90,25 +93,24 @@ bool trdp_pd_page_s::process_page_description(
           return false;
         }
 
-        if (create_vd)
-        {
-          // - create variable descriptor -
-          var_descrs.push_blank();
-          trdp_var_descr_s &var_descr = var_descrs.last();
+        unsigned var_descr_idx = var_descrs.used;
 
-          // - fill variable descriptor -
-          name_location->v_reference_cnt.atomic_inc();
-          var_descr.name_location = name_location;
-          var_descr.type = type;
-          var_descr.address = 0;
-          var_descr.length = 0;
-          var_descr.count = count;
-        }
+        // - create variable descriptor -
+        var_descrs.push_blank();
+        trdp_var_descr_s *vd_ptr = var_descrs.data + var_descr_idx;
+
+        // - fill variable descriptor -
+        name_location->v_reference_cnt.atomic_inc();
+        vd_ptr->name_location = name_location;
+        vd_ptr->type = type;
+        vd_ptr->address = pass.address;
+        vd_ptr->count = count;
 
         // - ERROR -
         unsigned array_vd_count;
+        unsigned array_last_vd_idx;
         if (!process_page_description(
-              it,pass,(pointer_array_s *)array_location->v_data_ptr,array_vd_count,create_vd))
+              it,pass,(pointer_array_s *)array_location->v_data_ptr,array_vd_count,array_last_vd_idx))
         {
           return false;
         }
@@ -119,16 +121,25 @@ bool trdp_pd_page_s::process_page_description(
           return false;
         }
 
-        while (--count > 0)
+        vd_ptr = var_descrs.data + var_descr_idx;
+        trdp_var_descr_s *item_vd_ptr = var_descrs.data + var_descr_idx + 1;
+
+        unsigned length = item_vd_ptr->size*count;
+
+        if (item_vd_ptr->type == TBOOL)
         {
-          // - ERROR -
-          unsigned array_vd_count;
-          if (!process_page_description(
-                it,pass,(pointer_array_s *)array_location->v_data_ptr,array_vd_count,false))
-          {
-            return false;
-          }
+          pass.address += (pass.bit_pos += (length - item_vd_ptr->size)) >> 3;
+          pass.bit_pos &= 0x07;
+
+          length = (length >> 3) + !!(length & 0x07);
         }
+        else
+        {
+          pass.address += length - item_vd_ptr->size;
+        }
+
+        vd_ptr->length = length;
+        vd_ptr->size = length;
       }/*}}}*/
       break;
     case ANY_STRUCTURED:
@@ -150,24 +161,21 @@ bool trdp_pd_page_s::process_page_description(
 
         unsigned var_descr_idx = var_descrs.used;
 
-        if (create_vd)
-        {
-          // - create variable descriptor -
-          var_descrs.push_blank();
-          trdp_var_descr_s &var_descr = var_descrs.last();
+        // - create variable descriptor -
+        var_descrs.push_blank();
+        trdp_var_descr_s *vd_ptr = var_descrs.data + var_descr_idx;
 
-          // - fill variable descriptor -
-          name_location->v_reference_cnt.atomic_inc();
-          var_descr.name_location = name_location;
-          var_descr.type = type;
-          var_descr.address = 0;
-          var_descr.length = 0;
-        }
+        // - fill variable descriptor -
+        name_location->v_reference_cnt.atomic_inc();
+        vd_ptr->name_location = name_location;
+        vd_ptr->type = type;
+        vd_ptr->address = pass.address;
 
         // - ERROR -
         unsigned struct_vd_count;
+        unsigned struct_last_vd_idx;
         if (!process_page_description(
-              it,pass,(pointer_array_s *)array_location->v_data_ptr,struct_vd_count,create_vd))
+              it,pass,(pointer_array_s *)array_location->v_data_ptr,struct_vd_count,struct_last_vd_idx))
         {
           return false;
         }
@@ -178,10 +186,19 @@ bool trdp_pd_page_s::process_page_description(
           return false;
         }
 
-        if (create_vd)
+        vd_ptr = var_descrs.data + var_descr_idx;
+        trdp_var_descr_s *last_vd_ptr = var_descrs.data + struct_last_vd_idx;
+
+        unsigned end_address = last_vd_ptr->address + last_vd_ptr->size;
+
+        if (last_vd_ptr->type == TBOOL)
         {
-          var_descrs[var_descr_idx].count = struct_vd_count;
+          end_address = (end_address >> 3) + !!(end_address & 0x07);
         }
+
+        vd_ptr->length = end_address - vd_ptr->address;
+        vd_ptr->size = vd_ptr->length;
+        vd_ptr->count = struct_vd_count;
       }/*}}}*/
       break;
     default:
@@ -203,20 +220,32 @@ bool trdp_pd_page_s::process_page_description(
         // - increase variable count -
         var_count += count;
 
-        unsigned var_address = pass.address;
-        unsigned var_length;
+        // - create variable descriptor -
+        var_descrs.push_blank();
+        trdp_var_descr_s &var_descr = var_descrs.last();
+
+        // - fill variable descriptor -
+        name_location->v_reference_cnt.atomic_inc();
+        var_descr.name_location = name_location;
+        var_descr.type = type;
+        var_descr.count = count;
 
         switch (type)
         {
         case TBOOL:
-          var_length = 0;
-          var_address = (pass.address << 3) + pass.bit_pos;
+          var_descr.address = (pass.address << 3) + pass.bit_pos;
+          var_descr.length = 1;
+          var_descr.size = count;
 
           pass.address += (pass.bit_pos += count) >> 3;
           pass.bit_pos &= 0x07;
           break;
         case TBYTE:
-          var_length = 1;
+          var_descr.address = pass.address;
+          var_descr.length = 1;
+          var_descr.size = count;
+
+          ++pass.address;
           break;
 
         // FIXME TODO continue ...
@@ -225,24 +254,6 @@ bool trdp_pd_page_s::process_page_description(
         default:
           return false;
         }
-
-        pass.address += count*var_length;
-
-        if (create_vd)
-        {
-          // - create variable descriptor -
-          var_descrs.push_blank();
-          trdp_var_descr_s &var_descr = var_descrs.last();
-
-          // - fill variable descriptor -
-          name_location->v_reference_cnt.atomic_inc();
-          var_descr.name_location = name_location;
-          var_descr.type = type;
-          var_descr.length = var_length;
-          var_descr.address = var_address;
-          var_descr.count = count;
-        }
-
       }/*}}}*/
       break;
     }
@@ -255,7 +266,7 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
 {/*{{{*/
   trdp_var_descr_s &var_descr = var_descrs[vd_idx];
 
-  // - align to byte -
+  // - align to bytes -
   if (var_descr.type != TBOOL)
   {
     pass.address += !!pass.bit_pos;
