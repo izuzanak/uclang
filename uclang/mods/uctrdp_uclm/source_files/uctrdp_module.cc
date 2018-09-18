@@ -993,7 +993,7 @@ bool bic_trdp_pd_page_method_pack_1(interpreter_thread_s &it,unsigned stack_base
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->create(pdpg_ptr->size);
 
-  trdp_pd_page_s::pass_s pass = {string_ptr->data,array_ptr,0,0,0};
+  trdp_pd_page_s::pass_s pass = {(unsigned char *)string_ptr->data,array_ptr,0,0,0};
 
   // - ERROR -
   if (!pdpg_ptr->pack_page_data(it,pass,0))
@@ -1040,7 +1040,7 @@ bool bic_trdp_pd_page_method_unpack_1(interpreter_thread_s &it,unsigned stack_ba
   pointer_array_s *array_ptr = it.get_new_array_ptr();
   BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);
 
-  trdp_pd_page_s::pass_s pass = {string_ptr->data,array_ptr,0,0,0};
+  trdp_pd_page_s::pass_s pass = {(unsigned char *)string_ptr->data,array_ptr,0,0,0};
 
   // - ERROR -
   if (!pdpg_ptr->unpack_page_data(it,pass,0))

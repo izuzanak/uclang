@@ -47,6 +47,13 @@ using namespace Ucf2;
 #define ANY_STRUCTURED 65 /* any structured                                  */
 
 /*
+ * basic definitions and constants
+ */
+
+extern const unsigned short c_two_bytes;
+extern const bool c_little_endian;
+
+/*
  * definition of generated structures
  */
 
@@ -77,7 +84,7 @@ struct trdp_pd_page_s
 {
   struct pass_s
   {
-    char *data_ptr;
+    unsigned char *data_ptr;
     pointer_array_s *array_ptr;
     unsigned array_idx;
     unsigned address;

@@ -4,6 +4,13 @@ include "ucl_uctrdp.h"
 @end
 
 /*
+ * basic definitions and constants
+ */
+
+const unsigned short c_two_bytes = 0xff00;
+const bool c_little_endian = ((unsigned char *)&c_two_bytes)[1] == 0xff;
+
+/*
  * methods of generated structures
  */
 
@@ -233,22 +240,77 @@ bool trdp_pd_page_s::process_page_description(
         switch (type)
         {
         case TBOOL:
-          var_descr.address = (pass.address << 3) + pass.bit_pos;
-          var_descr.length = 1;
-          var_descr.size = count;
+          {/*{{{*/
+            var_descr.address = (pass.address << 3) + pass.bit_pos;
+            var_descr.length = 1;
+            var_descr.size = count;
 
-          pass.address += (pass.bit_pos += count) >> 3;
-          pass.bit_pos &= 0x07;
+            pass.address += (pass.bit_pos += count) >> 3;
+            pass.bit_pos &= 0x07;
+          }/*}}}*/
           break;
         case TBYTE:
-          var_descr.address = pass.address;
-          var_descr.length = 1;
-          var_descr.size = count;
+        case TWORD:
+        case TDWORD:
+        case TLWORD:
+        case TUSINT:
+        case TINT:
+        case TUINT:
+        case TUDINT:
+        case TREAL:
+        case TLREAL:
+        case TSTRINGB:
+        case TSTRING:
+          {/*{{{*/
+            var_descr.address = pass.address;
 
-          pass.address += count;
+            switch (type)
+            {
+              case TBYTE:
+              case TUSINT:
+                var_descr.length = 1;
+                break;
+              case TWORD:
+              case TINT:
+              case TUINT:
+                var_descr.length = 2;
+                break;
+              case TDWORD:
+              case TUDINT:
+              case TREAL:
+                var_descr.length = 4;
+                break;
+              case TLWORD:
+              case TLREAL:
+                var_descr.length = 8;
+                break;
+              case TSTRINGB:
+              case TSTRING:
+                {/*{{{*/
+
+                  // - ERROR -
+                  if (p_ptr >= p_ptr_end)
+                  {
+                    return false;
+                  }
+
+                  // - ERROR -
+                  long long int length;
+                  if (!it.retrieve_integer(it.get_location_value(*p_ptr++),length) ||
+                      length <= 0 || length >= 256)
+                  {
+                    return false;
+                  }
+
+                  var_descr.length = length;
+                }/*}}}*/
+                break;
+            }
+
+            var_descr.size = var_descr.length*count;
+            pass.address += var_descr.size;
+          }/*}}}*/
           break;
-
-        // FIXME TODO continue ...
 
         // - ERROR -
         default:
@@ -295,7 +357,7 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
       unsigned svd_idx = vd_idx + 1;
       unsigned svd_idx_end = svd_idx + var_descr.count;
       do {
-        
+
         // - ERROR -
         if (!pack_page_data(it,pass,svd_idx))
         {
@@ -313,6 +375,63 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
         return false;
       }
 
+#define TRDP_PACK_PAGE_DATA_INTEGER_VALUE(TYPE) \
+{/*{{{*/\
+  unsigned count = var_descr.count;\
+  while (count-- > 0)\
+  {\
+    location_s *item_location = it.get_location_value(pass.array_ptr->data[pass.array_idx++]);\
+    \
+    /* - ERROR - */\
+    if (item_location->v_type != c_bi_class_integer)\
+    {\
+      return false;\
+    }\
+    \
+    TYPE value = (long long int)item_location->v_data_ptr;\
+    memcpy(pass.data_ptr + pass.address,(unsigned char *)&value,var_descr.length);\
+    pass.address += var_descr.length;\
+  }\
+}/*}}}*/
+
+#define TRDP_PACK_PAGE_DATA_INTEGER_REORDER_VALUE(TYPE) \
+{/*{{{*/\
+  unsigned count = var_descr.count;\
+  while (count-- > 0)\
+  {\
+    location_s *item_location = it.get_location_value(pass.array_ptr->data[pass.array_idx++]);\
+    \
+    /* - ERROR - */\
+    if (item_location->v_type != c_bi_class_integer)\
+    {\
+      return false;\
+    }\
+    \
+    TYPE value = (long long int)item_location->v_data_ptr;\
+    memcpy_bo(pass.data_ptr + pass.address,(unsigned char *)&value,var_descr.length,c_little_endian);\
+    pass.address += var_descr.length;\
+  }\
+}/*}}}*/
+
+#define TRDP_PACK_PAGE_DATA_FLOAT_REORDER_VALUE(TYPE) \
+{/*{{{*/\
+  unsigned count = var_descr.count;\
+  while (count-- > 0)\
+  {\
+    location_s *item_location = it.get_location_value(pass.array_ptr->data[pass.array_idx++]);\
+    \
+    /* - ERROR - */\
+    if (item_location->v_type != c_bi_class_float)\
+    {\
+      return false;\
+    }\
+    \
+    TYPE value = (double)item_location->v_data_ptr;\
+    memcpy_bo(pass.data_ptr + pass.address,(unsigned char *)&value,var_descr.length,c_little_endian);\
+    pass.address += var_descr.length;\
+  }\
+}/*}}}*/
+
       switch (var_descr.type)
       {
       case TBOOL:
@@ -328,7 +447,7 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
               return false;
             }
 
-            long long int value = !!(long long int)item_location->v_data_ptr;
+            unsigned char value = !!(long long int)item_location->v_data_ptr;
 
             // - set bit value -
             if (!pass.bit_pos)
@@ -350,6 +469,37 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
         }/*}}}*/
         break;
       case TBYTE:
+        TRDP_PACK_PAGE_DATA_INTEGER_VALUE(unsigned char);
+        break;
+      case TWORD:
+        TRDP_PACK_PAGE_DATA_INTEGER_VALUE(unsigned short);
+        break;
+      case TDWORD:
+        TRDP_PACK_PAGE_DATA_INTEGER_VALUE(unsigned);
+        break;
+      case TLWORD:
+        TRDP_PACK_PAGE_DATA_INTEGER_VALUE(unsigned long long);
+        break;
+      case TUSINT:
+        TRDP_PACK_PAGE_DATA_INTEGER_VALUE(unsigned char);
+        break;
+      case TINT:
+        TRDP_PACK_PAGE_DATA_INTEGER_REORDER_VALUE(short);
+        break;
+      case TUINT:
+        TRDP_PACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned short);
+        break;
+      case TUDINT:
+        TRDP_PACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned);
+        break;
+      case TREAL:
+        TRDP_PACK_PAGE_DATA_FLOAT_REORDER_VALUE(float);
+        break;
+      case TLREAL:
+        TRDP_PACK_PAGE_DATA_FLOAT_REORDER_VALUE(double);
+        break;
+      case TSTRINGB:
+      case TSTRING:
         {/*{{{*/
           unsigned count = var_descr.count;
           while (count-- > 0)
@@ -357,19 +507,33 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
             location_s *item_location = it.get_location_value(pass.array_ptr->data[pass.array_idx++]);
 
             // - ERROR -
-            if (item_location->v_type != c_bi_class_integer)
+            if (item_location->v_type != c_bi_class_string)
             {
               return false;
             }
 
-            // - set byte value -
-            *((unsigned char *)(pass.data_ptr + pass.address)) = (long long int)item_location->v_data_ptr;
-            ++pass.address;
+            string_s *string_ptr = (string_s *)item_location->v_data_ptr;
+
+            // - ERROR -
+            if (string_ptr->size - 1 > var_descr.length)
+            {
+              return false;
+            }
+
+            if (string_ptr->size < var_descr.length)
+            {
+              memcpy(pass.data_ptr + pass.address,string_ptr->data,string_ptr->size);
+              memset(pass.data_ptr + pass.address + string_ptr->size,0,var_descr.length - string_ptr->size);
+            }
+            else
+            {
+              memcpy(pass.data_ptr + pass.address,string_ptr->data,var_descr.length);
+            }
+
+            pass.address += var_descr.length;
           }
         }/*}}}*/
         break;
-
-      // FIXME TODO continue ...
 
       // - ERROR -
       default:
@@ -416,7 +580,7 @@ bool trdp_pd_page_s::unpack_page_data(interpreter_thread_s &it,pass_s &pass,unsi
       unsigned svd_idx = vd_idx + 1;
       unsigned svd_idx_end = svd_idx + var_descr.count;
       do {
-        
+
         // - ERROR -
         if (!unpack_page_data(it,pass,svd_idx))
         {
@@ -427,6 +591,49 @@ bool trdp_pd_page_s::unpack_page_data(interpreter_thread_s &it,pass_s &pass,unsi
     break;
   default:
     {/*{{{*/
+
+#define TRDP_UNPACK_PAGE_DATA_INTEGER_VALUE(TYPE) \
+{/*{{{*/\
+  unsigned count = var_descr.count;\
+  while (count-- > 0)\
+  {\
+    TYPE value;\
+    memcpy((unsigned char *)&value,pass.data_ptr + pass.address,var_descr.length);\
+    pass.address += var_descr.length;\
+\
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,(long long int)value);\
+    pass.array_ptr->push(new_location);\
+  }\
+}/*}}}*/
+
+#define TRDP_UNPACK_PAGE_DATA_INTEGER_REORDER_VALUE(TYPE) \
+{/*{{{*/\
+  unsigned count = var_descr.count;\
+  while (count-- > 0)\
+  {\
+    TYPE value;\
+    memcpy_bo((unsigned char *)&value,pass.data_ptr + pass.address,var_descr.length,c_little_endian);\
+    pass.address += var_descr.length;\
+\
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,(long long int)value);\
+    pass.array_ptr->push(new_location);\
+  }\
+}/*}}}*/
+
+#define TRDP_UNPACK_PAGE_DATA_FLOAT_VALUE(TYPE) \
+{/*{{{*/\
+  unsigned count = var_descr.count;\
+  while (count-- > 0)\
+  {\
+    TYPE value;\
+    memcpy_bo((unsigned char *)&value,pass.data_ptr + pass.address,var_descr.length,c_little_endian);\
+    pass.address += var_descr.length;\
+\
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,(double)value);\
+    pass.array_ptr->push(new_location);\
+  }\
+}/*}}}*/
+
       switch (var_descr.type)
       {
       case TBOOL:
@@ -449,21 +656,54 @@ bool trdp_pd_page_s::unpack_page_data(interpreter_thread_s &it,pass_s &pass,unsi
         }/*}}}*/
         break;
       case TBYTE:
+        TRDP_UNPACK_PAGE_DATA_INTEGER_VALUE(unsigned char);
+        break;
+      case TWORD:
+        TRDP_UNPACK_PAGE_DATA_INTEGER_VALUE(unsigned short);
+        break;
+      case TDWORD:
+        TRDP_UNPACK_PAGE_DATA_INTEGER_VALUE(unsigned);
+        break;
+      case TLWORD:
+        TRDP_UNPACK_PAGE_DATA_INTEGER_VALUE(unsigned long long);
+        break;
+      case TUSINT:
+        TRDP_UNPACK_PAGE_DATA_INTEGER_VALUE(unsigned char);
+        break;
+      case TINT:
+        TRDP_UNPACK_PAGE_DATA_INTEGER_REORDER_VALUE(short);
+        break;
+      case TUINT:
+        TRDP_UNPACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned short);
+        break;
+      case TUDINT:
+        TRDP_UNPACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned);
+        break;
+      case TREAL:
+        TRDP_UNPACK_PAGE_DATA_FLOAT_VALUE(float);
+        break;
+      case TLREAL:
+        TRDP_UNPACK_PAGE_DATA_FLOAT_VALUE(double);
+        break;
+      case TSTRINGB:
+      case TSTRING:
         {/*{{{*/
           unsigned count = var_descr.count;
           while (count-- > 0)
           {
-            long long int value = *((unsigned char *)(pass.data_ptr + pass.address));
+            unsigned length = strnlen((char *)(pass.data_ptr + pass.address),var_descr.length);
 
-            BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
+            string_s *string_ptr = it.get_new_string_ptr();
+            string_ptr->create(length);
+
+            memcpy(string_ptr->data,pass.data_ptr + pass.address,length);
+            pass.address += var_descr.length;
+
+            BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
             pass.array_ptr->push(new_location);
-
-            ++pass.address;
           }
         }/*}}}*/
         break;
-
-      // FIXME TODO continue ...
 
       // - ERROR -
       default:
