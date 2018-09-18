@@ -799,7 +799,7 @@ built_in_variable_s trdp_pd_page_variables[] =
   { "TUNICODE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "TSTRING", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "ANY_ARRAY", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "ANY_STRUCTURED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "ANY_STRUCT", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
 
@@ -840,7 +840,7 @@ void bic_trdp_pd_page_consts(location_array_s &const_locations)
     CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TUNICODE);
     CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TSTRING);
     CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(ANY_ARRAY);
-    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(ANY_STRUCTURED);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(ANY_STRUCT);
   }
 
 }/*}}}*/
@@ -892,8 +892,6 @@ bool bic_trdp_pd_page_method_TrdpPdPage_1(interpreter_thread_s &it,unsigned stac
   trdp_pd_page_s *pdpg_ptr = (trdp_pd_page_s *)cmalloc(sizeof(trdp_pd_page_s));
   pdpg_ptr->init();
 
-  pdpg_ptr->var_count = 0;
-
   // - create variable descriptor -
   pdpg_ptr->var_descrs.push_blank();
   trdp_var_descr_s &var_descr = pdpg_ptr->var_descrs.last();
@@ -901,13 +899,13 @@ bool bic_trdp_pd_page_method_TrdpPdPage_1(interpreter_thread_s &it,unsigned stac
   // - fill variable descriptor -
   ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
   var_descr.name_location = (location_s *)it.blank_location;
-  var_descr.type = ANY_STRUCTURED;
+  var_descr.type = ANY_STRUCT;
   var_descr.address = 0;
   var_descr.length = 0;
   var_descr.size = 0;
 
   // - create page pass structure -
-  trdp_pd_page_s::pass_s pass = {nullptr,0,0,0};
+  trdp_pd_page_s::pass_s pass = {nullptr,nullptr,0,0,0};
 
   // - ERROR -
   unsigned struct_vd_count;
@@ -927,6 +925,9 @@ bool bic_trdp_pd_page_method_TrdpPdPage_1(interpreter_thread_s &it,unsigned stac
 
   // - set page size -
   pdpg_ptr->size = pass.address + !!pass.bit_pos;
+
+  // - set page count of variables -
+  pdpg_ptr->var_count = pass.var_idx;
 
   // FIXME debug output
   trdp_var_descrs_s &var_descrs = pdpg_ptr->var_descrs;

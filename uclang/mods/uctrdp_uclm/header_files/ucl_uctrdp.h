@@ -44,7 +44,7 @@ using namespace Ucf2;
 #define TTDticks       115 // UINT  .. Number of ticks (1 tick =1/65536 s)
 
 #define ANY_ARRAY      0
-#define ANY_STRUCTURED 65 /* any structured                                  */
+#define ANY_STRUCT     65 /* any structured                                  */
 
 /*
  * basic definitions and constants
@@ -85,8 +85,8 @@ struct trdp_pd_page_s
   struct pass_s
   {
     unsigned char *data_ptr;
-    pointer_array_s *array_ptr;
-    unsigned array_idx;
+    pointer_array_s *vars_ptr;
+    unsigned var_idx;
     unsigned address;
     unsigned bit_pos;
   };

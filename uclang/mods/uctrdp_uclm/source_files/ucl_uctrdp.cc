@@ -113,9 +113,11 @@ bool trdp_pd_page_s::process_page_description(
         vd_ptr->address = pass.address;
         vd_ptr->count = count;
 
-        // - ERROR -
         unsigned array_vd_count;
         unsigned array_last_vd_idx;
+        unsigned old_var_idx = pass.var_idx;
+
+        // - ERROR -
         if (!process_page_description(
               it,pass,(pointer_array_s *)array_location->v_data_ptr,array_vd_count,array_last_vd_idx))
         {
@@ -145,11 +147,13 @@ bool trdp_pd_page_s::process_page_description(
           pass.address += length - item_vd_ptr->size;
         }
 
+        pass.var_idx += (count - 1)*(pass.var_idx - old_var_idx);
+
         vd_ptr->length = length;
         vd_ptr->size = length;
       }/*}}}*/
       break;
-    case ANY_STRUCTURED:
+    case ANY_STRUCT:
       {/*{{{*/
 
         // - ERROR -
@@ -178,9 +182,10 @@ bool trdp_pd_page_s::process_page_description(
         vd_ptr->type = type;
         vd_ptr->address = pass.address;
 
-        // - ERROR -
         unsigned struct_vd_count;
         unsigned struct_last_vd_idx;
+
+        // - ERROR -
         if (!process_page_description(
               it,pass,(pointer_array_s *)array_location->v_data_ptr,struct_vd_count,struct_last_vd_idx))
         {
@@ -225,7 +230,7 @@ bool trdp_pd_page_s::process_page_description(
         }
 
         // - increase variable count -
-        var_count += count;
+        pass.var_idx += count;
 
         // - create variable descriptor -
         var_descrs.push_blank();
@@ -352,7 +357,7 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
       }
     }/*}}}*/
     break;
-  case ANY_STRUCTURED:
+  case ANY_STRUCT:
     {/*{{{*/
       unsigned svd_idx = vd_idx + 1;
       unsigned svd_idx_end = svd_idx + var_descr.count;
@@ -370,7 +375,7 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
     {/*{{{*/
 
       // - ERROR -
-      if (pass.array_ptr->used - pass.array_idx < var_descr.count)
+      if (pass.vars_ptr->used - pass.var_idx < var_descr.count)
       {
         return false;
       }
@@ -380,7 +385,7 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
   unsigned count = var_descr.count;\
   while (count-- > 0)\
   {\
-    location_s *item_location = it.get_location_value(pass.array_ptr->data[pass.array_idx++]);\
+    location_s *item_location = it.get_location_value(pass.vars_ptr->data[pass.var_idx++]);\
     \
     /* - ERROR - */\
     if (item_location->v_type != c_bi_class_integer)\
@@ -399,7 +404,7 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
   unsigned count = var_descr.count;\
   while (count-- > 0)\
   {\
-    location_s *item_location = it.get_location_value(pass.array_ptr->data[pass.array_idx++]);\
+    location_s *item_location = it.get_location_value(pass.vars_ptr->data[pass.var_idx++]);\
     \
     /* - ERROR - */\
     if (item_location->v_type != c_bi_class_integer)\
@@ -418,7 +423,7 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
   unsigned count = var_descr.count;\
   while (count-- > 0)\
   {\
-    location_s *item_location = it.get_location_value(pass.array_ptr->data[pass.array_idx++]);\
+    location_s *item_location = it.get_location_value(pass.vars_ptr->data[pass.var_idx++]);\
     \
     /* - ERROR - */\
     if (item_location->v_type != c_bi_class_float)\
@@ -439,7 +444,7 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
           unsigned count = var_descr.count;
           while (count-- > 0)
           {
-            location_s *item_location = it.get_location_value(pass.array_ptr->data[pass.array_idx++]);
+            location_s *item_location = it.get_location_value(pass.vars_ptr->data[pass.var_idx++]);
 
             // - ERROR -
             if (item_location->v_type != c_bi_class_integer)
@@ -504,7 +509,7 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
           unsigned count = var_descr.count;
           while (count-- > 0)
           {
-            location_s *item_location = it.get_location_value(pass.array_ptr->data[pass.array_idx++]);
+            location_s *item_location = it.get_location_value(pass.vars_ptr->data[pass.var_idx++]);
 
             // - ERROR -
             if (item_location->v_type != c_bi_class_string)
@@ -575,7 +580,7 @@ bool trdp_pd_page_s::unpack_page_data(interpreter_thread_s &it,pass_s &pass,unsi
       }
     }/*}}}*/
     break;
-  case ANY_STRUCTURED:
+  case ANY_STRUCT:
     {/*{{{*/
       unsigned svd_idx = vd_idx + 1;
       unsigned svd_idx_end = svd_idx + var_descr.count;
@@ -602,7 +607,7 @@ bool trdp_pd_page_s::unpack_page_data(interpreter_thread_s &it,pass_s &pass,unsi
     pass.address += var_descr.length;\
 \
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,(long long int)value);\
-    pass.array_ptr->push(new_location);\
+    pass.vars_ptr->push(new_location);\
   }\
 }/*}}}*/
 
@@ -616,7 +621,7 @@ bool trdp_pd_page_s::unpack_page_data(interpreter_thread_s &it,pass_s &pass,unsi
     pass.address += var_descr.length;\
 \
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,(long long int)value);\
-    pass.array_ptr->push(new_location);\
+    pass.vars_ptr->push(new_location);\
   }\
 }/*}}}*/
 
@@ -630,7 +635,7 @@ bool trdp_pd_page_s::unpack_page_data(interpreter_thread_s &it,pass_s &pass,unsi
     pass.address += var_descr.length;\
 \
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,(double)value);\
-    pass.array_ptr->push(new_location);\
+    pass.vars_ptr->push(new_location);\
   }\
 }/*}}}*/
 
@@ -644,7 +649,7 @@ bool trdp_pd_page_s::unpack_page_data(interpreter_thread_s &it,pass_s &pass,unsi
             long long int value = !!(pass.data_ptr[pass.address] & (0x01 << pass.bit_pos));
 
             BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
-            pass.array_ptr->push(new_location);
+            pass.vars_ptr->push(new_location);
 
             // - advance bit position -
             if (++pass.bit_pos >= 8)
@@ -700,7 +705,7 @@ bool trdp_pd_page_s::unpack_page_data(interpreter_thread_s &it,pass_s &pass,unsi
             pass.address += var_descr.length;
 
             BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
-            pass.array_ptr->push(new_location);
+            pass.vars_ptr->push(new_location);
           }
         }/*}}}*/
         break;
