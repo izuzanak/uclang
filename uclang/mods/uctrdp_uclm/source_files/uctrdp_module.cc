@@ -998,6 +998,9 @@ bool bic_trdp_pd_page_method_pack_1(interpreter_thread_s &it,unsigned stack_base
   // - ERROR -
   if (!pdpg_ptr->pack_page_data(it,pass,0))
   {
+    string_ptr->clear();
+    cfree(string_ptr);
+
     // FIXME TODO throw proper exception
     BIC_TODO_ERROR(__FILE__,__LINE__);
     return false;
@@ -1010,10 +1013,48 @@ bool bic_trdp_pd_page_method_pack_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_trdp_pd_page_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
-  // FIXME TODO continue ...
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
+  if (src_0_location->v_type != c_bi_class_string)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("unpack#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  trdp_pd_page_s *pdpg_ptr = (trdp_pd_page_s *)dst_location->v_data_ptr;
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (string_ptr->size - 1 != pdpg_ptr->size)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+  BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);
+
+  trdp_pd_page_s::pass_s pass = {string_ptr->data,array_ptr,0,0,0};
+
+  // - ERROR -
+  if (!pdpg_ptr->unpack_page_data(it,pass,0))
+  {
+    it.release_location_ptr(array_location);
+
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_SET_RESULT(array_location);
+
+  return true;
 }/*}}}*/
 
 bool bic_trdp_pd_page_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)

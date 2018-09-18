@@ -245,7 +245,7 @@ bool trdp_pd_page_s::process_page_description(
           var_descr.length = 1;
           var_descr.size = count;
 
-          ++pass.address;
+          pass.address += count;
           break;
 
         // FIXME TODO continue ...
@@ -364,6 +364,100 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
 
             // - set byte value -
             *((unsigned char *)(pass.data_ptr + pass.address)) = (long long int)item_location->v_data_ptr;
+            ++pass.address;
+          }
+        }/*}}}*/
+        break;
+
+      // FIXME TODO continue ...
+
+      // - ERROR -
+      default:
+        return false;
+      }
+
+    }/*}}}*/
+    break;
+  }
+
+  return true;
+}/*}}}*/
+
+bool trdp_pd_page_s::unpack_page_data(interpreter_thread_s &it,pass_s &pass,unsigned vd_idx)
+{/*{{{*/
+  trdp_var_descr_s &var_descr = var_descrs[vd_idx];
+
+  // - align to bytes -
+  if (var_descr.type != TBOOL)
+  {
+    pass.address += !!pass.bit_pos;
+    pass.bit_pos = 0;
+  }
+
+  switch (var_descr.type)
+  {
+  case ANY_ARRAY:
+    {/*{{{*/
+      unsigned count = var_descr.count;
+      unsigned item_vd_idx = vd_idx + 1;
+
+      while (count-- > 0)
+      {
+        // - ERROR -
+        if (!unpack_page_data(it,pass,item_vd_idx))
+        {
+          return false;
+        }
+      }
+    }/*}}}*/
+    break;
+  case ANY_STRUCTURED:
+    {/*{{{*/
+      unsigned svd_idx = vd_idx + 1;
+      unsigned svd_idx_end = svd_idx + var_descr.count;
+      do {
+        
+        // - ERROR -
+        if (!unpack_page_data(it,pass,svd_idx))
+        {
+          return false;
+        }
+      } while(++svd_idx < svd_idx_end);
+    }/*}}}*/
+    break;
+  default:
+    {/*{{{*/
+      switch (var_descr.type)
+      {
+      case TBOOL:
+        {/*{{{*/
+          unsigned count = var_descr.count;
+          while (count-- > 0)
+          {
+            long long int value = !!(pass.data_ptr[pass.address] & (0x01 << pass.bit_pos));
+
+            BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
+            pass.array_ptr->push(new_location);
+
+            // - advance bit position -
+            if (++pass.bit_pos >= 8)
+            {
+              ++pass.address;
+              pass.bit_pos = 0;
+            }
+          }
+        }/*}}}*/
+        break;
+      case TBYTE:
+        {/*{{{*/
+          unsigned count = var_descr.count;
+          while (count-- > 0)
+          {
+            long long int value = *((unsigned char *)(pass.data_ptr + pass.address));
+
+            BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
+            pass.array_ptr->push(new_location);
+
             ++pass.address;
           }
         }/*}}}*/

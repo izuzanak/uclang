@@ -90,6 +90,7 @@ struct trdp_pd_page_s
 
   bool process_page_description(interpreter_thread_s &it,pass_s &pass,pointer_array_s *array_ptr,unsigned &vd_count,unsigned &last_vd_idx);
   bool pack_page_data(interpreter_thread_s &it,pass_s &pass,unsigned vd_idx);
+  bool unpack_page_data(interpreter_thread_s &it,pass_s &pass,unsigned vd_idx);
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
