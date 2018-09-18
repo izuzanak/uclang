@@ -18,25 +18,6 @@ extern built_in_module_s module;
 // - UCTRDP classes -
 extern built_in_class_s *uctrdp_classes[];
 
-// - UCTRDP error identifiers -
-enum
-{
-  c_error_TRDP_PD_INITIALIZE_ERROR = 0,
-  c_error_TRDP_PD_SET_MODE_INVALID_MODE,
-  c_error_TRDP_PD_SET_MODE_ERROR,
-  c_error_TRDP_PD_SET_PERIOD_ERROR,
-  c_error_TRDP_PD_REMOVE_PORTS_ERROR,
-  c_error_TRDP_PD_ADDRESS_INVALID_SCOPE,
-  c_error_TRDP_PD_ADDRESS_INVALID_ADDRESS,
-  c_error_TRDP_PD_PORT_STATE_ERROR,
-  c_error_TRDP_PD_PORT_PUBLISH_ERROR,
-  c_error_TRDP_PD_PORT_SUBSCRIBE_ERROR,
-  c_error_TRDP_PD_PORT_GET_PORT_ERROR,
-  c_error_TRDP_PD_PORT_WRITE_READ_ERROR,
-  c_error_TRDP_PD_PORT_INVALID_PAGE_SIZE,
-  c_error_TRDP_PD_PORT_RELEASE_PAGE_ERROR,
-};
-
 // - UCTRDP error strings -
 extern const char *uctrdp_error_strings[];
 

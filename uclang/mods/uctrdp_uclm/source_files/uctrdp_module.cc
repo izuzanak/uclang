@@ -19,7 +19,7 @@ built_in_module_s module =
   uctrdp_classes,         // Classes
 
   0,                      // Error base index
-  14,                     // Error count
+  27,                     // Error count
   uctrdp_error_strings,   // Error strings
 
   uctrdp_initialize,      // Initialize function
@@ -44,6 +44,19 @@ const char *uctrdp_error_strings[] =
   "error_TRDP_PD_SET_PERIOD_ERROR",
   "error_TRDP_PD_REMOVE_PORTS_ERROR",
   "error_TRDP_PD_ADDRESS_INVALID_SCOPE",
+  "error_TRDP_PD_PAGE_DESCR_TOO_SHORT",
+  "error_TRDP_PD_PAGE_DESCR_EXPECTED_STRING_AS_NAME",
+  "error_TRDP_PD_PAGE_DESCR_EXPECTED_INTEGER_AS_TYPE",
+  "error_TRDP_PD_PAGE_DESCR_EXPECTED_INTEGER_AS_ARRAY_SIZE",
+  "error_TRDP_PD_PAGE_DESCR_EXPECTED_INTEGER_AS_VARIABLE_COUNT",
+  "error_TRDP_PD_PAGE_DESCR_EXPECTED_INTEGER_AS_STRING_LENGTH",
+  "error_TRDP_PD_PAGE_DESCR_EXPECTED_ARRAY_AS_ARRAY_DESCR",
+  "error_TRDP_PD_PAGE_DESCR_EXPECTED_ARRAY_AS_STRUCT_DESCR",
+  "error_TRDP_PD_PAGE_DESCR_ARRAY_INVALID_VD_COUNT",
+  "error_TRDP_PD_PAGE_PACK_INVALID_VARIABLE_COUNT",
+  "error_TRDP_PD_PAGE_PACK_INVALID_DATA_SIZE",
+  "error_TRDP_PD_PAGE_PACK_INVALID_VARIABLE_TYPE",
+  "error_TRDP_PD_PAGE_PACK_INVALID_STRING_LENGTH",
   "error_TRDP_PD_ADDRESS_INVALID_ADDRESS",
   "error_TRDP_PD_PORT_STATE_ERROR",
   "error_TRDP_PD_PORT_PUBLISH_ERROR",
@@ -138,6 +151,97 @@ bool uctrdp_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nTRDP process data, invalid communication scope\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_PD_PAGE_DESCR_TOO_SHORT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP page, description unexpectedly ended\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_PD_PAGE_DESCR_EXPECTED_STRING_AS_NAME:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP page, expected string as variable name\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_PD_PAGE_DESCR_EXPECTED_INTEGER_AS_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP page, expected integer as variable type\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_PD_PAGE_DESCR_EXPECTED_INTEGER_AS_ARRAY_SIZE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP page, expected integer as array size\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_PD_PAGE_DESCR_EXPECTED_INTEGER_AS_VARIABLE_COUNT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP page, expected integer as variable count\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_PD_PAGE_DESCR_EXPECTED_INTEGER_AS_STRING_LENGTH:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP page, expected integer as string length\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_PD_PAGE_DESCR_EXPECTED_ARRAY_AS_ARRAY_DESCR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP page, expected array as array description\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_PD_PAGE_DESCR_EXPECTED_ARRAY_AS_STRUCT_DESCR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP page, expected array as structure description\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_PD_PAGE_DESCR_ARRAY_INVALID_VD_COUNT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP page, invalid count of array variable descriptors\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_PD_PAGE_PACK_INVALID_VARIABLE_COUNT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP page, invalid variable count\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_PD_PAGE_PACK_INVALID_DATA_SIZE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP process data, invalid page size\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_PD_PAGE_PACK_INVALID_VARIABLE_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP page, invalid variable type at position %" HOST_LL_FORMAT "d, expected %s\n",exception.params[0],it.class_symbol_names[it.class_records[exception.params[1]].name_idx].data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_PD_PAGE_PACK_INVALID_STRING_LENGTH:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP page, invalid string length at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_PD_ADDRESS_INVALID_ADDRESS:
@@ -916,8 +1020,22 @@ bool bic_trdp_pd_page_method_TrdpPdPage_1(interpreter_thread_s &it,unsigned stac
     pdpg_ptr->clear(it);
     cfree(pdpg_ptr);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    location_s *exception_loc = (location_s *)it.exception_location;
+    if (exception_loc->v_type != c_bi_class_blank)
+    {
+      // - retrieve thrown exception -
+      exception_s *exception = (exception_s *)((location_s *)it.exception_location)->v_data_ptr;
+
+      // - modify error type and position -
+      exception->type += module.error_base;
+      exception->position = operands[c_source_pos_idx];
+    }
+    else
+    {
+      // FIXME TODO throw proper exception
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+    }
+
     return false;
   }
 
@@ -928,23 +1046,6 @@ bool bic_trdp_pd_page_method_TrdpPdPage_1(interpreter_thread_s &it,unsigned stac
 
   // - set page count of variables -
   pdpg_ptr->var_count = pass.var_idx;
-
-  // FIXME debug output
-  trdp_var_descrs_s &var_descrs = pdpg_ptr->var_descrs;
-  if (var_descrs.used != 0)
-  {
-    trdp_var_descr_s *tvd_ptr = var_descrs.data;
-    trdp_var_descr_s *tvd_ptr_end = tvd_ptr + var_descrs.used;
-    do {
-      fprintf(stderr,"name: %p, type: %u, addr: %u, length: %u, size: %u, count: %u\n",
-          tvd_ptr->name_location,
-          tvd_ptr->type,
-          tvd_ptr->address,
-          tvd_ptr->length,
-          tvd_ptr->size,
-          tvd_ptr->count);
-    } while(++tvd_ptr < tvd_ptr_end);
-  }
 
   // - set trdp_pd_address destination location -
   dst_location->v_data_ptr = (trdp_pd_page_s *)pdpg_ptr;
@@ -986,8 +1087,7 @@ bool bic_trdp_pd_page_method_pack_1(interpreter_thread_s &it,unsigned stack_base
   // - ERROR -
   if (array_ptr->used != pdpg_ptr->var_count)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_PD_PAGE_PACK_INVALID_VARIABLE_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1002,8 +1102,22 @@ bool bic_trdp_pd_page_method_pack_1(interpreter_thread_s &it,unsigned stack_base
     string_ptr->clear();
     cfree(string_ptr);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    location_s *exception_loc = (location_s *)it.exception_location;
+    if (exception_loc->v_type != c_bi_class_blank)
+    {
+      // - retrieve thrown exception -
+      exception_s *exception = (exception_s *)((location_s *)it.exception_location)->v_data_ptr;
+
+      // - modify error type and position -
+      exception->type += module.error_base;
+      exception->position = operands[c_source_pos_idx];
+    }
+    else
+    {
+      // FIXME TODO throw proper exception
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+    }
+
     return false;
   }
 
@@ -1033,8 +1147,7 @@ bool bic_trdp_pd_page_method_unpack_1(interpreter_thread_s &it,unsigned stack_ba
   // - ERROR -
   if (string_ptr->size - 1 != pdpg_ptr->size)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_PD_PAGE_PACK_INVALID_DATA_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1048,8 +1161,22 @@ bool bic_trdp_pd_page_method_unpack_1(interpreter_thread_s &it,unsigned stack_ba
   {
     it.release_location_ptr(array_location);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    location_s *exception_loc = (location_s *)it.exception_location;
+    if (exception_loc->v_type != c_bi_class_blank)
+    {
+      // - retrieve thrown exception -
+      exception_s *exception = (exception_s *)((location_s *)it.exception_location)->v_data_ptr;
+
+      // - modify error type and position -
+      exception->type += module.error_base;
+      exception->position = operands[c_source_pos_idx];
+    }
+    else
+    {
+      // FIXME TODO throw proper exception
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+    }
+
     return false;
   }
 

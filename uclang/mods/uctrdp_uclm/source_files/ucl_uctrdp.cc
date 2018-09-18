@@ -38,6 +38,7 @@ bool trdp_pd_page_s::process_page_description(
   // - ERROR -
   if (array_ptr->used == 0)
   {
+    exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_DESCR_TOO_SHORT,0,(location_s *)it.blank_location);
     return false;
   }
 
@@ -54,6 +55,7 @@ bool trdp_pd_page_s::process_page_description(
     // - ERROR -
     if (p_ptr_end - p_ptr < 2)
     {
+      exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_DESCR_TOO_SHORT,0,(location_s *)it.blank_location);
       return false;
     }
 
@@ -61,9 +63,16 @@ bool trdp_pd_page_s::process_page_description(
 
     // - ERROR -
     long long int type;
-    if (name_location->v_type != c_bi_class_string ||
-        !it.retrieve_integer(it.get_location_value(*p_ptr++),type))
+    if (name_location->v_type != c_bi_class_string)
     {
+      exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_DESCR_EXPECTED_STRING_AS_NAME,0,(location_s *)it.blank_location);
+      return false;
+    }
+
+    // - ERROR -
+    if (!it.retrieve_integer(it.get_location_value(*p_ptr++),type))
+    {
+      exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_DESCR_EXPECTED_INTEGER_AS_TYPE,0,(location_s *)it.blank_location);
       return false;
     }
 
@@ -82,6 +91,7 @@ bool trdp_pd_page_s::process_page_description(
         // - ERROR -
         if (p_ptr_end - p_ptr < 2)
         {
+          exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_DESCR_TOO_SHORT,0,(location_s *)it.blank_location);
           return false;
         }
 
@@ -89,6 +99,7 @@ bool trdp_pd_page_s::process_page_description(
         long long int count;
         if (!it.retrieve_integer(it.get_location_value(*p_ptr++),count) || count <= 0)
         {
+          exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_DESCR_EXPECTED_INTEGER_AS_ARRAY_SIZE,0,(location_s *)it.blank_location);
           return false;
         }
 
@@ -97,6 +108,7 @@ bool trdp_pd_page_s::process_page_description(
         // - ERRRO -
         if (array_location->v_type != c_bi_class_array)
         {
+          exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_DESCR_EXPECTED_ARRAY_AS_ARRAY_DESCR,0,(location_s *)it.blank_location);
           return false;
         }
 
@@ -127,6 +139,7 @@ bool trdp_pd_page_s::process_page_description(
         // - ERROR -
         if (array_vd_count != 1)
         {
+          exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_DESCR_ARRAY_INVALID_VD_COUNT,0,(location_s *)it.blank_location);
           return false;
         }
 
@@ -159,6 +172,7 @@ bool trdp_pd_page_s::process_page_description(
         // - ERROR -
         if (p_ptr >= p_ptr_end)
         {
+          exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_DESCR_TOO_SHORT,0,(location_s *)it.blank_location);
           return false;
         }
 
@@ -167,6 +181,7 @@ bool trdp_pd_page_s::process_page_description(
         // - ERRRO -
         if (array_location->v_type != c_bi_class_array)
         {
+          exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_DESCR_EXPECTED_ARRAY_AS_STRUCT_DESCR,0,(location_s *)it.blank_location);
           return false;
         }
 
@@ -219,6 +234,7 @@ bool trdp_pd_page_s::process_page_description(
         // - ERROR -
         if (p_ptr >= p_ptr_end)
         {
+          exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_DESCR_TOO_SHORT,0,(location_s *)it.blank_location);
           return false;
         }
 
@@ -226,6 +242,7 @@ bool trdp_pd_page_s::process_page_description(
         long long int count;
         if (!it.retrieve_integer(it.get_location_value(*p_ptr++),count) || count <= 0)
         {
+          exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_DESCR_EXPECTED_INTEGER_AS_VARIABLE_COUNT,0,(location_s *)it.blank_location);
           return false;
         }
 
@@ -296,6 +313,7 @@ bool trdp_pd_page_s::process_page_description(
                   // - ERROR -
                   if (p_ptr >= p_ptr_end)
                   {
+                    exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_DESCR_TOO_SHORT,0,(location_s *)it.blank_location);
                     return false;
                   }
 
@@ -304,6 +322,7 @@ bool trdp_pd_page_s::process_page_description(
                   if (!it.retrieve_integer(it.get_location_value(*p_ptr++),length) ||
                       length <= 0 || length >= 256)
                   {
+                    exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_DESCR_EXPECTED_INTEGER_AS_STRING_LENGTH,0,(location_s *)it.blank_location);
                     return false;
                   }
 
@@ -319,6 +338,8 @@ bool trdp_pd_page_s::process_page_description(
 
         // - ERROR -
         default:
+
+          // FIXME TODO throw proper exception
           return false;
         }
       }/*}}}*/
@@ -373,13 +394,6 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
     break;
   default:
     {/*{{{*/
-
-      // - ERROR -
-      if (pass.vars_ptr->used - pass.var_idx < var_descr.count)
-      {
-        return false;
-      }
-
 #define TRDP_PACK_PAGE_DATA_INTEGER_VALUE(TYPE) \
 {/*{{{*/\
   unsigned count = var_descr.count;\
@@ -390,6 +404,10 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
     /* - ERROR - */\
     if (item_location->v_type != c_bi_class_integer)\
     {\
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_PACK_INVALID_VARIABLE_TYPE,0,(location_s *)it.blank_location);\
+      new_exception->params.push(pass.var_idx);\
+      new_exception->params.push(c_bi_class_integer);\
+      \
       return false;\
     }\
     \
@@ -409,6 +427,10 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
     /* - ERROR - */\
     if (item_location->v_type != c_bi_class_integer)\
     {\
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_PACK_INVALID_VARIABLE_TYPE,0,(location_s *)it.blank_location);\
+      new_exception->params.push(pass.var_idx);\
+      new_exception->params.push(c_bi_class_integer);\
+      \
       return false;\
     }\
     \
@@ -428,6 +450,10 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
     /* - ERROR - */\
     if (item_location->v_type != c_bi_class_float)\
     {\
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_PACK_INVALID_VARIABLE_TYPE,0,(location_s *)it.blank_location);\
+      new_exception->params.push(pass.var_idx);\
+      new_exception->params.push(c_bi_class_float);\
+      \
       return false;\
     }\
     \
@@ -449,6 +475,10 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
             // - ERROR -
             if (item_location->v_type != c_bi_class_integer)
             {
+              exception_s *new_exception = exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_PACK_INVALID_VARIABLE_TYPE,0,(location_s *)it.blank_location);
+              new_exception->params.push(pass.var_idx);
+              new_exception->params.push(c_bi_class_integer);
+
               return false;
             }
 
@@ -514,6 +544,10 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
             // - ERROR -
             if (item_location->v_type != c_bi_class_string)
             {
+              exception_s *new_exception = exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_PACK_INVALID_VARIABLE_TYPE,0,(location_s *)it.blank_location);
+              new_exception->params.push(pass.var_idx);
+              new_exception->params.push(c_bi_class_string);
+
               return false;
             }
 
@@ -522,6 +556,9 @@ bool trdp_pd_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsign
             // - ERROR -
             if (string_ptr->size - 1 > var_descr.length)
             {
+              exception_s *new_exception = exception_s::throw_exception(it,c_error_TRDP_PD_PAGE_PACK_INVALID_STRING_LENGTH,0,(location_s *)it.blank_location);
+              new_exception->params.push(pass.var_idx);
+
               return false;
             }
 
