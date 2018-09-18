@@ -74,7 +74,10 @@ void bic_trdp_pd_page_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_trdp_pd_page_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_trdp_pd_page_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_trdp_pd_page_method_TrdpPdPage_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_page_method_TrdpPdPage_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_page_method_size_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_page_method_pack_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_pd_page_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_pd_page_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_pd_page_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

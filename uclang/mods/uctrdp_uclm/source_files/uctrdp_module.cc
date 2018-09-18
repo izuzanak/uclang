@@ -9,6 +9,9 @@ unsigned c_bi_class_trdp_pd_page = c_idx_not_exist;
 unsigned c_bi_class_trdp_pd_address = c_idx_not_exist;
 unsigned c_bi_class_trdp_pd_port = c_idx_not_exist;
 
+// - UCTRDP indexes of remote classes -
+unsigned c_rm_class_dict = c_idx_not_exist;
+
 // - UCTRDP module -
 built_in_module_s module =
 {/*{{{*/
@@ -67,6 +70,19 @@ bool uctrdp_initialize(script_parser_s &sp)
 
   // - initialize trdp_pd_port class identifier -
   c_bi_class_trdp_pd_port = class_base_idx++;
+
+  // - retrieve remote dict class index -
+  c_rm_class_dict = sp.resolve_class_idx_by_name("Dict",c_idx_not_exist);
+
+  // - ERROR -
+  if (c_rm_class_dict == c_idx_not_exist)
+  {
+    sp.error_code.push(ei_module_cannot_find_remote_class);
+    sp.error_code.push(sp.module_names_positions[sp.module_idx].ui_first);
+    sp.error_code.push(sp.module_idx);
+
+    return false;
+  }
 
   return true;
 }/*}}}*/
@@ -699,8 +715,8 @@ built_in_class_s trdp_pd_page_class =
 {/*{{{*/
   "TrdpPdPage",
   c_modifier_public | c_modifier_final,
-  4, trdp_pd_page_methods,
-  0, trdp_pd_page_variables,
+  7, trdp_pd_page_methods,
+  24, trdp_pd_page_variables,
   bic_trdp_pd_page_consts,
   bic_trdp_pd_page_init,
   bic_trdp_pd_page_clear,
@@ -725,9 +741,24 @@ built_in_method_s trdp_pd_page_methods[] =
     bic_trdp_pd_page_operator_binary_equal
   },
   {
-    "TrdpPdAPage#4",
+    "TrdpPdPage#1",
     c_modifier_public | c_modifier_final,
-    bic_trdp_pd_page_method_TrdpPdPage_4
+    bic_trdp_pd_page_method_TrdpPdPage_1
+  },
+  {
+    "size#0",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_pd_page_method_size_0
+  },
+  {
+    "pack#1",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_pd_page_method_pack_1
+  },
+  {
+    "unpack#1",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_pd_page_method_unpack_1
   },
   {
     "to_string#0",
@@ -743,10 +774,75 @@ built_in_method_s trdp_pd_page_methods[] =
 
 built_in_variable_s trdp_pd_page_variables[] =
 {/*{{{*/
+
+  // - trdp variable type constants -
+  { "TBOOL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TBYTE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TWORD", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TDWORD", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TLWORD", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TUSINT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TSTRINGB", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TINT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TUINT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TUDINT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TREAL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TLREAL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TBCD8", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TTSTAMP", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TDATE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TTDsecs", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TTDticks", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TTIMEhm", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TTODhm", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TDThm", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TUNICODE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TSTRING", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "ANY_ARRAY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "ANY_STRUCTURED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_trdp_pd_page_consts(location_array_s &const_locations)
 {/*{{{*/
+
+  // - insert trdp variable type constants -
+  {
+    const_locations.push_blanks(24);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 24);
+
+#define CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TBOOL);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TBYTE);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TWORD);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TDWORD);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TLWORD);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TUSINT);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TSTRINGB);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TINT);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TUINT);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TUDINT);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TREAL);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TLREAL);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TBCD8);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TTSTAMP);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TDATE);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TTDsecs);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TTDticks);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TTIMEhm);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TTODhm);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TDThm);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TUNICODE);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(TSTRING);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(ANY_ARRAY);
+    CREATE_TRDP_VARIABLE_TYPE_BIC_STATIC(ANY_STRUCTURED);
+  }
+
 }/*}}}*/
 
 void bic_trdp_pd_page_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -777,10 +873,142 @@ bool bic_trdp_pd_page_operator_binary_equal(interpreter_thread_s &it,unsigned st
   return true;
 }/*}}}*/
 
-bool bic_trdp_pd_page_method_TrdpPdPage_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_trdp_pd_page_method_TrdpPdPage_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  
-  // FIXME TODO continue
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_array)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("TrdpPdPage#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  // - create trdp_pd_page object -
+  trdp_pd_page_s *pdpg_ptr = (trdp_pd_page_s *)cmalloc(sizeof(trdp_pd_page_s));
+  pdpg_ptr->init();
+
+  pdpg_ptr->var_count = 0;
+
+  // - create variable descriptor -
+  pdpg_ptr->var_descrs.push_blank();
+  trdp_var_descr_s &var_descr = pdpg_ptr->var_descrs.last();
+
+  // - fill variable descriptor -
+  ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
+  var_descr.name_location = (location_s *)it.blank_location;
+  var_descr.type = ANY_STRUCTURED;
+  var_descr.address = 0;
+  var_descr.length = 0;
+
+  // - create page pass structure -
+  trdp_pd_page_s::pass_s pass = {nullptr,0,0,0};
+
+  // - ERROR -
+  unsigned struct_vd_count;
+  if (!pdpg_ptr->process_page_description(
+        it,pass,(pointer_array_s *)src_0_location->v_data_ptr,struct_vd_count,true))
+  {
+    pdpg_ptr->clear(it);
+    cfree(pdpg_ptr);
+
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  pdpg_ptr->var_descrs[0].count = struct_vd_count;
+
+  // - set page size -
+  pdpg_ptr->size = pass.address + !!pass.bit_pos;
+
+  // FIXME debug output
+  trdp_var_descrs_s &var_descrs = pdpg_ptr->var_descrs;
+  if (var_descrs.used != 0)
+  {
+    trdp_var_descr_s *tvd_ptr = var_descrs.data;
+    trdp_var_descr_s *tvd_ptr_end = tvd_ptr + var_descrs.used;
+    do {
+      fprintf(stderr,"name: %p, type: %u, addr: %u, length: %u, count: %u\n",
+          tvd_ptr->name_location,
+          tvd_ptr->type,
+          tvd_ptr->address,
+          tvd_ptr->length,
+          tvd_ptr->count);
+    } while(++tvd_ptr < tvd_ptr_end);
+  }
+
+  // - set trdp_pd_address destination location -
+  dst_location->v_data_ptr = (trdp_pd_page_s *)pdpg_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_trdp_pd_page_method_size_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  trdp_pd_page_s *pdpg_ptr = (trdp_pd_page_s *)dst_location->v_data_ptr;
+
+  long long int result = pdpg_ptr->size;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_trdp_pd_page_method_pack_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_array)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("pack#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  trdp_pd_page_s *pdpg_ptr = (trdp_pd_page_s *)dst_location->v_data_ptr;
+  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (array_ptr->used != pdpg_ptr->var_count)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->create(pdpg_ptr->size);
+
+  trdp_pd_page_s::pass_s pass = {string_ptr->data,array_ptr,0,0,0};
+
+  // - ERROR -
+  if (!pdpg_ptr->pack_page_data(it,pass,0))
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_trdp_pd_page_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+
+  // FIXME TODO continue ...
   BIC_TODO_ERROR(__FILE__,__LINE__);
   return false;
 }/*}}}*/
