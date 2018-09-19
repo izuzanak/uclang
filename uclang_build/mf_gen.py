@@ -755,7 +755,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [ 
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -809,7 +809,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [ 
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -881,7 +881,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","libbase_ucll"])
+        os.sep.join(["..","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -907,7 +907,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -933,7 +933,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # "-lrt " CXX link options
@@ -959,7 +959,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -985,7 +985,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link + "-lreadline ", # CXX link options
@@ -1011,7 +1011,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -1037,7 +1037,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -1063,7 +1063,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -1089,7 +1089,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -1115,7 +1115,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -1141,7 +1141,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -1167,7 +1167,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link + "-lgsl ", # CXX link options
@@ -1193,7 +1193,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link + "-lfftw3 -lm ", # CXX link options
@@ -1219,7 +1219,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link + "-lgmp -lmpfr ", # CXX link options
@@ -1245,7 +1245,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link + "-ldatrie ", # CXX link options
@@ -1271,7 +1271,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build + "`pkg-config --cflags libpq` " , # CXX options
       opt_link + "`pkg-config --libs libpq` ", # CXX link options
@@ -1297,7 +1297,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link + "-lsqlite3 ", # CXX link options
@@ -1323,7 +1323,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link + "-lmicrohttpd ", # CXX link options
@@ -1349,7 +1349,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link + "-lwebsockets ", # CXX link options
@@ -1375,7 +1375,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link + "-lcurl ", # CXX link options
@@ -1425,7 +1425,7 @@ if cfg_ref[CFG_TARGET]:
         "header_files",
         os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
         os.sep.join(["..","..","..","ext_libs","ucframework","1.60","build","include"]),
-        os.sep.join(["..","..","..","ext_libs","uctcn","2.27","build","include"])
+        os.sep.join(["..","..","..","ext_libs","uctcn","2.27","build","include"]),
       ],
       [ 
         "source_files",
@@ -1433,7 +1433,7 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
         os.sep.join(["..","..","..","ext_libs","ucframework","1.60","build","lib"]),
-        os.sep.join(["..","..","..","ext_libs","uctcn","2.27","build","lib"])
+        os.sep.join(["..","..","..","ext_libs","uctcn","2.27","build","lib"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -1455,7 +1455,7 @@ if cfg_ref[CFG_TARGET]:
         "header_files",
         os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
         os.sep.join(["..","..","..","ext_libs","ucframework","1.60","build","include"]),
-        os.sep.join(["..","..","..","ext_libs","uctcn","2.27","build","include"])
+        os.sep.join(["..","..","..","ext_libs","uctcn","2.27","build","include"]),
       ],
       [ 
         "source_files",
@@ -1463,7 +1463,7 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
         os.sep.join(["..","..","..","ext_libs","ucframework","1.60","build","lib"]),
-        os.sep.join(["..","..","..","ext_libs","uctcn","2.27","build","lib"])
+        os.sep.join(["..","..","..","ext_libs","uctcn","2.27","build","lib"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -1485,7 +1485,7 @@ if cfg_ref[CFG_TARGET]:
         "header_files",
         os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
         os.sep.join(["..","..","..","ext_libs","ucframework","2.15","build","include"]),
-        os.sep.join(["..","..","..","ext_libs","uctrdp","1.8","build","include"])
+        os.sep.join(["..","..","..","ext_libs","uctrdp","1.8","build","include"]),
       ],
       [ 
         "source_files",
@@ -1493,7 +1493,7 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
         os.sep.join(["..","..","..","ext_libs","ucframework","2.15","build","lib"]),
-        os.sep.join(["..","..","..","ext_libs","uctrdp","1.8","build","lib"])
+        os.sep.join(["..","..","..","ext_libs","uctrdp","1.8","build","lib"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -1515,7 +1515,7 @@ if cfg_ref[CFG_TARGET]:
         "header_files",
         os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
         os.sep.join(["..","..","..","ext_libs","ucframework","2.15","build","include"]),
-        os.sep.join(["..","..","..","ext_libs","uctrdp","1.8","build","include"])
+        os.sep.join(["..","..","..","ext_libs","uctrdp","1.8","build","include"]),
       ],
       [ 
         "source_files",
@@ -1523,7 +1523,33 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
         os.sep.join(["..","..","..","ext_libs","ucframework","2.15","build","lib"]),
-        os.sep.join(["..","..","..","ext_libs","uctrdp","1.8","build","lib"])
+        os.sep.join(["..","..","..","ext_libs","uctrdp","1.8","build","lib"]),
+      ],
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
+      [],
+      [],
+    )
+# }}}
+
+# uctrdpmsh module
+cfg_ref = c_cfg[C_MODULE_UCTRDPMSH]
+# {{{
+if cfg_ref[CFG_TARGET]:
+    cfg_ref[CFG_MODULE] = module_c(
+      configuration,
+      cfg_ref[CFG_DIR],
+      cfg_ref[CFG_NAME],
+      [ 
+        "header_files",
+        os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
+      ],
+      [ 
+        "source_files",
+      ],
+      [ 
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -1545,7 +1571,7 @@ if cfg_ref[CFG_TARGET]:
         "header_files",
         os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
         os.sep.join(["..","..","..","ext_libs","ucframework","1.60","build","include"]),
-        os.sep.join(["..","..","..","ext_libs","uccanopen","1.14","build","include"])
+        os.sep.join(["..","..","..","ext_libs","uccanopen","1.14","build","include"]),
       ],
       [ 
         "source_files",
@@ -1553,7 +1579,7 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
         os.sep.join(["..","..","..","ext_libs","ucframework","1.60","build","lib"]),
-        os.sep.join(["..","..","..","ext_libs","uccanopen","1.14","build","lib"])
+        os.sep.join(["..","..","..","ext_libs","uccanopen","1.14","build","lib"]),
       ],
       opt_build + "-fno-strict-aliasing ", # CXX options
       opt_link, # CXX link options
@@ -1574,14 +1600,14 @@ if cfg_ref[CFG_TARGET]:
       [ 
         "header_files",
         os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
-        os.sep.join(["..","..","..","ext_libs","ucmm","trunk","build","include"])
+        os.sep.join(["..","..","..","ext_libs","ucmm","trunk","build","include"]),
       ],
       [ 
         "source_files",
       ],
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
-        os.sep.join(["..","..","..","ext_libs","ucmm","trunk","build","lib"])
+        os.sep.join(["..","..","..","ext_libs","ucmm","trunk","build","lib"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -1842,14 +1868,14 @@ if cfg_ref[CFG_TARGET]:
       [ 
         "header_files",
         os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
-        os.sep.join(["..","..","..","ext_libs","libjit","libjit","include"])
+        os.sep.join(["..","..","..","ext_libs","libjit","libjit","include"]),
       ],
       [ 
         "source_files",
       ],
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
-        os.sep.join(["..","..","..","ext_libs","libjit","libjit","lib"])
+        os.sep.join(["..","..","..","ext_libs","libjit","libjit","lib"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -1869,13 +1895,13 @@ if cfg_ref[CFG_TARGET]:
       cfg_ref[CFG_NAME],
       [ 
         "header_files",
-        os.sep.join(["..","..","libs","libbase_ucll","header_files"])
+        os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
       ],
       [ 
         "source_files",
       ],
       [ 
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link + "-llightning ", # CXX link options
@@ -1895,13 +1921,13 @@ if cfg_ref[CFG_TARGET]:
       cfg_ref[CFG_NAME],
       [ 
         "header_files",
-        os.sep.join(["..","..","libs","libbase_ucll","header_files"])
+        os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
       ],
       [ 
         "source_files",
       ],
       [ 
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build + "-std=c++11 `llvm-config-3.5 --cppflags` ", # CXX options
       opt_link + "`llvm-config-3.5 --ldflags --libs core jit native` -lz -ltinfo ", # CXX link options
@@ -2502,14 +2528,14 @@ if cfg_ref[CFG_TARGET]:
       [ 
         "header_files",
         os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
-        os.sep.join(["..","..","..","ext_libs","ucpas","libpas","src"])
+        os.sep.join(["..","..","..","ext_libs","ucpas","libpas","src"]),
       ],
       [ 
         "source_files",
       ],
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
-        os.sep.join(["..","..","..","ext_libs","ucpas","libpas"])
+        os.sep.join(["..","..","..","ext_libs","ucpas","libpas"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -2529,13 +2555,13 @@ if cfg_ref[CFG_TARGET]:
       cfg_ref[CFG_NAME],
       [ 
         "header_files",
-        os.sep.join(["..","..","libs","libbase_ucll","header_files"])
+        os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
       ],
       [ 
         "source_files",
       ],
       [ 
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -2615,7 +2641,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -2641,7 +2667,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -2667,7 +2693,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -2693,7 +2719,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -2719,7 +2745,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -2745,7 +2771,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -2771,7 +2797,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build + "-I/usr/include/libxml2 ", # CXX options
       opt_link + "-lxml2 ", # CXX link options
@@ -2797,7 +2823,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link + "-lgsoap ", # CXX link options
@@ -2823,7 +2849,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link + "-lgsoap ", # CXX link options
@@ -2849,7 +2875,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build + "-I/usr/include/python2.7 ", # CXX options, -DPy_DEBUG
       opt_link + "-lpython2.7 ", # CXX link options, -lpython2.7_d
@@ -2875,7 +2901,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link + "-lv8 ", # CXX link options
@@ -2901,7 +2927,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link + "-llua5.2 ", # CXX link options
@@ -2927,7 +2953,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build + "-I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include -I/usr/include/mono-2.0 ", # CXX options
       opt_link + "-lmonosgen-2.0 ", # CXX link options
@@ -2953,7 +2979,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build + "-I/usr/lib/i386-linux-gnu/perl/5.26.2/CORE ", # CXX options
       opt_link + "-L/usr/lib/i386-linux-gnu -lperl ", # CXX link options
@@ -2979,7 +3005,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build + "-I/usr/include/ruby-2.5.0 -I/usr/include/i386-linux-gnu/ruby-2.5.0 ", # CXX options
       opt_link + "-L/usr/lib/i386-linux-gnu -lruby-2.5 ", # CXX link options
@@ -3005,7 +3031,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build + "`pkg-config --cflags swipl` ", # CXX options
       opt_link + "`pkg-config --libs swipl` ", # CXX link options
@@ -3032,7 +3058,7 @@ if cfg_ref[CFG_TARGET]:
       ],
       [
         os.sep.join(["..","..","libs","libbase_ucll"]),
-        os.sep.join(["rs","target","release"])
+        os.sep.join(["rs","target","release"]),
       ],
       opt_build, # CXX options
       opt_link + "-lrust_ruclm ", # CXX link options
@@ -3058,7 +3084,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link + "-luv ", # CXX link options
@@ -3084,7 +3110,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link + "-lz ", # CXX link options
@@ -3110,7 +3136,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link + "-lzip ", # CXX link options
@@ -3136,7 +3162,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link + "-lsnappy ", # CXX link options
@@ -3162,7 +3188,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link + "-lpigpio ", # CXX link options
@@ -3188,7 +3214,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build + "-D_FILE_OFFSET_BITS=64 ", # CXX options
       opt_link + "-lfuse ", # CXX link options
@@ -3214,7 +3240,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -3240,7 +3266,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
@@ -3266,7 +3292,7 @@ if cfg_ref[CFG_TARGET]:
         "source_files",
       ],
       [
-        os.sep.join(["..","..","libs","libbase_ucll"])
+        os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
