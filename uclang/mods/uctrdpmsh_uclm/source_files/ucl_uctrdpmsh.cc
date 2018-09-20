@@ -773,7 +773,8 @@ bool trdp_page_s::unpack_page_data(interpreter_thread_s &it,pass_s &pass)
   return true;
 }/*}}}*/
 
-location_s *trdp_page_s::build_dict(interpreter_thread_s &it,pass_s &pass,pointer_array_s *array_ptr,pointer_map_tree_s *tree_ptr)
+location_s *trdp_page_s::to_dict(
+    interpreter_thread_s &it,pass_s &pass,pointer_array_s *array_ptr,pointer_map_tree_s *tree_ptr)
 {/*{{{*/
   trdp_var_descr_s &var_descr = var_descrs[pass.vd_idx++];
 
@@ -795,7 +796,7 @@ location_s *trdp_page_s::build_dict(interpreter_thread_s &it,pass_s &pass,pointe
       while (count-- > 0)
       {
         pass.vd_idx = item_vd_idx;
-        build_dict(it,pass,new_arr_ptr,nullptr);
+        to_dict(it,pass,new_arr_ptr,nullptr);
       }
     }/*}}}*/
     break;
@@ -814,13 +815,13 @@ location_s *trdp_page_s::build_dict(interpreter_thread_s &it,pass_s &pass,pointe
 
       while (count-- > 0)
       {
-        build_dict(it,pass,nullptr,new_tree_ptr);
+        to_dict(it,pass,nullptr,new_tree_ptr);
       }
     }/*}}}*/
     break;
   default:
     {/*{{{*/
-      
+
       // - single value -
       if (var_descr.count == 1)
       {
@@ -829,7 +830,7 @@ location_s *trdp_page_s::build_dict(interpreter_thread_s &it,pass_s &pass,pointe
         item_location->v_reference_cnt.atomic_inc();
         value_location = item_location;
       }
-      
+
       // - array of values -
       else
       {
@@ -886,5 +887,137 @@ location_s *trdp_page_s::build_dict(interpreter_thread_s &it,pass_s &pass,pointe
   }
 
   return nullptr;
+}/*}}}*/
+
+bool trdp_page_s::from_dict(
+    interpreter_thread_s &it,pass_s &pass,location_s *arr_item_loc,pointer_map_tree_s *tree_ptr)
+{/*{{{*/
+  trdp_var_descr_s &var_descr = var_descrs[pass.vd_idx++];
+
+  location_s *value_location;
+
+  if (arr_item_loc != nullptr)
+  {
+    // - set array item as value location -
+    value_location = arr_item_loc;
+  }
+  else
+  {
+    // - retrieve value location from dictionary -
+    pointer_map_s search_map = {var_descr.name_location,nullptr};
+    unsigned index = tree_ptr->get_idx(search_map);
+
+    if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+    {
+      return false;
+    }
+
+    // - ERROR -
+    if (index == c_idx_not_exist)
+    {
+      return false;
+    }
+
+    value_location = it.get_location_value(tree_ptr->data[index].object.value);
+  }
+
+  switch (var_descr.type)
+  {
+  case ANY_ARRAY:
+    {/*{{{*/
+
+      // - ERROR -
+      if (value_location->v_type != c_bi_class_array)
+      {
+        return false;
+      }
+
+      pointer_array_s *array_ptr = (pointer_array_s *)value_location->v_data_ptr;
+
+      // - ERROR -
+      if (array_ptr->used != var_descr.count)
+      {
+        return false;
+      }
+
+      unsigned item_vd_idx = pass.vd_idx;
+
+      pointer *p_ptr = array_ptr->data;
+      pointer *p_ptr_end = p_ptr + array_ptr->used;
+      do {
+        pass.vd_idx = item_vd_idx;
+        from_dict(it,pass,it.get_location_value(*p_ptr),nullptr);
+      } while(++p_ptr < p_ptr_end);
+    }/*}}}*/
+    break;
+  case ANY_STRUCT:
+    {/*{{{*/
+
+      // - ERROR -
+      if (value_location->v_type != c_rm_class_dict)
+      {
+        return false;
+      }
+
+      pointer_map_tree_s *next_tree_ptr = (pointer_map_tree_s *)value_location->v_data_ptr;
+
+      next_tree_ptr->it_ptr = &it;
+      next_tree_ptr->source_pos = 0;
+
+      // - ERROR -
+      if (next_tree_ptr->count != var_descr.count)
+      {
+        return false;
+      }
+
+      unsigned count = var_descr.count;
+
+      while (count-- > 0)
+      {
+        from_dict(it,pass,nullptr,next_tree_ptr);
+      }
+    }/*}}}*/
+    break;
+  default:
+    {/*{{{*/
+
+      // - single value -
+      if (var_descr.count == 1)
+      {
+        value_location->v_reference_cnt.atomic_inc();
+        pass.vars_ptr->push(value_location);
+      }
+
+      // - array of values -
+      else
+      {
+        // - ERROR -
+        if (value_location->v_type != c_bi_class_array)
+        {
+          return false;
+        }
+
+        pointer_array_s *array_ptr = (pointer_array_s *)value_location->v_data_ptr;
+
+        // - ERROR -
+        if (array_ptr->used != var_descr.count)
+        {
+          return false;
+        }
+
+        pointer *p_ptr = array_ptr->data;
+        pointer *p_ptr_end = p_ptr + array_ptr->used;
+        do {
+          location_s *item_location = it.get_location_value(*p_ptr);
+
+          item_location->v_reference_cnt.atomic_inc();
+          pass.vars_ptr->push(item_location);
+        } while(++p_ptr < p_ptr_end);
+      }
+    }/*}}}*/
+    break;
+  }
+
+  return true;
 }/*}}}*/
 

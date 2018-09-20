@@ -65,6 +65,7 @@ enum
   c_error_TRDP_PAGE_DESCR_ARRAY_INVALID_VD_COUNT,
   c_error_TRDP_PAGE_DESCR_UNSUPPORTED_TYPE,
   c_error_TRDP_PAGE_PACK_ERROR,
+  c_error_TRDP_PAGE_PACK_DICT_ERROR,
   c_error_TRDP_PAGE_PACK_INVALID_VARIABLE_COUNT,
   c_error_TRDP_PAGE_PACK_INVALID_DATA_SIZE,
   c_error_TRDP_PAGE_PACK_INVALID_VARIABLE_TYPE,
@@ -118,7 +119,8 @@ struct trdp_page_s
   bool process_page_description(interpreter_thread_s &it,pass_s &pass,pointer_array_s *array_ptr,unsigned &vd_count,unsigned &last_vd_idx);
   bool pack_page_data(interpreter_thread_s &it,pass_s &pass);
   bool unpack_page_data(interpreter_thread_s &it,pass_s &pass);
-  location_s *build_dict(interpreter_thread_s &it,pass_s &pass,pointer_array_s *array_ptr,pointer_map_tree_s *tree_ptr);
+  location_s *to_dict(interpreter_thread_s &it,pass_s &pass,pointer_array_s *array_ptr,pointer_map_tree_s *tree_ptr);
+  bool from_dict(interpreter_thread_s &it,pass_s &pass,location_s *arr_item_loc,pointer_map_tree_s *tree_ptr);
 
   inline void init();
   inline void clear(interpreter_thread_s &it);

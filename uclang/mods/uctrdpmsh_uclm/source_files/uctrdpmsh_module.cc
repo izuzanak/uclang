@@ -13,7 +13,7 @@ built_in_module_s module =
   uctrdpmsh_classes,         // Classes
 
   0,                      // Error base index
-  17,                     // Error count
+  18,                     // Error count
   uctrdpmsh_error_strings,   // Error strings
 
   uctrdpmsh_initialize,      // Initialize function
@@ -41,6 +41,7 @@ const char *uctrdpmsh_error_strings[] =
   "error_TRDP_PAGE_DESCR_ARRAY_INVALID_VD_COUNT",
   "error_TRDP_PAGE_DESCR_UNSUPPORTED_TYPE",
   "error_TRDP_PAGE_PACK_ERROR",
+  "error_TRDP_PAGE_PACK_DICT_ERROR",
   "error_TRDP_PAGE_PACK_INVALID_VARIABLE_COUNT",
   "error_TRDP_PAGE_PACK_INVALID_DATA_SIZE",
   "error_TRDP_PAGE_PACK_INVALID_VARIABLE_TYPE",
@@ -167,6 +168,13 @@ bool uctrdpmsh_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nTRDP page, page pack error\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_TRDP_PAGE_PACK_DICT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP page, page pack from dictionary error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_TRDP_PAGE_PACK_INVALID_VARIABLE_COUNT:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -217,7 +225,7 @@ built_in_class_s trdp_page_class =
 {/*{{{*/
   "TrdpPage",
   c_modifier_public | c_modifier_final,
-  8, trdp_page_methods,
+  9, trdp_page_methods,
   24, trdp_page_variables,
   bic_trdp_page_consts,
   bic_trdp_page_init,
@@ -256,6 +264,11 @@ built_in_method_s trdp_page_methods[] =
     "pack#1",
     c_modifier_public | c_modifier_final,
     bic_trdp_page_method_pack_1
+  },
+  {
+    "pack_dict#1",
+    c_modifier_public | c_modifier_final,
+    bic_trdp_page_method_pack_dict_1
   },
   {
     "unpack#1",
@@ -309,6 +322,79 @@ built_in_variable_s trdp_page_variables[] =
   { "ANY_STRUCT", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
+
+#define BIC_TRDP_PAGE_METHOD_PACK(CLEAR_CODE) \
+{/*{{{*/\
+  string_s *string_ptr = it.get_new_string_ptr();\
+  string_ptr->create(tpg_ptr->size);\
+  \
+  trdp_page_s::pass_s pass = {(unsigned char *)string_ptr->data,array_ptr,0,0,0,0};\
+  \
+  /* - ERROR - */\
+  if (!tpg_ptr->pack_page_data(it,pass))\
+  {\
+    CLEAR_CODE;\
+    \
+    string_ptr->clear();\
+    cfree(string_ptr);\
+    \
+    location_s *exception_loc = (location_s *)it.exception_location;\
+    if (exception_loc->v_type != c_bi_class_blank)\
+    {\
+      /* - retrieve thrown exception - */\
+      exception_s *exception = (exception_s *)((location_s *)it.exception_location)->v_data_ptr;\
+      \
+      /* - modify error type and position - */\
+      exception->type += module.error_base;\
+      exception->position = operands[c_source_pos_idx];\
+    }\
+    else\
+    {\
+      exception_s::throw_exception(it,module.error_base + c_error_TRDP_PAGE_PACK_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      return false;\
+    }\
+    \
+    return false;\
+  }\
+  \
+  cassert((pass.address + !!pass.bit_pos) == tpg_ptr->size &&\
+          pass.var_idx == tpg_ptr->var_count &&\
+          pass.vd_idx == tpg_ptr->var_descrs.used);\
+  \
+  BIC_SET_RESULT_STRING(string_ptr);\
+  \
+  CLEAR_CODE;\
+}/*}}}*/
+
+#define BIC_TRDP_PAGE_METHOD_UNPACK() \
+/*{{{*/\
+  trdp_page_s *tpg_ptr = (trdp_page_s *)dst_location->v_data_ptr;\
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;\
+  \
+  /* - ERROR - */\
+  if (string_ptr->size - 1 != tpg_ptr->size)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_PAGE_PACK_INVALID_DATA_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  pointer_array_s *array_ptr = it.get_new_array_ptr();\
+  BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);\
+  \
+  trdp_page_s::pass_s pass = {(unsigned char *)string_ptr->data,array_ptr,0,0,0,0};\
+  \
+  /* - ERROR - */\
+  if (!tpg_ptr->unpack_page_data(it,pass))\
+  {\
+    it.release_location_ptr(array_location);\
+    \
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_PAGE_UNPACK_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  cassert((pass.address + !!pass.bit_pos) == tpg_ptr->size &&\
+          pass.vd_idx == tpg_ptr->var_descrs.used);\
+/*}}}*/
 
 void bic_trdp_page_consts(location_array_s &const_locations)
 {/*{{{*/
@@ -494,41 +580,47 @@ bool bic_trdp_page_method_pack_1(interpreter_thread_s &it,unsigned stack_base,ul
     return false;
   }
 
-  string_s *string_ptr = it.get_new_string_ptr();
-  string_ptr->create(tpg_ptr->size);
+  BIC_TRDP_PAGE_METHOD_PACK();
 
-  trdp_page_s::pass_s pass = {(unsigned char *)string_ptr->data,array_ptr,0,0,0,0};
+  return true;
+}/*}}}*/
 
-  // - ERROR -
-  if (!tpg_ptr->pack_page_data(it,pass))
+bool bic_trdp_page_method_pack_dict_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type != c_rm_class_dict)
   {
-    string_ptr->clear();
-    cfree(string_ptr);
-
-    location_s *exception_loc = (location_s *)it.exception_location;
-    if (exception_loc->v_type != c_bi_class_blank)
-    {
-      // - retrieve thrown exception -
-      exception_s *exception = (exception_s *)((location_s *)it.exception_location)->v_data_ptr;
-
-      // - modify error type and position -
-      exception->type += module.error_base;
-      exception->position = operands[c_source_pos_idx];
-    }
-    else
-    {
-      exception_s::throw_exception(it,module.error_base + c_error_TRDP_PAGE_PACK_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-      return false;
-    }
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("pack_dict#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
 
     return false;
   }
 
-  cassert((pass.address + !!pass.bit_pos) == tpg_ptr->size &&
-          pass.var_idx == tpg_ptr->var_count &&
+  trdp_page_s *tpg_ptr = (trdp_page_s *)dst_location->v_data_ptr;
+
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+  BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);
+
+  trdp_page_s::pass_s pass = {nullptr,array_ptr,0,0,0,0};
+
+  if (!tpg_ptr->from_dict(it,pass,src_0_location,nullptr))
+  {
+    it.release_location_ptr(array_location);
+
+    exception_s::throw_exception(it,module.error_base + c_error_TRDP_PAGE_PACK_DICT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  cassert(array_ptr->used == tpg_ptr->var_count &&
           pass.vd_idx == tpg_ptr->var_descrs.used);
 
-  BIC_SET_RESULT_STRING(string_ptr);
+  BIC_TRDP_PAGE_METHOD_PACK(
+    it.release_location_ptr(array_location);
+  );
 
   return true;
 }/*}}}*/
@@ -548,32 +640,7 @@ bool bic_trdp_page_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,
     return false;
   }
 
-  trdp_page_s *tpg_ptr = (trdp_page_s *)dst_location->v_data_ptr;
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-
-  // - ERROR -
-  if (string_ptr->size - 1 != tpg_ptr->size)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_TRDP_PAGE_PACK_INVALID_DATA_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  pointer_array_s *array_ptr = it.get_new_array_ptr();
-  BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);
-
-  trdp_page_s::pass_s pass = {(unsigned char *)string_ptr->data,array_ptr,0,0,0,0};
-
-  // - ERROR -
-  if (!tpg_ptr->unpack_page_data(it,pass))
-  {
-    it.release_location_ptr(array_location);
-
-    exception_s::throw_exception(it,module.error_base + c_error_TRDP_PAGE_UNPACK_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  cassert((pass.address + !!pass.bit_pos) == tpg_ptr->size &&
-          pass.vd_idx == tpg_ptr->var_descrs.used);
+  BIC_TRDP_PAGE_METHOD_UNPACK();
 
   BIC_SET_RESULT(array_location);
 
@@ -595,38 +662,13 @@ bool bic_trdp_page_method_unpack_dict_1(interpreter_thread_s &it,unsigned stack_
     return false;
   }
 
-  trdp_page_s *tpg_ptr = (trdp_page_s *)dst_location->v_data_ptr;
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-
-  // - ERROR -
-  if (string_ptr->size - 1 != tpg_ptr->size)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_TRDP_PAGE_PACK_INVALID_DATA_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  pointer_array_s *array_ptr = it.get_new_array_ptr();
-  BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);
-
-  trdp_page_s::pass_s pass = {(unsigned char *)string_ptr->data,array_ptr,0,0,0,0};
-
-  // - ERROR -
-  if (!tpg_ptr->unpack_page_data(it,pass))
-  {
-    it.release_location_ptr(array_location);
-
-    exception_s::throw_exception(it,module.error_base + c_error_TRDP_PAGE_UNPACK_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  cassert((pass.address + !!pass.bit_pos) == tpg_ptr->size &&
-          pass.vd_idx == tpg_ptr->var_descrs.used);
+  BIC_TRDP_PAGE_METHOD_UNPACK();
 
   // - reset pass index variables -
   pass.var_idx = 0;
   pass.vd_idx = 0;
 
-  location_s *tree_location = tpg_ptr->build_dict(it,pass,nullptr,nullptr);
+  location_s *tree_location = tpg_ptr->to_dict(it,pass,nullptr,nullptr);
   it.release_location_ptr(array_location);
 
   cassert(pass.var_idx == tpg_ptr->var_count &&
