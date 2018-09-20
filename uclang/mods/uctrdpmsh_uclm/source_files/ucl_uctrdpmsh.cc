@@ -3,6 +3,9 @@
 include "ucl_uctrdpmsh.h"
 @end
 
+// - UCTRDPMSH indexes of remote classes -
+unsigned c_rm_class_dict = c_idx_not_exist;
+
 /*
  * basic definitions and constants
  */
@@ -283,6 +286,8 @@ bool trdp_page_s::process_page_description(
         case TLREAL:
         case TSTRINGB:
         case TSTRING:
+        case TTDsecs:
+        case TTDticks:
           {/*{{{*/
             var_descr.address = pass.address;
 
@@ -295,11 +300,13 @@ bool trdp_page_s::process_page_description(
               case TWORD:
               case TINT:
               case TUINT:
+              case TTDticks:
                 var_descr.length = 2;
                 break;
               case TDWORD:
               case TUDINT:
               case TREAL:
+              case TTDsecs:
                 var_descr.length = 4;
                 break;
               case TLWORD:
@@ -352,9 +359,9 @@ bool trdp_page_s::process_page_description(
   return true;
 }/*}}}*/
 
-bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsigned vd_idx)
+bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass)
 {/*{{{*/
-  trdp_var_descr_s &var_descr = var_descrs[vd_idx];
+  trdp_var_descr_s &var_descr = var_descrs[pass.vd_idx++];
 
   // - align to bytes -
   if (var_descr.type != TBOOL)
@@ -368,12 +375,14 @@ bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsigned 
   case ANY_ARRAY:
     {/*{{{*/
       unsigned count = var_descr.count;
-      unsigned item_vd_idx = vd_idx + 1;
+      unsigned item_vd_idx = pass.vd_idx;
 
       while (count-- > 0)
       {
+        pass.vd_idx = item_vd_idx;
+
         // - ERROR -
-        if (!pack_page_data(it,pass,item_vd_idx))
+        if (!pack_page_data(it,pass))
         {
           return false;
         }
@@ -382,16 +391,15 @@ bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsigned 
     break;
   case ANY_STRUCT:
     {/*{{{*/
-      unsigned svd_idx = vd_idx + 1;
-      unsigned svd_idx_end = svd_idx + var_descr.count;
-      do {
-
+      unsigned count = var_descr.count;
+      while (count-- > 0)
+      {
         // - ERROR -
-        if (!pack_page_data(it,pass,svd_idx))
+        if (!pack_page_data(it,pass))
         {
           return false;
         }
-      } while(++svd_idx < svd_idx_end);
+      }
     }/*}}}*/
     break;
   default:
@@ -506,6 +514,7 @@ bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsigned 
         }/*}}}*/
         break;
       case TBYTE:
+      case TUSINT:
         TRDP_PACK_PAGE_DATA_INTEGER_VALUE(unsigned char);
         break;
       case TWORD:
@@ -517,16 +526,15 @@ bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsigned 
       case TLWORD:
         TRDP_PACK_PAGE_DATA_INTEGER_VALUE(unsigned long long);
         break;
-      case TUSINT:
-        TRDP_PACK_PAGE_DATA_INTEGER_VALUE(unsigned char);
-        break;
       case TINT:
         TRDP_PACK_PAGE_DATA_INTEGER_REORDER_VALUE(short);
         break;
       case TUINT:
+      case TTDticks:
         TRDP_PACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned short);
         break;
       case TUDINT:
+      case TTDsecs:
         TRDP_PACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned);
         break;
       case TREAL:
@@ -591,9 +599,9 @@ bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass,unsigned 
   return true;
 }/*}}}*/
 
-bool trdp_page_s::unpack_page_data(interpreter_thread_s &it,pass_s &pass,unsigned vd_idx)
+bool trdp_page_s::unpack_page_data(interpreter_thread_s &it,pass_s &pass)
 {/*{{{*/
-  trdp_var_descr_s &var_descr = var_descrs[vd_idx];
+  trdp_var_descr_s &var_descr = var_descrs[pass.vd_idx++];
 
   // - align to bytes -
   if (var_descr.type != TBOOL)
@@ -607,12 +615,14 @@ bool trdp_page_s::unpack_page_data(interpreter_thread_s &it,pass_s &pass,unsigne
   case ANY_ARRAY:
     {/*{{{*/
       unsigned count = var_descr.count;
-      unsigned item_vd_idx = vd_idx + 1;
+      unsigned item_vd_idx = pass.vd_idx;
 
       while (count-- > 0)
       {
+        pass.vd_idx = item_vd_idx;
+
         // - ERROR -
-        if (!unpack_page_data(it,pass,item_vd_idx))
+        if (!unpack_page_data(it,pass))
         {
           return false;
         }
@@ -621,16 +631,16 @@ bool trdp_page_s::unpack_page_data(interpreter_thread_s &it,pass_s &pass,unsigne
     break;
   case ANY_STRUCT:
     {/*{{{*/
-      unsigned svd_idx = vd_idx + 1;
-      unsigned svd_idx_end = svd_idx + var_descr.count;
-      do {
+      unsigned count = var_descr.count;
 
+      while (count-- > 0)
+      {
         // - ERROR -
-        if (!unpack_page_data(it,pass,svd_idx))
+        if (!unpack_page_data(it,pass))
         {
           return false;
         }
-      } while(++svd_idx < svd_idx_end);
+      }
     }/*}}}*/
     break;
   default:
@@ -718,9 +728,11 @@ bool trdp_page_s::unpack_page_data(interpreter_thread_s &it,pass_s &pass,unsigne
         TRDP_UNPACK_PAGE_DATA_INTEGER_REORDER_VALUE(short);
         break;
       case TUINT:
+      case TTDticks:
         TRDP_UNPACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned short);
         break;
       case TUDINT:
+      case TTDsecs:
         TRDP_UNPACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned);
         break;
       case TREAL:
@@ -759,5 +771,120 @@ bool trdp_page_s::unpack_page_data(interpreter_thread_s &it,pass_s &pass,unsigne
   }
 
   return true;
+}/*}}}*/
+
+location_s *trdp_page_s::build_dict(interpreter_thread_s &it,pass_s &pass,pointer_array_s *array_ptr,pointer_map_tree_s *tree_ptr)
+{/*{{{*/
+  trdp_var_descr_s &var_descr = var_descrs[pass.vd_idx++];
+
+  // - retrieved value location -
+  location_s *value_location;
+
+  switch (var_descr.type)
+  {
+  case ANY_ARRAY:
+    {/*{{{*/
+      pointer_array_s *new_arr_ptr = it.get_new_array_ptr();
+
+      BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,new_arr_ptr);
+      value_location = array_location;
+
+      unsigned count = var_descr.count;
+      unsigned item_vd_idx = pass.vd_idx;
+
+      while (count-- > 0)
+      {
+        pass.vd_idx = item_vd_idx;
+        build_dict(it,pass,new_arr_ptr,nullptr);
+      }
+    }/*}}}*/
+    break;
+  case ANY_STRUCT:
+    {/*{{{*/
+      pointer_map_tree_s *new_tree_ptr = (pointer_map_tree_s *)cmalloc(sizeof(pointer_map_tree_s));
+      new_tree_ptr->init();
+
+      new_tree_ptr->it_ptr = &it;
+      new_tree_ptr->source_pos = 0;
+
+      BIC_CREATE_NEW_LOCATION(tree_location,c_rm_class_dict,new_tree_ptr);
+      value_location = tree_location;
+
+      unsigned count = var_descr.count;
+
+      while (count-- > 0)
+      {
+        build_dict(it,pass,nullptr,new_tree_ptr);
+      }
+    }/*}}}*/
+    break;
+  default:
+    {/*{{{*/
+      
+      // - single value -
+      if (var_descr.count == 1)
+      {
+        location_s *item_location = it.get_location_value(pass.vars_ptr->data[pass.var_idx++]);
+
+        item_location->v_reference_cnt.atomic_inc();
+        value_location = item_location;
+      }
+      
+      // - array of values -
+      else
+      {
+        pointer_array_s *new_arr_ptr = it.get_new_array_ptr();
+        BIC_CREATE_NEW_LOCATION(new_arr_location,c_bi_class_array,new_arr_ptr);
+
+        unsigned var_idx_end = pass.var_idx + var_descr.count;
+        do {
+          location_s *item_location = it.get_location_value(pass.vars_ptr->data[pass.var_idx++]);
+
+          item_location->v_reference_cnt.atomic_inc();
+          new_arr_ptr->push(item_location);
+        } while(pass.var_idx < var_idx_end);
+
+        value_location = new_arr_location;
+      }
+    }/*}}}*/
+    break;
+  }
+
+  // - insert value to dictionary -
+  if (tree_ptr != nullptr)
+  {
+    pointer_map_s insert_map = {var_descr.name_location,nullptr};
+    unsigned index = tree_ptr->unique_insert(insert_map);
+
+    // - no need to check exception! -
+    cassert(((location_s *)it.exception_location)->v_type == c_bi_class_blank);
+
+    pointer_map_s &map = tree_ptr->data[index].object;
+
+    if (map.value)
+    {
+      it.release_location_ptr((location_s *)map.value);
+    }
+    else
+    {
+      ((location_s *)var_descr.name_location)->v_reference_cnt.atomic_inc();
+    }
+
+    map.value = (pointer)value_location;
+  }
+
+  // - insert value to array -
+  else if (array_ptr != nullptr)
+  {
+    array_ptr->push(value_location);
+  }
+
+  // - return value as result -
+  else
+  {
+    return value_location;
+  }
+
+  return nullptr;
 }/*}}}*/
 

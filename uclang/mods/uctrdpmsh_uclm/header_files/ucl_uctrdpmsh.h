@@ -40,6 +40,9 @@ include "script_parser.h"
 #define ANY_ARRAY      0
 #define ANY_STRUCT     65 /* any structured                                  */
 
+// - UCTRDPMSH indexes of remote classes -
+extern unsigned c_rm_class_dict;
+
 /*
  * basic definitions and constants
  */
@@ -51,6 +54,7 @@ extern const bool c_little_endian;
 enum
 {
   c_error_TRDP_PAGE_DESCR_TOO_SHORT = 0,
+  c_error_TRDP_PAGE_DESCR_PROCESS_ERROR,
   c_error_TRDP_PAGE_DESCR_EXPECTED_STRING_AS_NAME,
   c_error_TRDP_PAGE_DESCR_EXPECTED_INTEGER_AS_TYPE,
   c_error_TRDP_PAGE_DESCR_EXPECTED_INTEGER_AS_ARRAY_SIZE,
@@ -60,10 +64,12 @@ enum
   c_error_TRDP_PAGE_DESCR_EXPECTED_ARRAY_AS_STRUCT_DESCR,
   c_error_TRDP_PAGE_DESCR_ARRAY_INVALID_VD_COUNT,
   c_error_TRDP_PAGE_DESCR_UNSUPPORTED_TYPE,
+  c_error_TRDP_PAGE_PACK_ERROR,
   c_error_TRDP_PAGE_PACK_INVALID_VARIABLE_COUNT,
   c_error_TRDP_PAGE_PACK_INVALID_DATA_SIZE,
   c_error_TRDP_PAGE_PACK_INVALID_VARIABLE_TYPE,
   c_error_TRDP_PAGE_PACK_INVALID_STRING_LENGTH,
+  c_error_TRDP_PAGE_UNPACK_ERROR,
 };
 
 /*
@@ -100,6 +106,7 @@ struct trdp_page_s
     unsigned char *data_ptr;
     pointer_array_s *vars_ptr;
     unsigned var_idx;
+    unsigned vd_idx;
     unsigned address;
     unsigned bit_pos;
   };
@@ -109,8 +116,9 @@ struct trdp_page_s
   unsigned var_count;
 
   bool process_page_description(interpreter_thread_s &it,pass_s &pass,pointer_array_s *array_ptr,unsigned &vd_count,unsigned &last_vd_idx);
-  bool pack_page_data(interpreter_thread_s &it,pass_s &pass,unsigned vd_idx);
-  bool unpack_page_data(interpreter_thread_s &it,pass_s &pass,unsigned vd_idx);
+  bool pack_page_data(interpreter_thread_s &it,pass_s &pass);
+  bool unpack_page_data(interpreter_thread_s &it,pass_s &pass);
+  location_s *build_dict(interpreter_thread_s &it,pass_s &pass,pointer_array_s *array_ptr,pointer_map_tree_s *tree_ptr);
 
   inline void init();
   inline void clear(interpreter_thread_s &it);

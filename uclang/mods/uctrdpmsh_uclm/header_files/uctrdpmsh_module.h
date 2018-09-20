@@ -38,6 +38,7 @@ bool bic_trdp_page_method_TrdpPage_1(interpreter_thread_s &it,unsigned stack_bas
 bool bic_trdp_page_method_size_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_page_method_pack_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_page_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_page_method_unpack_dict_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_page_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_page_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
