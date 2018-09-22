@@ -823,7 +823,7 @@ bool bic_trdp_pd_address_method_TrdpPdAddress_4(interpreter_thread_s &it,unsigne
   if (LOCATION->v_type == c_bi_class_string)\
   {\
     /* - ERROR - */\
-    if (!Str2IP(((string_s *)LOCATION->v_data_ptr)->data,TARGET))\
+    if (!Ucf2::Str2IP(((string_s *)LOCATION->v_data_ptr)->data,TARGET))\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_PD_ADDRESS_INVALID_ADDRESS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       new_exception->params.push(DST_FLAG);\

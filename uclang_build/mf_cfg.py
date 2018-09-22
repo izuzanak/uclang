@@ -36,6 +36,7 @@ C_MODULE_UCTCNMD    = index; index += 1
 C_MODULE_UCTRDP     = index; index += 1
 C_MODULE_UCTRDPMD   = index; index += 1
 C_MODULE_UCTRDPMSH  = index; index += 1
+C_MODULE_UCTRNDB    = index; index += 1
 C_MODULE_UCCAN      = index; index += 1
 C_MODULE_UCMM       = index; index += 1
 C_MODULE_UCGCG      = index; index += 1
@@ -141,6 +142,7 @@ c_cfg = [
     ["MOD_UCTRDP"    ,c_enabled[C_MODULE_UCTRDP]    ,C_UCLANG_DIR + "mods/uctrdp_uclm"      ,None],
     ["MOD_UCTRDPMD"  ,c_enabled[C_MODULE_UCTRDPMD]  ,C_UCLANG_DIR + "mods/uctrdpmd_uclm"    ,None],
     ["MOD_UCTRDPMSH" ,c_enabled[C_MODULE_UCTRDPMSH] ,C_UCLANG_DIR + "mods/uctrdpmsh_uclm"   ,None],
+    ["MOD_UCTRNDB"   ,c_enabled[C_MODULE_UCTRNDB]   ,C_UCLANG_DIR + "mods/uctrndb_uclm"     ,None],
     ["MOD_UCCAN"     ,c_enabled[C_MODULE_UCCAN]     ,C_UCLANG_DIR + "mods/uccan_uclm"       ,None],
     ["MOD_UCMM"      ,c_enabled[C_MODULE_UCMM]      ,C_UCLANG_DIR + "mods/ucmm_uclm"        ,None],
     ["MOD_UCGCG"     ,c_enabled[C_MODULE_UCGCG]     ,C_UCLANG_DIR + "mods/ucgcg_uclm"       ,None],

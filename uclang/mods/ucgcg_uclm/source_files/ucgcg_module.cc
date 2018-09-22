@@ -214,7 +214,7 @@ bool bic_gcg_msg_method_GcgMsg_1(interpreter_thread_s &it,unsigned stack_base,ul
 
   // - compute crc value -
   unsigned crc_comp = 0;
-  Crc32(&crc_comp,string_ptr->data + data_begin,data_end - data_begin + 1);
+  Ucf2::Crc32(&crc_comp,string_ptr->data + data_begin,data_end - data_begin + 1);
 
   // - retrieve message crc value -
   const char *ptr = string_ptr->data + crc_begin;
@@ -280,7 +280,7 @@ bool bic_gcg_msg_method_GcgMsg_2(interpreter_thread_s &it,unsigned stack_base,ul
   unsigned fcs_begin = buffer.used;
 
   unsigned crc_value = 0;
-  Crc32(&crc_value,buffer.data + data_begin,data_size);
+  Ucf2::Crc32(&crc_value,buffer.data + data_begin,data_size);
 
   buffer.push_blanks(10);
   snprintf(buffer.data + fcs_begin,11,"\"%08X\"",crc_value);

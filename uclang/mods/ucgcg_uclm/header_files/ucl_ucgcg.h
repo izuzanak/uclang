@@ -8,8 +8,6 @@ include "script_parser.h"
 
 #include "ucf2.h"
 
-using namespace Ucf2;
-
 /*
  * definition of structure gcg_msg_s
  */
