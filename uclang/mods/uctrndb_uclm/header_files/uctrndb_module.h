@@ -40,7 +40,10 @@ void bic_trndb_client_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_trndb_client_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_trndb_client_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_trndb_client_method_TrndbClient_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trndb_client_method_TrndbClient_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trndb_client_method_SetCallback_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trndb_client_method_Recall_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trndb_client_method_Relock_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trndb_client_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trndb_client_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
