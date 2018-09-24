@@ -9,11 +9,11 @@ unsigned c_bi_class_trndb_client = c_idx_not_exist;
 // - UCTRNDB module -
 built_in_module_s module =
 {/*{{{*/
-  1,                      // Class count
+  1,                       // Class count
   uctrndb_classes,         // Classes
 
-  0,                      // Error base index
-  1,                      // Error count
+  0,                       // Error base index
+  2,                       // Error count
   uctrndb_error_strings,   // Error strings
 
   uctrndb_initialize,      // Initialize function
@@ -29,7 +29,8 @@ built_in_class_s *uctrndb_classes[] =
 // - UCTRNDB error strings -
 const char *uctrndb_error_strings[] =
 {/*{{{*/
-  "error_TRNDB_DUMMY_ERROR",
+  "error_TRNDB_CLIENT_CREATE_ERROR",
+  "error_TRNDB_CLIENT_WRONG_CALLBACK_DELEGATE",
 };/*}}}*/
 
 // - UCTRNDB initialize -
@@ -54,11 +55,18 @@ bool uctrndb_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_TRNDB_DUMMY_ERROR:
+  case c_error_TRNDB_CLIENT_CREATE_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRNDB dummy error\n");
+    fprintf(stderr,"\nError while creating Trndb client\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRNDB_CLIENT_WRONG_CALLBACK_DELEGATE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong type of delegate for Trndb client connection\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -250,8 +258,7 @@ bool bic_trndb_client_method_TrndbClient_2(interpreter_thread_s &it,unsigned sta
     tdp_ptr->clear(it);
     delete tdp_ptr;
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_TRNDB_CLIENT_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -286,8 +293,7 @@ bool bic_trndb_client_method_SetCallback_1(interpreter_thread_s &it,unsigned sta
   // - ERROR -
   if (delegate_ptr->param_cnt != 1)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_TRNDB_CLIENT_WRONG_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 

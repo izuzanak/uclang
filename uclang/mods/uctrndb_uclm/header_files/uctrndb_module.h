@@ -18,7 +18,8 @@ extern built_in_class_s *uctrndb_classes[];
 // - UCTRNDB error identifiers -
 enum
 {
-  c_error_TRNDB_DUMMY_ERROR = 0,
+  c_error_TRNDB_CLIENT_CREATE_ERROR = 0,
+  c_error_TRNDB_CLIENT_WRONG_CALLBACK_DELEGATE,
 };
 
 // - UCTRNDB error strings -
