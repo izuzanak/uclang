@@ -74,15 +74,13 @@ inline void trdp_pd_port_s::clear(interpreter_thread_s &it)
     // - unpublish port -
     if (pub_handle != TRDP::TRDP_NULL_HANDLE)
     {
-      // FIXME TODO remove cassert
-      cassert(pd_ptr->Unpublish(pub_handle) == TRDP::TRDP_OK);
+      pd_ptr->Unpublish(pub_handle);
     }
 
     // - unsubscribe port -
     if (sub_handle != TRDP::TRDP_NULL_HANDLE)
     {
-      // FIXME TODO remove cassert
-      cassert(pd_ptr->Unsubscribe(sub_handle) == TRDP::TRDP_OK);
+      pd_ptr->Unsubscribe(sub_handle);
     }
 
     it.release_location_ptr(pd_location);

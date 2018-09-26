@@ -1278,35 +1278,49 @@ bool bic_trdp_pd_port_method_Read_0(interpreter_thread_s &it,unsigned stack_base
 
   // - ERROR -
   int res = pd_ptr->ReadPort(pdp_ptr->sub_handle,&page,&status,&indicators);
-  if (res != TRDP::TRDP_OK)
+
+  switch (res)
   {
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_PD_PORT_WRITE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    new_exception->params.push(res);
-    new_exception->params.push(0);
+    case TRDP::TRDP_NO_DATA:
+    {/*{{{*/
+      BIC_SET_RESULT_BLANK();
+    }/*}}}*/
+    break;
 
-    return false;
+    case TRDP::TRDP_OK:
+    {/*{{{*/
+      string_s *string_ptr = it.get_new_string_ptr();
+      string_ptr->create(page.size);
+
+      // - read page data -
+      memcpy(string_ptr->data,page.data,page.size);
+
+      // - ERROR -
+      res = pd_ptr->ReleasePage(&page,0);
+      if (res != TRDP::TRDP_OK)
+      {
+        string_ptr->clear();
+        cfree(string_ptr);
+
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_PD_PORT_RELEASE_PAGE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(res);
+
+        return false;
+      }
+
+      BIC_SET_RESULT_STRING(string_ptr);
+    }/*}}}*/
+    break;
+
+    // - ERROR -
+    default:
+
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_PD_PORT_WRITE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      new_exception->params.push(res);
+      new_exception->params.push(0);
+
+      return false;
   }
-
-  string_s *string_ptr = it.get_new_string_ptr();
-  string_ptr->create(page.size);
-
-  // - read page data -
-  memcpy(string_ptr->data,page.data,page.size);
-
-  // - ERROR -
-  res = pd_ptr->ReleasePage(&page,0);
-  if (res != TRDP::TRDP_OK)
-  {
-    string_ptr->clear();
-    cfree(string_ptr);
-
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_PD_PORT_RELEASE_PAGE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    new_exception->params.push(res);
-
-    return false;
-  }
-
-  BIC_SET_RESULT_STRING(string_ptr);
 
   return true;
 }/*}}}*/
