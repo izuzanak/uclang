@@ -310,12 +310,12 @@ bool bic_intel_hex_method_next_item_0(interpreter_thread_s &it,unsigned stack_ba
   {
     do {
       char *line = nullptr;
-      size_t count = 0;
+      size_t size = 0;
 
       // - read line from text file -
-      ssize_t result = getline(&line,&count,ih_ptr->file);
+      ssize_t length = getline(&line,&size,ih_ptr->file);
 
-      if (result == -1)
+      if (length == -1)
       {
         free(line);
 
@@ -324,8 +324,14 @@ bool bic_intel_hex_method_next_item_0(interpreter_thread_s &it,unsigned stack_ba
       }
       else
       {
+        // - decrease line length if needed -
+        if (length >= 2 && (line[length - 2] == '\r' || line[length - 2] == '\n'))
+        {
+          --length;
+        }
+
         // - ERROR -
-        if (result < 13)
+        if (length < 12)
         {
           free(line);
 
@@ -351,7 +357,7 @@ bool bic_intel_hex_method_next_item_0(interpreter_thread_s &it,unsigned stack_ba
 
         // - ERROR -
         if (byte_count < 0 ||
-            (byte_count << 1) != (result - 13) ||
+            (byte_count << 1) != (length - 12) ||
             (byte_count + 5) > 512)
         {
           free(line);

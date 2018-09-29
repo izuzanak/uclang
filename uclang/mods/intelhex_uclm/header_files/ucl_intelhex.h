@@ -40,15 +40,11 @@ inline int intel_hex_s::read_byte(const char *&a_ptr)
   char ch = *a_ptr++;
   if (ch >= '0' && ch <= '9')
   {
-    value = (ch - '0') << 4;
+    value = (unsigned char)(ch << 4);
   }
-  else if (ch >= 'a' && ch <= 'f')
+  else if ((ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F'))
   {
-    value = (10 + (ch - 'a')) << 4;
-  }
-  else if (ch >= 'A' && ch <= 'F')
-  {
-    value = (10 + (ch - 'A')) << 4;
+    value = 144 + (unsigned char)(ch << 4);
   }
   else
   {
@@ -58,15 +54,11 @@ inline int intel_hex_s::read_byte(const char *&a_ptr)
   ch = *a_ptr++;
   if (ch >= '0' && ch <= '9')
   {
-    value += ch - '0';
+    value += ch & 0x0f;
   }
-  else if (ch >= 'a' && ch <= 'f')
+  else if ((ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F'))
   {
-    value += 10 + (ch - 'a');
-  }
-  else if (ch >= 'A' && ch <= 'F')
-  {
-    value += 10 + (ch - 'A');
+    value += 9 + (ch & 0x0f);
   }
   else
   {
