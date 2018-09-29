@@ -87,6 +87,7 @@ c_packages = [
   ["MOD_GRAPH"     ,"true"      ,[]],
   ["MOD_JSON"      ,"true"      ,[]],
   ["MOD_XML"       ,"pkg-config",["libxml-2.0 >= 2.9.1"]],
+  ["MOD_INTELHEX"  ,"true",      []],
   ["MOD_SOAPCL"    ,"false"     ,[]],
   ["MOD_SOAPSRV"   ,"false"     ,[]],
   ["MOD_PYTHON"    ,"pkg-config",["python-2.7 >= 2.7"]],
