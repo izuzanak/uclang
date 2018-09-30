@@ -19,6 +19,7 @@ extern built_in_class_s *intelhex_classes[];
 enum
 {
   c_error_INTEL_HEX_FILE_OPEN_ERROR = 0,
+  c_error_INTEL_HEX_WRONG_CALLBACK_DELEGATE,
   c_error_INTEL_HEX_INVALID_RECORD_LENGTH,
   c_error_INTEL_HEX_INVALID_RECORD_DATA,
   c_error_INTEL_HEX_INVALID_RECORD_TYPE,
@@ -45,6 +46,7 @@ void bic_intel_hex_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_intel_hex_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_intel_hex_method_IntelHex_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_intel_hex_method_IntelHex_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_intel_hex_method_esa_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_intel_hex_method_ssa_cs_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_intel_hex_method_ssa_ip_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

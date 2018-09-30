@@ -13,6 +13,7 @@ include "script_parser.h"
 struct intel_hex_s
 {
   FILE *file;
+  location_s *callback_dlg;
   unsigned line_cnt;
   bool read_done;
 
@@ -71,6 +72,7 @@ inline int intel_hex_s::read_byte(const char *&a_ptr)
 inline void intel_hex_s::init()
 {/*{{{*/
   file = nullptr;
+  callback_dlg = nullptr;
 }/*}}}*/
 
 inline void intel_hex_s::clear(interpreter_thread_s &it)
@@ -78,6 +80,11 @@ inline void intel_hex_s::clear(interpreter_thread_s &it)
   if (file != nullptr)
   {
     fclose(file);
+  }
+
+  if (callback_dlg != nullptr)
+  {
+    it.release_location_ptr(callback_dlg);
   }
 
   init();

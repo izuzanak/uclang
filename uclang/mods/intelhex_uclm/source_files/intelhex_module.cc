@@ -13,7 +13,7 @@ built_in_module_s module =
   intelhex_classes,         // Classes
 
   0,                        // Error base index
-  5,                        // Error count
+  6,                        // Error count
   intelhex_error_strings,   // Error strings
 
   intelhex_initialize,      // Initialize function
@@ -30,6 +30,7 @@ built_in_class_s *intelhex_classes[] =
 const char *intelhex_error_strings[] =
 {/*{{{*/
   "error_INTEL_HEX_FILE_OPEN_ERROR",
+  "error_INTEL_HEX_WRONG_CALLBACK_DELEGATE",
   "error_INTEL_HEX_INVALID_RECORD_LENGTH",
   "error_INTEL_HEX_INVALID_RECORD_DATA",
   "error_INTEL_HEX_INVALID_RECORD_TYPE",
@@ -63,6 +64,13 @@ bool intelhex_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nCannot open Intel HEX file \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_INTEL_HEX_WRONG_CALLBACK_DELEGATE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong type of delegate for Intel HEX reader\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_INTEL_HEX_INVALID_RECORD_LENGTH:
@@ -108,7 +116,7 @@ built_in_class_s intel_hex_class =
 {/*{{{*/
   "IntelHex",
   c_modifier_public | c_modifier_final,
-  10, intel_hex_methods,
+  11, intel_hex_methods,
   0, intel_hex_variables,
   bic_intel_hex_consts,
   bic_intel_hex_init,
@@ -137,6 +145,11 @@ built_in_method_s intel_hex_methods[] =
     "IntelHex#1",
     c_modifier_public | c_modifier_final,
     bic_intel_hex_method_IntelHex_1
+  },
+  {
+    "IntelHex#2",
+    c_modifier_public | c_modifier_final,
+    bic_intel_hex_method_IntelHex_2
   },
   {
     "esa#0",
@@ -183,6 +196,35 @@ built_in_method_s intel_hex_methods[] =
 built_in_variable_s intel_hex_variables[] =
 {/*{{{*/
 };/*}}}*/
+
+#define BIC_INTEL_HEX_CONSTRUCTOR_OPEN_FILE() \
+/*{{{*/\
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;\
+  \
+  /* - ERROR - */\
+  FILE *f = fopen(string_ptr->data,"r");\
+  if (f == nullptr)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_INTEL_HEX_FILE_OPEN_ERROR,operands[c_source_pos_idx],src_0_location);\
+    return false;\
+  }\
+  \
+  /* - create intel_hex object - */\
+  intel_hex_s *ih_ptr = (intel_hex_s *)cmalloc(sizeof(intel_hex_s));\
+  ih_ptr->init();\
+  \
+  ih_ptr->file = f;\
+  ih_ptr->line_cnt = 0;\
+  \
+  /* - reset read done flag - */\
+  ih_ptr->read_done = false;\
+  \
+  ih_ptr->esa     = 0;\
+  ih_ptr->ssa_cs  = 0;\
+  ih_ptr->ssa_ip  = 0;\
+  ih_ptr->ela     = 0;\
+  ih_ptr->sla_eip = 0;\
+/*}}}*/
 
 #define BIC_INTEL_HEX_METHOD_VALUE_INTEGER(NAME) \
 {/*{{{*/\
@@ -242,31 +284,45 @@ bool bic_intel_hex_method_IntelHex_1(interpreter_thread_s &it,unsigned stack_bas
     return false;
   }
 
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+  BIC_INTEL_HEX_CONSTRUCTOR_OPEN_FILE();
 
-  // - ERROR -
-  FILE *f = fopen(string_ptr->data,"r");
-  if (f == nullptr)
+  // - set intel_hex destination location -
+  dst_location->v_data_ptr = (intel_hex_s *)ih_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_intel_hex_method_IntelHex_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_string)
   {
-    exception_s::throw_exception(it,module.error_base + c_error_INTEL_HEX_FILE_OPEN_ERROR,operands[c_source_pos_idx],src_0_location);
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("IntelHex#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
     return false;
   }
 
-  // - create intel_hex object -
-  intel_hex_s *ih_ptr = (intel_hex_s *)cmalloc(sizeof(intel_hex_s));
-  ih_ptr->init();
+  delegate_s *delegate_ptr = (delegate_s *)src_1_location->v_data_ptr;
 
-  ih_ptr->file = f;
-  ih_ptr->line_cnt = 0;
+  // - ERROR -
+  if (delegate_ptr->param_cnt != 2)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_INTEL_HEX_WRONG_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
 
-  // - reset read done flag -
-  ih_ptr->read_done = false;
+  BIC_INTEL_HEX_CONSTRUCTOR_OPEN_FILE();
 
-  ih_ptr->esa     = 0;
-  ih_ptr->ssa_cs  = 0;
-  ih_ptr->ssa_ip  = 0;
-  ih_ptr->ela     = 0;
-  ih_ptr->sla_eip = 0;
+  // - set callback delegate -
+  src_1_location->v_reference_cnt.atomic_inc();
+  ih_ptr->callback_dlg = src_1_location;
 
   // - set intel_hex destination location -
   dst_location->v_data_ptr = (intel_hex_s *)ih_ptr;
@@ -382,16 +438,17 @@ bool bic_intel_hex_method_next_item_0(interpreter_thread_s &it,unsigned stack_ba
           return false;
         }
 
-        long long int address = (buffer[1] << 8) | buffer[2];
+        unsigned short address = (buffer[1] << 8) | buffer[2];
+        unsigned short type  = buffer[3];
 
-        switch (buffer[3])
+        switch (type)
         {
         case 0:
           {/*{{{*/
             pointer_array_s *array_ptr = it.get_new_array_ptr();
             BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);
 
-            BIC_CREATE_NEW_LOCATION(addr_location,c_bi_class_integer,address);
+            BIC_CREATE_NEW_LOCATION(addr_location,c_bi_class_integer,(long long int)address);
             array_ptr->push(addr_location);
 
             string_s *string_ptr = it.get_new_string_ptr();
@@ -424,99 +481,109 @@ bool bic_intel_hex_method_next_item_0(interpreter_thread_s &it,unsigned stack_ba
           }/*}}}*/
           break;
         case 2:
-          {/*{{{*/
-
-            // - ERROR -
-            if (address != 0 || byte_count != 2)
-            {
-              free(line);
-
-              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_INTEL_HEX_INVALID_RECORD_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(ih_ptr->line_cnt + 1);
-
-              return false;
-            }
-
-            ih_ptr->esa = (buffer[4] << 8) | buffer[5];
-
-            // - increase line counter -
-            free(line);
-            ++ih_ptr->line_cnt;
-
-            continue;
-          }/*}}}*/
-          break;
         case 3:
-          {/*{{{*/
-
-            // - ERROR -
-            if (address != 0 || byte_count != 4)
-            {
-              free(line);
-
-              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_INTEL_HEX_INVALID_RECORD_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(ih_ptr->line_cnt + 1);
-
-              return false;
-            }
-
-            ih_ptr->ssa_cs = (buffer[4] << 8) | buffer[5];
-            ih_ptr->ssa_ip = (buffer[6] << 8) | buffer[7];
-
-            // - increase line counter -
-            free(line);
-            ++ih_ptr->line_cnt;
-
-            continue;
-          }/*}}}*/
-          break;
         case 4:
-          {/*{{{*/
-
-            // - ERROR -
-            if (address != 0 || byte_count != 2)
-            {
-              free(line);
-
-              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_INTEL_HEX_INVALID_RECORD_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(ih_ptr->line_cnt + 1);
-
-              return false;
-            }
-
-            ih_ptr->ela = (buffer[4] << 8) | buffer[5];
-
-            // - increase line counter -
-            free(line);
-            ++ih_ptr->line_cnt;
-
-            continue;
-          }/*}}}*/
-          break;
         case 5:
           {/*{{{*/
-
-            // - ERROR -
-            if (address != 0 || byte_count != 4)
+            switch (type)
             {
-              free(line);
+            case 2:
+              {/*{{{*/
 
-              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_INTEL_HEX_INVALID_RECORD_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(ih_ptr->line_cnt + 1);
+                // - ERROR -
+                if (address != 0 || byte_count != 2)
+                {
+                  free(line);
 
-              return false;
+                  exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_INTEL_HEX_INVALID_RECORD_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);
+                  new_exception->params.push(ih_ptr->line_cnt + 1);
+
+                  return false;
+                }
+
+                ih_ptr->esa = (buffer[4] << 8) | buffer[5];
+              }/*}}}*/
+              break;
+            case 3:
+              {/*{{{*/
+
+                // - ERROR -
+                if (address != 0 || byte_count != 4)
+                {
+                  free(line);
+
+                  exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_INTEL_HEX_INVALID_RECORD_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);
+                  new_exception->params.push(ih_ptr->line_cnt + 1);
+
+                  return false;
+                }
+
+                ih_ptr->ssa_cs = (buffer[4] << 8) | buffer[5];
+                ih_ptr->ssa_ip = (buffer[6] << 8) | buffer[7];
+              }/*}}}*/
+              break;
+            case 4:
+              {/*{{{*/
+
+                // - ERROR -
+                if (address != 0 || byte_count != 2)
+                {
+                  free(line);
+
+                  exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_INTEL_HEX_INVALID_RECORD_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);
+                  new_exception->params.push(ih_ptr->line_cnt + 1);
+
+                  return false;
+                }
+
+                ih_ptr->ela = (buffer[4] << 8) | buffer[5];
+              }/*}}}*/
+              break;
+            case 5:
+              {/*{{{*/
+
+                // - ERROR -
+                if (address != 0 || byte_count != 4)
+                {
+                  free(line);
+
+                  exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_INTEL_HEX_INVALID_RECORD_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);
+                  new_exception->params.push(ih_ptr->line_cnt + 1);
+
+                  return false;
+                }
+
+                ih_ptr->sla_eip = (buffer[4] << 24) | (buffer[5] << 16) | (buffer[6] << 8) | buffer[7];
+              }/*}}}*/
+              break;
             }
-
-            ih_ptr->sla_eip = (buffer[4] << 24) | (buffer[5] << 16) | (buffer[6] << 8) | buffer[7];
 
             // - increase line counter -
             free(line);
             ++ih_ptr->line_cnt;
 
+            // - if callback delegate is set -
+            if (ih_ptr->callback_dlg != nullptr)
+            {
+              delegate_s *delegate_ptr = (delegate_s *)ih_ptr->callback_dlg->v_data_ptr;
+
+              BIC_CREATE_NEW_LOCATION_REFS(type_location,c_bi_class_integer,(long long int)type,0);
+
+              // - callback parameters -
+              const unsigned param_cnt = 2;
+              pointer param_data[2] = {type_location,dst_location};
+
+              // - call delegate method -
+              location_s *trg_location = nullptr;
+              BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,operands[c_source_pos_idx],
+                return false;
+              );
+              it.release_location_ptr(trg_location);
+            }
+
             continue;
           }/*}}}*/
           break;
-        
         // - ERROR -
         default:
           free(line);
