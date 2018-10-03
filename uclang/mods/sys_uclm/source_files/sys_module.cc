@@ -53,7 +53,7 @@ built_in_module_s module =
   sys_classes,          // Classes
 
   0,                    // Error base index
-  36                    // Error count
+  37                    // Error count
 
 #ifdef ENABLE_CLASS_SOCKET
   + 14
@@ -114,6 +114,7 @@ const char *sys_error_strings[] =
   "error_SYS_DIR_CHANGE_ERROR",
   "error_SYS_DIR_LIST_ERROR",
   "error_SYS_MAKE_FIFO_ERROR",
+  "error_SYS_FILE_CHMOD_ERROR",
   "error_SYS_FILE_REMOVE_ERROR",
   "error_SYS_FILE_RENAME_ERROR",
   "error_SYS_FILE_DOES_NOT_EXIST",
@@ -279,6 +280,13 @@ bool sys_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nCannot create fifo file \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SYS_FILE_CHMOD_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot change permissions of file \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_SYS_FILE_REMOVE_ERROR:
@@ -716,7 +724,7 @@ built_in_class_s sys_class =
 {/*{{{*/
   "Sys",
   c_modifier_public | c_modifier_final,
-  27, sys_methods,
+  28, sys_methods,
   3, sys_variables,
   bic_sys_consts,
   bic_sys_init,
@@ -815,6 +823,11 @@ built_in_method_s sys_methods[] =
     "mkfifo#1",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_sys_method_mkfifo_1
+  },
+  {
+    "chmod#2",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_sys_method_chmod_2
   },
   {
     "remove#1",
@@ -1522,6 +1535,50 @@ bool bic_sys_method_mkfifo_1(interpreter_thread_s &it,unsigned stack_base,uli *o
   if (!result)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SYS_MAKE_FIFO_ERROR,operands[c_source_pos_idx],src_0_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_sys_method_chmod_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  long long int mode;
+
+  // - ERROR -
+  if (src_0_location->v_type != c_bi_class_string ||
+      !it.retrieve_integer(src_1_location,mode))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_sys,"chmod#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  bool result;
+
+#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  result = chmod(string_ptr->data,mode) == 0;
+#else
+  exception_s *new_exception = exception_s::throw_exception(it,c_error_BUILT_IN_NOT_IMPLEMENTED_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
+  BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_sys,"chmod#2");
+
+  return false;
+#endif
+
+  if (!result)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_SYS_FILE_CHMOD_ERROR,operands[c_source_pos_idx],src_0_location);
     return false;
   }
 
