@@ -16,7 +16,7 @@ built_in_module_s module =
   http_classes,          // Classes
 
   0,                     // Error base index
-  15,                    // Error count
+  16,                    // Error count
   http_error_strings,    // Error strings
 
   http_initialize,       // Initialize function
@@ -38,6 +38,7 @@ const char *http_error_strings[] =
   "error_HTTP_SERVER_WRONG_CALLBACK_DELEGATE",
   "error_HTTP_SERVER_CANNOT_START_DAEMON",
   "error_HTTP_SERVER_INTERNAL_ERROR",
+  "error_HTTP_SERVER_WAS_STOPPED",
   "error_HTTP_CONN_UNKNOWN_VALUES_TYPE",
   "error_HTTP_CONN_ALREADY_SUSPENDED",
   "error_HTTP_CONN_NOT_SUSPENDED",
@@ -99,6 +100,13 @@ bool http_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nInternal error of HTTP server\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_HTTP_SERVER_WAS_STOPPED:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nHTTP server was stopped (cannot be used any more)\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_HTTP_CONN_UNKNOWN_VALUES_TYPE:
@@ -197,7 +205,7 @@ built_in_class_s http_server_class =
 {/*{{{*/
   "HttpServer",
   c_modifier_public | c_modifier_final,
-  8, http_server_methods,
+  9, http_server_methods,
   0, http_server_variables,
   bic_http_server_consts,
   bic_http_server_init,
@@ -226,6 +234,11 @@ built_in_method_s http_server_methods[] =
     "HttpServer#2",
     c_modifier_public | c_modifier_final,
     bic_http_server_method_HttpServer_2
+  },
+  {
+    "stop#0",
+    c_modifier_public | c_modifier_final,
+    bic_http_server_method_stop_0
   },
   {
     "get_fds#0",
@@ -359,13 +372,44 @@ bool bic_http_server_method_HttpServer_2(interpreter_thread_s &it,unsigned stack
   return true;
 }/*}}}*/
 
+bool bic_http_server_method_stop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  // - retrieve server pointer -
+  http_server_s *srv_ptr = (http_server_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (srv_ptr == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_WAS_STOPPED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - stop http server -
+  srv_ptr->clear(it);
+  cfree(srv_ptr);
+
+  dst_location->v_data_ptr = (http_server_s *)nullptr;
+
+  BIC_SET_RESULT_BLANK(); 
+
+  return true;
+}/*}}}*/
+
 bool bic_http_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   // - retrieve server pointer -
   http_server_s *srv_ptr = (http_server_s *)dst_location->v_data_ptr;
-  MHD_Daemon *daemon_ptr = srv_ptr->daemon_ptr;
+
+  // - ERROR -
+  if (srv_ptr == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_WAS_STOPPED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
 
   // - prepare file descriptor sets -
   fd_set rs; FD_ZERO(&rs);
@@ -374,7 +418,7 @@ bool bic_http_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_ba
 
   // - ERROR -
   int max_fd = 0;
-  if (MHD_YES != MHD_get_fdset(daemon_ptr,&rs,&ws,&es,&max_fd))
+  if (MHD_YES != MHD_get_fdset(srv_ptr->daemon_ptr,&rs,&ws,&es,&max_fd))
   {
     exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_INTERNAL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -441,13 +485,19 @@ bool bic_http_server_method_timeout_0(interpreter_thread_s &it,unsigned stack_ba
 
   // - retrieve server pointer -
   http_server_s *srv_ptr = (http_server_s *)dst_location->v_data_ptr;
-  MHD_Daemon *daemon_ptr = srv_ptr->daemon_ptr;
+
+  // - ERROR -
+  if (srv_ptr == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_WAS_STOPPED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
 
   MHD_UNSIGNED_LONG_LONG mhd_timeout;
   long long int result;
 
   // - retrieve mhd timeout -
-  if (MHD_get_timeout(daemon_ptr,&mhd_timeout) == MHD_YES)
+  if (MHD_get_timeout(srv_ptr->daemon_ptr,&mhd_timeout) == MHD_YES)
   {
     result = mhd_timeout;
   }
@@ -467,14 +517,20 @@ bool bic_http_server_method_process_0(interpreter_thread_s &it,unsigned stack_ba
 
   // - retrieve server pointer -
   http_server_s *srv_ptr = (http_server_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (srv_ptr == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_WAS_STOPPED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
   srv_ptr->it_ptr = &it;
   srv_ptr->source_pos = operands[c_source_pos_idx];
   srv_ptr->ret_code = c_run_return_code_OK;
 
-  MHD_Daemon *daemon_ptr = srv_ptr->daemon_ptr;
-
   // - ERROR -
-  if (MHD_run(daemon_ptr) != MHD_YES)
+  if (MHD_run(srv_ptr->daemon_ptr) != MHD_YES)
   {
     exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_INTERNAL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -510,6 +566,14 @@ bool bic_http_server_method_process_1(interpreter_thread_s &it,unsigned stack_ba
 
   // - retrieve server pointer -
   http_server_s *srv_ptr = (http_server_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (srv_ptr == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_WAS_STOPPED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
   srv_ptr->it_ptr = &it;
   srv_ptr->source_pos = operands[c_source_pos_idx];
   srv_ptr->ret_code = c_run_return_code_OK;

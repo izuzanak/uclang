@@ -24,6 +24,7 @@ enum
   c_error_HTTP_SERVER_WRONG_CALLBACK_DELEGATE = 0,
   c_error_HTTP_SERVER_CANNOT_START_DAEMON,
   c_error_HTTP_SERVER_INTERNAL_ERROR,
+  c_error_HTTP_SERVER_WAS_STOPPED,
   c_error_HTTP_CONN_UNKNOWN_VALUES_TYPE,
   c_error_HTTP_CONN_ALREADY_SUSPENDED,
   c_error_HTTP_CONN_NOT_SUSPENDED,
@@ -58,6 +59,7 @@ void bic_http_server_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_http_server_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_server_method_HttpServer_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_http_server_method_stop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_server_method_timeout_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_server_method_process_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
