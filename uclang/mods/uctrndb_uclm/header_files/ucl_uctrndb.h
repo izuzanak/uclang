@@ -6,6 +6,9 @@
 include "script_parser.h"
 @end
 
+// - redefined in trndb.h -
+#undef nullptr
+
 #include "ucf2.h"
 #include <trndb.h>
 

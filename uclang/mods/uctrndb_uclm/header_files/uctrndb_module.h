@@ -8,6 +8,8 @@ include "ucl_uctrndb.h"
 
 // - UCTRNDB indexes of built in classes -
 extern unsigned c_bi_class_trndb_client;
+extern unsigned c_bi_class_trndb_vehicle;
+extern unsigned c_bi_class_trndb_consist;
 
 // - UCTRNDB module -
 extern built_in_module_s module;
@@ -45,8 +47,41 @@ bool bic_trndb_client_method_TrndbClient_2(interpreter_thread_s &it,unsigned sta
 bool bic_trndb_client_method_SetCallback_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trndb_client_method_Recall_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trndb_client_method_Relock_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trndb_client_method_TrnId_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trndb_client_method_TrnOperator_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trndb_client_method_Invalid_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trndb_client_method_EtbTopoCnt_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trndb_client_method_OpTrnTopoCnt_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trndb_client_method_vehicles_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trndb_client_method_consists_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trndb_client_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trndb_client_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class TRNDB_VEHICLE -
+extern built_in_variable_s trndb_vehicle_variables[];
+extern built_in_method_s trndb_vehicle_methods[];
+extern built_in_class_s trndb_vehicle_class;
+
+void bic_trndb_vehicle_consts(location_array_s &const_locations);
+void bic_trndb_vehicle_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_trndb_vehicle_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_trndb_vehicle_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trndb_vehicle_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trndb_vehicle_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class TRNDB_CONSIST -
+extern built_in_variable_s trndb_consist_variables[];
+extern built_in_method_s trndb_consist_methods[];
+extern built_in_class_s trndb_consist_class;
+
+void bic_trndb_consist_consts(location_array_s &const_locations);
+void bic_trndb_consist_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_trndb_consist_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_trndb_consist_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trndb_consist_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trndb_consist_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 
