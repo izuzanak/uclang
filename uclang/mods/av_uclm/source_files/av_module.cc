@@ -400,7 +400,7 @@ bool bic_av_format_method_stream_info_1(interpreter_thread_s &it,unsigned stack_
   if (!it.retrieve_integer(src_0_location,stream_idx))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("stream#1");
+    BIC_EXCEPTION_PUSH_METHOD_RI("stream_info#1");
     new_exception->params.push(1);
     new_exception->params.push(src_0_location->v_type);
 
@@ -447,7 +447,7 @@ bool bic_av_format_method_stream_decode_1(interpreter_thread_s &it,unsigned stac
   if (!it.retrieve_integer(src_0_location,stream_idx))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("stream#1");
+    BIC_EXCEPTION_PUSH_METHOD_RI("stream_decode#1");
     new_exception->params.push(1);
     new_exception->params.push(src_0_location->v_type);
 

@@ -2097,7 +2097,7 @@ built_in_method_s trdp_md_event_methods[] =
   {
     "Confirm#3",
     c_modifier_public | c_modifier_final,
-    bic_trdp_md_event_method_Confirm_0
+    bic_trdp_md_event_method_Confirm_3
   },
   {
     "to_string#0",
@@ -2295,7 +2295,7 @@ bool bic_trdp_md_event_method_Reply_3(interpreter_thread_s &it,unsigned stack_ba
   return true;
 }/*}}}*/
 
-bool bic_trdp_md_event_method_Confirm_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_trdp_md_event_method_Confirm_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);

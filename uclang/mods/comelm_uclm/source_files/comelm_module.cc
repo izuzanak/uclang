@@ -316,11 +316,12 @@ bool bic_elm_comm_method_ElmComm_4(interpreter_thread_s &it,unsigned stack_base,
       !it.retrieve_integer(src_3_location,read_speed))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("ElmComm#3");
-    new_exception->params.push(3);
+    BIC_EXCEPTION_PUSH_METHOD_RI("ElmComm#4");
+    new_exception->params.push(4);
     new_exception->params.push(src_0_location->v_type);
     new_exception->params.push(src_1_location->v_type);
     new_exception->params.push(src_2_location->v_type);
+    new_exception->params.push(src_3_location->v_type);
 
     return false;
   }

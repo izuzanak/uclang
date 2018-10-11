@@ -379,7 +379,7 @@ bool bic_gl_method_BlendFunc_2(interpreter_thread_s &it,unsigned stack_base,uli 
       !it.retrieve_integer(src_1_location,dfactor))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_gl,"BlendFunc#1");
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_gl,"BlendFunc#2");
     new_exception->params.push(2);
     new_exception->params.push(src_0_location->v_type);
     new_exception->params.push(src_1_location->v_type);
@@ -639,7 +639,7 @@ bool bic_gl_shader_method_GlShader_1(interpreter_thread_s &it,unsigned stack_bas
   if (!it.retrieve_integer(src_0_location,shader_type))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Glshader#1");
+    BIC_EXCEPTION_PUSH_METHOD_RI("GlShader#1");
     new_exception->params.push(1);
     new_exception->params.push(src_0_location->v_type);
 
@@ -672,7 +672,7 @@ bool bic_gl_shader_method_GlShader_2(interpreter_thread_s &it,unsigned stack_bas
       src_1_location->v_type != c_bi_class_string)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Glshader#2");
+    BIC_EXCEPTION_PUSH_METHOD_RI("GlShader#2");
     new_exception->params.push(2);
     new_exception->params.push(src_0_location->v_type);
     new_exception->params.push(src_1_location->v_type);

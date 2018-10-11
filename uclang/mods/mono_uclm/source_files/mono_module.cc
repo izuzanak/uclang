@@ -615,7 +615,7 @@ bool bic_mono_assembly_method_get_class_2(interpreter_thread_s &it,unsigned stac
       src_1_location->v_type != c_bi_class_string)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_mono_assembly,"class#2");
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_mono_assembly,"get_class#2");
     new_exception->params.push(2);
     new_exception->params.push(src_0_location->v_type);
     new_exception->params.push(src_1_location->v_type);

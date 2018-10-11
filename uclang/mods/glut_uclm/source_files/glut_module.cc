@@ -796,7 +796,7 @@ bool bic_glut_method_InitWindowPosition_2(interpreter_thread_s &it,unsigned stac
       !it.retrieve_integer(src_1_location,pos_y))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_glut,"InitWindowSize#2");
+    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_glut,"InitWindowPosition#2");
     new_exception->params.push(2);
     new_exception->params.push(src_0_location->v_type);
     new_exception->params.push(src_1_location->v_type);

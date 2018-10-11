@@ -283,7 +283,7 @@ built_in_variable_s perl_interpreter_variables[] =
   if (src_0_location->v_type != c_bi_class_string)\
   {\
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI("get_sv#1");\
+    BIC_EXCEPTION_PUSH_METHOD_RI("get_" #xv "#1");\
     new_exception->params.push(1);\
     new_exception->params.push(src_0_location->v_type);\
 \

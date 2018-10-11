@@ -2047,7 +2047,7 @@ bool bic_mat4_method_rotate_2(interpreter_thread_s &it,unsigned stack_base,uli *
       src_1_location->v_type != c_bi_class_vec3)
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("rotate#1");
+    BIC_EXCEPTION_PUSH_METHOD_RI("rotate#2");
     new_exception->params.push(2);
     new_exception->params.push(src_0_location->v_type);
     new_exception->params.push(src_1_location->v_type);
@@ -2524,7 +2524,7 @@ bool bic_primes_method_prime_factors_1(interpreter_thread_s &it,unsigned stack_b
   if (!it.retrieve_integer(src_0_location,number))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("item#1");
+    BIC_EXCEPTION_PUSH_METHOD_RI("prime_factors#1");
     new_exception->params.push(1);
     new_exception->params.push(src_0_location->v_type);
 

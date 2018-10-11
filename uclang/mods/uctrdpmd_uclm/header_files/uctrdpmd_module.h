@@ -182,7 +182,7 @@ bool bic_trdp_md_event_method_msg_type_0(interpreter_thread_s &it,unsigned stack
 bool bic_trdp_md_event_method_call_rc_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_event_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_event_method_Reply_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_trdp_md_event_method_Confirm_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_trdp_md_event_method_Confirm_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_event_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_trdp_md_event_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
