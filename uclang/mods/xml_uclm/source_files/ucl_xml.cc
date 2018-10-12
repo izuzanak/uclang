@@ -227,12 +227,16 @@ void xml_node_s::add_node_to_node_dict(interpreter_thread_s &it,pointer_map_tree
     if (value_location->v_type == c_bi_class_array)
     {
       pointer_array_s *array_ptr = (pointer_array_s *)value_location->v_data_ptr;
+
+      a_node->v_reference_cnt.atomic_inc();
       array_ptr->push(a_node);
     }
     else if (value_location->v_type == c_bi_class_xml_node)
     {
       pointer_array_s *array_ptr = it.get_new_array_ptr();
       array_ptr->push(value_location);
+
+      a_node->v_reference_cnt.atomic_inc();
       array_ptr->push(a_node);
 
       BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
@@ -247,6 +251,8 @@ void xml_node_s::add_node_to_node_dict(interpreter_thread_s &it,pointer_map_tree
   else
   {
     a_name->v_reference_cnt.atomic_inc();
+
+    a_node->v_reference_cnt.atomic_inc();
     map.value = (pointer)a_node;
   }
 }/*}}}*/
