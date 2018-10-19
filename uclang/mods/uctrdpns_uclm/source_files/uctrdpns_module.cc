@@ -640,9 +640,12 @@ built_in_variable_s trdp_ns_address_variables[] =
   \
   if (tna_ptr->err == 0)\
   {\
-    long long int result = tna_ptr->ip[INDEX];\
+    const char *address = Ucf2::IP2str(tna_ptr->ip[INDEX],nullptr,0);\
     \
-    BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
+    string_s *string_ptr = it.get_new_string_ptr();\
+    string_ptr->set(strlen(address),address);\
+    \
+    BIC_SET_RESULT_STRING(string_ptr);\
   }\
   else\
   {\

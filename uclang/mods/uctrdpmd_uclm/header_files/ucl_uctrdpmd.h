@@ -47,6 +47,16 @@ class uctrdpmd_c
 };
 
 /*
+ * definition of structure trdp_ns_target_s
+ */
+
+struct trdp_ns_target_s
+{
+  location_s *ns_location;
+  TRDP::Handle handle;
+};
+
+/*
  * definition of structure trdp_md_gate_s
  */
 

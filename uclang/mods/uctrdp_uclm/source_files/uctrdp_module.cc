@@ -792,9 +792,15 @@ bool bic_trdp_pd_address_method_TrdpPdAddress_4(interpreter_thread_s &it,unsigne
   long long int lli_src2_addr = 0;
 
   if (!it.retrieve_integer(src_0_location,scope) ||
-      (!it.retrieve_integer(src_1_location,lli_dst_addr) && src_1_location->v_type != c_bi_class_string) ||
-      (!it.retrieve_integer(src_2_location,lli_src_addr) && src_2_location->v_type != c_bi_class_string) ||
-      (!it.retrieve_integer(src_3_location,lli_src2_addr) && src_3_location->v_type != c_bi_class_string))
+      (!it.retrieve_integer(src_1_location,lli_dst_addr) &&
+       src_1_location->v_type != c_bi_class_string &&
+       src_1_location->v_type != c_rm_class_trdp_ns_target) ||
+      (!it.retrieve_integer(src_2_location,lli_src_addr) &&
+       src_2_location->v_type != c_bi_class_string &&
+       src_2_location->v_type != c_rm_class_trdp_ns_target) ||
+      (!it.retrieve_integer(src_3_location,lli_src2_addr) &&
+       src_3_location->v_type != c_bi_class_string &&
+       src_3_location->v_type != c_rm_class_trdp_ns_target))
   {
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("TrdpPdAddress#4");
@@ -826,10 +832,14 @@ bool bic_trdp_pd_address_method_TrdpPdAddress_4(interpreter_thread_s &it,unsigne
 
 #define BIC_TRDP_PD_ADDRESS_CONSTRUCTOR_RETRIEVE_IP(LOCATION,TARGET,DST_FLAG)\
 {/*{{{*/\
-  if (LOCATION->v_type == c_bi_class_string)\
+  if (LOCATION->v_type == c_rm_class_trdp_ns_target)\
+  {\
+    TARGET ## _host = ((trdp_ns_target_s *)LOCATION->v_data_ptr)->handle;\
+  }\
+  else if (LOCATION->v_type == c_bi_class_string)\
   {\
     /* - ERROR - */\
-    if (!Ucf2::Str2IP(((string_s *)LOCATION->v_data_ptr)->data,TARGET))\
+    if (!Ucf2::Str2IP(((string_s *)LOCATION->v_data_ptr)->data,TARGET ## _addr))\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_PD_ADDRESS_INVALID_ADDRESS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       new_exception->params.push(DST_FLAG);\
@@ -840,7 +850,7 @@ bool bic_trdp_pd_address_method_TrdpPdAddress_4(interpreter_thread_s &it,unsigne
   else\
   {\
     /* - ERROR - */\
-    if (lli_ ## TARGET < 0 || lli_ ## TARGET > UINT_MAX)\
+    if (lli_ ## TARGET ## _addr < 0 || lli_ ## TARGET ## _addr > UINT_MAX)\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRDP_PD_ADDRESS_INVALID_ADDRESS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       new_exception->params.push(DST_FLAG);\
@@ -848,21 +858,26 @@ bool bic_trdp_pd_address_method_TrdpPdAddress_4(interpreter_thread_s &it,unsigne
       return false;\
     }\
     \
-    TARGET = lli_ ## TARGET;\
+    TARGET ## _addr = lli_ ## TARGET ## _addr;\
   }\
 }/*}}}*/
 
+  TRDP::Handle dst_host  = 0;
+  TRDP::Handle src_host  = 0;
+  TRDP::Handle src2_host = 0;
+
+  unsigned dst_addr  = 0;
+  unsigned src_addr  = 0;
+  unsigned src2_addr = 0;
+
   // - retrieve destination ip addresses -
-  unsigned dst_addr;
-  BIC_TRDP_PD_ADDRESS_CONSTRUCTOR_RETRIEVE_IP(src_1_location,dst_addr,1);
+  BIC_TRDP_PD_ADDRESS_CONSTRUCTOR_RETRIEVE_IP(src_1_location,dst,1);
 
   // - retrieve source ip addresses -
-  unsigned src_addr;
-  BIC_TRDP_PD_ADDRESS_CONSTRUCTOR_RETRIEVE_IP(src_2_location,src_addr,0);
+  BIC_TRDP_PD_ADDRESS_CONSTRUCTOR_RETRIEVE_IP(src_2_location,src,0);
 
   // - retrieve second source ip addresses -
-  unsigned src2_addr;
-  BIC_TRDP_PD_ADDRESS_CONSTRUCTOR_RETRIEVE_IP(src_3_location,src2_addr,0);
+  BIC_TRDP_PD_ADDRESS_CONSTRUCTOR_RETRIEVE_IP(src_3_location,src2,0);
 
   // - create trdp_pd_address object -
   trdp_pd_address_s *tpa_ptr = (trdp_pd_address_s *)cmalloc(sizeof(trdp_pd_address_s));
@@ -872,15 +887,15 @@ bool bic_trdp_pd_address_method_TrdpPdAddress_4(interpreter_thread_s &it,unsigne
   tpa_ptr->scope = scope;
 
   // - set destination host and address -
-  tpa_ptr->dst_host.h = 0;
+  tpa_ptr->dst_host.h = dst_host;
   tpa_ptr->dst_host.ip = dst_addr;
 
   // - set source host and address -
-  tpa_ptr->src_host.h = 0;
+  tpa_ptr->src_host.h = src_host;
   tpa_ptr->src_host.ip = src_addr;
 
   // - set second source host and address -
-  tpa_ptr->src2_host.h = 0;
+  tpa_ptr->src2_host.h = src2_host;
   tpa_ptr->src2_host.ip = src2_addr;
 
   // - set trdp_pd_address destination location -
