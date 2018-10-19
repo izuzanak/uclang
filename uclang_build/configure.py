@@ -38,6 +38,7 @@ c_packages = [
   ["MOD_UCTCNMD"   ,"dirs"      ,["../ext_libs/ucframework/1.60","../ext_libs/uctcn/2.27"]],
   ["MOD_UCTRDP"    ,"dirs"      ,["../ext_libs/ucframework/2.15","../ext_libs/uctrdp/1.8"]],
   ["MOD_UCTRDPMD"  ,"dirs"      ,["../ext_libs/ucframework/2.15","../ext_libs/uctrdp/1.8"]],
+  ["MOD_UCTRDPNS"  ,"dirs"      ,["../ext_libs/ucframework/2.15","../ext_libs/uctrdp/1.8"]],
   ["MOD_UCTRDPMSH" ,"true"      ,[]],
   ["MOD_UCTRNDB"   ,"dirs"      ,["../ext_libs/ucframework/2.15","../ext_libs/trndb/trunk","../ext_libs/astor/trunk"]],
   ["MOD_UCCAN"     ,"dirs"      ,["../ext_libs/ucframework/1.60","../ext_libs/uccanopen/1.14"]],

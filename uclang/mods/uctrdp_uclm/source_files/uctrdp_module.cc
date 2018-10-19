@@ -8,6 +8,9 @@ unsigned c_bi_class_trdp_pd = c_idx_not_exist;
 unsigned c_bi_class_trdp_pd_address = c_idx_not_exist;
 unsigned c_bi_class_trdp_pd_port = c_idx_not_exist;
 
+// - UCTRDP indexes of remote classes -
+unsigned c_rm_class_trdp_ns_target = c_idx_not_exist;
+
 // - UCTRDP module -
 built_in_module_s module =
 {/*{{{*/
@@ -62,6 +65,9 @@ bool uctrdp_initialize(script_parser_s &sp)
 
   // - initialize trdp_pd_port class identifier -
   c_bi_class_trdp_pd_port = class_base_idx++;
+
+  // - retrieve remote trdp_ns_target class index -
+  c_rm_class_trdp_ns_target = sp.resolve_class_idx_by_name("TrdpNsTarget",c_idx_not_exist);
 
   return true;
 }/*}}}*/

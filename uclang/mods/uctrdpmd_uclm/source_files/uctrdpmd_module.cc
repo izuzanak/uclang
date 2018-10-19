@@ -13,14 +13,17 @@ unsigned c_bi_class_trdp_md_call = c_idx_not_exist;
 unsigned c_bi_class_trdp_md_listener = c_idx_not_exist;
 unsigned c_bi_class_trdp_md_event = c_idx_not_exist;
 
+// - UCTRDPMD indexes of remote classes -
+unsigned c_rm_class_trdp_ns_target = c_idx_not_exist;
+
 // - UCTRDPMD module -
 built_in_module_s module =
 {/*{{{*/
-  8,                      // Class count
+  8,                        // Class count
   uctrdpmd_classes,         // Classes
 
-  0,                      // Error base index
-  22,                     // Error count
+  0,                        // Error base index
+  22,                       // Error count
   uctrdpmd_error_strings,   // Error strings
 
   uctrdpmd_initialize,      // Initialize function
@@ -95,6 +98,9 @@ bool uctrdpmd_initialize(script_parser_s &sp)
 
   // - initialize trdp_md_event class identifier -
   c_bi_class_trdp_md_event = class_base_idx++;
+
+  // - retrieve remote trdp_ns_target class index -
+  c_rm_class_trdp_ns_target = sp.resolve_class_idx_by_name("TrdpNsTarget",c_idx_not_exist);
 
   return true;
 }/*}}}*/
