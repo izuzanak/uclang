@@ -4,31 +4,6 @@ include "ucl_validator.h"
 @end
 
 /*
- * basic definitions and constants
- */
-
-const char *c_prop_names[c_prop_name_cnt] =
-{/*{{{*/
-  "type",
-  "==",
-  "!=",
-  "<",
-  ">",
-  "<=",
-  ">=",
-  "length ==",
-  "length !=",
-  "length <",
-  "length >",
-  "length <=",
-  "length >=",
-  "ref",
-  "regex",
-  "items",
-  "all-items",
-};/*}}}*/
-
-/*
  * methods of structure validator_s
  */
 

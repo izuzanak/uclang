@@ -15,9 +15,6 @@ include "script_parser.h"
 extern unsigned c_rm_class_set;
 extern unsigned c_rm_class_dict;
 
-const unsigned c_prop_name_cnt = 17;
-extern const char *c_prop_names[c_prop_name_cnt];
-
 enum {
   prop_type = 0,
   prop_equal,
