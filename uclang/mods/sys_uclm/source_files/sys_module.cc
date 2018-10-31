@@ -5299,7 +5299,7 @@ bool bic_signal_method_send_2(interpreter_thread_s &it,unsigned stack_base,uli *
   result = kill(target_pid,signal_number);
 #else
   exception_s *new_exception = exception_s::throw_exception(it,c_error_BUILT_IN_NOT_IMPLEMENTED_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
-  BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_sys,"send#2");
+  BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_signal,"send#2");
 
   return false;
 #endif
@@ -6198,7 +6198,7 @@ bool bic_clock_method_settime_2(interpreter_thread_s &it,unsigned stack_base,uli
   }
 #else
   exception_s *new_exception = exception_s::throw_exception(it,c_error_BUILT_IN_NOT_IMPLEMENTED_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
-  BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_sys,"settime#2");
+  BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_clock,"settime#2");
 
   return false;
 #endif
