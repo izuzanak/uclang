@@ -1982,7 +1982,7 @@ built_in_class_s pipe_class =
 {/*{{{*/
   "Pipe",
   c_modifier_public | c_modifier_final,
-  14, pipe_methods,
+  15, pipe_methods,
   0, pipe_variables,
   bic_pipe_consts,
   bic_pipe_init,
@@ -2046,6 +2046,11 @@ built_in_method_s pipe_methods[] =
     "read#1",
     c_modifier_public | c_modifier_final,
     bic_stream_method_read_1
+  },
+  {
+    "read_max#1",
+    c_modifier_public | c_modifier_final,
+    bic_stream_method_read_max_1
   },
   {
     "read_close#0",
@@ -2299,7 +2304,7 @@ built_in_class_s file_class =
 {/*{{{*/
   "File",
   c_modifier_public | c_modifier_final,
-  16, file_methods,
+  17, file_methods,
   3 + 3, file_variables,
   bic_file_consts,
   bic_file_init,
@@ -2373,6 +2378,11 @@ built_in_method_s file_methods[] =
     "read#1",
     c_modifier_public | c_modifier_final,
     bic_stream_method_read_1
+  },
+  {
+    "read_max#1",
+    c_modifier_public | c_modifier_final,
+    bic_stream_method_read_max_1
   },
   {
     "read_close#0",
@@ -3881,6 +3891,77 @@ bool bic_stream_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
     exception_s::throw_exception(it,module.error_base + c_error_STREAM_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
+  }
+
+  // - return data string -
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->swap(data_string);
+  data_string.clear();
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_stream_method_read_max_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int byte_cnt;
+
+  // - ERROR -
+  if (!it.retrieve_integer(src_0_location,byte_cnt))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("read_max#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  // - retrieve pointer to stream -
+  FILE *f = (FILE *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (f == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_STREAM_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (byte_cnt < 0)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_STREAM_READ_NEGATIVE_BYTE_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(byte_cnt);
+
+    return false;
+  }
+
+  // - target data string -
+  string_s data_string;
+  data_string.init();
+  data_string.create(byte_cnt);
+
+  unsigned read_cnt = fread(data_string.data,1,byte_cnt,f);
+
+  if (read_cnt < byte_cnt)
+  {
+    // - ERROR -
+    if (ferror(f))
+    {
+      data_string.clear();
+
+      exception_s::throw_exception(it,module.error_base + c_error_STREAM_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
+    // - shorten data string -
+    data_string.size = read_cnt + 1;
+    data_string.data[read_cnt] = '\0';
   }
 
   // - return data string -

@@ -258,6 +258,7 @@ bool bic_stream_method_flush_0(interpreter_thread_s &it,unsigned stack_base,uli 
 bool bic_stream_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_stream_method_readln_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_stream_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_stream_method_read_max_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_stream_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_stream_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
