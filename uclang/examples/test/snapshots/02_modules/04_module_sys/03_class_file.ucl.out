@@ -37,6 +37,13 @@ file.read(10) -> Hello worl
 file.read(10) -> d!
 Hello a
 
+=== File method read_max#1 =====================================================
+
+file              -> File
+file.read_max(10) -> Hello worl
+file.read_max(10) -> d!
+Hello a
+
 === File method read_close#0 ===================================================
 
 file              -> File

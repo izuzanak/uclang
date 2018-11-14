@@ -3068,7 +3068,7 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build + "-I/usr/lib/i386-linux-gnu/perl/5.26.2/CORE ", # CXX options
+      opt_build + "-I/usr/lib/i386-linux-gnu/perl/5.28.0/CORE ", # CXX options
       opt_link + "-L/usr/lib/i386-linux-gnu -lperl ", # CXX link options
       "", # CXX defines
       [],

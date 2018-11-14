@@ -420,7 +420,7 @@ class Main
       "description","Class providing access to system pipes.",
       "source_id","\\(pipe\\|stream\\)",
       "channel_name","stream",
-      "create_example","new Pipe(\"cat -n numbers.txt 2> /dev/null\",\"r\")",
+      "create_example","new Pipe(\"cat numbers.txt 2> /dev/null\",\"r\")",
       "create_output","new Pipe(\"cat\",\"w\")"
     ]);/*}}}*/
     CLASS_PROPERTIES["File"] = class_File = new Dict(
@@ -5006,6 +5006,29 @@ while (Blank != (line = obj.readln()))
                 m_meth_ex_code = ("
 %s
 obj.read(32).print();
+'\\n'.print();
+" % obj_code);
+              }
+            }/*}}}*/
+            case "read_max#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+              if (Blank == (channel_name = get_property(class_name,"channel_name")))
+                new Exception("Property \"channel_name\" of class \"%s\" is not defined" % class_name).throw();
+
+              m_meth_descr_lst.push("Read maximaly requested count of bytes from %s represented by object of class `%s`, and return object of class %s containing read bytes." % [channel_name,class_name,doc_class_ref("String")]);
+              m_meth_param_lsts[0].push("Object of class %s, %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]);
+              m_meth_return_lst.push("* Object of class %s." % doc_class_ref("String"));
+
+              obj_code = get_code(a_class,"obj","create_example");
+
+              if (Blank != obj_code)
+              {
+                m_meth_ex_code = ("
+%s
+obj.read_max(47).print();
+'\\n'.print();
+obj.read_max(47).print();
 '\\n'.print();
 " % obj_code);
               }

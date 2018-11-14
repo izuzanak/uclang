@@ -22,6 +22,7 @@ class Main
     // public final read#0
     // public final readln#0
     // public final read#1
+    // public final read_max#1
     // public final read_close#0
     // public final get_fd#0
     // public final next_item#0
@@ -71,6 +72,13 @@ class Main
     ("pipe          -> %s\n" % $pipe).print();
     ("pipe.read(10) -> %s\n" % pipe.read(10)).print();
     ("pipe.read(10) -> %s\n" % pipe.read(10)).print();
+    pipe.close();
+
+    Tutorial.note("Pipe method read_max#1");
+    pipe = new Pipe("ls","r");
+    ("pipe              -> %s\n" % $pipe).print();
+    ("pipe.read_max(10) -> %s\n" % pipe.read_max(10)).print();
+    ("pipe.read_max(10) -> %s\n" % pipe.read_max(10)).print();
     pipe.close();
 
     Tutorial.note("Pipe method read_close#0");

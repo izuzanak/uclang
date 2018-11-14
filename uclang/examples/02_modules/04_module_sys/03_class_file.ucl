@@ -24,6 +24,7 @@ class Main
     // public final read#0
     // public final readln#0
     // public final read#1
+    // public final read_max#1
     // public final read_close#0
     // public final get_fd#0
     // public final next_item#0
@@ -77,6 +78,13 @@ class Main
     ("file          -> %s\n" % $file).print();
     ("file.read(10) -> %s\n" % file.read(10)).print();
     ("file.read(10) -> %s\n" % file.read(10)).print();
+    file.close();
+
+    Tutorial.note("File method read_max#1");
+    file = new File("/tmp/03_class_file.ucl","r");
+    ("file              -> %s\n" % $file).print();
+    ("file.read_max(10) -> %s\n" % file.read_max(10)).print();
+    ("file.read_max(10) -> %s\n" % file.read_max(10)).print();
     file.close();
 
     Tutorial.note("File method read_close#0");

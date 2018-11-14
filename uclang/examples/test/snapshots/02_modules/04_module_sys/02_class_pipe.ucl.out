@@ -50,6 +50,13 @@ pipe.read(10) -> 01_class_s
 pipe.read(10) -> ys.ucl
 02_
 
+=== Pipe method read_max#1 =====================================================
+
+pipe              -> Pipe
+pipe.read_max(10) -> 01_class_s
+pipe.read_max(10) -> ys.ucl
+02_
+
 === Pipe method read_close#0 ===================================================
 
 pipe              -> Pipe

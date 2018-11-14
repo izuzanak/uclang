@@ -39,6 +39,7 @@ Class providing access to system files.
   * Method [`read#0`](#read%230)
   * Method [`readln#0`](#readln%230)
   * Method [`read#1`](#read%231)
+  * Method [`read_max#1`](#read_max%231)
   * Method [`read_close#0`](#read_close%230)
   * Method [`get_fd#0`](#get_fd%230)
   * Method [`next_item#0`](#next_item%230)
@@ -51,7 +52,7 @@ Class providing access to system files.
 
 <a name="File#2" />
 
-### Constructor [`File#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2443)
+### Constructor [`File#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2510)
 
 Creates object of class `File`, based on file path and file open flags.
 
@@ -80,7 +81,7 @@ Line number 5
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2431)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2498)
 
 Assignment operator `=`. Object of class `File` is replaced by method parameter.
 
@@ -111,7 +112,7 @@ obj: New value
 
 <a name="seek#2" />
 
-### Method [`seek#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2454)
+### Method [`seek#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2521)
 
 Sets file position indicator of stream represented by object of class `File`.
 New position in bytes is obtained by adding offset to given position
@@ -143,7 +144,7 @@ line: Line number 1
 
 <a name="tell#0" />
 
-### Method [`tell#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2498)
+### Method [`tell#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2565)
 
 Return of file position indicator of stream represented by object of class
 `File`.
@@ -168,7 +169,7 @@ obj.tell(): 28
 
 <a name="close#0" />
 
-### Method [`close#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2526)
+### Method [`close#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2593)
 
 Closes stream represented by object of class `File`.
 
@@ -194,7 +195,7 @@ Stream is not opened
 
 <a name="write#1" />
 
-### Method [`write#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3714)
+### Method [`write#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3781)
 
 Write object of class `String` to stream represented by object of class `File`.
 
@@ -219,7 +220,7 @@ Done
 
 <a name="write_close#1" />
 
-### Method [`write_close#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2547)
+### Method [`write_close#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2614)
 
 Write object of class `String` to stream represented by object of class `File`, and closes it immediately.
 
@@ -244,7 +245,7 @@ Done
 
 <a name="flush#0" />
 
-### Method [`flush#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3737)
+### Method [`flush#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3804)
 
 Force write of all buffered data of output stream represented by object of class `File`.
 
@@ -266,7 +267,7 @@ Done
 
 <a name="read#0" />
 
-### Method [`read#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3762)
+### Method [`read#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3829)
 
 Read all data from stream represented by object of class `File`, and return object of class `String` containing read data.
 
@@ -294,7 +295,7 @@ Line number 5
 
 <a name="readln#0" />
 
-### Method [`readln#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3771)
+### Method [`readln#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3838)
 
 Read one line from stream represented by object of class `File`, and return object of class `String` containing read line.
 
@@ -322,7 +323,7 @@ line: Line number 5
 
 <a name="read#1" />
 
-### Method [`read#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3776)
+### Method [`read#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3843)
 
 Read requested count of bytes from stream represented by object of class `File`, and return object of class `String` containing read bytes.
 
@@ -347,9 +348,42 @@ Line number 2
 Line
 ```
 
+<a name="read_max#1" />
+
+### Method [`read_max#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3907)
+
+Read maximaly requested count of bytes from stream represented by object of class `File`, and return object of class `String` containing read bytes.
+
+**Parameters:**
+
+1. Object of class `Char`, `Integer` or `Float`.
+
+**Return:**
+
+* Object of class `String`.
+
+**Example:**
+
+```cpp
+obj = new File("numbers.txt","r");
+obj.read_max(47).print();
+'\n'.print();
+obj.read_max(47).print();
+'\n'.print();
+```
+```
+Line number 1
+Line number 2
+Line number 3
+Line 
+number 4
+Line number 5
+
+```
+
 <a name="read_close#0" />
 
-### Method [`read_close#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2571)
+### Method [`read_close#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2638)
 
 Read all data from stream represented by object of class `File`, and return object of class `String` containing read data. Input stream will be closed after reading.
 
@@ -374,7 +408,7 @@ Line number 5
 
 <a name="get_fd#0" />
 
-### Method [`get_fd#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3840)
+### Method [`get_fd#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3978)
 
 Return integer file descriptor of stream represented by object of class `File`.
 
@@ -394,7 +428,7 @@ obj.get_fd(): 3
 
 <a name="next_item#0" />
 
-### Method `spec` [`next_item#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3861)
+### Method `spec` [`next_item#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3999)
 
 Read one line from stream represented by object of class `File`, and return object of class `String` containing read line.
 
@@ -422,7 +456,7 @@ line: Line number 5
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2581)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2648)
 
 Convert object of class `File` to object of class `String`.
 This method returns name of class `File`.
@@ -442,7 +476,7 @@ File.to_string(): File
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2590)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2657)
 
 Print string representation of object of class `File` to standard output.
 This method prints name of class `File`.
