@@ -6,16 +6,17 @@ include "curl_module.h"
 // - CURL indexes of built in classes -
 unsigned c_bi_class_curl = c_idx_not_exist;
 unsigned c_bi_class_curl_multi = c_idx_not_exist;
+unsigned c_bi_class_curl_multi_request = c_idx_not_exist;
 unsigned c_bi_class_curl_result = c_idx_not_exist;
 
 // - CURL module -
 built_in_module_s module =
 {/*{{{*/
-  3,                    // Class count
+  4,                    // Class count
   curl_classes,         // Classes
 
   0,                    // Error base index
-  11,                   // Error count
+  14,                   // Error count
   curl_error_strings,   // Error strings
 
   curl_initialize,      // Initialize function
@@ -27,6 +28,7 @@ built_in_class_s *curl_classes[] =
 {/*{{{*/
   &curl_class,
   &curl_multi_class,
+  &curl_multi_request_class,
   &curl_result_class,
 };/*}}}*/
 
@@ -42,6 +44,9 @@ const char *curl_error_strings[] =
   "error_CURL_MULTI_SOCKET_ACTION_ERROR",
   "error_CURL_MULTI_INVALID_REQUEST_INDEX",
   "error_CURL_MULTI_POLL_ERROR",
+  "error_CURL_MULTI_REQUEST_INVALID_REFERENCE",
+  "error_CURL_MULTI_REQUEST_UNSUPPORTED_OPTION_TYPE",
+  "error_CURL_MULTI_REQUEST_WRONG_OPTION_VALUE_TYPE",
   "error_CURL_RESULT_UNSUPPORTED_INFO_VALUE_TYPE",
   "error_CURL_RESULT_ERROR_WHILE_GET_INFO",
 };/*}}}*/
@@ -56,6 +61,9 @@ bool curl_initialize(script_parser_s &sp)
 
   // - initialize curl_multi class identifier -
   c_bi_class_curl_multi = class_base_idx++;
+
+  // - initialize curl_multi_request class identifier -
+  c_bi_class_curl_multi_request = class_base_idx++;
 
   // - initialize curl_result class identifier -
   c_bi_class_curl_result = class_base_idx++;
@@ -124,7 +132,7 @@ bool curl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nInvalid timer record index %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr,"\nInvalid curl multi request index %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_CURL_MULTI_POLL_ERROR:
@@ -132,6 +140,27 @@ bool curl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nError while polling curl multi handler file descriptors\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CURL_MULTI_REQUEST_INVALID_REFERENCE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid curl multi request reference\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CURL_MULTI_REQUEST_UNSUPPORTED_OPTION_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nUnsupported type of curl request option\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CURL_MULTI_REQUEST_WRONG_OPTION_VALUE_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong type of curl option value, expected %s\n",it.class_symbol_names[it.class_records[exception.params[0]].name_idx].data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_CURL_RESULT_UNSUPPORTED_INFO_VALUE_TYPE:
@@ -161,7 +190,7 @@ built_in_class_s curl_class =
   "Curl",
   c_modifier_public | c_modifier_final,
   7, curl_methods,
-  0, curl_variables,
+  3 + 10, curl_variables,
   bic_curl_consts,
   bic_curl_init,
   bic_curl_clear,
@@ -219,6 +248,23 @@ built_in_method_s curl_methods[] =
 
 built_in_variable_s curl_variables[] =
 {/*{{{*/
+
+  // - curl option constants -
+  { "OPT_USERNAME", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_PASSWORD", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_HTTPAUTH", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - curl authentication constants -
+  { "AUTH_ANY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AUTH_ANYSAFE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AUTH_BASIC", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AUTH_DIGEST", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AUTH_GSSNEGOTIATE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AUTH_NTLM", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AUTH_DIGEST_IE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AUTH_NTLM_WB", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AUTH_ONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AUTH_NONE", c_modifier_public | c_modifier_static | c_modifier_static_const },
 };/*}}}*/
 
 #define BIC_CURL_GET_DELETE_HEAD_METHODS(NAME,OPTIONS) \
@@ -379,6 +425,45 @@ built_in_variable_s curl_variables[] =
 
 void bic_curl_consts(location_array_s &const_locations)
 {/*{{{*/
+
+  // - curl option constants -
+  {
+    const_locations.push_blanks(3);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 3);
+
+  #define CREATE_CURL_OPTION_BIC_STATIC(VALUE)\
+    cv_ptr->v_type = c_bi_class_integer;\
+    cv_ptr->v_reference_cnt.atomic_set(1);\
+    cv_ptr->v_data_ptr = (long long int)VALUE;\
+    cv_ptr++;
+
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_USERNAME);
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_PASSWORD);
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_HTTPAUTH);
+  }
+
+  // - curl authentication constants -
+  {
+    const_locations.push_blanks(10);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 10);
+
+  #define CREATE_CURL_AUTHENTICATION_BIC_STATIC(VALUE)\
+    cv_ptr->v_type = c_bi_class_integer;\
+    cv_ptr->v_reference_cnt.atomic_set(1);\
+    cv_ptr->v_data_ptr = (long long int)VALUE;\
+    cv_ptr++;
+
+    CREATE_CURL_AUTHENTICATION_BIC_STATIC(CURLAUTH_ANY);
+    CREATE_CURL_AUTHENTICATION_BIC_STATIC(CURLAUTH_ANYSAFE);
+    CREATE_CURL_AUTHENTICATION_BIC_STATIC(CURLAUTH_BASIC);
+    CREATE_CURL_AUTHENTICATION_BIC_STATIC(CURLAUTH_DIGEST);
+    CREATE_CURL_AUTHENTICATION_BIC_STATIC(CURLAUTH_GSSNEGOTIATE);
+    CREATE_CURL_AUTHENTICATION_BIC_STATIC(CURLAUTH_NTLM);
+    CREATE_CURL_AUTHENTICATION_BIC_STATIC(CURLAUTH_DIGEST_IE);
+    CREATE_CURL_AUTHENTICATION_BIC_STATIC(CURLAUTH_NTLM_WB);
+    CREATE_CURL_AUTHENTICATION_BIC_STATIC(CURLAUTH_ONLY);
+    CREATE_CURL_AUTHENTICATION_BIC_STATIC(CURLAUTH_NONE);
+  }
 }/*}}}*/
 
 void bic_curl_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -450,7 +535,7 @@ built_in_class_s curl_multi_class =
 {/*{{{*/
   "CurlMulti",
   c_modifier_public | c_modifier_final,
-  14, curl_multi_methods,
+  13, curl_multi_methods,
   0, curl_multi_variables,
   bic_curl_multi_consts,
   bic_curl_multi_init,
@@ -474,6 +559,11 @@ built_in_method_s curl_multi_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_curl_multi_operator_binary_equal
+  },
+  {
+    "operator_binary_le_br_re_br#1",
+    c_modifier_public | c_modifier_final,
+    bic_curl_multi_operator_binary_le_br_re_br
   },
   {
     "CurlMulti#1",
@@ -504,16 +594,6 @@ built_in_method_s curl_multi_methods[] =
     "HEAD#2",
     c_modifier_public | c_modifier_final,
     bic_curl_multi_method_HEAD_2
-  },
-  {
-    "add_headers#2",
-    c_modifier_public | c_modifier_final,
-    bic_curl_multi_method_add_headers_2
-  },
-  {
-    "cancel#1",
-    c_modifier_public | c_modifier_final,
-    bic_curl_multi_method_cancel_1
   },
   {
     "get_fds#0",
@@ -593,6 +673,7 @@ built_in_variable_s curl_multi_variables[] =
   /* - append curl to list - */\
   long long int index = cm_ptr->curl_list.append(curl_ptr);\
   curl_props->index = index;\
+  curl_props->unique_id = cm_ptr->unique_counter++;\
   \
   /* - set user data location - */\
   src_1_location->v_reference_cnt.atomic_inc();\
@@ -661,6 +742,7 @@ built_in_variable_s curl_multi_variables[] =
   /* - append curl to list - */\
   long long int index = cm_ptr->curl_list.append(curl_ptr);\
   curl_props->index = index;\
+  curl_props->unique_id = cm_ptr->unique_counter++;\
   \
   curl_props->read_buffer.init(*data_ptr);\
   \
@@ -714,6 +796,59 @@ bool bic_curl_multi_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_curl_multi_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int index;
+
+  /* - ERROR - */
+  if (!it.retrieve_integer(src_0_location,index))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_le_br_re_br#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  curl_multi_s *cm_ptr = (curl_multi_s *)dst_location->v_data_ptr;
+  pointer_list_s &curl_list = cm_ptr->curl_list;
+
+  // - ERROR -
+  if (index < 0 || index >= curl_list.used || !curl_list.data[index].valid)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_INVALID_REQUEST_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(index);
+
+    return false;
+  }
+
+  CURL *curl_ptr = (CURL *)curl_list[index];
+
+  // - retrieve curl properties -
+  curl_props_s *curl_props;
+  curl_easy_getinfo(curl_ptr,CURLINFO_PRIVATE,(char **)&curl_props);
+
+  // - create curl_multi_request object -
+  curl_multi_request_s *cmr_ptr = (curl_multi_request_s *)cmalloc(sizeof(curl_multi_request_s));
+  cmr_ptr->init();
+
+  // - set curl_multi reference -
+  dst_location->v_reference_cnt.atomic_inc();
+  cmr_ptr->curl_multi_loc = dst_location;
+
+  cmr_ptr->index = index;
+  cmr_ptr->unique_id = curl_props->unique_id;
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_curl_multi_request,cmr_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
@@ -802,137 +937,6 @@ bool bic_curl_multi_method_HEAD_2(interpreter_thread_s &it,unsigned stack_base,u
     curl_easy_setopt(curl_ptr,CURLOPT_HEADER,1);
     curl_easy_setopt(curl_ptr,CURLOPT_NOBODY,1);
   );
-}/*}}}*/
-
-bool bic_curl_multi_method_add_headers_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int index;
-
-  if (!it.retrieve_integer(src_0_location,index) ||
-      src_1_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("add_headers#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
-
-  curl_multi_s *cm_ptr = (curl_multi_s *)dst_location->v_data_ptr;
-  pointer_list_s &curl_list = cm_ptr->curl_list;
-
-  // - ERROR -
-  if (index < 0 || index >= curl_list.used || !curl_list.data[index].valid)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_INVALID_REQUEST_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    new_exception->params.push(index);
-
-    return false;
-  }
-
-  pointer_array_s *array_ptr = (pointer_array_s *)src_1_location->v_data_ptr;
-
-  if (array_ptr->used != 0)
-  {
-    curl_slist *headers = nullptr;
-
-    pointer *s_ptr = array_ptr->data;
-    pointer *s_ptr_end = s_ptr + array_ptr->used;
-
-    do {
-      location_s *item_location = it.get_location_value(*s_ptr);
-
-      // - ERROR -
-      if (item_location->v_type != c_bi_class_string)
-      {
-        curl_slist_free_all(headers);
-
-        exception_s::throw_exception(it,module.error_base + c_error_CURL_HTTP_HEADER_EXPECTED_STRING,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        return false;
-      }
-
-      // - append header to list -
-      string_s *string_ptr = (string_s *)item_location->v_data_ptr;
-      headers = curl_slist_append(headers,string_ptr->data);
-
-    } while(++s_ptr < s_ptr_end);
-
-    CURL *curl_ptr = (CURL *)curl_list[index];
-    curl_easy_setopt(curl_ptr,CURLOPT_HTTPHEADER,headers);
-
-    // - retrieve curl properties -
-    curl_props_s *curl_props;
-    curl_easy_getinfo(curl_ptr,CURLINFO_PRIVATE,(char **)&curl_props);
-
-    // - release old headers list -
-    if (curl_props->headers != nullptr)
-    {
-      curl_slist_free_all(curl_props->headers);
-    }
-
-    // - store headers list -
-    curl_props->headers = headers;
-  }
-
-  BIC_SET_RESULT_DESTINATION();
-
-  return true;
-}/*}}}*/
-
-bool bic_curl_multi_method_cancel_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int index;
-
-  if (!it.retrieve_integer(src_0_location,index))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("cancel#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
-  curl_multi_s *cm_ptr = (curl_multi_s *)dst_location->v_data_ptr;
-  pointer_list_s &curl_list = cm_ptr->curl_list;
-
-  // - ERROR -
-  if (index < 0 || index >= curl_list.used || !curl_list.data[index].valid)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_INVALID_REQUEST_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    new_exception->params.push(index);
-
-    return false;
-  }
-
-  CURL *curl_ptr = (CURL *)curl_list[index];
-
-  // - retrieve curl properties -
-  curl_props_s *curl_props;
-  curl_easy_getinfo(curl_ptr,CURLINFO_PRIVATE,(char **)&curl_props);
-
-  // - remove curl easy from multi -
-  curl_multi_remove_handle(cm_ptr->curlm_ptr,curl_ptr);
-
-  // - release curl properties -
-  curl_props->clear(it);
-  cfree(curl_props);
-
-  // - remove curl from list -
-  curl_list.remove(index);
-
-  BIC_SET_RESULT_DESTINATION();
-
-  return true;
 }/*}}}*/
 
 bool bic_curl_multi_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -1172,6 +1176,293 @@ bool bic_curl_multi_method_print_0(interpreter_thread_s &it,unsigned stack_base,
   return true;
 }/*}}}*/
 
+// - class CURL_MULTI_REQUEST -
+built_in_class_s curl_multi_request_class =
+{/*{{{*/
+  "CurlMultiRequest",
+  c_modifier_public | c_modifier_final,
+  6, curl_multi_request_methods,
+  0, curl_multi_request_variables,
+  bic_curl_multi_request_consts,
+  bic_curl_multi_request_init,
+  bic_curl_multi_request_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s curl_multi_request_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_curl_multi_request_operator_binary_equal
+  },
+  {
+    "add_headers#1",
+    c_modifier_public | c_modifier_final,
+    bic_curl_multi_request_method_add_headers_1
+  },
+  {
+    "setopt#2",
+    c_modifier_public | c_modifier_final,
+    bic_curl_multi_request_method_setopt_2
+  },
+  {
+    "cancel#0",
+    c_modifier_public | c_modifier_final,
+    bic_curl_multi_request_method_cancel_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_curl_multi_request_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_curl_multi_request_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s curl_multi_request_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+#define BIC_CURL_MULTI_REQUEST_CHECK_REFERENCE() \
+/*{{{*/\
+  curl_multi_request_s *cmr_ptr = (curl_multi_request_s *)dst_location->v_data_ptr;\
+  curl_multi_s *cm_ptr = (curl_multi_s *)cmr_ptr->curl_multi_loc->v_data_ptr;\
+  pointer_list_s &curl_list = cm_ptr->curl_list;\
+  \
+  /* - ERROR - */\
+  if (cmr_ptr->index < 0 || cmr_ptr->index >= curl_list.used || !curl_list.data[cmr_ptr->index].valid)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_REQUEST_INVALID_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  CURL *curl_ptr = (CURL *)curl_list[cmr_ptr->index];\
+  \
+  /* - retrieve curl properties - */\
+  curl_props_s *curl_props;\
+  curl_easy_getinfo(curl_ptr,CURLINFO_PRIVATE,(char **)&curl_props);\
+  \
+  /* - ERROR - */\
+  if (curl_props->unique_id != cmr_ptr->unique_id)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_REQUEST_INVALID_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+/*}}}*/
+
+void bic_curl_multi_request_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_curl_multi_request_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (curl_multi_request_s *)nullptr;
+}/*}}}*/
+
+void bic_curl_multi_request_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  curl_multi_request_s *cmr_ptr = (curl_multi_request_s *)location_ptr->v_data_ptr;
+
+  if (cmr_ptr != nullptr)
+  {
+    cmr_ptr->clear(it);
+    cfree(cmr_ptr);
+  }
+}/*}}}*/
+
+bool bic_curl_multi_request_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_curl_multi_request_method_add_headers_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_array)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("add_headers#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  BIC_CURL_MULTI_REQUEST_CHECK_REFERENCE();
+
+  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+  curl_slist *headers = nullptr;
+
+  if (array_ptr->used != 0)
+  {
+    pointer *s_ptr = array_ptr->data;
+    pointer *s_ptr_end = s_ptr + array_ptr->used;
+
+    do {
+      location_s *item_location = it.get_location_value(*s_ptr);
+
+      // - ERROR -
+      if (item_location->v_type != c_bi_class_string)
+      {
+        curl_slist_free_all(headers);
+
+        exception_s::throw_exception(it,module.error_base + c_error_CURL_HTTP_HEADER_EXPECTED_STRING,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+
+      // - append header to list -
+      string_s *string_ptr = (string_s *)item_location->v_data_ptr;
+      headers = curl_slist_append(headers,string_ptr->data);
+
+    } while(++s_ptr < s_ptr_end);
+  }
+
+  curl_easy_setopt(curl_ptr,CURLOPT_HTTPHEADER,headers);
+
+  // - release old headers list -
+  if (curl_props->headers != nullptr)
+  {
+    curl_slist_free_all(curl_props->headers);
+  }
+
+  // - store headers list -
+  curl_props->headers = headers;
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_curl_multi_request_method_setopt_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  long long int curlopt;
+
+  if (!it.retrieve_integer(src_0_location,curlopt))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("setopt#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  BIC_CURL_MULTI_REQUEST_CHECK_REFERENCE();
+
+  switch (curlopt)
+  {
+  case CURLOPT_HTTPAUTH:
+    {
+      long long int value;
+
+      // - ERROR -
+      if (!it.retrieve_integer(src_1_location,value))
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_REQUEST_WRONG_OPTION_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(c_bi_class_integer);
+
+        return false;
+      }
+
+      curl_easy_setopt(curl_ptr,(CURLoption)curlopt,value);
+    }
+    break;
+  case CURLOPT_USERNAME:
+  case CURLOPT_PASSWORD:
+    {
+      // - ERROR -
+      if (src_1_location->v_type != c_bi_class_string)
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_REQUEST_WRONG_OPTION_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(c_bi_class_string);
+
+        return false;
+      }
+
+      string_s *string_ptr = (string_s *)src_1_location->v_data_ptr;
+      curl_easy_setopt(curl_ptr,(CURLoption)curlopt,string_ptr->data);
+    }
+    break;
+
+  // - ERROR -
+  default:
+    
+    exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_REQUEST_UNSUPPORTED_OPTION_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_curl_multi_request_method_cancel_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  BIC_CURL_MULTI_REQUEST_CHECK_REFERENCE();
+
+  // - remove curl easy from multi -
+  curl_multi_remove_handle(cm_ptr->curlm_ptr,curl_ptr);
+
+  // - release curl properties -
+  curl_props->clear(it);
+  cfree(curl_props);
+
+  // - remove curl from list -
+  curl_list.remove(cmr_ptr->index);
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_curl_multi_request_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("CurlMultiRequest"),"CurlMultiRequest");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_curl_multi_request_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("CurlMultiRequest");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
 // - class CURL_RESULT -
 built_in_class_s curl_result_class =
 {/*{{{*/
@@ -1231,6 +1522,8 @@ built_in_method_s curl_result_methods[] =
 
 built_in_variable_s curl_result_variables[] =
 {/*{{{*/
+
+  // - curl result info constants -
   { "INFO_EFFECTIVE_URL", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "INFO_RESPONSE_CODE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "INFO_TOTAL_TIME", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -1278,6 +1571,8 @@ built_in_variable_s curl_result_variables[] =
 
 void bic_curl_result_consts(location_array_s &const_locations)
 {/*{{{*/
+
+  // - curl result info constants -
   const_locations.push_blanks(43);
   location_s *cv_ptr = const_locations.data + (const_locations.used - 43);
 

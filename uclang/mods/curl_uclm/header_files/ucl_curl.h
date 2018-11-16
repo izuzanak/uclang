@@ -48,6 +48,7 @@ struct curl_props_s
   CURL *curl_ptr;
   curl_slist *headers;
   unsigned index;
+  long long int unique_id;
   bc_array_s write_buffer;
   read_buffer_s read_buffer;
   location_s *read_loc;
@@ -66,10 +67,24 @@ struct curl_multi_s
   location_s *callback_dlg;
   fd_flags_rb_tree_s poll_fds;
   pointer_list_s curl_list;
+  long long int unique_counter;
 
   static int socket_callback(CURL *easy,curl_socket_t socket,int what,void *userp,void *socketp);
 
   static inline long long int get_stamp();
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
+ * definition of structure curl_multi_request_s
+ */
+struct curl_multi_request_s
+{
+  location_s *curl_multi_loc;
+  unsigned index;
+  long long int unique_id;
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
@@ -198,6 +213,7 @@ inline void curl_multi_s::init()
   callback_dlg = nullptr;;
   poll_fds.init();
   curl_list.init();
+  unique_counter = 0;
 }/*}}}*/
 
 inline void curl_multi_s::clear(interpreter_thread_s &it)
@@ -240,6 +256,27 @@ inline void curl_multi_s::clear(interpreter_thread_s &it)
   }
 
   poll_fds.clear();
+
+  init();
+}/*}}}*/
+
+/*
+ * inline methods of structure curl_multi_request_s
+ */
+
+inline void curl_multi_request_s::init()
+{/*{{{*/
+  curl_multi_loc = nullptr;
+}/*}}}*/
+
+inline void curl_multi_request_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+  
+  // - release curl_multi location -
+  if (curl_multi_loc != nullptr)
+  {
+    it.release_location_ptr(curl_multi_loc);
+  }
 
   init();
 }/*}}}*/
