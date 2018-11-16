@@ -88,6 +88,11 @@ bool bic_http_conn_method_values_1(interpreter_thread_s &it,unsigned stack_base,
 bool bic_http_conn_method_suspend_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_resume_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_queue_response_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_http_conn_method_queue_basic_auth_fail_response_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_http_conn_method_basic_auth_username_password_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_http_conn_method_queue_digest_auth_fail_response_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_http_conn_method_digest_auth_username_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_http_conn_method_digest_auth_check_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_post_processor_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

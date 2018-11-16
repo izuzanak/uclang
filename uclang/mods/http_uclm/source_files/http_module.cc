@@ -663,8 +663,8 @@ built_in_class_s http_conn_class =
 {/*{{{*/
   "HttpConn",
   c_modifier_public | c_modifier_final,
-  15, http_conn_methods,
-  8 + 5, http_conn_variables,
+  20, http_conn_methods,
+  8 + 5 + 3, http_conn_variables,
   bic_http_conn_consts,
   bic_http_conn_init,
   bic_http_conn_clear,
@@ -744,6 +744,31 @@ built_in_method_s http_conn_methods[] =
     bic_http_conn_method_queue_response_2
   },
   {
+    "queue_basic_auth_fail_response#2",
+    c_modifier_public | c_modifier_final,
+    bic_http_conn_method_queue_basic_auth_fail_response_2
+  },
+  {
+    "basic_auth_username_password#0",
+    c_modifier_public | c_modifier_final,
+    bic_http_conn_method_basic_auth_username_password_0
+  },
+  {
+    "queue_digest_auth_fail_response#4",
+    c_modifier_public | c_modifier_final,
+    bic_http_conn_method_queue_digest_auth_fail_response_4
+  },
+  {
+    "digest_auth_username#0",
+    c_modifier_public | c_modifier_final,
+    bic_http_conn_method_digest_auth_username_0
+  },
+  {
+    "digest_auth_check#4",
+    c_modifier_public | c_modifier_final,
+    bic_http_conn_method_digest_auth_check_4
+  },
+  {
     "post_processor#2",
     c_modifier_public | c_modifier_final,
     bic_http_conn_method_post_processor_2
@@ -779,6 +804,11 @@ built_in_variable_s http_conn_variables[] =
   { "VALS_POSTDATA", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VALS_GET_ARGUMENT", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VALS_FOOTER", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - value result constants -
+  { "YES", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NO", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "INVALID_NONCE", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
 
@@ -837,6 +867,22 @@ void bic_http_conn_consts(location_array_s &const_locations)
     CREATE_HTTP_CONN_VALUES_TYPE_BIC_STATIC(MHD_POSTDATA_KIND);
     CREATE_HTTP_CONN_VALUES_TYPE_BIC_STATIC(MHD_GET_ARGUMENT_KIND);
     CREATE_HTTP_CONN_VALUES_TYPE_BIC_STATIC(MHD_FOOTER_KIND);
+  }
+
+  // - insert http conn value result constants -
+  {
+    const_locations.push_blanks(3);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 3);
+
+#define CREATE_HTTP_CONN_RESULT_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_HTTP_CONN_RESULT_BIC_STATIC(MHD_YES);
+    CREATE_HTTP_CONN_RESULT_BIC_STATIC(MHD_NO);
+    CREATE_HTTP_CONN_RESULT_BIC_STATIC(MHD_INVALID_NONCE);
   }
 }/*}}}*/
 
@@ -1084,6 +1130,203 @@ bool bic_http_conn_method_queue_response_2(interpreter_thread_s &it,unsigned sta
   }
 
   BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_http_conn_method_queue_basic_auth_fail_response_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+
+  if (src_0_location->v_type != c_bi_class_string ||
+      src_1_location->v_type != c_bi_class_http_resp)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("queue_basic_auth_fail_response#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  // - retrieve connection and response pointers -
+  http_conn_s *conn_ptr = (http_conn_s *)dst_location->v_data_ptr;
+  MHD_Response *resp_ptr = (MHD_Response *)src_1_location->v_data_ptr;
+
+  string_s *realm_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  // - queue response to be transmitted to client -
+  int result = MHD_queue_basic_auth_fail_response(conn_ptr->connection_ptr,realm_ptr->data,resp_ptr);
+
+  // - ERROR -
+  if (result != MHD_YES)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_HTTP_CONN_CANNOT_QUEUE_RESPONSE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_http_conn_method_basic_auth_username_password_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  // - retrieve connection pointer -
+  http_conn_s *conn_ptr = (http_conn_s *)dst_location->v_data_ptr;
+
+  char *user;
+  char *pass = nullptr;
+
+  user = MHD_basic_auth_get_username_password(conn_ptr->connection_ptr,&pass);
+
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+#define BIC_HTTP_CONN_METHOD_BASIC_AUTH_USERNAME_PASSWORD_ADD_VALUE(NAME) \
+{/*{{{*/\
+  if (NAME != nullptr)\
+  {\
+    string_s *string_ptr = it.get_new_string_ptr();\
+    string_ptr->set(strlen(NAME),NAME);\
+    \
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);\
+    array_ptr->push(new_location);\
+    \
+    free(NAME);\
+  }\
+  else\
+  {\
+    ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();\
+    array_ptr->push(it.blank_location);\
+  }\
+}/*}}}*/
+
+  BIC_HTTP_CONN_METHOD_BASIC_AUTH_USERNAME_PASSWORD_ADD_VALUE(user);
+  BIC_HTTP_CONN_METHOD_BASIC_AUTH_USERNAME_PASSWORD_ADD_VALUE(pass);
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_http_conn_method_queue_digest_auth_fail_response_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
+  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
+
+  long long int signal_stale;
+
+  if (src_0_location->v_type != c_bi_class_string ||
+      src_1_location->v_type != c_bi_class_string ||
+      src_2_location->v_type != c_bi_class_http_resp ||
+      !it.retrieve_integer(src_3_location,signal_stale))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("queue_digest_auth_fail_response#4");
+    new_exception->params.push(4);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+    new_exception->params.push(src_2_location->v_type);
+    new_exception->params.push(src_3_location->v_type);
+
+    return false;
+  }
+
+  // - retrieve connection and response pointers -
+  http_conn_s *conn_ptr = (http_conn_s *)dst_location->v_data_ptr;
+  MHD_Response *resp_ptr = (MHD_Response *)src_2_location->v_data_ptr;
+
+  string_s *realm_ptr = (string_s *)src_0_location->v_data_ptr;
+  string_s *opaque_ptr = (string_s *)src_1_location->v_data_ptr;
+
+  // - queue response to be transmitted to client -
+  int result = MHD_queue_auth_fail_response(
+      conn_ptr->connection_ptr,realm_ptr->data,opaque_ptr->data,resp_ptr,signal_stale);
+
+  // - ERROR -
+  if (result != MHD_YES)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_HTTP_CONN_CANNOT_QUEUE_RESPONSE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_http_conn_method_digest_auth_username_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  // - retrieve connection pointer -
+  http_conn_s *conn_ptr = (http_conn_s *)dst_location->v_data_ptr;
+
+  char *user_name = MHD_digest_auth_get_username(conn_ptr->connection_ptr);
+
+  if (user_name != nullptr)
+  {
+    string_s *string_ptr = it.get_new_string_ptr();
+    string_ptr->set(strlen(user_name),user_name);
+    free(user_name);
+
+    BIC_SET_RESULT_STRING(string_ptr);
+  }
+  else
+  {
+    BIC_SET_RESULT_BLANK();
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_http_conn_method_digest_auth_check_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
+  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
+
+  long long int nonce_timeout;
+
+  if (src_0_location->v_type != c_bi_class_string ||
+      src_1_location->v_type != c_bi_class_string ||
+      src_2_location->v_type != c_bi_class_string ||
+      !it.retrieve_integer(src_3_location,nonce_timeout))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("digest_auth_check#4");
+    new_exception->params.push(4);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+    new_exception->params.push(src_2_location->v_type);
+    new_exception->params.push(src_3_location->v_type);
+
+    return false;
+  }
+
+  // - retrieve connection and response pointers -
+  http_conn_s *conn_ptr = (http_conn_s *)dst_location->v_data_ptr;
+
+  string_s *realm_ptr = (string_s *)src_0_location->v_data_ptr;
+  string_s *user_ptr = (string_s *)src_1_location->v_data_ptr;
+  string_s *pass_ptr = (string_s *)src_2_location->v_data_ptr;
+
+  // - queue response to be transmitted to client -
+  long long int result = MHD_digest_auth_check(
+      conn_ptr->connection_ptr,realm_ptr->data,user_ptr->data,pass_ptr->data,nonce_timeout);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
