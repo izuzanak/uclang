@@ -190,7 +190,7 @@ built_in_class_s curl_class =
   "Curl",
   c_modifier_public | c_modifier_final,
   7, curl_methods,
-  3 + 10, curl_variables,
+  5 + 10, curl_variables,
   bic_curl_consts,
   bic_curl_init,
   bic_curl_clear,
@@ -250,9 +250,11 @@ built_in_variable_s curl_variables[] =
 {/*{{{*/
 
   // - curl option constants -
+  { "OPT_TIMEOUT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_TIMEOUT_MS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_HTTPAUTH", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPT_USERNAME", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPT_PASSWORD", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "OPT_HTTPAUTH", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
   // - curl authentication constants -
   { "AUTH_ANY", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -428,8 +430,8 @@ void bic_curl_consts(location_array_s &const_locations)
 
   // - curl option constants -
   {
-    const_locations.push_blanks(3);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 3);
+    const_locations.push_blanks(5);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 5);
 
   #define CREATE_CURL_OPTION_BIC_STATIC(VALUE)\
     cv_ptr->v_type = c_bi_class_integer;\
@@ -437,9 +439,11 @@ void bic_curl_consts(location_array_s &const_locations)
     cv_ptr->v_data_ptr = (long long int)VALUE;\
     cv_ptr++;
 
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_TIMEOUT);
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_TIMEOUT_MS);
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_HTTPAUTH);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_USERNAME);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_PASSWORD);
-    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_HTTPAUTH);
   }
 
   // - curl authentication constants -
@@ -1379,6 +1383,8 @@ bool bic_curl_multi_request_method_setopt_2(interpreter_thread_s &it,unsigned st
 
   switch (curlopt)
   {
+  case CURLOPT_TIMEOUT:
+  case CURLOPT_TIMEOUT_MS:
   case CURLOPT_HTTPAUTH:
     {
       long long int value;
