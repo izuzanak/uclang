@@ -1010,7 +1010,7 @@ bool bic_image_method_write_jpeg_file_2(interpreter_thread_s &it,unsigned stack_
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
   location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
 
-  long long int quality;
+  long long int quality = 0;
 
   if (src_0_location->v_type != c_bi_class_string ||
       !it.retrieve_integer(src_1_location,quality))
