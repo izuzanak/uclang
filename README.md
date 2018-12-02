@@ -9,7 +9,7 @@ Interpreted, dynamically typed, object-oriented programming language.
 * Strong object oriented approach.
   * Everything is an object. 
   * No global functions at all.
-  * Almost all actions are performed by execution of methods (sending messages).
+  * Almost all actions are performed by execution of methods.
 * Support for inheritance.
 * Support for exceptions.
 * Support for native threads, no GIL (Global Interpreter Lock).
@@ -45,8 +45,6 @@ Some of implemented modules are:
 [`http`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/http_uclm),
 [`websocket`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/websocket_uclm),
 [`curl`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/curl_uclm),
-[`ucf`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/ucf_uclm),
-[`uctcn`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/uctcn_uclm),
 [`ftp`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/ftp_uclm),
 [`ssh2`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/ssh2_uclm),
 [`gcrypt`](https://github.com/izuzanak/uclang/tree/master/uclang/mods/gcrypt_uclm),
