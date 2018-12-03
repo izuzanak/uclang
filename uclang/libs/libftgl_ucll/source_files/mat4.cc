@@ -94,13 +94,13 @@ mat4_multiply( mat4 *self, mat4 *other )
             (self->data[i*4+1] * other->data[1*4+1]) +
             (self->data[i*4+2] * other->data[2*4+1]) +
             (self->data[i*4+3] * other->data[3*4+1]) ;
-        
+
         m.data[i*4+2] =
             (self->data[i*4+0] * other->data[0*4+2]) +
             (self->data[i*4+1] * other->data[1*4+2]) +
             (self->data[i*4+2] * other->data[2*4+2]) +
             (self->data[i*4+3] * other->data[3*4+2]) ;
-        
+
         m.data[i*4+3] =
             (self->data[i*4+0] * other->data[0*4+3]) +
             (self->data[i*4+1] * other->data[1*4+3]) +
@@ -140,13 +140,13 @@ mat4_set_perspective( mat4 *self,
                       float znear, float zfar)
 {
     float h, w;
-   
+
     assert( self );
     assert( znear != zfar );
 
     h = tan(fovy / 360.0 * M_PI) * znear;
     w = h * aspect;
- 
+
     mat4_set_frustum( self, -w, w, -h, h, znear, zfar );
 }
 
@@ -156,7 +156,7 @@ mat4_set_frustum( mat4 *self,
                   float bottom, float top,
                   float znear,  float zfar )
 {
-    
+
     assert( self );
     assert( right  != left );
     assert( bottom != top  );
@@ -182,7 +182,7 @@ mat4_set_rotation( mat4 *self,
                    float x, float y, float z)
 {
     float c, s, norm;
-  
+
     assert( self );
 
     c = cos( M_PI*angle/180.0 );
@@ -236,7 +236,7 @@ mat4_rotate( mat4 *self,
              float x, float y, float z)
 {
     mat4 m;
-    
+
     assert( self );
 
     mat4_set_rotation( &m, angle, x, y, z);

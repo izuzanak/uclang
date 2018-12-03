@@ -94,21 +94,21 @@ vertex_attribute_parse( char *format )
     if( p != nullptr)
     {
         name = strndup(format, p-format);
-        if( *(++p) == '\0' ) 
+        if( *(++p) == '\0' )
         {
             free( name );
             return nullptr;
         }
         size = *p - '0';
 
-        if( *(++p) == '\0' ) 
+        if( *(++p) == '\0' )
         {
             free( name );
             return nullptr;
         }
         ctype = *p;
 
-        if( *(++p) != '\0' ) 
+        if( *(++p) != '\0' )
         {
             if( *p == 'n' )
             {

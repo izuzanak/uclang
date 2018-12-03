@@ -55,7 +55,7 @@ extern "C" {
 #ifdef __APPLE__
     /* strndup() was only added in OSX lion */
     char * strndup( const char *s1, int n);
-#elif defined(_WIN32) || defined(_WIN64) 
+#elif defined(_WIN32) || defined(_WIN64)
     /* does not exist on windows */
     char * strndup( const char *s1, int n);
 #	if !defined(_MSC_VER) || _MSC_VER < 1800

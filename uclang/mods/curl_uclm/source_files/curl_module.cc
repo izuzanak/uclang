@@ -1420,7 +1420,7 @@ bool bic_curl_multi_request_method_setopt_2(interpreter_thread_s &it,unsigned st
 
   // - ERROR -
   default:
-    
+
     exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_REQUEST_UNSUPPORTED_OPTION_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }

@@ -54,7 +54,7 @@ include "text-buffer.h"
 text_buffer_t *
 text_buffer_new( int depth )
 {
-    
+
     text_buffer_t *self = (text_buffer_t *) malloc (sizeof(text_buffer_t));
     self->buffer = vertex_buffer_new(
         "vertex:3f,tex_coord:2f,color:4f,ashift:1f,agamma:1f" );
@@ -76,7 +76,7 @@ text_buffer_new( int depth )
 // ----------------------------------------------------------------------------
 void
 text_buffer_clear( text_buffer_t * self )
-{    
+{
     assert( self );
 
     vertex_buffer_clear( self->buffer );
@@ -137,7 +137,7 @@ text_buffer_printf( text_buffer_t * self, vec2 *pen, ... )
         self->origin = *pen;
     }
 
-    va_start ( args, pen ); 
+    va_start ( args, pen );
     do {
         markup = va_arg( args, markup_t * );
         if( markup == nullptr )
@@ -231,7 +231,7 @@ text_buffer_add_wchar( text_buffer_t * self,
     texture_glyph_t *glyph;
     texture_glyph_t *black;
     float kerning = 0;
-   
+
     if( current == L'\n' )
     {
         pen->x = self->origin.x;
@@ -256,18 +256,18 @@ text_buffer_add_wchar( text_buffer_t * self,
 
     glyph = texture_font_get_glyph( font, current );
     black = texture_font_get_glyph( font, -1 );
-        
+
     if( glyph == nullptr )
     {
         return;
     }
-    
+
     if( previous && markup->font->kerning )
     {
         kerning = texture_glyph_get_kerning( glyph, previous );
     }
     pen->x += kerning;
-        
+
     // Background
     if( markup->background_color.alpha > 0 )
     {
@@ -301,7 +301,7 @@ text_buffer_add_wchar( text_buffer_t * self,
         vcount += 4;
         icount += 6;
     }
-        
+
     // Underline
     if( markup->underline )
     {
@@ -312,7 +312,7 @@ text_buffer_add_wchar( text_buffer_t * self,
         float x0 = ( pen->x - kerning );
         float y0 = (int)( pen->y + font->underline_position );
         float x1 = ( x0 + glyph->advance_x );
-        float y1 = (int)( y0 + font->underline_thickness ); 
+        float y1 = (int)( y0 + font->underline_thickness );
         float s0 = black->s0;
         float t0 = black->t0;
         float s1 = black->s1;
@@ -335,7 +335,7 @@ text_buffer_add_wchar( text_buffer_t * self,
         vcount += 4;
         icount += 6;
     }
-    
+
     // Overline
     if( markup->overline )
     {
@@ -346,7 +346,7 @@ text_buffer_add_wchar( text_buffer_t * self,
         float x0 = ( pen->x -kerning );
         float y0 = (int)( pen->y + (int)font->ascender );
         float x1 = ( x0 + glyph->advance_x );
-        float y1 = (int)( y0 + (int)font->underline_thickness ); 
+        float y1 = (int)( y0 + (int)font->underline_thickness );
         float s0 = black->s0;
         float t0 = black->t0;
         float s1 = black->s1;
@@ -368,7 +368,7 @@ text_buffer_add_wchar( text_buffer_t * self,
         vcount += 4;
         icount += 6;
     }
-        
+
     /* Strikethrough */
     if( markup->strikethrough )
     {
@@ -379,7 +379,7 @@ text_buffer_add_wchar( text_buffer_t * self,
         float x0  = ( pen->x -kerning );
         float y0  = (int)( pen->y + (int)font->ascender*.33);
         float x1  = ( x0 + glyph->advance_x );
-        float y1  = (int)( y0 + (int)font->underline_thickness ); 
+        float y1  = (int)( y0 + (int)font->underline_thickness );
         float s0 = black->s0;
         float t0 = black->t0;
         float s1 = black->s1;
@@ -432,7 +432,7 @@ text_buffer_add_wchar( text_buffer_t * self,
         indices[icount + 5] = vcount+3;
         vcount += 4;
         icount += 6;
-    
+
         vertex_buffer_push_back( buffer, vertices, vcount, indices, icount );
         pen->x += glyph->advance_x * (1.0 + markup->spacing);
     }

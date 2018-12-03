@@ -2634,7 +2634,7 @@ bool bic_gtk_dialog_method_get_filenames_0(interpreter_thread_s &it,unsigned sta
     string_s *string_ptr = it.get_new_string_ptr();
     string_ptr->set(strlen(filename),filename);
     g_free(filename);
-    
+
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
     array_ptr->push(new_location);
 

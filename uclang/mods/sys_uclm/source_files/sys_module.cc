@@ -888,18 +888,9 @@ built_in_method_s sys_methods[] =
 
 built_in_variable_s sys_variables[] =
 {/*{{{*/
-  {
-    "NAME",
-    c_modifier_public | c_modifier_static | c_modifier_static_const
-  },
-  {
-    "SEP",
-    c_modifier_public | c_modifier_static | c_modifier_static_const
-  },
-  {
-    "RAND_MAX",
-    c_modifier_public | c_modifier_static | c_modifier_static_const
-  },
+  { "NAME", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SEP", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "RAND_MAX", c_modifier_public | c_modifier_static | c_modifier_static_const },
 };/*}}}*/
 
 #define SYS_FILE_OPEN(CLASS_IDX,NAME) \
@@ -2414,7 +2405,7 @@ built_in_method_s file_methods[] =
 built_in_variable_s file_variables[] =
 {/*{{{*/
 
-  // - insert standard file stream constants -
+  // - standard file stream constants -
   { "stdin",  c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "stdout", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "stderr", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -2978,38 +2969,14 @@ built_in_method_s socket_methods[] =
 
 built_in_variable_s socket_variables[] =
 {/*{{{*/
-  {
-    "AF_UNIX",
-    c_modifier_public | c_modifier_static | c_modifier_static_const
-  },
-  {
-    "AF_FILE",
-    c_modifier_public | c_modifier_static | c_modifier_static_const
-  },
-  {
-    "AF_INET",
-    c_modifier_public | c_modifier_static | c_modifier_static_const
-  },
-  {
-    "SOCK_STREAM",
-    c_modifier_public | c_modifier_static | c_modifier_static_const
-  },
-  {
-    "SOCK_DGRAM",
-    c_modifier_public | c_modifier_static | c_modifier_static_const
-  },
-  {
-    "SOCK_RAW",
-    c_modifier_public | c_modifier_static | c_modifier_static_const
-  },
-  {
-    "SO_RCVTIMEO",
-    c_modifier_public | c_modifier_static | c_modifier_static_const
-  },
-  {
-    "SO_SNDTIMEO",
-    c_modifier_public | c_modifier_static | c_modifier_static_const
-  },
+  { "AF_UNIX", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AF_FILE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AF_INET", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SOCK_STREAM", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SOCK_DGRAM", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SOCK_RAW", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SO_RCVTIMEO", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SO_SNDTIMEO", c_modifier_public | c_modifier_static | c_modifier_static_const },
 };/*}}}*/
 
 void bic_socket_consts(location_array_s &const_locations)
@@ -6134,22 +6101,10 @@ built_in_method_s clock_methods[] =
 
 built_in_variable_s clock_variables[] =
 {/*{{{*/
-  {
-    "CLOCK_REALTIME",
-    c_modifier_public | c_modifier_static | c_modifier_static_const
-  },
-  {
-    "CLOCK_MONOTONIC",
-    c_modifier_public | c_modifier_static | c_modifier_static_const
-  },
-  {
-    "CLOCK_PROCESS_CPUTIME_ID",
-    c_modifier_public | c_modifier_static | c_modifier_static_const
-  },
-  {
-    "CLOCK_THREAD_CPUTIME_ID",
-    c_modifier_public | c_modifier_static | c_modifier_static_const
-  },
+  { "CLOCK_REALTIME", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "CLOCK_MONOTONIC", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "CLOCK_PROCESS_CPUTIME_ID", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "CLOCK_THREAD_CPUTIME_ID", c_modifier_public | c_modifier_static | c_modifier_static_const },
 };/*}}}*/
 
 void bic_clock_consts(location_array_s &const_locations)

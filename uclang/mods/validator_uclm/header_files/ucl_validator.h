@@ -120,7 +120,7 @@ inline void validator_s::clear(interpreter_thread_s &it)
     pointer *r_ptr = regex_list.data;
     pointer *r_ptr_end = r_ptr + regex_list.used;
     do {
-      
+
       // - if regular expression exist -
       if (*r_ptr != nullptr)
       {

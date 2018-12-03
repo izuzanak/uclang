@@ -1358,7 +1358,7 @@ bool bic_pack_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *
             if (ptr >= ds_ptr_end)
             {
               PD_CLEAR_DATA();
-              
+
               exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_STRING_NOT_TERMINATED_BY_ZERO,operands[c_source_pos_idx],(location_s *)it.blank_location);
               return false;
             }

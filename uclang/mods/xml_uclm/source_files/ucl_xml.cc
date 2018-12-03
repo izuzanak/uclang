@@ -223,7 +223,7 @@ void xml_node_s::add_node_to_node_dict(interpreter_thread_s &it,pointer_map_tree
   if (map.value)
   {
     location_s *value_location = (location_s *)map.value;
-    
+
     if (value_location->v_type == c_bi_class_array)
     {
       pointer_array_s *array_ptr = (pointer_array_s *)value_location->v_data_ptr;

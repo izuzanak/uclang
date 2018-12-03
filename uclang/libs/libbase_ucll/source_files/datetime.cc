@@ -63,7 +63,7 @@ void datetime_s::from_nanosec(long long unsigned a_nanosec)
     days -= *month_days++;
   }
 
-  // - calculate day - 
+  // - calculate day -
   day = days + 1;
 }/*}}}*/
 

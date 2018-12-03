@@ -271,7 +271,7 @@ inline void curl_multi_request_s::init()
 
 inline void curl_multi_request_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release curl_multi location -
   if (curl_multi_loc != nullptr)
   {

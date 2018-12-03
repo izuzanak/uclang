@@ -8680,7 +8680,7 @@ bool bic_delegate_method_Delegate_3(interpreter_thread_s &it,unsigned stack_base
 
       return false;
     }
-    
+
     src_0_reference->v_reference_cnt.atomic_inc();
     delegate_ptr->object_location = src_0_reference;
 

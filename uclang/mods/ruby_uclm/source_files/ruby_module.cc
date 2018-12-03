@@ -677,7 +677,7 @@ bool bic_ruby_value_member(interpreter_thread_s &it,uli *code,unsigned stack_bas
 
   // - create key object -
   VALUE rv_key = rb_str_tmp_new(name_ref.size);
-  
+
   // - construct instance value name -
   char *key_data = RSTRING_PTR(rv_key);
   key_data[0] = '@';

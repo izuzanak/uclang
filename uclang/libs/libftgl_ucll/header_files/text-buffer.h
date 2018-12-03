@@ -81,12 +81,12 @@ include "shader.h"
  */
 typedef struct {
     /**
-     * Vertex buffer 
+     * Vertex buffer
      */
     vertex_buffer_t *buffer;
 
     /**
-     * Font manager 
+     * Font manager
      */
     font_manager_t *manager;
 

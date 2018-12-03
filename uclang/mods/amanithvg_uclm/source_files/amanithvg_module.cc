@@ -311,7 +311,7 @@ bool bic_amanith_vg_context_method_drop_current_0(interpreter_thread_s &it,unsig
 
 bool bic_amanith_vg_context_method_current_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  
+
   // - ERROR -
   if (amanith_vg_c::context_loc == nullptr)
   {
@@ -505,7 +505,7 @@ bool bic_amanith_vg_surface_method_AmanithVgSurface_5(interpreter_thread_s &it,u
 
 bool bic_amanith_vg_surface_method_current_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  
+
   // - ERROR -
   if (amanith_vg_c::surface_loc == nullptr)
   {

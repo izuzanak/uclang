@@ -3289,7 +3289,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
 
 void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
 {/*{{{*/
-  
+
   // - initialize static constants array -
   static_const_array.init();
 

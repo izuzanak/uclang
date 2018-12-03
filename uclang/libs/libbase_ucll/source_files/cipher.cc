@@ -47,7 +47,7 @@ void cipher_s::create(unsigned a_length,const char *a_data)
     register unsigned char state_j = state[j];
     state[j] = state[i];
     state[i] = state_j;
-    
+
   } while(++i != 0);
 
   i = 0;

@@ -103,7 +103,7 @@ include "vector.h"
  *   </tr>
  *   <tr>
  *     <td> Generic attribute             </td>
- *     <td> "[0-15]g(n)?[1234][bBsSiIfd]" </td> 
+ *     <td> "[0-15]g(n)?[1234][bBsSiIfd]" </td>
  *     <td>                               </td>
  *   </tr>
  * </table>
@@ -113,47 +113,47 @@ include "vector.h"
  * <table>
  *   <tr>
  *     <th> Format   </th>
- *     <th> Type     </th> 
+ *     <th> Type     </th>
  *     <th> GL Type  </th>
  *   </tr>
  *   <tr>
  *     <td> "b"               </td>
- *     <td> Signed byte       </td> 
+ *     <td> Signed byte       </td>
  *     <td> GL_BYTE           </td>
  *   </tr>
  *   <tr>
  *     <td> "B"               </td>
- *     <td> Unsigned byte     </td> 
+ *     <td> Unsigned byte     </td>
  *     <td> GL_UNSIGNED_BYTE  </td>
  *   </tr>
  *   <tr>
  *     <td> "s"               </td>
- *     <td> Signed short      </td> 
+ *     <td> Signed short      </td>
  *     <td> GL_SHORT          </td>
  *   </tr>
  *   <tr>
  *     <td> "S"               </td>
- *     <td> Unsigned short    </td> 
+ *     <td> Unsigned short    </td>
  *     <td> GL_UNSIGNED_SHORT </td>
  *   </tr>
  *   <tr>
  *     <td> "i"               </td>
- *     <td> Signed int        </td> 
+ *     <td> Signed int        </td>
  *     <td> GL_INT            </td>
  *   </tr>
  *   <tr>
  *     <td> "I"               </td>
- *     <td> Unsigned int      </td> 
+ *     <td> Unsigned int      </td>
  *     <td> GL_UNSIGNED_INT   </td>
  *   </tr>
  *   <tr>
  *     <td> "f"               </td>
- *     <td> Float             </td> 
+ *     <td> Float             </td>
  *     <td> GL_FLOAT          </td>
  *   </tr>
  *   <tr>
  *     <td> "d"               </td>
- *     <td> Double            </td> 
+ *     <td> Double            </td>
  *     <td> GL_DOUBLE     T   </td>
  *   </tr>
  * </table>
@@ -197,7 +197,7 @@ include "vector.h"
 /**
  *  Generic vertex attribute.
  */
-typedef struct 
+typedef struct
 {
     /**
      *  atribute name
@@ -216,7 +216,7 @@ typedef struct
      */
     GLint size;
 
-    /** 
+    /**
      *  data type of each component in the array.
      *
      *  Symbolic constants GL_BYTE, GL_UNSIGNED_BYTE, GL_SHORT,

@@ -99,7 +99,7 @@ string_s *interpreter_thread_s_get_new_string_ptr(interpreter_thread_s *a_this)
 
 void interpreter_thread_s_release_location_ptr(interpreter_thread_s *a_this,location_s *location_ptr)
 {/*{{{*/
-  a_this->release_location_ptr(location_ptr);  
+  a_this->release_location_ptr(location_ptr);
 }/*}}}*/
 }
 

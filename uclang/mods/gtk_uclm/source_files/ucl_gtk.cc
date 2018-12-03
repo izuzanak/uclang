@@ -46,7 +46,7 @@ void gtk_c::dlg_data_release(gpointer delegate_data)
 
       // - release data location -
       gtk_c::it_ptr->release_location_ptr((location_s *)delegate.data_loc);
-      
+
       // - remove delegate from delegates list -
       gtk_c::delegates.remove(delegate_idx);
 
@@ -117,7 +117,7 @@ void gtk_c::callback_handler(gpointer delegate_idx,...)
         {
           // - retrieve type identification -
           int type_id = (int)g_type_get_qdata(pg_type,gtk_c::bi_class_quark);
-          
+
           switch (type_id)
           {
 

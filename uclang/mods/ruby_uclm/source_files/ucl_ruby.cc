@@ -330,7 +330,7 @@ location_s *ruby_c::ruby_value_value(interpreter_thread_s &it,VALUE rv_value,uli
       BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_ruby_symbol,value);
       return new_location;
     }/*}}}*/
-    
+
   case T_DATA:
   default:
     return nullptr;

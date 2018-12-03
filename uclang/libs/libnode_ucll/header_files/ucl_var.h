@@ -5324,7 +5324,7 @@ inline void UclVar::ARRAY(unsigned a_size,const UclVar *a_array)
   {
     const UclVar *ucv_ptr = a_array;
     const UclVar *ucv_ptr_end = ucv_ptr + a_size;
-    
+
     do {
       ucv_ptr->location_ptr->v_reference_cnt.atomic_inc();
       array_ptr->push((pointer)ucv_ptr->location_ptr);

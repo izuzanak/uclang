@@ -882,7 +882,7 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
         if (delegate_ptr->param_cnt != 1)
         {
           VALIDATE_STACKS_PUSH_PROP_KEY();
-          
+
           exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_PROPERTY_DELEGATE,source_pos,(location_s *)it.blank_location);
           return false;
         }
@@ -905,7 +905,7 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
           it.release_location_ptr(trg_location);
 
           VALIDATE_STACKS_PUSH_PROP_KEY();
-          
+
           exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_PROPERTY_DELEGATE_RETURN_VALUE,source_pos,(location_s *)it.blank_location);
           return false;
         }
@@ -917,7 +917,7 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
         if (result == 0)
         {
           VALIDATE_STACKS_PUSH_PROP_KEY();
-          
+
           exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_VALUE,source_pos,(location_s *)it.blank_location);
           return false;
         }
@@ -1102,7 +1102,7 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
       break;
       case prop_all_keys:
       {/*{{{*/
-        
+
         // - ERROR -
         if (a_value->v_type != c_rm_class_dict)
         {

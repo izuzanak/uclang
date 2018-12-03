@@ -392,7 +392,7 @@ bool bic_http_server_method_stop_0(interpreter_thread_s &it,unsigned stack_base,
 
   dst_location->v_data_ptr = (http_server_s *)nullptr;
 
-  BIC_SET_RESULT_BLANK(); 
+  BIC_SET_RESULT_BLANK();
 
   return true;
 }/*}}}*/

@@ -1100,7 +1100,7 @@ bool bic_prolog_term_method_value_0(interpreter_thread_s &it,unsigned stack_base
 
   term_t term = (term_t)dst_location->v_data_ptr;
 
-  location_s *location_ptr = 
+  location_s *location_ptr =
     prolog_c::prolog_term_value(it,term,operands[c_source_pos_idx]);
 
   // - ERROR -
@@ -1295,7 +1295,7 @@ bool bic_prolog_pred_method_call_1(interpreter_thread_s &it,unsigned stack_base,
   // - retrieve predicate terms -
   fid_t fid = PL_open_foreign_frame();
   term_t terms = 0;
-  
+
   BIC_PROLOG_RETRIEVE_TERMS_FROM_ARRAY(
     PL_close_foreign_frame(fid);
   );

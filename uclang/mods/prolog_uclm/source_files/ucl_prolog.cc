@@ -27,7 +27,7 @@ bool prolog_c::retrieve_atom(location_s *location_ptr,atom_t &atom)
     atom = PL_new_atom_nchars(string_ptr->size - 1,string_ptr->data);
     return true;
   }
-  
+
   return false;
 }/*}}}*/
 

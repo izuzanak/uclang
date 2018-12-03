@@ -776,7 +776,7 @@ bool bic_zip_index_method_open_0(interpreter_thread_s &it,unsigned stack_base,ul
 
   BIC_ZIP_ARCHIVE_RETRIEVE_FROM(zi_ptr->archive_loc);
 
-  zip_file_t *file = zip_fopen_index(za_ptr,zi_ptr->index,0); 
+  zip_file_t *file = zip_fopen_index(za_ptr,zi_ptr->index,0);
 
   // - ERROR -
   if (file == nullptr)
@@ -1017,7 +1017,7 @@ bool bic_zip_file_method_close_0(interpreter_thread_s &it,unsigned stack_base,ul
 bool bic_zip_file_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
- 
+
   BIC_ZIP_FILE_METHOD_READ_0();
 
   return true;

@@ -178,7 +178,7 @@ typedef struct
  * Render a specified item from the vertex buffer.
  *
  * @param  self   a vertex buffer
- * @param  index index of the item to be rendered 
+ * @param  index index of the item to be rendered
  */
   void
   vertex_buffer_render_item ( vertex_buffer_t *self,
@@ -308,7 +308,7 @@ typedef struct
  */
   int
   vertex_buffer_push_back( vertex_buffer_t * self,
-                           const void * vertices, const int vcount,  
+                           const void * vertices, const int vcount,
                            const GLuint * indices, const int icount );
 
 
@@ -325,7 +325,7 @@ typedef struct
   int
   vertex_buffer_insert( vertex_buffer_t * self,
                         int index,
-                        const void * vertices, const int vcount,  
+                        const void * vertices, const int vcount,
                         const GLuint * indices, const int icount );
 
 /**

@@ -151,7 +151,7 @@ inline void trdp_page_s::init()
 
 inline void trdp_page_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  
+
   // - release varibale descriptor names -
   if (var_descrs.used != 0)
   {

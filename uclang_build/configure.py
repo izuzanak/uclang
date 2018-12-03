@@ -16,6 +16,7 @@ c_packages = [
   ["ENCIPHER"      ,"true"      ,[]],
   ["MOD_BASE"      ,"true"      ,[]],
   ["MOD_SYS"       ,"true"      ,[]],
+  ["MOD_LINUX"     ,"true"      ,[]],
   ["MOD_INOTIFY"   ,"files"     ,["/usr/include/sys/inotify.h"]],
   ["MOD_READLINE"  ,"files"     ,["/usr/include/readline/readline.h"]],
   ["MOD_TIME"      ,"true"      ,[]],

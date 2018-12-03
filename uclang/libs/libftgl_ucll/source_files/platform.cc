@@ -56,7 +56,7 @@ char *strndup( const char *s1, int n)
 	copy[n] = 0;
 	return copy;
 };
-#endif 
+#endif
 
 
 // strndup() was only added in OSX lion

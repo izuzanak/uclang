@@ -876,7 +876,7 @@ int inst_object_member_select(inst_params_s *params)
       return c_run_return_code_EXCEPTION;
     }
   }
-  else 
+  else
   {
     // - acquire reference to object member -
     variable_record_s &variable_record = IT_INTERPRETER->variable_records[element_ri_ep.record_idx];
@@ -1059,7 +1059,7 @@ int inst_slice_range(inst_params_s *params)
   // - adjust stop value -
   if (stop < 0)
   {
-    if (length == LLONG_MAX)    
+    if (length == LLONG_MAX)
     {
       // - retrieve length -
       BIC_CALL_LENGTH(it,src_location,length,code[isr_source_pos],
@@ -1097,7 +1097,7 @@ int inst_slice_range(inst_params_s *params)
     long long old_start = start;
     if (old_start == LLONG_MAX)
     {
-      if (length == LLONG_MAX)    
+      if (length == LLONG_MAX)
       {
         // - retrieve length -
         BIC_CALL_LENGTH(it,src_location,length,code[isr_source_pos],

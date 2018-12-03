@@ -3408,7 +3408,7 @@ void script_parser_s::initialize_parser(source_s &a_source,string_s &a_mods_path
     string_array_s tmp_module_dirs;
     tmp_module_dirs.init();
     tmp_module_dirs.split(a_mods_path,1,":");
-    
+
     if (tmp_module_dirs.used != 0)
     {
       string_s *s_ptr = tmp_module_dirs.data;
@@ -9037,7 +9037,7 @@ void script_parser_s::generate_intermediate_code()
   {
     unsigned cd_idx = 0;
     do {
-      
+
       // - retrieve method record index -
       im_descr.method_idx = const_delegates[cd_idx].name_idx_ri;
 

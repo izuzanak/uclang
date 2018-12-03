@@ -152,7 +152,7 @@ pub struct UclAtomic
 {//{{{
 
     // - FIXME only for linux -
-    counter:c_int, 
+    counter:c_int,
 }//}}}
 
 #[repr(C)]

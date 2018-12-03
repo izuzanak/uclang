@@ -3325,7 +3325,7 @@ bool bic_gmp_rational_method_GmpRational_2(interpreter_thread_s &it,unsigned sta
 
         return true;
       }
-  
+
       if (src_1_location->v_type == c_bi_class_gmp_integer)
       {
         gmp_c::mpq_set_z_z(*mpq_ptr,

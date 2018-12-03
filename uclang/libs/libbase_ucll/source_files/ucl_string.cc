@@ -108,7 +108,7 @@ unsigned string_s::utf32_to_utf8(unsigned *a_src,char *a_trg,unsigned a_size)
       t_ptr += 2;
       continue;
     }
-    
+
     if (value <= 0xffff)
     {
       t_ptr[0] = 0xe0 |   value >> 12;
@@ -117,7 +117,7 @@ unsigned string_s::utf32_to_utf8(unsigned *a_src,char *a_trg,unsigned a_size)
       t_ptr += 3;
       continue;
     }
-    
+
     if (value <= 0x1fffff)
     {
       t_ptr[0] = 0xf0 |   value >> 18;
@@ -127,7 +127,7 @@ unsigned string_s::utf32_to_utf8(unsigned *a_src,char *a_trg,unsigned a_size)
       t_ptr += 4;
       continue;
     }
-    
+
     if (value <= 0x3ffffff)
     {
       t_ptr[0] = 0xf8 |   value >> 24;
@@ -138,7 +138,7 @@ unsigned string_s::utf32_to_utf8(unsigned *a_src,char *a_trg,unsigned a_size)
       t_ptr += 5;
       continue;
     }
-    
+
     if (value <= 0x7fffffff)
     {
       t_ptr[0] = 0xfc |   value >> 30;
@@ -150,7 +150,7 @@ unsigned string_s::utf32_to_utf8(unsigned *a_src,char *a_trg,unsigned a_size)
       t_ptr += 6;
       continue;
     }
-    
+
   } while(++s_ptr < s_ptr_end);
 
   return t_ptr - (unsigned char *)a_trg;
