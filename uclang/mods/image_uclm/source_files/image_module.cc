@@ -174,7 +174,7 @@ built_in_class_s image_class =
 {/*{{{*/
   "Image",
   c_modifier_public | c_modifier_final,
-  19, image_methods,
+  20, image_methods,
   3, image_variables,
   bic_image_consts,
   bic_image_init,
@@ -278,6 +278,11 @@ built_in_method_s image_methods[] =
     "io_copy#1",
     c_modifier_public | c_modifier_final,
     bic_image_method_io_copy_1
+  },
+  {
+    "io_apply#1",
+    c_modifier_public | c_modifier_final,
+    bic_image_method_io_apply_1
   },
   {
     "to_string#0",
@@ -468,6 +473,46 @@ built_in_variable_s image_variables[] =
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_image,img_ptr);\
   BIC_SET_RESULT(new_location);\
 \
+  return true;\
+}/*}}}*/
+
+#define BIC_IMAGE_METHOD_BLOCK_IO(NAME,FUNCTION) \
+{/*{{{*/\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+  \
+  if (src_0_location->v_type != c_bi_class_image)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
+    new_exception->params.push(1);\
+    new_exception->params.push(src_0_location->v_type);\
+    \
+    return false;\
+  }\
+  \
+  image_s *img_ptr = (image_s *)dst_location->v_data_ptr;\
+  image_s *src_ptr = (image_s *)src_0_location->v_data_ptr;\
+  \
+  /* - ERROR - */\
+  if (img_ptr->pixel_format != src_ptr->pixel_format ||\
+      img_ptr->width != src_ptr->width ||\
+      img_ptr->height != src_ptr->height ||\
+      img_ptr->pixel_format == c_image_pixel_format_blank)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_IMAGE_WRONG_PROPERTIES,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  /* - ERROR - */\
+  if (!img_ptr->FUNCTION(*src_ptr))\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_IMAGE_IMAGE_OPERATION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+  \
+  BIC_SET_RESULT_DESTINATION();\
+  \
   return true;\
 }/*}}}*/
 
@@ -1311,42 +1356,12 @@ bool bic_image_method_io_fill_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_image_method_io_copy_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+  BIC_IMAGE_METHOD_BLOCK_IO("io_copy#1",io_copy);
+}/*}}}*/
 
-  if (src_0_location->v_type != c_bi_class_image)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("io_copy#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
-  image_s *img_ptr = (image_s *)dst_location->v_data_ptr;
-  image_s *src_ptr = (image_s *)src_0_location->v_data_ptr;
-
-  // - ERROR -
-  if (img_ptr->pixel_format != src_ptr->pixel_format ||
-      img_ptr->width != src_ptr->width ||
-      img_ptr->height != src_ptr->height ||
-      img_ptr->pixel_format == c_image_pixel_format_blank)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_IMAGE_WRONG_PROPERTIES,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - ERROR -
-  if (!img_ptr->io_copy(*src_ptr))
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_IMAGE_IMAGE_OPERATION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  BIC_SET_RESULT_DESTINATION();
-
-  return true;
+bool bic_image_method_io_apply_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_IMAGE_METHOD_BLOCK_IO("io_apply#1",io_apply);
 }/*}}}*/
 
 bool bic_image_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)

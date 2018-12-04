@@ -80,6 +80,7 @@ struct image_s
   bool io_clear();
   bool io_fill(unsigned char *a_color);
   bool io_copy(image_s &a_src);
+  bool io_apply(image_s &a_src);
 };
 
 /*
@@ -214,7 +215,7 @@ inline bool image_s::create(unsigned a_width,unsigned a_height,unsigned a_pixel_
 
 inline bool image_s::create(image_s &a_img)
 {/*{{{*/
-   return create(a_img.width,a_img.height,a_img.pixel_format);
+  return create(a_img.width,a_img.height,a_img.pixel_format);
 }/*}}}*/
 
 #endif

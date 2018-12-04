@@ -24,14 +24,13 @@ bool image_s::operator==(image_s &a_second)
     return false;
   }
 
-  unsigned s_pixel_step = a_second.pixel_step;
   unsigned line_size = image_data_ptr->line_bytes;
   unsigned s_line_size = a_second.image_data_ptr->line_bytes;
   unsigned image_ls = width*pixel_step;
 
   unsigned char *ptr = image_data_ptr->data + y_pos*line_size + x_pos*pixel_step;
   unsigned char *ptr_end = ptr + (height - 1)*line_size + width*pixel_step;
-  unsigned char *s_ptr = a_second.image_data_ptr->data + a_second.y_pos*s_line_size + a_second.x_pos*s_pixel_step;
+  unsigned char *s_ptr = a_second.image_data_ptr->data + a_second.y_pos*s_line_size + a_second.x_pos*pixel_step;
 
   do {
     if (memcmp(ptr,s_ptr,image_ls) != 0) {
@@ -177,28 +176,74 @@ bool image_s::io_fill(unsigned char *a_color)
 
 bool image_s::io_copy(image_s &a_src)
 {/*{{{*/
-   if (pixel_format != a_src.pixel_format || width != a_src.width || height != a_src.height || pixel_format == c_image_pixel_format_blank)
-   {
-      return false;
-   }
+  if (pixel_format != a_src.pixel_format || width != a_src.width || height != a_src.height || pixel_format == c_image_pixel_format_blank)
+  {
+    return false;
+  }
 
-   unsigned s_pixel_step = a_src.pixel_step;
-   unsigned line_size = image_data_ptr->line_bytes;
-   unsigned s_line_size = a_src.image_data_ptr->line_bytes;
-   unsigned image_ls = width*pixel_step;
+  unsigned line_size = image_data_ptr->line_bytes;
+  unsigned s_line_size = a_src.image_data_ptr->line_bytes;
+  unsigned image_ls = width*pixel_step;
 
-   unsigned char *ptr = image_data_ptr->data + y_pos*line_size + x_pos*pixel_step;
-   unsigned char *ptr_end = ptr + (height - 1)*line_size + width*pixel_step;
-   unsigned char *s_ptr = a_src.image_data_ptr->data + a_src.y_pos*s_line_size + a_src.x_pos*s_pixel_step;
+  unsigned char *ptr = image_data_ptr->data + y_pos*line_size + x_pos*pixel_step;
+  unsigned char *ptr_end = ptr + (height - 1)*line_size + width*pixel_step;
+  unsigned char *s_ptr = a_src.image_data_ptr->data + a_src.y_pos*s_line_size + a_src.x_pos*pixel_step;
 
-   do {
-      memcpy(ptr,s_ptr,image_ls);
+  do {
+    memcpy(ptr,s_ptr,image_ls);
 
-      ptr += line_size;
-      s_ptr += s_line_size;
-   } while(ptr < ptr_end);
+    ptr += line_size;
+    s_ptr += s_line_size;
+  } while(ptr < ptr_end);
 
-   return true;
+  return true;
+}/*}}}*/
+
+bool image_s::io_apply(image_s &a_src)
+{/*{{{*/
+  if (pixel_format != a_src.pixel_format || width != a_src.width || height != a_src.height || pixel_format == c_image_pixel_format_blank)
+  {
+    return false;
+  }
+
+  unsigned line_size = image_data_ptr->line_bytes;
+  unsigned s_line_size = a_src.image_data_ptr->line_bytes;
+  unsigned image_ls = width*pixel_step;
+
+  unsigned char *ptr = image_data_ptr->data + y_pos*line_size + x_pos*pixel_step;
+  unsigned char *ptr_end = ptr + (height - 1)*line_size + width*pixel_step;
+  unsigned char *s_ptr = a_src.image_data_ptr->data + a_src.y_pos*s_line_size + a_src.x_pos*pixel_step;
+
+#define IMAGE_APPLY(OPERATION) \
+  {\
+    do {\
+      unsigned char *ptr_w_end = ptr + image_ls;\
+      do {\
+        OPERATION;\
+      } while(s_ptr += pixel_step,(ptr += pixel_step) < ptr_w_end);\
+      \
+      ptr += line_size - image_ls;\
+      s_ptr += s_line_size - image_ls;\
+    } while(ptr < ptr_end);\
+  }
+
+  switch (pixel_format)
+  {
+  case c_image_pixel_format_RGBA:
+    IMAGE_APPLY(
+        unsigned alpha = s_ptr[3];
+        unsigned r_alpha = 255 - alpha;
+
+        ptr[0] = (alpha*s_ptr[0] + r_alpha*ptr[0])/255;
+        ptr[1] = (alpha*s_ptr[1] + r_alpha*ptr[1])/255;
+        ptr[2] = (alpha*s_ptr[2] + r_alpha*ptr[2])/255;
+        );
+    break;
+  default:
+    return false;
+  }
+
+  return true;
 }/*}}}*/
 
 /*

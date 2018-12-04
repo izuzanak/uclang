@@ -69,6 +69,7 @@ bool bic_image_method_referred_4(interpreter_thread_s &it,unsigned stack_base,ul
 bool bic_image_method_io_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_io_fill_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_io_copy_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_image_method_io_apply_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
