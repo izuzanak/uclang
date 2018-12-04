@@ -10,10 +10,9 @@ include "script_parser.h"
 const unsigned max_number_string_length = 12;
 
 // - callers of parse action functions -
-const unsigned c_script_parse_action_cnt = 190;
+const unsigned c_script_parse_action_cnt = 191;
 bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,script_parser_s &_this) =
 {/*{{{*/
-
   pa_null,
   pa_null,
   pa_null,
@@ -259,6 +258,7 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
   pa_const_hex_char,
   pa_const_backslash_char,
 
+  pa_const_bin_int,
   pa_const_oct_int,
   pa_const_dec_int,
   pa_const_hex_int,
@@ -4323,6 +4323,49 @@ bool pa_const_backslash_char(string_s &source_string,script_parser_s &_this)
     *end_ptr = '\0';
     fprintf(stderr,"script_parser: parse_action: pa_const_backslash_char: %s\n",source_string.data + lse.terminal_start);
     *end_ptr = '\'';
+  );
+
+  return true;
+}/*}}}*/
+
+bool pa_const_bin_int(string_s &source_string,script_parser_s &_this)
+{/*{{{*/
+  expression_descr_s &ed = _this.code_descrs.last().expression_descr;
+  lli_rb_tree_s &const_ints = _this.const_ints;
+  lalr_stack_s &lalr_stack = _this.lalr_stack;
+
+  // *****
+
+  lalr_stack_element_s &lse = lalr_stack.last();
+  char *ptr = source_string.data + lse.terminal_start + 2;
+  char *ptr_end = source_string.data + lse.terminal_end;
+
+  long long int const_int = 0;
+  do {
+    const_int = (const_int << 1) | (*ptr == '1');
+  } while(++ptr < ptr_end);
+
+  // - get constant position in array -
+  unsigned ci_idx = const_ints.unique_insert(const_int);
+
+  // - store node position -
+  unsigned tmp_node_idx = ed.tmp_expression.used;
+
+  ed.tmp_expression.push(c_node_type_const_int);
+  ed.tmp_expression.push(ci_idx);
+
+  // - create expression info node -
+  ed.tmp_exp_info.push_blank();
+  idx_size_s &tmp_exp_info = ed.tmp_exp_info.last();
+
+  tmp_exp_info.ui_first = tmp_node_idx;
+  tmp_exp_info.ui_second = 2;
+
+  debug_message_4(
+    char tmp_char = *ptr_end;
+    *ptr_end = '\0';
+    fprintf(stderr,"script_parser: parse_action: pa_const_bin_int: %s\n",source_string.data + lse.terminal_start);
+    *ptr_end = tmp_char;
   );
 
   return true;

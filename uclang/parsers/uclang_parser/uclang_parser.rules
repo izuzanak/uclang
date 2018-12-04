@@ -27,6 +27,7 @@ terminals:
    hex_char_const {'\''.'\\'.'x'.(<09>+<af>+<AF>).(<09>+<af>+<AF>+e).'\''}
    backslash_char_const {'\''.'\\'.[abfnrtv\\?\'"].'\''}
 
+   bin_int_const {'0'.[bB].[01].[01]*}
    oct_int_const {'0'.<07>*}
    dec_int_const {<19>.d*}
    hex_int_const {'0'.[xX].(<09>+<af>+<AF>).(<09>+<af>+<AF>)*}
@@ -2415,6 +2416,16 @@ rules:
       end
    }
 
+   <A> -> bin_int_const ->>
+   {
+      if gen_parse_tree == 1 then
+         print("   node_"..node_idx.." [label = \"const: "..rule_body(0).."\"]");
+         table.insert(node_stack,node_idx);
+         node_idx = node_idx + 1;
+      else
+         print(table.concat(tabs,"").."const bin int: \""..rule_body(0).."\"");
+      end
+   }
    <A> -> oct_int_const ->>
    {
       if gen_parse_tree == 1 then

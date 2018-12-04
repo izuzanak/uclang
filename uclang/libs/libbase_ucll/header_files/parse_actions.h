@@ -125,6 +125,7 @@ bool pa_const_char(string_s &source_string,script_parser_s &_this);
 bool pa_const_octal_char(string_s &source_string,script_parser_s &_this);
 bool pa_const_hex_char(string_s &source_string,script_parser_s &_this);
 bool pa_const_backslash_char(string_s &source_string,script_parser_s &_this);
+bool pa_const_bin_int(string_s &source_string,script_parser_s &_this);
 bool pa_const_oct_int(string_s &source_string,script_parser_s &_this);
 bool pa_const_dec_int(string_s &source_string,script_parser_s &_this);
 bool pa_const_hex_int(string_s &source_string,script_parser_s &_this);
