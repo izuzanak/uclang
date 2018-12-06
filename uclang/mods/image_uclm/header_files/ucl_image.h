@@ -80,6 +80,7 @@ struct image_s
   bool io_clear();
   bool io_fill(unsigned char *a_color);
   bool io_copy(image_s &a_src);
+  bool io_convert(image_s &a_src);
   bool io_apply(image_s &a_src);
 };
 

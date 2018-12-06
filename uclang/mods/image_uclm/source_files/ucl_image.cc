@@ -134,7 +134,7 @@ bool image_s::io_fill(unsigned char *a_color)
   unsigned char *ptr_end = ptr + (height - 1)*line_size + width*pixel_step;
 
 #define IMAGE_FILL(OPERATION) \
-  {\
+  {/*{{{*/\
     do {\
       unsigned char *ptr_w_end = ptr + image_ls;\
       do {\
@@ -143,7 +143,7 @@ bool image_s::io_fill(unsigned char *a_color)
       \
       ptr += line_size - image_ls;\
     } while(ptr < ptr_end);\
-  }
+  }/*}}}*/
 
   switch (pixel_format)
   {
@@ -199,6 +199,102 @@ bool image_s::io_copy(image_s &a_src)
   return true;
 }/*}}}*/
 
+bool image_s::io_convert(image_s &a_src)
+{/*{{{*/
+  if (width != a_src.width || height != a_src.height ||
+      pixel_format == c_image_pixel_format_blank || a_src.pixel_format == c_image_pixel_format_blank)
+  {
+    return false;
+  }
+
+  unsigned line_size = image_data_ptr->line_bytes;
+  unsigned s_line_size = a_src.image_data_ptr->line_bytes;
+  unsigned image_ls = width*pixel_step;
+  unsigned s_image_ls = width*a_src.pixel_step;
+
+  unsigned char *ptr = image_data_ptr->data + y_pos*line_size + x_pos*pixel_step;
+  unsigned char *ptr_end = ptr + (height - 1)*line_size + width*pixel_step;
+  unsigned char *s_ptr = a_src.image_data_ptr->data + a_src.y_pos*s_line_size + a_src.x_pos*a_src.pixel_step;
+
+#define IMAGE_CONVERT(OPERATION) \
+  {/*{{{*/\
+    do {\
+      unsigned char *ptr_w_end = ptr + image_ls;\
+      do {\
+        OPERATION;\
+      } while(s_ptr += a_src.pixel_step,(ptr += pixel_step) < ptr_w_end);\
+      \
+      ptr += line_size - image_ls;\
+      s_ptr += s_line_size - s_image_ls;\
+    } while(ptr < ptr_end);\
+  }/*}}}*/
+
+  switch (pixel_format)
+  {
+  case c_image_pixel_format_GRAY8:
+    switch (a_src.pixel_format)
+    {
+    case c_image_pixel_format_RGB24:
+    case c_image_pixel_format_RGBA:
+      IMAGE_CONVERT(
+          ptr[0] = (5014710U*s_ptr[0] + 9848226U*s_ptr[1] + 1914280U*s_ptr[2]) >> 24;
+          );
+      break;
+    default:
+      return false;
+    }
+    break;
+  case c_image_pixel_format_RGB24:
+    switch (a_src.pixel_format)
+    {
+    case c_image_pixel_format_GRAY8:
+      IMAGE_CONVERT(
+          ptr[0] =
+          ptr[1] =
+          ptr[2] = s_ptr[0];
+          );
+      break;
+    case c_image_pixel_format_RGBA:
+      IMAGE_CONVERT(
+          ptr[0] = s_ptr[0];
+          ptr[1] = s_ptr[1];
+          ptr[2] = s_ptr[2];
+          );
+      break;
+    default:
+      return false;
+    }
+    break;
+  case c_image_pixel_format_RGBA:
+    switch (a_src.pixel_format)
+    {
+    case c_image_pixel_format_GRAY8:
+      IMAGE_CONVERT(
+          ptr[0] =
+          ptr[1] =
+          ptr[2] = s_ptr[0];
+          ptr[3] = 255;
+          );
+      break;
+    case c_image_pixel_format_RGB24:
+      IMAGE_CONVERT(
+          ptr[0] = s_ptr[0];
+          ptr[1] = s_ptr[1];
+          ptr[2] = s_ptr[2];
+          ptr[3] = 255;
+          );
+      break;
+    default:
+      return false;
+    }
+    break;
+  default:
+    return false;
+  }
+
+  return true;
+}/*}}}*/
+
 bool image_s::io_apply(image_s &a_src)
 {/*{{{*/
   if (pixel_format != a_src.pixel_format || width != a_src.width || height != a_src.height || pixel_format == c_image_pixel_format_blank)
@@ -215,7 +311,7 @@ bool image_s::io_apply(image_s &a_src)
   unsigned char *s_ptr = a_src.image_data_ptr->data + a_src.y_pos*s_line_size + a_src.x_pos*pixel_step;
 
 #define IMAGE_APPLY(OPERATION) \
-  {\
+  {/*{{{*/\
     do {\
       unsigned char *ptr_w_end = ptr + image_ls;\
       do {\
@@ -225,7 +321,7 @@ bool image_s::io_apply(image_s &a_src)
       ptr += line_size - image_ls;\
       s_ptr += s_line_size - image_ls;\
     } while(ptr < ptr_end);\
-  }
+  }/*}}}*/
 
   switch (pixel_format)
   {
