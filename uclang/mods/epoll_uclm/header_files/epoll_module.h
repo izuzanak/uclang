@@ -19,6 +19,13 @@ extern built_in_class_s *epoll_classes[];
 enum
 {
   c_error_EPOLL_CREATE_ERROR = 0,
+  c_error_EPOLL_WRONG_FDS_AND_EVENTS_ARRAY_SIZE,
+  c_error_EPOLL_WRONG_FD_OR_EVENTS_VALUE_TYPE,
+  c_error_EPOLL_CONTROL_ADD_ERROR,
+  c_error_EPOLL_CONTROL_MODIFY_ERROR,
+  c_error_EPOLL_CONTROL_DELETE_ERROR,
+  c_error_EPOLL_WAIT_INVALID_MAX_EVENT_COUNT,
+  c_error_EPOLL_WAIT_ERROR,
 };
 
 // - EPOLL error strings -
@@ -41,6 +48,8 @@ void bic_epoll_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_epoll_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_epoll_method_Epoll_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_epoll_method_update_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_epoll_method_wait_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_epoll_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_epoll_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

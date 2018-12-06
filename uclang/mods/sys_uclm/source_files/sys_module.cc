@@ -175,7 +175,7 @@ const char *sys_error_strings[] =
 
 #ifdef ENABLE_CLASS_POLL
   "error_POLL_WRONG_FDS_AND_EVENTS_ARRAY_SIZE",
-  "error_POLL_WRONG_FD_OR_EVENT_VALUE_TYPE",
+  "error_POLL_WRONG_FD_OR_EVENTS_VALUE_TYPE",
   "error_POLL_POLL_ERROR",
 #endif
 
@@ -647,11 +647,11 @@ bool sys_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nWrong size of poll file descriptors and events array\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_POLL_WRONG_FD_OR_EVENT_VALUE_TYPE:
+  case c_error_POLL_WRONG_FD_OR_EVENTS_VALUE_TYPE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nWrong type of file descriptor or event value\n");
+    fprintf(stderr,"\nWrong type of file descriptor or events value\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_POLL_POLL_ERROR:
@@ -5552,7 +5552,7 @@ bool bic_poll_method_Poll_1(interpreter_thread_s &it,unsigned stack_base,uli *op
       {
         cfree(fds);
 
-        exception_s::throw_exception(it,module.error_base + c_error_POLL_WRONG_FD_OR_EVENT_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        exception_s::throw_exception(it,module.error_base + c_error_POLL_WRONG_FD_OR_EVENTS_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
 
