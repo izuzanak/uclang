@@ -9,6 +9,7 @@ include "ucl_linux.h"
 // - LINUX indexes of built in classes -
 extern unsigned c_bi_class_linux;
 extern unsigned c_bi_class_fd;
+extern unsigned c_bi_class_mmap;
 
 // - LINUX module -
 extern built_in_module_s module;
@@ -19,16 +20,25 @@ extern built_in_class_s *linux_classes[];
 // - LINUX error identifiers -
 enum
 {
-  c_error_FD_OPEN_ERROR = 0,
+  c_error_LINUX_SYSCONF_ERROR = 0,
+  c_error_FD_OPEN_ERROR,
   c_error_FD_CREATE_ERROR,
-  c_error_FD_WRITE_INVALID_DATA_OFFSET,
+  c_error_FD_CLOSE_ERROR,
+  c_error_FD_WRITE_INVALID_SOURCE_OFFSET,
   c_error_FD_WRITE_ERROR,
   c_error_FD_READ_INVALID_BYTE_COUNT,
   c_error_FD_READ_ERROR,
   c_error_FD_SYNC_ERROR,
+  c_error_FD_ADVISE_ERROR,
   c_error_FD_SEEK_ERROR,
-  c_error_FD_CLOSE_ERROR,
   c_error_FD_NOT_OPENED,
+  c_error_MMAP_INVALID_OFFSET,
+  c_error_MMAP_INVALID_LENGTH,
+  c_error_MMAP_CREATE_ERROR,
+  c_error_MMAP_REMAP_ERROR,
+  c_error_MMAP_PROTECT_ERROR,
+  c_error_MMAP_SYNC_ERROR,
+  c_error_MMAP_ADVISE_ERROR,
 };
 
 // - LINUX error strings -
@@ -50,6 +60,7 @@ void bic_linux_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_linux_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_linux_method_sync_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_linux_method_sysconf_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_linux_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_linux_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -67,19 +78,43 @@ bool bic_fd_method_Fd_2(interpreter_thread_s &it,unsigned stack_base,uli *operan
 bool bic_fd_method_open_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_creat_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_openat_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fd_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_write_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_write_all_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_pwrite_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_pwrite_all_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_pread_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_fd_method_fsync_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_fd_method_fdatasync_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_fd_method_lseek_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_fd_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fd_method_sync_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fd_method_datasync_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fd_method_advise_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fd_method_seek_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fd_method_mmap_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class MMAP -
+extern built_in_variable_s mmap_variables[];
+extern built_in_method_s mmap_methods[];
+extern built_in_class_s mmap_class;
+
+void bic_mmap_consts(location_array_s &const_locations);
+void bic_mmap_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_mmap_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_mmap_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mmap_method_remap_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mmap_method_protect_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mmap_method_sync_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mmap_method_advise_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mmap_method_write_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mmap_method_read_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mmap_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mmap_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mmap_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class AIO -
 
 #endif
 
