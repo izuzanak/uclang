@@ -577,10 +577,10 @@ void bic_gtk_consts(location_array_s &const_locations)
 {/*{{{*/\
   if ((int)TYPE_ID != 0)\
     g_type_set_qdata(VALUE,gtk_c::bi_class_quark,(gpointer)TYPE_ID);\
-  \
+\
   if (VALUE < gtk_c::gtk_type_min) gtk_c::gtk_type_min = VALUE;\
   if (VALUE > gtk_c::gtk_type_max) gtk_c::gtk_type_max = VALUE;\
-  \
+\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
   cv_ptr->v_data_ptr = (long long int)VALUE;\
@@ -1049,18 +1049,18 @@ built_in_variable_s gtk_g_object_variables[] =
 #define BIC_GTK_G_OBJECT_CREATE_FROM_OBJECT(TYPE) \
 {/*{{{*/\
   gpointer g_obj = (gpointer)src_0_location->v_data_ptr;\
-  \
+\
   /* - ERROR - */\
   if (!GTK_IS_ ## TYPE(g_obj))\
   {\
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GTK_G_OBJECT_INCOMPATIBLE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(GTK_TYPE_ ## TYPE);\
-    \
+\
     return false;\
   }\
-  \
+\
   g_object_ref(g_obj);\
-  \
+\
   dst_location->v_data_ptr = (gpointer)g_obj;\
 }/*}}}*/
 

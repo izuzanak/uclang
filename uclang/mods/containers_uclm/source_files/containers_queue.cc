@@ -155,14 +155,14 @@ built_in_variable_s queue_variables[] =
     {\
       pointer_queue_s &fq = *((pointer_queue_s *)dst_location->v_data_ptr);\
       pointer_queue_s &sq = *((pointer_queue_s *)src_0_location->v_data_ptr);\
-      \
+\
       if (fq.used != sq.used)\
       {\
         result = fq.used < sq.used ? -1 : 1;\
       }\
       else {\
         result = 0;\
-        \
+\
         if (fq.used != 0)\
         {\
           pointer *f_ptr = fq.data + fq.begin;\
@@ -170,33 +170,33 @@ built_in_variable_s queue_variables[] =
           pointer *f_ptr_end;\
           pointer *s_ptr = sq.data + sq.begin;\
           pointer *s_ptr_break = sq.data + sq.size;\
-          \
+\
           if (fq.begin + fq.used > fq.size) {\
             f_ptr_end = fq.data + (fq.begin + fq.used - fq.size);\
           }\
           else {\
             f_ptr_end = f_ptr + fq.used;\
           }\
-          \
+\
           do {\
-            \
+\
             BIC_CALL_COMPARE(it,*f_ptr,*s_ptr,SOURCE_POS,return false);\
             if (result != 0) {\
               break;\
             }\
-            \
+\
             if (++f_ptr == f_ptr_end) {\
               break;\
             }\
-            \
+\
             if (f_ptr >= f_ptr_break) {\
               f_ptr = fq.data;\
             }\
-            \
+\
             if (++s_ptr >= s_ptr_break) {\
               s_ptr = sq.data;\
             }\
-            \
+\
           } while(true);\
         }\
       }\
@@ -209,17 +209,17 @@ built_in_variable_s queue_variables[] =
 #define BIC_QUEUE_APPEND_ARRAY(SRC_LOCATION,TARGET_PTR) \
   {/*{{{*/\
     pointer_array_s *source_ptr = (pointer_array_s *)SRC_LOCATION->v_data_ptr;\
-    \
+\
     if (source_ptr->used != 0)\
     {\
       pointer *ptr = source_ptr->data;\
       pointer *ptr_end = ptr + source_ptr->used;\
-      \
+\
       do\
       {\
         location_s *item_location = it.get_location_value(*ptr);\
         item_location->v_reference_cnt.atomic_inc();\
-        \
+\
         /* - push item location to queue - */\
         TARGET_PTR->insert(item_location);\
       }\
@@ -230,12 +230,12 @@ built_in_variable_s queue_variables[] =
 #define BIC_QUEUE_APPEND_QUEUE(SRC_LOCATION,TARGET_PTR) \
   {/*{{{*/\
     pointer_queue_s *source_ptr = (pointer_queue_s *)SRC_LOCATION->v_data_ptr;\
-    \
+\
     if (source_ptr->used != 0)\
     {\
       unsigned fir_cnt;\
       unsigned sec_cnt;\
-      \
+\
       if (source_ptr->begin + source_ptr->used > source_ptr->size)\
       {\
         sec_cnt = source_ptr->begin + source_ptr->used - source_ptr->size;\
@@ -246,30 +246,30 @@ built_in_variable_s queue_variables[] =
         fir_cnt = source_ptr->used;\
         sec_cnt = 0;\
       }\
-      \
+\
       pointer *e_ptr = source_ptr->data + source_ptr->begin;\
       pointer *e_ptr_end = e_ptr + fir_cnt;\
-      \
+\
       do\
       {\
         location_s *item_location = it.get_location_value(*e_ptr);\
         item_location->v_reference_cnt.atomic_inc();\
-        \
+\
         /* - push item location to queue - */\
         TARGET_PTR->insert(item_location);\
       }\
       while(++e_ptr < e_ptr_end);\
-      \
+\
       if (sec_cnt != 0)\
       {\
         e_ptr = source_ptr->data;\
         e_ptr_end = e_ptr + sec_cnt;\
-        \
+\
         do\
         {\
           location_s *item_location = it.get_location_value(*e_ptr);\
           item_location->v_reference_cnt.atomic_inc();\
-          \
+\
           /* - push item location to queue - */\
           TARGET_PTR->insert(item_location);\
         }\
@@ -282,43 +282,43 @@ built_in_variable_s queue_variables[] =
   {/*{{{*/\
     item_location->v_reference_cnt.atomic_inc();\
     it.release_location_ptr(item_reference);\
-    \
+\
     /* - append item location to queue - */\
     TARGET_PTR->insert(item_location);\
   }/*}}}*/
 
 #define BIC_QUEUE_APPEND_ITERABLE(SRC_LOCATION,TARGET_PTR) \
   {/*{{{*/\
-    \
+\
     /* - retrieve iterable type - */\
     unsigned iter_type = it.get_iterable_type(SRC_LOCATION);\
-    \
+\
     /* - ERROR - */\
     if (iter_type == c_idx_not_exist)\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_OBJECT_OF_CLASS_IS_NOT_ITERABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       new_exception->params.push(SRC_LOCATION->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     if (iter_type == c_iter_first_idx_next_idx_item)\
     {\
       long long int index;\
       location_s *item_reference;\
       location_s *item_location;\
-      \
+\
       /* - retrieve first index - */\
       BIC_CALL_FIRST_IDX(it,SRC_LOCATION,index,operands[c_source_pos_idx],return false;);\
-      \
+\
       while (index != c_idx_not_exist)\
       {\
         /* - retrieve item location - */\
         BIC_CALL_ITEM(it,SRC_LOCATION,index,item_reference,operands[c_source_pos_idx],return false;);\
         item_location = it.get_location_value(item_reference);\
-        \
+\
         BIC_QUEUE_APPEND_ITERABLE_BODY(TARGET_PTR);\
-        \
+\
         /* - retrieve next index - */\
         BIC_CALL_NEXT_IDX(it,SRC_LOCATION,index,index,operands[c_source_pos_idx],return false;);\
       }\
@@ -327,22 +327,22 @@ built_in_variable_s queue_variables[] =
     {\
       location_s *item_reference;\
       location_s *item_location;\
-      \
+\
       do\
       {\
-        \
+\
         /* - retrieve next item location - */\
         BIC_CALL_NEXT_ITEM(it,SRC_LOCATION,item_reference,operands[c_source_pos_idx],return false;);\
         item_location = it.get_location_value(item_reference);\
-        \
+\
         if (item_location->v_type == c_bi_class_blank)\
         {\
           it.release_location_ptr(item_reference);\
           break;\
         }\
-        \
+\
         BIC_QUEUE_APPEND_ITERABLE_BODY(TARGET_PTR);\
-        \
+\
       }\
       while(true);\
     }\
@@ -355,14 +355,14 @@ built_in_variable_s queue_variables[] =
 #define BIC_QUEUE_CHECK_INDEX() \
   /*{{{*/\
   pointer_queue_s *queue_ptr = (pointer_queue_s *)dst_location->v_data_ptr;\
-  \
+\
   /* - ERROR - */\
-  \
+\
   unsigned req_used = ((index + queue_ptr->size) - queue_ptr->begin) % queue_ptr->size;\
   if (index < 0 || req_used >= queue_ptr->used) {\
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_QUEUE_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(index);\
-    \
+\
     return false;\
   }\
   /*}}}*/

@@ -555,12 +555,12 @@ state_55_label:
 {/*{{{*/\
   string_s *string_ptr = it.get_new_string_ptr();\
   string_ptr->set(strlen(FILE_NAME),FILE_NAME);\
-  \
+\
   location_s *new_location = it.get_new_location_ptr();\
   new_location->v_type = c_bi_class_string;\
   new_location->v_reference_cnt.atomic_set(0);\
   new_location->v_data_ptr = string_ptr;\
-  \
+\
   exception_s *new_exception = exception_s::throw_exception(it,c_error_TODO_EXCEPTION,source_pos,new_location);\
   new_exception->params.push(LINE);\
 }/*}}}*/
@@ -568,37 +568,37 @@ state_55_label:
 #define VALIDATE_PAIR_REFERENCE(VALUE,PROPS_REF,ERR_CODE) \
 {/*{{{*/\
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)schema->v_data_ptr;\
-  \
+\
   tree_ptr->it_ptr = it_ptr;\
   tree_ptr->source_pos = source_pos;\
-  \
+\
   pointer_map_s search_map = {(pointer)PROPS_REF,nullptr};\
   unsigned index = tree_ptr->get_idx(search_map);\
-  \
+\
   if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)\
   {\
     (PROPS_REF)->v_reference_cnt.atomic_inc();\
     ((pointer_array_s *)props_stack->v_data_ptr)->push(PROPS_REF);\
-    \
+\
     ERR_CODE;\
   }\
-  \
+\
   /* - ERROR - */\
   if (index == c_idx_not_exist)\
   {\
     (PROPS_REF)->v_reference_cnt.atomic_inc();\
     ((pointer_array_s *)props_stack->v_data_ptr)->push(PROPS_REF);\
-    \
+\
     exception_s::throw_exception(it,error_base + c_error_VALIDATOR_ENTRY_NOT_FOUND,source_pos,PROPS_REF);\
-    \
+\
     ERR_CODE;\
   }\
-  \
+\
   if (!validate_pair(VALUE,it.get_location_value(tree_ptr->data[index].object.value)))\
   {\
     (PROPS_REF)->v_reference_cnt.atomic_inc();\
     ((pointer_array_s *)props_stack->v_data_ptr)->push(PROPS_REF);\
-    \
+\
     ERR_CODE;\
   }\
 }/*}}}*/
@@ -959,7 +959,7 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
   item_key->v_reference_cnt.atomic_add(2);\
   ((pointer_array_s *)value_stack->v_data_ptr)->push(item_key);\
   ((pointer_array_s *)props_stack->v_data_ptr)->push(item_key);\
-  \
+\
   VALIDATE_STACKS_PUSH_PROP_KEY();\
 /*}}}*/
 

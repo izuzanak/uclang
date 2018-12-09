@@ -271,115 +271,109 @@ built_in_variable_s curl_variables[] =
 
 #define BIC_CURL_GET_DELETE_HEAD_METHODS(NAME,OPTIONS) \
 {/*{{{*/\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  \
-  if (src_0_location->v_type != c_bi_class_string)\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_curl,NAME);\
-    new_exception->params.push(1);\
-    new_exception->params.push(src_0_location->v_type);\
-    \
-    return false;\
-  }\
-  \
+@begin ucl_params
+<
+address:c_bi_class_string
+>
+class c_bi_class_curl
+method NAME
+static_method
+macro
+; @end\
+\
   string_s *address_ptr = (string_s *)src_0_location->v_data_ptr;\
-  \
+\
   /* - create curl session - */\
   CURL *curl_ptr = curl_easy_init();\
-  \
+\
   /* - ERROR - */\
   if (curl_ptr == nullptr)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_CURL_CANNOT_CREATE_SESSION,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-  \
+\
   /* - create write buffer - */\
   bc_array_s write_buffer;\
   write_buffer.init();\
-  \
+\
   curl_easy_setopt(curl_ptr,CURLOPT_URL,address_ptr->data);\
   curl_easy_setopt(curl_ptr,CURLOPT_WRITEFUNCTION,cb_write_buffer);\
   curl_easy_setopt(curl_ptr,CURLOPT_WRITEDATA,&write_buffer);\
   OPTIONS;\
   curl_easy_setopt(curl_ptr,CURLOPT_PRIVATE,nullptr);\
-  \
+\
   /* - ERROR - */\
   if (curl_easy_perform(curl_ptr) != CURLE_OK)\
   {\
     write_buffer.clear();\
     curl_easy_cleanup(curl_ptr);\
-    \
+\
     exception_s::throw_exception(it,module.error_base + c_error_CURL_ERROR_WHILE_PERFORMING_HTTP_REQUEST,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-  \
+\
   /* - push terminating character - */\
   write_buffer.push('\0');\
-  \
+\
   /* - create result string - */\
   string_s *res_data_ptr = it.get_new_string_ptr();\
-  \
+\
   res_data_ptr->size = write_buffer.used;\
   res_data_ptr->data = write_buffer.data;\
-  \
+\
   /* - create curl_result object - */\
   curl_result_s *res_ptr = (curl_result_s *)cmalloc(sizeof(curl_result_s));\
   res_ptr->init();\
-  \
+\
   /* - set curl pointer - */\
   res_ptr->curl_ptr = curl_ptr;\
-  \
+\
   /* - set result data location - */\
   BIC_CREATE_NEW_LOCATION(data_location,c_bi_class_string,res_data_ptr);\
   res_ptr->data_loc = data_location;\
-  \
+\
   /* - set result location - */\
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_curl_result,res_ptr);\
   BIC_SET_RESULT(new_location);\
-  \
+\
   return true;\
 }/*}}}*/
 
 #define BIC_CURL_PUT_POST_METHODS(NAME,OPTIONS) \
 {/*{{{*/\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);\
-  \
-  if (src_0_location->v_type != c_bi_class_string ||\
-      src_1_location->v_type != c_bi_class_string)\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_curl,NAME);\
-    new_exception->params.push(2);\
-    new_exception->params.push(src_0_location->v_type);\
-    new_exception->params.push(src_1_location->v_type);\
-    \
-    return false;\
-  }\
-  \
+@begin ucl_params
+<
+address:c_bi_class_string
+data:c_bi_class_string
+>
+class c_bi_class_curl
+method NAME
+static_method
+macro
+; @end\
+\
   string_s *address_ptr = (string_s *)src_0_location->v_data_ptr;\
   string_s *data_ptr = (string_s *)src_1_location->v_data_ptr;\
-  \
+\
   /* - create curl session - */\
   CURL *curl_ptr = curl_easy_init();\
-  \
+\
   /* - ERROR - */\
   if (curl_ptr == nullptr)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_CURL_CANNOT_CREATE_SESSION,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-  \
+\
   /* - create read buffer - */\
   read_buffer_s read_buffer;\
   read_buffer.init(*data_ptr);\
-  \
+\
   /* - create write buffer - */\
   bc_array_s write_buffer;\
   write_buffer.init();\
-  \
+\
   curl_easy_setopt(curl_ptr,CURLOPT_URL,address_ptr->data);\
   curl_easy_setopt(curl_ptr,CURLOPT_READFUNCTION,cb_read_buffer);\
   curl_easy_setopt(curl_ptr,CURLOPT_READDATA,&read_buffer);\
@@ -387,41 +381,41 @@ built_in_variable_s curl_variables[] =
   curl_easy_setopt(curl_ptr,CURLOPT_WRITEDATA,&write_buffer);\
   OPTIONS;\
   curl_easy_setopt(curl_ptr,CURLOPT_PRIVATE,nullptr);\
-  \
+\
   /* - ERROR - */\
   if (curl_easy_perform(curl_ptr) != CURLE_OK)\
   {\
     write_buffer.clear();\
     curl_easy_cleanup(curl_ptr);\
-    \
+\
     exception_s::throw_exception(it,module.error_base + c_error_CURL_ERROR_WHILE_PERFORMING_HTTP_REQUEST,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-  \
+\
   /* - push terminating character - */\
   write_buffer.push('\0');\
-  \
+\
   /* - create result string - */\
   string_s *res_data_ptr = it.get_new_string_ptr();\
-  \
+\
   res_data_ptr->size = write_buffer.used;\
   res_data_ptr->data = write_buffer.data;\
-  \
+\
   /* - create curl_result object - */\
   curl_result_s *res_ptr = (curl_result_s *)cmalloc(sizeof(curl_result_s));\
   res_ptr->init();\
-  \
+\
   /* - set curl pointer - */\
   res_ptr->curl_ptr = curl_ptr;\
-  \
+\
   /* - set result data location - */\
   BIC_CREATE_NEW_LOCATION(data_location,c_bi_class_string,res_data_ptr);\
   res_ptr->data_loc = data_location;\
-  \
+\
   /* - set result location - */\
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_curl_result,res_ptr);\
   BIC_SET_RESULT(new_location);\
-  \
+\
   return true;\
 }/*}}}*/
 
@@ -632,132 +626,118 @@ built_in_variable_s curl_multi_variables[] =
 
 #define BIC_CURL_MULTI_GET_DELETE_HEAD_METHODS(NAME,OPTIONS) \
 {/*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);\
-  \
-  if (src_0_location->v_type != c_bi_class_string)\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-    new_exception->params.push(2);\
-    new_exception->params.push(src_0_location->v_type);\
-    new_exception->params.push(src_1_location->v_type);\
-    \
-    return false;\
-  }\
-  \
+@begin ucl_params
+<
+address:c_bi_class_string
+user_data:ignore
+>
+method NAME
+macro
+; @end\
+\
   curl_multi_s *cm_ptr = (curl_multi_s *)dst_location->v_data_ptr;\
   string_s *address_ptr = (string_s *)src_0_location->v_data_ptr;\
-  \
+\
   /* - create curl session - */\
   CURL *curl_ptr = curl_easy_init();\
-  \
+\
   /* - ERROR - */\
   if (curl_ptr == nullptr)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_CURL_CANNOT_CREATE_SESSION,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-  \
+\
   /* - ERROR - */\
   if (curl_multi_add_handle(cm_ptr->curlm_ptr,curl_ptr) != CURLM_OK)\
   {\
     curl_easy_cleanup(curl_ptr);\
-    \
+\
     exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_CANNOT_ADD_HANDLER,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-  \
+\
   curl_props_s *curl_props = (curl_props_s *)cmalloc(sizeof(curl_props_s));\
   curl_props->init();\
-  \
+\
   curl_props->curl_ptr = curl_ptr;\
-  \
+\
   /* - append curl to list - */\
   long long int index = cm_ptr->curl_list.append(curl_ptr);\
   curl_props->index = index;\
   curl_props->unique_id = cm_ptr->unique_counter++;\
-  \
+\
   /* - set user data location - */\
   src_1_location->v_reference_cnt.atomic_inc();\
   curl_props->user_loc = src_1_location;\
-  \
+\
   /* - setup curl easy - */\
   curl_easy_setopt(curl_ptr,CURLOPT_URL,address_ptr->data);\
   curl_easy_setopt(curl_ptr,CURLOPT_WRITEFUNCTION,cb_write_buffer);\
   curl_easy_setopt(curl_ptr,CURLOPT_WRITEDATA,&curl_props->write_buffer);\
   OPTIONS;\
   curl_easy_setopt(curl_ptr,CURLOPT_PRIVATE,curl_props);\
-  \
+\
   BIC_SIMPLE_SET_RES(c_bi_class_integer,index);\
-  \
+\
   return true;\
 }/*}}}*/
 
 #define BIC_CURL_MULTI_PUT_POST_METHODS(NAME,OPTIONS) \
 {/*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);\
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);\
-  \
-  if (src_0_location->v_type != c_bi_class_string ||\
-      src_1_location->v_type != c_bi_class_string)\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-    new_exception->params.push(3);\
-    new_exception->params.push(src_0_location->v_type);\
-    new_exception->params.push(src_1_location->v_type);\
-    new_exception->params.push(src_2_location->v_type);\
-    \
-    return false;\
-  }\
-  \
+@begin ucl_params
+<
+address:c_bi_class_string
+data:c_bi_class_string
+user_data:ignore
+>
+method NAME
+macro
+; @end\
+\
   curl_multi_s *cm_ptr = (curl_multi_s *)dst_location->v_data_ptr;\
   string_s *address_ptr = (string_s *)src_0_location->v_data_ptr;\
   string_s *data_ptr = (string_s *)src_1_location->v_data_ptr;\
-  \
+\
   /* - create curl session - */\
   CURL *curl_ptr = curl_easy_init();\
-  \
+\
   /* - ERROR - */\
   if (curl_ptr == nullptr)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_CURL_CANNOT_CREATE_SESSION,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-  \
+\
   /* - ERROR - */\
   if (curl_multi_add_handle(cm_ptr->curlm_ptr,curl_ptr) != CURLM_OK)\
   {\
     curl_easy_cleanup(curl_ptr);\
-    \
+\
     exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_CANNOT_ADD_HANDLER,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-  \
+\
   curl_props_s *curl_props = (curl_props_s *)cmalloc(sizeof(curl_props_s));\
   curl_props->init();\
-  \
+\
   curl_props->curl_ptr = curl_ptr;\
-  \
+\
   /* - append curl to list - */\
   long long int index = cm_ptr->curl_list.append(curl_ptr);\
   curl_props->index = index;\
   curl_props->unique_id = cm_ptr->unique_counter++;\
-  \
+\
   curl_props->read_buffer.init(*data_ptr);\
-  \
+\
   /* - set read data location - */\
   src_1_location->v_reference_cnt.atomic_inc();\
   curl_props->read_loc = src_1_location;\
-  \
+\
   /* - set user data location - */\
   src_2_location->v_reference_cnt.atomic_inc();\
   curl_props->user_loc = src_2_location;\
-  \
+\
   /* - setup curl easy - */\
   curl_easy_setopt(curl_ptr,CURLOPT_URL,address_ptr->data);\
   curl_easy_setopt(curl_ptr,CURLOPT_READFUNCTION,cb_read_buffer);\
@@ -766,9 +746,9 @@ built_in_variable_s curl_multi_variables[] =
   curl_easy_setopt(curl_ptr,CURLOPT_WRITEDATA,&curl_props->write_buffer);\
   OPTIONS;\
   curl_easy_setopt(curl_ptr,CURLOPT_PRIVATE,curl_props);\
-  \
+\
   BIC_SIMPLE_SET_RES(c_bi_class_integer,index);\
-  \
+\
   return true;\
 }/*}}}*/
 
@@ -1246,20 +1226,20 @@ built_in_variable_s curl_multi_request_variables[] =
   curl_multi_request_s *cmr_ptr = (curl_multi_request_s *)dst_location->v_data_ptr;\
   curl_multi_s *cm_ptr = (curl_multi_s *)cmr_ptr->curl_multi_loc->v_data_ptr;\
   pointer_list_s &curl_list = cm_ptr->curl_list;\
-  \
+\
   /* - ERROR - */\
   if (cmr_ptr->index < 0 || cmr_ptr->index >= curl_list.used || !curl_list.data[cmr_ptr->index].valid)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_REQUEST_INVALID_REFERENCE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-  \
+\
   CURL *curl_ptr = (CURL *)curl_list[cmr_ptr->index];\
-  \
+\
   /* - retrieve curl properties - */\
   curl_props_s *curl_props;\
   curl_easy_getinfo(curl_ptr,CURLINFO_PRIVATE,(char **)&curl_props);\
-  \
+\
   /* - ERROR - */\
   if (curl_props->unique_id != cmr_ptr->unique_id)\
   {\

@@ -985,22 +985,22 @@ built_in_variable_s ftp_handle_variables[] =
 
 #define BIC_FTP_HANDLE_READLN() \
   /*{{{*/\
-  \
+\
   /* - target data buffer - */\
   bc_array_s line_buffer;\
   line_buffer.init();\
-  \
+\
   char ch;\
   int read_cnt;\
   do\
   {\
     read_cnt = FtpRead(&ch,1,ftph_ptr->nb_ptr);\
-    \
+\
     if (read_cnt <= 0 || ch == '\n')\
     {\
       break;\
     }\
-    \
+\
     line_buffer.push(ch);\
   }\
   while(true);\
@@ -1009,48 +1009,48 @@ built_in_variable_s ftp_handle_variables[] =
 #define BIC_FTP_HANDLE_NEXT_ITEM() \
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    \
+\
     /* - retrieve ftp handle - */\
     ftp_handle_s *ftph_ptr = (ftp_handle_s *)dst_location->v_data_ptr;\
-    \
+\
     /* - ERROR - */\
     if (ftph_ptr == nullptr)\
     {\
       exception_s::throw_exception(it,module.error_base + c_error_FTP_HANDLE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       return false;\
     }\
-    \
+\
     BIC_FTP_HANDLE_READLN();\
-    \
+\
     /* - ERROR - */\
     if (read_cnt < 0)\
     {\
       line_buffer.clear();\
-      \
+\
       exception_s::throw_exception(it,module.error_base + c_error_FTP_HANDLE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       return false;\
     }\
-    \
+\
     /* - was any data read from file - */\
     if (read_cnt == 0 && line_buffer.used == 0)\
     {\
       line_buffer.clear();\
-      \
+\
       BIC_SET_RESULT_BLANK();\
     }\
     else\
     {\
       line_buffer.push('\0');\
-      \
+\
       /* - return data string - */\
       string_s *string_ptr = it.get_new_string_ptr();\
       string_ptr->data = line_buffer.data;\
       string_ptr->size = line_buffer.used;\
-      \
+\
       BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);\
       BIC_SET_RESULT(new_location);\
     }\
-    \
+\
     return true;\
   }/*}}}*/
 

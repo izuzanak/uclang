@@ -154,20 +154,20 @@ built_in_variable_s stack_variables[] =
     if (src_0_location->v_type == c_bi_class_stack) {\
       pointer_array_s *f_array_ptr = (pointer_array_s *)dst_location->v_data_ptr;\
       pointer_array_s *s_array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;\
-      \
+\
       if (f_array_ptr->used != s_array_ptr->used)\
       {\
         result = f_array_ptr->used < s_array_ptr->used ? -1 : 1;\
       }\
       else {\
         result = 0;\
-        \
+\
         if (f_array_ptr->used != 0)\
         {\
           pointer *f_ptr = f_array_ptr->data;\
           pointer *f_ptr_end = f_ptr + f_array_ptr->used;\
           pointer *s_ptr = s_array_ptr->data;\
-          \
+\
           do {\
             BIC_CALL_COMPARE(it,*f_ptr,*s_ptr,SOURCE_POS,return false);\
             if (result != 0) {\
@@ -185,17 +185,17 @@ built_in_variable_s stack_variables[] =
 #define BIC_STACK_APPEND_ARRAY(SRC_LOCATION,TARGET_PTR) \
   {/*{{{*/\
     pointer_array_s *source_ptr = (pointer_array_s *)SRC_LOCATION->v_data_ptr;\
-    \
+\
     if (source_ptr->used != 0)\
     {\
       pointer *ptr = source_ptr->data;\
       pointer *ptr_end = ptr + source_ptr->used;\
-      \
+\
       do\
       {\
         location_s *item_location = it.get_location_value(*ptr);\
         item_location->v_reference_cnt.atomic_inc();\
-        \
+\
         /* - push item location to stack - */\
         TARGET_PTR->push(item_location);\
       }\
@@ -212,43 +212,43 @@ built_in_variable_s stack_variables[] =
   {/*{{{*/\
     item_location->v_reference_cnt.atomic_inc();\
     it.release_location_ptr(item_reference);\
-    \
+\
     /* - push item location to stack - */\
     TARGET_PTR->push(item_location);\
   }/*}}}*/
 
 #define BIC_STACK_APPEND_ITERABLE(SRC_LOCATION,TARGET_PTR) \
   {/*{{{*/\
-    \
+\
     /* - retrieve iterable type - */\
     unsigned iter_type = it.get_iterable_type(SRC_LOCATION);\
-    \
+\
     /* - ERROR - */\
     if (iter_type == c_idx_not_exist)\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_OBJECT_OF_CLASS_IS_NOT_ITERABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       new_exception->params.push(SRC_LOCATION->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     if (iter_type == c_iter_first_idx_next_idx_item)\
     {\
       long long int index;\
       location_s *item_reference;\
       location_s *item_location;\
-      \
+\
       /* - retrieve first index - */\
       BIC_CALL_FIRST_IDX(it,SRC_LOCATION,index,operands[c_source_pos_idx],return false;);\
-      \
+\
       while (index != c_idx_not_exist)\
       {\
         /* - retrieve item location - */\
         BIC_CALL_ITEM(it,SRC_LOCATION,index,item_reference,operands[c_source_pos_idx],return false;);\
         item_location = it.get_location_value(item_reference);\
-        \
+\
         BIC_STACK_APPEND_ITERABLE_BODY_BODY(TARGET_PTR);\
-        \
+\
         /* - retrieve next index - */\
         BIC_CALL_NEXT_IDX(it,SRC_LOCATION,index,index,operands[c_source_pos_idx],return false;);\
       }\
@@ -257,22 +257,22 @@ built_in_variable_s stack_variables[] =
     {\
       location_s *item_reference;\
       location_s *item_location;\
-      \
+\
       do\
       {\
-        \
+\
         /* - retrieve next item location - */\
         BIC_CALL_NEXT_ITEM(it,SRC_LOCATION,item_reference,operands[c_source_pos_idx],return false;);\
         item_location = it.get_location_value(item_reference);\
-        \
+\
         if (item_location->v_type == c_bi_class_blank)\
         {\
           it.release_location_ptr(item_reference);\
           break;\
         }\
-        \
+\
         BIC_STACK_APPEND_ITERABLE_BODY_BODY(TARGET_PTR);\
-        \
+\
       }\
       while(true);\
     }\
@@ -285,12 +285,12 @@ built_in_variable_s stack_variables[] =
 #define BIC_STACK_CHECK_INDEX() \
   /*{{{*/\
   pointer_array_s *array_ptr = (pointer_array_s *)dst_location->v_data_ptr;\
-  \
+\
   /* - ERROR - */\
   if (index < 0 || index >= array_ptr->used) {\
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_STACK_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(index);\
-    \
+\
     return false;\
   }\
   /*}}}*/

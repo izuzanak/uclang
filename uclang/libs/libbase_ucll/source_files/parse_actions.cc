@@ -283,7 +283,7 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
   unsigned *nni_ptr = namespace_name_idxs.data;\
   unsigned *nni_ptr_end = nni_ptr + namespace_name_idxs.used;\
   do {\
-    \
+\
     /* - retrieve namespace in parent namespace - */\
     namespace_ri = _this.get_parent_namespace_namespace_idx_by_name_idx(*nni_ptr,parent_namespace_ri);\
 \
@@ -317,44 +317,44 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
   lalr_stack_element_s &lse = LALR_STACK_POSITION;\
   unsigned name_length = lse.terminal_end - lse.terminal_start;\
   char *name_data = source_string.data + lse.terminal_start;\
-  \
+\
   /* - get position of variable name - */\
   unsigned name_idx = _this.variable_symbol_names.get_idx_char_ptr_insert(name_length,name_data);\
-  \
+\
   unsigned parent_class_idx = parent_class_idxs.last();\
   class_record_s &class_record = class_records[parent_class_idx];\
   ui_array_s &class_vr_idxs = class_record.variable_record_idxs;\
-  \
+\
   unsigned *vri_ptr = class_vr_idxs.data;\
   unsigned *vri_ptr_end = vri_ptr + class_vr_idxs.used;\
-  \
+\
   if (vri_ptr < vri_ptr_end) {\
-    \
+\
     /* - test variable name uniqueness in class - */\
     do {\
-      \
+\
       /* - PARSE ERROR - */\
       if (variable_records[*vri_ptr].name_idx == name_idx) {\
         _this.error_code.push(ei_duplicate_class_element_name);\
         _this.error_code.push(SET_SRC_POS(_this.source_idx,lse.terminal_start));\
         _this.error_code.push(parent_class_idx);\
         _this.error_code.push(name_idx);\
-        \
+\
         break;\
       }\
     } while(++vri_ptr < vri_ptr_end);\
   }\
-  \
+\
   /* - creation of new variable record - */\
   variable_records.push_blank();\
   variable_record_s &variable_record = variable_records.last();\
   variable_record.name_idx = name_idx;\
-  \
+\
   /* - default private modifier - */\
   if (!(_this.modifiers & c_modifier_public)) {\
     _this.modifiers |= c_modifier_private;\
   }\
-  \
+\
   /* - PARSE ERROR modifiers - */\
   if (_this.modifiers & c_variable_ilegal_modifiers) {\
     _this.error_code.push(ei_variable_ilegall_modifier);\
@@ -362,24 +362,24 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
     _this.error_code.push(variable_records.used - 1);\
     _this.error_code.push(parent_class_idx);\
   }\
-  \
+\
   /* - PARSE ERROR modifiers - */\
   if (((_this.modifiers & c_modifier_public) && (_this.modifiers & c_modifier_private))) {\
     _this.error_code.push(ei_variable_modifier_private_and_public);\
     _this.error_code.push(SET_SRC_POS(_this.source_idx,lse.terminal_start));\
   }\
-  \
+\
   variable_record.modifiers = _this.modifiers;\
   variable_record.parent_record = parent_class_idx;\
   variable_record.init_expression_idx = c_idx_not_exist;\
-  \
+\
   name_pos_s &name_position = variable_record.name_position;\
   name_position.ui_first = SET_SRC_POS(_this.source_idx,lse.terminal_start);\
   name_position.ui_second = SET_SRC_POS(_this.source_idx,lse.terminal_end);\
-  \
+\
   /* - insert record index to class variable - */\
   class_vr_idxs.push(variable_records.used - 1);\
-  \
+\
   /* - initialization of modifiers - */\
   _this.modifiers = 0;\
   /*}}}*/
@@ -390,16 +390,16 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
     /* - store node position - */\
     unsigned tmp_node_idx = ed.tmp_expression.used;\
     idx_size_s &exp_info = ed.tmp_exp_info.pop();\
-    \
+\
     /* - store node to expression - */\
     ed.tmp_expression.push(c_node_type_ ## OP_NAME);\
     ed.tmp_expression.push(SET_SRC_POS(_this.source_idx,_this.old_input_idx));\
     ed.tmp_expression.push(exp_info.ui_first);\
-    \
+\
     /* - create expression info node - */\
     ed.tmp_exp_info.push_blank();\
     idx_size_s &tmp_exp_info = ed.tmp_exp_info.last();\
-    \
+\
     tmp_exp_info.ui_first = tmp_node_idx;\
     tmp_exp_info.ui_second = exp_info.ui_second + 3;\
   }/*}}}*/
@@ -410,20 +410,20 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
     /* - store node position - */\
     unsigned tmp_node_idx = ed.tmp_expression.used;\
     idx_size_s *tei_ptr = ed.tmp_exp_info.data + ed.tmp_exp_info.used - 2;\
-    \
+\
     /* - insertion of node to expression - */\
     ed.tmp_expression.push(c_node_type_ ## OP_NAME);\
     ed.tmp_expression.push(SET_SRC_POS(_this.source_idx,_this.old_input_idx));\
     ed.tmp_expression.push(tei_ptr[0].ui_first);\
     ed.tmp_expression.push(tei_ptr[1].ui_first);\
-    \
+\
     /* - remove old nodes from stack - */\
     ed.tmp_exp_info.used -= 2;\
-    \
+\
     /* - create expression info node - */\
     ed.tmp_exp_info.push_blank();\
     idx_size_s &tmp_exp_info = ed.tmp_exp_info.last();\
-    \
+\
     tmp_exp_info.ui_first = tmp_node_idx;\
     tmp_exp_info.ui_second = tei_ptr[0].ui_second + tei_ptr[1].ui_second + 4;\
   }/*}}}*/
@@ -433,7 +433,7 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
   {/*{{{*/\
     /* - process top of thread stack - */\
     switch (fgd.fgts_type.pop()) {\
-      \
+\
       /* - FGTS_BLANK - */\
     case c_fgts_type_blank:\
       switch (fgd.fgts_type.last()) {\
@@ -445,7 +445,7 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
         debug_assert(0);\
       }\
       break;\
-      \
+\
       /* - FGTS_THREAD - */\
     case c_fgts_type_thread:\
       switch (fgd.fgts_type.last()) {\
@@ -457,45 +457,45 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
         unsigned second_end_cnt = fgd.fgts_cnt.pop();\
         unsigned first_end_cnt = fgd.fgts_cnt.last();\
         unsigned *ts_ptr = fgd.fg_thread_stack.data + fgd.fg_thread_stack.used - (2 + first_end_cnt + second_end_cnt);\
-        \
+\
         if (first_end_cnt != 0) {\
-          \
+\
           if (ts_ptr[first_end_cnt + 1] >= c_fgts_bc_value_base) {\
-            \
+\
             /* - store ends of first thread a special begins - */\
             unsigned *tse_ptr = ts_ptr + 1;\
             unsigned *tse_ptr_end = tse_ptr + first_end_cnt;\
             ui_array_s &bc_ends = fgd.fgts_bc_ends_array.last()[ts_ptr[first_end_cnt + 1] - c_fgts_bc_value_base];\
-            \
+\
             do {\
               bc_ends.push(*tse_ptr);\
             } while(++tse_ptr < tse_ptr_end);\
           }\
           else {\
-            \
+\
             /* - attaching ends of first thread to begin of second - */\
             unsigned *tse_ptr = ts_ptr + 1;\
             unsigned *tse_ptr_end = tse_ptr + first_end_cnt;\
             unsigned second_begin = ts_ptr[first_end_cnt + 1];\
-            \
+\
             do {\
               tmp_flow_graph[*tse_ptr] = second_begin;\
             } while(++tse_ptr < tse_ptr_end);\
           }\
         }\
-        \
+\
         if (second_end_cnt != 0) {\
-          \
+\
           /* - setting ends of second thread as ends of new thread - */\
           unsigned *tse_ptr = ts_ptr + 1;\
           unsigned *tse_ptr_end = tse_ptr + second_end_cnt;\
           unsigned offset = first_end_cnt + 1;\
-          \
+\
           do {\
             *tse_ptr = tse_ptr[offset];\
           } while(++tse_ptr < tse_ptr_end);\
         }\
-        \
+\
         fgd.fg_thread_stack.used -= first_end_cnt + 1;\
         fgd.fgts_cnt.last() = second_end_cnt;\
       }\
@@ -504,7 +504,7 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
         debug_assert(0);\
       }\
       break;\
-      \
+\
     default:\
       debug_assert(0);\
     }\
@@ -515,16 +515,16 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
   {/*{{{*/\
     /* - store node position- */\
     unsigned tmp_node_idx = ed.tmp_expression.used;\
-    \
+\
     /* - store node to expression - */\
     ed.tmp_expression.push(INSTRUCTION);\
     ed.tmp_expression.push(SET_SRC_POS(_this.source_idx,CODE_POS));\
     ed.tmp_expression.push(NAME_IDX);\
-    \
+\
     /* - create expression info node - */\
     ed.tmp_exp_info.push_blank();\
     idx_size_s &tmp_exp_info = ed.tmp_exp_info.last();\
-    \
+\
     tmp_exp_info.ui_first = tmp_node_idx;\
     tmp_exp_info.ui_second = 3;\
   }/*}}}*/
@@ -534,25 +534,25 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
   {/*{{{*/\
     /* - test if expression stack contain exactly one node - */\
     debug_assert(ed.tmp_exp_info.used == 1);\
-    \
+\
     /* - creation of description of flow graph node - */\
     fgd.fgts_type.push(c_fgts_type_thread);\
     fgd.fgts_cnt.push(1);\
     fgd.fg_thread_stack.push(tmp_flow_graph.used);\
     fgd.fg_thread_stack.push(tmp_flow_graph.used + c_fg_expression_first_out);\
-    \
+\
     /* - creation of flow graph node - */\
     tmp_flow_graph.push(c_fg_type_expression);\
     tmp_flow_graph.push(tmp_expressions.used);\
     tmp_flow_graph.push(c_idx_not_exist);\
-    \
+\
     /* - insertion of expression to expression list - */\
     tmp_expressions.push_blank();\
     expression_s &expression = tmp_expressions.last();\
-    \
+\
     expression.start_node_idx = ed.tmp_exp_info.pop().ui_first;\
     expression.nodes.swap(ed.tmp_expression);\
-    \
+\
     debug_assert(ed.tmp_expression.used == 0);\
     debug_assert(ed.tmp_exp_info.used == 0);\
   }/*}}}*/
@@ -562,28 +562,28 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
   {/*{{{*/\
     /* - position of created expression node - */\
     unsigned tmp_node_idx = ed.tmp_expression.used;\
-    \
+\
     ed.tmp_expression.push(c_node_type_object_method_call);\
     ed.tmp_expression.push(SET_SRC_POS(_this.source_idx,CODE_POS));\
     ed.tmp_expression.push(NAME_IDX);\
     ed.tmp_expression.push(PARAM_CNT);\
-    \
+\
     idx_size_s *tei_ptr = ed.tmp_exp_info.data + ed.tmp_exp_info.used - (PARAM_CNT + 1);\
     idx_size_s *tei_ptr_end = ed.tmp_exp_info.data + ed.tmp_exp_info.used;\
-    \
+\
     unsigned exp_size = 4;\
-    \
+\
     do {\
       ed.tmp_expression.push(tei_ptr->ui_first);\
       exp_size += 1 + tei_ptr->ui_second;\
     } while(++tei_ptr < tei_ptr_end);\
-    \
+\
     ed.tmp_exp_info.used -= PARAM_CNT + 1;\
-    \
+\
     /* - create expression info node - */\
     ed.tmp_exp_info.push_blank();\
     idx_size_s &tmp_exp_info = ed.tmp_exp_info.last();\
-    \
+\
     tmp_exp_info.ui_first = tmp_node_idx;\
     tmp_exp_info.ui_second = exp_size;\
   }/*}}}*/
@@ -591,45 +591,45 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
 // -- PA_METHOD_DEFINITION_END --
 #define PA_METHOD_DEFINITION_END() \
 /*{{{*/\
-  \
+\
   /* - test if thread was created on stack of graph flow - */\
   debug_assert(fgd.fgts_type.used > 0);\
-  \
+\
   /* - if method body contains no code - */\
   if (fgd.fgts_type.last() == c_fgts_type_blank)\
   {\
     fgd.fgts_type.pop();\
     pa_method_body_empty(source_string,_this);\
   }\
-  \
+\
   unsigned *ts_ptr = fgd.fg_thread_stack.data;\
   debug_assert(*ts_ptr < c_fgts_bc_value_base);\
-  \
+\
   /* - setting flow graph index in method - */\
   unsigned method_record_idx = parent_method_idxs.last();\
   method_record_s &method_record = method_records[method_record_idx];\
   method_record.flow_graph_idx = method_flow_graphs.used;\
-  \
+\
   /* - copy (swap) parsed flow graph - */\
   method_flow_graphs.push_blank();\
   exp_flow_graph_s &method_flow_graph = method_flow_graphs.last();\
-  \
+\
   method_flow_graph.start_node_idx = *ts_ptr;\
   method_flow_graph.nodes.swap(tmp_flow_graph);\
   method_flow_graph.expressions.swap(tmp_expressions);\
-  \
+\
   /* - remove temporary data - */\
   fgd.fg_thread_stack.used = 0;\
   fgd.fgts_cnt.used = 0;\
-  \
+\
   /* - remove method index from parent method stack - */\
   parent_method_idxs.used--;\
-  \
+\
   debug_assert(tmp_flow_graph.used == 0);\
   debug_assert(tmp_expressions.used == 0);\
   debug_assert(fgd.fg_thread_stack.used == 0);\
   debug_assert(fgd.fgts_cnt.used == 0);\
-  \
+\
   /* - remove code description - */\
   code_descrs.used--;\
 /*}}}*/
@@ -2425,7 +2425,7 @@ bool pa_switch_statement(string_s &source_string,script_parser_s &_this)
 
     idx_size_s *tei_ptr = ed.tmp_exp_info.data + ed.tmp_exp_info.used - value_cnt;
     idx_size_s *tei_ptr_end = ed.tmp_exp_info.data + ed.tmp_exp_info.used;
-    \
+\
 
     unsigned exp_size = 3;
 

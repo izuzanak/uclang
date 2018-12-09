@@ -185,7 +185,7 @@ built_in_variable_s utf8proc_variables[] =
 \
     utf8proc_int32_t code_point;\
     do {\
-      \
+\
       /* - retrieve next code point - */\
       s_ptr += utf8proc_iterate(s_ptr,s_ptr_end - s_ptr,&code_point);\
 \
@@ -770,57 +770,43 @@ built_in_variable_s unicode_string_variables[] =
 #define BIC_UNICODE_STRING_CHECK_INDEX() \
   /*{{{*/\
   ui_array_s *ustring_ptr = (ui_array_s *)dst_location->v_data_ptr;\
-  \
+\
   /* - ERROR - */\
   if (index < 0 || index >= (ustring_ptr->used - 1)) {\
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_UNICODE_STRING_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(index);\
-    \
+\
     return false;\
   }\
   /*}}}*/
 
 #define BIC_UNICODE_STRING_ITEM(NAME) \
   {/*{{{*/\
-    location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
-    long long int index;\
-    \
-    /* - ERROR - */\
-    if (!it.retrieve_integer(src_0_location,index))\
-    {\
-      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-      BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-      new_exception->params.push(1);\
-      new_exception->params.push(src_0_location->v_type);\
-      \
-      return false;\
-    }\
-    \
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method NAME
+macro
+; @end\
+\
     BIC_UNICODE_STRING_CHECK_INDEX();\
-    \
+\
     utf8proc_int32_t result = (utf8proc_int32_t)ustring_ptr->data[index];\
-    \
+\
     BIC_SIMPLE_SET_RES(c_bi_class_unicode_char,result);\
   }/*}}}*/
 
 #define BIC_UNICODE_STRING_OPERATOR_BINARY_PLUS(NAME) \
 /*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-\
-  /* - ERROR - */\
-  if (src_0_location->v_type != c_bi_class_unicode_string &&\
-      src_0_location->v_type != c_bi_class_string)\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-    new_exception->params.push(1);\
-    new_exception->params.push(src_0_location->v_type);\
-\
-    return false;\
-  }\
+@begin ucl_params
+<
+second:c_bi_class_unicode_string
+second:c_bi_class_string
+>
+method NAME
+macro
+; @end\
 \
   ui_array_s *first_ptr = (ui_array_s *)dst_location->v_data_ptr;\
   unsigned f_length = first_ptr->used - 1;\
@@ -867,21 +853,13 @@ built_in_variable_s unicode_string_variables[] =
 
 #define BIC_UNICODE_STRING_OPERATOR_BINARY_ASTERISK(NAME) \
 /*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-\
-  long long int mult;\
-\
-  /* - ERROR - */\
-  if (!it.retrieve_integer(src_0_location,mult))\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-    new_exception->params.push(1);\
-    new_exception->params.push(src_0_location->v_type);\
-\
-    return false;\
-  }\
+@begin ucl_params
+<
+mult:retrieve_integer
+>
+method NAME
+macro
+; @end\
 \
   ui_array_s *source_ptr = (ui_array_s *)dst_location->v_data_ptr;\
   unsigned s_length = source_ptr->used - 1;\

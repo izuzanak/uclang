@@ -890,17 +890,17 @@ bool bic_time_method_Time_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 {/*{{{*/\
   char tmp_char = str[END];\
   str[END] = '\0';\
-  \
+\
   char *end_ptr;\
   TARGET = strtol(str + START,&end_ptr,10);\
-  \
+\
   /* - ERROR - */\
   if (end_ptr != str + END)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_TIME_WRONG_INIT_STRING,operands[c_source_pos_idx],src_0_location);\
     return false;\
   }\
-  \
+\
   str[END] = tmp_char;\
 }/*}}}*/
 
@@ -1617,7 +1617,7 @@ bool bic_net_address_method_NetAddress_2(interpreter_thread_s &it,unsigned stack
       exception_s::throw_exception(it,module.error_base + c_error_NET_ADDRESS_ADDRESS_TYPE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       return false;\
     }\
-    \
+\
     *a_ptr = (long long int)location->v_data_ptr;\
   } while(++a_ptr,++p_ptr < p_ptr_end);\
 \

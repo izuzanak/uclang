@@ -200,7 +200,7 @@ built_in_variable_s intel_hex_variables[] =
 #define BIC_INTEL_HEX_CONSTRUCTOR_OPEN_FILE() \
 /*{{{*/\
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;\
-  \
+\
   /* - ERROR - */\
   FILE *f = fopen(string_ptr->data,"r");\
   if (f == nullptr)\
@@ -208,17 +208,17 @@ built_in_variable_s intel_hex_variables[] =
     exception_s::throw_exception(it,module.error_base + c_error_INTEL_HEX_FILE_OPEN_ERROR,operands[c_source_pos_idx],src_0_location);\
     return false;\
   }\
-  \
+\
   /* - create intel_hex object - */\
   intel_hex_s *ih_ptr = (intel_hex_s *)cmalloc(sizeof(intel_hex_s));\
   ih_ptr->init();\
-  \
+\
   ih_ptr->file = f;\
   ih_ptr->line_cnt = 0;\
-  \
+\
   /* - reset read done flag - */\
   ih_ptr->read_done = false;\
-  \
+\
   ih_ptr->esa     = 0;\
   ih_ptr->ssa_cs  = 0;\
   ih_ptr->ssa_ip  = 0;\
@@ -229,11 +229,11 @@ built_in_variable_s intel_hex_variables[] =
 #define BIC_INTEL_HEX_METHOD_VALUE_INTEGER(NAME) \
 {/*{{{*/\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  \
+\
   long long int result = ((intel_hex_s *)dst_location->v_data_ptr)->NAME;\
-  \
+\
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
-  \
+\
   return true;\
 }/*}}}*/
 

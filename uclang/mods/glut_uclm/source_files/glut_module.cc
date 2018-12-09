@@ -472,18 +472,15 @@ built_in_variable_s glut_variables[] =
 
 #define BIC_GLUT_DELEGATE(NAME,GLUT_NAME,FUN_PTR_NAME,DLG_PTR_NAME,PARAM_CNT,ADDITIONAL_CHECK) \
 {/*{{{*/\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-\
-  /* - ERROR - */\
-  if (src_0_location->v_type != c_bi_class_delegate)\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_glut,NAME);\
-    new_exception->params.push(1);\
-    new_exception->params.push(src_0_location->v_type);\
-\
-    return false;\
-  }\
+@begin ucl_params
+<
+delegate:c_bi_class_delegate
+>
+class c_bi_class_glut
+method NAME
+static_method
+macro
+; @end\
 \
   BIC_GLUT_CONTEXT_CHECK();\
   ADDITIONAL_CHECK;\

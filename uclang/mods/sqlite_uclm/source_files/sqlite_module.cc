@@ -660,7 +660,7 @@ built_in_variable_s sqlite_statement_variables[] =
     {\
       string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;\
       index = sqlite3_bind_parameter_index(statement_ptr,string_ptr->data);\
-      \
+\
       /* - ERROR - */\
       if (index <= 0)\
       {\
@@ -713,7 +713,7 @@ built_in_variable_s sqlite_statement_variables[] =
     if (column_cnt > 0)\
     {\
       row_array->copy_resize(column_cnt);\
-      \
+\
       int col_idx = 0;\
       do {\
         switch (sqlite3_column_type(statement_ptr,col_idx))\

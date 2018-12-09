@@ -184,39 +184,39 @@ built_in_variable_s dict_variables[] =
     if (src_0_location->v_type == c_bi_class_dict) {\
       pointer_map_tree_s *f_tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;\
       pointer_map_tree_s *s_tree_ptr = (pointer_map_tree_s *)src_0_location->v_data_ptr;\
-      \
+\
       if (f_tree_ptr->count != s_tree_ptr->count)\
       {\
         result = f_tree_ptr->count < s_tree_ptr->count ? -1 : 1;\
       }\
       else {\
         result = 0;\
-        \
+\
         if (f_tree_ptr->count != 0)\
         {\
           unsigned f_stack[f_tree_ptr->get_descent_stack_size()];\
           unsigned s_stack[s_tree_ptr->get_descent_stack_size()];\
-          \
+\
           unsigned *f_stack_ptr = f_stack;\
           unsigned *s_stack_ptr = s_stack;\
-          \
+\
           unsigned ft_idx = f_tree_ptr->get_stack_min_value_idx(f_tree_ptr->root_idx,&f_stack_ptr);\
           unsigned st_idx = s_tree_ptr->get_stack_min_value_idx(s_tree_ptr->root_idx,&s_stack_ptr);\
-          \
+\
           do {\
             pointer_map_s &f_map = f_tree_ptr->data[ft_idx].object;\
             pointer_map_s &s_map = s_tree_ptr->data[st_idx].object;\
-            \
+\
             BIC_CALL_COMPARE(it,f_map.key,s_map.key,SOURCE_POS,return false);\
             if (result != 0) {\
               break;\
             }\
-            \
+\
             BIC_CALL_COMPARE(it,f_map.value,s_map.value,SOURCE_POS,return false);\
             if (result != 0) {\
               break;\
             }\
-            \
+\
             ft_idx = f_tree_ptr->get_stack_next_idx(ft_idx,&f_stack_ptr,f_stack);\
             st_idx = s_tree_ptr->get_stack_next_idx(st_idx,&s_stack_ptr,s_stack);\
           } while(ft_idx != c_idx_not_exist);\
@@ -231,36 +231,36 @@ built_in_variable_s dict_variables[] =
 #define BIC_DICT_APPEND_ARRAY(SRC_LOCATION,TARGET_PTR) \
   {/*{{{*/\
     pointer_array_s *source_ptr = (pointer_array_s *)SRC_LOCATION->v_data_ptr;\
-    \
+\
     /* - ERROR - */\
     if (source_ptr->used & 1)\
     {\
       exception_s::throw_exception(it,module.error_base + c_error_DICT_SOURCE_NOT_DIVISIBLE_BY_TWO,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       return false;\
     }\
-    \
+\
     if (source_ptr->used != 0)\
     {\
       pointer *ptr = source_ptr->data;\
       pointer *ptr_end = ptr + source_ptr->used;\
-      \
+\
       do\
       {\
         location_s *key_location = it.get_location_value(ptr[0]);\
         location_s *val_location = it.get_location_value(ptr[1]);\
-        \
+\
         /* - push key and value locations to dictionary - */\
         pointer_map_s insert_map = {key_location,nullptr};\
         unsigned index = TARGET_PTR->unique_insert(insert_map);\
-        \
+\
         /* - ERROR - */\
         if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)\
         {\
           return false;\
         }\
-        \
+\
         pointer_map_s &map = TARGET_PTR->data[index].object;\
-        \
+\
         if (map.value)\
         {\
           it.release_location_ptr((location_s *)map.value);\
@@ -269,7 +269,7 @@ built_in_variable_s dict_variables[] =
         {\
           key_location->v_reference_cnt.atomic_inc();\
         }\
-        \
+\
         val_location->v_reference_cnt.atomic_inc();\
         map.value = (pointer)val_location;\
       }\
@@ -281,48 +281,48 @@ built_in_variable_s dict_variables[] =
   {/*{{{*/\
     key_location->v_reference_cnt.atomic_inc();\
     val_location->v_reference_cnt.atomic_inc();\
-    \
+\
     it.release_location_ptr(key_reference);\
     it.release_location_ptr(val_reference);\
-    \
+\
     /* - push key and value locations to dictionary - */\
     pointer_map_s insert_map = {key_location,nullptr};\
     unsigned map_idx = TARGET_PTR->unique_insert(insert_map);\
-    \
+\
     /* - ERROR - */\
     if (((location_s *)it.exception_location)->v_type != c_bi_class_blank) {\
       it.release_location_ptr(key_location);\
       it.release_location_ptr(val_location);\
-      \
+\
       return false;\
     }\
-    \
+\
     pointer_map_s &map = TARGET_PTR->data[map_idx].object;\
-    \
+\
     if (map.value)\
     {\
       it.release_location_ptr(key_location);\
       it.release_location_ptr((location_s *)map.value);\
     }\
-    \
+\
     map.value = (pointer)val_location;\
   }/*}}}*/
 
 #define BIC_DICT_APPEND_ITERABLE(SRC_LOCATION,TARGET_PTR) \
   {/*{{{*/\
-    \
+\
     /* - retrieve iterable type - */\
     unsigned iter_type = it.get_iterable_type(SRC_LOCATION);\
-    \
+\
     /* - ERROR - */\
     if (iter_type == c_idx_not_exist)\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_OBJECT_OF_CLASS_IS_NOT_ITERABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       new_exception->params.push(SRC_LOCATION->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     if (iter_type == c_iter_first_idx_next_idx_item)\
     {\
       long long int index;\
@@ -330,36 +330,36 @@ built_in_variable_s dict_variables[] =
       location_s *key_location;\
       location_s *val_reference;\
       location_s *val_location;\
-      \
+\
       BIC_CALL_FIRST_IDX(it,SRC_LOCATION,index,operands[c_source_pos_idx],return false;);\
-      \
+\
       while (index != c_idx_not_exist)\
       {\
         BIC_CALL_ITEM(it,SRC_LOCATION,index,key_reference,operands[c_source_pos_idx],return false;);\
         key_location = it.get_location_value(key_reference);\
-        \
+\
         BIC_CALL_NEXT_IDX(it,SRC_LOCATION,index,index,operands[c_source_pos_idx],\
                           it.release_location_ptr(key_reference);\
                           return false;\
                          );\
-        \
+\
         /* - ERROR - */\
         if (index == c_idx_not_exist)\
         {\
           it.release_location_ptr(key_reference);\
-          \
+\
           exception_s::throw_exception(it,module.error_base + c_error_DICT_SOURCE_NOT_DIVISIBLE_BY_TWO,operands[c_source_pos_idx],(location_s *)it.blank_location);\
           return false;\
         }\
-        \
+\
         BIC_CALL_ITEM(it,SRC_LOCATION,index,val_reference,operands[c_source_pos_idx],\
                       it.release_location_ptr(key_reference);\
                       return false;\
                      );\
         val_location = it.get_location_value(val_reference);\
-        \
+\
         BIC_DICT_APPEND_ITERABLE_BODY(TARGET_PTR);\
-        \
+\
         BIC_CALL_NEXT_IDX(it,SRC_LOCATION,index,index,operands[c_source_pos_idx],return false;);\
       }\
     }\
@@ -369,28 +369,28 @@ built_in_variable_s dict_variables[] =
       location_s *key_location;\
       location_s *val_reference;\
       location_s *val_location;\
-      \
+\
       do\
       {\
         BIC_CALL_NEXT_ITEM(it,SRC_LOCATION,key_reference,operands[c_source_pos_idx],return false;);\
         key_location = it.get_location_value(key_reference);\
-        \
+\
         if (key_location->v_type == c_bi_class_blank)\
         {\
           it.release_location_ptr(key_reference);\
           break;\
         }\
-        \
+\
         BIC_CALL_NEXT_ITEM(it,SRC_LOCATION,val_reference,operands[c_source_pos_idx],\
                            it.release_location_ptr(key_reference);\
-                           \
+\
                            exception_s::throw_exception(it,module.error_base + c_error_DICT_SOURCE_NOT_DIVISIBLE_BY_TWO,operands[c_source_pos_idx],(location_s *)it.blank_location);\
                            return false;\
                           );\
         val_location = it.get_location_value(val_reference);\
-        \
+\
         BIC_DICT_APPEND_ITERABLE_BODY(TARGET_PTR);\
-        \
+\
       }\
       while(true);\
     }\
@@ -403,13 +403,13 @@ built_in_variable_s dict_variables[] =
 #define BIC_DICT_CHECK_INDEX() \
   /*{{{*/\
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;\
-  \
+\
   /* - ERROR - */\
   if (index < 0 || index >= tree_ptr->used || !tree_ptr->data[index].valid)\
   {\
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_DICT_INDEX_DOES_NOT_REFER_TO_VALID_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(index);\
-    \
+\
     return false;\
   }\
   /*}}}*/

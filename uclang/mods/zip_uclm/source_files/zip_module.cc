@@ -278,19 +278,19 @@ built_in_variable_s zip_archive_variables[] =
     zip_error_t ze;\
     zip_error_init_with_code(&ze,ERROR_CODE);\
     const char *error_str = zip_error_strerror(&ze);\
-    \
+\
     /* - create error string - */\
     string_s *string_ptr = it.get_new_string_ptr();\
     string_ptr->set(strlen(error_str),error_str);\
     zip_error_fini(&ze);\
-    \
+\
     BIC_CREATE_NEW_LOCATION_REFS(ERROR_LOCATION,c_bi_class_string,string_ptr,0);\
 /*}}}*/
 
 #define BIC_ZIP_ARCHIVE_RETRIEVE_FROM(LOCATION) \
 /*{{{*/\
   zip_t *za_ptr = (zip_t *)LOCATION->v_data_ptr;\
-  \
+\
   /* - ERROR - */\
   if (za_ptr == nullptr)\
   {\
@@ -302,26 +302,31 @@ built_in_variable_s zip_archive_variables[] =
 #define BIC_ZIP_ARCHIVE_CHECK_INDEX() \
 /*{{{*/\
   long long int entry_cnt = zip_get_num_entries(za_ptr,0);\
-  \
+\
   /* - ERROR - */\
   if (index < 0 || index >= entry_cnt)\
   {\
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_ZIP_ARCHIVE_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(index);\
-    \
+\
     return false;\
   }\
 /*}}}*/
 
 #define BIC_ZIP_ARCHIVE_ITEM(NAME) \
 {/*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  \
+@begin ucl_params
+<
+item:ignore
+>
+method NAME
+macro
+; @end\
+\
   BIC_ZIP_ARCHIVE_RETRIEVE_FROM(dst_location);\
 \
   long long int index;\
-  \
+\
   if (!it.retrieve_integer(src_0_location,index))\
   {\
     /* - ERROR - */\
@@ -331,12 +336,12 @@ built_in_variable_s zip_archive_variables[] =
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     string_s *name_ptr = (string_s *)src_0_location->v_data_ptr;\
-   \
+\
     /* - ERROR - */\
     if ((index = zip_name_locate(za_ptr,name_ptr->data,0)) == -1)\
     {\
@@ -347,17 +352,17 @@ built_in_variable_s zip_archive_variables[] =
   else {\
     BIC_ZIP_ARCHIVE_CHECK_INDEX();\
   }\
-  \
+\
   /* - create new zip index object - */\
   zip_index_s *zi_ptr = (zip_index_s *)cmalloc(sizeof(zip_index_s));\
-  \
+\
   dst_location->v_reference_cnt.atomic_inc();\
   zi_ptr->archive_loc = dst_location;\
   zi_ptr->index = index;\
-  \
+\
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_zip_index,zi_ptr);\
   BIC_SET_RESULT(new_location);\
-  \
+\
   return true;\
 }/*}}}*/
 
@@ -888,7 +893,7 @@ built_in_variable_s zip_file_variables[] =
 #define BIC_ZIP_FILE_RETRIEVE_FROM(LOCATION) \
 /*{{{*/\
   zip_file_s *zf_ptr = (zip_file_s *)LOCATION->v_data_ptr;\
-  \
+\
   /* - ERROR - */\
   if (zf_ptr == nullptr)\
   {\

@@ -240,33 +240,25 @@ built_in_variable_s docu_source_variables[] =
 #define BIC_DOCU_SOURCE_CHECK_INDEX() \
   /*{{{*/\
   docu_source_s *ds_ptr = (docu_source_s *)dst_location->v_data_ptr;\
-  \
+\
   /* - ERROR - */\
   if (index < 0 || index >= ds_ptr->comment_ranges.used) {\
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_DOCU_SOURCE_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(index);\
-    \
+\
     return false;\
   }\
   /*}}}*/
 
 #define BIC_DOCU_SOURCE_ITEM(NAME) \
 {/*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-\
-  long long int index;\
-\
-  /* - ERROR - */\
-  if (!it.retrieve_integer(src_0_location,index))\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-    new_exception->params.push(1);\
-    new_exception->params.push(src_0_location->v_type);\
-\
-    return false;\
-  }\
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method NAME
+macro
+; @end\
 \
   BIC_DOCU_SOURCE_CHECK_INDEX();\
 \

@@ -372,20 +372,14 @@ bool bic_linux_method_sync_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_linux_method_sysconf_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int name;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,name))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_linux,"sysconf#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+name:retrieve_integer
+>
+class c_bi_class_linux
+method sysconf
+static_method
+; @end
 
   errno = 0;
   long long int result = sysconf(name);
@@ -747,24 +741,13 @@ bool bic_fd_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_fd_method_Fd_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int fd;
-  long long int close;
-
-  if (!it.retrieve_integer(src_0_location,fd) ||
-      !it.retrieve_integer(src_1_location,close))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Fd#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+fd:retrieve_integer
+close:retrieve_integer
+>
+method Fd
+; @end
 
   // - create fd object -
   fd_s *fd_ptr = (fd_s *)cmalloc(sizeof(fd_s));
@@ -785,27 +768,16 @@ bool bic_fd_method_Fd_2(interpreter_thread_s &it,unsigned stack_base,uli *operan
 
 bool bic_fd_method_open_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-
-  long long int flags;
-  long long int mode;
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,flags) ||
-      !it.retrieve_integer(src_2_location,mode))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_fd,"open#3");
-    new_exception->params.push(3);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+flags:retrieve_integer
+mode:retrieve_integer
+>
+class c_bi_class_fd
+method open
+static_method
+; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
@@ -833,23 +805,15 @@ bool bic_fd_method_open_3(interpreter_thread_s &it,unsigned stack_base,uli *oper
 
 bool bic_fd_method_creat_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int mode;
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,mode))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_fd,"creat#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+mode:retrieve_integer
+>
+class c_bi_class_fd
+method creat
+static_method
+; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
@@ -877,28 +841,14 @@ bool bic_fd_method_creat_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_fd_method_openat_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-
-  long long int flags;
-  long long int mode;
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,flags) ||
-      !it.retrieve_integer(src_2_location,mode))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("openat#3");
-    new_exception->params.push(3);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+flags:retrieve_integer
+mode:retrieve_integer
+>
+method openat
+; @end
 
   fd_s *dirfd_ptr = (fd_s *)dst_location->v_data_ptr;
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
@@ -950,24 +900,13 @@ bool bic_fd_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_fd_method_write_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int from;
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,from))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("write#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+from:retrieve_integer
+>
+method write
+; @end
 
   fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
@@ -1002,19 +941,12 @@ bool bic_fd_method_write_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_fd_method_write_all_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("write#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+method write_all
+; @end
 
   fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
@@ -1056,28 +988,14 @@ bool bic_fd_method_write_all_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_fd_method_pwrite_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-
-  long long int from;
-  long long int offset;
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,from) ||
-      !it.retrieve_integer(src_2_location,offset))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("pwrite#3");
-    new_exception->params.push(3);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+from:retrieve_integer
+offset:retrieve_integer
+>
+method pwrite
+; @end
 
   fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
@@ -1112,24 +1030,13 @@ bool bic_fd_method_pwrite_3(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_fd_method_pwrite_all_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int offset;
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,offset))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("pwrite_all#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+offset:retrieve_integer
+>
+method pwrite_all
+; @end
 
   fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
@@ -1171,21 +1078,12 @@ bool bic_fd_method_pwrite_all_2(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_fd_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int count;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,count))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("read#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+count:retrieve_integer
+>
+method read
+; @end
 
   fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
 
@@ -1238,25 +1136,13 @@ bool bic_fd_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *oper
 
 bool bic_fd_method_pread_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int count;
-  long long int offset;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,count) ||
-      !it.retrieve_integer(src_1_location,offset))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("pread#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+count:retrieve_integer
+offset:retrieve_integer
+>
+method pread
+; @end
 
   fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
 
@@ -1349,21 +1235,12 @@ bool bic_fd_method_datasync_0(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_fd_method_advise_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int advice;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,advice))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("advise#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+advice:retrieve_integer
+>
+method advise
+; @end
 
   fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
 
@@ -1384,25 +1261,13 @@ bool bic_fd_method_advise_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_fd_method_seek_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int offset;
-  long long int whence;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,offset) ||
-      !it.retrieve_integer(src_1_location,whence))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("seek#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+offset:retrieve_integer
+whence:retrieve_integer
+>
+method seek
+; @end
 
   fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
 
@@ -1424,33 +1289,15 @@ bool bic_fd_method_seek_2(interpreter_thread_s &it,unsigned stack_base,uli *oper
 
 bool bic_fd_method_mmap_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-
-  long long int offset;
-  long long int length;
-  long long int prot;
-  long long int flags;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,offset) ||
-      !it.retrieve_integer(src_1_location,length) ||
-      !it.retrieve_integer(src_2_location,prot) ||
-      !it.retrieve_integer(src_3_location,flags))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("mmap#4");
-    new_exception->params.push(4);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+offset:retrieve_integer
+length:retrieve_integer
+prot:retrieve_integer
+flags:retrieve_integer
+>
+method mmap
+; @end
 
   fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
 
@@ -1770,21 +1617,12 @@ bool bic_mmap_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_mmap_method_remap_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int length;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,length))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("remap#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+length:retrieve_integer
+>
+method remap
+; @end
 
   mmap_s *mm_ptr = (mmap_s *)dst_location->v_data_ptr;
 
@@ -1818,21 +1656,12 @@ bool bic_mmap_method_remap_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_mmap_method_protect_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int prot;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,prot))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("protect#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+prot:retrieve_integer
+>
+method protect
+; @end
 
   mmap_s *mm_ptr = (mmap_s *)dst_location->v_data_ptr;
 
@@ -1852,21 +1681,12 @@ bool bic_mmap_method_protect_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_mmap_method_sync_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int flags;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,flags))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("sync#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+flags:retrieve_integer
+>
+method sync
+; @end
 
   mmap_s *mm_ptr = (mmap_s *)dst_location->v_data_ptr;
 
@@ -1886,26 +1706,17 @@ bool bic_mmap_method_sync_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_mmap_method_advise_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int flags;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,flags))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("advise#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+advice:retrieve_integer
+>
+method advise
+; @end
 
   mmap_s *mm_ptr = (mmap_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (madvise(mm_ptr->mem_ptr,mm_ptr->length,flags) == -1)
+  if (madvise(mm_ptr->mem_ptr,mm_ptr->length,advice) == -1)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MMAP_ADVISE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(errno);
@@ -1920,28 +1731,14 @@ bool bic_mmap_method_advise_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_mmap_method_write_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-
-  long long int offset;
-  long long int from;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,offset) ||
-      src_1_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_2_location,from))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("write#3");
-    new_exception->params.push(3);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+offset:retrieve_integer
+data:c_bi_class_string
+from:retrieve_integer
+>
+method write
+; @end
 
   mmap_s *mm_ptr = (mmap_s *)dst_location->v_data_ptr;
   string_s *string_ptr = (string_s *)src_1_location->v_data_ptr;
@@ -1984,25 +1781,13 @@ bool bic_mmap_method_write_3(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_mmap_method_read_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int offset;
-  long long int length;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,offset) ||
-      !it.retrieve_integer(src_1_location,length))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("read#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+offset:retrieve_integer
+length:retrieve_integer
+>
+method read
+; @end
 
   mmap_s *mm_ptr = (mmap_s *)dst_location->v_data_ptr;
 

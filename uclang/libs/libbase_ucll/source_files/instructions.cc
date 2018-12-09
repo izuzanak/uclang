@@ -1133,7 +1133,7 @@ int inst_slice_range(inst_params_s *params)
     it.release_location_ptr((location_s *)trg_location);\
     ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();\
     trg_location = it.blank_location;\
-    \
+\
     return c_run_return_code_EXCEPTION;\
   }/*}}}*/
 
@@ -1163,7 +1163,7 @@ int inst_slice_range(inst_params_s *params)
   {/*{{{*/\
     /* - push item location to result array - */\
     array_ptr->push(item_location);\
-    \
+\
     next = actual + step;\
   }/*}}}*/
 

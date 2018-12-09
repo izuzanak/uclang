@@ -1078,9 +1078,9 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     char result = (char)dst_location->v_data_ptr;\
-    \
+\
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
       result OPERATOR ## = (char)src_0_location->v_data_ptr;\
@@ -1091,17 +1091,17 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
     case c_bi_class_float:\
       result  = (char)(result OPERATOR (double)src_0_location->v_data_ptr);\
       break;\
-      \
+\
       /* - ERROR - */\
     default:\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_SIMPLE_SET_DST_AND_RES(c_bi_class_char,result);\
   }/*}}}*/
 
@@ -1109,9 +1109,9 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     char result = (char)dst_location->v_data_ptr;\
-    \
+\
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
       result OPERATOR ## = (char)src_0_location->v_data_ptr;\
@@ -1119,17 +1119,17 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
     case c_bi_class_integer:\
       result OPERATOR ## = (long long int)src_0_location->v_data_ptr;\
       break;\
-      \
+\
       /* - ERROR - */\
     default:\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_SIMPLE_SET_DST_AND_RES(c_bi_class_char,result);\
   }/*}}}*/
 
@@ -1137,9 +1137,9 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     char result = (char)dst_location->v_data_ptr;\
-    \
+\
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
     {\
@@ -1148,10 +1148,10 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
       {\
         exception_s *new_exception = exception_s::throw_exception(it,c_error_NEGATIVE_SHIFT_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
         new_exception->params.push((long long int)shift_count);\
-        \
+\
         return false;\
       }\
-      \
+\
       result OPERATOR ## = shift_count;\
     }\
     break;\
@@ -1162,24 +1162,24 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
       {\
         exception_s *new_exception = exception_s::throw_exception(it,c_error_NEGATIVE_SHIFT_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
         new_exception->params.push(shift_count);\
-        \
+\
         return false;\
       }\
-      \
+\
       result OPERATOR ## = shift_count;\
     }\
     break;\
-    \
+\
     /* - ERROR - */\
     default:\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_SIMPLE_SET_DST_AND_RES(c_bi_class_char,result);\
   }/*}}}*/
 
@@ -1187,9 +1187,9 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     long long int result;\
-    \
+\
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
       result = (char)dst_location->v_data_ptr OPERATOR (char)src_0_location->v_data_ptr;\
@@ -1200,17 +1200,17 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
     case c_bi_class_float:\
       result = (char)dst_location->v_data_ptr OPERATOR (double)src_0_location->v_data_ptr;\
       break;\
-      \
+\
       /* - ERROR - */\
     default:\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
   }/*}}}*/
 
@@ -1218,9 +1218,9 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     long long int result;\
-    \
+\
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
       result = (char)dst_location->v_data_ptr OPERATOR (char)src_0_location->v_data_ptr;\
@@ -1228,17 +1228,17 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
     case c_bi_class_integer:\
       result = (char)dst_location->v_data_ptr OPERATOR (long long int)src_0_location->v_data_ptr;\
       break;\
-      \
+\
       /* - ERROR - */\
     default:\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
   }/*}}}*/
 
@@ -1246,9 +1246,9 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     long long int result;\
-    \
+\
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
     {\
@@ -1257,10 +1257,10 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
       {\
         exception_s *new_exception = exception_s::throw_exception(it,c_error_NEGATIVE_SHIFT_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
         new_exception->params.push((long long int)shift_count);\
-        \
+\
         return false;\
       }\
-      \
+\
       result = (char)dst_location->v_data_ptr OPERATOR shift_count;\
     }\
     break;\
@@ -1271,24 +1271,24 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
       {\
         exception_s *new_exception = exception_s::throw_exception(it,c_error_NEGATIVE_SHIFT_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
         new_exception->params.push(shift_count);\
-        \
+\
         return false;\
       }\
-      \
+\
       result = (char)dst_location->v_data_ptr OPERATOR shift_count;\
     }\
     break;\
-    \
+\
     /* - ERROR - */\
     default:\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
   }/*}}}*/
 
@@ -1296,10 +1296,10 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     unsigned v_type;\
     v_data_type v_data_ptr;\
-    \
+\
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
       v_type = c_bi_class_char;\
@@ -1313,44 +1313,44 @@ bool bic_char_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base
       v_type = c_bi_class_float;\
       v_data_ptr = (double)((char)dst_location->v_data_ptr OPERATOR (double)src_0_location->v_data_ptr);\
     break;\
-    \
+\
     /* - ERROR - */\
     default:\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_SIMPLE_SET_RES(v_type,v_data_ptr);\
   }/*}}}*/
 
 #define BIC_CHAR_POST_UNARY(OPERATOR) \
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    \
+\
     char result = ((char)dst_location->v_data_ptr) OPERATOR;\
-    \
+\
     BIC_SIMPLE_SET_RES_SWAP(c_bi_class_char,result);\
   }/*}}}*/
 
 #define BIC_CHAR_PRE_UNARY(OPERATOR) \
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    \
+\
     char result = ((char)dst_location->v_data_ptr) OPERATOR;\
-    \
+\
     BIC_SIMPLE_SET_DST_AND_RES(c_bi_class_char,result);\
   }/*}}}*/
 
 #define BIC_CHAR_PRE_UNARY_TMP_RESULT(OPERATOR) \
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    \
+\
     char result = OPERATOR (char)dst_location->v_data_ptr;\
-    \
+\
     BIC_SIMPLE_SET_RES(c_bi_class_char,result);\
   }/*}}}*/
 
@@ -2178,9 +2178,9 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     long long int result = (long long int)dst_location->v_data_ptr;\
-    \
+\
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
       result OPERATOR ## = (char)src_0_location->v_data_ptr;\
@@ -2191,17 +2191,17 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
     case c_bi_class_float:\
       result = (long long int)(result OPERATOR (double)src_0_location->v_data_ptr);\
       break;\
-      \
+\
       /* - ERROR - */\
     default:\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_SIMPLE_SET_DST_AND_RES(c_bi_class_integer,result);\
   }/*}}}*/
 
@@ -2209,9 +2209,9 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     long long int result = (long long int)dst_location->v_data_ptr;\
-    \
+\
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
       result OPERATOR ## = (char)src_0_location->v_data_ptr;\
@@ -2219,17 +2219,17 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
     case c_bi_class_integer:\
       result OPERATOR ## = (long long int)src_0_location->v_data_ptr;\
       break;\
-      \
+\
       /* - ERROR - */\
     default:\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_SIMPLE_SET_DST_AND_RES(c_bi_class_integer,result);\
   }/*}}}*/
 
@@ -2237,9 +2237,9 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     long long int result = (long long int)dst_location->v_data_ptr;\
-    \
+\
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
     {\
@@ -2248,10 +2248,10 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
       {\
         exception_s *new_exception = exception_s::throw_exception(it,c_error_NEGATIVE_SHIFT_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
         new_exception->params.push((long long int)shift_count);\
-        \
+\
         return false;\
       }\
-      \
+\
       result OPERATOR ## = shift_count;\
     }\
     break;\
@@ -2262,24 +2262,24 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
       {\
         exception_s *new_exception = exception_s::throw_exception(it,c_error_NEGATIVE_SHIFT_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
         new_exception->params.push(shift_count);\
-        \
+\
         return false;\
       }\
-      \
+\
       result OPERATOR ## = shift_count;\
     }\
     break;\
-    \
+\
     /* - ERROR - */\
     default:\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_SIMPLE_SET_DST_AND_RES(c_bi_class_integer,result);\
   }/*}}}*/
 
@@ -2287,9 +2287,9 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     long long int result;\
-    \
+\
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
       result = (long long int)dst_location->v_data_ptr OPERATOR (char)src_0_location->v_data_ptr;\
@@ -2300,17 +2300,17 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
     case c_bi_class_float:\
       result = (long long int)dst_location->v_data_ptr OPERATOR (double)src_0_location->v_data_ptr;\
       break;\
-      \
+\
       /* - ERROR - */\
     default:\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
   }/*}}}*/
 
@@ -2318,9 +2318,9 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     long long int result;\
-    \
+\
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
       result = (long long int)dst_location->v_data_ptr OPERATOR (char)src_0_location->v_data_ptr;\
@@ -2328,17 +2328,17 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
     case c_bi_class_integer:\
       result = (long long int)dst_location->v_data_ptr OPERATOR (long long int)src_0_location->v_data_ptr;\
       break;\
-      \
+\
       /* - ERROR - */\
     default:\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
   }/*}}}*/
 
@@ -2346,9 +2346,9 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     long long int result;\
-    \
+\
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
     {\
@@ -2357,10 +2357,10 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
       {\
         exception_s *new_exception = exception_s::throw_exception(it,c_error_NEGATIVE_SHIFT_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
         new_exception->params.push((long long int)shift_count);\
-        \
+\
         return false;\
       }\
-      \
+\
       result = (long long int)dst_location->v_data_ptr OPERATOR shift_count;\
     }\
     break;\
@@ -2371,24 +2371,24 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
       {\
         exception_s *new_exception = exception_s::throw_exception(it,c_error_NEGATIVE_SHIFT_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
         new_exception->params.push(shift_count);\
-        \
+\
         return false;\
       }\
-      \
+\
       result = (long long int)dst_location->v_data_ptr OPERATOR shift_count;\
     }\
     break;\
-    \
+\
     /* - ERROR - */\
     default:\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
   }/*}}}*/
 
@@ -2396,10 +2396,10 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     unsigned v_type;\
     v_data_type v_data_ptr;\
-    \
+\
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
       v_type = c_bi_class_integer;\
@@ -2413,44 +2413,44 @@ bool bic_integer_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
       v_type = c_bi_class_float;\
       v_data_ptr = (double)((long long int)dst_location->v_data_ptr OPERATOR (double)src_0_location->v_data_ptr);\
     break;\
-    \
+\
     /* - ERROR - */\
     default:\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_SIMPLE_SET_RES(v_type,v_data_ptr);\
   }/*}}}*/
 
 #define BIC_INTEGER_POST_UNARY(OPERATOR) \
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    \
+\
     long long int result = ((long long int)dst_location->v_data_ptr) OPERATOR;\
-    \
+\
     BIC_SIMPLE_SET_RES_SWAP(c_bi_class_integer,result);\
   }/*}}}*/
 
 #define BIC_INTEGER_PRE_UNARY(OPERATOR) \
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    \
+\
     long long int result = ((long long int)dst_location->v_data_ptr) OPERATOR;\
-    \
+\
     BIC_SIMPLE_SET_DST_AND_RES(c_bi_class_integer,result);\
   }/*}}}*/
 
 #define BIC_INTEGER_PRE_UNARY_TMP_RESULT(OPERATOR) \
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    \
+\
     long long int result = OPERATOR (long long int)dst_location->v_data_ptr;\
-    \
+\
     BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
   }/*}}}*/
 
@@ -3418,9 +3418,9 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     double result = (double)dst_location->v_data_ptr;\
-    \
+\
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
       result OPERATOR ## = (char)src_0_location->v_data_ptr;\
@@ -3431,17 +3431,17 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
     case c_bi_class_float:\
       result OPERATOR ## = (double)src_0_location->v_data_ptr;\
       break;\
-      \
+\
       /* - ERROR - */\
     default:\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_SIMPLE_SET_DST_AND_RES(c_bi_class_float,result);\
   }/*}}}*/
 
@@ -3449,9 +3449,9 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     long long int result;\
-    \
+\
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
       result = (double)dst_location->v_data_ptr OPERATOR (char)src_0_location->v_data_ptr;\
@@ -3462,17 +3462,17 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
     case c_bi_class_float:\
       result = (double)dst_location->v_data_ptr OPERATOR (double)src_0_location->v_data_ptr;\
       break;\
-      \
+\
       /* - ERROR - */\
     default:\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
   }/*}}}*/
 
@@ -3480,9 +3480,9 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     double result;\
-    \
+\
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
       result = (double)dst_location->v_data_ptr OPERATOR (char)src_0_location->v_data_ptr;\
@@ -3493,44 +3493,44 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
     case c_bi_class_float:\
       result = (double)dst_location->v_data_ptr OPERATOR (double)src_0_location->v_data_ptr;\
       break;\
-      \
+\
       /* - ERROR - */\
     default:\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
   }/*}}}*/
 
 #define BIC_FLOAT_POST_UNARY(OPERATOR) \
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    \
+\
     double result = (double)dst_location->v_data_ptr OPERATOR;\
-    \
+\
     BIC_SIMPLE_SET_RES_SWAP(c_bi_class_float,result);\
   }/*}}}*/
 
 #define BIC_FLOAT_PRE_UNARY(OPERATOR) \
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    \
+\
     double result = (double)dst_location->v_data_ptr OPERATOR;\
-    \
+\
     BIC_SIMPLE_SET_DST_AND_RES(c_bi_class_float,result);\
   }/*}}}*/
 
 #define BIC_FLOAT_PRE_UNARY_TMP_RESULT(OPERATOR) \
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    \
+\
     double result = OPERATOR (double)dst_location->v_data_ptr;\
-    \
+\
     BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
   }/*}}}*/
 
@@ -3556,9 +3556,9 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     double result;\
-    \
+\
     switch (src_0_location->v_type) {\
     case c_bi_class_char:\
       result = FNAME((double)dst_location->v_data_ptr, (char)src_0_location->v_data_ptr);\
@@ -3569,26 +3569,26 @@ bool bic_float_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
     case c_bi_class_float:\
       result = FNAME((double)dst_location->v_data_ptr, (double)src_0_location->v_data_ptr);\
       break;\
-      \
+\
       /* - ERROR - */\
     default:\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
   }/*}}}*/
 
 #define BIC_FLOAT_FUNCTION_UNARY(FNAME) \
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    \
+\
     double result = FNAME((double)dst_location->v_data_ptr);\
-    \
+\
     BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
   }/*}}}*/
 
@@ -4266,12 +4266,12 @@ built_in_variable_s string_variables[] =
 #define BIC_STRING_CHECK_INDEX() \
   /*{{{*/\
   string_s *string_ptr = (string_s *)dst_location->v_data_ptr;\
-  \
+\
   /* - ERROR - */\
   if (index < 0 || index >= (string_ptr->size - 1)) {\
     exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(index);\
-    \
+\
     return false;\
   }\
   /*}}}*/
@@ -4280,9 +4280,9 @@ built_in_variable_s string_variables[] =
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     long long int index;\
-    \
+\
     /* - ERROR - */\
     if (!it.retrieve_integer(src_0_location,index))\
     {\
@@ -4290,14 +4290,14 @@ built_in_variable_s string_variables[] =
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_STRING_CHECK_INDEX();\
-    \
+\
     char result = string_ptr->data[index];\
-    \
+\
     BIC_SIMPLE_SET_RES(c_bi_class_char,result);\
   }/*}}}*/
 
@@ -4305,7 +4305,7 @@ built_in_variable_s string_variables[] =
   /*{{{*/\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  \
+\
   /* - ERROR - */\
   if (src_0_location->v_type != c_bi_class_string)\
   {\
@@ -4313,20 +4313,20 @@ built_in_variable_s string_variables[] =
     BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
     new_exception->params.push(1);\
     new_exception->params.push(src_0_location->v_type);\
-  \
+\
     return false;\
   }\
-  \
+\
   string_s *first_ptr = (string_s *)dst_location->v_data_ptr;\
   string_s *second_ptr = (string_s *)src_0_location->v_data_ptr;\
-  \
+\
   unsigned f_length = first_ptr->size - 1;\
   unsigned s_length = second_ptr->size - 1;\
-  \
+\
   /* - create result string - */\
   string_s *result_ptr = it.get_new_string_ptr();\
   result_ptr->create(f_length + s_length);\
-  \
+\
   /* - construct result string - */\
   memcpy(result_ptr->data,first_ptr->data,f_length);\
   memcpy(result_ptr->data + f_length,second_ptr->data,s_length);\
@@ -5226,17 +5226,17 @@ bool bic_string_method_join_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
 #define BIC_STRING_METHOD_JOIN_1_BODY() \
   {/*{{{*/\
-    \
+\
     /* - push new string to strings - */\
     strings.push_blank();\
     string_s *s_ptr = &strings.last();\
-    \
+\
     /* - convert item to string - */\
     BIC_CALL_TO_STRING(it,item_location,operands[c_source_pos_idx],\
                        strings.clear();\
                        return false;\
                       );\
-    \
+\
     /* - release item location - */\
     it.release_location_ptr(item_location);\
   }/*}}}*/
@@ -5947,23 +5947,23 @@ built_in_variable_s array_variables[] =
     if ((SECOND_LOC_PTR)->v_type == c_bi_class_array) {\
       pointer_array_s *f_array_ptr = (pointer_array_s *)(FIRST_LOC_PTR)->v_data_ptr;\
       pointer_array_s *s_array_ptr = (pointer_array_s *)(SECOND_LOC_PTR)->v_data_ptr;\
-      \
+\
       if (f_array_ptr->used != s_array_ptr->used)\
       {\
         result = f_array_ptr->used < s_array_ptr->used ? -1 : 1;\
       }\
       else {\
         result = 0;\
-        \
+\
         if (f_array_ptr->used != 0)\
         {\
           pointer *f_ptr = f_array_ptr->data;\
           pointer *f_ptr_end = f_ptr + f_array_ptr->used;\
           pointer *s_ptr = s_array_ptr->data;\
-          \
+\
           do {\
             BIC_CALL_COMPARE(it,*f_ptr,*s_ptr,SOURCE_POS,return false);\
-            \
+\
             if (result != 0) {\
               break;\
             }\
@@ -5979,17 +5979,17 @@ built_in_variable_s array_variables[] =
 #define BIC_ARRAY_APPEND_ARRAY(SRC_LOCATION,TARGET_PTR) \
   {/*{{{*/\
     pointer_array_s *source_ptr = (pointer_array_s *)SRC_LOCATION->v_data_ptr;\
-    \
+\
     if (source_ptr->used != 0)\
     {\
       pointer *ptr = source_ptr->data;\
       pointer *ptr_end = ptr + source_ptr->used;\
-      \
+\
       do\
       {\
         location_s *item_location = it.get_location_value(*ptr);\
         item_location->v_reference_cnt.atomic_inc();\
-        \
+\
         /* - push item location to array - */\
         TARGET_PTR->push(item_location);\
       }\
@@ -6001,43 +6001,43 @@ built_in_variable_s array_variables[] =
   {/*{{{*/\
     item_location->v_reference_cnt.atomic_inc();\
     it.release_location_ptr(item_reference);\
-    \
+\
     /* - push item location to array - */\
     TARGET_PTR->push(item_location);\
   }/*}}}*/
 
 #define BIC_ARRAY_APPEND_ITERABLE(SRC_LOCATION,TARGET_PTR) \
   {/*{{{*/\
-    \
+\
     /* - retrieve iterable type - */\
     unsigned iter_type = it.get_iterable_type(SRC_LOCATION);\
-    \
+\
     /* - ERROR - */\
     if (iter_type == c_idx_not_exist)\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_OBJECT_OF_CLASS_IS_NOT_ITERABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       new_exception->params.push(SRC_LOCATION->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     if (iter_type == c_iter_first_idx_next_idx_item)\
     {\
       long long int index;\
       location_s *item_reference;\
       location_s *item_location;\
-      \
+\
       /* - retrieve first index - */\
       BIC_CALL_FIRST_IDX(it,SRC_LOCATION,index,operands[c_source_pos_idx],return false;);\
-      \
+\
       while (index != c_idx_not_exist)\
       {\
         /* - retrieve item location - */\
         BIC_CALL_ITEM(it,SRC_LOCATION,index,item_reference,operands[c_source_pos_idx],return false;);\
         item_location = it.get_location_value(item_reference);\
-        \
+\
         BIC_ARRAY_APPEND_ITERABLE_BODY(TARGET_PTR);\
-        \
+\
         /* - retrieve next index - */\
         BIC_CALL_NEXT_IDX(it,SRC_LOCATION,index,index,operands[c_source_pos_idx],return false;);\
       }\
@@ -6046,21 +6046,21 @@ built_in_variable_s array_variables[] =
     {\
       location_s *item_reference;\
       location_s *item_location;\
-      \
+\
       do\
       {\
         /* - retrieve next item location - */\
         BIC_CALL_NEXT_ITEM(it,SRC_LOCATION,item_reference,operands[c_source_pos_idx],return false;);\
         item_location = it.get_location_value(item_reference);\
-        \
+\
         if (item_location->v_type == c_bi_class_blank)\
         {\
           it.release_location_ptr(item_reference);\
           break;\
         }\
-        \
+\
         BIC_ARRAY_APPEND_ITERABLE_BODY(TARGET_PTR);\
-        \
+\
       }\
       while(true);\
     }\
@@ -6073,12 +6073,12 @@ built_in_variable_s array_variables[] =
 #define BIC_ARRAY_CHECK_INDEX() \
   /*{{{*/\
   pointer_array_s *array_ptr = (pointer_array_s *)dst_location->v_data_ptr;\
-  \
+\
   /* - ERROR - */\
   if (index < 0 || index >= array_ptr->used) {\
     exception_s *new_exception = exception_s::throw_exception(it,c_error_ARRAY_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(index);\
-    \
+\
     return false;\
   }\
   /*}}}*/
@@ -6087,9 +6087,9 @@ built_in_variable_s array_variables[] =
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     long long int index;\
-    \
+\
     /* - ERROR - */\
     if (!it.retrieve_integer(src_0_location,index))\
     {\
@@ -6097,15 +6097,15 @@ built_in_variable_s array_variables[] =
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_ARRAY_CHECK_INDEX();\
-    \
+\
     pointer *element_location = &array_ptr->data[index];\
     location_s *new_ref_location = it.get_new_reference((location_s **)element_location);\
-    \
+\
     BIC_SET_RESULT(new_ref_location);\
   }/*}}}*/
 
@@ -6363,19 +6363,19 @@ bool bic_array_operator_binary_ls_br_equal(interpreter_thread_s &it,unsigned sta
   {
 #define BIC_ARRAY_OPERATOR_BINARY_LS_BR_EQUAL_BODY() \
   {/*{{{*/\
-    \
+\
     /* - retrieve target location - */\
     pointer &trg_location = \
                             ((location_s *)*p_ptr)->v_type == c_bi_reference ? \
                             *((pointer *)((location_s *)*p_ptr)->v_data_ptr) : *p_ptr;\
-    \
+\
     /* - retrieve source location - */\
     location_s *src_location = it.get_location_value((pointer)item_location);\
-    \
+\
     src_location->v_reference_cnt.atomic_inc();\
     it.release_location_ptr((location_s *)trg_location);\
     trg_location = (pointer)src_location;\
-    \
+\
     it.release_location_ptr(item_location);\
   }/*}}}*/
 

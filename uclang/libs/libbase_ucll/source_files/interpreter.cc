@@ -510,7 +510,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
   release_location_ptr((location_s *)res_location);\
   ((location_s *)blank_location)->v_reference_cnt.atomic_inc();\
   res_location = blank_location;\
-  \
+\
   /* - release location pointers - */\
   release_location_ptr(dst_location);\
 }/*}}}*/
@@ -524,15 +524,15 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
   {\
     EXIT;\
   }\
-  \
+\
   FG_TYPE_FOR_LOOP_RELEASE();\
-  \
+\
   /* - remove parameters from stack - */\
   if (start_fg_idx == c_idx_not_exist)\
   {\
     release_stack_from(stack_base);\
   }\
-  \
+\
   return c_run_return_code_EXCEPTION;\
 }/*}}}*/
 
@@ -540,13 +540,13 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
 {/*{{{*/\
 \
   FG_TYPE_FOR_LOOP_RELEASE();\
-  \
+\
   /* - remove parameters from stack - */\
   if (start_fg_idx == c_idx_not_exist)\
   {\
     release_stack_from(stack_base);\
   }\
-  \
+\
   return c_run_return_code_RETURN;\
 }/*}}}*/
 
@@ -557,7 +557,7 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
   if (fg_ptr[c_fg_for_loop_body] != c_idx_not_exist)\
   {\
     int ret_value;\
-    \
+\
     try {\
       ret_value = run_method_code(method_record,stack_base,return_trg_idx,fg_ptr[c_fg_for_loop_body]);\
     }\
@@ -565,35 +565,35 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
     {\
       FG_TYPE_FOR_LOOP_RETURN();\
     }\
-    \
+\
     switch (ret_value)\
     {\
     case c_run_return_code_OK:\
       break;\
-      \
+\
     case c_run_return_code_EXCEPTION:\
       FG_TYPE_FOR_LOOP_EXCEPTION(\
                                  loop_run = false;\
                                  continue;\
                                 );\
       break;\
-      \
+\
     case c_run_return_code_RETURN:\
       FG_TYPE_FOR_LOOP_RETURN();\
       break;\
-      \
+\
     case c_run_return_code_BREAK:\
-      \
+\
       /* - continue to next instruction - */\
       fg_idx = fg_ptr[c_fg_expression_first_out];\
-      \
+\
       loop_run = false;\
       continue;\
       break;\
-      \
+\
     case c_run_return_code_CONTINUE:\
       break;\
-      \
+\
     default:\
       cassert(0);\
     }\
@@ -778,28 +778,28 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
     loop_run = false;\
     continue;\
   }\
-  \
+\
   FG_TYPE_SWITCH_RELEASE();\
-  \
+\
   /* - remove parameters from stack - */\
   if (start_fg_idx == c_idx_not_exist)\
   {\
     release_stack_from(stack_base);\
   }\
-  \
+\
   return c_run_return_code_EXCEPTION;\
 }/*}}}*/
 
 #define FG_TYPE_SWITCH_RETURN() \
 {/*{{{*/\
   FG_TYPE_SWITCH_RELEASE();\
-  \
+\
   /* - remove parameters from stack - */\
   if (start_fg_idx == c_idx_not_exist)\
   {\
     release_stack_from(stack_base);\
   }\
-  \
+\
   return c_run_return_code_RETURN;\
 }/*}}}*/
 

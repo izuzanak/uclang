@@ -83,11 +83,11 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
 #define IM_OPERATOR_UNARY(OP_NAME) \
   {/*{{{*/\
     im_descr_s &im = _this.im_descr;\
-    \
+\
     /* ***** */\
-    \
+\
     unsigned exp_node_idx = im.exp_node_stack.last();\
-    \
+\
     /* - set up method parameters - */\
     if (im.done_exp_nodes[exp_node_idx] == c_idx_not_exist) {\
       im.exp_node_stack.push(exp.nodes[exp_node_idx + 2]);\
@@ -96,47 +96,47 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
     else {\
       /* - get temporary position for location of operator result - */\
       unsigned tmp_local_idx = im.free_stack_idxs.used != 0?im.free_stack_idxs.pop():im.stack_idx_max++;\
-      \
+\
       /* - process operator parameters - */\
       unsigned *op_ptr = im.operands.data + im.operand_stack.pop();\
-      \
+\
       if (*op_ptr & c_op_modifier_static_class) {\
-        \
+\
         /* - process static method call - */\
         class_record_s &class_record = _this.class_records[op_ptr[1]];\
-        \
+\
         unsigned method_ri = class_record.mnri_map.map_name(OP_NAME);\
-        \
+\
         /* - ERROR - */\
         if (method_ri == c_idx_not_exist) {\
           _this.error_code.push(ei_class_does_not_contain_method);\
           _this.error_code.push(exp.nodes[exp_node_idx + 1]);\
           _this.error_code.push(op_ptr[1]);\
           _this.error_code.push(OP_NAME);\
-          \
+\
           return false;\
         }\
-        \
+\
         method_record_s &method_record = _this.method_records[method_ri];\
-        \
+\
         /* - ERROR - */\
         if (!(method_record.modifiers & c_modifier_static)) {\
           _this.error_code.push(ei_static_reference_to_nonstatic_method);\
           _this.error_code.push(exp.nodes[exp_node_idx + 1]);\
           _this.error_code.push(method_ri);\
-          \
+\
           return false;\
         }\
-        \
+\
         /* - ERROR if method is private, parent class must be im.class_idx - */\
         if ((method_record.modifiers & c_modifier_private) && (method_record.parent_record != im.class_idx)) {\
           _this.error_code.push(ei_cannot_access_private_method);\
           _this.error_code.push(exp.nodes[exp_node_idx + 1]);\
           _this.error_code.push(method_ri);\
-          \
+\
           return false;\
         }\
-        \
+\
         code.push(i_static_call);\
         code.push(0);\
         code.push(exp.nodes[exp_node_idx + 1]);\
@@ -144,33 +144,33 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
         code.push(method_ri);\
       }\
       else {\
-        \
+\
         /* - process method call - */\
         code.push(i_call);\
         code.push(1);\
         code.push(OP_NAME);\
         code.push(exp.nodes[exp_node_idx + 1]);\
         code.push(tmp_local_idx);\
-        \
+\
         /* - ERROR - */\
         if (!(*op_ptr & c_op_modifier_object)) {\
           _this.error_code.push(ei_expected_object_as_operand);\
           _this.error_code.push(exp.nodes[exp_node_idx + 1]);\
-          \
+\
           return false;\
         }\
-        \
+\
         code.push(op_ptr[1]);\
         if (*op_ptr & c_op_modifier_tmp) {\
           im.free_stack_idxs.push(op_ptr[1]);\
         }\
       }\
-      \
+\
       /* - store position of operator result reference - */\
       im.operand_stack.push(im.operands.used);\
       im.operands.push(c_op_modifier_object | c_op_modifier_tmp);\
       im.operands.push(tmp_local_idx);\
-      \
+\
       im.exp_node_stack.used--;\
     }\
   }/*}}}*/
@@ -178,65 +178,65 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
 #define IM_OPERATOR_BINARY(OP_NAME) \
   {/*{{{*/\
     im_descr_s &im = _this.im_descr;\
-    \
+\
     /* ***** */\
-    \
+\
     unsigned exp_node_idx = im.exp_node_stack.last();\
-    \
+\
     /* - set up of method operators - */\
     if (im.done_exp_nodes[exp_node_idx] == c_idx_not_exist) {\
       unsigned *exp_node_ptr = exp.nodes.data + exp_node_idx;\
-      \
+\
       im.exp_node_stack.push(exp_node_ptr[3]);\
       im.exp_node_stack.push(exp_node_ptr[2]);\
-      \
+\
       im.done_exp_nodes[exp_node_idx] = 1;\
     }\
     else {\
       /* - get temporary location for operator result - */\
       unsigned tmp_local_idx = im.free_stack_idxs.used != 0?im.free_stack_idxs.pop():im.stack_idx_max++;\
-      \
+\
       /* - process operator parameters - */\
       unsigned *op2_ptr = im.operands.data + im.operand_stack.pop();\
       unsigned *op1_ptr = im.operands.data + im.operand_stack.pop();\
-      \
+\
       if (*op1_ptr & c_op_modifier_static_class) {\
-        \
+\
         /* - process static method call - */\
         class_record_s &class_record = _this.class_records[op1_ptr[1]];\
-        \
+\
         unsigned method_ri = class_record.mnri_map.map_name(OP_NAME);\
-        \
+\
         /* - ERROR - */\
         if (method_ri == c_idx_not_exist) {\
           _this.error_code.push(ei_class_does_not_contain_method);\
           _this.error_code.push(exp.nodes[exp_node_idx + 1]);\
           _this.error_code.push(op1_ptr[1]);\
           _this.error_code.push(OP_NAME);\
-          \
+\
           return false;\
         }\
-        \
+\
         method_record_s &method_record = _this.method_records[method_ri];\
-        \
+\
         /* - ERROR - */\
         if (!(method_record.modifiers & c_modifier_static)) {\
           _this.error_code.push(ei_static_reference_to_nonstatic_method);\
           _this.error_code.push(exp.nodes[exp_node_idx + 1]);\
           _this.error_code.push(method_ri);\
-          \
+\
           return false;\
         }\
-        \
+\
         /* - ERROR if method is private, parent class must be im.class_idx - */\
         if ((method_record.modifiers & c_modifier_private) && (method_record.parent_record != im.class_idx)) {\
           _this.error_code.push(ei_cannot_access_private_method);\
           _this.error_code.push(exp.nodes[exp_node_idx + 1]);\
           _this.error_code.push(method_ri);\
-          \
+\
           return false;\
         }\
-        \
+\
         code.push(i_static_call);\
         code.push(1);\
         code.push(exp.nodes[exp_node_idx + 1]);\
@@ -244,46 +244,46 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
         code.push(method_ri);\
       }\
       else {\
-        \
+\
         /* - process method call - */\
         code.push(i_call);\
         code.push(2);\
         code.push(OP_NAME);\
         code.push(exp.nodes[exp_node_idx + 1]);\
         code.push(tmp_local_idx);\
-        \
+\
         /* - ERROR - */\
         if (!(*op1_ptr & c_op_modifier_object)) {\
           _this.error_code.push(ei_expected_object_as_operand);\
           _this.error_code.push(exp.nodes[exp_node_idx + 1]);\
-          \
+\
           return false;\
         }\
-        \
+\
         code.push(op1_ptr[1]);\
         if (*op1_ptr & c_op_modifier_tmp) {\
           im.free_stack_idxs.push(op1_ptr[1]);\
         }\
       }\
-      \
+\
       /* - ERROR - */\
       if (!(*op2_ptr & c_op_modifier_object)) {\
         _this.error_code.push(ei_expected_object_as_operand);\
         _this.error_code.push(exp.nodes[exp_node_idx + 1]);\
-        \
+\
         return false;\
       }\
-      \
+\
       code.push(op2_ptr[1]);\
       if (*op2_ptr & c_op_modifier_tmp) {\
         im.free_stack_idxs.push(op2_ptr[1]);\
       }\
-      \
+\
       /* - store position of operator result reference - */\
       im.operand_stack.push(im.operands.used);\
       im.operands.push(c_op_modifier_object | c_op_modifier_tmp);\
       im.operands.push(tmp_local_idx);\
-      \
+\
       im.exp_node_stack.used--;\
     }\
   }/*}}}*/
@@ -294,99 +294,99 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
     method_records_s &method_records = _this.method_records;\
     variable_records_s &variable_records = _this.variable_records;\
     im_descr_s &im = _this.im_descr;\
-    \
+\
     /* ***** */\
-    \
+\
     unsigned exp_node_idx = im.exp_node_stack.last();\
-    \
+\
     unsigned id_name_idx = exp.nodes[exp_node_idx + 2];\
     unsigned id_idx;\
-    \
+\
     ID_EXIST_TEST\
     {\
-      \
+\
       if (im.code_modifiers & c_code_modifier_run_time)\
       {\
-        \
+\
         /* - test if identifier is method parameter - */\
         method_record_s &method_record = method_records[im.method_idx];\
-        \
+\
         if (method_record.parameter_record_idxs.used != 0)\
         {\
           unsigned *vri_ptr = method_record.parameter_record_idxs.data;\
           unsigned *vri_ptr_end = vri_ptr + method_record.parameter_record_idxs.used;\
-          \
+\
           do\
           {\
             if (variable_records[*vri_ptr].name_idx == id_name_idx)\
             {\
-              \
+\
               /* - get index of parameter in method - */\
               id_idx = vri_ptr - method_record.parameter_record_idxs.data;\
-              \
+\
               if (!(im.code_modifiers & c_code_modifier_static))\
               {\
-                \
+\
                 /* - add one because of this parameter - */\
                 id_idx += 1;\
               }\
-              \
+\
               /* - insertion of new operand describing identifier - */\
               im.var_name_fo_map[id_name_idx] = im.found_operands.used;\
               im.found_operands.push(c_op_modifier_object);\
               im.found_operands.push(id_idx);\
-              \
+\
               /* - store information about identifier to operand stack - */\
               im.operand_stack.push(im.operands.used);\
               im.operands.push(c_op_modifier_object);\
               im.operands.push(id_idx);\
-              \
+\
               break;\
             }\
           }\
           while(++vri_ptr < vri_ptr_end);\
         }\
       }\
-      \
+\
       if (id_idx == c_idx_not_exist)\
       {\
-        \
+\
         /* - test if identifier is member of class, or parent classes - */\
         unsigned cr_idx = im.class_idx;\
-        \
+\
         /* - loop trough nested classes - */\
         do\
         {\
           class_record_s &class_record = class_records[cr_idx];\
           ri_ep_s &ri_ep = class_record.vn_ri_ep_map.map_name(id_name_idx);\
-          \
+\
           id_idx = ri_ep.record_idx;\
-          \
+\
           if (id_idx != c_idx_not_exist)\
           {\
-            \
+\
             variable_record_s &variable_record = variable_records[ri_ep.record_idx];\
-            \
+\
             /* - ERROR test in static code must be used static variable - */\
             if ((im.code_modifiers & c_code_modifier_static) && !(variable_record.modifiers & c_modifier_static))\
             {\
               _this.error_code.push(ei_static_reference_to_nonstatic_variable);\
               _this.error_code.push(exp.nodes[exp_node_idx + 1]);\
               _this.error_code.push(ri_ep.record_idx);\
-              \
+\
               return false;\
             }\
-            \
+\
             /* - ERROR if variable is private, parent class index must be im.class_idx - */\
             if ((variable_record.modifiers & c_modifier_private) && (variable_record.parent_record != im.class_idx))\
             {\
               _this.error_code.push(ei_cannot_access_private_variable);\
               _this.error_code.push(exp.nodes[exp_node_idx + 1]);\
               _this.error_code.push(ri_ep.record_idx);\
-              \
+\
               return false;\
             }\
-            \
+\
             if (variable_record.modifiers & c_modifier_static)\
             {\
               /* - test if static variable is built in constant - */\
@@ -395,21 +395,21 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
                 /* - store access to static constant - */\
                 unsigned const_idx = ri_ep.element_position;\
                 unsigned &cv_operand = im.const_idx_fo_map[const_idx];\
-                \
+\
                 if (cv_operand == c_idx_not_exist)\
                 {\
-                  \
+\
                   /* - creation of position on stack for reference on constant - */\
                   unsigned local_idx = im.stack_idx_max++;\
-                  \
+\
                   cv_operand = im.found_operands.used;\
                   im.found_operands.push(c_op_modifier_object);\
                   im.found_operands.push(local_idx);\
-                  \
+\
                   im.operand_stack.push(im.operands.used);\
                   im.operands.push(c_op_modifier_object);\
                   im.operands.push(local_idx);\
-                  \
+\
                   begin_code.push(i_const);\
                   begin_code.push(local_idx);\
                   begin_code.push(const_idx);\
@@ -417,7 +417,7 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
                 else\
                 {\
                   im.operand_stack.push(im.operands.used);\
-                  \
+\
                   unsigned *fo_ptr = im.found_operands.data + cv_operand;\
                   im.operands.push(*fo_ptr);\
                   im.operands.push(fo_ptr[1]);\
@@ -428,20 +428,20 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
                 /* - process static variable - */\
                 STATIC_EXIST_TEST\
                 {\
-                  \
+\
                   /* - position of static variable on stack - */\
                   unsigned local_idx = im.stack_idx_max++;\
-                  \
+\
                   im.var_name_fo_map[id_name_idx] = im.found_operands.used;\
                   im.static_vi_fo_map[ri_ep.element_position] = im.found_operands.used;\
                   im.found_operands.push(c_op_modifier_object);\
                   im.found_operands.push(local_idx);\
-                  \
+\
                   begin_code.push(i_static);\
                   begin_code.push(exp.nodes[exp_node_idx + 1]);\
                   begin_code.push(local_idx);\
                   begin_code.push(ri_ep.element_position);\
-                  \
+\
                   /* - store reference describing static variable - */\
                   im.operand_stack.push(im.operands.used);\
                   im.operands.push(c_op_modifier_object);\
@@ -451,24 +451,24 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
             }\
             else\
             {\
-              \
+\
               /* - access to nonstatic variable, only for this class - */\
               if (cr_idx == im.class_idx)\
               {\
-                \
+\
                 /* - position of value at stack - */\
                 unsigned local_idx = im.stack_idx_max++;\
-                \
+\
                 /* - creation of new operand describing identifier - */\
                 im.var_name_fo_map[id_name_idx] = im.found_operands.used;\
                 im.found_operands.push(c_op_modifier_object);\
                 im.found_operands.push(local_idx);\
-                \
+\
                 /* - store informations about identifier to operand stack - */\
                 im.operand_stack.push(im.operands.used);\
                 im.operands.push(c_op_modifier_object);\
                 im.operands.push(local_idx);\
-                \
+\
                 /* - identifier is variable of actual (this) class - */\
                 begin_code.push(i_this_element);\
                 begin_code.push(exp.nodes[exp_node_idx + 1]);\
@@ -477,36 +477,36 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
               }\
               else\
               {\
-                \
+\
                 /* - clear identifier index - */\
                 id_idx = c_idx_not_exist;\
-                \
+\
                 /* - continue by next class - */\
                 cr_idx = class_record.parent_record;\
-                \
+\
                 continue;\
               }\
             }\
-            \
+\
             break;\
           }\
-          \
+\
           cr_idx = class_record.parent_record;\
-          \
+\
         }\
         while(cr_idx != c_idx_not_exist);\
       }\
-      \
+\
       /* - test if identifier is link to static class name - */\
       if (id_idx == c_idx_not_exist)\
       {\
         id_idx = _this.class_symbol_names.get_idx(_this.variable_symbol_names[id_name_idx]);\
-        \
+\
         if (id_idx != c_idx_not_exist)\
         {\
-          \
+\
           unsigned class_ri = _this.resolve_class_idx_by_name_idx(id_idx,im.class_idx);\
-          \
+\
           /* - ERROR - */\
           if (class_ri == c_idx_not_exist)\
           {\
@@ -518,7 +518,7 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
             im.var_name_fo_map[id_name_idx] = im.found_operands.used;\
             im.found_operands.push(c_op_modifier_static_class);\
             im.found_operands.push(class_ri);\
-            \
+\
             /* - store information about identifier operand to operand stack - */\
             im.operand_stack.push(im.operands.used);\
             im.operands.push(c_op_modifier_static_class);\
@@ -526,36 +526,36 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
           }\
         }\
       }\
-      \
+\
       /* - creation of new local variable - */\
       if (id_idx == c_idx_not_exist)\
       {\
-        \
+\
         /* - ERROR code is not run time - */\
         if (!(im.code_modifiers & c_code_modifier_run_time))\
         {\
           _this.error_code.push(ei_variable_name_cannot_be_resolved);\
           _this.error_code.push(exp.nodes[exp_node_idx + 1]);\
           _this.error_code.push(id_name_idx);\
-          \
+\
           return false;\
         }\
-        \
+\
         /* - position of local variable at stack - */\
         unsigned local_idx = im.stack_idx_max++;\
-        \
+\
         /* - insertion of new operand describing identifier - */\
         im.var_name_fo_map[id_name_idx] = im.found_operands.used;\
         im.found_operands.push(c_op_modifier_object);\
         im.found_operands.push(local_idx);\
-        \
+\
         /* - store information about identifier operand to operand stack - */\
         im.operand_stack.push(im.operands.used);\
         im.operands.push(c_op_modifier_object);\
         im.operands.push(local_idx);\
       }\
     }\
-    \
+\
     im.exp_node_stack.used--;\
   }/*}}}*/
 

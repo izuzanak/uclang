@@ -638,121 +638,109 @@ built_in_variable_s xml_node_variables[] =
 #define BIC_XML_NODE_MEMBER(MEMBER_NAME) \
 {/*{{{*/\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  \
+\
   xml_node_s *node_ptr = (xml_node_s *)dst_location->v_data_ptr;\
-  \
+\
   location_s *location = node_ptr->MEMBER_NAME;\
   location->v_reference_cnt.atomic_inc();\
-  \
+\
   BIC_SET_RESULT(location);\
-  \
+\
   return true;\
 }/*}}}*/
 
 #define BIC_XML_NODE_METHOD_NODE_1(NAME,REF_CNT) \
 /*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  \
-  if (src_0_location->v_type != c_bi_class_string)\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-    new_exception->params.push(1);\
-    new_exception->params.push(src_0_location->v_type);\
-    \
-    return false;\
-  }\
-  \
+@begin ucl_params
+<
+name:c_bi_class_string
+>
+method NAME
+macro
+; @end\
+\
   xml_node_s *node_ptr = (xml_node_s *)dst_location->v_data_ptr;\
   string_s *name_ptr = (string_s *)src_0_location->v_data_ptr;\
-  \
+\
   /* - ERROR - */\
   if (name_ptr->size <= 1)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_XML_NODE_NAME_INVALID_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-  \
+\
   pointer_array_s *nodes_array = xml_node_s::get_conts_array(it,node_ptr->nodes);\
   pointer_array_s *conts_array = xml_node_s::get_conts_array(it,node_ptr->conts);\
-  \
+\
   /* - create xml node object - */\
   xml_node_s *new_node_ptr = (xml_node_s *)cmalloc(sizeof(xml_node_s));\
   new_node_ptr->init();\
-  \
+\
   src_0_location->v_reference_cnt.atomic_inc();\
   new_node_ptr->name = src_0_location;\
-  \
+\
   location_s *blank_location = (location_s *)it.blank_location;\
   blank_location->v_reference_cnt.atomic_add(5);\
-  \
+\
   new_node_ptr->attributes = blank_location;\
   new_node_ptr->node_dict = blank_location;\
   new_node_ptr->nodes = blank_location;\
   new_node_ptr->texts = blank_location;\
   new_node_ptr->conts = blank_location;\
-  \
+\
   BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_xml_node,new_node_ptr,REF_CNT);\
-  \
+\
   nodes_array->push(new_location);\
   conts_array->push(new_location);\
 /*}}}*/
 
 #define BIC_XML_NODE_METHOD_NODE_2(NAME,REF_CNT) \
 /*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);\
-  \
-  if (src_0_location->v_type != c_bi_class_string ||\
-      src_1_location->v_type != c_bi_class_string)\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-    new_exception->params.push(2);\
-    new_exception->params.push(src_0_location->v_type);\
-    new_exception->params.push(src_1_location->v_type);\
-    \
-    return false;\
-  }\
-  \
+@begin ucl_params
+<
+name:c_bi_class_string
+text:c_bi_class_string
+>
+method NAME
+macro
+; @end\
+\
   xml_node_s *node_ptr = (xml_node_s *)dst_location->v_data_ptr;\
   string_s *name_ptr = (string_s *)src_0_location->v_data_ptr;\
-  \
+\
   /* - ERROR - */\
   if (name_ptr->size <= 1)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_XML_NODE_NAME_INVALID_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-  \
+\
   pointer_array_s *nodes_array = xml_node_s::get_conts_array(it,node_ptr->nodes);\
   pointer_array_s *conts_array = xml_node_s::get_conts_array(it,node_ptr->conts);\
-  \
+\
   /* - create xml node object - */\
   xml_node_s *new_node_ptr = (xml_node_s *)cmalloc(sizeof(xml_node_s));\
   new_node_ptr->init();\
-  \
+\
   src_0_location->v_reference_cnt.atomic_inc();\
   new_node_ptr->name = src_0_location;\
-  \
+\
   location_s *blank_location = (location_s *)it.blank_location;\
   blank_location->v_reference_cnt.atomic_add(3);\
-  \
+\
   new_node_ptr->attributes = blank_location;\
   new_node_ptr->node_dict = blank_location;\
   new_node_ptr->nodes = blank_location;\
-  \
+\
   pointer_array_s *new_texts_array = xml_node_s::get_conts_array(it,new_node_ptr->texts);\
   pointer_array_s *new_conts_array = xml_node_s::get_conts_array(it,new_node_ptr->conts);\
-  \
+\
   src_1_location->v_reference_cnt.atomic_add(2);\
   new_texts_array->push(src_1_location);\
   new_conts_array->push(src_1_location);\
-  \
+\
   BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_xml_node,new_node_ptr,REF_CNT);\
-  \
+\
   nodes_array->push(new_location);\
   conts_array->push(new_location);\
 /*}}}*/

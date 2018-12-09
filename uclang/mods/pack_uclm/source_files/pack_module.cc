@@ -422,18 +422,18 @@ bool bic_pack_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,uli *
 #define UNPACK_RELEASE() \
   {/*{{{*/\
     class_unpack.clear();\
-    \
+\
     if (loc_stack.used != 0)\
     {\
       /* - release locations from location stack - */\
       pointer *l_ptr = loc_stack.data;\
       pointer *l_ptr_end = l_ptr + loc_stack.used;\
-      \
+\
       do {\
         it.release_location_ptr((location_s *)*l_ptr);\
       } while(++l_ptr < l_ptr_end);\
     }\
-    \
+\
     loc_stack.clear();\
   }/*}}}*/
 
@@ -442,7 +442,7 @@ bool bic_pack_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,uli *
     if (CONDITION)\
     {\
       UNPACK_RELEASE();\
-      \
+\
       exception_s::throw_exception(it,module.error_base + c_error_PACK_ERROR_WHILE_UNPACKING_VALUE_STREAM,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       return false;\
     }\
@@ -641,18 +641,18 @@ bool bic_pack_method_code_2(interpreter_thread_s &it,unsigned stack_base,uli *op
   {/*{{{*/\
     count == 0 && (count = 1);\
     data_size = count*sizeof(TYPE);\
-    \
+\
     if (data_size > c_temp_size)\
     {\
       data_buffer = (char *)cmalloc(data_size);\
     }\
-    \
+\
     if (data_size > 0)\
     {\
       TYPE *d_ptr;\
       TYPE *d_ptr_end;\
       int d_step;\
-      \
+\
       if (change_byte_order)\
       {\
         d_ptr = (TYPE *)data_buffer + count - 1;\
@@ -664,43 +664,43 @@ bool bic_pack_method_code_2(interpreter_thread_s &it,unsigned stack_base,uli *op
         d_ptr_end = (TYPE *)data_buffer + count - 1;\
         d_step = 1;\
       }\
-      \
+\
       do {\
-        \
+\
         /* - ERROR - */\
         if (array_ptr->used <= element_idx)\
         {\
           PC_CLEAR_DATA();\
-          \
+\
           exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_NOT_ENOUGH_ARGUMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
           return false;\
         }\
-        \
+\
         /* - retrieve argument - */\
         location_s *element_location = it.get_location_value(array_ptr->data[element_idx++]);\
-        \
+\
         /* - ERROR - */\
         if (element_location->v_type != CLASS_TYPE)\
         {\
           PC_CLEAR_DATA();\
-          \
+\
           exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
           new_exception->params.push(element_idx);\
           new_exception->params.push(CLASS_TYPE);\
           new_exception->params.push(element_location->v_type);\
-          \
+\
           return false;\
         }\
-        \
+\
         *d_ptr = RETRIEVE_CODE;\
-        \
+\
         if (d_ptr == d_ptr_end)\
         {\
           break;\
         }\
-        \
+\
         d_ptr += d_step;\
-        \
+\
       } while(true);\
     }\
   }/*}}}*/
@@ -741,25 +741,25 @@ bool bic_pack_method_code_2(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 #define BIC_PACK_METHOD_CODE_WRITE_STRING_FIXED_COUNT() \
 {/*{{{*/\
-  \
+\
   /* - ERROR - */\
   if (string_length > count)\
   {\
     PC_CLEAR_DATA();\
-    \
+\
     exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_STRING_LENGTH_EXCEEDS_TARGET_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-  \
+\
   unsigned old_used = buffer.used;\
   buffer.push_blanks(count);\
-  \
+\
   /* - copy string data - */\
   if (string_length > 0)\
   {\
     memcpy(buffer.data + old_used,string_ptr->data,string_length);\
   }\
-  \
+\
   /* - fill rest by zeroes - */\
   if (string_length < count)\
   {\
@@ -1080,27 +1080,27 @@ bool bic_pack_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *
   {/*{{{*/\
     count == 0 && (count = 1);\
     data_size = count*sizeof(TYPE);\
-    \
+\
     if (data_size > 0)\
     {\
       if (data_size > c_temp_size)\
       {\
         data_buffer = (char *)cmalloc(data_size);\
       }\
-      \
+\
       /* - ERROR - */\
       if ((unsigned)(ds_ptr_end - ds_ptr) < data_size)\
       {\
         PD_CLEAR_DATA();\
-        \
+\
         exception_s::throw_exception(it,module.error_base + c_error_PACK_DECODE_NOT_ENOUGH_DATA_BYTES,operands[c_source_pos_idx],(location_s *)it.blank_location);\
         return false;\
       }\
-      \
+\
       TYPE *d_ptr;\
       TYPE *d_ptr_end;\
       int d_step;\
-      \
+\
       if (change_byte_order)\
       {\
         /* - copy data with reversed byte order - */\
@@ -1111,7 +1111,7 @@ bool bic_pack_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *
           *ptr = *ds_ptr;\
         }\
         while(++ds_ptr,--ptr >= ptr_end);\
-        \
+\
         /* - initialize loop variables - */\
         d_ptr = (TYPE *)data_buffer + count - 1;\
         d_ptr_end = (TYPE *)data_buffer;\
@@ -1122,37 +1122,37 @@ bool bic_pack_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *
         /* - copy data with preserved byte order - */\
         memcpy(data_buffer,ds_ptr,data_size);\
         ds_ptr += data_size;\
-        \
+\
         /* - initialize loop variables - */\
         d_ptr = (TYPE *)data_buffer;\
         d_ptr_end = (TYPE *)data_buffer + count - 1;\
         d_step = 1;\
       }\
-      \
+\
       do {\
-        \
+\
         /* - create new location and push it to result array - */\
         v_data_type v_data_ptr;\
         RETRIEVE_CODE;\
         BIC_CREATE_NEW_LOCATION(new_location,CLASS_TYPE,v_data_ptr);\
         array_ptr->push(new_location);\
-        \
+\
         if (d_ptr == d_ptr_end)\
         {\
           break;\
         }\
-        \
+\
         d_ptr += d_step;\
-        \
+\
       } while(true);\
-      \
+\
       if (data_buffer != temp_buffer)\
       {\
         cfree(data_buffer);\
         data_buffer = temp_buffer;\
       }\
     }\
-    \
+\
     count = 0;\
   }/*}}}*/
 

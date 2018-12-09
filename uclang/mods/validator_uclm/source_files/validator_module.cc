@@ -356,13 +356,13 @@ bool bic_validator_method_validate_2(interpreter_thread_s &it,unsigned stack_bas
   if (array_ptr->used > 1)\
   {\
     new_array.used = 0;\
-    \
+\
     pointer *ptr = array_ptr->data + array_ptr->used;\
     pointer *ptr_end = array_ptr->data;\
     do {\
       new_array.push(*--ptr);\
     } while(ptr > ptr_end);\
-    \
+\
     array_ptr->swap(new_array);\
   }\
 }/*}}}*/

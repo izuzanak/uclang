@@ -1193,10 +1193,10 @@ bool bic_http_conn_method_basic_auth_username_password_0(interpreter_thread_s &i
   {\
     string_s *string_ptr = it.get_new_string_ptr();\
     string_ptr->set(strlen(NAME),NAME);\
-    \
+\
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);\
     array_ptr->push(new_location);\
-    \
+\
     free(NAME);\
   }\
   else\

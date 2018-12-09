@@ -374,43 +374,43 @@ built_in_variable_s fann_net_variables[] =
 
 #define BIC_FANN_NET_CREATE_PROC_LAYERS_ARRAY() \
 {/*{{{*/\
-  \
+\
   /* - ERROR - */\
   if (array_ptr->used < 2)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_FANN_NET_CREATE_IN_OUT_LAYER_MISSING,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-  \
+\
   pointer *p_ptr = array_ptr->data;\
   pointer *p_ptr_end = p_ptr + array_ptr->used;\
   unsigned *l_ptr = layers;\
   do {\
     location_s *item_location = it.get_location_value(*p_ptr);\
-    \
+\
     /* - ERROR - */\
     if (item_location->v_type != c_bi_class_integer)\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FANN_NET_CREATE_LAYER_NEURON_COUNT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       new_exception->params.push(l_ptr - layers);\
-      \
+\
       return false;\
     }\
-    \
+\
     /* - retrieve layer neuron count - */\
     long long int neuron_count = (long long int)item_location->v_data_ptr;\
-    \
+\
     /* - ERROR - */\
     if (neuron_count <= 0 || neuron_count > UINT_MAX)\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FANN_NET_CREATE_LAYER_NEURON_COUNT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       new_exception->params.push(l_ptr - layers);\
-      \
+\
       return false;\
     }\
-    \
+\
     *l_ptr = neuron_count;\
-    \
+\
   } while(++l_ptr,++p_ptr < p_ptr_end);\
 }/*}}}*/
 
@@ -418,7 +418,7 @@ built_in_variable_s fann_net_variables[] =
 /*{{{*/\
   fann *fann_ptr = (fann *)dst_location->v_data_ptr;\
   fann_train_data *ftd_ptr = (fann_train_data *)src_0_location->v_data_ptr;\
-  \
+\
   /* - ERROR - */\
   if (fann_get_num_input(fann_ptr) != fann_num_input_train_data(ftd_ptr) ||\
       fann_get_num_output(fann_ptr) != fann_num_output_train_data(ftd_ptr))\

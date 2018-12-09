@@ -663,21 +663,13 @@ if (index < 0 || index >= aa_ptr->record_count) {\
 
 #define BIC_ATO_ARU_ITEM(NAME) \
 {/*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-\
-  long long int index;\
-\
-  /* - ERROR - */\
-  if (!it.retrieve_integer(src_0_location,index))\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-    new_exception->params.push(1);\
-    new_exception->params.push(src_0_location->v_type);\
-\
-    return false;\
-  }\
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method NAME
+macro
+; @end\
 \
   BIC_ATO_ARU_CHECK_INDEX();\
 \
@@ -2005,21 +1997,13 @@ if (index < 0 || index >= ols_ptr->ols.NofLineSegments) {\
 
 #define BIC_OPTIM_LINE_SECTION_ITEM(NAME) \
 {/*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-\
-  long long int index;\
-\
-  /* - ERROR - */\
-  if (!it.retrieve_integer(src_0_location,index))\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-    new_exception->params.push(1);\
-    new_exception->params.push(src_0_location->v_type);\
-\
-    return false;\
-  }\
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method NAME
+macro
+; @end\
 \
   BIC_OPTIM_LINE_SECTION_CHECK_INDEX();\
 \
@@ -3569,27 +3553,19 @@ built_in_variable_s ato_trip_variables[] =
   return true;\
 }/*}}}*/
 
-#define BIC_ATO_TRIP_TIME_STAMP_VALUE_SET(NAME) \
+#define BIC_ATO_TRIP_TIME_STAMP_VALUE_SET(FUNC_NAME,NAME) \
 {/*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-\
-  long long int nanosec;\
-\
-  /* - ERROR - */\
-  if (!it.retrieve_integer(src_0_location,nanosec))\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI(#NAME "#1");\
-    new_exception->params.push(1);\
-    new_exception->params.push(src_0_location->v_type);\
-\
-    return false;\
-  }\
+@begin ucl_params
+<
+nanosec:retrieve_integer
+>
+method NAME
+macro
+; @end\
 \
   ato_trip_s *trip_ptr = (ato_trip_s *)dst_location->v_data_ptr;\
 \
-  nanosec_to_time_stamp(nanosec,trip_ptr->trip.NAME);\
+  nanosec_to_time_stamp(nanosec,trip_ptr->trip.FUNC_NAME);\
 \
   BIC_SET_RESULT_DESTINATION();\
 \
@@ -3611,21 +3587,13 @@ if (index < 0 || index >= trip_ptr->trip.NofLineSections) {\
 
 #define BIC_ATO_TRIP_ITEM(NAME) \
 {/*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-\
-  long long int index;\
-\
-  /* - ERROR - */\
-  if (!it.retrieve_integer(src_0_location,index))\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-    new_exception->params.push(1);\
-    new_exception->params.push(src_0_location->v_type);\
-\
-    return false;\
-  }\
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method NAME
+macro
+; @end\
 \
   BIC_ATO_TRIP_CHECK_INDEX();\
 \
@@ -3862,7 +3830,7 @@ bool bic_ato_trip_method_DepartTime_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_ato_trip_method_DepartTime_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  BIC_ATO_TRIP_TIME_STAMP_VALUE_SET(DepartTime);
+  BIC_ATO_TRIP_TIME_STAMP_VALUE_SET(DepartTime,"DepartTime#1");
 }/*}}}*/
 
 bool bic_ato_trip_method_ArrivalTime_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -3872,7 +3840,7 @@ bool bic_ato_trip_method_ArrivalTime_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_ato_trip_method_ArrivalTime_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  BIC_ATO_TRIP_TIME_STAMP_VALUE_SET(ArrivalTime);
+  BIC_ATO_TRIP_TIME_STAMP_VALUE_SET(ArrivalTime,"ArrivalTime#1");
 }/*}}}*/
 
 bool bic_ato_trip_method_Version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -4428,21 +4396,13 @@ if (index < 0 || index >= als_ptr->line_sec.NofLinePoints) {\
 
 #define BIC_ATO_LINE_SEC_ITEM(NAME) \
 {/*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-\
-  long long int index;\
-\
-  /* - ERROR - */\
-  if (!it.retrieve_integer(src_0_location,index))\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-    new_exception->params.push(1);\
-    new_exception->params.push(src_0_location->v_type);\
-\
-    return false;\
-  }\
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method NAME
+macro
+; @end\
 \
   BIC_ATO_LINE_SEC_CHECK_INDEX();\
 \

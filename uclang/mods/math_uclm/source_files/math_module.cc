@@ -157,43 +157,43 @@ bool math_print_exception(interpreter_s &it,exception_s &exception)
 #define MATH_RETRIEVE_FLOAT_FROM_ARRAY(LOCATION,FLOATS_PTR,FLOAT_CNT) \
   /*{{{*/\
   const unsigned float_cnt = FLOAT_CNT;\
-  \
+\
   pointer_array_s *array_ptr = (pointer_array_s *)(LOCATION)->v_data_ptr;\
-  \
+\
   /* - ERROR - */\
   if (array_ptr->used != float_cnt)\
   {\
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MATH_ARRAY_OF_NUMBERS_WRONG_LENGTH,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(float_cnt);\
     new_exception->params.push(array_ptr->used);\
-    \
+\
     return false;\
   }\
-  \
+\
   /* - process source number array - */\
   pointer *p_ptr = array_ptr->data;\
   pointer *p_ptr_end = p_ptr + array_ptr->used;\
   float *f_ptr = FLOATS_PTR;\
   do {\
     location_s *item_location = it.get_location_value(*p_ptr);\
-    \
+\
     /* - store value from array to floats - */\
     switch (item_location->v_type)\
     {\
     case c_bi_class_integer:\
       *f_ptr = (float)(long long int)item_location->v_data_ptr;\
       break;\
-      \
+\
     case c_bi_class_float:\
       *f_ptr = (double)item_location->v_data_ptr;\
       break;\
-      \
+\
       /* - ERROR - */\
     default:\
       exception_s::throw_exception(it,module.error_base + c_error_MATH_ARRAY_OF_NUMBERS_EXPECTED,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       return false;\
     }\
-    \
+\
   } while(++f_ptr,++p_ptr < p_ptr_end);\
   /*}}}*/
 
@@ -226,11 +226,11 @@ bool math_print_exception(interpreter_s &it,exception_s &exception)
     case c_bi_class_integer:\
       *float_ptr++ = (float)(long long int)(LOCATION)->v_data_ptr;\
       break;\
-      \
+\
     case c_bi_class_float:\
       *float_ptr++ = (double)(LOCATION)->v_data_ptr;\
       break;\
-      \
+\
     default:\
       type_error = true;\
     }\
@@ -239,11 +239,11 @@ bool math_print_exception(interpreter_s &it,exception_s &exception)
 #define MATH_VEC_RETRIEVE_ELEMENT(VEC_TYPE,ELEMENT_NAME) \
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    \
+\
     double result = ((glm::VEC_TYPE *)dst_location->v_data_ptr)->ELEMENT_NAME;\
-    \
+\
     BIC_SIMPLE_SET_RES(c_bi_class_float,result);\
-    \
+\
     return true;\
   }/*}}}*/
 
@@ -265,7 +265,7 @@ bool math_print_exception(interpreter_s &it,exception_s &exception)
     glm::VEC_TYPE &vec_src = *((glm::VEC_TYPE *)src_0_location->v_data_ptr);\
     vec_res_ptr = new glm::VEC_TYPE(vec_dst OPERATOR vec_src);\
   }\
-  \
+\
   /* - ERROR - */\
   else\
   {\
@@ -1708,7 +1708,7 @@ built_in_variable_s mat4_variables[] =
     glm::mat4 &m4_src = *((glm::mat4 *)src_0_location->v_data_ptr);\
     m4_res_ptr = new glm::mat4(m4_dst OPERATOR m4_src);\
   }\
-  \
+\
   /* - ERROR - */\
   else\
   {\
@@ -2374,9 +2374,9 @@ built_in_variable_s primes_variables[] =
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     long long int index;\
-    \
+\
     /* - ERROR - */\
     if (!it.retrieve_integer(src_0_location,index))\
     {\
@@ -2384,26 +2384,26 @@ built_in_variable_s primes_variables[] =
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     primes_s *primes_ptr = (primes_s *)dst_location->v_data_ptr;\
-    \
+\
     /* - retrieve next index - */\
     long long int prime = primes_ptr->get_prime(index);\
-    \
+\
     /* - ERROR - */\
     if (prime == c_idx_not_exist)\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PRIMES_INDEX_DOES_NOT_REFER_TO_VALID_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       new_exception->params.push(index);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_SIMPLE_SET_RES(c_bi_class_integer,prime);\
-    \
+\
     return true;\
   }/*}}}*/
 

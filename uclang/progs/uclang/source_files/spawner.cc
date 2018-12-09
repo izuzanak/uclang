@@ -101,7 +101,7 @@ unsigned spawn_parser_s::recognize_terminal(unsigned &a_input_idx)
     if (in_char == '\0') {\
       return RET_TERM_IDX;\
     }\
-    \
+\
     a_input_idx++;\
   }
 

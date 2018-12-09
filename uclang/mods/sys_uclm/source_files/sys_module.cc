@@ -895,27 +895,23 @@ built_in_variable_s sys_variables[] =
 
 #define SYS_FILE_OPEN(CLASS_IDX,NAME) \
   /*{{{*/\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);\
-  \
-  /* - ERROR - */\
-  if (src_0_location->v_type != c_bi_class_string || src_1_location->v_type != c_bi_class_string)\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,CLASS_IDX,NAME);\
-    new_exception->params.push(2);\
-    new_exception->params.push(src_0_location->v_type);\
-    new_exception->params.push(src_1_location->v_type);\
-    \
-    return false;\
-  }\
-  \
+@begin ucl_params
+<
+file_name:c_bi_class_string
+file_mode:c_bi_class_string
+>
+class CLASS_IDX
+method NAME
+static_method
+macro
+; @end\
+\
   string_s *file_name = (string_s *)src_0_location->v_data_ptr;\
   string_s *file_mode = (string_s *)src_1_location->v_data_ptr;\
-  \
+\
   /* - open file - */\
   FILE *f = fopen(file_name->data,file_mode->data);\
-  \
+\
   /* - ERROR - */\
   if (f == nullptr)\
   {\
@@ -926,27 +922,23 @@ built_in_variable_s sys_variables[] =
 
 #define SYS_PIPE_OPEN(CLASS_IDX,NAME) \
   /*{{{*/\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);\
-  \
-  /* - ERROR - */\
-  if (src_0_location->v_type != c_bi_class_string || src_1_location->v_type != c_bi_class_string)\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,CLASS_IDX,NAME);\
-    new_exception->params.push(2);\
-    new_exception->params.push(src_0_location->v_type);\
-    new_exception->params.push(src_1_location->v_type);\
-    \
-    return false;\
-  }\
-  \
+@begin ucl_params
+<
+command:c_bi_class_string
+type:c_bi_class_string
+>
+class CLASS_IDX
+method NAME
+static_method
+macro
+; @end\
+\
   string_s *command = (string_s *)src_0_location->v_data_ptr;\
   string_s *type = (string_s *)src_1_location->v_data_ptr;\
-  \
+\
   /* - open file - */\
   FILE *f = POPEN_FNAME(command->data,type->data);\
-  \
+\
   /* - ERROR - */\
   if (f == nullptr)\
   {\
@@ -965,7 +957,7 @@ void bic_sys_consts(location_array_s &const_locations)
     string_s *string_ptr = (string_s *)cmalloc(sizeof(string_s));\
     string_ptr->init();\
     string_ptr->set(strlen(VALUE),VALUE);\
-    \
+\
     cv_ptr->v_type = c_bi_class_string;\
     cv_ptr->v_reference_cnt.atomic_set(1);\
     cv_ptr->v_data_ptr = (string_s *)string_ptr;\
@@ -1158,20 +1150,14 @@ bool bic_sys_method_system_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_sys_method_exit_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int status;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,status))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_sys,"exit#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+status:retrieve_integer
+>
+class c_bi_class_sys
+method exit
+static_method
+; @end
 
   exit(status);
 
@@ -3634,69 +3620,69 @@ bool bic_socket_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli 
 #define BIC_STREAM_READLN() \
   /*{{{*/\
   const unsigned c_init_buffer_size = 1024;\
-  \
+\
   /* - target data buffer - */\
   bc_array_s line_buffer;\
   line_buffer.init_size(c_init_buffer_size);\
-  \
+\
   int ch;\
   do {\
     /* - read next character from file stream - */\
     ch = fgetc(f);\
-    \
+\
     /* - test end of line - */\
     if (ch == '\n' || ch == EOF)\
       break;\
-    \
+\
     /* - insert character to line buffer - */\
     line_buffer.push(ch);\
-    \
+\
   } while(true);\
   /*}}}*/
 
 #define BIC_STREAM_NEXT_ITEM() \
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    \
+\
     /* - retrieve pointer to stream - */\
     FILE *f = (FILE *)dst_location->v_data_ptr;\
-    \
+\
     /* - ERROR - */\
     if (f == nullptr)\
     {\
       exception_s::throw_exception(it,module.error_base + c_error_STREAM_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       return false;\
     }\
-    \
+\
     BIC_STREAM_READLN();\
-    \
+\
     /* - ERROR - */\
     if (ferror(f))\
     {\
       line_buffer.clear();\
-      \
+\
       exception_s::throw_exception(it,module.error_base + c_error_STREAM_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       return false;\
     }\
-    \
+\
     if (feof(f) && line_buffer.used == 0)\
     {\
       line_buffer.clear();\
-      \
+\
       BIC_SET_RESULT_BLANK();\
     }\
     else {\
       line_buffer.push('\0');\
-      \
+\
       /* - return data string - */\
       string_s *string_ptr = it.get_new_string_ptr();\
       string_ptr->data = line_buffer.data;\
       string_ptr->size = line_buffer.used;\
-      \
+\
       BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);\
       BIC_SET_RESULT(new_location)\
     }\
-    \
+\
     return true;\
   }/*}}}*/
 

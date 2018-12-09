@@ -805,7 +805,7 @@ built_in_variable_s snmp_agent_variables[] =
   {\
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_SNMP_AGENT_INDEX_DOES_NOT_REFER_TO_VALID_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(index);\
-    \
+\
     return false;\
   }\
 \
@@ -816,7 +816,7 @@ built_in_variable_s snmp_agent_variables[] =
   {\
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_SNMP_AGENT_INDEX_DOES_NOT_REFER_TO_VALID_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(index);\
-    \
+\
     return false;\
   }\
   /*}}}*/
@@ -825,9 +825,9 @@ built_in_variable_s snmp_agent_variables[] =
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     long long int index;\
-    \
+\
     if (!it.retrieve_integer(src_0_location,index))\
     {\
       /* - ERROR - */\
@@ -837,18 +837,18 @@ built_in_variable_s snmp_agent_variables[] =
         BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
         new_exception->params.push(1);\
         new_exception->params.push(src_0_location->v_type);\
-        \
+\
         return false;\
       }\
-      \
+\
       /* - retrieve snmp agent pointer and object name - */\
       snmp_agent_s *snmpa_ptr = (snmp_agent_s *)dst_location->v_data_ptr;\
       string_s *name_ptr = (string_s *)src_0_location->v_data_ptr;\
-      \
+\
       snmp_object_s search_obj;\
       search_obj.name.data = name_ptr->data;\
       search_obj.name.size = name_ptr->size;\
-      \
+\
       /* - ERROR - */\
       if ((index = snmpa_ptr->objects.get_idx(search_obj)) == c_idx_not_exist)\
       {\
@@ -859,17 +859,17 @@ built_in_variable_s snmp_agent_variables[] =
     else {\
       BIC_SNMP_AGENT_CHECK_INDEX();\
     }\
-    \
+\
     /* - create new varstore slot object - */\
     snmp_obj_s *snmpo_ptr = (snmp_obj_s *)cmalloc(sizeof(snmp_obj_s));\
-    \
+\
     dst_location->v_reference_cnt.atomic_inc();\
     snmpo_ptr->snmpa_ptr = dst_location;\
     snmpo_ptr->index = index;\
-    \
+\
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_snmp_obj,snmpo_ptr);\
     BIC_SET_RESULT(new_location);\
-    \
+\
     return true;\
   }/*}}}*/
 

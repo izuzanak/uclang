@@ -584,12 +584,12 @@ built_in_variable_s trace_storage_variables[] =
   /*{{{*/\
   trace_storage_s *ts_ptr = (trace_storage_s *)dst_location->v_data_ptr;\
   const TraceStorage::Desc *tsDesc = ts_ptr->ts_ptr->GetDesc();\
-  \
+\
   /* - ERROR - */\
   if ((QWORD)index < tsDesc->recIdTail || (QWORD)index > tsDesc->recIdHead) {\
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRACE_STORAGE_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(index);\
-    \
+\
     return false;\
   }\
   /*}}}*/
@@ -598,9 +598,9 @@ built_in_variable_s trace_storage_variables[] =
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
     location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
+\
     long long int index;\
-    \
+\
     /* - ERROR - */\
     if (!it.retrieve_integer(src_0_location,index))\
     {\
@@ -608,30 +608,30 @@ built_in_variable_s trace_storage_variables[] =
       BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
       new_exception->params.push(1);\
       new_exception->params.push(src_0_location->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     BIC_TRACE_STORAGE_CHECK_INDEX();\
-    \
+\
     /* - create target data string - */\
     string_s *data_ptr = (string_s *)it.get_new_string_ptr();\
     data_ptr->create(tsDesc->dataSize);\
-    \
+\
     /* - create new trace record object - */\
     trace_record_s *new_tr_ptr = (trace_record_s *)cmalloc(sizeof(trace_record_s));\
     new_tr_ptr->tr_ptr = new TraceRecord();\
-    \
+\
     TraceRecord &record = *new_tr_ptr->tr_ptr;\
     record.recId = index;\
     record.data = data_ptr->data;\
     record.size = tsDesc->dataSize;\
-    \
+\
     /* - read record from trace storage - */\
     try {\
       ts_ptr->ts_ptr->Read(record);\
     }\
-    \
+\
     /* - ERROR - */\
     catch (Exception e)\
     {\
@@ -639,13 +639,13 @@ built_in_variable_s trace_storage_variables[] =
       cfree(new_tr_ptr);\
       data_ptr->clear();\
       cfree(data_ptr);\
-      \
+\
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_TRACE_STORAGE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       new_exception->params.push(index);\
-      \
+\
       return false;\
     }\
-    \
+\
     /* - if record is not valid - */\
     if (record.status != TraceRecord::REC_VALID)\
     {\
@@ -653,25 +653,25 @@ built_in_variable_s trace_storage_variables[] =
       cfree(new_tr_ptr);\
       data_ptr->clear();\
       cfree(data_ptr);\
-      \
+\
       BIC_SET_RESULT_BLANK();\
     }\
     else  {\
-      \
+\
       /* - set reference to trace storage - */\
       dst_location->v_reference_cnt.atomic_inc();\
       new_tr_ptr->ts_ptr = dst_location;\
-      \
+\
       /* - create data string location - */\
       { \
         BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,data_ptr);\
         new_tr_ptr->data_ptr = new_location;\
       }\
-      \
+\
       BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_trace_record,new_tr_ptr);\
       BIC_SET_RESULT(new_location);\
     }\
-    \
+\
     return true;\
   }/*}}}*/
 

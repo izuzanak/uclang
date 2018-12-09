@@ -368,7 +368,7 @@ built_in_variable_s image_variables[] =
 \
   /* - ERROR - */\
   default:\
-    \
+\
     png_destroy_read_struct(&png_ptr,&info_ptr,nullptr);\
     RELEASE_CODE;\
 \
@@ -483,22 +483,17 @@ built_in_variable_s image_variables[] =
 
 #define BIC_IMAGE_METHOD_BLOCK_IO(NAME,FUNCTION) \
 {/*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  \
-  if (src_0_location->v_type != c_bi_class_image)\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-    new_exception->params.push(1);\
-    new_exception->params.push(src_0_location->v_type);\
-    \
-    return false;\
-  }\
-  \
+@begin ucl_params
+<
+src:c_bi_class_image
+>
+method NAME
+macro
+; @end\
+\
   image_s *img_ptr = (image_s *)dst_location->v_data_ptr;\
   image_s *src_ptr = (image_s *)src_0_location->v_data_ptr;\
-  \
+\
   /* - ERROR - */\
   if (img_ptr->pixel_format != src_ptr->pixel_format ||\
       img_ptr->width != src_ptr->width ||\
@@ -508,16 +503,16 @@ built_in_variable_s image_variables[] =
     exception_s::throw_exception(it,module.error_base + c_error_IMAGE_WRONG_PROPERTIES,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-  \
+\
   /* - ERROR - */\
   if (!img_ptr->FUNCTION(*src_ptr))\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_IMAGE_IMAGE_OPERATION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-  \
+\
   BIC_SET_RESULT_DESTINATION();\
-  \
+\
   return true;\
 }/*}}}*/
 
@@ -571,28 +566,14 @@ bool bic_image_operator_binary_equal(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_image_method_Image_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-
-  long long int width;
-  long long int height;
-  long long int format;
-
-  if (!it.retrieve_integer(src_0_location,width) ||
-      !it.retrieve_integer(src_1_location,height) ||
-      !it.retrieve_integer(src_2_location,format))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Image#3");
-    new_exception->params.push(3);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+width:retrieve_integer
+height:retrieve_integer
+format:retrieve_integer
+>
+method Image
+; @end
 
   // - ERROR -
   if (width <= 0 || height <= 0)
@@ -697,17 +678,14 @@ bool bic_image_method_buffer_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_image_method_read_png_data_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_image,"read_png_data#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+class c_bi_class_image
+method read_png_data
+static_method
+; @end
 
   string_s *data_str = (string_s *)src_0_location->v_data_ptr;
 
@@ -762,17 +740,14 @@ bool bic_image_method_read_png_data_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_image_method_read_png_file_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_image,"read_png_file#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+class c_bi_class_image
+method read_png_file
+static_method
+; @end
 
   string_s *file_name = (string_s *)src_0_location->v_data_ptr;
 
@@ -841,18 +816,12 @@ bool bic_image_method_read_png_file_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_image_method_write_png_file_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("write_png_file#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+method write_png_file
+; @end
 
   image_s *img_ptr = (image_s *)dst_location->v_data_ptr;
   string_s *file_name = (string_s *)src_0_location->v_data_ptr;
@@ -971,17 +940,14 @@ bool bic_image_method_write_png_file_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_image_method_read_jpeg_data_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_image,"read_jpeg_data#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+class c_bi_class_image
+method read_jpeg_data
+static_method
+; @end
 
   string_s *data_str = (string_s *)src_0_location->v_data_ptr;
 
@@ -1008,17 +974,14 @@ bool bic_image_method_read_jpeg_data_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_image_method_read_jpeg_file_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_image,"read_jpeg_file#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+class c_bi_class_image
+method read_jpeg_file
+static_method
+; @end
 
   string_s *file_name = (string_s *)src_0_location->v_data_ptr;
 
@@ -1056,23 +1019,13 @@ bool bic_image_method_read_jpeg_file_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_image_method_write_jpeg_file_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int quality = 0;
-
-  if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,quality))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("write_jpeg_file#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+quality:retrieve_integer_init
+>
+method write_jpeg_file
+; @end
 
   image_s *img_ptr = (image_s *)dst_location->v_data_ptr;
   string_s *file_name = (string_s *)src_0_location->v_data_ptr;
@@ -1182,32 +1135,15 @@ bool bic_image_method_duplicate_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_image_method_referred_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-
-  long long int x_pos;
-  long long int y_pos;
-  long long int width;
-  long long int height;
-
-  if (!it.retrieve_integer(src_0_location,x_pos) ||
-      !it.retrieve_integer(src_1_location,y_pos) ||
-      !it.retrieve_integer(src_2_location,width) ||
-      !it.retrieve_integer(src_3_location,height))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("referred#4");
-    new_exception->params.push(4);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+x_pos:retrieve_integer
+y_pos:retrieve_integer
+width:retrieve_integer
+height:retrieve_integer
+>
+method referred
+; @end
 
   image_s *src_ptr = (image_s *)dst_location->v_data_ptr;
 
@@ -1366,18 +1302,12 @@ bool bic_image_method_io_copy_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_image_method_io_convert_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_image)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("io_convert#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+src:c_bi_class_image
+>
+method io_convert
+; @end
 
   image_s *img_ptr = (image_s *)dst_location->v_data_ptr;
   image_s *src_ptr = (image_s *)src_0_location->v_data_ptr;

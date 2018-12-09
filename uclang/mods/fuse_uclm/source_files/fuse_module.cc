@@ -259,7 +259,7 @@ built_in_variable_s fuse_channel_variables[] =
 /*{{{*/\
   int argc = ARRAY_PTR->used;\
   char *argv[argc + 1];\
-  \
+\
   if (ARRAY_PTR->used != 0)\
   {\
     /* - process arguments array - */\
@@ -1217,20 +1217,13 @@ built_in_variable_s fuse_stat_variables[] =
 
 #define BIC_FUSE_STAT_SET_VALUE(NAME,VALUE) \
 {/*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-\
-  long long int value;\
-\
-  if (!it.retrieve_integer(src_0_location,value))\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-    new_exception->params.push(1);\
-    new_exception->params.push(src_0_location->v_type);\
-\
-    return false;\
-  }\
+@begin ucl_params
+<
+value:retrieve_integer
+>
+method NAME
+macro
+; @end\
 \
   struct stat *st_ptr = (struct stat *)dst_location->v_data_ptr;\
   st_ptr->VALUE = value;\

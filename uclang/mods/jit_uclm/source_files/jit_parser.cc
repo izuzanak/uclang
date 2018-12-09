@@ -691,7 +691,7 @@ unsigned jit_parser_s::recognize_terminal(unsigned &input_idx)
     if (in_char == '\0') {\
       return RET_TERM_IDX;\
     }\
-    \
+\
     input_idx++;\
   }
 

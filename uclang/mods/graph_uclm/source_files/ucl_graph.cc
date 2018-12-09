@@ -763,7 +763,7 @@ bool graph_s::shortest_path_digraph_dijkstra(unsigned a_src_vertex_idx,unsigned 
 \
   do {\
     unsigned sv_idx = v_queue.next();\
-    \
+\
     if (sv_idx == a_trg_vertex_idx)\
     {\
       v_queue.clear();\

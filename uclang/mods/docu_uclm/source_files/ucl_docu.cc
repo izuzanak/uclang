@@ -69,7 +69,7 @@ unsigned docu_source_s::fa_recognize(unsigned &input_idx)
     if (in_char == '\0') {\
       return RET_TERM_IDX;\
     }\
-    \
+\
     input_idx++;\
   }
 
@@ -347,7 +347,7 @@ bool(*docu_parsed_s::pa_callers[docu_parsed_s::c_parse_action_cnt])(interpreter_
   {\
     /* - construct array - */\
     array_ptr = it.get_new_array_ptr();\
-    \
+\
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);\
     it.release_location_ptr(POINTER);\
     POINTER = new_location;\
@@ -360,7 +360,7 @@ bool(*docu_parsed_s::pa_callers[docu_parsed_s::c_parse_action_cnt])(interpreter_
 \
   /* - construct string - */\
   string_s *string_ptr = it.get_new_string_ptr();\
-  \
+\
   SET_CODE;\
 \
   /* - push location to array - */\
@@ -655,7 +655,7 @@ unsigned docu_parsed_s::fa_recognize(unsigned &input_idx)
     if (in_char == '\0') {\
       return RET_TERM_IDX;\
     }\
-    \
+\
     input_idx++;\
   }
 

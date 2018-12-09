@@ -848,7 +848,7 @@ unsigned reg_parser_s::recognize_terminal(string_s &source_string,unsigned &inpu
     if (in_char == '\0') {\
       return RET_TERM_IDX;\
     }\
-    \
+\
     input_idx++;\
   }
 

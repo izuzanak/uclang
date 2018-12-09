@@ -410,17 +410,17 @@ bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass)
   while (count-- > 0)\
   {\
     location_s *item_location = it.get_location_value(pass.vars_ptr->data[pass.var_idx++]);\
-    \
+\
     /* - ERROR - */\
     if (item_location->v_type != c_bi_class_integer)\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_TRDP_PAGE_PACK_INVALID_VARIABLE_TYPE,0,(location_s *)it.blank_location);\
       new_exception->params.push(pass.var_idx);\
       new_exception->params.push(c_bi_class_integer);\
-      \
+\
       return false;\
     }\
-    \
+\
     TYPE value = (long long int)item_location->v_data_ptr;\
     memcpy(pass.data_ptr + pass.address,(unsigned char *)&value,var_descr.length);\
     pass.address += var_descr.length;\
@@ -433,17 +433,17 @@ bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass)
   while (count-- > 0)\
   {\
     location_s *item_location = it.get_location_value(pass.vars_ptr->data[pass.var_idx++]);\
-    \
+\
     /* - ERROR - */\
     if (item_location->v_type != c_bi_class_integer)\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_TRDP_PAGE_PACK_INVALID_VARIABLE_TYPE,0,(location_s *)it.blank_location);\
       new_exception->params.push(pass.var_idx);\
       new_exception->params.push(c_bi_class_integer);\
-      \
+\
       return false;\
     }\
-    \
+\
     TYPE value = (long long int)item_location->v_data_ptr;\
     memcpy_bo(pass.data_ptr + pass.address,(unsigned char *)&value,var_descr.length,c_little_endian);\
     pass.address += var_descr.length;\
@@ -456,17 +456,17 @@ bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass)
   while (count-- > 0)\
   {\
     location_s *item_location = it.get_location_value(pass.vars_ptr->data[pass.var_idx++]);\
-    \
+\
     /* - ERROR - */\
     if (item_location->v_type != c_bi_class_float)\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_TRDP_PAGE_PACK_INVALID_VARIABLE_TYPE,0,(location_s *)it.blank_location);\
       new_exception->params.push(pass.var_idx);\
       new_exception->params.push(c_bi_class_float);\
-      \
+\
       return false;\
     }\
-    \
+\
     TYPE value = (double)item_location->v_data_ptr;\
     memcpy_bo(pass.data_ptr + pass.address,(unsigned char *)&value,var_descr.length,c_little_endian);\
     pass.address += var_descr.length;\

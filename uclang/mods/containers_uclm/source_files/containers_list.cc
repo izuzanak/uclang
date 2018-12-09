@@ -204,25 +204,25 @@ built_in_variable_s list_variables[] =
     if (src_0_location->v_type == c_bi_class_list) {\
       pointer_list_s *f_list_ptr = (pointer_list_s *)dst_location->v_data_ptr;\
       pointer_list_s *s_list_ptr = (pointer_list_s *)src_0_location->v_data_ptr;\
-      \
+\
       if (f_list_ptr->count != s_list_ptr->count)\
       {\
         result = f_list_ptr->count < s_list_ptr->count ? -1 : 1;\
       }\
       else {\
         result = 0;\
-        \
+\
         if (f_list_ptr->count != 0)\
         {\
           unsigned fl_idx = f_list_ptr->first_idx;\
           unsigned sl_idx = s_list_ptr->first_idx;\
-          \
+\
           do {\
             BIC_CALL_COMPARE(it,f_list_ptr->data[fl_idx].object,s_list_ptr->data[sl_idx].object,SOURCE_POS,return false);\
             if (result != 0) {\
               break;\
             }\
-            \
+\
             fl_idx = f_list_ptr->next_idx(fl_idx);\
             sl_idx = s_list_ptr->next_idx(sl_idx);\
           } while(fl_idx != c_idx_not_exist);\
@@ -237,17 +237,17 @@ built_in_variable_s list_variables[] =
 #define BIC_LIST_APPEND_ARRAY(SRC_LOCATION,TARGET_PTR) \
   {/*{{{*/\
     pointer_array_s *source_ptr = (pointer_array_s *)SRC_LOCATION->v_data_ptr;\
-    \
+\
     if (source_ptr->used != 0)\
     {\
       pointer *ptr = source_ptr->data;\
       pointer *ptr_end = ptr + source_ptr->used;\
-      \
+\
       do\
       {\
         location_s *item_location = it.get_location_value(*ptr);\
         item_location->v_reference_cnt.atomic_inc();\
-        \
+\
         /* - append item location to list - */\
         TARGET_PTR->append(item_location);\
       }\
@@ -258,19 +258,19 @@ built_in_variable_s list_variables[] =
 #define BIC_LIST_APPEND_LIST(SRC_LOCATION,TARGET_PTR) \
   {/*{{{*/\
     pointer_list_s *source_ptr = (pointer_list_s *)SRC_LOCATION->v_data_ptr;\
-    \
+\
     if (source_ptr->count != 0)\
     {\
       unsigned l_idx = source_ptr->first_idx;\
-      \
+\
       do\
       {\
         location_s *item_location = it.get_location_value(source_ptr->data[l_idx].object);\
         item_location->v_reference_cnt.atomic_inc();\
-        \
+\
         /* - append item location to list - */\
         TARGET_PTR->append(item_location);\
-        \
+\
         l_idx = source_ptr->next_idx(l_idx);\
       }\
       while(l_idx != c_idx_not_exist);\
@@ -281,43 +281,43 @@ built_in_variable_s list_variables[] =
   {/*{{{*/\
     item_location->v_reference_cnt.atomic_inc();\
     it.release_location_ptr(item_reference);\
-    \
+\
     /* - append item location to list - */\
     TARGET_PTR->append(item_location);\
   }/*}}}*/
 
 #define BIC_LIST_APPEND_ITERABLE(SRC_LOCATION,TARGET_PTR) \
   {/*{{{*/\
-    \
+\
     /* - retrieve iterable type - */\
     unsigned iter_type = it.get_iterable_type(SRC_LOCATION);\
-    \
+\
     /* - ERROR - */\
     if (iter_type == c_idx_not_exist)\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_OBJECT_OF_CLASS_IS_NOT_ITERABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       new_exception->params.push(SRC_LOCATION->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     if (iter_type == c_iter_first_idx_next_idx_item)\
     {\
       long long int index;\
       location_s *item_reference;\
       location_s *item_location;\
-      \
+\
       /* - retrieve first index - */\
       BIC_CALL_FIRST_IDX(it,SRC_LOCATION,index,operands[c_source_pos_idx],return false;);\
-      \
+\
       while (index != c_idx_not_exist)\
       {\
         /* - retrieve item location - */\
         BIC_CALL_ITEM(it,SRC_LOCATION,index,item_reference,operands[c_source_pos_idx],return false;);\
         item_location = it.get_location_value(item_reference);\
-        \
+\
         BIC_LIST_APPEND_ITERABLE_BODY(TARGET_PTR);\
-        \
+\
         /* - retrieve next index - */\
         BIC_CALL_NEXT_IDX(it,SRC_LOCATION,index,index,operands[c_source_pos_idx],return false;);\
       }\
@@ -326,21 +326,21 @@ built_in_variable_s list_variables[] =
     {\
       location_s *item_reference;\
       location_s *item_location;\
-      \
+\
       do\
       {\
         /* - retrieve next item location - */\
         BIC_CALL_NEXT_ITEM(it,SRC_LOCATION,item_reference,operands[c_source_pos_idx],return false;);\
         item_location = it.get_location_value(item_reference);\
-        \
+\
         if (item_location->v_type == c_bi_class_blank)\
         {\
           it.release_location_ptr(item_reference);\
           break;\
         }\
-        \
+\
         BIC_LIST_APPEND_ITERABLE_BODY(TARGET_PTR);\
-        \
+\
       }\
       while(true);\
     }\
@@ -353,51 +353,43 @@ built_in_variable_s list_variables[] =
 #define BIC_LIST_CHECK_INDEX() \
   /*{{{*/\
   pointer_list_s *list_ptr = (pointer_list_s *)dst_location->v_data_ptr;\
-  \
+\
   /* - ERROR - */\
   if (index < 0 || index >= list_ptr->used)\
   {\
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_LIST_INDEX_DOES_NOT_REFER_TO_VALID_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(index);\
-    \
+\
     return false;\
   }\
-  \
+\
   pointer_list_s_element &element = list_ptr->data[index];\
-  \
+\
   /* - ERROR - */\
   if (!element.valid)\
   {\
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_LIST_INDEX_DOES_NOT_REFER_TO_VALID_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(index);\
-    \
+\
     return false;\
   }\
   /*}}}*/
 
 #define BIC_LIST_ITEM(NAME) \
   {/*{{{*/\
-    location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
-    long long int index;\
-    \
-    /* - ERROR - */\
-    if (!it.retrieve_integer(src_0_location,index))\
-    {\
-      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-      BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-      new_exception->params.push(1);\
-      new_exception->params.push(src_0_location->v_type);\
-      \
-      return false;\
-    }\
-    \
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method NAME
+macro
+; @end\
+\
     BIC_LIST_CHECK_INDEX();\
-    \
+\
     pointer *element_location = &list_ptr->data[index].object;\
     location_s *new_ref_location = it.get_new_reference((location_s **)element_location);\
-    \
+\
     BIC_SET_RESULT(new_ref_location);\
   }/*}}}*/
 

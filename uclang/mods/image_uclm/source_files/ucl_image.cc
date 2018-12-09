@@ -140,7 +140,7 @@ bool image_s::io_fill(unsigned char *a_color)
       do {\
         OPERATION;\
       } while((ptr += pixel_step) < ptr_w_end);\
-      \
+\
       ptr += line_size - image_ls;\
     } while(ptr < ptr_end);\
   }/*}}}*/
@@ -223,7 +223,7 @@ bool image_s::io_convert(image_s &a_src)
       do {\
         OPERATION;\
       } while(s_ptr += a_src.pixel_step,(ptr += pixel_step) < ptr_w_end);\
-      \
+\
       ptr += line_size - image_ls;\
       s_ptr += s_line_size - s_image_ls;\
     } while(ptr < ptr_end);\
@@ -317,7 +317,7 @@ bool image_s::io_apply(image_s &a_src)
       do {\
         OPERATION;\
       } while(s_ptr += pixel_step,(ptr += pixel_step) < ptr_w_end);\
-      \
+\
       ptr += line_size - image_ls;\
       s_ptr += s_line_size - image_ls;\
     } while(ptr < ptr_end);\

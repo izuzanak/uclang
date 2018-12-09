@@ -204,31 +204,31 @@ built_in_variable_s set_variables[] =
     if (src_0_location->v_type == c_bi_class_set) {\
       pointer_tree_s *f_tree_ptr = (pointer_tree_s *)dst_location->v_data_ptr;\
       pointer_tree_s *s_tree_ptr = (pointer_tree_s *)src_0_location->v_data_ptr;\
-      \
+\
       if (f_tree_ptr->count != s_tree_ptr->count)\
       {\
         result = f_tree_ptr->count < s_tree_ptr->count ? -1 : 1;\
       }\
       else {\
         result = 0;\
-        \
+\
         if (f_tree_ptr->count != 0)\
         {\
           unsigned f_stack[f_tree_ptr->get_descent_stack_size()];\
           unsigned s_stack[s_tree_ptr->get_descent_stack_size()];\
-          \
+\
           unsigned *f_stack_ptr = f_stack;\
           unsigned *s_stack_ptr = s_stack;\
-          \
+\
           unsigned ft_idx = f_tree_ptr->get_stack_min_value_idx(f_tree_ptr->root_idx,&f_stack_ptr);\
           unsigned st_idx = s_tree_ptr->get_stack_min_value_idx(s_tree_ptr->root_idx,&s_stack_ptr);\
-          \
+\
           do {\
             BIC_CALL_COMPARE(it,f_tree_ptr->data[ft_idx].object,s_tree_ptr->data[st_idx].object,SOURCE_POS,return false);\
             if (result != 0) {\
               break;\
             }\
-            \
+\
             ft_idx = f_tree_ptr->get_stack_next_idx(ft_idx,&f_stack_ptr,f_stack);\
             st_idx = s_tree_ptr->get_stack_next_idx(st_idx,&s_stack_ptr,s_stack);\
           } while(ft_idx != c_idx_not_exist);\
@@ -243,27 +243,27 @@ built_in_variable_s set_variables[] =
 #define BIC_SET_APPEND_ARRAY(SRC_LOCATION,TARGET_PTR) \
   {/*{{{*/\
     pointer_array_s *source_ptr = (pointer_array_s *)SRC_LOCATION->v_data_ptr;\
-    \
+\
     if (source_ptr->used != 0)\
     {\
       pointer *ptr = source_ptr->data;\
       pointer *ptr_end = ptr + source_ptr->used;\
-      \
+\
       do\
       {\
         location_s *item_location = it.get_location_value(*ptr);\
-        \
+\
         /* - push item location to set - */\
         if (TARGET_PTR->set_unique_insert(item_location))\
         {\
           item_location->v_reference_cnt.atomic_inc();\
         }\
-        \
+\
         if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)\
         {\
           return false;\
         }\
-        \
+\
       }\
       while(++ptr < ptr_end);\
     }\
@@ -272,29 +272,29 @@ built_in_variable_s set_variables[] =
 #define BIC_SET_APPEND_SET(SRC_LOCATION,TARGET_PTR) \
   {/*{{{*/\
     pointer_tree_s *source_ptr = (pointer_tree_s *)SRC_LOCATION->v_data_ptr;\
-    \
+\
     if (source_ptr->count != 0)\
     {\
       unsigned stack[source_ptr->get_descent_stack_size()];\
       unsigned *stack_ptr = stack;\
-      \
+\
       unsigned t_idx = source_ptr->get_stack_min_value_idx(source_ptr->root_idx,&stack_ptr);\
-      \
+\
       do\
       {\
         location_s *item_location = it.get_location_value(source_ptr->data[t_idx].object);\
-        \
+\
         /* - push item location to set - */\
         if (TARGET_PTR->set_unique_insert(item_location))\
         {\
           item_location->v_reference_cnt.atomic_inc();\
         }\
-        \
+\
         if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)\
         {\
           return false;\
         }\
-        \
+\
         t_idx = source_ptr->get_stack_next_idx(t_idx,&stack_ptr,stack);\
       }\
       while(t_idx != c_idx_not_exist);\
@@ -303,14 +303,14 @@ built_in_variable_s set_variables[] =
 
 #define BIC_SET_APPEND_ITERABLE_BODY(TARGET_PTR) \
   {/*{{{*/\
-    \
+\
     /* - insert item location to set - */\
     if (TARGET_PTR->set_unique_insert(item_location)) {\
       item_location->v_reference_cnt.atomic_inc();\
     }\
-    \
+\
     it.release_location_ptr(item_reference);\
-    \
+\
     if (((location_s *)it.exception_location)->v_type != c_bi_class_blank) {\
       return false;\
     }\
@@ -318,36 +318,36 @@ built_in_variable_s set_variables[] =
 
 #define BIC_SET_APPEND_ITERABLE(SRC_LOCATION,TARGET_PTR) \
   {/*{{{*/\
-    \
+\
     /* - retrieve iterable type - */\
     unsigned iter_type = it.get_iterable_type(SRC_LOCATION);\
-    \
+\
     /* - ERROR - */\
     if (iter_type == c_idx_not_exist)\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_OBJECT_OF_CLASS_IS_NOT_ITERABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       new_exception->params.push(SRC_LOCATION->v_type);\
-      \
+\
       return false;\
     }\
-    \
+\
     if (iter_type == c_iter_first_idx_next_idx_item)\
     {\
       long long int index;\
       location_s *item_reference;\
       location_s *item_location;\
-      \
+\
       /* - retrieve first index - */\
       BIC_CALL_FIRST_IDX(it,SRC_LOCATION,index,operands[c_source_pos_idx],return false;);\
-      \
+\
       while (index != c_idx_not_exist)\
       {\
         /* - retrieve item location - */\
         BIC_CALL_ITEM(it,SRC_LOCATION,index,item_reference,operands[c_source_pos_idx],return false;);\
         item_location = it.get_location_value(item_reference);\
-        \
+\
         BIC_SET_APPEND_ITERABLE_BODY(TARGET_PTR);\
-        \
+\
         /* - retrieve next index - */\
         BIC_CALL_NEXT_IDX(it,SRC_LOCATION,index,index,operands[c_source_pos_idx],return false;);\
       }\
@@ -356,22 +356,22 @@ built_in_variable_s set_variables[] =
     {\
       location_s *item_reference;\
       location_s *item_location;\
-      \
+\
       do\
       {\
-        \
+\
         /* - retrieve next item location - */\
         BIC_CALL_NEXT_ITEM(it,SRC_LOCATION,item_reference,operands[c_source_pos_idx],return false;);\
         item_location = it.get_location_value(item_reference);\
-        \
+\
         if (item_location->v_type == c_bi_class_blank)\
         {\
           it.release_location_ptr(item_reference);\
           break;\
         }\
-        \
+\
         BIC_SET_APPEND_ITERABLE_BODY(TARGET_PTR);\
-        \
+\
       }\
       while(true);\
     }\
@@ -384,42 +384,34 @@ built_in_variable_s set_variables[] =
 #define BIC_SET_CHECK_INDEX() \
   /*{{{*/\
   pointer_tree_s *tree_ptr = (pointer_tree_s *)dst_location->v_data_ptr;\
-  \
+\
   /* - ERROR - */\
   if (index < 0 || index >= tree_ptr->used || !tree_ptr->data[index].valid)\
   {\
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_SET_INDEX_DOES_NOT_REFER_TO_VALID_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(index);\
-    \
+\
     return false;\
   }\
   /*}}}*/
 
 #define BIC_SET_ITEM(NAME) \
   {/*{{{*/\
-    location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-    \
-    long long int index;\
-    \
-    /* - ERROR - */\
-    if (!it.retrieve_integer(src_0_location,index))\
-    {\
-      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-      BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-      new_exception->params.push(1);\
-      new_exception->params.push(src_0_location->v_type);\
-      \
-      return false;\
-    }\
-    \
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method NAME
+macro
+; @end\
+\
     BIC_SET_CHECK_INDEX();\
-    \
+\
     location_s *element_location = (location_s *)tree_ptr->data[index].object;\
     element_location->v_reference_cnt.atomic_inc();\
-    \
+\
     BIC_SET_RESULT(element_location);\
-    \
+\
     return true;\
   }/*}}}*/
 
@@ -428,17 +420,17 @@ built_in_variable_s set_variables[] =
     /* - configure second - */\
     second.it_ptr = &it;\
     second.source_pos = operands[c_source_pos_idx];\
-    \
+\
     /* - configure target - */\
     target_ptr->it_ptr = &it;\
     target_ptr->source_pos = operands[c_source_pos_idx];\
-    \
+\
     /* - if first and second are not empty - */\
     if (first.count != 0 && second.count != 0)\
     {\
       pointer_tree_s *first_ptr;\
       pointer_tree_s *second_ptr;\
-      \
+\
       /* - order sets by size - */\
       if (first.count <= second.count)\
       {\
@@ -450,36 +442,36 @@ built_in_variable_s set_variables[] =
         first_ptr = &second;\
         second_ptr = &first;\
       }\
-      \
+\
       /* - traverse through first - */\
       unsigned stack[first_ptr->get_descent_stack_size()];\
       unsigned *stack_ptr = stack;\
-      \
+\
       unsigned f_idx = first_ptr->get_stack_min_value_idx(first_ptr->root_idx,&stack_ptr);\
       do {\
         location_s *elm_location = (location_s *)first_ptr->data[f_idx].object;\
-        \
+\
         /* - retrieve index in second - */\
         unsigned s_idx = second_ptr->get_idx((pointer)elm_location);\
-        \
+\
         if (((location_s *)it.exception_location)->v_type != c_bi_class_blank) {\
           it.release_location_ptr(new_location);\
           return false;\
         }\
-        \
+\
         /* - if element exist in second - */\
         if (s_idx != c_idx_not_exist)\
         {\
           /* - insert to target - */\
           elm_location->v_reference_cnt.atomic_inc();\
           target_ptr->insert((pointer)elm_location);\
-          \
+\
           if (((location_s *)it.exception_location)->v_type != c_bi_class_blank) {\
             it.release_location_ptr(new_location);\
             return false;\
           }\
         }\
-        \
+\
         f_idx = first_ptr->get_stack_next_idx(f_idx,&stack_ptr,stack);\
       } while(f_idx != c_idx_not_exist);\
     }\
@@ -492,44 +484,44 @@ built_in_variable_s set_variables[] =
       /* - traverse through first - */\
       unsigned stack[first.get_descent_stack_size()];\
       unsigned *stack_ptr = stack;\
-      \
+\
       unsigned f_idx = first.get_stack_min_value_idx(first.root_idx,&stack_ptr);\
       do {\
-        \
+\
         /* - increase element reference count - */\
         ((location_s *)first.data[f_idx].object)->v_reference_cnt.atomic_inc();\
-        \
+\
         f_idx = first.get_stack_next_idx(f_idx,&stack_ptr,stack);\
       } while(f_idx != c_idx_not_exist);\
     }\
-    \
+\
     /* - copy first to target - */\
     *target_ptr = first;\
-    \
+\
     /* - configure target - */\
     target_ptr->it_ptr = &it;\
     target_ptr->source_pos = operands[c_source_pos_idx];\
-    \
+\
     if (second.count != 0)\
     {\
       /* - traverse through second - */\
       unsigned stack[second.get_descent_stack_size()];\
       unsigned *stack_ptr = stack;\
-      \
+\
       unsigned s_idx = second.get_stack_min_value_idx(second.root_idx,&stack_ptr);\
       do {\
         location_s *elm_location = (location_s *)second.data[s_idx].object;\
-        \
+\
         /* - unique insert element to target - */\
         if (target_ptr->set_unique_insert((pointer)elm_location)) {\
           elm_location->v_reference_cnt.atomic_inc();\
         }\
-        \
+\
         if (((location_s *)it.exception_location)->v_type != c_bi_class_blank) {\
           it.release_location_ptr(new_location);\
           return false;\
         }\
-        \
+\
         s_idx = second.get_stack_next_idx(s_idx,&stack_ptr,stack);\
       } while(s_idx != c_idx_not_exist);\
     }\
@@ -540,43 +532,43 @@ built_in_variable_s set_variables[] =
     /* - configure second - */\
     second.it_ptr = &it;\
     second.source_pos = operands[c_source_pos_idx];\
-    \
+\
     /* - configure target - */\
     target_ptr->it_ptr = &it;\
     target_ptr->source_pos = operands[c_source_pos_idx];\
-    \
+\
     /* - if first is not empty - */\
     if (first.count != 0) {\
-      \
+\
       /* - traverse through first - */\
       unsigned stack[first.get_descent_stack_size()];\
       unsigned *stack_ptr = stack;\
-      \
+\
       unsigned f_idx = first.get_stack_min_value_idx(first.root_idx,&stack_ptr);\
       do {\
         location_s *elm_location = (location_s *)first.data[f_idx].object;\
-        \
+\
         /* - retrieve index in second - */\
         unsigned s_idx = second.get_idx((pointer)elm_location);\
-        \
+\
         if (((location_s *)it.exception_location)->v_type != c_bi_class_blank) {\
           it.release_location_ptr(new_location);\
           return false;\
         }\
-        \
+\
         /* - if element not exist in second - */\
         if (s_idx == c_idx_not_exist)\
         {\
           /* - insert to target - */\
           elm_location->v_reference_cnt.atomic_inc();\
           target_ptr->insert((pointer)elm_location);\
-          \
+\
           if (((location_s *)it.exception_location)->v_type != c_bi_class_blank) {\
             it.release_location_ptr(new_location);\
             return false;\
           }\
         }\
-        \
+\
         f_idx = first.get_stack_next_idx(f_idx,&stack_ptr,stack);\
       } while(f_idx != c_idx_not_exist);\
     }\
@@ -589,48 +581,48 @@ built_in_variable_s set_variables[] =
       /* - traverse through first - */\
       unsigned stack[first.get_descent_stack_size()];\
       unsigned *stack_ptr = stack;\
-      \
+\
       unsigned f_idx = first.get_stack_min_value_idx(first.root_idx,&stack_ptr);\
       do {\
-        \
+\
         /* - increase element reference count - */\
         ((location_s *)first.data[f_idx].object)->v_reference_cnt.atomic_inc();\
-        \
+\
         f_idx = first.get_stack_next_idx(f_idx,&stack_ptr,stack);\
       } while(f_idx != c_idx_not_exist);\
     }\
-    \
+\
     /* - copy first to target - */\
     *target_ptr = first;\
-    \
+\
     /* - configure target - */\
     target_ptr->it_ptr = &it;\
     target_ptr->source_pos = operands[c_source_pos_idx];\
-    \
+\
     if (second.count != 0)\
     {\
       /* - traverse through second - */\
       unsigned stack[second.get_descent_stack_size()];\
       unsigned *stack_ptr = stack;\
-      \
+\
       unsigned s_idx = second.get_stack_min_value_idx(second.root_idx,&stack_ptr);\
       do {\
         location_s *elm_location = (location_s *)second.data[s_idx].object;\
-        \
+\
         /* - find index of element in target - */\
         unsigned index = target_ptr->get_idx((pointer)elm_location);\
-        \
+\
         if (((location_s *)it.exception_location)->v_type != c_bi_class_blank) {\
           it.release_location_ptr(new_location);\
           return false;\
         }\
-        \
+\
         if (index == c_idx_not_exist)\
         {\
           /* - insert element to target - */\
           elm_location->v_reference_cnt.atomic_inc();\
           target_ptr->insert((pointer)elm_location);\
-          \
+\
           if (((location_s *)it.exception_location)->v_type != c_bi_class_blank) {\
             it.release_location_ptr(new_location);\
             return false;\
@@ -641,7 +633,7 @@ built_in_variable_s set_variables[] =
           it.release_location_ptr((location_s *)target_ptr->data[index].object);\
           target_ptr->remove(index);\
         }\
-        \
+\
         s_idx = second.get_stack_next_idx(s_idx,&stack_ptr,stack);\
       } while(s_idx != c_idx_not_exist);\
     }\
@@ -653,25 +645,25 @@ built_in_variable_s set_variables[] =
     {\
       unsigned stack[first.get_descent_stack_size()];\
       unsigned *stack_ptr = stack;\
-      \
+\
       unsigned f_idx = first.get_stack_min_value_idx(first.root_idx,&stack_ptr);\
       do {\
         location_s *elm_location = (location_s *)first.data[f_idx].object;\
-        \
+\
         /* - retrieve index in second - */\
         unsigned s_idx = second.get_idx((pointer)elm_location);\
-        \
+\
         if (((location_s *)it.exception_location)->v_type != c_bi_class_blank) {\
           return false;\
         }\
-        \
+\
         /* - if element exist in second - */\
         if (s_idx == c_idx_not_exist)\
         {\
           result = 0;\
           break;\
         }\
-        \
+\
         f_idx = first.get_stack_next_idx(f_idx,&stack_ptr,stack);\
       } while(f_idx != c_idx_not_exist);\
     }\

@@ -1418,21 +1418,21 @@ built_in_variable_s sftp_handle_variables[] =
 #define BIC_SFTP_HANDLE_READLN() \
   /*{{{*/\
   const unsigned c_init_buffer_size = 1024;\
-  \
+\
   /* - target data buffer - */\
   bc_array_s line_buffer;\
   line_buffer.init_size(c_init_buffer_size);\
-  \
+\
   ssize_t read_cnt;\
   do\
   {\
     read_cnt = sftph_ptr->buff_read(line_buffer,1);\
-    \
+\
     if (read_cnt <= 0)\
     {\
       break;\
     }\
-    \
+\
     if (line_buffer.last() == '\n')\
     {\
       line_buffer.pop();\
@@ -1445,48 +1445,48 @@ built_in_variable_s sftp_handle_variables[] =
 #define BIC_SFTP_HANDLE_NEXT_ITEM() \
   {/*{{{*/\
     location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    \
+\
     /* - retrieve sftp handle - */\
     sftp_handle_s *sftph_ptr = (sftp_handle_s *)dst_location->v_data_ptr;\
-    \
+\
     /* - ERROR - */\
     if (sftph_ptr == nullptr)\
     {\
       exception_s::throw_exception(it,module.error_base + c_error_SFTP_HANDLE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       return false;\
     }\
-    \
+\
     BIC_SFTP_HANDLE_READLN();\
-    \
+\
     /* - ERROR - */\
     if (read_cnt < 0)\
     {\
       line_buffer.clear();\
-      \
+\
       exception_s::throw_exception(it,module.error_base + c_error_SFTP_HANDLE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       return false;\
     }\
-    \
+\
     /* - was any data read from file - */\
     if (read_cnt == 0 && line_buffer.used == 0)\
     {\
       line_buffer.clear();\
-      \
+\
       BIC_SET_RESULT_BLANK();\
     }\
     else\
     {\
       line_buffer.push('\0');\
-      \
+\
       /* - return data string - */\
       string_s *string_ptr = it.get_new_string_ptr();\
       string_ptr->data = line_buffer.data;\
       string_ptr->size = line_buffer.used;\
-      \
+\
       BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);\
       BIC_SET_RESULT(new_location);\
     }\
-    \
+\
     return true;\
   }/*}}}*/
 

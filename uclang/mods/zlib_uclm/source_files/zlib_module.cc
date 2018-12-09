@@ -561,69 +561,69 @@ built_in_variable_s gz_file_variables[] =
 #define BIC_GZ_FILE_READLN() \
 /*{{{*/\
   const unsigned c_init_buffer_size = 1024;\
-  \
+\
   /* - target data buffer - */\
   bc_array_s line_buffer;\
   line_buffer.init_size(c_init_buffer_size);\
-  \
+\
   int ch;\
   do {\
     /* - read next character from gz file - */\
     ch = gzgetc(gzf_ptr);\
-    \
+\
     /* - test end of line - */\
     if (ch == '\n' || ch == -1)\
       break;\
-    \
+\
     /* - insert character to line buffer - */\
     line_buffer.push(ch);\
-    \
+\
   } while(true);\
 /*}}}*/
 
 #define BIC_FD_NEXT_ITEM() \
 {/*{{{*/\
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  \
+\
   /* - retrieve pointer to gz file - */\
   gzFile gzf_ptr = (gzFile)dst_location->v_data_ptr;\
-  \
+\
   /* - ERROR - */\
   if (gzf_ptr == nullptr)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
- \
+\
   BIC_GZ_FILE_READLN();\
 \
   /* - ERROR - */\
   if (ch == -1 && !gzeof(gzf_ptr))\
   {\
     line_buffer.clear();\
-    \
+\
     exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-  \
+\
   if (gzeof(gzf_ptr) && line_buffer.used == 0)\
   {\
     line_buffer.clear();\
-    \
+\
     BIC_SET_RESULT_BLANK();\
   }\
   else {\
     line_buffer.push('\0');\
-    \
+\
     /* - return data string - */\
     string_s *string_ptr = it.get_new_string_ptr();\
     string_ptr->data = line_buffer.data;\
     string_ptr->size = line_buffer.used;\
-    \
+\
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);\
     BIC_SET_RESULT(new_location)\
   }\
-  \
+\
   return true;\
 }/*}}}*/
 
