@@ -395,18 +395,12 @@ bool bic_ftp_session_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_ftp_session_method_FtpSession_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("FtpSession#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+host:c_bi_class_string
+>
+method FtpSession
+; @end
 
   // - retrieve host name pointer -
   string_s *host_ptr = (string_s *)src_0_location->v_data_ptr;
@@ -435,21 +429,13 @@ bool bic_ftp_session_method_FtpSession_1(interpreter_thread_s &it,unsigned stack
 
 bool bic_ftp_session_method_login_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string || src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("login#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+user:c_bi_class_string
+password:c_bi_class_string
+>
+method login
+; @end
 
   // - retrieve ftp session -
   ftp_session_s *ftps_ptr = (ftp_session_s *)dst_location->v_data_ptr;
@@ -477,19 +463,12 @@ bool bic_ftp_session_method_login_2(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_ftp_session_method_mkdir_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("mkdir#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+method mkdir
+; @end
 
   // - retrieve ftp session -
   ftp_session_s *ftps_ptr = (ftp_session_s *)dst_location->v_data_ptr;
@@ -511,19 +490,12 @@ bool bic_ftp_session_method_mkdir_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_ftp_session_method_rmdir_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("rmdir#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+method rmdir
+; @end
 
   // - retrieve ftp session -
   ftp_session_s *ftps_ptr = (ftp_session_s *)dst_location->v_data_ptr;
@@ -545,19 +517,12 @@ bool bic_ftp_session_method_rmdir_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_ftp_session_method_listdir_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("listdir#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+method listdir
+; @end
 
   // - retrieve ftp session -
   ftp_session_s *ftps_ptr = (ftp_session_s *)dst_location->v_data_ptr;
@@ -626,19 +591,12 @@ bool bic_ftp_session_method_listdir_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_ftp_session_method_chdir_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("chdir#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+method chdir
+; @end
 
   // - retrieve ftp session -
   ftp_session_s *ftps_ptr = (ftp_session_s *)dst_location->v_data_ptr;
@@ -688,21 +646,13 @@ bool bic_ftp_session_method_getcwd_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_ftp_session_method_get_file_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string || src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("get_file#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+output:c_bi_class_string
+path:c_bi_class_string
+>
+method get_file
+; @end
 
   // - retrieve ftp session -
   ftp_session_s *ftps_ptr = (ftp_session_s *)dst_location->v_data_ptr;
@@ -727,21 +677,13 @@ bool bic_ftp_session_method_get_file_2(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_ftp_session_method_put_file_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string || src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("put_file#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+input:c_bi_class_string
+path:c_bi_class_string
+>
+method put_file
+; @end
 
   // - retrieve ftp session -
   ftp_session_s *ftps_ptr = (ftp_session_s *)dst_location->v_data_ptr;
@@ -766,19 +708,12 @@ bool bic_ftp_session_method_put_file_2(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_ftp_session_method_remove_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("remove#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+method remove
+; @end
 
   // - retrieve ftp session -
   ftp_session_s *ftps_ptr = (ftp_session_s *)dst_location->v_data_ptr;
@@ -800,21 +735,13 @@ bool bic_ftp_session_method_remove_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_ftp_session_method_rename_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string || src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("rename#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+src:c_bi_class_string
+dst:c_bi_class_string
+>
+method rename
+; @end
 
   // - retrieve ftp session -
   ftp_session_s *ftps_ptr = (ftp_session_s *)dst_location->v_data_ptr;
@@ -839,24 +766,13 @@ bool bic_ftp_session_method_rename_2(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_ftp_session_method_open_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int tr_type;
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,tr_type))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("open#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+tr_type:retrieve_integer
+>
+method open
+; @end
 
   // - retrieve ftp session -
   ftp_session_s *ftps_ptr = (ftp_session_s *)dst_location->v_data_ptr;
@@ -1171,19 +1087,12 @@ bool bic_ftp_handle_method_close_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_ftp_handle_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("write#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+method write
+; @end
 
   // - retrieve ftp handle -
   ftp_handle_s *ftph_ptr = (ftp_handle_s *)dst_location->v_data_ptr;
@@ -1285,21 +1194,12 @@ bool bic_ftp_handle_method_readln_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_ftp_handle_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int byte_cnt;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,byte_cnt))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("read#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+byte_cnt:retrieve_integer
+>
+method read
+; @end
 
   // - retrieve ftp handle -
   ftp_handle_s *ftph_ptr = (ftp_handle_s *)dst_location->v_data_ptr;

@@ -752,24 +752,15 @@ bool bic_glut_method_Glut_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_glut_method_InitWindowSize_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int width;
-  long long int height;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,width) ||
-      !it.retrieve_integer(src_1_location,height))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_glut,"InitWindowSize#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+width:retrieve_integer
+height:retrieve_integer
+>
+class c_bi_class_glut
+method InitWindowSize
+static_method
+; @end
 
   BIC_GLUT_CONTEXT_CHECK();
 
@@ -782,24 +773,15 @@ bool bic_glut_method_InitWindowSize_2(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_glut_method_InitWindowPosition_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int pos_x;
-  long long int pos_y;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,pos_x) ||
-      !it.retrieve_integer(src_1_location,pos_y))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_glut,"InitWindowPosition#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+pos_x:retrieve_integer
+pos_y:retrieve_integer
+>
+class c_bi_class_glut
+method InitWindowPosition
+static_method
+; @end
 
   BIC_GLUT_CONTEXT_CHECK();
 
@@ -812,20 +794,14 @@ bool bic_glut_method_InitWindowPosition_2(interpreter_thread_s &it,unsigned stac
 
 bool bic_glut_method_InitDisplayMode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int mode;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,mode))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_glut,"InitDisplayMode#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+mode:retrieve_integer
+>
+class c_bi_class_glut
+method InitDisplayMode
+static_method
+; @end
 
   BIC_GLUT_CONTEXT_CHECK();
 
@@ -838,18 +814,14 @@ bool bic_glut_method_InitDisplayMode_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_glut_method_CreateWindow_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_glut,"CreateWindow#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+name:c_bi_class_string
+>
+class c_bi_class_glut
+method CreateWindow
+static_method
+; @end
 
   BIC_GLUT_CONTEXT_CHECK();
 
@@ -871,24 +843,15 @@ bool bic_glut_method_CreateWindow_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_glut_method_ReshapeWindow_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int width;
-  long long int height;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,width) ||
-      !it.retrieve_integer(src_1_location,height))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_glut,"ReshapeWindow#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+width:retrieve_integer
+height:retrieve_integer
+>
+class c_bi_class_glut
+method ReshapeWindow
+static_method
+; @end
 
   BIC_GLUT_WINDOW_CHECK();
 
@@ -969,27 +932,16 @@ bool bic_glut_method_IdleFunc_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_glut_method_TimerFunc_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-
-  long long int millisec;
-  long long int value;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,millisec) ||
-      src_1_location->v_type != c_bi_class_delegate ||
-      !it.retrieve_integer(src_2_location,value))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_glut,"TimerFunc#3");
-    new_exception->params.push(3);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+millisec:retrieve_integer
+delegate:c_bi_class_delegate
+value:retrieve_integer
+>
+class c_bi_class_glut
+method TimerFunc
+static_method
+; @end
 
   BIC_GLUT_CONTEXT_CHECK();
   BIC_GLUT_DELEGATE_CHECK(src_1_location,1);
@@ -1026,20 +978,14 @@ bool bic_glut_method_GetModifiers_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_glut_method_Get_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int state;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,state))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_glut,"Get#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+state:retrieve_integer
+>
+class c_bi_class_glut
+method Get
+static_method
+; @end
 
   BIC_GLUT_CONTEXT_CHECK();
 

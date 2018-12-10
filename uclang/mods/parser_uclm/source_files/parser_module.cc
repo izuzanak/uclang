@@ -347,18 +347,12 @@ bool bic_final_automata_operator_binary_equal(interpreter_thread_s &it,unsigned 
 
 bool bic_final_automata_method_FinalAutomata_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("FinalAutomata#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+reg_expressions:c_bi_class_array
+>
+method FinalAutomata
+; @end
 
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
@@ -426,18 +420,12 @@ bool bic_final_automata_method_FinalAutomata_1(interpreter_thread_s &it,unsigned
 
 bool bic_final_automata_method_get_source_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("get_source#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+method get_source
+; @end
 
   // - create fa source object -
   fa_source_s *fs_ptr = (fa_source_s *)cmalloc(sizeof(fa_source_s));
@@ -746,18 +734,12 @@ bool bic_parser_operator_binary_equal(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_parser_method_Parser_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Parser#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+rules:c_bi_class_string
+>
+method Parser
+; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
@@ -796,21 +778,13 @@ bool bic_parser_method_Parser_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_parser_method_parse_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string ||
-      src_1_location->v_type != c_bi_class_delegate)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("parse#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+source:c_bi_class_string
+delegate:c_bi_class_delegate
+>
+method parse
+; @end
 
   delegate_s *delegate_ptr = (delegate_s *)src_1_location->v_data_ptr;
 
@@ -1003,20 +977,12 @@ bool bic_parse_state_method_rule_idx_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_parse_state_method_rule_body_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int index;
-
-  if (!it.retrieve_integer(src_0_location,index))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("rule_body#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method rule_body
+; @end
 
   parse_state_s *ps_ptr = (parse_state_s *)dst_location->v_data_ptr;
 

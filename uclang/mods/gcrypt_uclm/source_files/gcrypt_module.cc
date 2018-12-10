@@ -302,32 +302,15 @@ bool bic_gcrypt_cipher_operator_binary_equal(interpreter_thread_s &it,unsigned s
 
 bool bic_gcrypt_cipher_method_GcryptCipher_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-
-  long long int type;
-  long long int mode;
-  long long int flags;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,type) ||
-      !it.retrieve_integer(src_1_location,mode) ||
-      !it.retrieve_integer(src_2_location,flags) ||
-      src_3_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("GcryptCipher#4");
-    new_exception->params.push(4);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+type:retrieve_integer
+mode:retrieve_integer
+flags:retrieve_integer
+key:c_bi_class_string
+>
+method GcryptCipher
+; @end
 
   // - create gcrypt cipher object -
   gcrypt_cipher_s *gc_ptr = (gcrypt_cipher_s *)cmalloc(sizeof(gcrypt_cipher_s));
@@ -365,19 +348,12 @@ bool bic_gcrypt_cipher_method_GcryptCipher_4(interpreter_thread_s &it,unsigned s
 
 bool bic_gcrypt_cipher_method_setiv_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("setiv#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+init_vector:c_bi_class_string
+>
+method setiv
+; @end
 
   gcrypt_cipher_s *gc_ptr = (gcrypt_cipher_s *)dst_location->v_data_ptr;
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
@@ -398,19 +374,12 @@ bool bic_gcrypt_cipher_method_setiv_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_gcrypt_cipher_method_setctr_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("setctr#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+counter_vector:c_bi_class_string
+>
+method setctr
+; @end
 
   gcrypt_cipher_s *gc_ptr = (gcrypt_cipher_s *)dst_location->v_data_ptr;
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
@@ -431,19 +400,12 @@ bool bic_gcrypt_cipher_method_setctr_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_gcrypt_cipher_method_encrypt_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("encrypt#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+method encrypt
+; @end
 
   gcrypt_cipher_s *gc_ptr = (gcrypt_cipher_s *)dst_location->v_data_ptr;
 
@@ -472,19 +434,12 @@ bool bic_gcrypt_cipher_method_encrypt_1(interpreter_thread_s &it,unsigned stack_
 
 bool bic_gcrypt_cipher_method_decrypt_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("decrypt#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+method decrypt
+; @end
 
   gcrypt_cipher_s *gc_ptr = (gcrypt_cipher_s *)dst_location->v_data_ptr;
 

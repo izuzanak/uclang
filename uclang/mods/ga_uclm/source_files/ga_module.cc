@@ -294,31 +294,15 @@ bool bic_ga_real_genome_operator_binary_equal(interpreter_thread_s &it,unsigned 
 
 bool bic_ga_real_genome_method_GaRealGenome_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-
-  long long int length;
-  double lower;
-  double upper;
-
-  if (!it.retrieve_integer(src_0_location,length) ||
-      !it.retrieve_float(src_1_location,lower) ||
-      !it.retrieve_float(src_2_location,upper) ||
-      src_3_location->v_type != c_bi_class_delegate)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("GaRealGenome#4");
-    new_exception->params.push(4);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+length:retrieve_integer
+lower:retrieve_float
+upper:retrieve_float
+delegate:c_bi_class_delegate
+>
+method GaRealGenome
+; @end
 
   // - ERROR -
   if (length <= 1)
@@ -362,32 +346,15 @@ bool bic_ga_real_genome_method_GaRealGenome_4(interpreter_thread_s &it,unsigned 
 
 bool bic_ga_real_genome_method_evolve_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-
-  long long int generation_cnt;
-  long long int population_size;
-  double mutation;
-  double crossover;
-
-  if (!it.retrieve_integer(src_0_location,generation_cnt) ||
-      !it.retrieve_integer(src_1_location,population_size) ||
-      !it.retrieve_float(src_2_location,mutation) ||
-      !it.retrieve_float(src_3_location,crossover))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("evolve#4");
-    new_exception->params.push(4);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+generation_cnt:retrieve_integer
+population_size:retrieve_integer
+mutation:retrieve_float
+crossover:retrieve_float
+>
+method evolve
+; @end
 
   // - ERROR -
   if (generation_cnt <= 0)
@@ -456,32 +423,15 @@ bool bic_ga_real_genome_method_evolve_4(interpreter_thread_s &it,unsigned stack_
 
 bool bic_ga_real_genome_method_steady_state_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-
-  long long int generation_cnt;
-  long long int population_size;
-  double mutation;
-  double crossover;
-
-  if (!it.retrieve_integer(src_0_location,generation_cnt) ||
-      !it.retrieve_integer(src_1_location,population_size) ||
-      !it.retrieve_float(src_2_location,mutation) ||
-      !it.retrieve_float(src_3_location,crossover))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("steady_state#4");
-    new_exception->params.push(4);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+generation_cnt:retrieve_integer
+population_size:retrieve_integer
+mutation:retrieve_float
+crossover:retrieve_float
+>
+method steady_state
+; @end
 
   // - ERROR -
   if (generation_cnt <= 0)

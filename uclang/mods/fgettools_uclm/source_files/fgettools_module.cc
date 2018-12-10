@@ -248,27 +248,14 @@ bool bic_fget_target_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_fget_target_method_FgetTarget_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-
-  long long int block_size;
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      src_1_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_2_location,block_size))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("FgetTarget#3");
-    new_exception->params.push(3);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+file_path:c_bi_class_string
+map_path:c_bi_class_string
+block_size:retrieve_integer
+>
+method FgetTarget
+; @end
 
   string_s *file_name_ptr = (string_s *)src_0_location->v_data_ptr;
   string_s *map_name_ptr = (string_s *)src_1_location->v_data_ptr;
@@ -370,21 +357,12 @@ bool bic_fget_target_method_FgetTarget_3(interpreter_thread_s &it,unsigned stack
 
 bool bic_fget_target_method_index_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int index;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,index))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("index#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method index
+; @end
 
   fget_target_s *ft_ptr = (fget_target_s *)dst_location->v_data_ptr;
 
@@ -426,21 +404,12 @@ bool bic_fget_target_method_index_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_fget_target_method_received_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int request_cnt;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,request_cnt))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("received#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+request_cnt:retrieve_integer
+>
+method received
+; @end
 
   // - ERROR -
   if (request_cnt < 0)
@@ -534,24 +503,13 @@ bool bic_fget_target_method_received_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_fget_target_method_update_data_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int block_index;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,block_index) ||
-      src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("update_data#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+block_index:retrieve_integer
+data:c_bi_class_string
+>
+method update_data
+; @end
 
   fget_target_s *ft_ptr = (fget_target_s *)dst_location->v_data_ptr;
   string_s *string_ptr = (string_s *)src_1_location->v_data_ptr;

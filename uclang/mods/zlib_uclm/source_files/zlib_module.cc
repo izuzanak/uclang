@@ -217,23 +217,15 @@ void bic_zlib_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_zlib_method_compress_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int level;
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,level))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_zlib,"compress#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+level:retrieve_integer
+>
+class c_bi_class_zlib
+method compress
+static_method
+; @end
 
   // - ERROR -
   if (level < 0 || level > 9)
@@ -274,23 +266,15 @@ bool bic_zlib_method_compress_2(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_zlib_method_uncompress_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int lli_target_length;
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,lli_target_length))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_zlib,"uncompress#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+lli_target_length:retrieve_integer
+>
+class c_bi_class_zlib
+method uncompress
+static_method
+; @end
 
   // - ERROR -
   if (lli_target_length <= 0)
@@ -721,22 +705,13 @@ bool bic_gz_file_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_gz_file_method_GzFile_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("GzFile#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+mode:c_bi_class_string
+>
+method GzFile
+; @end
 
   string_s *file_name = (string_s *)src_0_location->v_data_ptr;
   string_s *file_mode = (string_s *)src_1_location->v_data_ptr;
@@ -757,25 +732,13 @@ bool bic_gz_file_method_GzFile_2(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_gz_file_method_seek_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int offset;
-  long long int whence;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,offset) ||
-      !it.retrieve_integer(src_1_location,whence))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("seek#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+offset:retrieve_integer
+whence:retrieve_integer
+>
+method seek
+; @end
 
   // - retrieve pointer to gz file -
   gzFile gzf_ptr = (gzFile)dst_location->v_data_ptr;
@@ -845,19 +808,12 @@ bool bic_gz_file_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_gz_file_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("write#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+method write
+; @end
 
   BIC_GZ_FILE_METHOD_WRITE_1();
 
@@ -868,19 +824,12 @@ bool bic_gz_file_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_gz_file_method_write_close_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("write_close#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+method write_close
+; @end
 
   BIC_GZ_FILE_METHOD_WRITE_1();
   BIC_GZ_FILE_METHOD_CLOSE_0();
@@ -906,21 +855,12 @@ bool bic_gz_file_method_readln_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_gz_file_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int byte_cnt;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,byte_cnt))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("read#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+byte_cnt:retrieve_integer
+>
+method read
+; @end
 
   // - retrieve pointer to gz file -
   gzFile gzf_ptr = (gzFile)dst_location->v_data_ptr;

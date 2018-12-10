@@ -185,18 +185,14 @@ void bic_json_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_json_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_rm_class_dict)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_json,"create#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+dict:c_rm_class_dict
+>
+class c_bi_class_json
+method create
+static_method
+; @end
 
   // - initialize character buffer -
   bc_array_s buffer;
@@ -385,21 +381,15 @@ bool bic_json_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_json_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_rm_class_dict ||
-      src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_json,"create_nice#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+dict:c_rm_class_dict
+tabulator:c_bi_class_string
+>
+class c_bi_class_json
+method create_nice
+static_method
+; @end
 
   // - retrieve tabulator pointer -
   string_s *tabulator_ptr = (string_s *)src_1_location->v_data_ptr;
@@ -435,24 +425,16 @@ bool bic_json_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_json_method_create_nice_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_rm_class_dict ||
-      src_1_location->v_type != c_bi_class_string ||
-      src_2_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_json,"create_nice#3");
-    new_exception->params.push(3);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+dict:c_rm_class_dict
+tabulator:c_bi_class_string
+indent:c_bi_class_string
+>
+class c_bi_class_json
+method create_nice
+static_method
+; @end
 
   // - retrieve tabulator pointer -
   string_s *tabulator_ptr = (string_s *)src_1_location->v_data_ptr;
@@ -486,18 +468,14 @@ bool bic_json_method_create_nice_3(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_json_method_parse_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_json,"parse#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+class c_bi_class_json
+method parse
+static_method
+; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 

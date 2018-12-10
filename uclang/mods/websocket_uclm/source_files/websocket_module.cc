@@ -317,24 +317,13 @@ bool bic_ws_context_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 
 bool bic_ws_context_method_WsContext_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int port;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,port) ||
-      src_1_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("WsContext#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+port:retrieve_integer
+protocols:c_bi_class_array
+>
+method WsContext
+; @end
 
   // - retrieve protocols array -
   pointer_array_s *array_ptr = (pointer_array_s *)src_1_location->v_data_ptr;
@@ -490,29 +479,15 @@ bool bic_ws_context_method_user_data_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_ws_context_method_client_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-
-  long long int port;
-
-  if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,port)||
-      src_2_location->v_type != c_bi_class_string ||
-      src_3_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("client#4");
-    new_exception->params.push(4);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+address:c_bi_class_string
+port:retrieve_integer
+path:c_bi_class_string
+protocol:c_bi_class_string
+>
+method client
+; @end
 
   ws_context_s *wsc_ptr = (ws_context_s *)dst_location->v_data_ptr;
 
@@ -601,20 +576,12 @@ bool bic_ws_context_method_get_fds_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_ws_context_method_process_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int timeout;
-
-  if (!it.retrieve_integer(src_0_location,timeout))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("process#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+timeout:retrieve_integer
+>
+method process
+; @end
 
   // - retrieve websocket context -
   ws_context_s *wsc_ptr = (ws_context_s *)dst_location->v_data_ptr;
@@ -638,18 +605,12 @@ bool bic_ws_context_method_process_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_ws_context_method_protocol_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("protocol_idx#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+protocol_name:c_bi_class_string
+>
+method protocol_idx
+; @end
 
   ws_context_s *wsc_ptr = (ws_context_s *)dst_location->v_data_ptr;
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
@@ -671,20 +632,12 @@ bool bic_ws_context_method_protocol_idx_1(interpreter_thread_s &it,unsigned stac
 
 bool bic_ws_context_method_callback_on_writable_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int prot_idx;
-
-  if (!it.retrieve_integer(src_0_location,prot_idx))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("callback_on_writable#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+prot_idx:retrieve_integer
+>
+method callback_on_writable
+; @end
 
   ws_context_s *wsc_ptr = (ws_context_s *)dst_location->v_data_ptr;
 
@@ -1102,24 +1055,13 @@ bool bic_ws_conn_method_callback_on_writable_0(interpreter_thread_s &it,unsigned
 
 bool bic_ws_conn_method_set_timeout_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int reason;
-  long long int seconds;
-
-  if (!it.retrieve_integer(src_0_location,reason) ||
-      !it.retrieve_integer(src_1_location,seconds))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("set_timeout#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+reason:retrieve_integer
+seconds:retrieve_integer
+>
+method set_timeout
+; @end
 
   // - retrieve websocket connection -
   ws_conn_s *wscn_ptr = (ws_conn_s *)dst_location->v_data_ptr;
@@ -1164,41 +1106,25 @@ bool bic_ws_conn_method_set_timeout_2(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_ws_conn_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("write#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+method write
+; @end
 
   BIC_WS_CONN_WRITE(src_0_location,LWS_WRITE_TEXT);
 }/*}}}*/
 
 bool bic_ws_conn_method_write_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int write_type;
-
-  if (!it.retrieve_integer(src_0_location,write_type) ||
-      src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("write#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+write_type:retrieve_integer
+data:c_bi_class_string
+>
+method write
+; @end
 
   BIC_WS_CONN_WRITE(src_1_location,(libwebsocket_write_protocol)write_type);
 }/*}}}*/
@@ -1429,17 +1355,14 @@ void bic_ws_base64_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_ws_base64_method_encode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_ws_base64,"encode#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+class c_bi_class_ws_base64
+method encode
+static_method
+; @end
 
   string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
 
@@ -1471,18 +1394,14 @@ bool bic_ws_base64_method_encode_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_ws_base64_method_decode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_ws_base64,"decode#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+class c_bi_class_ws_base64
+method decode
+static_method
+; @end
 
   string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
 

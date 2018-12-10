@@ -195,18 +195,14 @@ void bic_xml_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_xml_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_xml_node)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_xml,"create#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+node:c_bi_class_xml_node
+>
+class c_bi_class_xml
+method create
+static_method
+; @end
 
   bc_array_s buffer;
   buffer.init();
@@ -330,21 +326,15 @@ bool bic_xml_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_xml_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_xml_node ||
-      src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_xml,"create_nice#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+node:c_bi_class_xml_node
+tabulator:c_bi_class_string
+>
+class c_bi_class_xml
+method create_nice
+static_method
+; @end
 
   // - retrieve tabulator pointer -
   string_s *tabulator_ptr = (string_s *)src_1_location->v_data_ptr;
@@ -371,24 +361,16 @@ bool bic_xml_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_xml_method_create_nice_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_xml_node ||
-      src_1_location->v_type != c_bi_class_string ||
-      src_2_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_xml,"create_nice#3");
-    new_exception->params.push(3);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+node:c_bi_class_xml_node
+tabulator:c_bi_class_string
+indent:c_bi_class_string
+>
+class c_bi_class_xml
+method create_nice
+static_method
+; @end
 
   // - retrieve tabulator pointer -
   string_s *tabulator_ptr = (string_s *)src_1_location->v_data_ptr;
@@ -413,18 +395,14 @@ bool bic_xml_method_create_nice_3(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_xml_method_parse_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_xml,"parse#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+class c_bi_class_xml
+method parse
+static_method
+; @end
 
   string_s *data_ptr = (string_s *)src_0_location->v_data_ptr;
 
@@ -699,7 +677,7 @@ macro
 @begin ucl_params
 <
 name:c_bi_class_string
-text:c_bi_class_string
+data:c_bi_class_string
 >
 method NAME
 macro
@@ -822,18 +800,12 @@ bool bic_xml_node_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned 
 
 bool bic_xml_node_method_XmlNode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("XmlNode#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+name:c_bi_class_string
+>
+method XmlNode
+; @end
 
   string_s *name_ptr = (string_s *)src_0_location->v_data_ptr;
 
@@ -925,21 +897,13 @@ bool bic_xml_node_method_update_node_dict_0(interpreter_thread_s &it,unsigned st
 
 bool bic_xml_node_method_attr__2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string ||
-      src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("attr_#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+name:c_bi_class_string
+value:c_bi_class_string
+>
+method attr_
+; @end
 
   xml_node_s *node_ptr = (xml_node_s *)dst_location->v_data_ptr;
   string_s *name_ptr = (string_s *)src_0_location->v_data_ptr;
@@ -1039,18 +1003,12 @@ bool bic_xml_node_method_node__2(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_xml_node_method_text__1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("text_#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+method text_
+; @end
 
   xml_node_s *node_ptr = (xml_node_s *)dst_location->v_data_ptr;
 
@@ -1068,18 +1026,12 @@ bool bic_xml_node_method_text__1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_xml_node_method_append_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_xml_node)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("append#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+node:c_bi_class_xml_node
+>
+method append
+; @end
 
   xml_node_s *node_ptr = (xml_node_s *)dst_location->v_data_ptr;
 

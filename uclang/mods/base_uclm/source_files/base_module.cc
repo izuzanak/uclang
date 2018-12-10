@@ -4278,21 +4278,13 @@ built_in_variable_s string_variables[] =
 
 #define BIC_STRING_ITEM(NAME) \
   {/*{{{*/\
-    location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-\
-    long long int index;\
-\
-    /* - ERROR - */\
-    if (!it.retrieve_integer(src_0_location,index))\
-    {\
-      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-      BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-      new_exception->params.push(1);\
-      new_exception->params.push(src_0_location->v_type);\
-\
-      return false;\
-    }\
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method NAME
+macro
+; @end\
 \
     BIC_STRING_CHECK_INDEX();\
 \
@@ -4303,19 +4295,13 @@ built_in_variable_s string_variables[] =
 
 #define BIC_STRING_OPERATOR_BINARY_PLUS(NAME) \
   /*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-\
-  /* - ERROR - */\
-  if (src_0_location->v_type != c_bi_class_string)\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-    new_exception->params.push(1);\
-    new_exception->params.push(src_0_location->v_type);\
-\
-    return false;\
-  }\
+@begin ucl_params
+<
+second:c_bi_class_string
+>
+method NAME
+macro
+; @end\
 \
   string_s *first_ptr = (string_s *)dst_location->v_data_ptr;\
   string_s *second_ptr = (string_s *)src_0_location->v_data_ptr;\
@@ -4334,21 +4320,13 @@ built_in_variable_s string_variables[] =
 
 #define BIC_STRING_OPERATOR_BINARY_ASTERISK(NAME) \
 /*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-\
-  long long int mult;\
-\
-  /* - ERROR - */\
-  if (!it.retrieve_integer(src_0_location,mult))\
-  {\
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-    BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-    new_exception->params.push(1);\
-    new_exception->params.push(src_0_location->v_type);\
-\
-    return false;\
-  }\
+@begin ucl_params
+<
+mult:retrieve_integer
+>
+method NAME
+macro
+; @end\
 \
   /* - retrieve source string - */\
   string_s *source_ptr = (string_s *)dst_location->v_data_ptr;\
@@ -5114,20 +5092,14 @@ bool bic_string_method_String_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_string_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int length;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,length))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_string,"create#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+length:retrieve_integer
+>
+class c_bi_class_string
+method create
+static_method
+; @end
 
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->create(length);
@@ -5139,23 +5111,16 @@ bool bic_string_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_string_method_split_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("split#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+separator:c_bi_class_string
+>
+method split
+; @end
 
   // - retrieve string pointers -
   string_s *string_ptr = (string_s *)dst_location->v_data_ptr;
-  string_s *substr_ptr = (string_s *)src_0_location->v_data_ptr;
+  string_s *separator_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - create new array pointer -
   pointer_array_s *array_ptr = it.get_new_array_ptr();
@@ -5166,7 +5131,7 @@ bool bic_string_method_split_1(interpreter_thread_s &it,unsigned stack_base,uli 
     do
     {
       unsigned old_idx = idx;
-      idx = string_ptr->get_idx(idx,substr_ptr->size - 1,substr_ptr->data);
+      idx = string_ptr->get_idx(idx,separator_ptr->size - 1,separator_ptr->data);
 
       if (idx == c_idx_not_exist)
       {
@@ -5188,7 +5153,7 @@ bool bic_string_method_split_1(interpreter_thread_s &it,unsigned stack_base,uli 
       }
 
       // - jump over substring -
-      idx += substr_ptr->size - 1;
+      idx += separator_ptr->size - 1;
     }
     while(true);
   }
@@ -5313,21 +5278,12 @@ bool bic_string_method_join_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_string_method_head_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int original_length;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,original_length))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("head#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+original_length:retrieve_integer
+>
+method head
+; @end
 
   string_s *string_ptr = (string_s *)dst_location->v_data_ptr;
   unsigned string_length = string_ptr->size - 1;
@@ -5360,21 +5316,12 @@ bool bic_string_method_head_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_string_method_tail_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int original_length;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,original_length))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("tail#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+original_length:retrieve_integer
+>
+method tail
+; @end
 
   string_s *string_ptr = (string_s *)dst_location->v_data_ptr;
   unsigned string_length = string_ptr->size - 1;
@@ -5407,25 +5354,13 @@ bool bic_string_method_tail_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_string_method_range_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int original_first_index;
-  long long int original_second_index;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,original_first_index) ||
-      !it.retrieve_integer(src_1_location,original_second_index))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("range#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+original_first_index:retrieve_integer
+original_second_index:retrieve_integer
+>
+method range
+; @end
 
   string_s *string_ptr = (string_s *)dst_location->v_data_ptr;
   unsigned string_length = string_ptr->size - 1;
@@ -5467,19 +5402,12 @@ bool bic_string_method_range_2(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_string_method_get_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("get_idx#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+substr:c_bi_class_string
+>
+method get_idx
+; @end
 
   // - retrieve string pointers -
   string_s *string_ptr = (string_s *)dst_location->v_data_ptr;
@@ -5494,19 +5422,12 @@ bool bic_string_method_get_idx_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_string_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("get_idxs#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+substr:c_bi_class_string
+>
+method get_idxs
+; @end
 
   // - retrieve string pointers -
   string_s *string_ptr = (string_s *)dst_location->v_data_ptr;
@@ -5547,22 +5468,13 @@ bool bic_string_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_string_method_replace_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("replace#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+oldstr:c_bi_class_string
+newstr:c_bi_class_string
+>
+method replace
+; @end
 
   // - retrieve string pointers -
   string_s *string_ptr = (string_s *)dst_location->v_data_ptr;
@@ -5618,19 +5530,12 @@ bool bic_string_method_replace_2(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_string_method_contain_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("contain#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+substr:c_bi_class_string
+>
+method contain
+; @end
 
   // - retrieve string pointers -
   string_s *string_ptr = (string_s *)dst_location->v_data_ptr;
@@ -5702,21 +5607,12 @@ bool bic_string_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_string_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int index;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,index))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("next_idx#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method next_idx
+; @end
 
   BIC_STRING_CHECK_INDEX();
 
@@ -6085,21 +5981,13 @@ built_in_variable_s array_variables[] =
 
 #define BIC_ARRAY_ITEM(NAME) \
   {/*{{{*/\
-    location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-\
-    long long int index;\
-\
-    /* - ERROR - */\
-    if (!it.retrieve_integer(src_0_location,index))\
-    {\
-      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-      BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-      new_exception->params.push(1);\
-      new_exception->params.push(src_0_location->v_type);\
-\
-      return false;\
-    }\
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method NAME
+macro
+; @end\
 \
     BIC_ARRAY_CHECK_INDEX();\
 \
@@ -6519,21 +6407,12 @@ bool bic_array_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_array_method_resize_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int new_size;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,new_size))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("resize#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+new_size:retrieve_integer
+>
+method resize
+; @end
 
   pointer_array_s *array_ptr = (pointer_array_s *)dst_location->v_data_ptr;
 
@@ -6841,21 +6720,12 @@ bool bic_array_method_last_idx_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_array_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int index;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,index))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("next_idx#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method next_idx
+; @end
 
   BIC_ARRAY_CHECK_INDEX();
 
@@ -6873,21 +6743,12 @@ bool bic_array_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_array_method_prev_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int index;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,index))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("prev_idx#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method prev_idx
+; @end
 
   BIC_ARRAY_CHECK_INDEX();
 
@@ -6958,19 +6819,12 @@ bool bic_array_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_array_method_to_string_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("to_string#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+delimiter:c_bi_class_string
+>
+method to_string
+; @end
 
   pointer_array_s *array_ptr = (pointer_array_s *)dst_location->v_data_ptr;
   string_s *del_string_ptr = (string_s *)src_0_location->v_data_ptr;
@@ -8698,19 +8552,12 @@ bool bic_delegate_method_Delegate_3(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_delegate_method_call_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("call#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+parameters:c_bi_class_array
+>
+method call
+; @end
 
   // - retrieve delegate pointer -
   delegate_s *delegate_ptr = (delegate_s *)dst_location->v_data_ptr;
@@ -8739,19 +8586,12 @@ bool bic_delegate_method_call_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_delegate_method_papply_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("papply#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+parameters:c_bi_class_array
+>
+method papply
+; @end
 
   // - retrieve delegate pointer -
   delegate_s *orig_dlg_ptr = (delegate_s *)dst_location->v_data_ptr;

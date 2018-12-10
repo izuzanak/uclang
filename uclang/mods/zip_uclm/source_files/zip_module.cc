@@ -450,24 +450,13 @@ bool bic_zip_archive_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_zip_archive_method_ZipArchive_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int flags;
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,flags))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("ZipArchive#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+flags:retrieve_integer
+>
+method ZipArchive
+; @end
 
   string_s *file_name = (string_s *)src_0_location->v_data_ptr;
 
@@ -548,21 +537,12 @@ bool bic_zip_archive_method_first_idx_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_zip_archive_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int index;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,index))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("next_idx#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method next_idx
+; @end
 
   BIC_ZIP_ARCHIVE_RETRIEVE_FROM(dst_location);
   BIC_ZIP_ARCHIVE_CHECK_INDEX();
@@ -1030,21 +1010,12 @@ bool bic_zip_file_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_zip_file_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int byte_cnt;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,byte_cnt))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("read#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+byte_cnt:retrieve_integer
+>
+method read
+; @end
 
   BIC_ZIP_FILE_RETRIEVE_FROM(dst_location);
   BIC_ZIP_ARCHIVE_RETRIEVE_FROM(zf_ptr->archive_loc);

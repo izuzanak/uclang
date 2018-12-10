@@ -304,18 +304,14 @@ bool bic_lang_method_classes_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_lang_method_cls_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_lang,"cls#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+class_name:c_bi_class_string
+>
+class c_bi_class_lang
+method cls
+static_method
+; @end
 
   interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
   string_rb_tree_s &class_symbol_names = interpreter.class_symbol_names;
@@ -673,19 +669,12 @@ bool bic_class_ref_method_vars_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_class_ref_method_cls_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("cls#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+subclass_name:c_bi_class_string
+>
+method cls
+; @end
 
   interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
   string_rb_tree_s &class_symbol_names = interpreter.class_symbol_names;
@@ -742,19 +731,12 @@ bool bic_class_ref_method_cls_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_class_ref_method_method_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("method#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+method_name:c_bi_class_string
+>
+method method
+; @end
 
   interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
   string_rb_tree_s &method_symbol_names = interpreter.method_symbol_names;
@@ -812,19 +794,12 @@ bool bic_class_ref_method_method_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_class_ref_method_variable_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("variable#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+variable_name:c_bi_class_string
+>
+method variable
+; @end
 
   interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
   string_rb_tree_s &variable_symbol_names = interpreter.variable_symbol_names;
@@ -1096,19 +1071,12 @@ bool bic_namespace_ref_method_classes_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_namespace_ref_method_nspace_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("nspace#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+namespace_name:c_bi_class_string
+>
+method nspace
+; @end
 
   interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
   string_rb_tree_s &class_symbol_names = interpreter.class_symbol_names;
@@ -1165,19 +1133,12 @@ bool bic_namespace_ref_method_nspace_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_namespace_ref_method_cls_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("cls#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+class_name:c_bi_class_string
+>
+method cls
+; @end
 
   interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
   string_rb_tree_s &class_symbol_names = interpreter.class_symbol_names;
@@ -1437,19 +1398,12 @@ bool bic_method_ref_method_params_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_method_ref_method_param_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("param#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+param_name:c_bi_class_string
+>
+method param
+; @end
 
   interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
   string_rb_tree_s &variable_symbol_names = interpreter.variable_symbol_names;

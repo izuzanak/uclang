@@ -786,21 +786,12 @@ bool bic_curl_multi_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 
 bool bic_curl_multi_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int index;
-
-  /* - ERROR - */
-  if (!it.retrieve_integer(src_0_location,index))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_le_br_re_br#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method operator_binary_le_br_re_br
+; @end
 
   curl_multi_s *cm_ptr = (curl_multi_s *)dst_location->v_data_ptr;
   pointer_list_s &curl_list = cm_ptr->curl_list;
@@ -839,18 +830,12 @@ bool bic_curl_multi_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigne
 
 bool bic_curl_multi_method_CurlMulti_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_delegate)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("CurlMulti#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+delegate:c_bi_class_delegate
+>
+method CurlMulti
+; @end
 
   // - ERROR -
   if (((delegate_s *)src_0_location->v_data_ptr)->param_cnt != 1)
@@ -1282,18 +1267,12 @@ bool bic_curl_multi_request_operator_binary_equal(interpreter_thread_s &it,unsig
 
 bool bic_curl_multi_request_method_add_headers_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("add_headers#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+headers:c_bi_class_array
+>
+method add_headers
+; @end
 
   BIC_CURL_MULTI_REQUEST_CHECK_REFERENCE();
 
@@ -1342,22 +1321,13 @@ bool bic_curl_multi_request_method_add_headers_1(interpreter_thread_s &it,unsign
 
 bool bic_curl_multi_request_method_setopt_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int curlopt;
-
-  if (!it.retrieve_integer(src_0_location,curlopt))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("setopt#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+curlopt:retrieve_integer
+value:ignore
+>
+method setopt
+; @end
 
   BIC_CURL_MULTI_REQUEST_CHECK_REFERENCE();
 
@@ -1676,20 +1646,12 @@ bool bic_curl_result_method_user_data_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_curl_result_method_info_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int info_type;
-
-  if (!it.retrieve_integer(src_0_location,info_type))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("info#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+info_type:retrieve_integer
+>
+method info
+; @end
 
   curl_result_s *res_ptr = (curl_result_s *)dst_location->v_data_ptr;
 
