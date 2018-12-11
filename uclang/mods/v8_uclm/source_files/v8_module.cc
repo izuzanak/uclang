@@ -321,19 +321,14 @@ bool bic_v8_engine_method_version_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_v8_engine_method_notify_idle_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int hint;
-
-  if (!it.retrieve_integer(src_0_location,hint))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_v8_engine,"notify_idle#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+hint:retrieve_integer
+>
+class c_bi_class_v8_engine
+method notify_idle
+static_method
+; @end
 
   V8::IdleNotification(hint);
 
@@ -631,7 +626,12 @@ bool bic_v8_script_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 
 bool bic_v8_script_method_compile_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+@begin ucl_params
+<
+source:ignore
+>
+static_method
+; @end
 
   UCL_HANDLE_CONTEXT_SCOPE();
 
@@ -1501,8 +1501,12 @@ bool bic_v8_object_method_own_prop_names_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_v8_object_method_construct_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+@begin ucl_params
+<
+parameters:c_bi_class_array
+>
+method construct
+; @end
 
   UCL_HANDLE_CONTEXT_SCOPE();
 
@@ -1519,17 +1523,6 @@ bool bic_v8_object_method_construct_1(interpreter_thread_s &it,unsigned stack_ba
   if (!hnd_dst->IsObject())
   {
     exception_s::throw_exception(it,module.error_base + c_error_V8_OBJECT_INVOKE_METHOD_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("construct#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
     return false;
   }
 

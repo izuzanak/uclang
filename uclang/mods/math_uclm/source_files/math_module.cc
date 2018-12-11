@@ -685,19 +685,12 @@ bool bic_vec2_method_Vec2_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_vec2_method_Vec2_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Vec2#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_array
+>
+method Vec2
+; @end
 
   glm::vec2 &v2 = *((glm::vec2 *)dst_location->v_data_ptr);
 
@@ -1031,19 +1024,12 @@ bool bic_vec3_method_Vec3_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_vec3_method_Vec3_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Vec3#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_array
+>
+method Vec3
+; @end
 
   glm::vec3 &v3 = *((glm::vec3 *)dst_location->v_data_ptr);
 
@@ -1122,19 +1108,12 @@ bool bic_vec3_method_dot_1(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_vec3_method_cross_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_vec3)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("cross#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+src:c_bi_class_vec3
+>
+method cross
+; @end
 
   glm::vec3 &vec_dst = *((glm::vec3 *)dst_location->v_data_ptr);
   glm::vec3 &vec_src = *((glm::vec3 *)src_0_location->v_data_ptr);
@@ -1413,19 +1392,12 @@ bool bic_vec4_method_Vec4_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_vec4_method_Vec4_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Vec4#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_array
+>
+method Vec4
+; @end
 
   glm::vec4 &v4 = *((glm::vec4 *)dst_location->v_data_ptr);
 
@@ -1896,19 +1868,12 @@ bool bic_mat4_method_Mat4_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_mat4_method_Mat4_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Mat4#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_array
+>
+method Mat4
+; @end
 
   glm::mat4 &m4 = *((glm::mat4 *)dst_location->v_data_ptr);
 
@@ -1935,20 +1900,12 @@ bool bic_mat4_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_mat4_method_row_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int index;
-
-  if (!it.retrieve_integer(src_0_location,index))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("row#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method row
+; @end
 
   // - ERROR -
   if (index < 0 || index >= 4)
@@ -1973,20 +1930,12 @@ bool bic_mat4_method_row_1(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_mat4_method_col_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int index;
-
-  if (!it.retrieve_integer(src_0_location,index))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("col#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method col
+; @end
 
   // - ERROR -
   if (index < 0 || index >= 4)
@@ -2011,18 +1960,12 @@ bool bic_mat4_method_col_1(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_mat4_method_translate_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_vec3)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("translate#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+vector:c_bi_class_vec3
+>
+method translate
+; @end
 
   glm::mat4 &m4 = *((glm::mat4 *)dst_location->v_data_ptr);
   glm::vec3 &v3 = *((glm::vec3 *)src_0_location->v_data_ptr);
@@ -2037,23 +1980,13 @@ bool bic_mat4_method_translate_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_mat4_method_rotate_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  double angle;
-
-  if (!it.retrieve_float(src_0_location,angle) ||
-      src_1_location->v_type != c_bi_class_vec3)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("rotate#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+angle:retrieve_float
+axis:c_bi_class_vec3
+>
+method rotate
+; @end
 
   glm::mat4 &m4 = *((glm::mat4 *)dst_location->v_data_ptr);
   glm::vec3 &axis = *((glm::vec3 *)src_1_location->v_data_ptr);
@@ -2068,18 +2001,12 @@ bool bic_mat4_method_rotate_2(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_mat4_method_scale_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_vec3)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("scale#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+vector:c_bi_class_vec3
+>
+method scale
+; @end
 
   glm::mat4 &m4 = *((glm::mat4 *)dst_location->v_data_ptr);
   glm::vec3 &v3 = *((glm::vec3 *)src_0_location->v_data_ptr);
@@ -2094,37 +2021,21 @@ bool bic_mat4_method_scale_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_mat4_method_ortho_6(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-  location_s *src_4_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_4_op_idx]);
-  location_s *src_5_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_5_op_idx]);
+@begin ucl_params
+<
+left:retrieve_float
+right:retrieve_float
+bottom:retrieve_float
+top:retrieve_float
+zNear:retrieve_float
+zFar:retrieve_float
+>
+class c_bi_class_mat4
+method ortho
+static_method
+; @end
 
-  double doubles[6];
-
-  if (!it.retrieve_float(src_0_location,doubles[0]) || // left
-      !it.retrieve_float(src_1_location,doubles[1]) || // right
-      !it.retrieve_float(src_2_location,doubles[2]) || // bottom
-      !it.retrieve_float(src_3_location,doubles[3]) || // top
-      !it.retrieve_float(src_4_location,doubles[4]) || // zNear
-      !it.retrieve_float(src_5_location,doubles[5]))   // zFar
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_mat4,"ortho#6");
-    new_exception->params.push(6);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-    new_exception->params.push(src_4_location->v_type);
-    new_exception->params.push(src_5_location->v_type);
-
-    return false;
-  }
-
-  glm::mat4 *trg_m4_ptr = new glm::mat4(glm::ortho(
-                                          doubles[0],doubles[1],doubles[2],doubles[3],doubles[4],doubles[5]));
+  glm::mat4 *trg_m4_ptr = new glm::mat4(glm::ortho(left,right,bottom,top,zNear,zFar));
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_mat4,trg_m4_ptr);
   BIC_SET_RESULT(new_location);
@@ -2134,31 +2045,19 @@ bool bic_mat4_method_ortho_6(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_mat4_method_perspective_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
+@begin ucl_params
+<
+fovy:retrieve_float
+aspect:retrieve_float
+zNear:retrieve_float
+zFar:retrieve_float
+>
+class c_bi_class_mat4
+method perspective
+static_method
+; @end
 
-  double doubles[4];
-
-  if (!it.retrieve_float(src_0_location,doubles[0]) || // fovy
-      !it.retrieve_float(src_1_location,doubles[1]) || // aspect
-      !it.retrieve_float(src_2_location,doubles[2]) || // zNear
-      !it.retrieve_float(src_3_location,doubles[3]))   // zFar
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_mat4,"perspective#4");
-    new_exception->params.push(4);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-
-    return false;
-  }
-
-  glm::mat4 *trg_m4_ptr = new glm::mat4(glm::perspective(
-                                          doubles[0],doubles[1],doubles[2],doubles[3]));
+  glm::mat4 *trg_m4_ptr = new glm::mat4(glm::perspective(fovy,aspect,zNear,zFar));
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_mat4,trg_m4_ptr);
   BIC_SET_RESULT(new_location);
@@ -2168,34 +2067,20 @@ bool bic_mat4_method_perspective_4(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_mat4_method_perspective_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-  location_s *src_4_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_4_op_idx]);
+@begin ucl_params
+<
+fov:retrieve_float
+width:retrieve_float
+height:retrieve_float
+zNear:retrieve_float
+zFar:retrieve_float
+>
+class c_bi_class_mat4
+method perspective
+static_method
+; @end
 
-  double doubles[5];
-
-  if (!it.retrieve_float(src_0_location,doubles[0]) || // fov
-      !it.retrieve_float(src_1_location,doubles[1]) || // width
-      !it.retrieve_float(src_2_location,doubles[2]) || // height
-      !it.retrieve_float(src_3_location,doubles[3]) || // zNear
-      !it.retrieve_float(src_4_location,doubles[4]))   // zFar
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_mat4,"perspective#5");
-    new_exception->params.push(5);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-    new_exception->params.push(src_4_location->v_type);
-
-    return false;
-  }
-
-  glm::mat4 *trg_m4_ptr = new glm::mat4(glm::perspectiveFov(
-                                          doubles[0],doubles[1],doubles[2],doubles[3],doubles[4]));
+  glm::mat4 *trg_m4_ptr = new glm::mat4(glm::perspectiveFov(fov,width,height,zNear,zFar));
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_mat4,trg_m4_ptr);
   BIC_SET_RESULT(new_location);
@@ -2205,23 +2090,16 @@ bool bic_mat4_method_perspective_5(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_mat4_method_look_at_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_vec3 || // eye
-      src_1_location->v_type != c_bi_class_vec3 || // center
-      src_2_location->v_type != c_bi_class_vec3)   // up
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_mat4,"look_at#3");
-    new_exception->params.push(3);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+eye:c_bi_class_vec3
+center:c_bi_class_vec3
+up:c_bi_class_vec3
+>
+class c_bi_class_mat4
+method look_at
+static_method
+; @end
 
   glm::vec3 &v3_eye = *((glm::vec3 *)src_0_location->v_data_ptr);
   glm::vec3 &v3_center = *((glm::vec3 *)src_1_location->v_data_ptr);
@@ -2372,21 +2250,13 @@ built_in_variable_s primes_variables[] =
 
 #define BIC_PRIMES_ITEM(NAME) \
   {/*{{{*/\
-    location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-\
-    long long int index;\
-\
-    /* - ERROR - */\
-    if (!it.retrieve_integer(src_0_location,index))\
-    {\
-      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-      BIC_EXCEPTION_PUSH_METHOD_RI(NAME);\
-      new_exception->params.push(1);\
-      new_exception->params.push(src_0_location->v_type);\
-\
-      return false;\
-    }\
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method NAME
+macro
+; @end\
 \
     primes_s *primes_ptr = (primes_s *)dst_location->v_data_ptr;\
 \
@@ -2472,23 +2342,14 @@ bool bic_primes_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned st
 
 bool bic_primes_method_Primes_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+@begin ucl_params
+<
+size:retrieve_integer
+>
+method Primes
+; @end
 
   primes_s *primes_ptr = (primes_s *)dst_location->v_data_ptr;
-
-  long long int size;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,size))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Primes#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
 
   // - ERROR -
   if (size < 0)
@@ -2515,21 +2376,12 @@ bool bic_primes_method_Primes_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_primes_method_prime_factors_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int number;
-
-  /* - ERROR - */
-  if (!it.retrieve_integer(src_0_location,number))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("prime_factors#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+number:retrieve_integer
+>
+method prime_factors
+; @end
 
   primes_s *primes_ptr = (primes_s *)dst_location->v_data_ptr;
 
@@ -2616,21 +2468,12 @@ bool bic_primes_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_primes_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int index;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,index))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("next_idx#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method next_idx
+; @end
 
   primes_s *primes_ptr = (primes_s *)dst_location->v_data_ptr;
 

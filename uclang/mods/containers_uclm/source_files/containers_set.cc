@@ -864,19 +864,12 @@ bool bic_set_operator_binary_plus_equal(interpreter_thread_s &it,unsigned stack_
 
 bool bic_set_operator_binary_minus_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_set)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_minus_equal#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+second:c_bi_class_set
+>
+method operator_binary_minus_equal
+; @end
 
   // - get references to first and second -
   pointer_tree_s &first = *((pointer_tree_s *)dst_location->v_data_ptr);
@@ -900,19 +893,12 @@ bool bic_set_operator_binary_minus_equal(interpreter_thread_s &it,unsigned stack
 
 bool bic_set_operator_binary_ampersand_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_set)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_ampersand_equal#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+second:c_bi_class_set
+>
+method operator_binary_ampersand_equal
+; @end
 
   // - get references to first and second -
   pointer_tree_s &first = *((pointer_tree_s *)dst_location->v_data_ptr);
@@ -936,19 +922,12 @@ bool bic_set_operator_binary_ampersand_equal(interpreter_thread_s &it,unsigned s
 
 bool bic_set_operator_binary_pipe_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_set)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_pipe_equal#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+second:c_bi_class_set
+>
+method operator_binary_pipe_equal
+; @end
 
   // - get references to first and second -
   pointer_tree_s &first = *((pointer_tree_s *)dst_location->v_data_ptr);
@@ -972,19 +951,12 @@ bool bic_set_operator_binary_pipe_equal(interpreter_thread_s &it,unsigned stack_
 
 bool bic_set_operator_binary_circumflex_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_set)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_circumflex_equal#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+second:c_bi_class_set
+>
+method operator_binary_circumflex_equal
+; @end
 
   // - get references to first and second -
   pointer_tree_s &first = *((pointer_tree_s *)dst_location->v_data_ptr);
@@ -1008,19 +980,12 @@ bool bic_set_operator_binary_circumflex_equal(interpreter_thread_s &it,unsigned 
 
 bool bic_set_operator_binary_ampersand(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_set)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_ampersand#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+second:c_bi_class_set
+>
+method operator_binary_ampersand
+; @end
 
   // - get references to first and second -
   pointer_tree_s &first = *((pointer_tree_s *)dst_location->v_data_ptr);
@@ -1041,19 +1006,12 @@ bool bic_set_operator_binary_ampersand(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_set_operator_binary_pipe(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_set)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_pipe#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+second:c_bi_class_set
+>
+method operator_binary_pipe
+; @end
 
   // - get references to first and second -
   pointer_tree_s &first = *((pointer_tree_s *)dst_location->v_data_ptr);
@@ -1074,19 +1032,12 @@ bool bic_set_operator_binary_pipe(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_set_operator_binary_circumflex(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_set)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_circumflex#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+second:c_bi_class_set
+>
+method operator_binary_circumflex
+; @end
 
   // - get references to first and second -
   pointer_tree_s &first = *((pointer_tree_s *)dst_location->v_data_ptr);
@@ -1137,19 +1088,12 @@ bool bic_set_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned
 
 bool bic_set_operator_binary_rs_br_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_set)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_rs_br_equal#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+second:c_bi_class_set
+>
+method operator_binary_rs_br_equal
+; @end
 
   // - get references to first and second -
   pointer_tree_s &second = *((pointer_tree_s *)dst_location->v_data_ptr);
@@ -1166,19 +1110,12 @@ bool bic_set_operator_binary_rs_br_equal(interpreter_thread_s &it,unsigned stack
 
 bool bic_set_operator_binary_ls_br_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_set)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_ls_br_equal#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+second:c_bi_class_set
+>
+method operator_binary_ls_br_equal
+; @end
 
   // - get references to first and second -
   pointer_tree_s &first = *((pointer_tree_s *)dst_location->v_data_ptr);
@@ -1228,19 +1165,12 @@ bool bic_set_operator_binary_plus(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_set_operator_binary_minus(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_set)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_minus#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+second:c_bi_class_set
+>
+method operator_binary_minus
+; @end
 
   // - get references to first and second -
   pointer_tree_s &first = *((pointer_tree_s *)dst_location->v_data_ptr);
@@ -1492,21 +1422,12 @@ bool bic_set_method_last_idx_0(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_set_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int index;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,index))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("next_idx#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method next_idx
+; @end
 
   BIC_SET_CHECK_INDEX();
 
@@ -1519,21 +1440,12 @@ bool bic_set_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_set_method_prev_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int index;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,index))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("prev_idx#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method prev_idx
+; @end
 
   BIC_SET_CHECK_INDEX();
 
@@ -1600,19 +1512,12 @@ bool bic_set_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_set_method_to_string_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("to_string#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+delimiter:c_bi_class_string
+>
+method to_string
+; @end
 
   pointer_tree_s *tree_ptr = (pointer_tree_s *)dst_location->v_data_ptr;
   string_s *del_string_ptr = (string_s *)src_0_location->v_data_ptr;
