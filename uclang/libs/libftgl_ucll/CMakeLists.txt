@@ -1,0 +1,14 @@
+
+set(CONF_HEADER_DIRS
+  "${LIB_BASE}/header_files")
+set(CONF_INCLUDE_DIRS
+  "/usr/include/freetype2")
+set(CONF_COMP_DEFS)
+set(CONF_LINK_LIBS
+  libbase_ucll
+  freetype
+  GLEW
+  GL
+  glut
+  m)
+
