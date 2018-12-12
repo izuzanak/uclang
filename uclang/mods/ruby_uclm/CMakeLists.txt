@@ -1,12 +1,12 @@
 
-pkg_search_module(LIBPSQL REQUIRED libpq)
+pkg_search_module(LIBRUBY REQUIRED ruby-2.5)
 
 set(CONF_HEADER_DIRS
   "${LIB_BASE}/header_files")
 set(CONF_INCLUDE_DIRS
-  ${LIBPSQL_INCLUDE_DIRS})
+  ${LIBRUBY_INCLUDE_DIRS})
 set(CONF_COMP_DEFS)
 set(CONF_LINK_LIBS
   libbase_ucll
-  ${LIBPSQL_LIBRARIES})
+  ${LIBRUBY_LIBRARIES})
 

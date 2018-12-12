@@ -81,6 +81,8 @@ endfunction()
 # -----
 
 set(EXT_LIBS "${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs")
+set(LIBS "${CMAKE_CURRENT_SOURCE_DIR}/libs")
+set(MODS "${CMAKE_CURRENT_SOURCE_DIR}/mods")
 
 set(LIB_BASE "${CMAKE_CURRENT_SOURCE_DIR}/libs/libbase_ucll")
 set(LIB_FTGL "${CMAKE_CURRENT_SOURCE_DIR}/libs/libftgl_ucll")

@@ -77,7 +77,7 @@ c_packages = [
   ["MOD_SHIVAVG"   ,"shivavg_uclm"   ,"false"     ,[]],
   ["MOD_AMANITHVG" ,"amanithvg_uclm" ,"false"     ,[]],
   ["MOD_IMXEGL"    ,"imxegl_uclm"    ,"false"     ,[]],
-  ["MOD_SNMP"      ,"snmp_uclm"      ,"false"     ,[]], # test
+  ["MOD_SNMP"      ,"snmp_uclm"      ,"files"     ,["/usr/include/net-snmp/net-snmp-config.h","/usr/include/net-snmp/utilities.h","/usr/include/net-snmp/net-snmp-includes.h","/usr/include/net-snmp/agent/net-snmp-agent-includes.h"]], # test
   ["MOD_COMELM"    ,"comelm_uclm"    ,"false"     ,[]],
   ["MOD_DLMS"      ,"dlms_uclm"      ,"false"     ,[]],
   ["MOD_UCPAS"     ,"ucpas_uclm"     ,"dirs"      ,["../ext_libs/ucpas/libpas"]],
