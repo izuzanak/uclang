@@ -246,23 +246,15 @@ bool bic_gst_method_version_string_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_gst_method_pipeline_video_uri_imxegl_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int texture_id;
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,texture_id))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_gst,"pipeline_video_uri_imxegl#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+uri:c_bi_class_string
+texture_id:retrieve_integer
+>
+class c_bi_class_gst
+method pipeline_video_uri_imxegl
+static_method
+; @end
 
   string_s *uri_ptr = (string_s *)src_0_location->v_data_ptr;
 
@@ -435,20 +427,12 @@ bool bic_gst_pipeline_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
 bool bic_gst_pipeline_method_set_state_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int state;
-
-  if (!it.retrieve_integer(src_0_location,state))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("set_state#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+state:retrieve_integer
+>
+method set_state
+; @end
 
   gst_pipeline_s *gstp_ptr = (gst_pipeline_s *)dst_location->v_data_ptr;
 

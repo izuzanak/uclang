@@ -311,31 +311,17 @@ void bic_gl_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_gl_method_ClearColor_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-
-  double red;
-  double green;
-  double blue;
-  double alpha;
-
-  if (!it.retrieve_float(src_0_location,red) ||
-      !it.retrieve_float(src_1_location,green) ||
-      !it.retrieve_float(src_2_location,blue) ||
-      !it.retrieve_float(src_3_location,alpha))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_gl,"ClearColor#4");
-    new_exception->params.push(4);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+red:retrieve_float
+green:retrieve_float
+blue:retrieve_float
+alpha:retrieve_float
+>
+class c_bi_class_gl
+method ClearColor
+static_method
+; @end
 
   glClearColor(red,green,blue,alpha);
 
@@ -346,19 +332,14 @@ bool bic_gl_method_ClearColor_4(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_gl_method_Clear_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int mask;
-
-  if (!it.retrieve_integer(src_0_location,mask))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_gl,"Clear#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+mask:retrieve_integer
+>
+class c_bi_class_gl
+method Clear
+static_method
+; @end
 
   glClear(mask);
 
@@ -369,23 +350,15 @@ bool bic_gl_method_Clear_1(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_gl_method_BlendFunc_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int sfactor;
-  long long int dfactor;
-
-  if (!it.retrieve_integer(src_0_location,sfactor) ||
-      !it.retrieve_integer(src_1_location,dfactor))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_gl,"BlendFunc#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+sfactor:retrieve_integer
+dfactor:retrieve_integer
+>
+class c_bi_class_gl
+method BlendFunc
+static_method
+; @end
 
   glBlendFunc(sfactor,dfactor);
 
@@ -396,21 +369,16 @@ bool bic_gl_method_BlendFunc_2(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_gl_method_Enable_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+@begin ucl_params
+<
+capability:retrieve_integer
+>
+class c_bi_class_gl
+method Enable
+static_method
+; @end
 
-  long long int cap;
-
-  if (!it.retrieve_integer(src_0_location,cap))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_gl,"Enable#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
-  glEnable(cap);
+  glEnable(capability);
 
   BIC_SET_RESULT_BLANK();
 
@@ -419,21 +387,16 @@ bool bic_gl_method_Enable_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_gl_method_Disable_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+@begin ucl_params
+<
+capability:retrieve_integer
+>
+class c_bi_class_gl
+method Disable
+static_method
+; @end
 
-  long long int cap;
-
-  if (!it.retrieve_integer(src_0_location,cap))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_gl,"Disable#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
-  glDisable(cap);
+  glDisable(capability);
 
   BIC_SET_RESULT_BLANK();
 
@@ -442,21 +405,16 @@ bool bic_gl_method_Disable_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 
 bool bic_gl_method_IsEnabled_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+@begin ucl_params
+<
+capability:retrieve_integer
+>
+class c_bi_class_gl
+method IsEnabled
+static_method
+; @end
 
-  long long int cap;
-
-  if (!it.retrieve_integer(src_0_location,cap))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_gl,"IsEnabled#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
-  long long int result = glIsEnabled(cap);
+  long long int result = glIsEnabled(capability);
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
@@ -465,31 +423,17 @@ bool bic_gl_method_IsEnabled_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_gl_method_Viewport_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-
-  long long int x;
-  long long int y;
-  long long int width;
-  long long int height;
-
-  if (!it.retrieve_integer(src_0_location,x) ||
-      !it.retrieve_integer(src_1_location,y) ||
-      !it.retrieve_integer(src_2_location,width) ||
-      !it.retrieve_integer(src_3_location,height))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_gl,"Viewport#4");
-    new_exception->params.push(4);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+x:retrieve_integer
+y:retrieve_integer
+width:retrieve_integer
+height:retrieve_integer
+>
+class c_bi_class_gl
+method Viewport
+static_method
+; @end
 
   // - ERROR -
   if (width < 0 || height < 0)
@@ -631,20 +575,12 @@ bool bic_gl_shader_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 
 bool bic_gl_shader_method_GlShader_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int shader_type;
-
-  if (!it.retrieve_integer(src_0_location,shader_type))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("GlShader#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+shader_type:retrieve_integer
+>
+method GlShader
+; @end
 
   long long int shader = glCreateShader(shader_type);
 
@@ -662,23 +598,13 @@ bool bic_gl_shader_method_GlShader_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_gl_shader_method_GlShader_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int shader_type;
-
-  if (!it.retrieve_integer(src_0_location,shader_type) ||
-      src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("GlShader#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+shader_type:retrieve_integer
+source:c_bi_class_string
+>
+method GlShader
+; @end
 
   string_s *string_ptr = (string_s *)src_1_location->v_data_ptr;
 
@@ -917,21 +843,13 @@ bool bic_gl_program_method_GlProgram_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_gl_program_method_GlProgram_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_gl_shader ||
-      src_1_location->v_type != c_bi_class_gl_shader)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("GlProgram#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+vertex_shader:c_bi_class_gl_shader
+fragment_shader:c_bi_class_gl_shader
+>
+method GlProgram
+; @end
 
   long long int v_shader = (long long int)src_0_location->v_data_ptr;
   long long int f_shader = (long long int)src_1_location->v_data_ptr;
@@ -1716,31 +1634,15 @@ bool bic_gl_texture_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 
 bool bic_gl_texture_method_GlTexture_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-
-  long long int format;
-  long long int width;
-  long long int height;
-
-  if (!it.retrieve_integer(src_0_location,format) ||
-      !it.retrieve_integer(src_1_location,width) ||
-      !it.retrieve_integer(src_2_location,height) ||
-      src_3_location->v_type != c_bi_class_buffer)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("GlTexture#4");
-    new_exception->params.push(4);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+format:retrieve_integer
+width:retrieve_integer
+height:retrieve_integer
+buffer:c_bi_class_buffer
+>
+method GlTexture
+; @end
 
   unsigned pixel_size;
   switch (format)
@@ -1861,18 +1763,12 @@ bool bic_gl_texture_method_format_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_gl_texture_method_update_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_buffer)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("update#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+buffer:c_bi_class_buffer
+>
+method update
+; @end
 
   gl_texture_s *glt_ptr = (gl_texture_s *)dst_location->v_data_ptr;
 
