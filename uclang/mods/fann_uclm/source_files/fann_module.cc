@@ -555,17 +555,14 @@ bool bic_fann_net_operator_binary_equal(interpreter_thread_s &it,unsigned stack_
 
 bool bic_fann_net_method_create_standard_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_fann_net,"create_standard#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+layers:c_bi_class_array
+>
+class c_bi_class_fann_net
+method create_standard
+static_method
+; @end
 
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
   unsigned layers[array_ptr->used];
@@ -583,22 +580,15 @@ bool bic_fann_net_method_create_standard_1(interpreter_thread_s &it,unsigned sta
 
 bool bic_fann_net_method_create_sparse_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  double connection_rate;
-
-  if (!it.retrieve_float(src_0_location,connection_rate) ||
-      src_1_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_fann_net,"create_sparse#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+connection_rate:retrieve_float
+layers:c_bi_class_array
+>
+class c_bi_class_fann_net
+method create_sparse
+static_method
+; @end
 
   pointer_array_s *array_ptr = (pointer_array_s *)src_1_location->v_data_ptr;
   unsigned layers[array_ptr->used];
@@ -616,17 +606,14 @@ bool bic_fann_net_method_create_sparse_2(interpreter_thread_s &it,unsigned stack
 
 bool bic_fann_net_method_create_shortcut_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_fann_net,"create_shortcut#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+layers:c_bi_class_array
+>
+class c_bi_class_fann_net
+method create_shortcut
+static_method
+; @end
 
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
   unsigned layers[array_ptr->used];
@@ -644,24 +631,13 @@ bool bic_fann_net_method_create_shortcut_1(interpreter_thread_s &it,unsigned sta
 
 bool bic_fann_net_method_randomize_weights_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  double min_weight;
-  double max_weight;
-
-  if (!it.retrieve_float(src_0_location,min_weight) ||
-      !it.retrieve_float(src_1_location,max_weight))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("randomize_weights#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+min_weight:retrieve_float
+max_weight:retrieve_float
+>
+method randomize_weights
+; @end
 
   fann_randomize_weights((fann *)dst_location->v_data_ptr,min_weight,max_weight);
 
@@ -672,18 +648,12 @@ bool bic_fann_net_method_randomize_weights_2(interpreter_thread_s &it,unsigned s
 
 bool bic_fann_net_method_init_weights_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_fann_train_data)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("init_weights#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+train_data:c_bi_class_fann_train_data
+>
+method init_weights
+; @end
 
   BIC_FANN_NET_TRAIN_DATA_TEST();
 
@@ -696,31 +666,15 @@ bool bic_fann_net_method_init_weights_1(interpreter_thread_s &it,unsigned stack_
 
 bool bic_fann_net_method_train_on_data_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-
-  long long int max_epochs;
-  long long int epochs_between_reports;
-  double desired_error;
-
-  if (src_0_location->v_type != c_bi_class_fann_train_data ||
-      !it.retrieve_integer(src_1_location,max_epochs) ||
-      !it.retrieve_integer(src_2_location,epochs_between_reports) ||
-      !it.retrieve_float(src_3_location,desired_error))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("train_on_data#4");
-    new_exception->params.push(4);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+train_data:c_bi_class_fann_train_data
+max_epochs:retrieve_integer
+epochs_between_reports:retrieve_integer
+desired_error:retrieve_float
+>
+method train_on_data
+; @end
 
   BIC_FANN_NET_TRAIN_DATA_TEST();
 
@@ -733,18 +687,12 @@ bool bic_fann_net_method_train_on_data_4(interpreter_thread_s &it,unsigned stack
 
 bool bic_fann_net_method_train_epoch_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_fann_train_data)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("train_epoch#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+train_data:c_bi_class_fann_train_data
+>
+method train_epoch
+; @end
 
   BIC_FANN_NET_TRAIN_DATA_TEST();
 
@@ -757,18 +705,12 @@ bool bic_fann_net_method_train_epoch_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_fann_net_method_test_data_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_fann_train_data)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("test_data#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+train_data:c_bi_class_fann_train_data
+>
+method test_data
+; @end
 
   BIC_FANN_NET_TRAIN_DATA_TEST();
 
@@ -781,18 +723,12 @@ bool bic_fann_net_method_test_data_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_fann_net_method_run_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("run#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+input:c_bi_class_array
+>
+method run
+; @end
 
   fann *fann_ptr = (fann *)dst_location->v_data_ptr;
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
@@ -842,18 +778,12 @@ bool bic_fann_net_method_run_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_fann_net_method_save_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("save#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+method save
+; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
@@ -871,17 +801,14 @@ bool bic_fann_net_method_save_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_fann_net_method_load_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_fann_net,"load#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+class c_bi_class_fann_net
+method load
+static_method
+; @end
 
   fann *fann_ptr = fann_create_from_file(((string_s *)src_0_location->v_data_ptr)->data);
 
@@ -974,20 +901,12 @@ bool bic_fann_net_method_algorithm_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_fann_net_method_algorithm_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int algorithm;
-
-  if (!it.retrieve_integer(src_0_location,algorithm))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("algorithm#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+algorithm:retrieve_integer
+>
+method algorithm
+; @end
 
   // - ERROR -
   if (algorithm < FANN_TRAIN_INCREMENTAL || algorithm > FANN_TRAIN_QUICKPROP)
@@ -1016,20 +935,12 @@ bool bic_fann_net_method_rate_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_fann_net_method_rate_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  double rate;
-
-  if (!it.retrieve_float(src_0_location,rate))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("rate#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+rate:retrieve_float
+>
+method rate
+; @end
 
   fann_set_learning_rate((fann *)dst_location->v_data_ptr,rate);
 
@@ -1051,20 +962,12 @@ bool bic_fann_net_method_momentum_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_fann_net_method_momentum_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  double momentum;
-
-  if (!it.retrieve_float(src_0_location,momentum))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("momentum#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+momentum:retrieve_float
+>
+method momentum
+; @end
 
   // - ERROR -
   if (momentum < 0.0 || momentum > 1.0)
@@ -1214,18 +1117,12 @@ bool bic_fann_train_data_operator_binary_equal(interpreter_thread_s &it,unsigned
 
 bool bic_fann_train_data_method_FannTrainData_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("FannTrainData#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_array
+>
+method FannTrainData
+; @end
 
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
@@ -1352,18 +1249,12 @@ bool bic_fann_train_data_method_FannTrainData_1(interpreter_thread_s &it,unsigne
 
 bool bic_fann_train_data_method_save_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("save#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+method save
+; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
@@ -1381,17 +1272,14 @@ bool bic_fann_train_data_method_save_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_fann_train_data_method_load_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_fann_train_data,"load#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+class c_bi_class_fann_train_data
+method load
+static_method
+; @end
 
   fann_train_data *ftd_ptr = fann_read_train_from_file(((string_s *)src_0_location->v_data_ptr)->data);
 

@@ -63,7 +63,7 @@ class Main
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L972)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L946)
 
 Assignment operator `=`. Object of class `ParseState` is replaced by method parameter.
 
@@ -98,7 +98,7 @@ obj: New value
 
 <a name="rule_idx#0" />
 
-### Method [`rule_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L984)
+### Method [`rule_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L958)
 
 Retrieve index of rule according to which reduction occurred.
 
@@ -119,7 +119,7 @@ a_state.rule_idx(): 1
 
 <a name="rule_body#1" />
 
-### Method [`rule_body#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L1004)
+### Method [`rule_body#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L978)
 
 Retrieve substring of parsed source string which is represented by item in
 rule body at position identified by index given as method parameter.
@@ -148,7 +148,7 @@ test
 
 <a name="old_input_idx#0" />
 
-### Method [`old_input_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L1057)
+### Method [`old_input_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L1023)
 
 Retrieve index to source string that refers to beginning of last recognized
 terminal symbol.
@@ -171,7 +171,7 @@ a_state.old_input_idx(): 6
 
 <a name="input_idx#0" />
 
-### Method [`input_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L1077)
+### Method [`input_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L1043)
 
 Retrieve index to source string referring to first character that was not yet
 processed by parser.
@@ -194,7 +194,7 @@ a_state.input_idx(): 6
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L1097)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L1063)
 
 Convert object of class `ParseState` to object of class `String`.
 
@@ -215,7 +215,7 @@ ParseState.to_string(): ParseState
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L1106)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L1072)
 
 Print string representation of object of class `ParseState` to standard output.
 

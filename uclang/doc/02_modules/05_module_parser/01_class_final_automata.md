@@ -99,7 +99,7 @@ obj: New value
 
 <a name="get_source#1" />
 
-### Method [`get_source#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L427)
+### Method [`get_source#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L421)
 
 Creates object of class `FaSource` that can be used for retrieval of terminal symbol indexes.
 
@@ -124,7 +124,7 @@ obj: FaSource
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L458)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L446)
 
 Convert object of class `FinalAutomata` to object of class `String`.
 This method returns name of class `FinalAutomata`.
@@ -144,7 +144,7 @@ FinalAutomata.to_string(): FinalAutomata
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L467)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L455)
 
 Print string representation of object of class `FinalAutomata` to standard output.
 This method prints name of class `FinalAutomata`.

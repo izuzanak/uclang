@@ -11,26 +11,21 @@ enable_testing()
 
 find_package(PkgConfig)
 
-# -----
-
-function(process TARGET)
+# - process target source file -
+function(process_source TARGET)
   execute_process(COMMAND process --deps "${SOURCE_DIR}/${TARGET}.cc" ${COMP_HEADER_DIRS}
       OUTPUT_VARIABLE DEPS
       ERROR_QUIET)
   add_custom_command(OUTPUT "${PROC_DIR}/p.${TARGET}.cc"
       DEPENDS ${DEPS}
-      COMMAND process "${SOURCE_DIR}/${TARGET}.cc" ${COMP_HEADER_DIRS} > "${PROC_DIR}/p.${TARGET}.cc")
-  add_custom_target(${COMP_NAME}_p_${TARGET}
-      DEPENDS "${PROC_DIR}/p.${TARGET}.cc")
+      COMMAND process "--output" "${PROC_DIR}/p.${TARGET}.cc" "${SOURCE_DIR}/${TARGET}.cc" ${COMP_HEADER_DIRS})
 endfunction()
 
-# -----
-
-function(add_component)
+# - process component -
+function(process_component)
   set(PROC_DIR "${PROC_DIR}/${COMP_NAME}")
   file(MAKE_DIRECTORY ${PROC_DIR})
 
-  set(DEPENDENCIES)
   set(PROC_SOURCE_FILES)
   foreach(SOURCE_DIR ${COMP_SOURCE_DIRS})
     set(SOURCE_FILES)
@@ -38,9 +33,8 @@ function(add_component)
 
     foreach(SOURCE_FILE ${SOURCE_FILES})
       get_filename_component(TARGET ${SOURCE_FILE} NAME_WE)
-      process(${TARGET})
+      process_source(${TARGET})
 
-      list(APPEND DEPENDENCIES ${COMP_NAME}_p_${TARGET})
       list(APPEND PROC_SOURCE_FILES "${PROC_DIR}/p.${TARGET}.cc")
     endforeach()
   endforeach()
@@ -55,12 +49,10 @@ function(add_component)
   target_include_directories(${COMP_NAME} PUBLIC ${COMP_INCLUDE_DIRS})
   target_compile_definitions(${COMP_NAME} PUBLIC ${COMP_COMP_DEFS})
   target_link_libraries(${COMP_NAME} ${COMP_LINK_LIBS})
-  add_dependencies(${COMP_NAME} ${DEPENDENCIES})
 endfunction()
 
-# -----
-
-function(add_components COMPS_DIR)
+# - process components -
+function(process_components COMPS_DIR)
 file(GLOB MODULE_DIRS "" "${CMAKE_CURRENT_SOURCE_DIR}/${COMPS_DIR}/*")
 foreach(COMP_DIR ${MODULE_DIRS})
   get_filename_component(COMP_NAME ${COMP_DIR} NAME)
@@ -72,14 +64,13 @@ foreach(COMP_DIR ${MODULE_DIRS})
       set(COMP_INCLUDE_DIRS ${CONF_INCLUDE_DIRS})
       set(COMP_COMP_DEFS ${CONF_COMP_DEFS})
       set(COMP_LINK_LIBS ${CONF_LINK_LIBS})
-      add_component()
+      process_component()
     endif()
   endif()
 endforeach()
 endfunction()
 
-# -----
-
+# - set global variables -
 set(EXT_LIBS "${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs")
 set(LIBS "${CMAKE_CURRENT_SOURCE_DIR}/libs")
 set(MODS "${CMAKE_CURRENT_SOURCE_DIR}/mods")
@@ -91,13 +82,13 @@ set(LIB_NODE "${CMAKE_CURRENT_SOURCE_DIR}/libs/libnode_ucll")
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/../uclang_build/mf_mods.py" MF_MODS)
 
 # - process libraries -
-add_components("libs")
+process_components("libs")
 
 # - process programs -
-add_components("progs")
+process_components("progs")
 
 # - process modules -
-add_components("mods")
+process_components("mods")
 
 # -----
 

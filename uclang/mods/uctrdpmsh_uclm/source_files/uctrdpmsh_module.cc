@@ -468,18 +468,12 @@ bool bic_trdp_page_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 
 bool bic_trdp_page_method_TrdpPage_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("TrdpPage#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+page_description:c_bi_class_array
+>
+method TrdpPage
+; @end
 
   // - create trdp_page object -
   trdp_page_s *tpg_ptr = (trdp_page_s *)cmalloc(sizeof(trdp_page_s));
@@ -557,18 +551,12 @@ bool bic_trdp_page_method_size_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_trdp_page_method_pack_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("pack#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+values:c_bi_class_array
+>
+method pack
+; @end
 
   trdp_page_s *tpg_ptr = (trdp_page_s *)dst_location->v_data_ptr;
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
@@ -587,18 +575,12 @@ bool bic_trdp_page_method_pack_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_trdp_page_method_pack_dict_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_rm_class_dict)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("pack_dict#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+dict:c_rm_class_dict
+>
+method pack_dict
+; @end
 
   trdp_page_s *tpg_ptr = (trdp_page_s *)dst_location->v_data_ptr;
 
@@ -627,18 +609,12 @@ bool bic_trdp_page_method_pack_dict_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_trdp_page_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("unpack#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+method unpack
+; @end
 
   BIC_TRDP_PAGE_METHOD_UNPACK();
 
@@ -649,18 +625,12 @@ bool bic_trdp_page_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_trdp_page_method_unpack_dict_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("unpack_dict#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+method unpack_dict
+; @end
 
   BIC_TRDP_PAGE_METHOD_UNPACK();
 

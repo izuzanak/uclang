@@ -1180,8 +1180,12 @@ bool bic_image_method_io_clear_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_image_method_io_fill_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+@begin ucl_params
+<
+color:ignore
+>
+method io_fill
+; @end
 
   image_s *img_ptr = (image_s *)dst_location->v_data_ptr;
   unsigned char color[4];

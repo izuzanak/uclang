@@ -274,22 +274,13 @@ bool bic_datrie_alpha_map_method_DatrieAlphaMap_0(interpreter_thread_s &it,unsig
 
 bool bic_datrie_alpha_map_method_add_range_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_rm_class_unicode_char ||
-      src_1_location->v_type != c_rm_class_unicode_char)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("add_range#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+begin:c_rm_class_unicode_char
+end:c_rm_class_unicode_char
+>
+method add_range
+; @end
 
   AlphaMap *am_ptr = (AlphaMap *)dst_location->v_data_ptr;
   u_int32_t begin = (u_int32_t)src_0_location->v_data_ptr;
@@ -824,18 +815,12 @@ bool bic_datrie_operator_binary_exclamation_equal(interpreter_thread_s &it,unsig
 
 bool bic_datrie_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_rm_class_unicode_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_le_br_re_br#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+ustring:c_rm_class_unicode_string
+>
+method operator_binary_le_br_re_br
+; @end
 
   datrie_s *dt_ptr = (datrie_s *)dst_location->v_data_ptr;
   ui_array_s *ustring_ptr = (ui_array_s *)src_0_location->v_data_ptr;
@@ -872,19 +857,12 @@ bool bic_datrie_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned st
 
 bool bic_datrie_method_Datrie_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_datrie_alpha_map)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Datrie#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+alha_map:c_bi_class_datrie_alpha_map
+>
+method Datrie
+; @end
 
   AlphaMap *am_ptr = (AlphaMap *)src_0_location->v_data_ptr;
 
@@ -914,21 +892,13 @@ bool bic_datrie_method_Datrie_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_datrie_method_Datrie_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_datrie_alpha_map)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Datrie#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+alpha_map_loc:c_bi_class_datrie_alpha_map
+iterable:ignore
+>
+method Datrie
+; @end
 
   AlphaMap *am_ptr = (AlphaMap *)src_0_location->v_data_ptr;
 
@@ -1110,18 +1080,12 @@ bool bic_datrie_method_has_key_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_datrie_method_remove_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_rm_class_unicode_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("remove_key#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+ustring:c_rm_class_unicode_string
+>
+method remove_key
+; @end
 
   datrie_s *dt_ptr = (datrie_s *)dst_location->v_data_ptr;
   ui_array_s *ustring_ptr = (ui_array_s *)src_0_location->v_data_ptr;
