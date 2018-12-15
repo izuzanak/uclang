@@ -174,23 +174,13 @@ bool bic_node_callback_operator_binary_equal(interpreter_thread_s &it,unsigned s
 
 bool bic_node_callback_method_NodeCallback_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int param_cnt;
-
-  if (src_0_location->v_type != c_bi_class_integer ||
-      !it.retrieve_integer(src_1_location,param_cnt))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("NodeCallback#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+callback_ptr:c_bi_class_integer
+param_cnt:retrieve_integer
+>
+method NodeCallback
+; @end
 
   // - ERROR -
   if (param_cnt > c_node_callback_max_param)

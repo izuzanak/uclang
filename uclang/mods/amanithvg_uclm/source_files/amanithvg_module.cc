@@ -234,18 +234,12 @@ bool bic_amanith_vg_context_method_AmanithVgContext_0(interpreter_thread_s &it,u
 
 bool bic_amanith_vg_context_method_make_current_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_amanith_vg_surface)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("make_current#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+surface:c_bi_class_amanith_vg_surface
+>
+method make_current
+; @end
 
   void *ctx_ptr = (void *)dst_location->v_data_ptr;
   void *sface_ptr = (void *)src_0_location->v_data_ptr;
@@ -453,37 +447,16 @@ bool bic_amanith_vg_surface_operator_binary_equal(interpreter_thread_s &it,unsig
 
 bool bic_amanith_vg_surface_method_AmanithVgSurface_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-  location_s *src_4_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_4_op_idx]);
-
-  long long int width;
-  long long int height;
-  long long int linear_color_space;
-  long long int alpha_premultiplied;
-  long long int alpha_mask;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,width) ||
-      !it.retrieve_integer(src_1_location,height) ||
-      !it.retrieve_integer(src_2_location,linear_color_space) ||
-      !it.retrieve_integer(src_3_location,alpha_premultiplied) ||
-      !it.retrieve_integer(src_4_location,alpha_mask))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("AmanithVgSurface#5");
-    new_exception->params.push(5);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-    new_exception->params.push(src_4_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+width:retrieve_integer
+height:retrieve_integer
+linear_color_space:retrieve_integer
+alpha_premultiplied:retrieve_integer
+alpha_mask:retrieve_integer
+>
+method AmanithVgSurface
+; @end
 
   void *sface_ptr = vgPrivSurfaceCreateMZT(width,height,
       linear_color_space  ? VG_TRUE : VG_FALSE,
@@ -552,24 +525,13 @@ bool bic_amanith_vg_surface_method_height_0(interpreter_thread_s &it,unsigned st
 
 bool bic_amanith_vg_surface_method_resize_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int width;
-  long long int height;
-
-  if (!it.retrieve_integer(src_0_location,width) ||
-      !it.retrieve_integer(src_1_location,height))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("resize#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+width:retrieve_integer
+height:retrieve_integer
+>
+method resize
+; @end
 
   vgPrivSurfaceResizeMZT((void *)dst_location->v_data_ptr,width,height);
 

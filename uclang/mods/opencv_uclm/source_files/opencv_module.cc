@@ -317,20 +317,14 @@ void bic_cv_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_cv_method_wait_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int delay;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,delay))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_cv,"wait_key#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+delay:retrieve_integer
+>
+class c_bi_class_cv
+method wait_key
+static_method
+; @end
 
   long long int result = waitKey(delay);
 
@@ -502,23 +496,15 @@ bool bic_cv_mat_method_CvMat_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_cv_mat_method_read_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int flags;
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,flags))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_cv_mat,"read#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+flags:retrieve_integer
+>
+class c_bi_class_cv_mat
+method read
+static_method
+; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
@@ -545,22 +531,13 @@ bool bic_cv_mat_method_read_2(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_cv_mat_method_write_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      src_1_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("write#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+parameters:c_bi_class_array
+>
+method write
+; @end
 
   Mat *mat_ptr = (Mat *)dst_location->v_data_ptr;
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
@@ -594,23 +571,15 @@ bool bic_cv_mat_method_write_2(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_cv_mat_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int flags;
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,flags))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_cv_mat,"decode#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+flags:retrieve_integer
+>
+class c_bi_class_cv_mat
+method decode
+static_method
+; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
@@ -637,22 +606,13 @@ bool bic_cv_mat_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_cv_mat_method_encode_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      src_1_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("encode#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+parameters:c_bi_class_array
+>
+method encode
+; @end
 
   Mat *mat_ptr = (Mat *)dst_location->v_data_ptr;
   string_s *extension_ptr = (string_s *)src_0_location->v_data_ptr;
@@ -805,19 +765,12 @@ bool bic_cv_window_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 
 bool bic_cv_window_method_CvWindow_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("CvWindow#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+name:c_bi_class_string
+>
+method CvWindow
+; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
@@ -847,19 +800,12 @@ bool bic_cv_window_method_CvWindow_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_cv_window_method_show_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_cv_mat)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("show#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+image:c_bi_class_cv_mat
+>
+method show
+; @end
 
   cv_window_s *win_ptr = (cv_window_s *)dst_location->v_data_ptr;
   Mat *mat_ptr = (Mat *)src_0_location->v_data_ptr;
@@ -1359,19 +1305,12 @@ bool bic_cv_capture_method_retrieve_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_cv_capture_method_retrieve_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_cv_mat)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("retrieve#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+image:c_bi_class_cv_mat
+>
+method retrieve
+; @end
 
   VideoCapture *vc_ptr = (VideoCapture *)dst_location->v_data_ptr;
   Mat *mat_ptr = (Mat *)src_0_location->v_data_ptr;
@@ -1414,21 +1353,12 @@ bool bic_cv_capture_method_height_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_cv_capture_method_get_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int prop_id;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,prop_id))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("get#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+prop_id:retrieve_integer
+>
+method get
+; @end
 
   VideoCapture *vc_ptr = (VideoCapture *)dst_location->v_data_ptr;
   double result = vc_ptr->get(prop_id);
@@ -1440,25 +1370,13 @@ bool bic_cv_capture_method_get_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_cv_capture_method_set_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int prop_id;
-  double value;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,prop_id) ||
-      !it.retrieve_float(src_1_location,value))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("set#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+prop_id:retrieve_integer
+value:retrieve_float
+>
+method set
+; @end
 
   VideoCapture *vc_ptr = (VideoCapture *)dst_location->v_data_ptr;
 
@@ -1592,38 +1510,17 @@ bool bic_cv_writer_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 
 bool bic_cv_writer_method_CvWriter_6(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-  location_s *src_4_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_4_op_idx]);
-  location_s *src_5_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_5_op_idx]);
-
-  long long int fps;
-  long long int width;
-  long long int height;
-  long long int color;
-
-  if (src_0_location->v_type != c_bi_class_string ||
-      src_1_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_2_location,fps) ||
-      !it.retrieve_integer(src_3_location,width) ||
-      !it.retrieve_integer(src_4_location,height) ||
-      !it.retrieve_integer(src_5_location,color))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("CvWriter#6");
-    new_exception->params.push(6);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-    new_exception->params.push(src_4_location->v_type);
-    new_exception->params.push(src_5_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+name:c_bi_class_string
+fourcc:c_bi_class_string
+fps:retrieve_integer
+width:retrieve_integer
+height:retrieve_integer
+color:retrieve_integer
+>
+method CvWriter
+; @end
 
   string_s *name_ptr = (string_s *)src_0_location->v_data_ptr;
   string_s *fourcc_ptr = (string_s *)src_1_location->v_data_ptr;
@@ -1690,19 +1587,12 @@ bool bic_cv_writer_method_height_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_cv_writer_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_cv_mat)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("write#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+image:c_bi_class_cv_mat
+>
+method write
+; @end
 
   cv_writer_s *vw_ptr = (cv_writer_s *)dst_location->v_data_ptr;
   Mat *mat_ptr = (Mat *)src_0_location->v_data_ptr;

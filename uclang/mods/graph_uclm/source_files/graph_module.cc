@@ -787,19 +787,12 @@ bool bic_graph_method_duplicate_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_graph_method_subgraph_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("subgraph#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+edge_idxs:c_bi_class_array
+>
+method subgraph
+; @end
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
@@ -875,22 +868,13 @@ bool bic_graph_method_subgraph_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_graph_method_subgraph_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_array ||
-      src_1_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("subgraph#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+vertex_idxs:c_bi_class_array
+edge_idxs:c_bi_class_array
+>
+method subgraph
+; @end
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
@@ -1023,28 +1007,16 @@ bool bic_graph_method_subgraph_2(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_graph_method_generate_connected_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-
-  long long int vertex_cnt;
-  long long int edge_cnt;
-  long long int graph_type;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,vertex_cnt) ||
-      !it.retrieve_integer(src_1_location,edge_cnt) ||
-      !it.retrieve_integer(src_2_location,graph_type))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_graph,"generate_connected#3");
-    new_exception->params.push(3);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+vertex_cnt:retrieve_integer
+edge_cnt:retrieve_integer
+graph_type:retrieve_integer
+>
+class c_bi_class_graph
+method generate_connected
+static_method
+; @end
 
   graph_s *graph_ptr = (graph_s *)cmalloc(sizeof(graph_s));
   graph_ptr->init();
@@ -1143,25 +1115,13 @@ bool bic_graph_method_minimum_spanning_tree_0(interpreter_thread_s &it,unsigned 
 
 bool bic_graph_method_shortest_path_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int src_vertex_idx;
-  long long int trg_vertex_idx;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,src_vertex_idx) ||
-      !it.retrieve_integer(src_1_location,trg_vertex_idx))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("shortest_path#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+src_vertex_idx:retrieve_integer
+trg_vertex_idx:retrieve_integer
+>
+method shortest_path
+; @end
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
   graph_ptr->ucl_prepare(it,operands[c_source_pos_idx]);
@@ -1256,25 +1216,13 @@ bool bic_graph_method_shortest_path_2(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_graph_method_BFS_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int src_vertex_idx;
-  long long int trg_vertex_idx;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,src_vertex_idx) ||
-      !it.retrieve_integer(src_1_location,trg_vertex_idx))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("BFS#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+src_vertex_idx:retrieve_integer
+trg_vertex_idx:retrieve_integer
+>
+method BFS
+; @end
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
@@ -1354,25 +1302,13 @@ bool bic_graph_method_BFS_2(interpreter_thread_s &it,unsigned stack_base,uli *op
 
 bool bic_graph_method_DFS_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int src_vertex_idx;
-  long long int trg_vertex_idx;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,src_vertex_idx) ||
-      !it.retrieve_integer(src_1_location,trg_vertex_idx))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("DFS#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+src_vertex_idx:retrieve_integer
+trg_vertex_idx:retrieve_integer
+>
+method DFS
+; @end
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
@@ -1556,21 +1492,12 @@ bool bic_graph_method_vertex_add_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_graph_method_vertex_remove_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int vertex_idx;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,vertex_idx))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("vertex_remove#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+vertex_idx:retrieve_integer
+>
+method vertex_remove
+; @end
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
   graph_ptr->ucl_prepare(it,operands[c_source_pos_idx]);
@@ -1606,21 +1533,12 @@ bool bic_graph_method_vertex_remove_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_graph_method_vertex_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int vertex_idx;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,vertex_idx))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("vertex#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+vertex_idx:retrieve_integer
+>
+method vertex
+; @end
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
@@ -1750,6 +1668,7 @@ bool bic_graph_method_vertex_values_1(interpreter_thread_s &it,unsigned stack_ba
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
   long long int vertex_idx;
+
   if (!it.retrieve_integer(src_0_location,vertex_idx))
   {
     // - ERROR -
@@ -1828,27 +1747,14 @@ bool bic_graph_method_vertex_values_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_graph_method_edge_add_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-
-  long long int sv_idx;
-  long long int tv_idx;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,sv_idx) ||
-      !it.retrieve_integer(src_1_location,tv_idx))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("edge_add#3");
-    new_exception->params.push(3);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+sv_idx:retrieve_integer
+tv_idx:retrieve_integer
+value:ignore
+>
+method edge_add
+; @end
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
   graph_ptr->ucl_prepare(it,operands[c_source_pos_idx]);
@@ -1886,21 +1792,12 @@ bool bic_graph_method_edge_add_3(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_graph_method_edge_remove_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int edge_idx;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,edge_idx))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("edge_remove#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+edge_idx:retrieve_integer
+>
+method edge_remove
+; @end
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
   graph_ptr->ucl_prepare(it,operands[c_source_pos_idx]);
@@ -1929,21 +1826,12 @@ bool bic_graph_method_edge_remove_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_graph_method_edge_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int edge_idx;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,edge_idx))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("edge#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+edge_idx:retrieve_integer
+>
+method edge
+; @end
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
@@ -2073,6 +1961,7 @@ bool bic_graph_method_edge_values_1(interpreter_thread_s &it,unsigned stack_base
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
   long long int edge_idx;
+
   if (!it.retrieve_integer(src_0_location,edge_idx))
   {
     // - ERROR -
@@ -2781,21 +2670,12 @@ bool bic_graph_edge_method_target_idx_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_graph_edge_method_opposite_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int vertex_idx;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,vertex_idx))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("opposite_idx#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+vertex_idx:retrieve_integer
+>
+method opposite_idx
+; @end
 
   graph_edge_s *ge_ptr = (graph_edge_s *)dst_location->v_data_ptr;
   graph_s *graph_ptr = (graph_s *)((location_s *)ge_ptr->graph_ptr)->v_data_ptr;
@@ -3101,21 +2981,12 @@ bool bic_graph_paths_method_raw_paths_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_graph_paths_method_path_to_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int trg_vertex_idx;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,trg_vertex_idx))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("path_to#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+trg_vertex_idx:retrieve_integer
+>
+method path_to
+; @end
 
   graph_paths_s *gp_ptr = (graph_paths_s *)dst_location->v_data_ptr;
   graph_s *graph_ptr = (graph_s *)((location_s *)gp_ptr->graph_ptr)->v_data_ptr;

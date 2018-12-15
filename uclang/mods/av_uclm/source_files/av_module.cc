@@ -324,18 +324,12 @@ bool bic_av_format_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 
 bool bic_av_format_method_AvFormat_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("AvFormat#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+method AvFormat
+; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
@@ -392,20 +386,12 @@ bool bic_av_format_method_stream_cnt_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_av_format_method_stream_info_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int stream_idx;
-
-  if (!it.retrieve_integer(src_0_location,stream_idx))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("stream_info#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+stream_idx:retrieve_integer
+>
+method stream_info
+; @end
 
   // - retrieve av format -
   av_format_s *avf_ptr = (av_format_s *)dst_location->v_data_ptr;
@@ -439,20 +425,12 @@ bool bic_av_format_method_stream_info_1(interpreter_thread_s &it,unsigned stack_
 
 bool bic_av_format_method_stream_decode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int stream_idx;
-
-  if (!it.retrieve_integer(src_0_location,stream_idx))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("stream_decode#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+stream_idx:retrieve_integer
+>
+method stream_decode
+; @end
 
   // - retrieve av format -
   av_format_s *avf_ptr = (av_format_s *)dst_location->v_data_ptr;
@@ -1208,32 +1186,16 @@ bool bic_av_picture_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 
 bool bic_av_picture_method_AvPicture_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
+@begin ucl_params
+<
+width:retrieve_integer
+height:retrieve_integer
+int_format:retrieve_integer
+>
+method AvPicture
+; @end
 
-  long long int width;
-  long long int height;
-  AVPixelFormat format;
-
-  long long int int_format;
-
-  if (!it.retrieve_integer(src_0_location,width) ||
-      !it.retrieve_integer(src_1_location,height) ||
-      !it.retrieve_integer(src_2_location,int_format))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("AvPicture#3");
-    new_exception->params.push(3);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-
-    return false;
-  }
-
-  format = (AVPixelFormat)int_format;
+  AVPixelFormat format = (AVPixelFormat)int_format;
 
   // - create av picture object -
   av_picture_s *avp_ptr = (av_picture_s *)cmalloc(sizeof(av_picture_s));
@@ -1510,20 +1472,13 @@ bool bic_av_converter_method_AvConverter_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_av_converter_method_scale_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  if (src_1_location->v_type != c_bi_class_av_picture)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("scale#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+src_frame_picture:ignore
+trg_picture:c_bi_class_av_picture
+>
+method scale
+; @end
 
   // - source picture variables -
   AVFrame *src_pic;
@@ -1607,37 +1562,18 @@ bool bic_av_converter_method_scale_2(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_av_converter_method_scale_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-
-  // - target picture variables -
-  AVFrame *trg_pic;
-  long long int trg_width;
-  long long int trg_height;
-  AVPixelFormat trg_format;
-
-  long long int int_format;
-
-  if (!it.retrieve_integer(src_1_location,trg_width) ||
-      !it.retrieve_integer(src_2_location,trg_height) ||
-      !it.retrieve_integer(src_3_location,int_format))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("scale#4");
-    new_exception->params.push(4);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+src_frame_picture:ignore
+trg_width:retrieve_integer
+trg_height:retrieve_integer
+int_format:retrieve_integer
+>
+method scale
+; @end
 
   // - convert target format to enum AVPixelFormat -
-  trg_format = (AVPixelFormat)int_format;
+  AVPixelFormat trg_format = (AVPixelFormat)int_format;
 
   // - source picture variables -
   AVFrame *src_pic;
@@ -1704,7 +1640,7 @@ bool bic_av_converter_method_scale_4(interpreter_thread_s &it,unsigned stack_bas
   avp_ptr->init();
 
   // - pointer to target picture -
-  trg_pic = &avp_ptr->picture;
+  AVFrame *trg_pic = &avp_ptr->picture;
 
   memset(trg_pic,0,sizeof(AVFrame));
   trg_pic->format = trg_format;

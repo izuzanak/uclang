@@ -368,21 +368,13 @@ bool bic_gl_vertex_buffer_method_get_format_0(interpreter_thread_s &it,unsigned 
 
 bool bic_gl_vertex_buffer_method_push_back_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_array ||
-      src_1_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("push_back#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+vertex_array:c_bi_class_array
+index_array:c_bi_class_array
+>
+method push_back
+; @end
 
   gl_vertex_buffer_s *vb_ptr = (gl_vertex_buffer_s *)dst_location->v_data_ptr;
   pointer_array_s *vert_array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
@@ -527,20 +519,12 @@ bool bic_gl_vertex_buffer_method_push_back_2(interpreter_thread_s &it,unsigned s
 
 bool bic_gl_vertex_buffer_method_render_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int mode;
-
-  if (!it.retrieve_integer(src_0_location,mode))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("render#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+mode:retrieve_integer
+>
+method render
+; @end
 
   gl_vertex_buffer_s *vb_ptr = (gl_vertex_buffer_s *)dst_location->v_data_ptr;
 
@@ -771,31 +755,15 @@ bool bic_gl_font_operator_binary_equal(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_gl_font_method_GlFont_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-
-  long long int width;
-  long long int height;
-  long long int font_size;
-
-  if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,font_size) ||
-      !it.retrieve_integer(src_2_location,width) ||
-      !it.retrieve_integer(src_3_location,height))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("GlFont#4");
-    new_exception->params.push(4);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+font_size:retrieve_integer
+width:retrieve_integer
+height:retrieve_integer
+>
+method GlFont
+; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
@@ -891,21 +859,13 @@ bool bic_gl_font_method_descender_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_gl_font_method_buffer_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string ||
-      src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("buffer#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+vertex_name:c_bi_class_string
+tex_coord_name:c_bi_class_string
+>
+method buffer
+; @end
 
   // - retrieve names of shader attribute variables -
   string_s *vertex_name_ptr = (string_s *)src_0_location->v_data_ptr;
@@ -946,18 +906,12 @@ bool bic_gl_font_method_buffer_2(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_gl_font_method_measure_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("measure#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+text:c_bi_class_string
+>
+method measure
+; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
@@ -1154,24 +1108,13 @@ bool bic_gl_font_buffer_operator_binary_equal(interpreter_thread_s &it,unsigned 
 
 bool bic_gl_font_buffer_method_set_pos_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  double pos_x;
-  double pos_y;
-
-  if (!it.retrieve_float(src_0_location,pos_x) ||
-      !it.retrieve_float(src_1_location,pos_y))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("set_pos#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+pos_x:retrieve_float
+pos_y:retrieve_float
+>
+method set_pos
+; @end
 
   gl_font_buffer_s *glfb_ptr = (gl_font_buffer_s *)dst_location->v_data_ptr;
 
@@ -1215,18 +1158,12 @@ bool bic_gl_font_buffer_method_get_pos_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_gl_font_buffer_method_push_text_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("push_text#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+text:c_bi_class_string
+>
+method push_text
+; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 

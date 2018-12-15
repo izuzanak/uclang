@@ -276,8 +276,13 @@ built_in_variable_s perl_interpreter_variables[] =
 
 #define BIC_PERL_INTERPRETER_METHOD_GET_XV(XV,xv) \
 {/*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+@begin ucl_params
+<
+name:ignore
+>
+method get_xv
+macro
+; @end\
 \
   /* - ERROR - */\
   if (src_0_location->v_type != c_bi_class_string)\
@@ -358,18 +363,12 @@ bool bic_perl_interpreter_operator_binary_equal(interpreter_thread_s &it,unsigne
 
 bool bic_perl_interpreter_method_PerlInterpreter_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("PerlInterpreter#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+arguments:c_bi_class_array
+>
+method PerlInterpreter
+; @end
 
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
@@ -1068,8 +1067,12 @@ void bic_perl_reference_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_perl_reference_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+@begin ucl_params
+<
+value:ignore
+>
+method operator_binary_equal
+; @end
 
   perl_reference_s *pr_ptr = (perl_reference_s *)dst_location->v_data_ptr;
   location_s *pi_loc = pr_ptr->pi_loc;

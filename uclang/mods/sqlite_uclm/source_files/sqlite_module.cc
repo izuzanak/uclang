@@ -299,25 +299,18 @@ bool bic_sqlite_conn_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
 bool bic_sqlite_conn_method_SQLiteConn_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+method SQLiteConn
+; @end
 
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("SQLiteConn#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+  string_s *path_ptr = (string_s *)src_0_location->v_data_ptr;
   sqlite3 *db_ptr;
 
   // - ERROR -
-  if (sqlite3_open(string_ptr->data,&db_ptr) != SQLITE_OK)
+  if (sqlite3_open(path_ptr->data,&db_ptr) != SQLITE_OK)
   {
     sqlite3_close(db_ptr);
 
@@ -332,30 +325,19 @@ bool bic_sqlite_conn_method_SQLiteConn_1(interpreter_thread_s &it,unsigned stack
 
 bool bic_sqlite_conn_method_SQLiteConn_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+@begin ucl_params
+<
+path:c_bi_class_string
+flags:retrieve_integer
+>
+method SQLiteConn
+; @end
 
-  long long int flags;
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,flags))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("SQLiteConn#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
-
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+  string_s *path_ptr = (string_s *)src_0_location->v_data_ptr;
   sqlite3 *db_ptr;
 
   // - ERROR -
-  if (sqlite3_open_v2(string_ptr->data,&db_ptr,flags,nullptr) != SQLITE_OK)
+  if (sqlite3_open_v2(path_ptr->data,&db_ptr,flags,nullptr) != SQLITE_OK)
   {
     sqlite3_close(db_ptr);
 
@@ -379,19 +361,12 @@ bool bic_sqlite_conn_method_threadsafe_0(interpreter_thread_s &it,unsigned stack
 
 bool bic_sqlite_conn_method_execute_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("execute#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+query:c_bi_class_string
+>
+method execute
+; @end
 
   sqlite3 *db_ptr = (sqlite3 *)dst_location->v_data_ptr;
   string_s *query_ptr = (string_s *)src_0_location->v_data_ptr;
@@ -498,19 +473,12 @@ bool bic_sqlite_conn_method_execute_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_sqlite_conn_method_prepare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("prepare#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+query:c_bi_class_string
+>
+method prepare
+; @end
 
   sqlite3 *db_ptr = (sqlite3 *)dst_location->v_data_ptr;
   string_s *query_ptr = (string_s *)src_0_location->v_data_ptr;
@@ -820,9 +788,13 @@ bool bic_sqlite_statement_operator_binary_equal(interpreter_thread_s &it,unsigne
 
 bool bic_sqlite_statement_method_bind_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+@begin ucl_params
+<
+index:ignore
+value:ignore
+>
+method bind
+; @end
 
   BIC_SQLITE_STATEMENT_RETRIEVE_BIND_INDEX("bind#2");
 
@@ -873,21 +845,15 @@ bool bic_sqlite_statement_method_bind_2(interpreter_thread_s &it,unsigned stack_
 
 bool bic_sqlite_statement_method_bind_blob_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+@begin ucl_params
+<
+parameter_index:ignore
+blob:c_bi_class_string
+>
+method bind_blob
+; @end
 
   BIC_SQLITE_STATEMENT_RETRIEVE_BIND_INDEX("bind_blob#2");
-
-  // - ERROR -
-  if (src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("bind_blob#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-  }
 
   string_s *string_ptr = (string_s *)src_1_location->v_data_ptr;
 

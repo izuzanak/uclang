@@ -760,31 +760,17 @@ void bic_vg_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_vg_method_Clear_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-
-  double x;
-  double y;
-  double width;
-  double height;
-
-  if (!it.retrieve_float(src_0_location,x) ||
-      !it.retrieve_float(src_1_location,y) ||
-      !it.retrieve_float(src_2_location,width) ||
-      !it.retrieve_float(src_3_location,height))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_vg,"Clear#4");
-    new_exception->params.push(4);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+x:retrieve_float
+y:retrieve_float
+width:retrieve_float
+height:retrieve_float
+>
+class c_bi_class_vg
+method Clear
+static_method
+; @end
 
   vgClear(x,y,width,height);
 
@@ -795,17 +781,14 @@ bool bic_vg_method_Clear_4(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_vg_method_ClearColor_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_rm_class_vec4)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_vg,"ClearColor#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+color:c_rm_class_vec4
+>
+class c_bi_class_vg
+method ClearColor
+static_method
+; @end
 
   glm::vec4 &v4 = *((glm::vec4 *)src_0_location->v_data_ptr);
   vgSetfv(VG_CLEAR_COLOR,4,glm::value_ptr(v4));
@@ -817,19 +800,14 @@ bool bic_vg_method_ClearColor_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_vg_method_StrokeLineWidth_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  double line_width;
-
-  if (!it.retrieve_float(src_0_location,line_width))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_vg,"StrokeLineWidth#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+line_width:retrieve_float
+>
+class c_bi_class_vg
+method StrokeLineWidth
+static_method
+; @end
 
   vgSetf(VG_STROKE_LINE_WIDTH,line_width);
 
@@ -840,19 +818,14 @@ bool bic_vg_method_StrokeLineWidth_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_vg_method_StrokeCapStyle_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int cap_style;
-
-  if (!it.retrieve_integer(src_0_location,cap_style))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_vg,"StrokeCapStyle#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+cap_style:retrieve_integer
+>
+class c_bi_class_vg
+method StrokeCapStyle
+static_method
+; @end
 
   switch (cap_style)
   {
@@ -877,19 +850,14 @@ bool bic_vg_method_StrokeCapStyle_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_vg_method_StrokeJoinStyle_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int join_style;
-
-  if (!it.retrieve_integer(src_0_location,join_style))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_vg,"StrokeJoinStyle#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+join_style:retrieve_integer
+>
+class c_bi_class_vg
+method StrokeJoinStyle
+static_method
+; @end
 
   switch (join_style)
   {
@@ -914,17 +882,14 @@ bool bic_vg_method_StrokeJoinStyle_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_vg_method_StrokeDashPattern_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_vg,"StrokeDashPattern#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+dash_pattern:c_bi_class_array
+>
+class c_bi_class_vg
+method StrokeDashPattern
+static_method
+; @end
 
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
   float lengths[array_ptr->used];
@@ -968,23 +933,15 @@ bool bic_vg_method_LoadIdentity_0(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_vg_method_Translate_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  double x;
-  double y;
-
-  if (!it.retrieve_float(src_0_location,x) ||
-      !it.retrieve_float(src_1_location,y))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_vg,"Translate#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+x:retrieve_float
+y:retrieve_float
+>
+class c_bi_class_vg
+method Translate
+static_method
+; @end
 
   vgTranslate(x,y);
 
@@ -995,23 +952,15 @@ bool bic_vg_method_Translate_2(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_vg_method_Scale_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  double x;
-  double y;
-
-  if (!it.retrieve_float(src_0_location,x) ||
-      !it.retrieve_float(src_1_location,y))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_vg,"Scale#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+x:retrieve_float
+y:retrieve_float
+>
+class c_bi_class_vg
+method Scale
+static_method
+; @end
 
   vgScale(x,y);
 
@@ -1022,23 +971,15 @@ bool bic_vg_method_Scale_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_vg_method_Shear_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  double x;
-  double y;
-
-  if (!it.retrieve_float(src_0_location,x) ||
-      !it.retrieve_float(src_1_location,y))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_vg,"Shear#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+x:retrieve_float
+y:retrieve_float
+>
+class c_bi_class_vg
+method Shear
+static_method
+; @end
 
   vgShear(x,y);
 
@@ -1049,19 +990,14 @@ bool bic_vg_method_Shear_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_vg_method_Rotate_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  double angle;
-
-  if (!it.retrieve_float(src_0_location,angle))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_vg,"Rotate#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+angle:retrieve_float
+>
+class c_bi_class_vg
+method Rotate
+static_method
+; @end
 
   vgRotate(angle);
 
@@ -1217,20 +1153,12 @@ bool bic_vg_paint_method_VgPaint_0(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_vg_paint_method_VgPaint_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int paint_type;
-
-  if (!it.retrieve_integer(src_0_location,paint_type))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("VgPaint#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+paint_type:retrieve_integer
+>
+method VgPaint
+; @end
 
   switch (paint_type)
   {
@@ -1257,20 +1185,12 @@ bool bic_vg_paint_method_VgPaint_1(interpreter_thread_s &it,unsigned stack_base,
 
 bool bic_vg_paint_method_Type_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int paint_type;
-
-  if (!it.retrieve_integer(src_0_location,paint_type))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Type#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+paint_type:retrieve_integer
+>
+method Type
+; @end
 
   switch (paint_type)
   {
@@ -1297,18 +1217,12 @@ bool bic_vg_paint_method_Type_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_vg_paint_method_Color_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_rm_class_vec4)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Color#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+color:c_rm_class_vec4
+>
+method Color
+; @end
 
   VGPaint paint = (VGPaint)dst_location->v_data_ptr;
   glm::vec4 &v4 = *((glm::vec4 *)src_0_location->v_data_ptr);
@@ -1322,20 +1236,12 @@ bool bic_vg_paint_method_Color_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_vg_paint_method_Set_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int paint_modes;
-
-  if (!it.retrieve_integer(src_0_location,paint_modes))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Set#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+paint_modes:retrieve_integer
+>
+method Set
+; @end
 
   // - ERROR -
   if (paint_modes & ~(VG_STROKE_PATH | VG_FILL_PATH))
@@ -1354,19 +1260,14 @@ bool bic_vg_paint_method_Set_1(interpreter_thread_s &it,unsigned stack_base,uli 
 
 bool bic_vg_paint_method_Get_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int paint_mode;
-
-  if (!it.retrieve_integer(src_0_location,paint_mode))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_vg_paint,"Get#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+paint_mode:retrieve_integer
+>
+class c_bi_class_vg_paint
+method Get
+static_method
+; @end
 
   switch (paint_mode)
   {
@@ -1537,24 +1438,13 @@ bool bic_vg_path_method_VgPath_0(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_vg_path_method_VgPath_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int segment_cap;
-  long long int coordination_cap;
-
-  if (!it.retrieve_integer(src_0_location,segment_cap) ||
-      !it.retrieve_integer(src_1_location,coordination_cap))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("VgPath#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+segment_cap:retrieve_integer
+coordination_cap:retrieve_integer
+>
+method VgPath
+; @end
 
   VGPath path = vgCreatePath(VG_PATH_FORMAT_STANDARD,VG_PATH_DATATYPE_F,1.0f,0.0f,segment_cap,coordination_cap,VG_PATH_CAPABILITY_ALL);
 
@@ -1565,18 +1455,12 @@ bool bic_vg_path_method_VgPath_2(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_vg_path_method_MoveTo_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_rm_class_vec2)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("MoveTo#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+coords:c_rm_class_vec2
+>
+method MoveTo
+; @end
 
   VGPath path = (VGPath)dst_location->v_data_ptr;
   glm::vec2 &v2 = *((glm::vec2 *)src_0_location->v_data_ptr);
@@ -1591,24 +1475,13 @@ bool bic_vg_path_method_MoveTo_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_vg_path_method_MoveTo_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  double x;
-  double y;
-
-  if (!it.retrieve_float(src_0_location,x) ||
-      !it.retrieve_float(src_1_location,y))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("MoveTo#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+x:retrieve_float
+y:retrieve_float
+>
+method MoveTo
+; @end
 
   VGPath path = (VGPath)dst_location->v_data_ptr;
 
@@ -1624,18 +1497,12 @@ bool bic_vg_path_method_MoveTo_2(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_vg_path_method_LineTo_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_rm_class_vec2)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("LineTo#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+coords:c_rm_class_vec2
+>
+method LineTo
+; @end
 
   VGPath path = (VGPath)dst_location->v_data_ptr;
   glm::vec2 &v2 = *((glm::vec2 *)src_0_location->v_data_ptr);
@@ -1650,24 +1517,13 @@ bool bic_vg_path_method_LineTo_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_vg_path_method_LineTo_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  double x;
-  double y;
-
-  if (!it.retrieve_float(src_0_location,x) ||
-      !it.retrieve_float(src_1_location,y))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("LineTo#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+x:retrieve_float
+y:retrieve_float
+>
+method LineTo
+; @end
 
   VGPath path = (VGPath)dst_location->v_data_ptr;
 
@@ -1697,20 +1553,12 @@ bool bic_vg_path_method_CloseSubpath_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_vg_path_method_Draw_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int paint_modes;
-
-  if (!it.retrieve_integer(src_0_location,paint_modes))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Draw#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+paint_modes:retrieve_integer
+>
+method Draw
+; @end
 
   // - ERROR -
   if (paint_modes & ~(VG_STROKE_PATH | VG_FILL_PATH))

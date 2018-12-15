@@ -291,20 +291,14 @@ void bic_crypto_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_crypto_method_random_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int size;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,size))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_crypto,"random#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+size:retrieve_integer
+>
+class c_bi_class_crypto
+method random
+static_method
+; @end
 
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->create(size);
@@ -319,18 +313,14 @@ bool bic_crypto_method_random_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_crypto_method_encode_base16_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_crypto,"encode_base16#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+class c_bi_class_crypto
+method encode_base16
+static_method
+; @end
 
   string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
   unsigned s_length = source_ptr->size - 1;
@@ -359,18 +349,14 @@ bool bic_crypto_method_encode_base16_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_crypto_method_decode_base16_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_crypto,"decode_base16#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+class c_bi_class_crypto
+method decode_base16
+static_method
+; @end
 
   string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
   unsigned s_length = source_ptr->size - 1;
@@ -439,18 +425,14 @@ bool bic_crypto_method_decode_base16_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_crypto_method_encode_base64_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_crypto,"encode_base64#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+class c_bi_class_crypto
+method encode_base64
+static_method
+; @end
 
   string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
   unsigned s_length = source_ptr->size - 1;
@@ -475,18 +457,14 @@ bool bic_crypto_method_encode_base64_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_crypto_method_decode_base64_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_crypto,"decode_base64#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+class c_bi_class_crypto
+method decode_base64
+static_method
+; @end
 
   string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
   unsigned s_length = source_ptr->size - 1;
@@ -819,19 +797,12 @@ bool bic_crypto_digest_info_operator_binary_equal(interpreter_thread_s &it,unsig
 
 bool bic_crypto_digest_info_method_CryptoDigestInfo_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("CryptoDigestInfo#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+name:c_bi_class_string
+>
+method CryptoDigestInfo
+; @end
 
   const EVP_MD *mdt_ptr = EVP_get_digestbyname(((string_s *)src_0_location->v_data_ptr)->data);
 
@@ -975,8 +946,12 @@ bool bic_crypto_digest_operator_binary_equal(interpreter_thread_s &it,unsigned s
 
 bool bic_crypto_digest_method_CryptoDigest_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+@begin ucl_params
+<
+name_info:ignore
+>
+method CryptoDigest
+; @end
 
   const EVP_MD *mdt_ptr;
 
@@ -1038,19 +1013,12 @@ bool bic_crypto_digest_method_CryptoDigest_1(interpreter_thread_s &it,unsigned s
 
 bool bic_crypto_digest_method_update_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("update#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+update:c_bi_class_string
+>
+method update
+; @end
 
   crypto_digest_s *cd_ptr = (crypto_digest_s *)dst_location->v_data_ptr;
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
@@ -1207,9 +1175,14 @@ built_in_variable_s crypto_digest_sign_variables[] =
 
 #define BIC_CRYPTO_DIGEST_SIGN_VERIFY_CONSTRUCTOR(NAME,TYPE) \
 {/*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);\
+@begin ucl_params
+<
+name_info:ignore
+pkey:ignore
+>
+method NAME
+macro
+; @end\
 \
   const EVP_MD *mdt_ptr = nullptr;\
 \
@@ -1535,19 +1508,12 @@ bool bic_crypto_digest_verify_method_update_1(interpreter_thread_s &it,unsigned 
 
 bool bic_crypto_digest_verify_method_verify_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("verify#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+method verify
+; @end
 
   crypto_digest_key_s *cd_ptr = (crypto_digest_key_s *)dst_location->v_data_ptr;
   crypto_pkey_s *ck_ptr = (crypto_pkey_s *)cd_ptr->key_location->v_data_ptr;
@@ -1711,19 +1677,12 @@ bool bic_crypto_cipher_info_operator_binary_equal(interpreter_thread_s &it,unsig
 
 bool bic_crypto_cipher_info_method_CryptoCipherInfo_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("CryptoCipherInfo#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+name:c_bi_class_string
+>
+method CryptoCipherInfo
+; @end
 
   const EVP_CIPHER *ct_ptr = EVP_get_cipherbyname(((string_s *)src_0_location->v_data_ptr)->data);
 
@@ -1867,10 +1826,15 @@ built_in_variable_s crypto_encrypt_variables[] =
 
 #define BIC_CRYPTO_ENCRYPT_DECRYPT_METHOD_CONSTRUCTOR(TYPE,NAME) \
 {/*{{{*/\
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);\
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);\
+@begin ucl_params
+<
+name_info:ignore
+key:ignore
+init_vector:ignore
+>
+method NAME
+macro
+; @end\
 \
   const EVP_CIPHER *ct_ptr = nullptr;\
 \

@@ -336,18 +336,12 @@ bool bic_snmp_session_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
 bool bic_snmp_session_method_SnmpSession_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("SnmpSession#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+arguments:c_bi_class_array
+>
+method SnmpSession
+; @end
 
   // - retrieve arguments array -
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
@@ -431,21 +425,13 @@ bool bic_snmp_session_method_SnmpSession_1(interpreter_thread_s &it,unsigned sta
 
 bool bic_snmp_session_method_set_list_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_array ||
-      src_1_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("set_list#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+oid_array:c_bi_class_array
+value_array:c_bi_class_array
+>
+method set_list
+; @end
 
   // - retrieve snmp session object -
   snmp_session_s *snmps_ptr = (snmp_session_s *)dst_location->v_data_ptr;
@@ -564,18 +550,12 @@ bool bic_snmp_session_method_set_list_2(interpreter_thread_s &it,unsigned stack_
 
 bool bic_snmp_session_method_get_list_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("get_list#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+oid_array:c_bi_class_array
+>
+method get_list
+; @end
 
   // - retrieve snmp session object -
   snmp_session_s *snmps_ptr = (snmp_session_s *)dst_location->v_data_ptr;
@@ -823,8 +803,13 @@ built_in_variable_s snmp_agent_variables[] =
 
 #define BIC_SNMP_AGENT_ITEM(NAME) \
   {/*{{{*/\
-    location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
-    location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
+@begin ucl_params
+<
+index:ignore
+>
+method NAMEs
+macro
+; @end\
 \
     long long int index;\
 \
@@ -943,24 +928,13 @@ bool bic_snmp_agent_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigne
 
 bool bic_snmp_agent_method_SnmpAgent_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int agent_type;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,agent_type) ||
-      src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("SnmpAgent#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+agent_type:retrieve_integer
+name:c_bi_class_string
+>
+method SnmpAgent
+; @end
 
   switch (agent_type)
   {
@@ -1051,27 +1025,14 @@ bool bic_snmp_agent_method_SnmpAgent_2(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_snmp_agent_method_add_object_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-
-  long long int value_type;
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      src_1_location->v_type != c_bi_class_snmp_oid ||
-      !it.retrieve_integer(src_2_location,value_type))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("add_object#3");
-    new_exception->params.push(3);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+name:c_bi_class_string
+oid:c_bi_class_snmp_oid
+value_type:retrieve_integer
+>
+method add_object
+; @end
 
   switch (value_type)
   {
@@ -1185,21 +1146,12 @@ bool bic_snmp_agent_method_add_object_3(interpreter_thread_s &it,unsigned stack_
 
 bool bic_snmp_agent_method_check_and_process_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int block;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,block))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("check_and_process#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+block:retrieve_integer
+>
+method check_and_process
+; @end
 
   long long int result = agent_check_and_process(block);
 
@@ -1243,21 +1195,12 @@ bool bic_snmp_agent_method_first_idx_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_snmp_agent_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int index;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,index))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("next_idx#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method next_idx
+; @end
 
   BIC_SNMP_AGENT_CHECK_INDEX();
 
@@ -1623,18 +1566,12 @@ bool bic_snmp_oid_operator_binary_equal(interpreter_thread_s &it,unsigned stack_
 
 bool bic_snmp_oid_method_SnmpOid_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("SnmpOid#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+oid_string:c_bi_class_string
+>
+method SnmpOid
+; @end
 
   // - retrieve oid string -
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;

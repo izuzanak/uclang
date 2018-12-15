@@ -498,18 +498,12 @@ bool bic_ssh2_session_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
 bool bic_ssh2_session_method_Ssh2Session_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_rm_class_socket)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("Ssh2Session#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+socket:c_rm_class_socket
+>
+method Ssh2Session
+; @end
 
   int sock = (int)src_0_location->v_data_ptr;
 
@@ -561,21 +555,12 @@ bool bic_ssh2_session_method_Ssh2Session_1(interpreter_thread_s &it,unsigned sta
 
 bool bic_ssh2_session_method_hostkey_hash_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int hostkey_type;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,hostkey_type))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("hostkey_hash#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+hostkey_type:retrieve_integer
+>
+method hostkey_hash
+; @end
 
   // - retrieve ssh2 session -
   ssh2_session_s *ssh2s_ptr = (ssh2_session_s *)dst_location->v_data_ptr;
@@ -610,19 +595,12 @@ bool bic_ssh2_session_method_hostkey_hash_1(interpreter_thread_s &it,unsigned st
 
 bool bic_ssh2_session_method_userauth_list_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("userauth_list#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+user:c_bi_class_string
+>
+method userauth_list
+; @end
 
   // - retrieve ssh2 session -
   ssh2_session_s *ssh2s_ptr = (ssh2_session_s *)dst_location->v_data_ptr;
@@ -651,21 +629,13 @@ bool bic_ssh2_session_method_userauth_list_1(interpreter_thread_s &it,unsigned s
 
 bool bic_ssh2_session_method_userauth_password_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string || src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("userauth_password#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+user:c_bi_class_string
+password:c_bi_class_string
+>
+method userauth_password
+; @end
 
   // - retrieve ssh2 session -
   ssh2_session_s *ssh2s_ptr = (ssh2_session_s *)dst_location->v_data_ptr;
@@ -700,21 +670,13 @@ bool bic_ssh2_session_method_userauth_password_2(interpreter_thread_s &it,unsign
 
 bool bic_ssh2_session_method_userauth_fake_interactive_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string || src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("userauth_fake_interactive#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+user:c_bi_class_string
+password:c_bi_class_string
+>
+method userauth_fake_interactive
+; @end
 
   // - retrieve ssh2 session -
   ssh2_session_s *ssh2s_ptr = (ssh2_session_s *)dst_location->v_data_ptr;
@@ -745,28 +707,15 @@ bool bic_ssh2_session_method_userauth_fake_interactive_2(interpreter_thread_s &i
 
 bool bic_ssh2_session_method_userauth_publickey_fromfile_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      src_1_location->v_type != c_bi_class_string ||
-      src_2_location->v_type != c_bi_class_string ||
-      src_3_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("userauth_publickey_fromfile#4");
-    new_exception->params.push(4);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+user:c_bi_class_string
+public_key_path:c_bi_class_string
+private_key_path:c_bi_class_string
+passphrase:c_bi_class_string
+>
+method userauth_publickey_fromfile
+; @end
 
   // - retrieve ssh2 session -
   ssh2_session_s *ssh2s_ptr = (ssh2_session_s *)dst_location->v_data_ptr;
@@ -848,19 +797,12 @@ bool bic_ssh2_session_method_sftp_session_0(interpreter_thread_s &it,unsigned st
 
 bool bic_ssh2_session_method_exec_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("exec#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+command:c_bi_class_string
+>
+method exec
+; @end
 
   BIC_SSH2_SESSION_CHANNEL_OPEN_BEGIN();
 
@@ -1065,24 +1007,13 @@ bool bic_sftp_session_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
 bool bic_sftp_session_method_mkdir_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int dir_mode;
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,dir_mode))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("mkdir#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+dir_mode:retrieve_integer
+>
+method mkdir
+; @end
 
   // - retrieve sftp session -
   sftp_session_s *sftps_ptr = (sftp_session_s *)dst_location->v_data_ptr;
@@ -1104,19 +1035,12 @@ bool bic_sftp_session_method_mkdir_2(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_sftp_session_method_rmdir_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("rmdir#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+method rmdir
+; @end
 
   // - retrieve sftp session -
   sftp_session_s *sftps_ptr = (sftp_session_s *)dst_location->v_data_ptr;
@@ -1138,19 +1062,12 @@ bool bic_sftp_session_method_rmdir_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_sftp_session_method_listdir_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("listdir#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+method listdir
+; @end
 
   // - retrieve sftp session -
   sftp_session_s *sftps_ptr = (sftp_session_s *)dst_location->v_data_ptr;
@@ -1230,19 +1147,12 @@ bool bic_sftp_session_method_listdir_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_sftp_session_method_remove_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("remove#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+method remove
+; @end
 
   // - retrieve sftp session -
   sftp_session_s *sftps_ptr = (sftp_session_s *)dst_location->v_data_ptr;
@@ -1264,28 +1174,14 @@ bool bic_sftp_session_method_remove_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_sftp_session_method_open_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-
-  long long int open_flags;
-  long long int open_mode;
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string ||
-      !it.retrieve_integer(src_1_location,open_flags) ||
-      !it.retrieve_integer(src_2_location,open_mode))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("open#3");
-    new_exception->params.push(3);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+flags:retrieve_integer
+mode:retrieve_integer
+>
+method open
+; @end
 
   // - retrieve sftp session -
   sftp_session_s *sftps_ptr = (sftp_session_s *)dst_location->v_data_ptr;
@@ -1298,7 +1194,7 @@ bool bic_sftp_session_method_open_3(interpreter_thread_s &it,unsigned stack_base
   sftph_ptr->init();
 
   // - open file handle -
-  sftph_ptr->handle = libssh2_sftp_open_ex(sftps_ptr->session,file_name_ptr->data,file_name_ptr->size - 1,open_flags,open_mode,LIBSSH2_SFTP_OPENFILE);
+  sftph_ptr->handle = libssh2_sftp_open_ex(sftps_ptr->session,file_name_ptr->data,file_name_ptr->size - 1,flags,mode,LIBSSH2_SFTP_OPENFILE);
 
   // - ERROR -
   if (sftph_ptr->handle == nullptr)
@@ -1606,19 +1502,12 @@ bool bic_sftp_handle_method_close_0(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_sftp_handle_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("write#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+method write
+; @end
 
   // - retrieve sftp handle -
   sftp_handle_s *sftph_ptr = (sftp_handle_s *)dst_location->v_data_ptr;
@@ -1728,21 +1617,12 @@ bool bic_sftp_handle_method_readln_0(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_sftp_handle_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int byte_cnt;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,byte_cnt))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("read#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+byte_cnt:retrieve_integer
+>
+method read
+; @end
 
   // - retrieve sftp handle -
   sftp_handle_s *sftph_ptr = (sftp_handle_s *)dst_location->v_data_ptr;
@@ -1986,19 +1866,12 @@ bool bic_ssh2_channel_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
 bool bic_ssh2_channel_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("write#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+method write
+; @end
 
   // - retrieve ssh2 channel -
   ssh2_channel_s *ssh2ch_ptr = (ssh2_channel_s *)dst_location->v_data_ptr;

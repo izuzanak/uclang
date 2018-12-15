@@ -1078,31 +1078,15 @@ bool bic_pa_parameters_operator_binary_equal(interpreter_thread_s &it,unsigned s
 
 bool bic_pa_parameters_method_PaParameters_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-
-  long long int channel_cnt;
-  long long int sample_format;
-  double latency;
-
-  if (src_0_location->v_type != c_bi_class_pa_device ||
-      !it.retrieve_integer(src_1_location,channel_cnt) ||
-      !it.retrieve_integer(src_2_location,sample_format) ||
-      !it.retrieve_float(src_3_location,latency))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("PaParameters#4");
-    new_exception->params.push(4);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+device:c_bi_class_pa_device
+channel_cnt:retrieve_integer
+sample_format:retrieve_integer
+latency:retrieve_float
+>
+method PaParameters
+; @end
 
   pa_device_s *pad_ptr = (pa_device_s *)src_0_location->v_data_ptr;
 
@@ -1253,30 +1237,17 @@ bool bic_pa_stream_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 
 bool bic_pa_stream_method_PaStream_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-  location_s *src_3_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_3_op_idx]);
-
-  double sample_rate;
-  long long int buffer_frames;
-
-  if ((src_0_location->v_type != c_bi_class_pa_parameters && src_0_location->v_type != c_bi_class_blank) ||
-      (src_1_location->v_type != c_bi_class_pa_parameters && src_1_location->v_type != c_bi_class_blank) ||
-      !it.retrieve_float(src_2_location,sample_rate) ||
-      !it.retrieve_integer(src_3_location,buffer_frames))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("PaStream#4");
-    new_exception->params.push(4);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-    new_exception->params.push(src_3_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+input_parameters:c_bi_class_pa_parameters
+input_parameters:c_bi_class_blank
+output_parameters:c_bi_class_pa_parameters
+output_parameters:c_bi_class_blank
+sample_rate:retrieve_float
+buffer_frames:retrieve_integer
+>
+method PaStream
+; @end
 
   const PaStreamParameters *input = nullptr;
   const PaStreamParameters *output = nullptr;
@@ -1427,21 +1398,12 @@ bool bic_pa_stream_method_write_available_0(interpreter_thread_s &it,unsigned st
 
 bool bic_pa_stream_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int frame_count;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,frame_count))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("read#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+frame_count:retrieve_integer
+>
+method read
+; @end
 
   // - ERROR -
   if (frame_count <= 0)
@@ -1482,19 +1444,12 @@ bool bic_pa_stream_method_read_1(interpreter_thread_s &it,unsigned stack_base,ul
 
 bool bic_pa_stream_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("write#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+method write
+; @end
 
   pa_stream_s *pas_ptr = (pa_stream_s *)dst_location->v_data_ptr;
 

@@ -146,23 +146,13 @@ void bic_shiva_vg_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_shiva_vg_method_create_context_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int width;
-  long long int height;
-
-  if (!it.retrieve_integer(src_0_location,width) ||
-      !it.retrieve_integer(src_1_location,height))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_shiva_vg,"create_context#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+width:retrieve_integer
+height:retrieve_integer
+>
+method create_context
+; @end
 
   // - ERROR -
   if (shivavg_c::context)
@@ -188,23 +178,13 @@ bool bic_shiva_vg_method_create_context_2(interpreter_thread_s &it,unsigned stac
 
 bool bic_shiva_vg_method_resize_surface_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int width;
-  long long int height;
-
-  if (!it.retrieve_integer(src_0_location,width) ||
-      !it.retrieve_integer(src_1_location,height))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_shiva_vg,"resize_surface#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+width:retrieve_integer
+height:retrieve_integer
+>
+method resize_surface
+; @end
 
   vgResizeSurfaceSH(width,height);
 

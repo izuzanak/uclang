@@ -2764,7 +2764,7 @@ bool bic_integer_operator_binary_asterisk(interpreter_thread_s &it,unsigned stac
   }
   break;
 
-  /* - ERROR - */
+  // - ERROR -
   default:
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_asterisk#1");
@@ -5077,7 +5077,7 @@ bool bic_string_method_String_1(interpreter_thread_s &it,unsigned stack_base,uli
     *string_ptr = *((string_s *)src_0_location->v_data_ptr);
     break;
 
-    // - ERROR -
+  // - ERROR -
   default:
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("String#1");

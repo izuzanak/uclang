@@ -358,19 +358,14 @@ bool bic_mpg_method_supported_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_mpg_method_feature_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int feature;
-
-  if (!it.retrieve_integer(src_0_location,feature))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_mpg,"feature#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+feature:retrieve_integer
+>
+class c_bi_class_mpg
+method feature
+static_method
+; @end
 
   long long int result = mpg123_feature((mpg123_feature_set)feature);
 
@@ -802,18 +797,12 @@ bool bic_mpg_handle_method_MpgHandle_0(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_mpg_handle_method_MpgHandle_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("MpgHandle#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+decoder:c_bi_class_string
+>
+method MpgHandle
+; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
@@ -842,18 +831,12 @@ bool bic_mpg_handle_method_MpgHandle_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_mpg_handle_method_open_file_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("open_file#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+method open_file
+; @end
 
   mpg_handle_s *mh_ptr = (mpg_handle_s *)dst_location->v_data_ptr;
 
@@ -920,22 +903,13 @@ bool bic_mpg_handle_method_get_type_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_mpg_handle_method_set_param_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int param_type;
-
-  if (!it.retrieve_integer(src_0_location,param_type))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("set_param#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+param_type:retrieve_integer
+value:ignore
+>
+method set_param
+; @end
 
   long long int int_value = 0;
   double float_value = 0.0;
@@ -997,20 +971,12 @@ bool bic_mpg_handle_method_set_param_2(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_mpg_handle_method_get_param_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int param_type;
-
-  if (!it.retrieve_integer(src_0_location,param_type))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("get_param#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+param_type:retrieve_integer
+>
+method get_param
+; @end
 
   long int int_value = 0;
   double float_value = 0.0;
@@ -1065,20 +1031,12 @@ bool bic_mpg_handle_method_get_param_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_mpg_handle_method_volume_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  double volume;
-
-  if (!it.retrieve_float(src_0_location,volume))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("volume#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+volume:retrieve_float
+>
+method volume
+; @end
 
   mpg_handle_s *mh_ptr = (mpg_handle_s *)dst_location->v_data_ptr;
 
@@ -1133,18 +1091,12 @@ bool bic_mpg_handle_method_encoding_0(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_mpg_handle_method_feed_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("feed#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+method feed
+; @end
 
   mpg_handle_s *mh_ptr = (mpg_handle_s *)dst_location->v_data_ptr;
 
@@ -1171,20 +1123,12 @@ bool bic_mpg_handle_method_feed_1(interpreter_thread_s &it,unsigned stack_base,u
 
 bool bic_mpg_handle_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int buffer_size;
-
-  if (!it.retrieve_integer(src_0_location,buffer_size))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("read#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+buffer_size:retrieve_integer
+>
+method read
+; @end
 
   mpg_handle_s *mh_ptr = (mpg_handle_s *)dst_location->v_data_ptr;
 

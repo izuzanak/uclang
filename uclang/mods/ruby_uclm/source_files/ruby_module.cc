@@ -251,18 +251,14 @@ void bic_ruby_interpreter_clear(interpreter_thread_s &it,location_s *location_pt
 
 bool bic_ruby_interpreter_method_eval_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_ruby_interpreter,"eval#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+source:c_bi_class_string
+>
+class c_bi_class_ruby_interpreter
+method eval
+static_method
+; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
@@ -288,18 +284,14 @@ bool bic_ruby_interpreter_method_eval_1(interpreter_thread_s &it,unsigned stack_
 
 bool bic_ruby_interpreter_method_load_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_ruby_interpreter,"load#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+class c_bi_class_ruby_interpreter
+method load
+static_method
+; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
   VALUE rv_file_name = rb_str_new(string_ptr->data,string_ptr->size - 1);
@@ -323,18 +315,14 @@ bool bic_ruby_interpreter_method_load_1(interpreter_thread_s &it,unsigned stack_
 
 bool bic_ruby_interpreter_method_require_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_ruby_interpreter,"require#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+class c_bi_class_ruby_interpreter
+method require
+static_method
+; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
   VALUE rv_file_name = rb_str_new(string_ptr->data,string_ptr->size - 1);
@@ -361,18 +349,14 @@ bool bic_ruby_interpreter_method_require_1(interpreter_thread_s &it,unsigned sta
 
 bool bic_ruby_interpreter_method_gv_get_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_ruby_interpreter,"gv_get#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+name:c_bi_class_string
+>
+class c_bi_class_ruby_interpreter
+method gv_get
+static_method
+; @end
 
   VALUE rv_result = rb_gv_get(((string_s *)src_0_location->v_data_ptr)->data);
 
@@ -810,19 +794,12 @@ bool bic_ruby_value_method_RubyValue_1(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_ruby_value_method__new_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("_new#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+parameters:c_bi_class_array
+>
+method _new
+; @end
 
   int status = STATUS_OK;
   VALUE rv_dst = ruby_c::create_ruby_value(it,dst_location,status);
@@ -1016,8 +993,12 @@ void bic_ruby_iv_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_ruby_iv_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+@begin ucl_params
+<
+value:ignore
+>
+method operator_binary_equal
+; @end
 
   int status = STATUS_OK;
   VALUE rv_src_0 = ruby_c::create_ruby_value(it,src_0_location,status);
@@ -1131,8 +1112,12 @@ void bic_ruby_item_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_ruby_item_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+@begin ucl_params
+<
+value:ignore
+>
+method operator_binary_equal
+; @end
 
   int status = STATUS_OK;
   VALUE rv_src_0 = ruby_c::create_ruby_value(it,src_0_location,status);

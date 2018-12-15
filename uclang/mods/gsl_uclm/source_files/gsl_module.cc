@@ -217,26 +217,14 @@ bool bic_gsl_spline_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 
 bool bic_gsl_spline_method_GslSpline_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-
-  long long int interp_type;
-
-  if (!it.retrieve_integer(src_0_location,interp_type) ||
-      src_1_location->v_type != c_bi_class_array ||
-      src_2_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("GslSpline#3");
-    new_exception->params.push(3);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+interp_type:retrieve_integer
+x_array:c_bi_class_array
+y_array:c_bi_class_array
+>
+method GslSpline
+; @end
 
   pointer_array_s *x_arr_ptr = (pointer_array_s *)src_1_location->v_data_ptr;
   pointer_array_s *y_arr_ptr = (pointer_array_s *)src_2_location->v_data_ptr;
@@ -336,20 +324,12 @@ bool bic_gsl_spline_method_GslSpline_3(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_gsl_spline_method_eval_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  double x_value;
-
-  if (!it.retrieve_float(src_0_location,x_value))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("eval#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+x_value:retrieve_float
+>
+method eval
+; @end
 
   gsl_spline_s *spline_ptr = (gsl_spline_s *)dst_location->v_data_ptr;
 

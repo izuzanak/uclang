@@ -404,21 +404,13 @@ bool bic_mono_assembly_operator_binary_equal(interpreter_thread_s &it,unsigned s
 
 bool bic_mono_assembly_method_MonoAssembly_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string ||
-      src_1_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_mono_assembly,"MonoAssembly#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+path:c_bi_class_string
+arguments:c_bi_class_array
+>
+method MonoAssembly
+; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
   pointer_array_s *array_ptr = (pointer_array_s *)src_1_location->v_data_ptr;
@@ -608,20 +600,15 @@ bool bic_mono_assembly_method_MonoAssembly_2(interpreter_thread_s &it,unsigned s
 
 bool bic_mono_assembly_method_get_class_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string ||
-      src_1_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_mono_assembly,"get_class#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+namespace:c_bi_class_string
+name:c_bi_class_string
+>
+class c_bi_class_mono_assembly
+method get_class
+static_method
+; @end
 
   string_s *namespace_ptr = (string_s *)src_0_location->v_data_ptr;
   string_s *name_ptr = (string_s *)src_1_location->v_data_ptr;
@@ -1489,8 +1476,12 @@ void bic_mono_property_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_mono_property_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+@begin ucl_params
+<
+value:ignore
+>
+method operator_binary_equal
+; @end
 
   MonoObject *mono_src_0 = mono_c::create_mono_object(it,src_0_location);
 
@@ -1617,8 +1608,12 @@ void bic_mono_item_ref_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_mono_item_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+@begin ucl_params
+<
+value:ignore
+>
+method operator_binary_equal
+; @end
 
   MonoObject *mono_src_0 = mono_c::create_mono_object(it,src_0_location);
 

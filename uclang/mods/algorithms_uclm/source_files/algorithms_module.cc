@@ -416,8 +416,15 @@ bool bic_algo_method_any_true_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_algo_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+@begin ucl_params
+<
+iterable:ignore
+map:ignore
+>
+class c_bi_class_algo
+method map
+static_method
+; @end
 
   // - create result array -
   pointer_array_s *array_ptr = it.get_new_array_ptr();
@@ -626,21 +633,16 @@ bool bic_algo_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_algo_method_reduce_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-  location_s *src_2_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_2_op_idx]);
-
-  if (src_2_location->v_type != c_bi_class_delegate)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_algo,"reduce#3");
-    new_exception->params.push(3);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-    new_exception->params.push(src_2_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+init_value:ignore
+iterable:ignore
+callback:c_bi_class_delegate
+>
+class c_bi_class_algo
+method reduce
+static_method
+; @end
 
   // - retrieve delegate pointer -
   delegate_s *delegate_ptr = (delegate_s *)src_2_location->v_data_ptr;
@@ -706,8 +708,15 @@ bool bic_algo_method_reduce_3(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_algo_method_filter_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
+@begin ucl_params
+<
+iterable:ignore
+filter:ignore
+>
+class c_bi_class_algo
+method filter
+static_method
+; @end
 
   // - create result array -
   pointer_array_s *array_ptr = it.get_new_array_ptr();
@@ -916,8 +925,8 @@ bool bic_algo_method_filter_2(interpreter_thread_s &it,unsigned stack_base,uli *
       }/*}}}*/
       break;
 
-      // - ERROR -
-      default:
+    // - ERROR -
+    default:
       {
         it.release_location_ptr(array_location);
 
@@ -939,17 +948,14 @@ bool bic_algo_method_filter_2(interpreter_thread_s &it,unsigned stack_base,uli *
 
 bool bic_algo_method_zip_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_algo,"zip#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+iterables:c_bi_class_array
+>
+class c_bi_class_algo
+method zip
+static_method
+; @end
 
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
@@ -1107,17 +1113,14 @@ bool bic_algo_method_zip_1(interpreter_thread_s &it,unsigned stack_base,uli *ope
 
 bool bic_algo_method_tuple_zip_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_array)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_algo,"tuple_zip#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+iterables:c_bi_class_array
+>
+class c_bi_class_algo
+method tuple_zip
+static_method
+; @end
 
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
@@ -1600,10 +1603,18 @@ built_in_variable_s filter_variables[] =
   } while(!done);\
 }/*}}}*/
 
-#define BIC_FILTER_METHODS_MAP_FILTER(TYPE) \
+#define BIC_FILTER_METHODS_MAP_FILTER(TYPE,NAME) \
 {/*{{{*/\
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);\
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);\
+@begin ucl_params
+<
+iterable:ignore
+map_filter:ignore
+>
+class c_bi_class_filter
+method NAME
+static_method
+macro
+; @end\
 \
   unsigned filter_type;\
 \
@@ -1644,7 +1655,7 @@ built_in_variable_s filter_variables[] =
       default:\
       {\
         exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-        BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_filter,#TYPE "#2");\
+        BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_filter,NAME);\
         new_exception->params.push(2);\
         new_exception->params.push(src_0_location->v_type);\
         new_exception->params.push(src_1_location->v_type);\
@@ -1743,12 +1754,12 @@ bool bic_filter_operator_binary_equal(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_filter_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  BIC_FILTER_METHODS_MAP_FILTER(map);
+  BIC_FILTER_METHODS_MAP_FILTER(map,"map#2");
 }/*}}}*/
 
 bool bic_filter_method_filter_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  BIC_FILTER_METHODS_MAP_FILTER(filter);
+  BIC_FILTER_METHODS_MAP_FILTER(filter,"filter#2");
 }/*}}}*/
 
 bool bic_filter_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)

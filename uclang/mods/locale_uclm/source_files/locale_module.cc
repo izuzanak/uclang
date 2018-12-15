@@ -223,20 +223,15 @@ void bic_locale_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_locale_method_bind_domain_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_locale,"bind_domain#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+domainname:c_bi_class_string
+dirname:c_bi_class_string
+>
+class c_bi_class_locale
+method bind_domain
+static_method
+; @end
 
   // - ERROR -
   if (bindtextdomain(
@@ -255,18 +250,14 @@ bool bic_locale_method_bind_domain_2(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_locale_method_bind_domain_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_locale,"bind_domain#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+domainname:c_bi_class_string
+>
+class c_bi_class_locale
+method bind_domain
+static_method
+; @end
 
   char *base_dir = bindtextdomain(((string_s *)src_0_location->v_data_ptr)->data,nullptr);
 
@@ -288,18 +279,14 @@ bool bic_locale_method_bind_domain_1(interpreter_thread_s &it,unsigned stack_bas
 
 bool bic_locale_method_domain_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_locale,"domain#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+domainname:c_bi_class_string
+>
+class c_bi_class_locale
+method domain
+static_method
+; @end
 
   // - ERROR -
   if (textdomain(((string_s *)src_0_location->v_data_ptr)->data) == nullptr)
@@ -336,23 +323,15 @@ bool bic_locale_method_domain_0(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_locale_method_locale_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_integer ||
-      src_1_location->v_type != c_bi_class_string )
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_locale,"locale#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
-
-  long long int category = (long long int)src_0_location->v_data_ptr;
+@begin ucl_params
+<
+category:retrieve_integer
+locale:c_bi_class_string
+>
+class c_bi_class_locale
+method locale
+static_method
+; @end
 
   switch (category)
   {
@@ -392,20 +371,14 @@ bool bic_locale_method_locale_2(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_locale_method_locale_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_integer)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_locale,"locale#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
-
-  long long int category = (long long int)src_0_location->v_data_ptr;
+@begin ucl_params
+<
+category:retrieve_integer
+>
+class c_bi_class_locale
+method locale
+static_method
+; @end
 
   switch (category)
   {
@@ -450,18 +423,14 @@ bool bic_locale_method_locale_1(interpreter_thread_s &it,unsigned stack_base,uli
 
 bool bic_locale_method_gettext_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_locale,"gettext#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+msgid:c_bi_class_string
+>
+class c_bi_class_locale
+method gettext
+static_method
+; @end
 
   char *message = gettext(((string_s *)src_0_location->v_data_ptr)->data);
 

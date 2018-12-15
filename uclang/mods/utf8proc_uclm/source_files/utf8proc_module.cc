@@ -232,17 +232,14 @@ void bic_utf8proc_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_utf8proc_method_to_lower_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_utf8proc,"to_lower#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+class c_bi_class_utf8proc
+method to_lower
+static_method
+; @end
 
   string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
 
@@ -259,17 +256,14 @@ bool bic_utf8proc_method_to_lower_1(interpreter_thread_s &it,unsigned stack_base
 
 bool bic_utf8proc_method_to_upper_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_utf8proc,"to_upper#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+class c_bi_class_utf8proc
+method to_upper
+static_method
+; @end
 
   string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
 
@@ -494,8 +488,12 @@ bool bic_unicode_char_method_UnicodeChar_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_unicode_char_method_UnicodeChar_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+@begin ucl_params
+<
+character:ignore
+>
+method UnicodeChar
+; @end
 
   utf8proc_int32_t result;
 
@@ -1116,19 +1114,12 @@ bool bic_unicode_string_operator_binary_le_br_re_br(interpreter_thread_s &it,uns
 
 bool bic_unicode_string_method_UnicodeString_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  // - ERROR -
-  if (src_0_location->v_type != c_bi_class_string)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("UnicodeString#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+data:c_bi_class_string
+>
+method UnicodeString
+; @end
 
   string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
   utf8proc_ssize_t source_length = source_ptr->size - 1;
@@ -1198,21 +1189,12 @@ bool bic_unicode_string_method_to_upper_0(interpreter_thread_s &it,unsigned stac
 
 bool bic_unicode_string_method_head_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int original_length;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,original_length))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("head#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+original_length:retrieve_integer
+>
+method head
+; @end
 
   ui_array_s *ustring_ptr = (ui_array_s *)dst_location->v_data_ptr;
 
@@ -1250,21 +1232,12 @@ bool bic_unicode_string_method_head_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_unicode_string_method_tail_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int original_length;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,original_length))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("tail#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+original_length:retrieve_integer
+>
+method tail
+; @end
 
   ui_array_s *ustring_ptr = (ui_array_s *)dst_location->v_data_ptr;
 
@@ -1302,25 +1275,13 @@ bool bic_unicode_string_method_tail_1(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_unicode_string_method_range_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-  location_s *src_1_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_1_op_idx]);
-
-  long long int original_first_index;
-  long long int original_second_index;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,original_first_index) ||
-      !it.retrieve_integer(src_1_location,original_second_index))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("range#2");
-    new_exception->params.push(2);
-    new_exception->params.push(src_0_location->v_type);
-    new_exception->params.push(src_1_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+original_first_index:retrieve_integer
+original_second_index:retrieve_integer
+>
+method range
+; @end
 
   ui_array_s *ustring_ptr = (ui_array_s *)dst_location->v_data_ptr;
 
@@ -1444,21 +1405,12 @@ bool bic_unicode_string_method_first_idx_0(interpreter_thread_s &it,unsigned sta
 
 bool bic_unicode_string_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
-
-  long long int index;
-
-  // - ERROR -
-  if (!it.retrieve_integer(src_0_location,index))
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    BIC_EXCEPTION_PUSH_METHOD_RI("next_idx#1");
-    new_exception->params.push(1);
-    new_exception->params.push(src_0_location->v_type);
-
-    return false;
-  }
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method next_idx
+; @end
 
   BIC_UNICODE_STRING_CHECK_INDEX();
 
