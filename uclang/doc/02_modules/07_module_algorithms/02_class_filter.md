@@ -25,7 +25,7 @@ iterable types.
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1732)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1743)
 
 Assignment operator `=`. Object of class `Filter` is replaced by method parameter.
 
@@ -56,7 +56,7 @@ obj: New value
 
 <a name="map#2" />
 
-### Method `static` [`map#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1744)
+### Method `static` [`map#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1755)
 
 Creates object of type `Filter` representing iterable containing elements
 from input iterable object transformed by given map function.
@@ -89,7 +89,7 @@ result: [[0],[0,0],[0,0,0],[0,0,0,0],[0,0,0,0,0]]
 
 <a name="filter#2" />
 
-### Method `static` [`filter#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1749)
+### Method `static` [`filter#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1760)
 
 Creates object of type `Filter` representing iterable containing elements from
 input iterable object for which filter function returns true.
@@ -122,7 +122,7 @@ result: [1,3,5,7,9]
 
 <a name="next_item#0" />
 
-### Method `spec` [`next_item#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1754)
+### Method `spec` [`next_item#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1765)
 
 Retrieve next element from iterable object `Filter`.
 
@@ -147,7 +147,7 @@ element: Two
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1769)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1780)
 
 Convert object of class `Filter` to object of class `String`.
 This method returns name of class `Filter`.
@@ -167,7 +167,7 @@ Filter.to_string(): Filter
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1778)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1789)
 
 Print string representation of object of class `Filter` to standard output.
 This method prints name of class `Filter`.
