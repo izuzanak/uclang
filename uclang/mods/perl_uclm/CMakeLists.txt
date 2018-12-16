@@ -1,5 +1,5 @@
 
-FIND_LIBRARY(PERL_LIBRARY perl "/usr/lib/i386-linux-gnu")
+find_library(PERL_LIBRARY perl "/usr/lib/i386-linux-gnu")
 
 set(CONF_HEADER_DIRS
   "${LIB_BASE}/header_files")

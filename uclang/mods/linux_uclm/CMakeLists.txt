@@ -1,4 +1,8 @@
 
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+  set(CONF_DO_BUILD TRUE)
+endif()
+
 set(CONF_HEADER_DIRS
   "${LIB_BASE}/header_files")
 set(CONF_INCLUDE_DIRS)

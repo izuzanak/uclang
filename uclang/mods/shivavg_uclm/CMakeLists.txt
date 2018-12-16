@@ -1,5 +1,5 @@
 
-FIND_LIBRARY(OPENVG_LIBRARY OpenVG "${EXT_LIBS}/ShivaVG-0.2.1/src/.libs")
+find_library(OPENVG_LIBRARY OpenVG "${EXT_LIBS}/ShivaVG-0.2.1/src/.libs")
 
 set(CONF_HEADER_DIRS
   "${LIB_BASE}/header_files")

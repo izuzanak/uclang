@@ -1,21 +1,18 @@
 
-set(CONF_HEADER_DIRS
-  "${LIB_BASE}/header_files")
-set(CONF_INCLUDE_DIRS
-  "/usr/include/gstreamer-1.0"
-  "/usr/include/libxml2"
-  "/usr/include/glib-2.0"
-  "/usr/lib/i386-linux-gnu/glib-2.0/include"
-  "/usr/lib/i386-linux-gnu/gstreamer-1.0/include")
-set(CONF_COMP_DEFS)
-set(CONF_LINK_LIBS
-  libbase_ucll
-  z
-  gstreamer-1.0
-  gobject-2.0
-  gmodule-2.0
-  gthread-2.0
-  rt
-  xml2
-  glib-2.0)
+if(PKG_CONFIG_FOUND)
+
+  pkg_search_module(LIBGSTREAMER "gstreamer-1.0 >= 1.4.4")
+
+  if(LIBGSTREAMER_FOUND)
+    set(CONF_DO_BUILD TRUE)
+    set(CONF_HEADER_DIRS
+      "${LIB_BASE}/header_files")
+    set(CONF_INCLUDE_DIRS
+      ${LIBGSTREAMER_INCLUDE_DIRS})
+    set(CONF_COMP_DEFS)
+    set(CONF_LINK_LIBS
+      libbase_ucll
+      ${LIBGSTREAMER_LIBRARIES})
+  endif()
+endif()
 

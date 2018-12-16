@@ -1,15 +1,18 @@
 
 cmake_minimum_required(VERSION 3.1.0)
 
+find_package(PkgConfig)
+
 project(uclang)
 
 set(PROC_DIR "${CMAKE_CURRENT_BINARY_DIR}/proc_files")
 file(MAKE_DIRECTORY ${PROC_DIR})
 
+set(USE_MF_MODS FALSE)
+set(MF_MODS_FILE "${CMAKE_CURRENT_SOURCE_DIR}/../uclang_build/mf_mods.py")
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 enable_testing()
-
-find_package(PkgConfig)
 
 # - process target source file -
 function(process_source TARGET)
@@ -56,14 +59,30 @@ function(process_components COMPS_DIR)
 file(GLOB MODULE_DIRS "" "${CMAKE_CURRENT_SOURCE_DIR}/${COMPS_DIR}/*")
 foreach(COMP_DIR ${MODULE_DIRS})
   get_filename_component(COMP_NAME ${COMP_DIR} NAME)
-  if(${MF_MODS} MATCHES "True,[ #-A-Z_]*${COMP_NAME}")
-    if (EXISTS ${COMP_DIR}/CMakeLists.txt)
-      include(${COMP_DIR}/CMakeLists.txt)
-      set(COMP_HEADER_DIRS "${COMP_DIR}/header_files" ${CONF_HEADER_DIRS})
-      set(COMP_SOURCE_DIRS "${COMP_DIR}/source_files")
-      set(COMP_INCLUDE_DIRS ${CONF_INCLUDE_DIRS})
-      set(COMP_COMP_DEFS ${CONF_COMP_DEFS})
-      set(COMP_LINK_LIBS ${CONF_LINK_LIBS})
+
+  set(CONF_DO_BUILD FALSE)
+  set(COMP_DO_BUILD FALSE)
+
+  if(USE_MF_MODS)
+    if(${MF_MODS} MATCHES "True,[ #-A-Z_]*${COMP_NAME}")
+      set(COMP_DO_BUILD TRUE)
+    endif()
+  endif()
+
+  if(EXISTS ${COMP_DIR}/CMakeLists.txt)
+    include(${COMP_DIR}/CMakeLists.txt)
+
+    if(CONF_DO_BUILD)
+      set(COMP_DO_BUILD TRUE)
+    endif()
+
+    set(COMP_HEADER_DIRS "${COMP_DIR}/header_files" ${CONF_HEADER_DIRS})
+    set(COMP_SOURCE_DIRS "${COMP_DIR}/source_files")
+    set(COMP_INCLUDE_DIRS ${CONF_INCLUDE_DIRS})
+    set(COMP_COMP_DEFS ${CONF_COMP_DEFS})
+    set(COMP_LINK_LIBS ${CONF_LINK_LIBS})
+
+    if(COMP_DO_BUILD)
       process_component()
     endif()
   endif()
@@ -79,7 +98,9 @@ set(LIB_BASE "${CMAKE_CURRENT_SOURCE_DIR}/libs/libbase_ucll")
 set(LIB_FTGL "${CMAKE_CURRENT_SOURCE_DIR}/libs/libftgl_ucll")
 set(LIB_NODE "${CMAKE_CURRENT_SOURCE_DIR}/libs/libnode_ucll")
 
-file(READ "${CMAKE_CURRENT_SOURCE_DIR}/../uclang_build/mf_mods.py" MF_MODS)
+if(USE_MF_MODS)
+  file(READ ${MF_MODS_FILE} MF_MODS)
+endif()
 
 # - process libraries -
 process_components("libs")

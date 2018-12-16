@@ -1,5 +1,5 @@
 
-FIND_LIBRARY(GA_LIBRARY ga "${EXT_LIBS}/galib/galib247/ga")
+find_library(GA_LIBRARY ga "${EXT_LIBS}/galib/galib247/ga")
 
 set(CONF_HEADER_DIRS
   "${LIB_BASE}/header_files")

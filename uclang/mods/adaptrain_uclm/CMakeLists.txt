@@ -1,5 +1,5 @@
 
-FIND_LIBRARY(UCF_LIBRARY ucf "${EXT_LIBS}/ucframework/1.60/build/lib")
+find_library(UCF_LIBRARY ucf "${EXT_LIBS}/ucframework/1.60/build/lib")
 
 set(CONF_HEADER_DIRS
   "${LIB_BASE}/header_files")

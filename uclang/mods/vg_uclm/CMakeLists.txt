@@ -1,5 +1,5 @@
 
-FIND_LIBRARY(AMANITHVG_LIBRARY AmanithVG "${EXT_LIBS}/AmanithVG/libs")
+find_library(AMANITHVG_LIBRARY AmanithVG "${EXT_LIBS}/AmanithVG/libs")
 
 set(CONF_HEADER_DIRS
   "${LIB_BASE}/header_files")

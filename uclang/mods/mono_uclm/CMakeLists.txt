@@ -1,12 +1,21 @@
 
-set(CONF_HEADER_DIRS
-  "${LIB_BASE}/header_files")
-set(CONF_INCLUDE_DIRS
-  "/usr/include/glib-2.0"
-  "/usr/lib/i386-linux-gnu/glib-2.0/include"
-  "/usr/include/mono-2.0")
-set(CONF_COMP_DEFS)
-set(CONF_LINK_LIBS
-  libbase_ucll
-  monosgen-2.0)
+if(PKG_CONFIG_FOUND)
+
+  pkg_search_module(LIBGLIB2 "glib-2.0")
+  pkg_search_module(LIBMONOSGEN "monosgen-2 >= 3.2.8")
+
+  if(LIBGLIB2_FOUND AND LIBMONOSGEN_FOUND)
+    set(CONF_DO_BUILD TRUE)
+    set(CONF_HEADER_DIRS
+      "${LIB_BASE}/header_files")
+    set(CONF_INCLUDE_DIRS
+      ${LIBGLIB2_INCLUDE_DIRS}
+      ${LIBMONOSGEN_INCLUDE_DIRS})
+    set(CONF_COMP_DEFS)
+    set(CONF_LINK_LIBS
+      libbase_ucll
+      ${LIBGLIB2_LIBRARIES}
+      ${LIBMONOSGEN_LIBRARIES})
+  endif()
+endif()
 
