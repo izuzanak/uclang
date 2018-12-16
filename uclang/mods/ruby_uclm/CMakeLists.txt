@@ -1,7 +1,7 @@
 
 if(PKG_CONFIG_FOUND)
 
-  pkg_search_module(LIBRUBY "ruby-2.3 >= 2.3.0")
+  pkg_search_module(LIBRUBY "ruby >= 2.3.0")
 
   if(LIBRUBY_FOUND)
     set(CONF_DO_BUILD TRUE)

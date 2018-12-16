@@ -1,4 +1,5 @@
 
+set(CONF_DO_BUILD FALSE)
 set(CONF_HEADER_DIRS
   "${LIB_BASE}/header_files"
   "${LIB_FTGL}/header_files")

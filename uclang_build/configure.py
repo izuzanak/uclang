@@ -99,7 +99,7 @@ c_packages = [
   ["MOD_LUA"       ,"lua_uclm"       ,"pkg-config",["lua5.2 >= 5.2.0"]],
   ["MOD_MONO"      ,"mono_uclm"      ,"pkg-config",["mono-2 >= 3.2.8"]],
   ["MOD_PERL"      ,"perl_uclm"      ,"false",     []],
-  ["MOD_RUBY"      ,"ruby_uclm"      ,"pkg-config",["ruby-2.3 >= 2.3.0"]],
+  ["MOD_RUBY"      ,"ruby_uclm"      ,"pkg-config",["ruby >= 2.3.0"]],
   ["MOD_PROLOG"    ,"prolog_uclm"    ,"pkg-config",["swipl >= 7.2.3"]],
   ["MOD_RUST"      ,"rust_uclm"      ,"false",     []],
   ["MOD_UV"        ,"uv_uclm"        ,"false"     ,[]],
