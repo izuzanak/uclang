@@ -970,7 +970,7 @@ bool bic_datrie_method_keys_0(interpreter_thread_s &it,unsigned stack_base,uli *
     ui_array_s *ustring_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));
     ustring_ptr->data = trie_iterator_get_key(iter_ptr);
 
-    /* - retrieve key string size - */
+    // - retrieve key string size -
     unsigned *c_ptr = ustring_ptr->data;
     while (*c_ptr++ != 0) {};
 

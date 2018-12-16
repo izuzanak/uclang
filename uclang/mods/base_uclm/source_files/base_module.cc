@@ -1719,7 +1719,7 @@ bool bic_char_operator_binary_percent(interpreter_thread_s &it,unsigned stack_ba
     break;
   break;
 
-  /* - ERROR - */
+  // - ERROR -
   default:
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_percent#1");
@@ -3665,7 +3665,7 @@ bool bic_float_operator_binary_slash_equal(interpreter_thread_s &it,unsigned sta
   }
   break;
 
-  /* - ERROR - */
+  // - ERROR -
   default:
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_slash_equal#1");
@@ -3824,7 +3824,7 @@ bool bic_float_operator_binary_slash(interpreter_thread_s &it,unsigned stack_bas
   }
   break;
 
-  /* - ERROR - */
+  // - ERROR -
   default:
     exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_slash#1");

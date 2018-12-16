@@ -1410,7 +1410,7 @@ void bic_sftp_handle_clear(interpreter_thread_s &it,location_s *location_ptr)
 location_s *bic_sftp_handle_next_item(interpreter_thread_s &it,location_s *location_ptr,unsigned source_pos)
 {/*{{{*/
 
-  /* - retrieve sftp handle - */
+  // - retrieve sftp handle -
   sftp_handle_s *sftph_ptr = (sftp_handle_s *)location_ptr->v_data_ptr;
 
   // - ERROR -
