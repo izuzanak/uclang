@@ -1,5 +1,5 @@
 
-include(FindPerlLibs)
+find_package(PerlLibs)
 
 if(PERLLIBS_FOUND)
   set(CONF_DO_BUILD TRUE)

@@ -1,6 +1,6 @@
 
 set(OpenGL_GL_PREFERENCE "GLVND")
-include(FindOpenGL)
+find_package(OpenGL)
 
 if(OPENGL_FOUND)
   set(CONF_DO_BUILD TRUE)

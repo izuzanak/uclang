@@ -1,5 +1,11 @@
 
-if(EXISTS "/usr/include/readline/readline.h")
+if (OS_LINUX)
+  if(EXISTS "/usr/include/readline/readline.h")
+    set(LIBREADLINE_FOUND TRUE)
+  endif()
+endif()
+
+if(LIBREADLINE_FOUND)
   set(CONF_DO_BUILD TRUE)
   set(CONF_HEADER_DIRS
     "${LIB_BASE}/header_files")

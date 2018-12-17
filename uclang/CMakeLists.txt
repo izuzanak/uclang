@@ -90,6 +90,12 @@ endforeach()
 endfunction()
 
 # - set global variables -
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+  set(OS_LINUX TRUE)
+else()
+  set(OS_LINUX FALSE)
+endif()
+
 set(EXT_LIBS "${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs")
 set(LIBS "${CMAKE_CURRENT_SOURCE_DIR}/libs")
 set(MODS "${CMAKE_CURRENT_SOURCE_DIR}/mods")

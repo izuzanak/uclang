@@ -1,5 +1,5 @@
 
-include(FindGLUT)
+find_package(GLUT)
 
 if(GLUT_FOUND)
   set(CONF_DO_BUILD TRUE)
