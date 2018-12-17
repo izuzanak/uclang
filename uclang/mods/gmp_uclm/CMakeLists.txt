@@ -1,11 +1,9 @@
 
-if(OS_LINUX)
-  find_path(PATH_GMP_H "gmp.h" "/usr/include/")
+find_path(PATH_GMP_H NAMES "gmp.h")
 
-  if(PATH_GMP_H)
-    set(LIBGMP_FOUND TRUE)
-    set(LIBGMP_LIBRARIES gmp)
-  endif()
+if(PATH_GMP_H)
+  set(LIBGMP_FOUND TRUE)
+  set(LIBGMP_LIBRARY gmp)
 endif()
 
 if(PKG_CONFIG_FOUND)
@@ -21,7 +19,7 @@ if(LIBGMP_FOUND AND LIBMPFR_FOUND)
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
     libbase_ucll
-    ${LIBGMP_LIBRARIES}
+    ${LIBGMP_LIBRARY}
     ${LIBMPFR_LIBRARIES})
 endif()
 
