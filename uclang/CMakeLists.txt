@@ -92,8 +92,12 @@ endfunction()
 # - set global variables -
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   set(OS_LINUX TRUE)
+  set(OS_WINDOWS FALSE)
+  set(OS_DEFINITION "-DLINUX")
 else()
   set(OS_LINUX FALSE)
+  set(OS_WINDOWS TRUE)
+  set(OS_DEFINITION "-DWINDOWS")
 endif()
 
 set(EXT_LIBS "${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs")
@@ -119,5 +123,5 @@ process_components("mods")
 
 # -----
 
-add_definitions(-Wall -Wfatal-errors -Wno-class-memaccess -DLINUX)
+add_definitions(-Wall -Wfatal-errors -Wno-class-memaccess ${OS_DEFINITION})
 

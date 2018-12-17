@@ -1,7 +1,7 @@
 
 find_library(UCF_LIBRARY ucf "${EXT_LIBS}/ucframework/1.60/build/lib")
 
-if (UCF2_LIBRARY)
+if (UCF_LIBRARY)
   set(CONF_DO_BUILD TRUE)
   set(CONF_HEADER_DIRS
     "${LIB_BASE}/header_files")
