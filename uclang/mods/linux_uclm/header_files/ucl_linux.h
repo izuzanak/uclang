@@ -11,6 +11,8 @@ include "script_parser.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
+#include <sys/uio.h>
+#include <linux/version.h>
 
 // - file descriptor flags -
 enum

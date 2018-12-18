@@ -2122,7 +2122,7 @@ if cfg_ref[CFG_TARGET]:
       [ 
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build + "-D__STDC_CONSTANT_MACROS ", # CXX options
+      opt_build + "-D__STDC_CONSTANT_MACROS -Wno-deprecated-declarations", # CXX options
       opt_link + "-lavutil -lavformat -lavcodec -lswscale ", # CXX link options
       "", # CXX defines
       [],

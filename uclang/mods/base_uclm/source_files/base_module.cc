@@ -4938,25 +4938,25 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
             buffer.push_blanks(max_length);
 
             // - compute length of formatted string part -
-            int string_len = argument->size - 1;
-            string_len = precision != -1 ? (precision < string_len ? precision : string_len) : string_len;
+            int string_length = argument->size - 1;
+            string_length = precision != -1 ? (precision < string_length ? precision : string_length) : string_length;
 
             // - compute count of space characters -
-            int fill_cnt = width != 0 ? (width > string_len ? width - string_len : 0) : 0;
+            int fill_cnt = width != 0 ? (width > string_length ? width - string_length : 0) : 0;
 
             // - format data to target string -
             if (minus_flag)
             {
-              memcpy(buffer.data + old_used,argument->data,string_len);
-              memset(buffer.data + old_used + string_len,' ',fill_cnt);
+              memcpy(buffer.data + old_used,argument->data,string_length);
+              memset(buffer.data + old_used + string_length,' ',fill_cnt);
             }
             else
             {
               memset(buffer.data + old_used,' ',fill_cnt);
-              memcpy(buffer.data + old_used + fill_cnt,argument->data,string_len);
+              memcpy(buffer.data + old_used + fill_cnt,argument->data,string_length);
             }
 
-            buffer.used = old_used + fill_cnt + string_len;
+            buffer.used = old_used + fill_cnt + string_length;
             ret_term = c_idx_not_exist;
           }/*}}}*/
           break;

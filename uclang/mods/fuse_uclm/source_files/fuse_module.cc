@@ -1689,8 +1689,8 @@ method write
   // - if there is unused space -
   if (space > 0)
   {
-    unsigned string_len = string_ptr->size - 1;
-    unsigned copy_len = string_len > space ? space : string_len;
+    unsigned string_length = string_ptr->size - 1;
+    unsigned copy_len = string_length > space ? space : string_length;
 
     memcpy(fff_ptr->buffer + fff_ptr->writed,string_ptr->data,copy_len);
     fff_ptr->writed += copy_len;

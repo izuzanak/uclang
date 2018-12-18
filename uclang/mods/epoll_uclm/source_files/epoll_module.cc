@@ -384,9 +384,6 @@ method update
         event.events = events;
         event.data.fd = fd;
 
-        // FIXME debug output
-        fprintf(stderr,"EVENT ADD(%d,%u)\n",event.data.fd,event.events);
-
         // - ERROR -
         if (epoll_ctl(ep_ptr->fd,EPOLL_CTL_ADD,fd,&event) == -1)
         {
@@ -408,9 +405,6 @@ method update
         {
           event.events = events;
           event.data.fd = fd;
-
-          // FIXME debug output
-          fprintf(stderr,"EVENT MOD(%d,%u)\n",event.data.fd,event.events);
 
           // - ERROR -
           if (epoll_ctl(ep_ptr->fd,EPOLL_CTL_MOD,fd,&event) == -1)
@@ -442,9 +436,6 @@ method update
       // - fd is marked as removed -
       if (fd_ptr->fd == EPOLL_FD_REMOVED)
       {
-        // FIXME debug output
-        fprintf(stderr,"EVENT DEL(%d)\n",(int)(fd_ptr - fds.data));
-
         // - ERROR -
         if (epoll_ctl(ep_ptr->fd,EPOLL_CTL_DEL,fd_ptr - fds.data,&event) == -1)
         {

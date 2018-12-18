@@ -821,21 +821,21 @@ built_in_variable_s ws_conn_variables[] =
   ws_conn_s *wscn_ptr = (ws_conn_s *)dst_location->v_data_ptr;\
 \
   string_s *string_ptr = (string_s *)DATA_LOCATION->v_data_ptr;\
-  unsigned string_len = string_ptr->size - 1;\
+  unsigned string_length = string_ptr->size - 1;\
 \
   /* - allocate data buffer - */\
   unsigned char *buffer = (unsigned char *)cmalloc(\
-      LWS_SEND_BUFFER_PRE_PADDING + string_len +\
+      LWS_SEND_BUFFER_PRE_PADDING + string_length +\
       LWS_SEND_BUFFER_POST_PADDING);\
 \
   /* - pointer to data in buffer - */\
   unsigned char *buff_ptr = buffer + LWS_SEND_BUFFER_PRE_PADDING;\
 \
   /* - fill data to buffer - */\
-  memcpy(buff_ptr,string_ptr->data,string_len);\
+  memcpy(buff_ptr,string_ptr->data,string_length);\
 \
   /* - ERROR - */\
-  if (libwebsocket_write(wscn_ptr->ws_ptr,buff_ptr,string_len,WRITE_TYPE) < 0)\
+  if (libwebsocket_write(wscn_ptr->ws_ptr,buff_ptr,string_length,WRITE_TYPE) < 0)\
   {\
     /* - release data buffer - */\
     cfree(buffer);\

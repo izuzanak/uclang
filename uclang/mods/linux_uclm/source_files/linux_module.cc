@@ -14,7 +14,7 @@ built_in_module_s module =
   3,                     // Class count
   linux_classes,         // Classes
   0,                     // Error base index
-  19,                    // Error count
+  22,                    // Error count
   linux_error_strings,   // Error strings
   linux_initialize,      // Initialize function
   linux_print_exception, // Print exceptions function
@@ -36,8 +36,11 @@ const char *linux_error_strings[] =
   "error_FD_CREATE_ERROR",
   "error_FD_CLOSE_ERROR",
   "error_FD_WRITE_INVALID_SOURCE_OFFSET",
+  "error_FD_OPERATION_INVALID_IOV_SEGMENT_COUNT",
+  "error_FD_WRITE_INVALID_IOV_SEGMENT_DATA_TYPE",
   "error_FD_WRITE_ERROR",
   "error_FD_READ_INVALID_BYTE_COUNT",
+  "error_FD_READ_INVALID_IOV_SEGMENT_SIZE",
   "error_FD_READ_ERROR",
   "error_FD_SYNC_ERROR",
   "error_FD_ADVISE_ERROR",
@@ -123,6 +126,20 @@ bool linux_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nFile descriptor operation, invalid source data offset %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_FD_OPERATION_INVALID_IOV_SEGMENT_COUNT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFile descriptor operation, invalid count of iov segments %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FD_WRITE_INVALID_IOV_SEGMENT_DATA_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFile descriptor write, invalid iov segment data type, expected String\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_FD_WRITE_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -137,6 +154,13 @@ bool linux_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nFile descriptor read, invalid count of bytes to read %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FD_READ_INVALID_IOV_SEGMENT_SIZE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFile descriptor read, invalid iov segment size\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_FD_READ_ERROR:
@@ -428,8 +452,12 @@ built_in_class_s fd_class =
 {/*{{{*/
   "Fd",
   c_modifier_public | c_modifier_final,
-  20, fd_methods,
-  16 + 12 + 1 + 3 + 6, fd_variables,
+  24, fd_methods,
+  16 + 12 + 1 + 3 + 6
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,16,0)
+  + 5
+#endif
+  , fd_variables,
   bic_fd_consts,
   bic_fd_init,
   bic_fd_clear,
@@ -499,6 +527,16 @@ built_in_method_s fd_methods[] =
     bic_fd_method_pwrite_all_2
   },
   {
+    "writev#1",
+    c_modifier_public | c_modifier_final,
+    bic_fd_method_writev_1
+  },
+  {
+    "pwritev2#3",
+    c_modifier_public | c_modifier_final,
+    bic_fd_method_pwritev2_3
+  },
+  {
     "read#1",
     c_modifier_public | c_modifier_final,
     bic_fd_method_read_1
@@ -507,6 +545,16 @@ built_in_method_s fd_methods[] =
     "pread#2",
     c_modifier_public | c_modifier_final,
     bic_fd_method_pread_2
+  },
+  {
+    "readv#1",
+    c_modifier_public | c_modifier_final,
+    bic_fd_method_readv_1
+  },
+  {
+    "preadv2#3",
+    c_modifier_public | c_modifier_final,
+    bic_fd_method_preadv2_3
   },
   {
     "sync#0",
@@ -601,7 +649,197 @@ built_in_variable_s fd_variables[] =
   { "FADV_DONTNEED",  c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "FADV_NOREUSE",  c_modifier_public | c_modifier_static | c_modifier_static_const },
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,16,0)
+  // - per call read/write flag values -
+  { "RWF_HIPRI",  c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "RWF_DSYNC",  c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "RWF_SYNC",  c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "RWF_NOWAIT",  c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "RWF_APPEND",  c_modifier_public | c_modifier_static | c_modifier_static_const },
+#endif
+
 };/*}}}*/
+
+#define BIC_FD_METHOD_WRITE_READ_RELEASE_IOV() \
+{/*{{{*/\
+  if (array_ptr->used > 32)\
+  {\
+    cfree(iov_data);\
+  }\
+}/*}}}*/
+
+#define BIC_FD_METHOD_WRITEV(CODE) \
+/*{{{*/\
+\
+  /* - ERROR - */\
+  if (array_ptr->used <= 0 || array_ptr->used > IOV_MAX)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FD_OPERATION_INVALID_IOV_SEGMENT_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(array_ptr->used);\
+\
+    return false;\
+  }\
+\
+  iovec iov_stack[32];\
+  iovec *iov_data = iov_stack;\
+\
+  if (array_ptr->used > 32)\
+  {\
+    iov_data = (iovec *)cmalloc(array_ptr->used*sizeof(iovec));\
+  }\
+\
+  pointer *p_ptr = array_ptr->data;\
+  pointer *p_ptr_end = p_ptr + array_ptr->used;\
+  iovec *iov_ptr = iov_data;\
+  do {\
+    location_s *item_location = it.get_location_value(*p_ptr);\
+\
+    /* - ERROR - */\
+    if (item_location->v_type != c_bi_class_string)\
+    {\
+      BIC_FD_METHOD_WRITE_READ_RELEASE_IOV();\
+\
+      exception_s::throw_exception(it,module.error_base + c_error_FD_WRITE_INVALID_IOV_SEGMENT_DATA_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      return false;\
+    }\
+\
+    string_s *string_ptr = (string_s *)item_location->v_data_ptr;\
+    iov_ptr->iov_base = string_ptr->data;\
+    iov_ptr->iov_len = string_ptr->size - 1;\
+\
+  } while(++iov_ptr,++p_ptr < p_ptr_end);\
+\
+  /* - write to file descriptor - */\
+  CODE;\
+\
+  /* - ERROR - */\
+  if (cnt == -1)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FD_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(errno);\
+\
+    BIC_FD_METHOD_WRITE_READ_RELEASE_IOV();\
+\
+    return false;\
+  }\
+\
+  BIC_FD_METHOD_WRITE_READ_RELEASE_IOV();\
+\
+  long long int result = cnt;\
+\
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);\
+\
+  return true;\
+/*}}}*/
+
+#define BIC_FD_METHOD_READV_ERROR_RELEASE() \
+{/*{{{*/\
+  it.release_location_ptr(result_array_loc);\
+  BIC_FD_METHOD_WRITE_READ_RELEASE_IOV()\
+}/*}}}*/
+
+#define BIC_FD_METHOD_READV(CODE) \
+/*{{{*/\
+\
+  /* - ERROR - */\
+  if (array_ptr->used <= 0 || array_ptr->used > IOV_MAX)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FD_OPERATION_INVALID_IOV_SEGMENT_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(array_ptr->used);\
+\
+    return false;\
+  }\
+\
+  iovec iov_stack[32];\
+  iovec *iov_data = iov_stack;\
+\
+  if (array_ptr->used > 32)\
+  {\
+    iov_data = (iovec *)cmalloc(array_ptr->used*sizeof(iovec));\
+  }\
+\
+  pointer_array_s *result_array_ptr = it.get_new_array_ptr();\
+  BIC_CREATE_NEW_LOCATION(result_array_loc,c_bi_class_array,result_array_ptr);\
+\
+  pointer *p_ptr = array_ptr->data;\
+  pointer *p_ptr_end = p_ptr + array_ptr->used;\
+  iovec *iov_ptr = iov_data;\
+  ssize_t request_cnt = 0;\
+  do {\
+    location_s *item_location = it.get_location_value(*p_ptr);\
+\
+    long long int count;\
+\
+    /* - ERROR - */\
+    if (!it.retrieve_integer(item_location,count) || count <= 0)\
+    {\
+      BIC_FD_METHOD_READV_ERROR_RELEASE();\
+\
+      exception_s::throw_exception(it,module.error_base + c_error_FD_READ_INVALID_IOV_SEGMENT_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      return false;\
+    }\
+\
+    string_s *string_ptr = it.get_new_string_ptr();\
+    string_ptr->create(count);\
+\
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);\
+    result_array_ptr->push(new_location);\
+\
+    iov_ptr->iov_base = string_ptr->data;\
+    iov_ptr->iov_len = count;\
+\
+    request_cnt += count;\
+\
+  } while(++iov_ptr,++p_ptr < p_ptr_end);\
+\
+  /* - read from file descriptor - */\
+  CODE;\
+\
+  /* - ERROR - */\
+  if (cnt == -1)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FD_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(errno);\
+\
+    BIC_FD_METHOD_READV_ERROR_RELEASE();\
+\
+    return false;\
+  }\
+\
+  BIC_FD_METHOD_WRITE_READ_RELEASE_IOV();\
+\
+  if (cnt < request_cnt)\
+  {\
+    /* - find string on read count boundary - */\
+    pointer *p_ptr = result_array_ptr->data;\
+    pointer *p_ptr_end = p_ptr + result_array_ptr->used;\
+    ssize_t output_cnt = 0;\
+    do {\
+      string_s *string_ptr = (string_s *)((location_s *)*p_ptr)->v_data_ptr;\
+      ssize_t string_length = string_ptr->size - 1;\
+\
+      /* - truncate string at read count boundary - */\
+      if (output_cnt + string_length >= cnt)\
+      {\
+        string_ptr->size = (cnt - output_cnt) + 1;\
+        break;\
+      }\
+\
+      output_cnt += string_length;\
+    } while(++p_ptr < p_ptr_end);\
+\
+    /* - clear all strings after read count boundary - */\
+    while (++p_ptr < p_ptr_end)\
+    {\
+      string_s *string_ptr = (string_s *)((location_s *)*p_ptr)->v_data_ptr;\
+      string_ptr->clear();\
+    }\
+  }\
+\
+  BIC_SET_RESULT(result_array_loc);\
+\
+  return true;\
+/*}}}*/
 
 void bic_fd_consts(location_array_s &const_locations)
 {/*{{{*/
@@ -708,6 +946,26 @@ void bic_fd_consts(location_array_s &const_locations)
     CREATE_FD_ADVISE_FLAG_BIC_STATIC(POSIX_FADV_DONTNEED);
     CREATE_FD_ADVISE_FLAG_BIC_STATIC(POSIX_FADV_NOREUSE);
   }
+
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,16,0)
+  // - insert per call read/write flag values -
+  {
+    const_locations.push_blanks(5);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 5);
+
+#define CREATE_FD_PER_CALL_RW_FLAG_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_FD_PER_CALL_RW_FLAG_BIC_STATIC(RWF_HIPRI);
+    CREATE_FD_PER_CALL_RW_FLAG_BIC_STATIC(RWF_DSYNC);
+    CREATE_FD_PER_CALL_RW_FLAG_BIC_STATIC(RWF_SYNC);
+    CREATE_FD_PER_CALL_RW_FLAG_BIC_STATIC(RWF_NOWAIT);
+    CREATE_FD_PER_CALL_RW_FLAG_BIC_STATIC(RWF_APPEND);
+  }
+#endif
 
 }/*}}}*/
 
@@ -1076,6 +1334,42 @@ method pwrite_all
   return true;
 }/*}}}*/
 
+bool bic_fd_method_writev_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+data_array:c_bi_class_array
+>
+method writev
+; @end
+
+  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+  BIC_FD_METHOD_WRITEV(
+    ssize_t cnt = writev(fd_ptr->fd,iov_data,array_ptr->used);
+  );
+}/*}}}*/
+
+bool bic_fd_method_pwritev2_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+data_array:c_bi_class_array
+offset:retrieve_integer
+flags:retrieve_integer
+>
+method pwritev2
+; @end
+
+  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+  BIC_FD_METHOD_WRITEV(
+    ssize_t cnt = pwritev2(fd_ptr->fd,iov_data,array_ptr->used,offset,flags);
+  );
+}/*}}}*/
+
 bool bic_fd_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
@@ -1191,6 +1485,42 @@ method pread
   }
 
   return true;
+}/*}}}*/
+
+bool bic_fd_method_readv_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+count_array:c_bi_class_array
+>
+method readv
+; @end
+
+  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+  BIC_FD_METHOD_READV(
+    ssize_t cnt = readv(fd_ptr->fd,iov_data,array_ptr->used);
+  );
+}/*}}}*/
+
+bool bic_fd_method_preadv2_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+count_array:c_bi_class_array
+offset:retrieve_integer
+flags:retrieve_integer
+>
+method preadv2
+; @end
+
+  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+  BIC_FD_METHOD_READV(
+    ssize_t cnt = preadv2(fd_ptr->fd,iov_data,array_ptr->used,offset,flags);
+  );
 }/*}}}*/
 
 bool bic_fd_method_sync_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)

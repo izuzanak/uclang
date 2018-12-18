@@ -25,8 +25,11 @@ enum
   c_error_FD_CREATE_ERROR,
   c_error_FD_CLOSE_ERROR,
   c_error_FD_WRITE_INVALID_SOURCE_OFFSET,
+  c_error_FD_OPERATION_INVALID_IOV_SEGMENT_COUNT,
+  c_error_FD_WRITE_INVALID_IOV_SEGMENT_DATA_TYPE,
   c_error_FD_WRITE_ERROR,
   c_error_FD_READ_INVALID_BYTE_COUNT,
+  c_error_FD_READ_INVALID_IOV_SEGMENT_SIZE,
   c_error_FD_READ_ERROR,
   c_error_FD_SYNC_ERROR,
   c_error_FD_ADVISE_ERROR,
@@ -83,8 +86,12 @@ bool bic_fd_method_write_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
 bool bic_fd_method_write_all_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_pwrite_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_pwrite_all_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fd_method_writev_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fd_method_pwritev2_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_pread_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fd_method_readv_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fd_method_preadv2_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_sync_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_datasync_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_advise_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
