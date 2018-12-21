@@ -143,6 +143,7 @@ built_in_method_s gmp_methods[] =
 
 built_in_variable_s gmp_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_gmp_consts(location_array_s &const_locations)
@@ -421,6 +422,7 @@ built_in_method_s gmp_integer_methods[] =
 
 built_in_variable_s gmp_integer_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_GMP_INTEGER_BINARY_ADD_SUB_EQUAL(OPERATION,NAME) \
@@ -2036,6 +2038,7 @@ built_in_method_s gmp_rational_methods[] =
 
 built_in_variable_s gmp_rational_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_GMP_RATIONAL_BINARY_ADD_SUB_EQUAL(OPERATION,NAME) \
@@ -3681,6 +3684,7 @@ built_in_method_s mpfr_fixed_methods[] =
 
 built_in_variable_s mpfr_fixed_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_MPFR_FIXED_BINARY_ADD_SUB_MUL(OPERATION,NAME) \

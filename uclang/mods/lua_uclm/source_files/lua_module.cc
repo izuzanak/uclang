@@ -245,6 +245,7 @@ built_in_method_s lua_state_methods[] =
 
 built_in_variable_s lua_state_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_lua_state_consts(location_array_s &const_locations)
@@ -509,6 +510,7 @@ built_in_method_s lua_value_methods[] =
 
 built_in_variable_s lua_value_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_lua_value_consts(location_array_s &const_locations)
@@ -1026,6 +1028,7 @@ built_in_method_s lua_reference_methods[] =
 
 built_in_variable_s lua_reference_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_lua_reference_consts(location_array_s &const_locations)

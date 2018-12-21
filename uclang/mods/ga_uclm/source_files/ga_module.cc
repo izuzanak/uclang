@@ -205,6 +205,7 @@ built_in_method_s ga_real_genome_methods[] =
 
 built_in_variable_s ga_real_genome_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_GA_REAL_GENOME_RETRIEVE_VALUES() \
@@ -595,6 +596,7 @@ built_in_method_s ga_tmp_real_genome_methods[] =
 
 built_in_variable_s ga_tmp_real_genome_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_ga_tmp_real_genome_consts(location_array_s &const_locations)
@@ -730,6 +732,7 @@ built_in_method_s ga_steady_state_methods[] =
 
 built_in_variable_s ga_steady_state_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_ga_steady_state_consts(location_array_s &const_locations)

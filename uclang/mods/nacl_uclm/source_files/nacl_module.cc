@@ -220,6 +220,7 @@ built_in_method_s nacl_methods[] =
 
 built_in_variable_s nacl_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_NACL_DELEGATE_CHECK(LOCATION,PARAM_CNT) \
@@ -527,6 +528,7 @@ built_in_method_s nacl_3d_methods[] =
 
 built_in_variable_s nacl_3d_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_nacl_3d_consts(location_array_s &const_locations)
@@ -665,6 +667,7 @@ built_in_method_s core_methods[] =
 
 built_in_variable_s core_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_core_consts(location_array_s &const_locations)
@@ -806,6 +809,7 @@ built_in_method_s time_methods[] =
 
 built_in_variable_s time_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_time_consts(location_array_s &const_locations)

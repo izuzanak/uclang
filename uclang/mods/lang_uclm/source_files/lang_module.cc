@@ -237,6 +237,7 @@ built_in_method_s lang_methods[] =
 
 built_in_variable_s lang_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_lang_consts(location_array_s &const_locations)
@@ -472,6 +473,7 @@ built_in_method_s class_ref_methods[] =
 
 built_in_variable_s class_ref_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_class_ref_consts(location_array_s &const_locations)
@@ -947,6 +949,7 @@ built_in_method_s namespace_ref_methods[] =
 
 built_in_variable_s namespace_ref_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_namespace_ref_consts(location_array_s &const_locations)
@@ -1281,6 +1284,7 @@ built_in_method_s method_ref_methods[] =
 
 built_in_variable_s method_ref_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_method_ref_consts(location_array_s &const_locations)
@@ -1531,6 +1535,7 @@ built_in_method_s var_ref_methods[] =
 
 built_in_variable_s var_ref_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_var_ref_consts(location_array_s &const_locations)
@@ -1669,6 +1674,7 @@ built_in_method_s param_ref_methods[] =
 
 built_in_variable_s param_ref_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_param_ref_consts(location_array_s &const_locations)

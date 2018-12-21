@@ -224,6 +224,7 @@ built_in_method_s ruby_interpreter_methods[] =
 
 built_in_variable_s ruby_interpreter_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_ruby_interpreter_consts(location_array_s &const_locations)
@@ -430,6 +431,7 @@ built_in_method_s ruby_symbol_methods[] =
 
 built_in_variable_s ruby_symbol_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_ruby_symbol_consts(location_array_s &const_locations)
@@ -562,6 +564,7 @@ built_in_method_s ruby_value_methods[] =
 
 built_in_variable_s ruby_value_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_ruby_value_consts(location_array_s &const_locations)
@@ -969,6 +972,7 @@ built_in_method_s ruby_iv_ref_methods[] =
 
 built_in_variable_s ruby_iv_ref_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_ruby_iv_ref_consts(location_array_s &const_locations)
@@ -1088,6 +1092,7 @@ built_in_method_s ruby_item_ref_methods[] =
 
 built_in_variable_s ruby_item_ref_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_ruby_item_ref_consts(location_array_s &const_locations)

@@ -187,7 +187,7 @@ bool UclNode::Initialize(const char **a_modules)
       thread_s *new_thread = (thread_s *)cmalloc(sizeof(thread_s));
       new_thread->init();
 
-      new_thread->create_from_actual(pthread_self());
+      new_thread->create_from_actual();
 
       location_s *new_location = thread->get_new_location_ptr();
       new_location->v_type = c_bi_class_thread;

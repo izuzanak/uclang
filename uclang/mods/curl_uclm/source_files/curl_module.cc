@@ -622,6 +622,7 @@ built_in_method_s curl_multi_methods[] =
 
 built_in_variable_s curl_multi_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_CURL_MULTI_GET_DELETE_HEAD_METHODS(NAME,OPTIONS) \
@@ -920,7 +921,7 @@ bool bic_curl_multi_method_get_fds_0(interpreter_thread_s &it,unsigned stack_bas
 
   if (poll_fds.root_idx != c_idx_not_exist)
   {
-    unsigned stack[poll_fds.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(poll_fds)];
     unsigned *stack_ptr = stack;
 
     unsigned ff_idx = poll_fds.get_stack_min_value_idx(poll_fds.root_idx,&stack_ptr);
@@ -993,7 +994,7 @@ bool bic_curl_multi_method_process_0(interpreter_thread_s &it,unsigned stack_bas
     nfds_t nfds = poll_fds.count;
     pollfd fds[nfds];
 
-    unsigned stack[poll_fds.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(poll_fds)];
     unsigned *stack_ptr = stack;
 
     unsigned ff_idx = poll_fds.get_stack_min_value_idx(poll_fds.root_idx,&stack_ptr);
@@ -1204,6 +1205,7 @@ built_in_method_s curl_multi_request_methods[] =
 
 built_in_variable_s curl_multi_request_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_CURL_MULTI_REQUEST_CHECK_REFERENCE() \

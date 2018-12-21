@@ -336,6 +336,7 @@ built_in_method_s ao_device_methods[] =
 
 built_in_variable_s ao_device_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_AO_DEVICE_RETRIEVE_PARAMETERS(DRIVER_ID_LOC,SAMPLE_FORMAT_LOC,OPTIONS_LOC) \

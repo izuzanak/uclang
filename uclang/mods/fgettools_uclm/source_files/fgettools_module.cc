@@ -200,6 +200,7 @@ built_in_method_s fget_target_methods[] =
 
 built_in_variable_s fget_target_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_FGET_TARGET_RETRIEVE_INTEGER(VALUE) \

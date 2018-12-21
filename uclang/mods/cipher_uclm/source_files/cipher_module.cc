@@ -29,6 +29,7 @@ built_in_class_s *cipher_classes[] =
 // - CIPHER error strings -
 const char *cipher_error_strings[] =
 {/*{{{*/
+  BIC_MODULE_EMPTY_ERROR_STRINGS
 };/*}}}*/
 
 // - CIPHER initialize -
@@ -111,6 +112,7 @@ built_in_method_s cipher_rc4_methods[] =
 
 built_in_variable_s cipher_rc4_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_cipher_rc4_consts(location_array_s &const_locations)

@@ -225,6 +225,7 @@ built_in_method_s ddb_methods[] =
 
 built_in_variable_s ddb_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_ddb_consts(location_array_s &const_locations)
@@ -578,6 +579,7 @@ built_in_method_s trace_storage_methods[] =
 
 built_in_variable_s trace_storage_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_TRACE_STORAGE_CHECK_INDEX() \
@@ -1222,6 +1224,7 @@ built_in_method_s trace_record_methods[] =
 
 built_in_variable_s trace_record_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_trace_record_consts(location_array_s &const_locations)

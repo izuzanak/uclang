@@ -142,14 +142,15 @@ inline void timer_s::init()
 
 inline long long int timer_s::get_stamp()
 {/*{{{*/
-  #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
-    timespec tv;
-    clock_gettime(CLOCK_MONOTONIC,&tv);
+#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
+  timespec tv;
+  clock_gettime(CLOCK_MONOTONIC,&tv);
 
-    return 1000LL*tv.tv_sec + tv.tv_nsec/1000000LL;
-  #else
-    cassert(0);
-  #endif
+  return 1000LL*tv.tv_sec + tv.tv_nsec/1000000LL;
+#else
+  cassert(0);
+  return -1;
+#endif
 }/*}}}*/
 
 #endif

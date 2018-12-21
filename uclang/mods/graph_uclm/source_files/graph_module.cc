@@ -457,7 +457,7 @@ bool bic_graph_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s 
   // - process graph vertices -
   if (vertices.root_idx != c_idx_not_exist)
   {
-    unsigned stack[vertices.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(vertices)];
     unsigned *stack_ptr = stack;
 
     unsigned v_pos = 0;
@@ -475,7 +475,7 @@ bool bic_graph_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s 
   // - process graph edges -
   if (edges.root_idx != c_idx_not_exist)
   {
-    unsigned stack[edges.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(edges)];
     unsigned *stack_ptr = stack;
 
     unsigned e_idx = edges.get_stack_min_value_idx(edges.root_idx,&stack_ptr);
@@ -1596,7 +1596,7 @@ bool bic_graph_method_vertex_idxs_0(interpreter_thread_s &it,unsigned stack_base
 
   if (vertices.root_idx != c_idx_not_exist)
   {
-    unsigned stack[vertices.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(vertices)];
     unsigned *stack_ptr = stack;
 
     unsigned v_idx = vertices.get_stack_min_value_idx(vertices.root_idx,&stack_ptr);
@@ -1889,7 +1889,7 @@ bool bic_graph_method_edge_idxs_0(interpreter_thread_s &it,unsigned stack_base,u
 
   if (edges.root_idx != c_idx_not_exist)
   {
-    unsigned stack[edges.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(edges)];
     unsigned *stack_ptr = stack;
 
     unsigned e_idx = edges.get_stack_min_value_idx(edges.root_idx,&stack_ptr);
@@ -2173,6 +2173,7 @@ built_in_method_s graph_vertex_methods[] =
 
 built_in_variable_s graph_vertex_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_GRAPH_VERTEX_CHECK_INDEX() \
@@ -2206,7 +2207,7 @@ built_in_variable_s graph_vertex_variables[] =
 \
   if (edge_idxs.root_idx != c_idx_not_exist)\
   {\
-    unsigned stack[edge_idxs.get_descent_stack_size()];\
+    unsigned stack[RB_TREE_STACK_SIZE(edge_idxs)];\
     unsigned *stack_ptr = stack;\
 \
     unsigned ei_idx = edge_idxs.get_stack_min_value_idx(edge_idxs.root_idx,&stack_ptr);\
@@ -2441,7 +2442,7 @@ bool bic_graph_vertex_method_edge_idxs_0(interpreter_thread_s &it,unsigned stack
 
   if (edge_idxs.root_idx != c_idx_not_exist)
   {
-    unsigned stack[edge_idxs.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(edge_idxs)];
     unsigned *stack_ptr = stack;
 
     unsigned ei_idx = edge_idxs.get_stack_min_value_idx(edge_idxs.root_idx,&stack_ptr);
@@ -2559,6 +2560,7 @@ built_in_method_s graph_edge_methods[] =
 
 built_in_variable_s graph_edge_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_GRAPH_EDGE_CHECK_INDEX() \
@@ -2774,6 +2776,7 @@ built_in_method_s subgraph_methods[] =
 
 built_in_variable_s subgraph_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_subgraph_consts(location_array_s &const_locations)
@@ -2890,6 +2893,7 @@ built_in_method_s graph_paths_methods[] =
 
 built_in_variable_s graph_paths_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_graph_paths_consts(location_array_s &const_locations)

@@ -420,6 +420,7 @@ built_in_method_s cv_mat_methods[] =
 
 built_in_variable_s cv_mat_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_CV_MAT_IMWRITE_PARAMETERS(ERROR_CODE) \
@@ -720,6 +721,7 @@ built_in_method_s cv_window_methods[] =
 
 built_in_variable_s cv_window_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_cv_window_consts(location_array_s &const_locations)
@@ -1474,6 +1476,7 @@ built_in_method_s cv_writer_methods[] =
 
 built_in_variable_s cv_writer_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_cv_writer_consts(location_array_s &const_locations)

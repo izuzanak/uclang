@@ -540,6 +540,7 @@ built_in_method_s gl_shader_methods[] =
 
 built_in_variable_s gl_shader_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_gl_shader_consts(location_array_s &const_locations)
@@ -789,6 +790,7 @@ built_in_method_s gl_program_methods[] =
 
 built_in_variable_s gl_program_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_gl_program_consts(location_array_s &const_locations)
@@ -1125,6 +1127,7 @@ built_in_method_s gl_attribute_methods[] =
 
 built_in_variable_s gl_attribute_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_gl_attribute_consts(location_array_s &const_locations)
@@ -1300,6 +1303,7 @@ built_in_method_s gl_uniform_methods[] =
 
 built_in_variable_s gl_uniform_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_gl_uniform_consts(location_array_s &const_locations)
@@ -1597,6 +1601,7 @@ built_in_method_s gl_texture_methods[] =
 
 built_in_variable_s gl_texture_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_gl_texture_consts(location_array_s &const_locations)

@@ -177,6 +177,7 @@ built_in_method_s xml_methods[] =
 
 built_in_variable_s xml_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_xml_consts(location_array_s &const_locations)
@@ -611,6 +612,7 @@ built_in_method_s xml_node_methods[] =
 
 built_in_variable_s xml_node_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_XML_NODE_MEMBER(MEMBER_NAME) \

@@ -180,6 +180,7 @@ built_in_method_s amanith_vg_context_methods[] =
 
 built_in_variable_s amanith_vg_context_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_amanith_vg_context_consts(location_array_s &const_locations)
@@ -411,6 +412,7 @@ built_in_method_s amanith_vg_surface_methods[] =
 
 built_in_variable_s amanith_vg_surface_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_amanith_vg_surface_consts(location_array_s &const_locations)

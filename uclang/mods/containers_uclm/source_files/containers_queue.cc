@@ -147,6 +147,7 @@ built_in_method_s queue_methods[] =
 
 built_in_variable_s queue_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_QUEUE_COMPARE(SOURCE_POS) \

@@ -364,6 +364,7 @@ built_in_method_s mono_assembly_methods[] =
 
 built_in_variable_s mono_assembly_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_mono_assembly_consts(location_array_s &const_locations)
@@ -728,6 +729,7 @@ built_in_method_s mono_class_methods[] =
 
 built_in_variable_s mono_class_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_mono_class_consts(location_array_s &const_locations)
@@ -1008,6 +1010,7 @@ built_in_method_s mono_object_methods[] =
 
 built_in_variable_s mono_object_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_mono_object_consts(location_array_s &const_locations)
@@ -1450,6 +1453,7 @@ built_in_method_s mono_property_methods[] =
 
 built_in_variable_s mono_property_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_mono_property_consts(location_array_s &const_locations)
@@ -1582,6 +1586,7 @@ built_in_method_s mono_item_ref_methods[] =
 
 built_in_variable_s mono_item_ref_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_mono_item_ref_consts(location_array_s &const_locations)

@@ -197,6 +197,7 @@ built_in_method_s elm_comm_methods[] =
 
 built_in_variable_s elm_comm_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_ELM_COMM_READ_LOAD_PROFILE(NAME,DELTA_VALUES) \

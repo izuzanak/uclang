@@ -253,6 +253,7 @@ built_in_method_s fuse_channel_methods[] =
 
 built_in_variable_s fuse_channel_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_FUSE_CONSTRUCT_ARGV(ARRAY_PTR) \
@@ -1357,6 +1358,7 @@ built_in_method_s fuse_file_info_methods[] =
 
 built_in_variable_s fuse_file_info_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_fuse_file_info_consts(location_array_s &const_locations)
@@ -1456,6 +1458,7 @@ built_in_method_s fuse_dir_filler_methods[] =
 
 built_in_variable_s fuse_dir_filler_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_fuse_dir_filler_consts(location_array_s &const_locations)
@@ -1609,6 +1612,7 @@ built_in_method_s fuse_file_filler_methods[] =
 
 built_in_variable_s fuse_file_filler_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_FUSE_FILE_FILLER_GET_VALUE(NAME) \

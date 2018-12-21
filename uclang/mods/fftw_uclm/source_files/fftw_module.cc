@@ -286,6 +286,7 @@ built_in_method_s fftw_plan_methods[] =
 
 built_in_variable_s fftw_plan_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_fftw_plan_consts(location_array_s &const_locations)

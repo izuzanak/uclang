@@ -1082,6 +1082,7 @@ built_in_method_s fann_train_data_methods[] =
 
 built_in_variable_s fann_train_data_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_fann_train_data_consts(location_array_s &const_locations)

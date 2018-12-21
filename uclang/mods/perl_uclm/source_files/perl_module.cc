@@ -272,6 +272,7 @@ built_in_method_s perl_interpreter_methods[] =
 
 built_in_variable_s perl_interpreter_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_PERL_INTERPRETER_METHOD_GET_XV(XV,xv) \
@@ -565,6 +566,7 @@ built_in_method_s perl_value_methods[] =
 
 built_in_variable_s perl_value_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_perl_value_consts(location_array_s &const_locations)
@@ -1043,6 +1045,7 @@ built_in_method_s perl_reference_methods[] =
 
 built_in_variable_s perl_reference_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_perl_reference_consts(location_array_s &const_locations)

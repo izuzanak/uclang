@@ -127,6 +127,7 @@ built_in_method_s docu_methods[] =
 
 built_in_variable_s docu_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_docu_consts(location_array_s &const_locations)
@@ -235,6 +236,7 @@ built_in_method_s docu_source_methods[] =
 
 built_in_variable_s docu_source_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_DOCU_SOURCE_CHECK_INDEX() \
@@ -498,6 +500,7 @@ built_in_method_s docu_comment_methods[] =
 
 built_in_variable_s docu_comment_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_docu_comment_consts(location_array_s &const_locations)

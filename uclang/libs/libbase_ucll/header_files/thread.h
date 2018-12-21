@@ -18,6 +18,8 @@ struct thread_s
 {
 #if THREAD_LIB == THREAD_LIB_PTHREAD
   pthread_t thread;
+#elif THREAD_LIB == THREAD_LIB_WINDOWS
+  HANDLE handle;
 #elif THREAD_LIB == THREAD_LIB_DSP_TSK
   TSK_Handle tsk_handle;
 #endif
@@ -57,12 +59,7 @@ struct thread_s
   /*!
    * \brief create thread_s for existing thread
    */
-#if THREAD_LIB == THREAD_LIB_PTHREAD
-  inline void create_from_actual(pthread_t a_thread);
-#elif THREAD_LIB == THREAD_LIB_DSP_TSK
-  inline void create_from_actual(TSK_Handle a_tsk_handle);
-#else
-#endif
+  inline void create_from_actual();
 
   /*!
    * \brief join thread to actual thread
@@ -108,6 +105,16 @@ inline unsigned thread_s::create(void *a_thread_function,void *a_parameters)
   default:
     return c_error_UNKNOWN;
   }
+#elif THREAD_LIB == THREAD_LIB_WINDOWS
+  handle = CreateThread(nullptr,0,(LPTHREAD_START_ROUTINE)a_thread_function,a_parameters,0,nullptr);
+  if (handle != nullptr)
+  {
+    return c_error_OK;
+  }
+  else
+  {
+    return c_error_UNKNOWN;
+  }
 #elif THREAD_LIB == THREAD_LIB_DSP_TSK
   tsk_handle = TSK_create((Fxn)a_thread_function,nullptr,a_parameters);
   if (tsk_handle != nullptr)
@@ -124,18 +131,18 @@ inline unsigned thread_s::create(void *a_thread_function,void *a_parameters)
 #endif
 }/*}}}*/
 
+inline void thread_s::create_from_actual()
+{/*{{{*/
 #if THREAD_LIB == THREAD_LIB_PTHREAD
-inline void thread_s::create_from_actual(pthread_t a_thread)
-{/*{{{*/
-  thread = a_thread;
-}/*}}}*/
+  thread = pthread_self();
 #elif THREAD_LIB == THREAD_LIB_DSP_TSK
-inline void thread_s::create_from_actual(TSK_Handle a_tsk_handle)
-{/*{{{*/
-  tsk_handle = a_tsk_handle;
-}/*}}}*/
+  tsk_handle = TSK_self();
+#elif THREAD_LIB == THREAD_LIB_WINDOWS
+  handle = GetCurrentThread();
 #else
+  cassert(0);
 #endif
+}/*}}}*/
 
 inline unsigned thread_s::join(void **a_return_ptr)
 {/*{{{*/
@@ -152,6 +159,16 @@ inline unsigned thread_s::join(void **a_return_ptr)
   case EDEADLK:
     return c_error_EDEADLK;
   default:
+    return c_error_UNKNOWN;
+  }
+#elif THREAD_LIB == THREAD_LIB_WINDOWS
+  DWORD result = WaitForSingleObject(handle,INFINITE);
+  if (result != WAIT_FAILED)
+  {
+    return c_error_OK;
+  }
+  else
+  {
     return c_error_UNKNOWN;
   }
 #elif THREAD_LIB == THREAD_LIB_DSP_TSK
@@ -211,6 +228,16 @@ inline unsigned thread_s::detach()
   default:
     return c_error_UNKNOWN;
   }
+#elif THREAD_LIB == THREAD_LIB_WINDOWS
+  BOOL ret = CloseHandle(handle);
+  if (ret != 0)
+  {
+    return c_error_OK;
+  }
+  else
+  {
+    return c_error_UNKNOWN;
+  }
 #elif THREAD_LIB == THREAD_LIB_DSP_TSK
 
   // - implicitly detached -
@@ -231,6 +258,9 @@ inline unsigned thread_s::yield()
   sched_yield();
 #endif
 
+  return c_error_OK;
+#elif THREAD_LIB == THREAD_LIB_WINDOWS
+  SwitchToThread();
   return c_error_OK;
 #elif THREAD_LIB == THREAD_LIB_DSP_TSK
   TSK_yield();

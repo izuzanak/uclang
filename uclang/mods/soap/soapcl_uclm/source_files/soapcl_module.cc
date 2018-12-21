@@ -143,6 +143,7 @@ built_in_method_s calc_client_methods[] =
 
 built_in_variable_s calc_client_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_GSOAP_RETRIEVE_ENDPOINT() \

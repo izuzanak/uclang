@@ -54,7 +54,7 @@ SV *perl_c::create_perl_sv(interpreter_thread_s &it,PerlInterpreter *my_perl,loc
 
     if (tree_ptr->root_idx != c_idx_not_exist)
     {
-      unsigned stack[tree_ptr->get_descent_stack_size()];
+      unsigned stack[RB_TREE_STACK_SIZE(*tree_ptr)];
       unsigned *stack_ptr = stack;
 
       unsigned t_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);

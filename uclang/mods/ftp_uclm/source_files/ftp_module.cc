@@ -897,6 +897,7 @@ built_in_method_s ftp_handle_methods[] =
 
 built_in_variable_s ftp_handle_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_FTP_HANDLE_READLN() \

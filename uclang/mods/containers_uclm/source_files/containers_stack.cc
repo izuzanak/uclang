@@ -147,6 +147,7 @@ built_in_method_s stack_methods[] =
 
 built_in_variable_s stack_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_STACK_COMPARE(SOURCE_POS) \

@@ -27,7 +27,7 @@ void timer_s::clear(interpreter_thread_s &it)
   // - if some records exists -
   if (records.root_idx != c_idx_not_exist)
   {
-    unsigned stack[records.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(records)];
     unsigned *stack_ptr = stack;
 
     // - release all records locations -

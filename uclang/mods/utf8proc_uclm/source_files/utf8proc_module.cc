@@ -169,6 +169,7 @@ built_in_method_s utf8proc_methods[] =
 
 built_in_variable_s utf8proc_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_UTF8PROC_TRANSFORM_STRING(CODE_POINT_CODE) \
@@ -392,6 +393,7 @@ built_in_method_s unicode_char_methods[] =
 
 built_in_variable_s unicode_char_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_unicode_char_consts(location_array_s &const_locations)
@@ -763,6 +765,7 @@ built_in_method_s unicode_string_methods[] =
 
 built_in_variable_s unicode_string_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_UNICODE_STRING_CHECK_INDEX() \

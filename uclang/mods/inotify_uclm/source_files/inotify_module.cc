@@ -456,6 +456,7 @@ built_in_method_s inotify_watch_methods[] =
 
 built_in_variable_s inotify_watch_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_INOTIFY_WATCH_RETRIEVE_INTEGER(NAME) \
@@ -607,6 +608,7 @@ built_in_method_s inotify_event_methods[] =
 
 built_in_variable_s inotify_event_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_INOTIFY_EVENT_RETRIEVE_INTEGER(NAME) \

@@ -177,6 +177,7 @@ built_in_method_s calc_service_methods[] =
 
 built_in_variable_s calc_service_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_GSOAP_CALL_FAULT_EXCEPTION() \
@@ -499,6 +500,7 @@ built_in_method_s soap_fault_methods[] =
 
 built_in_variable_s soap_fault_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_soap_fault_consts(location_array_s &const_locations)

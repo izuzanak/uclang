@@ -1107,6 +1107,7 @@ built_in_method_s vg_paint_methods[] =
 
 built_in_variable_s vg_paint_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_vg_paint_consts(location_array_s &const_locations)
@@ -1392,6 +1393,7 @@ built_in_method_s vg_path_methods[] =
 
 built_in_variable_s vg_path_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_vg_path_consts(location_array_s &const_locations)

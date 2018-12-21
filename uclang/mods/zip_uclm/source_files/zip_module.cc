@@ -654,6 +654,7 @@ built_in_method_s zip_index_methods[] =
 
 built_in_variable_s zip_index_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_zip_index_consts(location_array_s &const_locations)
@@ -868,6 +869,7 @@ built_in_method_s zip_file_methods[] =
 
 built_in_variable_s zip_file_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_ZIP_FILE_RETRIEVE_FROM(LOCATION) \

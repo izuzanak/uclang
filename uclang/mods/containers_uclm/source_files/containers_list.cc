@@ -197,6 +197,7 @@ built_in_method_s list_methods[] =
 
 built_in_variable_s list_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_LIST_COMPARE(SOURCE_POS) \

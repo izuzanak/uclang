@@ -116,7 +116,7 @@ void edge_idxs_s::get_edge_idxs_by_edge(edge_s &a_edge,ui_array_s &a_edge_idxs,u
 
   edge_rb_tree_s &edges = ((graph_s *)graph_ptr)->edges;
 
-  unsigned stack[get_descent_stack_size()];
+  unsigned stack[RB_TREE_STACK_SIZE(*this)];
   unsigned *stack_ptr = stack;
 
   *(stack_ptr++) = root_idx;
@@ -174,7 +174,7 @@ void graph_s::clear()
 {/*{{{*/
   if (vertices.root_idx != c_idx_not_exist)
   {
-    unsigned stack[vertices.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(vertices)];
     unsigned *stack_ptr = stack;
 
     unsigned v_idx = vertices.get_stack_min_value_idx(vertices.root_idx,&stack_ptr);
@@ -189,7 +189,7 @@ void graph_s::clear()
 
   if (edges.root_idx != c_idx_not_exist)
   {
-    unsigned stack[edges.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(edges)];
     unsigned *stack_ptr = stack;
 
     unsigned e_idx = edges.get_stack_min_value_idx(edges.root_idx,&stack_ptr);
@@ -219,7 +219,7 @@ void graph_s::swap(graph_s &second)
   // - remap edge_idxs graph_ptr -
   if (vertices.root_idx != c_idx_not_exist)
   {
-    unsigned stack[vertices.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(vertices)];
     unsigned *stack_ptr = stack;
 
     unsigned v_idx = vertices.get_stack_min_value_idx(vertices.root_idx,&stack_ptr);
@@ -236,7 +236,7 @@ void graph_s::swap(graph_s &second)
   {
     vertex_rb_tree_s &s_vertices = second.vertices;
 
-    unsigned stack[s_vertices.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(s_vertices)];
     unsigned *stack_ptr = stack;
 
     unsigned v_idx = s_vertices.get_stack_min_value_idx(s_vertices.root_idx,&stack_ptr);
@@ -262,7 +262,7 @@ graph_s &graph_s::operator=(graph_s &second)
   // - remap edge_idxs graph_ptr, and copy vertex evaluation -
   if (vertices.root_idx != c_idx_not_exist)
   {
-    unsigned stack[vertices.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(vertices)];
     unsigned *stack_ptr = stack;
 
     unsigned v_idx = vertices.get_stack_min_value_idx(vertices.root_idx,&stack_ptr);
@@ -282,7 +282,7 @@ graph_s &graph_s::operator=(graph_s &second)
   // - copy edge evaluation -
   if (edges.root_idx != c_idx_not_exist)
   {
-    unsigned stack[edges.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(edges)];
     unsigned *stack_ptr = stack;
 
     unsigned e_idx = edges.get_stack_min_value_idx(edges.root_idx,&stack_ptr);
@@ -317,7 +317,7 @@ void graph_s::duplicate(graph_s &a_src)
   // - insert vertices to duplicate graph -
   if (s_vertices.root_idx != c_idx_not_exist)
   {
-    unsigned stack[s_vertices.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(s_vertices)];
     unsigned *stack_ptr = stack;
 
     unsigned sv_idx = s_vertices.get_stack_min_value_idx(s_vertices.root_idx,&stack_ptr);
@@ -333,7 +333,7 @@ void graph_s::duplicate(graph_s &a_src)
   // - insert edges to duplicate graph -
   if (s_edges.root_idx != c_idx_not_exist)
   {
-    unsigned stack[s_edges.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(s_edges)];
     unsigned *stack_ptr = stack;
 
     unsigned e_idx = s_edges.get_stack_min_value_idx(s_edges.root_idx,&stack_ptr);
@@ -362,7 +362,7 @@ void graph_s::adjacent_vertices(unsigned a_vertex_idx,ui_array_s &a_vertex_idxs)
   edge_idxs_s &edge_idxs = vertices[a_vertex_idx].edge_idxs;
   if (edge_idxs.root_idx != c_idx_not_exist)
   {
-    unsigned stack[edge_idxs.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(edge_idxs)];
     unsigned *stack_ptr = stack;
 
     unsigned ei_idx = edge_idxs.get_stack_min_value_idx(edge_idxs.root_idx,&stack_ptr);
@@ -401,7 +401,7 @@ void graph_s::incident_edges(unsigned a_vertex_idx,ui_array_s &a_edge_idxs)
   // - insert all edges in incident set to result array -
   if (edge_idxs.root_idx != c_idx_not_exist)
   {
-    unsigned stack[edge_idxs.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(edge_idxs)];
     unsigned *stack_ptr = stack;
 
     unsigned ei_idx = edge_idxs.get_stack_min_value_idx(edge_idxs.root_idx,&stack_ptr);
@@ -432,7 +432,7 @@ void graph_s::degree_sequence(ui_array_s &a_degree_sequence)
   }
 
   // - retrieve array of degrees -
-  unsigned stack[vertices.get_descent_stack_size()];
+  unsigned stack[RB_TREE_STACK_SIZE(vertices)];
   unsigned *stack_ptr = stack;
 
   unsigned v_idx = vertices.get_stack_min_value_idx(vertices.root_idx,&stack_ptr);
@@ -459,7 +459,7 @@ bool graph_s::minimum_spanning_tree_kruskals(ui_array_s &a_edge_idxs)
   // - traverse throught all edges -
   if (edges.root_idx != c_idx_not_exist)
   {
-    unsigned stack[edges.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(edges)];
     unsigned *stack_ptr = stack;
 
     unsigned e_idx = edges.get_stack_min_value_idx(edges.root_idx,&stack_ptr);
@@ -606,7 +606,7 @@ bool graph_s::minimum_spanning_tree_kruskals(ui_array_s &a_edge_idxs)
 \
     if (edge_idxs.root_idx != c_idx_not_exist)\
     {\
-      unsigned stack[edge_idxs.get_descent_stack_size()];\
+      unsigned stack[RB_TREE_STACK_SIZE(edge_idxs)];\
       unsigned *stack_ptr = stack;\
 \
       unsigned ei_idx = edge_idxs.get_stack_min_value_idx(edge_idxs.root_idx,&stack_ptr);\
@@ -649,7 +649,7 @@ bool graph_s::minimum_spanning_tree_kruskals(ui_array_s &a_edge_idxs)
 \
       if (edge_idxs.root_idx != c_idx_not_exist)\
       {\
-        unsigned stack[edge_idxs.get_descent_stack_size()];\
+        unsigned stack[RB_TREE_STACK_SIZE(edge_idxs)];\
         unsigned *stack_ptr = stack;\
 \
         unsigned ei_idx = edge_idxs.get_stack_min_value_idx(edge_idxs.root_idx,&stack_ptr);\
@@ -776,7 +776,7 @@ bool graph_s::shortest_path_digraph_dijkstra(unsigned a_src_vertex_idx,unsigned 
 \
     if (edge_idxs.root_idx != c_idx_not_exist)\
     {\
-      unsigned stack[edge_idxs.get_descent_stack_size()];\
+      unsigned stack[RB_TREE_STACK_SIZE(edge_idxs)];\
       unsigned *stack_ptr = stack;\
 \
       unsigned ei_idx = edge_idxs.get_stack_min_value_idx(edge_idxs.root_idx,&stack_ptr);\
@@ -966,7 +966,7 @@ bool graph_s::strongly_connected_components_tarjans(ui_array_s &a_comp_idxs)
   unsigned mark = 0;
 
   // - process all vertices -
-  unsigned stack[vertices.get_descent_stack_size()];
+  unsigned stack[RB_TREE_STACK_SIZE(vertices)];
   unsigned *stack_ptr = stack;
 
   unsigned v_idx = vertices.get_stack_min_value_idx(vertices.root_idx,&stack_ptr);
@@ -1083,7 +1083,7 @@ bool graph_s::is_weakly_connected_graph()
         edge_idxs_s &edge_idxs = vertices[edge.src_vertex_idx].edge_idxs;
         if (edge_idxs.root_idx != c_idx_not_exist)
         {
-          unsigned stack[edge_idxs.get_descent_stack_size()];
+          unsigned stack[RB_TREE_STACK_SIZE(edge_idxs)];
           unsigned *stack_ptr = stack;
 
           unsigned ei_idx = edge_idxs.get_stack_min_value_idx(edge_idxs.root_idx,&stack_ptr);
@@ -1112,7 +1112,7 @@ bool graph_s::is_weakly_connected_graph()
         edge_idxs_s &edge_idxs = vertices[edge.trg_vertex_idx].edge_idxs;
         if (edge_idxs.root_idx != c_idx_not_exist)
         {
-          unsigned stack[edge_idxs.get_descent_stack_size()];
+          unsigned stack[RB_TREE_STACK_SIZE(edge_idxs)];
           unsigned *stack_ptr = stack;
 
           unsigned ei_idx = edge_idxs.get_stack_min_value_idx(edge_idxs.root_idx,&stack_ptr);
@@ -1142,7 +1142,7 @@ bool graph_s::is_weakly_connected_graph()
 
   // - test if all vertices was accesed (if not graph is not connected) -
   {
-    unsigned stack[vertices.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(vertices)];
     unsigned *stack_ptr = stack;
 
     unsigned v_idx = vertices.get_stack_min_value_idx(vertices.root_idx,&stack_ptr);
@@ -1248,7 +1248,7 @@ bool graph_s::is_strongly_connected_graph_tarjans()
 
   // - test if all vertices fall in one component -
   {
-    unsigned stack[vertices.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(vertices)];
     unsigned *stack_ptr = stack;
 
     unsigned v_idx = vertices.get_stack_min_value_idx(vertices.root_idx,&stack_ptr);
@@ -1280,7 +1280,7 @@ bool graph_s::is_regular_graph()
     return true;
   }
 
-  unsigned stack[vertices.get_descent_stack_size()];
+  unsigned stack[RB_TREE_STACK_SIZE(vertices)];
   unsigned *stack_ptr = stack;
 
   unsigned v_idx = vertices.get_stack_min_value_idx(vertices.root_idx,&stack_ptr);
@@ -1411,7 +1411,7 @@ void graph_s::get_dot_code_params(string_s &a_string,const char *a_header,const 
   // - traverse thought vertices and print their values to output -
   if (vertices.root_idx != c_idx_not_exist)
   {
-    unsigned stack[vertices.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(vertices)];
     unsigned *stack_ptr = stack;
 
     unsigned v_idx = vertices.get_stack_min_value_idx(vertices.root_idx,&stack_ptr);
@@ -1438,7 +1438,7 @@ void graph_s::get_dot_code_params(string_s &a_string,const char *a_header,const 
   // - traverse thought edges and print their values to output -
   if (edges.root_idx != c_idx_not_exist)
   {
-    unsigned stack[edges.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(edges)];
     unsigned *stack_ptr = stack;
 
     unsigned e_idx = edges.get_stack_min_value_idx(edges.root_idx,&stack_ptr);

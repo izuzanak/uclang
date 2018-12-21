@@ -671,6 +671,7 @@ built_in_method_s blank_methods[] =
 
 built_in_variable_s blank_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_blank_consts(location_array_s &const_locations)
@@ -1016,6 +1017,7 @@ built_in_method_s char_methods[] =
 
 built_in_variable_s char_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_char_consts(location_array_s &const_locations)
@@ -2116,6 +2118,7 @@ built_in_method_s integer_methods[] =
 
 built_in_variable_s integer_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_integer_consts(location_array_s &const_locations)
@@ -4261,6 +4264,7 @@ built_in_method_s string_methods[] =
 
 built_in_variable_s string_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_STRING_CHECK_INDEX() \
@@ -5836,6 +5840,7 @@ built_in_method_s array_methods[] =
 
 built_in_variable_s array_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_ARRAY_COMPARE(FIRST_LOC_PTR,SECOND_LOC_PTR,SOURCE_POS) \
@@ -6959,6 +6964,7 @@ built_in_method_s error_methods[] =
 
 built_in_variable_s error_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_error_consts(location_array_s &const_locations)
@@ -7679,6 +7685,7 @@ built_in_method_s type_methods[] =
 
 built_in_variable_s type_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_type_consts(location_array_s &const_locations)
@@ -8347,6 +8354,7 @@ built_in_method_s delegate_methods[] =
 
 built_in_variable_s delegate_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_delegate_consts(location_array_s &const_locations)
@@ -8729,6 +8737,7 @@ built_in_method_s buffer_methods[] =
 
 built_in_variable_s buffer_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_buffer_consts(location_array_s &const_locations)

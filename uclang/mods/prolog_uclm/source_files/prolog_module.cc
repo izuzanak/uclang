@@ -223,6 +223,7 @@ built_in_method_s prolog_module_methods[] =
 
 built_in_variable_s prolog_module_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_PROLOG_MODULE_OPEN_QUERY(MODULE,PRED,TERMS,ERR_CODE) \
@@ -558,6 +559,7 @@ built_in_method_s prolog_frame_methods[] =
 
 built_in_variable_s prolog_frame_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_prolog_frame_consts(location_array_s &const_locations)
@@ -669,6 +671,7 @@ built_in_method_s prolog_atom_methods[] =
 
 built_in_variable_s prolog_atom_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_prolog_atom_consts(location_array_s &const_locations)
@@ -817,6 +820,7 @@ built_in_method_s prolog_functor_methods[] =
 
 built_in_variable_s prolog_functor_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_prolog_functor_consts(location_array_s &const_locations)
@@ -1020,6 +1024,7 @@ built_in_method_s prolog_term_methods[] =
 
 built_in_variable_s prolog_term_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_prolog_term_consts(location_array_s &const_locations)
@@ -1183,6 +1188,7 @@ built_in_method_s prolog_pred_methods[] =
 
 built_in_variable_s prolog_pred_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_prolog_pred_consts(location_array_s &const_locations)
@@ -1409,6 +1415,7 @@ built_in_method_s prolog_query_methods[] =
 
 built_in_variable_s prolog_query_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_prolog_query_consts(location_array_s &const_locations)

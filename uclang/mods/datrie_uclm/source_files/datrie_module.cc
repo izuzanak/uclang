@@ -220,6 +220,7 @@ built_in_method_s datrie_alpha_map_methods[] =
 
 built_in_variable_s datrie_alpha_map_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_datrie_alpha_map_consts(location_array_s &const_locations)
@@ -425,6 +426,7 @@ built_in_method_s datrie_methods[] =
 
 built_in_variable_s datrie_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_DATRIE_METHOD_CONTAIN(NAME) \
@@ -1220,6 +1222,7 @@ built_in_method_s datrie_iterator_methods[] =
 
 built_in_variable_s datrie_iterator_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_DATRIE_ITERATOR_METHOD_KEY() \

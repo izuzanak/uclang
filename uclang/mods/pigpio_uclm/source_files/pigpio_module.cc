@@ -104,6 +104,7 @@ built_in_method_s pigpio_methods[] =
 
 built_in_variable_s pigpio_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_pigpio_consts(location_array_s &const_locations)

@@ -223,6 +223,7 @@ built_in_method_s validator_methods[] =
 
 built_in_variable_s validator_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_validator_consts(location_array_s &const_locations)

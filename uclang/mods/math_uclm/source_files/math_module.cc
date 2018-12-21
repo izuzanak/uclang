@@ -579,6 +579,7 @@ built_in_method_s vec2_methods[] =
 
 built_in_variable_s vec2_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_vec2_consts(location_array_s &const_locations)
@@ -916,6 +917,7 @@ built_in_method_s vec3_methods[] =
 
 built_in_variable_s vec3_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_vec3_consts(location_array_s &const_locations)
@@ -1282,6 +1284,7 @@ built_in_method_s vec4_methods[] =
 
 built_in_variable_s vec4_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_vec4_consts(location_array_s &const_locations)
@@ -1660,6 +1663,7 @@ built_in_method_s mat4_methods[] =
 
 built_in_variable_s mat4_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_MAT4_BINARY_EQUAL_OPS_FLOAT_MAT4(OPERATOR,NAME) \
@@ -2246,6 +2250,7 @@ built_in_method_s primes_methods[] =
 
 built_in_variable_s primes_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_PRIMES_ITEM(NAME) \

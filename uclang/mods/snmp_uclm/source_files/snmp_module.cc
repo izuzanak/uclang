@@ -299,6 +299,7 @@ built_in_method_s snmp_session_methods[] =
 
 built_in_variable_s snmp_session_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_snmp_session_consts(location_array_s &const_locations)
@@ -1293,6 +1294,7 @@ built_in_method_s snmp_obj_methods[] =
 
 built_in_variable_s snmp_obj_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_snmp_obj_consts(location_array_s &const_locations)
@@ -1529,6 +1531,7 @@ built_in_method_s snmp_oid_methods[] =
 
 built_in_variable_s snmp_oid_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_snmp_oid_consts(location_array_s &const_locations)

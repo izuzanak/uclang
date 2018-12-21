@@ -209,6 +209,7 @@ built_in_method_s algo_methods[] =
 
 built_in_variable_s algo_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_ALGO_PROCESS_ARRAY(SRC_LOCATION,ALGO_CODE) \
@@ -966,7 +967,11 @@ static_method
   if (array_ptr->used > 0)
   {
     unsigned iter_cnt = array_ptr->used;
+#ifdef _MSC_VER
+    iterable_s *iterables = (iterable_s *)cmalloc(iter_cnt*sizeof(iterable_s));
+#else
     iterable_s iterables[iter_cnt];
+#endif
 
     // - retrieve iterable locations -
     iterable_s *i_ptr = iterables;
@@ -983,6 +988,9 @@ static_method
       // - ERROR -
       if (i_ptr->type == c_idx_not_exist)
       {
+#ifdef _MSC_VER
+        cfree(iterables);
+#endif
         it.release_location_ptr(array_location);
 
         exception_s *new_exception = exception_s::throw_exception(it,c_error_OBJECT_OF_CLASS_IS_NOT_ITERABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -998,14 +1006,36 @@ static_method
     do {
       if (i_ptr->type == c_iter_first_idx_next_idx_item)
       {
+#ifdef _MSC_VER
+        // - retrieve first index -
+        BIC_CALL_FIRST_IDX(it,i_ptr->location,i_ptr->index,operands[c_source_pos_idx],
+          cfree(iterables);
+          it.release_location_ptr(array_location);
+          return false;
+        );
+#else
         // - retrieve first index -
         BIC_CALL_FIRST_IDX(it,i_ptr->location,i_ptr->index,operands[c_source_pos_idx],
           it.release_location_ptr(array_location);
           return false;
         );
+#endif
       }
     } while(++i_ptr < i_ptr_end);
 
+
+#ifdef _MSC_VER
+#define BIC_ALGO_ZIP_RELEASE_ITERABLES() \
+{/*{{{*/\
+  iterable_s *i_ptr = iterables;\
+  iterable_s *i_ptr_end = i_ptr + iter_cnt;\
+  do {\
+    i_ptr->clear(it);\
+  } while(++i_ptr < i_ptr_end);\
+\
+  cfree(iterables);\
+}/*}}}*/
+#else
 #define BIC_ALGO_ZIP_RELEASE_ITERABLES() \
 {/*{{{*/\
   iterable_s *i_ptr = iterables;\
@@ -1014,6 +1044,7 @@ static_method
     i_ptr->clear(it);\
   } while(++i_ptr < i_ptr_end);\
 }/*}}}*/
+#endif
 
 #define BIC_ALGO_ZIP_RELEASE() \
 {/*{{{*/\
@@ -1131,7 +1162,11 @@ static_method
   if (array_ptr->used > 0)
   {
     unsigned iter_cnt = array_ptr->used;
+#ifdef _MSC_VER
+    iterable_s *iterables = (iterable_s *)cmalloc(iter_cnt*sizeof(iterable_s));
+#else
     iterable_s iterables[iter_cnt];
+#endif
 
     // - retrieve iterable locations -
     iterable_s *i_ptr = iterables;
@@ -1148,6 +1183,9 @@ static_method
       // - ERROR -
       if (i_ptr->type == c_idx_not_exist)
       {
+#ifdef _MSC_VER
+        cfree(iterables);
+#endif
         it.release_location_ptr(array_location);
 
         exception_s *new_exception = exception_s::throw_exception(it,c_error_OBJECT_OF_CLASS_IS_NOT_ITERABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -1163,14 +1201,36 @@ static_method
     do {
       if (i_ptr->type == c_iter_first_idx_next_idx_item)
       {
+#ifdef _MSC_VER
+        // - retrieve first index -
+        BIC_CALL_FIRST_IDX(it,i_ptr->location,i_ptr->index,operands[c_source_pos_idx],
+          cfree(iterables);
+          it.release_location_ptr(array_location);
+          return false;
+        );
+#else
         // - retrieve first index -
         BIC_CALL_FIRST_IDX(it,i_ptr->location,i_ptr->index,operands[c_source_pos_idx],
           it.release_location_ptr(array_location);
           return false;
         );
+#endif
       }
     } while(++i_ptr < i_ptr_end);
 
+
+#ifdef _MSC_VER
+#define BIC_ALGO_TUPLE_ZIP_RELEASE_ITERABLES() \
+{/*{{{*/\
+  iterable_s *i_ptr = iterables;\
+  iterable_s *i_ptr_end = i_ptr + iter_cnt;\
+  do {\
+    i_ptr->clear(it);\
+  } while(++i_ptr < i_ptr_end);\
+\
+  cfree(iterables);\
+}/*}}}*/
+#else
 #define BIC_ALGO_TUPLE_ZIP_RELEASE_ITERABLES() \
 {/*{{{*/\
   iterable_s *i_ptr = iterables;\
@@ -1179,6 +1239,7 @@ static_method
     i_ptr->clear(it);\
   } while(++i_ptr < i_ptr_end);\
 }/*}}}*/
+#endif
 
 #define BIC_ALGO_TUPLE_ZIP_RELEASE() \
 {/*{{{*/\
@@ -1360,6 +1421,7 @@ built_in_method_s filter_methods[] =
 
 built_in_variable_s filter_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_FILTER_NEXT_ITEM_MAP_ARRAY(SOURCE_POS,ERROR_CODE) \
@@ -1859,6 +1921,7 @@ built_in_method_s range_methods[] =
 
 built_in_variable_s range_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_RANGE_NEXT_ITEM(SET_RESULT,SOURCE_POS,ERROR_CODE) \

@@ -119,6 +119,7 @@ built_in_method_s emscripten_methods[] =
 
 built_in_variable_s emscripten_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_emscripten_consts(location_array_s &const_locations)

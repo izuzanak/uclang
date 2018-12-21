@@ -127,6 +127,7 @@ built_in_method_s iconv_methods[] =
 
 built_in_variable_s iconv_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_iconv_consts(location_array_s &const_locations)

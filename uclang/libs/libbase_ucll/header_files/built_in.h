@@ -89,6 +89,14 @@ enum
   c_bi_reference = 0xffffffff
 };/*}}}*/
 
+#ifdef _MSC_VER
+#define BIC_MODULE_EMPTY_ERROR_STRINGS ""
+#define BIC_CLASS_EMPTY_VARIABLES {"",0}
+#else
+#define BIC_MODULE_EMPTY_ERROR_STRINGS
+#define BIC_CLASS_EMPTY_VARIABLES
+#endif
+
 #define BIC_TODO_ERROR(FILE_NAME,LINE) \
   {/*{{{*/\
     string_s *string_ptr = it.get_new_string_ptr();\
@@ -826,6 +834,14 @@ enum
   }\
 }/*}}}*/
 
+#ifdef _MSC_VER
+#define DLG_NORMAL_PARAM_CNT(DELEGATE_PTR) 32
+#define DLG_STATIC_PARAM_CNT(DELEGATE_PTR) 35
+#else
+#define DLG_NORMAL_PARAM_CNT(DELEGATE_PTR) (5 + DELEGATE_PTR->orig_param_cnt)
+#define DLG_STATIC_PARAM_CNT(DELEGATE_PTR) (8 + DELEGATE_PTR->orig_param_cnt)
+#endif
+
 #define BIC_CALL_DELEGATE(IT,DELEGATE_PTR,PARAM_DATA,PARAM_CNT,TRG_LOCATION_PTR,SOURCE_POS,ERR_CODE) \
   {/*{{{*/\
     unsigned new_stack_base = IT.data_stack.used;\
@@ -837,7 +853,7 @@ enum
     /* - if delegate is static - */\
     if (DELEGATE_PTR->object_location == nullptr)\
     {/*{{{*/\
-      uli tmp_code[5 + DELEGATE_PTR->orig_param_cnt];\
+      uli tmp_code[DLG_NORMAL_PARAM_CNT(DELEGATE_PTR)];\
       tmp_code[0] = i_static_call;\
       tmp_code[1] = DELEGATE_PTR->orig_param_cnt;\
       tmp_code[2] = SOURCE_POS;\
@@ -867,7 +883,7 @@ enum
       location->v_reference_cnt.atomic_inc();\
       IT.data_stack.push((pointer)location);\
 \
-      uli tmp_code[8 + DELEGATE_PTR->orig_param_cnt];\
+      uli tmp_code[DLG_STATIC_PARAM_CNT(DELEGATE_PTR)];\
       tmp_code[0] = i_call;\
       tmp_code[1] = 1 + DELEGATE_PTR->orig_param_cnt;\
       tmp_code[2] = DELEGATE_PTR->name_idx_ri;\

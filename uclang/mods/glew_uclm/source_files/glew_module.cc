@@ -119,6 +119,7 @@ built_in_method_s glew_methods[] =
 
 built_in_variable_s glew_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_glew_consts(location_array_s &const_locations)

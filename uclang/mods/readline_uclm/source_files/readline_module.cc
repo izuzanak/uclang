@@ -120,6 +120,7 @@ built_in_method_s readline_methods[] =
 
 built_in_variable_s readline_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_readline_consts(location_array_s &const_locations)

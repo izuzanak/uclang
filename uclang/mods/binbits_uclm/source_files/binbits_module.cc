@@ -2511,6 +2511,7 @@ built_in_method_s bin_array_ref_methods[] =
 
 built_in_variable_s bin_array_ref_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_bin_array_ref_consts(location_array_s &const_locations)
@@ -2888,8 +2889,8 @@ built_in_variable_s bin_dict_variables[] =
 \
     if (f_tree_ptr->count != 0)\
     {\
-      unsigned f_stack[f_tree_ptr->get_descent_stack_size()];\
-      unsigned s_stack[s_tree_ptr->get_descent_stack_size()];\
+      unsigned f_stack[RB_TREE_STACK_SIZE(*f_tree_ptr)];\
+      unsigned s_stack[RB_TREE_STACK_SIZE(*s_tree_ptr)];\
 \
       unsigned *f_stack_ptr = f_stack;\
       unsigned *s_stack_ptr = s_stack;\
@@ -3101,7 +3102,7 @@ bool bic_bin_dict_pack(location_s *location_ptr,bc_array_s &stream,pointer_array
 \
   if (tree_ptr->root_idx != c_idx_not_exist)\
   {\
-    unsigned stack[tree_ptr->get_descent_stack_size()];\
+    unsigned stack[RB_TREE_STACK_SIZE(*tree_ptr)];\
     unsigned *stack_ptr = stack;\
 \
     unsigned kv_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);\
@@ -3363,7 +3364,7 @@ bool bic_bin_dict_method_keys_0(interpreter_thread_s &it,unsigned stack_base,uli
 \
   if (tree_ptr->root_idx != c_idx_not_exist)\
   {\
-    unsigned stack[tree_ptr->get_descent_stack_size()];\
+    unsigned stack[RB_TREE_STACK_SIZE(*tree_ptr)];\
     unsigned *stack_ptr = stack;\
 \
     unsigned kv_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);\
@@ -3409,7 +3410,7 @@ bool bic_bin_dict_method_items_0(interpreter_thread_s &it,unsigned stack_base,ul
 \
   if (tree_ptr->root_idx != c_idx_not_exist)\
   {\
-    unsigned stack[tree_ptr->get_descent_stack_size()];\
+    unsigned stack[RB_TREE_STACK_SIZE(*tree_ptr)];\
     unsigned *stack_ptr = stack;\
 \
     unsigned kv_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);\
@@ -3430,7 +3431,7 @@ bool bic_bin_dict_method_items_0(interpreter_thread_s &it,unsigned stack_base,ul
 \
   if (tree_ptr->root_idx != c_idx_not_exist)\
   {\
-    unsigned stack[tree_ptr->get_descent_stack_size()];\
+    unsigned stack[RB_TREE_STACK_SIZE(*tree_ptr)];\
     unsigned *stack_ptr = stack;\
 \
     unsigned kv_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);\
@@ -4193,7 +4194,7 @@ bool bic_bin_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_bas
     strings.copy_resize(tree_ptr->count);\
     strings.used = strings.size;\
 \
-    unsigned stack[tree_ptr->get_descent_stack_size()];\
+    unsigned stack[RB_TREE_STACK_SIZE(*tree_ptr)];\
     unsigned *stack_ptr = stack;\
 \
     unsigned kv_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);\
@@ -4289,7 +4290,7 @@ bool bic_bin_dict_method_print_0(interpreter_thread_s &it,unsigned stack_base,ul
 \
   if (tree_ptr->root_idx != c_idx_not_exist)\
   {\
-    unsigned stack[tree_ptr->get_descent_stack_size()];\
+    unsigned stack[RB_TREE_STACK_SIZE(*tree_ptr)];\
     unsigned *stack_ptr = stack;\
 \
     unsigned kv_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);\
@@ -4379,6 +4380,7 @@ built_in_method_s bin_dict_ref_methods[] =
 
 built_in_variable_s bin_dict_ref_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_bin_dict_ref_consts(location_array_s &const_locations)

@@ -262,6 +262,7 @@ bool bic_stream_method_read_max_1(interpreter_thread_s &it,unsigned stack_base,u
 bool bic_stream_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_stream_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
+#ifdef ENABLE_CLASS_SOCKET
 // - class dummy FD -
 location_s *bic_fd_next_item(interpreter_thread_s &it,location_s *location_ptr);
 
@@ -272,6 +273,7 @@ bool bic_fd_method_readln_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 bool bic_fd_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#endif
 
 #ifdef ENABLE_CLASS_REGEX
 // - class REGEX -

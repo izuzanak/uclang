@@ -167,6 +167,7 @@ built_in_method_s json_methods[] =
 
 built_in_variable_s json_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_json_consts(location_array_s &const_locations)

@@ -134,5 +134,6 @@ built_in_method_s rust_string_methods[] =
 
 built_in_variable_s rust_string_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 

@@ -1044,6 +1044,7 @@ built_in_method_s gtk_g_object_methods[] =
 
 built_in_variable_s gtk_g_object_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_GTK_G_OBJECT_CREATE_FROM_OBJECT(TYPE) \
@@ -1566,6 +1567,7 @@ built_in_method_s gtk_clipboard_methods[] =
 
 built_in_variable_s gtk_clipboard_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_gtk_clipboard_consts(location_array_s &const_locations)
@@ -1723,6 +1725,7 @@ built_in_method_s gtk_widget_methods[] =
 
 built_in_variable_s gtk_widget_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_gtk_widget_consts(location_array_s &const_locations)
@@ -1856,6 +1859,7 @@ built_in_method_s gtk_container_methods[] =
 
 built_in_variable_s gtk_container_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_gtk_container_consts(location_array_s &const_locations)
@@ -2007,6 +2011,7 @@ built_in_method_s gtk_grid_methods[] =
 
 built_in_variable_s gtk_grid_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_gtk_grid_consts(location_array_s &const_locations)
@@ -2192,6 +2197,7 @@ built_in_method_s gtk_window_methods[] =
 
 built_in_variable_s gtk_window_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_gtk_window_consts(location_array_s &const_locations)
@@ -2438,6 +2444,7 @@ built_in_method_s gtk_dialog_methods[] =
 
 built_in_variable_s gtk_dialog_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_gtk_dialog_consts(location_array_s &const_locations)
@@ -2654,6 +2661,7 @@ built_in_method_s gtk_handler_methods[] =
 
 built_in_variable_s gtk_handler_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_gtk_handler_consts(location_array_s &const_locations)

@@ -274,6 +274,7 @@ built_in_method_s http_server_methods[] =
 
 built_in_variable_s http_server_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_http_server_consts(location_array_s &const_locations)
@@ -1822,6 +1823,7 @@ built_in_method_s http_post_proc_methods[] =
 
 built_in_variable_s http_post_proc_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_http_post_proc_consts(location_array_s &const_locations)

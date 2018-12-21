@@ -234,6 +234,7 @@ built_in_method_s dlms_server_methods[] =
 
 built_in_variable_s dlms_server_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_DLMS_SERVER_CHECK_INDEX() \

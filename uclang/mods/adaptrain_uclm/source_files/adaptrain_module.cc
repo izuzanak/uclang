@@ -1365,6 +1365,7 @@ built_in_method_s ato_aru_record_methods[] =
 
 built_in_variable_s ato_aru_record_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_ato_aru_record_consts(location_array_s &const_locations)
@@ -1638,6 +1639,7 @@ built_in_method_s optim_speed_profile_methods[] =
 
 built_in_variable_s optim_speed_profile_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_optim_speed_profile_consts(location_array_s &const_locations)
@@ -1937,6 +1939,7 @@ built_in_method_s optim_line_section_methods[] =
 
 built_in_variable_s optim_line_section_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_OPTIM_LINE_SECTION_CHECK_INDEX() \
@@ -2707,6 +2710,7 @@ built_in_method_s ato_loco_methods[] =
 
 built_in_variable_s ato_loco_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_ATO_LOCO_STRING_VALUE(NAME)\
@@ -3043,6 +3047,7 @@ built_in_method_s ato_train_methods[] =
 
 built_in_variable_s ato_train_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_ATO_TRAIN_STRING_VALUE(NAME)\
@@ -3357,6 +3362,7 @@ built_in_method_s ato_trip_methods[] =
 
 built_in_variable_s ato_trip_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define ATO_TRIP_COPY(NAME,TYPE) \
@@ -3917,6 +3923,7 @@ built_in_method_s ato_trip_sec_methods[] =
 
 built_in_variable_s ato_trip_sec_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_ATO_TRIP_SEC_STRING_VALUE(NAME)\
@@ -4231,6 +4238,7 @@ built_in_method_s ato_line_sec_methods[] =
 
 built_in_variable_s ato_line_sec_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_ATO_LINE_SEC_INTEGER_VALUE(NAME)\
@@ -4804,6 +4812,7 @@ built_in_method_s ato_line_sec_point_methods[] =
 
 built_in_variable_s ato_line_sec_point_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_ato_line_sec_point_consts(location_array_s &const_locations)

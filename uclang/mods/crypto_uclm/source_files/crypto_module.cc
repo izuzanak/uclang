@@ -273,6 +273,7 @@ built_in_method_s crypto_methods[] =
 
 built_in_variable_s crypto_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_crypto_consts(location_array_s &const_locations)
@@ -768,6 +769,7 @@ built_in_method_s crypto_digest_info_methods[] =
 
 built_in_variable_s crypto_digest_info_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_crypto_digest_info_consts(location_array_s &const_locations)
@@ -909,6 +911,7 @@ built_in_method_s crypto_digest_methods[] =
 
 built_in_variable_s crypto_digest_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_crypto_digest_consts(location_array_s &const_locations)
@@ -1171,6 +1174,7 @@ built_in_method_s crypto_digest_sign_methods[] =
 
 built_in_variable_s crypto_digest_sign_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_CRYPTO_DIGEST_SIGN_VERIFY_CONSTRUCTOR(NAME,TYPE) \
@@ -1461,6 +1465,7 @@ built_in_method_s crypto_digest_verify_methods[] =
 
 built_in_variable_s crypto_digest_verify_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_crypto_digest_verify_consts(location_array_s &const_locations)
@@ -1648,6 +1653,7 @@ built_in_method_s crypto_cipher_info_methods[] =
 
 built_in_variable_s crypto_cipher_info_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_crypto_cipher_info_consts(location_array_s &const_locations)
@@ -1822,6 +1828,7 @@ built_in_method_s crypto_encrypt_methods[] =
 
 built_in_variable_s crypto_encrypt_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_CRYPTO_ENCRYPT_DECRYPT_METHOD_CONSTRUCTOR(TYPE,NAME) \
@@ -2147,6 +2154,7 @@ built_in_method_s crypto_decrypt_methods[] =
 
 built_in_variable_s crypto_decrypt_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_crypto_decrypt_consts(location_array_s &const_locations)

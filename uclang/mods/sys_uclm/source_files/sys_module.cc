@@ -1399,7 +1399,7 @@ static_method
   string_s *dir_path = (string_s *)src_0_location->v_data_ptr;
 
   // - create file mask -
-  char fmask[dir_path->size + 2];
+  char fmask[MAX_PATH + 2];
   memcpy(fmask,dir_path->data,dir_path->size - 1);
 
   // - append "\*" to directory name -
@@ -1734,7 +1734,7 @@ static_method
   result = stat(string_ptr->data,&st) == 0 && !S_ISDIR(st.st_mode);
 #elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
   struct _stat st;
-  result = _stat(string_ptr->data,&st) == 0 && !S_ISDIR(st.st_mode);
+  result = _stat(string_ptr->data,&st) == 0 && !(st.st_mode & S_IFDIR);
 #else
   exception_s *new_exception = exception_s::throw_exception(it,c_error_BUILT_IN_NOT_IMPLEMENTED_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
   BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_sys,"is_file#1");
@@ -1766,7 +1766,7 @@ static_method
   result = stat(string_ptr->data,&st) == 0 && S_ISDIR(st.st_mode);
 #elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
   struct _stat st;
-  result = _stat(string_ptr->data,&st) == 0 && S_ISDIR(st.st_mode);
+  result = _stat(string_ptr->data,&st) == 0 && st.st_mode & S_IFDIR;
 #else
   exception_s *new_exception = exception_s::throw_exception(it,c_error_BUILT_IN_NOT_IMPLEMENTED_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
   BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_sys,"is_dir#1");
@@ -1849,7 +1849,7 @@ bool bic_sys_method_time_0(interpreter_thread_s &it,unsigned stack_base,uli *ope
   GetSystemTimeAsFileTime(&ft);
 
   ULARGE_INTEGER ularge_int = { ft.dwLowDateTime,ft.dwHighDateTime };
-  result = (ularge_int.QuadPart - 116444736000000000ULL)/10LLU;
+  result = (ularge_int.QuadPart - 116444736000000000ULL)/10ULL;
 #else
   exception_s *new_exception = exception_s::throw_exception(it,c_error_BUILT_IN_NOT_IMPLEMENTED_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
   BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_sys,"time#0");
@@ -1984,6 +1984,7 @@ built_in_method_s pipe_methods[] =
 
 built_in_variable_s pipe_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_STREAM_METHOD_WRITE_1() \
@@ -2600,6 +2601,7 @@ built_in_method_s socket_addr_methods[] =
 
 built_in_variable_s socket_addr_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_socket_addr_consts(location_array_s &const_locations)
@@ -3764,6 +3766,7 @@ bool bic_stream_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,
   BIC_STREAM_NEXT_ITEM();
 }/*}}}*/
 
+#ifdef ENABLE_CLASS_SOCKET
 // - class dummy FD -
 
 #define BIC_FD_READLN() \
@@ -4196,6 +4199,7 @@ bool bic_fd_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli 
 {/*{{{*/
   BIC_FD_NEXT_ITEM();
 }/*}}}*/
+#endif
 
 #ifdef ENABLE_CLASS_REGEX
 // - class REGEX -
@@ -4272,6 +4276,7 @@ built_in_method_s regex_methods[] =
 
 built_in_variable_s regex_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_regex_consts(location_array_s &const_locations)
@@ -5444,6 +5449,7 @@ built_in_method_s timer_methods[] =
 
 built_in_variable_s timer_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_timer_consts(location_array_s &const_locations)

@@ -197,6 +197,7 @@ built_in_method_s set_methods[] =
 
 built_in_variable_s set_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_SET_COMPARE(SOURCE_POS) \
@@ -214,8 +215,8 @@ built_in_variable_s set_variables[] =
 \
         if (f_tree_ptr->count != 0)\
         {\
-          unsigned f_stack[f_tree_ptr->get_descent_stack_size()];\
-          unsigned s_stack[s_tree_ptr->get_descent_stack_size()];\
+          unsigned f_stack[RB_TREE_STACK_SIZE(*f_tree_ptr)];\
+          unsigned s_stack[RB_TREE_STACK_SIZE(*s_tree_ptr)];\
 \
           unsigned *f_stack_ptr = f_stack;\
           unsigned *s_stack_ptr = s_stack;\
@@ -275,7 +276,7 @@ built_in_variable_s set_variables[] =
 \
     if (source_ptr->count != 0)\
     {\
-      unsigned stack[source_ptr->get_descent_stack_size()];\
+      unsigned stack[RB_TREE_STACK_SIZE(*source_ptr)];\
       unsigned *stack_ptr = stack;\
 \
       unsigned t_idx = source_ptr->get_stack_min_value_idx(source_ptr->root_idx,&stack_ptr);\
@@ -444,7 +445,7 @@ macro
       }\
 \
       /* - traverse through first - */\
-      unsigned stack[first_ptr->get_descent_stack_size()];\
+      unsigned stack[RB_TREE_STACK_SIZE(*first_ptr)];\
       unsigned *stack_ptr = stack;\
 \
       unsigned f_idx = first_ptr->get_stack_min_value_idx(first_ptr->root_idx,&stack_ptr);\
@@ -482,7 +483,7 @@ macro
     if (first.count != 0)\
     {\
       /* - traverse through first - */\
-      unsigned stack[first.get_descent_stack_size()];\
+      unsigned stack[RB_TREE_STACK_SIZE(first)];\
       unsigned *stack_ptr = stack;\
 \
       unsigned f_idx = first.get_stack_min_value_idx(first.root_idx,&stack_ptr);\
@@ -505,7 +506,7 @@ macro
     if (second.count != 0)\
     {\
       /* - traverse through second - */\
-      unsigned stack[second.get_descent_stack_size()];\
+      unsigned stack[RB_TREE_STACK_SIZE(second)];\
       unsigned *stack_ptr = stack;\
 \
       unsigned s_idx = second.get_stack_min_value_idx(second.root_idx,&stack_ptr);\
@@ -541,7 +542,7 @@ macro
     if (first.count != 0) {\
 \
       /* - traverse through first - */\
-      unsigned stack[first.get_descent_stack_size()];\
+      unsigned stack[RB_TREE_STACK_SIZE(first)];\
       unsigned *stack_ptr = stack;\
 \
       unsigned f_idx = first.get_stack_min_value_idx(first.root_idx,&stack_ptr);\
@@ -579,7 +580,7 @@ macro
     if (first.count != 0)\
     {\
       /* - traverse through first - */\
-      unsigned stack[first.get_descent_stack_size()];\
+      unsigned stack[RB_TREE_STACK_SIZE(first)];\
       unsigned *stack_ptr = stack;\
 \
       unsigned f_idx = first.get_stack_min_value_idx(first.root_idx,&stack_ptr);\
@@ -602,7 +603,7 @@ macro
     if (second.count != 0)\
     {\
       /* - traverse through second - */\
-      unsigned stack[second.get_descent_stack_size()];\
+      unsigned stack[RB_TREE_STACK_SIZE(second)];\
       unsigned *stack_ptr = stack;\
 \
       unsigned s_idx = second.get_stack_min_value_idx(second.root_idx,&stack_ptr);\
@@ -643,7 +644,7 @@ macro
   {/*{{{*/\
     if (first.count <= second.count)\
     {\
-      unsigned stack[first.get_descent_stack_size()];\
+      unsigned stack[RB_TREE_STACK_SIZE(first)];\
       unsigned *stack_ptr = stack;\
 \
       unsigned f_idx = first.get_stack_min_value_idx(first.root_idx,&stack_ptr);\
@@ -690,7 +691,7 @@ void bic_set_clear(interpreter_thread_s &it,location_s *location_ptr)
 
   if (tree_ptr->count != 0)
   {
-    unsigned stack[tree_ptr->get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(*tree_ptr)];
     unsigned *stack_ptr = stack;
 
     unsigned t_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);
@@ -761,7 +762,7 @@ bool bic_set_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s &l
 
   if (tree_ptr->count != 0)
   {
-    unsigned stack[tree_ptr->get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(*tree_ptr)];
     unsigned *stack_ptr = stack;
 
     unsigned t_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);
@@ -1231,7 +1232,7 @@ bool bic_set_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
   if (tree_ptr->count != 0)
   {
-    unsigned stack[tree_ptr->get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(*tree_ptr)];
     unsigned *stack_ptr = stack;
 
     unsigned t_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);
@@ -1260,7 +1261,7 @@ bool bic_set_method_items_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
   if (tree_ptr->count != 0)
   {
-    unsigned stack[tree_ptr->get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(*tree_ptr)];
     unsigned *stack_ptr = stack;
 
     unsigned t_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);
@@ -1481,7 +1482,7 @@ bool bic_set_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli
 
   if (tree_ptr->count != 0)
   {
-    unsigned stack[tree_ptr->get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(*tree_ptr)];
     unsigned *stack_ptr = stack;
 
     unsigned t_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);
@@ -1530,7 +1531,7 @@ method to_string
 
   if (tree_ptr->count != 0)
   {
-    unsigned stack[tree_ptr->get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(*tree_ptr)];
     unsigned *stack_ptr = stack;
 
     unsigned t_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);
@@ -1569,7 +1570,7 @@ bool bic_set_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 
   if (tree_ptr->count != 0)
   {
-    unsigned stack[tree_ptr->get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(*tree_ptr)];
     unsigned *stack_ptr = stack;
 
     unsigned t_idx = tree_ptr->get_stack_min_value_idx(tree_ptr->root_idx,&stack_ptr);

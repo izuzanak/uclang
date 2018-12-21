@@ -311,6 +311,7 @@ built_in_method_s final_automata_methods[] =
 
 built_in_variable_s final_automata_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_final_automata_consts(location_array_s &const_locations)
@@ -525,6 +526,7 @@ built_in_method_s fa_source_methods[] =
 
 built_in_variable_s fa_source_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_FA_SOURCE_NEXT_ITEM() \
@@ -698,6 +700,7 @@ built_in_method_s parser_methods[] =
 
 built_in_variable_s parser_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_parser_consts(location_array_s &const_locations)
@@ -921,6 +924,7 @@ built_in_method_s parse_state_methods[] =
 
 built_in_variable_s parse_state_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_parse_state_consts(location_array_s &const_locations)

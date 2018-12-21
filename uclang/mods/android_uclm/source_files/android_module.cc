@@ -235,6 +235,7 @@ built_in_method_s sys_prop_methods[] =
 
 built_in_variable_s sys_prop_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_sys_prop_consts(location_array_s &const_locations)
@@ -1227,6 +1228,7 @@ built_in_method_s sensor_manager_methods[] =
 
 built_in_variable_s sensor_manager_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_sensor_manager_consts(location_array_s &const_locations)
@@ -1605,6 +1607,7 @@ built_in_method_s sensor_event_queue_methods[] =
 
 built_in_variable_s sensor_event_queue_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_sensor_event_queue_consts(location_array_s &const_locations)
@@ -1920,6 +1923,7 @@ built_in_method_s sensor_event_methods[] =
 
 built_in_variable_s sensor_event_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_sensor_event_consts(location_array_s &const_locations)

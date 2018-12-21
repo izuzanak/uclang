@@ -93,11 +93,11 @@ endfunction()
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   set(OS_LINUX TRUE)
   set(OS_WINDOWS FALSE)
-  set(OS_DEFINITION "-DLINUX")
+  add_definitions(-Wall -Wfatal-errors -Wno-class-memaccess -DLINUX)
 else()
   set(OS_LINUX FALSE)
   set(OS_WINDOWS TRUE)
-  set(OS_DEFINITION "-DWINDOWS")
+  add_definitions("/DWINDOWS /D_CRT_SECURE_NO_WARNINGS")
 endif()
 
 set(EXT_LIBS "${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs")
@@ -120,8 +120,4 @@ process_components("progs")
 
 # - process modules -
 process_components("mods")
-
-# -----
-
-add_definitions(-Wall -Wfatal-errors -Wno-class-memaccess ${OS_DEFINITION})
 

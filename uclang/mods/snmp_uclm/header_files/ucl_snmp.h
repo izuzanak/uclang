@@ -174,7 +174,7 @@ inline void snmp_agent_s::clear(interpreter_thread_s &it)
   // - release all object data pointers -
   if (objects.root_idx != c_idx_not_exist)
   {
-    unsigned stack[objects.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(objects)];
     unsigned *stack_ptr = stack;
 
     unsigned o_idx = objects.get_stack_min_value_idx(objects.root_idx,&stack_ptr);

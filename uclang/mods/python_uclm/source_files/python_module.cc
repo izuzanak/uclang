@@ -381,6 +381,7 @@ built_in_method_s py_object_methods[] =
 
 built_in_variable_s py_object_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_py_object_consts(location_array_s &const_locations)
@@ -1378,6 +1379,7 @@ built_in_method_s py_attr_ref_methods[] =
 
 built_in_variable_s py_attr_ref_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_py_attr_ref_consts(location_array_s &const_locations)
@@ -1607,6 +1609,7 @@ built_in_method_s py_item_ref_methods[] =
 
 built_in_variable_s py_item_ref_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_py_item_ref_consts(location_array_s &const_locations)

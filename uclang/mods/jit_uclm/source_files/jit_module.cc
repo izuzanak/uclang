@@ -540,6 +540,7 @@ built_in_method_s jit_function_methods[] =
 
 built_in_variable_s jit_function_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_jit_function_consts(location_array_s &const_locations)

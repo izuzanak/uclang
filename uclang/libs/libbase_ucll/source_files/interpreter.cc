@@ -1727,13 +1727,7 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
     thread_s *new_thread = (thread_s *)cmalloc(sizeof(thread_s));
     new_thread->init();
 
-#if THREAD_LIB == THREAD_LIB_PTHREAD
-    new_thread->create_from_actual(pthread_self());
-#elif THREAD_LIB == THREAD_LIB_DSP_TSK
-    new_thread->create_from_actual(TSK_self());
-#else
-    cassert(0);
-#endif
+    new_thread->create_from_actual();
 
     location_s *new_location = thread->get_new_location_ptr();
     new_location->v_type = c_bi_class_thread;

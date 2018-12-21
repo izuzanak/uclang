@@ -577,6 +577,7 @@ built_in_method_s pa_host_api_methods[] =
 
 built_in_variable_s pa_host_api_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_pa_host_api_consts(location_array_s &const_locations)
@@ -839,6 +840,7 @@ built_in_method_s pa_device_methods[] =
 
 built_in_variable_s pa_device_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_PA_DEVICE_RETRIEVE_INTEGER_VALUE(NAME) \
@@ -1043,6 +1045,7 @@ built_in_method_s pa_parameters_methods[] =
 
 built_in_variable_s pa_parameters_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_pa_parameters_consts(location_array_s &const_locations)
@@ -1201,6 +1204,7 @@ built_in_method_s pa_stream_methods[] =
 
 built_in_variable_s pa_stream_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_pa_stream_consts(location_array_s &const_locations)

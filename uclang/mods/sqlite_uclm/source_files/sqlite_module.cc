@@ -613,6 +613,7 @@ built_in_method_s sqlite_statement_methods[] =
 
 built_in_variable_s sqlite_statement_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_SQLITE_STATEMENT_RETRIEVE_BIND_INDEX(NAME) \

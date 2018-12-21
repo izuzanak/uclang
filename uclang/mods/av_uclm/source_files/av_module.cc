@@ -668,6 +668,7 @@ built_in_method_s av_stream_methods[] =
 
 built_in_variable_s av_stream_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_av_stream_consts(location_array_s &const_locations)
@@ -813,6 +814,7 @@ built_in_method_s av_video_frame_methods[] =
 
 built_in_variable_s av_video_frame_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_av_video_frame_consts(location_array_s &const_locations)
@@ -989,6 +991,7 @@ built_in_method_s av_audio_frame_methods[] =
 
 built_in_variable_s av_audio_frame_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_av_audio_frame_consts(location_array_s &const_locations)
@@ -1431,6 +1434,7 @@ built_in_method_s av_converter_methods[] =
 
 built_in_variable_s av_converter_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_av_converter_consts(location_array_s &const_locations)

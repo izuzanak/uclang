@@ -391,6 +391,7 @@ built_in_method_s gst_pipeline_methods[] =
 
 built_in_variable_s gst_pipeline_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_gst_pipeline_consts(location_array_s &const_locations)

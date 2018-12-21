@@ -547,7 +547,7 @@ bool bic_ws_context_method_get_fds_0(interpreter_thread_s &it,unsigned stack_bas
 
   if (poll_fds.root_idx != c_idx_not_exist)
   {
-    unsigned stack[poll_fds.get_descent_stack_size()];
+    unsigned stack[RB_TREE_STACK_SIZE(poll_fds)];
     unsigned *stack_ptr = stack;
 
     unsigned ff_idx = poll_fds.get_stack_min_value_idx(poll_fds.root_idx,&stack_ptr);
@@ -1201,6 +1201,7 @@ built_in_method_s ws_client_methods[] =
 
 built_in_variable_s ws_client_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_ws_client_consts(location_array_s &const_locations)
@@ -1337,6 +1338,7 @@ built_in_method_s ws_base64_methods[] =
 
 built_in_variable_s ws_base64_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_ws_base64_consts(location_array_s &const_locations)

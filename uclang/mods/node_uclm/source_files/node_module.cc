@@ -137,6 +137,7 @@ built_in_method_s node_callback_methods[] =
 
 built_in_variable_s node_callback_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_node_callback_consts(location_array_s &const_locations)

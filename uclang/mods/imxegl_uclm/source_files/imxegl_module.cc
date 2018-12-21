@@ -927,6 +927,7 @@ built_in_method_s imx_fb_methods[] =
 
 built_in_variable_s imx_fb_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_imx_fb_consts(location_array_s &const_locations)
@@ -1144,6 +1145,7 @@ built_in_method_s imx_ipu_methods[] =
 
 built_in_variable_s imx_ipu_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_imx_ipu_consts(location_array_s &const_locations)

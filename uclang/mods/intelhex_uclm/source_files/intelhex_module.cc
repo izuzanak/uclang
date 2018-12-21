@@ -195,6 +195,7 @@ built_in_method_s intel_hex_methods[] =
 
 built_in_variable_s intel_hex_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_INTEL_HEX_CONSTRUCTOR_OPEN_FILE() \

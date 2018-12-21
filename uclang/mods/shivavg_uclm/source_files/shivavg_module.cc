@@ -128,6 +128,7 @@ built_in_method_s shiva_vg_methods[] =
 
 built_in_variable_s shiva_vg_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_shiva_vg_consts(location_array_s &const_locations)

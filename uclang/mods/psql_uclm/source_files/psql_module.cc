@@ -136,6 +136,7 @@ built_in_method_s psql_methods[] =
 
 built_in_variable_s psql_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_psql_consts(location_array_s &const_locations)
@@ -229,6 +230,7 @@ built_in_method_s psql_conn_methods[] =
 
 built_in_variable_s psql_conn_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_psql_conn_consts(location_array_s &const_locations)
@@ -523,6 +525,7 @@ built_in_method_s psql_statement_methods[] =
 
 built_in_variable_s psql_statement_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_psql_statement_consts(location_array_s &const_locations)

@@ -169,6 +169,7 @@ built_in_method_s time_methods[] =
 
 built_in_variable_s time_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_time_consts(location_array_s &const_locations)
@@ -212,13 +213,13 @@ bool bic_time_method_Time_0(interpreter_thread_s &it,unsigned stack_base,uli *op
   timeval tv;
   gettimeofday(&tv,nullptr);
 
-  dst_location->v_data_ptr = (long long unsigned)(tv.tv_sec*1000000000LLU + tv.tv_usec*1000LLU);
+  dst_location->v_data_ptr = (long long unsigned)(tv.tv_sec*1000000000ULL + tv.tv_usec*1000ULL);
 #elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
   FILETIME ft;
   GetSystemTimeAsFileTime(&ft);
 
   ULARGE_INTEGER ularge_int = { ft.dwLowDateTime,ft.dwHighDateTime };
-  dst_location->v_data_ptr = (long long unsigned)((ularge_int.QuadPart - 116444736000000000ULL)*100LLU);
+  dst_location->v_data_ptr = (long long unsigned)((ularge_int.QuadPart - 116444736000000000ULL)*100ULL);
 #else
   exception_s *new_exception = exception_s::throw_exception(it,c_error_BUILT_IN_NOT_IMPLEMENTED_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
   BIC_EXCEPTION_PUSH_METHOD_RI("Time#0");
@@ -359,7 +360,7 @@ bool bic_time_method_micro_sec_0(interpreter_thread_s &it,unsigned stack_base,ul
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  long long int result = ((long long unsigned)dst_location->v_data_ptr)/1000LLU;
+  long long int result = ((long long unsigned)dst_location->v_data_ptr)/1000ULL;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
@@ -370,7 +371,7 @@ bool bic_time_method_milli_sec_0(interpreter_thread_s &it,unsigned stack_base,ul
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  long long int result = ((long long unsigned)dst_location->v_data_ptr)/1000000LLU;
+  long long int result = ((long long unsigned)dst_location->v_data_ptr)/1000000ULL;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
@@ -381,7 +382,7 @@ bool bic_time_method_seconds_0(interpreter_thread_s &it,unsigned stack_base,uli 
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  long long int result = ((long long unsigned)dst_location->v_data_ptr)/1000000000LLU;
+  long long int result = ((long long unsigned)dst_location->v_data_ptr)/1000000000ULL;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
@@ -392,7 +393,7 @@ bool bic_time_method_minutes_0(interpreter_thread_s &it,unsigned stack_base,uli 
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  long long int result = ((long long unsigned)dst_location->v_data_ptr)/60000000000LLU;
+  long long int result = ((long long unsigned)dst_location->v_data_ptr)/60000000000ULL;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
@@ -403,7 +404,7 @@ bool bic_time_method_hours_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  long long int result = ((long long unsigned)dst_location->v_data_ptr)/3600000000000LLU;
+  long long int result = ((long long unsigned)dst_location->v_data_ptr)/3600000000000ULL;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
@@ -414,7 +415,7 @@ bool bic_time_method_days_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  long long int result = ((long long unsigned)dst_location->v_data_ptr)/86400000000000LLU;
+  long long int result = ((long long unsigned)dst_location->v_data_ptr)/86400000000000ULL;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 

@@ -1309,6 +1309,7 @@ built_in_method_s sftp_handle_methods[] =
 
 built_in_variable_s sftp_handle_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_SFTP_HANDLE_READLN() \
@@ -1773,6 +1774,7 @@ built_in_method_s ssh2_channel_methods[] =
 
 built_in_variable_s ssh2_channel_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 #define BIC_SSH2_CHANNEL_READ(FUNCTION) \

@@ -282,6 +282,7 @@ built_in_method_s v8_engine_methods[] =
 
 built_in_variable_s v8_engine_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_v8_engine_consts(location_array_s &const_locations)
@@ -419,6 +420,7 @@ built_in_method_s v8_context_methods[] =
 
 built_in_variable_s v8_context_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_v8_context_consts(location_array_s &const_locations)
@@ -590,6 +592,7 @@ built_in_method_s v8_script_methods[] =
 
 built_in_variable_s v8_script_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_v8_script_consts(location_array_s &const_locations)
@@ -787,6 +790,7 @@ built_in_method_s v8_heap_stat_methods[] =
 
 built_in_variable_s v8_heap_stat_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_v8_heap_stat_consts(location_array_s &const_locations)
@@ -1019,6 +1023,7 @@ built_in_method_s v8_object_methods[] =
 
 built_in_variable_s v8_object_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_v8_object_consts(location_array_s &const_locations)
@@ -1767,6 +1772,7 @@ built_in_method_s v8_reference_methods[] =
 
 built_in_variable_s v8_reference_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_v8_reference_consts(location_array_s &const_locations)
