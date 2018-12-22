@@ -11,7 +11,7 @@ extern unsigned c_bi_class_jit_context;
 extern unsigned c_bi_class_jit_function;
 
 // - JIT module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - JIT classes -
 extern built_in_class_s *jit_classes[];

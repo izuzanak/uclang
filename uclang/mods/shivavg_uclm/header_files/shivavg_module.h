@@ -10,7 +10,7 @@ include "ucl_shivavg.h"
 extern unsigned c_bi_class_shiva_vg;
 
 // - SHIVAVG module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - SHIVAVG classes -
 extern built_in_class_s *shivavg_classes[];

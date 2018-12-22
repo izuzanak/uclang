@@ -13,7 +13,7 @@ unsigned c_bi_class_ssh2_channel = c_idx_not_exist;
 unsigned c_rm_class_socket = c_idx_not_exist;
 
 // - SSH2 module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   4,                     // Class count
   ssh2_classes,          // Classes

@@ -12,7 +12,7 @@ extern unsigned c_bi_class_gl_font;
 extern unsigned c_bi_class_gl_font_buffer;
 
 // - FTGL module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - FTGL classes -
 extern built_in_class_s *ftgl_classes[];

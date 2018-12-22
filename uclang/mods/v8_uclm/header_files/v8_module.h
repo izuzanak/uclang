@@ -15,7 +15,7 @@ extern unsigned c_bi_class_v8_object;
 extern unsigned c_bi_class_v8_reference;
 
 // - V8 module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - V8 classes -
 extern built_in_class_s *v8_classes[];

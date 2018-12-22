@@ -9,7 +9,7 @@ unsigned c_bi_class_gl_font = c_idx_not_exist;
 unsigned c_bi_class_gl_font_buffer = c_idx_not_exist;
 
 // - FTGL module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   3,                     // Class count
   ftgl_classes,          // Classes

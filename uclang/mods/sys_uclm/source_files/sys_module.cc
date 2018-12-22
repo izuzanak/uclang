@@ -30,7 +30,7 @@ unsigned c_bi_class_clock = c_idx_not_exist;
 #endif
 
 // - SYS module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   5                     // Class count
 
@@ -1184,7 +1184,7 @@ bool bic_sys_method_pipe_0(interpreter_thread_s &it,unsigned stack_base,uli *ope
   }
 
   // - open pipe read end -
-  FILE *fr = fdopen(pipefd[0],"r");
+  FILE *fr = fdopen(pipefd[0],"rb");
 
   // - ERROR -
   if (fr == nullptr)

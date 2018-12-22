@@ -10,7 +10,7 @@ unsigned c_bi_class_gmp_rational = c_idx_not_exist;
 unsigned c_bi_class_mpfr_fixed = c_idx_not_exist;
 
 // - GMP module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   4,                   // Class count
   gmp_classes,         // Classes

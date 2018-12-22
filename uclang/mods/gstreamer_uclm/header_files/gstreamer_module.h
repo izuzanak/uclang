@@ -11,7 +11,7 @@ extern unsigned c_bi_class_gst;
 extern unsigned c_bi_class_gst_pipeline;
 
 // - GSTREAMER module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - GSTREAMER classes -
 extern built_in_class_s *gstreamer_classes[];

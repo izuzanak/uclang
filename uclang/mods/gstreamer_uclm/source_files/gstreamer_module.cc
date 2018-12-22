@@ -8,7 +8,7 @@ unsigned c_bi_class_gst = c_idx_not_exist;
 unsigned c_bi_class_gst_pipeline = c_idx_not_exist;
 
 // - GSTREAMER module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   2,                         // Class count
   gstreamer_classes,         // Classes

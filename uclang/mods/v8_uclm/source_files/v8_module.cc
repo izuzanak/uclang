@@ -15,7 +15,7 @@ unsigned c_bi_class_v8_reference = c_idx_not_exist;
 unsigned c_rm_class_dict = c_idx_not_exist;
 
 // - V8 module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   6,                   // Class count
   v8_classes,          // Classes

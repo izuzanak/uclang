@@ -14,7 +14,7 @@ extern unsigned c_bi_class_ga_tmp_real_genome;
 extern unsigned c_bi_class_ga_steady_state;
 
 // - GA module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - GA classes -
 extern built_in_class_s *ga_classes[];

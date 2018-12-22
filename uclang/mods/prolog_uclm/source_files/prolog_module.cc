@@ -16,7 +16,7 @@ unsigned c_bi_class_prolog_query = c_idx_not_exist;
 unsigned c_rm_class_dict = c_idx_not_exist;
 
 // - PROLOG module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   7,                      // Class count
   prolog_classes,         // Classes

@@ -8,7 +8,7 @@ unsigned c_bi_class_elm_comm = c_idx_not_exist;
 unsigned c_bi_class_elm_packet = c_idx_not_exist;
 
 // - COMELM module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   2,                       // Class count
   comelm_classes,          // Classes

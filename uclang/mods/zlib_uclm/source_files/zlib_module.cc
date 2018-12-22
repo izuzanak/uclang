@@ -8,7 +8,7 @@ unsigned c_bi_class_zlib = c_idx_not_exist;
 unsigned c_bi_class_gz_file = c_idx_not_exist;
 
 // - ZLIB module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   2,                    // Class count
   zlib_classes,         // Classes

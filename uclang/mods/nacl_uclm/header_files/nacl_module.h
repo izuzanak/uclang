@@ -16,7 +16,7 @@ extern unsigned c_bi_class_message;
 extern unsigned c_bi_class_net_address;
 
 // - NACL module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - NACL classes -
 extern built_in_class_s *nacl_classes[];

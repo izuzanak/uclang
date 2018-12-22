@@ -50,7 +50,7 @@ include "font-manager.h"
 int
 file_exists( const char * filename )
 {
-    FILE * file = fopen( filename, "r" );
+    FILE * file = fopen( filename, "rb" );
     if ( file )
     {
         fclose(file);

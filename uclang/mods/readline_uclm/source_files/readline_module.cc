@@ -7,7 +7,7 @@ include "readline_module.h"
 unsigned c_bi_class_readline = c_idx_not_exist;
 
 // - READLINE module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   1,                    // Class count
   readline_classes,         // Classes

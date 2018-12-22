@@ -11,7 +11,7 @@ unsigned c_bi_class_subgraph = c_idx_not_exist;
 unsigned c_bi_class_graph_paths = c_idx_not_exist;
 
 // - GRAPH module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   5,                      // Class count
   graph_classes,          // Classes

@@ -13,7 +13,7 @@ extern unsigned c_bi_class_gmp_rational;
 extern unsigned c_bi_class_mpfr_fixed;
 
 // - GMP module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - GMP classes -
 extern built_in_class_s *gmp_classes[];

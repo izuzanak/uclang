@@ -15,7 +15,7 @@ extern unsigned c_bi_class_tree;
 extern unsigned c_bi_class_dict;
 
 // - CONTAINERS module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - CONTAINERS classes -
 extern built_in_class_s *containers_classes[];

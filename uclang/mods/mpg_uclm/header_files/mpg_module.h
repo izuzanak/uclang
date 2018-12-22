@@ -11,7 +11,7 @@ extern unsigned c_bi_class_mpg;
 extern unsigned c_bi_class_mpg_handle;
 
 // - MPG module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - MPG classes -
 extern built_in_class_s *mpg_classes[];

@@ -17,7 +17,7 @@ unsigned c_bi_class_ato_line_sec = c_idx_not_exist;
 unsigned c_bi_class_ato_line_sec_point = c_idx_not_exist;
 
 // - ADAPTRAIN module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   11,                        // Class count
   adaptrain_classes,         // Classes

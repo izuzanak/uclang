@@ -12,7 +12,7 @@ extern unsigned c_bi_class_perl_value;
 extern unsigned c_bi_class_perl_reference;
 
 // - PERL module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - PERL classes -
 extern built_in_class_s *perl_classes[];

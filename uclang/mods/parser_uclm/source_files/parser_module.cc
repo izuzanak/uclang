@@ -10,7 +10,7 @@ unsigned c_bi_class_parser = c_idx_not_exist;
 unsigned c_bi_class_parse_state = c_idx_not_exist;
 
 // - PARSER module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   4,                      // Class count
   parser_classes,         // Classes

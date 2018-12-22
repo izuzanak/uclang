@@ -10,7 +10,7 @@ unsigned c_bi_class_docu_comment = c_idx_not_exist;
 unsigned c_bi_class_docu_parsed = c_idx_not_exist;
 
 // - DOCU module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   4,                    // Class count
   docu_classes,         // Classes

@@ -15,7 +15,7 @@ extern unsigned c_bi_class_var_ref;
 extern unsigned c_bi_class_param_ref;
 
 // - LANG module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - LANG classes -
 extern built_in_class_s *lang_classes[];

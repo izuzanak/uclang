@@ -15,7 +15,7 @@ unsigned c_bi_class_gtk_dialog = c_idx_not_exist;
 unsigned c_bi_class_gtk_handler = c_idx_not_exist;
 
 // - GTK module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   9,                   // Class count
   gtk_classes,         // Classes

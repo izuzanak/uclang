@@ -15,7 +15,7 @@ unsigned c_rm_class_vec4 = c_idx_not_exist;
 unsigned c_rm_class_mat4 = c_idx_not_exist;
 
 // - VG module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   3,                   // Class count
   vg_classes,          // Classes

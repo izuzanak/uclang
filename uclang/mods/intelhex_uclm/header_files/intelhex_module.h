@@ -10,7 +10,7 @@ include "ucl_intelhex.h"
 extern unsigned c_bi_class_intel_hex;
 
 // - INTELHEX module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - INTELHEX classes -
 extern built_in_class_s *intelhex_classes[];

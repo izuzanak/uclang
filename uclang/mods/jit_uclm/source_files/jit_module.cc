@@ -8,7 +8,7 @@ unsigned c_bi_class_jit_context = c_idx_not_exist;
 unsigned c_bi_class_jit_function = c_idx_not_exist;
 
 // - JIT module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   2,                   // Class count
   jit_classes,         // Classes

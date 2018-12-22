@@ -8,7 +8,7 @@ unsigned c_bi_class_ao_format = c_idx_not_exist;
 unsigned c_bi_class_ao_device = c_idx_not_exist;
 
 // - AO module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   2,                  // Class count
   ao_classes,         // Classes

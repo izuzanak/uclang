@@ -18,7 +18,7 @@ unsigned c_rm_class_vec4 = c_idx_not_exist;
 unsigned c_rm_class_mat4 = c_idx_not_exist;
 
 // - GL module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   6,                   // Class count
   gl_classes,          // Classes

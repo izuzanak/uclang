@@ -13,7 +13,7 @@ extern unsigned c_bi_class_sftp_handle;
 extern unsigned c_bi_class_ssh2_channel;
 
 // - SSH2 module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - SSH2 classes -
 extern built_in_class_s *ssh2_classes[];

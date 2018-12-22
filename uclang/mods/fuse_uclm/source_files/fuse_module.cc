@@ -13,7 +13,7 @@ unsigned c_bi_class_fuse_dir_filler = c_idx_not_exist;
 unsigned c_bi_class_fuse_file_filler = c_idx_not_exist;
 
 // - FUSE module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   7,                    // Class count
   fuse_classes,         // Classes

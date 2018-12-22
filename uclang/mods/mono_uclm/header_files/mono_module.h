@@ -14,7 +14,7 @@ extern unsigned c_bi_class_mono_property;
 extern unsigned c_bi_class_mono_item_ref;
 
 // - MONO module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - MONO classes -
 extern built_in_class_s *mono_classes[];

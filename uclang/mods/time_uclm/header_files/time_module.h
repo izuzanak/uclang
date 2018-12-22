@@ -10,7 +10,7 @@ include "script_parser.h"
 extern unsigned c_bi_class_time;
 
 // - TIME module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - TIME classes -
 extern built_in_class_s *time_classes[];

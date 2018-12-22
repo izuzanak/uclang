@@ -12,7 +12,7 @@ extern unsigned c_bi_class_py_attr_ref;
 extern unsigned c_bi_class_py_item_ref;
 
 // - PYTHON module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - PYTHON classes -
 extern built_in_class_s *python_classes[];

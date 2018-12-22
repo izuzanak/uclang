@@ -7,7 +7,7 @@ include "ucl_base.h"
 @end
 
 // - BASE module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - BASE classes -
 extern built_in_class_s *base_classes[];

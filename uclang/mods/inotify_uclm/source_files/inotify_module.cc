@@ -9,7 +9,7 @@ unsigned c_bi_class_inotify_watch = c_idx_not_exist;
 unsigned c_bi_class_inotify_event = c_idx_not_exist;
 
 // - INOTIFY module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   3,                       // Class count
   inotify_classes,         // Classes

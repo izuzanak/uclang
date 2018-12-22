@@ -11,7 +11,7 @@ unsigned c_bi_class_cv_capture = c_idx_not_exist;
 unsigned c_bi_class_cv_writer = c_idx_not_exist;
 
 // - OPENCV module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   5,                      // Class count
   opencv_classes,         // Classes

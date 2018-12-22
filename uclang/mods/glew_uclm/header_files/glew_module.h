@@ -14,7 +14,7 @@ include "script_parser.h"
 extern unsigned c_bi_class_glew;
 
 // - GLEW module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - GLEW classes -
 extern built_in_class_s *glew_classes[];

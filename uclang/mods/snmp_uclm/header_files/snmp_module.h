@@ -13,7 +13,7 @@ extern unsigned c_bi_class_snmp_obj;
 extern unsigned c_bi_class_snmp_oid;
 
 // - SNMP module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - SNMP classes -
 extern built_in_class_s *snmp_classes[];

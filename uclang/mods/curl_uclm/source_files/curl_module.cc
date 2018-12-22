@@ -10,7 +10,7 @@ unsigned c_bi_class_curl_multi_request = c_idx_not_exist;
 unsigned c_bi_class_curl_result = c_idx_not_exist;
 
 // - CURL module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   4,                    // Class count
   curl_classes,         // Classes

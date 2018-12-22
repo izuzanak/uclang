@@ -62,6 +62,8 @@
 #define THREAD_LIB THREAD_LIB_PTHREAD
 #define MUTEX_TYPE MUTEX_TYPE_PTHREAD
 #define DYNAMIC_TYPE DYNAMIC_TYPE_POSIX
+#define EXPORT
+#define IMPORT
 #endif
 
 #ifdef ANDROID
@@ -72,6 +74,8 @@
 #define THREAD_LIB THREAD_LIB_PTHREAD
 #define MUTEX_TYPE MUTEX_TYPE_PTHREAD
 #define DYNAMIC_TYPE DYNAMIC_TYPE_POSIX
+#define EXPORT
+#define IMPORT
 #endif
 
 #ifdef NACL
@@ -81,6 +85,8 @@
 #define THREAD_LIB THREAD_LIB_PTHREAD
 #define MUTEX_TYPE MUTEX_TYPE_PTHREAD
 #define DYNAMIC_TYPE DYNAMIC_TYPE_POSIX
+#define EXPORT
+#define IMPORT
 #endif
 
 #ifdef WINDOWS
@@ -90,6 +96,8 @@
 #define THREAD_LIB THREAD_LIB_WINDOWS
 #define MUTEX_TYPE MUTEX_TYPE_WINDOWS
 #define DYNAMIC_TYPE DYNAMIC_TYPE_WINDOWS
+#define EXPORT __declspec(dllexport) 
+#define IMPORT __declspec(dllimport)
 #endif
 
 // - system includes -
@@ -223,8 +231,8 @@
 #endif
 
 // - name and version string constants -
-extern const char *c_name_str;
-extern const char *c_version_str;
+IMPORT extern const char *c_name_str;
+IMPORT extern const char *c_version_str;
 
 // - basic constants -
 const unsigned c_array_add = 4; // 64

@@ -13,7 +13,7 @@ extern unsigned c_bi_class_docu_comment;
 extern unsigned c_bi_class_docu_parsed;
 
 // - DOCU module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - DOCU classes -
 extern built_in_class_s *docu_classes[];

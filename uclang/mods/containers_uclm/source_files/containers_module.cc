@@ -18,7 +18,7 @@ unsigned c_bi_class_tree = c_idx_not_exist;
 unsigned c_bi_class_dict = c_idx_not_exist;
 
 // - CONTAINERS module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   6,                          // Class count
   containers_classes,         // Classes

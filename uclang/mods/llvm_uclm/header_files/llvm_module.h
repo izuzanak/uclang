@@ -11,7 +11,7 @@ extern unsigned c_bi_class_llvm_context;
 extern unsigned c_bi_class_llvm_module;
 
 // - LLVM module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - LLVM classes -
 extern built_in_class_s *llvm_classes[];

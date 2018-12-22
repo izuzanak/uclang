@@ -8,7 +8,7 @@ unsigned c_bi_class_fann_net = c_idx_not_exist;
 unsigned c_bi_class_fann_train_data = c_idx_not_exist;
 
 // - FANN module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   2,                    // Class count
   fann_classes,         // Classes

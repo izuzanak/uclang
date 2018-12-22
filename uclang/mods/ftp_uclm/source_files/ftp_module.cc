@@ -8,7 +8,7 @@ unsigned c_bi_class_ftp_session = c_idx_not_exist;
 unsigned c_bi_class_ftp_handle = c_idx_not_exist;
 
 // - FTP module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   2,                   // Class count
   ftp_classes,         // Classes

@@ -11,7 +11,7 @@ unsigned c_bi_class_xml_node = c_idx_not_exist;
 unsigned c_rm_class_dict = c_idx_not_exist;
 
 // - XML module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   2,                    // Class count
   xml_classes,          // Classes

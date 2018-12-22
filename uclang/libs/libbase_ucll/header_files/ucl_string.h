@@ -11,7 +11,7 @@ include "basic.h"
  */
 
 // - string terminating character -
-extern const char c_string_terminating_char;
+IMPORT extern const char c_string_terminating_char;
 
 // - tabulator size -
 const unsigned c_tabulator_size = 8;
@@ -108,7 +108,7 @@ struct string_s
    * \param a_data - pointer to string data
    * \param a_mult - multiplier of string
    */
-  void mult_char_ptr(unsigned a_length,const char *a_data,unsigned a_mult);
+  EXPORT void mult_char_ptr(unsigned a_length,const char *a_data,unsigned a_mult);
 
   /*!
    * \brief convert utf8 string to utf32 unsigned int string
@@ -153,7 +153,7 @@ struct string_s
    * \param a_format - format as in printf functions family
    * \param ... - list of parameters desired in format
    */
-  void setf(const char *a_format,...);
+  EXPORT void setf(const char *a_format,...);
 
   /*!
    * \brief find position of given string in string from given index
@@ -161,7 +161,7 @@ struct string_s
    * \param a_length - length of searched string
    * \param a_data - data of searched string
    */
-  unsigned get_idx(unsigned a_idx,unsigned a_length,const char *a_data);
+  EXPORT unsigned get_idx(unsigned a_idx,unsigned a_length,const char *a_data);
 
   /*!
    * \brief return print size between two character indexes in string
@@ -176,7 +176,7 @@ struct string_s
    * \param c_idx - character index
    * \return line number
    */
-  unsigned get_character_line(unsigned c_idx);
+  EXPORT unsigned get_character_line(unsigned c_idx);
 
   /*!
    * \brief return index of character at beginning of line on which is located given character
@@ -323,7 +323,7 @@ inline bool string_s::load_text_file(const char *a_file)
     return false;
   }
 
-  FILE *f = fopen(a_file,"r");
+  FILE *f = fopen(a_file,"rb");
   if (f == nullptr)
   {
     return false;

@@ -12,7 +12,7 @@ extern unsigned c_bi_class_zip_index;
 extern unsigned c_bi_class_zip_file;
 
 // - ZIP module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - ZIP classes -
 extern built_in_class_s *zip_classes[];

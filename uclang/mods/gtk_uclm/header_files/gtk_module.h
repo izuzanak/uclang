@@ -18,7 +18,7 @@ extern unsigned c_bi_class_gtk_dialog;
 extern unsigned c_bi_class_gtk_handler;
 
 // - GTK module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - GTK classes -
 extern built_in_class_s *gtk_classes[];

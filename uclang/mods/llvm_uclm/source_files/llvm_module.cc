@@ -8,7 +8,7 @@ unsigned c_bi_class_llvm_context = c_idx_not_exist;
 unsigned c_bi_class_llvm_module = c_idx_not_exist;
 
 // - LLVM module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   2,                    // Class count
   llvm_classes,         // Classes

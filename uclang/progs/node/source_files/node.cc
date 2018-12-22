@@ -102,7 +102,7 @@ int main(int argc,char **argv)
 #endif
 
       // - file loop test -
-      UclVar file = UclVar::File("node.log","r");
+      UclVar file = UclVar::File("node.log","rb");
       UCL_FOR_LOOP(item,file,
       {
         printf("item: %s\n",item.__str());
@@ -208,7 +208,7 @@ int main(int argc,char **argv)
     //  // - read from file -
     //  {
     //    UclVar array = UclVar::Pack::unpack(
-    //      UclVar::File("pack.bin","r").read_close());
+    //      UclVar::File("pack.bin","rb").read_close());
 
     //    printf("unpacked array: %s\n",array.to_string().__str());
     //  }
@@ -236,7 +236,7 @@ int main(int argc,char **argv)
 #if __cplusplus >= 201103
     // - module xml test -
     //{/*{{{*/
-    //  UclVar data = UclVar::File("trasa.gpx","r").read_close();
+    //  UclVar data = UclVar::File("trasa.gpx","rb").read_close();
     //  UclVar doc = UclVar::Xml::parse(data);
 
     //  UclVar nodes = doc.nodes()[0].nodes()[1].nodes();
@@ -316,7 +316,7 @@ int main(int argc,char **argv)
         printf("terminal: %" HOST_LL_FORMAT "d\n",term.__int());
       });
 
-      UclVar parser = UclVar::Parser(UclVar::File("new_reg.rules","r").read_close());
+      UclVar parser = UclVar::Parser(UclVar::File("new_reg.rules","rb").read_close());
       parser.parse("('\\xff' + <\\nz>.d + \"Hello\\n\" + '\\n' + '\\\\' + 'X' + |0123| + |abc\\||)\0",UclVar::Delegate(parse_cb));
     }/*}}}*/
 #endif

@@ -12,7 +12,7 @@ extern unsigned c_bi_class_trace_storage;
 extern unsigned c_bi_class_trace_record;
 
 // - DDB module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - DDB classes -
 extern built_in_class_s *ddb_classes[];

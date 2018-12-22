@@ -2,6 +2,10 @@
 #ifndef __BUILD_IN_H
 #define __BUILD_IN_H
 
+@begin
+include "basic.h"
+@end
+
 // - count of built in method names -
 const unsigned c_built_in_method_cnt = 49;
 
@@ -66,7 +70,7 @@ enum
 extern const char *c_built_in_method_symbol_names[];
 
 // - indexes of built in method names -
-extern unsigned c_built_in_method_idxs[];
+IMPORT extern unsigned c_built_in_method_idxs[];
 
 // - indexes of built in classes -
 enum

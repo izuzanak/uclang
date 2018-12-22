@@ -7,7 +7,7 @@ include "snappy_module.h"
 unsigned c_bi_class_snappy = c_idx_not_exist;
 
 // - SNAPPY module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   1,                      // Class count
   snappy_classes,         // Classes

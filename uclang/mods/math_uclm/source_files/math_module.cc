@@ -12,7 +12,7 @@ unsigned c_bi_class_mat4 = c_idx_not_exist;
 unsigned c_bi_class_primes = c_idx_not_exist;
 
 // - MATH module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   6,                    // Class count
   math_classes,         // Classes

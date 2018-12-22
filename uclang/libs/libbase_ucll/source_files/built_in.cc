@@ -61,5 +61,5 @@ const char *c_built_in_method_symbol_names[c_built_in_method_cnt] =
 };/*}}}*/
 
 // - indexes of built in method names -
-unsigned c_built_in_method_idxs[c_built_in_method_cnt];
+EXPORT unsigned c_built_in_method_idxs[c_built_in_method_cnt];
 

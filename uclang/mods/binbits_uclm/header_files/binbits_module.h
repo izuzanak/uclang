@@ -13,7 +13,7 @@ extern unsigned c_bi_class_bin_dict;
 extern unsigned c_bi_class_bin_dict_ref;
 
 // - BINBITS module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - BINBITS classes -
 extern built_in_class_s *binbits_classes[];

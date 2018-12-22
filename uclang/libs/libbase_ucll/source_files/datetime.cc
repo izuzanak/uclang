@@ -7,7 +7,7 @@ include "datetime.h"
  * constants and definitions
  */
 
-const unsigned *c_month_days_arr[2] = {c_month_days,c_month_days_leap};
+EXPORT const unsigned *c_month_days_arr[2] = {c_month_days,c_month_days_leap};
 
 /*
  * methods of structure datetime_s

@@ -10,7 +10,7 @@ include "ucl_readline.h"
 extern unsigned c_bi_class_readline;
 
 // - READLINE module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - READLINE classes -
 extern built_in_class_s *readline_classes[];

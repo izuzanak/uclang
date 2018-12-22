@@ -14,7 +14,7 @@ unsigned c_bi_class_sensor_event_queue = c_idx_not_exist;
 unsigned c_bi_class_sensor_event = c_idx_not_exist;
 
 // - ANDROID module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   8,                       // Class count
   android_classes,         // Classes

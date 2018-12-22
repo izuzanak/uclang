@@ -11,7 +11,7 @@ extern unsigned c_bi_class_ao_format;
 extern unsigned c_bi_class_ao_device;
 
 // - AO module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - AO classes -
 extern built_in_class_s *ao_classes[];

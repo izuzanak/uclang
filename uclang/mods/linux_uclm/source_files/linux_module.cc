@@ -9,7 +9,7 @@ unsigned c_bi_class_fd = c_idx_not_exist;
 unsigned c_bi_class_mmap = c_idx_not_exist;
 
 // - LINUX module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   3,                     // Class count
   linux_classes,         // Classes

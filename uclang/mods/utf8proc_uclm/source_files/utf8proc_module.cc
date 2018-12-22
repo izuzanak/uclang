@@ -9,7 +9,7 @@ unsigned c_bi_class_unicode_char = c_idx_not_exist;
 unsigned c_bi_class_unicode_string = c_idx_not_exist;
 
 // - UTF8PROC module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   3,                        // Class count
   utf8proc_classes,         // Classes

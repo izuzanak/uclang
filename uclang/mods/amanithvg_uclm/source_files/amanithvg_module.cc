@@ -8,7 +8,7 @@ unsigned c_bi_class_amanith_vg_context = c_idx_not_exist;
 unsigned c_bi_class_amanith_vg_surface = c_idx_not_exist;
 
 // - AMANITHVG module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   2,                         // Class count
   amanithvg_classes,         // Classes

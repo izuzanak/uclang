@@ -14,7 +14,7 @@ extern unsigned c_bi_class_cv_capture;
 extern unsigned c_bi_class_cv_writer;
 
 // - OPENCV module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - OPENCV classes -
 extern built_in_class_s *opencv_classes[];

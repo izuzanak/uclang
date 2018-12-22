@@ -10,7 +10,7 @@ unsigned c_bi_class_json = c_idx_not_exist;
 unsigned c_rm_class_dict = c_idx_not_exist;
 
 // - JSON module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   1,                    // Class count
   json_classes,         // Classes

@@ -7,7 +7,7 @@ include "locale_module.h"
 unsigned c_bi_class_locale = c_idx_not_exist;
 
 // - LOCALE module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   1,                      // Class count
   locale_classes,         // Classes

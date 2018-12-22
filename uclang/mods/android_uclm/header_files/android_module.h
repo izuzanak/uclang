@@ -17,7 +17,7 @@ extern unsigned c_bi_class_sensor_event_queue;
 extern unsigned c_bi_class_sensor_event;
 
 // - ANDROID module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - ANDROID classes -
 extern built_in_class_s *android_classes[];

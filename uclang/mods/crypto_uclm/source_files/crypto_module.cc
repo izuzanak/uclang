@@ -15,7 +15,7 @@ unsigned c_bi_class_crypto_encrypt = c_idx_not_exist;
 unsigned c_bi_class_crypto_decrypt = c_idx_not_exist;
 
 // - CRYPTO module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   9,                      // Class count
   crypto_classes,         // Classes
@@ -657,7 +657,7 @@ macro
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;\
 \
   /* - ERROR - */\
-  FILE *f = fopen(string_ptr->data,"r");\
+  FILE *f = fopen(string_ptr->data,"rb");\
   if (f == nullptr)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_PKEY_CANNOT_READ_KEY_FROM_FILE,operands[c_source_pos_idx],src_0_location);\

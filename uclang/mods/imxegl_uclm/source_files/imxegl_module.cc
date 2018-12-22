@@ -15,7 +15,7 @@ unsigned c_bi_class_imx_ipu = c_idx_not_exist;
 unsigned c_rm_class_gl_texture = c_idx_not_exist;
 
 // - IMXEGL module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   1                       // Class count
 

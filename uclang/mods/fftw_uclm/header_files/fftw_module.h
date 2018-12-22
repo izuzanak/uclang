@@ -11,7 +11,7 @@ extern unsigned c_bi_class_fftw;
 extern unsigned c_bi_class_fftw_plan;
 
 // - FFTW module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - FFTW classes -
 extern built_in_class_s *fftw_classes[];

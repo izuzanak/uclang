@@ -13,7 +13,7 @@ unsigned c_rm_class_unicode_char = c_idx_not_exist;
 unsigned c_rm_class_unicode_string = c_idx_not_exist;
 
 // - DATRIE module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   3,                      // Class count
   datrie_classes,         // Classes

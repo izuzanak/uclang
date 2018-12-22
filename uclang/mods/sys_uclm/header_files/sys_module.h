@@ -33,7 +33,7 @@ extern unsigned c_bi_class_clock;
 #endif
 
 // - SYS module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - SYS classes -
 extern built_in_class_s *sys_classes[];

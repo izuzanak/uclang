@@ -7,7 +7,7 @@ include "node_module.h"
 unsigned c_bi_class_node_callback = c_idx_not_exist;
 
 // - NODE module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   1,                     // Class count
   node_classes,          // Classes

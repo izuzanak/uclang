@@ -15,7 +15,7 @@ extern unsigned c_bi_class_mat4;
 extern unsigned c_bi_class_primes;
 
 // - MATH module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - MATH classes -
 extern built_in_class_s *math_classes[];

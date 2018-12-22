@@ -7,7 +7,7 @@ include "time_module.h"
 unsigned c_bi_class_time = c_idx_not_exist;
 
 // - TIME module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   1,                     // Class count
   time_classes,          // Classes

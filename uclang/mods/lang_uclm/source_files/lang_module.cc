@@ -12,7 +12,7 @@ unsigned c_bi_class_var_ref = c_idx_not_exist;
 unsigned c_bi_class_param_ref = c_idx_not_exist;
 
 // - LANG module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   6,                    // Class count
   lang_classes,         // Classes

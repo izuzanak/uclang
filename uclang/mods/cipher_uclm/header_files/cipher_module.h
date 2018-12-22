@@ -10,7 +10,7 @@ include "script_parser.h"
 extern unsigned c_bi_class_cipher_rc4;
 
 // - CIPHER module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - CIPHER classes -
 extern built_in_class_s *cipher_classes[];

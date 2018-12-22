@@ -8,7 +8,7 @@ include "ucl_string.h"
  */
 
 // - string terminating character -
-const char c_string_terminating_char = '\0';
+EXPORT const char c_string_terminating_char = '\0';
 
 /*
  * methods of structure string_s

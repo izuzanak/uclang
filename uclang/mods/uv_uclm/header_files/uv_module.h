@@ -10,7 +10,7 @@ include "ucl_uv.h"
 extern unsigned c_bi_class_uv_loop;
 
 // - UV module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - UV classes -
 extern built_in_class_s *uv_classes[];

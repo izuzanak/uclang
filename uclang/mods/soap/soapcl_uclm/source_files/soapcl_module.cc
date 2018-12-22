@@ -7,7 +7,7 @@ include "soapcl_module.h"
 unsigned c_bi_class_calc_client = c_idx_not_exist;
 
 // - SOAPCL module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   1,                       // Class count
   soapcl_classes,          // Classes

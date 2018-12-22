@@ -11,7 +11,7 @@ unsigned c_bi_class_pa_parameters = c_idx_not_exist;
 unsigned c_bi_class_pa_stream = c_idx_not_exist;
 
 // - PORT_AUDIO module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   5,                          // Class count
   port_audio_classes,         // Classes

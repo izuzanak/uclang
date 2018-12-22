@@ -11,7 +11,7 @@ unsigned c_rm_class_set = c_idx_not_exist;
 unsigned c_rm_class_dict = c_idx_not_exist;
 
 // - VALIDATOR module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   1,                         // Class count
   validator_classes,         // Classes

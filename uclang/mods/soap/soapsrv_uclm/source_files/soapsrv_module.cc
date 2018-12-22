@@ -8,7 +8,7 @@ unsigned c_bi_class_calc_service = c_idx_not_exist;
 unsigned c_bi_class_soap_fault = c_idx_not_exist;
 
 // - SOAPSRV module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   2,                        // Class count
   soapsrv_classes,          // Classes

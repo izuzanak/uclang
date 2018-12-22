@@ -7,7 +7,7 @@ include "rust_module.h"
 unsigned c_bi_class_rust_string = c_idx_not_exist;
 
 // - RUST module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   1,                    // Class count
   rust_classes,         // Classes

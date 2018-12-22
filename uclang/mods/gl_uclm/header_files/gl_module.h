@@ -15,7 +15,7 @@ extern unsigned c_bi_class_gl_uniform;
 extern unsigned c_bi_class_gl_texture;
 
 // - GL module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - GL classes -
 extern built_in_class_s *gl_classes[];

@@ -10,7 +10,7 @@ unsigned c_bi_class_ws_client = c_idx_not_exist;
 unsigned c_bi_class_ws_base64 = c_idx_not_exist;
 
 // - WEBSOCKET module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   4,                         // Class count
   websocket_classes,         // Classes

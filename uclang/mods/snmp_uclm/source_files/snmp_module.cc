@@ -10,7 +10,7 @@ unsigned c_bi_class_snmp_obj = c_idx_not_exist;
 unsigned c_bi_class_snmp_oid = c_idx_not_exist;
 
 // - SNMP module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   4,                     // Class count
   snmp_classes,          // Classes

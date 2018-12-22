@@ -8,7 +8,7 @@ unsigned c_bi_class_mpg = c_idx_not_exist;
 unsigned c_bi_class_mpg_handle = c_idx_not_exist;
 
 // - MPG module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   2,                   // Class count
   mpg_classes,         // Classes

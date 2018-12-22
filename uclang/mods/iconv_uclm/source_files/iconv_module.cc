@@ -7,7 +7,7 @@ include "iconv_module.h"
 unsigned c_bi_class_iconv = c_idx_not_exist;
 
 // - ICONV module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   1,                     // Class count
   iconv_classes,         // Classes

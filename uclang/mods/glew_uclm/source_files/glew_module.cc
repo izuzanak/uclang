@@ -7,7 +7,7 @@ include "glew_module.h"
 unsigned c_bi_class_glew = c_idx_not_exist;
 
 // - GLEW module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   1,                    // Class count
   glew_classes,         // Classes

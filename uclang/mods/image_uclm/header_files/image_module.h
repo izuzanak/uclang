@@ -10,7 +10,7 @@ include "ucl_image.h"
 extern unsigned c_bi_class_image;
 
 // - IMAGE module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - IMAGE classes -
 extern built_in_class_s *image_classes[];

@@ -12,7 +12,7 @@ extern unsigned c_bi_class_inotify_watch;
 extern unsigned c_bi_class_inotify_event;
 
 // - INOTIFY module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - INOTIFY classes -
 extern built_in_class_s *inotify_classes[];

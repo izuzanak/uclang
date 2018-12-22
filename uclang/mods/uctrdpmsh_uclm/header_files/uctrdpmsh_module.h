@@ -10,7 +10,7 @@ include "ucl_uctrdpmsh.h"
 extern unsigned c_bi_class_trdp_page;
 
 // - UCTRDPMSH module -
-extern built_in_module_s module;
+extern "C" IMPORT built_in_module_s module;
 
 // - UCTRDPMSH classes -
 extern built_in_class_s *uctrdpmsh_classes[];

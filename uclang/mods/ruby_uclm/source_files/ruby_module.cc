@@ -14,7 +14,7 @@ unsigned c_bi_class_ruby_item_ref = c_idx_not_exist;
 unsigned c_rm_class_dict = c_idx_not_exist;
 
 // - RUBY module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   5,                    // Class count
   ruby_classes,         // Classes

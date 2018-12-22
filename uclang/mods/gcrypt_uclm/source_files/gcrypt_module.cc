@@ -7,7 +7,7 @@ include "gcrypt_module.h"
 unsigned c_bi_class_gcrypt_cipher = c_idx_not_exist;
 
 // - GCRYPT module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   1,                      // Class count
   gcrypt_classes,         // Classes

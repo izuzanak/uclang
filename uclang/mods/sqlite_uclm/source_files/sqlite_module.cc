@@ -9,7 +9,7 @@ unsigned c_bi_class_sqlite_conn = c_idx_not_exist;
 unsigned c_bi_class_sqlite_statement = c_idx_not_exist;
 
 // - SQLITE module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   2,                      // Class count
   sqlite_classes,         // Classes

@@ -9,7 +9,7 @@ unsigned c_bi_class_psql_conn = c_idx_not_exist;
 unsigned c_bi_class_psql_statement = c_idx_not_exist;
 
 // - PSQL module -
-built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   3,                     // Class count
   psql_classes,          // Classes
