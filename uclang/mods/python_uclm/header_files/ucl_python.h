@@ -45,9 +45,6 @@ struct py_reference_s
  */
 class python_c
 {
-  private:
-  void *dl_handle;
-
   public:
   inline python_c();
   inline ~python_c();
@@ -110,9 +107,6 @@ inline python_c::python_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"python_init()\n"););
 
-  // - load python dynamic library -
-  dl_handle = dlopen("libpython2.7.so",RTLD_LAZY | RTLD_GLOBAL);
-
   // - initialize python interpreter -
   Py_Initialize();
 }/*}}}*/
@@ -123,12 +117,6 @@ inline python_c::~python_c()
 
   // - finalize python interpreter -
   Py_Finalize();
-
-  // - release python dynamic library -
-  if (dl_handle != nullptr)
-  {
-    dlclose(dl_handle);
-  }
 }/*}}}*/
 
 #endif

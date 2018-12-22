@@ -110,15 +110,15 @@ class UclNode
   inline UclNode();
   inline ~UclNode();
 
-  bool Initialize(const char **a_modules);
-  bool Clear();
+  libnode_ucll_EXPORT bool Initialize(const char **a_modules);
+  libnode_ucll_EXPORT bool Clear();
 
   inline UclVar RetrieveException();
   inline void PrintExceptionMessage();
 };
 
 // - UclNode global init object -
-extern UclNode g_UclNode;
+libnode_ucll_EXPORT extern UclNode g_UclNode;
 
 /*
  * inline methods of class UclNode

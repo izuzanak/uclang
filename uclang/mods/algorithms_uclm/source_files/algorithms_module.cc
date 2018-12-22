@@ -522,7 +522,7 @@ static_method
     if (src_0_location->v_type == c_bi_class_array)
     {
       BIC_ALGO_PROCESS_ARRAY(src_0_location,
-        BIC_ALGO_METHOD_MAP_MAP_DICT();
+        BIC_ALGO_METHOD_MAP_MAP_DICT({});
         array_ptr->push(trg_location);
       );
     }
@@ -553,7 +553,7 @@ static_method
         if (src_0_location->v_type == c_bi_class_array)
         {
           BIC_ALGO_PROCESS_ARRAY(src_0_location,
-            BIC_ALGO_METHOD_MAP_MAP_ARRAY();
+            BIC_ALGO_METHOD_MAP_MAP_ARRAY({});
             array_ptr->push(trg_location);
           );
         }
@@ -592,7 +592,7 @@ static_method
         if (src_0_location->v_type == c_bi_class_array)
         {
           BIC_ALGO_PROCESS_ARRAY(src_0_location,
-            BIC_ALGO_METHOD_MAP_MAP_DLG();
+            BIC_ALGO_METHOD_MAP_MAP_DLG({});
             array_ptr->push(trg_location);
           );
         }
@@ -837,8 +837,8 @@ static_method
     if (src_0_location->v_type == c_bi_class_array)
     {
       BIC_ALGO_PROCESS_ARRAY(src_0_location,
-        BIC_ALGO_METHOD_FILTER_MAP_DICT();
-        BIC_ALGO_METHOD_FILTER_OUT_FILTER();
+        BIC_ALGO_METHOD_FILTER_MAP_DICT({});
+        BIC_ALGO_METHOD_FILTER_OUT_FILTER({});
       );
     }
 
@@ -868,8 +868,8 @@ static_method
         if (src_0_location->v_type == c_bi_class_array)
         {
           BIC_ALGO_PROCESS_ARRAY(src_0_location,
-            BIC_ALGO_METHOD_FILTER_MAP_ARRAY();
-            BIC_ALGO_METHOD_FILTER_OUT_FILTER();
+            BIC_ALGO_METHOD_FILTER_MAP_ARRAY({});
+            BIC_ALGO_METHOD_FILTER_OUT_FILTER({});
           );
         }
 
@@ -907,8 +907,8 @@ static_method
         if (src_0_location->v_type == c_bi_class_array)
         {
           BIC_ALGO_PROCESS_ARRAY(src_0_location,
-            BIC_ALGO_METHOD_FILTER_MAP_DLG();
-            BIC_ALGO_METHOD_FILTER_OUT_FILTER();
+            BIC_ALGO_METHOD_FILTER_MAP_DLG({});
+            BIC_ALGO_METHOD_FILTER_OUT_FILTER({});
           );
         }
 

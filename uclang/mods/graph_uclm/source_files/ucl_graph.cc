@@ -1325,7 +1325,11 @@ bool graph_s::generate_connected(unsigned a_vertex_cnt,unsigned a_edge_cnt,unsig
   type = a_graph_type;
 
   // - create vertex map array -
+#ifdef _MSC_VER
+  unsigned *vertex_map = (unsigned *)cmalloc(a_vertex_cnt*sizeof(unsigned));
+#else
   unsigned vertex_map[a_vertex_cnt];
+#endif
 
   // - insert vertices to graph -
   {
@@ -1342,7 +1346,11 @@ bool graph_s::generate_connected(unsigned a_vertex_cnt,unsigned a_edge_cnt,unsig
   memset(imat.data,false,imat.used*sizeof(bool));
 
   // - create unused vertices array -
+#ifdef _MSC_VER
+  bool *used_vertices = (bool *)cmalloc(a_vertex_cnt*sizeof(bool));
+#else
   bool used_vertices[a_vertex_cnt];
+#endif
   memset(used_vertices,false,a_vertex_cnt*sizeof(bool));
 
   // - create graph spanning tree -
@@ -1375,6 +1383,10 @@ bool graph_s::generate_connected(unsigned a_vertex_cnt,unsigned a_edge_cnt,unsig
 
   } while(unused_vertex_cnt > 0);
 
+#ifdef _MSC_VER
+  cfree(used_vertices);
+#endif
+
   unsigned edge_cnt = a_edge_cnt - (a_vertex_cnt - 1);
   if (edge_cnt > 0) {
     do {
@@ -1393,6 +1405,10 @@ bool graph_s::generate_connected(unsigned a_vertex_cnt,unsigned a_edge_cnt,unsig
   }
 
   imat.clear();
+
+#ifdef _MSC_VER
+  cfree(vertex_map);
+#endif
 
   return true;
 }/*}}}*/

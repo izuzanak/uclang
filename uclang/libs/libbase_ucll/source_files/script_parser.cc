@@ -3365,7 +3365,7 @@ bool script_parser_s::load_module(const char *a_file_name)
   dl.init();
 
   // - open dynamic library -
-  if (!dl.open(a_file_name))
+  if (!dl.open(a_file_name,0))
   {
     //fprintf(stderr,"DL ERROR: %s\n",dl.get_error());
 

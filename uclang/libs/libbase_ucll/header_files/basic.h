@@ -64,6 +64,7 @@
 #define DYNAMIC_TYPE DYNAMIC_TYPE_POSIX
 #define EXPORT
 #define libbase_ucll_EXPORT
+#define libnode_ucll_EXPORT
 #endif
 
 #ifdef ANDROID
@@ -76,6 +77,7 @@
 #define DYNAMIC_TYPE DYNAMIC_TYPE_POSIX
 #define EXPORT
 #define libbase_ucll_EXPORT
+#define libnode_ucll_EXPORT
 #endif
 
 #ifdef NACL
@@ -87,6 +89,7 @@
 #define DYNAMIC_TYPE DYNAMIC_TYPE_POSIX
 #define EXPORT
 #define libbase_ucll_EXPORT
+#define libnode_ucll_EXPORT
 #endif
 
 #ifdef WINDOWS
@@ -101,6 +104,11 @@
 #define libbase_ucll_EXPORT __declspec(dllexport)
 #else
 #define libbase_ucll_EXPORT __declspec(dllimport)
+#endif
+#ifdef libnode_ucll_EXPORTS
+#define libnode_ucll_EXPORT __declspec(dllexport)
+#else
+#define libnode_ucll_EXPORT __declspec(dllimport)
 #endif
 #endif
 

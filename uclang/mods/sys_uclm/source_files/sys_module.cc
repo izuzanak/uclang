@@ -1431,7 +1431,7 @@ static_method
       }
     } while(FindNextFile(hFind,&ffd));
 
-    result = FindClose(hFind);
+    result = FindClose(hFind) != 0;
   }
 #else
   exception_s *new_exception = exception_s::throw_exception(it,c_error_BUILT_IN_NOT_IMPLEMENTED_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -3754,7 +3754,11 @@ bool bic_stream_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli
     return false;
   }
 
+#ifdef _MSC_VER
+  long long int result = _fileno(f);
+#else
   long long int result = fileno(f);
+#endif
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 

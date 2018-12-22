@@ -568,7 +568,7 @@ method pack
     return false;
   }
 
-  BIC_TRDP_PAGE_METHOD_PACK();
+  BIC_TRDP_PAGE_METHOD_PACK({});
 
   return true;
 }/*}}}*/

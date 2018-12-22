@@ -113,13 +113,13 @@ additions
    * \param a_data - pointer to searched string data
    * \return index of string
    */
-  unsigned get_idx_char_ptr(unsigned a_length,const char *a_data);
+  libbase_ucll_EXPORT unsigned get_idx_char_ptr(unsigned a_length,const char *a_data);
 
   /*
    * \brief join all strings in array to one string
    * \param a_string - target string to be set to concatenated result
    */
-  void join(string_s &a_string);
+  libbase_ucll_EXPORT void join(string_s &a_string);
 
   /*
    * \brief split string to strings array by given separator string

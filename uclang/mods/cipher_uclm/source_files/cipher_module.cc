@@ -46,16 +46,7 @@ bool cipher_initialize(script_parser_s &sp)
 // - CIPHER print exception -
 bool cipher_print_exception(interpreter_s &it,exception_s &exception)
 {/*{{{*/
-  //unsigned source_pos = GET_SRC_POS(exception.position);
-  //source_s &source = it.sources[GET_SRC_IDX(exception.position)];
-
-  switch (exception.type - module.error_base)
-  {
-  default:
-    return false;
-  }
-
-  return true;
+  return false;
 }/*}}}*/
 
 // - class CIPHER_RC4 -

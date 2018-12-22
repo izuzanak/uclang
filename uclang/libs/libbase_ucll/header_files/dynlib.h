@@ -40,9 +40,10 @@ struct dynlib_s
   /*!
    * \brief open dynamic library
    * \param a_file - file containing dynamic library object
+   * \param a_flags - dynamic library open flags
    * \return true if successfully opened
    */
-  inline bool open(const char *a_file);
+  inline bool open(const char *a_file,unsigned a_flags);
 
   /*!
    * \brief return addres to which was loaded symbol from library
@@ -107,15 +108,15 @@ inline void dynlib_s::swap(dynlib_s &a_second)
 #endif
 }/*}}}*/
 
-inline bool dynlib_s::open(const char *a_file)
+inline bool dynlib_s::open(const char *a_file,unsigned a_flags)
 {/*{{{*/
   clear();
 
 #if DYNAMIC_TYPE == DYNAMIC_TYPE_POSIX
-  lib_ptr = dlopen(a_file,RTLD_LAZY);
+  lib_ptr = dlopen(a_file,RTLD_LAZY | a_flags);
   return lib_ptr != nullptr;
 #elif DYNAMIC_TYPE == DYNAMIC_TYPE_WINDOWS
-  lib_ptr = LoadLibrary(a_file);
+  lib_ptr = LoadLibraryEx(a_file,NULL,a_flags);
   return lib_ptr != nullptr;
 #else
   return false;

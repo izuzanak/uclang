@@ -82,11 +82,9 @@ enum
 
 // - break and continue identifiers among thread nodes -
 const unsigned c_fgts_bc_value_base = 0xfffffff0;
-enum
-{
-  c_fgts_value_break = c_fgts_bc_value_base,
-  c_fgts_value_continue
-};
+
+const unsigned c_fgts_value_break    = c_fgts_bc_value_base;
+const unsigned c_fgts_value_continue = c_fgts_bc_value_base + 1;
 
 // - identifiers of expression graph nodes -
 enum
@@ -1370,7 +1368,7 @@ additions
   /*!
    * \brief release stored allocated locations, strings, arrays and objects
    */
-  void free_variables_clear();
+  libbase_ucll_EXPORT void free_variables_clear();
 }
 
 interpreter_thread_s;
@@ -1468,7 +1466,7 @@ additions
    * \param a_name_idx - index of class name (in class_symbol_names)
    * \return index of class record, or c_idx_not_exist
    */
-  unsigned get_global_namespace_class_idx_by_name_idx(unsigned a_name_idx);
+  libbase_ucll_EXPORT unsigned get_global_namespace_class_idx_by_name_idx(unsigned a_name_idx);
 
   /*!
    * \brief creates and execute desired method in new thread

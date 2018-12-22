@@ -9,11 +9,11 @@ include "basic.h"
 /*
  * constants and definitions
  */
-extern unsigned char c_cm_value[4];
-extern unsigned char c_ck_value[40];
+libbase_ucll_EXPORT extern unsigned char c_cm_value[4];
+libbase_ucll_EXPORT extern unsigned char c_ck_value[40];
 
-extern unsigned c_cm_length;
-extern unsigned c_ck_length;
+libbase_ucll_EXPORT extern unsigned c_cm_length;
+libbase_ucll_EXPORT extern unsigned c_ck_length;
 
 /*
  * definition of structure cipher_s
@@ -80,14 +80,14 @@ struct cipher_s
    * \param a_length - length of key
    * \param a_data - pointer to data of key
    */
-  void create(unsigned a_length,const char *a_data);
+  libbase_ucll_EXPORT void create(unsigned a_length,const char *a_data);
 
   /*!
    * \brief process encipher given message according to cipher state
    * \param a_length - length of message to encipher
    * \param a_data - pointer to data of message
    */
-  void process(unsigned a_length,char *a_data);
+  libbase_ucll_EXPORT void process(unsigned a_length,char *a_data);
 
   /*!
    * \brief test if given message is cipher

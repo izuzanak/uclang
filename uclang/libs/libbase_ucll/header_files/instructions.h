@@ -24,7 +24,7 @@ int inst_static(inst_params_s *params);
 libbase_ucll_EXPORT int inst_call(inst_params_s *params);
 libbase_ucll_EXPORT int inst_static_call(inst_params_s *params);
 int inst_element_array(inst_params_s *params);
-int inst_new_object(inst_params_s *params);
+libbase_ucll_EXPORT int inst_new_object(inst_params_s *params);
 int inst_new_object_array(inst_params_s *params);
 int inst_free_object(inst_params_s *params);
 int inst_type_identification(inst_params_s *params);
@@ -32,9 +32,9 @@ int inst_object_reference_copy(inst_params_s *params);
 int inst_conditional_expression(inst_params_s *params);
 int inst_logical_and(inst_params_s *params);
 int inst_logical_or(inst_params_s *params);
-int inst_object_member_select(inst_params_s *params);
+libbase_ucll_EXPORT int inst_object_member_select(inst_params_s *params);
 int inst_switch_test(inst_params_s *params);
-int inst_slice_range(inst_params_s *params);
+libbase_ucll_EXPORT int inst_slice_range(inst_params_s *params);
 int inst_expression_end(inst_params_s *params);
 int inst_return(inst_params_s *params);
 
@@ -42,7 +42,7 @@ int inst_return(inst_params_s *params);
  * access to function callers
  */
 
-extern int(*instruction_callers[])(inst_params_s *params);
+libbase_ucll_EXPORT extern int(*instruction_callers[])(inst_params_s *params);
 
 #endif
 
