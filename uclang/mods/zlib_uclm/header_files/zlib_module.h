@@ -11,7 +11,7 @@ extern unsigned c_bi_class_zlib;
 extern unsigned c_bi_class_gz_file;
 
 // - ZLIB module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - ZLIB classes -
 extern built_in_class_s *zlib_classes[];

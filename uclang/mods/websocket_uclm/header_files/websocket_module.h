@@ -13,7 +13,7 @@ extern unsigned c_bi_class_ws_client;
 extern unsigned c_bi_class_ws_base64;
 
 // - WEBSOCKET module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - WEBSOCKET classes -
 extern built_in_class_s *websocket_classes[];

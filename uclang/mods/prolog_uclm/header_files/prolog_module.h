@@ -16,7 +16,7 @@ extern unsigned c_bi_class_prolog_pred;
 extern unsigned c_bi_class_prolog_query;
 
 // - PROLOG module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - PROLOG classes -
 extern built_in_class_s *prolog_classes[];

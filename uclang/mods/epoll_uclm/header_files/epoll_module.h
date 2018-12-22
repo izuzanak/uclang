@@ -10,7 +10,7 @@ include "ucl_epoll.h"
 extern unsigned c_bi_class_epoll;
 
 // - EPOLL module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - EPOLL classes -
 extern built_in_class_s *epoll_classes[];

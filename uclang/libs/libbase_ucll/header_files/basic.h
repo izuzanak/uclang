@@ -63,7 +63,7 @@
 #define MUTEX_TYPE MUTEX_TYPE_PTHREAD
 #define DYNAMIC_TYPE DYNAMIC_TYPE_POSIX
 #define EXPORT
-#define IMPORT
+#define libbase_ucll_EXPORT
 #endif
 
 #ifdef ANDROID
@@ -75,7 +75,7 @@
 #define MUTEX_TYPE MUTEX_TYPE_PTHREAD
 #define DYNAMIC_TYPE DYNAMIC_TYPE_POSIX
 #define EXPORT
-#define IMPORT
+#define libbase_ucll_EXPORT
 #endif
 
 #ifdef NACL
@@ -86,7 +86,7 @@
 #define MUTEX_TYPE MUTEX_TYPE_PTHREAD
 #define DYNAMIC_TYPE DYNAMIC_TYPE_POSIX
 #define EXPORT
-#define IMPORT
+#define libbase_ucll_EXPORT
 #endif
 
 #ifdef WINDOWS
@@ -97,7 +97,11 @@
 #define MUTEX_TYPE MUTEX_TYPE_WINDOWS
 #define DYNAMIC_TYPE DYNAMIC_TYPE_WINDOWS
 #define EXPORT __declspec(dllexport) 
-#define IMPORT __declspec(dllimport)
+#ifdef libbase_ucll_EXPORTS
+#define libbase_ucll_EXPORT __declspec(dllexport)
+#else
+#define libbase_ucll_EXPORT __declspec(dllimport)
+#endif
 #endif
 
 // - system includes -
@@ -231,8 +235,8 @@
 #endif
 
 // - name and version string constants -
-IMPORT extern const char *c_name_str;
-IMPORT extern const char *c_version_str;
+libbase_ucll_EXPORT extern const char *c_name_str;
+libbase_ucll_EXPORT extern const char *c_version_str;
 
 // - basic constants -
 const unsigned c_array_add = 4; // 64

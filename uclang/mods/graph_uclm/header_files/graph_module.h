@@ -14,7 +14,7 @@ extern unsigned c_bi_class_subgraph;
 extern unsigned c_bi_class_graph_paths;
 
 // - GRAPH module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - GRAPH classes -
 extern built_in_class_s *graph_classes[];

@@ -12,7 +12,7 @@ extern unsigned c_bi_class_vg_paint;
 extern unsigned c_bi_class_vg_path;
 
 // - VG module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - VG classes -
 extern built_in_class_s *vg_classes[];

@@ -12,7 +12,7 @@ extern unsigned c_bi_class_unicode_char;
 extern unsigned c_bi_class_unicode_string;
 
 // - UTF8PROC module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - UTF8PROC classes -
 extern built_in_class_s *utf8proc_classes[];

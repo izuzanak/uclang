@@ -11,7 +11,7 @@ extern unsigned c_bi_class_fann_net;
 extern unsigned c_bi_class_fann_train_data;
 
 // - FANN module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - FANN classes -
 extern built_in_class_s *fann_classes[];

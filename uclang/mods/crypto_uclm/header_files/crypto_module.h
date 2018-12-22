@@ -18,7 +18,7 @@ extern unsigned c_bi_class_crypto_encrypt;
 extern unsigned c_bi_class_crypto_decrypt;
 
 // - CRYPTO module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - CRYPTO classes -
 extern built_in_class_s *crypto_classes[];

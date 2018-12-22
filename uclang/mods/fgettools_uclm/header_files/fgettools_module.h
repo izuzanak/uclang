@@ -10,7 +10,7 @@ include "ucl_fgettools.h"
 extern unsigned c_bi_class_fget_target;
 
 // - FGETTOOLS module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - FGETTOOLS classes -
 extern built_in_class_s *fgettools_classes[];

@@ -11,7 +11,7 @@ extern unsigned c_bi_class_dlms_server;
 extern unsigned c_bi_class_dlms_object;
 
 // - DLMS module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - DLMS classes -
 extern built_in_class_s *dlms_classes[];

@@ -12,7 +12,7 @@ extern unsigned c_bi_class_filter;
 extern unsigned c_bi_class_range;
 
 // - ALGORITHMS module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - ALGORITHMS classes -
 extern built_in_class_s *algorithms_classes[];

@@ -12,7 +12,7 @@ extern unsigned c_bi_class_lua_value;
 extern unsigned c_bi_class_lua_reference;
 
 // - LUA module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - LUA classes -
 extern built_in_class_s *lua_classes[];

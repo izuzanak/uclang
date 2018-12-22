@@ -15,7 +15,7 @@ extern unsigned c_bi_class_av_picture;
 extern unsigned c_bi_class_av_converter;
 
 // - AV module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - AV classes -
 extern built_in_class_s *av_classes[];

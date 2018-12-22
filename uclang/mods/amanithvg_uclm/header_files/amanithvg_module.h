@@ -11,7 +11,7 @@ extern unsigned c_bi_class_amanith_vg_context;
 extern unsigned c_bi_class_amanith_vg_surface;
 
 // - AMANITHVG module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - AMANITHVG classes -
 extern built_in_class_s *amanithvg_classes[];

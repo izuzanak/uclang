@@ -11,7 +11,7 @@ extern unsigned c_bi_class_sqlite_conn;
 extern unsigned c_bi_class_sqlite_statement;
 
 // - SQLITE module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - SQLITE classes -
 extern built_in_class_s *sqlite_classes[];

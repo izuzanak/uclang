@@ -1025,7 +1025,7 @@ additions
    * \param a_class_idx - class record index of class from which search begins
    * \return index of class record, or c_idx_not_exist
    */
-  EXPORT unsigned resolve_class_idx_by_name_idx(unsigned a_name_idx,unsigned a_class_idx);
+  libbase_ucll_EXPORT unsigned resolve_class_idx_by_name_idx(unsigned a_name_idx,unsigned a_class_idx);
 
   /*!
    * \brief resolve class record index by class name
@@ -1087,7 +1087,7 @@ additions
    * \param a_source - source of code to execute
    * \param a_mods_path - module import paths string
    */
-  EXPORT void initialize_parser(source_s &a_source,string_s &a_mods_path);
+  libbase_ucll_EXPORT void initialize_parser(source_s &a_source,string_s &a_mods_path);
 
   /*!
    * \brief return index of next terminal symbol (token) in input source
@@ -1100,22 +1100,22 @@ additions
    * \brief parse input string and keep parsed informations in its members
    * \param a_source_idx - index of source to be parsed
    */
-  EXPORT void parse_script(unsigned a_source_idx);
+  libbase_ucll_EXPORT void parse_script(unsigned a_source_idx);
 
   /*!
    * \brief recursively process all imported modules
    */
-  EXPORT void process_modules();
+  libbase_ucll_EXPORT void process_modules();
 
   /*!
    * \brief finds extended classes
    */
-  EXPORT void extended_classes_search();
+  libbase_ucll_EXPORT void extended_classes_search();
 
   /*!
    * \brief creates mapping arrays of methods, and variables for each class, count element usage of each class, separate static variables from classes, ...
    */
-  EXPORT void element_search();
+  libbase_ucll_EXPORT void element_search();
 
   /*!
    * \brief generate intermediate code for one expression
@@ -1134,12 +1134,12 @@ additions
   /*!
    * \brief generate intermediate code for all methods, class initializations and static variables initializations
    */
-  EXPORT void generate_intermediate_code();
+  libbase_ucll_EXPORT void generate_intermediate_code();
 
   /*!
    * process created error codes, and prints error messages to error output
    */
-  EXPORT void process_errors();
+  libbase_ucll_EXPORT void process_errors();
 }
 
 script_parser_s;
@@ -1157,7 +1157,7 @@ lli_array_s:params
 
 additions
 {
-  EXPORT static exception_s *throw_exception(interpreter_thread_s &it,unsigned a_type,unsigned a_pos,location_s *obj_location_ptr);
+  libbase_ucll_EXPORT static exception_s *throw_exception(interpreter_thread_s &it,unsigned a_type,unsigned a_pos,location_s *obj_location_ptr);
 
   inline void print();
 }
@@ -1297,19 +1297,19 @@ additions
    * \brief release all locations on stack from position stack_base
    * \param stack_base - position to which are locations released
    */
-  EXPORT void release_stack_from(unsigned stack_base);
+  libbase_ucll_EXPORT void release_stack_from(unsigned stack_base);
 
   /*!
    * \brief test and release location and variable in it contained
    * \param location_ptr - pointer to location to test and release
    */
-  EXPORT inline void release_location_ptr(location_s *location_ptr);
+  libbase_ucll_EXPORT inline void release_location_ptr(location_s *location_ptr);
 
   /*!
    * \brief release location and variable in it contained
    * \param location_ptr - pointer to location to release
    */
-  EXPORT void _release_location_ptr(location_s *location_ptr);
+  libbase_ucll_EXPORT void _release_location_ptr(location_s *location_ptr);
 
   /*!
    * \brief creates new object by calling its blank constructor
@@ -1351,7 +1351,7 @@ additions
    * \param stack_base - base of thread stack
    * \return true if everything is ok, otherwise return false
    */
-  EXPORT bool call_method(uli *code,unsigned stack_base);
+  libbase_ucll_EXPORT bool call_method(uli *code,unsigned stack_base);
 
   /*!
    * \brief if location is iterable return type of iterable
@@ -1442,17 +1442,17 @@ additions
    * \brief creates interpreter structures from script_parser
    * \param sp - reference to script parser with structures filed by parsing of source file
    */
-  EXPORT void create_from_script_parser(script_parser_s &sp);
+  libbase_ucll_EXPORT void create_from_script_parser(script_parser_s &sp);
 
   /*!
    * \brief create constant and static variable locations of interpreter
    */
-  EXPORT void create_constant_and_static_locations();
+  libbase_ucll_EXPORT void create_constant_and_static_locations();
 
   /*!
    * \brief release constant and static locations of interpreter
    */
-  EXPORT void release_constant_and_static_locations();
+  libbase_ucll_EXPORT void release_constant_and_static_locations();
 
 #if SYSTEM_TYPE != SYSTEM_TYPE_DSP
   void DEBUG_print_const_locations();
@@ -1461,7 +1461,7 @@ additions
   /*!
    * \brief print message based on given exception
    */
-  EXPORT void print_exception_message(exception_s &exception);
+  libbase_ucll_EXPORT void print_exception_message(exception_s &exception);
 
   /*!
    * \brief retrieve class record index by class name index in global namespace
@@ -1489,7 +1489,7 @@ additions
    * \param arg_list - array of string arguments given to interpreter
    * \return thread (program) exit code
    */
-  EXPORT int run_main_thread(const char *class_name,const char *method_name,string_array_s &arg_list);
+  libbase_ucll_EXPORT int run_main_thread(const char *class_name,const char *method_name,string_array_s &arg_list);
 }
 
 interpreter_s;
@@ -1506,14 +1506,14 @@ interpreter_s;
  * \param source_string - reference to input source string
  * \param begin - position of error begin
  */
-EXPORT void print_error_show_line(string_s &source_string,unsigned begin);
+libbase_ucll_EXPORT void print_error_show_line(string_s &source_string,unsigned begin);
 
 /*!
  * \brief print input source string line, on which is char positioned
  * \param source_string - reference to input source string
  * \param char_pos - position of character in source input string
  */
-EXPORT void print_error_line(string_s &source_string,unsigned char_pos);
+libbase_ucll_EXPORT void print_error_line(string_s &source_string,unsigned char_pos);
 
 /*!
  * \brief print sequence of classes which contain given class
@@ -1522,7 +1522,7 @@ EXPORT void print_error_line(string_s &source_string,unsigned char_pos);
  * \param class_stack - work stack for class indexes
  * \param class_record_idx - index of investigating class
  */
-EXPORT void print_class_sequence(string_rb_tree_s &class_symbol_names,class_records_s &class_records,ui_array_s &class_stack,unsigned class_record_idx);
+libbase_ucll_EXPORT void print_class_sequence(string_rb_tree_s &class_symbol_names,class_records_s &class_records,ui_array_s &class_stack,unsigned class_record_idx);
 
 // - interpreter global functions -
 

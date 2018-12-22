@@ -10,7 +10,7 @@ include "ucl_snappy.h"
 extern unsigned c_bi_class_snappy;
 
 // - SNAPPY module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - SNAPPY classes -
 extern built_in_class_s *snappy_classes[];

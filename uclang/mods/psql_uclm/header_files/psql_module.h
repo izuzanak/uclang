@@ -12,7 +12,7 @@ extern unsigned c_bi_class_psql_conn;
 extern unsigned c_bi_class_psql_statement;
 
 // - PSQL module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - PSQL classes -
 extern built_in_class_s *psql_classes[];

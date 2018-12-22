@@ -10,7 +10,7 @@ include "ucl_emscripten.h"
 extern unsigned c_bi_class_emscripten;
 
 // - EMSCRIPTEN module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - EMSCRIPTEN classes -
 extern built_in_class_s *emscripten_classes[];

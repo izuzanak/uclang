@@ -20,7 +20,7 @@ extern unsigned c_bi_class_ato_line_sec;
 extern unsigned c_bi_class_ato_line_sec_point;
 
 // - ADAPTRAIN module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - ADAPTRAIN classes -
 extern built_in_class_s *adaptrain_classes[];

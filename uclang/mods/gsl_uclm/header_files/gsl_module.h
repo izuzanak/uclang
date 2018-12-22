@@ -10,7 +10,7 @@ include "ucl_gsl.h"
 extern unsigned c_bi_class_gsl_spline;
 
 // - GSL module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - GSL classes -
 extern built_in_class_s *gsl_classes[];

@@ -13,7 +13,7 @@ extern unsigned c_bi_class_curl_multi_request;
 extern unsigned c_bi_class_curl_result;
 
 // - CURL module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - CURL classes -
 extern built_in_class_s *curl_classes[];

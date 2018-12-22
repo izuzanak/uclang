@@ -14,7 +14,7 @@ extern unsigned c_bi_class_pa_parameters;
 extern unsigned c_bi_class_pa_stream;
 
 // - PORT_AUDIO module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - PORT_AUDIO classes -
 extern built_in_class_s *port_audio_classes[];

@@ -10,7 +10,7 @@ include "script_parser.h"
 extern unsigned c_bi_class_rust_string;
 
 // - RUST module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - RUST classes -
 extern built_in_class_s *rust_classes[];

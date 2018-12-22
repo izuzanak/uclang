@@ -19,7 +19,7 @@ const unsigned c_days_in_4_years   = 1461;
 // - number of days in month -
 const unsigned c_month_days[] = {31,28,31,30,31,30,31,31,30,31,30,31,0};
 const unsigned c_month_days_leap[] = {31,29,31,30,31,30,31,31,30,31,30,31,0};
-IMPORT extern const unsigned *c_month_days_arr[2];
+libbase_ucll_EXPORT extern const unsigned *c_month_days_arr[2];
 
 // - number of days of month to end of year -
 const unsigned c_month_days_to_year_end[] = {0,31,59,90,120,151,181,212,243,273,304,334};
@@ -75,7 +75,7 @@ struct datetime_s
    * \brief create new datetime from given count of nanoseconds
    * \param a_nanosec - count of time nanoseconds
    */
-  EXPORT void from_nanosec(long long unsigned a_nanosec);
+  libbase_ucll_EXPORT void from_nanosec(long long unsigned a_nanosec);
 
   /*!
    * \brief create new datetime from given count of seconds
@@ -88,7 +88,7 @@ struct datetime_s
    * \param a_nanosec - target nanoseconds variable
    * \return true if operation was successful
    */
-  EXPORT bool to_nanosec(long long unsigned &a_nanosec);
+  libbase_ucll_EXPORT bool to_nanosec(long long unsigned &a_nanosec);
 
   /*!
    * \brief test if given year is leap year

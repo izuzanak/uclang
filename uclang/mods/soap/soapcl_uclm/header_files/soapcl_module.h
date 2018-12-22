@@ -12,7 +12,7 @@ include "ucl_soapcl.h"
 extern unsigned c_bi_class_calc_client;
 
 // - SOAPCL module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - SOAPCL classes -
 extern built_in_class_s *soapcl_classes[];

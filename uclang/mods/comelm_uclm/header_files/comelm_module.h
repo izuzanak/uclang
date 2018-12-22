@@ -11,7 +11,7 @@ extern unsigned c_bi_class_elm_comm;
 extern unsigned c_bi_class_elm_packet;
 
 // - COMELM module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - COMELM classes -
 extern built_in_class_s *comelm_classes[];

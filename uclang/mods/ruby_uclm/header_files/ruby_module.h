@@ -14,7 +14,7 @@ extern unsigned c_bi_class_ruby_iv_ref;
 extern unsigned c_bi_class_ruby_item_ref;
 
 // - RUBY module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - RUBY classes -
 extern built_in_class_s *ruby_classes[];

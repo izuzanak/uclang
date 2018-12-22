@@ -70,7 +70,7 @@ enum
 extern const char *c_built_in_method_symbol_names[];
 
 // - indexes of built in method names -
-IMPORT extern unsigned c_built_in_method_idxs[];
+libbase_ucll_EXPORT extern unsigned c_built_in_method_idxs[];
 
 // - indexes of built in classes -
 enum

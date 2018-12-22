@@ -10,7 +10,7 @@ include "ucl_validator.h"
 extern unsigned c_bi_class_validator;
 
 // - VALIDATOR module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - VALIDATOR classes -
 extern built_in_class_s *validator_classes[];

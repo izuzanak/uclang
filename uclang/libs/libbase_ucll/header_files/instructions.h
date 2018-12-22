@@ -21,8 +21,8 @@ struct inst_params_s
 int inst_this_element(inst_params_s *params);
 int inst_const(inst_params_s *params);
 int inst_static(inst_params_s *params);
-EXPORT int inst_call(inst_params_s *params);
-EXPORT int inst_static_call(inst_params_s *params);
+libbase_ucll_EXPORT int inst_call(inst_params_s *params);
+libbase_ucll_EXPORT int inst_static_call(inst_params_s *params);
 int inst_element_array(inst_params_s *params);
 int inst_new_object(inst_params_s *params);
 int inst_new_object_array(inst_params_s *params);

@@ -11,7 +11,7 @@ include "basic.h"
  */
 
 // - string terminating character -
-IMPORT extern const char c_string_terminating_char;
+libbase_ucll_EXPORT extern const char c_string_terminating_char;
 
 // - tabulator size -
 const unsigned c_tabulator_size = 8;
@@ -108,7 +108,7 @@ struct string_s
    * \param a_data - pointer to string data
    * \param a_mult - multiplier of string
    */
-  EXPORT void mult_char_ptr(unsigned a_length,const char *a_data,unsigned a_mult);
+  libbase_ucll_EXPORT void mult_char_ptr(unsigned a_length,const char *a_data,unsigned a_mult);
 
   /*!
    * \brief convert utf8 string to utf32 unsigned int string
@@ -153,7 +153,7 @@ struct string_s
    * \param a_format - format as in printf functions family
    * \param ... - list of parameters desired in format
    */
-  EXPORT void setf(const char *a_format,...);
+  libbase_ucll_EXPORT void setf(const char *a_format,...);
 
   /*!
    * \brief find position of given string in string from given index
@@ -161,7 +161,7 @@ struct string_s
    * \param a_length - length of searched string
    * \param a_data - data of searched string
    */
-  EXPORT unsigned get_idx(unsigned a_idx,unsigned a_length,const char *a_data);
+  libbase_ucll_EXPORT unsigned get_idx(unsigned a_idx,unsigned a_length,const char *a_data);
 
   /*!
    * \brief return print size between two character indexes in string
@@ -176,7 +176,7 @@ struct string_s
    * \param c_idx - character index
    * \return line number
    */
-  EXPORT unsigned get_character_line(unsigned c_idx);
+  libbase_ucll_EXPORT unsigned get_character_line(unsigned c_idx);
 
   /*!
    * \brief return index of character at beginning of line on which is located given character

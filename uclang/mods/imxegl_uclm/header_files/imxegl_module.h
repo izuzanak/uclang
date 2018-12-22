@@ -15,7 +15,7 @@ extern unsigned c_bi_class_imx_ipu;
 #endif
 
 // - IMXEGL module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - IMXEGL classes -
 extern built_in_class_s *imxegl_classes[];

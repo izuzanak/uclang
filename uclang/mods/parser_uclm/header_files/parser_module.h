@@ -13,7 +13,7 @@ extern unsigned c_bi_class_parser;
 extern unsigned c_bi_class_parse_state;
 
 // - PARSER module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - PARSER classes -
 extern built_in_class_s *parser_classes[];

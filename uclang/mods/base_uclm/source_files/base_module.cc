@@ -4,7 +4,7 @@ include "base_module.h"
 @end
 
 // - BASE module -
-EXPORT EXPORT built_in_module_s module =
+EXPORT built_in_module_s module =
 {/*{{{*/
   13,                   // Class count
   base_classes,         // Classes

@@ -12,7 +12,7 @@ extern unsigned c_bi_class_fd;
 extern unsigned c_bi_class_mmap;
 
 // - LINUX module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - LINUX classes -
 extern built_in_class_s *linux_classes[];

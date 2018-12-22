@@ -10,7 +10,7 @@ include "ucl_json.h"
 extern unsigned c_bi_class_json;
 
 // - JSON module -
-extern "C" IMPORT built_in_module_s module;
+extern "C" EXPORT built_in_module_s module;
 
 // - JSON classes -
 extern built_in_class_s *json_classes[];
