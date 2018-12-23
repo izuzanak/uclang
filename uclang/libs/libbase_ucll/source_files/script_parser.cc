@@ -1664,7 +1664,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
     }
     break;
     case c_node_type_operator_binary_equal:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_equal\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1673,7 +1673,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_plus_equal:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_plus_equal\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1682,7 +1682,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_minus_equal:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_minus_equal\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1691,7 +1691,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_asterisk_equal:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_asterisk_equal\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1700,7 +1700,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_slash_equal:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_slash_equal\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1709,7 +1709,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_percent_equal:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_percent_equal\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1718,7 +1718,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_double_ls_br_equal:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_double_ls_br_equal\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1727,7 +1727,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_double_rs_br_equal:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_double_rs_br_equal\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1736,7 +1736,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_ampersand_equal:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_ampersand_equal\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1745,7 +1745,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_pipe_equal:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_pipe_equal\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1754,7 +1754,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_circumflex_equal:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_circumflex_equal\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1763,7 +1763,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_double_ampersand:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_double_ampersand\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1772,7 +1772,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_double_pipe:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_double_pipe\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1781,7 +1781,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_ampersand:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_ampersand\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1790,7 +1790,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_pipe:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_pipe\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1799,7 +1799,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_circumflex:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_circumflex\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1808,7 +1808,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_double_equal:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_double_equal\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1817,7 +1817,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_exclamation_equal:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_exclamation_equal\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1826,7 +1826,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_rs_br:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_rs_br\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1835,7 +1835,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_ls_br:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_ls_br\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1844,7 +1844,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_rs_br_equal:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_rs_br_equal\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1853,7 +1853,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_ls_br_equal:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_ls_br_equal\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1862,7 +1862,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_double_rs_br:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_double_rs_br\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1871,7 +1871,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_double_ls_br:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_double_ls_br\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1880,7 +1880,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_plus:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_plus\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1889,7 +1889,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_minus:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_minus\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1898,7 +1898,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_asterisk:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_asterisk\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1907,7 +1907,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_slash:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_slash\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1916,7 +1916,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_binary_percent:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_percent\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -1925,63 +1925,63 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_operator_unary_post_double_plus:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_unary_post_double_plus\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         ,exp_idx,exp_ptr[2]);
       exp_stack.push(exp_ptr[2]);
       break;
     case c_node_type_operator_unary_post_double_minus:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_unary_post_double_minus\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         ,exp_idx,exp_ptr[2]);
       exp_stack.push(exp_ptr[2]);
       break;
     case c_node_type_operator_unary_pre_double_plus:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_unary_pre_double_plus\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         ,exp_idx,exp_ptr[2]);
       exp_stack.push(exp_ptr[2]);
       break;
     case c_node_type_operator_unary_pre_double_minus:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_unary_pre_double_minus\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         ,exp_idx,exp_ptr[2]);
       exp_stack.push(exp_ptr[2]);
       break;
     case c_node_type_operator_unary_pre_plus:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_unary_pre_plus\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         ,exp_idx,exp_ptr[2]);
       exp_stack.push(exp_ptr[2]);
       break;
     case c_node_type_operator_unary_pre_minus:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_unary_pre_minus\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         ,exp_idx,exp_ptr[2]);
       exp_stack.push(exp_ptr[2]);
       break;
     case c_node_type_operator_unary_pre_exclamation:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_unary_pre_exclamation\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         ,exp_idx,exp_ptr[2]);
       exp_stack.push(exp_ptr[2]);
       break;
     case c_node_type_operator_unary_pre_tilde:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_unary_pre_tilde\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         ,exp_idx,exp_ptr[2]);
       exp_stack.push(exp_ptr[2]);
       break;
     case c_node_type_operator_binary_le_br_re_br:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"operator_binary_plus_equal\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -2022,7 +2022,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
     }
     break;
     case c_node_type_new_objects_array:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"new_objects_array\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -2031,21 +2031,21 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_free_object:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"free_object\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         ,exp_idx,exp_ptr[2]);
       exp_stack.push(exp_ptr[2]);
       break;
     case c_node_type_type_identification:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"type_identification\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         ,exp_idx,exp_ptr[1]);
       exp_stack.push(exp_ptr[1]);
       break;
     case c_node_type_object_reference_copy:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"object_reference_copy\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -2054,7 +2054,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[2]);
       break;
     case c_node_type_conditional_expression:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"conditional_expression\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -2065,7 +2065,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[4]);
       break;
     case c_node_type_logical_and:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"logical_and\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -2074,7 +2074,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
       exp_stack.push(exp_ptr[3]);
       break;
     case c_node_type_logical_or:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"logical_or\" ]\n"
         "   nd_%1$u -> nd_%2$u\n"
         "   nd_%1$u -> nd_%3$u\n"
@@ -2107,7 +2107,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
     }
     break;
     case c_node_type_object_member_select:
-      printf(
+      _printf_p(
         "   nd_%1$u [ label = \"object_member_select: %2$s\" ]\n"
         "   nd_%1$u -> nd_%3$u\n"
         ,exp_idx,variable_symbol_names[exp_ptr[2]].data,exp_ptr[3]);

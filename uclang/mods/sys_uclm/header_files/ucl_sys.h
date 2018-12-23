@@ -147,6 +147,8 @@ inline long long int timer_s::get_stamp()
   clock_gettime(CLOCK_MONOTONIC,&tv);
 
   return 1000LL*tv.tv_sec + tv.tv_nsec/1000000LL;
+#elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
+  return GetTickCount64();
 #else
   cassert(0);
   return -1;

@@ -71,8 +71,6 @@ struct curl_multi_s
 
   static int socket_callback(CURL *easy,curl_socket_t socket,int what,void *userp,void *socketp);
 
-  static inline long long int get_stamp();
-
   inline void init();
   inline void clear(interpreter_thread_s &it);
 };
@@ -198,14 +196,6 @@ inline void curl_props_s::clear(interpreter_thread_s &it)
 /*
  * inline methods of structure curl_multi_s
  */
-
-inline long long int curl_multi_s::get_stamp()
-{/*{{{*/
-  timespec tv;
-  clock_gettime(CLOCK_MONOTONIC,&tv);
-
-  return 1000LL*tv.tv_sec + tv.tv_nsec/1000000LL;
-}/*}}}*/
 
 inline void curl_multi_s::init()
 {/*{{{*/

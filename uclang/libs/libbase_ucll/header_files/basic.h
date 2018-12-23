@@ -62,6 +62,7 @@
 #define THREAD_LIB THREAD_LIB_PTHREAD
 #define MUTEX_TYPE MUTEX_TYPE_PTHREAD
 #define DYNAMIC_TYPE DYNAMIC_TYPE_POSIX
+#define _printf_p printf
 #define EXPORT
 #define libbase_ucll_EXPORT
 #define libnode_ucll_EXPORT
@@ -75,6 +76,7 @@
 #define THREAD_LIB THREAD_LIB_PTHREAD
 #define MUTEX_TYPE MUTEX_TYPE_PTHREAD
 #define DYNAMIC_TYPE DYNAMIC_TYPE_POSIX
+#define _printf_p printf
 #define EXPORT
 #define libbase_ucll_EXPORT
 #define libnode_ucll_EXPORT
@@ -87,13 +89,13 @@
 #define THREAD_LIB THREAD_LIB_PTHREAD
 #define MUTEX_TYPE MUTEX_TYPE_PTHREAD
 #define DYNAMIC_TYPE DYNAMIC_TYPE_POSIX
+#define _printf_p printf
 #define EXPORT
 #define libbase_ucll_EXPORT
 #define libnode_ucll_EXPORT
 #endif
 
 #ifdef WINDOWS
-#define _WIN32_WINNT 0x0500
 #define SYSTEM_TYPE SYSTEM_TYPE_WINDOWS
 #define ATOMIC_TYPE ATOMIC_TYPE_WINDOWS
 #define THREAD_LIB THREAD_LIB_WINDOWS
@@ -442,6 +444,8 @@ define pointer_ptr basic
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
 extern struct timeval tv;
 extern struct timeval stv;
+#elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
+libbase_ucll_EXPORT extern long long unsigned tick_cnt;
 #endif
 
 // - mark time in nanoseconds -
@@ -449,6 +453,8 @@ inline void tm_mark_time()
 {/*{{{*/
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
   gettimeofday(&tv,nullptr);
+#elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
+  tick_cnt = GetTickCount64();
 #endif
 }/*}}}*/
 
@@ -458,6 +464,8 @@ inline long long int tm_time_diff()
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
   gettimeofday(&stv,nullptr);
   return stv.tv_usec - tv.tv_usec + (stv.tv_sec - tv.tv_sec)*1000000LL;
+#elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
+  return (GetTickCount64() - tick_cnt)*1000;
 #else
   return 0;
 #endif

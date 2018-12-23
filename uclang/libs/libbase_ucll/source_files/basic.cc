@@ -11,6 +11,8 @@ const char *c_version_str = "0.1.0";
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
 struct timeval tv;
 struct timeval stv;
+#elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
+long long unsigned tick_cnt;
 #endif
 
 /*

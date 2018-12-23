@@ -968,7 +968,7 @@ void bic_sys_consts(location_array_s &const_locations)
   CREATE_SYS_BIC_STATIC_STRING("Unix");
   CREATE_SYS_BIC_STATIC_STRING("/");
 #elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
-  CREATE_SYS_BIC_STATIC_STRING("Windows NT");
+  CREATE_SYS_BIC_STATIC_STRING("Windows");
   CREATE_SYS_BIC_STATIC_STRING("\\");
 #else
   CREATE_SYS_BIC_STATIC_STRING("Unknown");
@@ -1657,6 +1657,11 @@ static_method
   string_s *value = (string_s *)src_1_location->v_data_ptr;
 
   result = setenv(name->data,value->data,1) == 0;
+#elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
+  string_s *name = (string_s *)src_0_location->v_data_ptr;
+  string_s *value = (string_s *)src_1_location->v_data_ptr;
+
+  result = _putenv_s(name->data,value->data) == 0;
 #else
   exception_s *new_exception = exception_s::throw_exception(it,c_error_BUILT_IN_NOT_IMPLEMENTED_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
   BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_sys,"setenv#2");
@@ -3754,7 +3759,7 @@ bool bic_stream_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli
     return false;
   }
 
-#ifdef _MSC_VER
+#if SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
   long long int result = _fileno(f);
 #else
   long long int result = fileno(f);
