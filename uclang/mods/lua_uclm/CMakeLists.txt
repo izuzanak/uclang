@@ -1,17 +1,15 @@
 
-if(PKG_CONFIG_FOUND)
-  pkg_search_module(LIBLUA "lua5.2 >= 5.2.0")
-endif()
+find_package(Lua 5.2)
 
-if(LIBLUA_FOUND)
+if(LUA_FOUND)
   set(CONF_DO_BUILD TRUE)
   set(CONF_HEADER_DIRS
     "${LIB_BASE}/header_files")
   set(CONF_INCLUDE_DIRS
-    ${LIBLUA_INCLUDE_DIRS})
+    ${LUA_INCLUDE_DIR})
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
     libbase_ucll
-    ${LIBLUA_LIBRARIES})
+    ${LUA_LIBRARIES})
 endif()
 

@@ -272,8 +272,8 @@ const float c_log_of_2 = logf(2.0f);
 #endif
 
 // - system errors and exceptions -
-enum  /*{{{*/
-{
+enum  
+{/*{{{*/
   c_error_OK = 0,
   c_error_UNKNOWN,
 

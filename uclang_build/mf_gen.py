@@ -3069,7 +3069,7 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
-      opt_build, # CXX options
+      opt_build + "-I/usr/include/lua5.2 ", # CXX options
       opt_link + "-llua5.2 ", # CXX link options
       "", # CXX defines
       [],
