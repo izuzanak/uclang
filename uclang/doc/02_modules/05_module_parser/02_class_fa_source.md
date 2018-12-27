@@ -27,7 +27,7 @@ of last recognized terminal symbol.
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L581)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L583)
 
 Assignment operator `=`. Object of class `FaSource` is replaced by method parameter.
 
@@ -59,7 +59,7 @@ obj: New value
 
 <a name="next_terminal#0" />
 
-### Method [`next_terminal#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L593)
+### Method [`next_terminal#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L595)
 
 Retrieve next terminal symbol identified by object of class `Integer`. If no terminal
 symbol was recognized, method will return object of class `Blank`.
@@ -89,7 +89,7 @@ terminal: 0
 
 <a name="old_input_idx#0" />
 
-### Method [`old_input_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L598)
+### Method [`old_input_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L600)
 
 Retrieve index in source string that refers to beginning of last recognized terminal symbol.
 
@@ -117,7 +117,7 @@ obj.old_input_idx(): 6
 
 <a name="input_idx#0" />
 
-### Method [`input_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L611)
+### Method [`input_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L613)
 
 Retrieve index in source string referring to first character that was not yet processed by final automata.
 
@@ -145,7 +145,7 @@ obj.input_idx(): 11
 
 <a name="next_item#0" />
 
-### Method `spec` [`next_item#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L624)
+### Method `spec` [`next_item#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L626)
 
 Retrieve next terminal symbol identified by object of class `Integer`. If no terminal symbol was recognized, method will return object of class `Blank`. Presence of this method implies that object of class `FaSource` is iterable.
 
@@ -174,7 +174,7 @@ terminal: 0
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L629)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L631)
 
 Convert object of class `FaSource` to object of class `String`.
 This method returns name of class `FaSource`.
@@ -194,7 +194,7 @@ FaSource.to_string(): FaSource
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L638)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L640)
 
 Print string representation of object of class `FaSource` to standard output.
 This method prints name of class `FaSource`.

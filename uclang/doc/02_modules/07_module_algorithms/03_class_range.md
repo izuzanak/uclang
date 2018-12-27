@@ -28,7 +28,7 @@ Class allowing creation of lazy object sequences.
 
 <a name="Range#1" />
 
-### Constructor [`Range#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1994)
+### Constructor [`Range#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L2057)
 
 Creates object of class `Range`, representing infinite sequence, starting by method parameter.
 
@@ -50,7 +50,7 @@ obj: [21,22,23,24,25,26,27,28,29,30,31]
 
 <a name="Range#2" />
 
-### Constructor [`Range#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L2025)
+### Constructor [`Range#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L2088)
 
 Creates object of class `Range`, based on first and last values of requested
 sequence.
@@ -74,7 +74,7 @@ obj: [1,2,3,4,5,6,7,8,9,10]
 
 <a name="Range#3" />
 
-### Constructor [`Range#3`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L2077)
+### Constructor [`Range#3`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L2140)
 
 Creates object of class `Range`, based on first, last and step value
 of requested sequence.
@@ -103,7 +103,7 @@ obj: [0,-2,-4,-6,-8,-10,-12,-14,-16,-18]
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L1982)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L2045)
 
 Assignment operator `=`. Object of class `Range` is replaced by method parameter.
 
@@ -134,7 +134,7 @@ obj: New value
 
 <a name="next_item#0" />
 
-### Method `spec` [`next_item#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L2125)
+### Method `spec` [`next_item#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L2188)
 
 Retrieve next element from iterable object `Range`.
 
@@ -162,7 +162,7 @@ element: 20
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L2147)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L2210)
 
 Convert object of class `Range` to object of class `String`.
 This method returns name of class `Range`.
@@ -182,7 +182,7 @@ Range.to_string(): Range
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L2156)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/algorithms_uclm/source_files/algorithms_module.cc#L2219)
 
 Print string representation of object of class `Range` to standard output.
 This method prints name of class `Range`.

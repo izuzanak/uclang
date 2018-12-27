@@ -22,7 +22,7 @@ representation.
 
 <a name="pack#1" />
 
-### Method `static` [`pack#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/pack_uclm/source_files/pack_module.cc#L270)
+### Method `static` [`pack#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/pack_uclm/source_files/pack_module.cc#L271)
 
 Convert object of any type to its binary representation.
 
@@ -46,7 +46,7 @@ data.length(): 129
 
 <a name="unpack#1" />
 
-### Method `static` [`unpack#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/pack_uclm/source_files/pack_module.cc#L391)
+### Method `static` [`unpack#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/pack_uclm/source_files/pack_module.cc#L392)
 
 Creates object from its binary representation.
 
@@ -71,7 +71,7 @@ result: [One:1,Two:2,Three:3]
 
 <a name="code#2" />
 
-### Method `static` [`code#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/pack_uclm/source_files/pack_module.cc#L591)
+### Method `static` [`code#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/pack_uclm/source_files/pack_module.cc#L592)
 
 Convert list of objects to their binary representation. Binary format of
 encoded objects is determined by first method parameter. Parser
@@ -99,7 +99,7 @@ data.length(): 11
 
 <a name="decode#2" />
 
-### Method `static` [`decode#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/pack_uclm/source_files/pack_module.cc#L1035)
+### Method `static` [`decode#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/pack_uclm/source_files/pack_module.cc#L1036)
 
 Convert binary string to array of objects. Binary format of encoded objects
 is determined by first method parameter. Parser of binary format string is
@@ -130,7 +130,7 @@ result: [127,32767,2147483647,1.000000,]
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/pack_uclm/source_files/pack_module.cc#L1413)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/pack_uclm/source_files/pack_module.cc#L1414)
 
 Convert object of class `Pack` to object of class `String`.
 This method returns name of class `Pack`.
@@ -150,7 +150,7 @@ Pack.to_string(): Pack
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/pack_uclm/source_files/pack_module.cc#L1422)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/pack_uclm/source_files/pack_module.cc#L1423)
 
 Print string representation of object of class `Pack` to standard output.
 This method prints name of class `Pack`.

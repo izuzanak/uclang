@@ -50,7 +50,7 @@ Container class implementing abstract data type dictionary.
 
 <a name="Dict#0" />
 
-### Constructor [`Dict#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L664)
+### Constructor [`Dict#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L665)
 
 Creates default object of class `Dict`.
 
@@ -66,7 +66,7 @@ obj: []
 
 <a name="Dict#1" />
 
-### Constructor [`Dict#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L669)
+### Constructor [`Dict#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L670)
 
 Creates object of class `Dict` based on elements retrieved from method
 parameter. Values of parameter elements represents alternating keys and values
@@ -92,7 +92,7 @@ obj: [One:1,Two:2,Three:3]
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L583)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L584)
 
 Assignment operator `=`. Object of class `Dict` is replaced by method parameter.
 
@@ -119,7 +119,7 @@ obj: New value
 
 <a name="operator_binary_double_equal#1" />
 
-### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L595)
+### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L596)
 
 Comparison operator `==`. Compares object of class `Dict` with method parameter and return `1` if objects has same value or `0` otherwise.
 
@@ -149,7 +149,7 @@ obj_0 == obj_2: 1
 
 <a name="operator_binary_exclamation_equal#1" />
 
-### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L610)
+### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L611)
 
 Comparison operator `!=`. Compares object of class `Dict` with method parameter and return `0` if objects has same value or `1` otherwise.
 
@@ -179,7 +179,7 @@ obj_0 != obj_2: 0
 
 <a name="operator_binary_le_br_re_br#1" />
 
-### Operator [`operator_binary_le_br_re_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L625)
+### Operator [`operator_binary_le_br_re_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L626)
 
 Item selection operator `[]`.
 Retrieve element from object of class `Dict` stored at requested key position.
@@ -212,7 +212,7 @@ obj["Two"]: 2
 
 <a name="clear#0" />
 
-### Method [`clear#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L693)
+### Method [`clear#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L694)
 
 Release all elements stored in object of class `Dict`.
 
@@ -235,7 +235,7 @@ obj: []
 
 <a name="keys#0" />
 
-### Method [`keys#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L724)
+### Method [`keys#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L725)
 
 Retrieve keys contained in object of class `Dict`. Keys are returned as object of class `Array`.
 
@@ -260,7 +260,7 @@ keys: [One,Two,Three]
 
 <a name="items#0" />
 
-### Method [`items#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L758)
+### Method [`items#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L759)
 
 Retrieve list of elements contained in object of class `Dict`. Elements are returned as object of class `Array`.
 
@@ -285,7 +285,7 @@ items: [1,2,3]
 
 <a name="store_ref#2" />
 
-### Method [`store_ref#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L789)
+### Method [`store_ref#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L790)
 
 Store reference to second method parameter under key given by first method parameter in object of class `Dict`.
 
@@ -315,7 +315,7 @@ obj: [One:1,Two:2,Three:3,Value:Hello world!]
 
 <a name="has_key#1" />
 
-### Method [`has_key#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L827)
+### Method [`has_key#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L828)
 
 Test if object of class `Dict` has key given by method parameter.
 
@@ -348,7 +348,7 @@ obj.has_key("Four"): 0
 
 <a name="remove_key#1" />
 
-### Method [`remove_key#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L852)
+### Method [`remove_key#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L853)
 
 Remove key given by method parameter from object of class `Dict`. Value of object stored under key will be also removed.
 
@@ -375,7 +375,7 @@ obj: [One:1,Three:3]
 
 <a name="first_key#0" />
 
-### Method [`first_key#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L889)
+### Method [`first_key#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L890)
 
 Retrieve first key of object of class `Dict`.
 
@@ -402,7 +402,7 @@ obj.first_key(): <blank>
 
 <a name="last_key#0" />
 
-### Method [`last_key#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L912)
+### Method [`last_key#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L913)
 
 Retrieve last key of object of class `Dict`.
 
@@ -429,7 +429,7 @@ obj.last_key(): <blank>
 
 <a name="next_key#1" />
 
-### Method [`next_key#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L935)
+### Method [`next_key#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L936)
 
 From object of class `Dict` retrieve key following key identified by method parameter.
 
@@ -462,7 +462,7 @@ key: Three
 
 <a name="prev_key#1" />
 
-### Method [`prev_key#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L978)
+### Method [`prev_key#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L979)
 
 From object of class `Dict` retrieve key preceding key identified by method parameter.
 
@@ -495,7 +495,7 @@ key: One
 
 <a name="lee_key#1" />
 
-### Method [`lee_key#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1021)
+### Method [`lee_key#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1022)
 
 Retrieve key of object of class `Dict` which value is less or equal than value of method parameter.
 
@@ -524,7 +524,7 @@ obj.lee_key(2.1): 2.000000
 
 <a name="gre_key#1" />
 
-### Method [`gre_key#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1054)
+### Method [`gre_key#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1055)
 
 Retrieve key of object of class `Dict` which value is greater or equal than value of method parameter.
 
@@ -583,7 +583,7 @@ obj.contain("Seven"): 0
 
 <a name="compare#1" />
 
-### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1087)
+### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1088)
 
 Compare object of class `Dict` with method parameter.
 
@@ -614,7 +614,7 @@ obj_0.compare(obj_0): 0
 
 <a name="item#1" />
 
-### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1101)
+### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1102)
 
 Retrieve key from object of class `Dict` stored at requested index position.
 
@@ -647,7 +647,7 @@ obj.item(3): Three
 
 <a name="first_idx#0" />
 
-### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1120)
+### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1121)
 
 Retrieve index of first key in object of class `Dict`.
 
@@ -671,7 +671,7 @@ obj.first_idx: <blank>
 
 <a name="last_idx#0" />
 
-### Method `spec` [`last_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1140)
+### Method `spec` [`last_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1141)
 
 Retrieve index of last key in object of class `Dict`.
 
@@ -695,7 +695,7 @@ obj.last_idx: <blank>
 
 <a name="next_idx#1" />
 
-### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1160)
+### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1161)
 
 From object of class `Dict` retrieve index of key following key identified by method parameter.
 
@@ -728,7 +728,7 @@ idx: 3
 
 <a name="prev_idx#1" />
 
-### Method `spec` [`prev_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1178)
+### Method `spec` [`prev_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1179)
 
 From object of class `Dict` retrieve index of key preceding key identified by method parameter.
 
@@ -761,7 +761,7 @@ idx: 0
 
 <a name="length#0" />
 
-### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1196)
+### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1197)
 
 Retrieve count of keys in object of class `Dict`.
 
@@ -784,7 +784,7 @@ obj.length(): 0
 
 <a name="to_string#0" />
 
-### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1207)
+### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1208)
 
 Convert object of class `Dict` to object of class `String`.
 Each key and element of object of class `Dict` is converted to string by call of
@@ -807,7 +807,7 @@ obj.to_string(): [One:1,Two:2,Three:3]
 
 <a name="to_string#1" />
 
-### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1303)
+### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1304)
 
 Convert object of class `Dict` to object of class `String`.
 Each key and element of object of class `Dict` is converted to string by call of
@@ -836,7 +836,7 @@ obj.to_string("<->"): One:1<->Two:2<->Three:3
 
 <a name="print#0" />
 
-### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1401)
+### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1402)
 
 Print string representation of object of class `Dict` to standard output.
 Each key and element of object of class `Dict` is printed by call of its
