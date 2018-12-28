@@ -408,8 +408,8 @@ bool bic_http_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_ba
   fd_set es; FD_ZERO(&es);
 
   // - ERROR -
-  int max_fd = 0;
-  if (MHD_YES != MHD_get_fdset(srv_ptr->daemon_ptr,&rs,&ws,&es,&max_fd))
+  MHD_socket max_fd = 0;
+  if (MHD_YES != MHD_get_fdset2(srv_ptr->daemon_ptr,&rs,&ws,&es,&max_fd,FD_SETSIZE))
   {
     exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_INTERNAL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -569,8 +569,8 @@ method process
   fd_set es; FD_ZERO(&es);
 
   // - ERROR -
-  int max_fd = 0;
-  if (MHD_YES != MHD_get_fdset(daemon_ptr,&rs,&ws,&es,&max_fd))
+  MHD_socket max_fd = 0;
+  if (MHD_YES != MHD_get_fdset2(daemon_ptr,&rs,&ws,&es,&max_fd,FD_SETSIZE))
   {
     exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_INTERNAL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1635,6 +1635,29 @@ method HttpResp
 
   case c_resp_from_file:
     {
+#if SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
+      // - open file descriptor -
+      int fd = _open(string_ptr->data,_O_RDONLY);
+
+      // - ERROR -
+      if (fd == -1)
+      {
+        exception_s::throw_exception(it,module.error_base + c_error_HTTP_RESP_CANNOT_READ_SOURCE_FILE,operands[c_source_pos_idx],src_1_location);
+        return false;
+      }
+
+      // - retrieve file size -
+      struct _stat file_stat;
+
+      // - ERROR -
+      if (_fstat(fd,&file_stat) != 0)
+      {
+        _close(fd);
+
+        exception_s::throw_exception(it,module.error_base + c_error_HTTP_RESP_CANNOT_READ_SOURCE_FILE,operands[c_source_pos_idx],src_1_location);
+        return false;
+      }
+#else
       // - open file descriptor -
       int fd = open(string_ptr->data,O_RDONLY);
 
@@ -1656,6 +1679,7 @@ method HttpResp
         exception_s::throw_exception(it,module.error_base + c_error_HTTP_RESP_CANNOT_READ_SOURCE_FILE,operands[c_source_pos_idx],src_1_location);
         return false;
       }
+#endif
 
       // - create response from file descriptor -
       resp_ptr = MHD_create_response_from_fd(file_stat.st_size,fd);

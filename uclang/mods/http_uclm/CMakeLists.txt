@@ -1,6 +1,13 @@
 
 if(PKG_CONFIG_FOUND)
   pkg_search_module(LIBMICROHTTPD "libmicrohttpd >= 0.9.37")
+else()
+  if(OS_WINDOWS AND LIBMICROHTTPD_INCLUDE_DIRS AND LIBMICROHTTPD_LIBRARIES)
+    set(LIBMICROHTTPD_FOUND TRUE)
+    set(WSOCK32_LIBS
+      wsock32
+      ws2_32)
+  endif()
 endif()
 
 if(LIBMICROHTTPD_FOUND)
@@ -12,6 +19,7 @@ if(LIBMICROHTTPD_FOUND)
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
     libbase_ucll
-    ${LIBMICROHTTPD_LIBRARIES})
+    ${LIBMICROHTTPD_LIBRARIES}
+    ${WSOCK32_LIBS})
 endif()
 

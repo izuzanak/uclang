@@ -6,8 +6,15 @@
 include "script_parser.h"
 @end
 
+#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
 #include <poll.h>
 #include <fcntl.h>
+#elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
+#include <io.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#endif 
+
 #include <microhttpd.h>
 
 /*
