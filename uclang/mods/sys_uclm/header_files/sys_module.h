@@ -21,11 +21,7 @@ extern unsigned c_bi_class_regex;
 #endif
 
 extern unsigned c_bi_class_signal;
-
-#ifdef ENABLE_CLASS_POLL
 extern unsigned c_bi_class_poll;
-#endif
-
 extern unsigned c_bi_class_timer;
 
 #ifdef ENABLE_CLASS_CLOCK
@@ -109,11 +105,9 @@ enum
   c_error_SIGNAL_WRONG_PROCESS_IDENTIFIER,
   c_error_SIGNAL_SEND_ERROR,
 
-#ifdef ENABLE_CLASS_POLL
   c_error_POLL_WRONG_FDS_AND_EVENTS_ARRAY_SIZE,
   c_error_POLL_WRONG_FD_OR_EVENTS_VALUE_TYPE,
   c_error_POLL_POLL_ERROR,
-#endif
 
   c_error_TIMER_NEGATIVE_DELAY,
   c_error_TIMER_WRONG_DELEGATE_PARAMETER_COUNT,
@@ -311,7 +305,6 @@ bool bic_signal_method_send_2(interpreter_thread_s &it,unsigned stack_base,uli *
 bool bic_signal_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_signal_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
-#ifdef ENABLE_CLASS_POLL
 // - class POLL -
 extern built_in_variable_s poll_variables[];
 extern built_in_method_s poll_methods[];
@@ -327,7 +320,6 @@ bool bic_poll_method_ready_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 bool bic_poll_method_poll_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_poll_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_poll_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-#endif
 
 // - class TIMER -
 extern built_in_variable_s timer_variables[];

@@ -126,6 +126,7 @@
 #include <limits.h>
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
+#include <winsock2.h>
 #include <windows.h>
 #include <signal.h>
 

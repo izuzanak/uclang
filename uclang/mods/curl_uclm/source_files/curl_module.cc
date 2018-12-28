@@ -991,8 +991,17 @@ bool bic_curl_multi_method_process_0(interpreter_thread_s &it,unsigned stack_bas
   if (poll_fds.root_idx != c_idx_not_exist)
   {
     // - prepare pollfd structures -
+#if SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
+    ULONG nfds = poll_fds.count;
+#else
     nfds_t nfds = poll_fds.count;
+#endif
+
+#ifdef _MSC_VER
+    pollfd *fds = (pollfd *)cmalloc(nfds*sizeof(pollfd));
+#else
     pollfd fds[nfds];
+#endif
 
     unsigned stack[RB_TREE_STACK_SIZE(poll_fds)];
     unsigned *stack_ptr = stack;
@@ -1010,11 +1019,23 @@ bool bic_curl_multi_method_process_0(interpreter_thread_s &it,unsigned stack_bas
     } while(++fd_ptr,ff_idx != c_idx_not_exist);
 
     // - call poll function -
+#if SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
+    int res = WSAPoll(fds,nfds,0);
+#else
     int res = poll(fds,nfds,0);
+#endif
 
     // - ERROR -
+#if SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
+    if (res == SOCKET_ERROR)
+#else
     if (res == -1)
+#endif
     {
+#ifdef _MSC_VER
+      cfree(fds);
+#endif
+
       exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_POLL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
@@ -1041,12 +1062,19 @@ bool bic_curl_multi_method_process_0(interpreter_thread_s &it,unsigned stack_bas
           int running;
           if (curl_multi_socket_action(cm_ptr->curlm_ptr,fd_ptr->fd,events,&running) != CURLM_OK)
           {
+#ifdef _MSC_VER
+            cfree(fds);
+#endif
             exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_SOCKET_ACTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
             return false;
           }
         }
       } while(++fd_ptr < fd_ptr_end);
     }
+
+#ifdef _MSC_VER
+    cfree(fds);
+#endif
   }
 
   int msg_cnt;

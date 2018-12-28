@@ -18,7 +18,6 @@ include "script_parser.h"
 #define ENABLE_CLASS_SOCKET
 #endif
 #define ENABLE_CLASS_REGEX
-#define ENABLE_CLASS_POLL
 #define ENABLE_CLASS_CLOCK
 #define POPEN_FNAME popen
 #define PCLOSE_FNAME pclose
@@ -58,7 +57,6 @@ timer_record_s;
 safe_rb_tree<timer_record_s> timer_record_rb_tree_s;
 @end
 
-#ifdef ENABLE_CLASS_POLL
 /*
  * definition of structure poll_s
  */
@@ -66,12 +64,15 @@ safe_rb_tree<timer_record_s> timer_record_rb_tree_s;
 struct poll_s
 {
   pollfd *fds;
+#if SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
+  ULONG nfds;
+#else
   nfds_t nfds;
+#endif
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
 };
-#endif
 
 /*
  * definition of structure timer_s
@@ -107,7 +108,6 @@ inline int timer_record_rb_tree_s::__compare_value(timer_record_s &a_first,timer
     a_first.target_stamp > a_second.target_stamp ? 1 : 0;
 }/*}}}*/
 
-#ifdef ENABLE_CLASS_POLL
 /*
  * inline methods of structure poll_s
  */
@@ -129,7 +129,6 @@ inline void poll_s::clear(interpreter_thread_s &it)
 
   init();
 }/*}}}*/
-#endif
 
 /*
  * inline methods of structure timer_s

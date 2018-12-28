@@ -18,10 +18,7 @@ unsigned c_bi_class_regex = c_idx_not_exist;
 #endif
 
 unsigned c_bi_class_signal = c_idx_not_exist;
-
-#ifdef ENABLE_CLASS_POLL
 unsigned c_bi_class_poll = c_idx_not_exist;
-#endif
 
 unsigned c_bi_class_timer = c_idx_not_exist;
 
@@ -32,17 +29,13 @@ unsigned c_bi_class_clock = c_idx_not_exist;
 // - SYS module -
 EXPORT built_in_module_s module =
 {/*{{{*/
-  5                     // Class count
+  6                     // Class count
 
 #ifdef ENABLE_CLASS_SOCKET
   + 2
 #endif
 
 #ifdef ENABLE_CLASS_REGEX
-  + 1
-#endif
-
-#ifdef ENABLE_CLASS_POLL
   + 1
 #endif
 
@@ -62,11 +55,7 @@ EXPORT built_in_module_s module =
 #ifdef ENABLE_CLASS_REGEX
   + 5
 #endif
-
-#ifdef ENABLE_CLASS_POLL
   + 3
-#endif
-
 #ifdef ENABLE_CLASS_CLOCK
   + 3
 #endif
@@ -94,11 +83,7 @@ built_in_class_s *sys_classes[] =
 #endif
 
   &signal_class,
-
-#ifdef ENABLE_CLASS_POLL
   &poll_class,
-#endif
-
   &timer_class,
 
 #ifdef ENABLE_CLASS_CLOCK
@@ -173,11 +158,9 @@ const char *sys_error_strings[] =
   "error_SIGNAL_WRONG_PROCESS_IDENTIFIER",
   "error_SIGNAL_SEND_ERROR",
 
-#ifdef ENABLE_CLASS_POLL
   "error_POLL_WRONG_FDS_AND_EVENTS_ARRAY_SIZE",
   "error_POLL_WRONG_FD_OR_EVENTS_VALUE_TYPE",
   "error_POLL_POLL_ERROR",
-#endif
 
   "error_TIMER_NEGATIVE_DELAY",
   "error_TIMER_WRONG_DELEGATE_PARAMETER_COUNT",
@@ -220,10 +203,8 @@ bool sys_initialize(script_parser_s &sp)
   // - initialize signal class identifier -
   c_bi_class_signal = class_base_idx++;
 
-#ifdef ENABLE_CLASS_POLL
   // - initialize poll class identifier -
   c_bi_class_poll = class_base_idx++;
-#endif
 
   // - initialize timer class identifier -
   c_bi_class_timer = class_base_idx++;
@@ -638,8 +619,6 @@ bool sys_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nError while sending signal\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-
-#ifdef ENABLE_CLASS_POLL
   case c_error_POLL_WRONG_FDS_AND_EVENTS_ARRAY_SIZE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -661,8 +640,6 @@ bool sys_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nError while polling file descriptors\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-#endif
-
   case c_error_TIMER_NEGATIVE_DELAY:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -5101,7 +5078,6 @@ bool bic_signal_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli 
   return true;
 }/*}}}*/
 
-#ifdef ENABLE_CLASS_POLL
 // - class POLL -
 built_in_class_s poll_class =
 {/*{{{*/
@@ -5243,8 +5219,12 @@ method Poll
   }
 
   // - allocate pollfd structures -
-  nfds_t nfds = array_ptr->used >> 1;
   pollfd *fds = nullptr;
+#if SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
+  ULONG nfds = array_ptr->used >> 1;
+#else
+  nfds_t nfds = array_ptr->used >> 1;
+#endif
 
   if (array_ptr->used > 0)
   {
@@ -5300,10 +5280,18 @@ method ready
   poll_s *poll_ptr = (poll_s *)dst_location->v_data_ptr;
 
   // - call poll function -
+#if SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
+  int res = poll_ptr->nfds > 0 ? WSAPoll(poll_ptr->fds,poll_ptr->nfds,timeout) : 0;
+#else
   int res = poll(poll_ptr->fds,poll_ptr->nfds,timeout);
+#endif
 
   // - ERROR -
+#if SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
+  if (res == SOCKET_ERROR)
+#else
   if (res == -1)
+#endif
   {
     exception_s::throw_exception(it,module.error_base + c_error_POLL_POLL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -5329,12 +5317,20 @@ method poll
   poll_s *poll_ptr = (poll_s *)dst_location->v_data_ptr;
 
   // - call poll function -
+#if SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
+  int res = WSAPoll(poll_ptr->fds,poll_ptr->nfds,timeout);
+#else
   int res = poll(poll_ptr->fds,poll_ptr->nfds,timeout);
+#endif
 
   switch (res)
   {
     // - ERROR -
+#if SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
+    case SOCKET_ERROR:
+#else
     case -1:
+#endif
     {
       exception_s::throw_exception(it,module.error_base + c_error_POLL_POLL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
@@ -5382,7 +5378,6 @@ bool bic_poll_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 
   return true;
 }/*}}}*/
-#endif
 
 // - class TIMER -
 built_in_class_s timer_class =

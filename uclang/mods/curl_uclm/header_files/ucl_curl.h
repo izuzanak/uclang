@@ -7,7 +7,10 @@ include "script_parser.h"
 @end
 
 #include <curl/curl.h>
+
+#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
 #include <poll.h>
+#endif
 
 /*
  * definition of structure read_buffer_s
