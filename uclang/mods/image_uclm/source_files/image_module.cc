@@ -384,7 +384,7 @@ built_in_variable_s image_variables[] =
   img_ptr->create(width,height,pixel_format);\
 \
   /* - ERROR - */\
-  if (png_get_rowbytes(png_ptr,info_ptr) != img_ptr->image_data_ptr->line_bytes)\
+  if (png_get_rowbytes(png_ptr,info_ptr) > img_ptr->image_data_ptr->line_bytes)\
   {\
     png_destroy_read_struct(&png_ptr,&info_ptr,nullptr);\
     RELEASE_CODE;\

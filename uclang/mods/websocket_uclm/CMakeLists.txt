@@ -1,6 +1,13 @@
 
 if(PKG_CONFIG_FOUND)
   pkg_search_module(LIBWEBSOCKETS "libwebsockets = 1.3")
+else()
+  if(OS_WINDOWS AND LIBWEBSOCKETS_INCLUDE_DIRS AND LIBWEBSOCKETS_LIBRARIES)
+    set(LIBWEBSOCKETS_FOUND TRUE)
+    set(WSOCK32_LIBS
+      wsock32
+      ws2_32)
+  endif()
 endif()
 
 if(LIBWEBSOCKETS_FOUND)
@@ -12,6 +19,7 @@ if(LIBWEBSOCKETS_FOUND)
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
     libbase_ucll
-    ${LIBWEBSOCKETS_LIBRARIES})
+    ${LIBWEBSOCKETS_LIBRARIES}
+    ${WSOCK32_LIBS})
 endif()
 

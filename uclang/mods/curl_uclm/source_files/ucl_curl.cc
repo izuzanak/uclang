@@ -40,13 +40,21 @@ int curl_multi_s::socket_callback(CURL *easy,curl_socket_t socket,int what,void 
       switch (what)
       {
       case CURL_POLL_IN:
+#if SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
         fd_flags.flags = POLLIN;
+#else
+        fd_flags.flags = POLLIN | POLLPRI;
+#endif
         break;
       case CURL_POLL_OUT:
         fd_flags.flags = POLLOUT;
         break;
       case CURL_POLL_INOUT:
+#if SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
         fd_flags.flags = POLLIN | POLLOUT;
+#else
+        fd_flags.flags = POLLIN | POLLPRI | POLLOUT;
+#endif
         break;
       }
 

@@ -44,7 +44,19 @@ int http_func(libwebsocket_context *ctx,libwebsocket *wsi,
         fd_flags_rb_tree_s &poll_fds = wsc_ptr->poll_fds;
 
         libwebsocket_pollargs *args_ptr = (libwebsocket_pollargs *)in;
+
+#if SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
+        int events =
+          ((args_ptr->events & 0x01) ? POLLIN  : 0) |
+          // - POLLPRI ignored on windows -
+          ((args_ptr->events & 0x04) ? POLLOUT : 0) |
+          // - POLLERR ignored on windows -
+          ((args_ptr->events & 0x10) ? POLLHUP : 0);
+
+        fd_flags_s fd_flags = {args_ptr->fd,events};
+#else
         fd_flags_s fd_flags = {args_ptr->fd,args_ptr->events};
+#endif
 
         switch (reason)
         {
