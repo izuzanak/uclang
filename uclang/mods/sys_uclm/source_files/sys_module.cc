@@ -559,7 +559,7 @@ bool sys_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nWrong match count %" HOST_LL_FORMAT "d, expected at least one\n",exception.params[0]);
+    fprintf(stderr,"\nWrong match count %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_REGEX_WRONG_MATCH_OFFSET:
@@ -4410,7 +4410,11 @@ method match
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
+#ifdef _MSC_VER
+  if (match_count < 1 || match_count > 256)
+#else
   if (match_count < 1)
+#endif
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_REGEX_WRONG_MATCH_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(match_count);
@@ -4420,7 +4424,12 @@ method match
 
   // - create match target structure -
   size_t nmatch = match_count;
+
+#ifdef _MSC_VER
+  regmatch_t pmatch[256];
+#else
   regmatch_t pmatch[nmatch];
+#endif
 
   // - execute regular expression -
   int res = regexec(re,string_ptr->data,nmatch,pmatch,0);

@@ -28,6 +28,10 @@ include "script_parser.h"
 #include <sys/stat.h>
 #define POPEN_FNAME _popen
 #define PCLOSE_FNAME _pclose
+#ifdef PCRE_STATIC
+#include <pcreposix.h>
+#define ENABLE_CLASS_REGEX
+#endif
 #endif
 
 /*
