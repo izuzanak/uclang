@@ -1,14 +1,16 @@
 
-if(OS_LINUX)
-  set(REGEX_FOUND TRUE)
+set(PCRE_DEFS)
+
+if(PKG_CONFIG_FOUND)
+  pkg_search_module(PCRE "libpcreposix")
 else()
-  if (OS_WINDOWS AND PCRE_INCLUDE_DIRS AND PCRE_LIBRARIES)
+  if(OS_WINDOWS AND PCRE_INCLUDE_DIRS AND PCRE_LIBRARIES)
     set(PCRE_FOUND TRUE)
     set(PCRE_DEFS "-DPCRE_STATIC")
   endif()
 endif()
 
-if(REGEX_FOUND OR PCRE_FOUND)
+if(PCRE_FOUND)
   set(CONF_DO_BUILD TRUE)
   set(CONF_HEADER_DIRS
     "${LIB_BASE}/header_files")

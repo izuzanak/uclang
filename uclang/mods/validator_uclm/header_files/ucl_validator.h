@@ -6,11 +6,7 @@
 include "script_parser.h"
 @end
 
-#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
-#include <regex.h>
-#elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
 #include <pcreposix.h>
-#endif
 
 /*
  * basic definitions and constants
