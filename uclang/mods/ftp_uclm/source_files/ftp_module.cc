@@ -1106,7 +1106,14 @@ method write
   }
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-  ssize_t string_length = string_ptr->size - 1;
+
+#ifdef _MSC_VER
+  SSIZE_T string_length;
+#else
+  ssize_t string_length;
+#endif
+
+  string_length = string_ptr->size - 1;
 
   // - ERROR -
   if (FtpWrite(string_ptr->data,string_length,ftph_ptr->nb_ptr) != string_length)
