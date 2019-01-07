@@ -22,6 +22,7 @@ c_packages = [
   ["MOD_INOTIFY"   ,"inotify_uclm"   ,"files"     ,["/usr/include/sys/inotify.h"]],
   ["MOD_READLINE"  ,"readline_uclm"  ,"files"     ,["/usr/include/readline/readline.h"]],
   ["MOD_REGEX"     ,"regex_uclm"     ,"files"     ,["/usr/include/regex.h"]],
+  ["MOD_PCRE"      ,"pcre_uclm"      ,"pkg-config",["libpcreposix"]],
   ["MOD_TIME"      ,"time_uclm"      ,"true"      ,[]],
   ["MOD_LANG"      ,"lang_uclm"      ,"true"      ,[]],
   ["MOD_PACK"      ,"pack_uclm"      ,"true"      ,[]],
