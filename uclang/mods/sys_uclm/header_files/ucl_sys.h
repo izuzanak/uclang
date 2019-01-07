@@ -8,7 +8,6 @@ include "script_parser.h"
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
 #include <dirent.h>
-#include <regex.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
 #include <netinet/in.h>
@@ -17,7 +16,6 @@ include "script_parser.h"
 #if SYSTEM_TYPE_UNIX_SOCKET == ENABLED
 #define ENABLE_CLASS_SOCKET
 #endif
-#define ENABLE_CLASS_REGEX
 #define ENABLE_CLASS_CLOCK
 #define POPEN_FNAME popen
 #define PCLOSE_FNAME pclose
@@ -28,10 +26,6 @@ include "script_parser.h"
 #include <sys/stat.h>
 #define POPEN_FNAME _popen
 #define PCLOSE_FNAME _pclose
-#ifdef PCRE_STATIC
-#include <pcreposix.h>
-#define ENABLE_CLASS_REGEX
-#endif
 #endif
 
 /*

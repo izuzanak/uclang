@@ -3,24 +3,14 @@ if(OS_WINDOWS)
   set(WSOCK32_LIBS
     wsock32
     ws2_32)
-  if(PCRE_INCLUDE_DIRS AND PCRE_LIBRARIES)
-    set(PCRE_DEFS "-DPCRE_STATIC")
-  else()
-    set(PCRE_INCLUDE_DIRS)
-    set(PCRE_LIBRARIES)
-    set(PCRE_DEFS)
-  endif()
 endif()
 
 set(CONF_DO_BUILD TRUE)
 set(CONF_HEADER_DIRS
   "${LIB_BASE}/header_files")
-set(CONF_INCLUDE_DIRS
-  ${PCRE_INCLUDE_DIRS})
-set(CONF_COMP_DEFS
-  ${PCRE_DEFS})
+set(CONF_INCLUDE_DIRS)
+set(CONF_COMP_DEFS)
 set(CONF_LINK_LIBS
   libbase_ucll
-  ${WSOCK32_LIBS}
-  ${PCRE_LIBRARIES})
+  ${WSOCK32_LIBS})
 

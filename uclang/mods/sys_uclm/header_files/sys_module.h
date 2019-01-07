@@ -16,10 +16,6 @@ extern unsigned c_bi_class_socket_addr;
 extern unsigned c_bi_class_socket;
 #endif
 
-#ifdef ENABLE_CLASS_REGEX
-extern unsigned c_bi_class_regex;
-#endif
-
 extern unsigned c_bi_class_signal;
 extern unsigned c_bi_class_poll;
 extern unsigned c_bi_class_timer;
@@ -90,14 +86,6 @@ enum
   c_error_FD_READ_ERROR,
   c_error_FD_READ_NEGATIVE_BYTE_COUNT,
   c_error_FD_NOT_OPENED,
-
-#ifdef ENABLE_CLASS_REGEX
-  c_error_REGEX_COMPILE_ERROR,
-  c_error_REGEX_NOT_COMPILED,
-  c_error_REGEX_WRONG_MATCH_COUNT,
-  c_error_REGEX_WRONG_MATCH_OFFSET,
-  c_error_REGEX_STRING_SPLIT_EMPTY_MATCH,
-#endif
 
   c_error_SIGNAL_WRONG_SIGNAL_NUMBER,
   c_error_SIGNAL_WRONG_DELEGATE_PARAMETER_COUNT,
@@ -267,27 +255,6 @@ bool bic_fd_method_readln_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 bool bic_fd_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-#endif
-
-#ifdef ENABLE_CLASS_REGEX
-// - class REGEX -
-extern built_in_variable_s regex_variables[];
-extern built_in_method_s regex_methods[];
-extern built_in_class_s regex_class;
-
-void bic_regex_consts(location_array_s &const_locations);
-void bic_regex_init(interpreter_thread_s &it,location_s *location_ptr);
-void bic_regex_clear(interpreter_thread_s &it,location_s *location_ptr);
-
-bool bic_regex_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_regex_method_Regex_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_regex_method_match_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_regex_method_match_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_regex_method_match_from_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_regex_method_split_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_regex_method_replace_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_regex_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_regex_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 #endif
 
 // - class SIGNAL -
