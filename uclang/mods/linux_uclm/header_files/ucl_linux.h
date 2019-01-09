@@ -41,7 +41,7 @@ struct mmap_s
 {
   location_s *fd_location;
   void *mem_ptr;
-  size_t length;
+  long long int length;
 
   inline void init();
   void clear(interpreter_thread_s &it);

@@ -452,7 +452,11 @@ built_in_class_s fd_class =
 {/*{{{*/
   "Fd",
   c_modifier_public | c_modifier_final,
-  24, fd_methods,
+  22
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,6,0)
+  + 2
+#endif
+  , fd_methods,
   16 + 12 + 1 + 3 + 6
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,16,0)
   + 5
@@ -531,11 +535,13 @@ built_in_method_s fd_methods[] =
     c_modifier_public | c_modifier_final,
     bic_fd_method_writev_1
   },
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,6,0)
   {
     "pwritev2#3",
     c_modifier_public | c_modifier_final,
     bic_fd_method_pwritev2_3
   },
+#endif
   {
     "read#1",
     c_modifier_public | c_modifier_final,
@@ -551,11 +557,13 @@ built_in_method_s fd_methods[] =
     c_modifier_public | c_modifier_final,
     bic_fd_method_readv_1
   },
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,6,0)
   {
     "preadv2#3",
     c_modifier_public | c_modifier_final,
     bic_fd_method_preadv2_3
   },
+#endif
   {
     "sync#0",
     c_modifier_public | c_modifier_final,
@@ -1351,6 +1359,7 @@ method writev
   );
 }/*}}}*/
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,6,0)
 bool bic_fd_method_pwritev2_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
@@ -1369,6 +1378,7 @@ method pwritev2
     ssize_t cnt = pwritev2(fd_ptr->fd,iov_data,array_ptr->used,offset,flags);
   );
 }/*}}}*/
+#endif
 
 bool bic_fd_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
@@ -1504,6 +1514,7 @@ method readv
   );
 }/*}}}*/
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,6,0)
 bool bic_fd_method_preadv2_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
@@ -1522,6 +1533,7 @@ method preadv2
     ssize_t cnt = preadv2(fd_ptr->fd,iov_data,array_ptr->used,offset,flags);
   );
 }/*}}}*/
+#endif
 
 bool bic_fd_method_sync_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/

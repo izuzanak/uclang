@@ -87,11 +87,15 @@ bool bic_fd_method_write_all_1(interpreter_thread_s &it,unsigned stack_base,uli 
 bool bic_fd_method_pwrite_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_pwrite_all_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_writev_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,6,0)
 bool bic_fd_method_pwritev2_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#endif
 bool bic_fd_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_pread_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_readv_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,6,0)
 bool bic_fd_method_preadv2_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#endif
 bool bic_fd_method_sync_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_datasync_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_advise_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
