@@ -408,8 +408,13 @@ bool bic_http_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_ba
   fd_set es; FD_ZERO(&es);
 
   // - ERROR -
+#if MHD_VERSION <= 0x00093300
+  int max_fd = 0;
+  if (MHD_YES != MHD_get_fdset(srv_ptr->daemon_ptr,&rs,&ws,&es,&max_fd))
+#else
   MHD_socket max_fd = 0;
   if (MHD_YES != MHD_get_fdset2(srv_ptr->daemon_ptr,&rs,&ws,&es,&max_fd,FD_SETSIZE))
+#endif
   {
     exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_INTERNAL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -569,8 +574,13 @@ method process
   fd_set es; FD_ZERO(&es);
 
   // - ERROR -
+#if MHD_VERSION <= 0x00093300
+  int max_fd = 0;
+  if (MHD_YES != MHD_get_fdset(daemon_ptr,&rs,&ws,&es,&max_fd))
+#else
   MHD_socket max_fd = 0;
   if (MHD_YES != MHD_get_fdset2(daemon_ptr,&rs,&ws,&es,&max_fd,FD_SETSIZE))
+#endif
   {
     exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_INTERNAL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
