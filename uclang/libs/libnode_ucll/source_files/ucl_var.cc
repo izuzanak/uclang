@@ -27,7 +27,6 @@ unsigned UclVar::c_bi_class_Pipe;
 unsigned UclVar::c_bi_class_File;
 unsigned UclVar::c_bi_class_SocketAddr;
 unsigned UclVar::c_bi_class_Socket;
-unsigned UclVar::c_bi_class_Regex;
 unsigned UclVar::c_bi_class_Signal;
 unsigned UclVar::c_bi_class_Poll;
 unsigned UclVar::c_bi_class_Timer;
@@ -218,6 +217,7 @@ unsigned UclVar::c_bi_mni_rmdir_1;
 unsigned UclVar::c_bi_mni_chdir_1;
 unsigned UclVar::c_bi_mni_listdir_1;
 unsigned UclVar::c_bi_mni_mkfifo_1;
+unsigned UclVar::c_bi_mni_chmod_2;
 unsigned UclVar::c_bi_mni_remove_1;
 unsigned UclVar::c_bi_mni_rename_2;
 unsigned UclVar::c_bi_mni_getcwd_0;
@@ -235,6 +235,7 @@ unsigned UclVar::c_bi_mni_flush_0;
 unsigned UclVar::c_bi_mni_read_0;
 unsigned UclVar::c_bi_mni_readln_0;
 unsigned UclVar::c_bi_mni_read_1;
+unsigned UclVar::c_bi_mni_read_max_1;
 unsigned UclVar::c_bi_mni_read_close_0;
 unsigned UclVar::c_bi_mni_get_fd_0;
 unsigned UclVar::c_bi_mni_next_item_0;
@@ -254,10 +255,6 @@ unsigned UclVar::c_bi_mni_sendto_2;
 unsigned UclVar::c_bi_mni_recvfrom_0;
 unsigned UclVar::c_bi_mni_set_timeout_2;
 unsigned UclVar::c_bi_mni_read_nonblock_0;
-unsigned UclVar::c_bi_mni_Regex_1;
-unsigned UclVar::c_bi_mni_match_1;
-unsigned UclVar::c_bi_mni_match_2;
-unsigned UclVar::c_bi_mni_match_from_2;
 unsigned UclVar::c_bi_mni_bind_2;
 unsigned UclVar::c_bi_mni_unbind_1;
 unsigned UclVar::c_bi_mni_send_2;
@@ -266,8 +263,10 @@ unsigned UclVar::c_bi_mni_ready_1;
 unsigned UclVar::c_bi_mni_poll_1;
 unsigned UclVar::c_bi_mni_Timer_0;
 unsigned UclVar::c_bi_mni_schedule_3;
+unsigned UclVar::c_bi_mni_cancel_1;
 unsigned UclVar::c_bi_mni_process_0;
 unsigned UclVar::c_bi_mni_remain_0;
+unsigned UclVar::c_bi_mni_timeout_0;
 unsigned UclVar::c_bi_mni_getres_1;
 unsigned UclVar::c_bi_mni_gettime_1;
 unsigned UclVar::c_bi_mni_settime_2;
@@ -308,8 +307,8 @@ unsigned UclVar::c_bi_mni_step_0;
 unsigned UclVar::c_bi_mni_reset_0;
 unsigned UclVar::c_bi_mni_reset_clear_0;
 unsigned UclVar::c_bi_mni_HttpServer_2;
+unsigned UclVar::c_bi_mni_stop_0;
 unsigned UclVar::c_bi_mni_get_fds_0;
-unsigned UclVar::c_bi_mni_timeout_0;
 unsigned UclVar::c_bi_mni_process_1;
 unsigned UclVar::c_bi_mni_id_0;
 unsigned UclVar::c_bi_mni_url_0;
@@ -318,7 +317,14 @@ unsigned UclVar::c_bi_mni_version_0;
 unsigned UclVar::c_bi_mni_upload_data_0;
 unsigned UclVar::c_bi_mni_user_data_0;
 unsigned UclVar::c_bi_mni_values_1;
+unsigned UclVar::c_bi_mni_suspend_0;
+unsigned UclVar::c_bi_mni_resume_0;
 unsigned UclVar::c_bi_mni_queue_response_2;
+unsigned UclVar::c_bi_mni_queue_basic_auth_fail_response_2;
+unsigned UclVar::c_bi_mni_basic_auth_username_password_0;
+unsigned UclVar::c_bi_mni_queue_digest_auth_fail_response_4;
+unsigned UclVar::c_bi_mni_digest_auth_username_0;
+unsigned UclVar::c_bi_mni_digest_auth_check_4;
 unsigned UclVar::c_bi_mni_post_processor_2;
 unsigned UclVar::c_bi_mni_HttpResp_1;
 unsigned UclVar::c_bi_mni_HttpResp_2;
@@ -341,6 +347,7 @@ unsigned UclVar::c_bi_mni_data_0;
 unsigned UclVar::c_bi_mni_info_1;
 unsigned UclVar::c_bi_mni__GET_1;
 unsigned UclVar::c_bi_mni__PUT_2;
+unsigned UclVar::c_bi_mni__POST_2;
 unsigned UclVar::c_bi_mni__DELETE_1;
 unsigned UclVar::c_bi_mni__HEAD_1;
 unsigned UclVar::c_bi_mni_GetProcessId_0;
@@ -481,9 +488,19 @@ unsigned UclVar::c_bi_mni_Range_1;
 unsigned UclVar::c_bi_mni_Range_2;
 unsigned UclVar::c_bi_mni_Range_3;
 unsigned UclVar::c_bi_mni_create_nice_2;
+unsigned UclVar::c_bi_mni_create_nice_3;
 unsigned UclVar::c_bi_mni_parse_1;
+unsigned UclVar::c_bi_mni_XmlNode_1;
+unsigned UclVar::c_bi_mni_update_node_dict_0;
+unsigned UclVar::c_bi_mni_attr__2;
+unsigned UclVar::c_bi_mni_node_1;
+unsigned UclVar::c_bi_mni_node__1;
+unsigned UclVar::c_bi_mni_node_2;
+unsigned UclVar::c_bi_mni_node__2;
+unsigned UclVar::c_bi_mni_text__1;
 unsigned UclVar::c_bi_mni_text_0;
 unsigned UclVar::c_bi_mni_attributes_0;
+unsigned UclVar::c_bi_mni_node_dict_0;
 unsigned UclVar::c_bi_mni_nodes_0;
 unsigned UclVar::c_bi_mni_texts_0;
 unsigned UclVar::c_bi_mni_content_0;
@@ -665,6 +682,9 @@ unsigned UclVar::c_bi_vni_VALS_COOKIE;
 unsigned UclVar::c_bi_vni_VALS_POSTDATA;
 unsigned UclVar::c_bi_vni_VALS_GET_ARGUMENT;
 unsigned UclVar::c_bi_vni_VALS_FOOTER;
+unsigned UclVar::c_bi_vni_YES;
+unsigned UclVar::c_bi_vni_NO;
+unsigned UclVar::c_bi_vni_INVALID_NONCE;
 unsigned UclVar::c_bi_vni_FROM_STRING;
 unsigned UclVar::c_bi_vni_FROM_FILE;
 unsigned UclVar::c_bi_vni_HTTP_CONTINUE;
@@ -806,6 +826,21 @@ unsigned UclVar::c_bi_vni_INFO_PRIMARY_PORT;
 unsigned UclVar::c_bi_vni_INFO_LOCAL_IP;
 unsigned UclVar::c_bi_vni_INFO_LOCAL_PORT;
 unsigned UclVar::c_bi_vni_INFO_TLS_SESSION;
+unsigned UclVar::c_bi_vni_OPT_TIMEOUT;
+unsigned UclVar::c_bi_vni_OPT_TIMEOUT_MS;
+unsigned UclVar::c_bi_vni_OPT_HTTPAUTH;
+unsigned UclVar::c_bi_vni_OPT_USERNAME;
+unsigned UclVar::c_bi_vni_OPT_PASSWORD;
+unsigned UclVar::c_bi_vni_AUTH_ANY;
+unsigned UclVar::c_bi_vni_AUTH_ANYSAFE;
+unsigned UclVar::c_bi_vni_AUTH_BASIC;
+unsigned UclVar::c_bi_vni_AUTH_DIGEST;
+unsigned UclVar::c_bi_vni_AUTH_GSSNEGOTIATE;
+unsigned UclVar::c_bi_vni_AUTH_NTLM;
+unsigned UclVar::c_bi_vni_AUTH_DIGEST_IE;
+unsigned UclVar::c_bi_vni_AUTH_NTLM_WB;
+unsigned UclVar::c_bi_vni_AUTH_ONLY;
+unsigned UclVar::c_bi_vni_AUTH_NONE;
 unsigned UclVar::c_bi_vni_FC_NONE;
 unsigned UclVar::c_bi_vni_FC_RTS_CTS;
 unsigned UclVar::c_bi_vni_FC_RS_485;
@@ -890,6 +925,7 @@ unsigned UclVar::Sys::c_bi_mi_rmdir_1;
 unsigned UclVar::Sys::c_bi_mi_chdir_1;
 unsigned UclVar::Sys::c_bi_mi_listdir_1;
 unsigned UclVar::Sys::c_bi_mi_mkfifo_1;
+unsigned UclVar::Sys::c_bi_mi_chmod_2;
 unsigned UclVar::Sys::c_bi_mi_remove_1;
 unsigned UclVar::Sys::c_bi_mi_rename_2;
 unsigned UclVar::Sys::c_bi_mi_getcwd_0;
@@ -910,10 +946,6 @@ unsigned UclVar::SocketAddr::c_bi_mi_to_string_0;
 unsigned UclVar::SocketAddr::c_bi_mi_print_0;
 unsigned UclVar::Socket::c_bi_mi_to_string_0;
 unsigned UclVar::Socket::c_bi_mi_print_0;
-#endif
-#ifdef ENABLE_CLASS_REGEX
-unsigned UclVar::Regex::c_bi_mi_to_string_0;
-unsigned UclVar::Regex::c_bi_mi_print_0;
 #endif
 unsigned UclVar::Signal::c_bi_mi_bind_2;
 unsigned UclVar::Signal::c_bi_mi_unbind_1;
@@ -979,6 +1011,7 @@ unsigned UclVar::CurlResult::c_bi_mi_to_string_0;
 unsigned UclVar::CurlResult::c_bi_mi_print_0;
 unsigned UclVar::Curl::c_bi_mi__GET_1;
 unsigned UclVar::Curl::c_bi_mi__PUT_2;
+unsigned UclVar::Curl::c_bi_mi__POST_2;
 unsigned UclVar::Curl::c_bi_mi__DELETE_1;
 unsigned UclVar::Curl::c_bi_mi__HEAD_1;
 unsigned UclVar::Curl::c_bi_mi_to_string_0;
@@ -1051,9 +1084,13 @@ unsigned UclVar::Range::c_bi_mi_to_string_0;
 unsigned UclVar::Range::c_bi_mi_print_0;
 unsigned UclVar::Json::c_bi_mi_create_1;
 unsigned UclVar::Json::c_bi_mi_create_nice_2;
+unsigned UclVar::Json::c_bi_mi_create_nice_3;
 unsigned UclVar::Json::c_bi_mi_parse_1;
 unsigned UclVar::Json::c_bi_mi_to_string_0;
 unsigned UclVar::Json::c_bi_mi_print_0;
+unsigned UclVar::Xml::c_bi_mi_create_1;
+unsigned UclVar::Xml::c_bi_mi_create_nice_2;
+unsigned UclVar::Xml::c_bi_mi_create_nice_3;
 unsigned UclVar::Xml::c_bi_mi_parse_1;
 unsigned UclVar::Xml::c_bi_mi_to_string_0;
 unsigned UclVar::Xml::c_bi_mi_print_0;
@@ -1248,6 +1285,9 @@ UclVar UclVar::HttpConn::VALS_COOKIE = UclVar(NO_INIT());
 UclVar UclVar::HttpConn::VALS_POSTDATA = UclVar(NO_INIT());
 UclVar UclVar::HttpConn::VALS_GET_ARGUMENT = UclVar(NO_INIT());
 UclVar UclVar::HttpConn::VALS_FOOTER = UclVar(NO_INIT());
+UclVar UclVar::HttpConn::YES = UclVar(NO_INIT());
+UclVar UclVar::HttpConn::NO = UclVar(NO_INIT());
+UclVar UclVar::HttpConn::INVALID_NONCE = UclVar(NO_INIT());
 UclVar UclVar::HttpResp::FROM_STRING = UclVar(NO_INIT());
 UclVar UclVar::HttpResp::FROM_FILE = UclVar(NO_INIT());
 UclVar UclVar::HttpResp::HTTP_CONTINUE = UclVar(NO_INIT());
@@ -1389,6 +1429,21 @@ UclVar UclVar::CurlResult::INFO_PRIMARY_PORT = UclVar(NO_INIT());
 UclVar UclVar::CurlResult::INFO_LOCAL_IP = UclVar(NO_INIT());
 UclVar UclVar::CurlResult::INFO_LOCAL_PORT = UclVar(NO_INIT());
 UclVar UclVar::CurlResult::INFO_TLS_SESSION = UclVar(NO_INIT());
+UclVar UclVar::Curl::OPT_TIMEOUT = UclVar(NO_INIT());
+UclVar UclVar::Curl::OPT_TIMEOUT_MS = UclVar(NO_INIT());
+UclVar UclVar::Curl::OPT_HTTPAUTH = UclVar(NO_INIT());
+UclVar UclVar::Curl::OPT_USERNAME = UclVar(NO_INIT());
+UclVar UclVar::Curl::OPT_PASSWORD = UclVar(NO_INIT());
+UclVar UclVar::Curl::AUTH_ANY = UclVar(NO_INIT());
+UclVar UclVar::Curl::AUTH_ANYSAFE = UclVar(NO_INIT());
+UclVar UclVar::Curl::AUTH_BASIC = UclVar(NO_INIT());
+UclVar UclVar::Curl::AUTH_DIGEST = UclVar(NO_INIT());
+UclVar UclVar::Curl::AUTH_GSSNEGOTIATE = UclVar(NO_INIT());
+UclVar UclVar::Curl::AUTH_NTLM = UclVar(NO_INIT());
+UclVar UclVar::Curl::AUTH_DIGEST_IE = UclVar(NO_INIT());
+UclVar UclVar::Curl::AUTH_NTLM_WB = UclVar(NO_INIT());
+UclVar UclVar::Curl::AUTH_ONLY = UclVar(NO_INIT());
+UclVar UclVar::Curl::AUTH_NONE = UclVar(NO_INIT());
 UclVar UclVar::Serial::FC_NONE = UclVar(NO_INIT());
 UclVar UclVar::Serial::FC_RTS_CTS = UclVar(NO_INIT());
 UclVar UclVar::Serial::FC_RS_485 = UclVar(NO_INIT());
@@ -1478,9 +1533,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
 #ifdef ENABLE_CLASS_SOCKET
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_SocketAddr,"SocketAddr");
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Socket,"Socket");
-#endif
-#ifdef ENABLE_CLASS_REGEX
-    UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Regex,"Regex");
 #endif
     UCLVAR_RETRIEVE_CLASS_IDX(c_bi_class_Signal,"Signal");
 #ifdef ENABLE_CLASS_POLL
@@ -1821,6 +1873,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_chdir_1,"chdir#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_listdir_1,"listdir#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_mkfifo_1,"mkfifo#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_chmod_2,"chmod#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_remove_1,"remove#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_rename_2,"rename#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_getcwd_0,"getcwd#0");
@@ -1840,6 +1893,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_0,"read#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_readln_0,"readln#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_1,"read#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_max_1,"read_max#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_close_0,"read_close#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_fd_0,"get_fd#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_next_item_0,"next_item#0");
@@ -1855,6 +1909,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_0,"read#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_readln_0,"readln#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_1,"read#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_max_1,"read_max#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_read_close_0,"read_close#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_fd_0,"get_fd#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_next_item_0,"next_item#0");
@@ -1884,16 +1939,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
 #endif
-#ifdef ENABLE_CLASS_REGEX
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Regex_1,"Regex#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_match_1,"match#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_match_2,"match#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_match_from_2,"match_from#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_split_1,"split#1");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_replace_2,"replace#2");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
-    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
-#endif
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_bind_2,"bind#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_unbind_1,"unbind#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_send_2,"send#2");
@@ -1908,8 +1953,10 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
 #endif
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_Timer_0,"Timer#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_schedule_3,"schedule#3");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_cancel_1,"cancel#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_process_0,"process#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_remain_0,"remain#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_timeout_0,"timeout#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
 #ifdef ENABLE_CLASS_CLOCK
@@ -2023,6 +2070,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
   if (a_modules[c_uclvar_module_http])
   {
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_HttpServer_2,"HttpServer#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_stop_0,"stop#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_get_fds_0,"get_fds#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_timeout_0,"timeout#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_process_0,"process#0");
@@ -2037,7 +2085,14 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_upload_data_0,"upload_data#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_user_data_0,"user_data#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_values_1,"values#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_suspend_0,"suspend#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_resume_0,"resume#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_queue_response_2,"queue_response#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_queue_basic_auth_fail_response_2,"queue_basic_auth_fail_response#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_basic_auth_username_password_0,"basic_auth_username_password#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_queue_digest_auth_fail_response_4,"queue_digest_auth_fail_response#4");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_digest_auth_username_0,"digest_auth_username#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_digest_auth_check_4,"digest_auth_check#4");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_post_processor_2,"post_processor#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
@@ -2087,11 +2142,13 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
   if (a_modules[c_uclvar_module_curl])
   {
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_data_0,"data#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_user_data_0,"user_data#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_info_1,"info#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni__GET_1,"GET#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni__PUT_2,"PUT#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni__POST_2,"POST#2");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni__DELETE_1,"DELETE#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni__HEAD_1,"HEAD#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
@@ -2476,6 +2533,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
   {
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_create_1,"create#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_create_nice_2,"create_nice#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_create_nice_3,"create_nice#3");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_parse_1,"parse#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
@@ -2484,15 +2542,30 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
   // - module xml -
   if (a_modules[c_uclvar_module_xml])
   {
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_create_1,"create#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_create_nice_2,"create_nice#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_create_nice_3,"create_nice#3");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_parse_1,"parse#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_XmlNode_1,"XmlNode#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_update_node_dict_0,"update_node_dict#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_attr__2,"attr_#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_node_1,"node#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_node__1,"node_#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_node_2,"node#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_node__2,"node_#2");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_text__1,"text_#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_append_1,"append#1");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_has_key_1,"has_key#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_name_0,"name#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_text_0,"text#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_attributes_0,"attributes#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_node_dict_0,"node_dict#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_nodes_0,"nodes#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_texts_0,"texts#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_content_0,"content#0");
+    UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_contain_1,"contain#1");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_to_string_0,"to_string#0");
     UCLVAR_RETRIEVE_METHOD_NAME_IDX(c_bi_mni_print_0,"print#0");
   }
@@ -2729,6 +2802,9 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_VALS_POSTDATA,"VALS_POSTDATA");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_VALS_GET_ARGUMENT,"VALS_GET_ARGUMENT");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_VALS_FOOTER,"VALS_FOOTER");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_YES,"YES");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_NO,"NO");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INVALID_NONCE,"INVALID_NONCE");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_FROM_STRING,"FROM_STRING");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_FROM_FILE,"FROM_FILE");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_HTTP_CONTINUE,"HTTP_CONTINUE");
@@ -2880,6 +2956,21 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_LOCAL_IP,"INFO_LOCAL_IP");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_LOCAL_PORT,"INFO_LOCAL_PORT");
     UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_INFO_TLS_SESSION,"INFO_TLS_SESSION");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPT_TIMEOUT,"OPT_TIMEOUT");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPT_TIMEOUT_MS,"OPT_TIMEOUT_MS");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPT_HTTPAUTH,"OPT_HTTPAUTH");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPT_USERNAME,"OPT_USERNAME");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_OPT_PASSWORD,"OPT_PASSWORD");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_AUTH_ANY,"AUTH_ANY");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_AUTH_ANYSAFE,"AUTH_ANYSAFE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_AUTH_BASIC,"AUTH_BASIC");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_AUTH_DIGEST,"AUTH_DIGEST");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_AUTH_GSSNEGOTIATE,"AUTH_GSSNEGOTIATE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_AUTH_NTLM,"AUTH_NTLM");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_AUTH_DIGEST_IE,"AUTH_DIGEST_IE");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_AUTH_NTLM_WB,"AUTH_NTLM_WB");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_AUTH_ONLY,"AUTH_ONLY");
+    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(c_bi_vni_AUTH_NONE,"AUTH_NONE");
   }
 
   // - module ucf -
@@ -3027,6 +3118,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Sys,c_bi_class_Sys,c_bi_mi_chdir_1,c_bi_mni_chdir_1);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Sys,c_bi_class_Sys,c_bi_mi_listdir_1,c_bi_mni_listdir_1);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Sys,c_bi_class_Sys,c_bi_mi_mkfifo_1,c_bi_mni_mkfifo_1);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Sys,c_bi_class_Sys,c_bi_mi_chmod_2,c_bi_mni_chmod_2);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Sys,c_bi_class_Sys,c_bi_mi_remove_1,c_bi_mni_remove_1);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Sys,c_bi_class_Sys,c_bi_mi_rename_2,c_bi_mni_rename_2);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Sys,c_bi_class_Sys,c_bi_mi_getcwd_0,c_bi_mni_getcwd_0);
@@ -3047,10 +3139,6 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(SocketAddr,c_bi_class_SocketAddr,c_bi_mi_print_0,c_bi_mni_print_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Socket,c_bi_class_Socket,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Socket,c_bi_class_Socket,c_bi_mi_print_0,c_bi_mni_print_0);
-#endif
-#ifdef ENABLE_CLASS_REGEX
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Regex,c_bi_class_Regex,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
-    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Regex,c_bi_class_Regex,c_bi_mi_print_0,c_bi_mni_print_0);
 #endif
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Signal,c_bi_class_Signal,c_bi_mi_bind_2,c_bi_mni_bind_2);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Signal,c_bi_class_Signal,c_bi_mi_unbind_1,c_bi_mni_unbind_1);
@@ -3156,6 +3244,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(CurlResult,c_bi_class_CurlResult,c_bi_mi_print_0,c_bi_mni_print_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi__GET_1,c_bi_mni__GET_1);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi__PUT_2,c_bi_mni__PUT_2);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi__POST_2,c_bi_mni__POST_2);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi__DELETE_1,c_bi_mni__DELETE_1);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi__HEAD_1,c_bi_mni__HEAD_1);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Curl,c_bi_class_Curl,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
@@ -3268,6 +3357,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
   {
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Json,c_bi_class_Json,c_bi_mi_create_1,c_bi_mni_create_1);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Json,c_bi_class_Json,c_bi_mi_create_nice_2,c_bi_mni_create_nice_2);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Json,c_bi_class_Json,c_bi_mi_create_nice_3,c_bi_mni_create_nice_3);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Json,c_bi_class_Json,c_bi_mi_parse_1,c_bi_mni_parse_1);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Json,c_bi_class_Json,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Json,c_bi_class_Json,c_bi_mi_print_0,c_bi_mni_print_0);
@@ -3276,6 +3366,9 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
   // - module xml -
   if (a_modules[c_uclvar_module_xml])
   {
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Xml,c_bi_class_Xml,c_bi_mi_create_1,c_bi_mni_create_1);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Xml,c_bi_class_Xml,c_bi_mi_create_nice_2,c_bi_mni_create_nice_2);
+    UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Xml,c_bi_class_Xml,c_bi_mi_create_nice_3,c_bi_mni_create_nice_3);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Xml,c_bi_class_Xml,c_bi_mi_parse_1,c_bi_mni_parse_1);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Xml,c_bi_class_Xml,c_bi_mi_to_string_0,c_bi_mni_to_string_0);
     UCLVAR_RETRIEVE_STATIC_METHOD_IDX(Xml,c_bi_class_Xml,c_bi_mi_print_0,c_bi_mni_print_0);
@@ -3534,6 +3627,9 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(HttpConn,c_bi_class_HttpConn,VALS_POSTDATA);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpConn,c_bi_class_HttpConn,VALS_GET_ARGUMENT);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpConn,c_bi_class_HttpConn,VALS_FOOTER);
+    UCLVAR_RETRIEVE_STATIC_CONST(HttpConn,c_bi_class_HttpConn,YES);
+    UCLVAR_RETRIEVE_STATIC_CONST(HttpConn,c_bi_class_HttpConn,NO);
+    UCLVAR_RETRIEVE_STATIC_CONST(HttpConn,c_bi_class_HttpConn,INVALID_NONCE);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,FROM_STRING);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,FROM_FILE);
     UCLVAR_RETRIEVE_STATIC_CONST(HttpResp,c_bi_class_HttpResp,HTTP_CONTINUE);
@@ -3685,6 +3781,21 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
     UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_LOCAL_IP);
     UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_LOCAL_PORT);
     UCLVAR_RETRIEVE_STATIC_CONST(CurlResult,c_bi_class_CurlResult,INFO_TLS_SESSION);
+    UCLVAR_RETRIEVE_STATIC_CONST(Curl,c_bi_class_Curl,OPT_TIMEOUT);
+    UCLVAR_RETRIEVE_STATIC_CONST(Curl,c_bi_class_Curl,OPT_TIMEOUT_MS);
+    UCLVAR_RETRIEVE_STATIC_CONST(Curl,c_bi_class_Curl,OPT_HTTPAUTH);
+    UCLVAR_RETRIEVE_STATIC_CONST(Curl,c_bi_class_Curl,OPT_USERNAME);
+    UCLVAR_RETRIEVE_STATIC_CONST(Curl,c_bi_class_Curl,OPT_PASSWORD);
+    UCLVAR_RETRIEVE_STATIC_CONST(Curl,c_bi_class_Curl,AUTH_ANY);
+    UCLVAR_RETRIEVE_STATIC_CONST(Curl,c_bi_class_Curl,AUTH_ANYSAFE);
+    UCLVAR_RETRIEVE_STATIC_CONST(Curl,c_bi_class_Curl,AUTH_BASIC);
+    UCLVAR_RETRIEVE_STATIC_CONST(Curl,c_bi_class_Curl,AUTH_DIGEST);
+    UCLVAR_RETRIEVE_STATIC_CONST(Curl,c_bi_class_Curl,AUTH_GSSNEGOTIATE);
+    UCLVAR_RETRIEVE_STATIC_CONST(Curl,c_bi_class_Curl,AUTH_NTLM);
+    UCLVAR_RETRIEVE_STATIC_CONST(Curl,c_bi_class_Curl,AUTH_DIGEST_IE);
+    UCLVAR_RETRIEVE_STATIC_CONST(Curl,c_bi_class_Curl,AUTH_NTLM_WB);
+    UCLVAR_RETRIEVE_STATIC_CONST(Curl,c_bi_class_Curl,AUTH_ONLY);
+    UCLVAR_RETRIEVE_STATIC_CONST(Curl,c_bi_class_Curl,AUTH_NONE);
   }
 
   // - module ucf -

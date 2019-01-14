@@ -124,7 +124,6 @@ class Main
       "File",
       "SocketAddr",
       "Socket",
-      "Regex",
       "Signal",
       "Poll",
       "Timer",
@@ -298,6 +297,7 @@ class Main
     "CLOCK_THREAD_CPUTIME_ID",
     "GET#1",
     "PUT#2",
+    "POST#2",
     "DELETE#1",
     "HEAD#1"
   ]);/*}}}*/
@@ -383,7 +383,7 @@ class Main
     // - if variable name vas not processed yet -
     if (!m_processed_var_names.contain(var_name))
     {
-      m_header_bivn_idxs.push("  static unsigned %s;" % var_name_id);
+      m_header_bivn_idxs.push("  libnode_ucll_EXPORT static unsigned %s;" % var_name_id);
       m_source_bivn_idxs.push("unsigned UclVar::%s;" % var_name_id);
       m_source_isp_bivn_idxs.push("    UCLVAR_RETRIEVE_VARIABLE_NAME_IDX(%s,\"%s\");" % [var_name_id,var_orig_name]);
 
@@ -391,7 +391,7 @@ class Main
       m_processed_var_names.insert(var_name);
     }
 
-    a_class_vars.push("    static UclVar %s;" % var_name);
+    a_class_vars.push("    libnode_ucll_EXPORT static UclVar %s;" % var_name);
     m_source_biv_values.push("UclVar UclVar::%s::%s = UclVar(NO_INIT());" % [a_class_name,var_name]);
     m_source_ii_bisc.push("    UCLVAR_RETRIEVE_STATIC_CONST(%s,%s,%s);" % [a_class_name,a_class_id,var_name]);
   }/*}}}*/
@@ -440,7 +440,7 @@ class Main
     // - if method name was not processed yet -
     if (!m_processed_method_names.contain(method_name))
     {
-      m_header_bimn_idxs.push("  static unsigned %s;" % method_name_id);
+      m_header_bimn_idxs.push("  libnode_ucll_EXPORT static unsigned %s;" % method_name_id);
       m_source_bimn_idxs.push("unsigned UclVar::%s;" % method_name_id);
 
       // - if method is not constructor -
@@ -473,7 +473,7 @@ class Main
     class_comment_str = "  // - class %s -" % class_name;
     m_header_classes.push(class_comment_str);
 
-    m_header_bic_idxs.push("  static unsigned %s;" % class_id);
+    m_header_bic_idxs.push("  libnode_ucll_EXPORT static unsigned %s;" % class_id);
     m_source_bic_idxs.push("unsigned UclVar::%s;" % class_id);
     m_source_isp_bic_idxs.push("    UCLVAR_RETRIEVE_CLASS_IDX(%s,\"%s\");" % [class_id,class_name]);
 
@@ -640,7 +640,7 @@ class Main
         bi_method_name_underscore = bi_method_name.replace("#","_");
         bi_method_name_id = "c_bi_mni_%s" % bi_method_name_underscore;
 
-        m_header_bimn_idxs.push("  static unsigned %s;" % bi_method_name_id);
+        m_header_bimn_idxs.push("  libnode_ucll_EXPORT static unsigned %s;" % bi_method_name_id);
         m_source_bimn_idxs.push("unsigned UclVar::%s;" % bi_method_name_id);
 
         if (bi_method_name.get_idx("operator_") == 0)
