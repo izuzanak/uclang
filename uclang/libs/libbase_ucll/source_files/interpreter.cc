@@ -1963,11 +1963,14 @@ void *new_thread_function(void *nt_start_info)
       {
         // - process thread return value -
         location_s *ret_location = (location_s *)thread->get_stack_value(0);
+
+#if THREAD_LIB == THREAD_LIB_PTHREAD
         if (ret_location->v_type != c_bi_class_blank)
         {
           ret_location->v_reference_cnt.atomic_inc();
           return_location = ret_location;
         }
+#endif
       }
     }
   }
@@ -1991,6 +1994,12 @@ void *new_thread_function(void *nt_start_info)
   thread->clear();
   cfree(thread);
 
+#if THREAD_LIB == THREAD_LIB_PTHREAD
   return return_location;
+#elif THREAD_LIB == THREAD_LIB_WINDOWS
+  return 0;
+#else
+  cassert(0);
+#endif
 }/*}}}*/
 

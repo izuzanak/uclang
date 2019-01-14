@@ -8184,7 +8184,7 @@ bool bic_thread_method_join_0(interpreter_thread_s &it,unsigned stack_base,uli *
   // - test if thread exist -
   thread_s *thread_ptr = (thread_s *)dst_location->v_data_ptr;
 
-  void *return_location;
+  void *return_location = nullptr;
 
   // - join thread -
   unsigned ret = thread_ptr->join(&return_location);
