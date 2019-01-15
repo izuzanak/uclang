@@ -13,7 +13,7 @@ EXPORT built_in_module_s module =
   image_classes,          // Classes
 
   0,                      // Error base index
-  14,                     // Error count
+  15,                     // Error count
   image_error_strings,    // Error strings
 
   image_initialize,       // Initialize function
@@ -30,6 +30,7 @@ built_in_class_s *image_classes[] =
 const char *image_error_strings[] =
 {/*{{{*/
   "error_IMAGE_WRONG_PROPERTIES",
+  "error_IMAGE_INVALID_SOURCE_DATA_SIZE",
   "error_IMAGE_UNSUPPORTED_PIXEL_FORMAT",
   "error_IMAGE_CANNOT_GET_BUFFER_OF_NON_ROOT_IMAGE",
   "error_IMAGE_CANNOT_OPEN_FILE",
@@ -69,6 +70,13 @@ bool image_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nWrong properties (dimensions, pixel format) of image\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_IMAGE_INVALID_SOURCE_DATA_SIZE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid size of image source data\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_IMAGE_UNSUPPORTED_PIXEL_FORMAT:
@@ -174,7 +182,7 @@ built_in_class_s image_class =
 {/*{{{*/
   "Image",
   c_modifier_public | c_modifier_final,
-  21, image_methods,
+  22, image_methods,
   3, image_variables,
   bic_image_consts,
   bic_image_init,
@@ -203,6 +211,11 @@ built_in_method_s image_methods[] =
     "Image#3",
     c_modifier_public | c_modifier_final,
     bic_image_method_Image_3
+  },
+  {
+    "Image#4",
+    c_modifier_public | c_modifier_final,
+    bic_image_method_Image_4
   },
   {
     "width#0",
@@ -608,6 +621,97 @@ method Image
   return true;
 }/*}}}*/
 
+bool bic_image_method_Image_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+width:retrieve_integer
+height:retrieve_integer
+format:retrieve_integer
+data:c_bi_class_string
+data:c_bi_class_buffer
+>
+method Image
+; @end
+
+  // - ERROR -
+  if (width <= 0 || height <= 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_IMAGE_WRONG_PROPERTIES,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  switch (format)
+  {
+  case c_image_pixel_format_GRAY8:
+  case c_image_pixel_format_RGB24:
+  case c_image_pixel_format_RGBA:
+    break;
+
+  // - ERROR -
+  default:
+
+    exception_s::throw_exception(it,module.error_base + c_error_IMAGE_WRONG_PROPERTIES,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  unsigned char *data_ptr;
+  unsigned data_size;
+
+  if (src_3_location->v_type == c_bi_class_string)
+  {
+    // - retrieve data from string -
+    string_s *string_ptr = (string_s *)src_3_location->v_data_ptr;
+
+    data_ptr = (unsigned char *)string_ptr->data;
+    data_size = string_ptr->size - 1;
+  }
+  else
+  {
+    // - retrieve data from buffer -
+    buffer_s *buffer_ptr = (buffer_s *)src_3_location->v_data_ptr;
+
+    data_ptr = (unsigned char *)buffer_ptr->data;
+    data_size = buffer_ptr->size;
+  }
+
+  unsigned line_bytes = data_size / height;
+
+  // - ERROR -
+  if (height*line_bytes != data_size || width*c_pixel_sizes[format] > line_bytes)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_IMAGE_INVALID_SOURCE_DATA_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - image data structure -
+  image_data_s image_data;
+  image_data.line_bytes = line_bytes;
+  image_data.data = data_ptr;
+
+  // - image structure -
+  image_s image;
+  image.root = true;
+  image.pixel_format = format;
+  image.width = width;
+  image.height = height;
+  image.x_pos = 0;
+  image.y_pos = 0;
+  image.pixel_step = c_pixel_sizes[format];
+  image.image_data_ptr = &image_data;
+
+  // - create image object -
+  image_s *img_ptr = (image_s *)cmalloc(sizeof(image_s));
+  img_ptr->init();
+
+  // - copy image data -
+  *img_ptr = image;
+
+  dst_location->v_data_ptr = (image_s *)img_ptr;
+
+  return true;
+}/*}}}*/
+
 bool bic_image_method_width_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -681,16 +785,36 @@ bool bic_image_method_read_png_data_1(interpreter_thread_s &it,unsigned stack_ba
 @begin ucl_params
 <
 data:c_bi_class_string
+data:c_bi_class_buffer
 >
 class c_bi_class_image
 method read_png_data
 static_method
 ; @end
 
-  string_s *data_str = (string_s *)src_0_location->v_data_ptr;
+  const char *data_ptr;
+  unsigned data_size;
+
+  if (src_0_location->v_type == c_bi_class_string)
+  {
+    // - retrieve data from string -
+    string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+    data_ptr = string_ptr->data;
+    data_size = string_ptr->size - 1;
+  }
+  else
+  {
+    // - retrieve data from buffer -
+    buffer_s *buffer_ptr = (buffer_s *)src_0_location->v_data_ptr;
+
+    data_ptr = (const char *)buffer_ptr->data;
+    data_size = buffer_ptr->size;
+  }
+
 
   // - ERROR -
-  if (png_sig_cmp((unsigned char *)data_str->data,0,8) != 0)
+  if (png_sig_cmp((unsigned char *)data_ptr,0,8) != 0)
   {
     exception_s::throw_exception(it,module.error_base + c_error_IMAGE_PNG_DATA_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -729,8 +853,8 @@ static_method
 
   // - create png data object -
   png_data_s png_data;
-  png_data.data = data_str->data;
-  png_data.size = data_str->size - 1;
+  png_data.data = data_ptr;
+  png_data.size = data_size;
   png_data.read = 8;
 
   png_set_read_fn(png_ptr,&png_data,png_data_s::read_data);
@@ -943,13 +1067,32 @@ bool bic_image_method_read_jpeg_data_1(interpreter_thread_s &it,unsigned stack_b
 @begin ucl_params
 <
 data:c_bi_class_string
+data:c_bi_class_buffer
 >
 class c_bi_class_image
 method read_jpeg_data
 static_method
 ; @end
 
-  string_s *data_str = (string_s *)src_0_location->v_data_ptr;
+  const char *data_ptr;
+  unsigned data_size;
+
+  if (src_0_location->v_type == c_bi_class_string)
+  {
+    // - retrieve data from string -
+    string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+    data_ptr = string_ptr->data;
+    data_size = string_ptr->size - 1;
+  }
+  else
+  {
+    // - retrieve data from buffer -
+    buffer_s *buffer_ptr = (buffer_s *)src_0_location->v_data_ptr;
+
+    data_ptr = (const char *)buffer_ptr->data;
+    data_size = buffer_ptr->size;
+  }
 
   jpeg_decompress_struct cinfo;
   jpeg_error_mgr_s jem;
@@ -967,7 +1110,7 @@ static_method
   }
 
   jpeg_create_decompress(&cinfo);
-  jpeg_source_mgr_s::set_source(&cinfo,data_str->data,data_str->size - 1);
+  jpeg_source_mgr_s::set_source(&cinfo,data_ptr,data_size);
 
   BIC_IMAGE_READ_JPEG_DATA();
 }/*}}}*/

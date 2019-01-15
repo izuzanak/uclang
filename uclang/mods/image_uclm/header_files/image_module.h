@@ -19,6 +19,7 @@ extern built_in_class_s *image_classes[];
 enum
 {
   c_error_IMAGE_WRONG_PROPERTIES = 0,
+  c_error_IMAGE_INVALID_SOURCE_DATA_SIZE,
   c_error_IMAGE_UNSUPPORTED_PIXEL_FORMAT,
   c_error_IMAGE_CANNOT_GET_BUFFER_OF_NON_ROOT_IMAGE,
   c_error_IMAGE_CANNOT_OPEN_FILE,
@@ -54,6 +55,7 @@ void bic_image_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_image_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_Image_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_image_method_Image_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_width_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_height_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_format_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

@@ -65,6 +65,7 @@ C_MODULE_PORTAUDIO  = index; index += 1
 C_MODULE_GSTREAMER  = index; index += 1
 C_MODULE_GTK        = index; index += 1
 C_MODULE_IMAGE      = index; index += 1
+C_MODULE_RAW        = index; index += 1
 C_MODULE_OPENCV     = index; index += 1
 C_MODULE_DOCU       = index; index += 1
 C_MODULE_GLUT       = index; index += 1
@@ -177,6 +178,7 @@ c_cfg = [
     ["MOD_GSTREAMER" ,c_enabled[C_MODULE_GSTREAMER] ,C_UCLANG_DIR + "mods/gstreamer_uclm"   ,None],
     ["MOD_GTK"       ,c_enabled[C_MODULE_GTK]       ,C_UCLANG_DIR + "mods/gtk_uclm"         ,None],
     ["MOD_IMAGE"     ,c_enabled[C_MODULE_IMAGE]     ,C_UCLANG_DIR + "mods/image_uclm"       ,None],
+    ["MOD_RAW"       ,c_enabled[C_MODULE_RAW]       ,C_UCLANG_DIR + "mods/raw_uclm"         ,None],
     ["MOD_OPENCV"    ,c_enabled[C_MODULE_OPENCV]    ,C_UCLANG_DIR + "mods/opencv_uclm"      ,None],
     ["MOD_DOCU"      ,c_enabled[C_MODULE_DOCU]      ,C_UCLANG_DIR + "mods/docu_uclm"        ,None],
     ["MOD_GLUT"      ,c_enabled[C_MODULE_GLUT]      ,C_UCLANG_DIR + "mods/glut_uclm"        ,None],

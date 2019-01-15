@@ -69,6 +69,7 @@ c_packages = [
   ["MOD_GSTREAMER" ,"gstreamer_uclm" ,"pkg-config",["gstreamer-1.0 >= 1.4.4"]],
   ["MOD_GTK"       ,"gtk_uclm"       ,"pkg-config",["gtk+-3.0 >= 3.18.9"]],
   ["MOD_IMAGE"     ,"image_uclm"     ,"pkg-config",["libpng >= 1.2.50","libjpeg"]],
+  ["MOD_RAW"       ,"raw_uclm"       ,"pkg-config",["libraw"]],
   ["MOD_OPENCV"    ,"opencv_uclm"    ,"pkg-config",["opencv >= 2.4.9.1"]],
   ["MOD_DOCU"      ,"docu_uclm"      ,"true"      ,[]],
   ["MOD_GLUT"      ,"glut_uclm"      ,"false"     ,[]],
