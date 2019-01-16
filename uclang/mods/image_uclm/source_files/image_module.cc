@@ -628,8 +628,7 @@ bool bic_image_method_Image_4(interpreter_thread_s &it,unsigned stack_base,uli *
 width:retrieve_integer
 height:retrieve_integer
 format:retrieve_integer
-data:c_bi_class_string
-data:c_bi_class_buffer
+data:retrieve_data_buffer
 >
 method Image
 ; @end
@@ -655,26 +654,6 @@ method Image
     return false;
   }
 
-  unsigned char *data_ptr;
-  unsigned data_size;
-
-  if (src_3_location->v_type == c_bi_class_string)
-  {
-    // - retrieve data from string -
-    string_s *string_ptr = (string_s *)src_3_location->v_data_ptr;
-
-    data_ptr = (unsigned char *)string_ptr->data;
-    data_size = string_ptr->size - 1;
-  }
-  else
-  {
-    // - retrieve data from buffer -
-    buffer_s *buffer_ptr = (buffer_s *)src_3_location->v_data_ptr;
-
-    data_ptr = (unsigned char *)buffer_ptr->data;
-    data_size = buffer_ptr->size;
-  }
-
   unsigned line_bytes = data_size / height;
 
   // - ERROR -
@@ -687,7 +666,7 @@ method Image
   // - image data structure -
   image_data_s image_data;
   image_data.line_bytes = line_bytes;
-  image_data.data = data_ptr;
+  image_data.data = (unsigned char *)data_ptr;
 
   // - image structure -
   image_s image;
@@ -784,34 +763,12 @@ bool bic_image_method_read_png_data_1(interpreter_thread_s &it,unsigned stack_ba
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
-data:c_bi_class_buffer
+data:retrieve_data_buffer
 >
 class c_bi_class_image
 method read_png_data
 static_method
 ; @end
-
-  const char *data_ptr;
-  unsigned data_size;
-
-  if (src_0_location->v_type == c_bi_class_string)
-  {
-    // - retrieve data from string -
-    string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-
-    data_ptr = string_ptr->data;
-    data_size = string_ptr->size - 1;
-  }
-  else
-  {
-    // - retrieve data from buffer -
-    buffer_s *buffer_ptr = (buffer_s *)src_0_location->v_data_ptr;
-
-    data_ptr = (const char *)buffer_ptr->data;
-    data_size = buffer_ptr->size;
-  }
-
 
   // - ERROR -
   if (png_sig_cmp((unsigned char *)data_ptr,0,8) != 0)
@@ -853,7 +810,7 @@ static_method
 
   // - create png data object -
   png_data_s png_data;
-  png_data.data = data_ptr;
+  png_data.data = (const char *)data_ptr;
   png_data.size = data_size;
   png_data.read = 8;
 
@@ -1066,33 +1023,12 @@ bool bic_image_method_read_jpeg_data_1(interpreter_thread_s &it,unsigned stack_b
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
-data:c_bi_class_buffer
+data:retrieve_data_buffer
 >
 class c_bi_class_image
 method read_jpeg_data
 static_method
 ; @end
-
-  const char *data_ptr;
-  unsigned data_size;
-
-  if (src_0_location->v_type == c_bi_class_string)
-  {
-    // - retrieve data from string -
-    string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-
-    data_ptr = string_ptr->data;
-    data_size = string_ptr->size - 1;
-  }
-  else
-  {
-    // - retrieve data from buffer -
-    buffer_s *buffer_ptr = (buffer_s *)src_0_location->v_data_ptr;
-
-    data_ptr = (const char *)buffer_ptr->data;
-    data_size = buffer_ptr->size;
-  }
 
   jpeg_decompress_struct cinfo;
   jpeg_error_mgr_s jem;
@@ -1110,7 +1046,7 @@ static_method
   }
 
   jpeg_create_decompress(&cinfo);
-  jpeg_source_mgr_s::set_source(&cinfo,data_ptr,data_size);
+  jpeg_source_mgr_s::set_source(&cinfo,(const char *)data_ptr,data_size);
 
   BIC_IMAGE_READ_JPEG_DATA();
 }/*}}}*/

@@ -1258,7 +1258,7 @@ additions
    * \brief retrieve integer number from location pointer
    * \param location_ptr - pointer to source location
    * \param a_number - reference to target number variable
-   * \return true if number was successfuly retrieved
+   * \return true if number was successfully retrieved
    */
   inline static bool retrieve_integer(location_s *location_ptr,long long int &a_number);
 
@@ -1266,9 +1266,18 @@ additions
    * \brief retrieve float number from location pointer
    * \param location_ptr - pointer to source location
    * \param a_number - reference to target number variable
-   * \return true if number was successfuly retrieved
+   * \return true if number was successfully retrieved
    */
   inline static bool retrieve_float(location_s *location_ptr,double &a_number);
+
+  /*!
+   * \brief retrieve data buffer from location pointer
+   * \param location_ptr - pointer to source location
+   * \param a_data_ptr - reference to target data pointer
+   * \param a_data_size - reference to target data size
+   * \return true if data buffer was successfully retrieved
+   */
+  inline static bool retrieve_data_buffer(location_s *location_ptr,const void *&a_data_ptr,unsigned &a_data_size);
 
   /*!
    * \brief test value represented by location pointer
@@ -1949,6 +1958,34 @@ inline bool interpreter_thread_s::retrieve_float(location_s *location_ptr,double
     break;
   case c_bi_class_float:
     a_number = (double)location_ptr->v_data_ptr;
+    break;
+
+  default:
+    return false;
+  }
+
+  return true;
+}/*}}}*/
+
+inline bool interpreter_thread_s::retrieve_data_buffer(location_s *location_ptr,const void *&a_data_ptr,unsigned &a_data_size)
+{/*{{{*/
+  switch (location_ptr->v_type)
+  {
+  case c_bi_class_string:
+    {
+      string_s *string_ptr = (string_s *)location_ptr->v_data_ptr;
+
+      a_data_ptr = string_ptr->data;
+      a_data_size = string_ptr->size - 1;
+    }
+    break;
+  case c_bi_class_buffer:
+    {
+      buffer_s *buffer_ptr = (buffer_s *)location_ptr->v_data_ptr;
+
+      a_data_ptr = buffer_ptr->data;
+      a_data_size = buffer_ptr->size;
+    }
     break;
 
   default:
