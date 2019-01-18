@@ -1505,7 +1505,7 @@ bool bic_sftp_handle_method_write_1(interpreter_thread_s &it,unsigned stack_base
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method write
 ; @end
@@ -1520,12 +1520,11 @@ method write
     return false;
   }
 
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-  ssize_t string_length = string_ptr->size - 1;
+  ssize_t string_length = data_size;
 
   ssize_t writed = 0;
   do {
-    ssize_t write_cnt = libssh2_sftp_write(sftph_ptr->handle,string_ptr->data + writed,string_length - writed);
+    ssize_t write_cnt = libssh2_sftp_write(sftph_ptr->handle,(const char *)data_ptr + writed,string_length - writed);
 
     if (write_cnt < 0)
     {
@@ -1870,7 +1869,7 @@ bool bic_ssh2_channel_method_write_1(interpreter_thread_s &it,unsigned stack_bas
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method write
 ; @end
@@ -1878,11 +1877,10 @@ method write
   // - retrieve ssh2 channel -
   ssh2_channel_s *ssh2ch_ptr = (ssh2_channel_s *)dst_location->v_data_ptr;
 
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-  int string_length = string_ptr->size - 1;
+  ssize_t string_length = data_size;
 
   // - ERROR -
-  if (libssh2_channel_write(ssh2ch_ptr->channel,string_ptr->data,string_length) != string_length)
+  if (libssh2_channel_write(ssh2ch_ptr->channel,(const char *)data_ptr,string_length) != string_length)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SSH2_CHANNEL_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;

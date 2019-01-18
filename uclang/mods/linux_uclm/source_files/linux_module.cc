@@ -1168,17 +1168,16 @@ bool bic_fd_method_write_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 from:retrieve_integer
 >
 method write
 ; @end
 
   fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
-  if (from < 0 || from >= string_ptr->size)
+  if (from < 0 || from > data_size)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FD_WRITE_INVALID_SOURCE_OFFSET,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(from);
@@ -1187,7 +1186,7 @@ method write
   }
 
   // - write to file descriptor -
-  long int cnt = write(fd_ptr->fd,string_ptr->data + from,string_ptr->size - 1 - from);
+  long int cnt = write(fd_ptr->fd,(const char *)data_ptr + from,data_size - from);
 
   // - ERROR -
   if (cnt == -1)
@@ -1209,16 +1208,14 @@ bool bic_fd_method_write_all_1(interpreter_thread_s &it,unsigned stack_base,uli 
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method write_all
 ; @end
 
   fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-  unsigned length = string_ptr->size - 1;
 
-  if (length > 0)
+  if (data_size > 0)
   {
     long int cnt;
     unsigned writed = 0;
@@ -1226,7 +1223,7 @@ method write_all
     do
     {
       // - ERROR -
-      if ((cnt = write(fd_ptr->fd,string_ptr->data + writed,length - writed)) == -1)
+      if ((cnt = write(fd_ptr->fd,(const char *)data_ptr + writed,data_size - writed)) == -1)
       {
         // - if interrupted by signal -
         if (errno == EINTR)
@@ -1244,7 +1241,7 @@ method write_all
         writed += cnt;
       }
     }
-    while(writed < length);
+    while(writed < data_size);
   }
 
   BIC_SET_RESULT_DESTINATION();
@@ -1256,7 +1253,7 @@ bool bic_fd_method_pwrite_3(interpreter_thread_s &it,unsigned stack_base,uli *op
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 from:retrieve_integer
 offset:retrieve_integer
 >
@@ -1264,10 +1261,9 @@ method pwrite
 ; @end
 
   fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
-  if (from < 0 || from >= string_ptr->size)
+  if (from < 0 || from > data_size)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FD_WRITE_INVALID_SOURCE_OFFSET,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(from);
@@ -1276,7 +1272,7 @@ method pwrite
   }
 
   // - write to file descriptor -
-  long int cnt = pwrite(fd_ptr->fd,string_ptr->data + from,string_ptr->size - 1 - from,offset);
+  long int cnt = pwrite(fd_ptr->fd,(const char *)data_ptr + from,data_size - from,offset);
 
   // - ERROR -
   if (cnt == -1)
@@ -1298,17 +1294,15 @@ bool bic_fd_method_pwrite_all_2(interpreter_thread_s &it,unsigned stack_base,uli
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 offset:retrieve_integer
 >
 method pwrite_all
 ; @end
 
   fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-  unsigned length = string_ptr->size - 1;
 
-  if (length > 0)
+  if (data_size > 0)
   {
     long int cnt;
     unsigned writed = 0;
@@ -1316,7 +1310,7 @@ method pwrite_all
     do
     {
       // - ERROR -
-      if ((cnt = pwrite(fd_ptr->fd,string_ptr->data + writed,length - writed,offset + writed)) == -1)
+      if ((cnt = pwrite(fd_ptr->fd,(const char *)data_ptr + writed,data_size - writed,offset + writed)) == -1)
       {
         // - if interrupted by signal -
         if (errno == EINTR)
@@ -1334,7 +1328,7 @@ method pwrite_all
         writed += cnt;
       }
     }
-    while(writed < length);
+    while(writed < data_size);
   }
 
   BIC_SET_RESULT_DESTINATION();
@@ -2076,14 +2070,13 @@ bool bic_mmap_method_write_3(interpreter_thread_s &it,unsigned stack_base,uli *o
 @begin ucl_params
 <
 offset:retrieve_integer
-data:c_bi_class_string
+data:retrieve_data_buffer
 from:retrieve_integer
 >
 method write
 ; @end
 
   mmap_s *mm_ptr = (mmap_s *)dst_location->v_data_ptr;
-  string_s *string_ptr = (string_s *)src_1_location->v_data_ptr;
 
   // - ERROR -
   if (offset < 0 || offset > mm_ptr->length)
@@ -2095,7 +2088,7 @@ method write
   }
 
   // - ERROR -
-  if (from < 0 || from >= string_ptr->size)
+  if (from < 0 || from > data_size)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MMAP_INVALID_OFFSET,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(from);
@@ -2103,18 +2096,18 @@ method write
     return false;
   }
 
-  long long int length = string_ptr->size - 1 - from;
+  long long int length = data_size - from;
 
   // - ERROR -
   if ((offset + length) > mm_ptr->length)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MMAP_INVALID_LENGTH,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    new_exception->params.push(string_ptr->size - 1);
+    new_exception->params.push(data_size);
 
     return false;
   }
 
-  memcpy((char *)mm_ptr->mem_ptr + offset,string_ptr->data + from,length);
+  memcpy((char *)mm_ptr->mem_ptr + offset,(const char *)data_ptr + from,length);
 
   BIC_SET_RESULT_DESTINATION();
 

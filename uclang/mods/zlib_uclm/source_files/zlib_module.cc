@@ -220,7 +220,7 @@ bool bic_zlib_method_compress_2(interpreter_thread_s &it,unsigned stack_base,uli
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 level:retrieve_integer
 >
 class c_bi_class_zlib
@@ -237,17 +237,15 @@ static_method
     return false;
   }
 
-  string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
-
   // - retrieve maximal target length -
-  uLongf target_length = compressBound(source_ptr->size - 1);
+  uLongf target_length = compressBound(data_size);
 
   // - create target string -
   string_s *target_ptr = it.get_new_string_ptr();
   target_ptr->create(target_length);
 
   // - ERROR -
-  if (compress2((Bytef *)target_ptr->data,&target_length,(Bytef *)source_ptr->data,source_ptr->size - 1,level) != Z_OK)
+  if (compress2((Bytef *)target_ptr->data,&target_length,(Bytef *)data_ptr,data_size,level) != Z_OK)
   {
     target_ptr->clear();
     cfree(target_ptr);
@@ -269,7 +267,7 @@ bool bic_zlib_method_uncompress_2(interpreter_thread_s &it,unsigned stack_base,u
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 lli_target_length:retrieve_integer
 >
 class c_bi_class_zlib
@@ -284,8 +282,6 @@ static_method
     return false;
   }
 
-  string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
-
   // - retrieve target length -
   uLongf target_length = lli_target_length;
 
@@ -294,7 +290,7 @@ static_method
   target_ptr->create(target_length);
 
   // - uncompress data -
-  int res = uncompress((Bytef *)target_ptr->data,&target_length,(Bytef *)source_ptr->data,source_ptr->size - 1);
+  int res = uncompress((Bytef *)target_ptr->data,&target_length,(Bytef *)data_ptr,data_size);
 
   // - ERROR -
   if (res != Z_OK)
@@ -460,11 +456,8 @@ built_in_variable_s gz_file_variables[] =
     return false;\
   }\
 \
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;\
-  unsigned string_length = string_ptr->size - 1;\
-\
   /* - ERROR - */\
-  if (gzwrite(gzf_ptr,string_ptr->data,string_length) != (int)string_length)\
+  if (gzwrite(gzf_ptr,data_ptr,data_size) != (int)data_size)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
@@ -811,7 +804,7 @@ bool bic_gz_file_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method write
 ; @end
@@ -827,7 +820,7 @@ bool bic_gz_file_method_write_close_1(interpreter_thread_s &it,unsigned stack_ba
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method write_close
 ; @end

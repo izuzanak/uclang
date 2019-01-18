@@ -574,7 +574,7 @@ bool bic_cv_mat_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 flags:retrieve_integer
 >
 class c_bi_class_cv_mat
@@ -582,13 +582,11 @@ method decode
 static_method
 ; @end
 
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-
   // - create cv mat object -
   Mat *mat_ptr = new Mat();
 
   // - decode image from buffer -
-  *mat_ptr = imdecode(Mat(1,string_ptr->size - 1,CV_8UC1,string_ptr->data),flags);
+  *mat_ptr = imdecode(Mat(1,data_size,CV_8UC1,(void *)data_ptr),flags);
 
   // - ERROR -
   if (mat_ptr->data == nullptr)

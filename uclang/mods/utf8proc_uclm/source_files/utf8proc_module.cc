@@ -235,7 +235,7 @@ bool bic_utf8proc_method_to_lower_1(interpreter_thread_s &it,unsigned stack_base
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+string:c_bi_class_string
 >
 class c_bi_class_utf8proc
 method to_lower
@@ -259,7 +259,7 @@ bool bic_utf8proc_method_to_upper_1(interpreter_thread_s &it,unsigned stack_base
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+string:c_bi_class_string
 >
 class c_bi_class_utf8proc
 method to_upper
@@ -1119,7 +1119,7 @@ bool bic_unicode_string_method_UnicodeString_1(interpreter_thread_s &it,unsigned
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+string:c_bi_class_string
 >
 method UnicodeString
 ; @end

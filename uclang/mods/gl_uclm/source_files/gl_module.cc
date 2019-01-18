@@ -1644,7 +1644,7 @@ bool bic_gl_texture_method_GlTexture_4(interpreter_thread_s &it,unsigned stack_b
 format:retrieve_integer
 width:retrieve_integer
 height:retrieve_integer
-buffer:c_bi_class_buffer
+data:retrieve_data_buffer
 >
 method GlTexture
 ; @end
@@ -1682,11 +1682,8 @@ method GlTexture
 
   unsigned exp_buffer_size = width*height*pixel_size;
 
-  // - retrieve buffer object -
-  buffer_s *b_ptr = (buffer_s *)src_3_location->v_data_ptr;
-
   // - ERROR -
-  if (b_ptr->size != exp_buffer_size)
+  if (data_size != exp_buffer_size)
   {
     exception_s::throw_exception(it,module.error_base + c_error_GL_TEXTURE_WRONG_BUFFER_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1707,7 +1704,7 @@ method GlTexture
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 
-  glTexImage2D(GL_TEXTURE_2D,0,format,width,height,0,format,GL_UNSIGNED_BYTE,b_ptr->data);
+  glTexImage2D(GL_TEXTURE_2D,0,format,width,height,0,format,GL_UNSIGNED_BYTE,data_ptr);
 
   // - ERROR -
   if (glGetError() != GL_NO_ERROR)
@@ -1770,7 +1767,7 @@ bool bic_gl_texture_method_update_1(interpreter_thread_s &it,unsigned stack_base
 {/*{{{*/
 @begin ucl_params
 <
-buffer:c_bi_class_buffer
+data:retrieve_data_buffer
 >
 method update
 ; @end
@@ -1779,18 +1776,15 @@ method update
 
   unsigned exp_buffer_size = glt_ptr->width*glt_ptr->height*glt_ptr->pixel_size;
 
-  // - retrieve buffer object -
-  buffer_s *b_ptr = (buffer_s *)src_0_location->v_data_ptr;
-
   // - ERROR -
-  if (b_ptr->size != exp_buffer_size)
+  if (data_size != exp_buffer_size)
   {
     exception_s::throw_exception(it,module.error_base + c_error_GL_TEXTURE_WRONG_BUFFER_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
   glBindTexture(GL_TEXTURE_2D,glt_ptr->index);
-  glTexSubImage2D(GL_TEXTURE_2D,0,0,0,glt_ptr->width,glt_ptr->height,glt_ptr->format,GL_UNSIGNED_BYTE,b_ptr->data);
+  glTexSubImage2D(GL_TEXTURE_2D,0,0,0,glt_ptr->width,glt_ptr->height,glt_ptr->format,GL_UNSIGNED_BYTE,data_ptr);
 
   // - ERROR -
   if (glGetError() != GL_NO_ERROR)

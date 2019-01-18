@@ -814,28 +814,25 @@ built_in_variable_s ws_conn_variables[] =
   { "TIMEOUT_SSL_ACCEPT", c_modifier_public | c_modifier_static | c_modifier_static_const },
 };/*}}}*/
 
-#define BIC_WS_CONN_WRITE(DATA_LOCATION,WRITE_TYPE) \
+#define BIC_WS_CONN_WRITE(WRITE_TYPE) \
 {/*{{{*/\
 \
   /* - retrieve websocket connection - */\
   ws_conn_s *wscn_ptr = (ws_conn_s *)dst_location->v_data_ptr;\
 \
-  string_s *string_ptr = (string_s *)DATA_LOCATION->v_data_ptr;\
-  unsigned string_length = string_ptr->size - 1;\
-\
   /* - allocate data buffer - */\
   unsigned char *buffer = (unsigned char *)cmalloc(\
-      LWS_SEND_BUFFER_PRE_PADDING + string_length +\
+      LWS_SEND_BUFFER_PRE_PADDING + data_size +\
       LWS_SEND_BUFFER_POST_PADDING);\
 \
   /* - pointer to data in buffer - */\
   unsigned char *buff_ptr = buffer + LWS_SEND_BUFFER_PRE_PADDING;\
 \
   /* - fill data to buffer - */\
-  memcpy(buff_ptr,string_ptr->data,string_length);\
+  memcpy(buff_ptr,data_ptr,data_size);\
 \
   /* - ERROR - */\
-  if (libwebsocket_write(wscn_ptr->ws_ptr,buff_ptr,string_length,WRITE_TYPE) < 0)\
+  if (libwebsocket_write(wscn_ptr->ws_ptr,buff_ptr,data_size,WRITE_TYPE) < 0)\
   {\
     /* - release data buffer - */\
     cfree(buffer);\
@@ -1108,12 +1105,12 @@ bool bic_ws_conn_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method write
 ; @end
 
-  BIC_WS_CONN_WRITE(src_0_location,LWS_WRITE_TEXT);
+  BIC_WS_CONN_WRITE(LWS_WRITE_TEXT);
 }/*}}}*/
 
 bool bic_ws_conn_method_write_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -1121,12 +1118,12 @@ bool bic_ws_conn_method_write_2(interpreter_thread_s &it,unsigned stack_base,uli
 @begin ucl_params
 <
 write_type:retrieve_integer
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method write
 ; @end
 
-  BIC_WS_CONN_WRITE(src_1_location,(libwebsocket_write_protocol)write_type);
+  BIC_WS_CONN_WRITE((libwebsocket_write_protocol)write_type);
 }/*}}}*/
 
 bool bic_ws_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -1359,21 +1356,19 @@ bool bic_ws_base64_method_encode_1(interpreter_thread_s &it,unsigned stack_base,
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 class c_bi_class_ws_base64
 method encode
 static_method
 ; @end
 
-  string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
-
   // - create target buffer -
-  int target_size = (((source_ptr->size - 1)/3 + 1) << 2) + 2;
+  int target_size = ((data_size/3 + 1) << 2) + 2;
   char *target_data = (char *)cmalloc(target_size*sizeof(char));
 
   // - encode string to base64 -
-  int target_length = lws_b64_encode_string(source_ptr->data,source_ptr->size - 1,target_data,target_size);
+  int target_length = lws_b64_encode_string((const char *)data_ptr,data_size,target_data,target_size);
 
   // - ERROR -
   if (target_length < 0)
@@ -1398,17 +1393,15 @@ bool bic_ws_base64_method_decode_1(interpreter_thread_s &it,unsigned stack_base,
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 class c_bi_class_ws_base64
 method decode
 static_method
 ; @end
 
-  string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
-
   // - create target buffer -
-  int target_size = (((source_ptr->size - 1) >> 2) * 3) + 2;
+  int target_size = ((data_size >> 2) * 3) + 2;
   char *target_data = (char *)cmalloc(target_size*sizeof(char));
 
   // - initialize decode state -
@@ -1416,7 +1409,7 @@ static_method
   base64_init_decodestate(&state);
 
   // - decode string from base64 -
-  int target_length = base64_decode_block(source_ptr->data,source_ptr->size - 1,target_data,&state);
+  int target_length = base64_decode_block((const char *)data_ptr,data_size,target_data,&state);
 
   // - ERROR -
   if (target_length < 0)

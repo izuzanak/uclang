@@ -13,7 +13,7 @@ EXPORT built_in_module_s module =
   image_classes,          // Classes
 
   0,                      // Error base index
-  15,                     // Error count
+  16,                     // Error count
   image_error_strings,    // Error strings
 
   image_initialize,       // Initialize function
@@ -40,6 +40,7 @@ const char *image_error_strings[] =
   "error_IMAGE_PNG_DATA_READ_ERROR",
   "error_IMAGE_PNG_FILE_READ_ERROR",
   "error_IMAGE_PNG_FILE_WRITE_ERROR",
+  "error_IMAGE_JPEG_DATA_READ_ERROR",
   "error_IMAGE_JPEG_FILE_READ_ERROR",
   "error_IMAGE_JPEG_FILE_WRITE_ERROR",
   "error_IMAGE_IMAGE_OPERATION_ERROR",
@@ -140,6 +141,13 @@ bool image_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nCannot write image to PNG file \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_IMAGE_JPEG_DATA_READ_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot read image from JPEG data\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_IMAGE_JPEG_FILE_READ_ERROR:
@@ -1041,7 +1049,7 @@ static_method
   {
     jpeg_destroy_decompress(&cinfo);
 
-    exception_s::throw_exception(it,module.error_base + c_error_IMAGE_JPEG_FILE_READ_ERROR,operands[c_source_pos_idx],src_0_location);
+    exception_s::throw_exception(it,module.error_base + c_error_IMAGE_JPEG_DATA_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 

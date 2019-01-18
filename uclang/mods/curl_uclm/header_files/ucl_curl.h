@@ -18,21 +18,26 @@ include "script_parser.h"
 
 struct read_buffer_s
 {
-  string_s *string_ptr;
+  const void *data_ptr;
+  unsigned data_size;
   unsigned index;
 
-  inline void init(string_s &a_string);
+  inline void init(const void *a_data_ptr,unsigned a_data_size);
 };
 
 /*
  * definition of generated structures
  */
 
+@begin
+define curl_socket_t basic
+@end
+
 // -- fd_flags_s --
 @begin
 struct
 <
-int:fd
+curl_socket_t:fd
 int:flags
 >
 fd_flags_s;
@@ -126,9 +131,10 @@ size_t cb_read_buffer(void *ptr,size_t size,size_t nmemb,void *stream);
  * inline methods of structure read_buffer_s
  */
 
-inline void read_buffer_s::init(string_s &a_string)
+inline void read_buffer_s::init(const void *a_data_ptr,unsigned a_data_size)
 {/*{{{*/
-  string_ptr = &a_string;
+  data_ptr = a_data_ptr;
+  data_size = a_data_size;
   index = 0;
 }/*}}}*/
 

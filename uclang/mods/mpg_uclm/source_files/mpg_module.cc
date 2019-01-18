@@ -1093,7 +1093,7 @@ bool bic_mpg_handle_method_feed_1(interpreter_thread_s &it,unsigned stack_base,u
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method feed
 ; @end
@@ -1107,10 +1107,8 @@ method feed
     return false;
   }
 
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-
   // - ERROR -
-  if (mpg123_feed(mh_ptr->handle,(unsigned char *)string_ptr->data,string_ptr->size - 1) != MPG123_OK)
+  if (mpg123_feed(mh_ptr->handle,(unsigned char *)data_ptr,data_size) != MPG123_OK)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MPG_HANDLE_FEED_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;

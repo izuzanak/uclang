@@ -393,19 +393,17 @@ bool bic_pack_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,uli *
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 class c_bi_class_pack
 method unpack
 static_method
 ; @end
 
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-
   // - initialize value stream buffer -
   bc_array_s value_stream;
-  value_stream.data = string_ptr->data;
-  value_stream.size = string_ptr->size - 1;
+  value_stream.data = (char *)data_ptr;
+  value_stream.size = data_size;
   value_stream.used = value_stream.size;
 
   // - initialize location stack -
@@ -1038,7 +1036,7 @@ bool bic_pack_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *
 @begin ucl_params
 <
 format:c_bi_class_string
-data:c_bi_class_string
+src_data:retrieve_data_buffer
 >
 class c_bi_class_pack
 method decode
@@ -1047,9 +1045,6 @@ static_method
 
   // - retrieve string pointer -
   string_s *format_string_ptr = (string_s *)src_0_location->v_data_ptr;
-
-  // - retrieve data pointer -
-  string_s *data_string_ptr = (string_s *)src_1_location->v_data_ptr;
 
   // - create result location -
   pointer_array_s *array_ptr = it.get_new_array_ptr();
@@ -1142,8 +1137,8 @@ static_method
     count = 0;\
   }/*}}}*/
 
-  char *ds_ptr = data_string_ptr->data;
-  char *ds_ptr_end = ds_ptr + data_string_ptr->size - 1;
+  char *ds_ptr = (char *)src_data_ptr;
+  char *ds_ptr_end = ds_ptr + src_data_size;
 
   if (format_string_ptr->size > 1)
   {

@@ -1913,11 +1913,8 @@ built_in_variable_s pipe_variables[] =
     return false;\
   }\
 \
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;\
-  unsigned string_length = string_ptr->size - 1;\
-\
   /* - ERROR - */\
-  if (fwrite(string_ptr->data,1,string_length,f) != string_length)\
+  if (fwrite(data_ptr,1,data_size,f) != data_size)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_STREAM_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
@@ -2068,7 +2065,7 @@ bool bic_pipe_method_write_close_1(interpreter_thread_s &it,unsigned stack_base,
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method write_close
 ; @end
@@ -2413,7 +2410,7 @@ bool bic_file_method_write_close_1(interpreter_thread_s &it,unsigned stack_base,
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method write_close
 ; @end
@@ -3150,7 +3147,7 @@ bool bic_socket_method_sendto_2(interpreter_thread_s &it,unsigned stack_base,uli
 @begin ucl_params
 <
 address:c_bi_class_socket_addr
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method sendto
 ; @end
@@ -3168,10 +3165,7 @@ method sendto
   // - retrieve destination address -
   sockaddr_in *addr_ptr = (sockaddr_in *)src_0_location->v_data_ptr;
 
-  string_s *string_ptr = (string_s *)src_1_location->v_data_ptr;
-  unsigned length = string_ptr->size - 1;
-
-  if (length > 0)
+  if (data_size > 0)
   {
     long int cnt;
     unsigned writed = 0;
@@ -3179,13 +3173,13 @@ method sendto
     do
     {
       // - ERROR -
-      if ((cnt = sendto(fd,string_ptr->data + writed,length - writed,0,(sockaddr *)addr_ptr,sizeof(sockaddr_in))) == -1)
+      if ((cnt = sendto(fd,(const char *)data_ptr + writed,data_size - writed,0,(sockaddr *)addr_ptr,sizeof(sockaddr_in))) == -1)
       {
         exception_s::throw_exception(it,module.error_base + c_error_SOCKET_SENDTO_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
     }
-    while((writed += cnt) < length);
+    while((writed += cnt) < data_size);
   }
 
   BIC_SET_RESULT_DESTINATION();
@@ -3485,7 +3479,7 @@ bool bic_stream_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli 
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method write
 ; @end
@@ -3810,7 +3804,7 @@ bool bic_fd_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *ope
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method write
 ; @end
@@ -3825,10 +3819,7 @@ method write
     return false;
   }
 
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-  unsigned length = string_ptr->size - 1;
-
-  if (length > 0)
+  if (data_size > 0)
   {
     long int cnt;
     unsigned writed = 0;
@@ -3836,13 +3827,13 @@ method write
     do
     {
       // - ERROR -
-      if ((cnt = write(fd,string_ptr->data + writed,length - writed)) == -1)
+      if ((cnt = write(fd,(const char *)data_ptr + writed,data_size - writed)) == -1)
       {
         exception_s::throw_exception(it,module.error_base + c_error_FD_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
     }
-    while((writed += cnt) < length);
+    while((writed += cnt) < data_size);
   }
 
   BIC_SET_RESULT_DESTINATION();

@@ -345,7 +345,7 @@ macro
 @begin ucl_params
 <
 address:c_bi_class_string
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 class c_bi_class_curl
 method NAME
@@ -354,7 +354,6 @@ macro
 ; @end\
 \
   string_s *address_ptr = (string_s *)src_0_location->v_data_ptr;\
-  string_s *data_ptr = (string_s *)src_1_location->v_data_ptr;\
 \
   /* - create curl session - */\
   CURL *curl_ptr = curl_easy_init();\
@@ -368,7 +367,7 @@ macro
 \
   /* - create read buffer - */\
   read_buffer_s read_buffer;\
-  read_buffer.init(*data_ptr);\
+  read_buffer.init(data_ptr,data_size);\
 \
   /* - create write buffer - */\
   bc_array_s write_buffer;\
@@ -483,7 +482,7 @@ bool bic_curl_method_PUT_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
 {/*{{{*/
   BIC_CURL_PUT_POST_METHODS("PUT#2",
     curl_easy_setopt(curl_ptr,CURLOPT_UPLOAD,1L);
-    curl_easy_setopt(curl_ptr,CURLOPT_INFILESIZE_LARGE,(curl_off_t)(data_ptr->size - 1));
+    curl_easy_setopt(curl_ptr,CURLOPT_INFILESIZE_LARGE,(curl_off_t)data_size);
   );
 }/*}}}*/
 
@@ -491,7 +490,7 @@ bool bic_curl_method_POST_2(interpreter_thread_s &it,unsigned stack_base,uli *op
 {/*{{{*/
   BIC_CURL_PUT_POST_METHODS("POST#2",
     curl_easy_setopt(curl_ptr,CURLOPT_POST,1L);
-    curl_easy_setopt(curl_ptr,CURLOPT_POSTFIELDSIZE_LARGE,(curl_off_t)(data_ptr->size - 1));
+    curl_easy_setopt(curl_ptr,CURLOPT_POSTFIELDSIZE_LARGE,(curl_off_t)data_size);
   );
 }/*}}}*/
 
@@ -689,7 +688,7 @@ macro
 @begin ucl_params
 <
 address:c_bi_class_string
-data:c_bi_class_string
+data:retrieve_data_buffer
 user_data:ignore
 >
 method NAME
@@ -698,7 +697,6 @@ macro
 \
   curl_multi_s *cm_ptr = (curl_multi_s *)dst_location->v_data_ptr;\
   string_s *address_ptr = (string_s *)src_0_location->v_data_ptr;\
-  string_s *data_ptr = (string_s *)src_1_location->v_data_ptr;\
 \
   /* - create curl session - */\
   CURL *curl_ptr = curl_easy_init();\
@@ -729,7 +727,7 @@ macro
   curl_props->index = index;\
   curl_props->unique_id = cm_ptr->unique_counter++;\
 \
-  curl_props->read_buffer.init(*data_ptr);\
+  curl_props->read_buffer.init(data_ptr,data_size);\
 \
   /* - set read data location - */\
   src_1_location->v_reference_cnt.atomic_inc();\
@@ -882,7 +880,7 @@ bool bic_curl_multi_method_PUT_3(interpreter_thread_s &it,unsigned stack_base,ul
 {/*{{{*/
   BIC_CURL_MULTI_PUT_POST_METHODS("PUT#3",
     curl_easy_setopt(curl_ptr,CURLOPT_UPLOAD,1L);
-    curl_easy_setopt(curl_ptr,CURLOPT_INFILESIZE_LARGE,(curl_off_t)(data_ptr->size - 1));
+    curl_easy_setopt(curl_ptr,CURLOPT_INFILESIZE_LARGE,(curl_off_t)data_size);
   );
 }/*}}}*/
 
@@ -890,7 +888,7 @@ bool bic_curl_multi_method_POST_3(interpreter_thread_s &it,unsigned stack_base,u
 {/*{{{*/
   BIC_CURL_MULTI_PUT_POST_METHODS("POST#3",
     curl_easy_setopt(curl_ptr,CURLOPT_POST,1L);
-    curl_easy_setopt(curl_ptr,CURLOPT_POSTFIELDSIZE_LARGE,(curl_off_t)(data_ptr->size - 1));
+    curl_easy_setopt(curl_ptr,CURLOPT_POSTFIELDSIZE_LARGE,(curl_off_t)data_size);
   );
 }/*}}}*/
 

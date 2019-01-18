@@ -423,7 +423,7 @@ bool bic_final_automata_method_get_source_1(interpreter_thread_s &it,unsigned st
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+source:c_bi_class_string
 >
 method get_source
 ; @end

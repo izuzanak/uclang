@@ -548,15 +548,14 @@ bool bic_ao_device_method_play_1(interpreter_thread_s &it,unsigned stack_base,ul
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method play
 ; @end
 
   ao_device *aod_ptr = (ao_device *)dst_location->v_data_ptr;
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
-  if (ao_play(aod_ptr,string_ptr->data,string_ptr->size - 1) == 0)
+  if (ao_play(aod_ptr,(char *)data_ptr,data_size) == 0)
   {
     exception_s::throw_exception(it,module.error_base + c_error_AO_DEVICE_CANNOT_PLAY_AUDIO_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;

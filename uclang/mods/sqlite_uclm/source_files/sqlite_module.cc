@@ -848,18 +848,16 @@ bool bic_sqlite_statement_method_bind_blob_2(interpreter_thread_s &it,unsigned s
 {/*{{{*/
 @begin ucl_params
 <
-parameter_index:ignore
-blob:c_bi_class_string
+index:ignore
+blob:retrieve_data_buffer
 >
 method bind_blob
 ; @end
 
   BIC_SQLITE_STATEMENT_RETRIEVE_BIND_INDEX("bind_blob#2");
 
-  string_s *string_ptr = (string_s *)src_1_location->v_data_ptr;
-
   // - ERROR -
-  if (sqlite3_bind_blob(statement_ptr,index,string_ptr->data,string_ptr->size - 1,SQLITE_TRANSIENT) != SQLITE_OK)
+  if (sqlite3_bind_blob(statement_ptr,index,blob_ptr,blob_size,SQLITE_TRANSIENT) != SQLITE_OK)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SQLITE_STATEMENT_BIND_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;

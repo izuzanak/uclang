@@ -507,13 +507,12 @@ bool bic_fget_target_method_update_data_2(interpreter_thread_s &it,unsigned stac
 @begin ucl_params
 <
 block_index:retrieve_integer
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method update_data
 ; @end
 
   fget_target_s *ft_ptr = (fget_target_s *)dst_location->v_data_ptr;
-  string_s *string_ptr = (string_s *)src_1_location->v_data_ptr;
 
   // - ERROR -
   if (block_index < 0 || block_index >= ft_ptr->block_cnt)
@@ -534,11 +533,10 @@ method update_data
   if (update)
   {
     // - update target file -
-    char *data_ptr = ft_ptr->file_ptr + block_index*ft_ptr->block_size;
-    unsigned data_size = string_ptr->size - 1;
+    char *dst_data_ptr = ft_ptr->file_ptr + block_index*ft_ptr->block_size;
 
-    memcpy(data_ptr,string_ptr->data,data_size);
-    msync(data_ptr,data_size,MS_SYNC);
+    memcpy(dst_data_ptr,data_ptr,data_size);
+    msync(dst_data_ptr,data_size,MS_SYNC);
 
     // - update map file -
     *byte_ptr |= bit_mask;

@@ -143,23 +143,21 @@ bool bic_snappy_method_compress_1(interpreter_thread_s &it,unsigned stack_base,u
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 class c_bi_class_snappy
 method compress
 static_method
 ; @end
 
-  string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
-
   // - retrieve maximal target length -
-  size_t target_length = snappy::MaxCompressedLength(source_ptr->size - 1);
+  size_t target_length = snappy::MaxCompressedLength(data_size);
 
   // - create target string -
   string_s *target_ptr = it.get_new_string_ptr();
   target_ptr->create(target_length);
 
-  snappy::RawCompress(source_ptr->data,source_ptr->size - 1,target_ptr->data,&target_length);
+  snappy::RawCompress((const char *)data_ptr,data_size,target_ptr->data,&target_length);
 
   // - adjust string size -
   target_ptr->data[target_length] = '\0';
@@ -174,20 +172,18 @@ bool bic_snappy_method_uncompress_1(interpreter_thread_s &it,unsigned stack_base
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 class c_bi_class_snappy
 method uncompress
 static_method
 ; @end
 
-  string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
-
   // - retrieve target length -
   size_t target_length;
 
   // - ERROR -
-  if (!snappy::GetUncompressedLength(source_ptr->data,source_ptr->size - 1,&target_length))
+  if (!snappy::GetUncompressedLength((const char *)data_ptr,data_size,&target_length))
   {
     exception_s::throw_exception(it,module.error_base + c_error_SNAPPY_GET_UNCOMPRESSED_LENGTH,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -198,7 +194,7 @@ static_method
   target_ptr->create(target_length);
 
   // - ERROR -
-  if (!snappy::RawUncompress(source_ptr->data,source_ptr->size - 1,target_ptr->data))
+  if (!snappy::RawUncompress((const char *)data_ptr,data_size,target_ptr->data))
   {
     target_ptr->clear();
     cfree(target_ptr);

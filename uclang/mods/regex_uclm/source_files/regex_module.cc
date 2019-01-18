@@ -220,7 +220,7 @@ bool bic_regex_method_Regex_1(interpreter_thread_s &it,unsigned stack_base,uli *
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+string:c_bi_class_string
 >
 method Regex
 ; @end
@@ -250,7 +250,7 @@ bool bic_regex_method_match_1(interpreter_thread_s &it,unsigned stack_base,uli *
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+string:c_bi_class_string
 >
 method match
 ; @end
@@ -307,7 +307,7 @@ bool bic_regex_method_match_2(interpreter_thread_s &it,unsigned stack_base,uli *
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+string:c_bi_class_string
 match_count:retrieve_integer
 >
 method match
@@ -397,7 +397,7 @@ bool bic_regex_method_match_from_2(interpreter_thread_s &it,unsigned stack_base,
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+string:c_bi_class_string
 offset:retrieve_integer
 >
 method match_from
@@ -464,7 +464,7 @@ bool bic_regex_method_split_1(interpreter_thread_s &it,unsigned stack_base,uli *
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+string:c_bi_class_string
 >
 method split
 ; @end
@@ -550,7 +550,7 @@ bool bic_regex_method_replace_2(interpreter_thread_s &it,unsigned stack_base,uli
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+string:c_bi_class_string
 new_value:c_bi_class_string
 >
 method replace

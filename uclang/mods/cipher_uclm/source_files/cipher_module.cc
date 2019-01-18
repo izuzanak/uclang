@@ -143,19 +143,17 @@ bool bic_cipher_rc4_method_CipherRc4_1(interpreter_thread_s &it,unsigned stack_b
 {/*{{{*/
 @begin ucl_params
 <
-key:c_bi_class_string
+key:retrieve_data_buffer
 >
 method CipherRc4
 ; @end
-
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - create cipher object -
   cipher_s *cipher_ptr = (cipher_s *)cmalloc(sizeof(cipher_s));
   cipher_ptr->init();
 
   // - initialize cipher by given key -
-  cipher_ptr->create(string_ptr->size - 1,string_ptr->data);
+  cipher_ptr->create(key_size,(const char *)key_ptr);
 
   dst_location->v_data_ptr = (cipher_s *)cipher_ptr;
 
@@ -166,7 +164,7 @@ bool bic_cipher_rc4_method_process_1(interpreter_thread_s &it,unsigned stack_bas
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method process
 ; @end
@@ -175,11 +173,10 @@ method process
   cipher_s *cipher_ptr = (cipher_s *)dst_location->v_data_ptr;
 
   // - retrieve source string -
-  string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - create new string -
   string_s *target_ptr = it.get_new_string_ptr();
-  *target_ptr = *source_ptr;
+  target_ptr->set(data_size,(const char *)data_ptr);
 
   // - process target string data -
   cipher_ptr->process(target_ptr->size - 1,target_ptr->data);

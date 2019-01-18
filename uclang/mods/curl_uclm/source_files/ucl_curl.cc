@@ -104,9 +104,8 @@ size_t cb_write_buffer(void *ptr,size_t size,size_t nmemb,void *stream)
 size_t cb_read_buffer(void *ptr,size_t size,size_t nmemb,void *stream)
 {/*{{{*/
   read_buffer_s *buff_ptr = (read_buffer_s *)stream;
-  string_s *string_ptr = buff_ptr->string_ptr;
 
-  unsigned rest_cnt = (string_ptr->size - 1) - buff_ptr->index;
+  unsigned rest_cnt = buff_ptr->data_size - buff_ptr->index;
 
   // - if there are not enough bytes in buffer -
   if (nmemb > rest_cnt)
@@ -114,7 +113,7 @@ size_t cb_read_buffer(void *ptr,size_t size,size_t nmemb,void *stream)
     // - write rest of bytes -
     if (rest_cnt > 0)
     {
-      memcpy(ptr,string_ptr->data + buff_ptr->index,rest_cnt);
+      memcpy(ptr,(const char *)buff_ptr->data_ptr + buff_ptr->index,rest_cnt);
       buff_ptr->index += rest_cnt;
     }
 
@@ -122,7 +121,7 @@ size_t cb_read_buffer(void *ptr,size_t size,size_t nmemb,void *stream)
   }
 
   // - write requested count of bytes -
-  memcpy(ptr,string_ptr->data + buff_ptr->index,nmemb);
+  memcpy(ptr,(const char *)buff_ptr->data_ptr + buff_ptr->index,nmemb);
   buff_ptr->index += nmemb;
 
   return nmemb;

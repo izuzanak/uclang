@@ -369,10 +369,9 @@ built_in_variable_s trdp_page_variables[] =
 #define BIC_TRDP_PAGE_METHOD_UNPACK() \
 /*{{{*/\
   trdp_page_s *tpg_ptr = (trdp_page_s *)dst_location->v_data_ptr;\
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;\
 \
   /* - ERROR - */\
-  if (string_ptr->size - 1 != tpg_ptr->size)\
+  if (data_size != tpg_ptr->size)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_TRDP_PAGE_PACK_INVALID_DATA_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
@@ -381,7 +380,7 @@ built_in_variable_s trdp_page_variables[] =
   pointer_array_s *array_ptr = it.get_new_array_ptr();\
   BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);\
 \
-  trdp_page_s::pass_s pass = {(unsigned char *)string_ptr->data,array_ptr,0,0,0,0};\
+  trdp_page_s::pass_s pass = {(unsigned char *)data_ptr,array_ptr,0,0,0,0};\
 \
   /* - ERROR - */\
   if (!tpg_ptr->unpack_page_data(it,pass))\
@@ -611,7 +610,7 @@ bool bic_trdp_page_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method unpack
 ; @end
@@ -627,7 +626,7 @@ bool bic_trdp_page_method_unpack_dict_1(interpreter_thread_s &it,unsigned stack_
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method unpack_dict
 ; @end

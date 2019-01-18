@@ -435,7 +435,7 @@ bool bic_raw_processor_method_open_buffer_2(interpreter_thread_s &it,unsigned st
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 flags:retrieve_integer
 >
 class c_bi_class_raw_processor
@@ -443,12 +443,10 @@ method open_buffer
 static_method
 ; @end
 
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-
   LibRaw *lr_ptr = new LibRaw(flags);
 
   // - ERROR -
-  if (lr_ptr->open_buffer(string_ptr->data,string_ptr->size - 1) != 0)
+  if (lr_ptr->open_buffer((void *)data_ptr,data_size) != 0)
   {
     delete lr_ptr;
 

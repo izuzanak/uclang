@@ -425,7 +425,11 @@ bool bic_http_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_ba
 
   if (max_fd >= 0)
   {
+#if MHD_VERSION <= 0x00093300
     int fd = 0;
+#else
+    MHD_socket fd = 0;
+#endif
     do {
       long long int fd_value = -1;
       long long int flags = 0;
@@ -1594,16 +1598,14 @@ bool bic_http_resp_method_HttpResp_1(interpreter_thread_s &it,unsigned stack_bas
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method HttpResp
 ; @end
 
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-
   // - create http_resp object -
   MHD_Response *resp_ptr = MHD_create_response_from_buffer(
-      string_ptr->size - 1,string_ptr->data,MHD_RESPMEM_MUST_COPY);
+      data_size,(void *)data_ptr,MHD_RESPMEM_MUST_COPY);
 
   // - ERROR -
   if (resp_ptr == nullptr)
@@ -1623,7 +1625,7 @@ bool bic_http_resp_method_HttpResp_2(interpreter_thread_s &it,unsigned stack_bas
 @begin ucl_params
 <
 from_type:retrieve_integer
-data:c_bi_class_string
+string:c_bi_class_string
 >
 method HttpResp
 ; @end
@@ -1909,7 +1911,7 @@ bool bic_http_post_proc_method_process_1(interpreter_thread_s &it,unsigned stack
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method process
 ; @end
@@ -1920,9 +1922,7 @@ method process
   pp_ptr->source_pos = operands[c_source_pos_idx];
   pp_ptr->ret_code = c_run_return_code_OK;
 
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-
-  int res = MHD_post_process(pp_ptr->post_proc,string_ptr->data,string_ptr->size - 1);
+  int res = MHD_post_process(pp_ptr->post_proc,(const char *)data_ptr,data_size);
 
   // - if exception occurred -
   if (pp_ptr->ret_code == c_run_return_code_EXCEPTION)

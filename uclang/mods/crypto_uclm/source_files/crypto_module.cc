@@ -316,24 +316,21 @@ bool bic_crypto_method_encode_base16_1(interpreter_thread_s &it,unsigned stack_b
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 class c_bi_class_crypto
 method encode_base16
 static_method
 ; @end
 
-  string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
-  unsigned s_length = source_ptr->size - 1;
-
   string_s *target_ptr = it.get_new_string_ptr();
 
-  if (s_length != 0)
+  if (data_size != 0)
   {
-    target_ptr->create(s_length << 1);
+    target_ptr->create(data_size << 1);
 
-    unsigned char *s_ptr = (unsigned char *)source_ptr->data;
-    unsigned char *s_ptr_end = s_ptr + s_length;
+    unsigned char *s_ptr = (unsigned char *)data_ptr;
+    unsigned char *s_ptr_end = s_ptr + data_size;
     unsigned char *t_ptr = (unsigned char *)target_ptr->data;
 
     do {
@@ -352,18 +349,15 @@ bool bic_crypto_method_decode_base16_1(interpreter_thread_s &it,unsigned stack_b
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 class c_bi_class_crypto
 method decode_base16
 static_method
 ; @end
 
-  string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
-  unsigned s_length = source_ptr->size - 1;
-
   // - ERROR -
-  if (s_length & 0x01)
+  if (data_size & 0x01)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_INVALID_BASE_DATA_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(16);
@@ -373,12 +367,12 @@ static_method
 
   string_s *target_ptr = it.get_new_string_ptr();
 
-  if (s_length != 0)
+  if (data_size != 0)
   {
-    target_ptr->create(s_length >> 1);
+    target_ptr->create(data_size >> 1);
 
-    unsigned char *s_ptr = (unsigned char *)source_ptr->data;
-    unsigned char *s_ptr_end = s_ptr + s_length;
+    unsigned char *s_ptr = (unsigned char *)data_ptr;
+    unsigned char *s_ptr_end = s_ptr + data_size;
     unsigned char *t_ptr = (unsigned char *)target_ptr->data;
 
 #define BIC_CRYPTO_METHOD_DECODE_BASE16_CHARACTER(OPERATOR) \
@@ -428,26 +422,23 @@ bool bic_crypto_method_encode_base64_1(interpreter_thread_s &it,unsigned stack_b
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 class c_bi_class_crypto
 method encode_base64
 static_method
 ; @end
 
-  string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
-  unsigned s_length = source_ptr->size - 1;
-
   string_s *target_ptr = it.get_new_string_ptr();
 
-  if (s_length != 0)
+  if (data_size != 0)
   {
-    target_ptr->create(((s_length/3 + 1) << 2) + 1);
+    target_ptr->create(((data_size/3 + 1) << 2) + 1);
 
     target_ptr->size = EVP_EncodeBlock(
         (unsigned char *)target_ptr->data,
-        (unsigned char *)source_ptr->data,
-        s_length) + 1;
+        (unsigned char *)data_ptr,
+        data_size) + 1;
   }
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,target_ptr);
@@ -460,18 +451,15 @@ bool bic_crypto_method_decode_base64_1(interpreter_thread_s &it,unsigned stack_b
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 class c_bi_class_crypto
 method decode_base64
 static_method
 ; @end
 
-  string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
-  unsigned s_length = source_ptr->size - 1;
-
   // - ERROR -
-  if (s_length & 0x03)
+  if (data_size & 0x03)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_INVALID_BASE_DATA_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(64);
@@ -481,14 +469,14 @@ static_method
 
   string_s *target_ptr = it.get_new_string_ptr();
 
-  if (s_length != 0)
+  if (data_size != 0)
   {
-    target_ptr->create(((s_length >> 2) * 3) + 1);
+    target_ptr->create(((data_size >> 2) * 3) + 1);
 
     int length = EVP_DecodeBlock(
         (unsigned char *)target_ptr->data,
-        (unsigned char *)source_ptr->data,
-        s_length);
+        (unsigned char *)data_ptr,
+        data_size);
 
     // - ERROR -
     if (length == -1)
@@ -1018,16 +1006,15 @@ bool bic_crypto_digest_method_update_1(interpreter_thread_s &it,unsigned stack_b
 {/*{{{*/
 @begin ucl_params
 <
-update:c_bi_class_string
+data:retrieve_data_buffer
 >
 method update
 ; @end
 
   crypto_digest_s *cd_ptr = (crypto_digest_s *)dst_location->v_data_ptr;
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
-  if (EVP_DigestUpdate(cd_ptr->context,string_ptr->data,string_ptr->size - 1) != 1)
+  if (EVP_DigestUpdate(cd_ptr->context,data_ptr,data_size) != 1)
   {
     exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_DIGEST_UPDATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1258,17 +1245,16 @@ macro
 {/*{{{*/\
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method NAME
 macro
 ; @end\
 \
   crypto_digest_key_s *cd_ptr = (crypto_digest_key_s *)dst_location->v_data_ptr;\
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;\
 \
   /* - ERROR - */\
-  if (EVP_Digest ## TYPE ## Update(cd_ptr->context,string_ptr->data,string_ptr->size - 1) != 1)\
+  if (EVP_Digest ## TYPE ## Update(cd_ptr->context,data_ptr,data_size) != 1)\
   {\
     exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_DIGEST_UPDATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
@@ -1515,14 +1501,13 @@ bool bic_crypto_digest_verify_method_verify_1(interpreter_thread_s &it,unsigned 
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method verify
 ; @end
 
   crypto_digest_key_s *cd_ptr = (crypto_digest_key_s *)dst_location->v_data_ptr;
   crypto_pkey_s *ck_ptr = (crypto_pkey_s *)cd_ptr->key_location->v_data_ptr;
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
   EVP_MD_CTX *context_copy;
@@ -1550,7 +1535,7 @@ method verify
     return false;
   }
 
-  long long result = EVP_DigestVerifyFinal(context_copy,(unsigned char *)string_ptr->data,string_ptr->size - 1);
+  long long result = EVP_DigestVerifyFinal(context_copy,(unsigned char *)data_ptr,data_size);
 
   EVP_MD_CTX_destroy(context_copy);
 
@@ -1931,7 +1916,7 @@ macro
 {/*{{{*/\
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method NAME
 macro
@@ -1939,20 +1924,17 @@ macro
 \
   crypto_cipher_s *cc_ptr = (crypto_cipher_s *)dst_location->v_data_ptr;\
 \
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;\
-  unsigned string_length = string_ptr->size - 1;\
-\
   unsigned block_size = EVP_CIPHER_CTX_block_size(cc_ptr->context);\
 \
   /* - create result string - */\
   string_s *result_ptr = it.get_new_string_ptr();\
-  result_ptr->create(string_length + (block_size - string_length % block_size));\
+  result_ptr->create(data_size + (block_size - data_size % block_size));\
 \
   /* - ERROR - */\
   int result_length;\
   if (EVP_ ## TYPE ## Update(cc_ptr->context,\
       (unsigned char *)result_ptr->data,&result_length,\
-      (unsigned char *)string_ptr->data,string_length) != 1)\
+      (unsigned char *)data_ptr,data_size) != 1)\
   {\
     result_ptr->clear();\
     cfree(result_ptr);\

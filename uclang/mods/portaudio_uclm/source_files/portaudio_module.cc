@@ -1450,7 +1450,7 @@ bool bic_pa_stream_method_write_1(interpreter_thread_s &it,unsigned stack_base,u
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method write
 ; @end
@@ -1464,23 +1464,20 @@ method write
     return false;
   }
 
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-  unsigned string_length = string_ptr->size - 1;
-
   PaStreamParameters *output_ptr = (PaStreamParameters *)pas_ptr->output_ptr->v_data_ptr;
   int frame_size = output_ptr->channelCount*Pa_GetSampleSize(output_ptr->sampleFormat);
 
   // - ERROR -
-  if (string_length % frame_size)
+  if (data_size % frame_size)
   {
     exception_s::throw_exception(it,module.error_base + c_error_PA_STREAM_WRITE_WRONG_DATA_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
-  unsigned long frame_count = string_length / frame_size;
+  unsigned long frame_count = data_size / frame_size;
 
   // - ERROR -
-  if (paNoError != Pa_WriteStream(pas_ptr->stream_ptr,string_ptr->data,frame_count))
+  if (paNoError != Pa_WriteStream(pas_ptr->stream_ptr,data_ptr,frame_count))
   {
     exception_s::throw_exception(it,module.error_base + c_error_PA_STREAM_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;

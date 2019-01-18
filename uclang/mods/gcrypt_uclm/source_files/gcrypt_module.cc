@@ -307,7 +307,7 @@ bool bic_gcrypt_cipher_method_GcryptCipher_4(interpreter_thread_s &it,unsigned s
 type:retrieve_integer
 mode:retrieve_integer
 flags:retrieve_integer
-key:c_bi_class_string
+key:retrieve_data_buffer
 >
 method GcryptCipher
 ; @end
@@ -328,10 +328,8 @@ method GcryptCipher
     return false;
   }
 
-  string_s *string_ptr = (string_s *)src_3_location->v_data_ptr;
-
   // - ERROR -
-  if ((err = gcry_cipher_setkey(gc_ptr->handle,string_ptr->data,string_ptr->size - 1)) != 0)
+  if ((err = gcry_cipher_setkey(gc_ptr->handle,key_ptr,key_size)) != 0)
   {
     gc_ptr->clear(it);
     cfree(gc_ptr);
@@ -350,17 +348,16 @@ bool bic_gcrypt_cipher_method_setiv_1(interpreter_thread_s &it,unsigned stack_ba
 {/*{{{*/
 @begin ucl_params
 <
-init_vector:c_bi_class_string
+init_vec:retrieve_data_buffer
 >
 method setiv
 ; @end
 
   gcrypt_cipher_s *gc_ptr = (gcrypt_cipher_s *)dst_location->v_data_ptr;
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
   gcry_error_t err;
-  if ((err = gcry_cipher_setiv(gc_ptr->handle,string_ptr->data,string_ptr->size - 1)) != 0)
+  if ((err = gcry_cipher_setiv(gc_ptr->handle,init_vec_ptr,init_vec_size)) != 0)
   {
     BIC_GCRYPT_CIPHER_CREATE_ERROR_STRING(err);
     exception_s::throw_exception(it,module.error_base + c_error_GCRYPT_CIPHER_ERROR,operands[c_source_pos_idx],err_location);
@@ -376,17 +373,16 @@ bool bic_gcrypt_cipher_method_setctr_1(interpreter_thread_s &it,unsigned stack_b
 {/*{{{*/
 @begin ucl_params
 <
-counter_vector:c_bi_class_string
+counter_vec:retrieve_data_buffer
 >
 method setctr
 ; @end
 
   gcrypt_cipher_s *gc_ptr = (gcrypt_cipher_s *)dst_location->v_data_ptr;
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
   gcry_error_t err;
-  if ((err = gcry_cipher_setctr(gc_ptr->handle,string_ptr->data,string_ptr->size - 1)) != 0)
+  if ((err = gcry_cipher_setctr(gc_ptr->handle,counter_vec_ptr,counter_vec_size)) != 0)
   {
     BIC_GCRYPT_CIPHER_CREATE_ERROR_STRING(err);
     exception_s::throw_exception(it,module.error_base + c_error_GCRYPT_CIPHER_ERROR,operands[c_source_pos_idx],err_location);
@@ -402,22 +398,21 @@ bool bic_gcrypt_cipher_method_encrypt_1(interpreter_thread_s &it,unsigned stack_
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method encrypt
 ; @end
 
   gcrypt_cipher_s *gc_ptr = (gcrypt_cipher_s *)dst_location->v_data_ptr;
 
-  string_s *in_ptr = (string_s *)src_0_location->v_data_ptr;
   string_s *out_ptr = (string_s *)it.get_new_string_ptr();
 
   // - create target sring -
-  out_ptr->create(in_ptr->size - 1);
+  out_ptr->create(data_size);
 
   // - ERROR -
   gcry_error_t err;
-  if ((err = gcry_cipher_encrypt(gc_ptr->handle,out_ptr->data,out_ptr->size - 1,in_ptr->data,in_ptr->size - 1)) != 0)
+  if ((err = gcry_cipher_encrypt(gc_ptr->handle,out_ptr->data,out_ptr->size - 1,data_ptr,data_size)) != 0)
   {
     out_ptr->clear();
     cfree(out_ptr);
@@ -436,22 +431,21 @@ bool bic_gcrypt_cipher_method_decrypt_1(interpreter_thread_s &it,unsigned stack_
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method decrypt
 ; @end
 
   gcrypt_cipher_s *gc_ptr = (gcrypt_cipher_s *)dst_location->v_data_ptr;
 
-  string_s *in_ptr = (string_s *)src_0_location->v_data_ptr;
   string_s *out_ptr = (string_s *)it.get_new_string_ptr();
 
   // - create target sring -
-  out_ptr->create(in_ptr->size - 1);
+  out_ptr->create(data_size);
 
   // - ERROR -
   gcry_error_t err;
-  if ((err = gcry_cipher_decrypt(gc_ptr->handle,out_ptr->data,out_ptr->size - 1,in_ptr->data,in_ptr->size - 1)) != 0)
+  if ((err = gcry_cipher_decrypt(gc_ptr->handle,out_ptr->data,out_ptr->size - 1,data_ptr,data_size)) != 0)
   {
     out_ptr->clear();
     cfree(out_ptr);

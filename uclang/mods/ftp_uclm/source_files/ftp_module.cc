@@ -1090,7 +1090,7 @@ bool bic_ftp_handle_method_write_1(interpreter_thread_s &it,unsigned stack_base,
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method write
 ; @end
@@ -1105,18 +1105,16 @@ method write
     return false;
   }
 
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-
 #ifdef _MSC_VER
   SSIZE_T string_length;
 #else
   ssize_t string_length;
 #endif
 
-  string_length = string_ptr->size - 1;
+  string_length = data_size;
 
   // - ERROR -
-  if (FtpWrite(string_ptr->data,string_length,ftph_ptr->nb_ptr) != string_length)
+  if (FtpWrite(data_ptr,string_length,ftph_ptr->nb_ptr) != string_length)
   {
     exception_s::throw_exception(it,module.error_base + c_error_FTP_HANDLE_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;

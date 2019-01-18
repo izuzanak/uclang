@@ -1679,13 +1679,12 @@ bool bic_fuse_file_filler_method_write_1(interpreter_thread_s &it,unsigned stack
 {/*{{{*/
 @begin ucl_params
 <
-data:c_bi_class_string
+data:retrieve_data_buffer
 >
 method write
 ; @end
 
   fuse_file_filler_s *fff_ptr = (fuse_file_filler_s *)dst_location->v_data_ptr;
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - unused space in target buffer -
   unsigned space = fff_ptr->size - fff_ptr->writed;
@@ -1693,10 +1692,9 @@ method write
   // - if there is unused space -
   if (space > 0)
   {
-    unsigned string_length = string_ptr->size - 1;
-    unsigned copy_len = string_length > space ? space : string_length;
+    unsigned copy_len = data_size > space ? space : data_size;
 
-    memcpy(fff_ptr->buffer + fff_ptr->writed,string_ptr->data,copy_len);
+    memcpy(fff_ptr->buffer + fff_ptr->writed,data_ptr,copy_len);
     fff_ptr->writed += copy_len;
   }
 
