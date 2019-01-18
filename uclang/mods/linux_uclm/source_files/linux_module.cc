@@ -1726,7 +1726,7 @@ built_in_class_s mmap_class =
   "Mmap",
   c_modifier_public | c_modifier_final,
   10, mmap_methods,
-  4 + 16 + 3 + 5, mmap_variables,
+  4 + 15 + 3 + 5, mmap_variables,
   bic_mmap_consts,
   bic_mmap_init,
   bic_mmap_clear,
@@ -1809,7 +1809,6 @@ built_in_variable_s mmap_variables[] =
   // - mmap flags -
   { "MAP_SHARED",  c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "MAP_PRIVATE",  c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "MAP_32BIT",  c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "MAP_ANON",  c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "MAP_ANONYMOUS",  c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "MAP_DENYWRITE",  c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -1860,8 +1859,8 @@ void bic_mmap_consts(location_array_s &const_locations)
 
   // - mmap flags -
   {
-    const_locations.push_blanks(16);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 16);
+    const_locations.push_blanks(15);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 15);
 
 #define CREATE_MMAP_FLAG_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -1871,7 +1870,6 @@ void bic_mmap_consts(location_array_s &const_locations)
 
     CREATE_MMAP_FLAG_BIC_STATIC(MAP_SHARED);
     CREATE_MMAP_FLAG_BIC_STATIC(MAP_PRIVATE);
-    CREATE_MMAP_FLAG_BIC_STATIC(MAP_32BIT);
     CREATE_MMAP_FLAG_BIC_STATIC(MAP_ANON);
     CREATE_MMAP_FLAG_BIC_STATIC(MAP_ANONYMOUS);
     CREATE_MMAP_FLAG_BIC_STATIC(MAP_DENYWRITE);
