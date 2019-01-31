@@ -65,6 +65,8 @@ c_packages = [
   ["MOD_AV"        ,"av_uclm"        ,"pkg-config",["libavutil >= 54.3.0","libavformat >= 56.1.0","libavcodec >= 56.1.0","libswscale >= 3.0.0"]],
   ["MOD_AO"        ,"ao_uclm"        ,"pkg-config",["ao >= 1.1.0"]],
   ["MOD_MPG"       ,"mpg_uclm"       ,"pkg-config",["libmpg123 >= 1.20.1"]],
+  ["MOD_VLC"       ,"vlc_uclm"       ,"pkg-config",["libvlc >= 3.0.6"]],
+  ["MOD_VA"        ,"va_uclm"        ,"pkg-config",["libva >= 1.3.0"]],
   ["MOD_PORTAUDIO" ,"portaudio_uclm" ,"pkg-config",["portaudio-2.0 >= 19"]],
   ["MOD_GSTREAMER" ,"gstreamer_uclm" ,"pkg-config",["gstreamer-1.0 >= 1.4.4"]],
   ["MOD_GTK"       ,"gtk_uclm"       ,"pkg-config",["gtk+-3.0 >= 3.18.9"]],

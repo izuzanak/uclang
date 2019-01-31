@@ -61,6 +61,8 @@ C_MODULE_FANN       = index; index += 1
 C_MODULE_AV         = index; index += 1
 C_MODULE_AO         = index; index += 1
 C_MODULE_MPG        = index; index += 1
+C_MODULE_VLC        = index; index += 1
+C_MODULE_VA         = index; index += 1
 C_MODULE_PORTAUDIO  = index; index += 1
 C_MODULE_GSTREAMER  = index; index += 1
 C_MODULE_GTK        = index; index += 1
@@ -174,6 +176,8 @@ c_cfg = [
     ["MOD_AV"        ,c_enabled[C_MODULE_AV]        ,C_UCLANG_DIR + "mods/av_uclm"          ,None],
     ["MOD_AO"        ,c_enabled[C_MODULE_AO]        ,C_UCLANG_DIR + "mods/ao_uclm"          ,None],
     ["MOD_MPG"       ,c_enabled[C_MODULE_MPG]       ,C_UCLANG_DIR + "mods/mpg_uclm"         ,None],
+    ["MOD_VLC"       ,c_enabled[C_MODULE_VLC]       ,C_UCLANG_DIR + "mods/vlc_uclm"         ,None],
+    ["MOD_VA"        ,c_enabled[C_MODULE_VA]        ,C_UCLANG_DIR + "mods/va_uclm"          ,None],
     ["MOD_PORTAUDIO" ,c_enabled[C_MODULE_PORTAUDIO] ,C_UCLANG_DIR + "mods/portaudio_uclm"   ,None],
     ["MOD_GSTREAMER" ,c_enabled[C_MODULE_GSTREAMER] ,C_UCLANG_DIR + "mods/gstreamer_uclm"   ,None],
     ["MOD_GTK"       ,c_enabled[C_MODULE_GTK]       ,C_UCLANG_DIR + "mods/gtk_uclm"         ,None],
