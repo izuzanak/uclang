@@ -394,7 +394,7 @@ method update
         }
 
         // - update fd value -
-        fds[fd].fd = fd;
+        fds[fd].set(fd,events);
       }
 
       // - modify old fd -
@@ -417,7 +417,7 @@ method update
         }
 
         // - update fd value -
-        fds[fd].fd = fd;
+        fds[fd].set(fd,events);
       }
     } while((p_ptr += 2) < p_ptr_end);
   }

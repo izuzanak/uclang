@@ -398,7 +398,7 @@ bool bic_xml_method_parse_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 {/*{{{*/
 @begin ucl_params
 <
-siurce:c_bi_class_string
+source:c_bi_class_string
 >
 class c_bi_class_xml
 method parse
