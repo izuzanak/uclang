@@ -33,7 +33,7 @@ const char *pcre_error_strings[] =
   "error_PCRE_NOT_COMPILED",
   "error_PCRE_WRONG_MATCH_COUNT",
   "error_PCRE_WRONG_MATCH_OFFSET",
-  "error_PCRE_STRING_SPLIT_EMPTY_MATCH",
+  "error_PCRE_UNEXPECTED_EMPTY_MATCH",
 };/*}}}*/
 
 // - PCRE initialize -
@@ -86,11 +86,11 @@ bool pcre_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nMatch offset %" HOST_LL_FORMAT "d, is greater than string size\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_PCRE_STRING_SPLIT_EMPTY_MATCH:
+  case c_error_PCRE_UNEXPECTED_EMPTY_MATCH:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nEmpty match found while splitting string\n");
+    fprintf(stderr,"\nUnexpected empty match found\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -508,7 +508,7 @@ method split
         {
           it.release_location_ptr(array_location);
 
-          exception_s::throw_exception(it,module.error_base + c_error_PCRE_STRING_SPLIT_EMPTY_MATCH,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          exception_s::throw_exception(it,module.error_base + c_error_PCRE_UNEXPECTED_EMPTY_MATCH,operands[c_source_pos_idx],(location_s *)it.blank_location);
           return false;
         }
 
@@ -575,16 +575,25 @@ method replace
 
   // - replace regex matches by new string -
   {
-    regmatch_t regmatch;
+    regmatch_t match;
 
     unsigned pos = 0;
     do {
       unsigned old_pos = pos;
 
       // - search for substring -
-      if (regexec(re,string_ptr->data + pos,1,&regmatch,0) == 0)
+      if (regexec(re,string_ptr->data + pos,1,&match,0) == 0)
       {
-        pos += regmatch.rm_so;
+        // - ERROR -
+        if (match.rm_so == match.rm_eo)
+        {
+          buffer.clear();
+
+          exception_s::throw_exception(it,module.error_base + c_error_PCRE_UNEXPECTED_EMPTY_MATCH,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          return false;
+        }
+
+        pos += match.rm_so;
       }
       else
       {
@@ -603,7 +612,7 @@ method replace
       buffer.append(newstr_ptr->size - 1,newstr_ptr->data);
 
       // - jump over substring -
-      pos += regmatch.rm_eo - regmatch.rm_so;
+      pos += match.rm_eo - match.rm_so;
 
     } while(true);
   }

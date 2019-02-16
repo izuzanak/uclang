@@ -22,7 +22,7 @@ enum
   c_error_PCRE_NOT_COMPILED,
   c_error_PCRE_WRONG_MATCH_COUNT,
   c_error_PCRE_WRONG_MATCH_OFFSET,
-  c_error_PCRE_STRING_SPLIT_EMPTY_MATCH,
+  c_error_PCRE_UNEXPECTED_EMPTY_MATCH,
 };
 
 // - PCRE error strings -

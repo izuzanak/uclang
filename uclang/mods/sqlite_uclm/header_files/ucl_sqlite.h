@@ -17,14 +17,14 @@ include "script_parser.h"
  */
 
 struct sqlite_stmt_s
-{
+{/*{{{*/
   sqlite3_stmt *stmt_ptr;
   location_s *db_ptr;
   bool done;
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
-};
+};/*}}}*/
 
 /*
  * inline methods of structure sqlite_stmt_s

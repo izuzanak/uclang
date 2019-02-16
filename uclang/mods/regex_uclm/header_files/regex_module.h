@@ -22,7 +22,7 @@ enum
   c_error_REGEX_NOT_COMPILED,
   c_error_REGEX_WRONG_MATCH_COUNT,
   c_error_REGEX_WRONG_MATCH_OFFSET,
-  c_error_REGEX_STRING_SPLIT_EMPTY_MATCH,
+  c_error_REGEX_UNEXPECTED_EMPTY_MATCH,
 };
 
 // - REGEX error strings -
