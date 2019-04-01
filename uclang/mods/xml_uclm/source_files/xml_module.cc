@@ -263,6 +263,12 @@ static_method
         }
       }
 
+      // - self close tag if there is no content -
+      if (node_ptr->conts->v_type == c_bi_class_blank)
+      {
+        buffer.push('/');
+      }
+
       buffer.push('>');
     }
 
@@ -295,6 +301,7 @@ static_method
     }
 
     // - format node close tag -
+    if (node_ptr->conts->v_type != c_bi_class_blank)
     {
       buffer.push('<');
       buffer.push('/');

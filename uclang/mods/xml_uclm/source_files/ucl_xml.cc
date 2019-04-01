@@ -133,6 +133,12 @@ void xml_creator_s::create_nice(interpreter_thread_s &it,pointer a_node_ptr,stri
         }
       }
 
+      // - self close tag if there is no content -
+      if (node_ptr->conts->v_type == c_bi_class_blank)
+      {
+        a_buffer.push('/');
+      }
+
       a_buffer.push('>');
 
       cs_elm.after_node = true;
@@ -174,6 +180,7 @@ void xml_creator_s::create_nice(interpreter_thread_s &it,pointer a_node_ptr,stri
     }
 
     // - format node close tag -
+    if (node_ptr->conts->v_type != c_bi_class_blank)
     {
       if (cs_elm.after_node && cs_elm.index > 0)
       {
