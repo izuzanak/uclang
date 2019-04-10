@@ -29,7 +29,7 @@ void datetime_s::from_nanosec(long long unsigned a_nanosec)
   unsigned days = tmp + c_days_to_epoch;
 
   // - calculate week day -
-  wday = (days + 1) % 7;
+  wday = (days % 7) + 1;
 
   // - calculate year -
   year = 1601;
