@@ -9,19 +9,19 @@ set(PROC_DIR "${CMAKE_CURRENT_BINARY_DIR}/proc_files")
 file(MAKE_DIRECTORY ${PROC_DIR})
 
 set(USE_MF_MODS FALSE)
-set(MF_MODS_FILE "${CMAKE_CURRENT_SOURCE_DIR}/../uclang_build/mf_mods.py")
+set(MF_MODS_FILE "${CMAKE_CURRENT_SOURCE_DIR}/uclang_build/mf_mods.py")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 enable_testing()
 
 # - process target source file -
 function(process_source TARGET)
-  execute_process(COMMAND process --deps "${SOURCE_DIR}/${TARGET}.cc" ${COMP_HEADER_DIRS}
+  execute_process(COMMAND ${PROCESS_BIN} --deps "${SOURCE_DIR}/${TARGET}.cc" ${COMP_HEADER_DIRS}
       OUTPUT_VARIABLE DEPS
       ERROR_QUIET)
   add_custom_command(OUTPUT "${PROC_DIR}/p.${TARGET}.cc"
       DEPENDS ${DEPS}
-      COMMAND process "--output" "${PROC_DIR}/p.${TARGET}.cc" "${SOURCE_DIR}/${TARGET}.cc" ${COMP_HEADER_DIRS})
+      COMMAND ${PROCESS_BIN} "--output" "${PROC_DIR}/p.${TARGET}.cc" "${SOURCE_DIR}/${TARGET}.cc" ${COMP_HEADER_DIRS})
 endfunction()
 
 # - process component -
@@ -45,8 +45,10 @@ function(process_component)
   if(${COMP_NAME} MATCHES "_ucl[lm]$")
     add_library(${COMP_NAME} SHARED ${PROC_SOURCE_FILES})
     set_target_properties(${COMP_NAME} PROPERTIES PREFIX "")
+    install(TARGETS ${COMP_NAME} LIBRARY DESTINATION lib)
   else()
     add_executable(${COMP_NAME} ${PROC_SOURCE_FILES})
+    install(TARGETS ${COMP_NAME} RUNTIME DESTINATION bin)
   endif()
 
   target_include_directories(${COMP_NAME} PUBLIC ${COMP_INCLUDE_DIRS})
@@ -100,24 +102,32 @@ else()
   add_definitions("/DWINDOWS /D_CRT_SECURE_NO_WARNINGS /wd4244")
 endif()
 
-set(EXT_LIBS "${CMAKE_CURRENT_SOURCE_DIR}/../ext_libs")
-set(LIBS "${CMAKE_CURRENT_SOURCE_DIR}/libs")
-set(MODS "${CMAKE_CURRENT_SOURCE_DIR}/mods")
+# - find process binary -
+find_program(PROCESS_BIN cont)
 
-set(LIB_BASE "${CMAKE_CURRENT_SOURCE_DIR}/libs/libbase_ucll")
-set(LIB_FTGL "${CMAKE_CURRENT_SOURCE_DIR}/libs/libftgl_ucll")
-set(LIB_NODE "${CMAKE_CURRENT_SOURCE_DIR}/libs/libnode_ucll")
+if(NOT PROCESS_BIN)
+  message("WARNING: Cannot found container generator")
+  return()
+endif()
+
+set(EXT_LIBS "${CMAKE_CURRENT_SOURCE_DIR}/ext_libs")
+set(LIBS "${CMAKE_CURRENT_SOURCE_DIR}/uclang/libs")
+set(MODS "${CMAKE_CURRENT_SOURCE_DIR}/uclang/mods")
+
+set(LIB_BASE "${CMAKE_CURRENT_SOURCE_DIR}/uclang/libs/libbase_ucll")
+set(LIB_FTGL "${CMAKE_CURRENT_SOURCE_DIR}/uclang/libs/libftgl_ucll")
+set(LIB_NODE "${CMAKE_CURRENT_SOURCE_DIR}/uclang/libs/libnode_ucll")
 
 if(USE_MF_MODS)
   file(READ ${MF_MODS_FILE} MF_MODS)
 endif()
 
 # - process libraries -
-process_components("libs")
+process_components("uclang/libs")
 
 # - process programs -
-process_components("progs")
+process_components("uclang/progs")
 
 # - process modules -
-process_components("mods")
+process_components("uclang/mods")
 

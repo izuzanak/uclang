@@ -151,9 +151,9 @@ class configuration_c:
       assert False
 
     if self.shell_type == self.C_SHELL_TYPE_BASH:
-      string += "PROC=process\n"
+      string += "PROC=cont\n"
     elif self.shell_type == self.C_SHELL_TYPE_WINDOWS:
-      string += "PROC=process\n"
+      string += "PROC=cont\n"
     else:
       assert False
 

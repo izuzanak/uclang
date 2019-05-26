@@ -93,28 +93,24 @@ Some examples are introduced in
 ## Building interpreter
 
 The container generator [`cont`](https://github.com/izuzanak/cont) is needed
-for compilation of the interpreter. It will be automatically compiled in
-following compilation steps.
+for compilation of the interpreter.
 
 ### Linux compilation
 
-For compilation of a interpreter on Linux OS perform following steps:
-
-  * Download script [`try_uclang.sh`](https://raw.githubusercontent.com/izuzanak/uclang/master/uclang_try/try_uclang.sh).
-
+Enter build directory [`build`](https://github.com/izuzanak/uclang/tree/master/build).
 ```
-wget https://raw.githubusercontent.com/izuzanak/uclang/master/uclang_try/try_uclang.sh
+cd build
 ```
 
-  * Check prerequisites mentioned in the script.
-  * Execute script `try_uclang.sh`.
-
-```
-bash try_uclang.sh
+Process cmake source.
+```sh
+cmake ..
 ```
 
-It will clone two repositories `cont` and `uclang`, and then compile container
-generator and interpreter of uclang.
+Build uclang.
+```sh
+make -j$(nproc)
+```
 
 ### Linux example scripts
 
