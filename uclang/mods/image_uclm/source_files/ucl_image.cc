@@ -240,6 +240,16 @@ bool image_s::io_convert(image_s &a_src)
           ptr[0] = (5014710U*s_ptr[0] + 9848226U*s_ptr[1] + 1914280U*s_ptr[2]) >> 24;
           );
       break;
+    case c_image_pixel_format_DOUBLE:
+      IMAGE_CONVERT(
+          ptr[0] = *((double *)s_ptr)*255.0;
+          );
+      break;
+    case c_image_pixel_format_COMPLEX:
+      IMAGE_CONVERT(
+          ptr[0] = ((double *)s_ptr)[0]*255.0;
+          );
+      break;
     default:
       return false;
     }
@@ -282,6 +292,39 @@ bool image_s::io_convert(image_s &a_src)
           ptr[1] = s_ptr[1];
           ptr[2] = s_ptr[2];
           ptr[3] = 255;
+          );
+      break;
+    default:
+      return false;
+    }
+    break;
+  case c_image_pixel_format_DOUBLE:
+    switch (a_src.pixel_format)
+    {
+    case c_image_pixel_format_GRAY8:
+      IMAGE_CONVERT(
+          *((double *)ptr) = s_ptr[0]/255.0;
+          );
+      break;
+    case c_image_pixel_format_COMPLEX:
+      IMAGE_CONVERT(
+          double real = ((double *)s_ptr)[0];
+          double imag = ((double *)s_ptr)[1];
+
+          *((double *)ptr) = sqrt(real*real + imag*imag);
+          );
+      break;
+    default:
+      return false;
+    }
+    break;
+  case c_image_pixel_format_COMPLEX:
+    switch (a_src.pixel_format)
+    {
+    case c_image_pixel_format_GRAY8:
+      IMAGE_CONVERT(
+          ((double *)ptr)[0] = s_ptr[0]/255.0;
+          ((double *)ptr)[1] = 0.0;
           );
       break;
     default:
@@ -334,6 +377,57 @@ bool image_s::io_apply(image_s &a_src)
         ptr[1] = (alpha*s_ptr[1] + r_alpha*ptr[1])/255;
         ptr[2] = (alpha*s_ptr[2] + r_alpha*ptr[2])/255;
         );
+    break;
+  default:
+    return false;
+  }
+
+  return true;
+}/*}}}*/
+
+bool image_s::io_normalize()
+{/*{{{*/
+  unsigned line_size = image_data_ptr->line_bytes;
+  unsigned image_ls = width*pixel_step;
+
+#define IMAGE_NORMALIZE_PASS(OPERATION) \
+  {/*{{{*/\
+    unsigned char *ptr = image_data_ptr->data + y_pos*line_size + x_pos*pixel_step;\
+    unsigned char *ptr_end = ptr + (height - 1)*line_size + width*pixel_step;\
+\
+    do {\
+      unsigned char *ptr_w_end = ptr + image_ls;\
+      do {\
+        OPERATION;\
+      } while((ptr += pixel_step) < ptr_w_end);\
+\
+      ptr += line_size - image_ls;\
+    } while(ptr < ptr_end);\
+  }/*}}}*/
+
+  switch (pixel_format)
+  {
+  case c_image_pixel_format_DOUBLE:
+    {/*{{{*/
+      double min = INFINITY;
+      double max = -INFINITY;
+
+      IMAGE_NORMALIZE_PASS(
+          double value = ((double *)ptr)[0];
+
+          if (value < min) min = value;
+          if (value > max) max = value;
+          );
+
+      if (max > min)
+      {
+        double div = max - min;
+
+        IMAGE_NORMALIZE_PASS(
+            ((double *)ptr)[0] = (((double *)ptr)[0] - min)/div;
+            );
+      }
+    }/*}}}*/
     break;
   default:
     return false;

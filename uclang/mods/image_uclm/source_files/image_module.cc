@@ -190,8 +190,8 @@ built_in_class_s image_class =
 {/*{{{*/
   "Image",
   c_modifier_public | c_modifier_final,
-  22, image_methods,
-  3, image_variables,
+  23, image_methods,
+  5, image_variables,
   bic_image_consts,
   bic_image_init,
   bic_image_clear,
@@ -311,6 +311,11 @@ built_in_method_s image_methods[] =
     bic_image_method_io_apply_1
   },
   {
+    "io_normalize#0",
+    c_modifier_public | c_modifier_final,
+    bic_image_method_io_normalize_0
+  },
+  {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_image_method_to_string_0
@@ -334,6 +339,14 @@ built_in_variable_s image_variables[] =
   },
   {
     "PIX_FMT_RGBA",
+    c_modifier_public | c_modifier_static | c_modifier_static_const
+  },
+  {
+    "PIX_FMT_DOUBLE",
+    c_modifier_public | c_modifier_static | c_modifier_static_const
+  },
+  {
+    "PIX_FMT_COMPLEX",
     c_modifier_public | c_modifier_static | c_modifier_static_const
   },
 };/*}}}*/
@@ -542,8 +555,8 @@ void bic_image_consts(location_array_s &const_locations)
 
   // - insert image pixel format constants -
   {
-    const_locations.push_blanks(3);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 3);
+    const_locations.push_blanks(5);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 5);
 
 #define CREATE_IMAGE_PIXEL_FORMAT_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -554,6 +567,8 @@ void bic_image_consts(location_array_s &const_locations)
     CREATE_IMAGE_PIXEL_FORMAT_BIC_STATIC(c_image_pixel_format_GRAY8);
     CREATE_IMAGE_PIXEL_FORMAT_BIC_STATIC(c_image_pixel_format_RGB24);
     CREATE_IMAGE_PIXEL_FORMAT_BIC_STATIC(c_image_pixel_format_RGBA);
+    CREATE_IMAGE_PIXEL_FORMAT_BIC_STATIC(c_image_pixel_format_DOUBLE);
+    CREATE_IMAGE_PIXEL_FORMAT_BIC_STATIC(c_image_pixel_format_COMPLEX);
   }
 }/*}}}*/
 
@@ -608,6 +623,8 @@ method Image
   case c_image_pixel_format_GRAY8:
   case c_image_pixel_format_RGB24:
   case c_image_pixel_format_RGBA:
+  case c_image_pixel_format_DOUBLE:
+  case c_image_pixel_format_COMPLEX:
     break;
 
   // - ERROR -
@@ -653,6 +670,8 @@ method Image
   case c_image_pixel_format_GRAY8:
   case c_image_pixel_format_RGB24:
   case c_image_pixel_format_RGBA:
+  case c_image_pixel_format_DOUBLE:
+  case c_image_pixel_format_COMPLEX:
     break;
 
   // - ERROR -
@@ -1440,6 +1459,24 @@ method io_convert
 bool bic_image_method_io_apply_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_IMAGE_METHOD_BLOCK_IO("io_apply#1",io_apply);
+}/*}}}*/
+
+bool bic_image_method_io_normalize_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  image_s *img_ptr = (image_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (!img_ptr->io_normalize())
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_IMAGE_IMAGE_OPERATION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
 }/*}}}*/
 
 bool bic_image_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)

@@ -19,7 +19,12 @@ extern built_in_class_s *fftw_classes[];
 // - FFTW error identifiers -
 enum
 {
-  c_error_FFTW_DUMMY_ERROR = 0,
+  c_error_FFTW_PLAN_EMPTY_DIMENSIONS_ARRAY = 0,
+  c_error_FFTW_PLAN_INVALID_TRANSFORM_DIRECTION,
+  c_error_FFTW_PLAN_INVALID_DIMENSION_TYPE,
+  c_error_FFTW_PLAN_CREATE_ERROR,
+  c_error_FFTW_PLAN_INVALID_DIMENSION_RANK,
+  c_error_FFTW_PLAN_INVALID_BUFFER_SIZE,
 };
 
 // - FFTW error strings -
@@ -54,7 +59,8 @@ void bic_fftw_plan_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_fftw_plan_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_fftw_plan_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_fftw_plan_method_FftwPlan_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fftw_plan_method_FftwPlan_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fftw_plan_method_transform_2d_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fftw_plan_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fftw_plan_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

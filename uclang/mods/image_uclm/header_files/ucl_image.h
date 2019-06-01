@@ -18,22 +18,26 @@ extern "C" {
 #define c_ulluisv ((sizeof(long long unsigned) - sizeof(unsigned)) << 3)
 
 // - pixel formats -
-const unsigned c_pixel_format_cnt = 3;
+const unsigned c_pixel_format_cnt = 5;
 enum {
   c_image_pixel_format_GRAY8 = 0,
   c_image_pixel_format_RGB24,
   c_image_pixel_format_RGBA,
+  c_image_pixel_format_DOUBLE,
+  c_image_pixel_format_COMPLEX,
 
   c_image_pixel_format_blank,
 };
 
 // - sizes of pixels by format in bytes -
-const unsigned c_bigest_pixel_size = 4*sizeof(unsigned char);
+const unsigned c_bigest_pixel_size = 2*sizeof(double);
 const unsigned c_pixel_sizes[c_pixel_format_cnt] =
 {
   sizeof(unsigned char),
   3*sizeof(unsigned char),
   4*sizeof(unsigned char),
+  sizeof(double),
+  2*sizeof(double),
 };
 
 const unsigned c_pixel_values_cnt[c_pixel_format_cnt] =
@@ -41,6 +45,8 @@ const unsigned c_pixel_values_cnt[c_pixel_format_cnt] =
   1,
   3,
   4,
+  1,
+  2,
 };
 
 /*
@@ -82,6 +88,7 @@ struct image_s
   bool io_copy(image_s &a_src);
   bool io_convert(image_s &a_src);
   bool io_apply(image_s &a_src);
+  bool io_normalize();
 };
 
 /*

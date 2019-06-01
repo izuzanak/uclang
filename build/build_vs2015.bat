@@ -17,7 +17,7 @@ set BUILD_DIR=%~dp0\win32
     -D BUILD_VCREDIST_PATH=%BUILD_VCREDIST_PATH% ^
     --warn-uninitialized ^
     --no-warn-unused-cli ^
-    %~dp0\..\uclang
+    %~dp0\..
 
 pause
 

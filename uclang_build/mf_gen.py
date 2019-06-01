@@ -1301,7 +1301,7 @@ if cfg_ref[CFG_TARGET]:
         os.sep.join(["..","..","libs","libbase_ucll"]),
       ],
       opt_build, # CXX options
-      opt_link + "-lfftw3 -lm ", # CXX link options
+      opt_link + "-lfftw -lm ", # CXX link options
       "", # CXX defines
       [],
       [],
