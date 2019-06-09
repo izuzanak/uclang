@@ -2801,6 +2801,7 @@ void bic_socket_init(interpreter_thread_s &it,location_s *location_ptr)
 
 void bic_socket_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
+
   // - retrieve socket fd -
   int fd = (int)location_ptr->v_data_ptr;
 
