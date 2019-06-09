@@ -7,12 +7,33 @@ include "script_parser.h"
 @end
 
 #include <nanomsg/nn.h>
+
 #include <nanomsg/bus.h>
 #include <nanomsg/pair.h>
 #include <nanomsg/pipeline.h>
 #include <nanomsg/pubsub.h>
 #include <nanomsg/reqrep.h>
 #include <nanomsg/survey.h>
+
+#include <nanomsg/inproc.h>
+#include <nanomsg/ipc.h>
+#include <nanomsg/tcp.h>
+#include <nanomsg/ws.h>
+
+enum {
+  c_option_type_int = 0,
+  c_option_type_string,
+  c_option_type_error
+};
+
+/*
+ * definition of structure nano_msg_s
+ */
+
+struct nano_msg_s
+{
+  static unsigned option_type(int a_level,int a_option);
+};
 
 /*
  * definition of structure nano_endpoint_s

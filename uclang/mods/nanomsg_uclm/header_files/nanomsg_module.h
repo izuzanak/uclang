@@ -56,8 +56,12 @@ void bic_nano_socket_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_nano_socket_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_nano_socket_method_NanoSocket_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_nano_socket_method_setsockopt_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_nano_socket_method_getsockopt_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_nano_socket_method_bind_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_nano_socket_method_connect_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_nano_socket_method_send_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_nano_socket_method_recv_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_nano_socket_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_nano_socket_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

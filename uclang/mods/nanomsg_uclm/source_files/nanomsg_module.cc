@@ -173,8 +173,8 @@ built_in_class_s nano_socket_class =
 {/*{{{*/
   "NanoSocket",
   c_modifier_public | c_modifier_final,
-  6, nano_socket_methods,
-  2 + 10, nano_socket_variables,
+  10, nano_socket_methods,
+  2 + 10 + 4 + 1 + 23 + 2, nano_socket_variables,
   bic_nano_socket_consts,
   bic_nano_socket_init,
   bic_nano_socket_clear,
@@ -204,6 +204,16 @@ built_in_method_s nano_socket_methods[] =
     bic_nano_socket_method_NanoSocket_2
   },
   {
+    "setsockopt#3",
+    c_modifier_public | c_modifier_final,
+    bic_nano_socket_method_setsockopt_3
+  },
+  {
+    "getsockopt#2",
+    c_modifier_public | c_modifier_final,
+    bic_nano_socket_method_getsockopt_2
+  },
+  {
     "bind#1",
     c_modifier_public | c_modifier_final,
     bic_nano_socket_method_bind_1
@@ -212,6 +222,16 @@ built_in_method_s nano_socket_methods[] =
     "connect#1",
     c_modifier_public | c_modifier_final,
     bic_nano_socket_method_connect_1
+  },
+  {
+    "send#2",
+    c_modifier_public | c_modifier_final,
+    bic_nano_socket_method_send_2
+  },
+  {
+    "recv#1",
+    c_modifier_public | c_modifier_final,
+    bic_nano_socket_method_recv_1
   },
   {
     "to_string#0",
@@ -227,9 +247,12 @@ built_in_method_s nano_socket_methods[] =
 
 built_in_variable_s nano_socket_variables[] =
 {/*{{{*/
+
+  // - socket constants -
   { "AF_SP", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "AF_SP_RAW", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
+  // - socket protocol constants -
   { "NN_BUS", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "NN_PAIR", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "NN_PUSH", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -240,6 +263,44 @@ built_in_variable_s nano_socket_variables[] =
   { "NN_REP", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "NN_SURVEYOR", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "NN_RESPONDENT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - socket transport mechanism constants -
+  { "NN_INPROC", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_IPC", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_TCP", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_WS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - socket level constants -
+  { "NN_SOL_SOCKET", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - socket option constants -
+  { "NN_DOMAIN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_PROTOCOL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_LINGER", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_SNDBUF", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_RCVBUF", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_RCVMAXSIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_SNDTIMEO", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_RCVTIMEO", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_RECONNECT_IVL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_RECONNECT_IVL_MAX", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_SNDPRIO", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_RCVPRIO", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_IPV4ONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_SNDFD", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_RCVFD", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_SOCKET_NAME", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_MAXTTL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_REQ_RESEND_IVL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_SUB_SUBSCRIBE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_SUB_UNSUBSCRIBE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_SURVEYOR_DEADLINE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_TCP_NODELAY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_WS_MSG_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - socket ws option values -
+  { "NN_WS_MSG_TYPE_TEXT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NN_WS_MSG_TYPE_BINARY", c_modifier_public | c_modifier_static | c_modifier_static_const },
 };/*}}}*/
 
 void bic_nano_socket_consts(location_array_s &const_locations)
@@ -282,6 +343,89 @@ void bic_nano_socket_consts(location_array_s &const_locations)
     CREATE_NANO_SOCKET_PROTOCOL_BIC_STATIC(NN_SURVEYOR);
     CREATE_NANO_SOCKET_PROTOCOL_BIC_STATIC(NN_RESPONDENT);
   }
+
+  // - insert socket transport mechanism constants -
+  {
+    const_locations.push_blanks(4);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 4);
+
+#define CREATE_NANO_SOCKET_TRANSPORT_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_NANO_SOCKET_TRANSPORT_BIC_STATIC(NN_INPROC);
+    CREATE_NANO_SOCKET_TRANSPORT_BIC_STATIC(NN_IPC);
+    CREATE_NANO_SOCKET_TRANSPORT_BIC_STATIC(NN_TCP);
+    CREATE_NANO_SOCKET_TRANSPORT_BIC_STATIC(NN_WS);
+  }
+
+  // - insert socket level constants -
+  {
+    const_locations.push_blanks(1);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 1);
+
+#define CREATE_NANO_SOCKET_LEVEL_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_NANO_SOCKET_LEVEL_BIC_STATIC(NN_SOL_SOCKET);\
+  }
+
+  // - insert socket option constants -
+  {
+    const_locations.push_blanks(23);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 23);
+
+#define CREATE_NANO_SOCKET_OPTION_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_DOMAIN);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_PROTOCOL);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_LINGER);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_SNDBUF);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_RCVBUF);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_RCVMAXSIZE);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_SNDTIMEO);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_RCVTIMEO);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_RECONNECT_IVL);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_RECONNECT_IVL_MAX);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_SNDPRIO);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_RCVPRIO);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_IPV4ONLY);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_SNDFD);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_RCVFD);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_SOCKET_NAME);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_MAXTTL);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_REQ_RESEND_IVL);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_SUB_SUBSCRIBE);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_SUB_UNSUBSCRIBE);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_SURVEYOR_DEADLINE);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_TCP_NODELAY);
+    CREATE_NANO_SOCKET_OPTION_BIC_STATIC(NN_WS_MSG_TYPE);
+  }
+
+  // - insert socket ws option values -
+  {
+    const_locations.push_blanks(2);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 2);
+
+#define CREATE_NANO_SOCKET_WS_VALUE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_NANO_SOCKET_WS_VALUE_BIC_STATIC(NN_WS_MSG_TYPE_TEXT);
+    CREATE_NANO_SOCKET_WS_VALUE_BIC_STATIC(NN_WS_MSG_TYPE_BINARY);
+  }
+
 }/*}}}*/
 
 void bic_nano_socket_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -332,6 +476,139 @@ method NanoSocket
   }
 
   dst_location->v_data_ptr = (int)nn_fd;
+
+  return true;
+}/*}}}*/
+
+bool bic_nano_socket_method_setsockopt_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+level:retrieve_integer
+option:retrieve_integer
+value:ignore
+>
+method setsockopt
+; @end
+
+  int nn_fd = (int)dst_location->v_data_ptr;
+
+  switch (nano_msg_s::option_type(level,option))
+  {
+  case c_option_type_int:
+    {/*{{{*/
+      long long int parameter;
+
+      // - ERROR -
+      if (!it.retrieve_integer(src_2_location,parameter))
+      {
+        // FIXME TODO throw proper exception
+        BIC_TODO_ERROR(__FILE__,__LINE__);
+        return false;
+      }
+
+      int value = parameter;
+
+      // - ERROR -
+      if (nn_setsockopt(nn_fd,level,option,&value,sizeof(value)) == -1)
+      {
+        // FIXME TODO throw proper exception
+        BIC_TODO_ERROR(__FILE__,__LINE__);
+        return false;
+      }
+    }/*}}}*/
+    break;
+  case c_option_type_string:
+    {/*{{{*/
+      
+      // - ERROR -
+      if (src_2_location->v_type != c_bi_class_string)
+      {
+        // FIXME TODO throw proper exception
+        BIC_TODO_ERROR(__FILE__,__LINE__);
+        return false;
+      }
+
+      string_s *string_ptr = (string_s *)src_2_location->v_data_ptr;
+
+      // - ERROR -
+      if (nn_setsockopt(nn_fd,level,option,string_ptr->data,string_ptr->size - 1) == -1)
+      {
+        // FIXME TODO throw proper exception
+        BIC_TODO_ERROR(__FILE__,__LINE__);
+        return false;
+      }
+    }/*}}}*/
+    break;
+  default:
+    
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_nano_socket_method_getsockopt_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+level:retrieve_integer
+option:retrieve_integer
+>
+method getsockopt
+; @end
+
+  int nn_fd = (int)dst_location->v_data_ptr;
+
+  switch (nano_msg_s::option_type(level,option))
+  {
+  case c_option_type_int:
+    {/*{{{*/
+      int value;
+      size_t value_len = sizeof(value);
+
+      // - ERROR -
+      if (nn_getsockopt(nn_fd,level,option,&value,&value_len) == -1)
+      {
+        // FIXME TODO throw proper exception
+        BIC_TODO_ERROR(__FILE__,__LINE__);
+        return false;
+      }
+
+      long long int result = value;
+
+      BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+    }/*}}}*/
+    break;
+  case c_option_type_string:
+    {/*{{{*/
+      char buffer[512];
+      size_t buffer_size = sizeof(buffer);
+
+      // - ERROR -
+      if (nn_getsockopt(nn_fd,level,option,buffer,&buffer_size) == -1)
+      {
+        // FIXME TODO throw proper exception
+        BIC_TODO_ERROR(__FILE__,__LINE__);
+        return false;
+      }
+
+      string_s *string_ptr = it.get_new_string_ptr();
+      string_ptr->set(buffer_size,buffer);
+
+      BIC_SET_RESULT_STRING(string_ptr);
+    }/*}}}*/
+    break;
+  default:
+    
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
 
   return true;
 }/*}}}*/
@@ -408,6 +685,63 @@ method connect
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_nano_endpoint,ne_ptr);
   BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_nano_socket_method_send_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+data:retrieve_data_buffer
+flags:retrieve_integer
+>
+method send
+; @end
+
+  int nn_fd = (int)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (nn_send(nn_fd,data_ptr,data_size,flags) == -1)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_nano_socket_method_recv_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+flags:retrieve_integer
+>
+method recv
+; @end
+
+  int nn_fd = (int)dst_location->v_data_ptr;
+
+  void *buffer;
+  int cnt;
+
+  // - ERROR -
+  if ((cnt = nn_recv(nn_fd,&buffer,NN_MSG,flags)) == -1)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->set(cnt,(char *)buffer);
+
+  nn_freemsg(buffer);
+
+  BIC_SET_RESULT_STRING(string_ptr);
 
   return true;
 }/*}}}*/
