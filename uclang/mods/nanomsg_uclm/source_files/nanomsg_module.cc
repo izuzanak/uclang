@@ -15,7 +15,7 @@ EXPORT built_in_module_s module =
   nanomsg_classes,         // Classes
 
   0,                       // Error base index
-  1,                       // Error count
+  9,                       // Error count
   nanomsg_error_strings,   // Error strings
 
   nanomsg_initialize,      // Initialize function
@@ -33,7 +33,15 @@ built_in_class_s *nanomsg_classes[] =
 // - NANOMSG error strings -
 const char *nanomsg_error_strings[] =
 {/*{{{*/
-  "error_NANOMSG_DUMMY_ERROR",
+  "error_NANO_SOCKET_CREATE_ERROR",
+  "error_NANO_SOCKET_INVALID_OPTION_VALUE_TYPE",
+  "error_NANO_SOCKET_UNKNOWN_OPTION_AT_LEVEL",
+  "error_NANO_SOCKET_SETSOCKOPT_ERROR",
+  "error_NANO_SOCKET_GETSOCKOPT_ERROR",
+  "error_NANO_SOCKET_BIND_ERROR",
+  "error_NANO_SOCKET_CONNECT_ERROR",
+  "error_NANO_SOCKET_SEND_ERROR",
+  "error_NANO_SOCKET_RECV_ERROR",
 };/*}}}*/
 
 // - NANOMSG initialize -
@@ -64,11 +72,67 @@ bool nanomsg_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_NANOMSG_DUMMY_ERROR:
+  case c_error_NANO_SOCKET_CREATE_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nNanoMsg dummy error\n");
+    fprintf(stderr,"\nError while creating nanomsg socket\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_NANO_SOCKET_INVALID_OPTION_VALUE_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid nanomsg socket option value type, expected %s\n",it.class_symbol_names[it.class_records[exception.params[0]].name_idx].data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_NANO_SOCKET_UNKNOWN_OPTION_AT_LEVEL:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nNanomsg socket, unknown option at indicated level\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_NANO_SOCKET_SETSOCKOPT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while setting nanomsg socket option\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_NANO_SOCKET_GETSOCKOPT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while getting nanomsg socket option\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_NANO_SOCKET_BIND_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while binding nanomsg socket to local endpoint\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_NANO_SOCKET_CONNECT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while connecting nanomsg socket to remote endpoint\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_NANO_SOCKET_SEND_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while sending message to nanomsg socket\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_NANO_SOCKET_RECV_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while receiving message from nanomsg socket\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -470,8 +534,7 @@ method NanoSocket
   // - ERROR -
   if ((nn_fd = nn_socket(domain,protocol)) == -1)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_NANO_SOCKET_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -502,8 +565,9 @@ method setsockopt
       // - ERROR -
       if (!it.retrieve_integer(src_2_location,parameter))
       {
-        // FIXME TODO throw proper exception
-        BIC_TODO_ERROR(__FILE__,__LINE__);
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_NANO_SOCKET_INVALID_OPTION_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(c_bi_class_integer);
+
         return false;
       }
 
@@ -512,8 +576,7 @@ method setsockopt
       // - ERROR -
       if (nn_setsockopt(nn_fd,level,option,&value,sizeof(value)) == -1)
       {
-        // FIXME TODO throw proper exception
-        BIC_TODO_ERROR(__FILE__,__LINE__);
+        exception_s::throw_exception(it,module.error_base + c_error_NANO_SOCKET_SETSOCKOPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
     }/*}}}*/
@@ -524,8 +587,9 @@ method setsockopt
       // - ERROR -
       if (src_2_location->v_type != c_bi_class_string)
       {
-        // FIXME TODO throw proper exception
-        BIC_TODO_ERROR(__FILE__,__LINE__);
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_NANO_SOCKET_INVALID_OPTION_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(c_bi_class_string);
+
         return false;
       }
 
@@ -534,16 +598,16 @@ method setsockopt
       // - ERROR -
       if (nn_setsockopt(nn_fd,level,option,string_ptr->data,string_ptr->size - 1) == -1)
       {
-        // FIXME TODO throw proper exception
-        BIC_TODO_ERROR(__FILE__,__LINE__);
+        exception_s::throw_exception(it,module.error_base + c_error_NANO_SOCKET_SETSOCKOPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
     }/*}}}*/
     break;
+
+  // - ERROR -
   default:
-    
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+
+    exception_s::throw_exception(it,module.error_base + c_error_NANO_SOCKET_UNKNOWN_OPTION_AT_LEVEL,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -574,8 +638,7 @@ method getsockopt
       // - ERROR -
       if (nn_getsockopt(nn_fd,level,option,&value,&value_len) == -1)
       {
-        // FIXME TODO throw proper exception
-        BIC_TODO_ERROR(__FILE__,__LINE__);
+        exception_s::throw_exception(it,module.error_base + c_error_NANO_SOCKET_GETSOCKOPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
 
@@ -592,8 +655,7 @@ method getsockopt
       // - ERROR -
       if (nn_getsockopt(nn_fd,level,option,buffer,&buffer_size) == -1)
       {
-        // FIXME TODO throw proper exception
-        BIC_TODO_ERROR(__FILE__,__LINE__);
+        exception_s::throw_exception(it,module.error_base + c_error_NANO_SOCKET_GETSOCKOPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
 
@@ -603,10 +665,11 @@ method getsockopt
       BIC_SET_RESULT_STRING(string_ptr);
     }/*}}}*/
     break;
+
+  // - ERROR -
   default:
     
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_NANO_SOCKET_UNKNOWN_OPTION_AT_LEVEL,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -630,8 +693,7 @@ method bind
   // - ERROR -
   if ((end_id = nn_bind(nn_fd,address_ptr->data)) == -1)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_NANO_SOCKET_BIND_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -668,8 +730,7 @@ method connect
   // - ERROR -
   if ((end_id = nn_connect(nn_fd,address_ptr->data)) == -1)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_NANO_SOCKET_CONNECT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -704,8 +765,7 @@ method send
   // - ERROR -
   if (nn_send(nn_fd,data_ptr,data_size,flags) == -1)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_NANO_SOCKET_SEND_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -731,8 +791,7 @@ method recv
   // - ERROR -
   if ((cnt = nn_recv(nn_fd,&buffer,NN_MSG,flags)) == -1)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_NANO_SOCKET_RECV_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 

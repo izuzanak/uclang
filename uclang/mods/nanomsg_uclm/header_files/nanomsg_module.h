@@ -20,7 +20,15 @@ extern built_in_class_s *nanomsg_classes[];
 // - NANOMSG error identifiers -
 enum
 {
-  c_error_NANOMSG_DUMMY_ERROR = 0,
+  c_error_NANO_SOCKET_CREATE_ERROR = 0,
+  c_error_NANO_SOCKET_INVALID_OPTION_VALUE_TYPE,
+  c_error_NANO_SOCKET_UNKNOWN_OPTION_AT_LEVEL,
+  c_error_NANO_SOCKET_SETSOCKOPT_ERROR,
+  c_error_NANO_SOCKET_GETSOCKOPT_ERROR,
+  c_error_NANO_SOCKET_BIND_ERROR,
+  c_error_NANO_SOCKET_CONNECT_ERROR,
+  c_error_NANO_SOCKET_SEND_ERROR,
+  c_error_NANO_SOCKET_RECV_ERROR,
 };
 
 // - NANOMSG error strings -
