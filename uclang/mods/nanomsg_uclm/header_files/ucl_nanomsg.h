@@ -1,6 +1,6 @@
 
-#ifndef __UCL_FFTW_H
-#define __UCL_FFTW_H
+#ifndef __UCL_NANOMSG_H
+#define __UCL_NANOMSG_H
 
 @begin
 include "script_parser.h"

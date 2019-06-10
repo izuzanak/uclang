@@ -39,6 +39,7 @@ c_packages = [
   ["MOD_WEBSOCKET" ,"websocket_uclm" ,"pkg-config",["libwebsockets = 1.3"]],
   ["MOD_CURL"      ,"curl_uclm"      ,"pkg-config",["libcurl >= 7.38.0"]],
   ["MOD_NANOMSG"   ,"nanomsg_uclm"   ,"pkg-config",["nanomsg >= 1.1.5"]],
+  ["MOD_PROTOBUF"  ,"protobuf_uclm"  ,"pkg-config",["protobuf >= 1.3.1"]],
   ["MOD_UCF"       ,"ucf_uclm"       ,"dirs"      ,["../ext_libs/ucframework/2.15"]],
   ["MOD_UCTCN"     ,"uctcn_uclm"     ,"dirs"      ,["../ext_libs/ucframework/1.60","../ext_libs/uctcn/2.27"]],
   ["MOD_UCTCNMD"   ,"uctcnmd_uclm"   ,"dirs"      ,["../ext_libs/ucframework/1.60","../ext_libs/uctcn/2.27"]],

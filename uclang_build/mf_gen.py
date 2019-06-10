@@ -1516,6 +1516,32 @@ if cfg_ref[CFG_TARGET]:
     )
 # }}}
 
+# protobuf module
+cfg_ref = c_cfg[C_MODULE_PROTOBUF]
+# {{{
+if cfg_ref[CFG_TARGET]:
+    cfg_ref[CFG_MODULE] = module_c(
+      configuration,
+      cfg_ref[CFG_DIR],
+      cfg_ref[CFG_NAME],
+      [ 
+        "header_files",
+        os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
+      ],
+      [ 
+        "source_files",
+      ],
+      [
+        os.sep.join(["..","..","libs","libbase_ucll"]),
+      ],
+      opt_build, # CXX options
+      opt_link + "-lprotobuf ", # CXX link options
+      "", # CXX defines
+      [],
+      [],
+    )
+# }}}
+
 # ucf module
 cfg_ref = c_cfg[C_MODULE_UCF]
 # {{{

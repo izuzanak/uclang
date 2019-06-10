@@ -189,6 +189,7 @@ built_in_method_s nano_msg_methods[] =
 
 built_in_variable_s nano_msg_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_nano_msg_consts(location_array_s &const_locations)
@@ -867,6 +868,7 @@ built_in_method_s nano_endpoint_methods[] =
 
 built_in_variable_s nano_endpoint_variables[] =
 {/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_nano_endpoint_consts(location_array_s &const_locations)

@@ -35,6 +35,7 @@ C_MODULE_HTTP       = index; index += 1
 C_MODULE_WEBSOCKET  = index; index += 1
 C_MODULE_CURL       = index; index += 1
 C_MODULE_NANOMSG    = index; index += 1
+C_MODULE_PROTOBUF   = index; index += 1
 C_MODULE_UCF        = index; index += 1
 C_MODULE_UCTCN      = index; index += 1
 C_MODULE_UCTCNMD    = index; index += 1
@@ -151,6 +152,7 @@ c_cfg = [
     ["MOD_WEBSOCKET" ,c_enabled[C_MODULE_WEBSOCKET] ,C_UCLANG_DIR + "mods/websocket_uclm"   ,None],
     ["MOD_CURL"      ,c_enabled[C_MODULE_CURL]      ,C_UCLANG_DIR + "mods/curl_uclm"        ,None],
     ["MOD_NANOMSG"   ,c_enabled[C_MODULE_NANOMSG]   ,C_UCLANG_DIR + "mods/nanomsg_uclm"     ,None],
+    ["MOD_PROTOBUF"  ,c_enabled[C_MODULE_PROTOBUF]  ,C_UCLANG_DIR + "mods/protobuf_uclm"    ,None],
     ["MOD_UCF"       ,c_enabled[C_MODULE_UCF]       ,C_UCLANG_DIR + "mods/ucf_uclm"         ,None],
     ["MOD_UCTCN"     ,c_enabled[C_MODULE_UCTCN]     ,C_UCLANG_DIR + "mods/uctcn_uclm"       ,None],
     ["MOD_UCTCNMD"   ,c_enabled[C_MODULE_UCTCNMD]   ,C_UCLANG_DIR + "mods/uctcnmd_uclm"     ,None],
