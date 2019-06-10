@@ -45,6 +45,19 @@ bool protobuf_initialize(script_parser_s &sp)
   // - initialize proto_msg_descr class identifier -
   c_bi_class_proto_msg_descr = class_base_idx++;
 
+  // - retrieve remote dict class index -
+  c_rm_class_dict = sp.resolve_class_idx_by_name("Dict",c_idx_not_exist);
+
+  // - ERROR -
+  if (c_rm_class_dict == c_idx_not_exist)
+  {
+    sp.error_code.push(ei_module_cannot_find_remote_class);
+    sp.error_code.push(sp.module_names_positions[sp.module_idx].ui_first);
+    sp.error_code.push(sp.module_idx);
+
+    return false;
+  }
+
   return true;
 }/*}}}*/
 
@@ -259,6 +272,9 @@ method msg_descr
   // - store proto source location -
   dst_location->v_reference_cnt.atomic_inc();
   pmd_ptr->source_loc = dst_location;
+
+  // - initialize string location map -
+  pmd_ptr->update_string_map_message(it,pmd_ptr->msg_descriptor);
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_proto_msg_descr,pmd_ptr);
   BIC_SET_RESULT(new_location);

@@ -8,6 +8,9 @@ include "script_parser.h"
 
 #include <protobuf-c/protobuf-c.h>
 
+// - indexes of remote classes -
+extern unsigned c_rm_class_dict;
+
 /*
  * definition of structure proto_source_s
  */
@@ -35,6 +38,8 @@ typedef void   (*msg_free_unpacked_t)  (void *message,ProtobufCAllocator *alloca
 struct proto_msg_descr_s
 {
   location_s *source_loc;
+  pointer_map_tree_s string_location_map;
+
   ProtobufCMessageDescriptor *msg_descriptor;
 
   msg_init_t            msg_init;
@@ -45,7 +50,10 @@ struct proto_msg_descr_s
   msg_free_unpacked_t   msg_free_unpacked;
 
   inline void init();
-  void clear(interpreter_thread_s &it);
+  inline void clear(interpreter_thread_s &it);
+
+  void update_string_map_enum(interpreter_thread_s &it,ProtobufCEnumDescriptor *descr);
+  void update_string_map_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr);
 };
 
 /*
@@ -71,6 +79,7 @@ inline void proto_source_s::clear(interpreter_thread_s &it)
 inline void proto_msg_descr_s::init()
 {/*{{{*/
   source_loc = nullptr;
+  string_location_map.init();
 }/*}}}*/
 
 inline void proto_msg_descr_s::clear(interpreter_thread_s &it)
@@ -79,6 +88,20 @@ inline void proto_msg_descr_s::clear(interpreter_thread_s &it)
   {
     it.release_location_ptr(source_loc);
   }
+
+  if (string_location_map.root_idx != c_idx_not_exist)
+  {
+    pointer_map_tree_s_node *pmtn_ptr = string_location_map.data;
+    pointer_map_tree_s_node *pmtn_ptr_end = pmtn_ptr + string_location_map.used;
+    do {
+      if (pmtn_ptr->valid)
+      {
+        it.release_location_ptr((location_s *)pmtn_ptr->object.value);
+      }
+    } while(++pmtn_ptr < pmtn_ptr_end);
+  }
+
+  string_location_map.clear();
 
   init();
 }/*}}}*/
