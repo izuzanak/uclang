@@ -80,7 +80,7 @@ struct proto_msg_descr_s
   void update_string_map_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr);
 
   bool pack_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr,
-      pointer_map_tree_s *tree_ptr,bc_arrays_s *buffers,char *data);
+      pointer_map_tree_s *tree_ptr,bc_arrays_s &buffers,char *data);
   bool unpack_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr,
       char *data,pointer_map_tree_s *tree_ptr);
 };

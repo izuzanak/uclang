@@ -425,7 +425,7 @@ method pack
   char *msg_data = buffers.last().data;
 
   // - ERROR -
-  if (!pmd_ptr->pack_message(it,pmd_ptr->msg_descriptor,tree_ptr,&buffers,msg_data))
+  if (!pmd_ptr->pack_message(it,pmd_ptr->msg_descriptor,tree_ptr,buffers,msg_data))
   {
     buffers.clear();
 
@@ -465,7 +465,7 @@ method send
   // - unpack message -
   void *msg_data = pmd_ptr->msg_unpack(nullptr,data_size,(const uint8_t *)data_ptr);
 
-  // - create result dictionary -
+  // - create dictionary -
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)cmalloc(sizeof(pointer_map_tree_s));
   tree_ptr->init();
 

@@ -95,9 +95,9 @@ void proto_msg_descr_s::update_string_map_message(interpreter_thread_s &it,Proto
 }/*}}}*/
 
 bool proto_msg_descr_s::pack_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr,
-    pointer_map_tree_s *tree_ptr,bc_arrays_s *buffers,char *data)
+    pointer_map_tree_s *tree_ptr,bc_arrays_s &buffers,char *data)
 {/*{{{*/
-  msg_init(data);
+  descr->message_init((ProtobufCMessage *)data);
 
   if (descr->n_fields != 0)
   {
@@ -178,45 +178,343 @@ bool proto_msg_descr_s::pack_message(interpreter_thread_s &it,ProtobufCMessageDe
             return false;
       }
 
+#define PACK_MESSAGE_TYPE_INTEGER(TYPE) \
+{/*{{{*/\
+  if (array_ptr != nullptr)\
+  {\
+    if (array_ptr->used != 0)\
+    {\
+      buffers.push_blank();\
+      bc_array_s &buffer = buffers.last();\
+      buffer.copy_resize(array_ptr->used*sizeof(TYPE));\
+\
+      pointer *p_ptr = array_ptr->data;\
+      pointer *p_ptr_end = p_ptr + array_ptr->used;\
+      TYPE *ptr = (TYPE *)buffer.data;\
+      do {\
+        long long int value;\
+\
+        /* - ERROR - */\
+        if (!it.retrieve_integer(it.get_location_value(*p_ptr),value))\
+        {\
+          return false;\
+        }\
+\
+        *ptr++ = value;\
+\
+      } while(++p_ptr < p_ptr_end);\
+\
+      *((TYPE **)(data + f_ptr->offset)) = (TYPE *)buffer.data;\
+    }\
+  }\
+  else\
+  {\
+    long long int value;\
+\
+    /* - ERROR - */\
+    if (!it.retrieve_integer(value_location,value))\
+    {\
+      return false;\
+    }\
+\
+    *((TYPE *)(data + f_ptr->offset)) = value;\
+  }\
+}/*}}}*/
+
+#define PACK_MESSAGE_TYPE_FLOAT(TYPE) \
+{/*{{{*/\
+  if (array_ptr != nullptr)\
+  {\
+    if (array_ptr->used != 0)\
+    {\
+      buffers.push_blank();\
+      bc_array_s &buffer = buffers.last();\
+      buffer.copy_resize(array_ptr->used*sizeof(TYPE));\
+\
+      pointer *p_ptr = array_ptr->data;\
+      pointer *p_ptr_end = p_ptr + array_ptr->used;\
+      TYPE *ptr = (TYPE *)buffer.data;\
+      do {\
+        double value;\
+\
+        /* - ERROR - */\
+        if (!it.retrieve_float(it.get_location_value(*p_ptr),value))\
+        {\
+          return false;\
+        }\
+\
+        *ptr++ = value;\
+\
+      } while(++p_ptr < p_ptr_end);\
+\
+      *((TYPE **)(data + f_ptr->offset)) = (TYPE *)buffer.data;\
+    }\
+  }\
+  else\
+  {\
+    double value;\
+\
+    /* - ERROR - */\
+    if (!it.retrieve_float(value_location,value))\
+    {\
+      return false;\
+    }\
+\
+    *((TYPE *)(data + f_ptr->offset)) = value;\
+  }\
+}/*}}}*/
+
+#define PACK_MESSAGE_TYPE_BOOL(TYPE) \
+{/*{{{*/\
+  if (array_ptr != nullptr)\
+  {\
+    if (array_ptr->used != 0)\
+    {\
+      buffers.push_blank();\
+      bc_array_s &buffer = buffers.last();\
+      buffer.copy_resize(array_ptr->used*sizeof(TYPE));\
+\
+      pointer *p_ptr = array_ptr->data;\
+      pointer *p_ptr_end = p_ptr + array_ptr->used;\
+      TYPE *ptr = (TYPE *)buffer.data;\
+      do {\
+        long long int value;\
+\
+        /* - ERROR - */\
+        if (!it.retrieve_integer(it.get_location_value(*p_ptr),value))\
+        {\
+          return false;\
+        }\
+\
+        *ptr++ = value != 0;\
+\
+      } while(++p_ptr < p_ptr_end);\
+\
+      *((TYPE **)(data + f_ptr->offset)) = (TYPE *)buffer.data;\
+    }\
+  }\
+  else\
+  {\
+    long long int value;\
+\
+    /* - ERROR - */\
+    if (!it.retrieve_integer(value_location,value))\
+    {\
+      return false;\
+    }\
+\
+    *((TYPE *)(data + f_ptr->offset)) = value != 0;\
+  }\
+}/*}}}*/
+
       switch (f_ptr->type)
       {
 	case PROTOBUF_C_TYPE_INT32:
 	case PROTOBUF_C_TYPE_SINT32:
 	case PROTOBUF_C_TYPE_SFIXED32:
-          {/*{{{*/
-            if (array_ptr != nullptr)
-            {
-              // FIXME TODO continue ...
-              return false;
-            }
-            else
-            {
-              long long int value;
-
-              // - ERROR -
-              if (!it.retrieve_integer(value_location,value))
-              {
-                return false;
-              }
-
-              *((int32_t *)(data + f_ptr->offset)) = value;
-            }
-          }/*}}}*/
+          PACK_MESSAGE_TYPE_INTEGER(int32_t);
           break;
 	case PROTOBUF_C_TYPE_INT64:
 	case PROTOBUF_C_TYPE_SINT64:
 	case PROTOBUF_C_TYPE_SFIXED64:
+          PACK_MESSAGE_TYPE_INTEGER(int64_t);
+          break;
 	case PROTOBUF_C_TYPE_UINT32:
 	case PROTOBUF_C_TYPE_FIXED32:
+          PACK_MESSAGE_TYPE_INTEGER(uint32_t);
+          break;
 	case PROTOBUF_C_TYPE_UINT64:
 	case PROTOBUF_C_TYPE_FIXED64:
+          PACK_MESSAGE_TYPE_INTEGER(uint64_t);
+          break;
 	case PROTOBUF_C_TYPE_FLOAT:
+          PACK_MESSAGE_TYPE_FLOAT(float);
+          break;
 	case PROTOBUF_C_TYPE_DOUBLE:
+          PACK_MESSAGE_TYPE_FLOAT(double);
+          break;
 	case PROTOBUF_C_TYPE_BOOL:
+          PACK_MESSAGE_TYPE_BOOL(protobuf_c_boolean);
+          break;
 	case PROTOBUF_C_TYPE_ENUM:
+
+          // FIXME TODO continue ...
+          return false;
 	case PROTOBUF_C_TYPE_STRING:
+          {/*{{{*/
+            if (array_ptr != nullptr)
+            {
+              if (array_ptr->used != 0)
+              {
+                buffers.push_blank();
+                bc_array_s &buffer = buffers.last();
+                buffer.copy_resize(array_ptr->used*sizeof(char *));
+
+                pointer *p_ptr = array_ptr->data;
+                pointer *p_ptr_end = p_ptr + array_ptr->used;
+                char **ptr = (char **)buffer.data;
+                do
+                {
+                  location_s *item_location = it.get_location_value(*p_ptr);
+
+                  // - ERROR -
+                  if (item_location->v_type != c_bi_class_string)
+                  {
+                    return false;
+                  }
+
+                  *ptr++ = ((string_s *)item_location->v_data_ptr)->data;
+
+                } while(++p_ptr < p_ptr_end);
+
+                *((char ***)(data + f_ptr->offset)) = (char **)buffer.data;
+              }
+            }
+            else
+            {
+              // - ERROR -
+              if (value_location->v_type != c_bi_class_string)
+              {
+                return false;
+              }
+
+              *((char **)(data + f_ptr->offset)) = ((string_s *)value_location->v_data_ptr)->data;
+            }
+          }/*}}}*/
+          break;
 	case PROTOBUF_C_TYPE_BYTES:
+          {/*{{{*/
+            if (array_ptr != nullptr)
+            {
+              if (array_ptr->used != 0)
+              {
+                buffers.push_blank();
+                bc_array_s &buffer = buffers.last();
+                buffer.copy_resize(array_ptr->used*sizeof(ProtobufCBinaryData));
+
+                pointer *p_ptr = array_ptr->data;
+                pointer *p_ptr_end = p_ptr + array_ptr->used;
+                ProtobufCBinaryData *ptr = (ProtobufCBinaryData *)buffer.data;
+                do
+                {
+                  const void *data_ptr;
+                  unsigned data_size;
+
+                  // - ERROR -
+                  if (!it.retrieve_data_buffer(it.get_location_value(*p_ptr),data_ptr,data_size))
+                  {
+                    return false;
+                  }
+
+                  ptr->len = data_size;
+                  ptr->data = (uint8_t *)data_ptr;
+
+                } while(++ptr,++p_ptr < p_ptr_end);
+
+                *((ProtobufCBinaryData **)(data + f_ptr->offset)) = (ProtobufCBinaryData *)buffer.data;
+              }
+            }
+            else
+            {
+              const void *data_ptr;
+              unsigned data_size;
+
+              // - ERROR -
+              if (!it.retrieve_data_buffer(value_location,data_ptr,data_size))
+              {
+                return false;
+              }
+
+              ProtobufCBinaryData *pb_bin = (ProtobufCBinaryData *)(data + f_ptr->offset);
+
+              pb_bin->len = data_size;
+              pb_bin->data = (uint8_t *)data_ptr;
+            }
+          }/*}}}*/
+          break;
 	case PROTOBUF_C_TYPE_MESSAGE:
+          {/*{{{*/
+            if (array_ptr != nullptr)
+            {
+              if (array_ptr->used != 0)
+              {
+                buffers.push_blank();
+                bc_array_s &buffer = buffers.last();
+                buffer.copy_resize(array_ptr->used*sizeof(char *));
+
+                size_t sizeof_message = ((ProtobufCMessageDescriptor *)f_ptr->descriptor)->sizeof_message;
+
+                // - create messages buffer -
+                buffers.push_blank();
+                bc_array_s &msgs_buffer = buffers.last();
+                msgs_buffer.copy_resize(array_ptr->used*sizeof_message);
+
+                pointer *p_ptr = array_ptr->data;
+                pointer *p_ptr_end = p_ptr + array_ptr->used;
+                char **d_ptr = (char **)buffer.data;
+                char *m_ptr = msgs_buffer.data;
+                do
+                {
+                  location_s *item_location = it.get_location_value(*p_ptr);
+
+                  // - ERROR -
+                  if (item_location->v_type != c_rm_class_dict)
+                  {
+                    return false;
+                  }
+
+                  // - retrieve dictionary -
+                  pointer_map_tree_s *msg_tree_ptr = (pointer_map_tree_s *)item_location->v_data_ptr;
+
+                  msg_tree_ptr->it_ptr = &it;
+                  msg_tree_ptr->source_pos = tree_ptr->source_pos;
+
+                  // - ERROR -
+                  if (!pack_message(it,(ProtobufCMessageDescriptor *)f_ptr->descriptor,msg_tree_ptr,buffers,m_ptr))
+                  {
+                    return false;
+                  }
+
+                  *d_ptr++ = m_ptr;
+
+                  // - advance to next message -
+                  m_ptr += sizeof_message;
+
+                } while(++p_ptr < p_ptr_end);
+
+                *((char **)(data + f_ptr->offset)) = (char *)buffer.data;
+              }
+            }
+            else
+            {
+              // - ERROR -
+              if (value_location->v_type != c_rm_class_dict)
+              {
+                return false;
+              }
+
+              // - retrieve dictionary -
+              pointer_map_tree_s *msg_tree_ptr = (pointer_map_tree_s *)value_location->v_data_ptr;
+
+              msg_tree_ptr->it_ptr = &it;
+              msg_tree_ptr->source_pos = tree_ptr->source_pos;
+
+              // - create message buffer -
+              buffers.push_blank();
+              bc_array_s &buffer = buffers.last();
+              buffer.copy_resize(((ProtobufCMessageDescriptor *)f_ptr->descriptor)->sizeof_message);
+
+              // - ERROR -
+              if (!pack_message(it,(ProtobufCMessageDescriptor *)f_ptr->descriptor,msg_tree_ptr,buffers,buffer.data))
+              {
+                return false;
+              }
+
+              *((char **)(data + f_ptr->offset)) = buffer.data;
+            }
+          }/*}}}*/
+          break;
+        default:
 
           // FIXME TODO continue ...
           return false;
@@ -276,42 +574,192 @@ bool proto_msg_descr_s::unpack_message(interpreter_thread_s &it,ProtobufCMessage
   }\
 }/*}}}*/
 
+#define UNPACK_MESSAGE_TYPE_INTEGER(TYPE) \
+{/*{{{*/\
+  if (array_ptr != nullptr)\
+  {\
+    TYPE *ptr = *((TYPE **)(data + f_ptr->offset));\
+    TYPE *ptr_end = ptr + array_ptr->size;\
+    do {\
+      long long int value = *ptr;\
+\
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);\
+      array_ptr->push(new_location);\
+    } while(++ptr < ptr_end);\
+  }\
+  else\
+  {\
+    long long int value = *((TYPE *)(data + f_ptr->offset));\
+    \
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);\
+    value_location = new_location;\
+  }\
+}/*}}}*/
+
+#define UNPACK_MESSAGE_TYPE_FLOAT(TYPE) \
+{/*{{{*/\
+  if (array_ptr != nullptr)\
+  {\
+    TYPE *ptr = *((TYPE **)(data + f_ptr->offset));\
+    TYPE *ptr_end = ptr + array_ptr->size;\
+    do {\
+      double value = *ptr;\
+\
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);\
+      array_ptr->push(new_location);\
+    } while(++ptr < ptr_end);\
+  }\
+  else\
+  {\
+    double value = *((TYPE *)(data + f_ptr->offset));\
+    \
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);\
+    value_location = new_location;\
+  }\
+}/*}}}*/
+
       switch (f_ptr->type)
       {
 	case PROTOBUF_C_TYPE_INT32:
 	case PROTOBUF_C_TYPE_SINT32:
 	case PROTOBUF_C_TYPE_SFIXED32:
-          {/*{{{*/
-            if (array_ptr != nullptr)
-            {
-              // FIXME TODO continue ...
-              UNPACK_MESSAGE_RELEASE();
-
-              return false;
-            }
-            else
-            {
-              long long int value = *((int32_t *)(data + f_ptr->offset));
-              
-              BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
-              value_location = new_location;
-            }
-          }/*}}}*/
+          UNPACK_MESSAGE_TYPE_INTEGER(int32_t);
           break;
 	case PROTOBUF_C_TYPE_INT64:
 	case PROTOBUF_C_TYPE_SINT64:
 	case PROTOBUF_C_TYPE_SFIXED64:
+          UNPACK_MESSAGE_TYPE_INTEGER(int64_t);
+          break;
 	case PROTOBUF_C_TYPE_UINT32:
 	case PROTOBUF_C_TYPE_FIXED32:
+          UNPACK_MESSAGE_TYPE_INTEGER(uint32_t);
+          break;
 	case PROTOBUF_C_TYPE_UINT64:
 	case PROTOBUF_C_TYPE_FIXED64:
+          UNPACK_MESSAGE_TYPE_INTEGER(uint64_t);
+          break;
 	case PROTOBUF_C_TYPE_FLOAT:
+          UNPACK_MESSAGE_TYPE_FLOAT(float);
+          break;
 	case PROTOBUF_C_TYPE_DOUBLE:
+          UNPACK_MESSAGE_TYPE_FLOAT(double);
+          break;
 	case PROTOBUF_C_TYPE_BOOL:
+          UNPACK_MESSAGE_TYPE_INTEGER(protobuf_c_boolean);
+          break;
 	case PROTOBUF_C_TYPE_ENUM:
+
+          // FIXME TODO continue ...
+          UNPACK_MESSAGE_RELEASE();
+
+          return false;
 	case PROTOBUF_C_TYPE_STRING:
+          {/*{{{*/
+            if (array_ptr != nullptr)
+            {
+              char **ptr = *((char ***)(data + f_ptr->offset));
+              char **ptr_end = ptr + array_ptr->size;
+              do {
+                char *value = *ptr;
+
+                string_s *string_ptr = it.get_new_string_ptr();
+                string_ptr->set(strlen(value),value);
+
+                BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+                array_ptr->push(new_location);
+              } while(++ptr < ptr_end);
+            }
+            else
+            {
+              char *value = *((char **)(data + f_ptr->offset));
+
+              string_s *string_ptr = it.get_new_string_ptr();
+              string_ptr->set(strlen(value),value);
+              
+              BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+              value_location = new_location;
+            }
+          }/*}}}*/
+          break;
 	case PROTOBUF_C_TYPE_BYTES:
+          {/*{{{*/
+            if (array_ptr != nullptr)
+            {
+              ProtobufCBinaryData *ptr = *((ProtobufCBinaryData **)(data + f_ptr->offset));
+              ProtobufCBinaryData *ptr_end = ptr + array_ptr->size;
+              do {
+                string_s *string_ptr = it.get_new_string_ptr();
+                string_ptr->set(ptr->len,(const char *)ptr->data);
+
+                BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+                array_ptr->push(new_location);
+              } while(++ptr < ptr_end);
+            }
+            else
+            {
+              ProtobufCBinaryData *pb_bin = (ProtobufCBinaryData *)(data + f_ptr->offset);
+
+              string_s *string_ptr = it.get_new_string_ptr();
+              string_ptr->set(pb_bin->len,(const char *)pb_bin->data);
+              
+              BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+              value_location = new_location;
+            }
+          }/*}}}*/
+          break;
 	case PROTOBUF_C_TYPE_MESSAGE:
+          {/*{{{*/
+            if (array_ptr != nullptr)
+            {
+              char **ptr = *((char ***)(data + f_ptr->offset));
+              char **ptr_end = ptr + array_ptr->size;
+              do
+              {
+                // - create dictionary -
+                pointer_map_tree_s *msg_tree_ptr = (pointer_map_tree_s *)cmalloc(sizeof(pointer_map_tree_s));
+                msg_tree_ptr->init();
+
+                msg_tree_ptr->it_ptr = &it;
+                msg_tree_ptr->source_pos = tree_ptr->source_pos;
+
+                BIC_CREATE_NEW_LOCATION(new_location,c_rm_class_dict,msg_tree_ptr);
+                array_ptr->push(new_location);
+
+                // - ERROR -
+                if (!unpack_message(it,(ProtobufCMessageDescriptor *)f_ptr->descriptor,
+                      *ptr,msg_tree_ptr))
+                {
+                  UNPACK_MESSAGE_RELEASE();
+
+                  return false;
+                }
+
+              } while(++ptr < ptr_end);
+            }
+            else
+            {
+              // - create dictionary -
+              pointer_map_tree_s *msg_tree_ptr = (pointer_map_tree_s *)cmalloc(sizeof(pointer_map_tree_s));
+              msg_tree_ptr->init();
+
+              msg_tree_ptr->it_ptr = &it;
+              msg_tree_ptr->source_pos = tree_ptr->source_pos;
+
+              BIC_CREATE_NEW_LOCATION(new_location,c_rm_class_dict,msg_tree_ptr);
+              value_location = new_location;
+
+              // - ERROR -
+              if (!unpack_message(it,(ProtobufCMessageDescriptor *)f_ptr->descriptor,
+                    *((char **)(data + f_ptr->offset)),msg_tree_ptr))
+              {
+                UNPACK_MESSAGE_RELEASE();
+
+                return false;
+              }
+            }
+          }/*}}}*/
+          break;
+        default:
 
           // FIXME TODO continue ...
           UNPACK_MESSAGE_RELEASE();
