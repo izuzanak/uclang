@@ -404,18 +404,90 @@ bool bic_proto_msg_descr_method_ProtoMsgDescr_2(interpreter_thread_s &it,unsigne
 
 bool bic_proto_msg_descr_method_pack_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
+@begin ucl_params
+<
+dict:c_rm_class_dict
+>
+method pack
+; @end
 
-  // FIXME TODO continue ...
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
+  proto_msg_descr_s *pmd_ptr = (proto_msg_descr_s *)dst_location->v_data_ptr;
+  pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)src_0_location->v_data_ptr;
+
+  tree_ptr->it_ptr = &it;
+  tree_ptr->source_pos = operands[c_source_pos_idx];
+
+  bc_arrays_s buffers;
+  buffers.init();
+
+  buffers.push_blank();
+  buffers.last().copy_resize(pmd_ptr->msg_descriptor->sizeof_message);
+  char *msg_data = buffers.last().data;
+
+  // - ERROR -
+  if (!pmd_ptr->pack_message(it,pmd_ptr->msg_descriptor,tree_ptr,&buffers,msg_data))
+  {
+    buffers.clear();
+
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - retrieve message packed size -
+  size_t length = pmd_ptr->msg_get_packed_size(msg_data);
+
+  // - create result string -
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->create(length);
+
+  // - pack message -
+  pmd_ptr->msg_pack(msg_data,(uint8_t *)string_ptr->data);
+
+  buffers.clear();
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
 }/*}}}*/
 
 bool bic_proto_msg_descr_method_unpack_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
+@begin ucl_params
+<
+data:retrieve_data_buffer
+>
+method send
+; @end
 
-  // FIXME TODO continue ...
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
+  proto_msg_descr_s *pmd_ptr = (proto_msg_descr_s *)dst_location->v_data_ptr;
+
+  // - unpack message -
+  void *msg_data = pmd_ptr->msg_unpack(nullptr,data_size,(const uint8_t *)data_ptr);
+
+  // - create result dictionary -
+  pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)cmalloc(sizeof(pointer_map_tree_s));
+  tree_ptr->init();
+
+  tree_ptr->it_ptr = &it;
+  tree_ptr->source_pos = operands[c_source_pos_idx];
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_rm_class_dict,tree_ptr);
+  BIC_SET_RESULT(new_location);
+
+  // - ERROR -
+  if (!pmd_ptr->unpack_message(it,pmd_ptr->msg_descriptor,(char *)msg_data,tree_ptr))
+  {
+    pmd_ptr->msg_free_unpacked(msg_data,nullptr);
+
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  pmd_ptr->msg_free_unpacked(msg_data,nullptr);
+
+  return true;
 }/*}}}*/
 
 bool bic_proto_msg_descr_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)

@@ -12,6 +12,30 @@ include "script_parser.h"
 extern unsigned c_rm_class_dict;
 
 /*
+ * definition of generated structures
+ */
+
+// -- ptr_loc_map_s --
+@begin
+struct
+<
+pointer:key
+pointer:loc_value
+>
+ptr_loc_map_s;
+@end
+
+// -- ptr_loc_map_tree_s --
+@begin
+safe_rb_tree<ptr_loc_map_s> ptr_loc_map_tree_s;
+@end
+
+// -- bc_arrays_s --
+@begin
+array<bc_array_s> bc_arrays_s;
+@end
+
+/*
  * definition of structure proto_source_s
  */
 
@@ -38,7 +62,7 @@ typedef void   (*msg_free_unpacked_t)  (void *message,ProtobufCAllocator *alloca
 struct proto_msg_descr_s
 {
   location_s *source_loc;
-  pointer_map_tree_s string_location_map;
+  ptr_loc_map_tree_s string_location_map;
 
   ProtobufCMessageDescriptor *msg_descriptor;
 
@@ -54,7 +78,36 @@ struct proto_msg_descr_s
 
   void update_string_map_enum(interpreter_thread_s &it,ProtobufCEnumDescriptor *descr);
   void update_string_map_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr);
+
+  bool pack_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr,
+      pointer_map_tree_s *tree_ptr,bc_arrays_s *buffers,char *data);
+  bool unpack_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr,
+      char *data,pointer_map_tree_s *tree_ptr);
 };
+
+/*
+ * inline methods of generated structures
+ */
+
+// -- ptr_loc_map_s --
+@begin
+inlines ptr_loc_map_s
+@end
+
+// -- ptr_loc_map_tree_s --
+@begin
+inlines ptr_loc_map_tree_s
+@end
+
+inline int ptr_loc_map_tree_s::__compare_value(ptr_loc_map_s &a_first,ptr_loc_map_s &a_second)
+{/*{{{*/
+  return a_first.key < a_second.key ? -1 : a_first.key > a_second.key ? 1 : 0;
+}/*}}}*/
+
+// -- bc_arrays_s --
+@begin
+inlines bc_arrays_s
+@end
 
 /*
  * inline methods of structure proto_source_s
@@ -89,14 +142,15 @@ inline void proto_msg_descr_s::clear(interpreter_thread_s &it)
     it.release_location_ptr(source_loc);
   }
 
+  // - release string locations -
   if (string_location_map.root_idx != c_idx_not_exist)
   {
-    pointer_map_tree_s_node *pmtn_ptr = string_location_map.data;
-    pointer_map_tree_s_node *pmtn_ptr_end = pmtn_ptr + string_location_map.used;
+    ptr_loc_map_tree_s_node *pmtn_ptr = string_location_map.data;
+    ptr_loc_map_tree_s_node *pmtn_ptr_end = pmtn_ptr + string_location_map.used;
     do {
       if (pmtn_ptr->valid)
       {
-        it.release_location_ptr((location_s *)pmtn_ptr->object.value);
+        it.release_location_ptr((location_s *)pmtn_ptr->object.loc_value);
       }
     } while(++pmtn_ptr < pmtn_ptr_end);
   }
