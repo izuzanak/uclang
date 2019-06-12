@@ -14,7 +14,7 @@ EXPORT built_in_module_s module =
   protobuf_classes,         // Classes
 
   0,                        // Error base index
-  1,                        // Error count
+  5,                        // Error count
   protobuf_error_strings,   // Error strings
 
   protobuf_initialize,      // Initialize function
@@ -31,7 +31,11 @@ built_in_class_s *protobuf_classes[] =
 // - PROTOBUF error strings -
 const char *protobuf_error_strings[] =
 {/*{{{*/
-  "error_PROTOBUF_DUMMY_ERROR",
+  "error_PROTO_SOURCE_OPEN_ERROR",
+  "error_PROTO_SOURCE_MESSAGE_DESCRIPTOR_SYMBOL_TOO_LONG",
+  "error_PROTO_SOURCE_MESSAGE_DESCRIPTOR_SYMBOL_NOT_FOUND",
+  "error_PROTO_MSG_DESCR_MESSAGE_PACK_ERROR",
+  "error_PROTO_MSG_DESCR_MESSAGE_UNPACK_ERROR",
 };/*}}}*/
 
 // - PROTOBUF initialize -
@@ -72,11 +76,39 @@ bool protobuf_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_PROTOBUF_DUMMY_ERROR:
+  case c_error_PROTO_SOURCE_OPEN_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nProtobuf dummy error\n");
+    fprintf(stderr,"\nError while openning protobuf source library\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PROTO_SOURCE_MESSAGE_DESCRIPTOR_SYMBOL_TOO_LONG:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nProtobuf, message descriptor symbol is too long\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PROTO_SOURCE_MESSAGE_DESCRIPTOR_SYMBOL_NOT_FOUND:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nProtobuf, cannot found message descriptor symbol\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PROTO_MSG_DESCR_MESSAGE_PACK_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while packing protobuf message\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PROTO_MSG_DESCR_MESSAGE_UNPACK_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while unpacking protobuf message\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -193,6 +225,9 @@ method ProtoSource
   proto_source_s *ps_ptr = (proto_source_s *)cmalloc(sizeof(proto_source_s));
   ps_ptr->init();
 
+  ps_ptr->it_ptr = &it;
+  ps_ptr->source_pos = operands[c_source_pos_idx];
+
   // - ERROR -
   if (!ps_ptr->dynlib.open(string_ptr->data,0))
   {
@@ -201,8 +236,7 @@ method ProtoSource
     ps_ptr->clear(it);
     cfree(ps_ptr);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_PROTO_SOURCE_OPEN_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -221,9 +255,13 @@ method msg_descr
 ; @end
 
   proto_source_s *ps_ptr = (proto_source_s *)dst_location->v_data_ptr;
+
+  ps_ptr->it_ptr = &it;
+  ps_ptr->source_pos = operands[c_source_pos_idx];
+
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
-  const int buffer_size = 256;
+  const int buffer_size = 512;
   char buffer[buffer_size];
  
   // - create proto_msg_descr object -
@@ -239,8 +277,7 @@ method msg_descr
     pmd_ptr->clear(it);\
     cfree(pmd_ptr);\
 \
-    /* FIXME TODO throw proper exception */\
-    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    exception_s::throw_exception(it,module.error_base + c_error_PROTO_SOURCE_MESSAGE_DESCRIPTOR_SYMBOL_TOO_LONG,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
 \
@@ -251,8 +288,7 @@ method msg_descr
     pmd_ptr->clear(it);\
     cfree(pmd_ptr);\
 \
-    /* FIXME TODO throw proper exception */\
-    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    exception_s::throw_exception(it,module.error_base + c_error_PROTO_SOURCE_MESSAGE_DESCRIPTOR_SYMBOL_NOT_FOUND,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
 \
@@ -400,6 +436,10 @@ method pack
 
   proto_msg_descr_s *pmd_ptr = (proto_msg_descr_s *)dst_location->v_data_ptr;
   proto_source_s *ps_ptr = (proto_source_s *)pmd_ptr->source_loc->v_data_ptr;
+
+  ps_ptr->it_ptr = &it;
+  ps_ptr->source_pos = operands[c_source_pos_idx];
+
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)src_0_location->v_data_ptr;
 
   tree_ptr->it_ptr = &it;
@@ -417,8 +457,7 @@ method pack
   {
     buffers.clear();
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_PROTO_MSG_DESCR_MESSAGE_PACK_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -451,6 +490,9 @@ method send
   proto_msg_descr_s *pmd_ptr = (proto_msg_descr_s *)dst_location->v_data_ptr;
   proto_source_s *ps_ptr = (proto_source_s *)pmd_ptr->source_loc->v_data_ptr;
 
+  ps_ptr->it_ptr = &it;
+  ps_ptr->source_pos = operands[c_source_pos_idx];
+
   // - unpack message -
   void *msg_data = pmd_ptr->msg_unpack(nullptr,data_size,(const uint8_t *)data_ptr);
 
@@ -469,8 +511,7 @@ method send
   {
     pmd_ptr->msg_free_unpacked(msg_data,nullptr);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_PROTO_MSG_DESCR_MESSAGE_UNPACK_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 

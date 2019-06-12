@@ -57,6 +57,9 @@ safe_rb_tree<proto_enum_s> proto_enum_tree_s;
 
 struct proto_source_s
 {
+  interpreter_thread_s *it_ptr;
+  unsigned source_pos;
+
   dynlib_s dynlib;
   ptr_loc_map_tree_s string_location_map;
   proto_enum_tree_s enum_tree;

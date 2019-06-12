@@ -51,8 +51,8 @@ void proto_source_s::update_init_descr_enum(interpreter_thread_s &it,ProtobufCEn
   {
     if (descr->n_values != 0)
     {
-      proto_enum.name_tree.it_ptr = &it;
-      proto_enum.name_tree.source_pos = 0;
+      proto_enum.name_tree.it_ptr = it_ptr;
+      proto_enum.name_tree.source_pos = source_pos;
 
       const ProtobufCEnumValue *n_ptr = descr->values;
       const ProtobufCEnumValue *n_ptr_end = n_ptr + descr->n_values;
@@ -292,8 +292,8 @@ bool proto_source_s::pack_value(interpreter_thread_s &it,const ProtobufCFieldDes
 
         proto_enum_s &proto_enum = enum_tree[proto_enum_idx];
 
-        proto_enum.name_tree.it_ptr = &it;
-        proto_enum.name_tree.source_pos = 0;
+        proto_enum.name_tree.it_ptr = it_ptr;
+        proto_enum.name_tree.source_pos = source_pos;
 
         if (array_ptr != nullptr)
         {
@@ -472,8 +472,8 @@ bool proto_source_s::pack_value(interpreter_thread_s &it,const ProtobufCFieldDes
               // - retrieve dictionary -
               pointer_map_tree_s *msg_tree_ptr = (pointer_map_tree_s *)item_location->v_data_ptr;
 
-              msg_tree_ptr->it_ptr = &it;
-              msg_tree_ptr->source_pos = 0;
+              msg_tree_ptr->it_ptr = it_ptr;
+              msg_tree_ptr->source_pos = source_pos;
 
               // - ERROR -
               if (!pack_message(it,(ProtobufCMessageDescriptor *)field_descr->descriptor,msg_tree_ptr,buffers,m_ptr))
@@ -502,8 +502,8 @@ bool proto_source_s::pack_value(interpreter_thread_s &it,const ProtobufCFieldDes
           // - retrieve dictionary -
           pointer_map_tree_s *msg_tree_ptr = (pointer_map_tree_s *)value_location->v_data_ptr;
 
-          msg_tree_ptr->it_ptr = &it;
-          msg_tree_ptr->source_pos = 0;
+          msg_tree_ptr->it_ptr = it_ptr;
+          msg_tree_ptr->source_pos = source_pos;
 
           // - create message buffer -
           buffers.push_blank();
@@ -634,6 +634,9 @@ bool proto_source_s::pack_message(interpreter_thread_s &it,ProtobufCMessageDescr
                 }
 
                 pointer_map_tree_s *dict_tree_ptr = (pointer_map_tree_s *)value_location->v_data_ptr;
+
+                dict_tree_ptr->it_ptr = it_ptr;
+                dict_tree_ptr->source_pos = source_pos;
 
                 if (dict_tree_ptr->root_idx != c_idx_not_exist)
                 {
@@ -898,8 +901,8 @@ bool proto_source_s::unpack_value(interpreter_thread_s &it,const ProtobufCFieldD
                 pointer_map_tree_s *msg_tree_ptr = (pointer_map_tree_s *)cmalloc(sizeof(pointer_map_tree_s));
                 msg_tree_ptr->init();
 
-                msg_tree_ptr->it_ptr = &it;
-                msg_tree_ptr->source_pos = 0;
+                msg_tree_ptr->it_ptr = it_ptr;
+                msg_tree_ptr->source_pos = source_pos;
 
                 BIC_CREATE_NEW_LOCATION(new_location,c_rm_class_dict,msg_tree_ptr);
                 array_ptr->push(new_location);
@@ -919,8 +922,8 @@ bool proto_source_s::unpack_value(interpreter_thread_s &it,const ProtobufCFieldD
               pointer_map_tree_s *msg_tree_ptr = (pointer_map_tree_s *)cmalloc(sizeof(pointer_map_tree_s));
               msg_tree_ptr->init();
 
-              msg_tree_ptr->it_ptr = &it;
-              msg_tree_ptr->source_pos = 0;
+              msg_tree_ptr->it_ptr = it_ptr;
+              msg_tree_ptr->source_pos = source_pos;
 
               BIC_CREATE_NEW_LOCATION(new_location,c_rm_class_dict,msg_tree_ptr);
               value_location = new_location;
@@ -1024,8 +1027,8 @@ bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDes
                 pointer_map_tree_s *dict_tree_ptr = (pointer_map_tree_s *)cmalloc(sizeof(pointer_map_tree_s));
                 dict_tree_ptr->init();
 
-                dict_tree_ptr->it_ptr = &it;
-                dict_tree_ptr->source_pos = 0;
+                dict_tree_ptr->it_ptr = it_ptr;
+                dict_tree_ptr->source_pos = source_pos;
 
                 BIC_CREATE_NEW_LOCATION(new_location,c_rm_class_dict,dict_tree_ptr);
                 value_location = new_location;

@@ -19,7 +19,11 @@ extern built_in_class_s *protobuf_classes[];
 // - PROTOBUF error identifiers -
 enum
 {
-  c_error_PROTOBUF_DUMMY_ERROR = 0,
+  c_error_PROTO_SOURCE_OPEN_ERROR = 0,
+  c_error_PROTO_SOURCE_MESSAGE_DESCRIPTOR_SYMBOL_TOO_LONG,
+  c_error_PROTO_SOURCE_MESSAGE_DESCRIPTOR_SYMBOL_NOT_FOUND,
+  c_error_PROTO_MSG_DESCR_MESSAGE_PACK_ERROR,
+  c_error_PROTO_MSG_DESCR_MESSAGE_UNPACK_ERROR,
 };
 
 // - PROTOBUF error strings -
