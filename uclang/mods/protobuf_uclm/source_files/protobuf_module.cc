@@ -273,8 +273,8 @@ method msg_descr
   dst_location->v_reference_cnt.atomic_inc();
   pmd_ptr->source_loc = dst_location;
 
-  // - initialize string location map -
-  pmd_ptr->update_string_map_message(it,pmd_ptr->msg_descriptor);
+  // - initialize descriptor -
+  ps_ptr->update_init_descr_message(it,pmd_ptr->msg_descriptor);
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_proto_msg_descr,pmd_ptr);
   BIC_SET_RESULT(new_location);
@@ -305,7 +305,7 @@ built_in_class_s proto_msg_descr_class =
 {/*{{{*/
   "ProtoMsgDescr",
   c_modifier_public | c_modifier_final,
-  6, proto_msg_descr_methods,
+  5, proto_msg_descr_methods,
   0, proto_msg_descr_variables,
   bic_proto_msg_descr_consts,
   bic_proto_msg_descr_init,
@@ -329,11 +329,6 @@ built_in_method_s proto_msg_descr_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_proto_msg_descr_operator_binary_equal
-  },
-  {
-    "ProtoMsgDescr#2",
-    c_modifier_public | c_modifier_final,
-    bic_proto_msg_descr_method_ProtoMsgDescr_2
   },
   {
     "pack#1",
@@ -394,14 +389,6 @@ bool bic_proto_msg_descr_operator_binary_equal(interpreter_thread_s &it,unsigned
   return true;
 }/*}}}*/
 
-bool bic_proto_msg_descr_method_ProtoMsgDescr_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-
-  // FIXME TODO continue ...
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
-}/*}}}*/
-
 bool bic_proto_msg_descr_method_pack_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
@@ -412,6 +399,7 @@ method pack
 ; @end
 
   proto_msg_descr_s *pmd_ptr = (proto_msg_descr_s *)dst_location->v_data_ptr;
+  proto_source_s *ps_ptr = (proto_source_s *)pmd_ptr->source_loc->v_data_ptr;
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)src_0_location->v_data_ptr;
 
   tree_ptr->it_ptr = &it;
@@ -425,7 +413,7 @@ method pack
   char *msg_data = buffers.last().data;
 
   // - ERROR -
-  if (!pmd_ptr->pack_message(it,pmd_ptr->msg_descriptor,tree_ptr,buffers,msg_data))
+  if (!ps_ptr->pack_message(it,pmd_ptr->msg_descriptor,tree_ptr,buffers,msg_data))
   {
     buffers.clear();
 
@@ -461,6 +449,7 @@ method send
 ; @end
 
   proto_msg_descr_s *pmd_ptr = (proto_msg_descr_s *)dst_location->v_data_ptr;
+  proto_source_s *ps_ptr = (proto_source_s *)pmd_ptr->source_loc->v_data_ptr;
 
   // - unpack message -
   void *msg_data = pmd_ptr->msg_unpack(nullptr,data_size,(const uint8_t *)data_ptr);
@@ -476,7 +465,7 @@ method send
   BIC_SET_RESULT(new_location);
 
   // - ERROR -
-  if (!pmd_ptr->unpack_message(it,pmd_ptr->msg_descriptor,(char *)msg_data,tree_ptr))
+  if (!ps_ptr->unpack_message(it,pmd_ptr->msg_descriptor,(char *)msg_data,tree_ptr))
   {
     pmd_ptr->msg_free_unpacked(msg_data,nullptr);
 

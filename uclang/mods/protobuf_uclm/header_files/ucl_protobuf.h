@@ -35,6 +35,22 @@ safe_rb_tree<ptr_loc_map_s> ptr_loc_map_tree_s;
 array<bc_array_s> bc_arrays_s;
 @end
 
+// -- proto_enum_s --
+@begin
+struct
+<
+pointer:descr
+pointer_tree_s:name_tree
+lli_rb_tree_s:lli_tree
+>
+proto_enum_s;
+@end
+
+// -- proto_enum_tree_s --
+@begin
+safe_rb_tree<proto_enum_s> proto_enum_tree_s;
+@end
+
 /*
  * definition of structure proto_source_s
  */
@@ -42,9 +58,19 @@ array<bc_array_s> bc_arrays_s;
 struct proto_source_s
 {
   dynlib_s dynlib;
+  ptr_loc_map_tree_s string_location_map;
+  proto_enum_tree_s enum_tree;
 
   inline void init();
   void clear(interpreter_thread_s &it);
+
+  void update_init_descr_enum(interpreter_thread_s &it,ProtobufCEnumDescriptor *descr);
+  void update_init_descr_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr);
+
+  bool pack_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr,
+      pointer_map_tree_s *tree_ptr,bc_arrays_s &buffers,char *data);
+  bool unpack_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr,
+      char *data,pointer_map_tree_s *tree_ptr);
 };
 
 /*
@@ -62,8 +88,6 @@ typedef void   (*msg_free_unpacked_t)  (void *message,ProtobufCAllocator *alloca
 struct proto_msg_descr_s
 {
   location_s *source_loc;
-  ptr_loc_map_tree_s string_location_map;
-
   ProtobufCMessageDescriptor *msg_descriptor;
 
   msg_init_t            msg_init;
@@ -75,14 +99,6 @@ struct proto_msg_descr_s
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
-
-  void update_string_map_enum(interpreter_thread_s &it,ProtobufCEnumDescriptor *descr);
-  void update_string_map_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr);
-
-  bool pack_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr,
-      pointer_map_tree_s *tree_ptr,bc_arrays_s &buffers,char *data);
-  bool unpack_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr,
-      char *data,pointer_map_tree_s *tree_ptr);
 };
 
 /*
@@ -109,6 +125,21 @@ inline int ptr_loc_map_tree_s::__compare_value(ptr_loc_map_s &a_first,ptr_loc_ma
 inlines bc_arrays_s
 @end
 
+// -- proto_enum_s --
+@begin
+inlines proto_enum_s
+@end
+
+// -- proto_enum_tree_s --
+@begin
+inlines proto_enum_tree_s
+@end
+
+inline int proto_enum_tree_s::__compare_value(proto_enum_s &a_first,proto_enum_s &a_second)
+{/*{{{*/
+  return a_first.descr < a_second.descr ? -1 : a_first.descr > a_second.descr ? 1 : 0;
+}/*}}}*/
+
 /*
  * inline methods of structure proto_source_s
  */
@@ -116,31 +147,13 @@ inlines bc_arrays_s
 inline void proto_source_s::init()
 {/*{{{*/
   dynlib.init();
+  string_location_map.init();
+  enum_tree.init();
 }/*}}}*/
 
 inline void proto_source_s::clear(interpreter_thread_s &it)
 {/*{{{*/
   dynlib.clear();
-
-  init();
-}/*}}}*/
-
-/*
- * inline methods of structure proto_msg_descr_s
- */
-
-inline void proto_msg_descr_s::init()
-{/*{{{*/
-  source_loc = nullptr;
-  string_location_map.init();
-}/*}}}*/
-
-inline void proto_msg_descr_s::clear(interpreter_thread_s &it)
-{/*{{{*/
-  if (source_loc != nullptr)
-  {
-    it.release_location_ptr(source_loc);
-  }
 
   // - release string locations -
   if (string_location_map.root_idx != c_idx_not_exist)
@@ -156,6 +169,53 @@ inline void proto_msg_descr_s::clear(interpreter_thread_s &it)
   }
 
   string_location_map.clear();
+
+  // - release enum locations -
+  if (enum_tree.root_idx != c_idx_not_exist)
+  {
+    proto_enum_tree_s_node *petn_ptr = enum_tree.data;
+    proto_enum_tree_s_node *petn_ptr_end = petn_ptr + enum_tree.used;
+    do {
+      if (petn_ptr->valid)
+      {
+        // - release enum value name locations -
+        pointer_tree_s &name_tree = petn_ptr->object.name_tree;
+
+        if (name_tree.root_idx != c_idx_not_exist)
+        {
+          pointer_tree_s_node *p_ptr = name_tree.data;
+          pointer_tree_s_node *p_ptr_end = p_ptr + name_tree.used;
+          do {
+            if (p_ptr->valid)
+            {
+              it.release_location_ptr((location_s *)p_ptr->object);
+            }
+          } while(++p_ptr < p_ptr_end);
+        }
+      }
+    } while(++petn_ptr < petn_ptr_end);
+  }
+
+  enum_tree.clear();
+
+  init();
+}/*}}}*/
+
+/*
+ * inline methods of structure proto_msg_descr_s
+ */
+
+inline void proto_msg_descr_s::init()
+{/*{{{*/
+  source_loc = nullptr;
+}/*}}}*/
+
+inline void proto_msg_descr_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+  if (source_loc != nullptr)
+  {
+    it.release_location_ptr(source_loc);
+  }
 
   init();
 }/*}}}*/

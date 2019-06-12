@@ -25,37 +25,60 @@ methods ptr_loc_map_tree_s
 methods bc_arrays_s
 @end
 
+// -- proto_enum_s --
+@begin
+methods proto_enum_s
+@end
+
+// -- proto_enum_tree_s --
+@begin
+methods proto_enum_tree_s
+@end
+
 /*
- * methods of structure proto_msg_descr_s
+ * methods of structure proto_source_s
  */
 
-void proto_msg_descr_s::update_string_map_enum(interpreter_thread_s &it,ProtobufCEnumDescriptor *descr)
+void proto_source_s::update_init_descr_enum(interpreter_thread_s &it,ProtobufCEnumDescriptor *descr)
 {/*{{{*/
-  if (descr->n_value_names != 0)
+  proto_enum_s proto_enum;
+  proto_enum.init();
+
+  proto_enum.descr = descr;
+
+  unsigned index = enum_tree.get_idx(proto_enum);
+  if (index == c_idx_not_exist)
   {
-    const ProtobufCEnumValueIndex *n_ptr = descr->values_by_name;
-    const ProtobufCEnumValueIndex *n_ptr_end = n_ptr + descr->n_value_names;
-    do {
+    if (descr->n_values != 0)
+    {
+      proto_enum.name_tree.it_ptr = &it;
+      proto_enum.name_tree.source_pos = 0;
 
-      // - insert enum name to string map -
-      ptr_loc_map_s insert_ptr_loc_map = {(void *)n_ptr->name,nullptr};
-      unsigned ptr_loc_map_idx = string_location_map.unique_insert(insert_ptr_loc_map);
+      const ProtobufCEnumValue *n_ptr = descr->values;
+      const ProtobufCEnumValue *n_ptr_end = n_ptr + descr->n_values;
+      do {
 
-      ptr_loc_map_s &pointer_map = string_location_map[ptr_loc_map_idx];
-      if (pointer_map.loc_value == nullptr)
-      {
+        // - insert enum value name -
         string_s *string_ptr = it.get_new_string_ptr();
         string_ptr->set(strlen(n_ptr->name),n_ptr->name);
 
         BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
-        pointer_map.loc_value = new_location;
-      }
+        proto_enum.name_tree.insert(new_location);
 
-    } while(++n_ptr < n_ptr_end);
+        // - insert enum value integer -
+        proto_enum.lli_tree.insert(n_ptr->value);
+
+      } while(++n_ptr < n_ptr_end);
+    }
+
+    // - insert enum to enum tree -
+    enum_tree.swap_insert(proto_enum);
   }
+
+  proto_enum.clear();
 }/*}}}*/
 
-void proto_msg_descr_s::update_string_map_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr)
+void proto_source_s::update_init_descr_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr)
 {/*{{{*/
   if (descr->n_fields != 0)
   {
@@ -81,10 +104,10 @@ void proto_msg_descr_s::update_string_map_message(interpreter_thread_s &it,Proto
       switch (f_ptr->type)
       {
 	case PROTOBUF_C_TYPE_ENUM:
-          update_string_map_enum(it,(ProtobufCEnumDescriptor *)f_ptr->descriptor);
+          update_init_descr_enum(it,(ProtobufCEnumDescriptor *)f_ptr->descriptor);
           break;
 	case PROTOBUF_C_TYPE_MESSAGE:
-          update_string_map_message(it,(ProtobufCMessageDescriptor *)f_ptr->descriptor);
+          update_init_descr_message(it,(ProtobufCMessageDescriptor *)f_ptr->descriptor);
           break;
         default:
           break;
@@ -94,7 +117,7 @@ void proto_msg_descr_s::update_string_map_message(interpreter_thread_s &it,Proto
   }
 }/*}}}*/
 
-bool proto_msg_descr_s::pack_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr,
+bool proto_source_s::pack_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr,
     pointer_map_tree_s *tree_ptr,bc_arrays_s &buffers,char *data)
 {/*{{{*/
   descr->message_init((ProtobufCMessage *)data);
@@ -337,9 +360,72 @@ bool proto_msg_descr_s::pack_message(interpreter_thread_s &it,ProtobufCMessageDe
           PACK_MESSAGE_TYPE_BOOL(protobuf_c_boolean);
           break;
 	case PROTOBUF_C_TYPE_ENUM:
+          {/*{{{*/
+            proto_enum_s search_proto_enum = {(pointer)f_ptr->descriptor,};
+            unsigned proto_enum_idx = enum_tree.get_idx(search_proto_enum);
 
-          // FIXME TODO continue ...
-          return false;
+            // - ERROR -
+            if (proto_enum_idx == c_idx_not_exist)
+            {
+              return false;
+            }
+
+            proto_enum_s &proto_enum = enum_tree[proto_enum_idx];
+
+            proto_enum.name_tree.it_ptr = &it;
+            proto_enum.name_tree.source_pos = tree_ptr->source_pos;
+
+            if (array_ptr != nullptr)
+            {
+              if (array_ptr->used != 0)
+              {
+                buffers.push_blank();
+                bc_array_s &buffer = buffers.last();
+                buffer.copy_resize(array_ptr->used*sizeof(int32_t));
+
+                pointer *p_ptr = array_ptr->data;
+                pointer *p_ptr_end = p_ptr + array_ptr->used;
+                int32_t *ptr = (int32_t *)buffer.data;
+                do {
+                  unsigned enum_value_idx = proto_enum.name_tree.get_idx(*p_ptr);
+
+                  if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+                  {
+                    return false;
+                  }
+
+                  // - ERROR -
+                  if (enum_value_idx == c_idx_not_exist)
+                  {
+                    return false;
+                  }
+
+                  *ptr++ = proto_enum.lli_tree[enum_value_idx];
+
+                } while(++p_ptr < p_ptr_end);
+
+                *((int32_t **)(data + f_ptr->offset)) = (int32_t *)buffer.data;
+              }
+            }
+            else
+            {
+              unsigned enum_value_idx = proto_enum.name_tree.get_idx(value_location);
+
+              if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+              {
+                return false;
+              }
+
+              // - ERROR -
+              if (enum_value_idx == c_idx_not_exist)
+              {
+                return false;
+              }
+
+              *((int32_t *)(data + f_ptr->offset)) = proto_enum.lli_tree[enum_value_idx];
+            }
+          }/*}}}*/
+          break;
 	case PROTOBUF_C_TYPE_STRING:
           {/*{{{*/
             if (array_ptr != nullptr)
@@ -514,9 +600,10 @@ bool proto_msg_descr_s::pack_message(interpreter_thread_s &it,ProtobufCMessageDe
             }
           }/*}}}*/
           break;
+
+        // - ERROR -
         default:
 
-          // FIXME TODO continue ...
           return false;
       }
     } while(++f_ptr < f_ptr_end);
@@ -525,7 +612,7 @@ bool proto_msg_descr_s::pack_message(interpreter_thread_s &it,ProtobufCMessageDe
   return true;
 }/*}}}*/
 
-bool proto_msg_descr_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr,
+bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr,
     char *data,pointer_map_tree_s *tree_ptr)
 {/*{{{*/
   if (descr->n_fields != 0)
@@ -648,11 +735,44 @@ bool proto_msg_descr_s::unpack_message(interpreter_thread_s &it,ProtobufCMessage
           UNPACK_MESSAGE_TYPE_INTEGER(protobuf_c_boolean);
           break;
 	case PROTOBUF_C_TYPE_ENUM:
+          {/*{{{*/
+            proto_enum_s search_proto_enum = {(pointer)f_ptr->descriptor,};
+            unsigned proto_enum_idx = enum_tree.get_idx(search_proto_enum);
 
-          // FIXME TODO continue ...
-          UNPACK_MESSAGE_RELEASE();
+            // - ERROR -
+            if (proto_enum_idx == c_idx_not_exist)
+            {
+              UNPACK_MESSAGE_RELEASE();
 
-          return false;
+              return false;
+            }
+
+            proto_enum_s &proto_enum = enum_tree[proto_enum_idx];
+
+            if (array_ptr != nullptr)
+            {
+              int32_t *ptr = *((int32_t **)(data + f_ptr->offset));
+              int32_t *ptr_end = ptr + array_ptr->size;
+              do {
+                unsigned enum_value_idx = proto_enum.lli_tree.get_idx(*ptr);
+
+                location_s *name_location = (location_s *)proto_enum.name_tree[enum_value_idx];
+                name_location->v_reference_cnt.atomic_inc();
+
+                array_ptr->push(name_location);
+              } while(++ptr < ptr_end);
+            }
+            else
+            {
+              long long int value = *((int32_t *)(data + f_ptr->offset));
+
+              unsigned enum_value_idx = proto_enum.lli_tree.get_idx(value);
+
+              value_location = (location_s *)proto_enum.name_tree[enum_value_idx];
+              value_location->v_reference_cnt.atomic_inc();
+            }
+          }/*}}}*/
+          break;
 	case PROTOBUF_C_TYPE_STRING:
           {/*{{{*/
             if (array_ptr != nullptr)
@@ -675,7 +795,7 @@ bool proto_msg_descr_s::unpack_message(interpreter_thread_s &it,ProtobufCMessage
 
               string_s *string_ptr = it.get_new_string_ptr();
               string_ptr->set(strlen(value),value);
-              
+
               BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
               value_location = new_location;
             }
@@ -701,7 +821,7 @@ bool proto_msg_descr_s::unpack_message(interpreter_thread_s &it,ProtobufCMessage
 
               string_s *string_ptr = it.get_new_string_ptr();
               string_ptr->set(pb_bin->len,(const char *)pb_bin->data);
-              
+
               BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
               value_location = new_location;
             }
@@ -759,9 +879,10 @@ bool proto_msg_descr_s::unpack_message(interpreter_thread_s &it,ProtobufCMessage
             }
           }/*}}}*/
           break;
+
+        // - ERROR -
         default:
 
-          // FIXME TODO continue ...
           UNPACK_MESSAGE_RELEASE();
 
           return false;
@@ -797,7 +918,7 @@ bool proto_msg_descr_s::unpack_message(interpreter_thread_s &it,ProtobufCMessage
 
       // - increase name reference counter -
       name_location->v_reference_cnt.atomic_inc();
-      
+
       // - update value pointer -
       map.value = (pointer)value_location;
 
