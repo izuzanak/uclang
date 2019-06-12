@@ -117,6 +117,419 @@ void proto_source_s::update_init_descr_message(interpreter_thread_s &it,Protobuf
   }
 }/*}}}*/
 
+bool proto_source_s::pack_value(interpreter_thread_s &it,const ProtobufCFieldDescriptor *field_descr,
+    bc_arrays_s &buffers,location_s *value_location,pointer_array_s *array_ptr,char *data)
+{/*{{{*/
+
+#define PACK_MESSAGE_TYPE_INTEGER(TYPE) \
+{/*{{{*/\
+  if (array_ptr != nullptr)\
+  {\
+    if (array_ptr->used != 0)\
+    {\
+      buffers.push_blank();\
+      buffers.last().copy_resize(array_ptr->used*sizeof(TYPE));\
+      char *buffer = buffers.last().data;\
+\
+      pointer *p_ptr = array_ptr->data;\
+      pointer *p_ptr_end = p_ptr + array_ptr->used;\
+      TYPE *ptr = (TYPE *)buffer;\
+      do {\
+        long long int value;\
+\
+        /* - ERROR - */\
+        if (!it.retrieve_integer(it.get_location_value(*p_ptr),value))\
+        {\
+          return false;\
+        }\
+\
+        *ptr++ = value;\
+\
+      } while(++p_ptr < p_ptr_end);\
+\
+      *((TYPE **)(data + field_descr->offset)) = (TYPE *)buffer;\
+    }\
+  }\
+  else\
+  {\
+    long long int value;\
+\
+    /* - ERROR - */\
+    if (!it.retrieve_integer(value_location,value))\
+    {\
+      return false;\
+    }\
+\
+    *((TYPE *)(data + field_descr->offset)) = value;\
+  }\
+}/*}}}*/
+
+#define PACK_MESSAGE_TYPE_FLOAT(TYPE) \
+{/*{{{*/\
+  if (array_ptr != nullptr)\
+  {\
+    if (array_ptr->used != 0)\
+    {\
+      buffers.push_blank();\
+      buffers.last().copy_resize(array_ptr->used*sizeof(TYPE));\
+      char *buffer = buffers.last().data;\
+\
+      pointer *p_ptr = array_ptr->data;\
+      pointer *p_ptr_end = p_ptr + array_ptr->used;\
+      TYPE *ptr = (TYPE *)buffer;\
+      do {\
+        double value;\
+\
+        /* - ERROR - */\
+        if (!it.retrieve_float(it.get_location_value(*p_ptr),value))\
+        {\
+          return false;\
+        }\
+\
+        *ptr++ = value;\
+\
+      } while(++p_ptr < p_ptr_end);\
+\
+      *((TYPE **)(data + field_descr->offset)) = (TYPE *)buffer;\
+    }\
+  }\
+  else\
+  {\
+    double value;\
+\
+    /* - ERROR - */\
+    if (!it.retrieve_float(value_location,value))\
+    {\
+      return false;\
+    }\
+\
+    *((TYPE *)(data + field_descr->offset)) = value;\
+  }\
+}/*}}}*/
+
+#define PACK_MESSAGE_TYPE_BOOL(TYPE) \
+{/*{{{*/\
+  if (array_ptr != nullptr)\
+  {\
+    if (array_ptr->used != 0)\
+    {\
+      buffers.push_blank();\
+      buffers.last().copy_resize(array_ptr->used*sizeof(TYPE));\
+      char *buffer = buffers.last().data;\
+\
+      pointer *p_ptr = array_ptr->data;\
+      pointer *p_ptr_end = p_ptr + array_ptr->used;\
+      TYPE *ptr = (TYPE *)buffer;\
+      do {\
+        long long int value;\
+\
+        /* - ERROR - */\
+        if (!it.retrieve_integer(it.get_location_value(*p_ptr),value))\
+        {\
+          return false;\
+        }\
+\
+        *ptr++ = value != 0;\
+\
+      } while(++p_ptr < p_ptr_end);\
+\
+      *((TYPE **)(data + field_descr->offset)) = (TYPE *)buffer;\
+    }\
+  }\
+  else\
+  {\
+    long long int value;\
+\
+    /* - ERROR - */\
+    if (!it.retrieve_integer(value_location,value))\
+    {\
+      return false;\
+    }\
+\
+    *((TYPE *)(data + field_descr->offset)) = value != 0;\
+  }\
+}/*}}}*/
+
+  switch (field_descr->type)
+  {
+    case PROTOBUF_C_TYPE_INT32:
+    case PROTOBUF_C_TYPE_SINT32:
+    case PROTOBUF_C_TYPE_SFIXED32:
+      PACK_MESSAGE_TYPE_INTEGER(int32_t);
+      break;
+    case PROTOBUF_C_TYPE_INT64:
+    case PROTOBUF_C_TYPE_SINT64:
+    case PROTOBUF_C_TYPE_SFIXED64:
+      PACK_MESSAGE_TYPE_INTEGER(int64_t);
+      break;
+    case PROTOBUF_C_TYPE_UINT32:
+    case PROTOBUF_C_TYPE_FIXED32:
+      PACK_MESSAGE_TYPE_INTEGER(uint32_t);
+      break;
+    case PROTOBUF_C_TYPE_UINT64:
+    case PROTOBUF_C_TYPE_FIXED64:
+      PACK_MESSAGE_TYPE_INTEGER(uint64_t);
+      break;
+    case PROTOBUF_C_TYPE_FLOAT:
+      PACK_MESSAGE_TYPE_FLOAT(float);
+      break;
+    case PROTOBUF_C_TYPE_DOUBLE:
+      PACK_MESSAGE_TYPE_FLOAT(double);
+      break;
+    case PROTOBUF_C_TYPE_BOOL:
+      PACK_MESSAGE_TYPE_BOOL(protobuf_c_boolean);
+      break;
+    case PROTOBUF_C_TYPE_ENUM:
+      {/*{{{*/
+        proto_enum_s search_proto_enum = {(pointer)field_descr->descriptor,};
+        unsigned proto_enum_idx = enum_tree.get_idx(search_proto_enum);
+
+        // - ERROR -
+        if (proto_enum_idx == c_idx_not_exist)
+        {
+          return false;
+        }
+
+        proto_enum_s &proto_enum = enum_tree[proto_enum_idx];
+
+        proto_enum.name_tree.it_ptr = &it;
+        proto_enum.name_tree.source_pos = 0;
+
+        if (array_ptr != nullptr)
+        {
+          if (array_ptr->used != 0)
+          {
+            buffers.push_blank();
+            buffers.last().copy_resize(array_ptr->used*sizeof(int32_t));
+            char *buffer = buffers.last().data;
+
+            pointer *p_ptr = array_ptr->data;
+            pointer *p_ptr_end = p_ptr + array_ptr->used;
+            int32_t *ptr = (int32_t *)buffer;
+            do {
+              unsigned enum_value_idx = proto_enum.name_tree.get_idx(*p_ptr);
+
+              if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+              {
+                return false;
+              }
+
+              // - ERROR -
+              if (enum_value_idx == c_idx_not_exist)
+              {
+                return false;
+              }
+
+              *ptr++ = proto_enum.lli_tree[enum_value_idx];
+
+            } while(++p_ptr < p_ptr_end);
+
+            *((int32_t **)(data + field_descr->offset)) = (int32_t *)buffer;
+          }
+        }
+        else
+        {
+          unsigned enum_value_idx = proto_enum.name_tree.get_idx(value_location);
+
+          if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+          {
+            return false;
+          }
+
+          // - ERROR -
+          if (enum_value_idx == c_idx_not_exist)
+          {
+            return false;
+          }
+
+          *((int32_t *)(data + field_descr->offset)) = proto_enum.lli_tree[enum_value_idx];
+        }
+      }/*}}}*/
+      break;
+    case PROTOBUF_C_TYPE_STRING:
+      {/*{{{*/
+        if (array_ptr != nullptr)
+        {
+          if (array_ptr->used != 0)
+          {
+            buffers.push_blank();
+            buffers.last().copy_resize(array_ptr->used*sizeof(char *));
+            char *buffer = buffers.last().data;
+
+            pointer *p_ptr = array_ptr->data;
+            pointer *p_ptr_end = p_ptr + array_ptr->used;
+            char **ptr = (char **)buffer;
+            do
+            {
+              location_s *item_location = it.get_location_value(*p_ptr);
+
+              // - ERROR -
+              if (item_location->v_type != c_bi_class_string)
+              {
+                return false;
+              }
+
+              *ptr++ = ((string_s *)item_location->v_data_ptr)->data;
+
+            } while(++p_ptr < p_ptr_end);
+
+            *((char ***)(data + field_descr->offset)) = (char **)buffer;
+          }
+        }
+        else
+        {
+          // - ERROR -
+          if (value_location->v_type != c_bi_class_string)
+          {
+            return false;
+          }
+
+          *((char **)(data + field_descr->offset)) = ((string_s *)value_location->v_data_ptr)->data;
+        }
+      }/*}}}*/
+      break;
+    case PROTOBUF_C_TYPE_BYTES:
+      {/*{{{*/
+        if (array_ptr != nullptr)
+        {
+          if (array_ptr->used != 0)
+          {
+            buffers.push_blank();
+            buffers.last().copy_resize(array_ptr->used*sizeof(ProtobufCBinaryData));
+            char *buffer = buffers.last().data;
+
+            pointer *p_ptr = array_ptr->data;
+            pointer *p_ptr_end = p_ptr + array_ptr->used;
+            ProtobufCBinaryData *ptr = (ProtobufCBinaryData *)buffer;
+            do
+            {
+              const void *data_ptr;
+              unsigned data_size;
+
+              // - ERROR -
+              if (!it.retrieve_data_buffer(it.get_location_value(*p_ptr),data_ptr,data_size))
+              {
+                return false;
+              }
+
+              ptr->len = data_size;
+              ptr->data = (uint8_t *)data_ptr;
+
+            } while(++ptr,++p_ptr < p_ptr_end);
+
+            *((ProtobufCBinaryData **)(data + field_descr->offset)) = (ProtobufCBinaryData *)buffer;
+          }
+        }
+        else
+        {
+          const void *data_ptr;
+          unsigned data_size;
+
+          // - ERROR -
+          if (!it.retrieve_data_buffer(value_location,data_ptr,data_size))
+          {
+            return false;
+          }
+
+          ProtobufCBinaryData *pb_bin = (ProtobufCBinaryData *)(data + field_descr->offset);
+
+          pb_bin->len = data_size;
+          pb_bin->data = (uint8_t *)data_ptr;
+        }
+      }/*}}}*/
+      break;
+    case PROTOBUF_C_TYPE_MESSAGE:
+      {/*{{{*/
+        if (array_ptr != nullptr)
+        {
+          if (array_ptr->used != 0)
+          {
+            buffers.push_blank();
+            buffers.last().copy_resize(array_ptr->used*sizeof(char *));
+            char *buffer = buffers.last().data;
+
+            size_t sizeof_message = ((ProtobufCMessageDescriptor *)field_descr->descriptor)->sizeof_message;
+
+            // - create messages buffer -
+            buffers.push_blank();
+            buffers.last().copy_resize(array_ptr->used*sizeof_message);
+            char *msgs_buffer = buffers.last().data;
+
+            pointer *p_ptr = array_ptr->data;
+            pointer *p_ptr_end = p_ptr + array_ptr->used;
+            char **d_ptr = (char **)buffer;
+            char *m_ptr = msgs_buffer;
+            do
+            {
+              location_s *item_location = it.get_location_value(*p_ptr);
+
+              // - ERROR -
+              if (item_location->v_type != c_rm_class_dict)
+              {
+                return false;
+              }
+
+              // - retrieve dictionary -
+              pointer_map_tree_s *msg_tree_ptr = (pointer_map_tree_s *)item_location->v_data_ptr;
+
+              msg_tree_ptr->it_ptr = &it;
+              msg_tree_ptr->source_pos = 0;
+
+              // - ERROR -
+              if (!pack_message(it,(ProtobufCMessageDescriptor *)field_descr->descriptor,msg_tree_ptr,buffers,m_ptr))
+              {
+                return false;
+              }
+
+              *d_ptr++ = m_ptr;
+
+              // - advance to next message -
+              m_ptr += sizeof_message;
+
+            } while(++p_ptr < p_ptr_end);
+
+            *((char **)(data + field_descr->offset)) = (char *)buffer;
+          }
+        }
+        else
+        {
+          // - ERROR -
+          if (value_location->v_type != c_rm_class_dict)
+          {
+            return false;
+          }
+
+          // - retrieve dictionary -
+          pointer_map_tree_s *msg_tree_ptr = (pointer_map_tree_s *)value_location->v_data_ptr;
+
+          msg_tree_ptr->it_ptr = &it;
+          msg_tree_ptr->source_pos = 0;
+
+          // - create message buffer -
+          buffers.push_blank();
+          buffers.last().copy_resize(((ProtobufCMessageDescriptor *)field_descr->descriptor)->sizeof_message);
+          char *buffer = buffers.last().data;
+
+          // - ERROR -
+          if (!pack_message(it,(ProtobufCMessageDescriptor *)field_descr->descriptor,msg_tree_ptr,buffers,buffer))
+          {
+            return false;
+          }
+
+          *((char **)(data + field_descr->offset)) = buffer;
+        }
+      }/*}}}*/
+      break;
+
+    // - ERROR -
+    default:
+
+      return false;
+  }
+
+  return true;
+}/*}}}*/
+
 bool proto_source_s::pack_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr,
     pointer_map_tree_s *tree_ptr,bc_arrays_s &buffers,char *data)
 {/*{{{*/
@@ -148,7 +561,8 @@ bool proto_source_s::pack_message(interpreter_thread_s &it,ProtobufCMessageDescr
       switch (f_ptr->label)
       {
 	case PROTOBUF_C_LABEL_REQUIRED:
-          {
+          {/*{{{*/
+
             // - ERROR -
             if (index == c_idx_not_exist)
             {
@@ -157,11 +571,10 @@ bool proto_source_s::pack_message(interpreter_thread_s &it,ProtobufCMessageDescr
 
             // - retrieve value location -
             value_location = it.get_location_value(tree_ptr->data[index].object.value);
-          }
+          }/*}}}*/
           break;
 	case PROTOBUF_C_LABEL_OPTIONAL:
-          {
-            *((protobuf_c_boolean *)(data + f_ptr->quantifier_offset)) = index != c_idx_not_exist;
+          {/*{{{*/
 
             // - skip non present optional value -
             if (index == c_idx_not_exist)
@@ -169,12 +582,32 @@ bool proto_source_s::pack_message(interpreter_thread_s &it,ProtobufCMessageDescr
               continue;
             }
 
+            if (f_ptr->flags & PROTOBUF_C_FIELD_FLAG_ONEOF)
+            {
+              uint32_t &oneof_case = *((uint32_t *)(data + f_ptr->quantifier_offset));
+
+              // - ERROR -
+              if (oneof_case != 0)
+              {
+                return false;
+              }
+
+              // - set oneof case to field id -
+              oneof_case = f_ptr->id;
+            }
+            else
+            {
+              // - set optional boolean flag -
+              *((protobuf_c_boolean *)(data + f_ptr->quantifier_offset)) = index != c_idx_not_exist;
+            }
+
             // - retrieve value location -
             value_location = it.get_location_value(tree_ptr->data[index].object.value);
-          }
+          }/*}}}*/
           break;
 	case PROTOBUF_C_LABEL_REPEATED:
-          {
+          {/*{{{*/
+
             // - ERROR -
             if (index == c_idx_not_exist)
             {
@@ -184,6 +617,78 @@ bool proto_source_s::pack_message(interpreter_thread_s &it,ProtobufCMessageDescr
             // - retrieve value location -
             value_location = it.get_location_value(tree_ptr->data[index].object.value);
 
+            // - detect map -
+            if (f_ptr->type == PROTOBUF_C_TYPE_MESSAGE &&
+                ((ProtobufCMessageDescriptor *)f_ptr->descriptor)->n_fields == 2)
+            {
+              const ProtobufCMessageDescriptor *msg_descr = (ProtobufCMessageDescriptor *)f_ptr->descriptor;
+              const ProtobufCFieldDescriptor *msg_field_descrs = msg_descr->fields;
+
+              if (strcmp(msg_field_descrs[0].name,"key") == 0 &&
+                  strcmp(msg_field_descrs[1].name,"value") == 0)
+              {
+                // - retrieve dictionary for map -
+                if (value_location->v_type != c_rm_class_dict)
+                {
+                  return false;
+                }
+
+                pointer_map_tree_s *dict_tree_ptr = (pointer_map_tree_s *)value_location->v_data_ptr;
+
+                if (dict_tree_ptr->root_idx != c_idx_not_exist)
+                {
+                  buffers.push_blank();
+                  buffers.last().copy_resize(dict_tree_ptr->count*sizeof(char *));
+                  char *buffer = buffers.last().data;
+
+                  // - create messages buffer -
+                  buffers.push_blank();
+                  buffers.last().copy_resize(dict_tree_ptr->count*msg_descr->sizeof_message);
+                  char *msgs_buffer = buffers.last().data;
+
+                  pointer_map_tree_s_node *pmtn_ptr = dict_tree_ptr->data;
+                  pointer_map_tree_s_node *pmtn_ptr_end = pmtn_ptr + dict_tree_ptr->used;
+                  char **d_ptr = (char **)buffer;
+                  char *m_ptr = msgs_buffer;
+                  do {
+                    if (pmtn_ptr->valid)
+                    {
+                      // - init map entry message -
+                      msg_descr->message_init((ProtobufCMessage *)m_ptr);
+
+                      location_s *key_location = (location_s *)pmtn_ptr->object.key;
+
+                      // - ERROR -
+                      if (!pack_value(it,msg_field_descrs,buffers,key_location,nullptr,m_ptr))
+                      {
+                        return false;
+                      }
+
+                      location_s *item_location = it.get_location_value(pmtn_ptr->object.value);
+
+                      // - ERROR -
+                      if (!pack_value(it,msg_field_descrs + 1,buffers,item_location,nullptr,m_ptr))
+                      {
+                        return false;
+                      }
+
+                      *d_ptr++ = m_ptr;
+
+                      // - advance to next message -
+                      m_ptr += msg_descr->sizeof_message;
+                    }
+                  } while(++pmtn_ptr < pmtn_ptr_end);
+
+                  *((char **)(data + f_ptr->offset)) = (char *)buffer;
+                }
+
+                *((size_t *)(data + f_ptr->quantifier_offset)) = dict_tree_ptr->count;
+
+                continue;
+              }
+            }
+
+            // - retrieve array for repeated field -
             if (value_location->v_type != c_bi_class_array)
             {
               return false;
@@ -192,7 +697,7 @@ bool proto_source_s::pack_message(interpreter_thread_s &it,ProtobufCMessageDescr
             array_ptr = (pointer_array_s *)value_location->v_data_ptr;
 
             *((size_t *)(data + f_ptr->quantifier_offset)) = array_ptr->used;
-          }
+          }/*}}}*/
           break;
 
           // - ERROR -
@@ -201,471 +706,27 @@ bool proto_source_s::pack_message(interpreter_thread_s &it,ProtobufCMessageDescr
             return false;
       }
 
-#define PACK_MESSAGE_TYPE_INTEGER(TYPE) \
-{/*{{{*/\
-  if (array_ptr != nullptr)\
-  {\
-    if (array_ptr->used != 0)\
-    {\
-      buffers.push_blank();\
-      bc_array_s &buffer = buffers.last();\
-      buffer.copy_resize(array_ptr->used*sizeof(TYPE));\
-\
-      pointer *p_ptr = array_ptr->data;\
-      pointer *p_ptr_end = p_ptr + array_ptr->used;\
-      TYPE *ptr = (TYPE *)buffer.data;\
-      do {\
-        long long int value;\
-\
-        /* - ERROR - */\
-        if (!it.retrieve_integer(it.get_location_value(*p_ptr),value))\
-        {\
-          return false;\
-        }\
-\
-        *ptr++ = value;\
-\
-      } while(++p_ptr < p_ptr_end);\
-\
-      *((TYPE **)(data + f_ptr->offset)) = (TYPE *)buffer.data;\
-    }\
-  }\
-  else\
-  {\
-    long long int value;\
-\
-    /* - ERROR - */\
-    if (!it.retrieve_integer(value_location,value))\
-    {\
-      return false;\
-    }\
-\
-    *((TYPE *)(data + f_ptr->offset)) = value;\
-  }\
-}/*}}}*/
-
-#define PACK_MESSAGE_TYPE_FLOAT(TYPE) \
-{/*{{{*/\
-  if (array_ptr != nullptr)\
-  {\
-    if (array_ptr->used != 0)\
-    {\
-      buffers.push_blank();\
-      bc_array_s &buffer = buffers.last();\
-      buffer.copy_resize(array_ptr->used*sizeof(TYPE));\
-\
-      pointer *p_ptr = array_ptr->data;\
-      pointer *p_ptr_end = p_ptr + array_ptr->used;\
-      TYPE *ptr = (TYPE *)buffer.data;\
-      do {\
-        double value;\
-\
-        /* - ERROR - */\
-        if (!it.retrieve_float(it.get_location_value(*p_ptr),value))\
-        {\
-          return false;\
-        }\
-\
-        *ptr++ = value;\
-\
-      } while(++p_ptr < p_ptr_end);\
-\
-      *((TYPE **)(data + f_ptr->offset)) = (TYPE *)buffer.data;\
-    }\
-  }\
-  else\
-  {\
-    double value;\
-\
-    /* - ERROR - */\
-    if (!it.retrieve_float(value_location,value))\
-    {\
-      return false;\
-    }\
-\
-    *((TYPE *)(data + f_ptr->offset)) = value;\
-  }\
-}/*}}}*/
-
-#define PACK_MESSAGE_TYPE_BOOL(TYPE) \
-{/*{{{*/\
-  if (array_ptr != nullptr)\
-  {\
-    if (array_ptr->used != 0)\
-    {\
-      buffers.push_blank();\
-      bc_array_s &buffer = buffers.last();\
-      buffer.copy_resize(array_ptr->used*sizeof(TYPE));\
-\
-      pointer *p_ptr = array_ptr->data;\
-      pointer *p_ptr_end = p_ptr + array_ptr->used;\
-      TYPE *ptr = (TYPE *)buffer.data;\
-      do {\
-        long long int value;\
-\
-        /* - ERROR - */\
-        if (!it.retrieve_integer(it.get_location_value(*p_ptr),value))\
-        {\
-          return false;\
-        }\
-\
-        *ptr++ = value != 0;\
-\
-      } while(++p_ptr < p_ptr_end);\
-\
-      *((TYPE **)(data + f_ptr->offset)) = (TYPE *)buffer.data;\
-    }\
-  }\
-  else\
-  {\
-    long long int value;\
-\
-    /* - ERROR - */\
-    if (!it.retrieve_integer(value_location,value))\
-    {\
-      return false;\
-    }\
-\
-    *((TYPE *)(data + f_ptr->offset)) = value != 0;\
-  }\
-}/*}}}*/
-
-      switch (f_ptr->type)
+      // - pack single field -
+      if (!pack_value(it,f_ptr,buffers,value_location,array_ptr,data))
       {
-	case PROTOBUF_C_TYPE_INT32:
-	case PROTOBUF_C_TYPE_SINT32:
-	case PROTOBUF_C_TYPE_SFIXED32:
-          PACK_MESSAGE_TYPE_INTEGER(int32_t);
-          break;
-	case PROTOBUF_C_TYPE_INT64:
-	case PROTOBUF_C_TYPE_SINT64:
-	case PROTOBUF_C_TYPE_SFIXED64:
-          PACK_MESSAGE_TYPE_INTEGER(int64_t);
-          break;
-	case PROTOBUF_C_TYPE_UINT32:
-	case PROTOBUF_C_TYPE_FIXED32:
-          PACK_MESSAGE_TYPE_INTEGER(uint32_t);
-          break;
-	case PROTOBUF_C_TYPE_UINT64:
-	case PROTOBUF_C_TYPE_FIXED64:
-          PACK_MESSAGE_TYPE_INTEGER(uint64_t);
-          break;
-	case PROTOBUF_C_TYPE_FLOAT:
-          PACK_MESSAGE_TYPE_FLOAT(float);
-          break;
-	case PROTOBUF_C_TYPE_DOUBLE:
-          PACK_MESSAGE_TYPE_FLOAT(double);
-          break;
-	case PROTOBUF_C_TYPE_BOOL:
-          PACK_MESSAGE_TYPE_BOOL(protobuf_c_boolean);
-          break;
-	case PROTOBUF_C_TYPE_ENUM:
-          {/*{{{*/
-            proto_enum_s search_proto_enum = {(pointer)f_ptr->descriptor,};
-            unsigned proto_enum_idx = enum_tree.get_idx(search_proto_enum);
-
-            // - ERROR -
-            if (proto_enum_idx == c_idx_not_exist)
-            {
-              return false;
-            }
-
-            proto_enum_s &proto_enum = enum_tree[proto_enum_idx];
-
-            proto_enum.name_tree.it_ptr = &it;
-            proto_enum.name_tree.source_pos = tree_ptr->source_pos;
-
-            if (array_ptr != nullptr)
-            {
-              if (array_ptr->used != 0)
-              {
-                buffers.push_blank();
-                bc_array_s &buffer = buffers.last();
-                buffer.copy_resize(array_ptr->used*sizeof(int32_t));
-
-                pointer *p_ptr = array_ptr->data;
-                pointer *p_ptr_end = p_ptr + array_ptr->used;
-                int32_t *ptr = (int32_t *)buffer.data;
-                do {
-                  unsigned enum_value_idx = proto_enum.name_tree.get_idx(*p_ptr);
-
-                  if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
-                  {
-                    return false;
-                  }
-
-                  // - ERROR -
-                  if (enum_value_idx == c_idx_not_exist)
-                  {
-                    return false;
-                  }
-
-                  *ptr++ = proto_enum.lli_tree[enum_value_idx];
-
-                } while(++p_ptr < p_ptr_end);
-
-                *((int32_t **)(data + f_ptr->offset)) = (int32_t *)buffer.data;
-              }
-            }
-            else
-            {
-              unsigned enum_value_idx = proto_enum.name_tree.get_idx(value_location);
-
-              if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
-              {
-                return false;
-              }
-
-              // - ERROR -
-              if (enum_value_idx == c_idx_not_exist)
-              {
-                return false;
-              }
-
-              *((int32_t *)(data + f_ptr->offset)) = proto_enum.lli_tree[enum_value_idx];
-            }
-          }/*}}}*/
-          break;
-	case PROTOBUF_C_TYPE_STRING:
-          {/*{{{*/
-            if (array_ptr != nullptr)
-            {
-              if (array_ptr->used != 0)
-              {
-                buffers.push_blank();
-                bc_array_s &buffer = buffers.last();
-                buffer.copy_resize(array_ptr->used*sizeof(char *));
-
-                pointer *p_ptr = array_ptr->data;
-                pointer *p_ptr_end = p_ptr + array_ptr->used;
-                char **ptr = (char **)buffer.data;
-                do
-                {
-                  location_s *item_location = it.get_location_value(*p_ptr);
-
-                  // - ERROR -
-                  if (item_location->v_type != c_bi_class_string)
-                  {
-                    return false;
-                  }
-
-                  *ptr++ = ((string_s *)item_location->v_data_ptr)->data;
-
-                } while(++p_ptr < p_ptr_end);
-
-                *((char ***)(data + f_ptr->offset)) = (char **)buffer.data;
-              }
-            }
-            else
-            {
-              // - ERROR -
-              if (value_location->v_type != c_bi_class_string)
-              {
-                return false;
-              }
-
-              *((char **)(data + f_ptr->offset)) = ((string_s *)value_location->v_data_ptr)->data;
-            }
-          }/*}}}*/
-          break;
-	case PROTOBUF_C_TYPE_BYTES:
-          {/*{{{*/
-            if (array_ptr != nullptr)
-            {
-              if (array_ptr->used != 0)
-              {
-                buffers.push_blank();
-                bc_array_s &buffer = buffers.last();
-                buffer.copy_resize(array_ptr->used*sizeof(ProtobufCBinaryData));
-
-                pointer *p_ptr = array_ptr->data;
-                pointer *p_ptr_end = p_ptr + array_ptr->used;
-                ProtobufCBinaryData *ptr = (ProtobufCBinaryData *)buffer.data;
-                do
-                {
-                  const void *data_ptr;
-                  unsigned data_size;
-
-                  // - ERROR -
-                  if (!it.retrieve_data_buffer(it.get_location_value(*p_ptr),data_ptr,data_size))
-                  {
-                    return false;
-                  }
-
-                  ptr->len = data_size;
-                  ptr->data = (uint8_t *)data_ptr;
-
-                } while(++ptr,++p_ptr < p_ptr_end);
-
-                *((ProtobufCBinaryData **)(data + f_ptr->offset)) = (ProtobufCBinaryData *)buffer.data;
-              }
-            }
-            else
-            {
-              const void *data_ptr;
-              unsigned data_size;
-
-              // - ERROR -
-              if (!it.retrieve_data_buffer(value_location,data_ptr,data_size))
-              {
-                return false;
-              }
-
-              ProtobufCBinaryData *pb_bin = (ProtobufCBinaryData *)(data + f_ptr->offset);
-
-              pb_bin->len = data_size;
-              pb_bin->data = (uint8_t *)data_ptr;
-            }
-          }/*}}}*/
-          break;
-	case PROTOBUF_C_TYPE_MESSAGE:
-          {/*{{{*/
-            if (array_ptr != nullptr)
-            {
-              if (array_ptr->used != 0)
-              {
-                buffers.push_blank();
-                bc_array_s &buffer = buffers.last();
-                buffer.copy_resize(array_ptr->used*sizeof(char *));
-
-                size_t sizeof_message = ((ProtobufCMessageDescriptor *)f_ptr->descriptor)->sizeof_message;
-
-                // - create messages buffer -
-                buffers.push_blank();
-                bc_array_s &msgs_buffer = buffers.last();
-                msgs_buffer.copy_resize(array_ptr->used*sizeof_message);
-
-                pointer *p_ptr = array_ptr->data;
-                pointer *p_ptr_end = p_ptr + array_ptr->used;
-                char **d_ptr = (char **)buffer.data;
-                char *m_ptr = msgs_buffer.data;
-                do
-                {
-                  location_s *item_location = it.get_location_value(*p_ptr);
-
-                  // - ERROR -
-                  if (item_location->v_type != c_rm_class_dict)
-                  {
-                    return false;
-                  }
-
-                  // - retrieve dictionary -
-                  pointer_map_tree_s *msg_tree_ptr = (pointer_map_tree_s *)item_location->v_data_ptr;
-
-                  msg_tree_ptr->it_ptr = &it;
-                  msg_tree_ptr->source_pos = tree_ptr->source_pos;
-
-                  // - ERROR -
-                  if (!pack_message(it,(ProtobufCMessageDescriptor *)f_ptr->descriptor,msg_tree_ptr,buffers,m_ptr))
-                  {
-                    return false;
-                  }
-
-                  *d_ptr++ = m_ptr;
-
-                  // - advance to next message -
-                  m_ptr += sizeof_message;
-
-                } while(++p_ptr < p_ptr_end);
-
-                *((char **)(data + f_ptr->offset)) = (char *)buffer.data;
-              }
-            }
-            else
-            {
-              // - ERROR -
-              if (value_location->v_type != c_rm_class_dict)
-              {
-                return false;
-              }
-
-              // - retrieve dictionary -
-              pointer_map_tree_s *msg_tree_ptr = (pointer_map_tree_s *)value_location->v_data_ptr;
-
-              msg_tree_ptr->it_ptr = &it;
-              msg_tree_ptr->source_pos = tree_ptr->source_pos;
-
-              // - create message buffer -
-              buffers.push_blank();
-              bc_array_s &buffer = buffers.last();
-              buffer.copy_resize(((ProtobufCMessageDescriptor *)f_ptr->descriptor)->sizeof_message);
-
-              // - ERROR -
-              if (!pack_message(it,(ProtobufCMessageDescriptor *)f_ptr->descriptor,msg_tree_ptr,buffers,buffer.data))
-              {
-                return false;
-              }
-
-              *((char **)(data + f_ptr->offset)) = buffer.data;
-            }
-          }/*}}}*/
-          break;
-
-        // - ERROR -
-        default:
-
-          return false;
+        return false;
       }
+
     } while(++f_ptr < f_ptr_end);
   }
 
   return true;
 }/*}}}*/
 
-bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr,
-    char *data,pointer_map_tree_s *tree_ptr)
+bool proto_source_s::unpack_value(interpreter_thread_s &it,const ProtobufCFieldDescriptor *field_descr,
+    location_s *&value_location,pointer_array_s *array_ptr,char *data)
 {/*{{{*/
-  if (descr->n_fields != 0)
-  {
-    const ProtobufCFieldDescriptor *f_ptr = descr->fields;
-    const ProtobufCFieldDescriptor *f_ptr_end = f_ptr + descr->n_fields;
-    do
-    {
-      pointer_array_s *array_ptr = nullptr;
-      location_s *value_location = nullptr;
-
-      switch (f_ptr->label)
-      {
-	case PROTOBUF_C_LABEL_REQUIRED:
-          break;
-	case PROTOBUF_C_LABEL_OPTIONAL:
-          {
-            // - skip non present optional value -
-            if (!*((protobuf_c_boolean *)(data + f_ptr->quantifier_offset)))
-            {
-              continue;
-            }
-          }
-          break;
-	case PROTOBUF_C_LABEL_REPEATED:
-          {
-            array_ptr = it.get_new_array_ptr();
-            array_ptr->copy_resize(*((size_t *)(data + f_ptr->quantifier_offset)));
-
-            BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
-            value_location = new_location;
-          }
-          break;
-
-          // - ERROR -
-          default:
-
-            return false;
-      }
-
-#define UNPACK_MESSAGE_RELEASE() \
-{/*{{{*/\
-  if (value_location != nullptr)\
-  {\
-    it.release_location_ptr(value_location);\
-  }\
-}/*}}}*/
 
 #define UNPACK_MESSAGE_TYPE_INTEGER(TYPE) \
 {/*{{{*/\
   if (array_ptr != nullptr)\
   {\
-    TYPE *ptr = *((TYPE **)(data + f_ptr->offset));\
+    TYPE *ptr = *((TYPE **)(data + field_descr->offset));\
     TYPE *ptr_end = ptr + array_ptr->size;\
     do {\
       long long int value = *ptr;\
@@ -676,7 +737,7 @@ bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDes
   }\
   else\
   {\
-    long long int value = *((TYPE *)(data + f_ptr->offset));\
+    long long int value = *((TYPE *)(data + field_descr->offset));\
     \
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);\
     value_location = new_location;\
@@ -687,7 +748,7 @@ bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDes
 {/*{{{*/\
   if (array_ptr != nullptr)\
   {\
-    TYPE *ptr = *((TYPE **)(data + f_ptr->offset));\
+    TYPE *ptr = *((TYPE **)(data + field_descr->offset));\
     TYPE *ptr_end = ptr + array_ptr->size;\
     do {\
       double value = *ptr;\
@@ -698,14 +759,14 @@ bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDes
   }\
   else\
   {\
-    double value = *((TYPE *)(data + f_ptr->offset));\
+    double value = *((TYPE *)(data + field_descr->offset));\
     \
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);\
     value_location = new_location;\
   }\
 }/*}}}*/
 
-      switch (f_ptr->type)
+      switch (field_descr->type)
       {
 	case PROTOBUF_C_TYPE_INT32:
 	case PROTOBUF_C_TYPE_SINT32:
@@ -736,14 +797,12 @@ bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDes
           break;
 	case PROTOBUF_C_TYPE_ENUM:
           {/*{{{*/
-            proto_enum_s search_proto_enum = {(pointer)f_ptr->descriptor,};
+            proto_enum_s search_proto_enum = {(pointer)field_descr->descriptor,};
             unsigned proto_enum_idx = enum_tree.get_idx(search_proto_enum);
 
             // - ERROR -
             if (proto_enum_idx == c_idx_not_exist)
             {
-              UNPACK_MESSAGE_RELEASE();
-
               return false;
             }
 
@@ -751,7 +810,7 @@ bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDes
 
             if (array_ptr != nullptr)
             {
-              int32_t *ptr = *((int32_t **)(data + f_ptr->offset));
+              int32_t *ptr = *((int32_t **)(data + field_descr->offset));
               int32_t *ptr_end = ptr + array_ptr->size;
               do {
                 unsigned enum_value_idx = proto_enum.lli_tree.get_idx(*ptr);
@@ -764,7 +823,7 @@ bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDes
             }
             else
             {
-              long long int value = *((int32_t *)(data + f_ptr->offset));
+              long long int value = *((int32_t *)(data + field_descr->offset));
 
               unsigned enum_value_idx = proto_enum.lli_tree.get_idx(value);
 
@@ -777,7 +836,7 @@ bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDes
           {/*{{{*/
             if (array_ptr != nullptr)
             {
-              char **ptr = *((char ***)(data + f_ptr->offset));
+              char **ptr = *((char ***)(data + field_descr->offset));
               char **ptr_end = ptr + array_ptr->size;
               do {
                 char *value = *ptr;
@@ -791,7 +850,7 @@ bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDes
             }
             else
             {
-              char *value = *((char **)(data + f_ptr->offset));
+              char *value = *((char **)(data + field_descr->offset));
 
               string_s *string_ptr = it.get_new_string_ptr();
               string_ptr->set(strlen(value),value);
@@ -805,7 +864,7 @@ bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDes
           {/*{{{*/
             if (array_ptr != nullptr)
             {
-              ProtobufCBinaryData *ptr = *((ProtobufCBinaryData **)(data + f_ptr->offset));
+              ProtobufCBinaryData *ptr = *((ProtobufCBinaryData **)(data + field_descr->offset));
               ProtobufCBinaryData *ptr_end = ptr + array_ptr->size;
               do {
                 string_s *string_ptr = it.get_new_string_ptr();
@@ -817,7 +876,7 @@ bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDes
             }
             else
             {
-              ProtobufCBinaryData *pb_bin = (ProtobufCBinaryData *)(data + f_ptr->offset);
+              ProtobufCBinaryData *pb_bin = (ProtobufCBinaryData *)(data + field_descr->offset);
 
               string_s *string_ptr = it.get_new_string_ptr();
               string_ptr->set(pb_bin->len,(const char *)pb_bin->data);
@@ -831,7 +890,7 @@ bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDes
           {/*{{{*/
             if (array_ptr != nullptr)
             {
-              char **ptr = *((char ***)(data + f_ptr->offset));
+              char **ptr = *((char ***)(data + field_descr->offset));
               char **ptr_end = ptr + array_ptr->size;
               do
               {
@@ -840,17 +899,15 @@ bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDes
                 msg_tree_ptr->init();
 
                 msg_tree_ptr->it_ptr = &it;
-                msg_tree_ptr->source_pos = tree_ptr->source_pos;
+                msg_tree_ptr->source_pos = 0;
 
                 BIC_CREATE_NEW_LOCATION(new_location,c_rm_class_dict,msg_tree_ptr);
                 array_ptr->push(new_location);
 
                 // - ERROR -
-                if (!unpack_message(it,(ProtobufCMessageDescriptor *)f_ptr->descriptor,
+                if (!unpack_message(it,(ProtobufCMessageDescriptor *)field_descr->descriptor,
                       *ptr,msg_tree_ptr))
                 {
-                  UNPACK_MESSAGE_RELEASE();
-
                   return false;
                 }
 
@@ -863,17 +920,15 @@ bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDes
               msg_tree_ptr->init();
 
               msg_tree_ptr->it_ptr = &it;
-              msg_tree_ptr->source_pos = tree_ptr->source_pos;
+              msg_tree_ptr->source_pos = 0;
 
               BIC_CREATE_NEW_LOCATION(new_location,c_rm_class_dict,msg_tree_ptr);
               value_location = new_location;
 
               // - ERROR -
-              if (!unpack_message(it,(ProtobufCMessageDescriptor *)f_ptr->descriptor,
-                    *((char **)(data + f_ptr->offset)),msg_tree_ptr))
+              if (!unpack_message(it,(ProtobufCMessageDescriptor *)field_descr->descriptor,
+                    *((char **)(data + field_descr->offset)),msg_tree_ptr))
               {
-                UNPACK_MESSAGE_RELEASE();
-
                 return false;
               }
             }
@@ -883,9 +938,183 @@ bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDes
         // - ERROR -
         default:
 
-          UNPACK_MESSAGE_RELEASE();
-
           return false;
+      }
+
+  return true;
+}/*}}}*/
+
+bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr,
+    char *data,pointer_map_tree_s *tree_ptr)
+{/*{{{*/
+
+#define UNPACK_MESSAGE_RELEASE() \
+{/*{{{*/\
+  if (value_location != nullptr)\
+  {\
+    it.release_location_ptr(value_location);\
+  }\
+}/*}}}*/
+
+  if (descr->n_fields != 0)
+  {
+    const ProtobufCFieldDescriptor *f_ptr = descr->fields;
+    const ProtobufCFieldDescriptor *f_ptr_end = f_ptr + descr->n_fields;
+    do
+    {
+      pointer_array_s *array_ptr = nullptr;
+      location_s *value_location = nullptr;
+
+      switch (f_ptr->label)
+      {
+	case PROTOBUF_C_LABEL_REQUIRED:
+          {/*{{{*/
+
+            // - unpack single field -
+            if (!unpack_value(it,f_ptr,value_location,array_ptr,data))
+            {
+              UNPACK_MESSAGE_RELEASE();
+
+              return false;
+            }
+          }/*}}}*/
+          break;
+	case PROTOBUF_C_LABEL_OPTIONAL:
+          {/*{{{*/
+            if (f_ptr->flags & PROTOBUF_C_FIELD_FLAG_ONEOF)
+            {
+              // - skip non present optional oneof value -
+              if (*((uint32_t *)(data + f_ptr->quantifier_offset)) != f_ptr->id)
+              {
+                continue;
+              }
+            }
+            else
+            {
+              // - skip non present optional value -
+              if (!*((protobuf_c_boolean *)(data + f_ptr->quantifier_offset)))
+              {
+                continue;
+              }
+            }
+
+            // - unpack single field -
+            if (!unpack_value(it,f_ptr,value_location,array_ptr,data))
+            {
+              UNPACK_MESSAGE_RELEASE();
+
+              return false;
+            }
+          }/*}}}*/
+          break;
+	case PROTOBUF_C_LABEL_REPEATED:
+          {/*{{{*/
+
+            // - detect map -
+            if (f_ptr->type == PROTOBUF_C_TYPE_MESSAGE &&
+                ((ProtobufCMessageDescriptor *)f_ptr->descriptor)->n_fields == 2)
+            {
+              const ProtobufCMessageDescriptor *msg_descr = (ProtobufCMessageDescriptor *)f_ptr->descriptor;
+              const ProtobufCFieldDescriptor *msg_field_descrs = msg_descr->fields;
+
+              if (strcmp(msg_field_descrs[0].name,"key") == 0 &&
+                  strcmp(msg_field_descrs[1].name,"value") == 0)
+              {
+                // - create dictionary -
+                pointer_map_tree_s *dict_tree_ptr = (pointer_map_tree_s *)cmalloc(sizeof(pointer_map_tree_s));
+                dict_tree_ptr->init();
+
+                dict_tree_ptr->it_ptr = &it;
+                dict_tree_ptr->source_pos = 0;
+
+                BIC_CREATE_NEW_LOCATION(new_location,c_rm_class_dict,dict_tree_ptr);
+                value_location = new_location;
+
+                size_t map_size = *((size_t *)(data + f_ptr->quantifier_offset));
+
+                if (map_size > 0)
+                {
+                  char **ptr = *((char ***)(data + f_ptr->offset));
+                  char **ptr_end = ptr + map_size;
+                  do {
+                    location_s *key_location = nullptr;
+                    location_s *item_location = nullptr;
+
+                    // - ERROR -
+                    if (!unpack_value(it,msg_field_descrs,key_location,nullptr,*ptr))
+                    {
+                      UNPACK_MESSAGE_RELEASE();
+
+                      return false;
+                    }
+
+                    // - ERROR -
+                    if (!unpack_value(it,msg_field_descrs + 1,item_location,nullptr,*ptr))
+                    {
+                      it.release_location_ptr(key_location);
+
+                      UNPACK_MESSAGE_RELEASE();
+
+                      return false;
+                    }
+
+                    // - insert key value pair to dictionary -
+                    pointer_map_s insert_map = {key_location,nullptr};
+                    unsigned index = dict_tree_ptr->unique_insert(insert_map);
+
+                    if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+                    {
+                      it.release_location_ptr(key_location);
+                      it.release_location_ptr(item_location);
+
+                      UNPACK_MESSAGE_RELEASE();
+
+                      return false;
+                    }
+
+                    pointer_map_s &map = dict_tree_ptr->data[index].object;
+
+                    if (map.value != nullptr)
+                    {
+                      it.release_location_ptr(key_location);
+                      it.release_location_ptr(item_location);
+
+                      UNPACK_MESSAGE_RELEASE();
+
+                      return false;
+                    }
+
+                    // - update value pointer -
+                    map.value = (pointer)item_location;
+
+                  } while(++ptr < ptr_end);
+                }
+
+                break;
+              }
+            }
+
+            // - create array location -
+            array_ptr = it.get_new_array_ptr();
+            array_ptr->copy_resize(*((size_t *)(data + f_ptr->quantifier_offset)));
+
+            BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+            value_location = new_location;
+
+            // - unpack single field -
+            if (!unpack_value(it,f_ptr,value_location,array_ptr,data))
+            {
+              UNPACK_MESSAGE_RELEASE();
+
+              return false;
+            }
+          }/*}}}*/
+          break;
+
+          // - ERROR -
+          default:
+
+            return false;
       }
 
       // - retrieve field name from string map -

@@ -67,8 +67,13 @@ struct proto_source_s
   void update_init_descr_enum(interpreter_thread_s &it,ProtobufCEnumDescriptor *descr);
   void update_init_descr_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr);
 
+  bool pack_value(interpreter_thread_s &it,const ProtobufCFieldDescriptor *field_descr,
+      bc_arrays_s &buffers,location_s *value_location,pointer_array_s *array_ptr,char *data);
   bool pack_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr,
       pointer_map_tree_s *tree_ptr,bc_arrays_s &buffers,char *data);
+
+  bool unpack_value(interpreter_thread_s &it,const ProtobufCFieldDescriptor *field_descr,
+      location_s *&value_location,pointer_array_s *array_ptr,char *data);
   bool unpack_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr,
       char *data,pointer_map_tree_s *tree_ptr);
 };
