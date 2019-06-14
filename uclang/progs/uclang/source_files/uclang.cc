@@ -177,6 +177,8 @@ void *run_interpreter(void *data)
     {
       fprintf(stderr,"%s: Expected argument with name of script\n",argv[0]);
 
+      mods_path.clear();
+
       exit(22);
     }
 
