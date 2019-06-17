@@ -32,7 +32,6 @@ enum
   c_error_WS_CONN_SET_TIMEOUT_UNKNOWN_REASON,
   c_error_WS_CONN_SET_TIMEOUT_WRONG_VALUE,
   c_error_WS_CONN_WRITE_ERROR,
-  c_error_WS_CLIENT_NOT_CONNECTED_TO_SERVER,
   c_error_WS_BASE64_ENCODE_ERROR,
   c_error_WS_BASE64_DECODE_ERROR,
 };
@@ -99,7 +98,6 @@ void bic_ws_client_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_ws_client_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_ws_client_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_ws_client_method_connected_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ws_client_method_callback_on_writable_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ws_client_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ws_client_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

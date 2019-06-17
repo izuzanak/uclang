@@ -1384,6 +1384,9 @@ void interpreter_s::release_constant_and_static_locations()
   // - set thread pointer to interpreter -
   dummy_thread.interpreter_ptr = this;
 
+  // - reset throw on terminate flag -
+  dummy_thread.throw_on_terminate = false;
+
   // - release static built in constants -
   unsigned parse_constant_cnt = const_chars.used + const_ints.used +
                                 const_floats.used + const_strings.used +
@@ -1550,7 +1553,11 @@ bool interpreter_s::run_new_thread(interpreter_thread_s &p_thread,unsigned p_sta
   interpreter_thread_s *thread = (interpreter_thread_s *)cmalloc(sizeof(interpreter_thread_s));
   thread->init();
 
+  // - set thread pointer to interpreter -
   thread->interpreter_ptr = (pointer)this;
+
+  // - set throw on terminate flag -
+  thread->throw_on_terminate = true;
 
   // - attach thread location -
   thread->thread_location = (pointer)thread_location;
@@ -1720,7 +1727,11 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
   interpreter_thread_s *thread = (interpreter_thread_s *)cmalloc(sizeof(interpreter_thread_s));
   thread->init();
 
+  // - set thread pointer to interpreter -
   thread->interpreter_ptr = (pointer)this;
+
+  // - set throw on terminate flag -
+  thread->throw_on_terminate = true;
 
   // - creation of thread location for main thread -
   {
@@ -1884,6 +1895,9 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
   }
   catch (int) {}
 
+  // - reset throw on terminate flag -
+  thread->throw_on_terminate = false;
+
   // - release location from stack -
   thread->release_stack_from(0);
 
@@ -1975,6 +1989,9 @@ void *new_thread_function(void *nt_start_info)
     }
   }
   catch (int) {}
+
+  // - reset throw on terminate flag -
+  thread->throw_on_terminate = false;
 
   // - release locations from stack -
   thread->release_stack_from(0);

@@ -1220,6 +1220,8 @@ pointer_array_s:data_stack
 pointer:thread_location
 pointer:blank_location
 pointer:exception_location
+
+bool:throw_on_terminate
 >
 
 additions
@@ -1876,7 +1878,10 @@ inline bool interpreter_thread_s::run_expression_code(uli *code,unsigned stack_b
     register int tc = terminate.counter;
     if (unlikely(tc != 0))
     {
-      throw tc;
+      if (throw_on_terminate)
+      {
+        throw tc;
+      }
     }
   }
   while(ret_code == c_run_return_code_OK);

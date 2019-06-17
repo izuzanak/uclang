@@ -1,6 +1,6 @@
 
 if(PKG_CONFIG_FOUND)
-  pkg_search_module(LIBWEBSOCKETS "libwebsockets = 1.3")
+  pkg_search_module(LIBWEBSOCKETS "libwebsockets >= 2.0.3")
 else()
   if(OS_WINDOWS AND LIBWEBSOCKETS_INCLUDE_DIRS AND LIBWEBSOCKETS_LIBRARIES)
     set(LIBWEBSOCKETS_FOUND TRUE)

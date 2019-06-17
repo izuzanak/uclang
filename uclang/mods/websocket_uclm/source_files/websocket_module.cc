@@ -16,7 +16,7 @@ EXPORT built_in_module_s module =
   websocket_classes,         // Classes
 
   0,                         // Error base index
-  14,                        // Error count
+  13,                        // Error count
   websocket_error_strings,   // Error strings
 
   websocket_initialize,      // Initialize function
@@ -46,7 +46,6 @@ const char *websocket_error_strings[] =
   "error_WS_CONN_SET_TIMEOUT_UNKNOWN_REASON",
   "error_WS_CONN_SET_TIMEOUT_WRONG_VALUE",
   "error_WS_CONN_WRITE_ERROR",
-  "error_WS_CLIENT_NOT_CONNECTED_TO_SERVER",
   "error_WS_BASE64_ENCODE_ERROR",
   "error_WS_BASE64_DECODE_ERROR",
 };/*}}}*/
@@ -154,13 +153,6 @@ bool websocket_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nError while writing to websocket\n");
-    fprintf(stderr," ---------------------------------------- \n");
-    break;
-  case c_error_WS_CLIENT_NOT_CONNECTED_TO_SERVER:
-    fprintf(stderr," ---------------------------------------- \n");
-    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
-    print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nClient is not connected to server\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_WS_BASE64_ENCODE_ERROR:
@@ -347,10 +339,10 @@ method WsContext
   wsc_ptr->init();
 
   // - create websocket protocols structure -
-  wsc_ptr->protocols = (libwebsocket_protocols *)cmalloc((2 + (array_ptr->used / 2))*sizeof(libwebsocket_protocols));
+  wsc_ptr->protocols = (lws_protocols *)cmalloc((2 + (array_ptr->used / 2))*sizeof(lws_protocols));
 
   // - configure http protocol -
-  libwebsocket_protocols *http_prot = wsc_ptr->protocols;
+  lws_protocols *http_prot = wsc_ptr->protocols;
   http_prot->name = "http-only";
   http_prot->callback = http_func;
   http_prot->per_session_data_size = 0;
@@ -400,17 +392,16 @@ method WsContext
     wsc_ptr->prot_dlgs.push(dlg_location);
 
     // - configure websocket protocol -
-    libwebsocket_protocols *ws_prot = wsc_ptr->protocols + prot_idx++;
+    lws_protocols *ws_prot = wsc_ptr->protocols + prot_idx++;
     ws_prot->name = wsc_ptr->prot_names.last().data;
     ws_prot->callback = protocol_func;
     ws_prot->per_session_data_size = sizeof(pointer);
     ws_prot->rx_buffer_size = 0;
-    ws_prot->no_buffer_all_partial_tx = 1;
 
   } while((ptr += 2) < ptr_end);
 
   // - configure terminator protocol -
-  libwebsocket_protocols *term_prot = wsc_ptr->protocols + prot_idx;
+  lws_protocols *term_prot = wsc_ptr->protocols + prot_idx;
   term_prot->name = nullptr;
   term_prot->callback = nullptr;
   term_prot->per_session_data_size = 0;
@@ -423,14 +414,14 @@ method WsContext
   info.port = port;
   info.iface = nullptr;
   info.protocols = wsc_ptr->protocols;
-  info.extensions = libwebsocket_get_internal_extensions();
+  info.extensions = ws_default_extensions;
   info.gid = -1;
   info.uid = -1;
   info.options = 0;
   info.user = wsc_ptr;
 
   // - create wesocket context -
-  wsc_ptr->context = libwebsocket_create_context(&info);
+  wsc_ptr->context = lws_create_context(&info);
 
   // - ERROR -
   if (wsc_ptr->context == nullptr)
@@ -495,19 +486,26 @@ method client
   string_s *path_ptr = (string_s *)src_2_location->v_data_ptr;
   string_s *prot_ptr = (string_s *)src_3_location->v_data_ptr;
 
-  // - create websocket client user data pointer -
-  ws_client_s **wscl_udp_ptr = (ws_client_s **)cmalloc(sizeof(ws_client_s *));
+  // - fill client connect info structure -
+  struct lws_client_connect_info info;
+  memset(&info,0,sizeof(info));
+
+  info.context = wsc_ptr->context;
+  info.address = addr_ptr->data;
+  info.port = port;
+  info.ssl_connection = 0;
+  info.path = path_ptr->data;
+  info.host = addr_ptr->data;
+  info.origin = addr_ptr->data;
+  info.protocol = prot_ptr->data;
+  info.ietf_version_or_minus_one = -1;
 
   // - connect client to server -
-  libwebsocket *wsi = libwebsocket_client_connect_extended(
-      wsc_ptr->context,addr_ptr->data,port,0,path_ptr->data,
-      addr_ptr->data,addr_ptr->data,prot_ptr->data,-1,wscl_udp_ptr);
+  lws *wsi = lws_client_connect_via_info(&info);
 
   // - ERROR -
   if (wsi == nullptr)
   {
-    cfree(wscl_udp_ptr);
-
     exception_s::throw_exception(it,module.error_base + c_error_WS_CONTEXT_CANNOT_CREATE_CLIENT_CONNECTION,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -516,18 +514,12 @@ method client
   ws_client_s *wscl_ptr = (ws_client_s *)cmalloc(sizeof(ws_client_s));
   wscl_ptr->init();
 
-  // - set websocket client user data pointer -
-  *wscl_udp_ptr = wscl_ptr;
-
   // - set websocket context pointer -
   dst_location->v_reference_cnt.atomic_inc();
   wscl_ptr->wsc_location = dst_location;
 
   // - set websocket pointer -
   wscl_ptr->ws_ptr = wsi;
-
-  // - set websocket client user data pointer -
-  wscl_ptr->wscl_udp_ptr = wscl_udp_ptr;
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_ws_client,wscl_ptr);
   BIC_SET_RESULT(new_location);
@@ -590,7 +582,7 @@ method process
   wsc_ptr->ret_code = c_run_return_code_OK;
 
   // - service websocket context -
-  libwebsocket_service(wsc_ptr->context,timeout);
+  lws_service(wsc_ptr->context,timeout);
 
   // - if exception occurred -
   if (wsc_ptr->ret_code == c_run_return_code_EXCEPTION)
@@ -650,7 +642,7 @@ method callback_on_writable
     return false;
   }
 
-  libwebsocket_callback_on_writable_all_protocol(wsc_ptr->protocols + 1 + prot_idx);
+  lws_callback_on_writable_all_protocol(wsc_ptr->context,wsc_ptr->protocols + 1 + prot_idx);
 
   BIC_SET_RESULT_DESTINATION();
 
@@ -681,7 +673,7 @@ built_in_class_s ws_conn_class =
   "WsConn",
   c_modifier_public | c_modifier_final,
   12, ws_conn_methods,
-  7 + 25 + 10, ws_conn_variables,
+  6 + 25 + 10, ws_conn_variables,
   bic_ws_conn_consts,
   bic_ws_conn_init,
   bic_ws_conn_clear,
@@ -770,7 +762,6 @@ built_in_variable_s ws_conn_variables[] =
   { "WRITE_BINARY", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "WRITE_CONTINUATION", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "WRITE_HTTP", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "WRITE_CLOSE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "WRITE_PING", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "WRITE_PONG", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
@@ -832,7 +823,7 @@ built_in_variable_s ws_conn_variables[] =
   memcpy(buff_ptr,data_ptr,data_size);\
 \
   /* - ERROR - */\
-  if (libwebsocket_write(wscn_ptr->ws_ptr,buff_ptr,data_size,WRITE_TYPE) < 0)\
+  if (lws_write(wscn_ptr->ws_ptr,buff_ptr,data_size,WRITE_TYPE) < 0)\
   {\
     /* - release data buffer - */\
     cfree(buffer);\
@@ -854,8 +845,8 @@ void bic_ws_conn_consts(location_array_s &const_locations)
 
   // - write data types -
   {
-    const_locations.push_blanks(7);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 7);
+    const_locations.push_blanks(6);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 6);
 
 #define CREATE_WS_CONN_WRITE_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -867,7 +858,6 @@ void bic_ws_conn_consts(location_array_s &const_locations)
     CREATE_WS_CONN_WRITE_TYPE_BIC_STATIC(LWS_WRITE_BINARY);
     CREATE_WS_CONN_WRITE_TYPE_BIC_STATIC(LWS_WRITE_CONTINUATION);
     CREATE_WS_CONN_WRITE_TYPE_BIC_STATIC(LWS_WRITE_HTTP);
-    CREATE_WS_CONN_WRITE_TYPE_BIC_STATIC(LWS_WRITE_CLOSE);
     CREATE_WS_CONN_WRITE_TYPE_BIC_STATIC(LWS_WRITE_PING);
     CREATE_WS_CONN_WRITE_TYPE_BIC_STATIC(LWS_WRITE_PONG);
   }
@@ -1025,7 +1015,7 @@ bool bic_ws_conn_method_protocol_name_0(interpreter_thread_s &it,unsigned stack_
   ws_conn_s *wscn_ptr = (ws_conn_s *)dst_location->v_data_ptr;
 
   // - retrieve websocket protocol -
-  const libwebsocket_protocols *protocol = libwebsockets_get_protocol(wscn_ptr->ws_ptr);
+  const lws_protocols *protocol = lws_get_protocol(wscn_ptr->ws_ptr);
 
   // - retrieve protocol name -
   string_s *string_ptr = (string_s *)it.get_new_string_ptr();
@@ -1041,9 +1031,8 @@ bool bic_ws_conn_method_callback_on_writable_0(interpreter_thread_s &it,unsigned
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ws_conn_s *wscn_ptr = (ws_conn_s *)dst_location->v_data_ptr;
-  ws_context_s *wsc_ptr = wscn_ptr->wsc_ptr;
 
-  libwebsocket_callback_on_writable(wsc_ptr->context,wscn_ptr->ws_ptr);
+  lws_callback_on_writable(wscn_ptr->ws_ptr);
 
   BIC_SET_RESULT_DESTINATION();
 
@@ -1094,7 +1083,7 @@ method set_timeout
   }
 
   // - set connection timeout -
-  libwebsocket_set_timeout(wscn_ptr->ws_ptr,(pending_timeout)reason,seconds);
+  lws_set_timeout(wscn_ptr->ws_ptr,(pending_timeout)reason,seconds);
 
   BIC_SET_RESULT_DESTINATION();
 
@@ -1123,7 +1112,7 @@ data:retrieve_data_buffer
 method write
 ; @end
 
-  BIC_WS_CONN_WRITE((libwebsocket_write_protocol)write_type);
+  BIC_WS_CONN_WRITE((lws_write_protocol)write_type);
 }/*}}}*/
 
 bool bic_ws_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -1149,7 +1138,7 @@ built_in_class_s ws_client_class =
 {/*{{{*/
   "WsClient",
   c_modifier_public | c_modifier_final,
-  5, ws_client_methods,
+  4, ws_client_methods,
   0, ws_client_variables,
   bic_ws_client_consts,
   bic_ws_client_init,
@@ -1173,11 +1162,6 @@ built_in_method_s ws_client_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_ws_client_operator_binary_equal
-  },
-  {
-    "connected#0",
-    c_modifier_public | c_modifier_final,
-    bic_ws_client_method_connected_0
   },
   {
     "callback_on_writable#0",
@@ -1234,34 +1218,13 @@ bool bic_ws_client_operator_binary_equal(interpreter_thread_s &it,unsigned stack
   return true;
 }/*}}}*/
 
-bool bic_ws_client_method_connected_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  ws_client_s *wscl_ptr = (ws_client_s *)dst_location->v_data_ptr;
-
-  long long int result = wscl_ptr->connected;
-
-  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
-
-  return true;
-}/*}}}*/
-
 bool bic_ws_client_method_callback_on_writable_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   ws_client_s *wscl_ptr = (ws_client_s *)dst_location->v_data_ptr;
-  ws_context_s *wsc_ptr = (ws_context_s*)((location_s *)wscl_ptr->wsc_location)->v_data_ptr;
 
-  // - ERROR -
-  if (!wscl_ptr->connected)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_WS_CLIENT_NOT_CONNECTED_TO_SERVER,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  libwebsocket_callback_on_writable(wsc_ptr->context,wscl_ptr->ws_ptr);
+  lws_callback_on_writable(wscl_ptr->ws_ptr);
 
   BIC_SET_RESULT_DESTINATION();
 

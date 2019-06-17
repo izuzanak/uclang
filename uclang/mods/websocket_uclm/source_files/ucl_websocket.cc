@@ -3,6 +3,14 @@
 include "ucl_websocket.h"
 @end
 
+// - websocket default extensions -
+const lws_extension ws_default_extensions[] =
+{/*{{{*/
+  { "permessage-deflate",lws_extension_callback_pm_deflate,"permessage-deflate" },
+  { "deflate-frame",lws_extension_callback_pm_deflate,"deflate_frame" },
+  { NULL,NULL,NULL }
+};/*}}}*/
+
 // - websocket global init object -
 websocket_c g_websocket;
 
@@ -29,8 +37,7 @@ void log_emit(int level,const char *line)
   //fprintf(stderr,"LWS_LOG: %d,%s",level,line);
 }/*}}}*/
 
-int http_func(libwebsocket_context *ctx,libwebsocket *wsi,
-              enum libwebsocket_callback_reasons reason,void *user,void *in,size_t len)
+int http_func(lws *wsi,enum lws_callback_reasons reason,void *user,void *in,size_t len)
 {/*{{{*/
   switch (reason)
   {
@@ -40,10 +47,10 @@ int http_func(libwebsocket_context *ctx,libwebsocket *wsi,
     case LWS_CALLBACK_DEL_POLL_FD:
     case LWS_CALLBACK_CHANGE_MODE_POLL_FD:
       {
-        ws_context_s *wsc_ptr = (ws_context_s *)libwebsocket_context_user(ctx);
+        ws_context_s *wsc_ptr = (ws_context_s *)lws_context_user(lws_get_context(wsi));
         fd_flags_rb_tree_s &poll_fds = wsc_ptr->poll_fds;
 
-        libwebsocket_pollargs *args_ptr = (libwebsocket_pollargs *)in;
+        lws_pollargs *args_ptr = (lws_pollargs *)in;
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
         int events =
@@ -99,77 +106,83 @@ int http_func(libwebsocket_context *ctx,libwebsocket *wsi,
   return 0;
 }/*}}}*/
 
-int protocol_func(libwebsocket_context *ctx,libwebsocket *wsi,
-                  enum libwebsocket_callback_reasons reason,void *user,void *in,size_t len)
+int protocol_func(lws *wsi,enum lws_callback_reasons reason,void *user,void *in,size_t len)
 {/*{{{*/
+  ws_context_s *wsc_ptr = (ws_context_s *)lws_context_user(lws_get_context(wsi));
+  interpreter_thread_s &it = *wsc_ptr->it_ptr;
+
+  location_s *conn_location = nullptr;
+  ws_conn_s *wscn_ptr = nullptr;
+
   switch (reason)
   {
     case LWS_CALLBACK_ESTABLISHED:
     case LWS_CALLBACK_CLIENT_ESTABLISHED:
+      {/*{{{*/
+
+        // - create websocket connection object -
+        wscn_ptr = (ws_conn_s *)cmalloc(sizeof(ws_conn_s));
+        wscn_ptr->init();
+
+        // - set websocket context pointer -
+        wscn_ptr->wsc_ptr = wsc_ptr;
+
+        // - set protocol index pointer -
+        wscn_ptr->prot_idx = wsc_ptr->get_protocol_idx(wsi);
+        debug_assert(wscn_ptr->prot_idx != c_idx_not_exist);
+
+        // - set websocket pointer -
+        wscn_ptr->ws_ptr = wsi;
+
+        // - set user data pointer to blank location -
+        ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
+        wscn_ptr->user_data_ptr = (location_s *)it.blank_location;
+
+        // - create websocket connection location -
+        BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_ws_conn,wscn_ptr);
+        conn_location = new_location;
+
+        *((pointer *)user) = new_location;
+      }/*}}}*/
+      break;
     case LWS_CALLBACK_CLOSED:
     case LWS_CALLBACK_RECEIVE:
     case LWS_CALLBACK_CLIENT_RECEIVE:
     case LWS_CALLBACK_CLIENT_RECEIVE_PONG:
     case LWS_CALLBACK_CLIENT_WRITEABLE:
     case LWS_CALLBACK_SERVER_WRITEABLE:
-      {
-        ws_context_s *wsc_ptr = (ws_context_s *)libwebsocket_context_user(ctx);
-        interpreter_thread_s &it = *wsc_ptr->it_ptr;
+      {/*{{{*/
 
-        if (wsc_ptr->ret_code == c_run_return_code_OK)
-        {
-          // - if connection established -
-          if (reason == LWS_CALLBACK_ESTABLISHED ||
-              reason == LWS_CALLBACK_CLIENT_ESTABLISHED)
-          {
-            // - create websocket connection object -
-            ws_conn_s *wscn_ptr = (ws_conn_s *)cmalloc(sizeof(ws_conn_s));
-            wscn_ptr->init();
+        // - retrieve connection pointer -
+        conn_location = (location_s *)*((pointer *)user);
+        wscn_ptr = (ws_conn_s *)conn_location->v_data_ptr;
+      }/*}}}*/
+      break;
+    default:
+      break;
+  }
 
-            // - set websocket context pointer -
-            wscn_ptr->wsc_ptr = wsc_ptr;
+  if (wsc_ptr->ret_code == c_run_return_code_OK)
+  {
+    switch (reason)
+    {
+      case LWS_CALLBACK_RECEIVE:
+      case LWS_CALLBACK_CLIENT_RECEIVE:
+        {/*{{{*/
 
-            // - set protocol index pointer -
-            wscn_ptr->prot_idx = wsc_ptr->get_protocol_idx(wsi);
-            debug_assert(wscn_ptr->prot_idx != c_idx_not_exist);
-
-            // - set websocket pointer -
-            wscn_ptr->ws_ptr = wsi;
-
-            // - set websocket client status -
-            if (reason == LWS_CALLBACK_CLIENT_ESTABLISHED)
-            {
-              ws_client_s *wscl_ptr = *((ws_client_s **)user);
-
-              // - set websocket client connected flag -
-              wscl_ptr->connected = true;
-            }
-
-            // - set user data pointer to blank location -
-            ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
-            wscn_ptr->user_data_ptr = (location_s *)it.blank_location;
-
-            // - create websocket connection location -
-            BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_ws_conn,wscn_ptr);
-            *((pointer *)user) = new_location;
-          }
-
-          // - retrieve connection pointer -
-          location_s *conn_location = (location_s *)*((pointer *)user);
-          ws_conn_s *wscn_ptr = (ws_conn_s *)conn_location->v_data_ptr;
-
-          // - retrieve count of remaining bytes of message -
-          size_t remaining = libwebsockets_remaining_packet_payload(wsi);
+          // - retrieve count of remaining bytes of packet -
+          size_t remaining = lws_remaining_packet_payload(wsi);
+          int final_frag = lws_is_final_fragment(wsi);
           bc_array_s &data_buffer = wscn_ptr->data_buffer;
 
           // - message is not complete or buffered data exists -
-          if (remaining != 0 || data_buffer.used != 0)
+          if (remaining != 0 || !final_frag || data_buffer.used != 0)
           {
             data_buffer.reserve(len + remaining);
             data_buffer.append(len,(const char *)in);
           }
 
-          if (remaining == 0)
+          if (remaining == 0 && (data_buffer.used == 0 || final_frag))
           {
             // - retrieve delegate pointer -
             location_s *dlg_location = (location_s *)wsc_ptr->prot_dlgs[wscn_ptr->prot_idx];
@@ -207,6 +220,41 @@ int protocol_func(libwebsocket_context *ctx,libwebsocket *wsi,
                 );
             it.release_location_ptr(trg_location);
           }
+        }/*}}}*/
+        break;
+      case LWS_CALLBACK_ESTABLISHED:
+      case LWS_CALLBACK_CLIENT_ESTABLISHED:
+      case LWS_CALLBACK_CLOSED:
+      case LWS_CALLBACK_CLIENT_RECEIVE_PONG:
+      case LWS_CALLBACK_CLIENT_WRITEABLE:
+      case LWS_CALLBACK_SERVER_WRITEABLE:
+        {/*{{{*/
+
+          // - retrieve delegate pointer -
+          location_s *dlg_location = (location_s *)wsc_ptr->prot_dlgs[wscn_ptr->prot_idx];
+          delegate_s *delegate_ptr = (delegate_s *)dlg_location->v_data_ptr;
+
+          // - set callback reason -
+          wscn_ptr->reason = reason;
+
+          wscn_ptr->data_in = nullptr;
+          wscn_ptr->data_len = 0;
+
+          // - callback parameters -
+          const unsigned param_cnt = 1;
+          pointer *param_data = (pointer *)&conn_location;
+
+          // - call delegate method -
+          location_s *trg_location = nullptr;
+          BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,wsc_ptr->source_pos,
+              wsc_ptr->ret_code = c_run_return_code_EXCEPTION;
+
+              // - release connection location -
+              it.release_location_ptr(conn_location);
+
+              return 1;
+              );
+          it.release_location_ptr(trg_location);
 
           // - if connection closed -
           if (reason == LWS_CALLBACK_CLOSED)
@@ -214,11 +262,11 @@ int protocol_func(libwebsocket_context *ctx,libwebsocket *wsi,
             // - release connection location -
             it.release_location_ptr(conn_location);
           }
-        }
-      }
-      break;
-    default:
-      break;
+        }/*}}}*/
+        break;
+      default:
+        break;
+    }
   }
 
   return 0;

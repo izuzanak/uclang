@@ -28,6 +28,9 @@ XXX:
  * constants and definitions
  */
 
+// - websocket default extensions -
+extern const lws_extension ws_default_extensions[];
+
 extern unsigned c_bi_class_ws_conn;
 
 /*
@@ -59,8 +62,8 @@ struct ws_context_s
   unsigned source_pos;
   unsigned ret_code;
 
-  libwebsocket_context *context;
-  libwebsocket_protocols *protocols;
+  lws_context *context;
+  lws_protocols *protocols;
   location_s *user_data_ptr;
 
   string_array_s prot_names;
@@ -71,7 +74,7 @@ struct ws_context_s
   inline void init();
   inline void clear(interpreter_thread_s &it);
 
-  inline unsigned get_protocol_idx(libwebsocket *a_wsi);
+  inline unsigned get_protocol_idx(lws *a_wsi);
 };
 
 /*
@@ -82,9 +85,9 @@ struct ws_conn_s
 {
   ws_context_s *wsc_ptr;
   unsigned prot_idx;
-  libwebsocket *ws_ptr;
+  lws *ws_ptr;
   location_s *user_data_ptr;
-  libwebsocket_callback_reasons reason;
+  lws_callback_reasons reason;
   bc_array_s data_buffer;
   void *data_in;
   size_t data_len;
@@ -100,9 +103,7 @@ struct ws_conn_s
 struct ws_client_s
 {
   location_s *wsc_location;
-  libwebsocket *ws_ptr;
-  ws_client_s **wscl_udp_ptr;
-  bool connected;
+  lws *ws_ptr;
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
@@ -124,11 +125,9 @@ class websocket_c
 
 void log_emit(int level,const char *line);
 
-int http_func(libwebsocket_context *ctx,libwebsocket *wsi,
-    enum libwebsocket_callback_reasons reason,void *user,void *in,size_t len);
+int http_func(lws *wsi,enum lws_callback_reasons reason,void *user,void *in,size_t len);
 
-int protocol_func(libwebsocket_context *ctx,libwebsocket *wsi,
-    enum libwebsocket_callback_reasons reason,void *user,void *in,size_t len);
+int protocol_func(lws *wsi,enum lws_callback_reasons reason,void *user,void *in,size_t len);
 
 /*
  * definition of base64 decode functions
@@ -196,7 +195,7 @@ inline void ws_context_s::clear(interpreter_thread_s &it)
   // - destroy websocket context -
   if (context != nullptr)
   {
-    libwebsocket_context_destroy(context);
+    lws_context_destroy(context);
   }
 
   // - release protocols -
@@ -229,11 +228,11 @@ inline void ws_context_s::clear(interpreter_thread_s &it)
   init();
 }/*}}}*/
 
-inline unsigned ws_context_s::get_protocol_idx(libwebsocket *a_wsi)
+inline unsigned ws_context_s::get_protocol_idx(lws *a_wsi)
 {/*{{{*/
 
   // - retrieve websocket protocol -
-  const libwebsocket_protocols *protocol = libwebsockets_get_protocol(a_wsi);
+  const lws_protocols *protocol = lws_get_protocol(a_wsi);
 
   return prot_names.get_idx_char_ptr(strlen(protocol->name),protocol->name);
 }/*}}}*/
@@ -275,8 +274,6 @@ inline void ws_client_s::init()
 {/*{{{*/
   wsc_location = nullptr;
   ws_ptr = nullptr;
-  wscl_udp_ptr = nullptr;
-  connected = false;
 }/*}}}*/
 
 inline void ws_client_s::clear(interpreter_thread_s &it)
@@ -286,12 +283,6 @@ inline void ws_client_s::clear(interpreter_thread_s &it)
   if (wsc_location != nullptr)
   {
     it.release_location_ptr(wsc_location);
-  }
-
-  // - relese websocket user data -
-  if (!connected && wscl_udp_ptr != nullptr)
-  {
-    free(wscl_udp_ptr);
   }
 
   init();
