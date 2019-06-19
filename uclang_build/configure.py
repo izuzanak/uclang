@@ -112,7 +112,7 @@ c_packages = [
   ["MOD_UV"        ,"uv_uclm"        ,"false"     ,[]],
   ["MOD_ZLIB"      ,"zlib_uclm"      ,"pkg-config",["zlib >= 1.2.8"]],
   ["MOD_ZIP"       ,"zip_uclm"       ,"pkg-config",["libzip >= 1.1.2"]],
-  ["MOD_SNAPPY"    ,"snappy_uclm"    ,"files",     ["/usr/include/snappy.h"]],
+  ["MOD_SNAPPY"    ,"snappy_uclm"    ,"pkg-config",["snappy >= 1.0.0"]],
   ["MOD_PIGPIO"    ,"pigpio_uclm"    ,"files"     ,["/usr/include/pigpio.h"]],
   ["MOD_FUSE"      ,"fuse_uclm"      ,"pkg-config",["fuse >= 2.9.3"]],
   ["MOD_ANDROID"   ,"android_uclm"   ,"false"     ,[]],
