@@ -13,7 +13,7 @@ EXPORT built_in_module_s module =
   image_classes,          // Classes
 
   0,                      // Error base index
-  16,                     // Error count
+  17,                     // Error count
   image_error_strings,    // Error strings
 
   image_initialize,       // Initialize function
@@ -33,6 +33,7 @@ const char *image_error_strings[] =
   "error_IMAGE_INVALID_SOURCE_DATA_SIZE",
   "error_IMAGE_UNSUPPORTED_PIXEL_FORMAT",
   "error_IMAGE_CANNOT_GET_BUFFER_OF_NON_ROOT_IMAGE",
+  "error_IMAGE_CANNOT_GET_LINE_BYTES_OF_NON_ROOT_IMAGE",
   "error_IMAGE_CANNOT_OPEN_FILE",
   "error_IMAGE_FILE_IS_NOT_PNG_FILE",
   "error_IMAGE_PNG_READ_INIT_ERROR",
@@ -92,6 +93,13 @@ bool image_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nCannot get buffer of non root image\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_IMAGE_CANNOT_GET_LINE_BYTES_OF_NON_ROOT_IMAGE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot get line bytes of non root image\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_IMAGE_CANNOT_OPEN_FILE:
@@ -190,7 +198,7 @@ built_in_class_s image_class =
 {/*{{{*/
   "Image",
   c_modifier_public | c_modifier_final,
-  23, image_methods,
+  24, image_methods,
   5, image_variables,
   bic_image_consts,
   bic_image_init,
@@ -239,6 +247,11 @@ built_in_method_s image_methods[] =
     "format#0",
     c_modifier_public | c_modifier_final,
     bic_image_method_format_0
+  },
+  {
+    "line_bytes#0",
+    c_modifier_public | c_modifier_final,
+    bic_image_method_line_bytes_0
   },
   {
     "buffer#0",
@@ -751,6 +764,26 @@ bool bic_image_method_format_0(interpreter_thread_s &it,unsigned stack_base,uli 
   image_s *img_ptr = (image_s *)dst_location->v_data_ptr;
 
   long long int result = img_ptr->pixel_format;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_image_method_line_bytes_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  image_s *img_ptr = (image_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (!img_ptr->root)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_IMAGE_CANNOT_GET_LINE_BYTES_OF_NON_ROOT_IMAGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  long long int result = img_ptr->image_data_ptr->line_bytes;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 

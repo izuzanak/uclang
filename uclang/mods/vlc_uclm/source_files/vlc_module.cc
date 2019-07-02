@@ -393,9 +393,9 @@ built_in_method_s vlc_media_methods[] =
     bic_vlc_media_operator_binary_equal
   },
   {
-    "player#0",
+    "player#5",
     c_modifier_public | c_modifier_final,
-    bic_vlc_media_method_player_0
+    bic_vlc_media_method_player_5
   },
   {
     "to_string#0",
@@ -445,9 +445,35 @@ bool bic_vlc_media_operator_binary_equal(interpreter_thread_s &it,unsigned stack
   return true;
 }/*}}}*/
 
-bool bic_vlc_media_method_player_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_vlc_media_method_player_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+@begin ucl_params
+<
+chroma:retrieve_integer
+width:retrieve_integer
+height:retrieve_integer
+pitch:retrieve_integer
+delegate:c_bi_class_delegate
+>
+method video_set_format
+; @end
+
+  // - ERROR -
+  if (chroma < 0 || chroma >= c_vlc_chroma_count ||
+      width <= 0 || height <= 0 ||
+      pitch < width*c_vlc_chroma_sizes[chroma])
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_VLC_PLAYER_INVALID_VIDEO_FORMAT_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (((delegate_s *)src_4_location->v_data_ptr)->param_cnt != 1)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
 
   vlc_media_s *vm_ptr = (vlc_media_s *)dst_location->v_data_ptr;
 
@@ -468,10 +494,26 @@ bool bic_vlc_media_method_player_0(interpreter_thread_s &it,unsigned stack_base,
   vm_ptr->instance_loc->v_reference_cnt.atomic_inc();
   vp_ptr->instance_loc = vm_ptr->instance_loc;
 
+  // - set callback delegate -
+  src_4_location->v_reference_cnt.atomic_inc();
+  vp_ptr->callback_dlg = src_4_location;
+
   vp_ptr->player_ptr = player_ptr;
+
+  // - store player video properties -
+  vp_ptr->chroma = chroma;
+  vp_ptr->width  = width;
+  vp_ptr->height = height;
+  vp_ptr->pitch  = pitch;
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_vlc_player,vp_ptr);
   BIC_SET_RESULT(new_location);
+
+  // - set player video format -
+  libvlc_video_set_format(vp_ptr->player_ptr,c_vlc_chroma_fourcc[chroma],width,height,pitch);
+
+  // - set player video callbacks -
+  libvlc_video_set_callbacks(vp_ptr->player_ptr,vlc_player_s::lock,vlc_player_s::unlock,vlc_player_s::display,vp_ptr);
 
   return true;
 }/*}}}*/
@@ -499,7 +541,7 @@ built_in_class_s vlc_player_class =
 {/*{{{*/
   "VlcPlayer",
   c_modifier_public | c_modifier_final,
-  8, vlc_player_methods,
+  6, vlc_player_methods,
   1, vlc_player_variables,
   bic_vlc_player_consts,
   bic_vlc_player_init,
@@ -523,16 +565,6 @@ built_in_method_s vlc_player_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_vlc_player_operator_binary_equal
-  },
-  {
-    "video_set_format#4",
-    c_modifier_public | c_modifier_final,
-    bic_vlc_player_method_video_set_format_4
-  },
-  {
-    "video_set_callbacks#0",
-    c_modifier_public | c_modifier_final,
-    bic_vlc_player_method_video_set_callbacks_0
   },
   {
     "play#0",
@@ -612,57 +644,6 @@ bool bic_vlc_player_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
-
-  return true;
-}/*}}}*/
-
-bool bic_vlc_player_method_video_set_format_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-@begin ucl_params
-<
-chroma:retrieve_integer
-width:retrieve_integer
-height:retrieve_integer
-pitch:retrieve_integer
->
-method video_set_format
-; @end
-
-  // - ERROR -
-  if (chroma < 0 || chroma >= c_vlc_chroma_count ||
-      width <= 0 || height <= 0 ||
-      pitch < width*c_vlc_chroma_sizes[chroma])
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_VLC_PLAYER_INVALID_VIDEO_FORMAT_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  vlc_player_s *vp_ptr = (vlc_player_s *)dst_location->v_data_ptr;
-
-  // - set player video format -
-  libvlc_video_set_format(vp_ptr->player_ptr,c_vlc_chroma_fourcc[chroma],width,height,pitch);
-
-  // - store player video properties -
-  vp_ptr->chroma = chroma;
-  vp_ptr->width  = width;
-  vp_ptr->height = height;
-  vp_ptr->pitch  = pitch;
-
-  BIC_SET_RESULT_DESTINATION();
-
-  return true;
-}/*}}}*/
-
-bool bic_vlc_player_method_video_set_callbacks_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  vlc_player_s *vp_ptr = (vlc_player_s *)dst_location->v_data_ptr;
-
-  // - set player video callbacks -
-  libvlc_video_set_callbacks(vp_ptr->player_ptr,vlc_player_s::lock,vlc_player_s::unlock,vlc_player_s::display,vp_ptr);
-
-  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

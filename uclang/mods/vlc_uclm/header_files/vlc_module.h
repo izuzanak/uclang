@@ -63,7 +63,7 @@ void bic_vlc_media_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_vlc_media_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_vlc_media_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_vlc_media_method_player_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_vlc_media_method_player_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vlc_media_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vlc_media_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -77,8 +77,6 @@ void bic_vlc_player_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_vlc_player_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_vlc_player_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_vlc_player_method_video_set_format_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_vlc_player_method_video_set_callbacks_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vlc_player_method_play_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vlc_player_method_pause_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vlc_player_method_stop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

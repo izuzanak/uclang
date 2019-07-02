@@ -59,6 +59,7 @@ C_MODULE_JIT        = index; index += 1
 C_MODULE_LIGHTNING  = index; index += 1
 C_MODULE_LLVM       = index; index += 1
 C_MODULE_GA         = index; index += 1
+C_MODULE_QUIRC      = index; index += 1
 C_MODULE_FANN       = index; index += 1
 C_MODULE_AV         = index; index += 1
 C_MODULE_AO         = index; index += 1
@@ -176,6 +177,7 @@ c_cfg = [
     ["MOD_LIGHTNING" ,c_enabled[C_MODULE_LIGHTNING] ,C_UCLANG_DIR + "mods/lightning_uclm"   ,None],
     ["MOD_LLVM"      ,c_enabled[C_MODULE_LLVM]      ,C_UCLANG_DIR + "mods/llvm_uclm"        ,None],
     ["MOD_GA"        ,c_enabled[C_MODULE_GA]        ,C_UCLANG_DIR + "mods/ga_uclm"          ,None],
+    ["MOD_QUIRC"     ,c_enabled[C_MODULE_QUIRC]     ,C_UCLANG_DIR + "mods/quirc_uclm"       ,None],
     ["MOD_FANN"      ,c_enabled[C_MODULE_FANN]      ,C_UCLANG_DIR + "mods/fann_uclm"        ,None],
     ["MOD_AV"        ,c_enabled[C_MODULE_AV]        ,C_UCLANG_DIR + "mods/av_uclm"          ,None],
     ["MOD_AO"        ,c_enabled[C_MODULE_AO]        ,C_UCLANG_DIR + "mods/ao_uclm"          ,None],

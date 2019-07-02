@@ -44,6 +44,7 @@ struct vlc_media_s
 struct vlc_player_s
 {
   location_s *instance_loc;
+  location_s *callback_dlg;
   libvlc_media_player_t *player_ptr;
   unsigned chroma;
   unsigned width;
@@ -90,6 +91,7 @@ inline void vlc_media_s::clear(interpreter_thread_s &it)
 inline void vlc_player_s::init()
 {/*{{{*/
   instance_loc = nullptr;
+  callback_dlg = nullptr;
   player_ptr = nullptr;
 }/*}}}*/
 
@@ -98,6 +100,11 @@ inline void vlc_player_s::clear(interpreter_thread_s &it)
   if (player_ptr != nullptr)
   {
     libvlc_media_player_release(player_ptr);
+  }
+
+  if (callback_dlg != nullptr)
+  {
+    it.release_location_ptr(callback_dlg);
   }
 
   if (instance_loc != nullptr)

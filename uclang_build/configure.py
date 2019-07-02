@@ -63,6 +63,7 @@ c_packages = [
   ["MOD_LIGHTNING" ,"lightning_uclm" ,"false"     ,[]],
   ["MOD_LLVM"      ,"llvm_uclm"      ,"false"     ,[]],
   ["MOD_GA"        ,"ga_uclm"        ,"dirs",      ["../ext_libs/galib/galib247/ga"]],
+  ["MOD_QUIRC"     ,"quirc_uclm"     ,"dirs",      ["../ext_libs/quirc/quirc-1.0"]],
   ["MOD_FANN"      ,"fann_uclm"      ,"pkg-config",["fann >= 2.2.0"]],
   ["MOD_AV"        ,"av_uclm"        ,"pkg-config",["libavutil >= 54.3.0","libavformat >= 56.1.0","libavcodec >= 56.1.0","libswscale >= 3.0.0"]],
   ["MOD_AO"        ,"ao_uclm"        ,"pkg-config",["ao >= 1.1.0"]],

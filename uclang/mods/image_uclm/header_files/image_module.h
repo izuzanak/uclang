@@ -22,6 +22,7 @@ enum
   c_error_IMAGE_INVALID_SOURCE_DATA_SIZE,
   c_error_IMAGE_UNSUPPORTED_PIXEL_FORMAT,
   c_error_IMAGE_CANNOT_GET_BUFFER_OF_NON_ROOT_IMAGE,
+  c_error_IMAGE_CANNOT_GET_LINE_BYTES_OF_NON_ROOT_IMAGE,
   c_error_IMAGE_CANNOT_OPEN_FILE,
   c_error_IMAGE_FILE_IS_NOT_PNG_FILE,
   c_error_IMAGE_PNG_READ_INIT_ERROR,
@@ -60,6 +61,7 @@ bool bic_image_method_Image_4(interpreter_thread_s &it,unsigned stack_base,uli *
 bool bic_image_method_width_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_height_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_format_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_image_method_line_bytes_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_buffer_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_read_png_data_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_read_png_file_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);

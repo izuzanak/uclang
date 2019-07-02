@@ -11,6 +11,7 @@ include "script_parser.h"
 /*
  * definition of class fann_c
  */
+
 class fann_c
 {
   public:

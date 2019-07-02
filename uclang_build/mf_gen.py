@@ -2183,6 +2183,34 @@ if cfg_ref[CFG_TARGET]:
     )
 # }}}
 
+# quirc module
+cfg_ref = c_cfg[C_MODULE_QUIRC]
+# {{{
+if cfg_ref[CFG_TARGET]:
+    cfg_ref[CFG_MODULE] = module_c(
+      configuration,
+      cfg_ref[CFG_DIR],
+      cfg_ref[CFG_NAME],
+      [ 
+        "header_files",
+        os.sep.join(["..","..","libs","libbase_ucll","header_files"]),
+        os.sep.join(["..","..","..","ext_libs","quirc","quirc-1.0","lib"]),
+      ],
+      [ 
+        "source_files",
+      ],
+      [ 
+        os.sep.join(["..","..","libs","libbase_ucll"]),
+        os.sep.join(["..","..","..","ext_libs","quirc","quirc-1.0"]),
+      ],
+      opt_build, # CXX options
+      opt_link + "-lquirc ", # CXX link options
+      "", # CXX defines
+      [],
+      [],
+    )
+# }}}
+
 # fann module
 cfg_ref = c_cfg[C_MODULE_FANN]
 # {{{
