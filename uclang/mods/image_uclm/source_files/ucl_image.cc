@@ -168,7 +168,7 @@ bool image_s::io_fill(unsigned char *a_color)
           );
       break;
     default:
-      return false;;
+      return false;
   }
 
   return true;
@@ -385,12 +385,33 @@ bool image_s::io_apply(image_s &a_src)
   return true;
 }/*}}}*/
 
-bool image_s::io_normalize()
+bool image_s::io_normalize(image_s &a_src)
 {/*{{{*/
+  if (pixel_format != a_src.pixel_format || width != a_src.width || height != a_src.height || pixel_format == c_image_pixel_format_blank)
+  {
+    return false;
+  }
+
   unsigned line_size = image_data_ptr->line_bytes;
+  unsigned s_line_size = a_src.image_data_ptr->line_bytes;
   unsigned image_ls = width*pixel_step;
 
-#define IMAGE_NORMALIZE_PASS(OPERATION) \
+#define IMAGE_NORMALIZE_GET_MIN_MAX(OPERATION) \
+  {/*{{{*/\
+    unsigned char *s_ptr = a_src.image_data_ptr->data + a_src.y_pos*s_line_size + a_src.x_pos*pixel_step;\
+    unsigned char *s_ptr_end = s_ptr + (height - 1)*s_line_size + width*pixel_step;\
+\
+    do {\
+      unsigned char *s_ptr_w_end = s_ptr + image_ls;\
+      do {\
+        OPERATION;\
+      } while((s_ptr += pixel_step) < s_ptr_w_end);\
+\
+      s_ptr += s_line_size - image_ls;\
+    } while(s_ptr < s_ptr_end);\
+  }/*}}}*/
+
+#define IMAGE_NORMALIZE_APPLY(OPERATION) \
   {/*{{{*/\
     unsigned char *ptr = image_data_ptr->data + y_pos*line_size + x_pos*pixel_step;\
     unsigned char *ptr_end = ptr + (height - 1)*line_size + width*pixel_step;\
@@ -412,8 +433,8 @@ bool image_s::io_normalize()
       double min = INFINITY;
       double max = -INFINITY;
 
-      IMAGE_NORMALIZE_PASS(
-          double value = ((double *)ptr)[0];
+      IMAGE_NORMALIZE_GET_MIN_MAX(
+          double value = ((double *)s_ptr)[0];
 
           if (value < min) min = value;
           if (value > max) max = value;
@@ -423,7 +444,7 @@ bool image_s::io_normalize()
       {
         double div = max - min;
 
-        IMAGE_NORMALIZE_PASS(
+        IMAGE_NORMALIZE_APPLY(
             ((double *)ptr)[0] = (((double *)ptr)[0] - min)/div;
             );
       }

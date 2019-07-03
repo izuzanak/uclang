@@ -324,9 +324,9 @@ built_in_method_s image_methods[] =
     bic_image_method_io_apply_1
   },
   {
-    "io_normalize#0",
+    "io_normalize#1",
     c_modifier_public | c_modifier_final,
-    bic_image_method_io_normalize_0
+    bic_image_method_io_normalize_1
   },
   {
     "to_string#0",
@@ -831,7 +831,7 @@ static_method
 ; @end
 
   // - ERROR -
-  if (png_sig_cmp((unsigned char *)data_ptr,0,8) != 0)
+  if (data_size < 8 || png_sig_cmp((unsigned char *)data_ptr,0,8) != 0)
   {
     exception_s::throw_exception(it,module.error_base + c_error_IMAGE_PNG_DATA_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1494,22 +1494,9 @@ bool bic_image_method_io_apply_1(interpreter_thread_s &it,unsigned stack_base,ul
   BIC_IMAGE_METHOD_BLOCK_IO("io_apply#1",io_apply);
 }/*}}}*/
 
-bool bic_image_method_io_normalize_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_image_method_io_normalize_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  image_s *img_ptr = (image_s *)dst_location->v_data_ptr;
-
-  // - ERROR -
-  if (!img_ptr->io_normalize())
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_IMAGE_IMAGE_OPERATION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  BIC_SET_RESULT_DESTINATION();
-
-  return true;
+  BIC_IMAGE_METHOD_BLOCK_IO("io_normalize#1",io_normalize);
 }/*}}}*/
 
 bool bic_image_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)

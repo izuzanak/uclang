@@ -12,11 +12,6 @@ extern "C" {
 #include "jpeglib.h"
 }
 
-// - conversions -
-#define c_icsv ((sizeof(int) - sizeof(char)) << 3)
-#define c_lliisv ((sizeof(long long int) - sizeof(int)) << 3)
-#define c_ulluisv ((sizeof(long long unsigned) - sizeof(unsigned)) << 3)
-
 // - pixel formats -
 const unsigned c_pixel_format_cnt = 5;
 enum {
@@ -88,7 +83,7 @@ struct image_s
   bool io_copy(image_s &a_src);
   bool io_convert(image_s &a_src);
   bool io_apply(image_s &a_src);
-  bool io_normalize();
+  bool io_normalize(image_s &a_src);
 };
 
 /*

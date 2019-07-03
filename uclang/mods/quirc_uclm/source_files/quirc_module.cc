@@ -316,6 +316,38 @@ method Quirc
   return true;
 }/*}}}*/
 
+bool bic_quirc_method_process_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+data:retrieve_data_buffer
+>
+method process
+; @end
+
+  quirc_s *qrc_ptr = (quirc_s *)dst_location->v_data_ptr;
+
+  int quirc_width;
+  int quirc_height;
+  uint8_t *quirc_buffer = quirc_begin(qrc_ptr->quirc_ptr,&quirc_width,&quirc_height);
+  
+  // - ERROR -
+  if ((unsigned)(quirc_width*quirc_height) != data_size)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_QUIRC_PTROCESS_INVALID_DATA_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - copy data to quirc buffer -
+  memcpy(quirc_buffer,data_ptr,data_size);
+
+  quirc_end(qrc_ptr->quirc_ptr);
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
 bool bic_quirc_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_QUIRC_ITEM("item#1");
@@ -359,38 +391,6 @@ method next_idx
   {
     BIC_SET_RESULT_BLANK();
   }
-
-  return true;
-}/*}}}*/
-
-bool bic_quirc_method_process_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-@begin ucl_params
-<
-data:retrieve_data_buffer
->
-method process
-; @end
-
-  quirc_s *qrc_ptr = (quirc_s *)dst_location->v_data_ptr;
-
-  int quirc_width;
-  int quirc_height;
-  uint8_t *quirc_buffer = quirc_begin(qrc_ptr->quirc_ptr,&quirc_width,&quirc_height);
-  
-  // - ERROR -
-  if ((unsigned)(quirc_width*quirc_height) != data_size)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_QUIRC_PTROCESS_INVALID_DATA_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - copy data to quirc buffer -
-  memcpy(quirc_buffer,data_ptr,data_size);
-
-  quirc_end(qrc_ptr->quirc_ptr);
-
-  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
