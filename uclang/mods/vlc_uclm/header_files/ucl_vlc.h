@@ -14,7 +14,8 @@ include "script_parser.h"
 
 enum
 {/*{{{*/
-  c_vlc_chroma_RV24 = 0,
+  c_vlc_chroma_Y800 = 0,
+  c_vlc_chroma_RV24,
   c_vlc_chroma_count,
 };/*}}}*/
 
@@ -44,16 +45,19 @@ struct vlc_media_s
 struct vlc_player_s
 {
   location_s *instance_loc;
-  location_s *callback_dlg;
+  location_s *mutex_loc;
   libvlc_media_player_t *player_ptr;
   unsigned chroma;
   unsigned width;
   unsigned height;
   unsigned pitch;
 
-  static void *lock(void *data,void **p_pixels);
-  static void unlock(void *data,void *id,void *const *p_pixels);
-  static void display(void *data,void *id);
+  long long int frame_count;
+  void *pixels;
+
+  static void *lock(void *user,void **p_pixels);
+  static void unlock(void *user,void *id,void *const *p_pixels);
+  static void display(void *user,void *id);
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
@@ -91,8 +95,9 @@ inline void vlc_media_s::clear(interpreter_thread_s &it)
 inline void vlc_player_s::init()
 {/*{{{*/
   instance_loc = nullptr;
-  callback_dlg = nullptr;
+  mutex_loc = nullptr;
   player_ptr = nullptr;
+  pixels = nullptr;
 }/*}}}*/
 
 inline void vlc_player_s::clear(interpreter_thread_s &it)
@@ -102,14 +107,19 @@ inline void vlc_player_s::clear(interpreter_thread_s &it)
     libvlc_media_player_release(player_ptr);
   }
 
-  if (callback_dlg != nullptr)
-  {
-    it.release_location_ptr(callback_dlg);
-  }
-
   if (instance_loc != nullptr)
   {
     it.release_location_ptr(instance_loc);
+  }
+
+  if (mutex_loc != nullptr)
+  {
+    it.release_location_ptr(mutex_loc);
+  }
+
+  if (pixels != nullptr)
+  {
+    cfree(pixels);
   }
 
   init();

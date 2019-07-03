@@ -5,47 +5,35 @@ include "ucl_vlc.h"
 
 extern const unsigned c_vlc_chroma_sizes[] =
 {/*{{{*/
+  1,
   3,
 };/*}}}*/
 
 const char *c_vlc_chroma_fourcc[] =
 {/*{{{*/
+  "Y800",
   "RV24",
 };/*}}}*/
 
-void *vlc_player_s::lock(void *data,void **p_pixels)
+void *vlc_player_s::lock(void *user,void **p_pixels)
 {/*{{{*/
+  vlc_player_s *vp_ptr = (vlc_player_s *)user;
+  cassert(((mutex_s *)vp_ptr->mutex_loc->v_data_ptr)->lock() == c_error_OK);
 
-  // FIXME debug output
-  fprintf(stderr,"vlc_player_s::lock\n");
+  *p_pixels = vp_ptr->pixels;
   
-  vlc_player_s *vp_ptr = (vlc_player_s *)data;
-
-  void *id = cmalloc(vp_ptr->height*vp_ptr->pitch);
-  *p_pixels = id;
-  
-  // FIXME TODO continue ...
-
-  return id;
+  return nullptr;
 }/*}}}*/
 
-void vlc_player_s::unlock(void *data,void *id,void *const *p_pixels)
+void vlc_player_s::unlock(void *user,void *id,void *const *p_pixels)
 {/*{{{*/
-  
-  // FIXME debug output
-  fprintf(stderr,"vlc_player_s::unlock\n");
-  
-  // FIXME TODO continue ...
+  vlc_player_s *vp_ptr = (vlc_player_s *)user;
+  cassert(((mutex_s *)vp_ptr->mutex_loc->v_data_ptr)->unlock() == c_error_OK);
 }/*}}}*/
 
-void vlc_player_s::display(void *data,void *id)
+void vlc_player_s::display(void *user,void *id)
 {/*{{{*/
-  
-  // FIXME debug output
-  fprintf(stderr,"vlc_player_s::display\n");
-
-  cfree(id);
-
-  // FIXME TODO continue ...
+  vlc_player_s *vp_ptr = (vlc_player_s *)user;
+  ++vp_ptr->frame_count;
 }/*}}}*/
 

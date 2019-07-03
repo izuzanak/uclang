@@ -393,9 +393,9 @@ built_in_method_s vlc_media_methods[] =
     bic_vlc_media_operator_binary_equal
   },
   {
-    "player#5",
+    "player#4",
     c_modifier_public | c_modifier_final,
-    bic_vlc_media_method_player_5
+    bic_vlc_media_method_player_4
   },
   {
     "to_string#0",
@@ -445,7 +445,7 @@ bool bic_vlc_media_operator_binary_equal(interpreter_thread_s &it,unsigned stack
   return true;
 }/*}}}*/
 
-bool bic_vlc_media_method_player_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_vlc_media_method_player_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
@@ -453,7 +453,6 @@ chroma:retrieve_integer
 width:retrieve_integer
 height:retrieve_integer
 pitch:retrieve_integer
-delegate:c_bi_class_delegate
 >
 method video_set_format
 ; @end
@@ -464,14 +463,6 @@ method video_set_format
       pitch < width*c_vlc_chroma_sizes[chroma])
   {
     exception_s::throw_exception(it,module.error_base + c_error_VLC_PLAYER_INVALID_VIDEO_FORMAT_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - ERROR -
-  if (((delegate_s *)src_4_location->v_data_ptr)->param_cnt != 1)
-  {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
     return false;
   }
 
@@ -494,10 +485,14 @@ method video_set_format
   vm_ptr->instance_loc->v_reference_cnt.atomic_inc();
   vp_ptr->instance_loc = vm_ptr->instance_loc;
 
-  // - set callback delegate -
-  src_4_location->v_reference_cnt.atomic_inc();
-  vp_ptr->callback_dlg = src_4_location;
+  // - create player mutex -
+  mutex_s *mutex_ptr = (mutex_s *)cmalloc(sizeof(mutex_s));
+  cassert(mutex_ptr->init() == c_error_OK);
 
+  BIC_CREATE_NEW_LOCATION(mutex_location,c_bi_class_mutex,mutex_ptr);
+  vp_ptr->mutex_loc = mutex_location;
+
+  // - set player pointer -
   vp_ptr->player_ptr = player_ptr;
 
   // - store player video properties -
@@ -505,6 +500,9 @@ method video_set_format
   vp_ptr->width  = width;
   vp_ptr->height = height;
   vp_ptr->pitch  = pitch;
+
+  vp_ptr->frame_count = 0;
+  vp_ptr->pixels = cmalloc(height*pitch);
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_vlc_player,vp_ptr);
   BIC_SET_RESULT(new_location);
@@ -541,8 +539,8 @@ built_in_class_s vlc_player_class =
 {/*{{{*/
   "VlcPlayer",
   c_modifier_public | c_modifier_final,
-  6, vlc_player_methods,
-  1, vlc_player_variables,
+  9, vlc_player_methods,
+  2, vlc_player_variables,
   bic_vlc_player_consts,
   bic_vlc_player_init,
   bic_vlc_player_clear,
@@ -582,6 +580,21 @@ built_in_method_s vlc_player_methods[] =
     bic_vlc_player_method_stop_0
   },
   {
+    "mutex#0",
+    c_modifier_public | c_modifier_final,
+    bic_vlc_player_method_mutex_0
+  },
+  {
+    "frame_count#0",
+    c_modifier_public | c_modifier_final,
+    bic_vlc_player_method_frame_count_0
+  },
+  {
+    "pixels#0",
+    c_modifier_public | c_modifier_final,
+    bic_vlc_player_method_pixels_0
+  },
+  {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_vlc_player_method_to_string_0
@@ -597,6 +610,7 @@ built_in_variable_s vlc_player_variables[] =
 {/*{{{*/
 
   // - vlc player chroma constants -
+  { "CHROMA_Y800", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "CHROMA_RV24", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
@@ -606,8 +620,8 @@ void bic_vlc_player_consts(location_array_s &const_locations)
 
   // - insert vlc player chroma constants -
   {
-    const_locations.push_blanks(1);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 1);
+    const_locations.push_blanks(2);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 2);
 
 #define CREATE_VLC_PLAYER_CHROMA_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -615,6 +629,7 @@ void bic_vlc_player_consts(location_array_s &const_locations)
   cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
+    CREATE_VLC_PLAYER_CHROMA_BIC_STATIC(c_vlc_chroma_Y800);
     CREATE_VLC_PLAYER_CHROMA_BIC_STATIC(c_vlc_chroma_RV24);
   }
 
@@ -682,6 +697,51 @@ bool bic_vlc_player_method_stop_0(interpreter_thread_s &it,unsigned stack_base,u
   libvlc_media_player_stop(((vlc_player_s *)dst_location->v_data_ptr)->player_ptr);
 
   BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_vlc_player_method_mutex_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  vlc_player_s *vp_ptr = (vlc_player_s *)dst_location->v_data_ptr;
+
+  vp_ptr->mutex_loc->v_reference_cnt.atomic_inc();
+  BIC_SET_RESULT(vp_ptr->mutex_loc);
+
+  return true;
+}/*}}}*/
+
+bool bic_vlc_player_method_frame_count_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = ((vlc_player_s *)dst_location->v_data_ptr)->frame_count;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_vlc_player_method_pixels_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  vlc_player_s *vp_ptr = (vlc_player_s *)dst_location->v_data_ptr;
+
+  // - create buffer object -
+  buffer_s *buffer_ptr = (buffer_s *)cmalloc(sizeof(buffer_s));
+
+  // - set owner reference -
+  dst_location->v_reference_cnt.atomic_inc();
+  buffer_ptr->owner_ptr = dst_location;
+
+  buffer_ptr->data = vp_ptr->pixels;
+  buffer_ptr->size = vp_ptr->height*vp_ptr->pitch;
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_buffer,buffer_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
