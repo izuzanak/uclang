@@ -4,6 +4,7 @@ import gtk;
 import sys;
 import containers;
 import time;
+import regex;
 
 class TextView
 {
