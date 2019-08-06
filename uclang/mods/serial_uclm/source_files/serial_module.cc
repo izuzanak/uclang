@@ -9,10 +9,10 @@ unsigned c_bi_class_serial = c_idx_not_exist;
 // - SERIAL module -
 EXPORT built_in_module_s module =
 {/*{{{*/
-  1,                     // Class count
+  1,                      // Class count
   serial_classes,         // Classes
-  0,                     // Error base index
-  1,                     // Error count
+  0,                      // Error base index
+  2,                      // Error count
   serial_error_strings,   // Error strings
   serial_initialize,      // Initialize function
   serial_print_exception, // Print exceptions function
@@ -27,7 +27,8 @@ built_in_class_s *serial_classes[] =
 // - SERIAL error strings -
 const char *serial_error_strings[] =
 {/*{{{*/
-  "error_SERIAL_DUMMY_ERROR",
+  "error_SERIAL_OPEN_ERROR",
+  "error_SERIAL_SETUP_ERROR",
 };/*}}}*/
 
 // - SERIAL initialize -
@@ -52,11 +53,18 @@ bool serial_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_SERIAL_DUMMY_ERROR:
+  case c_error_SERIAL_OPEN_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nSerial dummy error\n");
+    fprintf(stderr,"\nCannot open serial device \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SERIAL_SETUP_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot setup serial device\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -74,7 +82,7 @@ built_in_class_s serial_class =
 {/*{{{*/
   "Serial",
   c_modifier_public | c_modifier_final,
-  4, serial_methods,
+  5, serial_methods,
   3 + 3, serial_variables,
   bic_serial_consts,
   bic_serial_init,
@@ -105,6 +113,11 @@ built_in_method_s serial_methods[] =
     bic_serial_method_Serial_1
   },
   {
+    "set_format#5",
+    c_modifier_public | c_modifier_final,
+    bic_serial_method_set_format_5
+  },
+  {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_serial_method_to_string_0
@@ -125,9 +138,9 @@ built_in_variable_s serial_variables[] =
   { "FC_RS_485", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
   // - serial parity constants -
-  { "PAR_NONE", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "PAR_EVEN", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "PAR_ODD", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PARITY_NONE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PARITY_EVEN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PARITY_ODD", c_modifier_public | c_modifier_static | c_modifier_static_const },
 };/*}}}*/
 
 void bic_serial_consts(location_array_s &const_locations)
@@ -160,21 +173,27 @@ void bic_serial_consts(location_array_s &const_locations)
   cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
-    CREATE_SERIAL_PARITY_BIC_STATIC(c_serial_PAR_NONE);
-    CREATE_SERIAL_PARITY_BIC_STATIC(c_serial_PAR_EVEN);
-    CREATE_SERIAL_PARITY_BIC_STATIC(c_serial_PAR_ODD);
+    CREATE_SERIAL_PARITY_BIC_STATIC(c_serial_PARITY_NONE);
+    CREATE_SERIAL_PARITY_BIC_STATIC(c_serial_PARITY_EVEN);
+    CREATE_SERIAL_PARITY_BIC_STATIC(c_serial_PARITY_ODD);
   }
 
 }/*}}}*/
 
 void bic_serial_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  cassert(0);
+  location_ptr->v_data_ptr = (serial_s *)nullptr;
 }/*}}}*/
 
 void bic_serial_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  cassert(0);
+  serial_s *serial_ptr = (serial_s *)location_ptr->v_data_ptr;
+
+  if (serial_ptr != nullptr)
+  {
+    serial_ptr->clear(it);
+    cfree(serial_ptr);
+  }
 }/*}}}*/
 
 bool bic_serial_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -191,10 +210,226 @@ bool bic_serial_operator_binary_equal(interpreter_thread_s &it,unsigned stack_ba
 
 bool bic_serial_method_Serial_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
+@begin ucl_params
+<
+path:c_bi_class_string
+>
+method Serial
+; @end
 
-  // FIXME TODO continue ...
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  // - open serial device -
+  int fd = open(string_ptr->data,O_RDWR | O_NONBLOCK | O_NOCTTY | O_CLOEXEC);
+
+  // - ERROR -
+  if (fd == -1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_SERIAL_OPEN_ERROR,operands[c_source_pos_idx],src_0_location);
+    return false;
+  }
+
+  // - create serial object -
+  serial_s *serial_ptr = (serial_s *)cmalloc(sizeof(serial_s));
+  serial_ptr->init();
+
+  // - set serial pointer fd -
+  serial_ptr->fd = fd;
+
+  // - set destination data pointer -
+  dst_location->v_data_ptr = (serial_s *)serial_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_serial_method_set_format_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+baudrate:retrieve_integer
+flow:retrieve_integer
+parity:retrieve_integer
+data:retrieve_integer
+stop:retrieve_integer
+>
+method set_format
+; @end
+
+  serial_s *serial_ptr = (serial_s *)dst_location->v_data_ptr;
+  termios termio;
+
+  // - ERROR -
+  if (tcgetattr(serial_ptr->fd,&termio) == -1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_SERIAL_SETUP_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  switch (baudrate)
+  {
+  case   1200: cfsetspeed(&termio,  B1200); break;
+  case   2400: cfsetspeed(&termio,  B2400); break;
+  case   4800: cfsetspeed(&termio,  B4800); break;
+  case   9600: cfsetspeed(&termio,  B9600); break;
+  case  19200: cfsetspeed(&termio, B19200); break;
+  case  38400: cfsetspeed(&termio, B38400); break;
+  case  57600: cfsetspeed(&termio, B57600); break;
+  case 115200: cfsetspeed(&termio,B115200); break;
+  case 230400: cfsetspeed(&termio,B230400); break;
+
+  // - ERROR -
+  default:
+    
+    exception_s::throw_exception(it,module.error_base + c_error_SERIAL_SETUP_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  switch (flow)
+  {
+  case c_serial_FC_NONE:
+      termio.c_cflag &= ~CRTSCTS;
+      termio.c_cflag &= ~CRS485;
+      termio.c_iflag &= ~(IXON | IXOFF | IXANY);
+      break;
+  case c_serial_FC_RTS_CTS:
+      termio.c_cflag |=  CRTSCTS;
+      termio.c_cflag &= ~CRS485;
+      termio.c_iflag &= ~(IXON | IXOFF | IXANY);
+      break;
+  case c_serial_FC_RS_485:
+      termio.c_cflag &= ~CRTSCTS;
+      termio.c_cflag |=  CRS485;
+      termio.c_iflag &= ~(IXON | IXOFF | IXANY);
+      break;
+
+  // - ERROR -
+  default:
+
+    exception_s::throw_exception(it,module.error_base + c_error_SERIAL_SETUP_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  switch (parity)
+  {
+  case c_serial_PARITY_NONE:
+      termio.c_cflag &= ~PARENB;
+      termio.c_iflag &= ~INPCK;
+      break;
+  case c_serial_PARITY_EVEN:
+      termio.c_cflag |= PARENB;
+      termio.c_cflag &= ~PARODD;
+      termio.c_iflag |= INPCK;
+      break;
+  case c_serial_PARITY_ODD:
+      termio.c_cflag |= PARENB;
+      termio.c_cflag |= PARODD;
+      termio.c_iflag |= INPCK;
+      break;
+
+  // - ERROR -
+  default:
+
+    exception_s::throw_exception(it,module.error_base + c_error_SERIAL_SETUP_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  switch (data)
+  {
+  case 8:
+      termio.c_cflag &= ~CSIZE;
+      termio.c_cflag |= CS8;
+      break;
+  case 7:
+      termio.c_cflag &= ~CSIZE;
+      termio.c_cflag |= CS7;
+      break;
+  case 6:
+      termio.c_cflag &= ~CSIZE;
+      termio.c_cflag |= CS6;
+      break;
+  case 5:
+      termio.c_cflag &= ~CSIZE;
+      termio.c_cflag |= CS5;
+      break;
+
+  // - ERROR -
+  default:
+
+    exception_s::throw_exception(it,module.error_base + c_error_SERIAL_SETUP_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  switch (stop)
+  {
+  case 1:
+      termio.c_cflag &= ~CSTOPB;
+      break;
+  case 2:
+      termio.c_cflag |= CSTOPB;
+      break;
+
+  // - ERROR -
+  default:
+
+    exception_s::throw_exception(it,module.error_base + c_error_SERIAL_SETUP_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - input flags -
+  termio.c_iflag &= ~(
+      IGNBRK              // do not ignore break conditions on input
+      | BRKINT            // do not send SIGINT in case of break condition
+      | IGNPAR            // do not ignore framing and parity errors
+      | PARMRK            // do not prefix characters with parity error
+      | ISTRIP            // do not strip-off eighth bit
+      | INLCR             // do not translate NL to CR on input
+      | IGNCR             // do not ignore CR on input
+      | ICRNL             // do not translate CR to NL on input
+      | IUCLC             // do not map uppercase chars to lowercase
+      | IMAXBEL);         // do not ring bell when input queue is full
+
+  // - output flags -
+  termio.c_oflag &= ~(
+      OPOST               // do not enable output processing
+      | OLCUC             // do not translate lowercase chars to uppercase
+      | ONLCR             // do not translate NL to NL-CR on output
+      | OCRNL             // do not translate CR to NL on output
+      | ONOCR             // allow to output CR at column 0
+      | ONLRET);          // do not suppress CR output
+
+  // - control flags -
+  termio.c_cflag |=
+      CREAD               // enable receiver
+      | CLOCAL;           // ignore modem control lines
+
+  // - local flags -
+  termio.c_lflag &= ~(
+      ISIG                // do not generate signals
+      | ICANON            // disable canonical mode
+      | ECHO              // do not echo input characters
+      | ECHOE             // do not use erase character
+      | ECHOK             // do not use kill character
+      | ECHONL            // do not echo NL character
+      | ECHOCTL           // do not echo control signals as ^X
+      | ECHOPRT           // do not print erased characters
+      | ECHOKE            // do not echo kill as erase chars
+      | NOFLSH            // do not disable flushing queues
+      | TOSTOP            // do not send SIGTTOU signal
+      | IEXTEN);          // disable input processing
+
+  termio.c_cc[VMIN] = 0;  // minimum number of characters to wait for
+  termio.c_cc[VTIME] = 0; // timeout in deciseconds
+
+  // - ERROR -
+  if (tcsetattr(serial_ptr->fd,TCSANOW,&termio) == -1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_SERIAL_SETUP_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
 }/*}}}*/
 
 bool bic_serial_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)

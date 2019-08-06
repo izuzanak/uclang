@@ -18,7 +18,8 @@ extern built_in_class_s *serial_classes[];
 // - SERIAL error identifiers -
 enum
 {
-  c_error_SERIAL_DUMMY_ERROR = 0,
+  c_error_SERIAL_OPEN_ERROR = 0,
+  c_error_SERIAL_SETUP_ERROR,
 };
 
 // - SERIAL error strings -
@@ -41,7 +42,7 @@ void bic_serial_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_serial_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_serial_method_Serial_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-//bool bic_serial_method_set_format_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_serial_method_set_format_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 //bool bic_serial_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 //bool bic_serial_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_serial_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
