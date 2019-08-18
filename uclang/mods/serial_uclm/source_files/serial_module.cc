@@ -12,7 +12,7 @@ EXPORT built_in_module_s module =
   1,                      // Class count
   serial_classes,         // Classes
   0,                      // Error base index
-  2,                      // Error count
+  4,                      // Error count
   serial_error_strings,   // Error strings
   serial_initialize,      // Initialize function
   serial_print_exception, // Print exceptions function
@@ -29,6 +29,8 @@ const char *serial_error_strings[] =
 {/*{{{*/
   "error_SERIAL_OPEN_ERROR",
   "error_SERIAL_SETUP_ERROR",
+  "error_SERIAL_WRITE_ERROR",
+  "error_SERIAL_READ_ERROR",
 };/*}}}*/
 
 // - SERIAL initialize -
@@ -67,6 +69,20 @@ bool serial_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nCannot setup serial device\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_SERIAL_WRITE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while writing to serial device\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SERIAL_READ_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while reading from serial device\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   default:
     class_stack.clear();
     return false;
@@ -82,7 +98,7 @@ built_in_class_s serial_class =
 {/*{{{*/
   "Serial",
   c_modifier_public | c_modifier_final,
-  5, serial_methods,
+  8, serial_methods,
   3 + 3, serial_variables,
   bic_serial_consts,
   bic_serial_init,
@@ -116,6 +132,21 @@ built_in_method_s serial_methods[] =
     "set_format#5",
     c_modifier_public | c_modifier_final,
     bic_serial_method_set_format_5
+  },
+  {
+    "write#1",
+    c_modifier_public | c_modifier_final,
+    bic_serial_method_write_1
+  },
+  {
+    "read#0",
+    c_modifier_public | c_modifier_final,
+    bic_serial_method_read_0
+  },
+  {
+    "get_fd#0",
+    c_modifier_public | c_modifier_final,
+    bic_serial_method_get_fd_0
   },
   {
     "to_string#0",
@@ -220,7 +251,7 @@ method Serial
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - open serial device -
-  int fd = open(string_ptr->data,O_RDWR | O_NONBLOCK | O_NOCTTY | O_CLOEXEC);
+  int fd = open(string_ptr->data,O_RDWR | O_NOCTTY | O_CLOEXEC);
 
   // - ERROR -
   if (fd == -1)
@@ -428,6 +459,104 @@ method set_format
   }
 
   BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_serial_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+data:retrieve_data_buffer
+>
+method write
+; @end
+
+  serial_s *serial_ptr = (serial_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (write(serial_ptr->fd,data_ptr,data_size) != (ssize_t)data_size)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_SERIAL_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_serial_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  serial_s *serial_ptr = (serial_s *)dst_location->v_data_ptr;
+
+  const long int c_buffer_add = 1024;
+
+  // - target data buffer -
+  bc_array_s data_buffer;
+  data_buffer.init();
+
+  int inq_cnt;
+  long int read_cnt;
+  do
+  {
+    data_buffer.reserve(c_buffer_add);
+    read_cnt = read(serial_ptr->fd,data_buffer.data + data_buffer.used,c_buffer_add);
+
+    // - ERROR -
+    if (read_cnt == -1)
+    {
+      data_buffer.clear();
+
+      exception_s::throw_exception(it,module.error_base + c_error_SERIAL_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
+    data_buffer.used += read_cnt;
+
+    // - ERROR -
+    if (ioctl(serial_ptr->fd,TIOCINQ,&inq_cnt) == -1)
+    {
+      data_buffer.clear();
+
+      exception_s::throw_exception(it,module.error_base + c_error_SERIAL_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+  }
+  while(inq_cnt > 0);
+
+  // - was any data read -
+  if (data_buffer.used == 0)
+  {
+    data_buffer.clear();
+
+    BIC_SET_RESULT_BLANK();
+  }
+  else
+  {
+    data_buffer.push('\0');
+
+    // - return data string -
+    string_s *string_ptr = it.get_new_string_ptr();
+    string_ptr->data = data_buffer.data;
+    string_ptr->size = data_buffer.used;
+
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+    BIC_SET_RESULT(new_location);
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_serial_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = ((serial_s *)dst_location->v_data_ptr)->fd;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
