@@ -112,7 +112,7 @@ class Main
       Sys.system("rm -rf %s" % tmp_dir);
     }
 
-    ("Sys.getcwd() -> %s\n\n" % (cwd = Sys.getcwd())).print();
+    ("Sys.getcwd() -> %s\n\n" % $type Sys.getcwd()).print();
 
     ("Sys.mkdir(\"%s\") -> %s\n" % [tmp_dir,$Sys.mkdir(tmp_dir)]).print();
     ("Sys.chdir(\"%s\") -> %s\n\n" % [tmp_dir,$Sys.chdir(tmp_dir)]).print();
@@ -140,7 +140,7 @@ class Main
     ("Sys.setenv(\"ENV_VAR\",\"value\") -> %s\n" % $Sys.setenv("ENV_VAR","value")).print();
 
     Tutorial.note("Sys method getenv#1");
-    ("Sys.getenv(\"PATH\")    -> %s\n" % $Sys.getenv("PATH")).print();
+    ("Sys.getenv(\"PATH\")    -> %s\n" % $type Sys.getenv("PATH")).print();
     ("Sys.getenv(\"ENV_VAR\") -> %s\n" % $Sys.getenv("ENV_VAR")).print();
     ("Sys.getenv(\"ENV_ERR\") -> %s\n" % $Sys.getenv("ENV_ERR")).print();
 
@@ -158,9 +158,9 @@ class Main
     ("Sys.listdir(\".\")     -> %s\n" % $Sys.listdir(".")).print();
 
     Tutorial.note("Sys method size#1");
-    ("Sys.size(\".\")     -> %d\n" % Sys.size(".")).print();
+    ("Sys.size(\".\")     -> %d\n" % (Sys.size(".") != 0)).print();
     ("Sys.size(\"file\")  -> %d\n" % Sys.size("file")).print();
-    ("Sys.size(\"dir_0\") -> %d\n" % Sys.size("dir_0")).print();
+    ("Sys.size(\"dir_0\") -> %d\n" % (Sys.size("dir_0") != 0)).print();
 
     // Method time of class Sys returns system time in microseconds from year
     // 1970

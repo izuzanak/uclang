@@ -63,7 +63,7 @@ line: line 2
 
 === Sys directories manipulation methods =======================================
 
-Sys.getcwd() -> /home/jirka/folder/work/programming/git/uclang/uclang/examples/02_modules/04_module_sys
+Sys.getcwd() -> String
 
 Sys.mkdir("/tmp/01_class_sys") -> <blank>
 Sys.chdir("/tmp/01_class_sys") -> <blank>
@@ -96,7 +96,7 @@ Sys.setenv("ENV_VAR","value") -> <blank>
 
 === Sys method getenv#1 ========================================================
 
-Sys.getenv("PATH")    -> /usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/db/bin:/usr/lib/jvm/java-8-oracle/jre/bin
+Sys.getenv("PATH")    -> String
 Sys.getenv("ENV_VAR") -> value
 Sys.getenv("ENV_ERR") -> <blank>
 
@@ -111,9 +111,9 @@ Sys.listdir(".")     -> [file,dir_0]
 
 === Sys method size#1 ==========================================================
 
-Sys.size(".")     -> 4096
+Sys.size(".")     -> 1
 Sys.size("file")  -> 12
-Sys.size("dir_0") -> 4096
+Sys.size("dir_0") -> 1
 
 === Sys method time#0 ==========================================================
 
