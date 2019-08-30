@@ -409,10 +409,23 @@ method update
           // - ERROR -
           if (epoll_ctl(ep_ptr->fd,EPOLL_CTL_MOD,fd,&event) == -1)
           {
-            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_EPOLL_CONTROL_MODIFY_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-            new_exception->params.push(errno);
+            // - reopened fd, not problem -
+            if (errno != ENOENT)
+            {
+              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_EPOLL_CONTROL_MODIFY_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+              new_exception->params.push(errno);
 
-            return false;
+              return false;
+            }
+
+            // - ERROR -
+            if (epoll_ctl(ep_ptr->fd,EPOLL_CTL_ADD,fd,&event) == -1)
+            {
+              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_EPOLL_CONTROL_ADD_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+              new_exception->params.push(errno);
+
+              return false;
+            }
           }
         }
 
@@ -439,10 +452,14 @@ method update
         // - ERROR -
         if (epoll_ctl(ep_ptr->fd,EPOLL_CTL_DEL,fd_ptr - fds.data,&event) == -1)
         {
-          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_EPOLL_CONTROL_DELETE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-          new_exception->params.push(errno);
+          // - closed fd, not problem -
+          if (errno != EBADF)
+          {
+            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_EPOLL_CONTROL_DELETE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            new_exception->params.push(errno);
 
-          return false;
+            return false;
+          }
         }
 
         // - mark fd as unused -
