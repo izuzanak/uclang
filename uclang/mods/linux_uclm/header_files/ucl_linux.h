@@ -7,30 +7,18 @@ include "script_parser.h"
 @end
 
 #include <fcntl.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/mman.h>
-#include <sys/uio.h>
 #include <linux/version.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <sys/timerfd.h>
+#include <sys/types.h>
+#include <sys/uio.h>
+#include <unistd.h>
 
 // - file descriptor flags -
 enum
 {
   FD_FLAG_NO_CLOSE = 1 << 0
-};
-
-/*
- * definition of structure fd_s
- */
-
-struct fd_s
-{
-  int fd;
-  int flags;
-
-  inline void init();
-  void clear(interpreter_thread_s &it);
 };
 
 /*
@@ -46,28 +34,6 @@ struct mmap_s
   inline void init();
   void clear(interpreter_thread_s &it);
 };
-
-/*
- * inline methods of structure fd_s
- */
-
-inline void fd_s::init()
-{/*{{{*/
-  fd = -1;
-  flags = 0;
-}/*}}}*/
-
-inline void fd_s::clear(interpreter_thread_s &it)
-{/*{{{*/
-
-  // - close file descriptor -
-  if (fd != -1 && !(flags & FD_FLAG_NO_CLOSE))
-  {
-    close(fd);
-  }
-
-  init();
-}/*}}}*/
 
 /*
  * inline methods of structure mmap_s

@@ -6,15 +6,16 @@ include "linux_module.h"
 // - LINUX indexes of built in classes -
 unsigned c_bi_class_linux = c_idx_not_exist;
 unsigned c_bi_class_fd = c_idx_not_exist;
+unsigned c_bi_class_timer_fd = c_idx_not_exist;
 unsigned c_bi_class_mmap = c_idx_not_exist;
 
 // - LINUX module -
 EXPORT built_in_module_s module =
 {/*{{{*/
-  3,                     // Class count
+  4,                     // Class count
   linux_classes,         // Classes
   0,                     // Error base index
-  22,                    // Error count
+  26,                    // Error count
   linux_error_strings,   // Error strings
   linux_initialize,      // Initialize function
   linux_print_exception, // Print exceptions function
@@ -25,6 +26,7 @@ built_in_class_s *linux_classes[] =
 {/*{{{*/
   &linux_class,
   &fd_class,
+  &timer_fd_class,
   &mmap_class,
 };/*}}}*/
 
@@ -32,6 +34,7 @@ built_in_class_s *linux_classes[] =
 const char *linux_error_strings[] =
 {/*{{{*/
   "error_LINUX_SYSCONF_ERROR",
+  "error_FD_DUPLICATE_ERROR",
   "error_FD_OPEN_ERROR",
   "error_FD_CREATE_ERROR",
   "error_FD_CLOSE_ERROR",
@@ -46,6 +49,9 @@ const char *linux_error_strings[] =
   "error_FD_ADVISE_ERROR",
   "error_FD_SEEK_ERROR",
   "error_FD_NOT_OPENED",
+  "error_TIMER_FD_CREATE_ERROR",
+  "error_TIMER_FD_SETTIME_ERROR",
+  "error_TIMER_FD_EXP_COUNTER_READ_ERROR",
   "error_MMAP_INVALID_OFFSET",
   "error_MMAP_INVALID_LENGTH",
   "error_MMAP_CREATE_ERROR",
@@ -65,6 +71,9 @@ bool linux_initialize(script_parser_s &sp)
 
   // - initialize fd class identifier -
   c_bi_class_fd = class_base_idx++;
+
+  // - initialize timer_fd class identifier -
+  c_bi_class_timer_fd = class_base_idx++;
 
   // - initialize mmap class identifier -
   c_bi_class_mmap = class_base_idx++;
@@ -89,6 +98,15 @@ bool linux_print_exception(interpreter_s &it,exception_s &exception)
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nLinux sysconf error: ");
     errno = exception.params[0];
+    perror("");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FD_DUPLICATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot duplicate file descriptor %d: ",(int)exception.params[0]);
+    errno = exception.params[1];
     perror("");
     fprintf(stderr," ---------------------------------------- \n");
     break;
@@ -204,6 +222,27 @@ bool linux_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nFile descriptor is not opened\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TIMER_FD_CREATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while creating TimerFd\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TIMER_FD_SETTIME_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while setting TimerFd time\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TIMER_FD_EXP_COUNTER_READ_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while reading TimerFd expiration counter\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_MMAP_INVALID_OFFSET:
@@ -486,9 +525,9 @@ built_in_method_s fd_methods[] =
     bic_fd_operator_binary_equal
   },
   {
-    "Fd#2",
+    "Fd#1",
     c_modifier_public | c_modifier_final,
-    bic_fd_method_Fd_2
+    bic_fd_method_Fd_1
   },
   {
     "open#3",
@@ -979,17 +1018,16 @@ void bic_fd_consts(location_array_s &const_locations)
 
 void bic_fd_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (fd_s *)nullptr;
+  location_ptr->v_data_ptr = (int)-1;
 }/*}}}*/
 
 void bic_fd_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  fd_s *fd_ptr = (fd_s *)location_ptr->v_data_ptr;
+  int fd = (int)location_ptr->v_data_ptr;
 
-  if (fd_ptr != nullptr)
+  if (fd != -1)
   {
-    fd_ptr->clear(it);
-    cfree(fd_ptr);
+    close(fd);
   }
 }/*}}}*/
 
@@ -1005,29 +1043,44 @@ bool bic_fd_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,u
   return true;
 }/*}}}*/
 
-bool bic_fd_method_Fd_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_fd_method_Fd_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-@begin ucl_params
-<
-fd:retrieve_integer
-close:retrieve_integer
->
-method Fd
-; @end
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
-  // - create fd object -
-  fd_s *fd_ptr = (fd_s *)cmalloc(sizeof(fd_s));
-  fd_ptr->init();
+  long long int src_fd;
 
-  fd_ptr->fd = fd;
-
-  // - set no close flag if requested -
-  if (!close)
+  if (!it.retrieve_integer(src_0_location,src_fd))
   {
-    fd_ptr->flags |= FD_FLAG_NO_CLOSE;
+    if (src_0_location->v_type == c_bi_class_fd)
+    {
+      src_fd = (int)src_0_location->v_data_ptr;
+    }
+    else
+    {
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      BIC_EXCEPTION_PUSH_METHOD_RI("Fd#1");
+      new_exception->params.push(1);
+      new_exception->params.push(src_0_location->v_type);
+
+      return false;
+    }
   }
 
-  dst_location->v_data_ptr = (fd_s *)fd_ptr;
+  // - duplicate file descriptor -
+  int fd = dup(src_fd);
+
+  // - ERROR -
+  if (fd == -1)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FD_DUPLICATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(fd);
+    new_exception->params.push(errno);
+
+    return false;
+  }
+
+  dst_location->v_data_ptr = (int)fd;
 
   return true;
 }/*}}}*/
@@ -1057,13 +1110,7 @@ static_method
     return false;
   }
 
-  // - create fd object -
-  fd_s *fd_ptr = (fd_s *)cmalloc(sizeof(fd_s));
-  fd_ptr->init();
-
-  fd_ptr->fd = fd;
-
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_fd,fd_ptr);
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_fd,fd);
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -1093,13 +1140,7 @@ static_method
     return false;
   }
 
-  // - create fd object -
-  fd_s *fd_ptr = (fd_s *)cmalloc(sizeof(fd_s));
-  fd_ptr->init();
-
-  fd_ptr->fd = fd;
-
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_fd,fd_ptr);
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_fd,fd);
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -1116,11 +1157,11 @@ mode:retrieve_integer
 method openat
 ; @end
 
-  fd_s *dirfd_ptr = (fd_s *)dst_location->v_data_ptr;
+  int dirfd = (int)dst_location->v_data_ptr;
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
-  int fd = openat(dirfd_ptr->fd,string_ptr->data,flags,mode);
+  int fd = openat(dirfd,string_ptr->data,flags,mode);
   if (fd == -1)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FD_OPEN_ERROR,operands[c_source_pos_idx],src_0_location);
@@ -1129,13 +1170,7 @@ method openat
     return false;
   }
 
-  // - create fd object -
-  fd_s *fd_ptr = (fd_s *)cmalloc(sizeof(fd_s));
-  fd_ptr->init();
-
-  fd_ptr->fd = fd;
-
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_fd,fd_ptr);
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_fd,fd);
   BIC_SET_RESULT(new_location);
 
   return true;
@@ -1145,10 +1180,10 @@ bool bic_fd_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *ope
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  int fd = (int)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (close(fd_ptr->fd) == -1)
+  if (close(fd) == -1)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FD_CLOSE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(errno);
@@ -1157,7 +1192,7 @@ bool bic_fd_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *ope
   }
 
   // - reset file descriptor value -
-  fd_ptr->fd = -1;
+  dst_location->v_data_ptr = (int)-1;
 
   BIC_SET_RESULT_DESTINATION();
 
@@ -1174,7 +1209,7 @@ from:retrieve_integer
 method write
 ; @end
 
-  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  int fd = (int)dst_location->v_data_ptr;
 
   // - ERROR -
   if (from < 0 || from > data_size)
@@ -1186,7 +1221,7 @@ method write
   }
 
   // - write to file descriptor -
-  long int cnt = write(fd_ptr->fd,(const char *)data_ptr + from,data_size - from);
+  long int cnt = write(fd,(const char *)data_ptr + from,data_size - from);
 
   // - ERROR -
   if (cnt == -1)
@@ -1213,7 +1248,7 @@ data:retrieve_data_buffer
 method write_all
 ; @end
 
-  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  int fd = (int)dst_location->v_data_ptr;
 
   if (data_size > 0)
   {
@@ -1223,7 +1258,7 @@ method write_all
     do
     {
       // - ERROR -
-      if ((cnt = write(fd_ptr->fd,(const char *)data_ptr + writed,data_size - writed)) == -1)
+      if ((cnt = write(fd,(const char *)data_ptr + writed,data_size - writed)) == -1)
       {
         // - if interrupted by signal -
         if (errno == EINTR)
@@ -1260,7 +1295,7 @@ offset:retrieve_integer
 method pwrite
 ; @end
 
-  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  int fd = (int)dst_location->v_data_ptr;
 
   // - ERROR -
   if (from < 0 || from > data_size)
@@ -1272,7 +1307,7 @@ method pwrite
   }
 
   // - write to file descriptor -
-  long int cnt = pwrite(fd_ptr->fd,(const char *)data_ptr + from,data_size - from,offset);
+  long int cnt = pwrite(fd,(const char *)data_ptr + from,data_size - from,offset);
 
   // - ERROR -
   if (cnt == -1)
@@ -1300,7 +1335,7 @@ offset:retrieve_integer
 method pwrite_all
 ; @end
 
-  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  int fd = (int)dst_location->v_data_ptr;
 
   if (data_size > 0)
   {
@@ -1310,7 +1345,7 @@ method pwrite_all
     do
     {
       // - ERROR -
-      if ((cnt = pwrite(fd_ptr->fd,(const char *)data_ptr + writed,data_size - writed,offset + writed)) == -1)
+      if ((cnt = pwrite(fd,(const char *)data_ptr + writed,data_size - writed,offset + writed)) == -1)
       {
         // - if interrupted by signal -
         if (errno == EINTR)
@@ -1345,11 +1380,11 @@ data_array:c_bi_class_array
 method writev
 ; @end
 
-  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  int fd = (int)dst_location->v_data_ptr;
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
   BIC_FD_METHOD_WRITEV(
-    ssize_t cnt = writev(fd_ptr->fd,iov_data,array_ptr->used);
+    ssize_t cnt = writev(fd,iov_data,array_ptr->used);
   );
 }/*}}}*/
 
@@ -1365,11 +1400,11 @@ flags:retrieve_integer
 method pwritev2
 ; @end
 
-  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  int fd = (int)dst_location->v_data_ptr;
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
   BIC_FD_METHOD_WRITEV(
-    ssize_t cnt = pwritev2(fd_ptr->fd,iov_data,array_ptr->used,offset,flags);
+    ssize_t cnt = pwritev2(fd,iov_data,array_ptr->used,offset,flags);
   );
 }/*}}}*/
 #endif
@@ -1383,7 +1418,7 @@ count:retrieve_integer
 method read
 ; @end
 
-  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  int fd = (int)dst_location->v_data_ptr;
 
   // - ERROR -
   if (count < 0)
@@ -1397,7 +1432,7 @@ method read
   char *buffer = (char *)cmalloc(count + 1);
 
   // - read from file descriptor -
-  long int cnt = read(fd_ptr->fd,buffer,count);
+  long int cnt = read(fd,buffer,count);
 
   // - ERROR -
   if (cnt == -1)
@@ -1442,7 +1477,7 @@ offset:retrieve_integer
 method pread
 ; @end
 
-  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  int fd = (int)dst_location->v_data_ptr;
 
   // - ERROR -
   if (count < 0)
@@ -1456,7 +1491,7 @@ method pread
   char *buffer = (char *)cmalloc(count + 1);
 
   // - read from file descriptor -
-  long int cnt = pread(fd_ptr->fd,buffer,count,offset);
+  long int cnt = pread(fd,buffer,count,offset);
 
   // - ERROR -
   if (cnt == -1)
@@ -1500,11 +1535,11 @@ count_array:c_bi_class_array
 method readv
 ; @end
 
-  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  int fd = (int)dst_location->v_data_ptr;
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
   BIC_FD_METHOD_READV(
-    ssize_t cnt = readv(fd_ptr->fd,iov_data,array_ptr->used);
+    ssize_t cnt = readv(fd,iov_data,array_ptr->used);
   );
 }/*}}}*/
 
@@ -1520,11 +1555,11 @@ flags:retrieve_integer
 method preadv2
 ; @end
 
-  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  int fd = (int)dst_location->v_data_ptr;
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
   BIC_FD_METHOD_READV(
-    ssize_t cnt = preadv2(fd_ptr->fd,iov_data,array_ptr->used,offset,flags);
+    ssize_t cnt = preadv2(fd,iov_data,array_ptr->used,offset,flags);
   );
 }/*}}}*/
 #endif
@@ -1533,10 +1568,10 @@ bool bic_fd_method_sync_0(interpreter_thread_s &it,unsigned stack_base,uli *oper
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  int fd = (int)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (fsync(fd_ptr->fd) == -1)
+  if (fsync(fd) == -1)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FD_SYNC_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(errno);
@@ -1553,10 +1588,10 @@ bool bic_fd_method_datasync_0(interpreter_thread_s &it,unsigned stack_base,uli *
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  int fd = (int)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (fdatasync(fd_ptr->fd) == -1)
+  if (fdatasync(fd) == -1)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FD_SYNC_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(errno);
@@ -1578,10 +1613,10 @@ advice:retrieve_integer
 method advise
 ; @end
 
-  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  int fd = (int)dst_location->v_data_ptr;
 
   // - ERROR -
-  int error = posix_fadvise(fd_ptr->fd,0,0,advice);
+  int error = posix_fadvise(fd,0,0,advice);
   if (error != 0)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FD_ADVISE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -1605,9 +1640,9 @@ whence:retrieve_integer
 method seek
 ; @end
 
-  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  int fd = (int)dst_location->v_data_ptr;
 
-  long long int result = lseek(fd_ptr->fd,offset,whence);
+  long long int result = lseek(fd,offset,whence);
 
   // - ERROR -
   if (result == -1)
@@ -1635,7 +1670,7 @@ flags:retrieve_integer
 method mmap
 ; @end
 
-  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  int fd = (int)dst_location->v_data_ptr;
 
   // - ERROR -
   if (offset < 0 || offset % sysconf(_SC_PAGE_SIZE) != 0)
@@ -1655,7 +1690,7 @@ method mmap
     return false;
   }
 
-  void *mem_ptr = mmap(nullptr,length,prot,flags,fd_ptr->fd,offset);
+  void *mem_ptr = mmap(nullptr,length,prot,flags,fd,offset);
 
   // - ERROR -
   if (mem_ptr == MAP_FAILED)
@@ -1686,16 +1721,16 @@ bool bic_fd_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *op
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  fd_s *fd_ptr = (fd_s *)dst_location->v_data_ptr;
+  int fd = (int)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (fd_ptr->fd == -1)
+  if (fd == -1)
   {
     exception_s::throw_exception(it,module.error_base + c_error_FD_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
-  long long int result = fd_ptr->fd;
+  long long int result = fd;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
@@ -1714,6 +1749,273 @@ bool bic_fd_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli 
 bool bic_fd_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   printf("Fd");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class TIMER_FD -
+built_in_class_s timer_fd_class =
+{/*{{{*/
+  "TimerFd",
+  c_modifier_public | c_modifier_final,
+  7, timer_fd_methods,
+  4 + 2 + 2, timer_fd_variables,
+  bic_timer_fd_consts,
+  bic_timer_fd_init,
+  bic_timer_fd_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s timer_fd_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_timer_fd_operator_binary_equal
+  },
+  {
+    "TimerFd#2",
+    c_modifier_public | c_modifier_final,
+    bic_timer_fd_method_TimerFd_2
+  },
+  {
+    "settime#3",
+    c_modifier_public | c_modifier_final,
+    bic_timer_fd_method_settime_3
+  },
+  {
+    "read_counter#0",
+    c_modifier_public | c_modifier_final,
+    bic_timer_fd_method_read_counter_0
+  },
+  {
+    "get_fd#0",
+    c_modifier_public | c_modifier_final,
+    bic_timer_fd_method_get_fd_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_timer_fd_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_timer_fd_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s timer_fd_variables[] =
+{/*{{{*/
+
+  // - clock type values -
+  { "CLOCK_REALTIME", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "CLOCK_MONOTONIC", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "CLOCK_PROCESS_CPUTIME_ID", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "CLOCK_THREAD_CPUTIME_ID", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - timerfd create flags -
+  { "TFD_NONBLOCK", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TFD_CLOEXEC", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - timerfd settime flags -
+  { "TFD_TIMER_ABSTIME", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TFD_TIMER_CANCEL_ON_SET", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+};/*}}}*/
+
+void bic_timer_fd_consts(location_array_s &const_locations)
+{/*{{{*/
+
+  // - insert clock type values -
+  {
+    const_locations.push_blanks(4);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 4);
+
+#define CREATE_TIMERFD_CLOCK_TYPE_ID_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_TIMERFD_CLOCK_TYPE_ID_BIC_STATIC(CLOCK_REALTIME);
+    CREATE_TIMERFD_CLOCK_TYPE_ID_BIC_STATIC(CLOCK_MONOTONIC);
+    CREATE_TIMERFD_CLOCK_TYPE_ID_BIC_STATIC(CLOCK_PROCESS_CPUTIME_ID);
+    CREATE_TIMERFD_CLOCK_TYPE_ID_BIC_STATIC(CLOCK_THREAD_CPUTIME_ID);
+  }
+
+  // - insert timerfd create flags -
+  {
+    const_locations.push_blanks(2);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 2);
+
+#define CREATE_TIMERFD_CREATE_FLAG_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_TIMERFD_CREATE_FLAG_BIC_STATIC(TFD_NONBLOCK);
+    CREATE_TIMERFD_CREATE_FLAG_BIC_STATIC(TFD_CLOEXEC);
+  }
+
+  // - insert timerfd settime flags -
+  {
+    const_locations.push_blanks(2);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 2);
+
+#define CREATE_TIMERFD_SETTIME_FLAG_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_TIMERFD_SETTIME_FLAG_BIC_STATIC(TFD_TIMER_ABSTIME);
+    CREATE_TIMERFD_SETTIME_FLAG_BIC_STATIC(TFD_TIMER_CANCEL_ON_SET);
+  }
+
+}/*}}}*/
+
+void bic_timer_fd_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (int)-1;
+}/*}}}*/
+
+void bic_timer_fd_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  int fd = (int)location_ptr->v_data_ptr;
+
+  if (fd != -1)
+  {
+    close(fd);
+  }
+}/*}}}*/
+
+bool bic_timer_fd_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_timer_fd_method_TimerFd_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+clock_id:retrieve_integer
+flags:retrieve_integer
+>
+method TimerFd
+; @end
+
+  int fd = timerfd_create(clock_id,flags);
+
+  // - ERROR -
+  if (fd == -1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TIMER_FD_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  dst_location->v_data_ptr = (int)fd;
+
+  return true;
+}/*}}}*/
+
+bool bic_timer_fd_method_settime_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+interval:retrieve_integer
+value:retrieve_integer
+flags:retrieve_integer
+>
+method settime
+; @end
+
+  int fd = (int)dst_location->v_data_ptr;
+
+  itimerspec itspec;
+
+  // - fill timer time structure -
+  itspec.it_interval.tv_sec = interval/1000000000ULL;
+  itspec.it_interval.tv_nsec = interval%1000000000ULL;
+  itspec.it_value.tv_sec = value/1000000000ULL;
+  itspec.it_value.tv_nsec = value%1000000000ULL;
+
+  // - ERROR -
+  if (timerfd_settime(fd,flags,&itspec,NULL) != 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TIMER_FD_SETTIME_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_timer_fd_method_read_counter_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  int fd = (int)dst_location->v_data_ptr;
+
+  // - ERROR -
+  long long unsigned exp_counter;
+  if (read(fd,&exp_counter,sizeof(exp_counter)) != sizeof(exp_counter))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TIMER_FD_EXP_COUNTER_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  long long int result = exp_counter;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_timer_fd_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = (int)dst_location->v_data_ptr;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_timer_fd_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("TimerFd"),"TimerFd")
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_timer_fd_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("TimerFd");
 
   BIC_SET_RESULT_BLANK();
 
