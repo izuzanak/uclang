@@ -141,10 +141,17 @@ bool logger_s::write(unsigned a_level,const string_s &a_message)
 {/*{{{*/
   buffer.used = 0;
 
-  // FIXME TODO format time, user, level
-  buffer.append(5,"xxx: ");
+  // - retrieve time -
+  timeval tv;
+  datetime_s datetime;
 
-  buffer.append_format("%s\n",a_message.data);
+  gettimeofday(&tv,nullptr);
+  datetime.from_nanosec(tv.tv_sec*1000000000ULL + tv.tv_usec*1000ULL);
+
+  // - format log record -
+  buffer.append_format("%4.4hu/%2.2hu/%2.2hu %2.2hu:%2.2hu:%2.2hu.%3.3u %u %s: %s\n",
+    datetime.year,datetime.month,datetime.day,datetime.hour,datetime.min,datetime.sec,
+    tv.tv_usec/1000,a_level,user.data,a_message.data);
 
   // - write ok flag -
   bool write_ok = true;

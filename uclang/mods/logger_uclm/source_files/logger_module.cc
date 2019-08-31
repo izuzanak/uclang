@@ -12,7 +12,7 @@ EXPORT built_in_module_s module =
   1,                      // Class count
   logger_classes,         // Classes
   0,                      // Error base index
-  1,                      // Error count
+  4,                      // Error count
   logger_error_strings,   // Error strings
   logger_initialize,      // Initialize function
   logger_print_exception, // Print exceptions function
@@ -27,7 +27,10 @@ built_in_class_s *logger_classes[] =
 // - LOGGER error strings -
 const char *logger_error_strings[] =
 {/*{{{*/
-  "error_LOGGER_DUMMY_ERROR",
+  "error_LOGGER_ADD_FILE_INVALID_PARAMETERS",
+  "error_LOGGER_ADD_FILE_ERROR",
+  "error_LOGGER_WRITE_INVALID_LOG_LEVEL",
+  "error_LOGGER_WRITE_ERROR",
 };/*}}}*/
 
 // - LOGGER initialize -
@@ -52,11 +55,32 @@ bool logger_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_LOGGER_DUMMY_ERROR:
+  case c_error_LOGGER_ADD_FILE_INVALID_PARAMETERS:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nLogger dummy error\n");
+    fprintf(stderr,"\nLogger, invalid parameters of file being added\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_LOGGER_ADD_FILE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nLogger, error while adding file\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_LOGGER_WRITE_INVALID_LOG_LEVEL:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nLogger, invalid write log level\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_LOGGER_WRITE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nLogger, write error\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -203,19 +227,16 @@ method add_file
   string_s *string_ptr = (string_s *)src_1_location->v_data_ptr;
 
   // - ERROR -
-  if (level < 0 || max_size < 4096 || max_count < 1 ||
-      max_size > UINT_MAX || max_count > UINT_MAX)
+  if (level < 0 || max_size < 4096 || max_count < 1 || max_size > UINT_MAX || max_count > UINT_MAX)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_LOGGER_ADD_FILE_INVALID_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
   // - ERROR -
   if (!logger_ptr->add_file(level,*string_ptr,max_size,max_count))
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_LOGGER_ADD_FILE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -240,15 +261,13 @@ method write
   // - ERROR -
   if (level < 0)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_LOGGER_WRITE_INVALID_LOG_LEVEL,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
   if (!logger_ptr->write(level,*string_ptr))
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_LOGGER_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 

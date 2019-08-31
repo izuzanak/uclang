@@ -18,7 +18,10 @@ extern built_in_class_s *logger_classes[];
 // - LOGGER error identifiers -
 enum
 {
-  c_error_LOGGER_DUMMY_ERROR = 0,
+  c_error_LOGGER_ADD_FILE_INVALID_PARAMETERS = 0,
+  c_error_LOGGER_ADD_FILE_ERROR,
+  c_error_LOGGER_WRITE_INVALID_LOG_LEVEL,
+  c_error_LOGGER_WRITE_ERROR,
 };
 
 // - LOGGER error strings -
