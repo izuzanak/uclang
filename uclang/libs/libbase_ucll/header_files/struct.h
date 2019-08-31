@@ -22,6 +22,12 @@ additions
   // - append characters to the end of character buffer -
   inline void append(unsigned a_count,const char *a_data);
 
+  // - append formatted characters to the end of character buffer -
+  void append_format_ap(const char *a_format,va_list a_ap);
+
+  // - append formatted characters to the end of character buffer -
+  inline void append_format(const char *a_format,...);
+
   // - retrieve data from end of buffer -
   inline void from_end(unsigned a_count,char *a_trg,bool a_order_bytes);
 }
@@ -296,6 +302,14 @@ inline void bc_array_s::append(unsigned a_count,const char *a_data)
   unsigned old_used = used;
   push_blanks(a_count);
   memcpy(data + old_used,a_data,a_count);
+}/*}}}*/
+
+inline void bc_array_s::append_format(const char *a_format,...)
+{/*{{{*/
+  va_list ap;
+  va_start(ap,a_format);
+  append_format_ap(a_format,ap);
+  va_end(ap);
 }/*}}}*/
 
 inline void bc_array_s::from_end(unsigned a_count,char *a_trg,bool a_order_bytes)

@@ -15,6 +15,7 @@ C_MODULE_BASE       = index; index += 1
 C_MODULE_SYS        = index; index += 1
 C_MODULE_LINUX      = index; index += 1
 C_MODULE_SERIAL     = index; index += 1
+C_MODULE_LOGGER     = index; index += 1
 C_MODULE_EPOLL      = index; index += 1
 C_MODULE_INOTIFY    = index; index += 1
 C_MODULE_READLINE   = index; index += 1
@@ -134,6 +135,7 @@ c_cfg = [
     ["MOD_SYS"       ,c_enabled[C_MODULE_SYS]       ,C_UCLANG_DIR + "mods/sys_uclm"         ,None],
     ["MOD_LINUX"     ,c_enabled[C_MODULE_LINUX]     ,C_UCLANG_DIR + "mods/linux_uclm"       ,None],
     ["MOD_SERIAL"    ,c_enabled[C_MODULE_SERIAL]    ,C_UCLANG_DIR + "mods/serial_uclm"      ,None],
+    ["MOD_LOGGER"    ,c_enabled[C_MODULE_LOGGER]    ,C_UCLANG_DIR + "mods/logger_uclm"      ,None],
     ["MOD_EPOLL"     ,c_enabled[C_MODULE_EPOLL]     ,C_UCLANG_DIR + "mods/epoll_uclm"       ,None],
     ["MOD_INOTIFY"   ,c_enabled[C_MODULE_INOTIFY]   ,C_UCLANG_DIR + "mods/inotify_uclm"     ,None],
     ["MOD_READLINE"  ,c_enabled[C_MODULE_READLINE]  ,C_UCLANG_DIR + "mods/readline_uclm"    ,None],

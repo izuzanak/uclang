@@ -12,6 +12,33 @@ include "struct.h"
 methods bc_array_s
 @end
 
+void bc_array_s::append_format_ap(const char *a_format,va_list a_ap)
+{/*{{{*/
+  int reserved = size - used;
+
+  va_list ap;
+  va_copy(ap,a_ap);
+  int length = vsnprintf(data + used,reserved,a_format,ap);
+  va_end(ap);
+
+  if (length < reserved)
+  {
+    used += length;
+  }
+  else
+  {
+    unsigned old_used = used;
+
+    unsigned size = length + 1;
+    push_blanks(size);
+
+    vsnprintf(data + old_used,size,a_format,a_ap);
+
+    // - remove terminating character -
+    --used;
+  }
+}/*}}}*/
+
 // -- bi_array_s --
 @begin
 methods bi_array_s
