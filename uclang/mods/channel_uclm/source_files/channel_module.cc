@@ -74,7 +74,7 @@ built_in_class_s channel_server_class =
 {/*{{{*/
   "ChannelServer",
   c_modifier_public | c_modifier_final,
-  5, channel_server_methods,
+  6, channel_server_methods,
   0, channel_server_variables,
   bic_channel_server_consts,
   bic_channel_server_init,
@@ -108,6 +108,11 @@ built_in_method_s channel_server_methods[] =
     "get_fds#0",
     c_modifier_public | c_modifier_final,
     bic_channel_server_method_get_fds_0
+  },
+  {
+    "process#2",
+    c_modifier_public | c_modifier_final,
+    bic_channel_server_method_process_2
   },
   {
     "to_string#0",
@@ -244,6 +249,116 @@ bool bic_channel_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
   BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_channel_server_method_process_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+fd:retrieve_integer
+events:retrieve_integer
+>
+method process
+; @end
+
+  channel_server_s *cs_ptr = (channel_server_s *)dst_location->v_data_ptr;
+
+  if (fd == cs_ptr->server_fd)
+  {
+    socklen_t addr_len = sizeof(struct sockaddr_in);
+    sockaddr_in address;
+
+    // - ERROR -
+    int conn_fd = accept(cs_ptr->server_fd,(struct sockaddr *)&address,&addr_len);
+    if (conn_fd < 0)
+    {
+      // FIXME TODO throw proper exception
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+      return false;
+    }
+
+    // - ERROR -
+    if (addr_len != sizeof(struct sockaddr_in))
+    {
+      close(conn_fd);
+
+      // FIXME TODO throw proper exception
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+      return false;
+    }
+
+    // - create new connection -
+    unsigned conn_index = cs_ptr->conn_list.append_blank();
+
+    channel_conn_s &conn = cs_ptr->conn_list[conn_index];
+    conn.init_static();
+
+    conn.conn_fd = conn_fd;
+    conn.events = POLLIN | POLLPRI;
+
+    ((location_s *)cs_ptr->message_callback)->v_reference_cnt.atomic_inc();
+    conn.message_callback = cs_ptr->message_callback;
+
+    conn.user_data = it.get_new_reference((location_s **)&cs_ptr->user_data);
+    conn.conn_index = conn_index;
+
+    // - update fd connection map -
+    fd_conn_map_s fd_conn_map = {conn_fd,conn_index};
+    cs_ptr->fd_conn_map.insert(fd_conn_map);
+
+    // FIXME TODO call new connection callback
+    fprintf(stderr,"CALLBACK: NEW CONNECTION\n");
+  }
+  else
+  {
+    fd_conn_map_s search_fd_conn_map = {(int)fd,0};
+    unsigned fd_conn_map_index = cs_ptr->fd_conn_map.get_idx(search_fd_conn_map);
+
+    // - ERROR -
+    if (fd_conn_map_index == c_idx_not_exist)
+    {
+      // FIXME TODO throw proper exception
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+      return false;
+    }
+
+    unsigned conn_index = cs_ptr->fd_conn_map[fd_conn_map_index].conn_index;
+    channel_conn_s &conn = cs_ptr->conn_list[conn_index];
+    unsigned conn_events = conn.events & events;
+
+    if (conn_events & POLLOUT)
+    {
+      if (!conn.send_msg(it))
+      {
+        // FIXME TODO call new connection callback
+        fprintf(stderr,"CALLBACK: DROP CONNECTION\n");
+
+        conn.clear(it);
+        cs_ptr->conn_list.remove(conn_index);
+        cs_ptr->fd_conn_map.remove(fd_conn_map_index);
+
+        // - reset conn_events -
+        conn_events = 0;
+      }
+    }
+
+    if (conn_events & POLLIN)
+    {
+      if (!conn.recv_msg(it))
+      {
+        // FIXME TODO call new connection callback
+        fprintf(stderr,"CALLBACK: DROP CONNECTION\n");
+
+        conn.clear(it);
+        cs_ptr->conn_list.remove(conn_index);
+        cs_ptr->fd_conn_map.remove(fd_conn_map_index);
+      }
+    }
+  }
+
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

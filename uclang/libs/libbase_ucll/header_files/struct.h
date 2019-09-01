@@ -30,6 +30,9 @@ additions
 
   // - retrieve data from end of buffer -
   inline void from_end(unsigned a_count,char *a_trg,bool a_order_bytes);
+
+  // - move data from buffer tail to its begin (drop head) -
+  inline void tail(unsigned a_count);
 }
 
 bc_array_s;
@@ -319,6 +322,27 @@ inline void bc_array_s::from_end(unsigned a_count,char *a_trg,bool a_order_bytes
   unsigned new_used = used - a_count;
   memcpy_bo(a_trg,data + new_used,a_count,a_order_bytes);
   used = new_used;
+}/*}}}*/
+
+inline void bc_array_s::tail(unsigned a_count)
+{/*{{{*/
+  debug_assert(a_count <= used);
+
+  if (a_count != 0)
+  {
+    unsigned begin = used - a_count;
+
+    if (begin < a_count)
+    {
+      memmove(data,data + begin,a_count);
+    }
+    else
+    {
+      memcpy(data,data + begin,a_count);
+    }
+  }
+
+  used = a_count;
 }/*}}}*/
 
 // -- bi_array_s --

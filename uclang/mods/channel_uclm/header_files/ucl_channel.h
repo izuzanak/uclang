@@ -8,6 +8,7 @@ include "script_parser.h"
 
 #include <netdb.h>
 #include <poll.h>
+#include <sys/ioctl.h>
 
 /*
  * definition of generated structures
@@ -49,6 +50,9 @@ ui:out_msg_offset
 
 additions
 {
+  bool send_msg(interpreter_thread_s &it);
+  bool recv_msg(interpreter_thread_s &it);
+
   inline void init_static();
   inline void clear(interpreter_thread_s &it);
 }
@@ -144,6 +148,7 @@ inline void channel_conn_s::clear(interpreter_thread_s &it)
     it.release_location_ptr((location_s *)user_data);
   }
 
+  // - release not send output messages  -
   while (out_msg_queue.used != 0)
   {
     it.release_location_ptr((location_s *)out_msg_queue.next());
@@ -207,6 +212,8 @@ inline void channel_server_s::clear(interpreter_thread_s &it)
     unsigned cl_idx = conn_list.first_idx;
     do {
       conn_list[cl_idx].clear(it);
+
+      cl_idx = conn_list.next_idx(cl_idx);
     } while(cl_idx != c_idx_not_exist);
   }
 
