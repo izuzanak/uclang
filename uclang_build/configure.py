@@ -20,6 +20,7 @@ c_packages = [
   ["MOD_LINUX"     ,"linux_uclm"     ,"true"      ,[]],
   ["MOD_SERIAL"    ,"serial_uclm"    ,"files"     ,["/usr/include/termios.h"]],
   ["MOD_LOGGER"    ,"logger_uclm"    ,"true"      ,[]],
+  ["MOD_CHANNEL"   ,"channel_uclm"   ,"true"      ,[]],
   ["MOD_EPOLL"     ,"epoll_uclm"     ,"files"     ,["/usr/include/sys/epoll.h"]],
   ["MOD_INOTIFY"   ,"inotify_uclm"   ,"files"     ,["/usr/include/sys/inotify.h"]],
   ["MOD_READLINE"  ,"readline_uclm"  ,"files"     ,["/usr/include/readline/readline.h"]],
