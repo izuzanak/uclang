@@ -11,6 +11,38 @@ include "script_parser.h"
 #include <sys/ioctl.h>
 
 /*
+ * basic definitions and constants
+ */
+
+#define CHANNEL_SERVER_CALL_CALLBACK_DELEGATE(NAME,PARAM_DATA,PARAM_CNT,PARAM_CODE,ERROR_CODE) \
+{/*{{{*/\
+  delegate_s *delegate_ptr = (delegate_s *)((location_s *)cs_ptr->NAME)->v_data_ptr;\
+\
+  PARAM_CODE;\
+\
+  /* - call delegate method - */\
+  location_s *trg_location = nullptr;\
+  BIC_CALL_DELEGATE(it,delegate_ptr,PARAM_DATA,PARAM_CNT,trg_location,operands[c_source_pos_idx],\
+    ERROR_CODE;\
+  );\
+  it.release_location_ptr(trg_location);\
+}/*}}}*/
+
+#define CHANNEL_CONNECTION_CALL_CALLBACK_DELEGATE(NAME,PARAM_DATA,PARAM_CNT,PARAM_CODE,ERROR_CODE) \
+{/*{{{*/\
+  delegate_s *delegate_ptr = (delegate_s *)((location_s *)NAME)->v_data_ptr;\
+\
+  PARAM_CODE;\
+\
+  /* - call delegate method - */\
+  location_s *trg_location = nullptr;\
+  BIC_CALL_DELEGATE(it,delegate_ptr,PARAM_DATA,PARAM_CNT,trg_location,a_source_pos,\
+    ERROR_CODE;\
+  );\
+  it.release_location_ptr(trg_location);\
+}/*}}}*/
+
+/*
  * definition of generated structures
  */
 
@@ -51,7 +83,7 @@ ui:out_msg_offset
 additions
 {
   bool send_msg(interpreter_thread_s &it);
-  bool recv_msg(interpreter_thread_s &it);
+  bool recv_msg(interpreter_thread_s &it,location_s *dst_location,unsigned a_source_pos);
 
   inline void init_static();
   inline void clear(interpreter_thread_s &it);
@@ -62,7 +94,7 @@ channel_conn_s;
 
 // -- channel_conn_list_s --
 @begin
-list<channel_conn_s> channel_conn_list_s;
+safe_list<channel_conn_s> channel_conn_list_s;
 @end
 
 // -- channel_server_s --
@@ -80,12 +112,6 @@ fd_conn_map_tree_s:fd_conn_map
 
 additions
 {
-  bool create(const string_s &a_ip,unsigned short a_port,
-      location_s *a_new_callback,
-      location_s *a_drop_callback,
-      location_s *a_message_callback,
-      location_s *a_user_data);
-
   inline void init_static();
   inline void clear(interpreter_thread_s &it);
 }

@@ -18,7 +18,7 @@ extern built_in_class_s *channel_classes[];
 // - CHANNEL error identifiers -
 enum
 {
-  c_error_CHANNEL_DUMMY_ERROR = 0,
+  c_error_CHANNEL_SERVER_DUMMY_ERROR = 0,
 };
 
 // - CHANNEL error strings -
@@ -43,6 +43,8 @@ bool bic_channel_server_operator_binary_equal(interpreter_thread_s &it,unsigned 
 bool bic_channel_server_method_ChannelServer_6(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_server_method_process_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_channel_server_method_message_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_channel_server_method_multi_message_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_server_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_server_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

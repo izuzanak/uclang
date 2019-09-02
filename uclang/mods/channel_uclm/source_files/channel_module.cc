@@ -27,7 +27,7 @@ built_in_class_s *channel_classes[] =
 // - CHANNEL error strings -
 const char *channel_error_strings[] =
 {/*{{{*/
-  "error_CHANNEL_DUMMY_ERROR",
+  "error_CHANNEL_SERVER_DUMMY_ERROR",
 };/*}}}*/
 
 // - CHANNEL initialize -
@@ -52,11 +52,11 @@ bool channel_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_CHANNEL_DUMMY_ERROR:
+  case c_error_CHANNEL_SERVER_DUMMY_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nLogger, invalid parameters of file being added\n");
+    fprintf(stderr,"\nChannel server dummy error\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -74,7 +74,7 @@ built_in_class_s channel_server_class =
 {/*{{{*/
   "ChannelServer",
   c_modifier_public | c_modifier_final,
-  6, channel_server_methods,
+  8, channel_server_methods,
   0, channel_server_variables,
   bic_channel_server_consts,
   bic_channel_server_init,
@@ -113,6 +113,16 @@ built_in_method_s channel_server_methods[] =
     "process#2",
     c_modifier_public | c_modifier_final,
     bic_channel_server_method_process_2
+  },
+  {
+    "message#2",
+    c_modifier_public | c_modifier_final,
+    bic_channel_server_method_message_2
+  },
+  {
+    "multi_message#2",
+    c_modifier_public | c_modifier_final,
+    bic_channel_server_method_multi_message_2
   },
   {
     "to_string#0",
@@ -174,28 +184,97 @@ drop_delegate:c_bi_class_delegate
 message_delegate:c_bi_class_delegate
 user_data:ignore
 >
-method Logger
+method ChannelServer
 ; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-
-  // FIXME TODO check delegates
-
-  // - create logger object -
-  channel_server_s *cs_ptr = (channel_server_s *)cmalloc(sizeof(channel_server_s));
-  cs_ptr->init();
-  cs_ptr->init_static();
+  delegate_s *new_delegate = (delegate_s *)src_2_location->v_data_ptr;
+  delegate_s *drop_delegate = (delegate_s *)src_3_location->v_data_ptr;
+  delegate_s *message_delegate = (delegate_s *)src_4_location->v_data_ptr;
 
   // - ERROR -
-  if (!cs_ptr->create(*string_ptr,port,src_2_location,src_3_location,src_4_location,src_5_location))
+  if (new_delegate->param_cnt != 2 ||
+      drop_delegate->param_cnt != 2 ||
+      message_delegate->param_cnt != 3)
   {
-    cs_ptr->clear(it);
-    cfree(cs_ptr);
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  sockaddr_in address;
+
+  // - retrieve host by name address -
+  struct hostent *host = gethostbyname(string_ptr->data);
+
+  // - ERROR -
+  if (host == NULL)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  memcpy(&address.sin_addr.s_addr,host->h_addr,host->h_length);
+  address.sin_port = htons(port);
+  address.sin_family = AF_INET;
+
+  // - create socket -
+  int fd = socket(AF_INET,SOCK_STREAM,0);
+
+  // - ERROR -
+  if (fd == -1)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - set server socket as reusable -
+  int yes = 1;
+  setsockopt(fd,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(int));
+
+  // - ERROR -
+  if (bind(fd,(struct sockaddr *)&address,sizeof(struct sockaddr_in)) != 0)
+  {
+    close(fd);
 
     // FIXME TODO throw proper exception
     BIC_TODO_ERROR(__FILE__,__LINE__);
     return false;
   }
+
+  // - ERROR -
+  if (listen(fd,256) != 0)
+  {
+    close(fd);
+
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - create channel_server object -
+  channel_server_s *cs_ptr = (channel_server_s *)cmalloc(sizeof(channel_server_s));
+  cs_ptr->init();
+  cs_ptr->init_static();
+
+  // - set server file descriptor -
+  cs_ptr->server_fd = fd;
+
+  // - retrieve callbacks -
+  src_2_location->v_reference_cnt.atomic_inc();
+  cs_ptr->new_callback = src_2_location;
+
+  src_3_location->v_reference_cnt.atomic_inc();
+  cs_ptr->drop_callback = src_3_location;
+
+  src_4_location->v_reference_cnt.atomic_inc();
+  cs_ptr->message_callback = src_4_location;
+
+  // - retrieve user data -
+  src_5_location->v_reference_cnt.atomic_inc();
+  cs_ptr->user_data = src_5_location;
 
   // - set destination data pointer -
   dst_location->v_data_ptr = (channel_server_s *)cs_ptr;
@@ -306,10 +385,22 @@ method process
 
     // - update fd connection map -
     fd_conn_map_s fd_conn_map = {conn_fd,conn_index};
-    cs_ptr->fd_conn_map.insert(fd_conn_map);
+    unsigned fd_conn_map_index = cs_ptr->fd_conn_map.insert(fd_conn_map);
 
-    // FIXME TODO call new connection callback
-    fprintf(stderr,"CALLBACK: NEW CONNECTION\n");
+    // - call new connection callback -
+    CHANNEL_SERVER_CALL_CALLBACK_DELEGATE(new_callback,param_data,param_cnt,
+      BIC_CREATE_NEW_LOCATION_REFS(conn_index_loc,c_bi_class_integer,conn_index,0);
+
+      const unsigned param_cnt = 2;
+      pointer param_data[param_cnt] = {dst_location MP_COMMA conn_index_loc};
+    ,
+      // - drop connection without callback -
+      conn.clear(it);
+      cs_ptr->conn_list.remove(conn_index);
+      cs_ptr->fd_conn_map.remove(fd_conn_map_index);
+
+      return false;
+    );
   }
   else
   {
@@ -326,18 +417,19 @@ method process
 
     unsigned conn_index = cs_ptr->fd_conn_map[fd_conn_map_index].conn_index;
     channel_conn_s &conn = cs_ptr->conn_list[conn_index];
+
+    // - mask events with connection events -
     unsigned conn_events = conn.events & events;
+
+    // - drop connection flag -
+    bool drop_connection = false;
 
     if (conn_events & POLLOUT)
     {
       if (!conn.send_msg(it))
       {
-        // FIXME TODO call new connection callback
-        fprintf(stderr,"CALLBACK: DROP CONNECTION\n");
-
-        conn.clear(it);
-        cs_ptr->conn_list.remove(conn_index);
-        cs_ptr->fd_conn_map.remove(fd_conn_map_index);
+        // - set drop connection flag -
+        drop_connection = true;
 
         // - reset conn_events -
         conn_events = 0;
@@ -346,16 +438,151 @@ method process
 
     if (conn_events & POLLIN)
     {
-      if (!conn.recv_msg(it))
+      if (!conn.recv_msg(it,dst_location,operands[c_source_pos_idx]))
       {
-        // FIXME TODO call new connection callback
-        fprintf(stderr,"CALLBACK: DROP CONNECTION\n");
-
-        conn.clear(it);
-        cs_ptr->conn_list.remove(conn_index);
-        cs_ptr->fd_conn_map.remove(fd_conn_map_index);
+        // - set drop connection flag -
+        drop_connection = true;
       }
     }
+
+    // - drop connection flag is set -
+    if (drop_connection)
+    {
+      // - call drop connection callback -
+      CHANNEL_SERVER_CALL_CALLBACK_DELEGATE(drop_callback,param_data,param_cnt,
+        BIC_CREATE_NEW_LOCATION_REFS(conn_index_loc,c_bi_class_integer,conn_index,0);
+
+        const unsigned param_cnt = 2;
+        pointer param_data[param_cnt] = {dst_location MP_COMMA conn_index_loc};
+      ,
+      );
+
+      // - drop connection -
+      conn.clear(it);
+      cs_ptr->conn_list.remove(conn_index);
+      cs_ptr->fd_conn_map.remove(fd_conn_map_index);
+
+      // - drop due to exception -
+      if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+      {
+        return false;
+      }
+    }
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_channel_server_method_message_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+conn_index:retrieve_integer
+message:c_bi_class_string
+>
+method process
+; @end
+
+  channel_server_s *cs_ptr = (channel_server_s *)dst_location->v_data_ptr;
+  string_s *message_ptr = (string_s *)src_1_location->v_data_ptr;
+
+  // - ERROR -
+  if (conn_index >= cs_ptr->conn_list.used || !cs_ptr->conn_list.data[conn_index].valid)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - create message length string -
+  string_s *length_ptr = it.get_new_string_ptr();
+  length_ptr->setf("0x%8.8x;",message_ptr->size - 1);
+
+  BIC_CREATE_NEW_LOCATION(length_location,c_bi_class_string,length_ptr);
+
+  channel_conn_s &conn = cs_ptr->conn_list[conn_index];
+
+  // - insert length of message to queue -
+  conn.out_msg_queue.insert(length_location);
+
+  // - insert message to queue -
+  src_1_location->v_reference_cnt.atomic_inc();
+  conn.out_msg_queue.insert(src_1_location);
+
+  // - update connection events -
+  conn.events = POLLIN | POLLPRI | POLLOUT;
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_channel_server_method_multi_message_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+conn_array:c_bi_class_array
+message:c_bi_class_string
+>
+method process
+; @end
+
+  channel_server_s *cs_ptr = (channel_server_s *)dst_location->v_data_ptr;
+  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+  string_s *message_ptr = (string_s *)src_1_location->v_data_ptr;
+
+  if (array_ptr->used != 0)
+  {
+    // - create message length string -
+    string_s *length_ptr = it.get_new_string_ptr();
+    length_ptr->setf("0x%8.8x;",message_ptr->size - 1);
+
+    BIC_CREATE_NEW_LOCATION_REFS(length_location,c_bi_class_string,length_ptr,1);
+
+    // - process connection array -
+    pointer *ptr = array_ptr->data;
+    pointer *ptr_end = ptr + array_ptr->used;
+    do {
+      location_s *item_location = it.get_location_value(*ptr);
+
+      long long int conn_index;
+
+      // - ERROR -
+      if (!it.retrieve_integer(item_location,conn_index))
+      {
+        it.release_location_ptr(length_location);
+
+        // FIXME TODO throw proper exception
+        BIC_TODO_ERROR(__FILE__,__LINE__);
+        return false;
+      }
+
+      // - ERROR -
+      if (conn_index >= cs_ptr->conn_list.used || !cs_ptr->conn_list.data[conn_index].valid)
+      {
+        // FIXME TODO throw proper exception
+        BIC_TODO_ERROR(__FILE__,__LINE__);
+        return false;
+      }
+
+      channel_conn_s &conn = cs_ptr->conn_list[conn_index];
+
+      // - insert length of message to queue -
+      length_location->v_reference_cnt.atomic_inc();
+      conn.out_msg_queue.insert(length_location);
+
+      // - insert message to queue -
+      src_1_location->v_reference_cnt.atomic_inc();
+      conn.out_msg_queue.insert(src_1_location);
+
+      // - update connection events -
+      conn.events = POLLIN | POLLPRI | POLLOUT;
+
+    } while(++ptr < ptr_end);
+
+    it.release_location_ptr(length_location);
   }
 
   BIC_SET_RESULT_DESTINATION();
