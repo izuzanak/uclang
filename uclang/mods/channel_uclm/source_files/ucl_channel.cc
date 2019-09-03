@@ -129,15 +129,33 @@ bool channel_conn_s::recv_msg(interpreter_thread_s &it,location_s *dst_location,
       debug_message_6(fprintf(stderr,"recevived message: %.*s\n",in_msg_length,in_msg.data + msg_offset));
 
       // - call message callback -
-      CHANNEL_CONNECTION_CALL_CALLBACK_DELEGATE(message_callback,param_data,param_cnt,
-        BIC_CREATE_NEW_LOCATION_REFS(conn_index_loc,c_bi_class_integer,conn_index,0);
+      CHANNEL_CALL_CALLBACK_DELEGATE(message_callback,a_source_pos,
 
         string_s *string_ptr = it.get_new_string_ptr();
         string_ptr->set(in_msg_length,in_msg.data + msg_offset);
         BIC_CREATE_NEW_LOCATION_REFS(message_loc,c_bi_class_string,string_ptr,0);
 
-        const unsigned param_cnt = 3;
-        pointer param_data[param_cnt] = {dst_location MP_COMMA conn_index_loc MP_COMMA message_loc};
+        unsigned param_cnt;
+        pointer param_data[3];
+
+        // - server callback -
+        if (dst_location->v_type == c_bi_class_channel_server)
+        {
+          BIC_CREATE_NEW_LOCATION_REFS(conn_index_loc,c_bi_class_integer,conn_index,0);
+
+          param_cnt = 3;
+          param_data[0] = dst_location;
+          param_data[1] = conn_index_loc;
+          param_data[2] = message_loc;
+        }
+
+        // - client callback -
+        else
+        {
+          param_cnt = 2;
+          param_data[0] = dst_location;
+          param_data[1] = message_loc;
+        }
       ,
         return false;
       );

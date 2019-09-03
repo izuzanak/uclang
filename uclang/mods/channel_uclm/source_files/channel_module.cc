@@ -5,11 +5,12 @@ include "channel_module.h"
 
 // - CHANNEL indexes of built in classes -
 unsigned c_bi_class_channel_server = c_idx_not_exist;
+unsigned c_bi_class_channel_client = c_idx_not_exist;
 
 // - CHANNEL module -
 EXPORT built_in_module_s module =
 {/*{{{*/
-  1,                       // Class count
+  2,                       // Class count
   channel_classes,         // Classes
   0,                       // Error base index
   6,                       // Error count
@@ -22,6 +23,7 @@ EXPORT built_in_module_s module =
 built_in_class_s *channel_classes[] =
 {/*{{{*/
   &channel_server_class,
+  &channel_client_class,
 };/*}}}*/
 
 // - CHANNEL error strings -
@@ -42,6 +44,9 @@ bool channel_initialize(script_parser_s &sp)
 
   // - initialize channel_server class identifier -
   c_bi_class_channel_server = class_base_idx++;
+
+  // - initialize channel_client class identifier -
+  c_bi_class_channel_client = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -294,7 +299,7 @@ method ChannelServer
   cs_ptr->init();
   cs_ptr->init_static();
 
-  // - set server file descriptor -
+  // - set file descriptor -
   cs_ptr->server_fd = fd;
 
   // - retrieve callbacks -
@@ -326,17 +331,11 @@ bool bic_channel_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack
   // - create result array -
   pointer_array_s *array_ptr = it.get_new_array_ptr();
 
-  // - create fd value -
-  {
-    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,cs_ptr->server_fd);
-    array_ptr->push(new_location);
-  }
+  BIC_CREATE_NEW_LOCATION(fd_location,c_bi_class_integer,cs_ptr->server_fd);
+  array_ptr->push(fd_location);
 
-  // - create flags -
-  {
-    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,POLLIN | POLLPRI);
-    array_ptr->push(new_location);
-  }
+  BIC_CREATE_NEW_LOCATION(events_location,c_bi_class_integer,POLLIN | POLLPRI);
+  array_ptr->push(events_location);
 
   if (cs_ptr->fd_conn_map.root_idx != c_idx_not_exist)
   {
@@ -345,18 +344,12 @@ bool bic_channel_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack
     do {
       if (fcmtn_ptr->valid)
       {
-        // - create fd value -
-        {
-          BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,fcmtn_ptr->object.fd);
-          array_ptr->push(new_location);
-        }
+        BIC_CREATE_NEW_LOCATION(fd_location,c_bi_class_integer,fcmtn_ptr->object.fd);
+        array_ptr->push(fd_location);
 
-        // - create flags -
-        {
-          BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,
-              cs_ptr->conn_list[fcmtn_ptr->object.conn_index].events);
-          array_ptr->push(new_location);
-        }
+        BIC_CREATE_NEW_LOCATION(events_location,c_bi_class_integer,
+          cs_ptr->conn_list[fcmtn_ptr->object.conn_index].events);
+        array_ptr->push(events_location);
       }
     } while(++fcmtn_ptr < fcmtn_ptr_end);
   }
@@ -421,7 +414,7 @@ method process
     unsigned fd_conn_map_index = cs_ptr->fd_conn_map.insert(fd_conn_map);
 
     // - call new connection callback -
-    CHANNEL_SERVER_CALL_CALLBACK_DELEGATE(new_callback,param_data,param_cnt,
+    CHANNEL_CALL_CALLBACK_DELEGATE(cs_ptr->new_callback,operands[c_source_pos_idx],
       BIC_CREATE_NEW_LOCATION_REFS(conn_index_loc,c_bi_class_integer,conn_index,0);
 
       const unsigned param_cnt = 2;
@@ -481,7 +474,7 @@ method process
     if (drop_connection)
     {
       // - call drop connection callback -
-      CHANNEL_SERVER_CALL_CALLBACK_DELEGATE(drop_callback,param_data,param_cnt,
+      CHANNEL_CALL_CALLBACK_DELEGATE(cs_ptr->drop_callback,operands[c_source_pos_idx],
         BIC_CREATE_NEW_LOCATION_REFS(conn_index_loc,c_bi_class_integer,conn_index,0);
 
         const unsigned param_cnt = 2;
@@ -633,6 +626,383 @@ bool bic_channel_server_method_to_string_0(interpreter_thread_s &it,unsigned sta
 bool bic_channel_server_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   printf("ChannelServer");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class CHANNEL_CLIENT -
+built_in_class_s channel_client_class =
+{/*{{{*/
+  "ChannelClient",
+  c_modifier_public | c_modifier_final,
+  7, channel_client_methods,
+  0, channel_client_variables,
+  bic_channel_client_consts,
+  bic_channel_client_init,
+  bic_channel_client_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s channel_client_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_channel_client_operator_binary_equal
+  },
+  {
+    "ChannelClient#5",
+    c_modifier_public | c_modifier_final,
+    bic_channel_client_method_ChannelClient_5
+  },
+  {
+    "get_fds#0",
+    c_modifier_public | c_modifier_final,
+    bic_channel_client_method_get_fds_0
+  },
+  {
+    "process#2",
+    c_modifier_public | c_modifier_final,
+    bic_channel_client_method_process_2
+  },
+  {
+    "message#1",
+    c_modifier_public | c_modifier_final,
+    bic_channel_client_method_message_1
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_channel_client_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_channel_client_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s channel_client_variables[] =
+{/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
+};/*}}}*/
+
+void bic_channel_client_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_channel_client_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (channel_conn_s *)nullptr;
+}/*}}}*/
+
+void bic_channel_client_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  channel_conn_s *cc_ptr = (channel_conn_s *)location_ptr->v_data_ptr;
+
+  if (cc_ptr != nullptr)
+  {
+    cc_ptr->clear(it);
+    cfree(cc_ptr);
+  }
+}/*}}}*/
+
+bool bic_channel_client_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_channel_client_method_ChannelClient_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+ip:c_bi_class_string
+port:retrieve_integer
+event_delegate:c_bi_class_delegate
+message_delegate:c_bi_class_delegate
+user_data:ignore
+>
+method ChannelClient
+; @end
+
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+  delegate_s *event_delegate = (delegate_s *)src_2_location->v_data_ptr;
+  delegate_s *message_delegate = (delegate_s *)src_3_location->v_data_ptr;
+
+  // - ERROR -
+  if (event_delegate->param_cnt != 2 ||
+      message_delegate->param_cnt != 2)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  sockaddr_in address;
+
+  // - retrieve host by name address -
+  struct hostent *host = gethostbyname(string_ptr->data);
+
+  // - ERROR -
+  if (host == NULL)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  memcpy(&address.sin_addr.s_addr,host->h_addr,host->h_length);
+  address.sin_port = htons(port);
+  address.sin_family = AF_INET;
+
+  // - create socket -
+  int fd = socket(AF_INET,SOCK_STREAM,0);
+
+  // - ERROR -
+  if (fd == -1)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - ERROR -
+  int nonblock_io = 1;
+  if (ioctl(fd,FIONBIO,&nonblock_io) != 0)
+  {
+    close(fd);
+
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - ERROR -
+  if (connect(fd,(struct sockaddr *)&address,sizeof(struct sockaddr_in)) != 0)
+  {
+    if (errno != EINPROGRESS)
+    {
+      close(fd);
+
+      // FIXME TODO throw proper exception
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+      return false;
+    }
+  }
+
+  // - create channel_client object -
+  channel_conn_s *cc_ptr = (channel_conn_s *)cmalloc(sizeof(channel_conn_s));
+  cc_ptr->init();
+  cc_ptr->init_static();
+
+  // - set file descriptor -
+  cc_ptr->conn_fd = fd;
+  cc_ptr->events = POLLIN | POLLOUT | POLLPRI;
+  cc_ptr->connecting = true;
+
+  // - retrieve callbacks -
+  src_2_location->v_reference_cnt.atomic_inc();
+  cc_ptr->event_callback = src_2_location;
+
+  src_3_location->v_reference_cnt.atomic_inc();
+  cc_ptr->message_callback = src_3_location;
+
+  // - retrieve user data -
+  src_4_location->v_reference_cnt.atomic_inc();
+  cc_ptr->user_data = src_4_location;
+
+  cc_ptr->conn_index = 0;
+
+  // - set destination data pointer -
+  dst_location->v_data_ptr = (channel_conn_s *)cc_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_channel_client_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  channel_conn_s *cc_ptr = (channel_conn_s *)dst_location->v_data_ptr;
+
+  // - create result array -
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+  if (cc_ptr->events != 0)
+  {
+    BIC_CREATE_NEW_LOCATION(fd_location,c_bi_class_integer,cc_ptr->conn_fd);
+    array_ptr->push(fd_location);
+
+    BIC_CREATE_NEW_LOCATION(events_location,c_bi_class_integer,cc_ptr->events);
+    array_ptr->push(events_location);
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_channel_client_method_process_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+fd:retrieve_integer
+events:retrieve_integer
+>
+method process
+; @end
+
+  channel_conn_s *cc_ptr = (channel_conn_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (fd != cc_ptr->conn_fd)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  if (cc_ptr->connecting)
+  {
+    int nonblock_io = 0;
+    int error;
+    socklen_t length = sizeof(error);
+
+    // - check connect result -
+    // - disable nonblocking io -
+    // - modify fd epoll events: only input -
+    if (getsockopt(cc_ptr->conn_fd,SOL_SOCKET,SO_ERROR,&error,&length) ||
+        error != 0 ||
+        ioctl(cc_ptr->conn_fd,FIONBIO,&nonblock_io))
+    {
+      // FIXME TODO CALLBACK EVENT TYPE ERROR
+      fprintf(stderr,"CALLBACK EVENT TYPE ERROR\n");
+      
+      cc_ptr->events = 0;
+    }
+    else
+    {
+      // FIXME TODO CALLBACK EVENT TYPE NEW
+      fprintf(stderr,"CALLBACK EVENT TYPE NEW\n");
+      
+      if (cc_ptr->out_msg_queue.used == 0)
+      {
+        cc_ptr->events = POLLIN | POLLPRI;
+      }
+    }
+
+    // - reset client connecting flag -
+    cc_ptr->connecting = false;
+  }
+  else
+  {
+    // - mask events with connection events -
+    unsigned conn_events = cc_ptr->events & events;
+
+    // - drop connection flag -
+    bool drop_connection = false;
+
+    if (conn_events & POLLOUT)
+    {
+      if (!cc_ptr->send_msg(it))
+      {
+        // - set drop connection flag -
+        drop_connection = true;
+
+        // - reset conn_events -
+        conn_events = 0;
+      }
+    }
+
+    if (conn_events & POLLIN)
+    {
+      if (!cc_ptr->recv_msg(it,dst_location,operands[c_source_pos_idx]))
+      {
+        // - set drop connection flag -
+        drop_connection = true;
+      }
+    }
+
+    // - drop connection flag is set -
+    if (drop_connection)
+    {
+      // FIXME TODO CALLBACK EVENT TYPE DROP
+      fprintf(stderr,"CALLBACK EVENT TYPE DROP\n");
+
+      cc_ptr->events = 0;
+    }
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_channel_client_method_message_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+message:c_bi_class_string
+>
+method process
+; @end
+
+  channel_conn_s *cc_ptr = (channel_conn_s *)dst_location->v_data_ptr;
+  string_s *message_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  // - create message length string -
+  string_s *length_ptr = it.get_new_string_ptr();
+  length_ptr->setf("0x%8.8x;",message_ptr->size - 1);
+
+  BIC_CREATE_NEW_LOCATION(length_location,c_bi_class_string,length_ptr);
+
+  // - insert length of message to queue -
+  cc_ptr->out_msg_queue.insert(length_location);
+
+  // - insert message to queue -
+  src_0_location->v_reference_cnt.atomic_inc();
+  cc_ptr->out_msg_queue.insert(src_0_location);
+
+  // - update connection events -
+  cc_ptr->events = POLLIN | POLLPRI | POLLOUT;
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_channel_client_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("ChannelClient"),"ChannelClient")
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_channel_client_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("ChannelClient");
 
   BIC_SET_RESULT_BLANK();
 

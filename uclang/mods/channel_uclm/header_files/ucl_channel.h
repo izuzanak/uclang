@@ -14,21 +14,10 @@ include "script_parser.h"
  * basic definitions and constants
  */
 
-#define CHANNEL_SERVER_CALL_CALLBACK_DELEGATE(NAME,PARAM_DATA,PARAM_CNT,PARAM_CODE,ERROR_CODE) \
-{/*{{{*/\
-  delegate_s *delegate_ptr = (delegate_s *)((location_s *)cs_ptr->NAME)->v_data_ptr;\
-\
-  PARAM_CODE;\
-\
-  /* - call delegate method - */\
-  location_s *trg_location = nullptr;\
-  BIC_CALL_DELEGATE(it,delegate_ptr,PARAM_DATA,PARAM_CNT,trg_location,operands[c_source_pos_idx],\
-    ERROR_CODE;\
-  );\
-  it.release_location_ptr(trg_location);\
-}/*}}}*/
+extern unsigned c_bi_class_channel_server;
+extern unsigned c_bi_class_channel_client;
 
-#define CHANNEL_CONNECTION_CALL_CALLBACK_DELEGATE(NAME,PARAM_DATA,PARAM_CNT,PARAM_CODE,ERROR_CODE) \
+#define CHANNEL_CALL_CALLBACK_DELEGATE(NAME,SOURCE_POS,PARAM_CODE,ERROR_CODE) \
 {/*{{{*/\
   delegate_s *delegate_ptr = (delegate_s *)((location_s *)NAME)->v_data_ptr;\
 \
@@ -36,7 +25,7 @@ include "script_parser.h"
 \
   /* - call delegate method - */\
   location_s *trg_location = nullptr;\
-  BIC_CALL_DELEGATE(it,delegate_ptr,PARAM_DATA,PARAM_CNT,trg_location,a_source_pos,\
+  BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,SOURCE_POS,\
     ERROR_CODE;\
   );\
   it.release_location_ptr(trg_location);\
@@ -67,8 +56,9 @@ struct
 <
 bi:conn_fd
 ui:events
-bi:connecting
+bool:connecting
 
+pointer:event_callback
 pointer:message_callback
 pointer:user_data
 ui:conn_index
@@ -147,8 +137,9 @@ inline void channel_conn_s::init_static()
 {/*{{{*/
   conn_fd = -1;
   events = 0;
-  connecting = 0;
+  connecting = false;
 
+  event_callback = nullptr;
   message_callback = nullptr;
   user_data = nullptr;
   conn_index = c_idx_not_exist;
@@ -162,6 +153,11 @@ inline void channel_conn_s::clear(interpreter_thread_s &it)
   if (conn_fd != -1)
   {
     close(conn_fd);
+  }
+
+  if (event_callback != nullptr)
+  {
+    it.release_location_ptr((location_s *)event_callback);
   }
 
   if (message_callback != nullptr)
