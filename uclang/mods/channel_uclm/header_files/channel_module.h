@@ -18,7 +18,12 @@ extern built_in_class_s *channel_classes[];
 // - CHANNEL error identifiers -
 enum
 {
-  c_error_CHANNEL_SERVER_DUMMY_ERROR = 0,
+  c_error_CHANNEL_SERVER_WRONG_DELEGATE_PARAMETER_COUNT = 0,
+  c_error_CHANNEL_SERVER_INVALID_IP_ADDRESS,
+  c_error_CHANNEL_SERVER_CREATE_ERROR,
+  c_error_CHANNEL_SERVER_ACCEPT_ERROR,
+  c_error_CHANNEL_SERVER_PROCESS_INVALID_FD,
+  c_error_CHANNEL_SERVER_MESSAGE_INVALID_CONNECTION_INDEX,
 };
 
 // - CHANNEL error strings -

@@ -12,7 +12,7 @@ EXPORT built_in_module_s module =
   1,                       // Class count
   channel_classes,         // Classes
   0,                       // Error base index
-  1,                       // Error count
+  6,                       // Error count
   channel_error_strings,   // Error strings
   channel_initialize,      // Initialize function
   channel_print_exception, // Print exceptions function
@@ -27,7 +27,12 @@ built_in_class_s *channel_classes[] =
 // - CHANNEL error strings -
 const char *channel_error_strings[] =
 {/*{{{*/
-  "error_CHANNEL_SERVER_DUMMY_ERROR",
+  "error_CHANNEL_CHANNEL_SERVER_WRONG_DELEGATE_PARAMETER_COUNT",
+  "error_CHANNEL_CHANNEL_SERVER_INVALID_IP_ADDRESS",
+  "error_CHANNEL_CHANNEL_SERVER_CREATE_ERROR",
+  "error_CHANNEL_CHANNEL_SERVER_ACCEPT_ERROR",
+  "error_CHANNEL_CHANNEL_SERVER_PROCESS_INVALID_FD",
+  "error_CHANNEL_CHANNEL_SERVER_MESSAGE_INVALID_CONNECTION_INDEX",
 };/*}}}*/
 
 // - CHANNEL initialize -
@@ -52,11 +57,46 @@ bool channel_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_CHANNEL_SERVER_DUMMY_ERROR:
+  case c_error_CHANNEL_SERVER_WRONG_DELEGATE_PARAMETER_COUNT:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nChannel server dummy error\n");
+    fprintf(stderr,"\nWrong count of ChannelServer delegate parameters\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CHANNEL_SERVER_INVALID_IP_ADDRESS:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid ChannelServer ip address: \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CHANNEL_SERVER_CREATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while creating ChannelServer\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CHANNEL_SERVER_ACCEPT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while accepting ChannelServer connection\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CHANNEL_SERVER_PROCESS_INVALID_FD:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nChannelServer, invalid file descriptor to process\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CHANNEL_SERVER_MESSAGE_INVALID_CONNECTION_INDEX:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nChannelServer, invalid connection index\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -197,8 +237,7 @@ method ChannelServer
       drop_delegate->param_cnt != 2 ||
       message_delegate->param_cnt != 3)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_WRONG_DELEGATE_PARAMETER_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -210,8 +249,7 @@ method ChannelServer
   // - ERROR -
   if (host == NULL)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_INVALID_IP_ADDRESS,operands[c_source_pos_idx],src_0_location);
     return false;
   }
 
@@ -225,8 +263,7 @@ method ChannelServer
   // - ERROR -
   if (fd == -1)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -239,8 +276,7 @@ method ChannelServer
   {
     close(fd);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -249,8 +285,7 @@ method ChannelServer
   {
     close(fd);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -351,10 +386,9 @@ method process
 
     // - ERROR -
     int conn_fd = accept(cs_ptr->server_fd,(struct sockaddr *)&address,&addr_len);
-    if (conn_fd < 0)
+    if (conn_fd == -1)
     {
-      // FIXME TODO throw proper exception
-      BIC_TODO_ERROR(__FILE__,__LINE__);
+      exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
 
@@ -363,8 +397,7 @@ method process
     {
       close(conn_fd);
 
-      // FIXME TODO throw proper exception
-      BIC_TODO_ERROR(__FILE__,__LINE__);
+      exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
 
@@ -410,8 +443,7 @@ method process
     // - ERROR -
     if (fd_conn_map_index == c_idx_not_exist)
     {
-      // FIXME TODO throw proper exception
-      BIC_TODO_ERROR(__FILE__,__LINE__);
+      exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_PROCESS_INVALID_FD,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
 
@@ -491,8 +523,7 @@ method process
   // - ERROR -
   if (conn_index >= cs_ptr->conn_list.used || !cs_ptr->conn_list.data[conn_index].valid)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_MESSAGE_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -554,16 +585,16 @@ method process
       {
         it.release_location_ptr(length_location);
 
-        // FIXME TODO throw proper exception
-        BIC_TODO_ERROR(__FILE__,__LINE__);
+        exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_MESSAGE_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
 
       // - ERROR -
       if (conn_index >= cs_ptr->conn_list.used || !cs_ptr->conn_list.data[conn_index].valid)
       {
-        // FIXME TODO throw proper exception
-        BIC_TODO_ERROR(__FILE__,__LINE__);
+        it.release_location_ptr(length_location);
+
+        exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_MESSAGE_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
 
