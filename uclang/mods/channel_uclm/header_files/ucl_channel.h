@@ -17,6 +17,21 @@ include "script_parser.h"
 extern unsigned c_bi_class_channel_server;
 extern unsigned c_bi_class_channel_client;
 
+// - channel event types -
+enum
+{
+  c_channel_EVENT_ERROR = -1,
+  c_channel_EVENT_ACCEPTED,
+  c_channel_EVENT_CONNECTED,
+  c_channel_EVENT_DROPPED,
+};
+
+// - special connection indexes -
+enum
+{
+  c_conn_index_CONN_ALL = -1,
+};
+
 #define CHANNEL_CALL_CALLBACK_DELEGATE(NAME,SOURCE_POS,PARAM_CODE,ERROR_CODE) \
 {/*{{{*/\
   delegate_s *delegate_ptr = (delegate_s *)((location_s *)NAME)->v_data_ptr;\
@@ -92,8 +107,7 @@ safe_list<channel_conn_s> channel_conn_list_s;
 struct
 <
 bi:server_fd
-pointer:new_callback
-pointer:drop_callback
+pointer:event_callback
 pointer:message_callback
 pointer:user_data
 channel_conn_list_s:conn_list
@@ -193,8 +207,7 @@ inlines channel_server_s
 inline void channel_server_s::init_static()
 {/*{{{*/
   server_fd = -1;
-  new_callback = nullptr;
-  drop_callback = nullptr;
+  event_callback = nullptr;
   message_callback = nullptr;
   user_data = nullptr;
 }/*}}}*/
@@ -207,14 +220,9 @@ inline void channel_server_s::clear(interpreter_thread_s &it)
   }
 
   // - release callbacks -
-  if (new_callback != nullptr)
+  if (event_callback != nullptr)
   {
-    it.release_location_ptr((location_s *)new_callback);
-  }
-
-  if (drop_callback != nullptr)
-  {
-    it.release_location_ptr((location_s *)drop_callback);
+    it.release_location_ptr((location_s *)event_callback);
   }
 
   if (message_callback != nullptr)

@@ -46,11 +46,11 @@ void bic_channel_server_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_channel_server_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_channel_server_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_channel_server_method_ChannelServer_6(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_channel_server_method_ChannelServer_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_server_method_process_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_server_method_message_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_channel_server_method_multi_message_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_channel_server_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_server_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_server_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -68,6 +68,7 @@ bool bic_channel_client_method_ChannelClient_5(interpreter_thread_s &it,unsigned
 bool bic_channel_client_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_client_method_process_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_client_method_message_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_channel_client_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_client_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_client_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

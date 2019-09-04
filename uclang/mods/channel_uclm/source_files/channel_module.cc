@@ -120,7 +120,7 @@ built_in_class_s channel_server_class =
   "ChannelServer",
   c_modifier_public | c_modifier_final,
   8, channel_server_methods,
-  0, channel_server_variables,
+  3, channel_server_variables,
   bic_channel_server_consts,
   bic_channel_server_init,
   bic_channel_server_clear,
@@ -145,9 +145,9 @@ built_in_method_s channel_server_methods[] =
     bic_channel_server_operator_binary_equal
   },
   {
-    "ChannelServer#6",
+    "ChannelServer#5",
     c_modifier_public | c_modifier_final,
-    bic_channel_server_method_ChannelServer_6
+    bic_channel_server_method_ChannelServer_5
   },
   {
     "get_fds#0",
@@ -165,9 +165,9 @@ built_in_method_s channel_server_methods[] =
     bic_channel_server_method_message_2
   },
   {
-    "multi_message#2",
+    "user_data#0",
     c_modifier_public | c_modifier_final,
-    bic_channel_server_method_multi_message_2
+    bic_channel_server_method_user_data_0
   },
   {
     "to_string#0",
@@ -183,11 +183,48 @@ built_in_method_s channel_server_methods[] =
 
 built_in_variable_s channel_server_variables[] =
 {/*{{{*/
-  BIC_CLASS_EMPTY_VARIABLES
+
+  // - channel server event type constants -
+  { "EVENT_ACCEPTED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "EVENT_DROPPED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - channel connection index constants -
+  { "CONN_ALL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_channel_server_consts(location_array_s &const_locations)
 {/*{{{*/
+
+  // - insert channel server event type constants -
+  {
+    const_locations.push_blanks(2);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 2);
+
+#define CREATE_CHANNEL_SERVER_EVENT_TYPE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_CHANNEL_SERVER_EVENT_TYPE_BIC_STATIC(c_channel_EVENT_ACCEPTED);
+    CREATE_CHANNEL_SERVER_EVENT_TYPE_BIC_STATIC(c_channel_EVENT_DROPPED);
+  }
+
+  // - insert channel connection index constants -
+  {
+    const_locations.push_blanks(1);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 1);
+
+#define CREATE_CHANNEL_SERVER_CONN_INDEX_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_CHANNEL_SERVER_CONN_INDEX_BIC_STATIC(c_conn_index_CONN_ALL);
+  }
+
 }/*}}}*/
 
 void bic_channel_server_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -218,14 +255,13 @@ bool bic_channel_server_operator_binary_equal(interpreter_thread_s &it,unsigned 
   return true;
 }/*}}}*/
 
-bool bic_channel_server_method_ChannelServer_6(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_channel_server_method_ChannelServer_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
 ip:c_bi_class_string
 port:retrieve_integer
-new_delegate:c_bi_class_delegate
-drop_delegate:c_bi_class_delegate
+event_delegate:c_bi_class_delegate
 message_delegate:c_bi_class_delegate
 user_data:ignore
 >
@@ -233,13 +269,11 @@ method ChannelServer
 ; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-  delegate_s *new_delegate = (delegate_s *)src_2_location->v_data_ptr;
-  delegate_s *drop_delegate = (delegate_s *)src_3_location->v_data_ptr;
-  delegate_s *message_delegate = (delegate_s *)src_4_location->v_data_ptr;
+  delegate_s *event_delegate = (delegate_s *)src_2_location->v_data_ptr;
+  delegate_s *message_delegate = (delegate_s *)src_3_location->v_data_ptr;
 
   // - ERROR -
-  if (new_delegate->param_cnt != 2 ||
-      drop_delegate->param_cnt != 2 ||
+  if (event_delegate->param_cnt != 3 ||
       message_delegate->param_cnt != 3)
   {
     exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_WRONG_DELEGATE_PARAMETER_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -304,17 +338,14 @@ method ChannelServer
 
   // - retrieve callbacks -
   src_2_location->v_reference_cnt.atomic_inc();
-  cs_ptr->new_callback = src_2_location;
+  cs_ptr->event_callback = src_2_location;
 
   src_3_location->v_reference_cnt.atomic_inc();
-  cs_ptr->drop_callback = src_3_location;
-
-  src_4_location->v_reference_cnt.atomic_inc();
-  cs_ptr->message_callback = src_4_location;
+  cs_ptr->message_callback = src_3_location;
 
   // - retrieve user data -
-  src_5_location->v_reference_cnt.atomic_inc();
-  cs_ptr->user_data = src_5_location;
+  src_4_location->v_reference_cnt.atomic_inc();
+  cs_ptr->user_data = src_4_location;
 
   // - set destination data pointer -
   dst_location->v_data_ptr = (channel_server_s *)cs_ptr;
@@ -406,7 +437,6 @@ method process
     ((location_s *)cs_ptr->message_callback)->v_reference_cnt.atomic_inc();
     conn.message_callback = cs_ptr->message_callback;
 
-    conn.user_data = it.get_new_reference((location_s **)&cs_ptr->user_data);
     conn.conn_index = conn_index;
 
     // - update fd connection map -
@@ -414,11 +444,12 @@ method process
     unsigned fd_conn_map_index = cs_ptr->fd_conn_map.insert(fd_conn_map);
 
     // - call new connection callback -
-    CHANNEL_CALL_CALLBACK_DELEGATE(cs_ptr->new_callback,operands[c_source_pos_idx],
+    CHANNEL_CALL_CALLBACK_DELEGATE(cs_ptr->event_callback,operands[c_source_pos_idx],
       BIC_CREATE_NEW_LOCATION_REFS(conn_index_loc,c_bi_class_integer,conn_index,0);
+      BIC_CREATE_NEW_LOCATION_REFS(event_type_loc,c_bi_class_integer,c_channel_EVENT_ACCEPTED,0);
 
-      const unsigned param_cnt = 2;
-      pointer param_data[param_cnt] = {dst_location MP_COMMA conn_index_loc};
+      const unsigned param_cnt = 3;
+      pointer param_data[param_cnt] = {dst_location MP_COMMA conn_index_loc MP_COMMA event_type_loc};
     ,
       // - drop connection without callback -
       conn.clear(it);
@@ -474,11 +505,12 @@ method process
     if (drop_connection)
     {
       // - call drop connection callback -
-      CHANNEL_CALL_CALLBACK_DELEGATE(cs_ptr->drop_callback,operands[c_source_pos_idx],
+      CHANNEL_CALL_CALLBACK_DELEGATE(cs_ptr->event_callback,operands[c_source_pos_idx],
         BIC_CREATE_NEW_LOCATION_REFS(conn_index_loc,c_bi_class_integer,conn_index,0);
+        BIC_CREATE_NEW_LOCATION_REFS(event_type_loc,c_bi_class_integer,c_channel_EVENT_DROPPED,0);
 
-        const unsigned param_cnt = 2;
-        pointer param_data[param_cnt] = {dst_location MP_COMMA conn_index_loc};
+        const unsigned param_cnt = 3;
+        pointer param_data[param_cnt] = {dst_location MP_COMMA conn_index_loc MP_COMMA event_type_loc};
       ,
       );
 
@@ -505,6 +537,7 @@ bool bic_channel_server_method_message_2(interpreter_thread_s &it,unsigned stack
 @begin ucl_params
 <
 conn_index:retrieve_integer
+conn_index:c_bi_class_array
 message:c_bi_class_string
 >
 method process
@@ -512,13 +545,6 @@ method process
 
   channel_server_s *cs_ptr = (channel_server_s *)dst_location->v_data_ptr;
   string_s *message_ptr = (string_s *)src_1_location->v_data_ptr;
-
-  // - ERROR -
-  if (conn_index >= cs_ptr->conn_list.used || !cs_ptr->conn_list.data[conn_index].valid)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_MESSAGE_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
 
   // - create message length string -
   string_s *length_ptr = it.get_new_string_ptr();
@@ -526,64 +552,84 @@ method process
 
   BIC_CREATE_NEW_LOCATION(length_location,c_bi_class_string,length_ptr);
 
-  channel_conn_s &conn = cs_ptr->conn_list[conn_index];
-
-  // - insert length of message to queue -
-  conn.out_msg_queue.insert(length_location);
-
-  // - insert message to queue -
-  src_1_location->v_reference_cnt.atomic_inc();
-  conn.out_msg_queue.insert(src_1_location);
-
-  // - update connection events -
-  conn.events = POLLIN | POLLPRI | POLLOUT;
-
-  BIC_SET_RESULT_DESTINATION();
-
-  return true;
-}/*}}}*/
-
-bool bic_channel_server_method_multi_message_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-@begin ucl_params
-<
-conn_array:c_bi_class_array
-message:c_bi_class_string
->
-method process
-; @end
-
-  channel_server_s *cs_ptr = (channel_server_s *)dst_location->v_data_ptr;
-  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
-  string_s *message_ptr = (string_s *)src_1_location->v_data_ptr;
-
-  if (array_ptr->used != 0)
+  if (src_0_location->v_type == c_bi_class_array)
   {
-    // - create message length string -
-    string_s *length_ptr = it.get_new_string_ptr();
-    length_ptr->setf("0x%8.8x;",message_ptr->size - 1);
+    pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
-    BIC_CREATE_NEW_LOCATION_REFS(length_location,c_bi_class_string,length_ptr,1);
+    if (array_ptr->used != 0)
+    {
+      // - process connection array -
+      pointer *ptr = array_ptr->data;
+      pointer *ptr_end = ptr + array_ptr->used;
+      do {
+        location_s *item_location = it.get_location_value(*ptr);
 
-    // - process connection array -
-    pointer *ptr = array_ptr->data;
-    pointer *ptr_end = ptr + array_ptr->used;
-    do {
-      location_s *item_location = it.get_location_value(*ptr);
+        long long int conn_index;
 
-      long long int conn_index;
+        // - ERROR -
+        if (!it.retrieve_integer(item_location,conn_index))
+        {
+          it.release_location_ptr(length_location);
 
-      // - ERROR -
-      if (!it.retrieve_integer(item_location,conn_index))
+          exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_MESSAGE_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          return false;
+        }
+
+        // - ERROR -
+        if (conn_index >= cs_ptr->conn_list.used || !cs_ptr->conn_list.data[conn_index].valid)
+        {
+          it.release_location_ptr(length_location);
+
+          exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_MESSAGE_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          return false;
+        }
+
+        channel_conn_s &conn = cs_ptr->conn_list[conn_index];
+
+        // - insert length of message to queue -
+        length_location->v_reference_cnt.atomic_inc();
+        conn.out_msg_queue.insert(length_location);
+
+        // - insert message to queue -
+        src_1_location->v_reference_cnt.atomic_inc();
+        conn.out_msg_queue.insert(src_1_location);
+
+        // - update connection events -
+        conn.events = POLLIN | POLLPRI | POLLOUT;
+
+      } while(++ptr < ptr_end);
+    }
+  }
+  else
+  {
+    if (conn_index == c_conn_index_CONN_ALL)
+    {
+      if (cs_ptr->conn_list.first_idx != c_idx_not_exist)
       {
-        it.release_location_ptr(length_location);
+        unsigned cl_idx = cs_ptr->conn_list.first_idx;
+        do {
+          channel_conn_s &conn = cs_ptr->conn_list[cl_idx];
 
-        exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_MESSAGE_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        return false;
+          // - insert length of message to queue -
+          length_location->v_reference_cnt.atomic_inc();
+          conn.out_msg_queue.insert(length_location);
+
+          // - insert message to queue -
+          src_1_location->v_reference_cnt.atomic_inc();
+          conn.out_msg_queue.insert(src_1_location);
+
+          // - update connection events -
+          conn.events = POLLIN | POLLPRI | POLLOUT;
+
+          cl_idx = cs_ptr->conn_list.next_idx(cl_idx);
+        } while(cl_idx != c_idx_not_exist);
       }
-
+    }
+    else
+    {
       // - ERROR -
-      if (conn_index >= cs_ptr->conn_list.used || !cs_ptr->conn_list.data[conn_index].valid)
+      if (conn_index < 0 || conn_index >= cs_ptr->conn_list.used ||
+          !cs_ptr->conn_list.data[conn_index].valid)
       {
         it.release_location_ptr(length_location);
 
@@ -603,13 +649,25 @@ method process
 
       // - update connection events -
       conn.events = POLLIN | POLLPRI | POLLOUT;
-
-    } while(++ptr < ptr_end);
-
-    it.release_location_ptr(length_location);
+    }
   }
 
+  it.release_location_ptr(length_location);
+
   BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_channel_server_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  channel_server_s *cs_ptr = (channel_server_s *)dst_location->v_data_ptr;
+
+  location_s *new_ref_location = it.get_new_reference((location_s **)&cs_ptr->user_data);
+
+  BIC_SET_RESULT(new_ref_location);
 
   return true;
 }/*}}}*/
@@ -637,8 +695,8 @@ built_in_class_s channel_client_class =
 {/*{{{*/
   "ChannelClient",
   c_modifier_public | c_modifier_final,
-  7, channel_client_methods,
-  0, channel_client_variables,
+  8, channel_client_methods,
+  3, channel_client_variables,
   bic_channel_client_consts,
   bic_channel_client_init,
   bic_channel_client_clear,
@@ -683,6 +741,11 @@ built_in_method_s channel_client_methods[] =
     bic_channel_client_method_message_1
   },
   {
+    "user_data#0",
+    c_modifier_public | c_modifier_final,
+    bic_channel_client_method_user_data_0
+  },
+  {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_channel_client_method_to_string_0
@@ -696,11 +759,33 @@ built_in_method_s channel_client_methods[] =
 
 built_in_variable_s channel_client_variables[] =
 {/*{{{*/
-  BIC_CLASS_EMPTY_VARIABLES
+
+  // - channel client event type constants -
+  { "EVENT_ERROR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "EVENT_CONNECTED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "EVENT_DROPPED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_channel_client_consts(location_array_s &const_locations)
 {/*{{{*/
+
+  // - insert channel client event type constants -
+  {
+    const_locations.push_blanks(3);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 3);
+
+#define CREATE_CHANNEL_CLIENT_EVENT_TYPE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_CHANNEL_CLIENT_EVENT_TYPE_BIC_STATIC(c_channel_EVENT_ERROR);
+    CREATE_CHANNEL_CLIENT_EVENT_TYPE_BIC_STATIC(c_channel_EVENT_CONNECTED);
+    CREATE_CHANNEL_CLIENT_EVENT_TYPE_BIC_STATIC(c_channel_EVENT_DROPPED);
+  }
+
 }/*}}}*/
 
 void bic_channel_client_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -884,6 +969,9 @@ method process
 
   if (cc_ptr->connecting)
   {
+    // - reset connecting flag -
+    cc_ptr->connecting = false;
+
     int nonblock_io = 0;
     int error;
     socklen_t length = sizeof(error);
@@ -895,24 +983,37 @@ method process
         error != 0 ||
         ioctl(cc_ptr->conn_fd,FIONBIO,&nonblock_io))
     {
-      // FIXME TODO CALLBACK EVENT TYPE ERROR
-      fprintf(stderr,"CALLBACK EVENT TYPE ERROR\n");
-      
       cc_ptr->events = 0;
+
+      // - call event error callback -
+      CHANNEL_CALL_CALLBACK_DELEGATE(cc_ptr->event_callback,operands[c_source_pos_idx],
+        BIC_CREATE_NEW_LOCATION_REFS(event_type_loc,c_bi_class_integer,c_channel_EVENT_ERROR,0);
+
+        const unsigned param_cnt = 2;
+        pointer param_data[param_cnt] = {dst_location MP_COMMA event_type_loc};
+      ,
+        return false;
+      );
     }
     else
     {
-      // FIXME TODO CALLBACK EVENT TYPE NEW
-      fprintf(stderr,"CALLBACK EVENT TYPE NEW\n");
-      
+      // - call event new callback -
+      CHANNEL_CALL_CALLBACK_DELEGATE(cc_ptr->event_callback,operands[c_source_pos_idx],
+        BIC_CREATE_NEW_LOCATION_REFS(event_type_loc,c_bi_class_integer,c_channel_EVENT_CONNECTED,0);
+
+        const unsigned param_cnt = 2;
+        pointer param_data[param_cnt] = {dst_location MP_COMMA event_type_loc};
+      ,
+        cc_ptr->events = 0;
+        return false;
+      );
+
+      // - no messages are queued to send -
       if (cc_ptr->out_msg_queue.used == 0)
       {
         cc_ptr->events = POLLIN | POLLPRI;
       }
     }
-
-    // - reset client connecting flag -
-    cc_ptr->connecting = false;
   }
   else
   {
@@ -946,10 +1047,17 @@ method process
     // - drop connection flag is set -
     if (drop_connection)
     {
-      // FIXME TODO CALLBACK EVENT TYPE DROP
-      fprintf(stderr,"CALLBACK EVENT TYPE DROP\n");
-
       cc_ptr->events = 0;
+
+      // - call event drop callback -
+      CHANNEL_CALL_CALLBACK_DELEGATE(cc_ptr->event_callback,operands[c_source_pos_idx],
+        BIC_CREATE_NEW_LOCATION_REFS(event_type_loc,c_bi_class_integer,c_channel_EVENT_DROPPED,0);
+
+        const unsigned param_cnt = 2;
+        pointer param_data[param_cnt] = {dst_location MP_COMMA event_type_loc};
+      ,
+        return false;
+      );
     }
   }
 
@@ -987,6 +1095,19 @@ method process
   cc_ptr->events = POLLIN | POLLPRI | POLLOUT;
 
   BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_channel_client_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  channel_conn_s *cc_ptr = (channel_conn_s *)dst_location->v_data_ptr;
+
+  location_s *new_ref_location = it.get_new_reference((location_s **)&cc_ptr->user_data);
+
+  BIC_SET_RESULT(new_ref_location);
 
   return true;
 }/*}}}*/
