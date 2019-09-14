@@ -9,7 +9,7 @@ set(CONF_INCLUDE_DIRS
   "${EXT_LIBS}/gurux/include")
 set(CONF_COMP_DEFS)
 set(CONF_LINK_LIBS
-  libbase_ucll
+  base_ucll
   ${GURUXNET_LIBRARY}
   ${GURUXDLMS_LIBRARY})
 

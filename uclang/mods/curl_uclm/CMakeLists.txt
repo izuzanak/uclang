@@ -15,7 +15,7 @@ if(CURL_FOUND)
     ${CURL_INCLUDE_DIRS})
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${CURL_LIBRARIES}
     ${WSOCK32_LIBS})
 endif()

@@ -13,7 +13,7 @@ if(JITPLUS_LIBRARY AND JITDYNAMIC_LIBRARY AND JIT_LIBRARY)
     "${EXT_LIBS}/libjit/libjit/include")
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${JITPLUS_LIBRARY}
     ${JITDYNAMIC_LIBRARY}
     ${JIT_LIBRARY})

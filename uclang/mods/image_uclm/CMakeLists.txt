@@ -12,7 +12,7 @@ if(PNG_FOUND AND JPEG_FOUND)
   set(CONF_COMP_DEFS
     ${PNG_DEFINITIONS})
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${PNG_LIBRARIES}
     ${JPEG_LIBRARIES})
 endif()

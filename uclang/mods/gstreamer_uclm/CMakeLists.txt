@@ -11,7 +11,7 @@ if(LIBGSTREAMER_FOUND)
     ${LIBGSTREAMER_INCLUDE_DIRS})
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${LIBGSTREAMER_LIBRARIES})
 endif()
 

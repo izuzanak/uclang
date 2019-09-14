@@ -12,7 +12,7 @@ if(LIBFUSE_FOUND)
   set(CONF_COMP_DEFS
     "-D_FILE_OFFSET_BITS=64 ")
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${LIBFUSE_LIBRARIES})
 endif()
 

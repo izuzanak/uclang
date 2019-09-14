@@ -9,7 +9,7 @@ if(QUIRC_LIBRARY)
     "${EXT_LIBS}/quirc/quirc-1.0/lib")
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${QUIRC_LIBRARY})
 endif()
 

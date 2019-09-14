@@ -18,7 +18,7 @@ if(LIBWEBSOCKETS_FOUND)
     ${LIBWEBSOCKETS_INCLUDE_DIRS})
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${LIBWEBSOCKETS_LIBRARIES}
     ${WSOCK32_LIBS})
 endif()

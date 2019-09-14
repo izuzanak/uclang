@@ -9,7 +9,7 @@ if(PERLLIBS_FOUND)
     ${PERL_INCLUDE_PATH})
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${PERL_LIBRARY})
 endif()
 

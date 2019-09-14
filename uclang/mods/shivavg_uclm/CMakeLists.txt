@@ -9,7 +9,7 @@ if(OPENVG_LIBRARY)
     "${EXT_LIBS}/ShivaVG-0.2.1/include")
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${OPENVG_LIBRARY}
     GL
     GLU

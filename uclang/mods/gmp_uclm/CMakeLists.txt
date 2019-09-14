@@ -18,7 +18,7 @@ if(LIBGMP_FOUND AND LIBMPFR_FOUND)
     ${LIBMPFR_INCLUDE_DIRS})
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${LIBGMP_LIBRARY}
     ${LIBMPFR_LIBRARIES})
 endif()

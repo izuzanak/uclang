@@ -6,7 +6,7 @@ set(CONF_INCLUDE_DIRS
   "/usr/include/freetype2")
 set(CONF_COMP_DEFS)
 set(CONF_LINK_LIBS
-  libbase_ucll
+  base_ucll
   freetype
   GLEW
   GL

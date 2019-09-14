@@ -12,7 +12,7 @@ if(RAW_FOUND)
   set(CONF_COMP_DEFS
     ${RAW_DEFINITIONS})
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${RAW_LIBRARIES})
 endif()
 

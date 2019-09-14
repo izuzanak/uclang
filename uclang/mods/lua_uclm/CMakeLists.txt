@@ -9,7 +9,7 @@ if(LUA_FOUND)
     ${LUA_INCLUDE_DIR})
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${LUA_LIBRARIES})
 endif()
 

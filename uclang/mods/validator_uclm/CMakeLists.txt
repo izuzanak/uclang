@@ -19,7 +19,7 @@ if(PCRE_FOUND)
   set(CONF_COMP_DEFS
     ${PCRE_DEFS})
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${PCRE_LIBRARIES})
 endif()
 

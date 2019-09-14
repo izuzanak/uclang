@@ -9,7 +9,7 @@ if(GA_LIBRARY)
     "${EXT_LIBS}/galib/galib247")
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${GA_LIBRARY})
 endif()
 

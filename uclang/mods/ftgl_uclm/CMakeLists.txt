@@ -6,6 +6,6 @@ set(CONF_HEADER_DIRS
 set(CONF_INCLUDE_DIRS)
 set(CONF_COMP_DEFS)
 set(CONF_LINK_LIBS
-  libbase_ucll
-  libftgl_ucll)
+  base_ucll
+  ftgl_ucll)
 

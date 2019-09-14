@@ -13,7 +13,7 @@ if(LIBUV_FOUND)
   set(CONF_INCLUDE_DIRS)
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${LIBUV_LIBRARY})
 endif()
 

@@ -9,7 +9,7 @@ if(Python2_FOUND)
     ${Python2_INCLUDE_DIRS})
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${Python2_LIBRARIES})
 endif()
 

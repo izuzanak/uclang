@@ -11,7 +11,7 @@ if(LIBAO_FOUND)
     ${LIBAO_INCLUDE_DIRS})
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${LIBAO_LIBRARIES})
 endif()
 

@@ -11,7 +11,7 @@ if(LIBZIP_FOUND)
     ${LIBZIP_INCLUDE_DIRS})
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${LIBZIP_LIBRARIES})
 endif()
 

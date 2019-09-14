@@ -9,7 +9,7 @@ if(AMANITHVG_LIBRARY)
     "${EXT_LIBS}/AmanithVG/include")
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${AMANITHVG_LIBRARY})
 endif()
 

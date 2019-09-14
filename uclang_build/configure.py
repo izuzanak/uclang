@@ -9,9 +9,9 @@ PKG_TEST_TYPE = index; index += 1
 PKG_TEST_PROP = index; index += 1
 
 c_packages = [
-  ["LIB_BASE"      ,"libbase_ucll"   ,"true"      ,[]],
-  ["LIB_FTGL"      ,"libftgl_ucll"   ,"false"     ,[]],
-  ["LIB_NODE"      ,"libnode_ucll"   ,"true"      ,[]],
+  ["LIB_BASE"      ,"base_ucll"      ,"true"      ,[]],
+  ["LIB_FTGL"      ,"ftgl_ucll"      ,"false"     ,[]],
+  ["LIB_NODE"      ,"node_ucll"      ,"true"      ,[]],
   ["UCLANG"        ,"uclang"         ,"true"      ,[]],
   ["NODE"          ,"node"           ,"true"      ,[]],
   ["ENCIPHER"      ,"encipher"       ,"true"      ,[]],

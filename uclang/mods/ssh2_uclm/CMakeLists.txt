@@ -11,7 +11,7 @@ if(LIBSSH2_FOUND)
     ${LIBSSH2_INCLUDE_DIRS})
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${LIBSSH2_LIBRARIES})
 endif()
 

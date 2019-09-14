@@ -3513,7 +3513,7 @@ void script_parser_s::initialize_parser(source_s &a_source,string_s &a_mods_path
   cassert(load_module(ANDROID_APP_DIR "/lib/libbase_uclm" DYNAMIC_LIB_EXTENSION));
   //cassert(load_module("base_uclm" DYNAMIC_LIB_EXTENSION));
 #else
-  cassert(load_module("base_uclm" DYNAMIC_LIB_EXTENSION));
+  cassert(load_module("libbase_uclm" DYNAMIC_LIB_EXTENSION));
 #endif
 
   module_idx++;
@@ -8186,7 +8186,7 @@ void script_parser_s::process_modules()
       file_name.setf(ANDROID_APP_DIR "/lib/lib%s_uclm" DYNAMIC_LIB_EXTENSION,module_names[module_idx].data);
       //file_name.setf("%s_uclm" DYNAMIC_LIB_EXTENSION,module_names[module_idx].data);
 #else
-      file_name.setf("%s_uclm" DYNAMIC_LIB_EXTENSION,module_names[module_idx].data);
+      file_name.setf("lib%s_uclm" DYNAMIC_LIB_EXTENSION,module_names[module_idx].data);
 #endif
 
       // - load build in module -

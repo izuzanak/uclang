@@ -11,7 +11,7 @@ if(LIBVLC_FOUND)
     ${LIBVLC_INCLUDE_DIRS})
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${LIBVLC_LIBRARIES})
 endif()
 

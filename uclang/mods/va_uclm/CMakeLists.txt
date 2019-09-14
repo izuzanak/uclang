@@ -11,7 +11,7 @@ if(LIBVA_FOUND)
     ${LIBVA_INCLUDE_DIRS})
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     "-lva-x11"
     ${LIBVA_LIBRARIES})
 endif()

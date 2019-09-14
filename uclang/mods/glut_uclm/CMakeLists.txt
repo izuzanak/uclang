@@ -9,7 +9,7 @@ if(GLUT_FOUND)
     ${GLUT_INCLUDE_DIR})
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${GLUT_LIBRARIES})
 endif()
 

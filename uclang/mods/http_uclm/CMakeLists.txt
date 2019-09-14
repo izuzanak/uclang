@@ -18,7 +18,7 @@ if(LIBMICROHTTPD_FOUND)
     ${LIBMICROHTTPD_INCLUDE_DIRS})
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${LIBMICROHTTPD_LIBRARIES}
     ${WSOCK32_LIBS})
 endif()

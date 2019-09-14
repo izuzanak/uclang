@@ -10,7 +10,7 @@ if(LIBXML2_FOUND)
   set(CONF_COMP_DEFS
     ${LIBXML2_DEFINITIONS})
   set(CONF_LINK_LIBS
-    libbase_ucll
+    base_ucll
     ${LIBXML2_LIBRARIES})
 endif()
 

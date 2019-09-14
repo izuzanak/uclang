@@ -126,9 +126,9 @@ CFG_DIR    = index; index += 1
 CFG_MODULE = index; index += 1
 
 c_cfg = [
-    ["LIB_BASE"      ,c_enabled[C_LIBRARY_BASE]     ,C_UCLANG_DIR + "libs/libbase_ucll"     ,None],
-    ["LIB_FTGL"      ,c_enabled[C_LIBRARY_FTGL]     ,C_UCLANG_DIR + "libs/libftgl_ucll"     ,None],
-    ["LIB_NODE"      ,c_enabled[C_LIBRARY_NODE]     ,C_UCLANG_DIR + "libs/libnode_ucll"     ,None],
+    ["LIB_BASE"      ,c_enabled[C_LIBRARY_BASE]     ,C_UCLANG_DIR + "libs/base_ucll"        ,None],
+    ["LIB_FTGL"      ,c_enabled[C_LIBRARY_FTGL]     ,C_UCLANG_DIR + "libs/ftgl_ucll"        ,None],
+    ["LIB_NODE"      ,c_enabled[C_LIBRARY_NODE]     ,C_UCLANG_DIR + "libs/node_ucll"        ,None],
     ["UCLANG"        ,c_enabled[C_UCLANG_PROG]      ,C_UCLANG_DIR + "progs/uclang"          ,None],
     ["NODE"          ,c_enabled[C_NODE_PROG]        ,C_UCLANG_DIR + "progs/node"            ,None],
     ["ENCIPHER"      ,c_enabled[C_ENCIPHER_PROG]    ,C_UCLANG_DIR + "progs/encipher"        ,None],
