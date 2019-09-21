@@ -1056,8 +1056,13 @@ method process
         const unsigned param_cnt = 2;
         pointer param_data[param_cnt] = {dst_location MP_COMMA event_type_loc};
       ,
-        return false;
       );
+
+      // - drop due to exception -
+      if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+      {
+        return false;
+      }
     }
   }
 

@@ -435,7 +435,7 @@ method update
     } while((p_ptr += 2) < p_ptr_end);
   }
 
-  // - preprocess all fds -
+  // - postprocess all fds -
   if (fds.used != 0)
   {
     // - reset props of dummy event -
