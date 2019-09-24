@@ -695,7 +695,7 @@ built_in_class_s channel_client_class =
 {/*{{{*/
   "ChannelClient",
   c_modifier_public | c_modifier_final,
-  8, channel_client_methods,
+  10, channel_client_methods,
   3, channel_client_variables,
   bic_channel_client_consts,
   bic_channel_client_init,
@@ -724,6 +724,16 @@ built_in_method_s channel_client_methods[] =
     "ChannelClient#5",
     c_modifier_public | c_modifier_final,
     bic_channel_client_method_ChannelClient_5
+  },
+  {
+    "get_fd#0",
+    c_modifier_public | c_modifier_final,
+    bic_channel_client_method_get_fd_0
+  },
+  {
+    "events#0",
+    c_modifier_public | c_modifier_final,
+    bic_channel_client_method_events_0
   },
   {
     "get_fds#0",
@@ -919,6 +929,28 @@ method ChannelClient
 
   // - set destination data pointer -
   dst_location->v_data_ptr = (channel_conn_s *)cc_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_channel_client_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = ((channel_conn_s *)dst_location->v_data_ptr)->conn_fd;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_channel_client_method_events_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = ((channel_conn_s *)dst_location->v_data_ptr)->events;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
