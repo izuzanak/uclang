@@ -536,7 +536,7 @@ bool bic_channel_server_method_message_2(interpreter_thread_s &it,unsigned stack
 {/*{{{*/
 @begin ucl_params
 <
-conn_index:retrieve_integer
+conn_index:retrieve_integer_init
 conn_index:c_bi_class_array
 message:c_bi_class_string
 >
