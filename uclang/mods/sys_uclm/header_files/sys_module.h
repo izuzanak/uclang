@@ -169,6 +169,9 @@ bool bic_pipe_method_Pipe_2(interpreter_thread_s &it,unsigned stack_base,uli *op
 bool bic_pipe_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pipe_method_write_close_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pipe_method_read_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#ifdef __GNUC__
+bool bic_pipe_method_pid_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#endif
 bool bic_pipe_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_pipe_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

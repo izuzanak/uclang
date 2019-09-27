@@ -1798,7 +1798,11 @@ built_in_class_s pipe_class =
 {/*{{{*/
   "Pipe",
   c_modifier_public | c_modifier_final,
-  15, pipe_methods,
+  15
+#ifdef __GNUC__
+  + 1
+#endif
+  , pipe_methods,
   0, pipe_variables,
   bic_pipe_consts,
   bic_pipe_init,
@@ -1873,6 +1877,13 @@ built_in_method_s pipe_methods[] =
     c_modifier_public | c_modifier_final,
     bic_pipe_method_read_close_0
   },
+#ifdef __GNUC__
+  {
+    "pid#0",
+    c_modifier_public | c_modifier_final,
+    bic_pipe_method_pid_0
+  },
+#endif
   {
     "get_fd#0",
     c_modifier_public | c_modifier_final,
@@ -2087,6 +2098,29 @@ bool bic_pipe_method_read_close_0(interpreter_thread_s &it,unsigned stack_base,u
 
   return true;
 }/*}}}*/
+
+#ifdef __GNUC__
+bool bic_pipe_method_pid_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  /* - retrieve pointer to stream - */
+  FILE *f = (FILE *)dst_location->v_data_ptr;
+
+  /* - ERROR - */
+  if (f == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_STREAM_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  long long int result = ((IO_proc_file *)f)->pid;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+#endif
 
 bool bic_pipe_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/

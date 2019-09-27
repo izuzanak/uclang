@@ -35,6 +35,22 @@ include "script_parser.h"
 const int value_on  = 1;
 const int value_off = 0;
 
+#ifdef __GNUC__
+// - should match glibc structure -
+struct IO_FILE_plus
+{
+  FILE file;
+  void *vtable;
+};
+
+// - should match glibc structure -
+struct IO_proc_file
+{
+  IO_FILE_plus file;
+  pid_t pid;
+};
+#endif
+
 /*
  * definition of generated structures
  */
