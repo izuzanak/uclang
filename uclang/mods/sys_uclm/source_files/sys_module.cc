@@ -40,7 +40,7 @@ EXPORT built_in_module_s module =
   0,                    // Error base index
   37                    // Error count
 #ifdef ENABLE_CLASS_SOCKET
-  + 14
+  + 18
 #endif
   + 3
 #ifdef ENABLE_CLASS_CLOCK
@@ -115,6 +115,10 @@ const char *sys_error_strings[] =
   "error_SOCKET_UDP_MAX_MSG_SIZE_EXCEEDED",
 
   "error_SOCKET_SET_TIMEOUT_ERROR",
+  "error_SOCKET_SOCKOPT_INVALID_LEVEL",
+  "error_SOCKET_SOCKOPT_INVALID_OPTNAME",
+  "error_SOCKET_SOCKOPT_INVALID_VALUE_TYPE",
+  "error_SOCKET_SOCKOPT_OPERATION_ERROR",
 #endif
 
   "error_STREAM_WRITE_ERROR",
@@ -442,6 +446,34 @@ bool sys_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nError while setting socket send/receive timeout\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SOCKET_SOCKOPT_INVALID_LEVEL:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid socket option level\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SOCKET_SOCKOPT_INVALID_OPTNAME:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid socket option name\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SOCKET_SOCKOPT_INVALID_VALUE_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid socket option value type\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SOCKET_SOCKOPT_OPERATION_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while %s socket option\n",exception.params[0] ? "setting" : "getting");
     fprintf(stderr," ---------------------------------------- \n");
     break;
 #endif
@@ -2677,8 +2709,8 @@ built_in_class_s socket_class =
 {/*{{{*/
   "Socket",
   c_modifier_public | c_modifier_final,
-  16, socket_methods,
-  8, socket_variables,
+  18, socket_methods,
+  3 + 3 + 1 + 5, socket_variables,
   bic_socket_consts,
   bic_socket_init,
   bic_socket_clear,
@@ -2748,6 +2780,16 @@ built_in_method_s socket_methods[] =
     bic_socket_method_set_timeout_2
   },
   {
+    "sockopt#3",
+    c_modifier_public | c_modifier_final,
+    bic_socket_method_sockopt_3
+  },
+  {
+    "sockopt#2",
+    c_modifier_public | c_modifier_final,
+    bic_socket_method_sockopt_2
+  },
+  {
     "write#1",
     c_modifier_public | c_modifier_final,
     bic_fd_method_write_1
@@ -2781,41 +2823,96 @@ built_in_method_s socket_methods[] =
 
 built_in_variable_s socket_variables[] =
 {/*{{{*/
+
+  // - socket domain values -
   { "AF_UNIX", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "AF_FILE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "AF_INET", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - socket type values -
   { "SOCK_STREAM", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SOCK_DGRAM", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SOCK_RAW", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - socket level values -
+  { "SOL_SOCKET", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - socket options values -
+  { "SO_ERROR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SO_SNDBUF", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SO_RCVBUF", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SO_RCVTIMEO", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SO_SNDTIMEO", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_socket_consts(location_array_s &const_locations)
 {/*{{{*/
 
-  // - insert socket constants -
+  // - insert socket domain values -
   {
-    const_locations.push_blanks(8);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 8);
+    const_locations.push_blanks(3);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 3);
 
-#define CREATE_SOCKET_BIC_STATIC(VALUE)\
+#define CREATE_SOCKET_DOMAIN_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
   cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
-    CREATE_SOCKET_BIC_STATIC(AF_UNIX);
-    CREATE_SOCKET_BIC_STATIC(AF_UNIX);
-    CREATE_SOCKET_BIC_STATIC(AF_INET);
-
-    CREATE_SOCKET_BIC_STATIC(SOCK_STREAM);
-    CREATE_SOCKET_BIC_STATIC(SOCK_DGRAM);
-    CREATE_SOCKET_BIC_STATIC(SOCK_RAW);
-
-    CREATE_SOCKET_BIC_STATIC(SO_RCVTIMEO);
-    CREATE_SOCKET_BIC_STATIC(SO_SNDTIMEO);
+    CREATE_SOCKET_DOMAIN_BIC_STATIC(AF_UNIX);
+    CREATE_SOCKET_DOMAIN_BIC_STATIC(AF_UNIX);
+    CREATE_SOCKET_DOMAIN_BIC_STATIC(AF_INET);
   }
+
+  // - insert socket type values -
+  {
+    const_locations.push_blanks(3);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 3);
+
+#define CREATE_SOCKET_TYPE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_SOCKET_TYPE_BIC_STATIC(SOCK_STREAM);
+    CREATE_SOCKET_TYPE_BIC_STATIC(SOCK_DGRAM);
+    CREATE_SOCKET_TYPE_BIC_STATIC(SOCK_RAW);
+  }
+
+  // - insert socket level values -
+  {
+    const_locations.push_blanks(1);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 1);
+
+#define CREATE_SOCKET_LEVEL_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_SOCKET_LEVEL_BIC_STATIC(SOL_SOCKET);
+  }
+
+  // - insert socket options values -
+  {
+    const_locations.push_blanks(5);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 5);
+
+#define CREATE_SOCKET_OPTION_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_SOCKET_OPTION_BIC_STATIC(SO_ERROR);
+    CREATE_SOCKET_OPTION_BIC_STATIC(SO_SNDBUF);
+    CREATE_SOCKET_OPTION_BIC_STATIC(SO_RCVBUF);
+    CREATE_SOCKET_OPTION_BIC_STATIC(SO_RCVTIMEO);
+    CREATE_SOCKET_OPTION_BIC_STATIC(SO_SNDTIMEO);
+  }
+
 }/*}}}*/
 
 void bic_socket_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -3329,6 +3426,141 @@ method set_timeout
   }
 
   BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_socket_method_sockopt_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+level:retrieve_integer
+optname:retrieve_integer
+value:ignore
+>
+method sockopt
+; @end
+
+  // - retrieve socket fd -
+  int fd = (int)dst_location->v_data_ptr;
+  char optval[32];
+  socklen_t optlen;
+
+  // - ERROR -
+  if (fd == -1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_SOCKET_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  switch (level)
+  {
+  case SOL_SOCKET:
+    {
+      switch (optname)
+      {
+      case SO_SNDBUF:
+      case SO_RCVBUF:
+        {
+          long long int value;
+
+          // - ERROR -
+          if (!it.retrieve_integer(src_2_location,value))
+          {
+            exception_s::throw_exception(it,module.error_base + c_error_SOCKET_SOCKOPT_INVALID_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            return false;
+          }
+
+          *((int *)optval) = value;
+          optlen = sizeof(int);
+        }
+        break;
+
+      default:
+        exception_s::throw_exception(it,module.error_base + c_error_SOCKET_SOCKOPT_INVALID_OPTNAME,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+    }
+    break;
+
+  default:
+    exception_s::throw_exception(it,module.error_base + c_error_SOCKET_SOCKOPT_INVALID_LEVEL,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (setsockopt(fd,level,optname,optval,optlen) == -1)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_SOCKET_SOCKOPT_OPERATION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(1);
+
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_socket_method_sockopt_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+level:retrieve_integer
+optname:retrieve_integer
+>
+method sockopt
+; @end
+
+  // - retrieve socket fd -
+  int fd = (int)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (fd == -1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_SOCKET_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  char optval[32];
+  socklen_t optlen = 32;
+
+  switch (level)
+  {
+  case SOL_SOCKET:
+    {
+      switch (optname)
+      {
+      case SO_ERROR:
+      case SO_SNDBUF:
+      case SO_RCVBUF:
+        {
+          // - ERROR -
+          if (getsockopt(fd,level,optname,optval,&optlen) == -1)
+          {
+            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_SOCKET_SOCKOPT_OPERATION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            new_exception->params.push(0);
+
+            return false;
+          }
+
+          long long int result = *((int *)optval);
+
+          BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+        }
+        break;
+
+      default:
+        exception_s::throw_exception(it,module.error_base + c_error_SOCKET_SOCKOPT_INVALID_OPTNAME,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+    }
+    break;
+
+  default:
+    exception_s::throw_exception(it,module.error_base + c_error_SOCKET_SOCKOPT_INVALID_LEVEL,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
 
   return true;
 }/*}}}*/

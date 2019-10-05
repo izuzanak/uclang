@@ -1832,13 +1832,13 @@ bool bic_fd_method_ioctl_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
 @begin ucl_params
 <
 request:retrieve_integer
-data:ignore
+value:ignore
 >
 method ioctl
 ; @end
 
   int fd = (int)dst_location->v_data_ptr;
-  char arg[128];
+  char arg[32];
 
   switch (request)
   {
@@ -1857,17 +1857,13 @@ method ioctl
     }
     break;
 
-  // - ERROR -
   default:
-    
     exception_s::throw_exception(it,module.error_base + c_error_FD_IOCTL_UNKNOWN_REQUEST,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
-  long long int result;
-
   // - ERROR -
-  if ((result = ioctl(fd,request,arg)) == -1)
+  if (ioctl(fd,request,arg) == -1)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FD_IOCTL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(errno);
@@ -1875,7 +1871,7 @@ method ioctl
     return false;
   }
 
-  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+  BIC_SET_RESULT_BLANK();
 
   return true;
 }/*}}}*/

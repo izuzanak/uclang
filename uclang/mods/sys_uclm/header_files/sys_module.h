@@ -74,6 +74,10 @@ enum
   c_error_SOCKET_UDP_MAX_MSG_SIZE_EXCEEDED,
 
   c_error_SOCKET_SET_TIMEOUT_ERROR,
+  c_error_SOCKET_SOCKOPT_INVALID_LEVEL,
+  c_error_SOCKET_SOCKOPT_INVALID_OPTNAME,
+  c_error_SOCKET_SOCKOPT_INVALID_VALUE_TYPE,
+  c_error_SOCKET_SOCKOPT_OPERATION_ERROR,
 #endif
 
   c_error_STREAM_WRITE_ERROR,
@@ -230,6 +234,8 @@ bool bic_socket_method_sendto_2(interpreter_thread_s &it,unsigned stack_base,uli
 bool bic_socket_method_recvfrom_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_socket_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_socket_method_set_timeout_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_socket_method_sockopt_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_socket_method_sockopt_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_socket_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_socket_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 #endif
