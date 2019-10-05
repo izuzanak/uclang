@@ -65,7 +65,6 @@ class Main
     // public final Socket#2
     // public final listen#2
     // public final accept#0
-    // public final accept_nonblock#0
     // public final connect#1
     // public final bind#1
     // public final sendto#2
@@ -74,7 +73,6 @@ class Main
     // public final set_timeout#2
     // public final write#1
     // public final read#0
-    // public final read_nonblock#0
     // public final read#1
     // public final get_fd#0
     // public final static to_string#0
@@ -95,7 +93,6 @@ class Main
     //
     // public final listen#2
     // public final accept#0
-    // public final accept_nonblock#0
     // public final connect#1
     // public final bind#1
     // public final sendto#2
@@ -104,7 +101,6 @@ class Main
     // public final set_timeout#2
     // public final write#1
     // public final read#0
-    // public final read_nonblock#0
     // public final read#1
     // public final get_fd#0
     //

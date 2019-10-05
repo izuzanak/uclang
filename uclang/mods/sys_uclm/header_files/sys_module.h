@@ -224,7 +224,6 @@ bool bic_socket_operator_binary_equal(interpreter_thread_s &it,unsigned stack_ba
 bool bic_socket_method_Socket_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_socket_method_listen_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_socket_method_accept_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_socket_method_accept_nonblock_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_socket_method_connect_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_socket_method_bind_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_socket_method_sendto_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -253,7 +252,6 @@ location_s *bic_fd_next_item(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_fd_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_fd_method_read_nonblock_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_readln_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

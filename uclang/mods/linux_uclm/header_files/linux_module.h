@@ -36,6 +36,9 @@ enum
   c_error_FD_SYNC_ERROR,
   c_error_FD_ADVISE_ERROR,
   c_error_FD_SEEK_ERROR,
+  c_error_FD_IOCTL_INVALID_ARGUMENT_TYPE,
+  c_error_FD_IOCTL_UNKNOWN_REQUEST,
+  c_error_FD_IOCTL_ERROR,
   c_error_FD_NOT_OPENED,
   c_error_TIMER_FD_CREATE_ERROR,
   c_error_TIMER_FD_SETTIME_ERROR,
@@ -83,6 +86,7 @@ void bic_fd_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_fd_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_Fd_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fd_method_Fd_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_open_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_creat_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_openat_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -106,6 +110,7 @@ bool bic_fd_method_datasync_0(interpreter_thread_s &it,unsigned stack_base,uli *
 bool bic_fd_method_advise_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_seek_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_mmap_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fd_method_ioctl_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

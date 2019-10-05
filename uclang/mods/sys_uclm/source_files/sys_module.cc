@@ -2677,7 +2677,7 @@ built_in_class_s socket_class =
 {/*{{{*/
   "Socket",
   c_modifier_public | c_modifier_final,
-  18, socket_methods,
+  16, socket_methods,
   8, socket_variables,
   bic_socket_consts,
   bic_socket_init,
@@ -2718,11 +2718,6 @@ built_in_method_s socket_methods[] =
     bic_socket_method_accept_0
   },
   {
-    "accept_nonblock#0",
-    c_modifier_public | c_modifier_final,
-    bic_socket_method_accept_nonblock_0
-  },
-  {
     "connect#1",
     c_modifier_public | c_modifier_final,
     bic_socket_method_connect_1
@@ -2761,11 +2756,6 @@ built_in_method_s socket_methods[] =
     "read#0",
     c_modifier_public | c_modifier_final,
     bic_fd_method_read_0
-  },
-  {
-    "read_nonblock#0",
-    c_modifier_public | c_modifier_final,
-    bic_fd_method_read_nonblock_0
   },
   {
     "read#1",
@@ -3035,39 +3025,6 @@ bool bic_socket_method_accept_0(interpreter_thread_s &it,unsigned stack_base,uli
 #endif
 
   return true;
-}/*}}}*/
-
-bool bic_socket_method_accept_nonblock_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  // - retrieve socket fd -
-  int fd = (int)dst_location->v_data_ptr;
-
-  // - ERROR -
-  if (ioctl(fd,FIONBIO,(char *)&value_on) != 0)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_SOCKET_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  bool ret_val = bic_socket_method_accept_0(it,stack_base,operands);
-
-  if (ret_val)
-  {
-    // - ERROR -
-    if (ioctl(fd,FIONBIO,(char *)&value_off) != 0)
-    {
-      exception_s::throw_exception(it,module.error_base + c_error_SOCKET_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-      return false;
-    }
-  }
-  else
-  {
-    ioctl(fd,FIONBIO,(char *)&value_off);
-  }
-
-  return ret_val;
 }/*}}}*/
 
 bool bic_socket_method_connect_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -3945,106 +3902,6 @@ bool bic_fd_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *oper
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
     BIC_SET_RESULT(new_location);
   }
-
-  return true;
-}/*}}}*/
-
-bool bic_fd_method_read_nonblock_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  // - retrieve fd -
-  int fd = (int)dst_location->v_data_ptr;
-
-  // - ERROR -
-  if (fd == -1)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_FD_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - ERROR -
-  if (ioctl(fd,FIONBIO,(char *)&value_on) != 0)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_FD_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  const long int c_buffer_add = 1024;
-
-  // - target data buffer -
-  bc_array_s data_buffer;
-  data_buffer.init();
-
-  long int read_cnt;
-  bool would_block = false;
-  do
-  {
-    unsigned old_used = data_buffer.used;
-    data_buffer.push_blanks(c_buffer_add);
-    read_cnt = read(fd,data_buffer.data + old_used,c_buffer_add);
-
-    // - read error -
-    if (read_cnt == -1)
-    {
-      // - test nonblock read escape -
-      if (errno == EAGAIN || errno == EWOULDBLOCK)
-      {
-        read_cnt = 0;
-        would_block = true;
-      }
-
-      // - ERROR -
-      else
-      {
-        data_buffer.clear();
-
-        ioctl(fd,FIONBIO,(char *)&value_off);
-
-        exception_s::throw_exception(it,module.error_base + c_error_FD_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        return false;
-      }
-    }
-  }
-  while(read_cnt >= c_buffer_add);
-
-  data_buffer.used = (data_buffer.used - c_buffer_add) + read_cnt;
-
-  // - was any data read -
-  if (data_buffer.used == 0 && !would_block)
-  {
-    data_buffer.clear();
-
-    BIC_SET_RESULT_BLANK();
-  }
-  else
-  {
-    data_buffer.push('\0');
-
-    // - return data string -
-    string_s *string_ptr = it.get_new_string_ptr();
-    string_ptr->data = data_buffer.data;
-    string_ptr->size = data_buffer.used;
-
-    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
-    BIC_SET_RESULT(new_location);
-  }
-
-  // - ERROR -
-  if (ioctl(fd,FIONBIO,(char *)&value_off) != 0)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_FD_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-#else
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  exception_s *new_exception = exception_s::throw_exception(it,c_error_BUILT_IN_NOT_IMPLEMENTED_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
-  BIC_EXCEPTION_PUSH_METHOD_RI("read_nonblock#0");
-
-  return false;
-#endif
 
   return true;
 }/*}}}*/

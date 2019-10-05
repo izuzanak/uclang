@@ -13,6 +13,7 @@ include "script_parser.h"
 #include <sys/timerfd.h>
 #include <sys/types.h>
 #include <sys/uio.h>
+#include <sys/ioctl.h>
 #include <unistd.h>
 
 // - file descriptor flags -

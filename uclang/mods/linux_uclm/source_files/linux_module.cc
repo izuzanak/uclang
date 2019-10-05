@@ -15,7 +15,7 @@ EXPORT built_in_module_s module =
   4,                     // Class count
   linux_classes,         // Classes
   0,                     // Error base index
-  26,                    // Error count
+  29,                    // Error count
   linux_error_strings,   // Error strings
   linux_initialize,      // Initialize function
   linux_print_exception, // Print exceptions function
@@ -48,6 +48,9 @@ const char *linux_error_strings[] =
   "error_FD_SYNC_ERROR",
   "error_FD_ADVISE_ERROR",
   "error_FD_SEEK_ERROR",
+  "error_FD_IOCTL_INVALID_ARGUMENT_TYPE",
+  "error_FD_IOCTL_UNKNOWN_REQUEST",
+  "error_FD_IOCTL_ERROR",
   "error_FD_NOT_OPENED",
   "error_TIMER_FD_CREATE_ERROR",
   "error_TIMER_FD_SETTIME_ERROR",
@@ -213,6 +216,29 @@ bool linux_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nFile descriptor seek error: ");
+    errno = exception.params[0];
+    perror("");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FD_IOCTL_INVALID_ARGUMENT_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFile descriptor ioctl invalid argument type\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FD_IOCTL_UNKNOWN_REQUEST:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFile descriptor ioctl unknown request\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FD_IOCTL_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFile descriptor ioctl error: ");
     errno = exception.params[0];
     perror("");
     fprintf(stderr," ---------------------------------------- \n");
@@ -491,12 +517,12 @@ built_in_class_s fd_class =
 {/*{{{*/
   "Fd",
   c_modifier_public | c_modifier_final,
-  22
+  24
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,6,0)
   + 2
 #endif
   , fd_methods,
-  16 + 12 + 1 + 3 + 6
+  16 + 12 + 1 + 1 + 3 + 6
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,16,0)
   + 5
 #endif
@@ -528,6 +554,11 @@ built_in_method_s fd_methods[] =
     "Fd#1",
     c_modifier_public | c_modifier_final,
     bic_fd_method_Fd_1
+  },
+  {
+    "Fd#2",
+    c_modifier_public | c_modifier_final,
+    bic_fd_method_Fd_2
   },
   {
     "open#3",
@@ -629,6 +660,11 @@ built_in_method_s fd_methods[] =
     bic_fd_method_mmap_4
   },
   {
+    "ioctl#2",
+    c_modifier_public | c_modifier_final,
+    bic_fd_method_ioctl_2
+  },
+  {
     "get_fd#0",
     c_modifier_public | c_modifier_final,
     bic_fd_method_get_fd_0
@@ -679,6 +715,9 @@ built_in_variable_s fd_variables[] =
   { "S_IROTH",  c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "S_IWOTH",  c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "S_IXOTH",  c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - ioctl requests -
+  { "FIONBIO",  c_modifier_public | c_modifier_static | c_modifier_static_const },
 
   // - special file descriptor values -
   { "AT_FDCWD",  c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -945,6 +984,20 @@ void bic_fd_consts(location_array_s &const_locations)
     CREATE_FD_OPEN_MODE_BIC_STATIC(S_IXOTH);
   }
 
+  // - insert ioctl requests -
+  {
+    const_locations.push_blanks(1);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 1);
+
+#define CREATE_FD_IOCTL_REQUEST_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_FD_IOCTL_REQUEST_BIC_STATIC(FIONBIO);
+  }
+
   // - insert special file descriptor values -
   {
     const_locations.push_blanks(1);
@@ -1078,6 +1131,63 @@ bool bic_fd_method_Fd_1(interpreter_thread_s &it,unsigned stack_base,uli *operan
     new_exception->params.push(errno);
 
     return false;
+  }
+
+  dst_location->v_data_ptr = (int)fd;
+
+  return true;
+}/*}}}*/
+
+bool bic_fd_method_Fd_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+src_fd:ignore
+duplicate:retrieve_integer
+>
+method Fd
+; @end
+
+  long long int src_fd;
+
+  if (!it.retrieve_integer(src_0_location,src_fd))
+  {
+    if (src_0_location->v_type == c_bi_class_fd)
+    {
+      src_fd = (int)src_0_location->v_data_ptr;
+    }
+    else
+    {
+      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      BIC_EXCEPTION_PUSH_METHOD_RI("Fd#2");
+      new_exception->params.push(2);
+      new_exception->params.push(src_0_location->v_type);
+      new_exception->params.push(src_1_location->v_type);
+
+      return false;
+    }
+  }
+
+  int fd;
+
+  if (duplicate)
+  {
+    // - duplicate file descriptor -
+    fd = dup(src_fd);
+
+    // - ERROR -
+    if (fd == -1)
+    {
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FD_DUPLICATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      new_exception->params.push(fd);
+      new_exception->params.push(errno);
+
+      return false;
+    }
+  }
+  else
+  {
+    fd = src_fd;
   }
 
   dst_location->v_data_ptr = (int)fd;
@@ -1713,6 +1823,59 @@ method mmap
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_mmap,mm_ptr);
   BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_fd_method_ioctl_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+request:retrieve_integer
+data:ignore
+>
+method ioctl
+; @end
+
+  int fd = (int)dst_location->v_data_ptr;
+  char arg[128];
+
+  switch (request)
+  {
+  case FIONBIO:
+    {
+      long long int argument;
+
+      // - ERROR -
+      if (!it.retrieve_integer(src_1_location,argument))
+      {
+        exception_s::throw_exception(it,module.error_base + c_error_FD_IOCTL_INVALID_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+
+      *((int *)arg) = argument;
+    }
+    break;
+
+  // - ERROR -
+  default:
+    
+    exception_s::throw_exception(it,module.error_base + c_error_FD_IOCTL_UNKNOWN_REQUEST,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  long long int result;
+
+  // - ERROR -
+  if ((result = ioctl(fd,request,arg)) == -1)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FD_IOCTL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(errno);
+
+    return false;
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
