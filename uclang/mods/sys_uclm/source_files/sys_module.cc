@@ -3160,8 +3160,11 @@ method connect
     // - ERROR -
     if (connect(fd,(sockaddr *)addr_ptr,sizeof(sockaddr_in)) != 0)
     {
-      exception_s::throw_exception(it,module.error_base + c_error_SOCKET_CONNECT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-      return false;
+      if (errno != EINPROGRESS)
+      {
+        exception_s::throw_exception(it,module.error_base + c_error_SOCKET_CONNECT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
     }
 #ifndef DISABLE_SO_DOMAIN
   }

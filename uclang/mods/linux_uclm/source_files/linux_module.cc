@@ -556,11 +556,6 @@ built_in_method_s fd_methods[] =
     bic_fd_method_Fd_1
   },
   {
-    "Fd#2",
-    c_modifier_public | c_modifier_final,
-    bic_fd_method_Fd_2
-  },
-  {
     "open#3",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_fd_method_open_3
@@ -569,6 +564,16 @@ built_in_method_s fd_methods[] =
     "creat#2",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_fd_method_creat_2
+  },
+  {
+    "ioctl#2",
+    c_modifier_public | c_modifier_final,
+    bic_fd_method_ioctl_2
+  },
+  {
+    "ioctl#3",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_fd_method_ioctl_3
   },
   {
     "openat#3",
@@ -660,11 +665,6 @@ built_in_method_s fd_methods[] =
     bic_fd_method_mmap_4
   },
   {
-    "ioctl#2",
-    c_modifier_public | c_modifier_final,
-    bic_fd_method_ioctl_2
-  },
-  {
     "get_fd#0",
     c_modifier_public | c_modifier_final,
     bic_fd_method_get_fd_0
@@ -745,6 +745,46 @@ built_in_variable_s fd_variables[] =
 #endif
 
 };/*}}}*/
+
+#define BIC_FD_METHOD_IOCTL(VALUE_LOCATION) \
+{/*{{{*/\
+  char arg[32];\
+\
+  switch (request)\
+  {\
+  case FIONBIO:\
+    {\
+      long long int argument;\
+\
+      /* - ERROR - */\
+      if (!it.retrieve_integer(VALUE_LOCATION,argument))\
+      {\
+        exception_s::throw_exception(it,module.error_base + c_error_FD_IOCTL_INVALID_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+        return false;\
+      }\
+\
+      *((int *)arg) = argument;\
+    }\
+    break;\
+\
+  default:\
+    exception_s::throw_exception(it,module.error_base + c_error_FD_IOCTL_UNKNOWN_REQUEST,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  /* - ERROR - */\
+  if (ioctl(fd,request,arg) == -1)\
+  {\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FD_IOCTL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(errno);\
+\
+    return false;\
+  }\
+\
+  BIC_SET_RESULT_BLANK();\
+\
+  return true;\
+}/*}}}*/
 
 #define BIC_FD_METHOD_WRITE_READ_RELEASE_IOV() \
 {/*{{{*/\
@@ -1138,63 +1178,6 @@ bool bic_fd_method_Fd_1(interpreter_thread_s &it,unsigned stack_base,uli *operan
   return true;
 }/*}}}*/
 
-bool bic_fd_method_Fd_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-@begin ucl_params
-<
-src_fd:ignore
-duplicate:retrieve_integer
->
-method Fd
-; @end
-
-  long long int src_fd;
-
-  if (!it.retrieve_integer(src_0_location,src_fd))
-  {
-    if (src_0_location->v_type == c_bi_class_fd)
-    {
-      src_fd = (int)src_0_location->v_data_ptr;
-    }
-    else
-    {
-      exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-      BIC_EXCEPTION_PUSH_METHOD_RI("Fd#2");
-      new_exception->params.push(2);
-      new_exception->params.push(src_0_location->v_type);
-      new_exception->params.push(src_1_location->v_type);
-
-      return false;
-    }
-  }
-
-  int fd;
-
-  if (duplicate)
-  {
-    // - duplicate file descriptor -
-    fd = dup(src_fd);
-
-    // - ERROR -
-    if (fd == -1)
-    {
-      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FD_DUPLICATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-      new_exception->params.push(fd);
-      new_exception->params.push(errno);
-
-      return false;
-    }
-  }
-  else
-  {
-    fd = src_fd;
-  }
-
-  dst_location->v_data_ptr = (int)fd;
-
-  return true;
-}/*}}}*/
-
 bool bic_fd_method_open_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
@@ -1252,6 +1235,41 @@ static_method
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_fd,fd);
   BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_fd_method_ioctl_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+request:retrieve_integer
+value:ignore
+>
+method ioctl
+; @end
+
+  int fd = (int)dst_location->v_data_ptr;
+
+  BIC_FD_METHOD_IOCTL(src_1_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_fd_method_ioctl_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+fd:retrieve_integer
+request:retrieve_integer
+value:ignore
+>
+class c_bi_class_fd
+method ioctl
+static_method
+; @end
+
+  BIC_FD_METHOD_IOCTL(src_2_location);
 
   return true;
 }/*}}}*/
@@ -1823,55 +1841,6 @@ method mmap
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_mmap,mm_ptr);
   BIC_SET_RESULT(new_location);
-
-  return true;
-}/*}}}*/
-
-bool bic_fd_method_ioctl_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-@begin ucl_params
-<
-request:retrieve_integer
-value:ignore
->
-method ioctl
-; @end
-
-  int fd = (int)dst_location->v_data_ptr;
-  char arg[32];
-
-  switch (request)
-  {
-  case FIONBIO:
-    {
-      long long int argument;
-
-      // - ERROR -
-      if (!it.retrieve_integer(src_1_location,argument))
-      {
-        exception_s::throw_exception(it,module.error_base + c_error_FD_IOCTL_INVALID_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        return false;
-      }
-
-      *((int *)arg) = argument;
-    }
-    break;
-
-  default:
-    exception_s::throw_exception(it,module.error_base + c_error_FD_IOCTL_UNKNOWN_REQUEST,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - ERROR -
-  if (ioctl(fd,request,arg) == -1)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FD_IOCTL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    new_exception->params.push(errno);
-
-    return false;
-  }
-
-  BIC_SET_RESULT_BLANK();
 
   return true;
 }/*}}}*/

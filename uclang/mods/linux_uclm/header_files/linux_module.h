@@ -86,9 +86,10 @@ void bic_fd_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_fd_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_Fd_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_fd_method_Fd_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_open_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_creat_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fd_method_ioctl_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fd_method_ioctl_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_openat_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_write_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -110,7 +111,6 @@ bool bic_fd_method_datasync_0(interpreter_thread_s &it,unsigned stack_base,uli *
 bool bic_fd_method_advise_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_seek_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_mmap_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_fd_method_ioctl_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
