@@ -572,7 +572,7 @@ conn_index:retrieve_integer_init
 conn_index:c_bi_class_array
 message:c_bi_class_string
 >
-method process
+method message
 ; @end
 
   channel_server_s *cs_ptr = (channel_server_s *)dst_location->v_data_ptr;
@@ -1135,7 +1135,7 @@ bool bic_channel_client_method_message_1(interpreter_thread_s &it,unsigned stack
 <
 message:c_bi_class_string
 >
-method process
+method message
 ; @end
 
   channel_conn_s *cc_ptr = (channel_conn_s *)dst_location->v_data_ptr;
