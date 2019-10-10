@@ -38,7 +38,7 @@ EXPORT built_in_module_s module =
   sys_classes,          // Classes
 
   0,                    // Error base index
-  37                    // Error count
+  36                    // Error count
 #ifdef ENABLE_CLASS_SOCKET
   + 18
 #endif
@@ -134,7 +134,6 @@ const char *sys_error_strings[] =
   "error_SIGNAL_WRONG_SIGNAL_NUMBER",
   "error_SIGNAL_WRONG_DELEGATE_PARAMETER_COUNT",
   "error_SIGNAL_CANNOT_BE_EXECUTED_BY_NON_MAIN_THREAD",
-  "error_SIGNAL_WRONG_PROCESS_IDENTIFIER",
   "error_SIGNAL_SEND_ERROR",
 
   "error_POLL_WRONG_FDS_AND_EVENTS_ARRAY_SIZE",
@@ -568,13 +567,6 @@ bool sys_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
   }
   break;
-  case c_error_SIGNAL_WRONG_PROCESS_IDENTIFIER:
-    fprintf(stderr," ---------------------------------------- \n");
-    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
-    print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nWrong process identification number %" HOST_LL_FORMAT "d\n",exception.params[0]);
-    fprintf(stderr," ---------------------------------------- \n");
-    break;
   case c_error_SIGNAL_SEND_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -4538,15 +4530,6 @@ class c_bi_class_signal
 method send
 static_method
 ; @end
-
-  // - ERROR -
-  if (target_pid <= 0)
-  {
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_SIGNAL_WRONG_PROCESS_IDENTIFIER,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    new_exception->params.push(target_pid);
-
-    return false;
-  }
 
   // - ERROR -
   if (signal_number < 0 || signal_number > UCHAR_MAX)
