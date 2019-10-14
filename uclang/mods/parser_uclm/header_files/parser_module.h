@@ -58,6 +58,7 @@ bool bic_fa_source_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 bool bic_fa_source_method_next_terminal_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fa_source_method_old_input_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fa_source_method_input_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fa_source_method_terminal_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fa_source_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fa_source_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fa_source_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

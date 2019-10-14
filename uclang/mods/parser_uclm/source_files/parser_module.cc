@@ -467,7 +467,7 @@ built_in_class_s fa_source_class =
 {/*{{{*/
   "FaSource",
   c_modifier_public | c_modifier_final,
-  7, fa_source_methods,
+  8, fa_source_methods,
   0, fa_source_variables,
   bic_fa_source_consts,
   bic_fa_source_init,
@@ -506,6 +506,11 @@ built_in_method_s fa_source_methods[] =
     "input_idx#0",
     c_modifier_public | c_modifier_final,
     bic_fa_source_method_input_idx_0
+  },
+  {
+    "terminal_length#0",
+    c_modifier_public | c_modifier_final,
+    bic_fa_source_method_terminal_length_0
   },
   {
     "next_item#0",
@@ -617,6 +622,19 @@ bool bic_fa_source_method_input_idx_0(interpreter_thread_s &it,unsigned stack_ba
   fa_source_s *fs_ptr = (fa_source_s *)dst_location->v_data_ptr;
 
   long long int result = fs_ptr->input_idx;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_fa_source_method_terminal_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  fa_source_s *fs_ptr = (fa_source_s *)dst_location->v_data_ptr;
+
+  long long int result = fs_ptr->input_idx - fs_ptr->old_input_idx;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
