@@ -16,7 +16,7 @@ EXPORT built_in_module_s module =
   parser_classes,         // Classes
 
   0,                      // Error base index
-  21,                     // Error count
+  22,                     // Error count
   parser_error_strings,   // Error strings
 
   parser_initialize,      // Initialize function
@@ -38,6 +38,7 @@ const char *parser_error_strings[] =
   "error_FINAL_AUTOMATA_REGULAR_EXPRESSIONS_EMPTY",
   "error_FINAL_AUTOMATA_REGULAR_EXPRESSION_NOT_STRING",
   "error_FINAL_AUTOMATA_REGULAR_EXPRESSION_PARSE_ERROR",
+  "error_FINAL_AUTOMATA_INVALID_TERMINAL_STRING_RANGE",
   "error_PARSER_CREATE_UNSPECIFIED_ERROR",
   "error_PARSER_CREATE_RULES_SYNTAX_ERROR",
   "error_PARSER_CREATE_RULES_DUPLICATE_TERMINAL",
@@ -105,6 +106,13 @@ bool parser_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nError while parsing regular expression at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FINAL_AUTOMATA_INVALID_TERMINAL_STRING_RANGE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid terminal string range\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_PARSER_CREATE_UNSPECIFIED_ERROR:
@@ -467,7 +475,7 @@ built_in_class_s fa_source_class =
 {/*{{{*/
   "FaSource",
   c_modifier_public | c_modifier_final,
-  8, fa_source_methods,
+  9, fa_source_methods,
   0, fa_source_variables,
   bic_fa_source_consts,
   bic_fa_source_init,
@@ -506,6 +514,11 @@ built_in_method_s fa_source_methods[] =
     "input_idx#0",
     c_modifier_public | c_modifier_final,
     bic_fa_source_method_input_idx_0
+  },
+  {
+    "terminal#2",
+    c_modifier_public | c_modifier_final,
+    bic_fa_source_method_terminal_2
   },
   {
     "terminal_length#0",
@@ -624,6 +637,37 @@ bool bic_fa_source_method_input_idx_0(interpreter_thread_s &it,unsigned stack_ba
   long long int result = fs_ptr->input_idx;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_fa_source_method_terminal_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+begin:retrieve_integer
+end:retrieve_integer
+>
+method terminal
+; @end
+
+  fa_source_s *fs_ptr = (fa_source_s *)dst_location->v_data_ptr;
+  string_s *source_ptr = (string_s *)fs_ptr->source_loc->v_data_ptr;
+
+  long long int term_begin = fs_ptr->old_input_idx + begin;
+  long long int term_end = fs_ptr->input_idx + end;
+
+  if (term_begin > term_end || term_begin < 0 || term_end > source_ptr->size - 1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_FINAL_AUTOMATA_INVALID_TERMINAL_STRING_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->set(term_end - term_begin,source_ptr->data + term_begin);
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
