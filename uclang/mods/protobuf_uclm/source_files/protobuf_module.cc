@@ -484,7 +484,7 @@ bool bic_proto_msg_descr_method_unpack_1(interpreter_thread_s &it,unsigned stack
 <
 data:retrieve_data_buffer
 >
-method send
+method unpack
 ; @end
 
   proto_msg_descr_s *pmd_ptr = (proto_msg_descr_s *)dst_location->v_data_ptr;
@@ -495,6 +495,13 @@ method send
 
   // - unpack message -
   void *msg_data = pmd_ptr->msg_unpack(nullptr,data_size,(const uint8_t *)data_ptr);
+
+  // - ERROR -
+  if (msg_data == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_PROTO_MSG_DESCR_MESSAGE_UNPACK_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
 
   // - create dictionary -
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)cmalloc(sizeof(pointer_map_tree_s));
