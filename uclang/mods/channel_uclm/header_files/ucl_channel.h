@@ -9,6 +9,7 @@ include "script_parser.h"
 #include <netdb.h>
 #include <poll.h>
 #include <sys/ioctl.h>
+#include <netinet/tcp.h>
 
 /*
  * basic definitions and constants

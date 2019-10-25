@@ -338,9 +338,10 @@ method ChannelServer
     return false;
   }
 
-  // - set server socket as reusable -
+  // - set server socket options -
   int yes = 1;
   setsockopt(fd,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(int));
+  setsockopt(fd,SOL_TCP,TCP_NODELAY,&yes,sizeof(int));
 
   // - ERROR -
   if (bind(fd,(struct sockaddr *)&address,sizeof(struct sockaddr_in)) != 0)
@@ -918,6 +919,11 @@ method ChannelClient
     exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_CLIENT_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
+
+
+  // - set server socket options -
+  int yes = 1;
+  setsockopt(fd,SOL_TCP,TCP_NODELAY,&yes,sizeof(int));
 
   // - ERROR -
   if (connect(fd,(struct sockaddr *)&address,sizeof(struct sockaddr_in)) != 0)
