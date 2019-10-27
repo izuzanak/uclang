@@ -13,7 +13,7 @@ EXPORT built_in_module_s module =
   2,                       // Class count
   channel_classes,         // Classes
   0,                       // Error base index
-  10,                      // Error count
+  11,                      // Error count
   channel_error_strings,   // Error strings
   channel_initialize,      // Initialize function
   channel_print_exception, // Print exceptions function
@@ -39,6 +39,7 @@ const char *channel_error_strings[] =
   "error_CHANNEL_CLIENT_INVALID_IP_ADDRESS",
   "error_CHANNEL_CLIENT_CREATE_ERROR",
   "error_CHANNEL_CLIENT_PROCESS_INVALID_FD",
+  "error_CHANNEL_CLIENT_NOT_CONNECTED",
 };/*}}}*/
 
 // - CHANNEL initialize -
@@ -134,6 +135,13 @@ bool channel_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nChannelClient, invalid file descriptor to process\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CHANNEL_CLIENT_NOT_CONNECTED:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nChannelClient is not connected\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -1061,6 +1069,9 @@ method process
     }
     else
     {
+      // - set connected flag -
+      cc_ptr->connected = true;
+
       // - call event new callback -
       CHANNEL_CALL_CALLBACK_DELEGATE(cc_ptr->event_callback,operands[c_source_pos_idx],
         BIC_CREATE_NEW_LOCATION_REFS(event_type_loc,c_bi_class_integer,c_channel_EVENT_CONNECTED,0);
@@ -1113,6 +1124,9 @@ method process
     {
       cc_ptr->events = 0;
 
+      // - reset connected flag -
+      cc_ptr->connected = false;
+
       // - call event drop callback -
       CHANNEL_CALL_CALLBACK_DELEGATE(cc_ptr->event_callback,operands[c_source_pos_idx],
         BIC_CREATE_NEW_LOCATION_REFS(event_type_loc,c_bi_class_integer,c_channel_EVENT_DROPPED,0);
@@ -1146,6 +1160,13 @@ method message
 
   channel_conn_s *cc_ptr = (channel_conn_s *)dst_location->v_data_ptr;
   string_s *message_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (!cc_ptr->connected)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_CLIENT_NOT_CONNECTED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
 
   // - create message length string -
   string_s *length_ptr = it.get_new_string_ptr();

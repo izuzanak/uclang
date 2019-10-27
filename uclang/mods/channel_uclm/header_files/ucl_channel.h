@@ -73,6 +73,7 @@ struct
 bi:conn_fd
 ui:events
 bool:connecting
+bool:connected
 
 pointer:event_callback
 pointer:message_callback
@@ -153,6 +154,7 @@ inline void channel_conn_s::init_static()
   conn_fd = -1;
   events = 0;
   connecting = false;
+  connected = false;
 
   event_callback = nullptr;
   message_callback = nullptr;
