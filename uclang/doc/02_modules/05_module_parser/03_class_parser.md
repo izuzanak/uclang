@@ -58,7 +58,7 @@ class Main
 
 <a name="Parser#1" />
 
-### Constructor [`Parser#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L738)
+### Constructor [`Parser#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L800)
 
 Creates object of class `Parser` based on string containing description of language terminal
 symbols and its grammar rules.
@@ -92,7 +92,7 @@ obj: Parser
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L726)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L788)
 
 Assignment operator `=`. Object of class `Parser` is replaced by method parameter.
 
@@ -131,7 +131,7 @@ obj: New value
 
 <a name="parse#2" />
 
-### Method [`parse#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L782)
+### Method [`parse#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L844)
 
 Parse source string given as first method parameter, and for each reduction
 occurred according to language grammar rules, call delegate given as second
@@ -169,7 +169,7 @@ a_state.rule_idx(): 1
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L845)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L907)
 
 Convert object of class `Parser` to object of class `String`.
 This method returns name of class `Parser`.
@@ -189,7 +189,7 @@ Parser.to_string(): Parser
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L854)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/parser_uclm/source_files/parser_module.cc#L916)
 
 Print string representation of object of class `Parser` to standard output.
 This method prints name of class `Parser`.

@@ -1591,6 +1591,15 @@ open flags." % m_target_name,
 %s
 obj.read().print();
 " % get_code(m_target_class,"obj","create_example")
+),/*}}}*/
+        "pid#0", new MethodDescr
+(/*{{{*/
+"Retrieve pid of process on other side of pipe.",
+[],
+"* Object of class %s." % doc_class_ref("Integer"),"
+%s
+(\"obj.pid(): %%d\\n\" %% obj.pid()).print();
+" % get_code(m_target_class,"obj","create_example")
 )/*}}}*/
       ]);/*}}}*/
     }
@@ -1747,6 +1756,33 @@ while(Blank != (term = obj.next_terminal()))
 while(Blank != (term = obj.next_terminal()))
 {
   (\"obj.input_idx(): %%d\\n\" %% obj.input_idx()).print();
+}
+" % get_property(m_target_name,"create_example_obj")
+),/*}}}*/
+        "terminal#2", new MethodDescr
+(/*{{{*/
+"Retrieve string that was recognized as last terminal symbol by final automata.",
+["Type convertible to integer, representing offset from terminal begin.",
+"Type convertible to integer, representing offset from terminal end."],
+"* Object of class %s representing last symbol recognized by final automata." % doc_class_ref("String"),"
+%s
+(\"obj: %%s\\n\" %% $obj).print();
+while(Blank != (term = obj.next_terminal()))
+{
+  (\"obj.terminal(0,0): %%s\\n\" %% obj.terminal(0,0)).print();
+}
+" % get_property(m_target_name,"create_example_obj")
+),/*}}}*/
+        "terminal_length#0", new MethodDescr
+(/*{{{*/
+"Retrieve length of last terminal symbol recognized by final automata.",
+[],
+"* Object of class %s representing length of last terminal symbol recognized by final automata." % doc_class_ref("Integer"),"
+%s
+(\"obj: %%s\\n\" %% $obj).print();
+while(Blank != (term = obj.next_terminal()))
+{
+  (\"obj.terminal_length(): %%d\\n\" %% obj.terminal_length()).print();
 }
 " % get_property(m_target_name,"create_example_obj")
 ),/*}}}*/
