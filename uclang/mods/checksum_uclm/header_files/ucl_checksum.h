@@ -6,5 +6,7 @@
 include "script_parser.h"
 @end
 
+extern unsigned short crc16_table[];
+
 #endif
 

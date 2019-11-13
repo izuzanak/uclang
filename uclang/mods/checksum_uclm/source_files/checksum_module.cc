@@ -5,11 +5,12 @@ include "checksum_module.h"
 
 // - CHECKSUM indexes of built in classes -
 unsigned c_bi_class_bcc = c_idx_not_exist;
+unsigned c_bi_class_crc_16 = c_idx_not_exist;
 
 // - CHECKSUM module -
 EXPORT built_in_module_s module =
 {/*{{{*/
-  1,                         // Class count
+  2,                         // Class count
   checksum_classes,          // Classes
 
   0,                         // Error base index
@@ -24,6 +25,7 @@ EXPORT built_in_module_s module =
 built_in_class_s *checksum_classes[] =
 {/*{{{*/
   &bcc_class,
+  &crc_16_class,
 };/*}}}*/
 
 // - CHECKSUM error strings -
@@ -39,6 +41,9 @@ bool checksum_initialize(script_parser_s &sp)
 
   // - initialize bcc class identifier -
   c_bi_class_bcc = class_base_idx++;
+
+  // - initialize crc_16 class identifier -
+  c_bi_class_crc_16 = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -214,6 +219,166 @@ bool bic_bcc_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli
 bool bic_bcc_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   printf("Bcc");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class CRC_16 -
+built_in_class_s crc_16_class =
+{/*{{{*/
+  "Crc16",
+  c_modifier_public | c_modifier_final,
+  6, crc_16_methods,
+  0, crc_16_variables,
+  bic_crc_16_consts,
+  bic_crc_16_init,
+  bic_crc_16_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s crc_16_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_crc_16_operator_binary_equal
+  },
+  {
+    "Crc16#1",
+    c_modifier_public | c_modifier_final,
+    bic_crc_16_method_Crc16_1
+  },
+  {
+    "append#1",
+    c_modifier_public | c_modifier_final,
+    bic_crc_16_method_append_1
+  },
+  {
+    "value#0",
+    c_modifier_public | c_modifier_final,
+    bic_crc_16_method_value_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_crc_16_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_crc_16_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s crc_16_variables[] =
+{/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
+};/*}}}*/
+
+void bic_crc_16_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_crc_16_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+}/*}}}*/
+
+void bic_crc_16_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+}/*}}}*/
+
+bool bic_crc_16_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_crc_16_method_Crc16_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+init_value:retrieve_integer
+>
+method Crc16
+; @end
+
+  // - set crc initial value -
+  dst_location->v_data_ptr = (long long int)init_value;
+
+  return true;
+}/*}}}*/
+
+bool bic_crc_16_method_append_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+data:retrieve_data_buffer
+>
+method append
+; @end
+
+  // - retrieve crc value -
+  unsigned short value = (long long int)dst_location->v_data_ptr;
+
+  if (data_size)
+  {
+    unsigned char *ptr = (unsigned char *)data_ptr;
+    unsigned char *ptr_end = ptr + data_size;
+
+    do {
+      value = crc16_table[(value ^ *ptr) & 0xff] ^ (value >> 8);
+    } while(++ptr < ptr_end);
+  }
+
+  // - set crc value -
+  dst_location->v_data_ptr = (long long int)value;
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_crc_16_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  // - retrieve crc value -
+  long long int result = (long long int)dst_location->v_data_ptr;
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_crc_16_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("Crc16"),"Crc16")
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_crc_16_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("Crc16");
 
   BIC_SET_RESULT_BLANK();
 
