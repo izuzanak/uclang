@@ -27,6 +27,7 @@ c_packages = [
   ["MOD_REGEX"     ,"regex_uclm"     ,"files"     ,["/usr/include/regex.h"]],
   ["MOD_PCRE"      ,"pcre_uclm"      ,"pkg-config",["libpcreposix"]],
   ["MOD_TIME"      ,"time_uclm"      ,"true"      ,[]],
+  ["MOD_CHECKSUM"  ,"checksum_uclm"  ,"true"      ,[]],
   ["MOD_LANG"      ,"lang_uclm"      ,"true"      ,[]],
   ["MOD_PACK"      ,"pack_uclm"      ,"true"      ,[]],
   ["MOD_CIPHER"    ,"cipher_uclm"    ,"true"      ,[]],

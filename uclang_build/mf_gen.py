@@ -1204,6 +1204,32 @@ if cfg_ref[CFG_TARGET]:
     )
 # }}}
 
+# checksum module
+cfg_ref = c_cfg[C_MODULE_CHECKSUM]
+# {{{
+if cfg_ref[CFG_TARGET]:
+    cfg_ref[CFG_MODULE] = module_c(
+      configuration,
+      cfg_ref[CFG_DIR],
+      cfg_ref[CFG_NAME],
+      [ 
+        "header_files",
+        os.sep.join(["..","..","libs","base_ucll","header_files"]),
+      ],
+      [ 
+        "source_files",
+      ],
+      [ 
+        os.sep.join(["..","..","libs","base_ucll"]),
+      ],
+      opt_build, # CXX options
+      opt_link, # CXX link options
+      "", # CXX defines
+      [],
+      [],
+    )
+# }}}
+
 # lang module
 cfg_ref = c_cfg[C_MODULE_LANG]
 # {{{

@@ -23,6 +23,7 @@ C_MODULE_READLINE   = index; index += 1
 C_MODULE_REGEX      = index; index += 1
 C_MODULE_PCRE       = index; index += 1
 C_MODULE_TIME       = index; index += 1
+C_MODULE_CHECKSUM   = index; index += 1
 C_MODULE_LANG       = index; index += 1
 C_MODULE_PACK       = index; index += 1
 C_MODULE_CIPHER     = index; index += 1
@@ -144,6 +145,7 @@ c_cfg = [
     ["MOD_REGEX"     ,c_enabled[C_MODULE_REGEX]     ,C_UCLANG_DIR + "mods/regex_uclm"       ,None],
     ["MOD_PCRE"      ,c_enabled[C_MODULE_PCRE]      ,C_UCLANG_DIR + "mods/pcre_uclm"        ,None],
     ["MOD_TIME"      ,c_enabled[C_MODULE_TIME]      ,C_UCLANG_DIR + "mods/time_uclm"        ,None],
+    ["MOD_CHECKSUM"  ,c_enabled[C_MODULE_CHECKSUM]  ,C_UCLANG_DIR + "mods/checksum_uclm"    ,None],
     ["MOD_LANG"      ,c_enabled[C_MODULE_LANG]      ,C_UCLANG_DIR + "mods/lang_uclm"        ,None],
     ["MOD_PACK"      ,c_enabled[C_MODULE_PACK]      ,C_UCLANG_DIR + "mods/pack_uclm"        ,None],
     ["MOD_CIPHER"    ,c_enabled[C_MODULE_CIPHER]    ,C_UCLANG_DIR + "mods/cipher_uclm"      ,None],
