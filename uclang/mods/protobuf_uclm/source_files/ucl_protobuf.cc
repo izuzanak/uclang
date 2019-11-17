@@ -597,8 +597,12 @@ bool proto_source_s::pack_message(interpreter_thread_s &it,ProtobufCMessageDescr
             }
             else
             {
-              // - set optional boolean flag -
-              *((protobuf_c_boolean *)(data + f_ptr->quantifier_offset)) = index != c_idx_not_exist;
+              if (f_ptr->type != PROTOBUF_C_TYPE_STRING &&
+                  f_ptr->type != PROTOBUF_C_TYPE_MESSAGE)
+              {
+                // - set optional boolean flag -
+                *((protobuf_c_boolean *)(data + f_ptr->quantifier_offset)) = index != c_idx_not_exist;
+              }
             }
 
             // - retrieve value location -
@@ -994,10 +998,22 @@ bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDes
             }
             else
             {
-              // - skip non present optional value -
-              if (!*((protobuf_c_boolean *)(data + f_ptr->quantifier_offset)))
+              if (f_ptr->type != PROTOBUF_C_TYPE_STRING &&
+                  f_ptr->type != PROTOBUF_C_TYPE_MESSAGE)
               {
-                continue;
+                // - skip non present optional value -
+                if (!*((protobuf_c_boolean *)(data + f_ptr->quantifier_offset)))
+                {
+                  continue;
+                }
+              }
+              else
+              {
+                // - skip non present optional value -
+                if (*((void **)(data + f_ptr->offset)) == nullptr)
+                {
+                  continue;
+                }
               }
             }
 
@@ -1097,19 +1113,24 @@ bool proto_source_s::unpack_message(interpreter_thread_s &it,ProtobufCMessageDes
               }
             }
 
+            size_t quantity = *((size_t *)(data + f_ptr->quantifier_offset));
+
             // - create array location -
             array_ptr = it.get_new_array_ptr();
-            array_ptr->copy_resize(*((size_t *)(data + f_ptr->quantifier_offset)));
+            array_ptr->copy_resize(quantity);
 
             BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
             value_location = new_location;
 
-            // - unpack single field -
-            if (!unpack_value(it,f_ptr,value_location,array_ptr,data))
+            if (quantity != 0)
             {
-              UNPACK_MESSAGE_RELEASE();
+              // - unpack single field -
+              if (!unpack_value(it,f_ptr,value_location,array_ptr,data))
+              {
+                UNPACK_MESSAGE_RELEASE();
 
-              return false;
+                return false;
+              }
             }
           }/*}}}*/
           break;
