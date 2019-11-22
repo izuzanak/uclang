@@ -6,7 +6,7 @@
 include "script_parser.h"
 @end
 
-#include <pcreposix.h>
+#include <regex.h>
 
 /*
  * basic definitions and constants

@@ -3124,7 +3124,7 @@ if cfg_ref[CFG_TARGET]:
         os.sep.join(["..","..","libs","base_ucll"]),
       ],
       opt_build, # CXX options
-      opt_link + "-lpcreposix ", # CXX link options
+      opt_link, # CXX link options
       "", # CXX defines
       [],
       [],
