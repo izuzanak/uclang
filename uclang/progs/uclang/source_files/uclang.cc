@@ -53,7 +53,7 @@ void term_signal_handler(int signum)
 
 void *run_interpreter(void *data)
 {/*{{{*/
-  int return_value = 0;
+  int return_value = 1;
 
   {
 #if SYSTEM_TYPE_UNIX_SIGACTION == ENABLED
