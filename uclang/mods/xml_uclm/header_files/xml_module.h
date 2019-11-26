@@ -64,6 +64,7 @@ bool bic_xml_node_operator_binary_equal(interpreter_thread_s &it,unsigned stack_
 bool bic_xml_node_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xml_node_method_XmlNode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xml_node_method_update_node_dict_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_xml_node_method_escape_texts_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xml_node_method_attr__2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xml_node_method_node_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xml_node_method_node__1(interpreter_thread_s &it,unsigned stack_base,uli *operands);

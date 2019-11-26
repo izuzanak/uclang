@@ -166,7 +166,15 @@ void xml_creator_s::create_nice(interpreter_thread_s &it,pointer a_node_ptr,stri
         else if (item_location->v_type == c_bi_class_string)
         {
           string_s *string_ptr = (string_s *)item_location->v_data_ptr;
-          xml_creator_s::append_string(string_ptr->data,string_ptr->size - 1,a_buffer);
+
+          if (node_ptr->escape_texts)
+          {
+            xml_creator_s::append_string(string_ptr->data,string_ptr->size - 1,a_buffer);
+          }
+          else
+          {
+            a_buffer.append(string_ptr->size - 1,string_ptr->data);
+          }
 
           cs_elm.after_node = false;
         }

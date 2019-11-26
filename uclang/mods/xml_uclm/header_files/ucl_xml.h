@@ -44,6 +44,7 @@ struct xml_node_s
   location_s *nodes;
   location_s *texts;
   location_s *conts;
+  bool escape_texts;
 
   static inline pointer_array_s *get_conts_array(interpreter_thread_s &it,location_s *&a_location_ptr);
   static void add_node_to_node_dict(interpreter_thread_s &it,pointer_map_tree_s &a_tree,
@@ -166,6 +167,7 @@ inline void xml_node_s::init()
   nodes = nullptr;
   texts = nullptr;
   conts = nullptr;
+  escape_texts = true;
 }/*}}}*/
 
 inline void xml_node_s::clear(interpreter_thread_s &it)

@@ -289,7 +289,15 @@ static_method
         else if (item_location->v_type == c_bi_class_string)
         {
           string_s *string_ptr = (string_s *)item_location->v_data_ptr;
-          xml_creator_s::append_string(string_ptr->data,string_ptr->size - 1,buffer);
+
+          if (node_ptr->escape_texts)
+          {
+            xml_creator_s::append_string(string_ptr->data,string_ptr->size - 1,buffer);
+          }
+          else
+          {
+            buffer.append(string_ptr->size - 1,string_ptr->data);
+          }
         }
         else
         {
@@ -485,7 +493,7 @@ built_in_class_s xml_node_class =
 {/*{{{*/
   "XmlNode",
   c_modifier_public | c_modifier_final,
-  22, xml_node_methods,
+  23, xml_node_methods,
   0, xml_node_variables,
   bic_xml_node_consts,
   bic_xml_node_init,
@@ -524,6 +532,11 @@ built_in_method_s xml_node_methods[] =
     "update_node_dict#0",
     c_modifier_public | c_modifier_final,
     bic_xml_node_method_update_node_dict_0
+  },
+  {
+    "escape_texts#1",
+    c_modifier_public | c_modifier_final,
+    bic_xml_node_method_escape_texts_1
   },
   {
     "attr_#2",
@@ -898,6 +911,24 @@ bool bic_xml_node_method_update_node_dict_0(interpreter_thread_s &it,unsigned st
   } while(node_stack.used > 0);
 
   node_stack.clear();
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_xml_node_method_escape_texts_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+value:retrieve_integer
+>
+method escape_texts
+; @end
+
+  xml_node_s *node_ptr = (xml_node_s *)dst_location->v_data_ptr;
+
+  node_ptr->escape_texts = value != 0;
 
   BIC_SET_RESULT_DESTINATION();
 
