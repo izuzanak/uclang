@@ -1,14 +1,14 @@
 
 import sys;
 import inotify;
-//import time;
+import time;
 import pack;
 import parser;
 import sqlite;
 import http;
 import websocket;
 import curl;
-import ucf;
+//import ucf;
 import ftp;
 import ssh2;
 import jit;
@@ -81,14 +81,14 @@ class Main
     "base",
     "sys",
     "inotify",
-    //"time",
+    "time",
     "pack",
     "parser",
     "sqlite",
     "http",
     "websocket",
     "curl",
-    "ucf",
+    //"ucf",
     "ftp",
     "ssh2",
     "jit",
@@ -181,7 +181,7 @@ class Main
       "UcfLog",
       "UcfMutex",
       "UcfLed",
-      "Serial",
+      "UcfSerial",
       "VarStore",
       "VarSlot",
       "NvmSegment",

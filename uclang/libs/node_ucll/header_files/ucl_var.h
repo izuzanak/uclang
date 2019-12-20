@@ -42,7 +42,6 @@ enum
   c_uclvar_module_http,
   c_uclvar_module_websocket,
   c_uclvar_module_curl,
-  c_uclvar_module_ucf,
   c_uclvar_module_ftp,
   c_uclvar_module_ssh2,
   c_uclvar_module_jit,
@@ -95,6 +94,7 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_class_Inotify;
   libnode_ucll_EXPORT static unsigned c_bi_class_InotifyWatch;
   libnode_ucll_EXPORT static unsigned c_bi_class_InotifyEvent;
+  libnode_ucll_EXPORT static unsigned c_bi_class_Time;
   libnode_ucll_EXPORT static unsigned c_bi_class_Pack;
   libnode_ucll_EXPORT static unsigned c_bi_class_FinalAutomata;
   libnode_ucll_EXPORT static unsigned c_bi_class_FaSource;
@@ -111,20 +111,6 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_class_WsBase64;
   libnode_ucll_EXPORT static unsigned c_bi_class_CurlResult;
   libnode_ucll_EXPORT static unsigned c_bi_class_Curl;
-  libnode_ucll_EXPORT static unsigned c_bi_class_System;
-  libnode_ucll_EXPORT static unsigned c_bi_class_Time;
-  libnode_ucll_EXPORT static unsigned c_bi_class_CfgFile;
-  libnode_ucll_EXPORT static unsigned c_bi_class_UcfLog;
-  libnode_ucll_EXPORT static unsigned c_bi_class_UcfMutex;
-  libnode_ucll_EXPORT static unsigned c_bi_class_UcfLed;
-  libnode_ucll_EXPORT static unsigned c_bi_class_Serial;
-  libnode_ucll_EXPORT static unsigned c_bi_class_VarStore;
-  libnode_ucll_EXPORT static unsigned c_bi_class_VarSlot;
-  libnode_ucll_EXPORT static unsigned c_bi_class_NvmSegment;
-  libnode_ucll_EXPORT static unsigned c_bi_class_MsgQueue;
-  libnode_ucll_EXPORT static unsigned c_bi_class_Bcc;
-  libnode_ucll_EXPORT static unsigned c_bi_class_Crc;
-  libnode_ucll_EXPORT static unsigned c_bi_class_Md5;
   libnode_ucll_EXPORT static unsigned c_bi_class_FtpSession;
   libnode_ucll_EXPORT static unsigned c_bi_class_FtpHandle;
   libnode_ucll_EXPORT static unsigned c_bi_class_Ssh2Session;
@@ -298,6 +284,7 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_mni_read_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni_read_max_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni_read_close_0;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_pid_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_get_fd_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_next_item_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_File_2;
@@ -309,13 +296,13 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_mni_Socket_2;
   libnode_ucll_EXPORT static unsigned c_bi_mni_listen_2;
   libnode_ucll_EXPORT static unsigned c_bi_mni_accept_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_accept_nonblock_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_connect_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni_bind_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni_sendto_2;
   libnode_ucll_EXPORT static unsigned c_bi_mni_recvfrom_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_set_timeout_2;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_read_nonblock_0;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_sockopt_3;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_sockopt_2;
   libnode_ucll_EXPORT static unsigned c_bi_mni_bind_2;
   libnode_ucll_EXPORT static unsigned c_bi_mni_unbind_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni_send_2;
@@ -336,6 +323,9 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_mni_watch_id_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_mask_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_cookie_0;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_Time_0;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_Time_1;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_value_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_nano_sec_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_micro_sec_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_milli_sec_0;
@@ -353,6 +343,8 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_mni_next_terminal_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_old_input_idx_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_input_idx_0;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_terminal_2;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_terminal_length_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_Parser_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni_parse_2;
   libnode_ucll_EXPORT static unsigned c_bi_mni_rule_idx_0;
@@ -401,7 +393,6 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_mni_protocol_name_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_callback_on_writable_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_write_2;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_connected_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_encode_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni_decode_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni_data_0;
@@ -411,76 +402,6 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_mni__POST_2;
   libnode_ucll_EXPORT static unsigned c_bi_mni__DELETE_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni__HEAD_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_GetProcessId_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_GetProcessName_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_GetWorkingDirectory_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_Sleep_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_Time_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_Time_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_GetNanosec_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_GetMicrosec_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_GetMillisec_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_GetSeconds_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_GetMinutes_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_GetHours_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_GetDays_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_IsLeapYear_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_DaysTillYear_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_GetSystemTime_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_SetSystemTime_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_ToSystemTime_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_ToLocalTime_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_CfgFile_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_CfgFile_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_Open_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_EnumSections_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_OpenSection_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_GetSection_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_EnumEntries_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_GetValue_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_GetValue_2;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_GetValueArray_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_UcfLog_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_UcfLog_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_add_file_4;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_add_file_5;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_add_stdout_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_add_stderr_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_add_nvm_2;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_write_3;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_UcfMutex_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_UcfMutex_2;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_Reserve_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_Reserve_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_Release_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_UcfLed_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_LightOn_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_LightOff_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_Toggle_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_Serial_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_SetFormat_5;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_Write_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_WriteAll_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_Read_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_VarStore_2;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_VarStore_5;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_clear_slots_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_index_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_varType_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_varSize_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_NvmSegment_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_NvmSegment_2;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_read_2;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_MsgQueue_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_MsgQueue_3;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_read_pid_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_peek_msg_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_Bcc_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_append_1;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_value_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_Crc_2;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_Md5_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_string_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_FtpSession_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni_login_2;
   libnode_ucll_EXPORT static unsigned c_bi_mni_get_file_2;
@@ -516,6 +437,7 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_mni_Set_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni_List_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_List_1;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_append_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni_append_ref_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni_prepend_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni_prepend_ref_1;
@@ -553,6 +475,7 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_mni_parse_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni_XmlNode_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni_update_node_dict_0;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_escape_texts_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni_attr__2;
   libnode_ucll_EXPORT static unsigned c_bi_mni_node_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni_node__1;
@@ -640,6 +563,10 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_vni_SOCK_STREAM;
   libnode_ucll_EXPORT static unsigned c_bi_vni_SOCK_DGRAM;
   libnode_ucll_EXPORT static unsigned c_bi_vni_SOCK_RAW;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_SOL_SOCKET;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_SO_ERROR;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_SO_SNDBUF;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_SO_RCVBUF;
   libnode_ucll_EXPORT static unsigned c_bi_vni_SO_RCVTIMEO;
   libnode_ucll_EXPORT static unsigned c_bi_vni_SO_SNDTIMEO;
   libnode_ucll_EXPORT static unsigned c_bi_vni__SIGINT;
@@ -806,7 +733,6 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_vni_WRITE_BINARY;
   libnode_ucll_EXPORT static unsigned c_bi_vni_WRITE_CONTINUATION;
   libnode_ucll_EXPORT static unsigned c_bi_vni_WRITE_HTTP;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_WRITE_CLOSE;
   libnode_ucll_EXPORT static unsigned c_bi_vni_WRITE_PING;
   libnode_ucll_EXPORT static unsigned c_bi_vni_WRITE_PONG;
   libnode_ucll_EXPORT static unsigned c_bi_vni_CB_ESTABLISHED;
@@ -902,31 +828,6 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_vni_AUTH_NTLM_WB;
   libnode_ucll_EXPORT static unsigned c_bi_vni_AUTH_ONLY;
   libnode_ucll_EXPORT static unsigned c_bi_vni_AUTH_NONE;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_FC_NONE;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_FC_RTS_CTS;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_FC_RS_485;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_PAR_NONE;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_PAR_EVEN;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_PAR_ODD;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_TBOOL;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_TSINT;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_TINT;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_TDINT;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_TLINT;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_TUSINT;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_TUINT;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_TUDINT;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_TULINT;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_TREAL;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_TLREAL;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_TTIME;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_TDATE;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_TTOD;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_TDT;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_TSTRING;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_CRC8;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_CRC16;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_CRC32;
   libnode_ucll_EXPORT static unsigned c_bi_vni_TYPE_DIR;
   libnode_ucll_EXPORT static unsigned c_bi_vni_TYPE_DIR_VERBOSE;
   libnode_ucll_EXPORT static unsigned c_bi_vni_TYPE_FILE_READ;
@@ -1712,6 +1613,10 @@ class UclVar
     libnode_ucll_EXPORT static UclVar SOCK_STREAM;
     libnode_ucll_EXPORT static UclVar SOCK_DGRAM;
     libnode_ucll_EXPORT static UclVar SOCK_RAW;
+    libnode_ucll_EXPORT static UclVar SOL_SOCKET;
+    libnode_ucll_EXPORT static UclVar SO_ERROR;
+    libnode_ucll_EXPORT static UclVar SO_SNDBUF;
+    libnode_ucll_EXPORT static UclVar SO_RCVBUF;
     libnode_ucll_EXPORT static UclVar SO_RCVTIMEO;
     libnode_ucll_EXPORT static UclVar SO_SNDTIMEO;
 
@@ -2013,6 +1918,17 @@ class UclVar
     }/*}}}*/
 
   };/*}}}*/
+
+  // - class Time -
+  inline static UclVar Time()
+  {/*{{{*/
+    return __new_object_0(c_bi_class_Time,c_bi_mni_Time_0);
+  }/*}}}*/
+
+  inline static UclVar Time(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_Time,c_bi_mni_Time_1,op_0);
+  }/*}}}*/
 
   // - class Pack -
   class Pack
@@ -2434,7 +2350,6 @@ class UclVar
     libnode_ucll_EXPORT static UclVar WRITE_BINARY;
     libnode_ucll_EXPORT static UclVar WRITE_CONTINUATION;
     libnode_ucll_EXPORT static UclVar WRITE_HTTP;
-    libnode_ucll_EXPORT static UclVar WRITE_CLOSE;
     libnode_ucll_EXPORT static UclVar WRITE_PING;
     libnode_ucll_EXPORT static UclVar WRITE_PONG;
     libnode_ucll_EXPORT static UclVar CB_ESTABLISHED;
@@ -2673,456 +2588,6 @@ class UclVar
     }/*}}}*/
 
   };/*}}}*/
-
-  // - class System -
-  class System
-  {/*{{{*/
-    friend class UclVar;
-    protected:
-    static unsigned c_bi_mi_GetProcessId_0;
-    static unsigned c_bi_mi_GetProcessName_0;
-    static unsigned c_bi_mi_GetWorkingDirectory_0;
-    static unsigned c_bi_mi_Sleep_1;
-    static unsigned c_bi_mi_to_string_0;
-    static unsigned c_bi_mi_print_0;
-
-    public:
-    inline static UclVar GetProcessId()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_GetProcessId_0);
-    }/*}}}*/
-
-    inline static UclVar GetProcessName()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_GetProcessName_0);
-    }/*}}}*/
-
-    inline static UclVar GetWorkingDirectory()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_GetWorkingDirectory_0);
-    }/*}}}*/
-
-    inline static UclVar Sleep(UclVar op_0)
-    {/*{{{*/
-      return __static_call_1(c_bi_mi_Sleep_1,op_0);
-    }/*}}}*/
-
-    inline static UclVar to_string()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_to_string_0);
-    }/*}}}*/
-
-    inline static UclVar print()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_print_0);
-    }/*}}}*/
-
-  };/*}}}*/
-
-  // - class Time -
-  class Time
-  {/*{{{*/
-    friend class UclVar;
-    protected:
-    static unsigned c_bi_mi_IsLeapYear_1;
-    static unsigned c_bi_mi_DaysTillYear_1;
-    static unsigned c_bi_mi_GetSystemTime_0;
-
-    public:
-    inline static UclVar IsLeapYear(UclVar op_0)
-    {/*{{{*/
-      return __static_call_1(c_bi_mi_IsLeapYear_1,op_0);
-    }/*}}}*/
-
-    inline static UclVar DaysTillYear(UclVar op_0)
-    {/*{{{*/
-      return __static_call_1(c_bi_mi_DaysTillYear_1,op_0);
-    }/*}}}*/
-
-    inline static UclVar GetSystemTime()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_GetSystemTime_0);
-    }/*}}}*/
-
-  };/*}}}*/
-
-  inline static UclVar Time()
-  {/*{{{*/
-    return __new_object_0(c_bi_class_Time,c_bi_mni_Time_0);
-  }/*}}}*/
-
-  inline static UclVar Time(UclVar op_0)
-  {/*{{{*/
-    return __new_object_1(c_bi_class_Time,c_bi_mni_Time_1,op_0);
-  }/*}}}*/
-
-  // - class CfgFile -
-  class CfgFile
-  {/*{{{*/
-    friend class UclVar;
-    protected:
-    static unsigned c_bi_mi_to_string_0;
-    static unsigned c_bi_mi_print_0;
-
-    public:
-    inline static UclVar to_string()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_to_string_0);
-    }/*}}}*/
-
-    inline static UclVar print()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_print_0);
-    }/*}}}*/
-
-  };/*}}}*/
-
-  inline static UclVar CfgFile()
-  {/*{{{*/
-    return __new_object_0(c_bi_class_CfgFile,c_bi_mni_CfgFile_0);
-  }/*}}}*/
-
-  inline static UclVar CfgFile(UclVar op_0)
-  {/*{{{*/
-    return __new_object_1(c_bi_class_CfgFile,c_bi_mni_CfgFile_1,op_0);
-  }/*}}}*/
-
-  // - class UcfLog -
-  class UcfLog
-  {/*{{{*/
-    friend class UclVar;
-    protected:
-    static unsigned c_bi_mi_to_string_0;
-    static unsigned c_bi_mi_print_0;
-
-    public:
-    inline static UclVar to_string()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_to_string_0);
-    }/*}}}*/
-
-    inline static UclVar print()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_print_0);
-    }/*}}}*/
-
-  };/*}}}*/
-
-  inline static UclVar UcfLog()
-  {/*{{{*/
-    return __new_object_0(c_bi_class_UcfLog,c_bi_mni_UcfLog_0);
-  }/*}}}*/
-
-  inline static UclVar UcfLog(UclVar op_0)
-  {/*{{{*/
-    return __new_object_1(c_bi_class_UcfLog,c_bi_mni_UcfLog_1,op_0);
-  }/*}}}*/
-
-  // - class UcfMutex -
-  class UcfMutex
-  {/*{{{*/
-    friend class UclVar;
-    protected:
-    static unsigned c_bi_mi_to_string_0;
-    static unsigned c_bi_mi_print_0;
-
-    public:
-    inline static UclVar to_string()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_to_string_0);
-    }/*}}}*/
-
-    inline static UclVar print()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_print_0);
-    }/*}}}*/
-
-  };/*}}}*/
-
-  inline static UclVar UcfMutex(UclVar op_0)
-  {/*{{{*/
-    return __new_object_1(c_bi_class_UcfMutex,c_bi_mni_UcfMutex_1,op_0);
-  }/*}}}*/
-
-  inline static UclVar UcfMutex(UclVar op_0,UclVar op_1)
-  {/*{{{*/
-    return __new_object_2(c_bi_class_UcfMutex,c_bi_mni_UcfMutex_2,op_0,op_1);
-  }/*}}}*/
-
-  // - class UcfLed -
-  class UcfLed
-  {/*{{{*/
-    friend class UclVar;
-    protected:
-    static unsigned c_bi_mi_to_string_0;
-    static unsigned c_bi_mi_print_0;
-
-    public:
-    inline static UclVar to_string()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_to_string_0);
-    }/*}}}*/
-
-    inline static UclVar print()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_print_0);
-    }/*}}}*/
-
-  };/*}}}*/
-
-  inline static UclVar UcfLed(UclVar op_0)
-  {/*{{{*/
-    return __new_object_1(c_bi_class_UcfLed,c_bi_mni_UcfLed_1,op_0);
-  }/*}}}*/
-
-  // - class Serial -
-  class Serial
-  {/*{{{*/
-    friend class UclVar;
-    protected:
-    static unsigned c_bi_mi_to_string_0;
-    static unsigned c_bi_mi_print_0;
-
-    public:
-    libnode_ucll_EXPORT static UclVar FC_NONE;
-    libnode_ucll_EXPORT static UclVar FC_RTS_CTS;
-    libnode_ucll_EXPORT static UclVar FC_RS_485;
-    libnode_ucll_EXPORT static UclVar PAR_NONE;
-    libnode_ucll_EXPORT static UclVar PAR_EVEN;
-    libnode_ucll_EXPORT static UclVar PAR_ODD;
-
-    public:
-    inline static UclVar to_string()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_to_string_0);
-    }/*}}}*/
-
-    inline static UclVar print()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_print_0);
-    }/*}}}*/
-
-  };/*}}}*/
-
-  inline static UclVar Serial(UclVar op_0)
-  {/*{{{*/
-    return __new_object_1(c_bi_class_Serial,c_bi_mni_Serial_1,op_0);
-  }/*}}}*/
-
-  // - class VarStore -
-  class VarStore
-  {/*{{{*/
-    friend class UclVar;
-    protected:
-    static unsigned c_bi_mi_to_string_0;
-    static unsigned c_bi_mi_print_0;
-
-    public:
-    libnode_ucll_EXPORT static UclVar TBOOL;
-    libnode_ucll_EXPORT static UclVar TSINT;
-    libnode_ucll_EXPORT static UclVar TINT;
-    libnode_ucll_EXPORT static UclVar TDINT;
-    libnode_ucll_EXPORT static UclVar TLINT;
-    libnode_ucll_EXPORT static UclVar TUSINT;
-    libnode_ucll_EXPORT static UclVar TUINT;
-    libnode_ucll_EXPORT static UclVar TUDINT;
-    libnode_ucll_EXPORT static UclVar TULINT;
-    libnode_ucll_EXPORT static UclVar TREAL;
-    libnode_ucll_EXPORT static UclVar TLREAL;
-    libnode_ucll_EXPORT static UclVar TTIME;
-    libnode_ucll_EXPORT static UclVar TDATE;
-    libnode_ucll_EXPORT static UclVar TTOD;
-    libnode_ucll_EXPORT static UclVar TDT;
-    libnode_ucll_EXPORT static UclVar TSTRING;
-
-    public:
-    inline static UclVar to_string()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_to_string_0);
-    }/*}}}*/
-
-    inline static UclVar print()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_print_0);
-    }/*}}}*/
-
-  };/*}}}*/
-
-  inline static UclVar VarStore(UclVar op_0,UclVar op_1)
-  {/*{{{*/
-    return __new_object_2(c_bi_class_VarStore,c_bi_mni_VarStore_2,op_0,op_1);
-  }/*}}}*/
-
-  inline static UclVar VarStore(UclVar op_0,UclVar op_1,UclVar op_2,UclVar op_3,UclVar op_4)
-  {/*{{{*/
-    return __new_object_5(c_bi_class_VarStore,c_bi_mni_VarStore_5,op_0,op_1,op_2,op_3,op_4);
-  }/*}}}*/
-
-  // - class VarSlot -
-  class VarSlot
-  {/*{{{*/
-    friend class UclVar;
-    protected:
-    static unsigned c_bi_mi_to_string_0;
-    static unsigned c_bi_mi_print_0;
-
-    public:
-    inline static UclVar to_string()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_to_string_0);
-    }/*}}}*/
-
-    inline static UclVar print()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_print_0);
-    }/*}}}*/
-
-  };/*}}}*/
-
-  // - class NvmSegment -
-  class NvmSegment
-  {/*{{{*/
-    friend class UclVar;
-    protected:
-    static unsigned c_bi_mi_to_string_0;
-    static unsigned c_bi_mi_print_0;
-
-    public:
-    inline static UclVar to_string()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_to_string_0);
-    }/*}}}*/
-
-    inline static UclVar print()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_print_0);
-    }/*}}}*/
-
-  };/*}}}*/
-
-  inline static UclVar NvmSegment(UclVar op_0)
-  {/*{{{*/
-    return __new_object_1(c_bi_class_NvmSegment,c_bi_mni_NvmSegment_1,op_0);
-  }/*}}}*/
-
-  inline static UclVar NvmSegment(UclVar op_0,UclVar op_1)
-  {/*{{{*/
-    return __new_object_2(c_bi_class_NvmSegment,c_bi_mni_NvmSegment_2,op_0,op_1);
-  }/*}}}*/
-
-  // - class MsgQueue -
-  class MsgQueue
-  {/*{{{*/
-    friend class UclVar;
-    protected:
-    static unsigned c_bi_mi_to_string_0;
-    static unsigned c_bi_mi_print_0;
-
-    public:
-    inline static UclVar to_string()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_to_string_0);
-    }/*}}}*/
-
-    inline static UclVar print()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_print_0);
-    }/*}}}*/
-
-  };/*}}}*/
-
-  inline static UclVar MsgQueue(UclVar op_0)
-  {/*{{{*/
-    return __new_object_1(c_bi_class_MsgQueue,c_bi_mni_MsgQueue_1,op_0);
-  }/*}}}*/
-
-  inline static UclVar MsgQueue(UclVar op_0,UclVar op_1,UclVar op_2)
-  {/*{{{*/
-    return __new_object_3(c_bi_class_MsgQueue,c_bi_mni_MsgQueue_3,op_0,op_1,op_2);
-  }/*}}}*/
-
-  // - class Bcc -
-  class Bcc
-  {/*{{{*/
-    friend class UclVar;
-    protected:
-    static unsigned c_bi_mi_to_string_0;
-    static unsigned c_bi_mi_print_0;
-
-    public:
-    inline static UclVar to_string()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_to_string_0);
-    }/*}}}*/
-
-    inline static UclVar print()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_print_0);
-    }/*}}}*/
-
-  };/*}}}*/
-
-  inline static UclVar Bcc()
-  {/*{{{*/
-    return __new_object_0(c_bi_class_Bcc,c_bi_mni_Bcc_0);
-  }/*}}}*/
-
-  // - class Crc -
-  class Crc
-  {/*{{{*/
-    friend class UclVar;
-    protected:
-    static unsigned c_bi_mi_to_string_0;
-    static unsigned c_bi_mi_print_0;
-
-    public:
-    libnode_ucll_EXPORT static UclVar CRC8;
-    libnode_ucll_EXPORT static UclVar CRC16;
-    libnode_ucll_EXPORT static UclVar CRC32;
-
-    public:
-    inline static UclVar to_string()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_to_string_0);
-    }/*}}}*/
-
-    inline static UclVar print()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_print_0);
-    }/*}}}*/
-
-  };/*}}}*/
-
-  inline static UclVar Crc(UclVar op_0,UclVar op_1)
-  {/*{{{*/
-    return __new_object_2(c_bi_class_Crc,c_bi_mni_Crc_2,op_0,op_1);
-  }/*}}}*/
-
-  // - class Md5 -
-  class Md5
-  {/*{{{*/
-    friend class UclVar;
-    protected:
-    static unsigned c_bi_mi_to_string_0;
-    static unsigned c_bi_mi_print_0;
-
-    public:
-    inline static UclVar to_string()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_to_string_0);
-    }/*}}}*/
-
-    inline static UclVar print()
-    {/*{{{*/
-      return __static_call_0(c_bi_mi_print_0);
-    }/*}}}*/
-
-  };/*}}}*/
-
-  inline static UclVar Md5()
-  {/*{{{*/
-    return __new_object_0(c_bi_class_Md5,c_bi_mni_Md5_0);
-  }/*}}}*/
 
   // - class FtpSession -
   class FtpSession
@@ -4339,6 +3804,11 @@ class UclVar
     return __call_0(c_bi_mni_read_close_0);
   }/*}}}*/
 
+  inline UclVar pid()
+  {/*{{{*/
+    return __call_0(c_bi_mni_pid_0);
+  }/*}}}*/
+
   inline UclVar get_fd()
   {/*{{{*/
     return __call_0(c_bi_mni_get_fd_0);
@@ -4379,11 +3849,6 @@ class UclVar
     return __call_0(c_bi_mni_accept_0);
   }/*}}}*/
 
-  inline UclVar accept_nonblock()
-  {/*{{{*/
-    return __call_0(c_bi_mni_accept_nonblock_0);
-  }/*}}}*/
-
   inline UclVar connect(UclVar op_0)
   {/*{{{*/
     return __call_1(c_bi_mni_connect_1,op_0);
@@ -4409,9 +3874,14 @@ class UclVar
     return __call_2(c_bi_mni_set_timeout_2,op_0,op_1);
   }/*}}}*/
 
-  inline UclVar read_nonblock()
+  inline UclVar sockopt(UclVar op_0,UclVar op_1,UclVar op_2)
   {/*{{{*/
-    return __call_0(c_bi_mni_read_nonblock_0);
+    return __call_3(c_bi_mni_sockopt_3,op_0,op_1,op_2);
+  }/*}}}*/
+
+  inline UclVar sockopt(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_sockopt_2,op_0,op_1);
   }/*}}}*/
 
   inline UclVar bind(UclVar op_0,UclVar op_1)
@@ -4499,6 +3969,11 @@ class UclVar
     return __call_0(c_bi_mni_cookie_0);
   }/*}}}*/
 
+  inline UclVar value()
+  {/*{{{*/
+    return __call_0(c_bi_mni_value_0);
+  }/*}}}*/
+
   inline UclVar nano_sec()
   {/*{{{*/
     return __call_0(c_bi_mni_nano_sec_0);
@@ -4577,6 +4052,16 @@ class UclVar
   inline UclVar input_idx()
   {/*{{{*/
     return __call_0(c_bi_mni_input_idx_0);
+  }/*}}}*/
+
+  inline UclVar terminal(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_terminal_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar terminal_length()
+  {/*{{{*/
+    return __call_0(c_bi_mni_terminal_length_0);
   }/*}}}*/
 
   inline UclVar parse(UclVar op_0,UclVar op_1)
@@ -4784,11 +4269,6 @@ class UclVar
     return __call_2(c_bi_mni_write_2,op_0,op_1);
   }/*}}}*/
 
-  inline UclVar connected()
-  {/*{{{*/
-    return __call_0(c_bi_mni_connected_0);
-  }/*}}}*/
-
   inline UclVar encode(UclVar op_0)
   {/*{{{*/
     return __call_1(c_bi_mni_encode_1,op_0);
@@ -4832,261 +4312,6 @@ class UclVar
   inline UclVar _HEAD(UclVar op_0)
   {/*{{{*/
     return __call_1(c_bi_mni__HEAD_1,op_0);
-  }/*}}}*/
-
-  inline UclVar GetProcessId()
-  {/*{{{*/
-    return __call_0(c_bi_mni_GetProcessId_0);
-  }/*}}}*/
-
-  inline UclVar GetProcessName()
-  {/*{{{*/
-    return __call_0(c_bi_mni_GetProcessName_0);
-  }/*}}}*/
-
-  inline UclVar GetWorkingDirectory()
-  {/*{{{*/
-    return __call_0(c_bi_mni_GetWorkingDirectory_0);
-  }/*}}}*/
-
-  inline UclVar Sleep(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_Sleep_1,op_0);
-  }/*}}}*/
-
-  inline UclVar GetNanosec()
-  {/*{{{*/
-    return __call_0(c_bi_mni_GetNanosec_0);
-  }/*}}}*/
-
-  inline UclVar GetMicrosec()
-  {/*{{{*/
-    return __call_0(c_bi_mni_GetMicrosec_0);
-  }/*}}}*/
-
-  inline UclVar GetMillisec()
-  {/*{{{*/
-    return __call_0(c_bi_mni_GetMillisec_0);
-  }/*}}}*/
-
-  inline UclVar GetSeconds()
-  {/*{{{*/
-    return __call_0(c_bi_mni_GetSeconds_0);
-  }/*}}}*/
-
-  inline UclVar GetMinutes()
-  {/*{{{*/
-    return __call_0(c_bi_mni_GetMinutes_0);
-  }/*}}}*/
-
-  inline UclVar GetHours()
-  {/*{{{*/
-    return __call_0(c_bi_mni_GetHours_0);
-  }/*}}}*/
-
-  inline UclVar GetDays()
-  {/*{{{*/
-    return __call_0(c_bi_mni_GetDays_0);
-  }/*}}}*/
-
-  inline UclVar IsLeapYear(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_IsLeapYear_1,op_0);
-  }/*}}}*/
-
-  inline UclVar DaysTillYear(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_DaysTillYear_1,op_0);
-  }/*}}}*/
-
-  inline UclVar GetSystemTime()
-  {/*{{{*/
-    return __call_0(c_bi_mni_GetSystemTime_0);
-  }/*}}}*/
-
-  inline UclVar SetSystemTime()
-  {/*{{{*/
-    return __call_0(c_bi_mni_SetSystemTime_0);
-  }/*}}}*/
-
-  inline UclVar ToSystemTime()
-  {/*{{{*/
-    return __call_0(c_bi_mni_ToSystemTime_0);
-  }/*}}}*/
-
-  inline UclVar ToLocalTime()
-  {/*{{{*/
-    return __call_0(c_bi_mni_ToLocalTime_0);
-  }/*}}}*/
-
-  inline UclVar Open(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_Open_1,op_0);
-  }/*}}}*/
-
-  inline UclVar EnumSections()
-  {/*{{{*/
-    return __call_0(c_bi_mni_EnumSections_0);
-  }/*}}}*/
-
-  inline UclVar OpenSection(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_OpenSection_1,op_0);
-  }/*}}}*/
-
-  inline UclVar GetSection()
-  {/*{{{*/
-    return __call_0(c_bi_mni_GetSection_0);
-  }/*}}}*/
-
-  inline UclVar EnumEntries()
-  {/*{{{*/
-    return __call_0(c_bi_mni_EnumEntries_0);
-  }/*}}}*/
-
-  inline UclVar GetValue(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_GetValue_1,op_0);
-  }/*}}}*/
-
-  inline UclVar GetValue(UclVar op_0,UclVar op_1)
-  {/*{{{*/
-    return __call_2(c_bi_mni_GetValue_2,op_0,op_1);
-  }/*}}}*/
-
-  inline UclVar GetValueArray(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_GetValueArray_1,op_0);
-  }/*}}}*/
-
-  inline UclVar add_file(UclVar op_0,UclVar op_1,UclVar op_2,UclVar op_3)
-  {/*{{{*/
-    return __call_4(c_bi_mni_add_file_4,op_0,op_1,op_2,op_3);
-  }/*}}}*/
-
-  inline UclVar add_file(UclVar op_0,UclVar op_1,UclVar op_2,UclVar op_3,UclVar op_4)
-  {/*{{{*/
-    return __call_5(c_bi_mni_add_file_5,op_0,op_1,op_2,op_3,op_4);
-  }/*}}}*/
-
-  inline UclVar add_stdout(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_add_stdout_1,op_0);
-  }/*}}}*/
-
-  inline UclVar add_stderr(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_add_stderr_1,op_0);
-  }/*}}}*/
-
-  inline UclVar add_nvm(UclVar op_0,UclVar op_1)
-  {/*{{{*/
-    return __call_2(c_bi_mni_add_nvm_2,op_0,op_1);
-  }/*}}}*/
-
-  inline UclVar write(UclVar op_0,UclVar op_1,UclVar op_2)
-  {/*{{{*/
-    return __call_3(c_bi_mni_write_3,op_0,op_1,op_2);
-  }/*}}}*/
-
-  inline UclVar Reserve()
-  {/*{{{*/
-    return __call_0(c_bi_mni_Reserve_0);
-  }/*}}}*/
-
-  inline UclVar Reserve(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_Reserve_1,op_0);
-  }/*}}}*/
-
-  inline UclVar Release()
-  {/*{{{*/
-    return __call_0(c_bi_mni_Release_0);
-  }/*}}}*/
-
-  inline UclVar LightOn()
-  {/*{{{*/
-    return __call_0(c_bi_mni_LightOn_0);
-  }/*}}}*/
-
-  inline UclVar LightOff()
-  {/*{{{*/
-    return __call_0(c_bi_mni_LightOff_0);
-  }/*}}}*/
-
-  inline UclVar Toggle()
-  {/*{{{*/
-    return __call_0(c_bi_mni_Toggle_0);
-  }/*}}}*/
-
-  inline UclVar SetFormat(UclVar op_0,UclVar op_1,UclVar op_2,UclVar op_3,UclVar op_4)
-  {/*{{{*/
-    return __call_5(c_bi_mni_SetFormat_5,op_0,op_1,op_2,op_3,op_4);
-  }/*}}}*/
-
-  inline UclVar Write(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_Write_1,op_0);
-  }/*}}}*/
-
-  inline UclVar WriteAll(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_WriteAll_1,op_0);
-  }/*}}}*/
-
-  inline UclVar Read()
-  {/*{{{*/
-    return __call_0(c_bi_mni_Read_0);
-  }/*}}}*/
-
-  inline UclVar clear_slots()
-  {/*{{{*/
-    return __call_0(c_bi_mni_clear_slots_0);
-  }/*}}}*/
-
-  inline UclVar index()
-  {/*{{{*/
-    return __call_0(c_bi_mni_index_0);
-  }/*}}}*/
-
-  inline UclVar varType()
-  {/*{{{*/
-    return __call_0(c_bi_mni_varType_0);
-  }/*}}}*/
-
-  inline UclVar varSize()
-  {/*{{{*/
-    return __call_0(c_bi_mni_varSize_0);
-  }/*}}}*/
-
-  inline UclVar read(UclVar op_0,UclVar op_1)
-  {/*{{{*/
-    return __call_2(c_bi_mni_read_2,op_0,op_1);
-  }/*}}}*/
-
-  inline UclVar read_pid()
-  {/*{{{*/
-    return __call_0(c_bi_mni_read_pid_0);
-  }/*}}}*/
-
-  inline UclVar peek_msg()
-  {/*{{{*/
-    return __call_0(c_bi_mni_peek_msg_0);
-  }/*}}}*/
-
-  inline UclVar append(UclVar op_0)
-  {/*{{{*/
-    return __call_1(c_bi_mni_append_1,op_0);
-  }/*}}}*/
-
-  inline UclVar value()
-  {/*{{{*/
-    return __call_0(c_bi_mni_value_0);
-  }/*}}}*/
-
-  inline UclVar string()
-  {/*{{{*/
-    return __call_0(c_bi_mni_string_0);
   }/*}}}*/
 
   inline UclVar login(UclVar op_0,UclVar op_1)
@@ -5202,6 +4427,11 @@ class UclVar
   inline UclVar next()
   {/*{{{*/
     return __call_0(c_bi_mni_next_0);
+  }/*}}}*/
+
+  inline UclVar append(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_append_1,op_0);
   }/*}}}*/
 
   inline UclVar append_ref(UclVar op_0)
@@ -5347,6 +4577,11 @@ class UclVar
   inline UclVar update_node_dict()
   {/*{{{*/
     return __call_0(c_bi_mni_update_node_dict_0);
+  }/*}}}*/
+
+  inline UclVar escape_texts(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_escape_texts_1,op_0);
   }/*}}}*/
 
   inline UclVar attr_(UclVar op_0,UclVar op_1)
