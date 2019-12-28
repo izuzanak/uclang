@@ -805,7 +805,7 @@ unsigned final_automata_s::recognize(char *input,unsigned &input_idx,unsigned in
     if (next_state_idx != c_idx_not_exist)
     {
       // - input end -
-      if (in_char == '\0')
+      if (input_idx >= input_length)
       {
         return states[next_state_idx].final;
       }
@@ -845,7 +845,7 @@ unsigned reg_parser_s::recognize_terminal(string_s &source_string,unsigned &inpu
 
 #define CLOSE_CHAR(RET_TERM_IDX) \
   {\
-    if (in_char == '\0') {\
+    if (input_idx >= source_string_length) {\
       return RET_TERM_IDX;\
     }\
 \
