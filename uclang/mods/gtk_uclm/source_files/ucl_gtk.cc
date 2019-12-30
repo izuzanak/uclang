@@ -60,7 +60,7 @@ void gtk_c::dlg_data_release(gpointer delegate_data)
 
 void gtk_c::callback_handler(gpointer delegate_idx,...)
 {/*{{{*/
-  gtk_delegate_s &delegate = gtk_c::delegates[(unsigned)delegate_idx];
+  gtk_delegate_s &delegate = gtk_c::delegates[(long unsigned)delegate_idx];
 
   // - retrieve interpreter thread reference -
   interpreter_thread_s &it = *gtk_c::it_ptr;
@@ -116,7 +116,7 @@ void gtk_c::callback_handler(gpointer delegate_idx,...)
       default:
         {
           // - retrieve type identification -
-          int type_id = (int)g_type_get_qdata(pg_type,gtk_c::bi_class_quark);
+          long int type_id = (long int)g_type_get_qdata(pg_type,gtk_c::bi_class_quark);
 
           switch (type_id)
           {
@@ -132,8 +132,8 @@ void gtk_c::callback_handler(gpointer delegate_idx,...)
           }
 
           // - process known objects -
-          if (type_id >= (int)gtk_c::gtk_obj_class_first &&
-              type_id <= (int)gtk_c::gtk_obj_class_last)
+          if (type_id >= (long int)gtk_c::gtk_obj_class_first &&
+              type_id <= (long int)gtk_c::gtk_obj_class_last)
           {
             GTK_C_CALLBACK_HANDLER_OBJECT_PARAMETER(type_id);
           }
@@ -192,11 +192,11 @@ bool gtk_c::g_type_check(location_s *location_ptr,GType g_type)
       if (g_type >= gtk_c::gtk_type_min && g_type <= gtk_c::gtk_type_max)
       {
         // - retrieve type identification -
-        int type_id = (int)g_type_get_qdata(g_type,gtk_c::bi_class_quark);
+        long int type_id = (long int)g_type_get_qdata(g_type,gtk_c::bi_class_quark);
 
         // - process known objects -
-        if (type_id >= (int)gtk_c::gtk_obj_class_first &&
-            type_id <= (int)gtk_c::gtk_obj_class_last)
+        if (type_id >= (long int)gtk_c::gtk_obj_class_first &&
+            type_id <= (long int)gtk_c::gtk_obj_class_last)
         {
           return location_ptr->v_type == (unsigned)type_id;
         }
@@ -483,11 +483,11 @@ location_s *gtk_c::g_value_value(interpreter_thread_s &it,GType g_type,GValue *g
       if (g_type >= gtk_c::gtk_type_min && g_type <= gtk_c::gtk_type_max)
       {
         // - retrieve type identification -
-        int type_id = (int)g_type_get_qdata(g_type,gtk_c::bi_class_quark);
+        long int type_id = (long int)g_type_get_qdata(g_type,gtk_c::bi_class_quark);
 
         // - process known objects -
-        if (type_id >= (int)gtk_c::gtk_obj_class_first &&
-            type_id <= (int)gtk_c::gtk_obj_class_last)
+        if (type_id >= (long int)gtk_c::gtk_obj_class_first &&
+            type_id <= (long int)gtk_c::gtk_obj_class_last)
         {
           gpointer g_obj = g_value_get_object(g_value);
 

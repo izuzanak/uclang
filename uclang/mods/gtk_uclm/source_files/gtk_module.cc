@@ -575,7 +575,7 @@ void bic_gtk_consts(location_array_s &const_locations)
 
 #define CREATE_G_OBJECT_TYPE_BIC_STATIC(VALUE,TYPE_ID)\
 {/*{{{*/\
-  if ((int)TYPE_ID != 0)\
+  if ((long int)TYPE_ID != 0)\
     g_type_set_qdata(VALUE,gtk_c::bi_class_quark,(gpointer)TYPE_ID);\
 \
   if (VALUE < gtk_c::gtk_type_min) gtk_c::gtk_type_min = VALUE;\
@@ -587,17 +587,17 @@ void bic_gtk_consts(location_array_s &const_locations)
   cv_ptr++;\
 }/*}}}*/
 
-    const struct {GType type;int type_id;} data[] =
+    const struct {GType type;long int type_id;} data[] =
     {/*{{{*/
-      { GTK_TYPE_ABOUT_DIALOG, (int)c_bi_class_gtk_dialog },
+      { GTK_TYPE_ABOUT_DIALOG, (long int)c_bi_class_gtk_dialog },
       { GTK_TYPE_ACCEL_GROUP, 0 },
       { GTK_TYPE_ACCEL_LABEL, 0 },
       { GTK_TYPE_ACCEL_MAP, 0 },
       { GTK_TYPE_ACCESSIBLE, 0 },
       { GTK_TYPE_ACTION_BAR, 0 },
-      { GTK_TYPE_ADJUSTMENT, (int)c_bi_class_gtk_g_object },
+      { GTK_TYPE_ADJUSTMENT, (long int)c_bi_class_gtk_g_object },
       { GTK_TYPE_APP_CHOOSER_BUTTON, 0 },
-      { GTK_TYPE_APP_CHOOSER_DIALOG, (int)c_bi_class_gtk_dialog },
+      { GTK_TYPE_APP_CHOOSER_DIALOG, (long int)c_bi_class_gtk_dialog },
       { GTK_TYPE_APP_CHOOSER_WIDGET, 0 },
       { GTK_TYPE_APPLICATION, 0 },
       { GTK_TYPE_APPLICATION_WINDOW, 0 },
@@ -626,11 +626,11 @@ void bic_gtk_consts(location_array_s &const_locations)
       { GTK_TYPE_CHECK_MENU_ITEM, 0 },
       { GTK_TYPE_CLIPBOARD, 0 },
       { GTK_TYPE_COLOR_BUTTON, 0 },
-      { GTK_TYPE_COLOR_CHOOSER_DIALOG, (int)c_bi_class_gtk_dialog },
+      { GTK_TYPE_COLOR_CHOOSER_DIALOG, (long int)c_bi_class_gtk_dialog },
       { GTK_TYPE_COLOR_CHOOSER_WIDGET, 0 },
       { GTK_TYPE_COMBO_BOX, 0 },
       { GTK_TYPE_COMBO_BOX_TEXT, 0 },
-      { GTK_TYPE_CONTAINER, (int)c_bi_class_gtk_container },
+      { GTK_TYPE_CONTAINER, (long int)c_bi_class_gtk_container },
       { GTK_TYPE_CSS_PROVIDER, 0 },
       { GTK_TYPE_DIALOG, 0 },
       { GTK_TYPE_DRAWING_AREA, 0 },
@@ -641,13 +641,13 @@ void bic_gtk_consts(location_array_s &const_locations)
       { GTK_TYPE_EVENT_CONTROLLER, 0 },
       { GTK_TYPE_EXPANDER, 0 },
       { GTK_TYPE_FILE_CHOOSER_BUTTON, 0 },
-      { GTK_TYPE_FILE_CHOOSER_DIALOG, (int)c_bi_class_gtk_dialog },
+      { GTK_TYPE_FILE_CHOOSER_DIALOG, (long int)c_bi_class_gtk_dialog },
       { GTK_TYPE_FILE_CHOOSER_WIDGET, 0 },
       { GTK_TYPE_FIXED, 0 },
       { GTK_TYPE_FLOW_BOX, 0 },
       { GTK_TYPE_FLOW_BOX_CHILD, 0 },
       { GTK_TYPE_FONT_BUTTON, 0 },
-      { GTK_TYPE_FONT_CHOOSER_DIALOG, (int)c_bi_class_gtk_dialog },
+      { GTK_TYPE_FONT_CHOOSER_DIALOG, (long int)c_bi_class_gtk_dialog },
       { GTK_TYPE_FONT_CHOOSER_WIDGET, 0 },
       { GTK_TYPE_FRAME, 0 },
       { GTK_TYPE_GESTURE, 0 },
@@ -660,7 +660,7 @@ void bic_gtk_consts(location_array_s &const_locations)
       { GTK_TYPE_GESTURE_SWIPE, 0 },
       { GTK_TYPE_GESTURE_ZOOM, 0 },
       { GTK_TYPE_GL_AREA, 0 },
-      { GTK_TYPE_GRID, (int)c_bi_class_gtk_grid },
+      { GTK_TYPE_GRID, (long int)c_bi_class_gtk_grid },
       { GTK_TYPE_HEADER_BAR, 0 },
       { GTK_TYPE_ICON_INFO, 0 },
       { GTK_TYPE_ICON_THEME, 0 },
@@ -685,7 +685,7 @@ void bic_gtk_consts(location_array_s &const_locations)
       { GTK_TYPE_MENU_ITEM, 0 },
       { GTK_TYPE_MENU_SHELL, 0 },
       { GTK_TYPE_MENU_TOOL_BUTTON, 0 },
-      { GTK_TYPE_MESSAGE_DIALOG, (int)c_bi_class_gtk_dialog },
+      { GTK_TYPE_MESSAGE_DIALOG, (long int)c_bi_class_gtk_dialog },
       { GTK_TYPE_MOUNT_OPERATION, 0 },
       { GTK_TYPE_NOTEBOOK, 0 },
       { GTK_TYPE_OFFSCREEN_WINDOW, 0 },
@@ -700,7 +700,7 @@ void bic_gtk_consts(location_array_s &const_locations)
       { GTK_TYPE_RADIO_MENU_ITEM, 0 },
       { GTK_TYPE_RADIO_TOOL_BUTTON, 0 },
       { GTK_TYPE_RANGE, 0 },
-      { GTK_TYPE_RECENT_CHOOSER_DIALOG, (int)c_bi_class_gtk_dialog },
+      { GTK_TYPE_RECENT_CHOOSER_DIALOG, (long int)c_bi_class_gtk_dialog },
       { GTK_TYPE_RECENT_CHOOSER_MENU, 0 },
       { GTK_TYPE_RECENT_CHOOSER_WIDGET, 0 },
       { GTK_TYPE_RECENT_MANAGER, 0 },
@@ -724,7 +724,7 @@ void bic_gtk_consts(location_array_s &const_locations)
       { GTK_TYPE_STATUSBAR, 0 },
       { GTK_TYPE_STYLE_CONTEXT, 0 },
       { GTK_TYPE_SWITCH, 0 },
-      { GTK_TYPE_TEXT_BUFFER, (int)c_bi_class_gtk_g_object },
+      { GTK_TYPE_TEXT_BUFFER, (long int)c_bi_class_gtk_g_object },
       { GTK_TYPE_TEXT_CHILD_ANCHOR, 0 },
       { GTK_TYPE_TEXT_MARK, 0 },
       { GTK_TYPE_TEXT_TAG, 0 },
@@ -745,8 +745,8 @@ void bic_gtk_consts(location_array_s &const_locations)
       { GTK_TYPE_TREE_VIEW_COLUMN, 0 },
       { GTK_TYPE_VIEWPORT, 0 },
       { GTK_TYPE_VOLUME_BUTTON, 0 },
-      { GTK_TYPE_WIDGET, (int)c_bi_class_gtk_widget },
-      { GTK_TYPE_WINDOW, (int)c_bi_class_gtk_window },
+      { GTK_TYPE_WIDGET, (long int)c_bi_class_gtk_widget },
+      { GTK_TYPE_WINDOW, (long int)c_bi_class_gtk_window },
       { GTK_TYPE_WINDOW_GROUP, 0 },
 
       { GTK_TYPE_LICENSE, 0 },
@@ -870,7 +870,7 @@ void bic_gtk_consts(location_array_s &const_locations)
     unsigned v_idx_end = sizeof(data)/sizeof(data[0]);
     do {
       GType type = data[v_idx].type;
-      int type_id = data[v_idx].type_id;
+      long int type_id = data[v_idx].type_id;
 
       CREATE_G_OBJECT_TYPE_BIC_STATIC(type,type_id);
     } while(++v_idx < v_idx_end);
