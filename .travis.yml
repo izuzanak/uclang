@@ -2,6 +2,7 @@
 language: cpp
 compiler: gcc
 os: linux
+dist: bionic
 
 install:
   - git clone --branch=master https://github.com/izuzanak/cont.git ~/build/izuzanak/cont
