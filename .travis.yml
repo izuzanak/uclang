@@ -1,0 +1,19 @@
+
+language: cpp
+compiler: gcc
+os: linux
+
+install:
+  - git clone --branch=master https://github.com/izuzanak/cont.git ~/build/izuzanak/cont
+
+  - cd ~/build/izuzanak/cont/build
+  - cmake ..
+  - make
+  - sudo make install
+
+script:
+  - cd ~/build/izuzanak/uclang/build
+  - cmake ..
+  - make
+  - sudo make install
+

@@ -1,5 +1,7 @@
 # uclang - programming language
 
+[![Build Status](https://travis-ci.com/izuzanak/uclang.svg?branch=master)](https://travis-ci.com/izuzanak/uclang)
+
 Interpreted, dynamically typed, object-oriented programming language.
 
 ## Language features
