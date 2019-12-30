@@ -4,6 +4,40 @@ compiler: gcc
 os: linux
 dist: bionic
 
+before_install:
+  - >
+    sudo apt-get -y install
+    liblua5.2-dev
+    libpq-dev
+    libao-dev
+    libavutil-dev
+    libavformat-dev
+    libavcodec-dev
+    libswscale-dev
+    libdatrie-dev
+    libfann-dev
+    libfftw3-dev
+    libfuse-dev
+    libgmp-dev
+    libmpfr-dev
+    libgtk-3-dev
+    libmicrohttpd-dev
+    libglm-dev
+    libglib2.0-dev-bin
+    mono-runtime-sgen
+    libmpg123-dev
+    libnanomsg-dev
+    libopencv-dev
+    libportaudio2
+    libprotobuf-c-dev
+    libraw-dev
+    libsnappy-dev
+    libsqlite3-dev
+    libssh2-1-dev
+    libwebsockets-dev
+    libva-dev
+    libvlc-dev
+
 install:
   - git clone --branch=master https://github.com/izuzanak/cont.git ~/build/izuzanak/cont
 
