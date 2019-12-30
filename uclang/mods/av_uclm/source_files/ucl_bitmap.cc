@@ -14,15 +14,16 @@ bool bitmap_s::load_from_file(const char *a_file)
     return false;
   }
 
-  fread(&fh,sizeof(bmp_file_header_s),1,f);
-  if (fh.type != 0x4d42) {
+  if (fread(&fh,sizeof(bmp_file_header_s),1,f) != 1 ||
+      fh.type != 0x4d42)
+  {
     fclose(f);
     return false;
   }
 
-  fread(&ih,sizeof(bmp_image_header_s),1,f);
-
-  if (ih.planes != 1 || ih.bit_cnt != 32) {
+  if (fread(&ih,sizeof(bmp_image_header_s),1,f) != 1 ||
+      ih.planes != 1 || ih.bit_cnt != 32)
+  {
     fclose(f);
     return false;
   }
@@ -37,7 +38,13 @@ bool bitmap_s::load_from_file(const char *a_file)
   }
 
   data = (unsigned char *)cmalloc(image_size*sizeof(unsigned char));
-  fread(data,image_size,1,f);
+
+  if (fread(data,image_size,1,f) != 1)
+  {
+    cfree(data);
+    fclose(f);
+    return false;
+  }
 
   fclose(f);
 
