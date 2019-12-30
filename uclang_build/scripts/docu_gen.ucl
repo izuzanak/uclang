@@ -1598,7 +1598,7 @@ obj.read().print();
 [],
 "* Object of class %s." % doc_class_ref("Integer"),"
 %s
-(\"obj.pid(): %%d\\n\" %% obj.pid()).print();
+(\"obj.pid(): %%s\\n\" %% $(type obj.pid())).print();
 " % get_code(m_target_class,"obj","create_example")
 )/*}}}*/
       ]);/*}}}*/

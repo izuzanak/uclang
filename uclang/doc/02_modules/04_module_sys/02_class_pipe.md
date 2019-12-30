@@ -352,10 +352,10 @@ Retrieve pid of process on other side of pipe.
 
 ```cpp
 obj = new Pipe("cat numbers.txt 2> /dev/null","r");
-("obj.pid(): %d\n" % obj.pid()).print();
+("obj.pid(): %s\n" % $(type obj.pid())).print();
 ```
 ```
-obj.pid(): 23182
+obj.pid(): Integer
 ```
 
 <a name="get_fd#0" />

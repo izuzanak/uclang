@@ -57,4 +57,13 @@ script:
   - cmake ..
   - make
   - sudo make install
+  - export LD_LIBRARY_PATH=/usr/local/lib/uclang
+
+  - cd ~/build/izuzanak/uclang/uclang/examples
+  - source prepare.sh
+  - cd test
+  - uclang test.ucl snapshot:test
+
+  - cd ~/build/izuzanak/uclang/uclang_build
+  - bash scripts/docu_gen.sh
 
