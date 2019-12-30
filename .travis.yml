@@ -9,6 +9,7 @@ before_install:
     sudo apt-get -y install
     liblua5.2-dev
     libpq-dev
+    postgresql-server-dev-all
     libao-dev
     libavutil-dev
     libavformat-dev
@@ -20,10 +21,13 @@ before_install:
     libfuse-dev
     libgmp-dev
     libmpfr-dev
+    libgstreamer1.0-dev
+    libgsl-dev
     libgtk-3-dev
     libmicrohttpd-dev
     libglm-dev
-    libglib2.0-dev-bin
+    libglib2.0-dev
+    libmono-2.0-dev
     mono-runtime-sgen
     libmpg123-dev
     libnanomsg-dev
@@ -37,6 +41,8 @@ before_install:
     libwebsockets-dev
     libva-dev
     libvlc-dev
+    freeglut3-dev
+    libglew-dev
 
 install:
   - git clone --branch=master https://github.com/izuzanak/cont.git ~/build/izuzanak/cont
