@@ -63,7 +63,6 @@ script:
   - source prepare.sh
   - cd test
   - uclang test.ucl snapshot:test
-  - cat $(find ./ -name "*diff*")
 
   - cd ~/build/izuzanak/uclang/uclang_build
   - bash scripts/docu_gen.sh

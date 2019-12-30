@@ -1,6 +1,7 @@
 // vim: syntax=java
 
 import tutorial;
+import containers;
 import sys;
 
 class Main
@@ -117,24 +118,24 @@ class Main
     ("Sys.mkdir(\"%s\") -> %s\n" % [tmp_dir,$Sys.mkdir(tmp_dir)]).print();
     ("Sys.chdir(\"%s\") -> %s\n\n" % [tmp_dir,$Sys.chdir(tmp_dir)]).print();
 
-    ("Sys.listdir(\".\")   -> %s\n" % $Sys.listdir(".")).print();
+    ("Sys.listdir(\".\")   -> %s\n" % $new Set(Sys.listdir("."))).print();
     ("Sys.mkdir(\"dir_0\") -> %s\n" % $Sys.mkdir("dir_0")).print();
     ("Sys.mkdir(\"dir_1\") -> %s\n" % $Sys.mkdir("dir_1")).print();
-    ("Sys.listdir(\".\")   -> %s\n" % $Sys.listdir(".")).print();
+    ("Sys.listdir(\".\")   -> %s\n" % $new Set(Sys.listdir("."))).print();
     ("Sys.rmdir(\"dir_1\") -> %s\n" % $Sys.rmdir("dir_1")).print();
-    ("Sys.listdir(\".\")   -> %s\n" % $Sys.listdir(".")).print();
+    ("Sys.listdir(\".\")   -> %s\n" % $new Set(Sys.listdir("."))).print();
 
     Tutorial.note("Sys method mkfifo#1");
     ("Sys.mkfifo(\"fifo\") -> %s\n" % $Sys.mkfifo("fifo")).print();
-    ("Sys.listdir(\".\")   -> %s\n" % $Sys.listdir(".")).print();
+    ("Sys.listdir(\".\")   -> %s\n" % $new Set(Sys.listdir("."))).print();
 
     Tutorial.note("Sys method rename#2");
     ("Sys.rename(\"fifo\",\"new_fifo\") -> %s\n" % $Sys.rename("fifo","new_fifo")).print();
-    ("Sys.listdir(\".\")              -> %s\n" % $Sys.listdir(".")).print();
+    ("Sys.listdir(\".\")              -> %s\n" % $new Set(Sys.listdir("."))).print();
 
     Tutorial.note("Sys method remove#1");
     ("Sys.remove(\"new_fifo\") -> %s\n" % $Sys.remove("new_fifo")).print();
-    ("Sys.listdir(\".\")       -> %s\n" % $Sys.listdir(".")).print();
+    ("Sys.listdir(\".\")       -> %s\n" % $new Set(Sys.listdir("."))).print();
 
     Tutorial.note("Sys method setenv#2");
     ("Sys.setenv(\"ENV_VAR\",\"value\") -> %s\n" % $Sys.setenv("ENV_VAR","value")).print();
@@ -150,12 +151,12 @@ class Main
     file.write("Hello world!");
     file.close();
 
-    ("Sys.listdir(\".\")     -> %s\n" % $Sys.listdir(".")).print();
+    ("Sys.listdir(\".\")     -> %s\n" % $new Set(Sys.listdir("."))).print();
     ("Sys.is_file(\"file\")  -> %d\n" % Sys.is_file("file")).print();
     ("Sys.is_file(\"dir_0\") -> %d\n" % Sys.is_file("dir_0")).print();
     ("Sys.is_dir(\"file\")   -> %d\n" % Sys.is_dir("file")).print();
     ("Sys.is_dir(\"dir_0\")  -> %d\n" % Sys.is_dir("dir_0")).print();
-    ("Sys.listdir(\".\")     -> %s\n" % $Sys.listdir(".")).print();
+    ("Sys.listdir(\".\")     -> %s\n" % $new Set(Sys.listdir("."))).print();
 
     Tutorial.note("Sys method size#1");
     ("Sys.size(\".\")     -> %d\n" % (Sys.size(".") != 0)).print();

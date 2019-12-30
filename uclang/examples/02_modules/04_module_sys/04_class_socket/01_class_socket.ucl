@@ -33,12 +33,12 @@ class Main
     ("sockaddr: %s\n" % $sockaddr).print();
 
     Tutorial.note("SocketAddr method name#0");
-    sockaddr = new SocketAddr("localhost",8888);
+    sockaddr = new SocketAddr("127.0.0.1",8888);
     ("sockaddr        -> %s\n" % $sockaddr).print();
     ("sockaddr.name() -> %s\n" % sockaddr.name()).print();
 
     Tutorial.note("SocketAddr method port#0");
-    sockaddr = new SocketAddr("localhost",8888);
+    sockaddr = new SocketAddr("127.0.0.1",8888);
     ("sockaddr        -> %s\n" % $sockaddr).print();
     ("sockaddr.port() -> %d\n" % sockaddr.port()).print();
 

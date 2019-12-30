@@ -45,9 +45,9 @@ Sys.open("01_class_sys.ucl","r") -> File
 file.readln(): // vim: syntax=java
 file.readln(): 
 file.readln(): import tutorial;
+file.readln(): import containers;
 file.readln(): import sys;
 file.readln(): 
-file.readln(): class Main
 
 === Sys method popen#2 =========================================================
 
@@ -71,7 +71,7 @@ Sys.chdir("/tmp/01_class_sys") -> <blank>
 Sys.listdir(".")   -> []
 Sys.mkdir("dir_0") -> <blank>
 Sys.mkdir("dir_1") -> <blank>
-Sys.listdir(".")   -> [dir_1,dir_0]
+Sys.listdir(".")   -> [dir_0,dir_1]
 Sys.rmdir("dir_1") -> <blank>
 Sys.listdir(".")   -> [dir_0]
 
@@ -83,7 +83,7 @@ Sys.listdir(".")   -> [fifo,dir_0]
 === Sys method rename#2 ========================================================
 
 Sys.rename("fifo","new_fifo") -> <blank>
-Sys.listdir(".")              -> [new_fifo,dir_0]
+Sys.listdir(".")              -> [dir_0,new_fifo]
 
 === Sys method remove#1 ========================================================
 
