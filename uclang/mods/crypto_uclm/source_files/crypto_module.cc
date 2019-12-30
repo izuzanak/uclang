@@ -1062,7 +1062,7 @@ bool bic_crypto_digest_method_value_0(interpreter_thread_s &it,unsigned stack_ba
   string_ptr->create(EVP_MD_CTX_size(context_copy));
 
   // - ERROR -
-  unsigned dg_length;
+  size_t dg_length;
   if (EVP_DigestFinal_ex(context_copy,(unsigned char *)string_ptr->data,&dg_length) != 1)
   {
     EVP_MD_CTX_destroy(context_copy);
@@ -1342,7 +1342,7 @@ bool bic_crypto_digest_sign_method_value_0(interpreter_thread_s &it,unsigned sta
   }
 
   // - ERROR -
-  unsigned dg_length = 0;
+  size_t dg_length = 0;
   if (EVP_DigestSignFinal(context_copy,nullptr,&dg_length) != 1)
   {
     EVP_MD_CTX_destroy(context_copy);
