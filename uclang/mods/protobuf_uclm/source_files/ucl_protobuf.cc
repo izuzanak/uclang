@@ -663,12 +663,24 @@ bool proto_source_s::pack_message(interpreter_thread_s &it,ProtobufCMessageDescr
                       // - init map entry message -
                       msg_descr->message_init((ProtobufCMessage *)m_ptr);
 
+                      // - set has_key flag if needed -
+                      if (msg_field_descrs->quantifier_offset != 0)
+                      {
+                        *((protobuf_c_boolean *)(m_ptr + msg_field_descrs->quantifier_offset)) = 1;
+                      }
+
                       location_s *key_location = (location_s *)pmtn_ptr->object.key;
 
                       // - ERROR -
                       if (!pack_value(it,msg_field_descrs,buffers,key_location,nullptr,m_ptr))
                       {
                         return false;
+                      }
+
+                      // - set has_value flag if needed -
+                      if ((msg_field_descrs + 1)->quantifier_offset != 0)
+                      {
+                        *((protobuf_c_boolean *)(m_ptr + (msg_field_descrs + 1)->quantifier_offset)) = 1;
                       }
 
                       location_s *item_location = it.get_location_value(pmtn_ptr->object.value);
