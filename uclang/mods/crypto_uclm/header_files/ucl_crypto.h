@@ -17,6 +17,7 @@ const char c_base16_map[] = "0123456789abcdef";
 /*
  * definition of class crypto_c
  */
+
 class crypto_c
 {
   public:

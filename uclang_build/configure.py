@@ -60,6 +60,7 @@ c_packages = [
   ["MOD_SSH2"      ,"ssh2_uclm"      ,"pkg-config",["libssh2 >= 1.4.3"]],
   ["MOD_GCRYPT"    ,"gcrypt_uclm"    ,"files"     ,["/usr/include/gcrypt.h"]],
   ["MOD_CRYPTO"    ,"crypto_uclm"    ,"pkg-config",["libcrypto >= 1.0.2m"]],
+  ["MOD_OPENSSL"   ,"openssl_uclm"   ,"pkg-config",["openssl >= 1.0.2m"]],
   ["MOD_LOCALE"    ,"locale_uclm"    ,"files"     ,["/usr/include/locale.h","/usr/include/libintl.h"]],
   ["MOD_ICONV"     ,"iconv_uclm"     ,"files"     ,["/usr/include/iconv.h"]],
   ["MOD_UTF8PROC"  ,"utf8proc_uclm"  ,"files"     ,["/usr/include/utf8proc.h"]],
