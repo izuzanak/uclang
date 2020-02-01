@@ -5,11 +5,12 @@ include "openssl_module.h"
 
 // - OPENSSL indexes of built in classes -
 unsigned c_bi_class_ssl_context = c_idx_not_exist;
+unsigned c_bi_class_ssl_conn = c_idx_not_exist;
 
 // - OPENSSL module -
 EXPORT built_in_module_s module =
 {/*{{{*/
-  1,                       // Class count
+  2,                       // Class count
   openssl_classes,         // Classes
 
   0,                       // Error base index
@@ -24,6 +25,7 @@ EXPORT built_in_module_s module =
 built_in_class_s *openssl_classes[] =
 {/*{{{*/
   &ssl_context_class,
+  &ssl_conn_class,
 };/*}}}*/
 
 // - OPENSSL error strings -
@@ -39,6 +41,9 @@ bool openssl_initialize(script_parser_s &sp)
 
   // - initialize ssl_context class identifier -
   c_bi_class_ssl_context = class_base_idx++;
+
+  // - initialize ssl_conn class identifier -
+  c_bi_class_ssl_conn = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -68,10 +73,10 @@ bool openssl_print_exception(interpreter_s &it,exception_s &exception)
 // - class SSL_CONTEXT -
 built_in_class_s ssl_context_class =
 {/*{{{*/
-  "SSLContext",
+  "SslContext",
   c_modifier_public | c_modifier_final,
-  6, ssl_context_methods,
-  2, ssl_context_variables,
+  9, ssl_context_methods,
+  2 + 2, ssl_context_variables,
   bic_ssl_context_consts,
   bic_ssl_context_init,
   bic_ssl_context_clear,
@@ -96,19 +101,34 @@ built_in_method_s ssl_context_methods[] =
     bic_ssl_context_operator_binary_equal
   },
   {
-    "SSLContext#1",
+    "SslContext#1",
     c_modifier_public | c_modifier_final,
-    bic_ssl_context_method_SSLContext_1
+    bic_ssl_context_method_SslContext_1
   },
   {
-    "use_certificate_file#1",
+    "use_certificate_file#2",
     c_modifier_public | c_modifier_final,
-    bic_ssl_context_method_use_certificate_file_1
+    bic_ssl_context_method_use_certificate_file_2
   },
   {
-    "use_private_key_file#1",
+    "use_private_key_file#2",
     c_modifier_public | c_modifier_final,
-    bic_ssl_context_method_use_private_key_file_1
+    bic_ssl_context_method_use_private_key_file_2
+  },
+  {
+    "check_private_key#0",
+    c_modifier_public | c_modifier_final,
+    bic_ssl_context_method_check_private_key_0
+  },
+  {
+    "accept#1",
+    c_modifier_public | c_modifier_final,
+    bic_ssl_context_method_accept_1
+  },
+  {
+    "connect#1",
+    c_modifier_public | c_modifier_final,
+    bic_ssl_context_method_connect_1
   },
   {
     "to_string#0",
@@ -129,24 +149,43 @@ built_in_variable_s ssl_context_variables[] =
   { "METHOD_SERVER", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "METHOD_CLIENT", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
+  // - ssl file type -
+  { "SSL_FILETYPE_PEM", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SSL_FILETYPE_ASN1", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_ssl_context_consts(location_array_s &const_locations)
 {/*{{{*/
 
-  // - ssl context method type -
+  // - insert ssl context method type -
   {
     const_locations.push_blanks(2);
     location_s *cv_ptr = const_locations.data + (const_locations.used - 2);
 
-#define CREATE_CRYPTO_PKEY_TYPE_BIC_STATIC(VALUE)\
+#define CREATE_SSL_CONTECT_METHOD_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
   cv_ptr->v_reference_cnt.atomic_set(1);\
   cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
-    CREATE_CRYPTO_PKEY_TYPE_BIC_STATIC(c_ssl_ctx_method_server);
-    CREATE_CRYPTO_PKEY_TYPE_BIC_STATIC(c_ssl_ctx_method_client);
+    CREATE_SSL_CONTECT_METHOD_TYPE_BIC_STATIC(c_ssl_ctx_method_server);
+    CREATE_SSL_CONTECT_METHOD_TYPE_BIC_STATIC(c_ssl_ctx_method_client);
+  }
+
+  // - insert ssl file type -
+  {
+    const_locations.push_blanks(2);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 2);
+
+#define CREATE_SSL_FILE_TYPE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_SSL_FILE_TYPE_BIC_STATIC(SSL_FILETYPE_PEM);
+    CREATE_SSL_FILE_TYPE_BIC_STATIC(SSL_FILETYPE_ASN1);
   }
 
 }/*}}}*/
@@ -179,13 +218,13 @@ bool bic_ssl_context_operator_binary_equal(interpreter_thread_s &it,unsigned sta
   return true;
 }/*}}}*/
 
-bool bic_ssl_context_method_SSLContext_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_ssl_context_method_SslContext_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
 method_type:retrieve_integer
 >
-method SSLContext
+method SslContext
 ; @end
 
   const SSL_METHOD *method = nullptr;
@@ -224,11 +263,12 @@ method SSLContext
   return true;
 }/*}}}*/
 
-bool bic_ssl_context_method_use_certificate_file_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_ssl_context_method_use_certificate_file_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
 file_name:c_bi_class_string
+file_type:retrieve_integer
 >
 method use_certificate_file
 ; @end
@@ -237,7 +277,7 @@ method use_certificate_file
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
-  if (SSL_CTX_use_certificate_file(sc_ptr,string_ptr->data,SSL_FILETYPE_PEM) != 1)
+  if (SSL_CTX_use_certificate_file(sc_ptr,string_ptr->data,file_type) != 1)
   {
     // FIXME TODO throw proper exception
     BIC_TODO_ERROR(__FILE__,__LINE__);
@@ -249,11 +289,12 @@ method use_certificate_file
   return true;
 }/*}}}*/
 
-bool bic_ssl_context_method_use_private_key_file_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_ssl_context_method_use_private_key_file_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
 file_name:c_bi_class_string
+file_type:retrieve_integer
 >
 method use_private_key_file
 ; @end
@@ -262,7 +303,7 @@ method use_private_key_file
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
-  if (SSL_CTX_use_PrivateKey_file(sc_ptr,string_ptr->data,SSL_FILETYPE_PEM) != 1)
+  if (SSL_CTX_use_PrivateKey_file(sc_ptr,string_ptr->data,file_type) != 1)
   {
     // FIXME TODO throw proper exception
     BIC_TODO_ERROR(__FILE__,__LINE__);
@@ -274,10 +315,117 @@ method use_private_key_file
   return true;
 }/*}}}*/
 
+bool bic_ssl_context_method_check_private_key_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  SSL_CTX *sc_ptr = (SSL_CTX *)dst_location->v_data_ptr;
+
+  long long int result = SSL_CTX_check_private_key(sc_ptr) != 0;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_ssl_context_method_accept_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+fd:retrieve_integer
+>
+method accept
+; @end
+
+  SSL_CTX *sc_ptr = (SSL_CTX *)dst_location->v_data_ptr;
+
+  SSL *ssl_ptr = SSL_new(sc_ptr);
+
+  // - ERROR -
+  if (ssl_ptr == nullptr)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - ERROR -
+  if (SSL_set_fd(ssl_ptr,fd) != 1)
+  {
+    SSL_free(ssl_ptr);
+
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - ERROR -
+  if (SSL_accept(ssl_ptr) != 1)
+  {
+    SSL_free(ssl_ptr);
+
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_ssl_conn,ssl_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_ssl_context_method_connect_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+fd:retrieve_integer
+>
+method connect
+; @end
+
+  SSL_CTX *sc_ptr = (SSL_CTX *)dst_location->v_data_ptr;
+
+  SSL *ssl_ptr = SSL_new(sc_ptr);
+
+  // - ERROR -
+  if (ssl_ptr == nullptr)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - ERROR -
+  if (SSL_set_fd(ssl_ptr,fd) != 1)
+  {
+    SSL_free(ssl_ptr);
+
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - ERROR -
+  if (SSL_connect(ssl_ptr) != 1)
+  {
+    SSL_free(ssl_ptr);
+
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_ssl_conn,ssl_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
 bool bic_ssl_context_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
-    string_ptr->set(strlen("SSLContext"),"SSLContext");
+    string_ptr->set(strlen("SslContext"),"SslContext");
   );
 
   return true;
@@ -285,7 +433,195 @@ bool bic_ssl_context_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 
 bool bic_ssl_context_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  printf("SSLContext");
+  printf("SslContext");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class SSL_CONN -
+built_in_class_s ssl_conn_class =
+{/*{{{*/
+  "SslConn",
+  c_modifier_public | c_modifier_final,
+  5, ssl_conn_methods,
+  0, ssl_conn_variables,
+  bic_ssl_conn_consts,
+  bic_ssl_conn_init,
+  bic_ssl_conn_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s ssl_conn_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_ssl_conn_operator_binary_equal
+  },
+  {
+    "write#1",
+    c_modifier_public | c_modifier_final,
+    bic_ssl_conn_method_write_1
+  },
+  {
+    "read#0",
+    c_modifier_public | c_modifier_final,
+    bic_ssl_conn_method_read_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_ssl_conn_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_ssl_conn_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s ssl_conn_variables[] =
+{/*{{{*/
+};/*}}}*/
+
+void bic_ssl_conn_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_ssl_conn_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (SSL *)nullptr;
+}/*}}}*/
+
+void bic_ssl_conn_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  SSL *ssl_ptr = (SSL *)location_ptr->v_data_ptr;
+
+  // - if ssl connection exists -
+  if (ssl_ptr != nullptr)
+  {
+    SSL_free(ssl_ptr);
+  }
+}/*}}}*/
+
+bool bic_ssl_conn_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_ssl_conn_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+data:retrieve_data_buffer
+>
+method write
+; @end
+
+  SSL *ssl_ptr = (SSL *)dst_location->v_data_ptr;
+
+  if (data_size > 0)
+  {
+    // - ERROR -
+    if (SSL_write(ssl_ptr,data_ptr,data_size) != (int)data_size)
+    {
+      // FIXME TODO throw proper exception
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+      return false;
+    }
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_ssl_conn_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  SSL *ssl_ptr = (SSL *)dst_location->v_data_ptr;
+
+  const long int c_buffer_add = 1024;
+
+  // - target data buffer -
+  bc_array_s data_buffer;
+  data_buffer.init();
+
+  int read_cnt;
+  do
+  {
+    data_buffer.reserve(c_buffer_add);
+    read_cnt = SSL_read(ssl_ptr,data_buffer.data + data_buffer.used,c_buffer_add);
+
+    // - ERROR -
+    if (read_cnt <= 0)
+    {
+      data_buffer.clear();
+
+      // FIXME TODO throw proper exception
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+      return false;
+    }
+
+    data_buffer.used += read_cnt;
+  }
+  while(SSL_pending(ssl_ptr) > 0);
+
+  // - was any data read -
+  if (data_buffer.used == 0)
+  {
+    data_buffer.clear();
+
+    BIC_SET_RESULT_BLANK();
+  }
+  else
+  {
+    data_buffer.push('\0');
+
+    // - return data string -
+    string_s *string_ptr = it.get_new_string_ptr();
+    string_ptr->data = data_buffer.data;
+    string_ptr->size = data_buffer.used;
+
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+    BIC_SET_RESULT(new_location);
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_ssl_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("SslConn"),"SslConn");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_ssl_conn_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("SslConn");
 
   BIC_SET_RESULT_BLANK();
 

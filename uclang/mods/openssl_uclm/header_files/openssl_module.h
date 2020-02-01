@@ -8,6 +8,7 @@ include "ucl_openssl.h"
 
 // - OPENSSL indexes of built in classes -
 extern unsigned c_bi_class_ssl_context;
+extern unsigned c_bi_class_ssl_conn;
 
 // - OPENSSL module -
 extern "C" EXPORT built_in_module_s module;
@@ -40,11 +41,29 @@ void bic_ssl_context_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_ssl_context_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_ssl_context_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_ssl_context_method_SSLContext_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_ssl_context_method_use_certificate_file_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_ssl_context_method_use_private_key_file_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ssl_context_method_SslContext_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ssl_context_method_use_certificate_file_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ssl_context_method_use_private_key_file_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ssl_context_method_check_private_key_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ssl_context_method_accept_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ssl_context_method_connect_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ssl_context_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ssl_context_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class SSL_CONN -
+extern built_in_variable_s ssl_conn_variables[];
+extern built_in_method_s ssl_conn_methods[];
+extern built_in_class_s ssl_conn_class;
+
+void bic_ssl_conn_consts(location_array_s &const_locations);
+void bic_ssl_conn_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_ssl_conn_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_ssl_conn_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ssl_conn_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ssl_conn_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ssl_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ssl_conn_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 
