@@ -19,7 +19,16 @@ extern built_in_class_s *openssl_classes[];
 // - OPENSSL error identifiers -
 enum
 {
-  c_error_OPENSSL_DUMMY_ERROR = 0,
+  c_error_SSL_CONTEXT_INVALID_METHOD_TYPE = 0,
+  c_error_SSL_CONTEXT_CREATE_ERROR,
+  c_error_SSL_CONTEXT_CERTIFICATE_FILE_ERRROR,
+  c_error_SSL_CONTEXT_PRIVATE_KEY_FILE_ERRROR,
+  c_error_SSL_CONN_CREATE_ERROR,
+  c_error_SSL_CONN_ACCEPT_ERROR,
+  c_error_SSL_CONN_CONNECT_ERROR,
+  c_error_SSL_CONN_WRITE_ERROR,
+  c_error_SSL_CONN_READ_ERROR,
+  c_error_SSL_CONN_READ_NEGATIVE_BYTE_COUNT,
 };
 
 // - OPENSSL error strings -
@@ -62,6 +71,7 @@ void bic_ssl_conn_clear(interpreter_thread_s &it,location_s *location_ptr);
 bool bic_ssl_conn_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ssl_conn_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ssl_conn_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ssl_conn_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ssl_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ssl_conn_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

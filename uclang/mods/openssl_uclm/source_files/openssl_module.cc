@@ -14,7 +14,7 @@ EXPORT built_in_module_s module =
   openssl_classes,         // Classes
 
   0,                       // Error base index
-  1,                       // Error count
+  10,                       // Error count
   openssl_error_strings,   // Error strings
 
   openssl_initialize,      // Initialize function
@@ -31,7 +31,16 @@ built_in_class_s *openssl_classes[] =
 // - OPENSSL error strings -
 const char *openssl_error_strings[] =
 {/*{{{*/
-  "error_OPENSSL_DUMMY_ERROR",
+  "error_SSL_CONTEXT_INVALID_METHOD_TYPE",
+  "error_SSL_CONTEXT_CREATE_ERROR",
+  "error_SSL_CONTEXT_CERTIFICATE_FILE_ERRROR",
+  "error_SSL_CONTEXT_PRIVATE_KEY_FILE_ERRROR",
+  "error_SSL_CONN_CREATE_ERROR",
+  "error_SSL_CONN_ACCEPT_ERROR",
+  "error_SSL_CONN_CONNECT_ERROR",
+  "error_SSL_CONN_WRITE_ERROR",
+  "error_SSL_CONN_READ_ERROR",
+  "error_SSL_CONN_READ_NEGATIVE_BYTE_COUNT",
 };/*}}}*/
 
 // - OPENSSL initialize -
@@ -56,11 +65,74 @@ bool openssl_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_OPENSSL_DUMMY_ERROR:
+  case c_error_SSL_CONTEXT_INVALID_METHOD_TYPE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nInvalid base%" HOST_LL_FORMAT "d encoded data size\n",exception.params[0]);
+    fprintf(stderr,"\nSSL context, invalid method type\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SSL_CONTEXT_CREATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot create new SSL context\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SSL_CONTEXT_CERTIFICATE_FILE_ERRROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nSSL context, cannot read certificate from file\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SSL_CONTEXT_PRIVATE_KEY_FILE_ERRROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nSSL context, cannot read private key from file\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SSL_CONN_CREATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot create new SSL connection\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SSL_CONN_ACCEPT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nSSL connection, cannot accept connection\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SSL_CONN_CONNECT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nSSL connection, cannot connect to host\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SSL_CONN_WRITE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while writing to SSL connection\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SSL_CONN_READ_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while reading from SSL connection\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SSL_CONN_READ_NEGATIVE_BYTE_COUNT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot read %" HOST_LL_FORMAT "d bytes from ssl connection\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -243,8 +315,7 @@ method SslContext
   // - ERROR -
   if (method == nullptr)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_SSL_CONTEXT_INVALID_METHOD_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -253,8 +324,7 @@ method SslContext
   // - ERROR -
   if (sc_ptr == nullptr)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_SSL_CONTEXT_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -279,8 +349,7 @@ method use_certificate_file
   // - ERROR -
   if (SSL_CTX_use_certificate_file(sc_ptr,string_ptr->data,file_type) != 1)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_SSL_CONTEXT_CERTIFICATE_FILE_ERRROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -305,8 +374,7 @@ method use_private_key_file
   // - ERROR -
   if (SSL_CTX_use_PrivateKey_file(sc_ptr,string_ptr->data,file_type) != 1)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_SSL_CONTEXT_PRIVATE_KEY_FILE_ERRROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -344,8 +412,7 @@ method accept
   // - ERROR -
   if (ssl_ptr == nullptr)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_SSL_CONN_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -354,8 +421,7 @@ method accept
   {
     SSL_free(ssl_ptr);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_SSL_CONN_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -364,8 +430,7 @@ method accept
   {
     SSL_free(ssl_ptr);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_SSL_CONN_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -391,8 +456,7 @@ method connect
   // - ERROR -
   if (ssl_ptr == nullptr)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_SSL_CONN_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -401,8 +465,7 @@ method connect
   {
     SSL_free(ssl_ptr);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_SSL_CONN_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -411,8 +474,7 @@ method connect
   {
     SSL_free(ssl_ptr);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_SSL_CONN_CONNECT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -445,7 +507,7 @@ built_in_class_s ssl_conn_class =
 {/*{{{*/
   "SslConn",
   c_modifier_public | c_modifier_final,
-  5, ssl_conn_methods,
+  6, ssl_conn_methods,
   0, ssl_conn_variables,
   bic_ssl_conn_consts,
   bic_ssl_conn_init,
@@ -479,6 +541,11 @@ built_in_method_s ssl_conn_methods[] =
     "read#0",
     c_modifier_public | c_modifier_final,
     bic_ssl_conn_method_read_0
+  },
+  {
+    "read#1",
+    c_modifier_public | c_modifier_final,
+    bic_ssl_conn_method_read_1
   },
   {
     "to_string#0",
@@ -541,13 +608,19 @@ method write
 
   if (data_size > 0)
   {
-    // - ERROR -
-    if (SSL_write(ssl_ptr,data_ptr,data_size) != (int)data_size)
+    int cnt;
+    unsigned writed = 0;
+
+    do
     {
-      // FIXME TODO throw proper exception
-      BIC_TODO_ERROR(__FILE__,__LINE__);
-      return false;
+      // - ERROR -
+      if ((cnt = SSL_write(ssl_ptr,(const char *)data_ptr + writed,data_size - writed)) <= 0)
+      {
+        exception_s::throw_exception(it,module.error_base + c_error_SSL_CONN_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
     }
+    while((writed += cnt) < data_size);
   }
 
   BIC_SET_RESULT_DESTINATION();
@@ -576,11 +649,17 @@ bool bic_ssl_conn_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli
     // - ERROR -
     if (read_cnt <= 0)
     {
-      data_buffer.clear();
+      if (SSL_get_error(ssl_ptr,read_cnt) != SSL_ERROR_ZERO_RETURN)
+      {
+        break;
+      }
+      else
+      {
+        data_buffer.clear();
 
-      // FIXME TODO throw proper exception
-      BIC_TODO_ERROR(__FILE__,__LINE__);
-      return false;
+        exception_s::throw_exception(it,module.error_base + c_error_SSL_CONN_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
     }
 
     data_buffer.used += read_cnt;
@@ -606,6 +685,62 @@ bool bic_ssl_conn_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
     BIC_SET_RESULT(new_location);
   }
+
+  return true;
+}/*}}}*/
+
+bool bic_ssl_conn_method_read_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+byte_cnt:retrieve_integer
+>
+method read
+; @end
+
+  SSL *ssl_ptr = (SSL *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (byte_cnt < 0)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_SSL_CONN_READ_NEGATIVE_BYTE_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(byte_cnt);
+
+    return false;
+  }
+
+  // - target data string -
+  string_s data_string;
+  data_string.init();
+  data_string.create(byte_cnt);
+
+  unsigned readed = 0;
+  int read_cnt;
+
+  do
+  {
+    read_cnt = SSL_read(ssl_ptr,data_string.data + readed,byte_cnt - readed);
+
+    // - ERROR -
+    if (read_cnt <= 0)
+    {
+      data_string.clear();
+
+      exception_s::throw_exception(it,module.error_base + c_error_SSL_CONN_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
+    readed += read_cnt;
+  }
+  while(readed < byte_cnt);
+
+  // - return data string -
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->swap(data_string);
+  data_string.clear();
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
