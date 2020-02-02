@@ -313,10 +313,18 @@ method SslContext
   switch (method_type)
   {
   case c_ssl_ctx_method_server:
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
     method = TLS_server_method();
+#else
+    method = TLSv1_2_server_method()
+#endif
     break;
   case c_ssl_ctx_method_client:
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
     method = TLS_client_method();
+#else
+    method = TLSv1_2_client_method()
+#endif
     break;
   }
 
