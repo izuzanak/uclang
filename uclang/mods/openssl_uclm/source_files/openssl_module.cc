@@ -14,7 +14,7 @@ EXPORT built_in_module_s module =
   openssl_classes,         // Classes
 
   0,                       // Error base index
-  10,                       // Error count
+  11,                       // Error count
   openssl_error_strings,   // Error strings
 
   openssl_initialize,      // Initialize function
@@ -41,6 +41,7 @@ const char *openssl_error_strings[] =
   "error_SSL_CONN_WRITE_ERROR",
   "error_SSL_CONN_READ_ERROR",
   "error_SSL_CONN_READ_NEGATIVE_BYTE_COUNT",
+  "error_SSL_CONN_INCORRECT_BIO_TYPE",
 };/*}}}*/
 
 // - OPENSSL initialize -
@@ -133,6 +134,13 @@ bool openssl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nCannot read %" HOST_LL_FORMAT "d bytes from ssl connection\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SSL_CONN_INCORRECT_BIO_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nIncorrect SSL connection BIO type\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -507,7 +515,7 @@ built_in_class_s ssl_conn_class =
 {/*{{{*/
   "SslConn",
   c_modifier_public | c_modifier_final,
-  6, ssl_conn_methods,
+  7, ssl_conn_methods,
   0, ssl_conn_variables,
   bic_ssl_conn_consts,
   bic_ssl_conn_init,
@@ -546,6 +554,11 @@ built_in_method_s ssl_conn_methods[] =
     "read#1",
     c_modifier_public | c_modifier_final,
     bic_ssl_conn_method_read_1
+  },
+  {
+    "get_fd#0",
+    c_modifier_public | c_modifier_final,
+    bic_ssl_conn_method_get_fd_0
   },
   {
     "to_string#0",
@@ -741,6 +754,26 @@ method read
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
   BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_ssl_conn_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  SSL *ssl_ptr = (SSL *)dst_location->v_data_ptr;
+
+  long long int result = SSL_get_fd(ssl_ptr);
+
+  // - ERROR -
+  if (result < 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_SSL_CONN_INCORRECT_BIO_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
