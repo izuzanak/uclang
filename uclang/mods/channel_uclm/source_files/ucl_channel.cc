@@ -3,6 +3,9 @@
 include "ucl_channel.h"
 @end
 
+// - channel global init object -
+channel_c g_channel;
+
 /*
  * methods of generated structures
  */
@@ -35,13 +38,47 @@ bool channel_conn_s::send_msg(interpreter_thread_s &it)
       write_cnt = 4096;
     }
 
-    ssize_t cnt = write(conn_fd,message->data + this->out_msg_offset,write_cnt);
+    ssize_t cnt;
 
-    // - ERROR -
-    if (cnt == -1)
+#ifdef UCL_WITH_OPENSSL
+    if (ssl != nullptr)
     {
-      return false;
+      cnt = SSL_write(ssl,message->data + this->out_msg_offset,write_cnt);
+
+      if (cnt <= 0)
+      {
+        switch (SSL_get_error(ssl,cnt))
+        {
+          case SSL_ERROR_WANT_READ:
+            // FIXME
+            fprintf(stderr,"send_msg: WANT_READ\n");
+            break;
+          case SSL_ERROR_WANT_WRITE:
+            // FIXME
+            fprintf(stderr,"send_msg: WANT_WRITE\n");
+            break;
+          default:
+            return false;
+        }
+
+        cnt = 0;
+      }
     }
+    else
+    {
+#else
+      cnt = write(conn_fd,message->data + this->out_msg_offset,write_cnt);
+
+      // - ERROR -
+      if (cnt == -1)
+      {
+        return false;
+      }
+#endif
+
+#ifdef UCL_WITH_OPENSSL
+    }
+#endif
 
     // - whole message was send -
     if ((this->out_msg_offset += cnt) >= message->size - 1)
@@ -71,13 +108,44 @@ bool channel_conn_s::recv_msg(interpreter_thread_s &it,location_s *dst_location,
   do
   {
     in_msg.reserve(c_buffer_add);
-    read_cnt = read(conn_fd,in_msg.data + in_msg.used,c_buffer_add);
 
-    // - ERROR -
-    if (read_cnt == -1)
+#ifdef UCL_WITH_OPENSSL
+    if (ssl != nullptr)
     {
-      return false;
+      read_cnt = SSL_read(ssl,in_msg.data + in_msg.used,c_buffer_add);
+
+      if (read_cnt <= 0)
+      {
+        switch (SSL_get_error(ssl,read_cnt))
+        {
+          case SSL_ERROR_WANT_READ:
+            // FIXME
+            fprintf(stderr,"recv_msg: WANT_READ\n");
+            break;
+          case SSL_ERROR_WANT_WRITE:
+            // FIXME
+            fprintf(stderr,"recv_msg: WANT_WRITE\n");
+            break;
+          default:
+            return false;
+        }
+      }
     }
+    else
+    {
+#else
+      read_cnt = read(conn_fd,in_msg.data + in_msg.used,c_buffer_add);
+
+      // - ERROR -
+      if (read_cnt == -1)
+      {
+        return false;
+      }
+#endif
+
+#ifdef UCL_WITH_OPENSSL
+    }
+#endif
 
     in_msg.used += read_cnt;
 
@@ -89,10 +157,17 @@ bool channel_conn_s::recv_msg(interpreter_thread_s &it,location_s *dst_location,
   }
   while(inq_cnt > 0);
 
-  if (in_msg.used == msg_old_used)
+#ifdef UCL_WITH_OPENSSL
+  if (ssl == nullptr)
   {
-    return false;
+#endif
+    if (in_msg.used == msg_old_used)
+    {
+      return false;
+    }
+#ifdef UCL_WITH_OPENSSL
   }
+#endif
 
   unsigned msg_offset = 0;
   do

@@ -159,7 +159,11 @@ built_in_class_s channel_server_class =
 {/*{{{*/
   "ChannelServer",
   c_modifier_public | c_modifier_final,
-  8, channel_server_methods,
+  8
+#ifdef UCL_WITH_OPENSSL
+  + 1
+#endif
+  , channel_server_methods,
   3, channel_server_variables,
   bic_channel_server_consts,
   bic_channel_server_init,
@@ -189,6 +193,13 @@ built_in_method_s channel_server_methods[] =
     c_modifier_public | c_modifier_final,
     bic_channel_server_method_ChannelServer_5
   },
+#ifdef UCL_WITH_OPENSSL
+  {
+    "init_ssl#2",
+    c_modifier_public | c_modifier_final,
+    bic_channel_server_method_init_ssl_2
+  },
+#endif
   {
     "get_fds#0",
     c_modifier_public | c_modifier_final,
@@ -394,6 +405,73 @@ method ChannelServer
   return true;
 }/*}}}*/
 
+#ifdef UCL_WITH_OPENSSL
+bool bic_channel_server_method_init_ssl_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+cert_file_name:c_bi_class_string
+pkey_file_name:c_bi_class_string
+>
+method init_ssl
+; @end
+
+  channel_server_s *cs_ptr = (channel_server_s *)dst_location->v_data_ptr;
+  string_s *cert_file_ptr = (string_s *)src_0_location->v_data_ptr;
+  string_s *pkey_file_ptr = (string_s *)src_1_location->v_data_ptr;
+
+  // - ERROR -
+  if (cs_ptr->ssl_ctx != nullptr)
+  {
+    // FIXME throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+  const SSL_METHOD *method = TLS_server_method();
+#else
+  const SSL_METHOD *method = TLSv1_2_server_method();
+#endif
+
+  SSL_CTX *ssl_ctx = SSL_CTX_new(method);
+
+  // - ERROR -
+  if (ssl_ctx == nullptr)
+  {
+    // FIXME throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - ERROR -
+  if (SSL_CTX_use_certificate_file(ssl_ctx,cert_file_ptr->data,SSL_FILETYPE_PEM) != 1)
+  {
+    SSL_CTX_free(ssl_ctx);
+
+    // FIXME throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - ERROR -
+  if (SSL_CTX_use_PrivateKey_file(ssl_ctx,pkey_file_ptr->data,SSL_FILETYPE_PEM) != 1)
+  {
+    SSL_CTX_free(ssl_ctx);
+
+    // FIXME throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  cs_ptr->ssl_ctx = ssl_ctx;
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+#endif
+
 bool bic_channel_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -471,6 +549,34 @@ method process
 
     channel_conn_s &conn = cs_ptr->conn_list[conn_index];
     conn.init_static();
+
+#ifdef UCL_WITH_OPENSSL
+    if (cs_ptr->ssl_ctx != nullptr)
+    {
+      SSL *ssl = SSL_new(cs_ptr->ssl_ctx);
+
+      // - ERROR -
+      if (ssl == nullptr)
+      {
+        // FIXME throw proper exception
+        BIC_TODO_ERROR(__FILE__,__LINE__);
+        return false;
+      }
+
+      // - ERROR -
+      if (SSL_set_fd(ssl,conn_fd) != 1)
+      {
+        SSL_free(ssl);
+
+        // FIXME throw proper exception
+        BIC_TODO_ERROR(__FILE__,__LINE__);
+        return false;
+      }
+
+      SSL_set_accept_state(ssl);
+      conn.ssl = ssl;
+    }
+#endif
 
     conn.conn_fd = conn_fd;
     conn.events = POLLIN | POLLPRI;
@@ -736,7 +842,11 @@ built_in_class_s channel_client_class =
 {/*{{{*/
   "ChannelClient",
   c_modifier_public | c_modifier_final,
-  10, channel_client_methods,
+  10
+#ifdef UCL_WITH_OPENSSL
+  + 1
+#endif
+  , channel_client_methods,
   3, channel_client_variables,
   bic_channel_client_consts,
   bic_channel_client_init,
@@ -766,6 +876,13 @@ built_in_method_s channel_client_methods[] =
     c_modifier_public | c_modifier_final,
     bic_channel_client_method_ChannelClient_5
   },
+#ifdef UCL_WITH_OPENSSL
+  {
+    "init_ssl#0",
+    c_modifier_public | c_modifier_final,
+    bic_channel_client_method_init_ssl_0
+  },
+#endif
   {
     "get_fd#0",
     c_modifier_public | c_modifier_final,
@@ -973,6 +1090,63 @@ method ChannelClient
 
   return true;
 }/*}}}*/
+
+#ifdef UCL_WITH_OPENSSL
+bool bic_channel_client_method_init_ssl_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  channel_conn_s *cc_ptr = (channel_conn_s *)dst_location->v_data_ptr;
+
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+  const SSL_METHOD *method = TLS_client_method();
+#else
+  const SSL_METHOD *method = TLSv1_2_client_method();
+#endif
+
+  SSL_CTX *ssl_ctx = SSL_CTX_new(method);
+
+  // - ERROR -
+  if (ssl_ctx == nullptr)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  SSL *ssl = SSL_new(ssl_ctx);
+
+  // - ERROR -
+  if (ssl == nullptr)
+  {
+    SSL_CTX_free(ssl_ctx);
+
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - ERROR -
+  if (SSL_set_fd(ssl,cc_ptr->conn_fd) != 1)
+  {
+    SSL_free(ssl);
+    SSL_CTX_free(ssl_ctx);
+
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  SSL_set_connect_state(ssl);
+  cc_ptr->ssl = ssl;
+
+  SSL_CTX_free(ssl_ctx);
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+#endif
 
 bool bic_channel_client_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/

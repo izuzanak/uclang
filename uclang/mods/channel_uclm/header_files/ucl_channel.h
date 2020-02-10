@@ -11,6 +11,11 @@ include "script_parser.h"
 #include <sys/ioctl.h>
 #include <netinet/tcp.h>
 
+#ifdef UCL_WITH_OPENSSL
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+#endif
+
 /*
  * basic definitions and constants
  */
@@ -46,6 +51,17 @@ enum
   );\
   it.release_location_ptr(trg_location);\
 }/*}}}*/
+
+/*
+ * definition of class channel_c
+ */
+
+class channel_c
+{
+  public:
+  inline channel_c();
+  inline ~channel_c();
+};
 
 /*
  * definition of generated structures
@@ -89,6 +105,10 @@ ui:out_msg_offset
 
 additions
 {
+#ifdef UCL_WITH_OPENSSL
+  SSL *ssl;
+#endif
+
   bool send_msg(interpreter_thread_s &it);
   bool recv_msg(interpreter_thread_s &it,location_s *dst_location,unsigned a_source_pos);
 
@@ -118,12 +138,39 @@ fd_conn_map_tree_s:fd_conn_map
 
 additions
 {
+#ifdef UCL_WITH_OPENSSL
+  SSL_CTX *ssl_ctx;
+#endif
+
   inline void init_static();
   inline void clear(interpreter_thread_s &it);
 }
 
 channel_server_s;
 @end
+
+/*
+ * inline methods of class channel_c
+ */
+
+inline channel_c::channel_c()
+{/*{{{*/
+  debug_message_2(fprintf(stderr,"channel_init()\n"););
+
+#ifdef UCL_WITH_OPENSSL
+  SSL_load_error_strings();
+  OpenSSL_add_ssl_algorithms();
+#endif
+}/*}}}*/
+
+inline channel_c::~channel_c()
+{/*{{{*/
+  debug_message_2(fprintf(stderr,"channel_exit()\n"););
+
+#ifdef UCL_WITH_OPENSSL
+  EVP_cleanup();
+#endif
+}/*}}}*/
 
 /*
  * inline methods of generated structures
@@ -151,6 +198,10 @@ inlines channel_conn_s
 
 inline void channel_conn_s::init_static()
 {/*{{{*/
+#ifdef UCL_WITH_OPENSSL
+  ssl = nullptr;
+#endif
+
   conn_fd = -1;
   events = 0;
   connecting = false;
@@ -167,6 +218,13 @@ inline void channel_conn_s::init_static()
 
 inline void channel_conn_s::clear(interpreter_thread_s &it)
 {/*{{{*/
+#ifdef UCL_WITH_OPENSSL
+  if (ssl != nullptr)
+  {
+    SSL_free(ssl);
+  }
+#endif
+
   if (conn_fd != -1)
   {
     close(conn_fd);
@@ -209,6 +267,9 @@ inlines channel_server_s
 
 inline void channel_server_s::init_static()
 {/*{{{*/
+#ifdef UCL_WITH_OPENSSL
+  ssl_ctx = nullptr;
+#endif
   server_fd = -1;
   event_callback = nullptr;
   message_callback = nullptr;
@@ -217,6 +278,13 @@ inline void channel_server_s::init_static()
 
 inline void channel_server_s::clear(interpreter_thread_s &it)
 {/*{{{*/
+#ifdef UCL_WITH_OPENSSL
+  if (ssl_ctx != nullptr)
+  {
+    SSL_CTX_free(ssl_ctx);
+  }
+#endif
+
   if (server_fd != -1)
   {
     close(server_fd);

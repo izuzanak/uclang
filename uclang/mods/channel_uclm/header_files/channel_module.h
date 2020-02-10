@@ -52,6 +52,9 @@ void bic_channel_server_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_channel_server_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_server_method_ChannelServer_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#ifdef UCL_WITH_OPENSSL
+bool bic_channel_server_method_init_ssl_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#endif
 bool bic_channel_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_server_method_process_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_server_method_message_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -70,6 +73,9 @@ void bic_channel_client_clear(interpreter_thread_s &it,location_s *location_ptr)
 
 bool bic_channel_client_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_client_method_ChannelClient_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#ifdef UCL_WITH_OPENSSL
+bool bic_channel_client_method_init_ssl_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#endif
 bool bic_channel_client_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_client_method_events_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_client_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
