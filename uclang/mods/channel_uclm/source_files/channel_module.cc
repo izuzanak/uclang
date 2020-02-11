@@ -13,7 +13,7 @@ EXPORT built_in_module_s module =
   2,                       // Class count
   channel_classes,         // Classes
   0,                       // Error base index
-  11,                      // Error count
+  18,                      // Error count
   channel_error_strings,   // Error strings
   channel_initialize,      // Initialize function
   channel_print_exception, // Print exceptions function
@@ -35,11 +35,18 @@ const char *channel_error_strings[] =
   "error_CHANNEL_SERVER_ACCEPT_ERROR",
   "error_CHANNEL_SERVER_PROCESS_INVALID_FD",
   "error_CHANNEL_SERVER_MESSAGE_INVALID_CONNECTION_INDEX",
+  "error_CHANNEL_SERVER_SSL_ALREADY_INITIALIZED",
+  "error_CHANNEL_SERVER_SSL_INIT_ERROR",
+  "error_CHANNEL_SERVER_SSL_CERTIFICATE_FILE_ERROR",
+  "error_CHANNEL_SERVER_SSL_PRIVATE_KEY_FILE_ERROR",
+  "error_CHANNEL_SERVER_SSL_ACCEPT_ERROR",
   "error_CHANNEL_CLIENT_WRONG_DELEGATE_PARAMETER_COUNT",
   "error_CHANNEL_CLIENT_INVALID_IP_ADDRESS",
   "error_CHANNEL_CLIENT_CREATE_ERROR",
   "error_CHANNEL_CLIENT_PROCESS_INVALID_FD",
   "error_CHANNEL_CLIENT_NOT_CONNECTED",
+  "error_CHANNEL_CLIENT_SSL_ALREADY_INITIALIZED",
+  "error_CHANNEL_CLIENT_SSL_INIT_ERROR",
 };/*}}}*/
 
 // - CHANNEL initialize -
@@ -109,6 +116,41 @@ bool channel_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nChannelServer, invalid connection index\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_CHANNEL_SERVER_SSL_ALREADY_INITIALIZED:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nChannelServer, SSL is already initialized\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CHANNEL_SERVER_SSL_INIT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nChannelServer, error while initializing SSL\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CHANNEL_SERVER_SSL_CERTIFICATE_FILE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nChannelServer, cannot read SSL certificate from file\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CHANNEL_SERVER_SSL_PRIVATE_KEY_FILE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nChannelServer, cannot read SSL private key from file\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CHANNEL_SERVER_SSL_ACCEPT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nChannelServer, error while accepting SSL connection\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_CHANNEL_CLIENT_WRONG_DELEGATE_PARAMETER_COUNT:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -142,6 +184,20 @@ bool channel_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nChannelClient is not connected\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CHANNEL_CLIENT_SSL_ALREADY_INITIALIZED:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nChannelClient, SSL is already initialized\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CHANNEL_CLIENT_SSL_INIT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nChannelClient, error while initializing SSL\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -423,8 +479,7 @@ method init_ssl
   // - ERROR -
   if (cs_ptr->ssl_ctx != nullptr)
   {
-    // FIXME throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_SSL_ALREADY_INITIALIZED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -439,8 +494,7 @@ method init_ssl
   // - ERROR -
   if (ssl_ctx == nullptr)
   {
-    // FIXME throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_SSL_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -449,8 +503,7 @@ method init_ssl
   {
     SSL_CTX_free(ssl_ctx);
 
-    // FIXME throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_SSL_CERTIFICATE_FILE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -459,8 +512,7 @@ method init_ssl
   {
     SSL_CTX_free(ssl_ctx);
 
-    // FIXME throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_SSL_PRIVATE_KEY_FILE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -565,8 +617,7 @@ method process
       // - ERROR -
       if (ssl == nullptr)
       {
-        // FIXME throw proper exception
-        BIC_TODO_ERROR(__FILE__,__LINE__);
+        exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_SSL_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
 
@@ -575,8 +626,7 @@ method process
       {
         SSL_free(ssl);
 
-        // FIXME throw proper exception
-        BIC_TODO_ERROR(__FILE__,__LINE__);
+        exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_SSL_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
 
@@ -1143,8 +1193,7 @@ bool bic_channel_client_method_init_ssl_0(interpreter_thread_s &it,unsigned stac
   // - ERROR -
   if (cc_ptr->ssl != nullptr)
   {
-    // FIXME throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_CLIENT_SSL_ALREADY_INITIALIZED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1159,8 +1208,7 @@ bool bic_channel_client_method_init_ssl_0(interpreter_thread_s &it,unsigned stac
   // - ERROR -
   if (ssl_ctx == nullptr)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_CLIENT_SSL_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1171,8 +1219,7 @@ bool bic_channel_client_method_init_ssl_0(interpreter_thread_s &it,unsigned stac
   {
     SSL_CTX_free(ssl_ctx);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_CLIENT_SSL_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1182,8 +1229,7 @@ bool bic_channel_client_method_init_ssl_0(interpreter_thread_s &it,unsigned stac
     SSL_free(ssl);
     SSL_CTX_free(ssl_ctx);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_CLIENT_SSL_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
