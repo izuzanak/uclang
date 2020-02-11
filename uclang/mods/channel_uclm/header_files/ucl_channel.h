@@ -38,6 +38,16 @@ enum
   c_conn_index_CONN_ALL = -1,
 };
 
+#ifdef UCL_WITH_OPENSSL
+// - ssl repeated actions -
+enum
+{
+  SSL_ACTION_NONE = 0,
+  SSL_ACTION_SEND_MSG,
+  SSL_ACTION_RECV_MSG
+};
+#endif
+
 #define CHANNEL_CALL_CALLBACK_DELEGATE(NAME,SOURCE_POS,PARAM_CODE,ERROR_CODE) \
 {/*{{{*/\
   delegate_s *delegate_ptr = (delegate_s *)((location_s *)NAME)->v_data_ptr;\
@@ -107,6 +117,9 @@ additions
 {
 #ifdef UCL_WITH_OPENSSL
   SSL *ssl;
+
+  ui ssl_action;
+  ui ssl_events;
 #endif
 
   bool send_msg(interpreter_thread_s &it);
@@ -200,6 +213,8 @@ inline void channel_conn_s::init_static()
 {/*{{{*/
 #ifdef UCL_WITH_OPENSSL
   ssl = nullptr;
+  ssl_action = SSL_ACTION_NONE;
+  ssl_events = 0;
 #endif
 
   conn_fd = -1;

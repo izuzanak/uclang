@@ -50,12 +50,12 @@ bool channel_conn_s::send_msg(interpreter_thread_s &it)
         switch (SSL_get_error(ssl,cnt))
         {
           case SSL_ERROR_WANT_READ:
-            // FIXME
-            fprintf(stderr,"send_msg: WANT_READ\n");
+            ssl_action = SSL_ACTION_SEND_MSG;
+            ssl_events = POLLIN | POLLPRI;
             break;
           case SSL_ERROR_WANT_WRITE:
-            // FIXME
-            fprintf(stderr,"send_msg: WANT_WRITE\n");
+            ssl_action = SSL_ACTION_SEND_MSG;
+            ssl_events = POLLOUT;
             break;
           default:
             return false;
@@ -66,7 +66,7 @@ bool channel_conn_s::send_msg(interpreter_thread_s &it)
     }
     else
     {
-#else
+#endif
       cnt = write(conn_fd,message->data + this->out_msg_offset,write_cnt);
 
       // - ERROR -
@@ -74,8 +74,6 @@ bool channel_conn_s::send_msg(interpreter_thread_s &it)
       {
         return false;
       }
-#endif
-
 #ifdef UCL_WITH_OPENSSL
     }
 #endif
@@ -119,12 +117,12 @@ bool channel_conn_s::recv_msg(interpreter_thread_s &it,location_s *dst_location,
         switch (SSL_get_error(ssl,read_cnt))
         {
           case SSL_ERROR_WANT_READ:
-            // FIXME
-            fprintf(stderr,"recv_msg: WANT_READ\n");
+            ssl_action = SSL_ACTION_RECV_MSG;
+            ssl_events = POLLIN | POLLPRI;
             break;
           case SSL_ERROR_WANT_WRITE:
-            // FIXME
-            fprintf(stderr,"recv_msg: WANT_WRITE\n");
+            ssl_action = SSL_ACTION_RECV_MSG;
+            ssl_events = POLLOUT;
             break;
           default:
             return false;
@@ -133,7 +131,7 @@ bool channel_conn_s::recv_msg(interpreter_thread_s &it,location_s *dst_location,
     }
     else
     {
-#else
+#endif
       read_cnt = read(conn_fd,in_msg.data + in_msg.used,c_buffer_add);
 
       // - ERROR -
@@ -141,8 +139,6 @@ bool channel_conn_s::recv_msg(interpreter_thread_s &it,location_s *dst_location,
       {
         return false;
       }
-#endif
-
 #ifdef UCL_WITH_OPENSSL
     }
 #endif

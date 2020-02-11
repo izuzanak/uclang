@@ -1040,7 +1040,7 @@ if cfg_ref[CFG_TARGET]:
       [
         os.sep.join(["..","..","libs","base_ucll"]),
       ],
-      opt_build + "-DUCL_WITH_OPENSSL", # CXX options
+      opt_build + "-DUCL_WITH_OPENSSL ", # CXX options
       opt_link + "-lssl -lcrypto ", # "-lrt " CXX link options
       "", # CXX defines
       [],

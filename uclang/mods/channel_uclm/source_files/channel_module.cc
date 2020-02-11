@@ -494,11 +494,18 @@ bool bic_channel_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack
     do {
       if (fcmtn_ptr->valid)
       {
+        channel_conn_s &conn = cs_ptr->conn_list[fcmtn_ptr->object.conn_index];
+
+#ifdef UCL_WITH_OPENSSL
+        unsigned events = conn.ssl_action ? conn.ssl_events : conn.events;
+#else
+        unsigned events = conn.events;
+#endif
+
         BIC_CREATE_NEW_LOCATION(fd_location,c_bi_class_integer,fcmtn_ptr->object.fd);
         array_ptr->push(fd_location);
 
-        BIC_CREATE_NEW_LOCATION(events_location,c_bi_class_integer,
-          cs_ptr->conn_list[fcmtn_ptr->object.conn_index].events);
+        BIC_CREATE_NEW_LOCATION(events_location,c_bi_class_integer,events);
         array_ptr->push(events_location);
       }
     } while(++fcmtn_ptr < fcmtn_ptr_end);
@@ -621,32 +628,67 @@ method process
     unsigned conn_index = cs_ptr->fd_conn_map[fd_conn_map_index].conn_index;
     channel_conn_s &conn = cs_ptr->conn_list[conn_index];
 
-    // - mask events with connection events -
-    unsigned conn_events = conn.events & events;
-
     // - drop connection flag -
     bool drop_connection = false;
 
-    if (conn_events & POLLOUT)
+#ifdef UCL_WITH_OPENSSL
+    if (conn.ssl_action)
     {
-      if (!conn.send_msg(it))
+      if (conn.ssl_events & events)
       {
-        // - set drop connection flag -
-        drop_connection = true;
+        // - reset ssl action -
+        conn.ssl_action = SSL_ACTION_NONE;
 
-        // - reset conn_events -
-        conn_events = 0;
+        switch (conn.ssl_action)
+        {
+        case SSL_ACTION_SEND_MSG:
+          if (!conn.send_msg(it))
+          {
+            // - set drop connection flag -
+            drop_connection = true;
+          }
+          break;
+        case SSL_ACTION_RECV_MSG:
+          if (!conn.recv_msg(it,dst_location,operands[c_source_pos_idx]))
+          {
+            // - set drop connection flag -
+            drop_connection = true;
+          }
+          break;
+        default:
+          cassert(0);
+        }
       }
     }
-
-    if (conn_events & POLLIN)
+    else
     {
-      if (!conn.recv_msg(it,dst_location,operands[c_source_pos_idx]))
+#endif
+      // - mask events with connection events -
+      unsigned conn_events = conn.events & events;
+
+      if (conn_events & POLLOUT)
       {
-        // - set drop connection flag -
-        drop_connection = true;
+        if (!conn.send_msg(it))
+        {
+          // - set drop connection flag -
+          drop_connection = true;
+
+          // - reset conn_events -
+          conn_events = 0;
+        }
       }
+
+      if (conn_events & POLLIN)
+      {
+        if (!conn.recv_msg(it,dst_location,operands[c_source_pos_idx]))
+        {
+          // - set drop connection flag -
+          drop_connection = true;
+        }
+      }
+#ifdef UCL_WITH_OPENSSL
     }
+#endif
 
     // - drop connection flag is set -
     if (drop_connection)
@@ -1098,6 +1140,14 @@ bool bic_channel_client_method_init_ssl_0(interpreter_thread_s &it,unsigned stac
 
   channel_conn_s *cc_ptr = (channel_conn_s *)dst_location->v_data_ptr;
 
+  // - ERROR -
+  if (cc_ptr->ssl != nullptr)
+  {
+    // FIXME throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
   const SSL_METHOD *method = TLS_client_method();
 #else
@@ -1163,7 +1213,13 @@ bool bic_channel_client_method_events_0(interpreter_thread_s &it,unsigned stack_
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  long long int result = ((channel_conn_s *)dst_location->v_data_ptr)->events;
+  channel_conn_s *cc_ptr = (channel_conn_s *)dst_location->v_data_ptr;
+
+#ifdef UCL_WITH_OPENSSL
+  long long int result = cc_ptr->ssl_action ? cc_ptr->ssl_events : cc_ptr->events;
+#else
+  long long int result = cc_ptr->events;
+#endif
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
@@ -1179,12 +1235,18 @@ bool bic_channel_client_method_get_fds_0(interpreter_thread_s &it,unsigned stack
   // - create result array -
   pointer_array_s *array_ptr = it.get_new_array_ptr();
 
-  if (cc_ptr->events != 0)
+#ifdef UCL_WITH_OPENSSL
+  unsigned events = cc_ptr->ssl_action ? cc_ptr->ssl_events : cc_ptr->events;
+#else
+  unsigned events = cc_ptr->events;
+#endif
+
+  if (events != 0)
   {
     BIC_CREATE_NEW_LOCATION(fd_location,c_bi_class_integer,cc_ptr->conn_fd);
     array_ptr->push(fd_location);
 
-    BIC_CREATE_NEW_LOCATION(events_location,c_bi_class_integer,cc_ptr->events);
+    BIC_CREATE_NEW_LOCATION(events_location,c_bi_class_integer,events);
     array_ptr->push(events_location);
   }
 
@@ -1266,32 +1328,67 @@ method process
   }
   else
   {
-    // - mask events with connection events -
-    unsigned conn_events = cc_ptr->events & events;
-
     // - drop connection flag -
     bool drop_connection = false;
 
-    if (conn_events & POLLOUT)
+#ifdef UCL_WITH_OPENSSL
+    if (cc_ptr->ssl_action)
     {
-      if (!cc_ptr->send_msg(it))
+      if (cc_ptr->ssl_events & events)
       {
-        // - set drop connection flag -
-        drop_connection = true;
+        // - reset ssl action -
+        cc_ptr->ssl_action = SSL_ACTION_NONE;
 
-        // - reset conn_events -
-        conn_events = 0;
+        switch (cc_ptr->ssl_action)
+        {
+        case SSL_ACTION_SEND_MSG:
+          if (!cc_ptr->send_msg(it))
+          {
+            // - set drop connection flag -
+            drop_connection = true;
+          }
+          break;
+        case SSL_ACTION_RECV_MSG:
+          if (!cc_ptr->recv_msg(it,dst_location,operands[c_source_pos_idx]))
+          {
+            // - set drop connection flag -
+            drop_connection = true;
+          }
+          break;
+        default:
+          cassert(0);
+        }
       }
     }
-
-    if (conn_events & POLLIN)
+    else
     {
-      if (!cc_ptr->recv_msg(it,dst_location,operands[c_source_pos_idx]))
+#endif
+      // - mask events with connection events -
+      unsigned conn_events = cc_ptr->events & events;
+
+      if (conn_events & POLLOUT)
       {
-        // - set drop connection flag -
-        drop_connection = true;
+        if (!cc_ptr->send_msg(it))
+        {
+          // - set drop connection flag -
+          drop_connection = true;
+
+          // - reset conn_events -
+          conn_events = 0;
+        }
       }
+
+      if (conn_events & POLLIN)
+      {
+        if (!cc_ptr->recv_msg(it,dst_location,operands[c_source_pos_idx]))
+        {
+          // - set drop connection flag -
+          drop_connection = true;
+        }
+      }
+#ifdef UCL_WITH_OPENSSL
     }
+#endif
 
     // - drop connection flag is set -
     if (drop_connection)
