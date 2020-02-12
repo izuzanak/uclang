@@ -127,6 +127,8 @@ bool channel_conn_s::recv_msg(interpreter_thread_s &it,location_s *dst_location,
           default:
             return false;
         }
+
+        break;
       }
     }
     else

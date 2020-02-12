@@ -33,8 +33,8 @@ const char *openssl_error_strings[] =
 {/*{{{*/
   "error_SSL_CONTEXT_INVALID_METHOD_TYPE",
   "error_SSL_CONTEXT_CREATE_ERROR",
-  "error_SSL_CONTEXT_CERTIFICATE_FILE_ERRROR",
-  "error_SSL_CONTEXT_PRIVATE_KEY_FILE_ERRROR",
+  "error_SSL_CONTEXT_CERTIFICATE_FILE_ERROR",
+  "error_SSL_CONTEXT_PRIVATE_KEY_FILE_ERROR",
   "error_SSL_CONN_CREATE_ERROR",
   "error_SSL_CONN_ACCEPT_ERROR",
   "error_SSL_CONN_CONNECT_ERROR",
@@ -80,14 +80,14 @@ bool openssl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nCannot create new SSL context\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_SSL_CONTEXT_CERTIFICATE_FILE_ERRROR:
+  case c_error_SSL_CONTEXT_CERTIFICATE_FILE_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nSSL context, cannot read certificate from file\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_SSL_CONTEXT_PRIVATE_KEY_FILE_ERRROR:
+  case c_error_SSL_CONTEXT_PRIVATE_KEY_FILE_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
@@ -365,7 +365,7 @@ method use_certificate_file
   // - ERROR -
   if (SSL_CTX_use_certificate_file(sc_ptr,string_ptr->data,file_type) != 1)
   {
-    exception_s::throw_exception(it,module.error_base + c_error_SSL_CONTEXT_CERTIFICATE_FILE_ERRROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s::throw_exception(it,module.error_base + c_error_SSL_CONTEXT_CERTIFICATE_FILE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -390,7 +390,7 @@ method use_private_key_file
   // - ERROR -
   if (SSL_CTX_use_PrivateKey_file(sc_ptr,string_ptr->data,file_type) != 1)
   {
-    exception_s::throw_exception(it,module.error_base + c_error_SSL_CONTEXT_PRIVATE_KEY_FILE_ERRROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    exception_s::throw_exception(it,module.error_base + c_error_SSL_CONTEXT_PRIVATE_KEY_FILE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 

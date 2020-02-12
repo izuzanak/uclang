@@ -1383,9 +1383,10 @@ method process
       if (cc_ptr->ssl_events & events)
       {
         // - reset ssl action -
+        unsigned ssl_action = cc_ptr->ssl_action;
         cc_ptr->ssl_action = SSL_ACTION_NONE;
 
-        switch (cc_ptr->ssl_action)
+        switch (ssl_action)
         {
         case SSL_ACTION_SEND_MSG:
           if (!cc_ptr->send_msg(it))
