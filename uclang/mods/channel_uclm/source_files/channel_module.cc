@@ -612,11 +612,22 @@ method process
 #ifdef UCL_WITH_OPENSSL
     if (cs_ptr->ssl_ctx != nullptr)
     {
+      int nonblock_io = 1;
+      if (ioctl(conn_fd,FIONBIO,&nonblock_io))
+      {
+        close(conn_fd);
+
+        exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+
       SSL *ssl = SSL_new(cs_ptr->ssl_ctx);
 
       // - ERROR -
       if (ssl == nullptr)
       {
+        close(conn_fd);
+
         exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_SSL_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
@@ -625,6 +636,7 @@ method process
       if (SSL_set_fd(ssl,conn_fd) != 1)
       {
         SSL_free(ssl);
+        close(conn_fd);
 
         exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_SSL_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
@@ -687,9 +699,10 @@ method process
       if (conn.ssl_events & events)
       {
         // - reset ssl action -
+        unsigned ssl_action = conn.ssl_action;
         conn.ssl_action = SSL_ACTION_NONE;
 
-        switch (conn.ssl_action)
+        switch (ssl_action)
         {
         case SSL_ACTION_SEND_MSG:
           if (!conn.send_msg(it))
@@ -1326,16 +1339,31 @@ method process
     // - reset connecting flag -
     cc_ptr->connecting = false;
 
-    int nonblock_io = 0;
     int error;
     socklen_t length = sizeof(error);
 
     // - check connect result -
-    // - disable nonblocking io -
-    // - modify fd epoll events: only input -
-    if (getsockopt(cc_ptr->conn_fd,SOL_SOCKET,SO_ERROR,&error,&length) ||
-        error != 0 ||
-        ioctl(cc_ptr->conn_fd,FIONBIO,&nonblock_io))
+    if (getsockopt(cc_ptr->conn_fd,SOL_SOCKET,SO_ERROR,&error,&length))
+    {
+      error = 1;
+    }
+
+#ifdef UCL_WITH_OPENSSL
+    if (cc_ptr->ssl == nullptr)
+    {
+#endif
+      // - disable nonblocking io -
+      int nonblock_io = 0;
+      if (!error && ioctl(cc_ptr->conn_fd,FIONBIO,&nonblock_io))
+      {
+        error = 1;
+      }
+#ifdef UCL_WITH_OPENSSL
+    }
+#endif
+
+    // - error occured -
+    if (error)
     {
       cc_ptr->events = 0;
 
