@@ -404,7 +404,7 @@ method ChannelServer
   address.sin_family = AF_INET;
 
   // - create socket -
-  int fd = socket(AF_INET,SOCK_STREAM,0);
+  int fd = socket(AF_INET,SOCK_STREAM | SOCK_CLOEXEC,0);
 
   // - ERROR -
   if (fd == -1)
