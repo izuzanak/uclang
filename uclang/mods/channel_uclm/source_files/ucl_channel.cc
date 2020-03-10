@@ -54,8 +54,6 @@ bool channel_conn_s::send_msg(interpreter_thread_s &it)
             ssl_events = POLLIN | POLLPRI;
             break;
           case SSL_ERROR_WANT_WRITE:
-            ssl_action = SSL_ACTION_SEND_MSG;
-            ssl_events = POLLOUT;
             break;
           default:
             return false;
@@ -98,10 +96,9 @@ bool channel_conn_s::send_msg(interpreter_thread_s &it)
 
 bool channel_conn_s::recv_msg(interpreter_thread_s &it,location_s *dst_location,unsigned a_source_pos)
 {/*{{{*/
-  const long int c_buffer_add = 1024;
+  const long int c_buffer_add = 4096;
   unsigned msg_old_used = in_msg.used;
 
-  int inq_cnt;
   long int read_cnt;
   do
   {
@@ -117,8 +114,6 @@ bool channel_conn_s::recv_msg(interpreter_thread_s &it,location_s *dst_location,
         switch (SSL_get_error(ssl,read_cnt))
         {
           case SSL_ERROR_WANT_READ:
-            ssl_action = SSL_ACTION_RECV_MSG;
-            ssl_events = POLLIN | POLLPRI;
             break;
           case SSL_ERROR_WANT_WRITE:
             ssl_action = SSL_ACTION_RECV_MSG;
@@ -147,13 +142,33 @@ bool channel_conn_s::recv_msg(interpreter_thread_s &it,location_s *dst_location,
 
     in_msg.used += read_cnt;
 
-    // - ERROR -
-    if (ioctl(conn_fd,TIOCINQ,&inq_cnt) == -1)
+#ifdef UCL_WITH_OPENSSL
+    if (ssl == nullptr)
     {
-      return false;
+#endif
+
+      // - ERROR -
+      int inq_cnt;
+      if (ioctl(conn_fd,TIOCINQ,&inq_cnt) == -1)
+      {
+        return false;
+      }
+
+      if (inq_cnt <= 0)
+      {
+        break;
+      }
+#ifdef UCL_WITH_OPENSSL
     }
-  }
-  while(inq_cnt > 0);
+    else
+    {
+      if (read_cnt <= 0)
+      {
+        break;
+      }
+    }
+#endif
+  } while(1);
 
 #ifdef UCL_WITH_OPENSSL
   if (ssl == nullptr)
