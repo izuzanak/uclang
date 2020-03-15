@@ -10,6 +10,7 @@ if(LIBPAM_FOUND)
   set(CONF_INCLUDE_DIRS)
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
-    base_ucll)
+    base_ucll
+    pam)
 endif()
 
