@@ -23,6 +23,7 @@ c_packages = [
   ["MOD_CHANNEL"   ,"channel_uclm"   ,"true"      ,[]],
   ["MOD_EPOLL"     ,"epoll_uclm"     ,"files"     ,["/usr/include/sys/epoll.h"]],
   ["MOD_INOTIFY"   ,"inotify_uclm"   ,"files"     ,["/usr/include/sys/inotify.h"]],
+  ["MOD_PAM"       ,"pam_uclm"       ,"files"     ,["/usr/include/security/pam_appl.h"]],
   ["MOD_READLINE"  ,"readline_uclm"  ,"files"     ,["/usr/include/readline/readline.h"]],
   ["MOD_REGEX"     ,"regex_uclm"     ,"files"     ,["/usr/include/regex.h"]],
   ["MOD_PCRE"      ,"pcre_uclm"      ,"pkg-config",["libpcreposix"]],

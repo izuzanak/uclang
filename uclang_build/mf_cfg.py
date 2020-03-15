@@ -19,6 +19,7 @@ C_MODULE_LOGGER     = index; index += 1
 C_MODULE_CHANNEL    = index; index += 1
 C_MODULE_EPOLL      = index; index += 1
 C_MODULE_INOTIFY    = index; index += 1
+C_MODULE_PAM        = index; index += 1
 C_MODULE_READLINE   = index; index += 1
 C_MODULE_REGEX      = index; index += 1
 C_MODULE_PCRE       = index; index += 1
@@ -142,6 +143,7 @@ c_cfg = [
     ["MOD_CHANNEL"   ,c_enabled[C_MODULE_CHANNEL]   ,C_UCLANG_DIR + "mods/channel_uclm"     ,None],
     ["MOD_EPOLL"     ,c_enabled[C_MODULE_EPOLL]     ,C_UCLANG_DIR + "mods/epoll_uclm"       ,None],
     ["MOD_INOTIFY"   ,c_enabled[C_MODULE_INOTIFY]   ,C_UCLANG_DIR + "mods/inotify_uclm"     ,None],
+    ["MOD_PAM"       ,c_enabled[C_MODULE_PAM]       ,C_UCLANG_DIR + "mods/pam_uclm"         ,None],
     ["MOD_READLINE"  ,c_enabled[C_MODULE_READLINE]  ,C_UCLANG_DIR + "mods/readline_uclm"    ,None],
     ["MOD_REGEX"     ,c_enabled[C_MODULE_REGEX]     ,C_UCLANG_DIR + "mods/regex_uclm"       ,None],
     ["MOD_PCRE"      ,c_enabled[C_MODULE_PCRE]      ,C_UCLANG_DIR + "mods/pcre_uclm"        ,None],

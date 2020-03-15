@@ -9,8 +9,8 @@ from mf_cfg import *
 
 # - CLASS configuration_c -
 class configuration_c:
-  C_SHELL_TYPE_WINDOWS  = 0
-  C_SHELL_TYPE_BASH     = 1
+  C_SHELL_TYPE_WINDOWS = 0
+  C_SHELL_TYPE_BASH    = 1
 
   C_COMPILER_GCC   = 0
   C_COMPILER_MS_VS = 1
@@ -1094,6 +1094,32 @@ if cfg_ref[CFG_TARGET]:
       ],
       opt_build, # CXX options
       opt_link, # CXX link options
+      "", # CXX defines
+      [],
+      [],
+    )
+# }}}
+
+# pam module
+cfg_ref = c_cfg[C_MODULE_PAM]
+# {{{
+if cfg_ref[CFG_TARGET]:
+    cfg_ref[CFG_MODULE] = module_c(
+      configuration,
+      cfg_ref[CFG_DIR],
+      cfg_ref[CFG_NAME],
+      [ 
+        "header_files",
+        os.sep.join(["..","..","libs","base_ucll","header_files"]),
+      ],
+      [ 
+        "source_files",
+      ],
+      [
+        os.sep.join(["..","..","libs","base_ucll"]),
+      ],
+      opt_build, # CXX options
+      opt_link + "-lpam ", # CXX link options
       "", # CXX defines
       [],
       [],
