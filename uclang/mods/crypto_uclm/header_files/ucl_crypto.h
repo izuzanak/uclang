@@ -78,6 +78,20 @@ struct crypto_cipher_s
 };
 
 /*
+ * definition of structure crypto_seal_s
+ */
+
+struct crypto_seal_s
+{
+  EVP_CIPHER_CTX *context;
+  location_s *keys_location;
+  location_s *iv_location;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
  * inline methods of class crypto_c
  */
 
@@ -184,6 +198,41 @@ inline void crypto_cipher_s::clear(interpreter_thread_s &it)
   if (context != nullptr)
   {
     EVP_CIPHER_CTX_free(context);
+  }
+
+  init();
+}/*}}}*/
+
+/*
+ * inline methods of structure crypto_seal_s
+ */
+
+inline void crypto_seal_s::init()
+{/*{{{*/
+  context = nullptr;
+  keys_location = nullptr;
+  iv_location = nullptr;
+}/*}}}*/
+
+inline void crypto_seal_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+
+  // - release crypto cipher context -
+  if (context != nullptr)
+  {
+    EVP_CIPHER_CTX_free(context);
+  }
+
+  // - release keys location -
+  if (keys_location != nullptr)
+  {
+    it.release_location_ptr(keys_location);
+  }
+
+  // - release initial vector location -
+  if (iv_location != nullptr)
+  {
+    it.release_location_ptr(iv_location);
   }
 
   init();

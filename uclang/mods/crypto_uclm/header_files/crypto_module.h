@@ -16,6 +16,8 @@ extern unsigned c_bi_class_crypto_digest_verify;
 extern unsigned c_bi_class_crypto_cipher_info;
 extern unsigned c_bi_class_crypto_encrypt;
 extern unsigned c_bi_class_crypto_decrypt;
+extern unsigned c_bi_class_crypto_seal;
+extern unsigned c_bi_class_crypto_open;
 
 // - CRYPTO module -
 extern "C" EXPORT built_in_module_s module;
@@ -40,6 +42,9 @@ enum
   c_error_CRYPTO_CIPHER_NEW_INIT_ERROR,
   c_error_CRYPTO_CIPHER_UPDATE_ERROR,
   c_error_CRYPTO_CIPHER_FINALIZE_ERROR,
+  c_error_CRYPTO_CIPHER_EMPTY_PUBLIC_KEY_ARRAY,
+  c_error_CRYPTO_CIPHER_EXPECTED_PUBLIC_KEY,
+  c_error_CRYPTO_CIPHER_INVALID_PRIVATE_PUBLIC_KEY,
 };
 
 // - CRYPTO error strings -
@@ -190,11 +195,45 @@ void bic_crypto_decrypt_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_crypto_decrypt_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_crypto_decrypt_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_crypto_decrypt_method_CryptoDescrypt_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_decrypt_method_CryptoDecrypt_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_crypto_decrypt_method_update_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_crypto_decrypt_method_finalize_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_crypto_decrypt_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_crypto_decrypt_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class CRYPTO_SEAL -
+extern built_in_variable_s crypto_seal_variables[];
+extern built_in_method_s crypto_seal_methods[];
+extern built_in_class_s crypto_seal_class;
+
+void bic_crypto_seal_consts(location_array_s &const_locations);
+void bic_crypto_seal_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_crypto_seal_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_crypto_seal_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_seal_method_CryptoSeal_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_seal_method_keys_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_seal_method_iv_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_seal_method_update_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_seal_method_finalize_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_seal_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_seal_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class CRYPTO_OPEN -
+extern built_in_variable_s crypto_open_variables[];
+extern built_in_method_s crypto_open_methods[];
+extern built_in_class_s crypto_open_class;
+
+void bic_crypto_open_consts(location_array_s &const_locations);
+void bic_crypto_open_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_crypto_open_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_crypto_open_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_open_method_CryptoOpen_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_open_method_update_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_open_method_finalize_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_open_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_open_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 

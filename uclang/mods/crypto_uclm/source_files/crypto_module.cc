@@ -13,15 +13,17 @@ unsigned c_bi_class_crypto_digest_verify = c_idx_not_exist;
 unsigned c_bi_class_crypto_cipher_info = c_idx_not_exist;
 unsigned c_bi_class_crypto_encrypt = c_idx_not_exist;
 unsigned c_bi_class_crypto_decrypt = c_idx_not_exist;
+unsigned c_bi_class_crypto_seal = c_idx_not_exist;
+unsigned c_bi_class_crypto_open = c_idx_not_exist;
 
 // - CRYPTO module -
 EXPORT built_in_module_s module =
 {/*{{{*/
-  9,                      // Class count
+  11,                     // Class count
   crypto_classes,         // Classes
 
   0,                      // Error base index
-  14,                     // Error count
+  17,                     // Error count
   crypto_error_strings,   // Error strings
 
   crypto_initialize,      // Initialize function
@@ -40,6 +42,8 @@ built_in_class_s *crypto_classes[] =
   &crypto_cipher_info_class,
   &crypto_encrypt_class,
   &crypto_decrypt_class,
+  &crypto_seal_class,
+  &crypto_open_class,
 };/*}}}*/
 
 // - CRYPTO error strings -
@@ -59,6 +63,9 @@ const char *crypto_error_strings[] =
   "error_CRYPTO_CIPHER_NEW_INIT_ERROR",
   "error_CRYPTO_CIPHER_UPDATE_ERROR",
   "error_CRYPTO_CIPHER_FINALIZE_ERROR",
+  "error_CRYPTO_CIPHER_EMPTY_PUBLIC_KEY_ARRAY",
+  "error_CRYPTO_CIPHER_EXPECTED_PUBLIC_KEY",
+  "error_CRYPTO_CIPHER_INVALID_PRIVATE_PUBLIC_KEY",
 };/*}}}*/
 
 // - CRYPTO initialize -
@@ -92,6 +99,12 @@ bool crypto_initialize(script_parser_s &sp)
 
   // - initialize crypto_decrypt class identifier -
   c_bi_class_crypto_decrypt = class_base_idx++;
+
+  // - initialize crypto_seal class identifier -
+  c_bi_class_crypto_seal = class_base_idx++;
+
+  // - initialize crypto_open class identifier -
+  c_bi_class_crypto_open = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -200,6 +213,28 @@ bool crypto_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nError while finalizing cipher context\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CRYPTO_CIPHER_EMPTY_PUBLIC_KEY_ARRAY:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nEmpty array of public keys\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CRYPTO_CIPHER_EXPECTED_PUBLIC_KEY:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid item of public key array, at position %" HOST_LL_FORMAT "d expected %s received %s\n",
+            exception.params[0],it.class_symbol_names[it.class_records[exception.params[1]].name_idx].data,it.class_symbol_names[it.class_records[exception.params[2]].name_idx].data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CRYPTO_CIPHER_INVALID_PRIVATE_PUBLIC_KEY:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid type of private/public key\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -2110,7 +2145,7 @@ built_in_method_s crypto_decrypt_methods[] =
   {
     "CryptoDecrypt#3",
     c_modifier_public | c_modifier_final,
-    bic_crypto_decrypt_method_CryptoDescrypt_3
+    bic_crypto_decrypt_method_CryptoDecrypt_3
   },
   {
     "update#1",
@@ -2172,7 +2207,7 @@ bool bic_crypto_decrypt_operator_binary_equal(interpreter_thread_s &it,unsigned 
   return true;
 }/*}}}*/
 
-bool bic_crypto_decrypt_method_CryptoDescrypt_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_crypto_decrypt_method_CryptoDecrypt_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_CRYPTO_ENCRYPT_DECRYPT_METHOD_CONSTRUCTOR(Decrypt,"CryptoDecrypt#3");
 
@@ -2205,6 +2240,650 @@ bool bic_crypto_decrypt_method_to_string_0(interpreter_thread_s &it,unsigned sta
 bool bic_crypto_decrypt_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   printf("CryptoDecrypt");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class CRYPTO_SEAL -
+built_in_class_s crypto_seal_class =
+{/*{{{*/
+  "CryptoSeal",
+  c_modifier_public | c_modifier_final,
+  8, crypto_seal_methods,
+  0, crypto_seal_variables,
+  bic_crypto_seal_consts,
+  bic_crypto_seal_init,
+  bic_crypto_seal_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s crypto_seal_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_seal_operator_binary_equal
+  },
+  {
+    "CryptoSeal#2",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_seal_method_CryptoSeal_2
+  },
+  {
+    "keys#0",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_seal_method_keys_0
+  },
+  {
+    "iv#0",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_seal_method_iv_0
+  },
+  {
+    "update#1",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_seal_method_update_1
+  },
+  {
+    "finalize#0",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_seal_method_finalize_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_crypto_seal_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_crypto_seal_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s crypto_seal_variables[] =
+{/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
+};/*}}}*/
+
+void bic_crypto_seal_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_crypto_seal_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (crypto_seal_s *)nullptr;
+}/*}}}*/
+
+void bic_crypto_seal_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  crypto_seal_s *cc_ptr = (crypto_seal_s *)location_ptr->v_data_ptr;
+
+  // - if crypto seal object exists -
+  if (cc_ptr != nullptr)
+  {
+    cc_ptr->clear(it);
+    cfree(cc_ptr);
+  }
+}/*}}}*/
+
+bool bic_crypto_seal_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_seal_method_CryptoSeal_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+name_info:ignore
+pub_keys:ignore
+>
+method CryptoSeal
+; @end
+
+  const EVP_CIPHER *ct_ptr = nullptr;
+
+  if (src_0_location->v_type == c_bi_class_string)
+  {
+    ct_ptr = EVP_get_cipherbyname(((string_s *)src_0_location->v_data_ptr)->data);
+
+    // - ERROR -
+    if (ct_ptr == nullptr)
+    {
+      exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_INVALID_ALGORITHM_NAME,operands[c_source_pos_idx],src_0_location);
+      return false;
+    }
+  }
+  else if (src_0_location->v_type == c_bi_class_crypto_cipher_info)
+  {
+    ct_ptr = (EVP_CIPHER *)src_0_location->v_data_ptr;
+  }
+
+  // - ERROR -
+  if (ct_ptr == nullptr || src_1_location->v_type != c_bi_class_array)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("CryptoSeal#2");
+    new_exception->params.push(2);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+
+    return false;
+  }
+
+  pointer_array_s *pkey_array_ptr = (pointer_array_s *)src_1_location->v_data_ptr;
+
+  // - ERROR -
+  if (pkey_array_ptr->used < 1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_EMPTY_PUBLIC_KEY_ARRAY,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - create keys array location -
+  pointer_array_s *keys_array_ptr = it.get_new_array_ptr();
+  BIC_CREATE_NEW_LOCATION(keys_location,c_bi_class_array,keys_array_ptr);
+
+  int npubk = pkey_array_ptr->used;
+  EVP_PKEY *pubk[npubk];
+  unsigned char *ek[npubk];
+  int ekl[npubk];
+
+  {
+    pointer *p_ptr = pkey_array_ptr->data;
+    pointer *p_ptr_end = p_ptr + npubk;
+    EVP_PKEY **pubk_ptr = pubk;
+    unsigned char **ek_ptr = ek;
+    do {
+      location_s *pkey_location = it.get_location_value(*p_ptr);
+
+      // - ERROR -
+      if (pkey_location->v_type != c_bi_class_crypto_pkey)
+      {
+        it.release_location_ptr(keys_location);
+
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_EXPECTED_PUBLIC_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(p_ptr - pkey_array_ptr->data);
+        new_exception->params.push(c_bi_class_crypto_pkey);
+        new_exception->params.push(pkey_location->v_type);
+
+        return false;
+      }
+
+      crypto_pkey_s *ck_ptr = (crypto_pkey_s *)pkey_location->v_data_ptr;
+
+      // - ERROR -
+      if (!ck_ptr->ispub)
+      {
+        it.release_location_ptr(keys_location);
+
+        exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_INVALID_PRIVATE_PUBLIC_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+
+      string_s *key_string_ptr = it.get_new_string_ptr();
+      key_string_ptr->create(EVP_PKEY_size(ck_ptr->pkey));
+
+      BIC_CREATE_NEW_LOCATION(key_location,c_bi_class_string,key_string_ptr);
+      keys_array_ptr->push(key_location);
+
+      *pubk_ptr = ck_ptr->pkey;
+      *ek_ptr = (unsigned char *)key_string_ptr->data;
+
+    } while(++pubk_ptr,++ek_ptr,++p_ptr < p_ptr_end);
+  }
+
+  // - create initial vector location -
+  string_s *iv_ptr = it.get_new_string_ptr();
+  iv_ptr->create((unsigned)EVP_CIPHER_iv_length(ct_ptr));
+  BIC_CREATE_NEW_LOCATION(iv_location,c_bi_class_string,iv_ptr);
+
+  // - create crypto seal object -
+  crypto_seal_s *cs_ptr = (crypto_seal_s *)cmalloc(sizeof(crypto_seal_s));
+  cs_ptr->init();
+
+  cs_ptr->keys_location = keys_location;
+  cs_ptr->iv_location = iv_location;
+
+  // - ERROR -
+  if ((cs_ptr->context = EVP_CIPHER_CTX_new()) == nullptr)
+  {
+    cs_ptr->clear(it);
+    cfree(cs_ptr);
+
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_NEW_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (EVP_SealInit(cs_ptr->context,ct_ptr,ek,ekl,(unsigned char *)iv_ptr->data,pubk,npubk) == 0)
+  {
+    cs_ptr->clear(it);
+    cfree(cs_ptr);
+
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_NEW_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - adjust keys lengths -
+  {
+    pointer *p_ptr = keys_array_ptr->data;
+    pointer *p_ptr_end = p_ptr + keys_array_ptr->used;
+    int *ekl_ptr = ekl;
+    do {
+      string_s *key_ptr = (string_s *)it.get_location_value(*p_ptr)->v_data_ptr;
+
+      key_ptr->data[*ekl_ptr] = '\0';
+      key_ptr->size = *ekl_ptr + 1;
+
+    } while(++ekl_ptr,++p_ptr < p_ptr_end);
+  }
+
+  dst_location->v_data_ptr = (crypto_cipher_s *)cs_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_seal_method_keys_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  crypto_seal_s *cs_ptr = (crypto_seal_s *)dst_location->v_data_ptr;
+
+  cs_ptr->keys_location->v_reference_cnt.atomic_inc();
+  BIC_SET_RESULT(cs_ptr->keys_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_seal_method_iv_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  crypto_seal_s *cs_ptr = (crypto_seal_s *)dst_location->v_data_ptr;
+
+  cs_ptr->iv_location->v_reference_cnt.atomic_inc();
+  BIC_SET_RESULT(cs_ptr->iv_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_seal_method_update_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_CRYPTO_ENCRYPT_DECRYPT_METHOD_UPDATE(Seal,"update#1");
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_seal_method_finalize_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  crypto_seal_s *cs_ptr = (crypto_seal_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  EVP_CIPHER_CTX *context_copy;
+  if ((context_copy = EVP_CIPHER_CTX_new()) == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_FINALIZE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (EVP_SealInit(context_copy,EVP_CIPHER_CTX_cipher(cs_ptr->context),nullptr,nullptr,nullptr,nullptr,0) == 0)
+  {
+    EVP_CIPHER_CTX_free(context_copy);
+
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_FINALIZE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (EVP_CIPHER_CTX_copy(context_copy,cs_ptr->context) != 1)
+  {
+    EVP_CIPHER_CTX_free(context_copy);
+
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_FINALIZE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - create result string -
+  string_s *result_ptr = it.get_new_string_ptr();
+  result_ptr->create(EVP_CIPHER_CTX_block_size(context_copy));
+
+  // - ERROR -
+  int result_length;
+  if (EVP_SealFinal(context_copy,(unsigned char *)result_ptr->data,&result_length) != 1)
+  {
+    EVP_CIPHER_CTX_free(context_copy);
+
+    result_ptr->clear();
+    cfree(result_ptr);
+
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_FINALIZE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  EVP_CIPHER_CTX_free(context_copy);
+
+  // - adjust result string size -
+  result_ptr->size = result_length + 1;
+
+  BIC_SET_RESULT_STRING(result_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_seal_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("CryptoSeal"),"CryptoSeal");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_seal_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("CryptoSeal");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class CRYPTO_OPEN -
+built_in_class_s crypto_open_class =
+{/*{{{*/
+  "CryptoOpen",
+  c_modifier_public | c_modifier_final,
+  6, crypto_open_methods,
+  0, crypto_open_variables,
+  bic_crypto_open_consts,
+  bic_crypto_open_init,
+  bic_crypto_open_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s crypto_open_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_open_operator_binary_equal
+  },
+  {
+    "CryptoOpen#4",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_open_method_CryptoOpen_4
+  },
+  {
+    "update#1",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_open_method_update_1
+  },
+  {
+    "finalize#0",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_open_method_finalize_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_crypto_open_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_crypto_open_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s crypto_open_variables[] =
+{/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
+};/*}}}*/
+
+void bic_crypto_open_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_crypto_open_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (crypto_cipher_s *)nullptr;
+}/*}}}*/
+
+void bic_crypto_open_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  crypto_cipher_s *cc_ptr = (crypto_cipher_s *)location_ptr->v_data_ptr;
+
+  // - if crypto open object exists -
+  if (cc_ptr != nullptr)
+  {
+    cc_ptr->clear(it);
+    cfree(cc_ptr);
+  }
+}/*}}}*/
+
+bool bic_crypto_open_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_open_method_CryptoOpen_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+name_info:ignore
+key:ignore
+init_vector:ignore
+private_key:ignore
+>
+method CryptoOpen
+; @end
+
+  const EVP_CIPHER *ct_ptr = nullptr;
+
+  if (src_0_location->v_type == c_bi_class_string)
+  {
+    ct_ptr = EVP_get_cipherbyname(((string_s *)src_0_location->v_data_ptr)->data);
+
+    // - ERROR -
+    if (ct_ptr == nullptr)
+    {
+      exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_INVALID_ALGORITHM_NAME,operands[c_source_pos_idx],src_0_location);
+      return false;
+    }
+  }
+  else if (src_0_location->v_type == c_bi_class_crypto_cipher_info)
+  {
+    ct_ptr = (EVP_CIPHER *)src_0_location->v_data_ptr;
+  }
+
+  // - ERROR -
+  if (ct_ptr == nullptr ||
+      src_1_location->v_type != c_bi_class_string ||
+      src_2_location->v_type != c_bi_class_string ||
+      src_3_location->v_type != c_bi_class_crypto_pkey)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("CryptoOpen#4");
+    new_exception->params.push(4);
+    new_exception->params.push(src_0_location->v_type);
+    new_exception->params.push(src_1_location->v_type);
+    new_exception->params.push(src_2_location->v_type);
+    new_exception->params.push(src_3_location->v_type);
+
+    return false;
+  }
+
+  string_s *key_ptr = (string_s *)src_1_location->v_data_ptr;
+  string_s *iv_ptr = (string_s *)src_2_location->v_data_ptr;
+
+  // - ERROR -
+  if (iv_ptr->size - 1 != (unsigned)EVP_CIPHER_iv_length(ct_ptr))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_INVALID_INIT_VECTOR_LENGTH,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(iv_ptr->size - 1);
+    new_exception->params.push(EVP_CIPHER_iv_length(ct_ptr));
+
+    return false;
+  }
+
+  crypto_pkey_s *ck_ptr = (crypto_pkey_s *)src_3_location->v_data_ptr;
+  
+  // - ERROR -
+  if (ck_ptr->ispub)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_INVALID_PRIVATE_PUBLIC_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - create crypto cipher object -
+  crypto_cipher_s *cc_ptr = (crypto_cipher_s *)cmalloc(sizeof(crypto_cipher_s));
+  cc_ptr->init();
+
+  // - ERROR -
+  if ((cc_ptr->context = EVP_CIPHER_CTX_new()) == nullptr)
+  {
+    cc_ptr->clear(it);
+    cfree(cc_ptr);
+
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_NEW_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (EVP_OpenInit(cc_ptr->context,ct_ptr,(unsigned char *)key_ptr->data,key_ptr->size - 1,
+        (unsigned char *)iv_ptr->data,ck_ptr->pkey) == 0)
+  {
+    cc_ptr->clear(it);
+    cfree(cc_ptr);
+
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_NEW_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  dst_location->v_data_ptr = (crypto_cipher_s *)cc_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_open_method_update_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_CRYPTO_ENCRYPT_DECRYPT_METHOD_UPDATE(Open,"update#1");
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_open_method_finalize_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  crypto_cipher_s *cc_ptr = (crypto_cipher_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  EVP_CIPHER_CTX *context_copy;
+  if ((context_copy = EVP_CIPHER_CTX_new()) == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_FINALIZE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (EVP_OpenInit(context_copy,EVP_CIPHER_CTX_cipher(cc_ptr->context),nullptr,0,nullptr,nullptr) == 0)
+  {
+    EVP_CIPHER_CTX_free(context_copy);
+
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_FINALIZE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (EVP_CIPHER_CTX_copy(context_copy,cc_ptr->context) != 1)
+  {
+    EVP_CIPHER_CTX_free(context_copy);
+
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_FINALIZE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - create result string -
+  string_s *result_ptr = it.get_new_string_ptr();
+  result_ptr->create(EVP_CIPHER_CTX_block_size(context_copy));
+
+  // - ERROR -
+  int result_length;
+  if (EVP_OpenFinal(context_copy,(unsigned char *)result_ptr->data,&result_length) != 1)
+  {
+    EVP_CIPHER_CTX_free(context_copy);
+
+    result_ptr->clear();
+    cfree(result_ptr);
+
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_FINALIZE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  EVP_CIPHER_CTX_free(context_copy);
+
+  // - adjust result string size -
+  result_ptr->size = result_length + 1;
+
+  BIC_SET_RESULT_STRING(result_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_open_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("CryptoOpen"),"CryptoOpen");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_open_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("CryptoOpen");
 
   BIC_SET_RESULT_BLANK();
 
