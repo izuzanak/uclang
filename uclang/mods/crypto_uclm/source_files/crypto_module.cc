@@ -525,6 +525,16 @@ static_method
       return false;
     }
 
+    // - adjust output length according to input padding characters -
+    if (((char *)data_ptr)[data_size - 2] == '=')
+    {
+      length -= 2;
+    }
+    else if (((char *)data_ptr)[data_size - 1] == '=')
+    {
+      length -= 1;
+    }
+
     target_ptr->size = length + 1;
   }
 
