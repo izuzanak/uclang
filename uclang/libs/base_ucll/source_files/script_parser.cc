@@ -3548,174 +3548,174 @@ unsigned script_parser_s::recognize_terminal(unsigned &input_idx)
 // - STATE 0 -
    GET_NEXT_CHAR();
 
-   if (in_char == 0)
+   if (in_char == 0) {
       goto state_1_label;
-
-   if (in_char >= 8 && in_char < 14)
+   }
+   if (in_char >= 8 && in_char < 14) {
       goto state_49_label;
-
-   if (in_char == 32)
+   }
+   if (in_char == 32) {
       goto state_49_label;
-
-   if (in_char == 33)
+   }
+   if (in_char == 33) {
       goto state_2_label;
-
-   if (in_char == 34)
+   }
+   if (in_char == 34) {
       goto state_3_label;
-
-   if (in_char == 35)
+   }
+   if (in_char == 35) {
       goto state_4_label;
-
-   if (in_char == 36)
+   }
+   if (in_char == 36) {
       goto state_5_label;
-
-   if (in_char == 37)
+   }
+   if (in_char == 37) {
       goto state_6_label;
-
-   if (in_char == 38)
+   }
+   if (in_char == 38) {
       goto state_7_label;
-
-   if (in_char == 39)
+   }
+   if (in_char == 39) {
       goto state_8_label;
-
-   if (in_char == 40)
+   }
+   if (in_char == 40) {
       goto state_9_label;
-
-   if (in_char == 41)
+   }
+   if (in_char == 41) {
       goto state_10_label;
-
-   if (in_char == 42)
+   }
+   if (in_char == 42) {
       goto state_11_label;
-
-   if (in_char == 43)
+   }
+   if (in_char == 43) {
       goto state_12_label;
-
-   if (in_char == 44)
+   }
+   if (in_char == 44) {
       goto state_13_label;
-
-   if (in_char == 45)
+   }
+   if (in_char == 45) {
       goto state_14_label;
-
-   if (in_char == 46)
+   }
+   if (in_char == 46) {
       goto state_15_label;
-
-   if (in_char == 47)
+   }
+   if (in_char == 47) {
       goto state_16_label;
-
-   if (in_char == 48)
+   }
+   if (in_char == 48) {
       goto state_17_label;
-
-   if (in_char >= 49 && in_char < 58)
+   }
+   if (in_char >= 49 && in_char < 58) {
       goto state_18_label;
-
-   if (in_char == 58)
+   }
+   if (in_char == 58) {
       goto state_19_label;
-
-   if (in_char == 59)
+   }
+   if (in_char == 59) {
       goto state_20_label;
-
-   if (in_char == 60)
+   }
+   if (in_char == 60) {
       goto state_21_label;
-
-   if (in_char == 61)
+   }
+   if (in_char == 61) {
       goto state_22_label;
-
-   if (in_char == 62)
+   }
+   if (in_char == 62) {
       goto state_23_label;
-
-   if (in_char == 63)
+   }
+   if (in_char == 63) {
       goto state_24_label;
-
-   if (in_char == 64)
+   }
+   if (in_char == 64) {
       goto state_25_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 91)
+   }
+   if (in_char == 91) {
       goto state_26_label;
-
-   if (in_char == 93)
+   }
+   if (in_char == 93) {
       goto state_27_label;
-
-   if (in_char == 94)
+   }
+   if (in_char == 94) {
       goto state_28_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char == 97)
+   }
+   if (in_char == 97) {
       goto state_30_label;
-
-   if (in_char == 98)
+   }
+   if (in_char == 98) {
       goto state_31_label;
-
-   if (in_char == 99)
+   }
+   if (in_char == 99) {
       goto state_32_label;
-
-   if (in_char == 100)
+   }
+   if (in_char == 100) {
       goto state_33_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_34_label;
-
-   if (in_char == 102)
+   }
+   if (in_char == 102) {
       goto state_35_label;
-
-   if (in_char >= 103 && in_char < 105)
+   }
+   if (in_char >= 103 && in_char < 105) {
       goto state_29_label;
-
-   if (in_char == 105)
+   }
+   if (in_char == 105) {
       goto state_36_label;
-
-   if (in_char >= 106 && in_char < 110)
+   }
+   if (in_char >= 106 && in_char < 110) {
       goto state_29_label;
-
-   if (in_char == 110)
+   }
+   if (in_char == 110) {
       goto state_37_label;
-
-   if (in_char == 111)
+   }
+   if (in_char == 111) {
       goto state_38_label;
-
-   if (in_char == 112)
+   }
+   if (in_char == 112) {
       goto state_39_label;
-
-   if (in_char == 113)
+   }
+   if (in_char == 113) {
       goto state_29_label;
-
-   if (in_char == 114)
+   }
+   if (in_char == 114) {
       goto state_40_label;
-
-   if (in_char == 115)
+   }
+   if (in_char == 115) {
       goto state_41_label;
-
-   if (in_char == 116)
+   }
+   if (in_char == 116) {
       goto state_42_label;
-
-   if (in_char == 117)
+   }
+   if (in_char == 117) {
       goto state_43_label;
-
-   if (in_char == 118)
+   }
+   if (in_char == 118) {
       goto state_29_label;
-
-   if (in_char == 119)
+   }
+   if (in_char == 119) {
       goto state_44_label;
-
-   if (in_char >= 120 && in_char < 123)
+   }
+   if (in_char >= 120 && in_char < 123) {
       goto state_29_label;
-
-   if (in_char == 123)
+   }
+   if (in_char == 123) {
       goto state_45_label;
-
-   if (in_char == 124)
+   }
+   if (in_char == 124) {
       goto state_46_label;
-
-   if (in_char == 125)
+   }
+   if (in_char == 125) {
       goto state_47_label;
-
-   if (in_char == 126)
+   }
+   if (in_char == 126) {
       goto state_48_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 1 -
@@ -3728,9 +3728,9 @@ state_2_label:
    CLOSE_CHAR(85);
    GET_NEXT_CHAR();
 
-   if (in_char == 61)
+   if (in_char == 61) {
       goto state_51_label;
-
+   }
    return 85;
 
 // - STATE 3 -
@@ -3738,21 +3738,21 @@ state_3_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char < 34)
+   if (in_char < 34) {
       goto state_3_label;
-
-   if (in_char == 34)
+   }
+   if (in_char == 34) {
       goto state_52_label;
-
-   if (in_char >= 35 && in_char < 92)
+   }
+   if (in_char >= 35 && in_char < 92) {
       goto state_3_label;
-
-   if (in_char == 92)
+   }
+   if (in_char == 92) {
       goto state_53_label;
-
-   if (in_char >= 93)
+   }
+   if (in_char >= 93) {
       goto state_3_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 4 -
@@ -3760,15 +3760,15 @@ state_4_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char < 10)
+   if (in_char < 10) {
       goto state_4_label;
-
-   if (in_char == 10)
+   }
+   if (in_char == 10) {
       goto state_54_label;
-
-   if (in_char >= 11)
+   }
+   if (in_char >= 11) {
       goto state_4_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 5 -
@@ -3781,9 +3781,9 @@ state_6_label:
    CLOSE_CHAR(82);
    GET_NEXT_CHAR();
 
-   if (in_char == 61)
+   if (in_char == 61) {
       goto state_55_label;
-
+   }
    return 82;
 
 // - STATE 7 -
@@ -3791,12 +3791,12 @@ state_7_label:
    CLOSE_CHAR(66);
    GET_NEXT_CHAR();
 
-   if (in_char == 38)
+   if (in_char == 38) {
       goto state_56_label;
-
-   if (in_char == 61)
+   }
+   if (in_char == 61) {
       goto state_57_label;
-
+   }
    return 66;
 
 // - STATE 8 -
@@ -3804,15 +3804,15 @@ state_8_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char < 92)
+   if (in_char < 92) {
       goto state_59_label;
-
-   if (in_char == 92)
+   }
+   if (in_char == 92) {
       goto state_58_label;
-
-   if (in_char >= 93)
+   }
+   if (in_char >= 93) {
       goto state_59_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 9 -
@@ -3830,9 +3830,9 @@ state_11_label:
    CLOSE_CHAR(80);
    GET_NEXT_CHAR();
 
-   if (in_char == 61)
+   if (in_char == 61) {
       goto state_60_label;
-
+   }
    return 80;
 
 // - STATE 12 -
@@ -3840,12 +3840,12 @@ state_12_label:
    CLOSE_CHAR(77);
    GET_NEXT_CHAR();
 
-   if (in_char == 43)
+   if (in_char == 43) {
       goto state_61_label;
-
-   if (in_char == 61)
+   }
+   if (in_char == 61) {
       goto state_62_label;
-
+   }
    return 77;
 
 // - STATE 13 -
@@ -3858,15 +3858,15 @@ state_14_label:
    CLOSE_CHAR(78);
    GET_NEXT_CHAR();
 
-   if (in_char == 45)
+   if (in_char == 45) {
       goto state_63_label;
-
-   if (in_char == 61)
+   }
+   if (in_char == 61) {
       goto state_64_label;
-
-   if (in_char == 62)
+   }
+   if (in_char == 62) {
       goto state_65_label;
-
+   }
    return 78;
 
 // - STATE 15 -
@@ -3874,9 +3874,9 @@ state_15_label:
    CLOSE_CHAR(79);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_66_label;
-
+   }
    return 79;
 
 // - STATE 16 -
@@ -3884,15 +3884,15 @@ state_16_label:
    CLOSE_CHAR(81);
    GET_NEXT_CHAR();
 
-   if (in_char == 42)
+   if (in_char == 42) {
       goto state_67_label;
-
-   if (in_char == 47)
+   }
+   if (in_char == 47) {
       goto state_68_label;
-
-   if (in_char == 61)
+   }
+   if (in_char == 61) {
       goto state_69_label;
-
+   }
    return 81;
 
 // - STATE 17 -
@@ -3900,33 +3900,33 @@ state_17_label:
    CLOSE_CHAR(5);
    GET_NEXT_CHAR();
 
-   if (in_char == 46)
+   if (in_char == 46) {
       goto state_70_label;
-
-   if (in_char >= 48 && in_char < 56)
+   }
+   if (in_char >= 48 && in_char < 56) {
       goto state_71_label;
-
-   if (in_char >= 56 && in_char < 58)
+   }
+   if (in_char >= 56 && in_char < 58) {
       goto state_50_label;
-
-   if (in_char == 66)
+   }
+   if (in_char == 66) {
       goto state_72_label;
-
-   if (in_char == 69)
+   }
+   if (in_char == 69) {
       goto state_73_label;
-
-   if (in_char == 88)
+   }
+   if (in_char == 88) {
       goto state_74_label;
-
-   if (in_char == 98)
+   }
+   if (in_char == 98) {
       goto state_72_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_73_label;
-
-   if (in_char == 120)
+   }
+   if (in_char == 120) {
       goto state_74_label;
-
+   }
    return 5;
 
 // - STATE 18 -
@@ -3934,18 +3934,18 @@ state_18_label:
    CLOSE_CHAR(6);
    GET_NEXT_CHAR();
 
-   if (in_char == 46)
+   if (in_char == 46) {
       goto state_70_label;
-
-   if (in_char >= 48 && in_char < 58)
+   }
+   if (in_char >= 48 && in_char < 58) {
       goto state_18_label;
-
-   if (in_char == 69)
+   }
+   if (in_char == 69) {
       goto state_73_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_73_label;
-
+   }
    return 6;
 
 // - STATE 19 -
@@ -3963,15 +3963,15 @@ state_21_label:
    CLOSE_CHAR(72);
    GET_NEXT_CHAR();
 
-   if (in_char == 45)
+   if (in_char == 45) {
       goto state_75_label;
-
-   if (in_char == 60)
+   }
+   if (in_char == 60) {
       goto state_76_label;
-
-   if (in_char == 61)
+   }
+   if (in_char == 61) {
       goto state_77_label;
-
+   }
    return 72;
 
 // - STATE 22 -
@@ -3979,12 +3979,12 @@ state_22_label:
    CLOSE_CHAR(53);
    GET_NEXT_CHAR();
 
-   if (in_char == 61)
+   if (in_char == 61) {
       goto state_78_label;
-
-   if (in_char == 64)
+   }
+   if (in_char == 64) {
       goto state_79_label;
-
+   }
    return 53;
 
 // - STATE 23 -
@@ -3992,12 +3992,12 @@ state_23_label:
    CLOSE_CHAR(71);
    GET_NEXT_CHAR();
 
-   if (in_char == 61)
+   if (in_char == 61) {
       goto state_80_label;
-
-   if (in_char == 62)
+   }
+   if (in_char == 62) {
       goto state_81_label;
-
+   }
    return 71;
 
 // - STATE 24 -
@@ -4025,9 +4025,9 @@ state_28_label:
    CLOSE_CHAR(68);
    GET_NEXT_CHAR();
 
-   if (in_char == 61)
+   if (in_char == 61) {
       goto state_82_label;
-
+   }
    return 68;
 
 // - STATE 29 -
@@ -4035,18 +4035,18 @@ state_29_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 30 -
@@ -4054,30 +4054,30 @@ state_30_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char == 97)
+   }
+   if (in_char == 97) {
       goto state_29_label;
-
-   if (in_char == 98)
+   }
+   if (in_char == 98) {
       goto state_83_label;
-
-   if (in_char >= 99 && in_char < 110)
+   }
+   if (in_char >= 99 && in_char < 110) {
       goto state_29_label;
-
-   if (in_char == 110)
+   }
+   if (in_char == 110) {
       goto state_84_label;
-
-   if (in_char >= 111 && in_char < 123)
+   }
+   if (in_char >= 111 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 31 -
@@ -4085,24 +4085,24 @@ state_31_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 114)
+   }
+   if (in_char >= 97 && in_char < 114) {
       goto state_29_label;
-
-   if (in_char == 114)
+   }
+   if (in_char == 114) {
       goto state_85_label;
-
-   if (in_char >= 115 && in_char < 123)
+   }
+   if (in_char >= 115 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 32 -
@@ -4110,33 +4110,33 @@ state_32_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char == 97)
+   }
+   if (in_char == 97) {
       goto state_86_label;
-
-   if (in_char >= 98 && in_char < 108)
+   }
+   if (in_char >= 98 && in_char < 108) {
       goto state_29_label;
-
-   if (in_char == 108)
+   }
+   if (in_char == 108) {
       goto state_87_label;
-
-   if (in_char >= 109 && in_char < 111)
+   }
+   if (in_char >= 109 && in_char < 111) {
       goto state_29_label;
-
-   if (in_char == 111)
+   }
+   if (in_char == 111) {
       goto state_88_label;
-
-   if (in_char >= 112 && in_char < 123)
+   }
+   if (in_char >= 112 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 33 -
@@ -4144,30 +4144,30 @@ state_33_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 101)
+   }
+   if (in_char >= 97 && in_char < 101) {
       goto state_29_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_89_label;
-
-   if (in_char >= 102 && in_char < 111)
+   }
+   if (in_char >= 102 && in_char < 111) {
       goto state_29_label;
-
-   if (in_char == 111)
+   }
+   if (in_char == 111) {
       goto state_90_label;
-
-   if (in_char >= 112 && in_char < 123)
+   }
+   if (in_char >= 112 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 34 -
@@ -4175,30 +4175,30 @@ state_34_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 108)
+   }
+   if (in_char >= 97 && in_char < 108) {
       goto state_29_label;
-
-   if (in_char == 108)
+   }
+   if (in_char == 108) {
       goto state_91_label;
-
-   if (in_char >= 109 && in_char < 120)
+   }
+   if (in_char >= 109 && in_char < 120) {
       goto state_29_label;
-
-   if (in_char == 120)
+   }
+   if (in_char == 120) {
       goto state_92_label;
-
-   if (in_char >= 121 && in_char < 123)
+   }
+   if (in_char >= 121 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 35 -
@@ -4206,36 +4206,36 @@ state_35_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 105)
+   }
+   if (in_char >= 97 && in_char < 105) {
       goto state_29_label;
-
-   if (in_char == 105)
+   }
+   if (in_char == 105) {
       goto state_93_label;
-
-   if (in_char >= 106 && in_char < 111)
+   }
+   if (in_char >= 106 && in_char < 111) {
       goto state_29_label;
-
-   if (in_char == 111)
+   }
+   if (in_char == 111) {
       goto state_94_label;
-
-   if (in_char >= 112 && in_char < 114)
+   }
+   if (in_char >= 112 && in_char < 114) {
       goto state_29_label;
-
-   if (in_char == 114)
+   }
+   if (in_char == 114) {
       goto state_95_label;
-
-   if (in_char >= 115 && in_char < 123)
+   }
+   if (in_char >= 115 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 36 -
@@ -4243,33 +4243,33 @@ state_36_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 102)
+   }
+   if (in_char >= 97 && in_char < 102) {
       goto state_29_label;
-
-   if (in_char == 102)
+   }
+   if (in_char == 102) {
       goto state_96_label;
-
-   if (in_char >= 103 && in_char < 109)
+   }
+   if (in_char >= 103 && in_char < 109) {
       goto state_29_label;
-
-   if (in_char == 109)
+   }
+   if (in_char == 109) {
       goto state_97_label;
-
-   if (in_char == 110)
+   }
+   if (in_char == 110) {
       goto state_98_label;
-
-   if (in_char >= 111 && in_char < 123)
+   }
+   if (in_char >= 111 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 37 -
@@ -4277,27 +4277,27 @@ state_37_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char == 97)
+   }
+   if (in_char == 97) {
       goto state_99_label;
-
-   if (in_char >= 98 && in_char < 101)
+   }
+   if (in_char >= 98 && in_char < 101) {
       goto state_29_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_100_label;
-
-   if (in_char >= 102 && in_char < 123)
+   }
+   if (in_char >= 102 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 38 -
@@ -4305,24 +4305,24 @@ state_38_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 114)
+   }
+   if (in_char >= 97 && in_char < 114) {
       goto state_29_label;
-
-   if (in_char == 114)
+   }
+   if (in_char == 114) {
       goto state_101_label;
-
-   if (in_char >= 115 && in_char < 123)
+   }
+   if (in_char >= 115 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 39 -
@@ -4330,33 +4330,33 @@ state_39_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char == 97)
+   }
+   if (in_char == 97) {
       goto state_102_label;
-
-   if (in_char >= 98 && in_char < 114)
+   }
+   if (in_char >= 98 && in_char < 114) {
       goto state_29_label;
-
-   if (in_char == 114)
+   }
+   if (in_char == 114) {
       goto state_103_label;
-
-   if (in_char >= 115 && in_char < 117)
+   }
+   if (in_char >= 115 && in_char < 117) {
       goto state_29_label;
-
-   if (in_char == 117)
+   }
+   if (in_char == 117) {
       goto state_104_label;
-
-   if (in_char >= 118 && in_char < 123)
+   }
+   if (in_char >= 118 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 40 -
@@ -4364,24 +4364,24 @@ state_40_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 101)
+   }
+   if (in_char >= 97 && in_char < 101) {
       goto state_29_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_105_label;
-
-   if (in_char >= 102 && in_char < 123)
+   }
+   if (in_char >= 102 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 41 -
@@ -4389,30 +4389,30 @@ state_41_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 116)
+   }
+   if (in_char >= 97 && in_char < 116) {
       goto state_29_label;
-
-   if (in_char == 116)
+   }
+   if (in_char == 116) {
       goto state_106_label;
-
-   if (in_char >= 117 && in_char < 119)
+   }
+   if (in_char >= 117 && in_char < 119) {
       goto state_29_label;
-
-   if (in_char == 119)
+   }
+   if (in_char == 119) {
       goto state_107_label;
-
-   if (in_char >= 120 && in_char < 123)
+   }
+   if (in_char >= 120 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 42 -
@@ -4420,36 +4420,36 @@ state_42_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 104)
+   }
+   if (in_char >= 97 && in_char < 104) {
       goto state_29_label;
-
-   if (in_char == 104)
+   }
+   if (in_char == 104) {
       goto state_108_label;
-
-   if (in_char >= 105 && in_char < 114)
+   }
+   if (in_char >= 105 && in_char < 114) {
       goto state_29_label;
-
-   if (in_char == 114)
+   }
+   if (in_char == 114) {
       goto state_109_label;
-
-   if (in_char >= 115 && in_char < 121)
+   }
+   if (in_char >= 115 && in_char < 121) {
       goto state_29_label;
-
-   if (in_char == 121)
+   }
+   if (in_char == 121) {
       goto state_110_label;
-
-   if (in_char == 122)
+   }
+   if (in_char == 122) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 43 -
@@ -4457,24 +4457,24 @@ state_43_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 115)
+   }
+   if (in_char >= 97 && in_char < 115) {
       goto state_29_label;
-
-   if (in_char == 115)
+   }
+   if (in_char == 115) {
       goto state_111_label;
-
-   if (in_char >= 116 && in_char < 123)
+   }
+   if (in_char >= 116 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 44 -
@@ -4482,24 +4482,24 @@ state_44_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 104)
+   }
+   if (in_char >= 97 && in_char < 104) {
       goto state_29_label;
-
-   if (in_char == 104)
+   }
+   if (in_char == 104) {
       goto state_112_label;
-
-   if (in_char >= 105 && in_char < 123)
+   }
+   if (in_char >= 105 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 45 -
@@ -4512,12 +4512,12 @@ state_46_label:
    CLOSE_CHAR(67);
    GET_NEXT_CHAR();
 
-   if (in_char == 61)
+   if (in_char == 61) {
       goto state_113_label;
-
-   if (in_char == 124)
+   }
+   if (in_char == 124) {
       goto state_114_label;
-
+   }
    return 67;
 
 // - STATE 47 -
@@ -4535,12 +4535,12 @@ state_49_label:
    CLOSE_CHAR(90);
    GET_NEXT_CHAR();
 
-   if (in_char >= 8 && in_char < 14)
+   if (in_char >= 8 && in_char < 14) {
       goto state_49_label;
-
-   if (in_char == 32)
+   }
+   if (in_char == 32) {
       goto state_49_label;
-
+   }
    return 90;
 
 // - STATE 50 -
@@ -4548,18 +4548,18 @@ state_50_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 46)
+   if (in_char == 46) {
       goto state_70_label;
-
-   if (in_char >= 48 && in_char < 58)
+   }
+   if (in_char >= 48 && in_char < 58) {
       goto state_50_label;
-
-   if (in_char == 69)
+   }
+   if (in_char == 69) {
       goto state_73_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_73_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 51 -
@@ -4577,42 +4577,42 @@ state_53_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 34)
+   if (in_char == 34) {
       goto state_3_label;
-
-   if (in_char == 39)
+   }
+   if (in_char == 39) {
       goto state_3_label;
-
-   if (in_char >= 48 && in_char < 56)
+   }
+   if (in_char >= 48 && in_char < 56) {
       goto state_115_label;
-
-   if (in_char == 63)
+   }
+   if (in_char == 63) {
       goto state_3_label;
-
-   if (in_char == 92)
+   }
+   if (in_char == 92) {
       goto state_3_label;
-
-   if (in_char >= 97 && in_char < 99)
+   }
+   if (in_char >= 97 && in_char < 99) {
       goto state_3_label;
-
-   if (in_char == 102)
+   }
+   if (in_char == 102) {
       goto state_3_label;
-
-   if (in_char == 110)
+   }
+   if (in_char == 110) {
       goto state_3_label;
-
-   if (in_char == 114)
+   }
+   if (in_char == 114) {
       goto state_3_label;
-
-   if (in_char == 116)
+   }
+   if (in_char == 116) {
       goto state_3_label;
-
-   if (in_char == 118)
+   }
+   if (in_char == 118) {
       goto state_3_label;
-
-   if (in_char == 120)
+   }
+   if (in_char == 120) {
       goto state_116_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 54 -
@@ -4640,42 +4640,42 @@ state_58_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 34)
+   if (in_char == 34) {
       goto state_117_label;
-
-   if (in_char == 39)
+   }
+   if (in_char == 39) {
       goto state_118_label;
-
-   if (in_char >= 48 && in_char < 56)
+   }
+   if (in_char >= 48 && in_char < 56) {
       goto state_119_label;
-
-   if (in_char == 63)
+   }
+   if (in_char == 63) {
       goto state_117_label;
-
-   if (in_char == 92)
+   }
+   if (in_char == 92) {
       goto state_117_label;
-
-   if (in_char >= 97 && in_char < 99)
+   }
+   if (in_char >= 97 && in_char < 99) {
       goto state_117_label;
-
-   if (in_char == 102)
+   }
+   if (in_char == 102) {
       goto state_117_label;
-
-   if (in_char == 110)
+   }
+   if (in_char == 110) {
       goto state_117_label;
-
-   if (in_char == 114)
+   }
+   if (in_char == 114) {
       goto state_117_label;
-
-   if (in_char == 116)
+   }
+   if (in_char == 116) {
       goto state_117_label;
-
-   if (in_char == 118)
+   }
+   if (in_char == 118) {
       goto state_117_label;
-
-   if (in_char == 120)
+   }
+   if (in_char == 120) {
       goto state_120_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 59 -
@@ -4683,9 +4683,9 @@ state_59_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 39)
+   if (in_char == 39) {
       goto state_121_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 60 -
@@ -4723,15 +4723,15 @@ state_66_label:
    CLOSE_CHAR(8);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_66_label;
-
-   if (in_char == 69)
+   }
+   if (in_char == 69) {
       goto state_73_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_73_label;
-
+   }
    return 8;
 
 // - STATE 67 -
@@ -4739,15 +4739,15 @@ state_67_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char < 42)
+   if (in_char < 42) {
       goto state_67_label;
-
-   if (in_char == 42)
+   }
+   if (in_char == 42) {
       goto state_122_label;
-
-   if (in_char >= 43)
+   }
+   if (in_char >= 43) {
       goto state_67_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 68 -
@@ -4755,15 +4755,15 @@ state_68_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char < 10)
+   if (in_char < 10) {
       goto state_68_label;
-
-   if (in_char == 10)
+   }
+   if (in_char == 10) {
       goto state_123_label;
-
-   if (in_char >= 11)
+   }
+   if (in_char >= 11) {
       goto state_68_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 69 -
@@ -4776,15 +4776,15 @@ state_70_label:
    CLOSE_CHAR(8);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_66_label;
-
-   if (in_char == 69)
+   }
+   if (in_char == 69) {
       goto state_73_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_73_label;
-
+   }
    return 8;
 
 // - STATE 71 -
@@ -4792,21 +4792,21 @@ state_71_label:
    CLOSE_CHAR(5);
    GET_NEXT_CHAR();
 
-   if (in_char == 46)
+   if (in_char == 46) {
       goto state_70_label;
-
-   if (in_char >= 48 && in_char < 56)
+   }
+   if (in_char >= 48 && in_char < 56) {
       goto state_71_label;
-
-   if (in_char >= 56 && in_char < 58)
+   }
+   if (in_char >= 56 && in_char < 58) {
       goto state_50_label;
-
-   if (in_char == 69)
+   }
+   if (in_char == 69) {
       goto state_73_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_73_label;
-
+   }
    return 5;
 
 // - STATE 72 -
@@ -4814,9 +4814,9 @@ state_72_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 50)
+   if (in_char >= 48 && in_char < 50) {
       goto state_124_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 73 -
@@ -4824,15 +4824,15 @@ state_73_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 43)
+   if (in_char == 43) {
       goto state_125_label;
-
-   if (in_char == 45)
+   }
+   if (in_char == 45) {
       goto state_125_label;
-
-   if (in_char >= 48 && in_char < 58)
+   }
+   if (in_char >= 48 && in_char < 58) {
       goto state_126_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 74 -
@@ -4840,15 +4840,15 @@ state_74_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_127_label;
-
-   if (in_char >= 65 && in_char < 71)
+   }
+   if (in_char >= 65 && in_char < 71) {
       goto state_127_label;
-
-   if (in_char >= 97 && in_char < 103)
+   }
+   if (in_char >= 97 && in_char < 103) {
       goto state_127_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 75 -
@@ -4861,9 +4861,9 @@ state_76_label:
    CLOSE_CHAR(76);
    GET_NEXT_CHAR();
 
-   if (in_char == 61)
+   if (in_char == 61) {
       goto state_128_label;
-
+   }
    return 76;
 
 // - STATE 77 -
@@ -4891,9 +4891,9 @@ state_81_label:
    CLOSE_CHAR(75);
    GET_NEXT_CHAR();
 
-   if (in_char == 61)
+   if (in_char == 61) {
       goto state_129_label;
-
+   }
    return 75;
 
 // - STATE 82 -
@@ -4906,24 +4906,24 @@ state_83_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 115)
+   }
+   if (in_char >= 97 && in_char < 115) {
       goto state_29_label;
-
-   if (in_char == 115)
+   }
+   if (in_char == 115) {
       goto state_130_label;
-
-   if (in_char >= 116 && in_char < 123)
+   }
+   if (in_char >= 116 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 84 -
@@ -4931,24 +4931,24 @@ state_84_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 100)
+   }
+   if (in_char >= 97 && in_char < 100) {
       goto state_29_label;
-
-   if (in_char == 100)
+   }
+   if (in_char == 100) {
       goto state_131_label;
-
-   if (in_char >= 101 && in_char < 123)
+   }
+   if (in_char >= 101 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 85 -
@@ -4956,24 +4956,24 @@ state_85_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 101)
+   }
+   if (in_char >= 97 && in_char < 101) {
       goto state_29_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_132_label;
-
-   if (in_char >= 102 && in_char < 123)
+   }
+   if (in_char >= 102 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 86 -
@@ -4981,27 +4981,27 @@ state_86_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 115)
+   }
+   if (in_char >= 97 && in_char < 115) {
       goto state_29_label;
-
-   if (in_char == 115)
+   }
+   if (in_char == 115) {
       goto state_133_label;
-
-   if (in_char == 116)
+   }
+   if (in_char == 116) {
       goto state_134_label;
-
-   if (in_char >= 117 && in_char < 123)
+   }
+   if (in_char >= 117 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 87 -
@@ -5009,21 +5009,21 @@ state_87_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char == 97)
+   }
+   if (in_char == 97) {
       goto state_135_label;
-
-   if (in_char >= 98 && in_char < 123)
+   }
+   if (in_char >= 98 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 88 -
@@ -5031,24 +5031,24 @@ state_88_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 110)
+   }
+   if (in_char >= 97 && in_char < 110) {
       goto state_29_label;
-
-   if (in_char == 110)
+   }
+   if (in_char == 110) {
       goto state_136_label;
-
-   if (in_char >= 111 && in_char < 123)
+   }
+   if (in_char >= 111 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 89 -
@@ -5056,24 +5056,24 @@ state_89_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 102)
+   }
+   if (in_char >= 97 && in_char < 102) {
       goto state_29_label;
-
-   if (in_char == 102)
+   }
+   if (in_char == 102) {
       goto state_137_label;
-
-   if (in_char >= 103 && in_char < 123)
+   }
+   if (in_char >= 103 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 90 -
@@ -5081,18 +5081,18 @@ state_90_label:
    CLOSE_CHAR(40);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 40;
 
 // - STATE 91 -
@@ -5100,24 +5100,24 @@ state_91_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 115)
+   }
+   if (in_char >= 97 && in_char < 115) {
       goto state_29_label;
-
-   if (in_char == 115)
+   }
+   if (in_char == 115) {
       goto state_138_label;
-
-   if (in_char >= 116 && in_char < 123)
+   }
+   if (in_char >= 116 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 92 -
@@ -5125,24 +5125,24 @@ state_92_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 116)
+   }
+   if (in_char >= 97 && in_char < 116) {
       goto state_29_label;
-
-   if (in_char == 116)
+   }
+   if (in_char == 116) {
       goto state_139_label;
-
-   if (in_char >= 117 && in_char < 123)
+   }
+   if (in_char >= 117 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 93 -
@@ -5150,24 +5150,24 @@ state_93_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 110)
+   }
+   if (in_char >= 97 && in_char < 110) {
       goto state_29_label;
-
-   if (in_char == 110)
+   }
+   if (in_char == 110) {
       goto state_140_label;
-
-   if (in_char >= 111 && in_char < 123)
+   }
+   if (in_char >= 111 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 94 -
@@ -5175,24 +5175,24 @@ state_94_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 114)
+   }
+   if (in_char >= 97 && in_char < 114) {
       goto state_29_label;
-
-   if (in_char == 114)
+   }
+   if (in_char == 114) {
       goto state_141_label;
-
-   if (in_char >= 115 && in_char < 123)
+   }
+   if (in_char >= 115 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 95 -
@@ -5200,24 +5200,24 @@ state_95_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 101)
+   }
+   if (in_char >= 97 && in_char < 101) {
       goto state_29_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_142_label;
-
-   if (in_char >= 102 && in_char < 123)
+   }
+   if (in_char >= 102 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 96 -
@@ -5225,18 +5225,18 @@ state_96_label:
    CLOSE_CHAR(38);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 38;
 
 // - STATE 97 -
@@ -5244,24 +5244,24 @@ state_97_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 112)
+   }
+   if (in_char >= 97 && in_char < 112) {
       goto state_29_label;
-
-   if (in_char == 112)
+   }
+   if (in_char == 112) {
       goto state_143_label;
-
-   if (in_char >= 113 && in_char < 123)
+   }
+   if (in_char >= 113 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 98 -
@@ -5269,18 +5269,18 @@ state_98_label:
    CLOSE_CHAR(28);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 28;
 
 // - STATE 99 -
@@ -5288,24 +5288,24 @@ state_99_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 109)
+   }
+   if (in_char >= 97 && in_char < 109) {
       goto state_29_label;
-
-   if (in_char == 109)
+   }
+   if (in_char == 109) {
       goto state_144_label;
-
-   if (in_char >= 110 && in_char < 123)
+   }
+   if (in_char >= 110 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 100 -
@@ -5313,24 +5313,24 @@ state_100_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 119)
+   }
+   if (in_char >= 97 && in_char < 119) {
       goto state_29_label;
-
-   if (in_char == 119)
+   }
+   if (in_char == 119) {
       goto state_145_label;
-
-   if (in_char >= 120 && in_char < 123)
+   }
+   if (in_char >= 120 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 101 -
@@ -5338,18 +5338,18 @@ state_101_label:
    CLOSE_CHAR(52);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 52;
 
 // - STATE 102 -
@@ -5357,24 +5357,24 @@ state_102_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 114)
+   }
+   if (in_char >= 97 && in_char < 114) {
       goto state_29_label;
-
-   if (in_char == 114)
+   }
+   if (in_char == 114) {
       goto state_146_label;
-
-   if (in_char >= 115 && in_char < 123)
+   }
+   if (in_char >= 115 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 103 -
@@ -5382,24 +5382,24 @@ state_103_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 105)
+   }
+   if (in_char >= 97 && in_char < 105) {
       goto state_29_label;
-
-   if (in_char == 105)
+   }
+   if (in_char == 105) {
       goto state_147_label;
-
-   if (in_char >= 106 && in_char < 123)
+   }
+   if (in_char >= 106 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 104 -
@@ -5407,24 +5407,24 @@ state_104_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char == 97)
+   }
+   if (in_char == 97) {
       goto state_29_label;
-
-   if (in_char == 98)
+   }
+   if (in_char == 98) {
       goto state_148_label;
-
-   if (in_char >= 99 && in_char < 123)
+   }
+   if (in_char >= 99 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 105 -
@@ -5432,24 +5432,24 @@ state_105_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 116)
+   }
+   if (in_char >= 97 && in_char < 116) {
       goto state_29_label;
-
-   if (in_char == 116)
+   }
+   if (in_char == 116) {
       goto state_149_label;
-
-   if (in_char >= 117 && in_char < 123)
+   }
+   if (in_char >= 117 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 106 -
@@ -5457,21 +5457,21 @@ state_106_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char == 97)
+   }
+   if (in_char == 97) {
       goto state_150_label;
-
-   if (in_char >= 98 && in_char < 123)
+   }
+   if (in_char >= 98 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 107 -
@@ -5479,24 +5479,24 @@ state_107_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 105)
+   }
+   if (in_char >= 97 && in_char < 105) {
       goto state_29_label;
-
-   if (in_char == 105)
+   }
+   if (in_char == 105) {
       goto state_151_label;
-
-   if (in_char >= 106 && in_char < 123)
+   }
+   if (in_char >= 106 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 108 -
@@ -5504,24 +5504,24 @@ state_108_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 105)
+   }
+   if (in_char >= 97 && in_char < 105) {
       goto state_29_label;
-
-   if (in_char == 105)
+   }
+   if (in_char == 105) {
       goto state_152_label;
-
-   if (in_char >= 106 && in_char < 123)
+   }
+   if (in_char >= 106 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 109 -
@@ -5529,24 +5529,24 @@ state_109_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 121)
+   }
+   if (in_char >= 97 && in_char < 121) {
       goto state_29_label;
-
-   if (in_char == 121)
+   }
+   if (in_char == 121) {
       goto state_153_label;
-
-   if (in_char == 122)
+   }
+   if (in_char == 122) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 110 -
@@ -5554,24 +5554,24 @@ state_110_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 112)
+   }
+   if (in_char >= 97 && in_char < 112) {
       goto state_29_label;
-
-   if (in_char == 112)
+   }
+   if (in_char == 112) {
       goto state_154_label;
-
-   if (in_char >= 113 && in_char < 123)
+   }
+   if (in_char >= 113 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 111 -
@@ -5579,24 +5579,24 @@ state_111_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 105)
+   }
+   if (in_char >= 97 && in_char < 105) {
       goto state_29_label;
-
-   if (in_char == 105)
+   }
+   if (in_char == 105) {
       goto state_155_label;
-
-   if (in_char >= 106 && in_char < 123)
+   }
+   if (in_char >= 106 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 112 -
@@ -5604,24 +5604,24 @@ state_112_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 105)
+   }
+   if (in_char >= 97 && in_char < 105) {
       goto state_29_label;
-
-   if (in_char == 105)
+   }
+   if (in_char == 105) {
       goto state_156_label;
-
-   if (in_char >= 106 && in_char < 123)
+   }
+   if (in_char >= 106 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 113 -
@@ -5639,27 +5639,27 @@ state_115_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char < 34)
+   if (in_char < 34) {
       goto state_3_label;
-
-   if (in_char == 34)
+   }
+   if (in_char == 34) {
       goto state_52_label;
-
-   if (in_char >= 35 && in_char < 48)
+   }
+   if (in_char >= 35 && in_char < 48) {
       goto state_3_label;
-
-   if (in_char >= 48 && in_char < 56)
+   }
+   if (in_char >= 48 && in_char < 56) {
       goto state_157_label;
-
-   if (in_char >= 56 && in_char < 92)
+   }
+   if (in_char >= 56 && in_char < 92) {
       goto state_3_label;
-
-   if (in_char == 92)
+   }
+   if (in_char == 92) {
       goto state_53_label;
-
-   if (in_char >= 93)
+   }
+   if (in_char >= 93) {
       goto state_3_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 116 -
@@ -5667,15 +5667,15 @@ state_116_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_158_label;
-
-   if (in_char >= 65 && in_char < 71)
+   }
+   if (in_char >= 65 && in_char < 71) {
       goto state_158_label;
-
-   if (in_char >= 97 && in_char < 103)
+   }
+   if (in_char >= 97 && in_char < 103) {
       goto state_158_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 117 -
@@ -5683,9 +5683,9 @@ state_117_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 39)
+   if (in_char == 39) {
       goto state_159_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 118 -
@@ -5693,9 +5693,9 @@ state_118_label:
    CLOSE_CHAR(0);
    GET_NEXT_CHAR();
 
-   if (in_char == 39)
+   if (in_char == 39) {
       goto state_159_label;
-
+   }
    return 0;
 
 // - STATE 119 -
@@ -5703,12 +5703,12 @@ state_119_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 39)
+   if (in_char == 39) {
       goto state_160_label;
-
-   if (in_char >= 48 && in_char < 56)
+   }
+   if (in_char >= 48 && in_char < 56) {
       goto state_161_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 120 -
@@ -5716,15 +5716,15 @@ state_120_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_162_label;
-
-   if (in_char >= 65 && in_char < 71)
+   }
+   if (in_char >= 65 && in_char < 71) {
       goto state_162_label;
-
-   if (in_char >= 97 && in_char < 103)
+   }
+   if (in_char >= 97 && in_char < 103) {
       goto state_162_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 121 -
@@ -5737,15 +5737,15 @@ state_122_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char < 47)
+   if (in_char < 47) {
       goto state_67_label;
-
-   if (in_char == 47)
+   }
+   if (in_char == 47) {
       goto state_163_label;
-
-   if (in_char >= 48)
+   }
+   if (in_char >= 48) {
       goto state_67_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 123 -
@@ -5758,9 +5758,9 @@ state_124_label:
    CLOSE_CHAR(4);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 50)
+   if (in_char >= 48 && in_char < 50) {
       goto state_124_label;
-
+   }
    return 4;
 
 // - STATE 125 -
@@ -5768,9 +5768,9 @@ state_125_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_126_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 126 -
@@ -5778,9 +5778,9 @@ state_126_label:
    CLOSE_CHAR(8);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_126_label;
-
+   }
    return 8;
 
 // - STATE 127 -
@@ -5788,15 +5788,15 @@ state_127_label:
    CLOSE_CHAR(7);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_127_label;
-
-   if (in_char >= 65 && in_char < 71)
+   }
+   if (in_char >= 65 && in_char < 71) {
       goto state_127_label;
-
-   if (in_char >= 97 && in_char < 103)
+   }
+   if (in_char >= 97 && in_char < 103) {
       goto state_127_label;
-
+   }
    return 7;
 
 // - STATE 128 -
@@ -5814,24 +5814,24 @@ state_130_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 116)
+   }
+   if (in_char >= 97 && in_char < 116) {
       goto state_29_label;
-
-   if (in_char == 116)
+   }
+   if (in_char == 116) {
       goto state_164_label;
-
-   if (in_char >= 117 && in_char < 123)
+   }
+   if (in_char >= 117 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 131 -
@@ -5839,18 +5839,18 @@ state_131_label:
    CLOSE_CHAR(51);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 51;
 
 // - STATE 132 -
@@ -5858,21 +5858,21 @@ state_132_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char == 97)
+   }
+   if (in_char == 97) {
       goto state_165_label;
-
-   if (in_char >= 98 && in_char < 123)
+   }
+   if (in_char >= 98 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 133 -
@@ -5880,24 +5880,24 @@ state_133_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 101)
+   }
+   if (in_char >= 97 && in_char < 101) {
       goto state_29_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_166_label;
-
-   if (in_char >= 102 && in_char < 123)
+   }
+   if (in_char >= 102 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 134 -
@@ -5905,24 +5905,24 @@ state_134_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 99)
+   }
+   if (in_char >= 97 && in_char < 99) {
       goto state_29_label;
-
-   if (in_char == 99)
+   }
+   if (in_char == 99) {
       goto state_167_label;
-
-   if (in_char >= 100 && in_char < 123)
+   }
+   if (in_char >= 100 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 135 -
@@ -5930,24 +5930,24 @@ state_135_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 115)
+   }
+   if (in_char >= 97 && in_char < 115) {
       goto state_29_label;
-
-   if (in_char == 115)
+   }
+   if (in_char == 115) {
       goto state_168_label;
-
-   if (in_char >= 116 && in_char < 123)
+   }
+   if (in_char >= 116 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 136 -
@@ -5955,24 +5955,24 @@ state_136_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 116)
+   }
+   if (in_char >= 97 && in_char < 116) {
       goto state_29_label;
-
-   if (in_char == 116)
+   }
+   if (in_char == 116) {
       goto state_169_label;
-
-   if (in_char >= 117 && in_char < 123)
+   }
+   if (in_char >= 117 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 137 -
@@ -5980,21 +5980,21 @@ state_137_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char == 97)
+   }
+   if (in_char == 97) {
       goto state_170_label;
-
-   if (in_char >= 98 && in_char < 123)
+   }
+   if (in_char >= 98 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 138 -
@@ -6002,24 +6002,24 @@ state_138_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 101)
+   }
+   if (in_char >= 97 && in_char < 101) {
       goto state_29_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_171_label;
-
-   if (in_char >= 102 && in_char < 123)
+   }
+   if (in_char >= 102 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 139 -
@@ -6027,24 +6027,24 @@ state_139_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 101)
+   }
+   if (in_char >= 97 && in_char < 101) {
       goto state_29_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_172_label;
-
-   if (in_char >= 102 && in_char < 123)
+   }
+   if (in_char >= 102 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 140 -
@@ -6052,21 +6052,21 @@ state_140_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char == 97)
+   }
+   if (in_char == 97) {
       goto state_173_label;
-
-   if (in_char >= 98 && in_char < 123)
+   }
+   if (in_char >= 98 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 141 -
@@ -6074,18 +6074,18 @@ state_141_label:
    CLOSE_CHAR(42);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 42;
 
 // - STATE 142 -
@@ -6093,24 +6093,24 @@ state_142_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 101)
+   }
+   if (in_char >= 97 && in_char < 101) {
       goto state_29_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_174_label;
-
-   if (in_char >= 102 && in_char < 123)
+   }
+   if (in_char >= 102 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 143 -
@@ -6118,24 +6118,24 @@ state_143_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 111)
+   }
+   if (in_char >= 97 && in_char < 111) {
       goto state_29_label;
-
-   if (in_char == 111)
+   }
+   if (in_char == 111) {
       goto state_175_label;
-
-   if (in_char >= 112 && in_char < 123)
+   }
+   if (in_char >= 112 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 144 -
@@ -6143,24 +6143,24 @@ state_144_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 101)
+   }
+   if (in_char >= 97 && in_char < 101) {
       goto state_29_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_176_label;
-
-   if (in_char >= 102 && in_char < 123)
+   }
+   if (in_char >= 102 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 145 -
@@ -6168,18 +6168,18 @@ state_145_label:
    CLOSE_CHAR(22);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 22;
 
 // - STATE 146 -
@@ -6187,21 +6187,21 @@ state_146_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char == 97)
+   }
+   if (in_char == 97) {
       goto state_177_label;
-
-   if (in_char >= 98 && in_char < 123)
+   }
+   if (in_char >= 98 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 147 -
@@ -6209,24 +6209,24 @@ state_147_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 118)
+   }
+   if (in_char >= 97 && in_char < 118) {
       goto state_29_label;
-
-   if (in_char == 118)
+   }
+   if (in_char == 118) {
       goto state_178_label;
-
-   if (in_char >= 119 && in_char < 123)
+   }
+   if (in_char >= 119 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 148 -
@@ -6234,24 +6234,24 @@ state_148_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 108)
+   }
+   if (in_char >= 97 && in_char < 108) {
       goto state_29_label;
-
-   if (in_char == 108)
+   }
+   if (in_char == 108) {
       goto state_179_label;
-
-   if (in_char >= 109 && in_char < 123)
+   }
+   if (in_char >= 109 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 149 -
@@ -6259,24 +6259,24 @@ state_149_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 117)
+   }
+   if (in_char >= 97 && in_char < 117) {
       goto state_29_label;
-
-   if (in_char == 117)
+   }
+   if (in_char == 117) {
       goto state_180_label;
-
-   if (in_char >= 118 && in_char < 123)
+   }
+   if (in_char >= 118 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 150 -
@@ -6284,24 +6284,24 @@ state_150_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 116)
+   }
+   if (in_char >= 97 && in_char < 116) {
       goto state_29_label;
-
-   if (in_char == 116)
+   }
+   if (in_char == 116) {
       goto state_181_label;
-
-   if (in_char >= 117 && in_char < 123)
+   }
+   if (in_char >= 117 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 151 -
@@ -6309,24 +6309,24 @@ state_151_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 116)
+   }
+   if (in_char >= 97 && in_char < 116) {
       goto state_29_label;
-
-   if (in_char == 116)
+   }
+   if (in_char == 116) {
       goto state_182_label;
-
-   if (in_char >= 117 && in_char < 123)
+   }
+   if (in_char >= 117 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 152 -
@@ -6334,24 +6334,24 @@ state_152_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 115)
+   }
+   if (in_char >= 97 && in_char < 115) {
       goto state_29_label;
-
-   if (in_char == 115)
+   }
+   if (in_char == 115) {
       goto state_183_label;
-
-   if (in_char >= 116 && in_char < 123)
+   }
+   if (in_char >= 116 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 153 -
@@ -6359,18 +6359,18 @@ state_153_label:
    CLOSE_CHAR(49);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 49;
 
 // - STATE 154 -
@@ -6378,24 +6378,24 @@ state_154_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 101)
+   }
+   if (in_char >= 97 && in_char < 101) {
       goto state_29_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_184_label;
-
-   if (in_char >= 102 && in_char < 123)
+   }
+   if (in_char >= 102 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 155 -
@@ -6403,24 +6403,24 @@ state_155_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 110)
+   }
+   if (in_char >= 97 && in_char < 110) {
       goto state_29_label;
-
-   if (in_char == 110)
+   }
+   if (in_char == 110) {
       goto state_185_label;
-
-   if (in_char >= 111 && in_char < 123)
+   }
+   if (in_char >= 111 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 156 -
@@ -6428,24 +6428,24 @@ state_156_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 108)
+   }
+   if (in_char >= 97 && in_char < 108) {
       goto state_29_label;
-
-   if (in_char == 108)
+   }
+   if (in_char == 108) {
       goto state_186_label;
-
-   if (in_char >= 109 && in_char < 123)
+   }
+   if (in_char >= 109 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 157 -
@@ -6453,21 +6453,21 @@ state_157_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char < 34)
+   if (in_char < 34) {
       goto state_3_label;
-
-   if (in_char == 34)
+   }
+   if (in_char == 34) {
       goto state_52_label;
-
-   if (in_char >= 35 && in_char < 92)
+   }
+   if (in_char >= 35 && in_char < 92) {
       goto state_3_label;
-
-   if (in_char == 92)
+   }
+   if (in_char == 92) {
       goto state_53_label;
-
-   if (in_char >= 93)
+   }
+   if (in_char >= 93) {
       goto state_3_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 158 -
@@ -6475,21 +6475,21 @@ state_158_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char < 34)
+   if (in_char < 34) {
       goto state_3_label;
-
-   if (in_char == 34)
+   }
+   if (in_char == 34) {
       goto state_52_label;
-
-   if (in_char >= 35 && in_char < 92)
+   }
+   if (in_char >= 35 && in_char < 92) {
       goto state_3_label;
-
-   if (in_char == 92)
+   }
+   if (in_char == 92) {
       goto state_53_label;
-
-   if (in_char >= 93)
+   }
+   if (in_char >= 93) {
       goto state_3_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 159 -
@@ -6507,12 +6507,12 @@ state_161_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 39)
+   if (in_char == 39) {
       goto state_160_label;
-
-   if (in_char >= 48 && in_char < 56)
+   }
+   if (in_char >= 48 && in_char < 56) {
       goto state_187_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 162 -
@@ -6520,18 +6520,18 @@ state_162_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 39)
+   if (in_char == 39) {
       goto state_188_label;
-
-   if (in_char >= 48 && in_char < 58)
+   }
+   if (in_char >= 48 && in_char < 58) {
       goto state_189_label;
-
-   if (in_char >= 65 && in_char < 71)
+   }
+   if (in_char >= 65 && in_char < 71) {
       goto state_189_label;
-
-   if (in_char >= 97 && in_char < 103)
+   }
+   if (in_char >= 97 && in_char < 103) {
       goto state_189_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 163 -
@@ -6544,24 +6544,24 @@ state_164_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 114)
+   }
+   if (in_char >= 97 && in_char < 114) {
       goto state_29_label;
-
-   if (in_char == 114)
+   }
+   if (in_char == 114) {
       goto state_190_label;
-
-   if (in_char >= 115 && in_char < 123)
+   }
+   if (in_char >= 115 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 165 -
@@ -6569,24 +6569,24 @@ state_165_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 107)
+   }
+   if (in_char >= 97 && in_char < 107) {
       goto state_29_label;
-
-   if (in_char == 107)
+   }
+   if (in_char == 107) {
       goto state_191_label;
-
-   if (in_char >= 108 && in_char < 123)
+   }
+   if (in_char >= 108 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 166 -
@@ -6594,18 +6594,18 @@ state_166_label:
    CLOSE_CHAR(44);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 44;
 
 // - STATE 167 -
@@ -6613,24 +6613,24 @@ state_167_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 104)
+   }
+   if (in_char >= 97 && in_char < 104) {
       goto state_29_label;
-
-   if (in_char == 104)
+   }
+   if (in_char == 104) {
       goto state_192_label;
-
-   if (in_char >= 105 && in_char < 123)
+   }
+   if (in_char >= 105 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 168 -
@@ -6638,24 +6638,24 @@ state_168_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 115)
+   }
+   if (in_char >= 97 && in_char < 115) {
       goto state_29_label;
-
-   if (in_char == 115)
+   }
+   if (in_char == 115) {
       goto state_193_label;
-
-   if (in_char >= 116 && in_char < 123)
+   }
+   if (in_char >= 116 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 169 -
@@ -6663,24 +6663,24 @@ state_169_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 105)
+   }
+   if (in_char >= 97 && in_char < 105) {
       goto state_29_label;
-
-   if (in_char == 105)
+   }
+   if (in_char == 105) {
       goto state_194_label;
-
-   if (in_char >= 106 && in_char < 123)
+   }
+   if (in_char >= 106 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 170 -
@@ -6688,24 +6688,24 @@ state_170_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 117)
+   }
+   if (in_char >= 97 && in_char < 117) {
       goto state_29_label;
-
-   if (in_char == 117)
+   }
+   if (in_char == 117) {
       goto state_195_label;
-
-   if (in_char >= 118 && in_char < 123)
+   }
+   if (in_char >= 118 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 171 -
@@ -6713,18 +6713,18 @@ state_171_label:
    CLOSE_CHAR(39);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 39;
 
 // - STATE 172 -
@@ -6732,24 +6732,24 @@ state_172_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 110)
+   }
+   if (in_char >= 97 && in_char < 110) {
       goto state_29_label;
-
-   if (in_char == 110)
+   }
+   if (in_char == 110) {
       goto state_196_label;
-
-   if (in_char >= 111 && in_char < 123)
+   }
+   if (in_char >= 111 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 173 -
@@ -6757,24 +6757,24 @@ state_173_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 108)
+   }
+   if (in_char >= 97 && in_char < 108) {
       goto state_29_label;
-
-   if (in_char == 108)
+   }
+   if (in_char == 108) {
       goto state_197_label;
-
-   if (in_char >= 109 && in_char < 123)
+   }
+   if (in_char >= 109 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 174 -
@@ -6782,18 +6782,18 @@ state_174_label:
    CLOSE_CHAR(23);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 23;
 
 // - STATE 175 -
@@ -6801,24 +6801,24 @@ state_175_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 114)
+   }
+   if (in_char >= 97 && in_char < 114) {
       goto state_29_label;
-
-   if (in_char == 114)
+   }
+   if (in_char == 114) {
       goto state_198_label;
-
-   if (in_char >= 115 && in_char < 123)
+   }
+   if (in_char >= 115 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 176 -
@@ -6826,24 +6826,24 @@ state_176_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 115)
+   }
+   if (in_char >= 97 && in_char < 115) {
       goto state_29_label;
-
-   if (in_char == 115)
+   }
+   if (in_char == 115) {
       goto state_199_label;
-
-   if (in_char >= 116 && in_char < 123)
+   }
+   if (in_char >= 116 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 177 -
@@ -6851,24 +6851,24 @@ state_177_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 108)
+   }
+   if (in_char >= 97 && in_char < 108) {
       goto state_29_label;
-
-   if (in_char == 108)
+   }
+   if (in_char == 108) {
       goto state_200_label;
-
-   if (in_char >= 109 && in_char < 123)
+   }
+   if (in_char >= 109 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 178 -
@@ -6876,21 +6876,21 @@ state_178_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char == 97)
+   }
+   if (in_char == 97) {
       goto state_201_label;
-
-   if (in_char >= 98 && in_char < 123)
+   }
+   if (in_char >= 98 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 179 -
@@ -6898,24 +6898,24 @@ state_179_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 105)
+   }
+   if (in_char >= 97 && in_char < 105) {
       goto state_29_label;
-
-   if (in_char == 105)
+   }
+   if (in_char == 105) {
       goto state_202_label;
-
-   if (in_char >= 106 && in_char < 123)
+   }
+   if (in_char >= 106 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 180 -
@@ -6923,24 +6923,24 @@ state_180_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 114)
+   }
+   if (in_char >= 97 && in_char < 114) {
       goto state_29_label;
-
-   if (in_char == 114)
+   }
+   if (in_char == 114) {
       goto state_203_label;
-
-   if (in_char >= 115 && in_char < 123)
+   }
+   if (in_char >= 115 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 181 -
@@ -6948,24 +6948,24 @@ state_181_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 105)
+   }
+   if (in_char >= 97 && in_char < 105) {
       goto state_29_label;
-
-   if (in_char == 105)
+   }
+   if (in_char == 105) {
       goto state_204_label;
-
-   if (in_char >= 106 && in_char < 123)
+   }
+   if (in_char >= 106 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 182 -
@@ -6973,24 +6973,24 @@ state_182_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 99)
+   }
+   if (in_char >= 97 && in_char < 99) {
       goto state_29_label;
-
-   if (in_char == 99)
+   }
+   if (in_char == 99) {
       goto state_205_label;
-
-   if (in_char >= 100 && in_char < 123)
+   }
+   if (in_char >= 100 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 183 -
@@ -6998,18 +6998,18 @@ state_183_label:
    CLOSE_CHAR(24);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 24;
 
 // - STATE 184 -
@@ -7017,18 +7017,18 @@ state_184_label:
    CLOSE_CHAR(25);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 25;
 
 // - STATE 185 -
@@ -7036,24 +7036,24 @@ state_185_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 103)
+   }
+   if (in_char >= 97 && in_char < 103) {
       goto state_29_label;
-
-   if (in_char == 103)
+   }
+   if (in_char == 103) {
       goto state_206_label;
-
-   if (in_char >= 104 && in_char < 123)
+   }
+   if (in_char >= 104 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 186 -
@@ -7061,24 +7061,24 @@ state_186_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 101)
+   }
+   if (in_char >= 97 && in_char < 101) {
       goto state_29_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_207_label;
-
-   if (in_char >= 102 && in_char < 123)
+   }
+   if (in_char >= 102 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 187 -
@@ -7086,9 +7086,9 @@ state_187_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 39)
+   if (in_char == 39) {
       goto state_160_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 188 -
@@ -7101,9 +7101,9 @@ state_189_label:
    CLOSE_CHAR(c_idx_not_exist);
    GET_NEXT_CHAR();
 
-   if (in_char == 39)
+   if (in_char == 39) {
       goto state_188_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 190 -
@@ -7111,21 +7111,21 @@ state_190_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char == 97)
+   }
+   if (in_char == 97) {
       goto state_208_label;
-
-   if (in_char >= 98 && in_char < 123)
+   }
+   if (in_char >= 98 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 191 -
@@ -7133,18 +7133,18 @@ state_191_label:
    CLOSE_CHAR(46);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 46;
 
 // - STATE 192 -
@@ -7152,18 +7152,18 @@ state_192_label:
    CLOSE_CHAR(50);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 50;
 
 // - STATE 193 -
@@ -7171,18 +7171,18 @@ state_193_label:
    CLOSE_CHAR(14);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 14;
 
 // - STATE 194 -
@@ -7190,24 +7190,24 @@ state_194_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 110)
+   }
+   if (in_char >= 97 && in_char < 110) {
       goto state_29_label;
-
-   if (in_char == 110)
+   }
+   if (in_char == 110) {
       goto state_209_label;
-
-   if (in_char >= 111 && in_char < 123)
+   }
+   if (in_char >= 111 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 195 -
@@ -7215,24 +7215,24 @@ state_195_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 108)
+   }
+   if (in_char >= 97 && in_char < 108) {
       goto state_29_label;
-
-   if (in_char == 108)
+   }
+   if (in_char == 108) {
       goto state_210_label;
-
-   if (in_char >= 109 && in_char < 123)
+   }
+   if (in_char >= 109 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 196 -
@@ -7240,24 +7240,24 @@ state_196_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 100)
+   }
+   if (in_char >= 97 && in_char < 100) {
       goto state_29_label;
-
-   if (in_char == 100)
+   }
+   if (in_char == 100) {
       goto state_211_label;
-
-   if (in_char >= 101 && in_char < 123)
+   }
+   if (in_char >= 101 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 197 -
@@ -7265,18 +7265,18 @@ state_197_label:
    CLOSE_CHAR(20);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 20;
 
 // - STATE 198 -
@@ -7284,24 +7284,24 @@ state_198_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 116)
+   }
+   if (in_char >= 97 && in_char < 116) {
       goto state_29_label;
-
-   if (in_char == 116)
+   }
+   if (in_char == 116) {
       goto state_212_label;
-
-   if (in_char >= 117 && in_char < 123)
+   }
+   if (in_char >= 117 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 199 -
@@ -7309,24 +7309,24 @@ state_199_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 112)
+   }
+   if (in_char >= 97 && in_char < 112) {
       goto state_29_label;
-
-   if (in_char == 112)
+   }
+   if (in_char == 112) {
       goto state_213_label;
-
-   if (in_char >= 113 && in_char < 123)
+   }
+   if (in_char >= 113 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 200 -
@@ -7334,24 +7334,24 @@ state_200_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 108)
+   }
+   if (in_char >= 97 && in_char < 108) {
       goto state_29_label;
-
-   if (in_char == 108)
+   }
+   if (in_char == 108) {
       goto state_214_label;
-
-   if (in_char >= 109 && in_char < 123)
+   }
+   if (in_char >= 109 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 201 -
@@ -7359,24 +7359,24 @@ state_201_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 116)
+   }
+   if (in_char >= 97 && in_char < 116) {
       goto state_29_label;
-
-   if (in_char == 116)
+   }
+   if (in_char == 116) {
       goto state_215_label;
-
-   if (in_char >= 117 && in_char < 123)
+   }
+   if (in_char >= 117 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 202 -
@@ -7384,24 +7384,24 @@ state_202_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 99)
+   }
+   if (in_char >= 97 && in_char < 99) {
       goto state_29_label;
-
-   if (in_char == 99)
+   }
+   if (in_char == 99) {
       goto state_216_label;
-
-   if (in_char >= 100 && in_char < 123)
+   }
+   if (in_char >= 100 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 203 -
@@ -7409,24 +7409,24 @@ state_203_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 110)
+   }
+   if (in_char >= 97 && in_char < 110) {
       goto state_29_label;
-
-   if (in_char == 110)
+   }
+   if (in_char == 110) {
       goto state_217_label;
-
-   if (in_char >= 111 && in_char < 123)
+   }
+   if (in_char >= 111 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 204 -
@@ -7434,24 +7434,24 @@ state_204_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 99)
+   }
+   if (in_char >= 97 && in_char < 99) {
       goto state_29_label;
-
-   if (in_char == 99)
+   }
+   if (in_char == 99) {
       goto state_218_label;
-
-   if (in_char >= 100 && in_char < 123)
+   }
+   if (in_char >= 100 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 205 -
@@ -7459,24 +7459,24 @@ state_205_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 104)
+   }
+   if (in_char >= 97 && in_char < 104) {
       goto state_29_label;
-
-   if (in_char == 104)
+   }
+   if (in_char == 104) {
       goto state_219_label;
-
-   if (in_char >= 105 && in_char < 123)
+   }
+   if (in_char >= 105 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 206 -
@@ -7484,18 +7484,18 @@ state_206_label:
    CLOSE_CHAR(13);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 13;
 
 // - STATE 207 -
@@ -7503,18 +7503,18 @@ state_207_label:
    CLOSE_CHAR(41);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 41;
 
 // - STATE 208 -
@@ -7522,24 +7522,24 @@ state_208_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 99)
+   }
+   if (in_char >= 97 && in_char < 99) {
       goto state_29_label;
-
-   if (in_char == 99)
+   }
+   if (in_char == 99) {
       goto state_220_label;
-
-   if (in_char >= 100 && in_char < 123)
+   }
+   if (in_char >= 100 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 209 -
@@ -7547,24 +7547,24 @@ state_209_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 117)
+   }
+   if (in_char >= 97 && in_char < 117) {
       goto state_29_label;
-
-   if (in_char == 117)
+   }
+   if (in_char == 117) {
       goto state_221_label;
-
-   if (in_char >= 118 && in_char < 123)
+   }
+   if (in_char >= 118 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 210 -
@@ -7572,24 +7572,24 @@ state_210_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 116)
+   }
+   if (in_char >= 97 && in_char < 116) {
       goto state_29_label;
-
-   if (in_char == 116)
+   }
+   if (in_char == 116) {
       goto state_222_label;
-
-   if (in_char >= 117 && in_char < 123)
+   }
+   if (in_char >= 117 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 211 -
@@ -7597,24 +7597,24 @@ state_211_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 115)
+   }
+   if (in_char >= 97 && in_char < 115) {
       goto state_29_label;
-
-   if (in_char == 115)
+   }
+   if (in_char == 115) {
       goto state_223_label;
-
-   if (in_char >= 116 && in_char < 123)
+   }
+   if (in_char >= 116 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 212 -
@@ -7622,18 +7622,18 @@ state_212_label:
    CLOSE_CHAR(11);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 11;
 
 // - STATE 213 -
@@ -7641,21 +7641,21 @@ state_213_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char == 97)
+   }
+   if (in_char == 97) {
       goto state_224_label;
-
-   if (in_char >= 98 && in_char < 123)
+   }
+   if (in_char >= 98 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 214 -
@@ -7663,24 +7663,24 @@ state_214_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 101)
+   }
+   if (in_char >= 97 && in_char < 101) {
       goto state_29_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_225_label;
-
-   if (in_char >= 102 && in_char < 123)
+   }
+   if (in_char >= 102 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 215 -
@@ -7688,24 +7688,24 @@ state_215_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 101)
+   }
+   if (in_char >= 97 && in_char < 101) {
       goto state_29_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_226_label;
-
-   if (in_char >= 102 && in_char < 123)
+   }
+   if (in_char >= 102 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 216 -
@@ -7713,18 +7713,18 @@ state_216_label:
    CLOSE_CHAR(16);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 16;
 
 // - STATE 217 -
@@ -7732,18 +7732,18 @@ state_217_label:
    CLOSE_CHAR(48);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 48;
 
 // - STATE 218 -
@@ -7751,18 +7751,18 @@ state_218_label:
    CLOSE_CHAR(18);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 18;
 
 // - STATE 219 -
@@ -7770,18 +7770,18 @@ state_219_label:
    CLOSE_CHAR(43);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 43;
 
 // - STATE 220 -
@@ -7789,24 +7789,24 @@ state_220_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 116)
+   }
+   if (in_char >= 97 && in_char < 116) {
       goto state_29_label;
-
-   if (in_char == 116)
+   }
+   if (in_char == 116) {
       goto state_227_label;
-
-   if (in_char >= 117 && in_char < 123)
+   }
+   if (in_char >= 117 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 221 -
@@ -7814,24 +7814,24 @@ state_221_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 101)
+   }
+   if (in_char >= 97 && in_char < 101) {
       goto state_29_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_228_label;
-
-   if (in_char >= 102 && in_char < 123)
+   }
+   if (in_char >= 102 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 222 -
@@ -7839,18 +7839,18 @@ state_222_label:
    CLOSE_CHAR(45);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 45;
 
 // - STATE 223 -
@@ -7858,18 +7858,18 @@ state_223_label:
    CLOSE_CHAR(15);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 15;
 
 // - STATE 224 -
@@ -7877,24 +7877,24 @@ state_224_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 99)
+   }
+   if (in_char >= 97 && in_char < 99) {
       goto state_29_label;
-
-   if (in_char == 99)
+   }
+   if (in_char == 99) {
       goto state_229_label;
-
-   if (in_char >= 100 && in_char < 123)
+   }
+   if (in_char >= 100 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 225 -
@@ -7902,24 +7902,24 @@ state_225_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 108)
+   }
+   if (in_char >= 97 && in_char < 108) {
       goto state_29_label;
-
-   if (in_char == 108)
+   }
+   if (in_char == 108) {
       goto state_230_label;
-
-   if (in_char >= 109 && in_char < 123)
+   }
+   if (in_char >= 109 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 226 -
@@ -7927,18 +7927,18 @@ state_226_label:
    CLOSE_CHAR(17);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 17;
 
 // - STATE 227 -
@@ -7946,18 +7946,18 @@ state_227_label:
    CLOSE_CHAR(19);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 19;
 
 // - STATE 228 -
@@ -7965,18 +7965,18 @@ state_228_label:
    CLOSE_CHAR(47);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 47;
 
 // - STATE 229 -
@@ -7984,24 +7984,24 @@ state_229_label:
    CLOSE_CHAR(10);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 101)
+   }
+   if (in_char >= 97 && in_char < 101) {
       goto state_29_label;
-
-   if (in_char == 101)
+   }
+   if (in_char == 101) {
       goto state_231_label;
-
-   if (in_char >= 102 && in_char < 123)
+   }
+   if (in_char >= 102 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 10;
 
 // - STATE 230 -
@@ -8009,18 +8009,18 @@ state_230_label:
    CLOSE_CHAR(21);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 21;
 
 // - STATE 231 -
@@ -8028,18 +8028,18 @@ state_231_label:
    CLOSE_CHAR(12);
    GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_29_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_29_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_29_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_29_label;
-
+   }
    return 12;
 
 }/*}}}*/
