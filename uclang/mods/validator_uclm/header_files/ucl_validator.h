@@ -33,6 +33,7 @@ enum {
   prop_regex,
   prop_test,
   prop_items,
+  prop_opt_items,
   prop_all_items,
   prop_all_keys,
   prop_in,
