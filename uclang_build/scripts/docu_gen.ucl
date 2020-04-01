@@ -4299,6 +4299,30 @@ obj.remove_key(\"Two\");
                 }
               }
             }/*}}}*/
+            case "remove_if_key#1":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                m_meth_descr_lst.push("Remove key given by method parameter from object of class `%s` if it exists. Value of object stored under key will be also removed." % class_name);
+                m_meth_param_lsts[0].push("Any type.");
+                m_meth_return_lst.push("Object of class %s." % doc_class_ref("Blank"));
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  m_meth_ex_code = ("
+%s
+(\"obj: %%s\\n\" %% $obj).print();
+obj.remove_if_key(\"Two\");
+obj.remove_if_key(\"Six\");
+(\"obj: %%s\\n\" %% $obj).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
             case "first_key#0":
             {/*{{{*/
               if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();

@@ -8,7 +8,7 @@ built_in_class_s dict_class =
 {/*{{{*/
   "Dict",
   c_modifier_public | c_modifier_final,
-  29, dict_methods,
+  30, dict_methods,
   0, dict_variables,
   bic_dict_consts,
   bic_dict_init,
@@ -87,6 +87,11 @@ built_in_method_s dict_methods[] =
     "remove_key#1",
     c_modifier_public | c_modifier_final,
     bic_dict_method_remove_key_1
+  },
+  {
+    "remove_if_key#1",
+    c_modifier_public | c_modifier_final,
+    bic_dict_method_remove_if_key_1
   },
   {
     "first_key#0",
@@ -881,6 +886,39 @@ bool bic_dict_method_remove_key_1(interpreter_thread_s &it,unsigned stack_base,u
   it.release_location_ptr((location_s *)node.object.key);
   it.release_location_ptr((location_s *)node.object.value);
   tree_ptr->remove(index);
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_dict_method_remove_if_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;
+
+  tree_ptr->it_ptr = &it;
+  tree_ptr->source_pos = operands[c_source_pos_idx];
+
+  pointer_map_s search_map = {(pointer)src_0_location,nullptr};
+  unsigned index = tree_ptr->get_idx(search_map);
+
+  if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+  {
+    return false;
+  }
+
+  if (index != c_idx_not_exist)
+  {
+    // - retrieve tree node -
+    pointer_map_tree_s_node &node = tree_ptr->data[index];
+
+    it.release_location_ptr((location_s *)node.object.key);
+    it.release_location_ptr((location_s *)node.object.value);
+    tree_ptr->remove(index);
+  }
 
   BIC_SET_RESULT_DESTINATION();
 
