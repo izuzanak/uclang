@@ -9,6 +9,7 @@ include "script_parser.h"
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
 #include <poll.h>
 #include <fcntl.h>
+#include <netdb.h>
 #elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
 #include <io.h>
 #include <fcntl.h>

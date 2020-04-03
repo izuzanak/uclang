@@ -359,7 +359,7 @@ Remove key given by method parameter from object of class `Dict`. Value of objec
 
 **Return:**
 
-Object of class `Blank`.
+Object of class Dict.
 
 **Example:**
 
@@ -386,7 +386,7 @@ Remove key given by method parameter from object of class `Dict` if it exists. V
 
 **Return:**
 
-Object of class `Blank`.
+Object of class Dict.
 
 **Example:**
 

@@ -4284,7 +4284,7 @@ value = \"Hello world!\";
               {
                 m_meth_descr_lst.push("Remove key given by method parameter from object of class `%s`. Value of object stored under key will be also removed." % class_name);
                 m_meth_param_lsts[0].push("Any type.");
-                m_meth_return_lst.push("Object of class %s." % doc_class_ref("Blank"));
+                m_meth_return_lst.push("Object of class %s." % class_name);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
@@ -4307,7 +4307,7 @@ obj.remove_key(\"Two\");
               {
                 m_meth_descr_lst.push("Remove key given by method parameter from object of class `%s` if it exists. Value of object stored under key will be also removed." % class_name);
                 m_meth_param_lsts[0].push("Any type.");
-                m_meth_return_lst.push("Object of class %s." % doc_class_ref("Blank"));
+                m_meth_return_lst.push("Object of class %s." % class_name);
 
                 obj_code = get_code(a_class,"obj","create_example");
 
