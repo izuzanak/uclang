@@ -21,12 +21,13 @@ terminals:
   regex {"regex"}
   test {"test"}
   items {"items"}
+  opt_items {"opt-items"}
   all_items {"all-items"}
   all_keys {"all-keys"}
   in {"in"}
 
   $ !!! FIXME comment this terminal before production
-   _SKIP_ {w.w*}
+  _SKIP_ {w.w*}
   _END_ {'\0'}
 
 nonterminals:
@@ -66,6 +67,7 @@ rules:
   <term> -> regex ->> {print("regex");}
   <term> -> test ->> {print("test");}
   <term> -> items ->> {print("items");}
+  <term> -> opt_items ->> {print("opt_items");}
   <term> -> all_items ->> {print("all_items");}
   <term> -> all_keys ->> {print("all_keys");}
   <term> -> in ->> {print("in");}

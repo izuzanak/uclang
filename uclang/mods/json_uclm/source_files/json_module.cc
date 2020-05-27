@@ -499,7 +499,7 @@ static_method
   }
 
   // - retrieve object location -
-  location_s *obj_location = (location_s *)json_parser.objects.pop();
+  location_s *obj_location = (location_s *)json_parser.values.pop();
   BIC_SET_RESULT(obj_location);
 
   json_parser.release_locations();

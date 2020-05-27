@@ -49,7 +49,7 @@ nonterminals:
 
 rules:
    <start> -> <end_check> ->> {}
-   <end_check> -> <object> _END_ ->> {}
+   <end_check> -> <value> _END_ ->> {}
 
    <object> -> <pairs> rc_br ->>
    {
