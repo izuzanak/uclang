@@ -467,9 +467,6 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
         FG_HANDLE_EXCEPTION()
       }
 
-      location_s *rp_location = (location_s *)get_stack_value(stack_base + return_src_idx);
-      rp_location->v_reference_cnt.atomic_inc();
-
       // - ERROR -
       if (return_trg_idx == c_idx_not_exist)
       {
@@ -478,6 +475,9 @@ int interpreter_thread_s::run_method_code(method_record_s &method_record,unsigne
 
         FG_HANDLE_EXCEPTION()
       }
+
+      location_s *rp_location = (location_s *)get_stack_value(stack_base + return_src_idx);
+      rp_location->v_reference_cnt.atomic_inc();
 
       pointer &return_trg = data_stack[return_trg_idx];
       release_location_ptr((location_s *)return_trg);
