@@ -8,7 +8,7 @@ built_in_class_s dict_class =
 {/*{{{*/
   "Dict",
   c_modifier_public | c_modifier_final,
-  30, dict_methods,
+  32, dict_methods,
   0, dict_variables,
   bic_dict_consts,
   bic_dict_init,
@@ -72,6 +72,16 @@ built_in_method_s dict_methods[] =
     "items#0",
     c_modifier_public | c_modifier_final,
     bic_dict_method_items_0
+  },
+  {
+    "unordered_keys#0",
+    c_modifier_public | c_modifier_final,
+    bic_dict_method_unordered_keys_0
+  },
+  {
+    "unordered_items#0",
+    c_modifier_public | c_modifier_final,
+    bic_dict_method_unordered_items_0
   },
   {
     "store_ref#2",
@@ -784,6 +794,70 @@ bool bic_dict_method_items_0(interpreter_thread_s &it,unsigned stack_base,uli *o
       t_idx = tree_ptr->get_stack_next_idx(t_idx,&stack_ptr,stack);
     }
     while(t_idx != c_idx_not_exist);
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_dict_method_unordered_keys_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+  if (tree_ptr->root_idx != c_idx_not_exist)
+  {
+    array_ptr->init_size(tree_ptr->count);
+
+    pointer_map_tree_s_node *ptr = tree_ptr->data;
+    pointer_map_tree_s_node *ptr_end = ptr + tree_ptr->used;
+
+    do
+    {
+      if (ptr->valid)
+      {
+        location_s *key_location = (location_s *)ptr->object.key;
+        key_location->v_reference_cnt.atomic_inc();
+
+        array_ptr->push(key_location);
+      }
+    } while(++ptr < ptr_end);
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_dict_method_unordered_items_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+  if (tree_ptr->root_idx != c_idx_not_exist)
+  {
+    array_ptr->init_size(tree_ptr->count);
+
+    pointer_map_tree_s_node *ptr = tree_ptr->data;
+    pointer_map_tree_s_node *ptr_end = ptr + tree_ptr->used;
+
+    do
+    {
+      if (ptr->valid)
+      {
+        location_s *item_location = it.get_location_value(ptr->object.value);
+        item_location->v_reference_cnt.atomic_inc();
+
+        array_ptr->push(item_location);
+      }
+    } while(++ptr < ptr_end);
   }
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);

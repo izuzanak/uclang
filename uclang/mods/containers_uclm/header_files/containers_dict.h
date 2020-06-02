@@ -30,6 +30,8 @@ bool bic_dict_method_Dict_1(interpreter_thread_s &it,unsigned stack_base,uli *op
 bool bic_dict_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dict_method_keys_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dict_method_items_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_dict_method_unordered_keys_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_dict_method_unordered_items_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dict_method_store_ref_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dict_method_has_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_dict_method_remove_key_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
