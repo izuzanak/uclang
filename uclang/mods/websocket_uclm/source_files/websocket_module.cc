@@ -339,7 +339,10 @@ method WsContext
   wsc_ptr->init();
 
   // - create websocket protocols structure -
-  wsc_ptr->protocols = (lws_protocols *)cmalloc((2 + (array_ptr->used / 2))*sizeof(lws_protocols));
+  unsigned prot_size = (2 + (array_ptr->used / 2))*sizeof(lws_protocols);
+
+  wsc_ptr->protocols = (lws_protocols *)cmalloc(prot_size);
+  memset(wsc_ptr->protocols,0,prot_size);
 
   // - configure http protocol -
   lws_protocols *http_prot = wsc_ptr->protocols;
@@ -420,7 +423,7 @@ method WsContext
   info.options = 0;
   info.user = wsc_ptr;
 
-  // - create wesocket context -
+  // - create websocket context -
   wsc_ptr->context = lws_create_context(&info);
 
   // - ERROR -
@@ -673,7 +676,7 @@ built_in_class_s ws_conn_class =
   "WsConn",
   c_modifier_public | c_modifier_final,
   12, ws_conn_methods,
-  6 + 25 + 10, ws_conn_variables,
+  6 + 25 + 9, ws_conn_variables,
   bic_ws_conn_consts,
   bic_ws_conn_init,
   bic_ws_conn_clear,
@@ -800,7 +803,6 @@ built_in_variable_s ws_conn_variables[] =
   { "TIMEOUT_AWAITING_SERVER_RESPONSE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "TIMEOUT_AWAITING_PING", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "TIMEOUT_CLOSE_ACK", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "TIMEOUT_SENT_CLIENT_HANDSHAKE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "TIMEOUT_SSL_ACCEPT", c_modifier_public | c_modifier_static | c_modifier_static_const },
 };/*}}}*/
@@ -902,8 +904,8 @@ void bic_ws_conn_consts(location_array_s &const_locations)
 
   // - timeout types -
   {
-    const_locations.push_blanks(10);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 10);
+    const_locations.push_blanks(9);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 9);
 
 #define CREATE_WS_CONN_TIMEOUT_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -918,7 +920,6 @@ void bic_ws_conn_consts(location_array_s &const_locations)
     CREATE_WS_CONN_CB_TYPE_BIC_STATIC(PENDING_TIMEOUT_AWAITING_SERVER_RESPONSE);
     CREATE_WS_CONN_CB_TYPE_BIC_STATIC(PENDING_TIMEOUT_AWAITING_PING);
     CREATE_WS_CONN_CB_TYPE_BIC_STATIC(PENDING_TIMEOUT_CLOSE_ACK);
-    CREATE_WS_CONN_CB_TYPE_BIC_STATIC(PENDING_TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE);
     CREATE_WS_CONN_CB_TYPE_BIC_STATIC(PENDING_TIMEOUT_SENT_CLIENT_HANDSHAKE);
     CREATE_WS_CONN_CB_TYPE_BIC_STATIC(PENDING_TIMEOUT_SSL_ACCEPT);
   }
@@ -1061,7 +1062,6 @@ method set_timeout
   case PENDING_TIMEOUT_AWAITING_SERVER_RESPONSE:
   case PENDING_TIMEOUT_AWAITING_PING:
   case PENDING_TIMEOUT_CLOSE_ACK:
-  case PENDING_TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE:
   case PENDING_TIMEOUT_SENT_CLIENT_HANDSHAKE:
   case PENDING_TIMEOUT_SSL_ACCEPT:
     break;
