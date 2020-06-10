@@ -120,7 +120,7 @@ bool parse_state_s::parse_source_string(location_s *parse_state_loc,delegate_s *
       lalr_stack.push(goto_val,nonterm_start,nonterm_end);
     }
   }
-  while(1);
+  while(true);
 
   return true;
 }/*}}}*/

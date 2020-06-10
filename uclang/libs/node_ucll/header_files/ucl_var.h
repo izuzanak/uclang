@@ -3293,12 +3293,12 @@ class UclVar
     return __call_1(c_bi_mni_operator_binary_percent_1,a_op);
   }/*}}}*/
 
-  inline UclVar operator++(int)
+  inline UclVar operator++(int) // NOLINT
   {/*{{{*/
     return __call_0(c_bi_mni_operator_unary_post_double_plus_0);
   }/*}}}*/
 
-  inline UclVar operator--(int)
+  inline UclVar operator--(int) // NOLINT
   {/*{{{*/
     return __call_0(c_bi_mni_operator_unary_post_double_minus_0);
   }/*}}}*/

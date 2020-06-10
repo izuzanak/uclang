@@ -230,21 +230,21 @@ union v_data_type
   pointer ptr;
 
   v_data_type() {}
-  v_data_type(char a_bc) { lli = a_bc; }
-  v_data_type(int a_bi) { lli = a_bi; }
-  v_data_type(unsigned a_ui) { lli = a_ui; }
-  v_data_type(long long int a_lli) { lli = a_lli; }
-  v_data_type(long long unsigned a_llu) { llu = a_llu; }
-  v_data_type(double a_bd) { bd = a_bd; }
-  template <class T> v_data_type(T* a_ptr) { ptr = (pointer)a_ptr; }
+  v_data_type(char a_bc) { lli = a_bc; }                             // NOLINT
+  v_data_type(int a_bi) { lli = a_bi; }                              // NOLINT
+  v_data_type(unsigned a_ui) { lli = a_ui; }                         // NOLINT
+  v_data_type(long long int a_lli) { lli = a_lli; }                  // NOLINT
+  v_data_type(long long unsigned a_llu) { llu = a_llu; }             // NOLINT
+  v_data_type(double a_bd) { bd = a_bd; }                            // NOLINT
+  template <class T> v_data_type(T* a_ptr) { ptr = (pointer)a_ptr; } // NOLINT
 
-  operator char () const { return lli; }
-  operator int () const { return lli; }
-  operator unsigned () const { return lli; }
-  operator long long int () const { return lli; }
-  operator long long unsigned () const { return llu; }
-  operator double () const { return bd; }
-  template <class T> operator T* () const { return (T *)ptr; }
+  operator char () const { return lli; }                       // NOLINT
+  operator int () const { return lli; }                        // NOLINT
+  operator unsigned () const { return lli; }                   // NOLINT
+  operator long long int () const { return lli; }              // NOLINT
+  operator long long unsigned () const { return llu; }         // NOLINT
+  operator double () const { return bd; }                      // NOLINT
+  template <class T> operator T* () const { return (T *)ptr; } // NOLINT
 
   v_data_type& operator=(const v_data_type &a_src) { lli = a_src.lli; return *this; }
   bool operator==(const v_data_type &a_second) { return lli == a_second.lli; }

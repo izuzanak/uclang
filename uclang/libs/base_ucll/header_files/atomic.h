@@ -74,12 +74,12 @@ struct atomic_s
   /*!
    * \brief decrease atomic variable by one and return 1 if new value is equal to 0
    */
-  inline int atomic_dec_and_test();
+  inline bool atomic_dec_and_test();
 
   /*!
    * \brief increase atomic variable by one and return 1 if new value is equal to a_test
    */
-  inline int atomic_inc_and_test(int a_test);
+  inline bool atomic_inc_and_test(int a_test);
 };
 
 /*
@@ -152,7 +152,7 @@ inline void atomic_s::atomic_add(int a_value)
 #endif
 }/*}}}*/
 
-inline int atomic_s::atomic_dec_and_test()
+inline bool atomic_s::atomic_dec_and_test()
 {/*{{{*/
 #if ATOMIC_TYPE == ATOMIC_TYPE_GCC
   return __sync_sub_and_fetch(&counter,1) == 0;
@@ -163,7 +163,7 @@ inline int atomic_s::atomic_dec_and_test()
 #endif
 }/*}}}*/
 
-inline int atomic_s::atomic_inc_and_test(int a_test)
+inline bool atomic_s::atomic_inc_and_test(int a_test)
 {/*{{{*/
 #if ATOMIC_TYPE == ATOMIC_TYPE_GCC
   return __sync_add_and_fetch(&counter,1) == a_test;

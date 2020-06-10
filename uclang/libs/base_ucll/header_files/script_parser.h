@@ -1875,7 +1875,7 @@ inline bool interpreter_thread_s::run_expression_code(uli *code,unsigned stack_b
     ret_code = instruction_callers[*code](&params);
 
     // - test interpreter terminate flag -
-    register int tc = terminate.counter;
+    int tc = terminate.counter;
     if (unlikely(tc != 0))
     {
       if (throw_on_terminate)
