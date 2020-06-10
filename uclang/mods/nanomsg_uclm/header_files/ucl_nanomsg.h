@@ -70,7 +70,7 @@ inline void nano_endpoint_s::clear(interpreter_thread_s &it)
       {
         break;
       }
-    } while(1);
+    } while(true);
   }
 
   // - release socket location -

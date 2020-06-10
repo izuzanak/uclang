@@ -921,7 +921,7 @@ class UclVar
   }/*}}}*/
 #endif
 
-  inline UclVar(location_s **a_location_ptr)
+  inline UclVar(location_s **a_location_ptr) // NOLINT
   {/*{{{*/
     location_ptr = it_ptr->get_new_reference(a_location_ptr);
   }/*}}}*/
@@ -936,18 +936,18 @@ class UclVar
 
   class NO_INIT {};
 
-  inline UclVar(NO_INIT)                              { location_ptr = nullptr; }
+  inline UclVar(NO_INIT)                              { location_ptr = nullptr; }        // NOLINT
   inline UclVar()                                     { BLANK(); }
-  inline UclVar(char a_value)                         { CHAR(a_value); }
-  inline UclVar(int a_value)                          { INTEGER(a_value); }
-  inline UclVar(long int a_value)                     { INTEGER(a_value); }
-  inline UclVar(long long int a_value)                { INTEGER(a_value); }
-  inline UclVar(unsigned a_value)                     { INTEGER(a_value); }
-  inline UclVar(long unsigned a_value)                { INTEGER(a_value); }
-  inline UclVar(long long unsigned a_value)           { INTEGER(a_value); }
-  inline UclVar(float a_value)                        { FLOAT(a_value); }
-  inline UclVar(double a_value)                       { FLOAT(a_value); }
-  inline UclVar(const char *a_data)                   { STRING(strlen(a_data),a_data); }
+  inline UclVar(char a_value)                         { CHAR(a_value); }                 // NOLINT
+  inline UclVar(int a_value)                          { INTEGER(a_value); }              // NOLINT
+  inline UclVar(long int a_value)                     { INTEGER(a_value); }              // NOLINT
+  inline UclVar(long long int a_value)                { INTEGER(a_value); }              // NOLINT
+  inline UclVar(unsigned a_value)                     { INTEGER(a_value); }              // NOLINT
+  inline UclVar(long unsigned a_value)                { INTEGER(a_value); }              // NOLINT
+  inline UclVar(long long unsigned a_value)           { INTEGER(a_value); }              // NOLINT
+  inline UclVar(float a_value)                        { FLOAT(a_value); }                // NOLINT
+  inline UclVar(double a_value)                       { FLOAT(a_value); }                // NOLINT
+  inline UclVar(const char *a_data)                   { STRING(strlen(a_data),a_data); } // NOLINT
   inline UclVar(unsigned a_length,const char *a_data) { STRING(a_length,a_data); }
   inline UclVar(unsigned a_size,UclVar *a_array)      { ARRAY(a_size,a_array); }
 

@@ -179,7 +179,7 @@ void gmp_c::mpq_set_lli_lli(mpq_ptr a_mpq,long long int a_value,long long int a_
     char buffer[64];
     snprintf(buffer,64,"%" HOST_LL_FORMAT "d/%" HOST_LL_FORMAT "d",a_value,a_denom);
     mpq_set_str(a_mpq,buffer,10);
-  } while(0);
+  } while(false);
 
   mpq_canonicalize(a_mpq);
 }/*}}}*/

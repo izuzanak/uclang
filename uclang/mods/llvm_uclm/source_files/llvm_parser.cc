@@ -2916,7 +2916,7 @@ bool llvm_parser_s::parse_source()
     }
 
   }
-  while(1);
+  while(true);
 
   return true;
 }/*}}}*/

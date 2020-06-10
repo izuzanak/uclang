@@ -85,7 +85,7 @@ catch (std::string reason)\
 \
         CODE;\
 \
-      } while(1);\
+      } while(true);\
     }/*}}}*/\
     break;\
 \

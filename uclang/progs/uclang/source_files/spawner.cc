@@ -460,7 +460,7 @@ bool spawn_parser_s::parse_source(string_s &a_string)
     }
 
   }
-  while(1);
+  while(true);
 
   SPWN_PARSE_SOURCE_RETURN();
   return true;

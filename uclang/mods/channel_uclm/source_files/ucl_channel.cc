@@ -168,7 +168,7 @@ bool channel_conn_s::recv_msg(interpreter_thread_s &it,location_s *dst_location,
       }
     }
 #endif
-  } while(1);
+  } while(true);
 
 #ifdef UCL_WITH_OPENSSL
   if (ssl == nullptr)
@@ -253,7 +253,7 @@ bool channel_conn_s::recv_msg(interpreter_thread_s &it,location_s *dst_location,
       // - reset message length -
       in_msg_length = 0;
     }
-  } while(1);
+  } while(true);
 
   in_msg.tail(in_msg.used - msg_offset);
 

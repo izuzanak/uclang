@@ -1031,7 +1031,7 @@ bool json_parser_s::parse_source(interpreter_thread_s &a_it,string_s &a_string)
     }
 
   }
-  while(1);
+  while(true);
 
   JSON_PARSE_SOURCE_RETURN();
   return true;

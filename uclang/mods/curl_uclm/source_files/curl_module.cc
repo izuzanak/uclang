@@ -1047,14 +1047,15 @@ bool bic_curl_multi_method_process_0(interpreter_thread_s &it,unsigned stack_bas
         {
           int events = 0;
 
-          if (fd_ptr->revents & (POLLIN | POLLPRI))
+          if (fd_ptr->revents & (POLLIN | POLLPRI)) {
             events |= CURL_CSELECT_IN;
-
-          if (fd_ptr->revents & POLLOUT)
+          }
+          if (fd_ptr->revents & POLLOUT) {
             events |= CURL_CSELECT_OUT;
-
-          if (fd_ptr->revents & (POLLERR | POLLHUP | POLLNVAL))
+          }
+          if (fd_ptr->revents & (POLLERR | POLLHUP | POLLNVAL)) {
             events |= CURL_CSELECT_ERR;
+          }
 
           // - ERROR -
           int running;

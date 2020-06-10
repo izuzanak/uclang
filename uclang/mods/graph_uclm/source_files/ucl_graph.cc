@@ -895,7 +895,7 @@ bool graph_s::BFS_digraph(unsigned a_src_vertex_idx,unsigned a_trg_vertex_idx,ui
         break;\
       }\
 \
-    } while(1);\
+    } while(true);\
 \
   } while(v_stack.used > 0);\
 \
@@ -1034,7 +1034,7 @@ bool graph_s::strongly_connected_components_tarjans(ui_array_s &a_comp_idxs)
           }
 
           ei_idx = edge_idxs.get_next_idx(ei_idx);
-        } while(1);
+        } while(true);
 
       } while(v_stack.used > 0);
     }
@@ -1240,7 +1240,7 @@ bool graph_s::is_strongly_connected_graph_tarjans()
       }
 
       ei_idx = edge_idxs.get_next_idx(ei_idx);
-    } while(1);
+    } while(true);
 
   } while(v_stack.used > 0);
 

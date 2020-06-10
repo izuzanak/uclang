@@ -588,7 +588,7 @@ bool bic_intel_hex_method_next_item_0(interpreter_thread_s &it,unsigned stack_ba
 
         break;
       }
-    } while(1);
+    } while(true);
   }
   else
   {

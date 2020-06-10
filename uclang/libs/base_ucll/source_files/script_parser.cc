@@ -654,7 +654,7 @@ unsigned script_parser_s::resolve_class_idx_by_name_idx(unsigned a_name_idx,unsi
       a_class_idx = class_record.parent_record;
 
     }
-    while(1);
+    while(true);
   }
 
   // - search for name in used namespaces -
@@ -1430,7 +1430,7 @@ void script_parser_s::DEBUG_show_expression(expression_s &exp)
             break;
 
           printf(", ");
-        } while(1);
+        } while(true);
       }
 
       printf("\n");
@@ -2100,7 +2100,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
             break;
 
           printf(",");
-        } while(1);
+        } while(true);
       }
 
       printf("\" ]\n");
@@ -8167,7 +8167,7 @@ void script_parser_s::parse_script(unsigned a_source_idx)
     }
 
   }
-  while(1);
+  while(true);
 }/*}}}*/
 
 void script_parser_s::process_modules()
@@ -8637,8 +8637,9 @@ bool script_parser_s::generate_method_intermediate_code()
   im_descr.found_operands.used = 0;
   memset(im_descr.var_name_fo_map.data,(int)c_idx_not_exist,im_descr.var_name_fo_map.used*sizeof(unsigned));
   memset(im_descr.const_idx_fo_map.data,(int)c_idx_not_exist,im_descr.const_idx_fo_map.used*sizeof(unsigned));
-  if (im_descr.static_vi_fo_map.used != 0)
+  if (im_descr.static_vi_fo_map.used != 0) {
     memset(im_descr.static_vi_fo_map.data,(int)c_idx_not_exist,im_descr.static_vi_fo_map.used*sizeof(unsigned));
+  }
 
   unsigned me_idx = 0;
   unsigned *fgn_ptr = fg.nodes.data;
@@ -8847,8 +8848,9 @@ void script_parser_s::generate_intermediate_code()
       im_descr.found_operands.used = 0;
       memset(im_descr.var_name_fo_map.data,(int)c_idx_not_exist,im_descr.var_name_fo_map.used*sizeof(unsigned));
       memset(im_descr.const_idx_fo_map.data,(int)c_idx_not_exist,im_descr.const_idx_fo_map.used*sizeof(unsigned));
-      if (im_descr.static_vi_fo_map.used != 0)
+      if (im_descr.static_vi_fo_map.used != 0) {
         memset(im_descr.static_vi_fo_map.data,(int)c_idx_not_exist,im_descr.static_vi_fo_map.used*sizeof(unsigned));
+      }
 
       // - cycle through records of all classes sorted by deep of nesting -
       do
@@ -8961,8 +8963,9 @@ void script_parser_s::generate_intermediate_code()
         im_descr.found_operands.used = 0;
         memset(im_descr.var_name_fo_map.data,(int)c_idx_not_exist,im_descr.var_name_fo_map.used*sizeof(unsigned));
         memset(im_descr.const_idx_fo_map.data,(int)c_idx_not_exist,im_descr.const_idx_fo_map.used*sizeof(unsigned));
-        if (im_descr.static_vi_fo_map.used != 0)
+        if (im_descr.static_vi_fo_map.used != 0) {
           memset(im_descr.static_vi_fo_map.data,(int)c_idx_not_exist,im_descr.static_vi_fo_map.used*sizeof(unsigned));
+        }
 
         unsigned *vri_ptr = variable_record_idxs.data;
         unsigned *vri_ptr_end = vri_ptr + variable_record_idxs.used;

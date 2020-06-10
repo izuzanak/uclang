@@ -760,7 +760,7 @@ bool bic_imx_egl_method_global_lock_0(interpreter_thread_s &it,unsigned stack_ba
     // - sleep some time -
     nanosleep(&ts,nullptr);
 
-  } while(1);
+  } while(true);
 
   BIC_SET_RESULT_BLANK();
 

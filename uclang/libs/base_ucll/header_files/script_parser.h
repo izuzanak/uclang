@@ -1864,7 +1864,7 @@ inline location_s *interpreter_thread_s::get_location_value(pointer location_ptr
   return (location_s *)location_ptr;
 }/*}}}*/
 
-inline bool interpreter_thread_s::run_expression_code(uli *code,unsigned stack_base,unsigned *return_value)
+inline bool interpreter_thread_s::run_expression_code(uli *code,unsigned stack_base,unsigned *return_value) // NOLINT
 {/*{{{*/
   int ret_code;
   atomic_s &terminate = ((interpreter_s *)interpreter_ptr)->terminate;
@@ -1880,7 +1880,7 @@ inline bool interpreter_thread_s::run_expression_code(uli *code,unsigned stack_b
     {
       if (throw_on_terminate)
       {
-        throw tc;
+        throw int(tc);
       }
     }
   }

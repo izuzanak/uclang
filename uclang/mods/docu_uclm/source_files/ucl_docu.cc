@@ -298,7 +298,7 @@ void docu_source_s::find_comments()
       }
     }
   }
-  while(1);
+  while(true);
 }/*}}}*/
 
 /*
@@ -1492,7 +1492,7 @@ bool docu_parsed_s::parse(interpreter_thread_s &it,string_s &a_source)
     }
 
   }
-  while(1);
+  while(true);
 
   return true;
 }/*}}}*/
