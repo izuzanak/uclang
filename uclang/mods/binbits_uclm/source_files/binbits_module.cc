@@ -1940,6 +1940,8 @@ method get_idx
       case c_bin_array_type_uint32:
         index = ((ui_array_s *)ba_ptr->cont)->get_idx(value);
         break;
+      default:
+        cassert(0);
       }
     }/*}}}*/
     break;
@@ -1967,6 +1969,8 @@ method get_idx
       case c_bin_array_type_double:
         index = ((bd_array_s *)ba_ptr->cont)->get_idx(value);
         break;
+      default:
+        cassert(0);
       }
     }/*}}}*/
     break;
@@ -3511,6 +3515,8 @@ method has_key
       case c_bin_dict_type_int64_float64:
         BIC_BIN_DICT_METHOD_HAS_KEY(lli_bd_map);
         break;
+      default:
+        cassert(0);
       }
     }
     break;

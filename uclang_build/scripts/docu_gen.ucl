@@ -397,8 +397,8 @@ class Main
     CLASS_PROPERTIES["Dict"] = class_Dict = new Dict(
     [/*{{{*/
       "description","Container class implementing abstract data type dictionary.",
-      "create_example","new Dict([\"One\",1,\"Two\",2,\"Three\",3])",
-      "create_compare","new Dict([\"One\",1,\"Two\",2,\"Three\",3,\"Four\",4])",
+      "create_example","new Dict([\"Three\",3,\"Two\",2,\"One\",1])",
+      "create_compare","new Dict([\"Four\",4,\"Three\",3,\"Two\",2,\"One\",1])",
       "iter_indexes",["One","Two"],
       "contain_values",["One","Two","Seven"],
       "iter_index_name","key",
@@ -3721,6 +3721,52 @@ keys = obj.keys();
 items = obj.items();
 (\"type items: %%s\\n\" %% $(type items)).print();
 (\"items: %%s\\n\" %% $items).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "unordered_keys#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                m_meth_descr_lst.push("Retrieve unordered keys contained in object of class `%s`. Keys are returned as object of class %s." % [class_name,doc_class_ref("Array")]);
+                m_meth_return_lst.push("* Object of class %s containing all keys." % doc_class_ref("Array"));
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  m_meth_ex_code = ("
+%s
+(\"obj: %%s\\n\" %% $obj).print();
+unordered_keys = obj.unordered_keys();
+(\"type unordered_keys: %%s\\n\" %% $(type unordered_keys)).print();
+(\"unordered_keys: %%s\\n\" %% $unordered_keys).print();
+" % obj_code);
+                }
+              }
+            }/*}}}*/
+            case "unordered_items#0":
+            {/*{{{*/
+              if (a_method.is_static()) new Exception("Method \"%s\" is static" % method_name).throw();
+
+              if (class_is_container(a_class))
+              {
+                m_meth_descr_lst.push("Retrieve list of unordered elements contained in object of class `%s`. Elements are returned as object of class %s." % [class_name,doc_class_ref("Array")]);
+                m_meth_return_lst.push("* Object of class %s containing all elements." % doc_class_ref("Array"));
+
+                obj_code = get_code(a_class,"obj","create_example");
+
+                if (Blank != obj_code)
+                {
+                  m_meth_ex_code = ("
+%s
+(\"obj: %%s\\n\" %% $obj).print();
+unordered_items = obj.unordered_items();
+(\"type unordered_items: %%s\\n\" %% $(type unordered_items)).print();
+(\"unordered_items: %%s\\n\" %% $unordered_items).print();
 " % obj_code);
                 }
               }

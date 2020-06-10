@@ -37,7 +37,7 @@ Convert object of any type to its binary representation.
 **Example:**
 
 ```cpp
-data = Pack.pack(new Dict(["One",1,"Two",2,"Three",3]));
+data = Pack.pack(new Dict(["Three",3,"Two",2,"One",1]));
 ("data.length(): %d\n" % data.length()).print();
 ```
 ```
@@ -61,7 +61,7 @@ Creates object from its binary representation.
 **Example:**
 
 ```cpp
-data = Pack.pack(new Dict(["One",1,"Two",2,"Three",3]));
+data = Pack.pack(new Dict(["Three",3,"Two",2,"One",1]));
 result = Pack.unpack(data);
 ("result: %s\n" % $result).print();
 ```

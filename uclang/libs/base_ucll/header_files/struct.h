@@ -302,9 +302,12 @@ inlines bc_array_s
 
 inline void bc_array_s::append(unsigned a_count,const char *a_data)
 {/*{{{*/
-  unsigned old_used = used;
-  push_blanks(a_count);
-  memcpy(data + old_used,a_data,a_count);
+  if (a_count != 0)
+  {
+    unsigned old_used = used;
+    push_blanks(a_count);
+    memcpy(data + old_used,a_data,a_count);
+  }
 }/*}}}*/
 
 inline void bc_array_s::append_format(const char *a_format,...)

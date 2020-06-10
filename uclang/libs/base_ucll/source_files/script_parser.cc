@@ -8637,7 +8637,8 @@ bool script_parser_s::generate_method_intermediate_code()
   im_descr.found_operands.used = 0;
   memset(im_descr.var_name_fo_map.data,(int)c_idx_not_exist,im_descr.var_name_fo_map.used*sizeof(unsigned));
   memset(im_descr.const_idx_fo_map.data,(int)c_idx_not_exist,im_descr.const_idx_fo_map.used*sizeof(unsigned));
-  memset(im_descr.static_vi_fo_map.data,(int)c_idx_not_exist,im_descr.static_vi_fo_map.used*sizeof(unsigned));
+  if (im_descr.static_vi_fo_map.used != 0)
+    memset(im_descr.static_vi_fo_map.data,(int)c_idx_not_exist,im_descr.static_vi_fo_map.used*sizeof(unsigned));
 
   unsigned me_idx = 0;
   unsigned *fgn_ptr = fg.nodes.data;
@@ -8846,7 +8847,8 @@ void script_parser_s::generate_intermediate_code()
       im_descr.found_operands.used = 0;
       memset(im_descr.var_name_fo_map.data,(int)c_idx_not_exist,im_descr.var_name_fo_map.used*sizeof(unsigned));
       memset(im_descr.const_idx_fo_map.data,(int)c_idx_not_exist,im_descr.const_idx_fo_map.used*sizeof(unsigned));
-      memset(im_descr.static_vi_fo_map.data,(int)c_idx_not_exist,im_descr.static_vi_fo_map.used*sizeof(unsigned));
+      if (im_descr.static_vi_fo_map.used != 0)
+        memset(im_descr.static_vi_fo_map.data,(int)c_idx_not_exist,im_descr.static_vi_fo_map.used*sizeof(unsigned));
 
       // - cycle through records of all classes sorted by deep of nesting -
       do
@@ -8959,7 +8961,8 @@ void script_parser_s::generate_intermediate_code()
         im_descr.found_operands.used = 0;
         memset(im_descr.var_name_fo_map.data,(int)c_idx_not_exist,im_descr.var_name_fo_map.used*sizeof(unsigned));
         memset(im_descr.const_idx_fo_map.data,(int)c_idx_not_exist,im_descr.const_idx_fo_map.used*sizeof(unsigned));
-        memset(im_descr.static_vi_fo_map.data,(int)c_idx_not_exist,im_descr.static_vi_fo_map.used*sizeof(unsigned));
+        if (im_descr.static_vi_fo_map.used != 0)
+          memset(im_descr.static_vi_fo_map.data,(int)c_idx_not_exist,im_descr.static_vi_fo_map.used*sizeof(unsigned));
 
         unsigned *vri_ptr = variable_record_idxs.data;
         unsigned *vri_ptr_end = vri_ptr + variable_record_idxs.used;

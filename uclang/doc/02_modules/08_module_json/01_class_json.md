@@ -36,11 +36,11 @@ Object of class `String` containing `JSON` representation of method parameter.
 **Example:**
 
 ```cpp
-obj = Json.create(new Dict(["One",1,"Two",2,"Three",3]));
+obj = Json.create(new Dict(["Three",3,"Two",2,"One",1]));
 ("obj: %s\n" % obj).print();
 ```
 ```
-obj: {"One":1,"Two":2,"Three":3}
+obj: {"Three":3,"Two":2,"One":1}
 ```
 
 <a name="create_nice#2" />
@@ -62,15 +62,15 @@ Object of class `String` containing `JSON` representation of method parameter.
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Three",3]);
+dict = new Dict(["Three",3,"Two",2,"One",1]);
 obj = Json.create_nice(dict,"   ");
 ("obj: %s\n" % obj).print();
 ```
 ```
 obj: {
-   "One": 1,
+   "Three": 3,
    "Two": 2,
-   "Three": 3
+   "One": 1
 }
 ```
 
@@ -94,15 +94,15 @@ Object of class `String` containing `JSON` representation of method parameter.
 **Example:**
 
 ```cpp
-dict = new Dict(["One",1,"Two",2,"Three",3]);
+dict = new Dict(["Three",3,"Two",2,"One",1]);
 obj = Json.create_nice(dict,"   ","|||");
 ("obj: %s\n" % obj).print();
 ```
 ```
 obj: {
-|||   "One": 1,
+|||   "Three": 3,
 |||   "Two": 2,
-|||   "Three": 3
+|||   "One": 1
 |||}
 ```
 

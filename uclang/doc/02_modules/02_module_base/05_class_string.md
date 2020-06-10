@@ -436,7 +436,7 @@ concatenated to one string, with object of class `String` used as separator.
 ```cpp
 obj = [1,2,3,4,5];
 ("res: %s\n" % $" ".join(obj)).print();
-obj = new Dict(["One",1,"Two",2,"Three",3]);
+obj = new Dict(["Three",3,"Two",2,"One",1]);
 ("res: %s\n" % $" ".join(obj)).print();
 obj = ["numbers:",1,2,3,4,"end"];
 ("res: %s\n" % $" ".join(obj)).print();

@@ -16,6 +16,7 @@ public class Main
 
     // Read data from socket
     ("Client: Data: %s" % socket.read()).print();
+    File.stdout.flush();
 
     // Write data to socket
     socket.write("Data cli -> srv\n");
