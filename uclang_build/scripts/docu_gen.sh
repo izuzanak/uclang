@@ -1,5 +1,7 @@
 #!/bin/bash
 
+mkdir -p snippets
+
 # Generate base documentation
 uclang scripts/docu_gen.ucl Blank ../uclang/doc/02_modules/02_module_base/01_class_blank.md
 uclang scripts/docu_gen.ucl Char ../uclang/doc/02_modules/02_module_base/02_class_char.md
