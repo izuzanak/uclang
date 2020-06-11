@@ -115,7 +115,7 @@ class Main
 
   static CLASS_PROPERTIES;
 
-  static public SNIPPET_FILE = "./snippet.ucl";
+  static public SNIPPET_FILE = "./snippets/snippet_%s.ucl";
   static public METHOD_SOURCES_FILE = "/tmp/method_sources";
 
   static public TYPE_PRIORITY = new Dict(
@@ -171,8 +171,10 @@ class Main
 " % a_code);
     }
 
-    new File(SNIPPET_FILE,"w").write_close(code.to_string(""));
-    resp = new Pipe("./uclang %s 2>&1" % SNIPPET_FILE,"r").read_close();
+    snippet_filename = SNIPPET_FILE % m_arg_class;
+    new File(snippet_filename,"w").write_close(code.to_string(""));
+    resp = new Pipe("./uclang %s 2>&1" % snippet_filename,"r").read_close();
+    Sys.remove(snippet_filename);
 
     return resp;
   }/*}}}*/
@@ -5422,6 +5424,7 @@ TODO example result
     m_arg_modules = a_argv.length() > 3 ? a_argv[3].split(":") : [];
 
     // - retrieve method sources -
+    METHOD_SOURCES_FILE = "/tmp/method_sources_%s" % m_arg_class;
     Sys.system("grep -n 'bool .\\+(interpreter_thread_s &it,unsigned stack_base,uli \\*operands)' $(find ../uclang/mods/ -name '*.cc') > '%s'" % METHOD_SOURCES_FILE);
 
     // - retrieve target class -
@@ -5439,6 +5442,9 @@ TODO example result
 
     // - write result to target File -
     new File(m_arg_file,"w").write_close(m_descr_lst.to_string("\n"));
+
+    // - remove method sources file -
+    Sys.remove(METHOD_SOURCES_FILE);
   }/*}}}*/
 
   static public main(argv)

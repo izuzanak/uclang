@@ -206,7 +206,7 @@ catch (exc)
 ```
 ```
 obj.get_file_name(): <blank>
-exc.get_file_name(): ./snippet.ucl
+exc.get_file_name(): ./snippets/snippet_Exception.ucl
 ```
 
 <a name="get_line#0" />
@@ -262,7 +262,7 @@ catch (exc)
 ```
 ```
  ---------------------------------------- 
-Exception: ERROR: in file: "./snippet.ucl" on line: 8
+Exception: ERROR: in file: "./snippets/snippet_Exception.ucl" on line: 8
   new Exception("Simple exception").throw();
 
 Simple exception

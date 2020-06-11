@@ -115,7 +115,7 @@ obj.read();
 ```
 ```
  ---------------------------------------- 
-Exception: ERROR: in file: "./snippet.ucl" on line: 10
+Exception: ERROR: in file: "./snippets/snippet_Pipe.ucl" on line: 10
 obj.read();
 
 Stream is not opened
