@@ -133,7 +133,7 @@ location_s *prolog_c::prolog_term_value(interpreter_thread_s &it,term_t term,uli
     }/*}}}*/
   case PL_INTEGER:
     {/*{{{*/
-      long long int value;
+      int64_t value;
 
       // - ERROR -
       if (!PL_get_int64(term,&value))
