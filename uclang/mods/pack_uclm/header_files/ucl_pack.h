@@ -93,8 +93,8 @@ inlines name_pos_tree_s
 
 inline int name_pos_tree_s::__compare_value(name_pos_s &a_first,name_pos_s &a_second)
 {/*{{{*/
-  register unsigned first = a_first.ui_first;
-  register unsigned second = a_second.ui_first;
+  unsigned first = a_first.ui_first;
+  unsigned second = a_second.ui_first;
 
   return first < second ? -1 : (first > second ? 1 : 0);
 }/*}}}*/

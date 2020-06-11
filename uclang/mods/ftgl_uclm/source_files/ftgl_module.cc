@@ -1213,14 +1213,14 @@ method push_text
     float &ss3 = vertices[15+3];
     float &st3 = vertices[15+4];
   ,
-    register float x0 = pos_x + glyph_ptr->offset_x;
-    register float y0 = pos_y + glyph_ptr->offset_y;
-    register float x1 = x0 + glyph_ptr->width;
-    register float y1 = y0 - glyph_ptr->height;
-    register float s0 = glyph_ptr->s0;
-    register float t0 = glyph_ptr->t0;
-    register float s1 = glyph_ptr->s1;
-    register float t1 = glyph_ptr->t1;
+    float x0 = pos_x + glyph_ptr->offset_x;
+    float y0 = pos_y + glyph_ptr->offset_y;
+    float x1 = x0 + glyph_ptr->width;
+    float y1 = y0 - glyph_ptr->height;
+    float s0 = glyph_ptr->s0;
+    float t0 = glyph_ptr->t0;
+    float s1 = glyph_ptr->s1;
+    float t1 = glyph_ptr->t1;
 
     sx0 = x0; sy0 = y0; ss0 = s0; st0 = t0;
     sx1 = x0; sy1 = y1; ss1 = s0; st1 = t1;

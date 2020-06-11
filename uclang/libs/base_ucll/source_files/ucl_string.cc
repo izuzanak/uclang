@@ -93,7 +93,7 @@ unsigned string_s::utf32_to_utf8(unsigned *a_src,char *a_trg,unsigned a_size)
   unsigned *s_ptr_end = s_ptr + a_size;
   unsigned char *t_ptr = (unsigned char *)a_trg;
   do {
-    register unsigned value = *s_ptr;
+    unsigned value = *s_ptr;
 
     if (value <= 0x7f)
     {

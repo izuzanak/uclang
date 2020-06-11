@@ -32,7 +32,7 @@ void cipher_s::create(unsigned a_length,const char *a_data)
 {/*{{{*/
   cassert(a_length > 0);
 
-  register unsigned idx = 0;
+  unsigned idx = 0;
   do {
     state[idx] = idx;
   } while(++idx < 256);
@@ -44,7 +44,7 @@ void cipher_s::create(unsigned a_length,const char *a_data)
   do {
     j = j + state[i] + key[i % a_length];
 
-    register unsigned char state_j = state[j];
+    unsigned char state_j = state[j];
     state[j] = state[i];
     state[i] = state_j;
 

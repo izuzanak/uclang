@@ -416,8 +416,8 @@ void graph_s::incident_edges(unsigned a_vertex_idx,ui_array_s &a_edge_idxs)
 
 inline int comp_int(const void *first,const void *second)
 {/*{{{*/
-  register unsigned f_val = *((unsigned *)first);
-  register unsigned s_val = *((unsigned *)second);
+  unsigned f_val = *((unsigned *)first);
+  unsigned s_val = *((unsigned *)second);
 
   return (f_val > s_val?-1:(f_val < s_val)?1:0);
 }/*}}}*/

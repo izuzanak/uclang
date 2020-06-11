@@ -2535,7 +2535,7 @@ bool reg_parser_s::parse_reg_exp(string_s &source_string)
       {
         lalr_stack_element_s &lse = lalr_stack[lalr_stack.used - 1];
 
-        register char *t_ptr = source_string.data + lse.terminal_start + 1;
+        char *t_ptr = source_string.data + lse.terminal_start + 1;
         in_char = process_char(t_ptr);
 
         goto c_reduce_char_lbl;
@@ -2557,7 +2557,7 @@ bool reg_parser_s::parse_reg_exp(string_s &source_string)
       {
         lalr_stack_element_s &lse = lalr_stack[lalr_stack.used - 1];
 
-        register char *t_ptr = source_string.data + lse.terminal_start + 2;
+        char *t_ptr = source_string.data + lse.terminal_start + 2;
         in_char = c_no_char_base + process_char(t_ptr);
       }
 

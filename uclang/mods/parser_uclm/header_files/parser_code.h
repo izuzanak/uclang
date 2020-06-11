@@ -779,7 +779,7 @@ inlines p_lalr_table_s
 
 inline unsigned &p_lalr_table_s::value(unsigned a_x_idx,unsigned a_y_idx)
 {/*{{{*/
-  register unsigned t_idx = a_y_idx*x_size + a_x_idx;
+  unsigned t_idx = a_y_idx*x_size + a_x_idx;
   debug_assert(t_idx < table.used);
   return table.data[t_idx];
 }/*}}}*/
