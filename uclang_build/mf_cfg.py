@@ -1,6 +1,6 @@
 
 import os;
-from mf_mods import *
+from mf_mods import c_enabled
 
 C_UCLANG_DIR = os.sep.join(os.getcwd().split(os.sep)[:-1] + ["uclang" + os.sep])
 

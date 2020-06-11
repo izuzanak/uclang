@@ -233,6 +233,8 @@ union v_data_type
   v_data_type(char a_bc) { lli = a_bc; }                             // NOLINT
   v_data_type(int a_bi) { lli = a_bi; }                              // NOLINT
   v_data_type(unsigned a_ui) { lli = a_ui; }                         // NOLINT
+  v_data_type(long int a_li) { lli = a_li; }                         // NOLINT
+  v_data_type(long unsigned a_lu) { llu = a_lu; }                    // NOLINT
   v_data_type(long long int a_lli) { lli = a_lli; }                  // NOLINT
   v_data_type(long long unsigned a_llu) { llu = a_llu; }             // NOLINT
   v_data_type(double a_bd) { bd = a_bd; }                            // NOLINT
@@ -241,6 +243,8 @@ union v_data_type
   operator char () const { return lli; }                       // NOLINT
   operator int () const { return lli; }                        // NOLINT
   operator unsigned () const { return lli; }                   // NOLINT
+  operator long int () const { return lli; }                   // NOLINT
+  operator long unsigned () const { return llu; }              // NOLINT
   operator long long int () const { return lli; }              // NOLINT
   operator long long unsigned () const { return llu; }         // NOLINT
   operator double () const { return bd; }                      // NOLINT

@@ -43,10 +43,13 @@ extraction:
       command:
         - git clone --branch=master https://github.com/izuzanak/cont.git $LGTM_WORKSPACE/cont
         - cd $LGTM_WORKSPACE/cont/build
-        - cmake ..
+        - cmake -DCMAKE_INSTALL_PREFIX=install ..
         - make
-        - sudo make install
+        - make install
     index:
       build_command:
-        - "make -j4"
+        - export PATH=$PATH:$LGTM_WORKSPACE/cont/build/install/bin
+        - cd $LGTM_SRC/build
+        - cmake ..
+        - make
 
