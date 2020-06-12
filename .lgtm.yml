@@ -1,4 +1,8 @@
 
+#path_classifiers:
+#  generated:
+#    - exclude: cpp_src/**/*
+
 extraction:
   cpp:
     prepare:
@@ -49,7 +53,11 @@ extraction:
     index:
       build_command:
         - export PATH=$PATH:$LGTM_WORKSPACE/cont/build/install/bin
-        - cd $LGTM_SRC/build
+        - cd $LGTM_SRC/cpp_src/gen
+        - cmake ..
+        - cd proc_files
+        - mkdir -p build
+        - cd build
         - cmake ..
         - make
 

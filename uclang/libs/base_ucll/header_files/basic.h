@@ -429,6 +429,22 @@ typedef long unsigned t_ps_uint;
 typedef unsigned t_ps_uint;
 #endif
 
+// - cont basic types -
+typedef bool bb;
+typedef char bc;
+typedef unsigned char uc;
+typedef short int si;
+typedef unsigned short int usi;
+typedef int bi;
+typedef unsigned int ui;
+typedef long int li;
+typedef unsigned long uli;
+typedef long long int lli;
+typedef unsigned long long int ulli;
+typedef float bf;
+typedef double bd;
+typedef long double ld;
+
 // - pointer typedef -
 typedef void * pointer;
 @begin

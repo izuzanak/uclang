@@ -524,7 +524,7 @@ class project_c:
       string += "   $(%s_SOURCE_%d)%s%s\n" % (self.abbr,self.sources[s_idx][1],os.sep,self.sources[s_idx][0])
 
       string += self.conf.str_message("Process   : %s : %s" % (self.project_name,self.sources[s_idx][0]))
-      string += "\t$(PROC) %s" % self.sources[s_idx][0]
+      string += "\t$(PROC) --geninc %s" % self.sources[s_idx][0]
 
       hd_idx = 0
       while hd_idx < len(self.header_dirs):
