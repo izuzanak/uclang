@@ -25,6 +25,9 @@ struct mutex_s
 #else
 #endif
 
+  mutex_s() = default;
+  mutex_s(const mutex_s &a_src) = delete;
+
   inline unsigned init();
   inline unsigned clear();
   inline void flush_all() {}
@@ -32,7 +35,7 @@ struct mutex_s
   {
     cassert(0);
   }
-  inline mutex_s &operator=(mutex_s &a_src)
+  inline mutex_s &operator=(const mutex_s &a_src)
   {
     cassert(0);
     return *this;

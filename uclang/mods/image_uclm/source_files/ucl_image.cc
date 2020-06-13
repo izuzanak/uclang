@@ -174,7 +174,7 @@ bool image_s::io_fill(unsigned char *a_color)
   return true;
 }/*}}}*/
 
-bool image_s::io_copy(image_s &a_src)
+bool image_s::io_copy(const image_s &a_src)
 {/*{{{*/
   if (pixel_format != a_src.pixel_format || width != a_src.width || height != a_src.height || pixel_format == c_image_pixel_format_blank)
   {
@@ -187,7 +187,7 @@ bool image_s::io_copy(image_s &a_src)
 
   unsigned char *ptr = image_data_ptr->data + y_pos*line_size + x_pos*pixel_step;
   unsigned char *ptr_end = ptr + (height - 1)*line_size + width*pixel_step;
-  unsigned char *s_ptr = a_src.image_data_ptr->data + a_src.y_pos*s_line_size + a_src.x_pos*pixel_step;
+  const unsigned char *s_ptr = a_src.image_data_ptr->data + a_src.y_pos*s_line_size + a_src.x_pos*pixel_step;
 
   do {
     memcpy(ptr,s_ptr,image_ls);

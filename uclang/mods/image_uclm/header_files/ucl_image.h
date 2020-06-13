@@ -66,11 +66,14 @@ struct image_s
   unsigned pixel_step;
   image_data_s *image_data_ptr;
 
+  image_s() = default;
+  image_s(const image_s &a_src) = delete;
+
   inline void init();
   inline void clear();
   inline void flush_all() {}
   inline void swap(image_s &a_second);
-  inline image_s &operator=(image_s &a_src);
+  inline image_s &operator=(const image_s &a_src);
   bool operator==(image_s &a_second);
 
   bool create_header(unsigned a_width,unsigned a_height,unsigned a_pixel_format);
@@ -80,7 +83,7 @@ struct image_s
 
   bool io_clear();
   bool io_fill(unsigned char *a_color);
-  bool io_copy(image_s &a_src);
+  bool io_copy(const image_s &a_src);
   bool io_convert(image_s &a_src);
   bool io_apply(image_s &a_src);
   bool io_normalize(image_s &a_src);
@@ -188,7 +191,7 @@ inline void image_s::swap(image_s &a_second)
   a_second.image_data_ptr = tmp_image_data_ptr;
 }/*}}}*/
 
-inline image_s &image_s::operator=(image_s &a_src)
+inline image_s &image_s::operator=(const image_s &a_src)
 {/*{{{*/
   if (a_src.pixel_format == c_image_pixel_format_blank)
   {

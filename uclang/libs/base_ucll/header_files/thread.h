@@ -24,6 +24,9 @@ struct thread_s
   TSK_Handle tsk_handle;
 #endif
 
+  thread_s() = default;
+  thread_s(const thread_s &a_src) = delete;
+
   inline void init()
   {
     debug_message_2(fprintf(stderr,"thread_s::init()\n"););
@@ -37,7 +40,7 @@ struct thread_s
   {
     cassert(0);
   }
-  inline thread_s &operator=(thread_s &a_src)
+  inline thread_s &operator=(const thread_s &a_src)
   {
     cassert(0);
     return *this;

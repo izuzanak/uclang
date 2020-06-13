@@ -29,6 +29,9 @@ struct string_s
   unsigned size;
   char *data;
 
+  string_s() = default;
+  string_s(const string_s &a_src) = delete;
+
   /*!
    * \brief initialization of string variables
    */
@@ -84,7 +87,7 @@ struct string_s
    * \param a_src - reference to another string
    * \return reference to this string
    */
-  inline string_s &operator=(string_s &a_src);
+  inline string_s &operator=(const string_s &a_src);
 
   /*!
    * \brief compare value with another string
@@ -280,7 +283,7 @@ inline char &string_s::operator[](unsigned a_idx)
   return data[a_idx];
 }/*}}}*/
 
-inline string_s &string_s::operator=(string_s &a_src)
+inline string_s &string_s::operator=(const string_s &a_src)
 {/*{{{*/
   clear();
 

@@ -29,6 +29,9 @@ struct cipher_s
   unsigned char j;
   unsigned char state[256];
 
+  cipher_s() = default;
+  cipher_s(const cipher_s &a_src) = delete;
+
   /*!
    * \brief initialization of cipher variables
    */
@@ -58,7 +61,7 @@ struct cipher_s
    * \param src - reference to another cipher
    * \return reference to this cipher
    */
-  inline cipher_s &operator=(cipher_s &src)
+  inline cipher_s &operator=(const cipher_s &src)
   {
     cassert(0);
     return *this;

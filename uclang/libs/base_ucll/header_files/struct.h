@@ -250,6 +250,7 @@ union v_data_type
   operator double () const { return bd; }                      // NOLINT
   template <class T> operator T* () const { return (T *)ptr; } // NOLINT
 
+  v_data_type(const v_data_type &a_src) : lli(a_src.lli) {}
   v_data_type& operator=(const v_data_type &a_src) { lli = a_src.lli; return *this; }
   bool operator==(const v_data_type &a_second) { return lli == a_second.lli; }
 };

@@ -48,6 +48,9 @@ struct datetime_s
   unsigned short usec;  // microseconds (0..999)
   unsigned short nsec;  // nanoseconds (0..999)
 
+  datetime_s() = default;
+  datetime_s(const datetime_s &a_src) = delete;
+
   inline void init();
   inline void clear() {};
 
@@ -62,7 +65,7 @@ struct datetime_s
    * \param src - reference to another datetime
    * \return reference to this datetime
    */
-  inline datetime_s &operator=(datetime_s &src);
+  inline datetime_s &operator=(const datetime_s &src);
 
   /*!
    * \brief compare values with another datetime
@@ -127,7 +130,7 @@ inline void datetime_s::swap(datetime_s &second)
   DATE_TIME_SWAP(us_tmp,nsec,second.nsec);
 }/*}}}*/
 
-inline datetime_s &datetime_s::operator=(datetime_s &src)
+inline datetime_s &datetime_s::operator=(const datetime_s &src)
 {/*{{{*/
   memcpy(this,&src,sizeof(datetime_s));
   return *this;

@@ -22,13 +22,16 @@ struct atomic_s
   volatile LONG counter;
 #endif
 
+  atomic_s() = default;
+  atomic_s(const atomic_s &a_src) = delete;
+
   inline void init() {}
   inline void clear() {}
   inline void swap(atomic_s &a_second)
   {
     cassert(0);
   }
-  inline atomic_s &operator=(atomic_s &a_src)
+  inline atomic_s &operator=(const atomic_s &a_src)
   {
     cassert(0);
     return *this;

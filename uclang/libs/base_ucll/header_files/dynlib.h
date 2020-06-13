@@ -22,11 +22,14 @@ struct dynlib_s
   HMODULE lib_ptr;
 #endif
 
+  dynlib_s() = default;
+  dynlib_s(const dynlib_s &a_src) = delete;
+
   inline void init();
   inline void clear();
   inline void flush_all() {}
   inline void swap(dynlib_s &a_second);
-  inline dynlib_s &operator=(dynlib_s &a_src)
+  inline dynlib_s &operator=(const dynlib_s &a_src)
   {
     cassert(0);
     return *this;
