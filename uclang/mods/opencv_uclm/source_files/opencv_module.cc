@@ -490,7 +490,7 @@ bool bic_cv_mat_operator_binary_equal(interpreter_thread_s &it,unsigned stack_ba
 bool bic_cv_mat_method_CvMat_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 
-  // FIXME TODO continue ...
+  // TODO continue ...
   BIC_TODO_ERROR(__FILE__,__LINE__);
   return false;
 }/*}}}*/

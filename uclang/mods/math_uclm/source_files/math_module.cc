@@ -2308,7 +2308,7 @@ location_s *bic_primes_item(interpreter_thread_s &it,location_s *location_ptr,un
 
   long long int prime = primes_ptr->get_prime(index);
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   cassert(prime != c_idx_not_exist);
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,prime);

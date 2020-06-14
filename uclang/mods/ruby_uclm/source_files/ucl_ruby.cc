@@ -270,10 +270,10 @@ location_s *ruby_c::ruby_value_value(interpreter_thread_s &it,VALUE rv_value,uli
 
         size_t idx = 0;
         do {
-          VALUE rv_key = RARRAY_AREF(kv_pairs,idx);
-          VALUE rv_value = RARRAY_AREF(kv_pairs,idx + 1);
+          VALUE hrv_key = RARRAY_AREF(kv_pairs,idx);
+          VALUE hrv_value = RARRAY_AREF(kv_pairs,idx + 1);
 
-          location_s *key_location = ruby_value_value(it,rv_key,source_pos);
+          location_s *key_location = ruby_value_value(it,hrv_key,source_pos);
 
           // - ERROR -
           if (key_location == nullptr)
@@ -282,7 +282,7 @@ location_s *ruby_c::ruby_value_value(interpreter_thread_s &it,VALUE rv_value,uli
             return nullptr;
           }
 
-          location_s *value_location = ruby_value_value(it,rv_value,source_pos);
+          location_s *value_location = ruby_value_value(it,hrv_value,source_pos);
 
           // - ERROR -
           if (value_location == nullptr)

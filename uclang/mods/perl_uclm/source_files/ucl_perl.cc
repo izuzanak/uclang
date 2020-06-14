@@ -171,7 +171,7 @@ SV *perl_c::create_perl_sv(interpreter_thread_s &it,PerlInterpreter *my_perl,loc
 location_s *perl_c::perl_sv_value(interpreter_thread_s &it,PerlInterpreter *my_perl,SV *sv,uli source_pos)
 {/*{{{*/
 
-  //// FIXME debug output
+  //// debug output
   //switch (SvTYPE(sv))
   //{
   //  case SVt_NULL: fprintf(stderr,"SVt_NULL\n"); break;

@@ -20,7 +20,7 @@ glut_c g_glut;
 
 #ifdef EMSCRIPTEN
 #define GLUT_CALLBACK_ERROR_CODE \
-  /* FIXME TODO terminate empscripten glut main loop */\
+  /* TODO terminate empscripten glut main loop */\
   exit(0)
 #else
 #define GLUT_CALLBACK_ERROR_CODE \

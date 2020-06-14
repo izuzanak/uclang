@@ -407,7 +407,7 @@ location_s *bic_queue_item(interpreter_thread_s &it,location_s *location_ptr,uns
 {/*{{{*/
   pointer_queue_s *queue_ptr = (pointer_queue_s *)location_ptr->v_data_ptr;
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   unsigned req_used = ((index + queue_ptr->size) - queue_ptr->begin)%queue_ptr->size;
   cassert(req_used < queue_ptr->used);
 
@@ -425,7 +425,7 @@ unsigned bic_queue_next_idx(location_s *location_ptr,unsigned index)
 {/*{{{*/
   pointer_queue_s *queue_ptr = (pointer_queue_s *)location_ptr->v_data_ptr;
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   unsigned req_used = ((index + queue_ptr->size) - queue_ptr->begin) % queue_ptr->size;
   cassert(req_used < queue_ptr->used);
 

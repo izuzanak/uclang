@@ -375,7 +375,7 @@ methods create_stack_s
 methods json_parser_s
 @end
 
-unsigned json_parser_s::recognize_terminal(unsigned &a_input_idx)
+unsigned json_parser_s::recognize_terminal(unsigned &a_input_idx) // lgtm [cpp/use-of-goto]
 {/*{{{*/
   unsigned source_string_length = source_string.size - 1;
 

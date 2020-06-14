@@ -7,7 +7,7 @@ include "ucl_base.h"
  * global functions
  */
 
-unsigned sf_terminal_recognize(char **a_ptr)
+unsigned sf_terminal_recognize(char **a_ptr) // lgtm [cpp/use-of-goto]
 {/*{{{*/
 #define SF_GET_NEXT_CHAR() in_char = **a_ptr;
 #define SF_CLOSE_CHAR(RET_TERM_IDX) ++(*a_ptr);

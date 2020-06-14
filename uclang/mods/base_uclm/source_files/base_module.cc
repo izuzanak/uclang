@@ -4379,7 +4379,7 @@ location_s *bic_string_item(interpreter_thread_s &it,location_s *location_ptr,un
 {/*{{{*/
   string_s *string_ptr = (string_s *)location_ptr->v_data_ptr;
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   cassert(index < (string_ptr->size - 1));
 
   char result = string_ptr->data[index];
@@ -4399,7 +4399,7 @@ unsigned bic_string_next_idx(location_s *location_ptr,unsigned index)
   string_s *string_ptr = (string_s *)location_ptr->v_data_ptr;
   unsigned length = string_ptr->size - 1;
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   cassert(index < length);
 
   return (index + 1 < length) ? index + 1 : c_idx_not_exist;
@@ -6041,7 +6041,7 @@ location_s *bic_array_item(interpreter_thread_s &it,location_s *location_ptr,uns
 {/*{{{*/
   pointer_array_s *array_ptr = (pointer_array_s *)location_ptr->v_data_ptr;
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   cassert(index < array_ptr->used);
 
   pointer *element_location = &array_ptr->data[index];
@@ -6058,7 +6058,7 @@ unsigned bic_array_next_idx(location_s *location_ptr,unsigned index)
 {/*{{{*/
   pointer_array_s *array_ptr = (pointer_array_s *)location_ptr->v_data_ptr;
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   cassert(index < array_ptr->used);
 
   return (index + 1 < array_ptr->used) ? index + 1 : c_idx_not_exist;

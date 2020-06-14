@@ -459,8 +459,8 @@ define pointer_ptr basic
 
 // - time measuring data structures -
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
-extern struct timeval tv;
-extern struct timeval stv;
+extern struct timeval g_measure_tv;
+extern struct timeval g_measure_stv;
 #elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
 libbase_ucll_EXPORT extern long long unsigned tick_cnt;
 #endif
@@ -469,7 +469,7 @@ libbase_ucll_EXPORT extern long long unsigned tick_cnt;
 inline void tm_mark_time()
 {/*{{{*/
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
-  gettimeofday(&tv,nullptr);
+  gettimeofday(&g_measure_tv,nullptr);
 #elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
   tick_cnt = GetTickCount64();
 #endif
@@ -479,8 +479,8 @@ inline void tm_mark_time()
 inline long long int tm_time_diff()
 {/*{{{*/
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
-  gettimeofday(&stv,nullptr);
-  return stv.tv_usec - tv.tv_usec + (stv.tv_sec - tv.tv_sec)*1000000LL;
+  gettimeofday(&g_measure_stv,nullptr);
+  return g_measure_stv.tv_usec - g_measure_tv.tv_usec + (g_measure_stv.tv_sec - g_measure_tv.tv_sec)*1000000LL;
 #elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
   return (GetTickCount64() - tick_cnt)*1000;
 #else

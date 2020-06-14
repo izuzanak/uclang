@@ -985,7 +985,7 @@ method SnmpAgent
       snmpa_ptr->clear(it);
       cfree(snmpa_ptr);
 
-      // FIXME TODO implement
+      // TODO implement
       BIC_TODO_ERROR(__FILE__,__LINE__);
       return false;
     }

@@ -335,7 +335,7 @@ location_s *bic_stack_item(interpreter_thread_s &it,location_s *location_ptr,uns
 {/*{{{*/
   pointer_array_s *array_ptr = (pointer_array_s *)location_ptr->v_data_ptr;
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   cassert(index < array_ptr->used);
 
   pointer *element_location = &array_ptr->data[index];
@@ -352,7 +352,7 @@ unsigned bic_stack_next_idx(location_s *location_ptr,unsigned index)
 {/*{{{*/
   pointer_array_s *array_ptr = (pointer_array_s *)location_ptr->v_data_ptr;
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   cassert(index < array_ptr->used);
 
   return (index + 1 < array_ptr->used) ? index + 1 : c_idx_not_exist;

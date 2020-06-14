@@ -1,8 +1,4 @@
 
-#path_classifiers:
-#  generated:
-#    - exclude: cpp_src/**/*
-
 extraction:
   cpp:
     prepare:
@@ -60,4 +56,8 @@ extraction:
         - cd build
         - cmake ..
         - make
+
+path_classifiers:
+  generated:
+    - exclude: cpp_src/**/*
 

@@ -656,7 +656,7 @@ location_s *bic_gz_file_next_item(interpreter_thread_s &it,location_s *location_
   BIC_GZ_FILE_READLN();
 
   // - ERROR -
-  if (ch == -1 && !gzeof(gzf_ptr))
+  if (ch == -1 && !gzeof(gzf_ptr)) // lgtm [cpp/constant-comparison]
   {
     line_buffer.clear();
 

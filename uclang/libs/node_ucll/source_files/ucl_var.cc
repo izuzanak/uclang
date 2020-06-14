@@ -2454,16 +2454,19 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
   // - module time -
   if (a_modules[c_uclvar_module_time])
   {
+    // - no module variables -
   }
 
   // - module pack -
   if (a_modules[c_uclvar_module_pack])
   {
+    // - no module variables -
   }
 
   // - module parser -
   if (a_modules[c_uclvar_module_parser])
   {
+    // - no module variables -
   }
 
   // - module sqlite -
@@ -2719,26 +2722,31 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
   // - module node -
   if (a_modules[c_uclvar_module_node])
   {
+    // - no module variables -
   }
 
   // - module containers -
   if (a_modules[c_uclvar_module_containers])
   {
+    // - no module variables -
   }
 
   // - module algorithms -
   if (a_modules[c_uclvar_module_algorithms])
   {
+    // - no module variables -
   }
 
   // - module json -
   if (a_modules[c_uclvar_module_json])
   {
+    // - no module variables -
   }
 
   // - module xml -
   if (a_modules[c_uclvar_module_xml])
   {
+    // - no module variables -
   }
 
   /*}}}*/
@@ -2848,6 +2856,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
   // - module time -
   if (a_modules[c_uclvar_module_time])
   {
+    // - no static methods -
   }
 
   // - module pack -
@@ -2966,6 +2975,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
   // - module containers -
   if (a_modules[c_uclvar_module_containers])
   {
+    // - no static methods -
   }
 
   // - module algorithms -
@@ -3214,16 +3224,19 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
   // - module time -
   if (a_modules[c_uclvar_module_time])
   {
+    // - no static constants -
   }
 
   // - module pack -
   if (a_modules[c_uclvar_module_pack])
   {
+    // - no static constants -
   }
 
   // - module parser -
   if (a_modules[c_uclvar_module_parser])
   {
+    // - no static constants -
   }
 
   // - module sqlite -
@@ -3479,26 +3492,31 @@ void UclVar::Initialize(interpreter_s &a_interpreter,bool *a_modules)
   // - module node -
   if (a_modules[c_uclvar_module_node])
   {
+    // - no static constants -
   }
 
   // - module containers -
   if (a_modules[c_uclvar_module_containers])
   {
+    // - no static constants -
   }
 
   // - module algorithms -
   if (a_modules[c_uclvar_module_algorithms])
   {
+    // - no static constants -
   }
 
   // - module json -
   if (a_modules[c_uclvar_module_json])
   {
+    // - no static constants -
   }
 
   // - module xml -
   if (a_modules[c_uclvar_module_xml])
   {
+    // - no static constants -
   }
 
   /*}}}*/

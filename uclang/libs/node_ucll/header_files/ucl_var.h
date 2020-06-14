@@ -3148,7 +3148,7 @@ class UclVar
 
   // - operator methods -
   /*{{{*/
-  inline UclVar operator=(UclVar a_op)
+  inline UclVar operator=(UclVar a_op) // lgtm [cpp/assignment-does-not-return-this]
   {/*{{{*/
     return __call_1(c_bi_mni_operator_binary_equal_1,a_op);
   }/*}}}*/

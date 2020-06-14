@@ -478,12 +478,12 @@ location_s *bic_dict_item(interpreter_thread_s &it,location_s *location_ptr,unsi
 {/*{{{*/
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)((location_s *)location_ptr)->v_data_ptr;
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   cassert(index < tree_ptr->used);
 
   pointer_map_tree_s_node &node = tree_ptr->data[index];
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   cassert(node.valid);
 
   location_s *element_location = (location_s *)node.object.key;
@@ -508,7 +508,7 @@ unsigned bic_dict_next_idx(location_s *location_ptr,unsigned index)
 {/*{{{*/
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)((location_s *)location_ptr)->v_data_ptr;
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   cassert(index < tree_ptr->used && tree_ptr->data[index].valid);
 
   return tree_ptr->get_next_idx(index);

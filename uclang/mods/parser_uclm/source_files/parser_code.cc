@@ -829,7 +829,7 @@ unsigned final_automata_s::recognize(char *input,unsigned &input_idx,unsigned in
 methods reg_parser_s
 @end
 
-unsigned reg_parser_s::recognize_terminal(string_s &source_string,unsigned &input_idx)
+unsigned reg_parser_s::recognize_terminal(string_s &source_string,unsigned &input_idx) // lgtm [cpp/use-of-goto]
 {/*{{{*/
   unsigned source_string_length = source_string.size - 1;
 
@@ -1535,7 +1535,7 @@ state_36_label:
    if (in_char < 48) {
       goto state_39_label;
    }
-   if (in_char >= 48 && in_char < 56) {
+   if (in_char >= 48 && in_char < 56) { // lgtm [cpp/constant-comparison]
       goto state_55_label;
    }
    if (in_char >= 56 && in_char < 92) {
@@ -1680,7 +1680,7 @@ state_42_label:
    if (in_char < 48) {
       goto state_25_label;
    }
-   if (in_char >= 48 && in_char < 56) {
+   if (in_char >= 48 && in_char < 56) { // lgtm [cpp/constant-comparison]
       goto state_62_label;
    }
    if (in_char >= 56 && in_char < 92) {
@@ -1772,7 +1772,7 @@ state_46_label:
    if (in_char < 48) {
       goto state_27_label;
    }
-   if (in_char >= 48 && in_char < 56) {
+   if (in_char >= 48 && in_char < 56) { // lgtm [cpp/constant-comparison]
       goto state_66_label;
    }
    if (in_char >= 56 && in_char < 92) {
@@ -1926,7 +1926,7 @@ state_55_label:
    if (in_char < 48) {
       goto state_39_label;
    }
-   if (in_char >= 48 && in_char < 56) {
+   if (in_char >= 48 && in_char < 56) { // lgtm [cpp/constant-comparison]
       goto state_70_label;
    }
    if (in_char >= 56 && in_char < 62) {
@@ -1954,7 +1954,7 @@ state_56_label:
    if (in_char < 48) {
       goto state_39_label;
    }
-   if (in_char >= 48 && in_char < 58) {
+   if (in_char >= 48 && in_char < 58) { // lgtm [cpp/constant-comparison]
       goto state_70_label;
    }
    if (in_char >= 58 && in_char < 65) {
@@ -2022,7 +2022,7 @@ state_60_label:
    if (in_char < 48) {
       goto state_25_label;
    }
-   if (in_char >= 48 && in_char < 56) {
+   if (in_char >= 48 && in_char < 56) { // lgtm [cpp/constant-comparison]
       goto state_74_label;
    }
    if (in_char >= 56 && in_char < 92) {
@@ -2101,7 +2101,7 @@ state_64_label:
    if (in_char < 48) {
       goto state_27_label;
    }
-   if (in_char >= 48 && in_char < 56) {
+   if (in_char >= 48 && in_char < 56) { // lgtm [cpp/constant-comparison]
       goto state_76_label;
    }
    if (in_char >= 56 && in_char < 92) {

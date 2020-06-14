@@ -435,12 +435,12 @@ location_s *bic_list_item(interpreter_thread_s &it,location_s *location_ptr,unsi
 {/*{{{*/
   pointer_list_s *list_ptr = (pointer_list_s *)location_ptr->v_data_ptr;
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   cassert(index < list_ptr->used);
 
   pointer_list_s_element &element = list_ptr->data[index];
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   cassert(element.valid);
 
   return it.get_new_reference((location_s **)&element.object);
@@ -455,10 +455,10 @@ unsigned bic_list_next_idx(location_s *location_ptr,unsigned index)
 {/*{{{*/
   pointer_list_s *list_ptr = (pointer_list_s *)location_ptr->v_data_ptr;
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   cassert(index < list_ptr->used);
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   pointer_list_s_element &element = list_ptr->data[index];
   cassert(element.valid);
 

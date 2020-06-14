@@ -187,7 +187,7 @@ inline gtk_c::~gtk_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"gtk_exit()\n"););
 
-  // FIXME debug output
+  // debug output
   //fprintf(stderr,"delegate_count: %u\n",delegates.count);
 
   delegates.clear();

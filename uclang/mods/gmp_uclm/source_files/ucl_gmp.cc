@@ -38,7 +38,7 @@ void gmp_c::mpz_set_lli(mpz_ptr a_mpz,long long int a_value)
   {
     mpz_set_si(a_mpz,a_value);
   }
-  else if (a_value >= 0 && a_value <= ULONG_MAX)
+  else if (a_value >= 0 && (long long unsigned)a_value <= ULONG_MAX)
   {
     mpz_set_ui(a_mpz,a_value);
   }
@@ -57,7 +57,7 @@ int gmp_c::mpz_cmp_lli(mpz_ptr a_mpz,long long int a_value)
     return mpz_cmp_si(a_mpz,a_value);
   }
 
-  if (a_value >= 0 && a_value <= ULONG_MAX)
+  if (a_value >= 0 && (long long unsigned)a_value <= ULONG_MAX)
   {
     return mpz_cmp_ui(a_mpz,a_value);
   }
@@ -73,7 +73,7 @@ int gmp_c::mpz_cmp_lli(mpz_ptr a_mpz,long long int a_value)
 
 void gmp_c::mpz_add_lli(mpz_ptr a_res,mpz_srcptr a_mpz,long long int a_value)
 {/*{{{*/
-  if (a_value >= 0 && a_value <= ULONG_MAX)
+  if (a_value >= 0 && (long long unsigned)a_value <= ULONG_MAX)
   {
     mpz_add_ui(a_res,a_mpz,a_value);
   }
@@ -86,7 +86,7 @@ void gmp_c::mpz_add_lli(mpz_ptr a_res,mpz_srcptr a_mpz,long long int a_value)
 
 void gmp_c::mpz_sub_lli(mpz_ptr a_res,mpz_srcptr a_mpz,long long int a_value)
 {/*{{{*/
-  if (a_value >= 0 && a_value <= ULONG_MAX)
+  if (a_value >= 0 && (long long unsigned)a_value <= ULONG_MAX)
   {
     mpz_sub_ui(a_res,a_mpz,a_value);
   }
@@ -103,7 +103,7 @@ void gmp_c::mpz_mul_lli(mpz_ptr a_res,mpz_srcptr a_mpz,long long int a_value)
   {
     mpz_mul_si(a_res,a_mpz,a_value);
   }
-  else if (a_value >= 0 && a_value <= ULONG_MAX)
+  else if (a_value >= 0 && (long long unsigned)a_value <= ULONG_MAX)
   {
     mpz_mul_ui(a_res,a_mpz,a_value);
   }
@@ -116,7 +116,7 @@ void gmp_c::mpz_mul_lli(mpz_ptr a_res,mpz_srcptr a_mpz,long long int a_value)
 
 void gmp_c::mpz_div_lli(mpz_ptr a_res,mpz_srcptr a_mpz,long long int a_value)
 {/*{{{*/
-  if (a_value >= 0 && a_value <= ULONG_MAX)
+  if (a_value >= 0 && (long long unsigned)a_value <= ULONG_MAX)
   {
     mpz_div_ui(a_res,a_mpz,a_value);
   }
@@ -129,7 +129,7 @@ void gmp_c::mpz_div_lli(mpz_ptr a_res,mpz_srcptr a_mpz,long long int a_value)
 
 void gmp_c::mpz_mod_lli(mpz_ptr a_res,mpz_srcptr a_mpz,long long int a_value)
 {/*{{{*/
-  if (a_value >= 0 && a_value <= ULONG_MAX)
+  if (a_value >= 0 && (long long unsigned)a_value <= ULONG_MAX)
   {
     mpz_mod_ui(a_res,a_mpz,a_value);
   }
@@ -146,7 +146,7 @@ void gmp_c::mpq_set_lli(mpq_ptr a_mpq,long long int a_value)
   {
     mpq_set_si(a_mpq,a_value,1);
   }
-  else if (a_value >= 0 && a_value <= ULONG_MAX)
+  else if (a_value >= 0 && (long long unsigned)a_value <= ULONG_MAX)
   {
     mpq_set_ui(a_mpq,a_value,1);
   }
@@ -162,14 +162,14 @@ void gmp_c::mpq_set_lli_lli(mpq_ptr a_mpq,long long int a_value,long long int a_
 {/*{{{*/
   do
   {
-    if (a_denom >= 0 && a_denom < ULONG_MAX)
+    if (a_denom >= 0 && (long long unsigned)a_denom < ULONG_MAX) // lgtm [cpp/constant-comparison]
     {
       if (a_value >= LONG_MIN && a_value <= LONG_MAX)
       {
         mpq_set_si(a_mpq,a_value,a_denom);
         break;
       }
-      else if (a_value >= 0 && a_value <= ULONG_MAX)
+      else if (a_value >= 0 && (long long unsigned)a_value <= ULONG_MAX)
       {
         mpq_set_ui(a_mpq,a_value,a_denom);
         break;
@@ -212,7 +212,7 @@ int gmp_c::mpq_cmp_lli(mpq_ptr a_mpq,long long int a_value)
     return mpq_cmp_si(a_mpq,a_value,1);
   }
 
-  if (a_value >= 0 && a_value <= ULONG_MAX)
+  if (a_value >= 0 && (long long unsigned)a_value <= ULONG_MAX)
   {
     return mpq_cmp_ui(a_mpq,a_value,1);
   }
@@ -228,7 +228,7 @@ int gmp_c::mpq_cmp_lli(mpq_ptr a_mpq,long long int a_value)
 
 void gmp_c::mpq_add_lli(mpq_ptr a_res,mpq_srcptr a_mpq,long long int a_value)
 {/*{{{*/
-  if (a_value >= 0 && a_value <= ULONG_MAX)
+  if (a_value >= 0 && (long long unsigned)a_value <= ULONG_MAX)
   {
     mpq_set(a_res,a_mpq);
     mpz_addmul_ui(mpq_numref(a_res),mpq_denref(a_res),a_value);
@@ -242,7 +242,7 @@ void gmp_c::mpq_add_lli(mpq_ptr a_res,mpq_srcptr a_mpq,long long int a_value)
 
 void gmp_c::mpq_sub_lli(mpq_ptr a_res,mpq_srcptr a_mpq,long long int a_value)
 {/*{{{*/
-  if (a_value >= 0 && a_value <= ULONG_MAX)
+  if (a_value >= 0 && (long long unsigned)a_value <= ULONG_MAX)
   {
     mpq_set(a_res,a_mpq);
     mpz_submul_ui(mpq_numref(a_res),mpq_denref(a_res),a_value);
@@ -275,7 +275,7 @@ int gmp_c::mpfr_cmp_lli(mpfr_ptr a_mpfr,long long int a_value)
     return mpfr_cmp_si(a_mpfr,a_value);
   }
 
-  if (a_value >= 0 && a_value <= ULONG_MAX)
+  if (a_value >= 0 && (long long unsigned)a_value <= ULONG_MAX)
   {
     return mpfr_cmp_ui(a_mpfr,a_value);
   }
@@ -295,7 +295,7 @@ void gmp_c::mpfr_add_lli(mpfr_ptr a_res,mpfr_srcptr a_mpfr,long long int a_value
   {
     mpfr_add_si(a_res,a_mpfr,a_value,a_rnd);
   }
-  else if (a_value >= 0 && a_value <= ULONG_MAX)
+  else if (a_value >= 0 && (long long unsigned)a_value <= ULONG_MAX)
   {
     mpfr_add_ui(a_res,a_mpfr,a_value,a_rnd);
   }
@@ -312,7 +312,7 @@ void gmp_c::mpfr_sub_lli(mpfr_ptr a_res,mpfr_srcptr a_mpfr,long long int a_value
   {
     mpfr_sub_si(a_res,a_mpfr,a_value,a_rnd);
   }
-  else if (a_value >= 0 && a_value <= ULONG_MAX)
+  else if (a_value >= 0 && (long long unsigned)a_value <= ULONG_MAX)
   {
     mpfr_sub_ui(a_res,a_mpfr,a_value,a_rnd);
   }
@@ -329,7 +329,7 @@ void gmp_c::mpfr_mul_lli(mpfr_ptr a_res,mpfr_srcptr a_mpfr,long long int a_value
   {
     mpfr_mul_si(a_res,a_mpfr,a_value,a_rnd);
   }
-  else if (a_value >= 0 && a_value <= ULONG_MAX)
+  else if (a_value >= 0 && (long long unsigned)a_value <= ULONG_MAX)
   {
     mpfr_mul_ui(a_res,a_mpfr,a_value,a_rnd);
   }
@@ -346,7 +346,7 @@ void gmp_c::mpfr_div_lli(mpfr_ptr a_res,mpfr_srcptr a_mpfr,long long int a_value
   {
     mpfr_div_si(a_res,a_mpfr,a_value,a_rnd);
   }
-  else if (a_value >= 0 && a_value <= ULONG_MAX)
+  else if (a_value >= 0 && (long long unsigned)a_value <= ULONG_MAX)
   {
     mpfr_div_ui(a_res,a_mpfr,a_value,a_rnd);
   }
@@ -363,7 +363,7 @@ void gmp_c::mpfr_pow_lli(mpfr_ptr a_res,mpfr_srcptr a_mpfr,long long int a_value
   {
     mpfr_pow_si(a_res,a_mpfr,a_value,a_rnd);
   }
-  else if (a_value >= 0 && a_value <= ULONG_MAX)
+  else if (a_value >= 0 && (long long unsigned)a_value <= ULONG_MAX)
   {
     mpfr_pow_ui(a_res,a_mpfr,a_value,a_rnd);
   }

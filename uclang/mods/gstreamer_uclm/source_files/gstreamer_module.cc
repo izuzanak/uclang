@@ -515,7 +515,7 @@ bool bic_gst_pipeline_method_main_loop_0(interpreter_thread_s &it,unsigned stack
           return false;
         }
 
-        // FIXME debug output
+        // debug output
         //case GST_MESSAGE_UNKNOWN: fprintf(stderr,"GST_MESSAGE_UNKNOWN\n"); break;
         //case GST_MESSAGE_WARNING: fprintf(stderr,"GST_MESSAGE_WARNING\n"); break;
         //case GST_MESSAGE_INFO: fprintf(stderr,"GST_MESSAGE_INFO\n"); break;

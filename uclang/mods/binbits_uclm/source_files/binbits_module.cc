@@ -703,7 +703,7 @@ location_s *bic_bin_array_item(interpreter_thread_s &it,location_s *location_ptr
 {/*{{{*/
   BIC_BIN_ARRAY_GET_USED(location_ptr);
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   cassert(index < used);
 
   // - create bin array reference -
@@ -723,7 +723,7 @@ unsigned bic_bin_array_next_idx(location_s *location_ptr,unsigned index)
 {/*{{{*/
   BIC_BIN_ARRAY_GET_USED(location_ptr);
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   cassert(index < used);
 
   return (index + 1 < used) ? index + 1 : c_idx_not_exist;

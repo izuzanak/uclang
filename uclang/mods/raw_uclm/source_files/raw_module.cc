@@ -481,7 +481,7 @@ method process
 
   raw_processor_s *rp_ptr = (raw_processor_s *)dst_location->v_data_ptr;
 
-  // FIXME TODO process dcraw options
+  // TODO process dcraw options
 
   // - unpack raw image if needed -
   if (!(rp_ptr->state & c_raw_proc_state_unpacked))

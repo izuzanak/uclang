@@ -52,9 +52,9 @@ const unsigned dp_lalr_table[dp_lalr_state_cnt*c_dp_terminal_plus_nonterminal_cn
  * methods of structure docu_source_s
  */
 
-unsigned docu_source_s::fa_recognize(unsigned &input_idx)
+unsigned docu_source_s::fa_recognize(unsigned &input_idx) // lgtm [cpp/use-of-goto]
 {/*{{{*/
-#define GET_DOCU_COMM_NEXT_CHAR() \
+#define DOCU_COMM_GET_NEXT_CHAR() \
   {\
     if (input_idx < src_length) {\
       in_char = (unsigned char)src_data[input_idx];\
@@ -64,7 +64,7 @@ unsigned docu_source_s::fa_recognize(unsigned &input_idx)
     }\
   }
 
-#define CLOSE_DOCU_COMM_CHAR(RET_TERM_IDX) \
+#define DOCU_COMM_CLOSE_CHAR(RET_TERM_IDX) \
   {\
     if (in_char == '\0') {\
       return RET_TERM_IDX;\
@@ -73,171 +73,171 @@ unsigned docu_source_s::fa_recognize(unsigned &input_idx)
     input_idx++;\
   }
 
-  unsigned short in_char;
+   unsigned char in_char;
 
 // - STATE 0 -
-  GET_DOCU_COMM_NEXT_CHAR();
+   DOCU_COMM_GET_NEXT_CHAR();
 
-  if (in_char == 0)
-    goto state_1_label;
-
-  if (in_char == 35)
-    goto state_2_label;
-
-  if (in_char == 47)
-    goto state_3_label;
-
-  return c_idx_not_exist;
+   if (in_char == 0) {
+      goto state_1_label;
+   }
+   if (in_char == 35) {
+      goto state_2_label;
+   }
+   if (in_char == 47) {
+      goto state_3_label;
+   }
+   return c_idx_not_exist;
 
 // - STATE 1 -
 state_1_label:
-  CLOSE_DOCU_COMM_CHAR(1)
-  return 1;
+   DOCU_COMM_CLOSE_CHAR(1);
+   return 1;
 
 // - STATE 2 -
 state_2_label:
-  CLOSE_DOCU_COMM_CHAR(c_idx_not_exist);
-  GET_DOCU_COMM_NEXT_CHAR();
+   DOCU_COMM_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_COMM_GET_NEXT_CHAR();
 
-  if (in_char == 33)
-    goto state_4_label;
-
-  if (in_char == 35)
-    goto state_4_label;
-
-  return c_idx_not_exist;
+   if (in_char == 33) {
+      goto state_4_label;
+   }
+   if (in_char == 35) {
+      goto state_4_label;
+   }
+   return c_idx_not_exist;
 
 // - STATE 3 -
 state_3_label:
-  CLOSE_DOCU_COMM_CHAR(c_idx_not_exist);
-  GET_DOCU_COMM_NEXT_CHAR();
+   DOCU_COMM_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_COMM_GET_NEXT_CHAR();
 
-  if (in_char == 42)
-    goto state_5_label;
-
-  if (in_char == 47)
-    goto state_6_label;
-
-  return c_idx_not_exist;
+   if (in_char == 42) {
+      goto state_5_label;
+   }
+   if (in_char == 47) {
+      goto state_6_label;
+   }
+   return c_idx_not_exist;
 
 // - STATE 4 -
 state_4_label:
-  CLOSE_DOCU_COMM_CHAR(c_idx_not_exist);
-  GET_DOCU_COMM_NEXT_CHAR();
+   DOCU_COMM_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_COMM_GET_NEXT_CHAR();
 
-  if (in_char < 10)
-    goto state_4_label;
-
-  if (in_char == 10)
-    goto state_7_label;
-
-  if (in_char >= 11 && in_char < 257)
-    goto state_4_label;
-
-  return c_idx_not_exist;
+   if (in_char < 10) {
+      goto state_4_label;
+   }
+   if (in_char == 10) {
+      goto state_7_label;
+   }
+   if (in_char >= 11) {
+      goto state_4_label;
+   }
+   return c_idx_not_exist;
 
 // - STATE 5 -
 state_5_label:
-  CLOSE_DOCU_COMM_CHAR(c_idx_not_exist);
-  GET_DOCU_COMM_NEXT_CHAR();
+   DOCU_COMM_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_COMM_GET_NEXT_CHAR();
 
-  if (in_char == 33)
-    goto state_8_label;
-
-  if (in_char == 42)
-    goto state_8_label;
-
-  return c_idx_not_exist;
+   if (in_char == 33) {
+      goto state_8_label;
+   }
+   if (in_char == 42) {
+      goto state_8_label;
+   }
+   return c_idx_not_exist;
 
 // - STATE 6 -
 state_6_label:
-  CLOSE_DOCU_COMM_CHAR(c_idx_not_exist);
-  GET_DOCU_COMM_NEXT_CHAR();
+   DOCU_COMM_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_COMM_GET_NEXT_CHAR();
 
-  if (in_char == 33)
-    goto state_9_label;
-
-  if (in_char == 47)
-    goto state_9_label;
-
-  return c_idx_not_exist;
+   if (in_char == 33) {
+      goto state_9_label;
+   }
+   if (in_char == 47) {
+      goto state_9_label;
+   }
+   return c_idx_not_exist;
 
 // - STATE 7 -
 state_7_label:
-  CLOSE_DOCU_COMM_CHAR(0)
-  GET_DOCU_COMM_NEXT_CHAR();
+   DOCU_COMM_CLOSE_CHAR(0);
+   DOCU_COMM_GET_NEXT_CHAR();
 
-  if (in_char == 9)
-    goto state_7_label;
-
-  if (in_char == 32)
-    goto state_7_label;
-
-  return 0;
+   if (in_char == 9) {
+      goto state_7_label;
+   }
+   if (in_char == 32) {
+      goto state_7_label;
+   }
+   return 0;
 
 // - STATE 8 -
 state_8_label:
-  CLOSE_DOCU_COMM_CHAR(c_idx_not_exist);
-  GET_DOCU_COMM_NEXT_CHAR();
+   DOCU_COMM_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_COMM_GET_NEXT_CHAR();
 
-  if (in_char < 42)
-    goto state_8_label;
-
-  if (in_char == 42)
-    goto state_10_label;
-
-  if (in_char >= 43 && in_char < 257)
-    goto state_8_label;
-
-  return c_idx_not_exist;
+   if (in_char < 42) {
+      goto state_8_label;
+   }
+   if (in_char == 42) {
+      goto state_10_label;
+   }
+   if (in_char >= 43) {
+      goto state_8_label;
+   }
+   return c_idx_not_exist;
 
 // - STATE 9 -
 state_9_label:
-  CLOSE_DOCU_COMM_CHAR(c_idx_not_exist);
-  GET_DOCU_COMM_NEXT_CHAR();
+   DOCU_COMM_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_COMM_GET_NEXT_CHAR();
 
-  if (in_char < 10)
-    goto state_9_label;
-
-  if (in_char == 10)
-    goto state_7_label;
-
-  if (in_char >= 11 && in_char < 257)
-    goto state_9_label;
-
-  return c_idx_not_exist;
+   if (in_char < 10) {
+      goto state_9_label;
+   }
+   if (in_char == 10) {
+      goto state_7_label;
+   }
+   if (in_char >= 11) {
+      goto state_9_label;
+   }
+   return c_idx_not_exist;
 
 // - STATE 10 -
 state_10_label:
-  CLOSE_DOCU_COMM_CHAR(c_idx_not_exist);
-  GET_DOCU_COMM_NEXT_CHAR();
+   DOCU_COMM_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_COMM_GET_NEXT_CHAR();
 
-  if (in_char < 47)
-    goto state_8_label;
-
-  if (in_char == 47)
-    goto state_11_label;
-
-  if (in_char >= 48 && in_char < 257)
-    goto state_8_label;
-
-  return c_idx_not_exist;
+   if (in_char < 47) {
+      goto state_8_label;
+   }
+   if (in_char == 47) {
+      goto state_11_label;
+   }
+   if (in_char >= 48) {
+      goto state_8_label;
+   }
+   return c_idx_not_exist;
 
 // - STATE 11 -
 state_11_label:
-  CLOSE_DOCU_COMM_CHAR(0)
-  GET_DOCU_COMM_NEXT_CHAR();
+   DOCU_COMM_CLOSE_CHAR(0);
+   DOCU_COMM_GET_NEXT_CHAR();
 
-  if (in_char == 9)
-    goto state_11_label;
-
-  if (in_char == 10)
-    goto state_7_label;
-
-  if (in_char == 32)
-    goto state_11_label;
-
-  return 0;
+   if (in_char == 9) {
+      goto state_11_label;
+   }
+   if (in_char == 10) {
+      goto state_7_label;
+   }
+   if (in_char == 32) {
+      goto state_11_label;
+   }
+   return 0;
 
 }/*}}}*/
 
@@ -638,9 +638,9 @@ void docu_parsed_s::text_lines_to_string(string_s &a_target)
   }
 }/*}}}*/
 
-unsigned docu_parsed_s::fa_recognize(unsigned &input_idx)
+unsigned docu_parsed_s::fa_recognize(unsigned &input_idx) // lgtm [cpp/use-of-goto]
 {/*{{{*/
-#define GET_DOCU_PARSE_NEXT_CHAR() \
+#define DOCU_PARSE_GET_NEXT_CHAR() \
   {\
     if (input_idx < src_length) {\
       in_char = (unsigned char)src_data[input_idx];\
@@ -650,7 +650,7 @@ unsigned docu_parsed_s::fa_recognize(unsigned &input_idx)
     }\
   }
 
-#define CLOSE_DOCU_PARSE_CHAR(RET_TERM_IDX) \
+#define DOCU_PARSE_CLOSE_CHAR(RET_TERM_IDX) \
   {\
     if (in_char == '\0') {\
       return RET_TERM_IDX;\
@@ -659,756 +659,756 @@ unsigned docu_parsed_s::fa_recognize(unsigned &input_idx)
     input_idx++;\
   }
 
-   unsigned short in_char;
+   unsigned char in_char;
 
 // - STATE 0 -
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 0)
+   if (in_char == 0) {
       goto state_1_label;
-
-   if (in_char == 9)
+   }
+   if (in_char == 9) {
       goto state_2_label;
-
-   if (in_char == 10)
+   }
+   if (in_char == 10) {
       goto state_3_label;
-
-   if (in_char == 32)
+   }
+   if (in_char == 32) {
       goto state_2_label;
-
-   if (in_char == 35)
+   }
+   if (in_char == 35) {
       goto state_4_label;
-
-   if (in_char == 42)
+   }
+   if (in_char == 42) {
       goto state_5_label;
-
-   if (in_char == 47)
+   }
+   if (in_char == 47) {
       goto state_6_label;
-
-   if (in_char >= 48 && in_char < 58)
+   }
+   if (in_char >= 48 && in_char < 58) {
       goto state_9_label;
-
-   if (in_char == 60)
+   }
+   if (in_char == 60) {
       goto state_7_label;
-
-   if (in_char == 64)
+   }
+   if (in_char == 64) {
       goto state_8_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_9_label;
-
-   if (in_char == 92)
+   }
+   if (in_char == 92) {
       goto state_8_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_9_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 1 -
 state_1_label:
-   CLOSE_DOCU_PARSE_CHAR(15)
+   DOCU_PARSE_CLOSE_CHAR(15);
    return 15;
 
 // - STATE 2 -
 state_2_label:
-   CLOSE_DOCU_PARSE_CHAR(10)
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(10);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 9)
+   if (in_char == 9) {
       goto state_2_label;
-
-   if (in_char == 32)
+   }
+   if (in_char == 32) {
       goto state_2_label;
-
+   }
    return 10;
 
 // - STATE 3 -
 state_3_label:
-   CLOSE_DOCU_PARSE_CHAR(0)
+   DOCU_PARSE_CLOSE_CHAR(0);
    return 0;
 
 // - STATE 4 -
 state_4_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 33)
+   if (in_char == 33) {
       goto state_10_label;
-
-   if (in_char == 35)
+   }
+   if (in_char == 35) {
       goto state_10_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 5 -
 state_5_label:
-   CLOSE_DOCU_PARSE_CHAR(14)
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(14);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 47)
+   if (in_char == 47) {
       goto state_11_label;
-
+   }
    return 14;
 
 // - STATE 6 -
 state_6_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 42)
+   if (in_char == 42) {
       goto state_12_label;
-
-   if (in_char == 47)
+   }
+   if (in_char == 47) {
       goto state_13_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 7 -
 state_7_label:
-   CLOSE_DOCU_PARSE_CHAR(2)
+   DOCU_PARSE_CLOSE_CHAR(2);
    return 2;
 
 // - STATE 8 -
 state_8_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 98)
+   if (in_char == 98) {
       goto state_14_label;
-
-   if (in_char == 99)
+   }
+   if (in_char == 99) {
       goto state_15_label;
-
-   if (in_char == 102)
+   }
+   if (in_char == 102) {
       goto state_16_label;
-
-   if (in_char == 109)
+   }
+   if (in_char == 109) {
       goto state_17_label;
-
-   if (in_char == 112)
+   }
+   if (in_char == 112) {
       goto state_18_label;
-
-   if (in_char == 114)
+   }
+   if (in_char == 114) {
       goto state_19_label;
-
-   if (in_char == 118)
+   }
+   if (in_char == 118) {
       goto state_20_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 9 -
 state_9_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char < 10)
+   if (in_char < 10) {
       goto state_9_label;
-
-   if (in_char == 10)
+   }
+   if (in_char == 10) {
       goto state_21_label;
-
-   if (in_char >= 11 && in_char < 257)
+   }
+   if (in_char >= 11) {
       goto state_9_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 10 -
 state_10_label:
-   CLOSE_DOCU_PARSE_CHAR(11)
+   DOCU_PARSE_CLOSE_CHAR(11);
    return 11;
 
 // - STATE 11 -
 state_11_label:
-   CLOSE_DOCU_PARSE_CHAR(14)
+   DOCU_PARSE_CLOSE_CHAR(14);
    return 14;
 
 // - STATE 12 -
 state_12_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 33)
+   if (in_char == 33) {
       goto state_22_label;
-
-   if (in_char == 42)
+   }
+   if (in_char == 42) {
       goto state_22_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 13 -
 state_13_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 33)
+   if (in_char == 33) {
       goto state_23_label;
-
-   if (in_char == 47)
+   }
+   if (in_char == 47) {
       goto state_23_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 14 -
 state_14_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 114)
+   if (in_char == 114) {
       goto state_24_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 15 -
 state_15_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 108)
+   if (in_char == 108) {
       goto state_25_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 16 -
 state_16_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 105)
+   if (in_char == 105) {
       goto state_26_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 17 -
 state_17_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 101)
+   if (in_char == 101) {
       goto state_27_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 18 -
 state_18_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 97)
+   if (in_char == 97) {
       goto state_28_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 19 -
 state_19_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 101)
+   if (in_char == 101) {
       goto state_29_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 20 -
 state_20_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 97)
+   if (in_char == 97) {
       goto state_30_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 21 -
 state_21_label:
-   CLOSE_DOCU_PARSE_CHAR(1)
+   DOCU_PARSE_CLOSE_CHAR(1);
    return 1;
 
 // - STATE 22 -
 state_22_label:
-   CLOSE_DOCU_PARSE_CHAR(13)
+   DOCU_PARSE_CLOSE_CHAR(13);
    return 13;
 
 // - STATE 23 -
 state_23_label:
-   CLOSE_DOCU_PARSE_CHAR(12)
+   DOCU_PARSE_CLOSE_CHAR(12);
    return 12;
 
 // - STATE 24 -
 state_24_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 105)
+   if (in_char == 105) {
       goto state_31_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 25 -
 state_25_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 97)
+   if (in_char == 97) {
       goto state_32_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 26 -
 state_26_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 108)
+   if (in_char == 108) {
       goto state_33_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 27 -
 state_27_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 116)
+   if (in_char == 116) {
       goto state_34_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 28 -
 state_28_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 114)
+   if (in_char == 114) {
       goto state_35_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 29 -
 state_29_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 116)
+   if (in_char == 116) {
       goto state_36_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 30 -
 state_30_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 114)
+   if (in_char == 114) {
       goto state_37_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 31 -
 state_31_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 101)
+   if (in_char == 101) {
       goto state_38_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 32 -
 state_32_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 115)
+   if (in_char == 115) {
       goto state_39_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 33 -
 state_33_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 101)
+   if (in_char == 101) {
       goto state_40_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 34 -
 state_34_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 104)
+   if (in_char == 104) {
       goto state_41_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 35 -
 state_35_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 97)
+   if (in_char == 97) {
       goto state_42_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 36 -
 state_36_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 117)
+   if (in_char == 117) {
       goto state_43_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 37 -
 state_37_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 32)
+   if (in_char == 32) {
       goto state_44_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 38 -
 state_38_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 102)
+   if (in_char == 102) {
       goto state_45_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 39 -
 state_39_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 115)
+   if (in_char == 115) {
       goto state_46_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 40 -
 state_40_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 32)
+   if (in_char == 32) {
       goto state_47_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 41 -
 state_41_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 111)
+   if (in_char == 111) {
       goto state_48_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 42 -
 state_42_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 109)
+   if (in_char == 109) {
       goto state_49_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 43 -
 state_43_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 114)
+   if (in_char == 114) {
       goto state_50_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 44 -
 state_44_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 46)
+   if (in_char == 46) {
       goto state_51_label;
-
-   if (in_char >= 48 && in_char < 58)
+   }
+   if (in_char >= 48 && in_char < 58) {
       goto state_51_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_51_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_51_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_51_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 45 -
 state_45_label:
-   CLOSE_DOCU_PARSE_CHAR(3)
+   DOCU_PARSE_CLOSE_CHAR(3);
    return 3;
 
 // - STATE 46 -
 state_46_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 32)
+   if (in_char == 32) {
       goto state_52_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 47 -
 state_47_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 46)
+   if (in_char == 46) {
       goto state_53_label;
-
-   if (in_char >= 48 && in_char < 58)
+   }
+   if (in_char >= 48 && in_char < 58) {
       goto state_53_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_53_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_53_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_53_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 48 -
 state_48_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 100)
+   if (in_char == 100) {
       goto state_54_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 49 -
 state_49_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 32)
+   if (in_char == 32) {
       goto state_55_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 50 -
 state_50_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 110)
+   if (in_char == 110) {
       goto state_56_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 51 -
 state_51_label:
-   CLOSE_DOCU_PARSE_CHAR(9)
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(9);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 35)
+   if (in_char == 35) {
       goto state_51_label;
-
-   if (in_char == 46)
+   }
+   if (in_char == 46) {
       goto state_51_label;
-
-   if (in_char >= 48 && in_char < 58)
+   }
+   if (in_char >= 48 && in_char < 58) {
       goto state_51_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_51_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_51_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_51_label;
-
+   }
    return 9;
 
 // - STATE 52 -
 state_52_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 46)
+   if (in_char == 46) {
       goto state_57_label;
-
-   if (in_char >= 48 && in_char < 58)
+   }
+   if (in_char >= 48 && in_char < 58) {
       goto state_57_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_57_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_57_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_57_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 53 -
 state_53_label:
-   CLOSE_DOCU_PARSE_CHAR(6)
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(6);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char >= 45 && in_char < 47)
+   if (in_char >= 45 && in_char < 47) {
       goto state_53_label;
-
-   if (in_char >= 48 && in_char < 58)
+   }
+   if (in_char >= 48 && in_char < 58) {
       goto state_53_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_53_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_53_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_53_label;
-
+   }
    return 6;
 
 // - STATE 54 -
 state_54_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 32)
+   if (in_char == 32) {
       goto state_58_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 55 -
 state_55_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char >= 65 && in_char < 91)
+   if (in_char >= 65 && in_char < 91) {
       goto state_59_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_59_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_59_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 56 -
 state_56_label:
-   CLOSE_DOCU_PARSE_CHAR(5)
+   DOCU_PARSE_CLOSE_CHAR(5);
    return 5;
 
 // - STATE 57 -
 state_57_label:
-   CLOSE_DOCU_PARSE_CHAR(7)
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(7);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 46)
+   if (in_char == 46) {
       goto state_57_label;
-
-   if (in_char >= 48 && in_char < 58)
+   }
+   if (in_char >= 48 && in_char < 58) {
       goto state_57_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_57_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_57_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_57_label;
-
+   }
    return 7;
 
 // - STATE 58 -
 state_58_label:
-   CLOSE_DOCU_PARSE_CHAR(c_idx_not_exist);
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(c_idx_not_exist);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 46)
+   if (in_char == 46) {
       goto state_60_label;
-
-   if (in_char >= 48 && in_char < 58)
+   }
+   if (in_char >= 48 && in_char < 58) {
       goto state_60_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_60_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_60_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_60_label;
-
+   }
    return c_idx_not_exist;
 
 // - STATE 59 -
 state_59_label:
-   CLOSE_DOCU_PARSE_CHAR(4)
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(4);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
+   if (in_char >= 48 && in_char < 58) {
       goto state_59_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_59_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_59_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_59_label;
-
+   }
    return 4;
 
 // - STATE 60 -
 state_60_label:
-   CLOSE_DOCU_PARSE_CHAR(8)
-   GET_DOCU_PARSE_NEXT_CHAR();
+   DOCU_PARSE_CLOSE_CHAR(8);
+   DOCU_PARSE_GET_NEXT_CHAR();
 
-   if (in_char == 35)
+   if (in_char == 35) {
       goto state_60_label;
-
-   if (in_char == 46)
+   }
+   if (in_char == 46) {
       goto state_60_label;
-
-   if (in_char >= 48 && in_char < 58)
+   }
+   if (in_char >= 48 && in_char < 58) {
       goto state_60_label;
-
-   if (in_char >= 65 && in_char < 91)
+   }
+   if (in_char >= 65 && in_char < 91) {
       goto state_60_label;
-
-   if (in_char == 95)
+   }
+   if (in_char == 95) {
       goto state_60_label;
-
-   if (in_char >= 97 && in_char < 123)
+   }
+   if (in_char >= 97 && in_char < 123) {
       goto state_60_label;
-
+   }
    return 8;
 
 }/*}}}*/

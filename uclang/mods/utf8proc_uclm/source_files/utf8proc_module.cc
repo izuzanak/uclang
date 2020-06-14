@@ -960,7 +960,7 @@ location_s *bic_unicode_string_item(interpreter_thread_s &it,location_s *locatio
 {/*{{{*/
   ui_array_s *ustring_ptr = (ui_array_s *)location_ptr->v_data_ptr;
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   cassert(index < ustring_ptr->used - 1);
 
   utf8proc_int32_t result = (utf8proc_int32_t)ustring_ptr->data[index];
@@ -979,7 +979,7 @@ unsigned bic_unicode_string_next_idx(location_s *location_ptr,unsigned index)
 {/*{{{*/
   ui_array_s *ustring_ptr = (ui_array_s *)location_ptr->v_data_ptr;
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   cassert(index < ustring_ptr->used - 1);
 
   return (index + 1 < ustring_ptr->used - 1) ? index + 1 : c_idx_not_exist;

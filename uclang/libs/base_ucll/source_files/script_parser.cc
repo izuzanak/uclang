@@ -3519,7 +3519,7 @@ void script_parser_s::initialize_parser(source_s &a_source,string_s &a_mods_path
   module_idx++;
 }/*}}}*/
 
-unsigned script_parser_s::recognize_terminal(unsigned &input_idx)
+unsigned script_parser_s::recognize_terminal(unsigned &input_idx) // lgtm [cpp/use-of-goto]
 {/*{{{*/
   string_s &source_string = sources[source_idx].source_string;
   unsigned source_string_length = source_string.size - 1;

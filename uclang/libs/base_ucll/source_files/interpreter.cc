@@ -1129,7 +1129,7 @@ bool interpreter_thread_s::handle_signal(int signal_number)
   // - call delegate method -
   location_s *trg_location = nullptr;
 
-  // FIXME TODO set properly SOURCE_POS, now set to zero
+  // TODO set properly SOURCE_POS, now set to zero
   BIC_CALL_DELEGATE((*this),delegate_ptr,(pointer *)&sn_location,1,trg_location,0,
                     release_location_ptr(sn_location);
                     return false;

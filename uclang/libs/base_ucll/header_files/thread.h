@@ -256,7 +256,7 @@ inline unsigned thread_s::yield()
 #if THREAD_LIB == THREAD_LIB_PTHREAD
 
 #ifdef __WIN32
-  // FIXME - yield ve windows
+  // TODO yield in windows
 #else
   sched_yield();
 #endif

@@ -311,7 +311,7 @@ unsigned bic_docu_source_next_idx(location_s *location_ptr,unsigned index)
 {/*{{{*/
   docu_source_s *ds_ptr = (docu_source_s *)location_ptr->v_data_ptr;
 
-  // FIXME TODO check index ...
+  // TODO check index ...
   cassert(index < ds_ptr->comment_ranges.used);
 
   return (index + 1 < ds_ptr->comment_ranges.used) ? index + 1 : c_idx_not_exist;

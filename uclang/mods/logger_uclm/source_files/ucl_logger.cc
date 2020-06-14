@@ -151,7 +151,7 @@ bool logger_s::write(unsigned a_level,const string_s &a_message)
   // - format log record -
   buffer.append_format("%4.4hu/%2.2hu/%2.2hu %2.2hu:%2.2hu:%2.2hu.%3.3u %u %s: %s\n",
     datetime.year,datetime.month,datetime.day,datetime.hour,datetime.min,datetime.sec,
-    tv.tv_usec/1000,a_level,user.data,a_message.data);
+    (unsigned)(tv.tv_usec/1000),a_level,user.data,a_message.data);
 
   // - write ok flag -
   bool write_ok = true;

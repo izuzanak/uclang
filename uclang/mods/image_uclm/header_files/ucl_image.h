@@ -214,7 +214,7 @@ inline bool image_s::create(unsigned a_width,unsigned a_height,unsigned a_pixel_
   }
 
   image_data_ptr->data = (unsigned char *)cmalloc(height*image_data_ptr->line_bytes);
-  memset(image_data_ptr->data,0,height*image_data_ptr->line_bytes);
+  memset(image_data_ptr->data,0,(size_t)height*image_data_ptr->line_bytes);
 
   return true;
 }/*}}}*/
