@@ -5,7 +5,7 @@ import sys,os
 import re
 import json
 
-from mf_cfg import *
+from mf_cfg import * # lgtm [py/polluting-import]
 
 # - CLASS configuration_c -
 class configuration_c:

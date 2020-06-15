@@ -18,7 +18,7 @@ try {
 #define UCL_NODE_CATCH \
 /*{{{*/\
 }\
-catch (std::string reason)\
+catch (const std::string &reason)\
 {\
   if (reason == "Exception")\
   {\

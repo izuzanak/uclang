@@ -82,7 +82,7 @@ int spawn_parser_s::open_file(char *ptr,char *ptr_end,int flags)
   return fd;
 }/*}}}*/
 
-unsigned spawn_parser_s::recognize_terminal(unsigned &a_input_idx)
+unsigned spawn_parser_s::recognize_terminal(unsigned &a_input_idx) // lgtm [cpp/use-of-goto]
 {/*{{{*/
   unsigned source_string_length = source_string.size - 1;
 
@@ -105,62 +105,68 @@ unsigned spawn_parser_s::recognize_terminal(unsigned &a_input_idx)
     a_input_idx++;\
   }
 
-   unsigned short in_char;
+   unsigned char in_char;
 
 // - STATE 0 -
    SPWN_GET_NEXT_CHAR();
 
-   if (in_char == 0)
+   if (in_char == 0) {
       goto state_1_label;
-
-   if (in_char >= 1 && in_char < 9)
+   }
+   if (in_char >= 1 && in_char < 8) {
       goto state_2_label;
-
-   if (in_char >= 8 && in_char < 14)
-      goto state_9_label;
-
-   if (in_char >= 11 && in_char < 32)
-      goto state_2_label;
-
-   if (in_char == 32)
-      goto state_9_label;
-
-   if (in_char == 33)
-      goto state_2_label;
-
-   if (in_char == 34)
+   }
+   if (in_char == 8) {
       goto state_3_label;
-
-   if (in_char >= 35 && in_char < 38)
+   }
+   if (in_char >= 9 && in_char < 11) {
+      goto state_10_label;
+   }
+   if (in_char >= 11 && in_char < 14) {
+      goto state_3_label;
+   }
+   if (in_char >= 14 && in_char < 32) {
       goto state_2_label;
-
-   if (in_char == 38)
+   }
+   if (in_char == 32) {
+      goto state_10_label;
+   }
+   if (in_char == 33) {
+      goto state_2_label;
+   }
+   if (in_char == 34) {
       goto state_4_label;
-
-   if (in_char == 39)
+   }
+   if (in_char >= 35 && in_char < 38) {
+      goto state_2_label;
+   }
+   if (in_char == 38) {
       goto state_5_label;
-
-   if (in_char >= 40 && in_char < 48)
-      goto state_2_label;
-
-   if (in_char >= 48 && in_char < 58)
+   }
+   if (in_char == 39) {
       goto state_6_label;
-
-   if (in_char >= 58 && in_char < 60)
+   }
+   if (in_char >= 40 && in_char < 48) {
       goto state_2_label;
-
-   if (in_char == 60)
+   }
+   if (in_char >= 48 && in_char < 58) {
       goto state_7_label;
-
-   if (in_char == 61)
+   }
+   if (in_char >= 58 && in_char < 60) {
       goto state_2_label;
-
-   if (in_char == 62)
+   }
+   if (in_char == 60) {
       goto state_8_label;
-
-   if (in_char >= 63 && in_char < 256)
+   }
+   if (in_char == 61) {
       goto state_2_label;
-
+   }
+   if (in_char == 62) {
+      goto state_9_label;
+   }
+   if (in_char >= 63) {
+      goto state_2_label;
+   }
    return 10;
 
 // - STATE 1 -
@@ -173,202 +179,242 @@ state_2_label:
    SPWN_CLOSE_CHAR(10);
    SPWN_GET_NEXT_CHAR();
 
-   if (in_char >= 1 && in_char < 9)
+   if (in_char >= 1 && in_char < 9) {
       goto state_2_label;
-
-   if (in_char >= 11 && in_char < 32)
+   }
+   if (in_char >= 11 && in_char < 32) {
       goto state_2_label;
-
-   if (in_char == 33)
+   }
+   if (in_char == 33) {
       goto state_2_label;
-
-   if (in_char >= 35 && in_char < 38)
+   }
+   if (in_char >= 35 && in_char < 38) {
       goto state_2_label;
-
-   if (in_char >= 40 && in_char < 60)
+   }
+   if (in_char >= 40 && in_char < 60) {
       goto state_2_label;
-
-   if (in_char == 61)
+   }
+   if (in_char == 61) {
       goto state_2_label;
-
-   if (in_char >= 63 && in_char < 256)
+   }
+   if (in_char >= 63) {
       goto state_2_label;
-
+   }
    return 10;
 
 // - STATE 3 -
 state_3_label:
-   SPWN_CLOSE_CHAR(c_idx_not_exist);
+   SPWN_CLOSE_CHAR(10);
    SPWN_GET_NEXT_CHAR();
 
-   if (in_char < 34)
+   if (in_char >= 1 && in_char < 8) {
+      goto state_2_label;
+   }
+   if (in_char == 8) {
       goto state_3_label;
-
-   if (in_char == 34)
-      goto state_11_label;
-
-   if (in_char >= 35 && in_char < 256)
+   }
+   if (in_char >= 9 && in_char < 11) {
+      goto state_10_label;
+   }
+   if (in_char >= 11 && in_char < 14) {
       goto state_3_label;
-
-   return c_idx_not_exist;
+   }
+   if (in_char >= 14 && in_char < 32) {
+      goto state_2_label;
+   }
+   if (in_char == 32) {
+      goto state_10_label;
+   }
+   if (in_char == 33) {
+      goto state_2_label;
+   }
+   if (in_char >= 35 && in_char < 38) {
+      goto state_2_label;
+   }
+   if (in_char >= 40 && in_char < 60) {
+      goto state_2_label;
+   }
+   if (in_char == 61) {
+      goto state_2_label;
+   }
+   if (in_char >= 63) {
+      goto state_2_label;
+   }
+   return 10;
 
 // - STATE 4 -
 state_4_label:
-   SPWN_CLOSE_CHAR(8);
-   SPWN_GET_NEXT_CHAR();
-
-   if (in_char == 62)
-      goto state_12_label;
-
-   return 8;
-
-// - STATE 5 -
-state_5_label:
    SPWN_CLOSE_CHAR(c_idx_not_exist);
    SPWN_GET_NEXT_CHAR();
 
-   if (in_char < 39)
-      goto state_5_label;
-
-   if (in_char == 39)
-      goto state_13_label;
-
-   if (in_char >= 40 && in_char < 256)
-      goto state_5_label;
-
+   if (in_char < 34) {
+      goto state_4_label;
+   }
+   if (in_char == 34) {
+      goto state_12_label;
+   }
+   if (in_char >= 35) {
+      goto state_4_label;
+   }
    return c_idx_not_exist;
+
+// - STATE 5 -
+state_5_label:
+   SPWN_CLOSE_CHAR(8);
+   SPWN_GET_NEXT_CHAR();
+
+   if (in_char == 62) {
+      goto state_13_label;
+   }
+   return 8;
 
 // - STATE 6 -
 state_6_label:
-   SPWN_CLOSE_CHAR(9);
+   SPWN_CLOSE_CHAR(c_idx_not_exist);
    SPWN_GET_NEXT_CHAR();
 
-   if (in_char >= 1 && in_char < 9)
-      goto state_2_label;
-
-   if (in_char >= 11 && in_char < 32)
-      goto state_2_label;
-
-   if (in_char == 33)
-      goto state_2_label;
-
-   if (in_char >= 35 && in_char < 38)
-      goto state_2_label;
-
-   if (in_char >= 40 && in_char < 48)
-      goto state_2_label;
-
-   if (in_char >= 48 && in_char < 58)
+   if (in_char < 39) {
       goto state_6_label;
-
-   if (in_char >= 58 && in_char < 60)
-      goto state_2_label;
-
-   if (in_char == 60)
+   }
+   if (in_char == 39) {
       goto state_14_label;
-
-   if (in_char == 61)
-      goto state_2_label;
-
-   if (in_char == 62)
-      goto state_15_label;
-
-   if (in_char >= 63 && in_char < 256)
-      goto state_2_label;
-
-   return 9;
+   }
+   if (in_char >= 40) {
+      goto state_6_label;
+   }
+   return c_idx_not_exist;
 
 // - STATE 7 -
 state_7_label:
-   SPWN_CLOSE_CHAR(0);
-   return 0;
-
-// - STATE 8 -
-state_8_label:
-   SPWN_CLOSE_CHAR(1);
-   SPWN_GET_NEXT_CHAR();
-
-   if (in_char == 62)
-      goto state_16_label;
-
-   return 1;
-
-// - STATE 9 -
-state_9_label:
-   SPWN_CLOSE_CHAR(13);
-   SPWN_GET_NEXT_CHAR();
-
-   if (in_char >= 8 && in_char < 14)
-      goto state_9_label;
-
-   if (in_char == 32)
-      goto state_9_label;
-
-   return 13;
-
-// - STATE 10 -
-state_10_label:
    SPWN_CLOSE_CHAR(9);
    SPWN_GET_NEXT_CHAR();
 
-   if (in_char >= 48 && in_char < 58)
-      goto state_10_label;
-
-   if (in_char == 60)
-      goto state_14_label;
-
-   if (in_char == 62)
+   if (in_char >= 1 && in_char < 9) {
+      goto state_2_label;
+   }
+   if (in_char >= 11 && in_char < 32) {
+      goto state_2_label;
+   }
+   if (in_char == 33) {
+      goto state_2_label;
+   }
+   if (in_char >= 35 && in_char < 38) {
+      goto state_2_label;
+   }
+   if (in_char >= 40 && in_char < 48) {
+      goto state_2_label;
+   }
+   if (in_char >= 48 && in_char < 58) {
+      goto state_7_label;
+   }
+   if (in_char >= 58 && in_char < 60) {
+      goto state_2_label;
+   }
+   if (in_char == 60) {
       goto state_15_label;
-
+   }
+   if (in_char == 61) {
+      goto state_2_label;
+   }
+   if (in_char == 62) {
+      goto state_16_label;
+   }
+   if (in_char >= 63) {
+      goto state_2_label;
+   }
    return 9;
+
+// - STATE 8 -
+state_8_label:
+   SPWN_CLOSE_CHAR(0);
+   return 0;
+
+// - STATE 9 -
+state_9_label:
+   SPWN_CLOSE_CHAR(1);
+   SPWN_GET_NEXT_CHAR();
+
+   if (in_char == 62) {
+      goto state_17_label;
+   }
+   return 1;
+
+// - STATE 10 -
+state_10_label:
+   SPWN_CLOSE_CHAR(13);
+   SPWN_GET_NEXT_CHAR();
+
+   if (in_char >= 8 && in_char < 14) {
+      goto state_10_label;
+   }
+   if (in_char == 32) {
+      goto state_10_label;
+   }
+   return 13;
 
 // - STATE 11 -
 state_11_label:
-   SPWN_CLOSE_CHAR(11);
-   return 11;
+   SPWN_CLOSE_CHAR(9);
+   SPWN_GET_NEXT_CHAR();
+
+   if (in_char >= 48 && in_char < 58) {
+      goto state_11_label;
+   }
+   if (in_char == 60) {
+      goto state_15_label;
+   }
+   if (in_char == 62) {
+      goto state_16_label;
+   }
+   return 9;
 
 // - STATE 12 -
 state_12_label:
-   SPWN_CLOSE_CHAR(6);
-   SPWN_GET_NEXT_CHAR();
-
-   if (in_char == 62)
-      goto state_17_label;
-
-   return 6;
+   SPWN_CLOSE_CHAR(11);
+   return 11;
 
 // - STATE 13 -
 state_13_label:
-   SPWN_CLOSE_CHAR(12);
-   return 12;
+   SPWN_CLOSE_CHAR(6);
+   SPWN_GET_NEXT_CHAR();
+
+   if (in_char == 62) {
+      goto state_18_label;
+   }
+   return 6;
 
 // - STATE 14 -
 state_14_label:
-   SPWN_CLOSE_CHAR(3);
-   return 3;
+   SPWN_CLOSE_CHAR(12);
+   return 12;
 
 // - STATE 15 -
 state_15_label:
-   SPWN_CLOSE_CHAR(4);
-   SPWN_GET_NEXT_CHAR();
-
-   if (in_char == 62)
-      goto state_18_label;
-
-   return 4;
+   SPWN_CLOSE_CHAR(3);
+   return 3;
 
 // - STATE 16 -
 state_16_label:
-   SPWN_CLOSE_CHAR(2);
-   return 2;
+   SPWN_CLOSE_CHAR(4);
+   SPWN_GET_NEXT_CHAR();
+
+   if (in_char == 62) {
+      goto state_19_label;
+   }
+   return 4;
 
 // - STATE 17 -
 state_17_label:
-   SPWN_CLOSE_CHAR(7);
-   return 7;
+   SPWN_CLOSE_CHAR(2);
+   return 2;
 
 // - STATE 18 -
 state_18_label:
+   SPWN_CLOSE_CHAR(7);
+   return 7;
+
+// - STATE 19 -
+state_19_label:
    SPWN_CLOSE_CHAR(5);
    return 5;
 
