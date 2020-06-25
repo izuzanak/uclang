@@ -589,12 +589,15 @@ void xml_characters(void *user,const xmlChar *ch,int len)
 
   // -----
 
-  location_s *text_location = sp->get_string_location(len,(const char *)ch);
-  text_location->v_reference_cnt.atomic_add(2);
+  if (text_array_stack.used != 0 && cont_array_stack.used != 0)
+  {
+    location_s *text_location = sp->get_string_location(len,(const char *)ch);
+    text_location->v_reference_cnt.atomic_add(2);
 
-  // - push text to text and content arrays -
-  text_array_stack.last().push(text_location);
-  cont_array_stack.last().push(text_location);
+    // - push text to text and content arrays -
+    text_array_stack.last().push(text_location);
+    cont_array_stack.last().push(text_location);
+  }
 }/*}}}*/
 
 void xml_warning(void *user,const char *msg,...)
