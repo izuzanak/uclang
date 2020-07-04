@@ -2702,7 +2702,7 @@ built_in_class_s socket_class =
   "Socket",
   c_modifier_public | c_modifier_final,
   18, socket_methods,
-  3 + 3 + 1 + 5, socket_variables,
+  3 + 3 + 1 + 6, socket_variables,
   bic_socket_consts,
   bic_socket_init,
   bic_socket_clear,
@@ -2835,6 +2835,7 @@ built_in_variable_s socket_variables[] =
   { "SO_RCVBUF", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SO_RCVTIMEO", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SO_SNDTIMEO", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SO_BROADCAST", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
 
@@ -2889,8 +2890,8 @@ void bic_socket_consts(location_array_s &const_locations)
 
   // - insert socket options values -
   {
-    const_locations.push_blanks(5);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 5);
+    const_locations.push_blanks(6);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 6);
 
 #define CREATE_SOCKET_OPTION_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -2903,6 +2904,7 @@ void bic_socket_consts(location_array_s &const_locations)
     CREATE_SOCKET_OPTION_BIC_STATIC(SO_RCVBUF);
     CREATE_SOCKET_OPTION_BIC_STATIC(SO_RCVTIMEO);
     CREATE_SOCKET_OPTION_BIC_STATIC(SO_SNDTIMEO);
+    CREATE_SOCKET_OPTION_BIC_STATIC(SO_BROADCAST);
   }
 
 }/*}}}*/
@@ -3456,6 +3458,7 @@ method sockopt
       {
       case SO_SNDBUF:
       case SO_RCVBUF:
+      case SO_BROADCAST:
         {
           long long int value;
 
@@ -3529,6 +3532,7 @@ method sockopt
       case SO_ERROR:
       case SO_SNDBUF:
       case SO_RCVBUF:
+      case SO_BROADCAST:
         {
           // - ERROR -
           if (getsockopt(fd,level,optname,optval,&optlen) == -1)
