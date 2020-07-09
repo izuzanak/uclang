@@ -60,6 +60,7 @@ void bic_http_server_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_http_server_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_server_method_HttpServer_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_http_server_method_HttpServer_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_server_method_stop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_server_method_timeout_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

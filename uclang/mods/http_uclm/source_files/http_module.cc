@@ -213,7 +213,7 @@ built_in_class_s http_server_class =
 {/*{{{*/
   "HttpServer",
   c_modifier_public | c_modifier_final,
-  9, http_server_methods,
+  10, http_server_methods,
   0, http_server_variables,
   bic_http_server_consts,
   bic_http_server_init,
@@ -242,6 +242,11 @@ built_in_method_s http_server_methods[] =
     "HttpServer#2",
     c_modifier_public | c_modifier_final,
     bic_http_server_method_HttpServer_2
+  },
+  {
+    "HttpServer#4",
+    c_modifier_public | c_modifier_final,
+    bic_http_server_method_HttpServer_4
   },
   {
     "stop#0",
@@ -350,6 +355,67 @@ method HttpServer
       MHD_USE_SUSPEND_RESUME,port,nullptr,nullptr,
       &connection_func,dst_location,
       MHD_OPTION_NOTIFY_COMPLETED,completed_func,nullptr,
+      MHD_OPTION_END);
+
+  // - ERROR -
+  if (daemon_ptr == nullptr)
+  {
+    srv_ptr->clear(it);
+    cfree(srv_ptr);
+
+    exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_CANNOT_START_DAEMON,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - set server daemon pointer -
+  srv_ptr->daemon_ptr = daemon_ptr;
+
+  // - set http_server destination location -
+  dst_location->v_data_ptr = (http_server_s *)srv_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_http_server_method_HttpServer_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+port:retrieve_integer
+delegate:c_bi_class_delegate
+key:c_bi_class_string
+cert:c_bi_class_string
+>
+method HttpServer
+; @end
+
+  // - retrieve delegate pointer -
+  delegate_s *delegate_ptr = (delegate_s *)src_1_location->v_data_ptr;
+
+  // - ERROR -
+  if (delegate_ptr->param_cnt != 1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_WRONG_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - create http_server object -
+  http_server_s *srv_ptr = (http_server_s *)cmalloc(sizeof(http_server_s));
+  srv_ptr->init();
+
+  string_s *key_ptr = (string_s *)src_2_location->v_data_ptr;
+  string_s *cert_ptr = (string_s *)src_3_location->v_data_ptr;
+
+  // - register connection delegate -
+  src_1_location->v_reference_cnt.atomic_inc();
+  srv_ptr->connection_dlg = src_1_location;
+
+  // - start http server -
+  MHD_Daemon *daemon_ptr = MHD_start_daemon(
+      MHD_USE_SUSPEND_RESUME | MHD_USE_SSL,port,nullptr,nullptr,
+      &connection_func,dst_location,
+      MHD_OPTION_NOTIFY_COMPLETED,completed_func,nullptr,
+      MHD_OPTION_HTTPS_MEM_KEY,key_ptr->data,
+      MHD_OPTION_HTTPS_MEM_CERT,cert_ptr->data,
       MHD_OPTION_END);
 
   // - ERROR -
