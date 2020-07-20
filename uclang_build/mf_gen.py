@@ -3313,6 +3313,32 @@ if cfg_ref[CFG_TARGET]:
     )
 # }}}
 
+# shape module
+cfg_ref = c_cfg[C_MODULE_SHAPE]
+# {{{
+if cfg_ref[CFG_TARGET]:
+    cfg_ref[CFG_MODULE] = module_c(
+      configuration,
+      cfg_ref[CFG_DIR],
+      cfg_ref[CFG_NAME],
+      [ 
+        "header_files",
+        os.sep.join(["..","..","libs","base_ucll","header_files"]),
+      ],
+      [ 
+        "source_files",
+      ],
+      [
+        os.sep.join(["..","..","libs","base_ucll"]),
+      ],
+      opt_build, # CXX options
+      opt_link + "`pkg-config --libs shapelib` ", # CXX link options
+      "", # CXX defines
+      [],
+      [],
+    )
+# }}}
+
 # soapcl module
 cfg_ref = c_cfg[C_MODULE_SOAPCL]
 # {{{

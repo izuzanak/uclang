@@ -106,6 +106,7 @@ c_packages = [
   ["MOD_JSON"      ,"json_uclm"      ,"true"      ,[]],
   ["MOD_XML"       ,"xml_uclm"       ,"pkg-config",["libxml-2.0 >= 2.9.1"]],
   ["MOD_INTELHEX"  ,"intelhex_uclm"  ,"true",      []],
+  ["MOD_SHAPE"     ,"shape_uclm"     ,"pkg-config",["shapelib >= 1.4.1"]],
   ["MOD_SOAPCL"    ,"soapcl_uclm"    ,"false"     ,[]],
   ["MOD_SOAPSRV"   ,"soapsrv_uclm"   ,"false"     ,[]],
   ["MOD_PYTHON"    ,"python_uclm"    ,"pkg-config",["python-2.7 >= 2.7"]],

@@ -102,6 +102,7 @@ C_MODULE_GRAPH      = index; index += 1
 C_MODULE_JSON       = index; index += 1
 C_MODULE_XML        = index; index += 1
 C_MODULE_INTELHEX   = index; index += 1
+C_MODULE_SHAPE      = index; index += 1
 C_MODULE_SOAPCL     = index; index += 1
 C_MODULE_SOAPSRV    = index; index += 1
 C_MODULE_PYTHON     = index; index += 1
@@ -226,6 +227,7 @@ c_cfg = [
     ["MOD_JSON"      ,c_enabled[C_MODULE_JSON]      ,C_UCLANG_DIR + "mods/json_uclm"        ,None],
     ["MOD_XML"       ,c_enabled[C_MODULE_XML]       ,C_UCLANG_DIR + "mods/xml_uclm"         ,None],
     ["MOD_INTELHEX"  ,c_enabled[C_MODULE_INTELHEX]  ,C_UCLANG_DIR + "mods/intelhex_uclm"    ,None],
+    ["MOD_SHAPE"     ,c_enabled[C_MODULE_SHAPE]     ,C_UCLANG_DIR + "mods/shape_uclm"       ,None],
     ["MOD_SOAPCL"    ,c_enabled[C_MODULE_SOAPCL]    ,C_UCLANG_DIR + "mods/soap/soapcl_uclm" ,None],
     ["MOD_SOAPSRV"   ,c_enabled[C_MODULE_SOAPSRV]   ,C_UCLANG_DIR + "mods/soap/soapsrv_uclm",None],
     ["MOD_PYTHON"    ,c_enabled[C_MODULE_PYTHON]    ,C_UCLANG_DIR + "mods/python_uclm"      ,None],
