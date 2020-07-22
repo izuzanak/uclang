@@ -123,11 +123,15 @@ void bic_shp_handle_consts(location_array_s &const_locations)
 
 void bic_shp_handle_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
+  
+  // FIXME TODO continue ...
   cassert(0);
 }/*}}}*/
 
 void bic_shp_handle_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
+
+  // FIXME TODO continue ...
   cassert(0);
 }/*}}}*/
 

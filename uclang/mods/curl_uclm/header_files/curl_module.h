@@ -112,6 +112,7 @@ void bic_curl_result_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_curl_result_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_curl_result_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curl_result_method_code_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_result_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_result_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_result_method_info_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);

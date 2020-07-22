@@ -101,6 +101,7 @@ struct curl_multi_request_s
  */
 struct curl_result_s
 {
+  CURLcode code;
   CURL *curl_ptr;
   location_s *data_loc;
   location_s *user_loc;
