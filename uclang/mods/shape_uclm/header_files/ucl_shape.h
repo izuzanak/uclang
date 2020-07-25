@@ -10,7 +10,7 @@
 include "script_parser.h"
 @end
 
-//#include <shapefil.h>
+#include <shapefil.h>
 
 #endif
 

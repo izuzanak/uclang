@@ -190,7 +190,7 @@ built_in_class_s curl_class =
   "Curl",
   c_modifier_public | c_modifier_final,
   7, curl_methods,
-  5 + 10, curl_variables,
+  7 + 10 + 3, curl_variables,
   bic_curl_consts,
   bic_curl_init,
   bic_curl_clear,
@@ -255,6 +255,8 @@ built_in_variable_s curl_variables[] =
   { "OPT_HTTPAUTH", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPT_USERNAME", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPT_PASSWORD", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_DIRLISTONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_FTP_CREATE_MISSING_DIRS", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
   // - curl authentication constants -
   { "AUTH_ANY", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -267,6 +269,11 @@ built_in_variable_s curl_variables[] =
   { "AUTH_NTLM_WB", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "AUTH_ONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "AUTH_NONE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - curl ftp create dir constants -
+  { "FTP_CREATE_DIR_NONE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FTP_CREATE_DIR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FTP_CREATE_DIR_RETRY", c_modifier_public | c_modifier_static | c_modifier_static_const },
 };/*}}}*/
 
 #define BIC_CURL_GET_DELETE_HEAD_METHODS(NAME,OPTIONS) \
@@ -423,20 +430,22 @@ void bic_curl_consts(location_array_s &const_locations)
 
   // - curl option constants -
   {
-    const_locations.push_blanks(5);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 5);
+    const_locations.push_blanks(7);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 7);
 
-  #define CREATE_CURL_OPTION_BIC_STATIC(VALUE)\
-    cv_ptr->v_type = c_bi_class_integer;\
-    cv_ptr->v_reference_cnt.atomic_set(1);\
-    cv_ptr->v_data_ptr = (long long int)VALUE;\
-    cv_ptr++;
+#define CREATE_CURL_OPTION_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
 
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_TIMEOUT);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_TIMEOUT_MS);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_HTTPAUTH);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_USERNAME);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_PASSWORD);
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_DIRLISTONLY);
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_FTP_CREATE_MISSING_DIRS);
   }
 
   // - curl authentication constants -
@@ -444,11 +453,11 @@ void bic_curl_consts(location_array_s &const_locations)
     const_locations.push_blanks(10);
     location_s *cv_ptr = const_locations.data + (const_locations.used - 10);
 
-  #define CREATE_CURL_AUTHENTICATION_BIC_STATIC(VALUE)\
-    cv_ptr->v_type = c_bi_class_integer;\
-    cv_ptr->v_reference_cnt.atomic_set(1);\
-    cv_ptr->v_data_ptr = (long long int)VALUE;\
-    cv_ptr++;
+#define CREATE_CURL_AUTHENTICATION_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
 
     CREATE_CURL_AUTHENTICATION_BIC_STATIC(CURLAUTH_ANY);
     CREATE_CURL_AUTHENTICATION_BIC_STATIC(CURLAUTH_ANYSAFE);
@@ -460,6 +469,22 @@ void bic_curl_consts(location_array_s &const_locations)
     CREATE_CURL_AUTHENTICATION_BIC_STATIC(CURLAUTH_NTLM_WB);
     CREATE_CURL_AUTHENTICATION_BIC_STATIC(CURLAUTH_ONLY);
     CREATE_CURL_AUTHENTICATION_BIC_STATIC(CURLAUTH_NONE);
+  }
+
+  // - curl ftp create dir constants -
+  {
+    const_locations.push_blanks(3);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 3);
+
+#define CREATE_CURL_FTP_CREATE_DIR_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_CURL_FTP_CREATE_DIR_BIC_STATIC(CURLFTP_CREATE_DIR_NONE);
+    CREATE_CURL_FTP_CREATE_DIR_BIC_STATIC(CURLFTP_CREATE_DIR);
+    CREATE_CURL_FTP_CREATE_DIR_BIC_STATIC(CURLFTP_CREATE_DIR_RETRY);
   }
 }/*}}}*/
 
@@ -1368,6 +1393,8 @@ method setopt
   case CURLOPT_TIMEOUT:
   case CURLOPT_TIMEOUT_MS:
   case CURLOPT_HTTPAUTH:
+  case CURLOPT_DIRLISTONLY:
+  case CURLOPT_FTP_CREATE_MISSING_DIRS:
     {
       long long int value;
 
