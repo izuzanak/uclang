@@ -6,15 +6,16 @@ include "shape_module.h"
 // - SHAPE indexes of built in classes -
 unsigned c_bi_class_shp_handle = c_idx_not_exist;
 unsigned c_bi_class_shp_object = c_idx_not_exist;
+unsigned c_bi_class_shp_part = c_idx_not_exist;
 
 // - SHAPE module -
 EXPORT built_in_module_s module =
 {/*{{{*/
-  2,                     // Class count
+  3,                     // Class count
   shape_classes,         // Classes
 
   0,                     // Error base index
-  3,                     // Error count
+  4,                     // Error count
   shape_error_strings,   // Error strings
 
   shape_initialize,      // Initialize function
@@ -26,6 +27,7 @@ built_in_class_s *shape_classes[] =
 {/*{{{*/
   &shp_handle_class,
   &shp_object_class,
+  &shp_part_class,
 };/*}}}*/
 
 // - SHAPE error strings -
@@ -34,6 +36,7 @@ const char *shape_error_strings[] =
   "error_SHP_HANDLE_FILE_OPEN_ERROR",
   "error_SHP_HANDLE_INDEX_EXCEEDS_RANGE",
   "error_SHP_OBJECT_INDEX_EXCEEDS_RANGE",
+  "error_SHP_PART_INDEX_EXCEEDS_RANGE",
 };/*}}}*/
 
 // - SHAPE initialize -
@@ -46,6 +49,9 @@ bool shape_initialize(script_parser_s &sp)
 
   // - initialize shp_object class identifier -
   c_bi_class_shp_object = class_base_idx++;
+
+  // - initialize shp_part class identifier -
+  c_bi_class_shp_part = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -76,7 +82,14 @@ bool shape_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nIndex %" HOST_LL_FORMAT "d exceeds shape object vertices range\n",exception.params[0]);
+    fprintf(stderr,"\nIndex %" HOST_LL_FORMAT "d exceeds shape object parts range\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SHP_PART_INDEX_EXCEEDS_RANGE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nIndex %" HOST_LL_FORMAT "d exceeds shape part vertices range\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -364,7 +377,7 @@ built_in_class_s shp_object_class =
 {/*{{{*/
   "ShpObject",
   c_modifier_public | c_modifier_final,
-  9, shp_object_methods,
+  12, shp_object_methods,
   14, shp_object_variables,
   bic_shp_object_consts,
   bic_shp_object_init,
@@ -390,6 +403,11 @@ built_in_method_s shp_object_methods[] =
     bic_shp_object_operator_binary_equal
   },
   {
+    "operator_binary_le_br_re_br#1",
+    c_modifier_public | c_modifier_final,
+    bic_shp_object_operator_binary_le_br_re_br
+  },
+  {
     "shape_type#0",
     c_modifier_public | c_modifier_final,
     bic_shp_object_method_shape_type_0
@@ -400,19 +418,29 @@ built_in_method_s shp_object_methods[] =
     bic_shp_object_method_id_0
   },
   {
-    "x#1",
+    "min#0",
     c_modifier_public | c_modifier_final,
-    bic_shp_object_method_x_1
+    bic_shp_object_method_min_0
   },
   {
-    "y#1",
+    "max#0",
     c_modifier_public | c_modifier_final,
-    bic_shp_object_method_y_1
+    bic_shp_object_method_max_0
   },
   {
-    "z#1",
+    "item#1",
     c_modifier_public | c_modifier_final,
-    bic_shp_object_method_z_1
+    bic_shp_object_method_item_1
+  },
+  {
+    "first_idx#0",
+    c_modifier_public | c_modifier_final,
+    bic_shp_object_method_first_idx_0
+  },
+  {
+    "next_idx#1",
+    c_modifier_public | c_modifier_final,
+    bic_shp_object_method_next_idx_1
   },
   {
     "length#0",
@@ -456,13 +484,58 @@ built_in_variable_s shp_object_variables[] =
   SHPObject *so_ptr = (SHPObject *)dst_location->v_data_ptr;\
 \
   /* - ERROR - */\
-  if (index < 0 || index >= so_ptr->nVertices) {\
+  if (index < 0 || index >= so_ptr->nParts) {\
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_SHP_OBJECT_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     new_exception->params.push(index);\
 \
     return false;\
   }\
   /*}}}*/
+
+#define BIC_SHP_OBJECT_ITEM(NAME) \
+  {/*{{{*/\
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method NAME
+macro
+; @end\
+\
+    BIC_SHP_OBJECT_CHECK_INDEX();\
+\
+    /* - create shp part object - */\
+    shp_part_s *sp_ptr = (shp_part_s *)cmalloc(sizeof(shp_part_s));\
+    sp_ptr->init();\
+\
+    dst_location->v_reference_cnt.atomic_inc();\
+    sp_ptr->object_loc = dst_location;\
+    sp_ptr->part_idx = index;\
+\
+    int part_start = so_ptr->panPartStart[index];\
+    int part_end;\
+\
+    /* - not last part of object - */\
+    if (index + 1 < so_ptr->nParts)\
+    {\
+      part_end = so_ptr->panPartStart[index + 1];\
+    }\
+    else\
+    {\
+      part_end = so_ptr->nVertices;\
+    }\
+\
+    sp_ptr->length = part_end - part_start;\
+\
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_shp_part,sp_ptr);\
+    BIC_SET_RESULT(new_location);\
+  }/*}}}*/
+
+#define BIC_SHP_OBJECT_MIN_MAX_VALUE(NAME) \
+{/*{{{*/\
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,so_ptr->NAME);\
+  array_ptr->push(new_location);\
+}/*}}}*/
 
 void bic_shp_object_consts(location_array_s &const_locations)
 {/*{{{*/
@@ -522,6 +595,13 @@ bool bic_shp_object_operator_binary_equal(interpreter_thread_s &it,unsigned stac
   return true;
 }/*}}}*/
 
+bool bic_shp_object_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_SHP_OBJECT_ITEM("operator_binary_le_br_re_br#1");
+
+  return true;
+}/*}}}*/
+
 bool bic_shp_object_method_shape_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -548,65 +628,88 @@ bool bic_shp_object_method_id_0(interpreter_thread_s &it,unsigned stack_base,uli
   return true;
 }/*}}}*/
 
-bool bic_shp_object_method_x_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_shp_object_method_min_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-@begin ucl_params
-<
-index:retrieve_integer
->
-method x
-; @end
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  BIC_SHP_OBJECT_CHECK_INDEX();
+  SHPObject *so_ptr = (SHPObject *)dst_location->v_data_ptr;
 
-  double result = so_ptr->padfX[index];
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
 
-  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
+  BIC_SHP_OBJECT_MIN_MAX_VALUE(dfXMin);
+  BIC_SHP_OBJECT_MIN_MAX_VALUE(dfYMin);
+  BIC_SHP_OBJECT_MIN_MAX_VALUE(dfZMin);
+  BIC_SHP_OBJECT_MIN_MAX_VALUE(dfMMin);
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
 
-bool bic_shp_object_method_y_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_shp_object_method_max_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-@begin ucl_params
-<
-index:retrieve_integer
->
-method y
-; @end
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  BIC_SHP_OBJECT_CHECK_INDEX();
+  SHPObject *so_ptr = (SHPObject *)dst_location->v_data_ptr;
 
-  double result = so_ptr->padfY[index];
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
 
-  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
+  BIC_SHP_OBJECT_MIN_MAX_VALUE(dfXMax);
+  BIC_SHP_OBJECT_MIN_MAX_VALUE(dfYMax);
+  BIC_SHP_OBJECT_MIN_MAX_VALUE(dfZMax);
+  BIC_SHP_OBJECT_MIN_MAX_VALUE(dfMMax);
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
 
-bool bic_shp_object_method_z_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_shp_object_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-@begin ucl_params
-<
-index:retrieve_integer
->
-method z
-; @end
+  BIC_SHP_OBJECT_ITEM("item#1");
 
-  BIC_SHP_OBJECT_CHECK_INDEX();
+  return true;
+}/*}}}*/
 
-  double result;
+bool bic_shp_object_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  if (so_ptr->padfZ != nullptr)
+  SHPObject *so_ptr = (SHPObject *)dst_location->v_data_ptr;
+
+  if (so_ptr->nParts > 0)
   {
-    result = so_ptr->padfZ[index];
+    BIC_SIMPLE_SET_RES(c_bi_class_integer,0);
   }
   else
   {
-    result = 0.0;
+    BIC_SET_RESULT_BLANK();
   }
 
-  BIC_SIMPLE_SET_RES(c_bi_class_float,result);
+  return true;
+}/*}}}*/
+
+bool bic_shp_object_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method next_idx
+; @end
+
+  BIC_SHP_OBJECT_CHECK_INDEX();
+
+  if (++index < so_ptr->nParts)
+  {
+    BIC_SIMPLE_SET_RES(c_bi_class_integer,index);
+  }
+  else
+  {
+    BIC_SET_RESULT_BLANK();
+  }
 
   return true;
 }/*}}}*/
@@ -615,7 +718,7 @@ bool bic_shp_object_method_length_0(interpreter_thread_s &it,unsigned stack_base
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  long long int result = ((SHPObject *)dst_location->v_data_ptr)->nVertices;
+  long long int result = ((SHPObject *)dst_location->v_data_ptr)->nParts;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
@@ -634,6 +737,261 @@ bool bic_shp_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 bool bic_shp_object_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   printf("ShpObject");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class SHP_PART -
+built_in_class_s shp_part_class =
+{/*{{{*/
+  "ShpPart",
+  c_modifier_public | c_modifier_final,
+  9, shp_part_methods,
+  0, shp_part_variables,
+  bic_shp_part_consts,
+  bic_shp_part_init,
+  bic_shp_part_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s shp_part_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_shp_part_operator_binary_equal
+  },
+  {
+    "operator_binary_le_br_re_br#1",
+    c_modifier_public | c_modifier_final,
+    bic_shp_part_operator_binary_le_br_re_br
+  },
+  {
+    "shape_type#0",
+    c_modifier_public | c_modifier_final,
+    bic_shp_part_method_shape_type_0
+  },
+  {
+    "item#1",
+    c_modifier_public | c_modifier_final,
+    bic_shp_part_method_item_1
+  },
+  {
+    "first_idx#0",
+    c_modifier_public | c_modifier_final,
+    bic_shp_part_method_first_idx_0
+  },
+  {
+    "next_idx#1",
+    c_modifier_public | c_modifier_final,
+    bic_shp_part_method_next_idx_1
+  },
+  {
+    "length#0",
+    c_modifier_public | c_modifier_final,
+    bic_shp_part_method_length_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_shp_part_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_shp_part_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s shp_part_variables[] =
+{/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
+};/*}}}*/
+
+#define BIC_SHP_PART_CHECK_INDEX() \
+  /*{{{*/\
+  shp_part_s *sp_ptr = (shp_part_s *)dst_location->v_data_ptr;\
+\
+  /* - ERROR - */\
+  if (index < 0 || index >= sp_ptr->length) {\
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_SHP_PART_INDEX_EXCEEDS_RANGE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    new_exception->params.push(index);\
+\
+    return false;\
+  }\
+  /*}}}*/
+
+#define BIC_SHP_PART_ITEM(NAME) \
+  {/*{{{*/\
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method NAME
+macro
+; @end\
+\
+    BIC_SHP_PART_CHECK_INDEX();\
+\
+    SHPObject *so_ptr = (SHPObject *)sp_ptr->object_loc->v_data_ptr;\
+\
+    /* - retrieve vertex index - */\
+    unsigned vertex_idx = so_ptr->panPartStart[sp_ptr->part_idx] + index;\
+\
+    pointer_array_s *array_ptr = it.get_new_array_ptr();\
+\
+    BIC_CREATE_NEW_LOCATION(x_location,c_bi_class_float,so_ptr->padfX[vertex_idx]);\
+    array_ptr->push(x_location);\
+\
+    BIC_CREATE_NEW_LOCATION(y_location,c_bi_class_float,so_ptr->padfY[vertex_idx]);\
+    array_ptr->push(y_location);\
+\
+    if (so_ptr->padfZ != nullptr)\
+    {\
+      BIC_CREATE_NEW_LOCATION(z_location,c_bi_class_float,so_ptr->padfZ[vertex_idx]);\
+      array_ptr->push(z_location);\
+    }\
+\
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);\
+    BIC_SET_RESULT(new_location);\
+  }/*}}}*/
+
+void bic_shp_part_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_shp_part_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (shp_part_s *)nullptr;
+}/*}}}*/
+
+void bic_shp_part_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  shp_part_s *sp_ptr = (shp_part_s *)location_ptr->v_data_ptr;
+
+  if (sp_ptr != nullptr)
+  {
+    sp_ptr->clear(it);
+    cfree(sp_ptr);
+  }
+}/*}}}*/
+
+bool bic_shp_part_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_shp_part_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_SHP_PART_ITEM("operator_binary_le_br_re_br#1");
+
+  return true;
+}/*}}}*/
+
+bool bic_shp_part_method_shape_type_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  shp_part_s *sp_ptr = (shp_part_s *)dst_location->v_data_ptr;
+  SHPObject *so_ptr = (SHPObject *)sp_ptr->object_loc->v_data_ptr;
+
+  long long int result = so_ptr->panPartType[sp_ptr->part_idx];
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_shp_part_method_item_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_SHP_PART_ITEM("item#1");
+
+  return true;
+}/*}}}*/
+
+bool bic_shp_part_method_first_idx_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  shp_part_s *sp_ptr = (shp_part_s *)dst_location->v_data_ptr;
+
+  if (sp_ptr->length > 0)
+  {
+    BIC_SIMPLE_SET_RES(c_bi_class_integer,0);
+  }
+  else
+  {
+    BIC_SET_RESULT_BLANK();
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_shp_part_method_next_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+index:retrieve_integer
+>
+method next_idx
+; @end
+
+  BIC_SHP_PART_CHECK_INDEX();
+
+  if (++index < sp_ptr->length)
+  {
+    BIC_SIMPLE_SET_RES(c_bi_class_integer,index);
+  }
+  else
+  {
+    BIC_SET_RESULT_BLANK();
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_shp_part_method_length_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = ((shp_part_s *)dst_location->v_data_ptr)->length;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_shp_part_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("ShpPart"),"ShpPart");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_shp_part_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("ShpPart");
 
   BIC_SET_RESULT_BLANK();
 
