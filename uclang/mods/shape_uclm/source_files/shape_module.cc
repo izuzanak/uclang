@@ -15,7 +15,7 @@ EXPORT built_in_module_s module =
   shape_classes,         // Classes
 
   0,                     // Error base index
-  4,                     // Error count
+  5,                     // Error count
   shape_error_strings,   // Error strings
 
   shape_initialize,      // Initialize function
@@ -35,6 +35,7 @@ const char *shape_error_strings[] =
 {/*{{{*/
   "error_SHP_HANDLE_FILE_OPEN_ERROR",
   "error_SHP_HANDLE_INDEX_EXCEEDS_RANGE",
+  "error_SHP_HANDLE_READ_OBJECT_ERROR",
   "error_SHP_OBJECT_INDEX_EXCEEDS_RANGE",
   "error_SHP_PART_INDEX_EXCEEDS_RANGE",
 };/*}}}*/
@@ -76,6 +77,13 @@ bool shape_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nIndex %" HOST_LL_FORMAT "d exceeds shape entities range\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SHP_HANDLE_READ_OBJECT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while reading object from shape file\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_SHP_OBJECT_INDEX_EXCEEDS_RANGE:
@@ -206,8 +214,7 @@ macro
     /* ERROR */\
     if (so_ptr == nullptr)\
     {\
-      /* FIXME TODO throw proper exception */\
-      BIC_TODO_ERROR(__FILE__,__LINE__);\
+      exception_s::throw_exception(it,module.error_base + c_error_SHP_HANDLE_READ_OBJECT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       return false;\
     }\
 \
