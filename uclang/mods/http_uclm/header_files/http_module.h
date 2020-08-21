@@ -25,6 +25,9 @@ enum
   c_error_HTTP_SERVER_CANNOT_START_DAEMON,
   c_error_HTTP_SERVER_INTERNAL_ERROR,
   c_error_HTTP_SERVER_WAS_STOPPED,
+  c_error_HTTP_SERVER_EXPECTED_INTEGER_AS_OPTION_ID,
+  c_error_HTTP_SERVER_UNKNOWN_OPTION_ID,
+  c_error_HTTP_SERVER_INVALID_OPTION_VALUE_TYPE,
   c_error_HTTP_CONN_UNKNOWN_VALUES_TYPE,
   c_error_HTTP_CONN_ALREADY_SUSPENDED,
   c_error_HTTP_CONN_NOT_SUSPENDED,
@@ -59,7 +62,6 @@ void bic_http_server_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_http_server_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_http_server_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_http_server_method_HttpServer_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_server_method_HttpServer_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_server_method_stop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -87,6 +89,7 @@ bool bic_http_conn_method_version_0(interpreter_thread_s &it,unsigned stack_base
 bool bic_http_conn_method_upload_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_values_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+//bool bic_http_conn_method_value_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_client_ip_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_suspend_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_resume_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

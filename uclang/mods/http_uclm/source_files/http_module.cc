@@ -16,7 +16,7 @@ EXPORT built_in_module_s module =
   http_classes,          // Classes
 
   0,                     // Error base index
-  17,                    // Error count
+  20,                    // Error count
   http_error_strings,    // Error strings
 
   http_initialize,       // Initialize function
@@ -39,6 +39,9 @@ const char *http_error_strings[] =
   "error_HTTP_SERVER_CANNOT_START_DAEMON",
   "error_HTTP_SERVER_INTERNAL_ERROR",
   "error_HTTP_SERVER_WAS_STOPPED",
+  "error_HTTP_SERVER_EXPECTED_INTEGER_AS_OPTION_ID",
+  "error_HTTP_SERVER_UNKNOWN_OPTION_ID",
+  "error_HTTP_SERVER_INVALID_OPTION_VALUE_TYPE",
   "error_HTTP_CONN_UNKNOWN_VALUES_TYPE",
   "error_HTTP_CONN_ALREADY_SUSPENDED",
   "error_HTTP_CONN_NOT_SUSPENDED",
@@ -108,6 +111,27 @@ bool http_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nHTTP server was stopped (cannot be used any more)\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_HTTP_SERVER_EXPECTED_INTEGER_AS_OPTION_ID:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nHTTP server, expected integer as option identifier\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_HTTP_SERVER_UNKNOWN_OPTION_ID:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nHTTP server, unknown option identifier\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_HTTP_SERVER_INVALID_OPTION_VALUE_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nHTTP server, invalid type of option value\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_HTTP_CONN_UNKNOWN_VALUES_TYPE:
@@ -213,8 +237,8 @@ built_in_class_s http_server_class =
 {/*{{{*/
   "HttpServer",
   c_modifier_public | c_modifier_final,
-  10, http_server_methods,
-  0, http_server_variables,
+  9, http_server_methods,
+  1 + 2, http_server_variables,
   bic_http_server_consts,
   bic_http_server_init,
   bic_http_server_clear,
@@ -237,11 +261,6 @@ built_in_method_s http_server_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_http_server_operator_binary_equal
-  },
-  {
-    "HttpServer#2",
-    c_modifier_public | c_modifier_final,
-    bic_http_server_method_HttpServer_2
   },
   {
     "HttpServer#4",
@@ -287,11 +306,48 @@ built_in_method_s http_server_methods[] =
 
 built_in_variable_s http_server_variables[] =
 {/*{{{*/
-  BIC_CLASS_EMPTY_VARIABLES
+
+  // - http server use constants -
+  { "USE_SSL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - http server option constants -
+  { "OPTION_HTTPS_MEM_KEY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPTION_HTTPS_MEM_CERT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_http_server_consts(location_array_s &const_locations)
 {/*{{{*/
+
+  // - insert http server use constants -
+  {
+    const_locations.push_blanks(1);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 1);
+
+#define CREATE_HTTP_SERVER_USE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_HTTP_SERVER_USE_BIC_STATIC(MHD_USE_SSL);
+  }
+
+  // - insert http server option constants -
+  {
+    const_locations.push_blanks(2);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 2);
+
+#define CREATE_HTTP_SERVER_OPTION_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_HTTP_SERVER_OPTION_BIC_STATIC(MHD_OPTION_HTTPS_MEM_KEY);
+    CREATE_HTTP_SERVER_OPTION_BIC_STATIC(MHD_OPTION_HTTPS_MEM_CERT);
+  }
+
 }/*}}}*/
 
 void bic_http_server_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -322,74 +378,20 @@ bool bic_http_server_operator_binary_equal(interpreter_thread_s &it,unsigned sta
   return true;
 }/*}}}*/
 
-bool bic_http_server_method_HttpServer_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-@begin ucl_params
-<
-port:retrieve_integer
-delegate:c_bi_class_delegate
->
-method HttpServer
-; @end
-
-  // - retrieve delegate pointer -
-  delegate_s *delegate_ptr = (delegate_s *)src_1_location->v_data_ptr;
-
-  // - ERROR -
-  if (delegate_ptr->param_cnt != 1)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_WRONG_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - create http_server object -
-  http_server_s *srv_ptr = (http_server_s *)cmalloc(sizeof(http_server_s));
-  srv_ptr->init();
-
-  // - register connection delegate -
-  src_1_location->v_reference_cnt.atomic_inc();
-  srv_ptr->connection_dlg = src_1_location;
-
-  // - start http server -
-  MHD_Daemon *daemon_ptr = MHD_start_daemon(
-      MHD_USE_SUSPEND_RESUME,port,nullptr,nullptr,
-      &connection_func,dst_location,
-      MHD_OPTION_NOTIFY_COMPLETED,completed_func,nullptr,
-      MHD_OPTION_END);
-
-  // - ERROR -
-  if (daemon_ptr == nullptr)
-  {
-    srv_ptr->clear(it);
-    cfree(srv_ptr);
-
-    exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_CANNOT_START_DAEMON,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - set server daemon pointer -
-  srv_ptr->daemon_ptr = daemon_ptr;
-
-  // - set http_server destination location -
-  dst_location->v_data_ptr = (http_server_s *)srv_ptr;
-
-  return true;
-}/*}}}*/
-
 bool bic_http_server_method_HttpServer_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
+flags:retrieve_integer
 port:retrieve_integer
 delegate:c_bi_class_delegate
-key:c_bi_class_string
-cert:c_bi_class_string
+opts:c_bi_class_array
 >
 method HttpServer
 ; @end
 
   // - retrieve delegate pointer -
-  delegate_s *delegate_ptr = (delegate_s *)src_1_location->v_data_ptr;
+  delegate_s *delegate_ptr = (delegate_s *)src_2_location->v_data_ptr;
 
   // - ERROR -
   if (delegate_ptr->param_cnt != 1)
@@ -398,24 +400,73 @@ method HttpServer
     return false;
   }
 
+  // - process options -
+  pointer_array_s *opts_array = (pointer_array_s *)src_3_location->v_data_ptr;
+
+  MHD_OptionItem mhd_opts[(opts_array->used >> 1) + 2];
+  MHD_OptionItem *mhd_opt_ptr = mhd_opts;
+
+  if (opts_array->used != 0)
+  {
+    pointer *ptr = opts_array->data;
+    pointer *ptr_end = ptr + opts_array->used;
+    do {
+      location_s *option_loc = it.get_location_value(*ptr);
+
+      // - ERROR -
+      long long int option;
+      if (!it.retrieve_integer(option_loc,option))
+      {
+        exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_EXPECTED_INTEGER_AS_OPTION_ID,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+
+      switch (option)
+      {
+      case MHD_OPTION_HTTPS_MEM_KEY:
+      case MHD_OPTION_HTTPS_MEM_CERT:
+        {
+          location_s *value_loc = it.get_location_value(ptr[1]);
+
+          // - ERROR -
+          if (value_loc->v_type != c_bi_class_string)
+          {
+            exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_INVALID_OPTION_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            return false;
+          }
+
+          string_s *string_ptr = (string_s *)value_loc->v_data_ptr;
+          *mhd_opt_ptr++ = MHD_OptionItem{ (MHD_OPTION)option,0,string_ptr->data };
+
+          ptr += 2;
+        }
+        break;
+
+      // - ERROR -
+      default:
+        exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_UNKNOWN_OPTION_ID,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+
+    } while(ptr < ptr_end);
+  }
+
+  *mhd_opt_ptr++ = MHD_OptionItem{ MHD_OPTION_NOTIFY_COMPLETED,(intptr_t)completed_func,nullptr };
+  *mhd_opt_ptr++ = MHD_OptionItem{ MHD_OPTION_END,0,nullptr };
+
   // - create http_server object -
   http_server_s *srv_ptr = (http_server_s *)cmalloc(sizeof(http_server_s));
   srv_ptr->init();
 
-  string_s *key_ptr = (string_s *)src_2_location->v_data_ptr;
-  string_s *cert_ptr = (string_s *)src_3_location->v_data_ptr;
-
   // - register connection delegate -
-  src_1_location->v_reference_cnt.atomic_inc();
-  srv_ptr->connection_dlg = src_1_location;
+  src_2_location->v_reference_cnt.atomic_inc();
+  srv_ptr->connection_dlg = src_2_location;
 
   // - start http server -
   MHD_Daemon *daemon_ptr = MHD_start_daemon(
-      MHD_USE_SUSPEND_RESUME | MHD_USE_SSL,port,nullptr,nullptr,
+      MHD_USE_SUSPEND_RESUME | flags,port,nullptr,nullptr,
       &connection_func,dst_location,
-      MHD_OPTION_NOTIFY_COMPLETED,completed_func,nullptr,
-      MHD_OPTION_HTTPS_MEM_KEY,key_ptr->data,
-      MHD_OPTION_HTTPS_MEM_CERT,cert_ptr->data,
+      MHD_OPTION_ARRAY,mhd_opts,
       MHD_OPTION_END);
 
   // - ERROR -
@@ -864,7 +915,7 @@ built_in_method_s http_conn_methods[] =
 built_in_variable_s http_conn_variables[] =
 {/*{{{*/
 
-  // - conn type constants -
+  // - http conn type constants -
   { "TYPE_CONNECT", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "TYPE_DELETE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "TYPE_GET", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -874,14 +925,14 @@ built_in_variable_s http_conn_variables[] =
   { "TYPE_PUT", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "TYPE_TRACE", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
-  // - value type constants -
+  // - http conn value type constants -
   { "VALS_HEADER", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VALS_COOKIE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VALS_POSTDATA", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VALS_GET_ARGUMENT", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VALS_FOOTER", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
-  // - value result constants -
+  // - http conn value result constants -
   { "YES", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "NO", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "INVALID_NONCE", c_modifier_public | c_modifier_static | c_modifier_static_const },
