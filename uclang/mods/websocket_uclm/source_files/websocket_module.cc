@@ -207,9 +207,9 @@ built_in_method_s ws_context_methods[] =
     bic_ws_context_operator_binary_equal
   },
   {
-    "WsContext#2",
+    "WsContext#3",
     c_modifier_public | c_modifier_final,
-    bic_ws_context_method_WsContext_2
+    bic_ws_context_method_WsContext_3
   },
   {
     "version#0",
@@ -307,18 +307,22 @@ bool bic_ws_context_operator_binary_equal(interpreter_thread_s &it,unsigned stac
   return true;
 }/*}}}*/
 
-bool bic_ws_context_method_WsContext_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_ws_context_method_WsContext_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
+iface:c_bi_class_string
 port:retrieve_integer
 protocols:c_bi_class_array
 >
 method WsContext
 ; @end
 
+  // - retrieve interface string -
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
   // - retrieve protocols array -
-  pointer_array_s *array_ptr = (pointer_array_s *)src_1_location->v_data_ptr;
+  pointer_array_s *array_ptr = (pointer_array_s *)src_2_location->v_data_ptr;
 
   // - ERROR -
   if (array_ptr->used == 0)
@@ -414,8 +418,8 @@ method WsContext
   lws_context_creation_info info;
   memset(&info,0,sizeof info);
 
+  info.iface = string_ptr->data;
   info.port = port;
-  info.iface = nullptr;
   info.protocols = wsc_ptr->protocols;
   info.extensions = ws_default_extensions;
   info.gid = -1;
