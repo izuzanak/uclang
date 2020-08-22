@@ -330,7 +330,7 @@ method process
   int quirc_width;
   int quirc_height;
   uint8_t *quirc_buffer = quirc_begin(qrc_ptr->quirc_ptr,&quirc_width,&quirc_height);
-  
+
   // - ERROR -
   if ((unsigned)(quirc_width*quirc_height) != data_size)
   {

@@ -2778,7 +2778,7 @@ method CryptoOpen
   }
 
   crypto_pkey_s *ck_ptr = (crypto_pkey_s *)src_3_location->v_data_ptr;
-  
+
   // - ERROR -
   if (ck_ptr->ispub)
   {

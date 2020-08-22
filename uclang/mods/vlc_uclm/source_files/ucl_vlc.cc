@@ -21,7 +21,7 @@ void *vlc_player_s::lock(void *user,void **p_pixels)
   cassert(((mutex_s *)vp_ptr->mutex_loc->v_data_ptr)->lock() == c_error_OK);
 
   *p_pixels = vp_ptr->pixels;
-  
+
   return nullptr;
 }/*}}}*/
 

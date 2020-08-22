@@ -554,7 +554,7 @@ bool bic_raw_processor_method_get_thumb_0(interpreter_thread_s &it,unsigned stac
       exception_s::throw_exception(it,module.error_base + c_error_RAW_PROCESSOR_UNPACK_THUMBNAIL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
-    
+
     rp_ptr->state |= c_raw_proc_state_unpacked_thumb;
   }
 

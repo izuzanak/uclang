@@ -9,6 +9,10 @@ unsigned c_bi_class_http_conn = c_idx_not_exist;
 unsigned c_bi_class_http_resp = c_idx_not_exist;
 unsigned c_bi_class_http_post_proc = c_idx_not_exist;
 
+#ifdef ENABLE_RM_CLASS_SOCKET
+unsigned c_rm_class_socket_addr = c_idx_not_exist;
+#endif
+
 // - HTTP module -
 EXPORT built_in_module_s module =
 {/*{{{*/
@@ -16,7 +20,7 @@ EXPORT built_in_module_s module =
   http_classes,          // Classes
 
   0,                     // Error base index
-  20,                    // Error count
+  21,                    // Error count
   http_error_strings,    // Error strings
 
   http_initialize,       // Initialize function
@@ -43,6 +47,7 @@ const char *http_error_strings[] =
   "error_HTTP_SERVER_UNKNOWN_OPTION_ID",
   "error_HTTP_SERVER_INVALID_OPTION_VALUE_TYPE",
   "error_HTTP_CONN_UNKNOWN_VALUES_TYPE",
+  "error_HTTP_CONN_INVALID_VALUE_NAME",
   "error_HTTP_CONN_ALREADY_SUSPENDED",
   "error_HTTP_CONN_NOT_SUSPENDED",
   "error_HTTP_CONN_CANNOT_QUEUE_RESPONSE",
@@ -73,6 +78,21 @@ bool http_initialize(script_parser_s &sp)
 
   // - initialize http_post_proc class identifier -
   c_bi_class_http_post_proc = class_base_idx++;
+
+#ifdef ENABLE_RM_CLASS_SOCKET
+  // - retrieve remote dict class index -
+  c_rm_class_socket_addr = sp.resolve_class_idx_by_name("SocketAddr",c_idx_not_exist);
+
+  // - ERROR -
+  if (c_rm_class_socket_addr == c_idx_not_exist)
+  {
+    sp.error_code.push(ei_module_cannot_find_remote_class);
+    sp.error_code.push(sp.module_names_positions[sp.module_idx].ui_first);
+    sp.error_code.push(sp.module_idx);
+
+    return false;
+  }
+#endif
 
   return true;
 }/*}}}*/
@@ -139,6 +159,13 @@ bool http_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nUnknown type of requested HTTP connection values\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_HTTP_CONN_INVALID_VALUE_NAME:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid name \"%s\" of requested HTTP connection value\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_HTTP_CONN_ALREADY_SUSPENDED:
@@ -238,7 +265,11 @@ built_in_class_s http_server_class =
   "HttpServer",
   c_modifier_public | c_modifier_final,
   9, http_server_methods,
-  1 + 2, http_server_variables,
+  1 + 2
+#ifdef ENABLE_RM_CLASS_SOCKET
+  + 1
+#endif
+  , http_server_variables,
   bic_http_server_consts,
   bic_http_server_init,
   bic_http_server_clear,
@@ -311,6 +342,9 @@ built_in_variable_s http_server_variables[] =
   { "USE_SSL", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
   // - http server option constants -
+#ifdef ENABLE_RM_CLASS_SOCKET
+  { "OPTION_SOCK_ADDR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#endif
   { "OPTION_HTTPS_MEM_KEY", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPTION_HTTPS_MEM_CERT", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
@@ -335,8 +369,16 @@ void bic_http_server_consts(location_array_s &const_locations)
 
   // - insert http server option constants -
   {
-    const_locations.push_blanks(2);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 2);
+    const_locations.push_blanks(2
+#ifdef ENABLE_RM_CLASS_SOCKET
+  + 1
+#endif
+    );
+    location_s *cv_ptr = const_locations.data + (const_locations.used - (2
+#ifdef ENABLE_RM_CLASS_SOCKET
+  + 1
+#endif
+    ));
 
 #define CREATE_HTTP_SERVER_OPTION_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -344,6 +386,9 @@ void bic_http_server_consts(location_array_s &const_locations)
   cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
+#ifdef ENABLE_RM_CLASS_SOCKET
+    CREATE_HTTP_SERVER_OPTION_BIC_STATIC(MHD_OPTION_SOCK_ADDR);
+#endif
     CREATE_HTTP_SERVER_OPTION_BIC_STATIC(MHD_OPTION_HTTPS_MEM_KEY);
     CREATE_HTTP_SERVER_OPTION_BIC_STATIC(MHD_OPTION_HTTPS_MEM_CERT);
   }
@@ -423,6 +468,25 @@ method HttpServer
 
       switch (option)
       {
+#ifdef ENABLE_RM_CLASS_SOCKET
+      case MHD_OPTION_SOCK_ADDR:
+        {
+          location_s *value_loc = it.get_location_value(ptr[1]);
+
+          // - ERROR -
+          if (value_loc->v_type != c_rm_class_socket_addr)
+          {
+            exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_INVALID_OPTION_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            return false;
+          }
+
+          sockaddr *addr_ptr = (sockaddr *)value_loc->v_data_ptr;
+          *mhd_opt_ptr++ = MHD_OptionItem{ (MHD_OPTION)option,0,addr_ptr };
+
+          ptr += 2;
+        }
+        break;
+#endif
       case MHD_OPTION_HTTPS_MEM_KEY:
       case MHD_OPTION_HTTPS_MEM_CERT:
         {
@@ -785,7 +849,7 @@ built_in_class_s http_conn_class =
 {/*{{{*/
   "HttpConn",
   c_modifier_public | c_modifier_final,
-  21, http_conn_methods,
+  22, http_conn_methods,
   8 + 5 + 3, http_conn_variables,
   bic_http_conn_consts,
   bic_http_conn_init,
@@ -849,6 +913,11 @@ built_in_method_s http_conn_methods[] =
     "values#1",
     c_modifier_public | c_modifier_final,
     bic_http_conn_method_values_1
+  },
+  {
+    "value#2",
+    c_modifier_public | c_modifier_final,
+    bic_http_conn_method_value_2
   },
   {
     "client_ip#0",
@@ -1159,6 +1228,53 @@ method values
   conn_ptr->key_value_arr_ptr = array_ptr;
   MHD_get_connection_values(conn_ptr->connection_ptr,(MHD_ValueKind)vals_type,&conn_key_value_func,conn_ptr);
   conn_ptr->key_value_arr_ptr = nullptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_http_conn_method_value_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+vals_type:retrieve_integer
+key:c_bi_class_string
+>
+method value
+; @end
+
+  // - test requested values type -
+  switch (vals_type)
+  {
+  case MHD_HEADER_KIND:
+  case MHD_COOKIE_KIND:
+  case MHD_POSTDATA_KIND:
+  case MHD_GET_ARGUMENT_KIND:
+  case MHD_FOOTER_KIND:
+    break;
+
+  // - ERROR -
+  default:
+
+    exception_s::throw_exception(it,module.error_base + c_error_HTTP_CONN_UNKNOWN_VALUES_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  http_conn_s *conn_ptr = (http_conn_s *)dst_location->v_data_ptr;
+  string_s *string_ptr = (string_s *)src_1_location->v_data_ptr;
+
+  const char *value = MHD_lookup_connection_value(conn_ptr->connection_ptr,(MHD_ValueKind)vals_type,string_ptr->data);
+
+  // - ERROR -
+  if (value == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_HTTP_CONN_INVALID_VALUE_NAME,operands[c_source_pos_idx],src_1_location);
+    return false;
+  }
+
+  string_s *value_ptr = it.get_new_string_ptr();
+  value_ptr->set(strlen(value),value);
+
+  BIC_SET_RESULT_STRING(value_ptr);
 
   return true;
 }/*}}}*/

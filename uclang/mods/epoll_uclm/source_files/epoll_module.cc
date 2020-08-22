@@ -337,7 +337,7 @@ method update
     epoll_fd_s *fd_ptr = fds.data;
     epoll_fd_s *fd_ptr_end = fd_ptr + fds.used;
     do {
-      
+
       // - fd is not unused -
       if (fd_ptr->fd != EPOLL_FD_UNUSED)
       {
@@ -445,7 +445,7 @@ method update
     epoll_fd_s *fd_ptr = fds.data;
     epoll_fd_s *fd_ptr_end = fd_ptr + fds.used;
     do {
-      
+
       // - fd is marked as removed -
       if (fd_ptr->fd == EPOLL_FD_REMOVED)
       {

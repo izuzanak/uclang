@@ -10,11 +10,14 @@ include "script_parser.h"
 #include <poll.h>
 #include <fcntl.h>
 #include <netdb.h>
+#if SYSTEM_TYPE_UNIX_SOCKET == ENABLED
+#define ENABLE_RM_CLASS_SOCKET
+#endif
 #elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
 #include <io.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-#endif 
+#endif
 
 #include <microhttpd.h>
 

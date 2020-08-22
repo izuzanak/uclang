@@ -584,7 +584,7 @@ method setsockopt
     break;
   case c_option_type_string:
     {/*{{{*/
-      
+
       // - ERROR -
       if (src_2_location->v_type != c_bi_class_string)
       {
@@ -669,7 +669,7 @@ method getsockopt
 
   // - ERROR -
   default:
-    
+
     exception_s::throw_exception(it,module.error_base + c_error_NANO_SOCKET_UNKNOWN_OPTION_AT_LEVEL,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }

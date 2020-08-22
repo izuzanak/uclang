@@ -263,7 +263,7 @@ method msg_descr
 
   const int buffer_size = 512;
   char buffer[buffer_size];
- 
+
   // - create proto_msg_descr object -
   proto_msg_descr_s *pmd_ptr = (proto_msg_descr_s *)cmalloc(sizeof(proto_msg_descr_s));
   pmd_ptr->init();

@@ -1132,7 +1132,7 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
             if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
             {
               VALIDATE_STACKS_PUSH_ITEMS();
-            
+
               return false;
             }
 
