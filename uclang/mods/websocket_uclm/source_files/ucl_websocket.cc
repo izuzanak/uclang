@@ -146,6 +146,7 @@ int protocol_func(lws *wsi,enum lws_callback_reasons reason,void *user,void *in,
       }/*}}}*/
       break;
     case LWS_CALLBACK_CLOSED:
+    case LWS_CALLBACK_CLIENT_CLOSED:
     case LWS_CALLBACK_RECEIVE:
     case LWS_CALLBACK_CLIENT_RECEIVE:
     case LWS_CALLBACK_CLIENT_RECEIVE_PONG:
@@ -225,6 +226,7 @@ int protocol_func(lws *wsi,enum lws_callback_reasons reason,void *user,void *in,
       case LWS_CALLBACK_ESTABLISHED:
       case LWS_CALLBACK_CLIENT_ESTABLISHED:
       case LWS_CALLBACK_CLOSED:
+      case LWS_CALLBACK_CLIENT_CLOSED:
       case LWS_CALLBACK_CLIENT_RECEIVE_PONG:
       case LWS_CALLBACK_CLIENT_WRITEABLE:
       case LWS_CALLBACK_SERVER_WRITEABLE:
@@ -257,7 +259,7 @@ int protocol_func(lws *wsi,enum lws_callback_reasons reason,void *user,void *in,
           it.release_location_ptr(trg_location);
 
           // - if connection closed -
-          if (reason == LWS_CALLBACK_CLOSED)
+          if (reason == LWS_CALLBACK_CLOSED || reason == LWS_CALLBACK_CLIENT_CLOSED)
           {
             // - release connection location -
             it.release_location_ptr(conn_location);
