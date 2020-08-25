@@ -29,6 +29,7 @@ enum
   c_error_WS_CONTEXT_CANNOT_CREATE_CLIENT_CONNECTION,
   c_error_WS_CONTEXT_PROTOCOL_NAME_NOT_FOUND,
   c_error_WS_CONTEXT_PROTOCOL_INDEX_EXCEEDS_RANGE,
+  c_error_WS_CONN_INVALID_HTTP_HEADER_INDEX,
   c_error_WS_CONN_SET_TIMEOUT_UNKNOWN_REASON,
   c_error_WS_CONN_SET_TIMEOUT_WRONG_VALUE,
   c_error_WS_CONN_WRITE_ERROR,
@@ -81,6 +82,7 @@ bool bic_ws_conn_method_received_data_0(interpreter_thread_s &it,unsigned stack_
 bool bic_ws_conn_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ws_conn_method_ctx_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ws_conn_method_protocol_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ws_conn_method_header_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ws_conn_method_callback_on_writable_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ws_conn_method_set_timeout_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ws_conn_method_write_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);

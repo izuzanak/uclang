@@ -16,7 +16,7 @@ EXPORT built_in_module_s module =
   websocket_classes,         // Classes
 
   0,                         // Error base index
-  13,                        // Error count
+  14,                        // Error count
   websocket_error_strings,   // Error strings
 
   websocket_initialize,      // Initialize function
@@ -43,6 +43,7 @@ const char *websocket_error_strings[] =
   "error_WS_CONTEXT_CANNOT_CREATE_CLIENT_CONNECTION",
   "error_WS_CONTEXT_PROTOCOL_NAME_NOT_FOUND",
   "error_WS_CONTEXT_PROTOCOL_INDEX_EXCEEDS_RANGE",
+  "error_WS_CONN_INVALID_HTTP_HEADER_INDEX",
   "error_WS_CONN_SET_TIMEOUT_UNKNOWN_REASON",
   "error_WS_CONN_SET_TIMEOUT_WRONG_VALUE",
   "error_WS_CONN_WRITE_ERROR",
@@ -132,6 +133,13 @@ bool websocket_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nProtocol index %" HOST_LL_FORMAT "d exceeds protocol count\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_WS_CONN_INVALID_HTTP_HEADER_INDEX:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid http header index: %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_WS_CONN_SET_TIMEOUT_UNKNOWN_REASON:
@@ -679,8 +687,8 @@ built_in_class_s ws_conn_class =
 {/*{{{*/
   "WsConn",
   c_modifier_public | c_modifier_final,
-  12, ws_conn_methods,
-  6 + 26 + 9, ws_conn_variables,
+  13, ws_conn_methods,
+  6 + 26 + 9 + 50, ws_conn_variables,
   bic_ws_conn_consts,
   bic_ws_conn_init,
   bic_ws_conn_clear,
@@ -728,6 +736,11 @@ built_in_method_s ws_conn_methods[] =
     "protocol_name#0",
     c_modifier_public | c_modifier_final,
     bic_ws_conn_method_protocol_name_0
+  },
+  {
+    "header#1",
+    c_modifier_public | c_modifier_final,
+    bic_ws_conn_method_header_1
   },
   {
     "callback_on_writable#0",
@@ -810,6 +823,59 @@ built_in_variable_s ws_conn_variables[] =
   { "TIMEOUT_CLOSE_ACK", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "TIMEOUT_SENT_CLIENT_HANDSHAKE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "TIMEOUT_SSL_ACCEPT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - token types -
+  { "TOKEN_GET_URI", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_POST_URI", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HOST", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_CONNECTION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_UPGRADE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_ORIGIN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_CHALLENGE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_ACCEPT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_IF_MODIFIED_SINCE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_IF_NONE_MATCH", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_ACCEPT_ENCODING", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_ACCEPT_LANGUAGE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_PRAGMA", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_CACHE_CONTROL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_AUTHORIZATION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_COOKIE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_CONTENT_LENGTH", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_CONTENT_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_DATE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_RANGE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_ACCEPT_RANGES", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_AGE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_ALLOW", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_CONTENT_DISPOSITION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_CONTENT_ENCODING", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_CONTENT_LANGUAGE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_CONTENT_LOCATION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_CONTENT_RANGE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_ETAG", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_EXPECT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_EXPIRES", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_FROM", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_IF_MATCH", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_IF_RANGE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_IF_UNMODIFIED_SINCE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_LAST_MODIFIED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_LINK", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_LOCATION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_REFRESH", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_RETRY_AFTER", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_SERVER", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_SET_COOKIE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_TRANSFER_ENCODING", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP_URI_ARGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HTTP1_0", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_X_FORWARDED_FOR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_CONNECT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_HEAD_URI", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TOKEN_X_AUTH_TOKEN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 #define BIC_WS_CONN_WRITE(WRITE_TYPE) \
@@ -919,15 +985,78 @@ void bic_ws_conn_consts(location_array_s &const_locations)
   cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
-    CREATE_WS_CONN_CB_TYPE_BIC_STATIC(NO_PENDING_TIMEOUT);
-    CREATE_WS_CONN_CB_TYPE_BIC_STATIC(PENDING_TIMEOUT_AWAITING_PROXY_RESPONSE);
-    CREATE_WS_CONN_CB_TYPE_BIC_STATIC(PENDING_TIMEOUT_AWAITING_CONNECT_RESPONSE);
-    CREATE_WS_CONN_CB_TYPE_BIC_STATIC(PENDING_TIMEOUT_ESTABLISH_WITH_SERVER);
-    CREATE_WS_CONN_CB_TYPE_BIC_STATIC(PENDING_TIMEOUT_AWAITING_SERVER_RESPONSE);
-    CREATE_WS_CONN_CB_TYPE_BIC_STATIC(PENDING_TIMEOUT_AWAITING_PING);
-    CREATE_WS_CONN_CB_TYPE_BIC_STATIC(PENDING_TIMEOUT_CLOSE_ACK);
-    CREATE_WS_CONN_CB_TYPE_BIC_STATIC(PENDING_TIMEOUT_SENT_CLIENT_HANDSHAKE);
-    CREATE_WS_CONN_CB_TYPE_BIC_STATIC(PENDING_TIMEOUT_SSL_ACCEPT);
+    CREATE_WS_CONN_TIMEOUT_TYPE_BIC_STATIC(NO_PENDING_TIMEOUT);
+    CREATE_WS_CONN_TIMEOUT_TYPE_BIC_STATIC(PENDING_TIMEOUT_AWAITING_PROXY_RESPONSE);
+    CREATE_WS_CONN_TIMEOUT_TYPE_BIC_STATIC(PENDING_TIMEOUT_AWAITING_CONNECT_RESPONSE);
+    CREATE_WS_CONN_TIMEOUT_TYPE_BIC_STATIC(PENDING_TIMEOUT_ESTABLISH_WITH_SERVER);
+    CREATE_WS_CONN_TIMEOUT_TYPE_BIC_STATIC(PENDING_TIMEOUT_AWAITING_SERVER_RESPONSE);
+    CREATE_WS_CONN_TIMEOUT_TYPE_BIC_STATIC(PENDING_TIMEOUT_AWAITING_PING);
+    CREATE_WS_CONN_TIMEOUT_TYPE_BIC_STATIC(PENDING_TIMEOUT_CLOSE_ACK);
+    CREATE_WS_CONN_TIMEOUT_TYPE_BIC_STATIC(PENDING_TIMEOUT_SENT_CLIENT_HANDSHAKE);
+    CREATE_WS_CONN_TIMEOUT_TYPE_BIC_STATIC(PENDING_TIMEOUT_SSL_ACCEPT);
+  }
+
+  // - token types -
+  {
+    const_locations.push_blanks(50);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 50);
+
+#define CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_GET_URI);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_POST_URI);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HOST);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_CONNECTION);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_UPGRADE);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_ORIGIN);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_CHALLENGE);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_ACCEPT);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_IF_MODIFIED_SINCE);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_IF_NONE_MATCH);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_ACCEPT_ENCODING);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_ACCEPT_LANGUAGE);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_PRAGMA);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_CACHE_CONTROL);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_AUTHORIZATION);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_COOKIE);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_CONTENT_LENGTH);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_CONTENT_TYPE);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_DATE);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_RANGE);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_ACCEPT_RANGES);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_AGE);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_ALLOW);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_CONTENT_DISPOSITION);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_CONTENT_ENCODING);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_CONTENT_LANGUAGE);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_CONTENT_LOCATION);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_CONTENT_RANGE);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_ETAG);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_EXPECT);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_EXPIRES);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_FROM);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_IF_MATCH);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_IF_RANGE);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_IF_UNMODIFIED_SINCE);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_LAST_MODIFIED);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_LINK);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_LOCATION);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_REFRESH);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_RETRY_AFTER);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_SERVER);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_SET_COOKIE);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_TRANSFER_ENCODING);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP_URI_ARGS);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HTTP1_0);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_X_FORWARDED_FOR);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_CONNECT);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_HEAD_URI);
+    CREATE_WS_CONN_TOKEN_TYPE_BIC_STATIC(WSI_TOKEN_X_AUTH_TOKEN);
   }
 }/*}}}*/
 
@@ -1029,6 +1158,51 @@ bool bic_ws_conn_method_protocol_name_0(interpreter_thread_s &it,unsigned stack_
   string_ptr->set(strlen(protocol->name),protocol->name);
 
   BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_ws_conn_method_header_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+header_id:retrieve_integer
+>
+method header
+; @end
+
+  ws_conn_s *wscn_ptr = (ws_conn_s *)dst_location->v_data_ptr;
+  lws *ws_ptr = wscn_ptr->ws_ptr;
+
+  // - ERROR -
+  if (header_id < 0 || header_id >= WSI_TOKEN_COUNT)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_WS_CONN_INVALID_HTTP_HEADER_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(header_id);
+
+    return false;
+  }
+
+  int length = lws_hdr_total_length(ws_ptr,(lws_token_indexes)header_id);
+
+  // - ERROR -
+  if (length < 0)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_WS_CONN_INVALID_HTTP_HEADER_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(header_id);
+
+    return false;
+  }
+
+  string_s *value_ptr = it.get_new_string_ptr();
+
+  if (length > 0)
+  {
+    value_ptr->create(length);
+    lws_hdr_copy(ws_ptr,value_ptr->data,value_ptr->size,(lws_token_indexes)header_id);
+  }
+
+  BIC_SET_RESULT_STRING(value_ptr);
 
   return true;
 }/*}}}*/
