@@ -188,7 +188,7 @@ bool bic_json_method_create_1(interpreter_thread_s &it,unsigned stack_base,uli *
 {/*{{{*/
 @begin ucl_params
 <
-dict:c_rm_class_dict
+data:ignore
 >
 class c_bi_class_json
 method create
@@ -384,7 +384,7 @@ bool bic_json_method_create_nice_2(interpreter_thread_s &it,unsigned stack_base,
 {/*{{{*/
 @begin ucl_params
 <
-dict:c_rm_class_dict
+data:ignore
 tabulator:c_bi_class_string
 >
 class c_bi_class_json
@@ -428,7 +428,7 @@ bool bic_json_method_create_nice_3(interpreter_thread_s &it,unsigned stack_base,
 {/*{{{*/
 @begin ucl_params
 <
-dict:c_rm_class_dict
+data:ignore
 tabulator:c_bi_class_string
 indent:c_bi_class_string
 >
