@@ -148,6 +148,7 @@ int protocol_func(lws *wsi,enum lws_callback_reasons reason,void *user,void *in,
     case LWS_CALLBACK_CLOSED:
     case LWS_CALLBACK_CLIENT_CLOSED:
     case LWS_CALLBACK_RECEIVE:
+    case LWS_CALLBACK_RECEIVE_PONG:
     case LWS_CALLBACK_CLIENT_RECEIVE:
     case LWS_CALLBACK_CLIENT_RECEIVE_PONG:
     case LWS_CALLBACK_CLIENT_WRITEABLE:
@@ -227,6 +228,7 @@ int protocol_func(lws *wsi,enum lws_callback_reasons reason,void *user,void *in,
       case LWS_CALLBACK_CLIENT_ESTABLISHED:
       case LWS_CALLBACK_CLOSED:
       case LWS_CALLBACK_CLIENT_CLOSED:
+      case LWS_CALLBACK_RECEIVE_PONG:
       case LWS_CALLBACK_CLIENT_RECEIVE_PONG:
       case LWS_CALLBACK_CLIENT_WRITEABLE:
       case LWS_CALLBACK_SERVER_WRITEABLE:

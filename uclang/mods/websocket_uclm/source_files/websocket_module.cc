@@ -688,7 +688,7 @@ built_in_class_s ws_conn_class =
   "WsConn",
   c_modifier_public | c_modifier_final,
   13, ws_conn_methods,
-  6 + 26 + 9 + 50, ws_conn_variables,
+  6 + 27 + 9 + 50, ws_conn_variables,
   bic_ws_conn_consts,
   bic_ws_conn_init,
   bic_ws_conn_clear,
@@ -793,6 +793,7 @@ built_in_variable_s ws_conn_variables[] =
   { "CB_CLOSED", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "CB_CLIENT_CLOSED", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "CB_RECEIVE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "CB_RECEIVE_PONG", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "CB_CLIENT_RECEIVE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "CB_CLIENT_RECEIVE_PONG", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "CB_CLIENT_WRITEABLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -937,8 +938,8 @@ void bic_ws_conn_consts(location_array_s &const_locations)
 
   // - callback types -
   {
-    const_locations.push_blanks(26);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 26);
+    const_locations.push_blanks(27);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 27);
 
 #define CREATE_WS_CONN_CB_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -953,6 +954,7 @@ void bic_ws_conn_consts(location_array_s &const_locations)
     CREATE_WS_CONN_CB_TYPE_BIC_STATIC(LWS_CALLBACK_CLOSED);
     CREATE_WS_CONN_CB_TYPE_BIC_STATIC(LWS_CALLBACK_CLIENT_CLOSED);
     CREATE_WS_CONN_CB_TYPE_BIC_STATIC(LWS_CALLBACK_RECEIVE);
+    CREATE_WS_CONN_CB_TYPE_BIC_STATIC(LWS_CALLBACK_RECEIVE_PONG);
     CREATE_WS_CONN_CB_TYPE_BIC_STATIC(LWS_CALLBACK_CLIENT_RECEIVE);
     CREATE_WS_CONN_CB_TYPE_BIC_STATIC(LWS_CALLBACK_CLIENT_RECEIVE_PONG);
     CREATE_WS_CONN_CB_TYPE_BIC_STATIC(LWS_CALLBACK_CLIENT_WRITEABLE);
