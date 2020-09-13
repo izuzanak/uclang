@@ -287,6 +287,7 @@ inline void curl_multi_request_s::clear(interpreter_thread_s &it)
 
 inline void curl_result_s::init()
 {/*{{{*/
+  code = CURLE_OK;
   curl_ptr = nullptr;
   data_loc = nullptr;
   user_loc = nullptr;
