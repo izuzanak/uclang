@@ -131,10 +131,7 @@ state_4_label:
    if (in_char == 10) {
       goto state_7_label;
    }
-   if (in_char >= 11) {
-      goto state_4_label;
-   }
-   return c_idx_not_exist;
+   goto state_4_label;
 
 // - STATE 5 -
 state_5_label:
@@ -186,10 +183,7 @@ state_8_label:
    if (in_char == 42) {
       goto state_10_label;
    }
-   if (in_char >= 43) {
-      goto state_8_label;
-   }
-   return c_idx_not_exist;
+   goto state_8_label;
 
 // - STATE 9 -
 state_9_label:
@@ -202,10 +196,7 @@ state_9_label:
    if (in_char == 10) {
       goto state_7_label;
    }
-   if (in_char >= 11) {
-      goto state_9_label;
-   }
-   return c_idx_not_exist;
+   goto state_9_label;
 
 // - STATE 10 -
 state_10_label:
@@ -218,10 +209,7 @@ state_10_label:
    if (in_char == 47) {
       goto state_11_label;
    }
-   if (in_char >= 48) {
-      goto state_8_label;
-   }
-   return c_idx_not_exist;
+   goto state_8_label;
 
 // - STATE 11 -
 state_11_label:
@@ -808,10 +796,7 @@ state_9_label:
    if (in_char == 10) {
       goto state_21_label;
    }
-   if (in_char >= 11) {
-      goto state_9_label;
-   }
-   return c_idx_not_exist;
+   goto state_9_label;
 
 // - STATE 10 -
 state_10_label:

@@ -601,7 +601,7 @@ bool proto_source_s::pack_message(interpreter_thread_s &it,ProtobufCMessageDescr
                   f_ptr->type != PROTOBUF_C_TYPE_MESSAGE)
               {
                 // - set optional boolean flag -
-                *((protobuf_c_boolean *)(data + f_ptr->quantifier_offset)) = index != c_idx_not_exist;
+                *((protobuf_c_boolean *)(data + f_ptr->quantifier_offset)) = true;
               }
             }
 

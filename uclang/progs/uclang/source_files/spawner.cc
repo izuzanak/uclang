@@ -113,19 +113,19 @@ unsigned spawn_parser_s::recognize_terminal(unsigned &a_input_idx) // lgtm [cpp/
    if (in_char == 0) {
       goto state_1_label;
    }
-   if (in_char >= 1 && in_char < 8) {
+   if (in_char < 8) {
       goto state_2_label;
    }
    if (in_char == 8) {
       goto state_3_label;
    }
-   if (in_char >= 9 && in_char < 11) {
+   if (in_char < 11) {
       goto state_10_label;
    }
-   if (in_char >= 11 && in_char < 14) {
+   if (in_char < 14) {
       goto state_3_label;
    }
-   if (in_char >= 14 && in_char < 32) {
+   if (in_char < 32) {
       goto state_2_label;
    }
    if (in_char == 32) {
@@ -137,7 +137,7 @@ unsigned spawn_parser_s::recognize_terminal(unsigned &a_input_idx) // lgtm [cpp/
    if (in_char == 34) {
       goto state_4_label;
    }
-   if (in_char >= 35 && in_char < 38) {
+   if (in_char < 38) {
       goto state_2_label;
    }
    if (in_char == 38) {
@@ -146,13 +146,13 @@ unsigned spawn_parser_s::recognize_terminal(unsigned &a_input_idx) // lgtm [cpp/
    if (in_char == 39) {
       goto state_6_label;
    }
-   if (in_char >= 40 && in_char < 48) {
+   if (in_char < 48) {
       goto state_2_label;
    }
-   if (in_char >= 48 && in_char < 58) {
+   if (in_char < 58) {
       goto state_7_label;
    }
-   if (in_char >= 58 && in_char < 60) {
+   if (in_char < 60) {
       goto state_2_label;
    }
    if (in_char == 60) {
@@ -164,10 +164,7 @@ unsigned spawn_parser_s::recognize_terminal(unsigned &a_input_idx) // lgtm [cpp/
    if (in_char == 62) {
       goto state_9_label;
    }
-   if (in_char >= 63) {
-      goto state_2_label;
-   }
-   return 10;
+   goto state_2_label;
 
 // - STATE 1 -
 state_1_label:
@@ -253,10 +250,7 @@ state_4_label:
    if (in_char == 34) {
       goto state_12_label;
    }
-   if (in_char >= 35) {
-      goto state_4_label;
-   }
-   return c_idx_not_exist;
+   goto state_4_label;
 
 // - STATE 5 -
 state_5_label:
@@ -279,10 +273,7 @@ state_6_label:
    if (in_char == 39) {
       goto state_14_label;
    }
-   if (in_char >= 40) {
-      goto state_6_label;
-   }
-   return c_idx_not_exist;
+   goto state_6_label;
 
 // - STATE 7 -
 state_7_label:

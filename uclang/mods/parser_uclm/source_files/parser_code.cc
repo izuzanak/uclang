@@ -939,16 +939,13 @@ state_3_label:
    if (in_char == 34) {
       goto state_19_label;
    }
-   if (in_char >= 35 && in_char < 92) {
+   if (in_char < 92) {
       goto state_3_label;
    }
    if (in_char == 92) {
       goto state_20_label;
    }
-   if (in_char >= 93) {
-      goto state_3_label;
-   }
-   return c_idx_not_exist;
+   goto state_3_label;
 
 // - STATE 4 -
 state_4_label:
@@ -961,10 +958,7 @@ state_4_label:
    if (in_char == 92) {
       goto state_21_label;
    }
-   if (in_char >= 93) {
-      goto state_22_label;
-   }
-   return c_idx_not_exist;
+   goto state_22_label;
 
 // - STATE 5 -
 state_5_label:
@@ -1002,10 +996,7 @@ state_10_label:
    if (in_char == 92) {
       goto state_23_label;
    }
-   if (in_char >= 93) {
-      goto state_24_label;
-   }
-   return c_idx_not_exist;
+   goto state_24_label;
 
 // - STATE 11 -
 state_11_label:
@@ -1054,7 +1045,7 @@ state_16_label:
    if (in_char == 92) {
       goto state_28_label;
    }
-   if (in_char >= 93 && in_char < 124) {
+   if (in_char < 124) {
       goto state_27_label;
    }
    if (in_char >= 125) {
@@ -1086,10 +1077,7 @@ state_18_label:
    if (in_char == 92) {
       goto state_29_label;
    }
-   if (in_char >= 93) {
-      goto state_30_label;
-   }
-   return c_idx_not_exist;
+   goto state_30_label;
 
 // - STATE 19 -
 state_19_label:
@@ -1255,10 +1243,7 @@ state_24_label:
    if (in_char == 92) {
       goto state_38_label;
    }
-   if (in_char >= 93) {
-      goto state_39_label;
-   }
-   return c_idx_not_exist;
+   goto state_39_label;
 
 // - STATE 25 -
 state_25_label:
@@ -1274,10 +1259,7 @@ state_25_label:
    if (in_char == 93) {
       goto state_41_label;
    }
-   if (in_char >= 94) {
-      goto state_25_label;
-   }
-   return c_idx_not_exist;
+   goto state_25_label;
 
 // - STATE 26 -
 state_26_label:
@@ -1336,16 +1318,13 @@ state_27_label:
    if (in_char == 92) {
       goto state_44_label;
    }
-   if (in_char >= 93 && in_char < 124) {
+   if (in_char < 124) {
       goto state_27_label;
    }
    if (in_char == 124) {
       goto state_45_label;
    }
-   if (in_char >= 125) {
-      goto state_27_label;
-   }
-   return c_idx_not_exist;
+   goto state_27_label;
 
 // - STATE 28 -
 state_28_label:
@@ -1460,22 +1439,19 @@ state_31_label:
    if (in_char == 34) {
       goto state_19_label;
    }
-   if (in_char >= 35 && in_char < 48) {
+   if (in_char < 48) {
       goto state_3_label;
    }
-   if (in_char >= 48 && in_char < 56) {
+   if (in_char < 56) {
       goto state_51_label;
    }
-   if (in_char >= 56 && in_char < 92) {
+   if (in_char < 92) {
       goto state_3_label;
    }
    if (in_char == 92) {
       goto state_20_label;
    }
-   if (in_char >= 93) {
-      goto state_3_label;
-   }
-   return c_idx_not_exist;
+   goto state_3_label;
 
 // - STATE 32 -
 state_32_label:
@@ -1535,19 +1511,16 @@ state_36_label:
    if (in_char < 48) {
       goto state_39_label;
    }
-   if (in_char >= 48 && in_char < 56) { // lgtm [cpp/constant-comparison]
+   if (in_char < 56) {
       goto state_55_label;
    }
-   if (in_char >= 56 && in_char < 92) {
+   if (in_char < 92) {
       goto state_39_label;
    }
    if (in_char == 92) {
       goto state_38_label;
    }
-   if (in_char >= 93) {
-      goto state_39_label;
-   }
-   return c_idx_not_exist;
+   goto state_39_label;
 
 // - STATE 37 -
 state_37_label:
@@ -1680,10 +1653,10 @@ state_42_label:
    if (in_char < 48) {
       goto state_25_label;
    }
-   if (in_char >= 48 && in_char < 56) { // lgtm [cpp/constant-comparison]
+   if (in_char < 56) {
       goto state_62_label;
    }
-   if (in_char >= 56 && in_char < 92) {
+   if (in_char < 92) {
       goto state_25_label;
    }
    if (in_char == 92) {
@@ -1692,10 +1665,7 @@ state_42_label:
    if (in_char == 93) {
       goto state_41_label;
    }
-   if (in_char >= 94) {
-      goto state_25_label;
-   }
-   return c_idx_not_exist;
+   goto state_25_label;
 
 // - STATE 43 -
 state_43_label:
@@ -1772,25 +1742,22 @@ state_46_label:
    if (in_char < 48) {
       goto state_27_label;
    }
-   if (in_char >= 48 && in_char < 56) { // lgtm [cpp/constant-comparison]
+   if (in_char < 56) {
       goto state_66_label;
    }
-   if (in_char >= 56 && in_char < 92) {
+   if (in_char < 92) {
       goto state_27_label;
    }
    if (in_char == 92) {
       goto state_44_label;
    }
-   if (in_char >= 93 && in_char < 124) {
+   if (in_char < 124) {
       goto state_27_label;
    }
    if (in_char == 124) {
       goto state_45_label;
    }
-   if (in_char >= 125) {
-      goto state_27_label;
-   }
-   return c_idx_not_exist;
+   goto state_27_label;
 
 // - STATE 47 -
 state_47_label:
@@ -1853,16 +1820,13 @@ state_51_label:
    if (in_char == 34) {
       goto state_19_label;
    }
-   if (in_char >= 35 && in_char < 92) {
+   if (in_char < 92) {
       goto state_3_label;
    }
    if (in_char == 92) {
       goto state_20_label;
    }
-   if (in_char >= 93) {
-      goto state_3_label;
-   }
-   return c_idx_not_exist;
+   goto state_3_label;
 
 // - STATE 52 -
 state_52_label:
@@ -1875,16 +1839,13 @@ state_52_label:
    if (in_char == 34) {
       goto state_19_label;
    }
-   if (in_char >= 35 && in_char < 92) {
+   if (in_char < 92) {
       goto state_3_label;
    }
    if (in_char == 92) {
       goto state_20_label;
    }
-   if (in_char >= 93) {
-      goto state_3_label;
-   }
-   return c_idx_not_exist;
+   goto state_3_label;
 
 // - STATE 53 -
 state_53_label:
@@ -1926,25 +1887,22 @@ state_55_label:
    if (in_char < 48) {
       goto state_39_label;
    }
-   if (in_char >= 48 && in_char < 56) { // lgtm [cpp/constant-comparison]
+   if (in_char < 56) {
       goto state_70_label;
    }
-   if (in_char >= 56 && in_char < 62) {
+   if (in_char < 62) {
       goto state_39_label;
    }
    if (in_char == 62) {
       goto state_71_label;
    }
-   if (in_char >= 63 && in_char < 92) {
+   if (in_char < 92) {
       goto state_39_label;
    }
    if (in_char == 92) {
       goto state_38_label;
    }
-   if (in_char >= 93) {
-      goto state_39_label;
-   }
-   return c_idx_not_exist;
+   goto state_39_label;
 
 // - STATE 56 -
 state_56_label:
@@ -1954,31 +1912,28 @@ state_56_label:
    if (in_char < 48) {
       goto state_39_label;
    }
-   if (in_char >= 48 && in_char < 58) { // lgtm [cpp/constant-comparison]
+   if (in_char < 58) {
       goto state_70_label;
    }
-   if (in_char >= 58 && in_char < 65) {
+   if (in_char < 65) {
       goto state_39_label;
    }
-   if (in_char >= 65 && in_char < 71) {
+   if (in_char < 71) {
       goto state_70_label;
    }
-   if (in_char >= 71 && in_char < 92) {
+   if (in_char < 92) {
       goto state_39_label;
    }
    if (in_char == 92) {
       goto state_38_label;
    }
-   if (in_char >= 93 && in_char < 97) {
+   if (in_char < 97) {
       goto state_39_label;
    }
-   if (in_char >= 97 && in_char < 103) {
+   if (in_char < 103) {
       goto state_70_label;
    }
-   if (in_char >= 103) {
-      goto state_39_label;
-   }
-   return c_idx_not_exist;
+   goto state_39_label;
 
 // - STATE 57 -
 state_57_label:
@@ -2022,10 +1977,10 @@ state_60_label:
    if (in_char < 48) {
       goto state_25_label;
    }
-   if (in_char >= 48 && in_char < 56) { // lgtm [cpp/constant-comparison]
+   if (in_char < 56) {
       goto state_74_label;
    }
-   if (in_char >= 56 && in_char < 92) {
+   if (in_char < 92) {
       goto state_25_label;
    }
    if (in_char == 92) {
@@ -2034,10 +1989,7 @@ state_60_label:
    if (in_char == 93) {
       goto state_41_label;
    }
-   if (in_char >= 94) {
-      goto state_25_label;
-   }
-   return c_idx_not_exist;
+   goto state_25_label;
 
 // - STATE 61 -
 state_61_label:
@@ -2069,10 +2021,7 @@ state_62_label:
    if (in_char == 93) {
       goto state_41_label;
    }
-   if (in_char >= 94) {
-      goto state_25_label;
-   }
-   return c_idx_not_exist;
+   goto state_25_label;
 
 // - STATE 63 -
 state_63_label:
@@ -2088,10 +2037,7 @@ state_63_label:
    if (in_char == 93) {
       goto state_41_label;
    }
-   if (in_char >= 94) {
-      goto state_25_label;
-   }
-   return c_idx_not_exist;
+   goto state_25_label;
 
 // - STATE 64 -
 state_64_label:
@@ -2101,25 +2047,22 @@ state_64_label:
    if (in_char < 48) {
       goto state_27_label;
    }
-   if (in_char >= 48 && in_char < 56) { // lgtm [cpp/constant-comparison]
+   if (in_char < 56) {
       goto state_76_label;
    }
-   if (in_char >= 56 && in_char < 92) {
+   if (in_char < 92) {
       goto state_27_label;
    }
    if (in_char == 92) {
       goto state_44_label;
    }
-   if (in_char >= 93 && in_char < 124) {
+   if (in_char < 124) {
       goto state_27_label;
    }
    if (in_char == 124) {
       goto state_45_label;
    }
-   if (in_char >= 125) {
-      goto state_27_label;
-   }
-   return c_idx_not_exist;
+   goto state_27_label;
 
 // - STATE 65 -
 state_65_label:
@@ -2148,16 +2091,13 @@ state_66_label:
    if (in_char == 92) {
       goto state_44_label;
    }
-   if (in_char >= 93 && in_char < 124) {
+   if (in_char < 124) {
       goto state_27_label;
    }
    if (in_char == 124) {
       goto state_45_label;
    }
-   if (in_char >= 125) {
-      goto state_27_label;
-   }
-   return c_idx_not_exist;
+   goto state_27_label;
 
 // - STATE 67 -
 state_67_label:
@@ -2170,16 +2110,13 @@ state_67_label:
    if (in_char == 92) {
       goto state_44_label;
    }
-   if (in_char >= 93 && in_char < 124) {
+   if (in_char < 124) {
       goto state_27_label;
    }
    if (in_char == 124) {
       goto state_45_label;
    }
-   if (in_char >= 125) {
-      goto state_27_label;
-   }
-   return c_idx_not_exist;
+   goto state_27_label;
 
 // - STATE 68 -
 state_68_label:
@@ -2224,16 +2161,13 @@ state_70_label:
    if (in_char == 62) {
       goto state_71_label;
    }
-   if (in_char >= 63 && in_char < 92) {
+   if (in_char < 92) {
       goto state_39_label;
    }
    if (in_char == 92) {
       goto state_38_label;
    }
-   if (in_char >= 93) {
-      goto state_39_label;
-   }
-   return c_idx_not_exist;
+   goto state_39_label;
 
 // - STATE 71 -
 state_71_label:
@@ -2291,10 +2225,7 @@ state_74_label:
    if (in_char == 93) {
       goto state_41_label;
    }
-   if (in_char >= 94) {
-      goto state_25_label;
-   }
-   return c_idx_not_exist;
+   goto state_25_label;
 
 // - STATE 75 -
 state_75_label:
@@ -2310,10 +2241,7 @@ state_75_label:
    if (in_char == 93) {
       goto state_41_label;
    }
-   if (in_char >= 94) {
-      goto state_25_label;
-   }
-   return c_idx_not_exist;
+   goto state_25_label;
 
 // - STATE 76 -
 state_76_label:
@@ -2326,16 +2254,13 @@ state_76_label:
    if (in_char == 92) {
       goto state_44_label;
    }
-   if (in_char >= 93 && in_char < 124) {
+   if (in_char < 124) {
       goto state_27_label;
    }
    if (in_char == 124) {
       goto state_45_label;
    }
-   if (in_char >= 125) {
-      goto state_27_label;
-   }
-   return c_idx_not_exist;
+   goto state_27_label;
 
 // - STATE 77 -
 state_77_label:
@@ -2348,16 +2273,13 @@ state_77_label:
    if (in_char == 92) {
       goto state_44_label;
    }
-   if (in_char >= 93 && in_char < 124) {
+   if (in_char < 124) {
       goto state_27_label;
    }
    if (in_char == 124) {
       goto state_45_label;
    }
-   if (in_char >= 125) {
-      goto state_27_label;
-   }
-   return c_idx_not_exist;
+   goto state_27_label;
 
 }/*}}}*/
 
