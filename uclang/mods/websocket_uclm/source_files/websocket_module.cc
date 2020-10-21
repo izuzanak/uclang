@@ -885,13 +885,22 @@ built_in_variable_s ws_conn_variables[] =
   /* - retrieve websocket connection - */\
   ws_conn_s *wscn_ptr = (ws_conn_s *)dst_location->v_data_ptr;\
 \
-  /* - allocate data buffer - */\
-  unsigned char *buffer = (unsigned char *)cmalloc(\
-      LWS_SEND_BUFFER_PRE_PADDING + data_size +\
-      LWS_SEND_BUFFER_POST_PADDING);\
+  unsigned message_size = LWS_SEND_BUFFER_PRE_PADDING + data_size +\
+    LWS_SEND_BUFFER_POST_PADDING;\
+\
+  /* - retrieve message buffer - */\
+  bc_array_s &buffer = wscn_ptr->message_buffer;\
+\
+  /* - resize message buffer - */\
+  if (buffer.used < message_size)\
+  {\
+    buffer.used = 0;\
+    buffer.reserve(message_size);\
+    buffer.used = buffer.size;\
+  }\
 \
   /* - pointer to data in buffer - */\
-  unsigned char *buff_ptr = buffer + LWS_SEND_BUFFER_PRE_PADDING;\
+  unsigned char *buff_ptr = (unsigned char *)buffer.data + LWS_SEND_BUFFER_PRE_PADDING;\
 \
   /* - fill data to buffer - */\
   memcpy(buff_ptr,data_ptr,data_size);\
@@ -899,15 +908,9 @@ built_in_variable_s ws_conn_variables[] =
   /* - ERROR - */\
   if (lws_write(wscn_ptr->ws_ptr,buff_ptr,data_size,WRITE_TYPE) < 0)\
   {\
-    /* - release data buffer - */\
-    cfree(buffer);\
-\
     exception_s::throw_exception(it,module.error_base + c_error_WS_CONN_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
-\
-  /* - release data buffer - */\
-  cfree(buffer);\
 \
   BIC_SET_RESULT_DESTINATION();\
 \

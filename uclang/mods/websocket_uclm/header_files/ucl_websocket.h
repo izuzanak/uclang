@@ -88,6 +88,7 @@ struct ws_conn_s
   lws *ws_ptr;
   location_s *user_data_ptr;
   lws_callback_reasons reason;
+  bc_array_s message_buffer;
   bc_array_s data_buffer;
   void *data_in;
   size_t data_len;
@@ -247,6 +248,7 @@ inline void ws_conn_s::init()
   prot_idx = c_idx_not_exist;
   ws_ptr = nullptr;
   user_data_ptr = nullptr;
+  message_buffer.init();
   data_buffer.init();
   data_in = nullptr;
   data_len = 0;
@@ -261,6 +263,7 @@ inline void ws_conn_s::clear(interpreter_thread_s &it)
     it.release_location_ptr(user_data_ptr);
   }
 
+  message_buffer.clear();
   data_buffer.clear();
 
   init();
