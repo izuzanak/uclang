@@ -64,6 +64,6 @@ script:
   - cd test
   - uclang test.ucl snapshot:test
 
-  - cd ~/build/izuzanak/uclang/uclang_build
+  - cd ~/build/izuzanak/uclang/build
   - bash scripts/docu_gen.sh
 
