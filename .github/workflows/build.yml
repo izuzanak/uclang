@@ -72,10 +72,11 @@ jobs:
           cmake ..
           make
           sudo make install
-          export LD_LIBRARY_PATH=/usr/local/lib/uclang
 
       - name: Test uclang
         run: |
+          export LD_LIBRARY_PATH=/usr/local/lib/uclang
+
           cd ${GITHUB_WORKSPACE}/uclang/examples
           source prepare.sh
           cd test
