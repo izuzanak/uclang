@@ -55,6 +55,7 @@ jobs:
           libvlc-dev
           freeglut3-dev
           libglew-dev
+          libpam0g-dev
 
       - name: Build and install cont
         run: |
