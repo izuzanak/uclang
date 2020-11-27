@@ -54,29 +54,29 @@ jobs:
           libglew-dev
 
       - name: Build and install cont
-        run:
-          - git clone --branch=master https://github.com/izuzanak/cont.git ${GITHUB_WORKSPACE}/cont
+        run: |
+          git clone --branch=master https://github.com/izuzanak/cont.git ${GITHUB_WORKSPACE}/cont
 
-          - cd ${GITHUB_WORKSPACE}/cont/build
-          - cmake ..
-          - make
-          - sudo make install
+          cd ${GITHUB_WORKSPACE}/cont/build
+          cmake ..
+          make
+          sudo make install
 
       - name: Build uclang
-        run:
-          - cd ${GITHUB_WORKSPACE}/uclang/build
-          - cmake ..
-          - make
-          - sudo make install
-          - export LD_LIBRARY_PATH=/usr/local/lib/uclang
+        run: |
+          cd ${GITHUB_WORKSPACE}/uclang/build
+          cmake ..
+          make
+          sudo make install
+          export LD_LIBRARY_PATH=/usr/local/lib/uclang
 
       - name: Test uclang
-        run:
-          - cd ${GITHUB_WORKSPACE}/uclang/uclang/examples
-          - source prepare.sh
-          - cd test
-          - uclang test.ucl snapshot:test
+        run: |
+          cd ${GITHUB_WORKSPACE}/uclang/uclang/examples
+          source prepare.sh
+          cd test
+          uclang test.ucl snapshot:test
 
-          - cd ${GITHUB_WORKSPACE}/uclang/build
-          - bash scripts/docu_gen.sh
+          cd ${GITHUB_WORKSPACE}/uclang/build
+          bash scripts/docu_gen.sh
 
