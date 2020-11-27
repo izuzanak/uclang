@@ -58,16 +58,16 @@ jobs:
 
       - name: Build and install cont
         run: |
-          git clone --branch=master https://github.com/izuzanak/cont.git ${GITHUB_WORKSPACE}/cont
+          git clone --branch=master https://github.com/izuzanak/cont.git ${GITHUB_WORKSPACE}/../cont
 
-          cd ${GITHUB_WORKSPACE}/cont/build
+          cd ${GITHUB_WORKSPACE}/../cont/build
           cmake ..
           make
           sudo make install
 
       - name: Build uclang
         run: |
-          cd ${GITHUB_WORKSPACE}/uclang/build
+          cd ${GITHUB_WORKSPACE}/build
           cmake ..
           make
           sudo make install
@@ -75,11 +75,11 @@ jobs:
 
       - name: Test uclang
         run: |
-          cd ${GITHUB_WORKSPACE}/uclang/uclang/examples
+          cd ${GITHUB_WORKSPACE}/uclang/examples
           source prepare.sh
           cd test
           uclang test.ucl snapshot:test
 
-          cd ${GITHUB_WORKSPACE}/uclang/build
+          cd ${GITHUB_WORKSPACE}/build
           bash scripts/docu_gen.sh
 
