@@ -1,6 +1,9 @@
 # uclang - programming language
 
-[![Build Status](https://travis-ci.com/izuzanak/uclang.svg?branch=master)](https://travis-ci.com/izuzanak/uclang) [![Total alerts](https://img.shields.io/lgtm/alerts/g/izuzanak/uclang.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/izuzanak/uclang/alerts/) [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/izuzanak/uclang.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/izuzanak/uclang/context:cpp)
+[![Build Status](https://travis-ci.com/izuzanak/uclang.svg?branch=master)](https://travis-ci.com/izuzanak/uclang)
+![CI](https://github.com/izuzanak/uclang/workflows/CI/badge.svg)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/izuzanak/uclang.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/izuzanak/uclang/alerts/)
+[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/izuzanak/uclang.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/izuzanak/uclang/context:cpp)
 
 Interpreted, dynamically typed, object-oriented programming language.
 
