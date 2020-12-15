@@ -11,6 +11,7 @@ include "script_parser.h"
 #include <sys/socket.h>
 #include <sys/ioctl.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <netdb.h>
 #include <poll.h>
 #if SYSTEM_TYPE_UNIX_SOCKET == ENABLED

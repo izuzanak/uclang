@@ -2702,7 +2702,7 @@ built_in_class_s socket_class =
   "Socket",
   c_modifier_public | c_modifier_final,
   18, socket_methods,
-  3 + 3 + 1 + 6, socket_variables,
+  3 + 3 + 1 + 6 + 1 + 2, socket_variables,
   bic_socket_consts,
   bic_socket_init,
   bic_socket_clear,
@@ -2837,6 +2837,13 @@ built_in_variable_s socket_variables[] =
   { "SO_SNDTIMEO", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SO_BROADCAST", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
+  // - ip protocol values -
+  { "IPPROTO_IP", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - ip options values -
+  { "IP_ADD_MEMBERSHIP", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "IP_DROP_MEMBERSHIP", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_socket_consts(location_array_s &const_locations)
@@ -2905,6 +2912,36 @@ void bic_socket_consts(location_array_s &const_locations)
     CREATE_SOCKET_OPTION_BIC_STATIC(SO_RCVTIMEO);
     CREATE_SOCKET_OPTION_BIC_STATIC(SO_SNDTIMEO);
     CREATE_SOCKET_OPTION_BIC_STATIC(SO_BROADCAST);
+  }
+
+  // - insert ip protocol values -
+  {
+    const_locations.push_blanks(1);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 1);
+
+#define CREATE_IP_PROTOCOL_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_IP_PROTOCOL_BIC_STATIC(IPPROTO_IP);
+  }
+
+
+  // - insert ip options values -
+  {
+    const_locations.push_blanks(2);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 2);
+
+#define CREATE_IP_OPTION_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_IP_OPTION_BIC_STATIC(IP_ADD_MEMBERSHIP);
+    CREATE_IP_OPTION_BIC_STATIC(IP_DROP_MEMBERSHIP);
   }
 
 }/*}}}*/
@@ -3471,6 +3508,43 @@ method sockopt
 
           *((int *)optval) = value;
           optlen = sizeof(int);
+        }
+        break;
+
+      default:
+        exception_s::throw_exception(it,module.error_base + c_error_SOCKET_SOCKOPT_INVALID_OPTNAME,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+    }
+    break;
+
+  case IPPROTO_IP:
+    {
+      switch (optname)
+      {
+      case IP_ADD_MEMBERSHIP:
+      case IP_DROP_MEMBERSHIP:
+        {
+          // - ERROR -
+          if (src_2_location->v_type != c_bi_class_string)
+          {
+            exception_s::throw_exception(it,module.error_base + c_error_SOCKET_SOCKOPT_INVALID_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            return false;
+          }
+
+          string_s *string_ptr = (string_s *)src_2_location->v_data_ptr;
+
+          ip_mreq *opt = (ip_mreq *)optval;
+          opt->imr_interface.s_addr = INADDR_ANY;
+
+          // - ERROR -
+          if (inet_aton(string_ptr->data,&opt->imr_multiaddr) == 0)
+          {
+            exception_s::throw_exception(it,module.error_base + c_error_SOCKET_SOCKOPT_INVALID_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            return false;
+          }
+
+          optlen = sizeof(ip_mreq);
         }
         break;
 
