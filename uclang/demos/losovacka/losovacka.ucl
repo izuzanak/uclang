@@ -103,12 +103,12 @@ class Main
     names_set = new Set();
 
     // - retrieve lines -
-    regex = new Regex("UFICommentActorName[^>]*>");
+    regex = new Regex("Komentář od ");
 
     // - retrieve names -
     for (line <- regex.split(input_data)[1::])
     {
-      name = line.split("<")[0];
+      name = line.split(" (")[0];
 
       if (!(name in names_set))
       {
