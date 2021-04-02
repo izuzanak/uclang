@@ -29,6 +29,7 @@ jobs:
           libswscale-dev
           libdatrie-dev
           libfann-dev
+          fftw-dev
           libfftw3-dev
           libfuse-dev
           libgmp-dev
