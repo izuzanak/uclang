@@ -133,11 +133,11 @@ void *run_interpreter(void *data)
     // - count of arguments removed by interpreter -
     int arg_idx = 1;
 
-    const char *arg_mods_ptr = "-mods=";
+    const char *arg_mods_ptr = "mods=";
     const int arg_mods_len = strlen(arg_mods_ptr);
 
 #if SYSTEM_TYPE_UNIX_SPAWNER == ENABLED
-    const char *arg_spawn_ptr = "-spawner=";
+    const char *arg_spawn_ptr = "spawner=";
     const int arg_spawn_len = strlen(arg_spawn_ptr);
 
     const char *spawner_path = nullptr;
@@ -149,25 +149,31 @@ void *run_interpreter(void *data)
       do {
         char *arg_ptr = argv[arg_idx];
 
-        // - test modules argument -
-        if (strncmp(arg_ptr,arg_mods_ptr,arg_mods_len) == 0)
+        if (*arg_ptr == '-') { ++arg_ptr; }
+        if (*arg_ptr == '-') { ++arg_ptr; }
+
+        // - some dashes was removed -
+        if (arg_ptr != argv[arg_idx])
         {
-          mods_path.set(strlen(arg_ptr) - arg_mods_len,arg_ptr + arg_mods_len);
-        }
-        
+          // - test modules argument -
+          if (strncmp(arg_ptr,arg_mods_ptr,arg_mods_len) == 0)
+          {
+            mods_path.set(strlen(arg_ptr) - arg_mods_len,arg_ptr + arg_mods_len);
+            continue;
+          }
+          
 #if SYSTEM_TYPE_UNIX_SPAWNER == ENABLED
-        // - test spawner argument -
-        else if (strncmp(arg_ptr,arg_spawn_ptr,arg_spawn_len) == 0)
-        {
-          spawner_path = arg_ptr + arg_spawn_len;
-        }
+          // - test spawner argument -
+          else if (strncmp(arg_ptr,arg_spawn_ptr,arg_spawn_len) == 0)
+          {
+            spawner_path = arg_ptr + arg_spawn_len;
+            continue;
+          }
 #endif
+        }
 
         // - argument was not recognized -
-        else
-        {
-          break;
-        }
+        break;
 
       } while(++arg_idx < argc);
     }
