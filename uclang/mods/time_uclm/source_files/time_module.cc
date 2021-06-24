@@ -70,7 +70,7 @@ built_in_class_s time_class =
 {/*{{{*/
   "Time",
   c_modifier_public | c_modifier_final,
-  15, time_methods,
+  16, time_methods,
   0, time_variables,
   bic_time_consts,
   bic_time_init,
@@ -149,6 +149,11 @@ built_in_method_s time_methods[] =
     "datetime#0",
     c_modifier_public | c_modifier_final,
     bic_time_method_datetime_0
+  },
+  {
+    "day_of_week#0",
+    c_modifier_public | c_modifier_final,
+    bic_time_method_day_of_week_0
   },
   {
     "compare#1",
@@ -460,6 +465,23 @@ bool bic_time_method_datetime_0(interpreter_thread_s &it,unsigned stack_base,uli
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
   BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_time_method_day_of_week_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long unsigned nanosec = (long long unsigned)dst_location->v_data_ptr;
+
+  // - number of days plus days to epoch -
+  unsigned days = (nanosec / 86400000000000ULL) + c_days_to_epoch;
+
+  // - calculate week day -
+  unsigned result = (days % 7) + 1;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/

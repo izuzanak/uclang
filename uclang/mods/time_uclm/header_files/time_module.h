@@ -52,6 +52,7 @@ bool bic_time_method_minutes_0(interpreter_thread_s &it,unsigned stack_base,uli 
 bool bic_time_method_hours_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_time_method_days_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_time_method_datetime_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_time_method_day_of_week_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_time_method_compare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_time_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_time_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

@@ -168,7 +168,7 @@ bool bic_iconv_method_Iconv_2(interpreter_thread_s &it,unsigned stack_base,uli *
 @begin ucl_params
 <
 tocode:c_bi_class_string
-gromcode:c_bi_class_string
+fromcode:c_bi_class_string
 >
 method Iconv
 ; @end
