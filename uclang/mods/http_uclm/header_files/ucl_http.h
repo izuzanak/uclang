@@ -21,6 +21,12 @@ include "script_parser.h"
 
 #include <microhttpd.h>
 
+#if MHD_VERSION >= 0x00097002
+#define MHD_RESULT enum MHD_Result
+#else
+#define MHD_RESULT int
+#endif
+
 /*
  * contants and definitions
  */
@@ -117,11 +123,11 @@ struct http_post_proc_s
  * definition of global functions
  */
 
-int connection_func(void *cls,struct MHD_Connection *connection,
+MHD_RESULT connection_func(void *cls,struct MHD_Connection *connection,
     const char *url,const char *method,const char *version,
     const char *upload_data,size_t *upload_data_size,void **con_cls);
 
-int conn_key_value_func (void *cls,enum MHD_ValueKind kind,
+MHD_RESULT conn_key_value_func (void *cls,enum MHD_ValueKind kind,
     const char *key,const char *value);
 
 void completed_func(void *cls,struct MHD_Connection *connection,

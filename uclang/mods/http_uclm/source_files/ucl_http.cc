@@ -7,7 +7,7 @@ include "ucl_http.h"
  * global functions
  */
 
-int connection_func(void *cls,struct MHD_Connection *connection,
+MHD_RESULT connection_func(void *cls,struct MHD_Connection *connection,
     const char *url,const char *method,const char *version,
     const char *upload_data,size_t *upload_data_size,void **con_cls)
 {/*{{{*/
@@ -117,7 +117,7 @@ int connection_func(void *cls,struct MHD_Connection *connection,
   return MHD_YES;
 }/*}}}*/
 
-int conn_key_value_func(void *cls,enum MHD_ValueKind kind,
+MHD_RESULT conn_key_value_func(void *cls,enum MHD_ValueKind kind,
     const char *key,const char *value)
 {/*{{{*/
   http_conn_s *conn_ptr = (http_conn_s *)cls;
