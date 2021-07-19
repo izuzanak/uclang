@@ -48,6 +48,9 @@ void bic_epoll_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_epoll_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_epoll_method_Epoll_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_epoll_method_add_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_epoll_method_del_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_epoll_method_has_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_epoll_method_update_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_epoll_method_wait_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_epoll_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

@@ -140,7 +140,7 @@ built_in_class_s epoll_class =
 {/*{{{*/
   "Epoll",
   c_modifier_public | c_modifier_final,
-  6, epoll_methods,
+  9, epoll_methods,
   1 + 8, epoll_variables,
   bic_epoll_consts,
   bic_epoll_init,
@@ -169,6 +169,21 @@ built_in_method_s epoll_methods[] =
     "Epoll#1",
     c_modifier_public | c_modifier_final,
     bic_epoll_method_Epoll_1
+  },
+  {
+    "add#2",
+    c_modifier_public | c_modifier_final,
+    bic_epoll_method_add_2
+  },
+  {
+    "del#1",
+    c_modifier_public | c_modifier_final,
+    bic_epoll_method_del_1
+  },
+  {
+    "has#1",
+    c_modifier_public | c_modifier_final,
+    bic_epoll_method_has_1
   },
   {
     "update#1",
@@ -209,6 +224,158 @@ built_in_variable_s epoll_variables[] =
   { "EPOLLONESHOT",  c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
+
+#define EPOLL_ADD_UPDATE_FD_EVENTS() \
+/*{{{*/\
+\
+  /* - resize fds if needed - */\
+  if (fd >= fds.used)\
+  {\
+    fds.reserve(fd + 1 - fds.used);\
+\
+    do {\
+      fds.push_blank();\
+      fds.last().set(EPOLL_FD_UNUSED,0);\
+    } while(fd >= fds.used);\
+  }\
+\
+  /* - add new fd - */\
+  if (fds[fd].fd == EPOLL_FD_UNUSED)\
+  {\
+    event.events = events;\
+    event.data.fd = fd;\
+\
+    /* - ERROR - */\
+    if (epoll_ctl(ep_ptr->fd,EPOLL_CTL_ADD,fd,&event) == -1)\
+    {\
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_EPOLL_CONTROL_ADD_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      new_exception->params.push(errno);\
+\
+      return false;\
+    }\
+\
+    /* - update fd value - */\
+    fds[fd].set(fd,events);\
+  }\
+\
+  /* - modify old fd - */\
+  else\
+  {\
+    /* - event set was changed - */\
+    if (fds[fd].events != events)\
+    {\
+      event.events = events;\
+      event.data.fd = fd;\
+\
+      /* - ERROR - */\
+      if (epoll_ctl(ep_ptr->fd,EPOLL_CTL_MOD,fd,&event) == -1)\
+      {\
+        /* - reopened fd, not problem - */\
+        if (errno != ENOENT)\
+        {\
+          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_EPOLL_CONTROL_MODIFY_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+          new_exception->params.push(errno);\
+\
+          return false;\
+        }\
+\
+        /* - ERROR - */\
+        if (epoll_ctl(ep_ptr->fd,EPOLL_CTL_ADD,fd,&event) == -1)\
+        {\
+          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_EPOLL_CONTROL_ADD_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+          new_exception->params.push(errno);\
+\
+          return false;\
+        }\
+      }\
+    }\
+\
+    /* - update fd value - */\
+    fds[fd].set(fd,events);\
+  }\
+/*}}}*/
+
+#define EPOLL_DEL_FD_EVENTS() \
+/*{{{*/\
+\
+  /* - ERROR - */\
+  if (epoll_ctl(ep_ptr->fd,EPOLL_CTL_DEL,fd,&event) == -1)\
+  {\
+    /* - closed fd, not problem - */\
+    if (errno != EBADF)\
+    {\
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_EPOLL_CONTROL_DELETE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      new_exception->params.push(errno);\
+\
+      return false;\
+    }\
+  }\
+\
+  /* - mark fd as unused - */\
+  fd_ptr->fd = EPOLL_FD_UNUSED;\
+/*}}}*/
+
+#define EPOLL_UPDATE_PREPROCESS_FDS() \
+/*{{{*/\
+\
+  /* - preprocess all fds - */\
+  if (fds.used != 0)\
+  {\
+    epoll_fd_s *fd_ptr = fds.data;\
+    epoll_fd_s *fd_ptr_end = fd_ptr + fds.used;\
+    do {\
+\
+      /* - fd is not unused - */\
+      if (fd_ptr->fd != EPOLL_FD_UNUSED)\
+      {\
+        /* - mark fd as removed - */\
+        fd_ptr->fd = EPOLL_FD_REMOVED;\
+      }\
+    } while(++fd_ptr < fd_ptr_end);\
+  }\
+/*}}}*/
+
+#define EPOLL_UPDATE_PROCESS_FD_EVENTS() \
+/*{{{*/\
+\
+  /* - ERROR - */\
+  if (fd_location->v_type != c_bi_class_integer ||\
+      events_location->v_type != c_bi_class_integer)\
+  {\
+    exception_s::throw_exception(it,module.error_base + c_error_EPOLL_WRONG_FD_OR_EVENTS_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  long long int fd = (long long int)fd_location->v_data_ptr;\
+  long long int events = (long long int)events_location->v_data_ptr;\
+\
+  EPOLL_ADD_UPDATE_FD_EVENTS();
+/*}}}*/
+
+#define EPOLL_UPDATE_POSTPROCESS_FDS() \
+/*{{{*/\
+\
+  /* - postprocess all fds - */\
+  if (fds.used != 0)\
+  {\
+    /* - reset props of dummy event - */\
+    event.events = 0;\
+    event.data.fd = 0;\
+\
+    epoll_fd_s *fd_ptr = fds.data;\
+    epoll_fd_s *fd_ptr_end = fd_ptr + fds.used;\
+    do {\
+\
+      /* - fd is marked as removed - */\
+      if (fd_ptr->fd == EPOLL_FD_REMOVED)\
+      {\
+        long long int fd = fd_ptr - fds.data;\
+\
+        EPOLL_DEL_FD_EVENTS();\
+      }\
+    } while(++fd_ptr < fd_ptr_end);\
+  }\
+/*}}}*/
 
 void bic_epoll_consts(location_array_s &const_locations)
 {/*{{{*/
@@ -309,6 +476,75 @@ method Epoll
   return true;
 }/*}}}*/
 
+bool bic_epoll_method_add_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+fd:retrieve_integer
+events:retrieve_integer
+>
+method add
+; @end
+
+  epoll_s *ep_ptr = (epoll_s *)dst_location->v_data_ptr;
+  epoll_fds_s &fds = ep_ptr->fds;
+  epoll_event event = {0};
+
+  EPOLL_ADD_UPDATE_FD_EVENTS()
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_epoll_method_del_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+fd:retrieve_integer
+>
+method del
+; @end
+
+  epoll_s *ep_ptr = (epoll_s *)dst_location->v_data_ptr;
+  epoll_fds_s &fds = ep_ptr->fds;
+
+  if (fd < fds.used)
+  {
+    epoll_fd_s *fd_ptr = fds.data + fd;
+
+    if (fd_ptr->fd != EPOLL_FD_UNUSED)
+    {
+      epoll_event event = {0};
+
+      EPOLL_DEL_FD_EVENTS();
+    }
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_epoll_method_has_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+fd:retrieve_integer
+>
+method has
+; @end
+
+  epoll_s *ep_ptr = (epoll_s *)dst_location->v_data_ptr;
+  epoll_fds_s &fds = ep_ptr->fds;
+
+  long long int result = fd < fds.used && (fds.data + fd)->fd != EPOLL_FD_UNUSED;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
 bool bic_epoll_method_update_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
@@ -331,21 +567,7 @@ method update
   epoll_fds_s &fds = ep_ptr->fds;
   epoll_event event = {0};
 
-  // - preprocess all fds -
-  if (fds.used != 0)
-  {
-    epoll_fd_s *fd_ptr = fds.data;
-    epoll_fd_s *fd_ptr_end = fd_ptr + fds.used;
-    do {
-
-      // - fd is not unused -
-      if (fd_ptr->fd != EPOLL_FD_UNUSED)
-      {
-        // - mark fd as removed -
-        fd_ptr->fd = EPOLL_FD_REMOVED;
-      }
-    } while(++fd_ptr < fd_ptr_end);
-  }
+  EPOLL_UPDATE_PREPROCESS_FDS();
 
   if (array_ptr->used > 0)
   {
@@ -356,117 +578,12 @@ method update
       location_s *fd_location = it.get_location_value(p_ptr[0]);
       location_s *events_location = it.get_location_value(p_ptr[1]);
 
-      // - ERROR -
-      if (fd_location->v_type != c_bi_class_integer ||
-          events_location->v_type != c_bi_class_integer)
-      {
-        exception_s::throw_exception(it,module.error_base + c_error_EPOLL_WRONG_FD_OR_EVENTS_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        return false;
-      }
+      EPOLL_UPDATE_PROCESS_FD_EVENTS();
 
-      long long int fd = (long long int)fd_location->v_data_ptr;
-      long long int events = (long long int)events_location->v_data_ptr;
-
-      // - resize fds if needed -
-      if (fd >= fds.used)
-      {
-        fds.reserve(fd + 1 - fds.used);
-
-        do {
-          fds.push_blank();
-          fds.last().set(EPOLL_FD_UNUSED,0);
-        } while(fd >= fds.used);
-      }
-
-      // - add new fd -
-      if (fds[fd].fd == EPOLL_FD_UNUSED)
-      {
-        event.events = events;
-        event.data.fd = fd;
-
-        // - ERROR -
-        if (epoll_ctl(ep_ptr->fd,EPOLL_CTL_ADD,fd,&event) == -1)
-        {
-          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_EPOLL_CONTROL_ADD_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-          new_exception->params.push(errno);
-
-          return false;
-        }
-
-        // - update fd value -
-        fds[fd].set(fd,events);
-      }
-
-      // - modify old fd -
-      else
-      {
-        // - event set was changed -
-        if (fds[fd].events != events)
-        {
-          event.events = events;
-          event.data.fd = fd;
-
-          // - ERROR -
-          if (epoll_ctl(ep_ptr->fd,EPOLL_CTL_MOD,fd,&event) == -1)
-          {
-            // - reopened fd, not problem -
-            if (errno != ENOENT)
-            {
-              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_EPOLL_CONTROL_MODIFY_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(errno);
-
-              return false;
-            }
-
-            // - ERROR -
-            if (epoll_ctl(ep_ptr->fd,EPOLL_CTL_ADD,fd,&event) == -1)
-            {
-              exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_EPOLL_CONTROL_ADD_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(errno);
-
-              return false;
-            }
-          }
-        }
-
-        // - update fd value -
-        fds[fd].set(fd,events);
-      }
     } while((p_ptr += 2) < p_ptr_end);
   }
 
-  // - postprocess all fds -
-  if (fds.used != 0)
-  {
-    // - reset props of dummy event -
-    event.events = 0;
-    event.data.fd = 0;
-
-    epoll_fd_s *fd_ptr = fds.data;
-    epoll_fd_s *fd_ptr_end = fd_ptr + fds.used;
-    do {
-
-      // - fd is marked as removed -
-      if (fd_ptr->fd == EPOLL_FD_REMOVED)
-      {
-        // - ERROR -
-        if (epoll_ctl(ep_ptr->fd,EPOLL_CTL_DEL,fd_ptr - fds.data,&event) == -1)
-        {
-          // - closed fd, not problem -
-          if (errno != EBADF)
-          {
-            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_EPOLL_CONTROL_DELETE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-            new_exception->params.push(errno);
-
-            return false;
-          }
-        }
-
-        // - mark fd as unused -
-        fd_ptr->fd = EPOLL_FD_UNUSED;
-      }
-    } while(++fd_ptr < fd_ptr_end);
-  }
+  EPOLL_UPDATE_POSTPROCESS_FDS();
 
   BIC_SET_RESULT_DESTINATION();
 
