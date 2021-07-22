@@ -1647,7 +1647,7 @@ built_in_class_s http_resp_class =
   "HttpResp",
   c_modifier_public | c_modifier_final,
   7, http_resp_methods,
-  2 + 53, http_resp_variables,
+  2 + 51, http_resp_variables,
   bic_http_resp_consts,
   bic_http_resp_init,
   bic_http_resp_clear,
@@ -1748,9 +1748,7 @@ built_in_variable_s http_resp_variables[] =
   { "HTTP_UNPROCESSABLE_ENTITY", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HTTP_LOCKED", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HTTP_FAILED_DEPENDENCY", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "HTTP_UNORDERED_COLLECTION", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HTTP_UPGRADE_REQUIRED", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "HTTP_NO_RESPONSE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HTTP_RETRY_WITH", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HTTP_BLOCKED_BY_WINDOWS_PARENTAL_CONTROLS", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HTTP_UNAVAILABLE_FOR_LEGAL_REASONS", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -1836,9 +1834,7 @@ void bic_http_resp_consts(location_array_s &const_locations)
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_UNPROCESSABLE_ENTITY);
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_LOCKED);
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_FAILED_DEPENDENCY);
-    CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_UNORDERED_COLLECTION);
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_UPGRADE_REQUIRED);
-    CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_NO_RESPONSE);
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_RETRY_WITH);
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_BLOCKED_BY_WINDOWS_PARENTAL_CONTROLS);
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_UNAVAILABLE_FOR_LEGAL_REASONS);

@@ -164,7 +164,7 @@ void completed_func(void *cls,struct MHD_Connection *connection,
   }
 }/*}}}*/
 
-int post_proc_func(void *coninfo_cls,enum MHD_ValueKind kind,
+MHD_RESULT post_proc_func(void *coninfo_cls,enum MHD_ValueKind kind,
     const char *key,const char *filename,const char *content_type,
     const char *transfer_encoding,const char *data,uint64_t off,size_t size)
 {/*{{{*/
