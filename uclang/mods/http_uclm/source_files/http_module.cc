@@ -1784,8 +1784,8 @@ void bic_http_resp_consts(location_array_s &const_locations)
 
   // - insert http resp response codes -
   {
-    const_locations.push_blanks(53);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 53);
+    const_locations.push_blanks(51);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 51);
 
 #define CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
