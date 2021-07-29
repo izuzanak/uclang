@@ -611,25 +611,37 @@ method wait
 
   epoll_s *ep_ptr = (epoll_s *)dst_location->v_data_ptr;
 
+  int count;
   epoll_event stack_events[32];
   epoll_event *events = max_events <= 32 ? stack_events :
     (epoll_event *)cmalloc(max_events*sizeof(epoll_event));
 
-  int count = epoll_wait(ep_ptr->fd,events,max_events,timeout);
-
-  // - ERROR -
-  if (count == -1)
+  do
   {
-    if (events != stack_events)
+    count = epoll_wait(ep_ptr->fd,events,max_events,timeout);
+
+    // - ERROR -
+    if (count == -1)
     {
-      cfree(events);
+      if (errno == EINTR)
+      {
+        continue;
+      }
+
+      if (events != stack_events)
+      {
+        cfree(events);
+      }
+
+      exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_EPOLL_WAIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      new_exception->params.push(errno);
+
+      return false;
     }
 
-    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_EPOLL_WAIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    new_exception->params.push(errno);
+    break;
 
-    return false;
-  }
+  } while(true);
 
   pointer_array_s *array_ptr = it.get_new_array_ptr();
 
