@@ -12,7 +12,7 @@ EXPORT built_in_module_s module =
   1,                     // Class count
   epoll_classes,         // Classes
   0,                     // Error base index
-  8,                     // Error count
+  9,                     // Error count
   epoll_error_strings,   // Error strings
   epoll_initialize,      // Initialize function
   epoll_print_exception, // Print exceptions function
@@ -28,6 +28,7 @@ built_in_class_s *epoll_classes[] =
 const char *epoll_error_strings[] =
 {/*{{{*/
   "error_EPOLL_CREATE_ERROR",
+  "error_EPOLL_REINIT_ERROR",
   "error_EPOLL_WRONG_FDS_AND_EVENTS_ARRAY_SIZE",
   "error_EPOLL_WRONG_FD_OR_EVENTS_VALUE_TYPE",
   "error_EPOLL_CONTROL_ADD_ERROR",
@@ -66,6 +67,13 @@ bool epoll_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nEpoll create error: ");
     errno = exception.params[0];
     perror("");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_EPOLL_REINIT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nEpoll reinit error\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_EPOLL_WRONG_FDS_AND_EVENTS_ARRAY_SIZE:
@@ -140,7 +148,7 @@ built_in_class_s epoll_class =
 {/*{{{*/
   "Epoll",
   c_modifier_public | c_modifier_final,
-  9, epoll_methods,
+  10, epoll_methods,
   1 + 8, epoll_variables,
   bic_epoll_consts,
   bic_epoll_init,
@@ -189,6 +197,11 @@ built_in_method_s epoll_methods[] =
     "update#1",
     c_modifier_public | c_modifier_final,
     bic_epoll_method_update_1
+  },
+  {
+    "reinit#0",
+    c_modifier_public | c_modifier_final,
+    bic_epoll_method_reinit_0
   },
   {
     "wait#2",
@@ -470,6 +483,7 @@ method Epoll
   ep_ptr->init();
 
   ep_ptr->fd = fd;
+  ep_ptr->flags = (int)flags;
 
   dst_location->v_data_ptr = (epoll_s *)ep_ptr;
 
@@ -590,6 +604,26 @@ method update
   return true;
 }/*}}}*/
 
+bool bic_epoll_method_reinit_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  epoll_s *ep_ptr = (epoll_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (!ep_ptr->reinit())
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_EPOLL_REINIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(errno);
+
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
 bool bic_epoll_method_wait_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
@@ -610,24 +644,19 @@ method wait
   }
 
   epoll_s *ep_ptr = (epoll_s *)dst_location->v_data_ptr;
+  epoll_fds_s &fds = ep_ptr->fds;
 
-  int count;
   epoll_event stack_events[32];
   epoll_event *events = max_events <= 32 ? stack_events :
     (epoll_event *)cmalloc(max_events*sizeof(epoll_event));
 
-  do
+  int count = epoll_wait(ep_ptr->fd,events,max_events,timeout);
+
+  // - ERROR -
+  if (count == -1)
   {
-    count = epoll_wait(ep_ptr->fd,events,max_events,timeout);
-
-    // - ERROR -
-    if (count == -1)
+    if (errno != EINTR)
     {
-      if (errno == EINTR)
-      {
-        continue;
-      }
-
       if (events != stack_events)
       {
         cfree(events);
@@ -638,20 +667,35 @@ method wait
 
       return false;
     }
-
-    break;
-
-  } while(true);
-
-  pointer_array_s *array_ptr = it.get_new_array_ptr();
+  }
 
   if (count > 0)
   {
+    pointer_array_s *array_ptr = it.get_new_array_ptr();
+    BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);
+
     epoll_event *e_ptr = events;
     epoll_event *e_ptr_end = e_ptr + count;
     do {
       long long int fd = e_ptr->data.fd;
       long long int events = e_ptr->events;
+
+      // - epoll reinit needed -
+      if (fds[fd].fd != fd)
+      {
+        it.release_location_ptr(array_location);
+
+        // - ERROR -
+        if (!ep_ptr->reinit())
+        {
+          exception_s::throw_exception(it,module.error_base + c_error_EPOLL_REINIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          return false;
+        }
+
+        BIC_SET_RESULT_BLANK();
+
+        return true;
+      }
 
       BIC_CREATE_NEW_LOCATION(fd_location,c_bi_class_integer,fd)
       array_ptr->push(fd_location);
@@ -660,15 +704,18 @@ method wait
       array_ptr->push(events_location);
 
     } while(++e_ptr < e_ptr_end);
+
+    BIC_SET_RESULT(array_location);
+  }
+  else
+  {
+    BIC_SET_RESULT_BLANK();
   }
 
   if (events != stack_events)
   {
     cfree(events);
   }
-
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
-  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/

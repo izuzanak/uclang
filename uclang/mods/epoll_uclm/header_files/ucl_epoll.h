@@ -40,10 +40,12 @@ array<epoll_fd_s> epoll_fds_s;
 struct epoll_s
 {
   int fd;
+  int flags;
   epoll_fds_s fds;
 
   inline void init();
   void clear(interpreter_thread_s &it);
+  bool reinit();
 };
 
 /*
