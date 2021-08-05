@@ -315,7 +315,7 @@ built_in_variable_s epoll_variables[] =
   if (epoll_ctl(ep_ptr->fd,EPOLL_CTL_DEL,fd,&event) == -1)\
   {\
     /* - closed fd, not problem - */\
-    if (errno != EBADF)\
+    if (errno != EBADF && errno != ENOENT)\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_EPOLL_CONTROL_DELETE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       new_exception->params.push(errno);\
