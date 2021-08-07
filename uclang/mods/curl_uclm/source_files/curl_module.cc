@@ -16,7 +16,7 @@ EXPORT built_in_module_s module =
   curl_classes,         // Classes
 
   0,                    // Error base index
-  14,                   // Error count
+  16,                   // Error count
   curl_error_strings,   // Error strings
 
   curl_initialize,      // Initialize function
@@ -47,6 +47,8 @@ const char *curl_error_strings[] =
   "error_CURL_MULTI_REQUEST_INVALID_REFERENCE",
   "error_CURL_MULTI_REQUEST_UNSUPPORTED_OPTION_TYPE",
   "error_CURL_MULTI_REQUEST_WRONG_OPTION_VALUE_TYPE",
+  "error_CURL_MULTI_REQUEST_WRONG_OPTION_ARRAY_SIZE",
+  "error_CURL_MULTI_REQUEST_WRONG_OPTION_ARRAY_VALUE_TYPE",
   "error_CURL_RESULT_UNSUPPORTED_INFO_VALUE_TYPE",
   "error_CURL_RESULT_ERROR_WHILE_GET_INFO",
 };/*}}}*/
@@ -163,6 +165,20 @@ bool curl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nWrong type of curl option value, expected %s\n",it.class_symbol_names[it.class_records[exception.params[0]].name_idx].data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_CURL_MULTI_REQUEST_WRONG_OPTION_ARRAY_SIZE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid size of curl option value array\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CURL_MULTI_REQUEST_WRONG_OPTION_ARRAY_VALUE_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nWrong type of value of curl option value array, expected %s\n",it.class_symbol_names[it.class_records[exception.params[0]].name_idx].data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_CURL_RESULT_UNSUPPORTED_INFO_VALUE_TYPE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -190,7 +206,7 @@ built_in_class_s curl_class =
   "Curl",
   c_modifier_public | c_modifier_final,
   7, curl_methods,
-  9 + 10 + 3, curl_variables,
+  12 + 10 + 3, curl_variables,
   bic_curl_consts,
   bic_curl_init,
   bic_curl_clear,
@@ -259,6 +275,9 @@ built_in_variable_s curl_variables[] =
   { "OPT_FTP_CREATE_MISSING_DIRS", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPT_SSL_VERIFYPEER", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPT_SSL_VERIFYHOST", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_QUOTE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_PREQUOTE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_POSTQUOTE", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
   // - curl authentication constants -
   { "AUTH_ANY", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -432,8 +451,8 @@ void bic_curl_consts(location_array_s &const_locations)
 
   // - curl option constants -
   {
-    const_locations.push_blanks(9);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 9);
+    const_locations.push_blanks(12);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 12);
 
 #define CREATE_CURL_OPTION_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -450,6 +469,9 @@ void bic_curl_consts(location_array_s &const_locations)
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_FTP_CREATE_MISSING_DIRS);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_SSL_VERIFYPEER);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_SSL_VERIFYHOST);
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_QUOTE);
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_PREQUOTE);
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_POSTQUOTE);
   }
 
   // - curl authentication constants -
@@ -1338,7 +1360,7 @@ method add_headers
   BIC_CURL_MULTI_REQUEST_CHECK_REFERENCE();
 
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
-  curl_slist *headers = nullptr;
+  curl_slist *header_slist = nullptr;
 
   if (array_ptr->used != 0)
   {
@@ -1351,7 +1373,7 @@ method add_headers
       // - ERROR -
       if (item_location->v_type != c_bi_class_string)
       {
-        curl_slist_free_all(headers);
+        curl_slist_free_all(header_slist);
 
         exception_s::throw_exception(it,module.error_base + c_error_CURL_HTTP_HEADER_EXPECTED_STRING,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
@@ -1359,21 +1381,21 @@ method add_headers
 
       // - append header to list -
       string_s *string_ptr = (string_s *)item_location->v_data_ptr;
-      headers = curl_slist_append(headers,string_ptr->data);
+      header_slist = curl_slist_append(header_slist,string_ptr->data);
 
     } while(++s_ptr < s_ptr_end);
   }
 
-  curl_easy_setopt(curl_ptr,CURLOPT_HTTPHEADER,headers);
+  curl_easy_setopt(curl_ptr,CURLOPT_HTTPHEADER,header_slist);
 
-  // - release old headers list -
-  if (curl_props->headers != nullptr)
+  // - release old header list -
+  if (curl_props->header_slist != nullptr)
   {
-    curl_slist_free_all(curl_props->headers);
+    curl_slist_free_all(curl_props->header_slist);
   }
 
-  // - store headers list -
-  curl_props->headers = headers;
+  // - store header list -
+  curl_props->header_slist = header_slist;
 
   BIC_SET_RESULT_DESTINATION();
 
@@ -1401,7 +1423,7 @@ method setopt
   case CURLOPT_FTP_CREATE_MISSING_DIRS:
   case CURLOPT_SSL_VERIFYPEER:
   case CURLOPT_SSL_VERIFYHOST:
-    {
+    {/*{{{*/
       long long int value;
 
       // - ERROR -
@@ -1414,11 +1436,12 @@ method setopt
       }
 
       curl_easy_setopt(curl_ptr,(CURLoption)curlopt,value);
-    }
+    }/*}}}*/
     break;
   case CURLOPT_USERNAME:
   case CURLOPT_PASSWORD:
-    {
+    {/*{{{*/
+
       // - ERROR -
       if (src_1_location->v_type != c_bi_class_string)
       {
@@ -1430,7 +1453,79 @@ method setopt
 
       string_s *string_ptr = (string_s *)src_1_location->v_data_ptr;
       curl_easy_setopt(curl_ptr,(CURLoption)curlopt,string_ptr->data);
-    }
+    }/*}}}*/
+    break;
+  case CURLOPT_QUOTE:
+  case CURLOPT_PREQUOTE:
+  case CURLOPT_POSTQUOTE:
+    {/*{{{*/
+
+      // - ERROR -
+      if (src_1_location->v_type != c_bi_class_array)
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_REQUEST_WRONG_OPTION_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(c_bi_class_array);
+
+        return false;
+      }
+
+      pointer_array_s *array_ptr = (pointer_array_s *)src_1_location->v_data_ptr;
+
+      // - ERROR -
+      if (array_ptr->used == 0)
+      {
+        exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_REQUEST_WRONG_OPTION_ARRAY_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+
+      curl_slist *command_slist = nullptr;
+      
+      pointer *p_ptr = array_ptr->data;
+      pointer *p_ptr_end = p_ptr + array_ptr->used;
+      do {
+        location_s *cmd_location = it.get_location_value(*p_ptr);
+
+        // - ERROR -
+        if (cmd_location->v_type != c_bi_class_string)
+        {
+          curl_slist_free_all(command_slist);
+
+          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_REQUEST_WRONG_OPTION_ARRAY_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          new_exception->params.push(c_bi_class_string);
+
+          return false;
+        }
+
+        string_s *string_ptr = (string_s *)cmd_location->v_data_ptr;
+        command_slist = curl_slist_append(command_slist,string_ptr->data);
+      } while(++p_ptr < p_ptr_end);
+
+      curl_slist **quote_slist = nullptr;
+
+      switch (curlopt)
+      {
+      case CURLOPT_QUOTE:
+        quote_slist = &curl_props->quote_slist;
+        break;
+      case CURLOPT_PREQUOTE:
+        quote_slist = &curl_props->prequote_slist;
+        break;
+      case CURLOPT_POSTQUOTE:
+        quote_slist = &curl_props->postquote_slist;
+        break;
+      }
+
+      curl_easy_setopt(curl_ptr,(CURLoption)curlopt,command_slist);
+
+      // - release old command list -
+      if (*quote_slist != nullptr)
+      {
+        curl_slist_free_all(*quote_slist);
+      }
+
+      // - store command list -
+      *quote_slist = command_slist;
+    }/*}}}*/
     break;
 
   // - ERROR -

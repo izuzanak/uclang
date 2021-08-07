@@ -54,7 +54,12 @@ safe_rb_tree<fd_flags_s> fd_flags_rb_tree_s;
 struct curl_props_s
 {
   CURL *curl_ptr;
-  curl_slist *headers;
+
+  curl_slist *header_slist;
+  curl_slist *quote_slist;
+  curl_slist *prequote_slist;
+  curl_slist *postquote_slist;
+
   unsigned index;
   long long int unique_id;
   bc_array_s write_buffer;
@@ -165,7 +170,10 @@ inline int fd_flags_rb_tree_s::__compare_value(fd_flags_s &a_first,fd_flags_s &a
 inline void curl_props_s::init()
 {/*{{{*/
   curl_ptr = nullptr;
-  headers = nullptr;
+  header_slist = nullptr;
+  quote_slist = nullptr;
+  prequote_slist = nullptr;
+  postquote_slist = nullptr;
   write_buffer.init();
   read_loc = nullptr;
   user_loc = nullptr;
@@ -180,10 +188,28 @@ inline void curl_props_s::clear(interpreter_thread_s &it)
     curl_easy_cleanup(curl_ptr);
   }
 
-  // - release headers list -
-  if (headers != nullptr)
+  // - release header list -
+  if (header_slist != nullptr)
   {
-    curl_slist_free_all(headers);
+    curl_slist_free_all(header_slist);
+  }
+
+  // - release quote list -
+  if (quote_slist != nullptr)
+  {
+    curl_slist_free_all(quote_slist);
+  }
+
+  // - release prequote list -
+  if (prequote_slist != nullptr)
+  {
+    curl_slist_free_all(prequote_slist);
+  }
+
+  // - release postquote list -
+  if (postquote_slist != nullptr)
+  {
+    curl_slist_free_all(postquote_slist);
   }
 
   write_buffer.clear();
