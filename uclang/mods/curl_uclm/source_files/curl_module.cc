@@ -1479,7 +1479,7 @@ method setopt
       }
 
       curl_slist *command_slist = nullptr;
-      
+
       pointer *p_ptr = array_ptr->data;
       pointer *p_ptr_end = p_ptr + array_ptr->used;
       do {

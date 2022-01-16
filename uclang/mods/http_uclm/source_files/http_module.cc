@@ -1554,7 +1554,7 @@ method digest_auth_check
   string_s *user_ptr = (string_s *)src_1_location->v_data_ptr;
   string_s *pass_ptr = (string_s *)src_2_location->v_data_ptr;
 
-  // - queue response to be transmitted to client -
+  // - check digest authentication -
   long long int result = MHD_digest_auth_check(
       conn_ptr->connection_ptr,realm_ptr->data,user_ptr->data,pass_ptr->data,nonce_timeout);
 
