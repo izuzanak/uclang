@@ -8,8 +8,5 @@ set(CONF_COMP_DEFS)
 set(CONF_LINK_LIBS
   base_ucll
   freetype
-  GLEW
-  GL
-  glut
-  m)
+  GLEW)
 

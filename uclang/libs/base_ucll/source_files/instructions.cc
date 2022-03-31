@@ -608,6 +608,13 @@ int inst_free_object(inst_params_s *params)
   ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
   object_location = it.blank_location;
 
+  pointer *object_ref_location = &it.data_stack[stack_base + code[ifo_stack_object]];
+  location_s *new_ref_location = it.get_new_reference((location_s **)object_ref_location);
+
+  pointer &trg_location = it.data_stack[stack_base + code[ifo_stack_trg]];
+  it.release_location_ptr((location_s *)trg_location);
+  trg_location = new_ref_location;
+
   code += ifo_size;
 
   return c_run_return_code_OK;
