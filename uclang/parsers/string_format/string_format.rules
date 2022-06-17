@@ -5,7 +5,7 @@ init_code: {}
 terminals:
 
   minus {'-'}
-  flags {[+ #0].[-+ #0]*}
+  flags {[+ #].[-+ #]*}
   number {<09>.<09>*}
   parameter {'*'}
   dot {'.'}

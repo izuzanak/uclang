@@ -17,31 +17,31 @@ unsigned sf_terminal_recognize(char **a_ptr) // lgtm [cpp/use-of-goto]
 // - STATE 0 -
    SF_GET_NEXT_CHAR();
 
+   if (in_char == 10) {
+      goto state_1_label;
+   }
    if (in_char == 32) {
-      goto state_1_label;
-   }
-   if (in_char == 35) {
-      goto state_1_label;
-   }
-   if (in_char == 37) {
       goto state_2_label;
    }
-   if (in_char == 42) {
+   if (in_char == 35) {
+      goto state_2_label;
+   }
+   if (in_char == 37) {
       goto state_3_label;
    }
-   if (in_char == 43) {
-      goto state_1_label;
-   }
-   if (in_char == 45) {
+   if (in_char == 42) {
       goto state_4_label;
    }
-   if (in_char == 46) {
+   if (in_char == 43) {
+      goto state_2_label;
+   }
+   if (in_char == 45) {
       goto state_5_label;
    }
-   if (in_char == 48) {
+   if (in_char == 46) {
       goto state_6_label;
    }
-   if (in_char >= 49 && in_char < 58) {
+   if (in_char >= 48 && in_char < 58) {
       goto state_7_label;
    }
    if (in_char >= 69 && in_char < 72) {
@@ -75,70 +75,47 @@ unsigned sf_terminal_recognize(char **a_ptr) // lgtm [cpp/use-of-goto]
 
 // - STATE 1 -
 state_1_label:
-   SF_CLOSE_CHAR(1);
-   SF_GET_NEXT_CHAR();
-
-   if (in_char == 32) {
-      goto state_1_label;
-   }
-   if (in_char == 35) {
-      goto state_1_label;
-   }
-   if (in_char == 43) {
-      goto state_1_label;
-   }
-   if (in_char == 45) {
-      goto state_1_label;
-   }
-   if (in_char == 48) {
-      goto state_1_label;
-   }
-   return 1;
+   SF_CLOSE_CHAR(10);
+   return 10;
 
 // - STATE 2 -
 state_2_label:
-   SF_CLOSE_CHAR(5);
-   return 5;
-
-// - STATE 3 -
-state_3_label:
-   SF_CLOSE_CHAR(3);
-   return 3;
-
-// - STATE 4 -
-state_4_label:
-   SF_CLOSE_CHAR(0);
-   return 0;
-
-// - STATE 5 -
-state_5_label:
-   SF_CLOSE_CHAR(4);
-   return 4;
-
-// - STATE 6 -
-state_6_label:
    SF_CLOSE_CHAR(1);
    SF_GET_NEXT_CHAR();
 
    if (in_char == 32) {
-      goto state_1_label;
+      goto state_2_label;
    }
    if (in_char == 35) {
-      goto state_1_label;
+      goto state_2_label;
    }
    if (in_char == 43) {
-      goto state_1_label;
+      goto state_2_label;
    }
    if (in_char == 45) {
-      goto state_1_label;
-   }
-   if (in_char == 48) {
-      goto state_6_label;
-   }
-   if (in_char >= 49 && in_char < 58) {
-      goto state_7_label;
+      goto state_2_label;
    }
    return 1;
+
+// - STATE 3 -
+state_3_label:
+   SF_CLOSE_CHAR(5);
+   return 5;
+
+// - STATE 4 -
+state_4_label:
+   SF_CLOSE_CHAR(3);
+   return 3;
+
+// - STATE 5 -
+state_5_label:
+   SF_CLOSE_CHAR(0);
+   return 0;
+
+// - STATE 6 -
+state_6_label:
+   SF_CLOSE_CHAR(4);
+   return 4;
 
 // - STATE 7 -
 state_7_label:
