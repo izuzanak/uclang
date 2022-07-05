@@ -11,6 +11,7 @@ file(MAKE_DIRECTORY ${PROC_DIR})
 set(USE_MF_MODS FALSE)
 set(MF_MODS_FILE "${CMAKE_CURRENT_SOURCE_DIR}/uclang_build/mf_mods.py")
 
+set_property(GLOBAL PROPERTY TARGET_MESSAGES OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 enable_testing()
 

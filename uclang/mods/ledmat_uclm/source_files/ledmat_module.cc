@@ -238,7 +238,6 @@ void bic_ledmat_clear(interpreter_thread_s &it,location_s *location_ptr)
     lm_ptr->clear(it);
     cfree(lm_ptr);
   }
-
 }/*}}}*/
 
 bool bic_ledmat_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
