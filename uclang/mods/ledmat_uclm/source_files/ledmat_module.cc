@@ -582,7 +582,7 @@ method fill
 
   ledmat_buffer_s *lmb_ptr = (ledmat_buffer_s *)dst_location->v_data_ptr;
 
-  memset(lmb_ptr->data,value,lmb_ptr->row_cnt*(lmb_ptr->col_cnt >> 3));
+  memset(lmb_ptr->data,value,(size_t)lmb_ptr->row_cnt*(lmb_ptr->col_cnt >> 3));
 
   BIC_SET_RESULT_DESTINATION();
 
