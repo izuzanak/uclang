@@ -442,7 +442,7 @@ method render_text
   ftb_ptr->height = bitmap_height;
   ftb_ptr->baseline = bitmap_top;
 
-  size_t data_size = bitmap_width*bitmap_height*sizeof(unsigned char);
+  size_t data_size = (size_t)bitmap_width*bitmap_height*sizeof(unsigned char);
   ftb_ptr->data = (unsigned char *)cmalloc(data_size);
   memset(ftb_ptr->data,0,data_size);
 
