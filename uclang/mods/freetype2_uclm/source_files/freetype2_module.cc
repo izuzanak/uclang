@@ -18,7 +18,7 @@ EXPORT built_in_module_s module =
   freetype2_classes,         // Classes
 
   0,                         // Error base index
-  1,                         // Error count
+  7,                         // Error count
   freetype2_error_strings,   // Error strings
 
   freetype2_initialize,      // Initialize function
@@ -36,7 +36,13 @@ built_in_class_s *freetype2_classes[] =
 // - FREETYPE2 error strings -
 const char *freetype2_error_strings[] =
 {/*{{{*/
-  "error_FREETYPE2_DUMMY_ERROR",
+  "error_FREETYPE2_LIBRARY_INIT_ERROR",
+  "error_FREETYPE2_LIBRARY_NEW_FACE_ERROR",
+  "error_FREETYPE2_FACE_INVALID_TEXT_HEIGHT",
+  "error_FREETYPE2_FACE_SELECT_CHARMAP_ERROR",
+  "error_FREETYPE2_FACE_PIXEL_SIZES_ERROR",
+  "error_FREETYPE2_FACE_MEASURE_TEXT_ERROR",
+  "error_FREETYPE2_FACE_RENDER_TEXT_ERROR",
 };/*}}}*/
 
 // - FREETYPE2 initialize -
@@ -77,11 +83,53 @@ bool freetype2_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_FREETYPE2_DUMMY_ERROR:
+  case c_error_FREETYPE2_LIBRARY_INIT_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nFreeType2 dummy error\n");
+    fprintf(stderr,"\nFreeType2 library, init error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FREETYPE2_LIBRARY_NEW_FACE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFreeType2 library, new face error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FREETYPE2_FACE_INVALID_TEXT_HEIGHT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFreeType2 face, invalid text height: %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FREETYPE2_FACE_SELECT_CHARMAP_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFreeType2 face, select charmap error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FREETYPE2_FACE_PIXEL_SIZES_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFreeType2 face, pixel sizes error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FREETYPE2_FACE_MEASURE_TEXT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFreeType2 face, measure text error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FREETYPE2_FACE_RENDER_TEXT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFreeType2 face, render text error\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -189,8 +237,7 @@ bool bic_ft2_library_method_Ft2Library_0(interpreter_thread_s &it,unsigned stack
   // - ERROR -
   if (FT_Init_FreeType((FT_Library *)&dst_location->v_data_ptr))
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_FREETYPE2_LIBRARY_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -214,8 +261,7 @@ method face
   FT_Face face;
   if (FT_New_Face(ftl_ptr,string_ptr->data,face_index,&face))
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_FREETYPE2_LIBRARY_NEW_FACE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -353,18 +399,25 @@ method render_text
   ui_array_s *array_ptr = (ui_array_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
+  if (height < 1 || height > 1024)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FREETYPE2_FACE_INVALID_TEXT_HEIGHT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(height);
+
+    return false;
+  }
+
+  // - ERROR -
   if (FT_Select_Charmap(ftf_ptr->face,FT_ENCODING_UNICODE))
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_FREETYPE2_FACE_SELECT_CHARMAP_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
   // - ERROR -
   if (FT_Set_Pixel_Sizes(ftf_ptr->face,0,height))
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_FREETYPE2_FACE_PIXEL_SIZES_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -377,8 +430,7 @@ method render_text
   if (!ftf_ptr->measure_text(*array_ptr,
         bitmap_left,bitmap_top,bitmap_width,bitmap_height))
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_FREETYPE2_FACE_MEASURE_TEXT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -401,8 +453,7 @@ method render_text
   {
     it.release_location_ptr(bitmap_location);
 
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_FREETYPE2_FACE_RENDER_TEXT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 

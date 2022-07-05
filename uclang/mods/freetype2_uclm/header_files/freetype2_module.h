@@ -20,7 +20,13 @@ extern built_in_class_s *freetype2_classes[];
 // - FREETYPE2 error identifiers -
 enum
 {
-  c_error_FREETYPE2_DUMMY_ERROR = 0,
+  c_error_FREETYPE2_LIBRARY_INIT_ERROR = 0,
+  c_error_FREETYPE2_LIBRARY_NEW_FACE_ERROR,
+  c_error_FREETYPE2_FACE_INVALID_TEXT_HEIGHT,
+  c_error_FREETYPE2_FACE_SELECT_CHARMAP_ERROR,
+  c_error_FREETYPE2_FACE_PIXEL_SIZES_ERROR,
+  c_error_FREETYPE2_FACE_MEASURE_TEXT_ERROR,
+  c_error_FREETYPE2_FACE_RENDER_TEXT_ERROR,
 };
 
 // - FREETYPE2 error strings -
