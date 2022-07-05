@@ -257,8 +257,8 @@ built_in_class_s ft2_face_class =
 {/*{{{*/
   "Ft2Face",
   c_modifier_public | c_modifier_final,
-  15, ft2_face_methods,
-  14 + 19 + 5 + 2, ft2_face_variables,
+  4, ft2_face_methods,
+  0, ft2_face_variables,
   bic_ft2_face_consts,
   bic_ft2_face_init,
   bic_ft2_face_clear,
@@ -283,64 +283,9 @@ built_in_method_s ft2_face_methods[] =
     bic_ft2_face_operator_binary_equal
   },
   {
-    "select_charmap#1",
-    c_modifier_public | c_modifier_final,
-    bic_ft2_face_method_select_charmap_1
-  },
-  {
-    "set_pixel_sizes#2",
-    c_modifier_public | c_modifier_final,
-    bic_ft2_face_method_set_pixel_sizes_2
-  },
-  {
     "render_text#2",
     c_modifier_public | c_modifier_final,
     bic_ft2_face_method_render_text_2
-  },
-  {
-    "load_char#2",
-    c_modifier_public | c_modifier_final,
-    bic_ft2_face_method_load_char_2
-  },
-  {
-    "render_glyph#1",
-    c_modifier_public | c_modifier_final,
-    bic_ft2_face_method_render_glyph_1
-  },
-  {
-    "get_kerning#3",
-    c_modifier_public | c_modifier_final,
-    bic_ft2_face_method_get_kerning_3
-  },
-  {
-    "top#0",
-    c_modifier_public | c_modifier_final,
-    bic_ft2_face_method_top_0
-  },
-  {
-    "left#0",
-    c_modifier_public | c_modifier_final,
-    bic_ft2_face_method_left_0
-  },
-  {
-    "width#0",
-    c_modifier_public | c_modifier_final,
-    bic_ft2_face_method_width_0
-  },
-  {
-    "height#0",
-    c_modifier_public | c_modifier_final,
-    bic_ft2_face_method_height_0
-  },
-  {
-    "buffer#0",
-    c_modifier_public | c_modifier_final,
-    bic_ft2_face_method_buffer_0
-  },
-  {
-    "glyph_info#0",
-    c_modifier_public | c_modifier_final,
-    bic_ft2_face_method_glyph_info_0
   },
   {
     "to_string#0",
@@ -356,145 +301,11 @@ built_in_method_s ft2_face_methods[] =
 
 built_in_variable_s ft2_face_variables[] =
 {/*{{{*/
-  { "FT_ENCODING_NONE",           c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_ENCODING_UNICODE",        c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_ENCODING_MS_SYMBOL",      c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_ENCODING_ADOBE_LATIN_1",  c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_ENCODING_OLD_LATIN_2",    c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_ENCODING_SJIS",           c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_ENCODING_PRC",            c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_ENCODING_BIG5",           c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_ENCODING_WANSUNG",        c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_ENCODING_JOHAB",          c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_ENCODING_ADOBE_STANDARD", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_ENCODING_ADOBE_EXPERT",   c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_ENCODING_ADOBE_CUSTOM",   c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_ENCODING_APPLE_ROMAN",    c_modifier_public | c_modifier_static | c_modifier_static_const },
-
-  { "FT_LOAD_DEFAULT",             c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_LOAD_NO_SCALE",            c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_LOAD_NO_HINTING",          c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_LOAD_RENDER",              c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_LOAD_NO_BITMAP",           c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_LOAD_VERTICAL_LAYOUT",     c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_LOAD_FORCE_AUTOHINT",      c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_LOAD_CROP_BITMAP",         c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_LOAD_PEDANTIC",            c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_LOAD_NO_RECURSE",          c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_LOAD_IGNORE_TRANSFORM",    c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_LOAD_MONOCHROME",          c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_LOAD_LINEAR_DESIGN",       c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_LOAD_SBITS_ONLY",          c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_LOAD_NO_AUTOHINT",         c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_LOAD_COLOR",               c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_LOAD_COMPUTE_METRICS",     c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_LOAD_BITMAP_METRICS_ONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
-
-  { "FT_RENDER_MODE_NORMAL", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_RENDER_MODE_LIGHT",  c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_RENDER_MODE_MONO",   c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_RENDER_MODE_LCD",    c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_RENDER_MODE_LCD_V",  c_modifier_public | c_modifier_static | c_modifier_static_const },
-
-  { "FT_KERNING_DEFAULT",  c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FT_KERNING_UNFITTED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
 
 void bic_ft2_face_consts(location_array_s &const_locations)
 {/*{{{*/
-
-  // - insert freetype encoding constants -
-  {
-    const_locations.push_blanks(14);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 14);
-
-#define CREATE_FREETYPE_ENCODING_BIC_STATIC(VALUE)\
-  cv_ptr->v_type = c_bi_class_integer;\
-  cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (long long int)VALUE;\
-  cv_ptr++;
-
-    CREATE_FREETYPE_ENCODING_BIC_STATIC(FT_ENCODING_NONE);
-    CREATE_FREETYPE_ENCODING_BIC_STATIC(FT_ENCODING_UNICODE);
-    CREATE_FREETYPE_ENCODING_BIC_STATIC(FT_ENCODING_MS_SYMBOL);
-    CREATE_FREETYPE_ENCODING_BIC_STATIC(FT_ENCODING_ADOBE_LATIN_1);
-    CREATE_FREETYPE_ENCODING_BIC_STATIC(FT_ENCODING_OLD_LATIN_2);
-    CREATE_FREETYPE_ENCODING_BIC_STATIC(FT_ENCODING_SJIS);
-    CREATE_FREETYPE_ENCODING_BIC_STATIC(FT_ENCODING_PRC);
-    CREATE_FREETYPE_ENCODING_BIC_STATIC(FT_ENCODING_BIG5);
-    CREATE_FREETYPE_ENCODING_BIC_STATIC(FT_ENCODING_WANSUNG);
-    CREATE_FREETYPE_ENCODING_BIC_STATIC(FT_ENCODING_JOHAB);
-    CREATE_FREETYPE_ENCODING_BIC_STATIC(FT_ENCODING_ADOBE_STANDARD);
-    CREATE_FREETYPE_ENCODING_BIC_STATIC(FT_ENCODING_ADOBE_EXPERT);
-    CREATE_FREETYPE_ENCODING_BIC_STATIC(FT_ENCODING_ADOBE_CUSTOM);
-    CREATE_FREETYPE_ENCODING_BIC_STATIC(FT_ENCODING_APPLE_ROMAN);
-  }
-
-  // - insert freetype load constants -
-  {
-    const_locations.push_blanks(19);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 19);
-
-#define CREATE_FREETYPE_LOAD_BIC_STATIC(VALUE)\
-  cv_ptr->v_type = c_bi_class_integer;\
-  cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (long long int)VALUE;\
-  cv_ptr++;
-
-    CREATE_FREETYPE_LOAD_BIC_STATIC(FT_LOAD_DEFAULT);
-    CREATE_FREETYPE_LOAD_BIC_STATIC(FT_LOAD_NO_SCALE);
-    CREATE_FREETYPE_LOAD_BIC_STATIC(FT_LOAD_NO_HINTING);
-    CREATE_FREETYPE_LOAD_BIC_STATIC(FT_LOAD_RENDER);
-    CREATE_FREETYPE_LOAD_BIC_STATIC(FT_LOAD_NO_BITMAP);
-    CREATE_FREETYPE_LOAD_BIC_STATIC(FT_LOAD_VERTICAL_LAYOUT);
-    CREATE_FREETYPE_LOAD_BIC_STATIC(FT_LOAD_FORCE_AUTOHINT);
-    CREATE_FREETYPE_LOAD_BIC_STATIC(FT_LOAD_CROP_BITMAP);
-    CREATE_FREETYPE_LOAD_BIC_STATIC(FT_LOAD_PEDANTIC);
-    CREATE_FREETYPE_LOAD_BIC_STATIC(FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH);
-    CREATE_FREETYPE_LOAD_BIC_STATIC(FT_LOAD_NO_RECURSE);
-    CREATE_FREETYPE_LOAD_BIC_STATIC(FT_LOAD_IGNORE_TRANSFORM);
-    CREATE_FREETYPE_LOAD_BIC_STATIC(FT_LOAD_MONOCHROME);
-    CREATE_FREETYPE_LOAD_BIC_STATIC(FT_LOAD_LINEAR_DESIGN);
-    CREATE_FREETYPE_LOAD_BIC_STATIC(FT_LOAD_SBITS_ONLY);
-    CREATE_FREETYPE_LOAD_BIC_STATIC(FT_LOAD_NO_AUTOHINT);
-    CREATE_FREETYPE_LOAD_BIC_STATIC(FT_LOAD_COLOR);
-    CREATE_FREETYPE_LOAD_BIC_STATIC(FT_LOAD_COMPUTE_METRICS);
-    CREATE_FREETYPE_LOAD_BIC_STATIC(FT_LOAD_BITMAP_METRICS_ONLY);
-  }
-
-  // - insert freetype render mode constants -
-  {
-    const_locations.push_blanks(5);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 5);
-
-#define CREATE_FREETYPE_REDER_MODE_BIC_STATIC(VALUE)\
-  cv_ptr->v_type = c_bi_class_integer;\
-  cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (long long int)VALUE;\
-  cv_ptr++;
-
-    CREATE_FREETYPE_REDER_MODE_BIC_STATIC(FT_RENDER_MODE_NORMAL);
-    CREATE_FREETYPE_REDER_MODE_BIC_STATIC(FT_RENDER_MODE_LIGHT);
-    CREATE_FREETYPE_REDER_MODE_BIC_STATIC(FT_RENDER_MODE_MONO);
-    CREATE_FREETYPE_REDER_MODE_BIC_STATIC(FT_RENDER_MODE_LCD);
-    CREATE_FREETYPE_REDER_MODE_BIC_STATIC(FT_RENDER_MODE_LCD_V);
-  }
-
-  // - insert freetype kerning constants -
-  {
-    const_locations.push_blanks(2);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 2);
-
-#define CREATE_FREETYPE_KERNING_BIC_STATIC(VALUE)\
-  cv_ptr->v_type = c_bi_class_integer;\
-  cv_ptr->v_reference_cnt.atomic_set(1);\
-  cv_ptr->v_data_ptr = (long long int)VALUE;\
-  cv_ptr++;
-
-    CREATE_FREETYPE_KERNING_BIC_STATIC(FT_KERNING_DEFAULT);
-    CREATE_FREETYPE_KERNING_BIC_STATIC(FT_KERNING_UNFITTED);
-  }
 }/*}}}*/
 
 void bic_ft2_face_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -528,55 +339,6 @@ bool bic_ft2_face_operator_binary_equal(interpreter_thread_s &it,unsigned stack_
   return true;
 }/*}}}*/
 
-bool bic_ft2_face_method_select_charmap_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-@begin ucl_params
-<
-encoding:retrieve_integer
->
-method select_charmap
-; @end
-
-  ft2_face_s *ftf_ptr = (ft2_face_s *)dst_location->v_data_ptr;
-
-  // - ERROR -
-  if (FT_Select_Charmap(ftf_ptr->face,(FT_Encoding)encoding))
-  {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
-    return false;
-  }
-
-  BIC_SET_RESULT_DESTINATION();
-
-  return true;
-}/*}}}*/
-
-bool bic_ft2_face_method_set_pixel_sizes_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-@begin ucl_params
-<
-width:retrieve_integer
-height:retrieve_integer
->
-method set_pixel_sizes
-; @end
-
-  ft2_face_s *ftf_ptr = (ft2_face_s *)dst_location->v_data_ptr;
-
-  // - ERROR -
-  if (FT_Set_Pixel_Sizes(ftf_ptr->face,width,height))
-  {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
-    return false;
-  }
-
-  BIC_SET_RESULT_DESTINATION();
-
-  return true;
-}/*}}}*/
-
 bool bic_ft2_face_method_render_text_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
@@ -591,6 +353,14 @@ method render_text
   ui_array_s *array_ptr = (ui_array_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
+  if (FT_Select_Charmap(ftf_ptr->face,FT_ENCODING_UNICODE))
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - ERROR -
   if (FT_Set_Pixel_Sizes(ftf_ptr->face,0,height))
   {
     // FIXME TODO throw proper exception
@@ -598,16 +368,19 @@ method render_text
     return false;
   }
 
-  // - ERROR -
+  int bitmap_left;
+  int bitmap_top;
   unsigned bitmap_width;
-  if (!ftf_ptr->measure_text(*array_ptr,bitmap_width))
+  unsigned bitmap_height;
+
+  // - ERROR -
+  if (!ftf_ptr->measure_text(*array_ptr,
+        bitmap_left,bitmap_top,bitmap_width,bitmap_height))
   {
     // FIXME TODO throw proper exception
     BIC_TODO_ERROR(__FILE__,__LINE__);
     return false;
   }
-
-  unsigned bitmap_height = ftf_ptr->face->size->metrics.height >> 6;
 
   // - create ft2_bitmap object -
   ft2_bitmap_s *ftb_ptr = (ft2_bitmap_s *)cmalloc(sizeof(ft2_bitmap_s));
@@ -615,12 +388,16 @@ method render_text
 
   ftb_ptr->width = bitmap_width;
   ftb_ptr->height = bitmap_height;
-  ftb_ptr->data = (unsigned char *)cmalloc(bitmap_width*bitmap_height*sizeof(unsigned char));
+  ftb_ptr->baseline = bitmap_top;
+
+  size_t data_size = bitmap_width*bitmap_height*sizeof(unsigned char);
+  ftb_ptr->data = (unsigned char *)cmalloc(data_size);
+  memset(ftb_ptr->data,0,data_size);
 
   BIC_CREATE_NEW_LOCATION(bitmap_location,c_bi_class_ft2_bitmap,ftb_ptr);
 
   // - ERROR -
-  if (!ftf_ptr->render_text(*array_ptr,*ftb_ptr))
+  if (!ftf_ptr->render_text(*array_ptr,*ftb_ptr,bitmap_left,bitmap_top))
   {
     it.release_location_ptr(bitmap_location);
 
@@ -630,206 +407,6 @@ method render_text
   }
 
   BIC_SET_RESULT(bitmap_location);
-
-  return true;
-}/*}}}*/
-
-bool bic_ft2_face_method_load_char_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-@begin ucl_params
-<
-char_code:retrieve_integer
-load_flags:retrieve_integer
->
-method load_char
-; @end
-
-  ft2_face_s *ftf_ptr = (ft2_face_s *)dst_location->v_data_ptr;
-
-  // - ERROR -
-  if (FT_Load_Char(ftf_ptr->face,char_code,load_flags))
-  {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
-    return false;
-  }
-
-  BIC_SET_RESULT_DESTINATION();
-
-  return true;
-}/*}}}*/
-
-bool bic_ft2_face_method_render_glyph_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-@begin ucl_params
-<
-render_mode:retrieve_integer
->
-method render_glyph
-; @end
-
-  ft2_face_s *ftf_ptr = (ft2_face_s *)dst_location->v_data_ptr;
-  FT_GlyphSlot slot = ftf_ptr->face->glyph;
-
-  // - ERROR -
-  if (FT_Render_Glyph(slot,(FT_Render_Mode)render_mode))
-  {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
-    return false;
-  }
-
-  BIC_SET_RESULT_DESTINATION();
-
-  return true;
-}/*}}}*/
-
-bool bic_ft2_face_method_get_kerning_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-@begin ucl_params
-<
-left_code:retrieve_integer
-right_code:retrieve_integer
-kern_mode:retrieve_integer
->
-method get_kerning
-; @end
-
-  ft2_face_s *ftf_ptr = (ft2_face_s *)dst_location->v_data_ptr;
-
-  FT_UInt left_glyph = FT_Get_Char_Index(ftf_ptr->face,left_code);
-  FT_UInt right_glyph = FT_Get_Char_Index(ftf_ptr->face,right_code);
-
-  // - ERROR -
-  if (left_glyph == 0 || right_glyph == 0)
-  {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
-    return false;
-  }
-
-  // - ERROR -
-  FT_Vector kerning;
-  if (FT_Get_Kerning(ftf_ptr->face,left_glyph,right_glyph,kern_mode,&kerning))
-  {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
-    return false;
-  }
-
-  long long int result = kerning.x;
-
-  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
-
-  return true;
-}/*}}}*/
-
-bool bic_ft2_face_method_top_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  ft2_face_s *ftf_ptr = (ft2_face_s *)dst_location->v_data_ptr;
-  FT_GlyphSlot slot = ftf_ptr->face->glyph;
-
-  long long int result = slot->bitmap_top;
-
-  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
-
-  return true;
-}/*}}}*/
-
-bool bic_ft2_face_method_left_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  ft2_face_s *ftf_ptr = (ft2_face_s *)dst_location->v_data_ptr;
-  FT_GlyphSlot slot = ftf_ptr->face->glyph;
-
-  long long int result = slot->bitmap_left;
-
-  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
-
-  return true;
-}/*}}}*/
-
-bool bic_ft2_face_method_width_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  ft2_face_s *ftf_ptr = (ft2_face_s *)dst_location->v_data_ptr;
-  FT_Bitmap *bitmap = &ftf_ptr->face->glyph->bitmap;
-
-  long long int result = bitmap->width;
-
-  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
-
-  return true;
-}/*}}}*/
-
-bool bic_ft2_face_method_height_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  ft2_face_s *ftf_ptr = (ft2_face_s *)dst_location->v_data_ptr;
-  FT_Bitmap *bitmap = &ftf_ptr->face->glyph->bitmap;
-
-  long long int result = bitmap->rows;
-
-  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
-
-  return true;
-}/*}}}*/
-
-bool bic_ft2_face_method_buffer_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  ft2_face_s *ftf_ptr = (ft2_face_s *)dst_location->v_data_ptr;
-  FT_Bitmap *bitmap = &ftf_ptr->face->glyph->bitmap;
-
-  // - ERROR -
-  if (bitmap->buffer == nullptr)
-  {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
-    return false;
-  }
-
-  // - create buffer object -
-  buffer_s *buffer_ptr = (buffer_s *)cmalloc(sizeof(buffer_s));
-
-  // - set owner reference -
-  dst_location->v_reference_cnt.atomic_inc();
-  buffer_ptr->owner_ptr = dst_location;
-
-  buffer_ptr->data = bitmap->buffer;
-  buffer_ptr->size = bitmap->rows*bitmap->pitch;
-
-  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_buffer,buffer_ptr);
-  BIC_SET_RESULT(new_location);
-
-  return true;
-}/*}}}*/
-
-bool bic_ft2_face_method_glyph_info_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  ft2_face_s *ftf_ptr = (ft2_face_s *)dst_location->v_data_ptr;
-
-  FT_GlyphSlot slot = ftf_ptr->face->glyph;
-  FT_Bitmap *bitmap = &slot->bitmap;
-  FT_Vector *advance = &slot->advance;
-
-  // FIXME
-  fprintf(stderr,"advance, x: %ld, y: %ld\n",advance->x,advance->y);
-  fprintf(stderr,"posit.: %d x %d\n",slot->bitmap_left,slot->bitmap_top);
-  fprintf(stderr,"bitmap: %u x %u\n",bitmap->width,bitmap->rows);
-  fprintf(stderr,"pixel_mode: %hhu\n",bitmap->pixel_mode);
-  fprintf(stderr,"pitch: %d\n",bitmap->pitch);
-  fprintf(stderr,"\n");
-
-  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -857,7 +434,7 @@ built_in_class_s ft2_bitmap_class =
 {/*{{{*/
   "Ft2Bitmap",
   c_modifier_public | c_modifier_final,
-  3, ft2_bitmap_methods,
+  7, ft2_bitmap_methods,
   0, ft2_bitmap_variables,
   bic_ft2_bitmap_consts,
   bic_ft2_bitmap_init,
@@ -881,6 +458,26 @@ built_in_method_s ft2_bitmap_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_ft2_bitmap_operator_binary_equal
+  },
+  {
+    "width#0",
+    c_modifier_public | c_modifier_final,
+    bic_ft2_bitmap_method_width_0
+  },
+  {
+    "height#0",
+    c_modifier_public | c_modifier_final,
+    bic_ft2_bitmap_method_height_0
+  },
+  {
+    "baseline#0",
+    c_modifier_public | c_modifier_final,
+    bic_ft2_bitmap_method_baseline_0
+  },
+  {
+    "buffer#0",
+    c_modifier_public | c_modifier_final,
+    bic_ft2_bitmap_method_buffer_0
   },
   {
     "to_string#0",
@@ -930,6 +527,67 @@ bool bic_ft2_bitmap_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_ft2_bitmap_method_width_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  ft2_bitmap_s *ftb_ptr = (ft2_bitmap_s *)dst_location->v_data_ptr;
+
+  long long int result = ftb_ptr->width;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_ft2_bitmap_method_height_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  ft2_bitmap_s *ftb_ptr = (ft2_bitmap_s *)dst_location->v_data_ptr;
+
+  long long int result = ftb_ptr->height;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_ft2_bitmap_method_baseline_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  ft2_bitmap_s *ftb_ptr = (ft2_bitmap_s *)dst_location->v_data_ptr;
+
+  long long int result = ftb_ptr->baseline;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_ft2_bitmap_method_buffer_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  ft2_bitmap_s *ftb_ptr = (ft2_bitmap_s *)dst_location->v_data_ptr;
+
+  // - create buffer object -
+  buffer_s *buffer_ptr = (buffer_s *)cmalloc(sizeof(buffer_s));
+
+  // - set owner reference -
+  dst_location->v_reference_cnt.atomic_inc();
+  buffer_ptr->owner_ptr = dst_location;
+
+  buffer_ptr->data = ftb_ptr->data;
+  buffer_ptr->size = ftb_ptr->width*ftb_ptr->height;
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_buffer,buffer_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/

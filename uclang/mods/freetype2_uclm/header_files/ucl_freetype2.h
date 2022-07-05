@@ -23,10 +23,13 @@ struct ft2_bitmap_s
 {
   unsigned width;
   unsigned height;
+  unsigned baseline;
   unsigned char *data;
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
+
+  void copy_glyph_bitmap(unsigned x_pos,unsigned y_pos,FT_GlyphSlot glyph_slot);
 };
 
 /*
@@ -41,8 +44,10 @@ struct ft2_face_s
   inline void init();
   inline void clear(interpreter_thread_s &it);
 
-  bool measure_text(const ui_array_s &a_text,unsigned &a_width);
-  bool render_text(const ui_array_s &a_text,ft2_bitmap_s &a_bitmap);
+  bool measure_text(const ui_array_s &a_text,
+      int &a_left,int &a_top,unsigned &a_width,unsigned &a_height);
+  bool render_text(const ui_array_s &a_text,ft2_bitmap_s &a_bitmap,
+      int a_left,int a_top);
 };
 
 /*

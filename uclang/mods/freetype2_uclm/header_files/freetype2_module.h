@@ -57,18 +57,7 @@ void bic_ft2_face_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_ft2_face_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_ft2_face_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_ft2_face_method_select_charmap_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_ft2_face_method_set_pixel_sizes_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ft2_face_method_render_text_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_ft2_face_method_load_char_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_ft2_face_method_render_glyph_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_ft2_face_method_get_kerning_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_ft2_face_method_top_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_ft2_face_method_left_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_ft2_face_method_width_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_ft2_face_method_height_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_ft2_face_method_buffer_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_ft2_face_method_glyph_info_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ft2_face_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ft2_face_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -82,6 +71,10 @@ void bic_ft2_bitmap_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_ft2_bitmap_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_ft2_bitmap_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ft2_bitmap_method_width_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ft2_bitmap_method_height_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ft2_bitmap_method_baseline_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ft2_bitmap_method_buffer_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ft2_bitmap_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ft2_bitmap_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
