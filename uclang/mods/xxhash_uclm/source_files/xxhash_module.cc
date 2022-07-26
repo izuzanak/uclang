@@ -201,8 +201,11 @@ method XXHash64
   }
   else
   {
+    XXH64_hash_t hash;
+    memcpy(&hash,&init,sizeof(XXH64_hash_t));
+
     // - ERROR -
-    if (XXH64_reset(xxhs_ptr,*((XXH64_hash_t *)&init)) == XXH_ERROR)
+    if (XXH64_reset(xxhs_ptr,hash) == XXH_ERROR)
     {
       XXH64_freeState(xxhs_ptr);
 
@@ -229,7 +232,8 @@ static_method
 ; @end
 
   XXH64_hash_t hash = XXH64(data_ptr,data_size,seed);
-  long long int result = *((long long int *)&hash);
+  long long int result;
+  memcpy(&result,&hash,sizeof(XXH64_hash_t));
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
@@ -266,7 +270,8 @@ bool bic_xxhash64_method_digest_0(interpreter_thread_s &it,unsigned stack_base,u
   XXH64_state_t *xxhs_ptr = (XXH64_state_t *)dst_location->v_data_ptr;
 
   XXH64_hash_t hash = XXH64_digest(xxhs_ptr);
-  long long int result = *((long long int *)&hash);
+  long long int result;
+  memcpy(&result,&hash,sizeof(XXH64_hash_t));
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
