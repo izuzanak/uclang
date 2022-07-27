@@ -65,7 +65,7 @@ texture_atlas_new( const int width,
 
     vector_push_back( self->nodes, &node );
     self->data = (unsigned char *)
-        calloc( width*height*depth, sizeof(unsigned char) );
+        calloc( (size_t)width*height*depth, sizeof(unsigned char) );
 
     return self;
 }
@@ -116,7 +116,7 @@ texture_atlas_set_region( texture_atlas_t * self,
     for( i=0; i<height; ++i )
     {
         memcpy( self->data+((y+i)*self->width + x ) * charsize * depth,
-                data + (i*stride) * charsize, width * charsize * depth  );
+                data + (i*stride) * charsize, (size_t)width * charsize * depth  );
     }
 }
 
@@ -284,7 +284,7 @@ texture_atlas_clear( texture_atlas_t * self )
     node.z = self->width-2;
 
     vector_push_back( self->nodes, &node );
-    memset( self->data, 0, self->width*self->height*self->depth );
+    memset( self->data, 0, (size_t)self->width*self->height*self->depth );
 }
 
 
