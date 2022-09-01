@@ -37,7 +37,7 @@ Class providing access to system pipes.
 
 <a name="Pipe#2" />
 
-### Constructor [`Pipe#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2067)
+### Constructor [`Pipe#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2133)
 
 Creates object of class `Pipe`, based on system command to be executed and file
 open flags.
@@ -67,7 +67,7 @@ Line number 5
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2055)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2121)
 
 Assignment operator `=`. Object of class `Pipe` is replaced by method parameter.
 
@@ -98,7 +98,7 @@ obj: New value
 
 <a name="close#0" />
 
-### Method [`close#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2078)
+### Method [`close#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2144)
 
 Closes stream represented by object of class `Pipe`.
 
@@ -124,7 +124,7 @@ Stream is not opened
 
 <a name="write#1" />
 
-### Method [`write#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3776)
+### Method [`write#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3842)
 
 Write object of class `String` to stream represented by object of class `Pipe`.
 
@@ -150,7 +150,7 @@ Done
 
 <a name="write_close#1" />
 
-### Method [`write_close#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2099)
+### Method [`write_close#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2165)
 
 Write object of class `String` to stream represented by object of class `Pipe`, and closes it immediately.
 
@@ -176,7 +176,7 @@ Done
 
 <a name="flush#0" />
 
-### Method [`flush#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3792)
+### Method [`flush#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3858)
 
 Force write of all buffered data of output stream represented by object of class `Pipe`.
 
@@ -199,7 +199,7 @@ Done
 
 <a name="read#0" />
 
-### Method [`read#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3817)
+### Method [`read#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3883)
 
 Read all data from stream represented by object of class `Pipe`, and return object of class `String` containing read data.
 
@@ -227,7 +227,7 @@ Line number 5
 
 <a name="readln#0" />
 
-### Method [`readln#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3826)
+### Method [`readln#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3892)
 
 Read one line from stream represented by object of class `Pipe`, and return object of class `String` containing read line.
 
@@ -255,7 +255,7 @@ line: Line number 5
 
 <a name="read#1" />
 
-### Method [`read#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3831)
+### Method [`read#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3897)
 
 Read requested count of bytes from stream represented by object of class `Pipe`, and return object of class `String` containing read bytes.
 
@@ -282,7 +282,7 @@ Line
 
 <a name="read_max#1" />
 
-### Method [`read_max#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3886)
+### Method [`read_max#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3952)
 
 Read maximaly requested count of bytes from stream represented by object of class `Pipe`, and return object of class `String` containing read bytes.
 
@@ -315,7 +315,7 @@ Line number 5
 
 <a name="read_close#0" />
 
-### Method [`read_close#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2116)
+### Method [`read_close#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2182)
 
 Read all data from stream represented by object of class `Pipe`, and return object of class `String` containing read data. Input stream will be closed after reading.
 
@@ -340,7 +340,7 @@ Line number 5
 
 <a name="pid#0" />
 
-### Method [`pid#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2127)
+### Method [`pid#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2193)
 
 Retrieve pid of process on other side of pipe.
 
@@ -360,7 +360,7 @@ obj.pid(): Integer
 
 <a name="get_fd#0" />
 
-### Method [`get_fd#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3948)
+### Method [`get_fd#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4014)
 
 Return integer file descriptor of stream represented by object of class `Pipe`.
 
@@ -380,7 +380,7 @@ obj.get_fd(): 3
 
 <a name="next_item#0" />
 
-### Method `spec` [`next_item#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3973)
+### Method `spec` [`next_item#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4039)
 
 Read one line from stream represented by object of class `Pipe`, and return object of class `String` containing read line.
 
@@ -408,7 +408,7 @@ line: Line number 5
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2149)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2215)
 
 Convert object of class `Pipe` to object of class `String`.
 This method returns name of class `Pipe`.
@@ -428,7 +428,7 @@ Pipe.to_string(): Pipe
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2158)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2224)
 
 Print string representation of object of class `Pipe` to standard output.
 This method prints name of class `Pipe`.

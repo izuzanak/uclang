@@ -38,7 +38,7 @@ EXPORT built_in_module_s module =
   sys_classes,          // Classes
 
   0,                    // Error base index
-  36                    // Error count
+  37                    // Error count
 #ifdef ENABLE_CLASS_SOCKET
   + 18
 #endif
@@ -85,6 +85,7 @@ const char *sys_error_strings[] =
   "error_SYS_FILE_CHMOD_ERROR",
   "error_SYS_FILE_REMOVE_ERROR",
   "error_SYS_FILE_RENAME_ERROR",
+  "error_SYS_FILE_LINK_ERROR",
   "error_SYS_FILE_DOES_NOT_EXIST",
   "error_SYS_SETENV_ERROR",
   "error_SYS_GET_TIME_ERROR",
@@ -260,6 +261,19 @@ bool sys_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nCannot rename file \"%s\" to \"%s\"\n",old_file_name->data,new_file_name->data);
+    fprintf(stderr," ---------------------------------------- \n");
+  }
+  break;
+  case c_error_SYS_FILE_LINK_ERROR:
+  {
+    pointer_array_s *array_ptr = (pointer_array_s *)((location_s *)exception.obj_location)->v_data_ptr;
+    string_s *old_file_name = (string_s *)(((location_s *)(*array_ptr)[0])->v_data_ptr);
+    string_s *new_file_name = (string_s *)(((location_s *)(*array_ptr)[1])->v_data_ptr);
+
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot link file \"%s\" to \"%s\"\n",old_file_name->data,new_file_name->data);
     fprintf(stderr," ---------------------------------------- \n");
   }
   break;
@@ -656,7 +670,7 @@ built_in_class_s sys_class =
 {/*{{{*/
   "Sys",
   c_modifier_public | c_modifier_final,
-  28, sys_methods,
+  29, sys_methods,
   3, sys_variables,
   bic_sys_consts,
   bic_sys_init,
@@ -770,6 +784,11 @@ built_in_method_s sys_methods[] =
     "rename#2",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_sys_method_rename_2
+  },
+  {
+    "link#2",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_sys_method_link_2
   },
   {
     "getcwd#0",
@@ -1529,6 +1548,53 @@ static_method
     BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_array,array_ptr,0);
 
     exception_s::throw_exception(it,module.error_base + c_error_SYS_FILE_RENAME_ERROR,operands[c_source_pos_idx],new_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_sys_method_link_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+old_path:c_bi_class_string
+new_path:c_bi_class_string
+>
+class c_bi_class_sys
+method link
+static_method
+; @end
+
+  string_s *string_old = (string_s *)src_0_location->v_data_ptr;
+  string_s *string_new = (string_s *)src_1_location->v_data_ptr;
+  bool result;
+
+#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
+  result = link(string_old->data,string_new->data) == 0;
+#else
+  exception_s *new_exception = exception_s::throw_exception(it,c_error_BUILT_IN_NOT_IMPLEMENTED_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
+  BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_sys,"link#2");
+
+  return false;
+#endif
+
+  if (!result)
+  {
+    // - construct array containing old and new file names -
+    pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+    src_0_location->v_reference_cnt.atomic_inc();
+    array_ptr->push(src_0_location);
+
+    src_1_location->v_reference_cnt.atomic_inc();
+    array_ptr->push(src_1_location);
+
+    BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_array,array_ptr,0);
+
+    exception_s::throw_exception(it,module.error_base + c_error_SYS_FILE_LINK_ERROR,operands[c_source_pos_idx],new_location);
     return false;
   }
 

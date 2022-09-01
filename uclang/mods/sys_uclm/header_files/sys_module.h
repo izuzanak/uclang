@@ -42,6 +42,7 @@ enum
   c_error_SYS_FILE_CHMOD_ERROR,
   c_error_SYS_FILE_REMOVE_ERROR,
   c_error_SYS_FILE_RENAME_ERROR,
+  c_error_SYS_FILE_LINK_ERROR,
   c_error_SYS_FILE_DOES_NOT_EXIST,
   c_error_SYS_SETENV_ERROR,
   c_error_SYS_GET_TIME_ERROR,
@@ -148,6 +149,7 @@ bool bic_sys_method_mkfifo_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 bool bic_sys_method_chmod_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sys_method_remove_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sys_method_rename_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_sys_method_link_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sys_method_getcwd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sys_method_setenv_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sys_method_getenv_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
