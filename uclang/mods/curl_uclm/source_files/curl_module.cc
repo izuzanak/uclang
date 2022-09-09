@@ -1435,7 +1435,7 @@ method setopt
         return false;
       }
 
-      curl_easy_setopt(curl_ptr,(CURLoption)curlopt,value);
+      curl_easy_setopt(curl_ptr,(CURLoption)curlopt,(long)value);
     }/*}}}*/
     break;
   case CURLOPT_USERNAME:
