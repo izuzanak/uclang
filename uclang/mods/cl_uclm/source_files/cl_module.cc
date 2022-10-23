@@ -151,7 +151,7 @@ bool bic_cl_method_get_platform_ids_0(interpreter_thread_s &it,unsigned stack_ba
   cl_platform_id platforms[num_platforms];
 
   // - ERROR -
-  if (clGetPlatformIDs(num_platforms,platforms,&num_platforms) != CL_SUCCESS)
+  if (clGetPlatformIDs(num_platforms,platforms,nullptr) != CL_SUCCESS)
   {
     // FIXME TODO throw proper exception ...
     BIC_TODO_ERROR(__FILE__,__LINE__);
@@ -206,7 +206,7 @@ built_in_class_s cl_platform_class =
 {/*{{{*/
   "ClPlatform",
   c_modifier_public | c_modifier_final,
-  4, cl_platform_methods,
+  5, cl_platform_methods,
   7, cl_platform_variables,
   bic_cl_platform_consts,
   bic_cl_platform_init,
@@ -237,6 +237,11 @@ built_in_method_s cl_platform_methods[] =
     bic_cl_platform_method_info_1
   },
   {
+    "get_device_ids#1",
+    c_modifier_public | c_modifier_final,
+    bic_cl_platform_method_get_device_ids_1
+  },
+  {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_cl_platform_method_to_string_0
@@ -250,6 +255,8 @@ built_in_method_s cl_platform_methods[] =
 
 built_in_variable_s cl_platform_variables[] =
 {/*{{{*/
+
+  // - cl platform info values -
   { "PROFILE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VERSION", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "NAME", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -262,7 +269,7 @@ built_in_variable_s cl_platform_variables[] =
 void bic_cl_platform_consts(location_array_s &const_locations)
 {/*{{{*/
 
-  // - insert sys rand values -
+  // - insert cl platform info values -
   {
     const_locations.push_blanks(7);
     location_s *cv_ptr = const_locations.data + (const_locations.used - 7);
@@ -382,6 +389,63 @@ method info
   return true;
 }/*}}}*/
 
+bool bic_cl_platform_method_get_device_ids_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+device_type:retrieve_integer
+>
+method get_device_ids
+; @end
+
+  // - retrieve platform id -
+  cl_platform_id platform_id = (cl_platform_id)dst_location->v_data_ptr;
+
+  cl_uint num_devices = 0;
+
+  // - ERROR -
+  if (clGetDeviceIDs(platform_id,device_type,0,nullptr,&num_devices) != CL_SUCCESS)
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  cl_device_id devices[num_devices];
+
+  // - ERROR -
+  if (clGetDeviceIDs(platform_id,device_type,num_devices,devices,nullptr) != CL_SUCCESS)
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - create new array pointer -
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+  // - some devices were found -
+  if (num_devices > 0)
+  {
+    cl_device_id *di_ptr = devices;
+    cl_device_id *di_ptr_end = di_ptr + num_devices;
+    do {
+
+      // - create new device id location -
+      BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_cl_device,*di_ptr);
+
+      // - insert device id location to pointer array -
+      array_ptr->push((pointer)new_location);
+
+    } while(++di_ptr < di_ptr_end);
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
 bool bic_cl_platform_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -406,7 +470,7 @@ built_in_class_s cl_device_class =
   "ClDevice",
   c_modifier_public | c_modifier_final,
   4, cl_device_methods,
-  0, cl_device_variables,
+  6, cl_device_variables,
   bic_cl_device_consts,
   bic_cl_device_init,
   bic_cl_device_clear,
@@ -449,11 +513,38 @@ built_in_method_s cl_device_methods[] =
 
 built_in_variable_s cl_device_variables[] =
 {/*{{{*/
-  BIC_CLASS_EMPTY_VARIABLES
+
+  // - cl defvice type values -
+  { "TYPE_CPU", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_GPU", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_ACCELERATOR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_CUSTOM", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_DEFAULT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE_ALL", c_modifier_public | c_modifier_static | c_modifier_static_const },
 };/*}}}*/
 
 void bic_cl_device_consts(location_array_s &const_locations)
 {/*{{{*/
+
+  // - insert cl device type values -
+  {
+    const_locations.push_blanks(6);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 6);
+
+#define CREATE_CL_DEVICE_TYPE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_CL_DEVICE_TYPE_BIC_STATIC(CL_DEVICE_TYPE_CPU);
+    CREATE_CL_DEVICE_TYPE_BIC_STATIC(CL_DEVICE_TYPE_GPU);
+    CREATE_CL_DEVICE_TYPE_BIC_STATIC(CL_DEVICE_TYPE_ACCELERATOR);
+    CREATE_CL_DEVICE_TYPE_BIC_STATIC(CL_DEVICE_TYPE_CUSTOM);
+    CREATE_CL_DEVICE_TYPE_BIC_STATIC(CL_DEVICE_TYPE_DEFAULT);
+    CREATE_CL_DEVICE_TYPE_BIC_STATIC(CL_DEVICE_TYPE_ALL);
+  }
+
 }/*}}}*/
 
 void bic_cl_device_init(interpreter_thread_s &it,location_s *location_ptr)
