@@ -41,7 +41,7 @@ void bic_cl_consts(location_array_s &const_locations);
 void bic_cl_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_cl_clear(interpreter_thread_s &it,location_s *location_ptr);
 
-bool bic_cl_method_get_platform_ids_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_method_get_platforms_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_cl_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_cl_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -56,7 +56,7 @@ void bic_cl_platform_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_cl_platform_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_cl_platform_method_info_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_cl_platform_method_get_device_ids_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_platform_method_get_devices_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_cl_platform_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_cl_platform_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

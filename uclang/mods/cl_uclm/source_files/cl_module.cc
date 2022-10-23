@@ -101,9 +101,9 @@ built_in_class_s cl_class =
 built_in_method_s cl_methods[] =
 {/*{{{*/
   {
-    "get_platform_ids#0",
+    "get_platforms#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_cl_method_get_platform_ids_0
+    bic_cl_method_get_platforms_0
   },
   {
     "to_string#0",
@@ -136,7 +136,7 @@ void bic_cl_clear(interpreter_thread_s &it,location_s *location_ptr)
   cassert(0);
 }/*}}}*/
 
-bool bic_cl_method_get_platform_ids_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_cl_method_get_platforms_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   cl_uint num_platforms = 0;
 
@@ -237,9 +237,9 @@ built_in_method_s cl_platform_methods[] =
     bic_cl_platform_method_info_1
   },
   {
-    "get_device_ids#1",
+    "get_devices#1",
     c_modifier_public | c_modifier_final,
-    bic_cl_platform_method_get_device_ids_1
+    bic_cl_platform_method_get_devices_1
   },
   {
     "to_string#0",
@@ -389,7 +389,7 @@ method info
   return true;
 }/*}}}*/
 
-bool bic_cl_platform_method_get_device_ids_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_cl_platform_method_get_devices_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
@@ -470,7 +470,7 @@ built_in_class_s cl_device_class =
   "ClDevice",
   c_modifier_public | c_modifier_final,
   4, cl_device_methods,
-  6, cl_device_variables,
+  6 + 93, cl_device_variables,
   bic_cl_device_consts,
   bic_cl_device_init,
   bic_cl_device_clear,
@@ -521,6 +521,102 @@ built_in_variable_s cl_device_variables[] =
   { "TYPE_CUSTOM", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "TYPE_DEFAULT", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "TYPE_ALL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - cl device info values -
+  { "ADDRESS_BITS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "AVAILABLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "BUILT_IN_KERNELS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "COMPILER_AVAILABLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "DOUBLE_FP_CONFIG", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "ENDIAN_LITTLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "ERROR_CORRECTION_SUPPORT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "EXECUTION_CAPABILITIES", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "EXTENSIONS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "GLOBAL_MEM_CACHE_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "GLOBAL_MEM_CACHE_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "GLOBAL_MEM_CACHELINE_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "GLOBAL_MEM_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "GLOBAL_VARIABLE_PREFERRED_TOTAL_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "IL_VERSION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "IMAGE2D_MAX_HEIGHT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "IMAGE2D_MAX_WIDTH", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "IMAGE3D_MAX_DEPTH", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "IMAGE3D_MAX_HEIGHT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "IMAGE3D_MAX_WIDTH", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "IMAGE_BASE_ADDRESS_ALIGNMENT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "IMAGE_MAX_ARRAY_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "IMAGE_MAX_BUFFER_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "IMAGE_PITCH_ALIGNMENT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "IMAGE_SUPPORT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "LINKER_AVAILABLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "LOCAL_MEM_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "LOCAL_MEM_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_CLOCK_FREQUENCY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_COMPUTE_UNITS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_CONSTANT_ARGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_CONSTANT_BUFFER_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_GLOBAL_VARIABLE_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_MEM_ALLOC_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_NUM_SUB_GROUPS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_ON_DEVICE_EVENTS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_ON_DEVICE_QUEUES", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_PARAMETER_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_PIPE_ARGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_READ_IMAGE_ARGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_READ_WRITE_IMAGE_ARGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_SAMPLERS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_WORK_GROUP_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_WORK_ITEM_DIMENSIONS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_WORK_ITEM_SIZES", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAX_WRITE_IMAGE_ARGS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MEM_BASE_ADDR_ALIGN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NAME", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NATIVE_VECTOR_WIDTH_CHAR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NATIVE_VECTOR_WIDTH_SHORT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NATIVE_VECTOR_WIDTH_INT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NATIVE_VECTOR_WIDTH_LONG", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NATIVE_VECTOR_WIDTH_FLOAT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NATIVE_VECTOR_WIDTH_DOUBLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NATIVE_VECTOR_WIDTH_HALF", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPENCL_C_VERSION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PARENT_DEVICE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PARTITION_AFFINITY_DOMAIN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PARTITION_MAX_SUB_DEVICES", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PARTITION_PROPERTIES", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PARTITION_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PIPE_MAX_ACTIVE_RESERVATIONS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PIPE_MAX_PACKET_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PLATFORM", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PREFERRED_GLOBAL_ATOMIC_ALIGNMENT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PREFERRED_INTEROP_USER_SYNC", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PREFERRED_LOCAL_ATOMIC_ALIGNMENT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PREFERRED_PLATFORM_ATOMIC_ALIGNMENT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PREFERRED_VECTOR_WIDTH_CHAR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PREFERRED_VECTOR_WIDTH_SHORT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PREFERRED_VECTOR_WIDTH_INT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PREFERRED_VECTOR_WIDTH_LONG", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PREFERRED_VECTOR_WIDTH_FLOAT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PREFERRED_VECTOR_WIDTH_DOUBLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PREFERRED_VECTOR_WIDTH_HALF", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PRINTF_BUFFER_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROFILE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROFILING_TIMER_RESOLUTION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "QUEUE_ON_DEVICE_MAX_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "QUEUE_ON_DEVICE_PREFERRED_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "QUEUE_ON_DEVICE_PROPERTIES", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "QUEUE_ON_HOST_PROPERTIES", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "REFERENCE_COUNT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SINGLE_FP_CONFIG", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SPIR_VERSIONS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SUB_GROUP_INDEPENDENT_FORWARD_PROGRESS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SVM_CAPABILITIES", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TERMINATE_CAPABILITY_KHR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "VENDOR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "VENDOR_ID", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "DEVICE_VERSION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "DRIVER_VERSION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_cl_device_consts(location_array_s &const_locations)
@@ -543,6 +639,112 @@ void bic_cl_device_consts(location_array_s &const_locations)
     CREATE_CL_DEVICE_TYPE_BIC_STATIC(CL_DEVICE_TYPE_CUSTOM);
     CREATE_CL_DEVICE_TYPE_BIC_STATIC(CL_DEVICE_TYPE_DEFAULT);
     CREATE_CL_DEVICE_TYPE_BIC_STATIC(CL_DEVICE_TYPE_ALL);
+  }
+
+  // - insert cl device info values -
+  {
+    const_locations.push_blanks(93);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 93);
+
+#define CREATE_CL_DEVICE_INFO_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_ADDRESS_BITS);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_AVAILABLE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_BUILT_IN_KERNELS);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_COMPILER_AVAILABLE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_DOUBLE_FP_CONFIG);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_ENDIAN_LITTLE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_ERROR_CORRECTION_SUPPORT);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_EXECUTION_CAPABILITIES);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_EXTENSIONS);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_GLOBAL_MEM_CACHE_SIZE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_GLOBAL_MEM_CACHE_TYPE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_GLOBAL_MEM_SIZE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_GLOBAL_VARIABLE_PREFERRED_TOTAL_SIZE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_IL_VERSION);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_IMAGE2D_MAX_HEIGHT);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_IMAGE2D_MAX_WIDTH);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_IMAGE3D_MAX_DEPTH);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_IMAGE3D_MAX_HEIGHT);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_IMAGE3D_MAX_WIDTH);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_IMAGE_BASE_ADDRESS_ALIGNMENT);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_IMAGE_MAX_ARRAY_SIZE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_IMAGE_MAX_BUFFER_SIZE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_IMAGE_PITCH_ALIGNMENT);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_IMAGE_SUPPORT);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_LINKER_AVAILABLE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_LOCAL_MEM_SIZE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_LOCAL_MEM_TYPE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_MAX_CLOCK_FREQUENCY);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_MAX_COMPUTE_UNITS);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_MAX_CONSTANT_ARGS);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_MAX_GLOBAL_VARIABLE_SIZE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_MAX_MEM_ALLOC_SIZE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_MAX_NUM_SUB_GROUPS);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_MAX_ON_DEVICE_EVENTS);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_MAX_ON_DEVICE_QUEUES);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_MAX_PARAMETER_SIZE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_MAX_PIPE_ARGS);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_MAX_READ_IMAGE_ARGS);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_MAX_READ_WRITE_IMAGE_ARGS);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_MAX_SAMPLERS);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_MAX_WORK_GROUP_SIZE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_MAX_WORK_ITEM_SIZES);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_MAX_WRITE_IMAGE_ARGS);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_MEM_BASE_ADDR_ALIGN);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_NAME);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_NATIVE_VECTOR_WIDTH_CHAR);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_NATIVE_VECTOR_WIDTH_SHORT);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_NATIVE_VECTOR_WIDTH_INT);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_NATIVE_VECTOR_WIDTH_LONG);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_NATIVE_VECTOR_WIDTH_FLOAT);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_NATIVE_VECTOR_WIDTH_HALF);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_OPENCL_C_VERSION);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PARENT_DEVICE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PARTITION_AFFINITY_DOMAIN);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PARTITION_MAX_SUB_DEVICES);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PARTITION_PROPERTIES);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PARTITION_TYPE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PIPE_MAX_ACTIVE_RESERVATIONS);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PIPE_MAX_PACKET_SIZE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PLATFORM);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PREFERRED_GLOBAL_ATOMIC_ALIGNMENT);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PREFERRED_INTEROP_USER_SYNC);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PREFERRED_LOCAL_ATOMIC_ALIGNMENT);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PREFERRED_PLATFORM_ATOMIC_ALIGNMENT);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PREFERRED_VECTOR_WIDTH_CHAR);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PREFERRED_VECTOR_WIDTH_SHORT);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PREFERRED_VECTOR_WIDTH_INT);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PREFERRED_VECTOR_WIDTH_LONG);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PREFERRED_VECTOR_WIDTH_HALF);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PRINTF_BUFFER_SIZE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PROFILE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_PROFILING_TIMER_RESOLUTION);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_QUEUE_ON_DEVICE_MAX_SIZE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_QUEUE_ON_DEVICE_PREFERRED_SIZE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_QUEUE_ON_DEVICE_PROPERTIES);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_QUEUE_ON_HOST_PROPERTIES);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_REFERENCE_COUNT);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_SINGLE_FP_CONFIG);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_SPIR_VERSIONS);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_SUB_GROUP_INDEPENDENT_FORWARD_PROGRESS);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_SVM_CAPABILITIES);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_TERMINATE_CAPABILITY_KHR);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_TYPE);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_VENDOR);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_VENDOR_ID);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_VERSION);
+    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DRIVER_VERSION);
   }
 
 }/*}}}*/
