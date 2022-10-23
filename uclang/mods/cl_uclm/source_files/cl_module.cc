@@ -141,7 +141,7 @@ bool bic_cl_method_get_platform_ids_0(interpreter_thread_s &it,unsigned stack_ba
   cl_uint num_platforms = 0;
 
   // - ERROR -
-  if (clGetPlatformIDs(0,NULL,&num_platforms) != CL_SUCCESS)
+  if (clGetPlatformIDs(0,nullptr,&num_platforms) != CL_SUCCESS)
   {
     // FIXME TODO throw proper exception ...
     BIC_TODO_ERROR(__FILE__,__LINE__);
@@ -316,6 +316,8 @@ method info
   // - retrieve platform id -
   cl_platform_id platform_id = (cl_platform_id)dst_location->v_data_ptr;
 
+  size_t param_value_size;
+
   switch (name)
   {
     case CL_PLATFORM_PROFILE:
@@ -325,10 +327,9 @@ method info
     case CL_PLATFORM_EXTENSIONS:
     case CL_PLATFORM_ICD_SUFFIX_KHR:
       {/*{{{*/
-        size_t param_value_size;
 
         // - ERROR -
-        if (clGetPlatformInfo(platform_id,name,0,NULL,&param_value_size) != CL_SUCCESS)
+        if (clGetPlatformInfo(platform_id,name,0,nullptr,&param_value_size) != CL_SUCCESS)
         {
           // FIXME TODO throw proper exception ...
           BIC_TODO_ERROR(__FILE__,__LINE__);
@@ -339,8 +340,7 @@ method info
         string_ptr->create(param_value_size);
 
         // - ERROR -
-        if (clGetPlatformInfo(platform_id,name,string_ptr->size - 1,string_ptr->data,
-              &param_value_size) != CL_SUCCESS)
+        if (clGetPlatformInfo(platform_id,name,string_ptr->size - 1,string_ptr->data,nullptr) != CL_SUCCESS)
         {
           string_ptr->clear();
           cfree(string_ptr);
@@ -354,11 +354,21 @@ method info
       }/*}}}*/
       break;
     case CL_PLATFORM_HOST_TIMER_RESOLUTION:
+      {/*{{{*/
+        cl_ulong value;
 
-      // FIXME TODO continue ...
-      BIC_TODO_ERROR(__FILE__,__LINE__);
-      return false;
+        // - ERROR -
+        if (clGetPlatformInfo(platform_id,name,sizeof(cl_ulong),&value,nullptr) != CL_SUCCESS)
+        {
+          // FIXME TODO throw proper exception ...
+          BIC_TODO_ERROR(__FILE__,__LINE__);
+          return false;
+        }
 
+        long long int result = value;
+
+        BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+      }/*}}}*/
       break;
 
     // - ERROR -
