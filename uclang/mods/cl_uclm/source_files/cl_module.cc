@@ -344,17 +344,22 @@ method info
         }
 
         string_s *string_ptr = it.get_new_string_ptr();
-        string_ptr->create(param_value_size);
 
-        // - ERROR -
-        if (clGetPlatformInfo(platform_id,name,string_ptr->size - 1,string_ptr->data,nullptr) != CL_SUCCESS)
+        // - not empty string -
+        if (param_value_size > 1)
         {
-          string_ptr->clear();
-          cfree(string_ptr);
+          string_ptr->create(param_value_size - 1);
 
-          // FIXME TODO throw proper exception ...
-          BIC_TODO_ERROR(__FILE__,__LINE__);
-          return false;
+          // - ERROR -
+          if (clGetPlatformInfo(platform_id,name,string_ptr->size,string_ptr->data,nullptr) != CL_SUCCESS)
+          {
+            string_ptr->clear();
+            cfree(string_ptr);
+
+            // FIXME TODO throw proper exception ...
+            BIC_TODO_ERROR(__FILE__,__LINE__);
+            return false;
+          }
         }
 
         BIC_SET_RESULT_STRING(string_ptr);
@@ -395,7 +400,7 @@ bool bic_cl_platform_method_get_devices_1(interpreter_thread_s &it,unsigned stac
 <
 device_type:retrieve_integer
 >
-method get_device_ids
+method get_devices
 ; @end
 
   // - retrieve platform id -
@@ -470,7 +475,7 @@ built_in_class_s cl_device_class =
   "ClDevice",
   c_modifier_public | c_modifier_final,
   4, cl_device_methods,
-  6 + 93, cl_device_variables,
+  6 + 91, cl_device_variables,
   bic_cl_device_consts,
   bic_cl_device_init,
   bic_cl_device_clear,
@@ -495,9 +500,9 @@ built_in_method_s cl_device_methods[] =
     bic_cl_device_operator_binary_equal
   },
   {
-    "dummy#0",
+    "info#1",
     c_modifier_public | c_modifier_final,
-    bic_cl_device_method_dummy_0
+    bic_cl_device_method_info_1
   },
   {
     "to_string#0",
@@ -607,10 +612,8 @@ built_in_variable_s cl_device_variables[] =
   { "QUEUE_ON_HOST_PROPERTIES", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "REFERENCE_COUNT", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SINGLE_FP_CONFIG", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "SPIR_VERSIONS", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SUB_GROUP_INDEPENDENT_FORWARD_PROGRESS", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SVM_CAPABILITIES", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "TERMINATE_CAPABILITY_KHR", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VENDOR", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "VENDOR_ID", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -736,10 +739,8 @@ void bic_cl_device_consts(location_array_s &const_locations)
     CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_QUEUE_ON_HOST_PROPERTIES);
     CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_REFERENCE_COUNT);
     CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_SINGLE_FP_CONFIG);
-    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_SPIR_VERSIONS);
     CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_SUB_GROUP_INDEPENDENT_FORWARD_PROGRESS);
     CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_SVM_CAPABILITIES);
-    CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_TERMINATE_CAPABILITY_KHR);
     CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_TYPE);
     CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_VENDOR);
     CREATE_CL_DEVICE_INFO_BIC_STATIC(CL_DEVICE_VENDOR_ID);
@@ -770,11 +771,262 @@ bool bic_cl_device_operator_binary_equal(interpreter_thread_s &it,unsigned stack
   return true;
 }/*}}}*/
 
-bool bic_cl_device_method_dummy_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_cl_device_method_info_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  long long int result = 0;
+@begin ucl_params
+<
+name:retrieve_integer
+>
+method info
+; @end
 
-  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+  // - retrieve device id -
+  cl_device_id device_id = (cl_device_id)dst_location->v_data_ptr;
+
+  size_t param_value_size;
+
+  // - ERROR -
+  if (clGetDeviceInfo(device_id,name,0,nullptr,&param_value_size) != CL_SUCCESS)
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  switch (name)
+  {
+    case CL_DEVICE_BUILT_IN_KERNELS:
+    case CL_DEVICE_EXTENSIONS:
+    case CL_DEVICE_IL_VERSION:
+    case CL_DEVICE_NAME:
+    case CL_DEVICE_OPENCL_C_VERSION:
+    case CL_DEVICE_PROFILE:
+    case CL_DEVICE_VENDOR:
+    case CL_DEVICE_VERSION:
+    case CL_DRIVER_VERSION:
+      {/*{{{*/
+        string_s *string_ptr = it.get_new_string_ptr();
+
+        // - not empty string -
+        if (param_value_size > 1)
+        {
+          string_ptr->create(param_value_size - 1);
+
+          // - ERROR -
+          if (clGetDeviceInfo(device_id,name,string_ptr->size,string_ptr->data,nullptr) != CL_SUCCESS)
+          {
+            string_ptr->clear();
+            cfree(string_ptr);
+
+            // FIXME TODO throw proper exception ...
+            BIC_TODO_ERROR(__FILE__,__LINE__);
+            return false;
+          }
+        }
+
+        BIC_SET_RESULT_STRING(string_ptr);
+      }/*}}}*/
+      break;
+    default:
+      {/*{{{*/
+        char param_data[param_value_size];
+
+        // - ERROR -
+        if (clGetDeviceInfo(device_id,name,param_value_size,param_data,nullptr) != CL_SUCCESS)
+        {
+          // FIXME TODO throw proper exception ...
+          BIC_TODO_ERROR(__FILE__,__LINE__);
+          return false;
+        }
+
+        switch (name)
+        {
+          case CL_DEVICE_GLOBAL_VARIABLE_PREFERRED_TOTAL_SIZE:
+          case CL_DEVICE_IMAGE2D_MAX_HEIGHT:
+          case CL_DEVICE_IMAGE2D_MAX_WIDTH:
+          case CL_DEVICE_IMAGE3D_MAX_DEPTH:
+          case CL_DEVICE_IMAGE3D_MAX_HEIGHT:
+          case CL_DEVICE_IMAGE3D_MAX_WIDTH:
+          case CL_DEVICE_IMAGE_MAX_ARRAY_SIZE:
+          case CL_DEVICE_IMAGE_MAX_BUFFER_SIZE:
+          case CL_DEVICE_MAX_GLOBAL_VARIABLE_SIZE:
+          case CL_DEVICE_MAX_PARAMETER_SIZE:
+          case CL_DEVICE_MAX_WORK_GROUP_SIZE:
+          case CL_DEVICE_PRINTF_BUFFER_SIZE:
+          case CL_DEVICE_PROFILING_TIMER_RESOLUTION:
+            {/*{{{*/
+              size_t value;
+              memcpy(&value,param_data,sizeof(size_t));
+
+              // -ERROR  -
+              if (value > LLONG_MAX)
+              {
+                // FIXME TODO throw proper exception ...
+                BIC_TODO_ERROR(__FILE__,__LINE__);
+                return false;
+              }
+
+              long long int result = value;
+
+              BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+            }/*}}}*/
+            break;
+          case CL_DEVICE_ADDRESS_BITS:
+          case CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE:
+          case CL_DEVICE_IMAGE_BASE_ADDRESS_ALIGNMENT:
+          case CL_DEVICE_IMAGE_PITCH_ALIGNMENT:
+          case CL_DEVICE_MAX_CLOCK_FREQUENCY:
+          case CL_DEVICE_MAX_COMPUTE_UNITS:
+          case CL_DEVICE_MAX_CONSTANT_ARGS:
+          case CL_DEVICE_MAX_NUM_SUB_GROUPS:
+          case CL_DEVICE_MAX_ON_DEVICE_EVENTS:
+          case CL_DEVICE_MAX_ON_DEVICE_QUEUES:
+          case CL_DEVICE_MAX_PIPE_ARGS:
+          case CL_DEVICE_MAX_READ_IMAGE_ARGS:
+          case CL_DEVICE_MAX_READ_WRITE_IMAGE_ARGS:
+          case CL_DEVICE_MAX_SAMPLERS:
+          case CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS:
+          case CL_DEVICE_MAX_WRITE_IMAGE_ARGS:
+          case CL_DEVICE_MEM_BASE_ADDR_ALIGN:
+          case CL_DEVICE_NATIVE_VECTOR_WIDTH_CHAR:
+          case CL_DEVICE_NATIVE_VECTOR_WIDTH_SHORT:
+          case CL_DEVICE_NATIVE_VECTOR_WIDTH_INT:
+          case CL_DEVICE_NATIVE_VECTOR_WIDTH_LONG:
+          case CL_DEVICE_NATIVE_VECTOR_WIDTH_FLOAT:
+          case CL_DEVICE_NATIVE_VECTOR_WIDTH_DOUBLE:
+          case CL_DEVICE_NATIVE_VECTOR_WIDTH_HALF:
+          case CL_DEVICE_PARTITION_MAX_SUB_DEVICES:
+          case CL_DEVICE_PIPE_MAX_ACTIVE_RESERVATIONS:
+          case CL_DEVICE_PIPE_MAX_PACKET_SIZE:
+          case CL_DEVICE_PREFERRED_GLOBAL_ATOMIC_ALIGNMENT:
+          case CL_DEVICE_PREFERRED_LOCAL_ATOMIC_ALIGNMENT:
+          case CL_DEVICE_PREFERRED_PLATFORM_ATOMIC_ALIGNMENT:
+          case CL_DEVICE_PREFERRED_VECTOR_WIDTH_CHAR:
+          case CL_DEVICE_PREFERRED_VECTOR_WIDTH_SHORT:
+          case CL_DEVICE_PREFERRED_VECTOR_WIDTH_INT:
+          case CL_DEVICE_PREFERRED_VECTOR_WIDTH_LONG:
+          case CL_DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT:
+          case CL_DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE:
+          case CL_DEVICE_PREFERRED_VECTOR_WIDTH_HALF:
+          case CL_DEVICE_QUEUE_ON_DEVICE_MAX_SIZE:
+          case CL_DEVICE_QUEUE_ON_DEVICE_PREFERRED_SIZE:
+          case CL_DEVICE_REFERENCE_COUNT:
+          case CL_DEVICE_VENDOR_ID:
+            {/*{{{*/
+              cl_uint value;
+              memcpy(&value,param_data,sizeof(cl_uint));
+
+              long long int result = value;
+
+              BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+            }/*}}}*/
+            break;
+          case CL_DEVICE_GLOBAL_MEM_CACHE_SIZE:
+          case CL_DEVICE_GLOBAL_MEM_SIZE:
+          case CL_DEVICE_LOCAL_MEM_SIZE:
+          case CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE:
+          case CL_DEVICE_MAX_MEM_ALLOC_SIZE:
+            {/*{{{*/
+              cl_ulong value;
+              memcpy(&value,param_data,sizeof(cl_ulong));
+
+              // -ERROR  -
+              if (value > LLONG_MAX)
+              {
+                // FIXME TODO throw proper exception ...
+                BIC_TODO_ERROR(__FILE__,__LINE__);
+                return false;
+              }
+
+              long long int result = value;
+
+              BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+            }/*}}}*/
+            break;
+          case CL_DEVICE_AVAILABLE:
+          case CL_DEVICE_COMPILER_AVAILABLE:
+          case CL_DEVICE_ENDIAN_LITTLE:
+          case CL_DEVICE_ERROR_CORRECTION_SUPPORT:
+          case CL_DEVICE_IMAGE_SUPPORT:
+          case CL_DEVICE_LINKER_AVAILABLE:
+          case CL_DEVICE_PREFERRED_INTEROP_USER_SYNC:
+          case CL_DEVICE_SUB_GROUP_INDEPENDENT_FORWARD_PROGRESS:
+            {/*{{{*/
+              cl_bool value;
+              memcpy(&value,param_data,sizeof(cl_bool));
+
+              long long int result = value;
+
+              BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+            }/*}}}*/
+            break;
+          case CL_DEVICE_DOUBLE_FP_CONFIG:
+          case CL_DEVICE_EXECUTION_CAPABILITIES:
+          case CL_DEVICE_PARTITION_AFFINITY_DOMAIN:
+          case CL_DEVICE_SINGLE_FP_CONFIG:
+          case CL_DEVICE_SVM_CAPABILITIES:
+          case CL_DEVICE_TYPE:
+          case CL_DEVICE_QUEUE_ON_DEVICE_PROPERTIES:
+          case CL_DEVICE_QUEUE_ON_HOST_PROPERTIES:
+            {/*{{{*/
+              cl_bitfield value;
+              memcpy(&value,param_data,sizeof(cl_bitfield));
+
+              long long int result = value;
+
+              BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+            }/*}}}*/
+            break;
+          case CL_DEVICE_GLOBAL_MEM_CACHE_TYPE:
+          case CL_DEVICE_LOCAL_MEM_TYPE:
+            {/*{{{*/
+              cl_uint value;
+              memcpy(&value,param_data,sizeof(cl_uint));
+
+              long long int result = value;
+
+              BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+            }/*}}}*/
+            break;
+          case CL_DEVICE_PARENT_DEVICE:
+            {/*{{{*/
+              cl_device_id device_id;
+              memcpy(&device_id,param_data,sizeof(cl_device_id));
+
+              if (device_id != nullptr)
+              {
+                BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_cl_device,device_id);
+                BIC_SET_RESULT(new_location);
+              }
+              else
+              {
+                BIC_SET_RESULT_BLANK();
+              }
+            }/*}}}*/
+            break;
+          case CL_DEVICE_PLATFORM:
+            {/*{{{*/
+              cl_platform_id platform_id;
+              memcpy(&platform_id,param_data,sizeof(cl_platform_id));
+
+              if (platform_id != nullptr)
+              {
+                BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_cl_platform,platform_id);
+                BIC_SET_RESULT(new_location);
+              }
+              else
+              {
+                BIC_SET_RESULT_BLANK();
+              }
+            }/*}}}*/
+            break;
+          default:
+
+            // FIXME TODO continue ...
+            BIC_SET_RESULT_BLANK();
+        }
+      }/*}}}*/
+  }
 
   return true;
 }/*}}}*/
