@@ -10,6 +10,10 @@ include "ucl_cl.h"
 extern unsigned c_bi_class_cl;
 extern unsigned c_bi_class_cl_platform;
 extern unsigned c_bi_class_cl_device;
+extern unsigned c_bi_class_cl_context;
+extern unsigned c_bi_class_cl_command_queue;
+extern unsigned c_bi_class_cl_program;
+extern unsigned c_bi_class_cl_kernel;
 
 // - CL module -
 extern "C" EXPORT built_in_module_s module;
@@ -73,6 +77,60 @@ bool bic_cl_device_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 bool bic_cl_device_method_info_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_cl_device_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_cl_device_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class CL_CONTEXT -
+extern built_in_variable_s cl_context_variables[];
+extern built_in_method_s cl_context_methods[];
+extern built_in_class_s cl_context_class;
+
+void bic_cl_context_consts(location_array_s &const_locations);
+void bic_cl_context_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_cl_context_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_cl_context_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_context_method_ClContext_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_context_method_command_queue_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_context_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_context_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class CL_COMMAND_QUEUE -
+extern built_in_variable_s cl_command_queue_variables[];
+extern built_in_method_s cl_command_queue_methods[];
+extern built_in_class_s cl_command_queue_class;
+
+void bic_cl_command_queue_consts(location_array_s &const_locations);
+void bic_cl_command_queue_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_cl_command_queue_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_cl_command_queue_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_command_queue_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_command_queue_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class CL_PROGRAM -
+extern built_in_variable_s cl_program_variables[];
+extern built_in_method_s cl_program_methods[];
+extern built_in_class_s cl_program_class;
+
+void bic_cl_program_consts(location_array_s &const_locations);
+void bic_cl_program_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_cl_program_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_cl_program_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_program_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_program_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class CL_KERNEL -
+extern built_in_variable_s cl_kernel_variables[];
+extern built_in_method_s cl_kernel_methods[];
+extern built_in_class_s cl_kernel_class;
+
+void bic_cl_kernel_consts(location_array_s &const_locations);
+void bic_cl_kernel_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_cl_kernel_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_cl_kernel_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_kernel_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_kernel_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 

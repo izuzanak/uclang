@@ -7,11 +7,15 @@ include "cl_module.h"
 unsigned c_bi_class_cl = c_idx_not_exist;
 unsigned c_bi_class_cl_platform = c_idx_not_exist;
 unsigned c_bi_class_cl_device = c_idx_not_exist;
+unsigned c_bi_class_cl_context = c_idx_not_exist;
+unsigned c_bi_class_cl_command_queue = c_idx_not_exist;
+unsigned c_bi_class_cl_program = c_idx_not_exist;
+unsigned c_bi_class_cl_kernel = c_idx_not_exist;
 
 // - CL module -
 EXPORT built_in_module_s module =
 {/*{{{*/
-  3,                   // Class count
+  7,                   // Class count
   cl_classes,          // Classes
 
   0,                   // Error base index
@@ -28,6 +32,10 @@ built_in_class_s *cl_classes[] =
   &cl_class,
   &cl_platform_class,
   &cl_device_class,
+  &cl_context_class,
+  &cl_command_queue_class,
+  &cl_program_class,
+  &cl_kernel_class,
 };/*}}}*/
 
 // - CL error strings -
@@ -49,6 +57,18 @@ bool cl_initialize(script_parser_s &sp)
 
   // - initialize cl_device class identifier -
   c_bi_class_cl_device = class_base_idx++;
+
+  // - initialize cl_context class identifier -
+  c_bi_class_cl_context = class_base_idx++;
+
+  // - initialize cl_command_queue class identifier -
+  c_bi_class_cl_command_queue = class_base_idx++;
+
+  // - initialize cl_program class identifier -
+  c_bi_class_cl_program = class_base_idx++;
+
+  // - initialize cl_kernel class identifier -
+  c_bi_class_cl_kernel = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -646,8 +666,8 @@ void bic_cl_device_consts(location_array_s &const_locations)
 
   // - insert cl device info values -
   {
-    const_locations.push_blanks(93);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 93);
+    const_locations.push_blanks(91);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 91);
 
 #define CREATE_CL_DEVICE_INFO_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -1020,6 +1040,68 @@ method info
               }
             }/*}}}*/
             break;
+          case CL_DEVICE_MAX_WORK_ITEM_SIZES:
+            {/*{{{*/
+
+              // - create new array pointer -
+              pointer_array_s *array_ptr = it.get_new_array_ptr();
+              BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);
+
+              if (param_value_size > 0)
+              {
+                char *p_ptr = param_data;
+                char *p_ptr_end = p_ptr + param_value_size;
+                do {
+                  size_t value;
+                  memcpy(&value,p_ptr,sizeof(size_t));
+
+                  if (value > LLONG_MAX)
+                  {
+                    it.release_location_ptr(array_location);
+
+                    // FIXME TODO throw proper exception ...
+                    BIC_TODO_ERROR(__FILE__,__LINE__);
+                    return false;
+                  }
+
+                  long long int result = value;
+
+                  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,result);
+                  array_ptr->push(new_location);
+
+                } while((p_ptr += sizeof(size_t)) < p_ptr_end);
+              }
+
+              BIC_SET_RESULT(array_location);
+            }/*}}}*/
+            break;
+          case CL_DEVICE_PARTITION_PROPERTIES:
+          case CL_DEVICE_PARTITION_TYPE:
+            {/*{{{*/
+
+              // - create new array pointer -
+              pointer_array_s *array_ptr = it.get_new_array_ptr();
+              BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);
+
+              if (param_value_size > 0)
+              {
+                char *p_ptr = param_data;
+                char *p_ptr_end = p_ptr + param_value_size;
+                do {
+                  intptr_t value;
+                  memcpy(&value,p_ptr,sizeof(intptr_t));
+
+                  long long int result = value;
+
+                  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,result);
+                  array_ptr->push(new_location);
+
+                } while((p_ptr += sizeof(intptr_t)) < p_ptr_end);
+              }
+
+              BIC_SET_RESULT(array_location);
+            }/*}}}*/
+            break;
           default:
 
             // FIXME TODO continue ...
@@ -1043,6 +1125,479 @@ bool bic_cl_device_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 bool bic_cl_device_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   printf("ClDevice");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class CL_CONTEXT -
+built_in_class_s cl_context_class =
+{/*{{{*/
+  "ClContext",
+  c_modifier_public | c_modifier_final,
+  5, cl_context_methods,
+  0, cl_context_variables,
+  bic_cl_context_consts,
+  bic_cl_context_init,
+  bic_cl_context_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s cl_context_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_cl_context_operator_binary_equal
+  },
+  {
+    "ClContext#1",
+    c_modifier_public | c_modifier_final,
+    bic_cl_context_method_ClContext_1
+  },
+  {
+    "command_queue#1",
+    c_modifier_public | c_modifier_final,
+    bic_cl_context_method_command_queue_1
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_cl_context_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_cl_context_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s cl_context_variables[] =
+{/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
+};/*}}}*/
+
+void bic_cl_context_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_cl_context_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (cl_context)nullptr;
+}/*}}}*/
+
+void bic_cl_context_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  cl_context ctx = (cl_context)location_ptr->v_data_ptr;
+
+  if (ctx != nullptr)
+  {
+    clReleaseContext(ctx);
+  }
+}/*}}}*/
+
+bool bic_cl_context_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_cl_context_method_ClContext_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+devices:c_bi_class_array
+>
+method ClContext
+; @end
+
+  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (array_ptr->used <= 0)
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  cl_device_id devices[array_ptr->used];
+
+  pointer *p_ptr = array_ptr->data;
+  pointer *p_ptr_end = p_ptr + array_ptr->used;
+  cl_device_id *d_ptr = devices;
+  do {
+    location_s *item_loc = it.get_location_value(*p_ptr);
+
+    // - ERROR -
+    if (item_loc->v_type != c_bi_class_cl_device)
+    {
+      // FIXME TODO throw proper exception ...
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+      return false;
+    }
+
+    *d_ptr = (cl_device_id)item_loc->v_data_ptr;
+  } while(++d_ptr,++p_ptr < p_ptr_end);
+
+  // - ERROR -
+  cl_context ctx = clCreateContext(nullptr,array_ptr->used,devices,nullptr,nullptr,nullptr);
+  if (ctx == nullptr)
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  dst_location->v_data_ptr = (cl_context)ctx;
+
+  return true;
+}/*}}}*/
+
+bool bic_cl_context_method_command_queue_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+device:c_bi_class_cl_device
+>
+method command_queue
+; @end
+
+  cl_context ctx = (cl_context)dst_location->v_data_ptr;
+  cl_device_id device_id = (cl_device_id)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  cl_command_queue cqueue = clCreateCommandQueueWithProperties(ctx,device_id,nullptr,nullptr);
+  if (cqueue == nullptr)
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_cl_command_queue,cqueue);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_cl_context_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("ClContext"),"ClContext");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_cl_context_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("ClContext");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class CL_COMMAND_QUEUE -
+built_in_class_s cl_command_queue_class =
+{/*{{{*/
+  "ClCommandQueue",
+  c_modifier_public | c_modifier_final,
+  3, cl_command_queue_methods,
+  0, cl_command_queue_variables,
+  bic_cl_command_queue_consts,
+  bic_cl_command_queue_init,
+  bic_cl_command_queue_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s cl_command_queue_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_cl_command_queue_operator_binary_equal
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_cl_command_queue_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_cl_command_queue_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s cl_command_queue_variables[] =
+{/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
+};/*}}}*/
+
+void bic_cl_command_queue_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_cl_command_queue_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (cl_command_queue)nullptr;
+}/*}}}*/
+
+void bic_cl_command_queue_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  cl_command_queue cqueue = (cl_command_queue)location_ptr->v_data_ptr;
+
+  if (cqueue != nullptr)
+  {
+    clReleaseCommandQueue(cqueue);
+  }
+}/*}}}*/
+
+bool bic_cl_command_queue_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_cl_command_queue_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("ClCommandQueue"),"ClCommandQueue");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_cl_command_queue_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("ClCommandQueue");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class CL_PROGRAM -
+built_in_class_s cl_program_class =
+{/*{{{*/
+  "ClProgram",
+  c_modifier_public | c_modifier_final,
+  3, cl_program_methods,
+  0, cl_program_variables,
+  bic_cl_program_consts,
+  bic_cl_program_init,
+  bic_cl_program_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s cl_program_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_cl_program_operator_binary_equal
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_cl_program_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_cl_program_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s cl_program_variables[] =
+{/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
+};/*}}}*/
+
+void bic_cl_program_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_cl_program_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (cl_program)nullptr;
+}/*}}}*/
+
+void bic_cl_program_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  cl_program program = (cl_program)location_ptr->v_data_ptr;
+
+  if (program != nullptr)
+  {
+    clReleaseProgram(program);
+  }
+}/*}}}*/
+
+bool bic_cl_program_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_cl_program_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("ClProgram"),"ClProgram");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_cl_program_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("ClProgram");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class CL_KERNEL -
+built_in_class_s cl_kernel_class =
+{/*{{{*/
+  "ClKernel",
+  c_modifier_public | c_modifier_final,
+  3, cl_kernel_methods,
+  0, cl_kernel_variables,
+  bic_cl_kernel_consts,
+  bic_cl_kernel_init,
+  bic_cl_kernel_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s cl_kernel_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_cl_kernel_operator_binary_equal
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_cl_kernel_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_cl_kernel_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s cl_kernel_variables[] =
+{/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
+};/*}}}*/
+
+void bic_cl_kernel_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_cl_kernel_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (cl_kernel)nullptr;
+}/*}}}*/
+
+void bic_cl_kernel_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  cl_kernel kernel = (cl_kernel)location_ptr->v_data_ptr;
+
+  if (kernel != nullptr)
+  {
+    clReleaseKernel(kernel);
+  }
+}/*}}}*/
+
+bool bic_cl_kernel_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_cl_kernel_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("ClKernel"),"ClKernel");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_cl_kernel_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("ClKernel");
 
   BIC_SET_RESULT_BLANK();
 
