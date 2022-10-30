@@ -11,11 +11,12 @@ unsigned c_bi_class_cl_context = c_idx_not_exist;
 unsigned c_bi_class_cl_command_queue = c_idx_not_exist;
 unsigned c_bi_class_cl_program = c_idx_not_exist;
 unsigned c_bi_class_cl_kernel = c_idx_not_exist;
+unsigned c_bi_class_cl_mem = c_idx_not_exist;
 
 // - CL module -
 EXPORT built_in_module_s module =
 {/*{{{*/
-  7,                   // Class count
+  8,                   // Class count
   cl_classes,          // Classes
 
   0,                   // Error base index
@@ -36,6 +37,7 @@ built_in_class_s *cl_classes[] =
   &cl_command_queue_class,
   &cl_program_class,
   &cl_kernel_class,
+  &cl_mem_class,
 };/*}}}*/
 
 // - CL error strings -
@@ -69,6 +71,9 @@ bool cl_initialize(script_parser_s &sp)
 
   // - initialize cl_kernel class identifier -
   c_bi_class_cl_kernel = class_base_idx++;
+
+  // - initialize cl_mem class identifier -
+  c_bi_class_cl_mem = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -539,7 +544,7 @@ built_in_method_s cl_device_methods[] =
 built_in_variable_s cl_device_variables[] =
 {/*{{{*/
 
-  // - cl defvice type values -
+  // - cl device type values -
   { "TYPE_CPU", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "TYPE_GPU", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "TYPE_ACCELERATOR", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -1104,8 +1109,9 @@ method info
             break;
           default:
 
-            // FIXME TODO continue ...
-            BIC_SET_RESULT_BLANK();
+            // FIXME TODO throw proper exception ...
+            BIC_TODO_ERROR(__FILE__,__LINE__);
+            return false;
         }
       }/*}}}*/
   }
@@ -1136,7 +1142,7 @@ built_in_class_s cl_context_class =
 {/*{{{*/
   "ClContext",
   c_modifier_public | c_modifier_final,
-  5, cl_context_methods,
+  7, cl_context_methods,
   0, cl_context_variables,
   bic_cl_context_consts,
   bic_cl_context_init,
@@ -1170,6 +1176,16 @@ built_in_method_s cl_context_methods[] =
     "command_queue#1",
     c_modifier_public | c_modifier_final,
     bic_cl_context_method_command_queue_1
+  },
+  {
+    "program#1",
+    c_modifier_public | c_modifier_final,
+    bic_cl_context_method_program_1
+  },
+  {
+    "buffer#3",
+    c_modifier_public | c_modifier_final,
+    bic_cl_context_method_buffer_3
   },
   {
     "to_string#0",
@@ -1298,6 +1314,87 @@ method command_queue
   return true;
 }/*}}}*/
 
+bool bic_cl_context_method_program_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+code:c_bi_class_string
+>
+method program
+; @end
+
+  cl_context ctx = (cl_context)dst_location->v_data_ptr;
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  const char *string = string_ptr->data;
+  size_t length = string_ptr->size - 1;
+
+  // - ERROR -
+  cl_program program = clCreateProgramWithSource(ctx,1,&string,&length,nullptr);
+  if (program == nullptr)
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_cl_program,program);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_cl_context_method_buffer_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+flags:retrieve_integer
+size:retrieve_integer
+data:retrieve_data_buffer
+data:c_bi_class_blank
+>
+method buffer
+; @end
+
+  cl_context ctx = (cl_context)dst_location->v_data_ptr;
+
+  if (src_2_location->v_type == c_bi_class_blank)
+  {
+    data_ptr = nullptr;
+    data_size = 0;
+  }
+
+  // - ERROR -
+  if (size <= 0)
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - ERROR -
+  if (data_size != 0 && data_size < size)
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - ERROR -
+  cl_mem mem = clCreateBuffer(ctx,flags,size,(void *)data_ptr,nullptr);
+  if (mem == nullptr)
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_cl_mem,mem);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
 bool bic_cl_context_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -1417,7 +1514,7 @@ built_in_class_s cl_program_class =
 {/*{{{*/
   "ClProgram",
   c_modifier_public | c_modifier_final,
-  3, cl_program_methods,
+  5, cl_program_methods,
   0, cl_program_variables,
   bic_cl_program_consts,
   bic_cl_program_init,
@@ -1441,6 +1538,16 @@ built_in_method_s cl_program_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_cl_program_operator_binary_equal
+  },
+  {
+    "build#1",
+    c_modifier_public | c_modifier_final,
+    bic_cl_program_method_build_1
+  },
+  {
+    "kernel#1",
+    c_modifier_public | c_modifier_final,
+    bic_cl_program_method_kernel_1
   },
   {
     "to_string#0",
@@ -1490,6 +1597,86 @@ bool bic_cl_program_operator_binary_equal(interpreter_thread_s &it,unsigned stac
   return true;
 }/*}}}*/
 
+bool bic_cl_program_method_build_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+devices:c_bi_class_array
+>
+method build
+; @end
+
+  cl_program program = (cl_program)dst_location->v_data_ptr;
+  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (array_ptr->used <= 0)
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  cl_device_id devices[array_ptr->used];
+
+  pointer *p_ptr = array_ptr->data;
+  pointer *p_ptr_end = p_ptr + array_ptr->used;
+  cl_device_id *d_ptr = devices;
+  do {
+    location_s *item_loc = it.get_location_value(*p_ptr);
+
+    // - ERROR -
+    if (item_loc->v_type != c_bi_class_cl_device)
+    {
+      // FIXME TODO throw proper exception ...
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+      return false;
+    }
+
+    *d_ptr = (cl_device_id)item_loc->v_data_ptr;
+  } while(++d_ptr,++p_ptr < p_ptr_end);
+
+
+  // - ERROR -
+  if (clBuildProgram(program,array_ptr->used,devices,nullptr,nullptr,nullptr) != CL_SUCCESS)
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_cl_program_method_kernel_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+name:c_bi_class_string
+>
+method kernel
+; @end
+
+  cl_program program = (cl_program)dst_location->v_data_ptr;
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  cl_kernel kernel = clCreateKernel(program,string_ptr->data,nullptr);
+  if (kernel == nullptr)
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_cl_kernel,kernel);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
 bool bic_cl_program_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -1513,7 +1700,7 @@ built_in_class_s cl_kernel_class =
 {/*{{{*/
   "ClKernel",
   c_modifier_public | c_modifier_final,
-  3, cl_kernel_methods,
+  4, cl_kernel_methods,
   0, cl_kernel_variables,
   bic_cl_kernel_consts,
   bic_cl_kernel_init,
@@ -1537,6 +1724,11 @@ built_in_method_s cl_kernel_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_cl_kernel_operator_binary_equal
+  },
+  {
+    "set_arg#2",
+    c_modifier_public | c_modifier_final,
+    bic_cl_kernel_method_set_arg_2
   },
   {
     "to_string#0",
@@ -1586,6 +1778,25 @@ bool bic_cl_kernel_operator_binary_equal(interpreter_thread_s &it,unsigned stack
   return true;
 }/*}}}*/
 
+bool bic_cl_kernel_method_set_arg_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+index:retrieve_integer
+value:ignore
+>
+method set_arg
+; @end
+
+  //cl_kernel kernel = (cl_kernel)dst_location->v_data_ptr;
+
+  // FIXME TODO continue ...
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
 bool bic_cl_kernel_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -1598,6 +1809,136 @@ bool bic_cl_kernel_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 bool bic_cl_kernel_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   printf("ClKernel");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class CL_MEM -
+built_in_class_s cl_mem_class =
+{/*{{{*/
+  "ClMem",
+  c_modifier_public | c_modifier_final,
+  3, cl_mem_methods,
+  9, cl_mem_variables,
+  bic_cl_mem_consts,
+  bic_cl_mem_init,
+  bic_cl_mem_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s cl_mem_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_cl_mem_operator_binary_equal
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_cl_mem_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_cl_mem_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s cl_mem_variables[] =
+{/*{{{*/
+
+  // - cl mem flag values -
+  { "READ_WRITE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "WRITE_ONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "READ_ONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "USE_HOST_PTR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "ALLOC_HOST_PTR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "COPY_HOST_PTR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "HOST_WRITE_ONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "HOST_READ_ONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "HOST_NO_ACCESS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+};/*}}}*/
+
+void bic_cl_mem_consts(location_array_s &const_locations)
+{/*{{{*/
+
+  // - insert cl mem flag values -
+  {
+    const_locations.push_blanks(9);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 9);
+
+#define CREATE_CL_MEM_FLAG_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_CL_MEM_FLAG_BIC_STATIC(CL_MEM_READ_WRITE);
+    CREATE_CL_MEM_FLAG_BIC_STATIC(CL_MEM_WRITE_ONLY);
+    CREATE_CL_MEM_FLAG_BIC_STATIC(CL_MEM_READ_ONLY);
+    CREATE_CL_MEM_FLAG_BIC_STATIC(CL_MEM_USE_HOST_PTR);
+    CREATE_CL_MEM_FLAG_BIC_STATIC(CL_MEM_ALLOC_HOST_PTR);
+    CREATE_CL_MEM_FLAG_BIC_STATIC(CL_MEM_COPY_HOST_PTR);
+    CREATE_CL_MEM_FLAG_BIC_STATIC(CL_MEM_HOST_WRITE_ONLY);
+    CREATE_CL_MEM_FLAG_BIC_STATIC(CL_MEM_HOST_READ_ONLY);
+    CREATE_CL_MEM_FLAG_BIC_STATIC(CL_MEM_HOST_NO_ACCESS);
+  }
+
+}/*}}}*/
+
+void bic_cl_mem_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (cl_mem)nullptr;
+}/*}}}*/
+
+void bic_cl_mem_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  cl_mem mem = (cl_mem)location_ptr->v_data_ptr;
+
+  if (mem != nullptr)
+  {
+    clReleaseMemObject(mem);
+  }
+}/*}}}*/
+
+bool bic_cl_mem_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_cl_mem_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("ClMem"),"ClMem");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_cl_mem_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("ClMem");
 
   BIC_SET_RESULT_BLANK();
 
