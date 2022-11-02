@@ -106,6 +106,8 @@ void bic_cl_command_queue_init(interpreter_thread_s &it,location_s *location_ptr
 void bic_cl_command_queue_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_cl_command_queue_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_command_queue_method_enqueue_nd_range_kernel_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_command_queue_method_finish_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_cl_command_queue_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_cl_command_queue_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -134,6 +136,10 @@ void bic_cl_kernel_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_cl_kernel_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_cl_kernel_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_kernel_method_function_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_kernel_method_arg_count_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_kernel_method_reference_count_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_kernel_method_attributes_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_cl_kernel_method_set_arg_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_cl_kernel_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_cl_kernel_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

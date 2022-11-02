@@ -345,7 +345,6 @@ name:retrieve_integer
 method info
 ; @end
 
-  // - retrieve platform id -
   cl_platform_id platform_id = (cl_platform_id)dst_location->v_data_ptr;
 
   size_t param_value_size;
@@ -428,7 +427,6 @@ device_type:retrieve_integer
 method get_devices
 ; @end
 
-  // - retrieve platform id -
   cl_platform_id platform_id = (cl_platform_id)dst_location->v_data_ptr;
 
   cl_uint num_devices = 0;
@@ -805,7 +803,6 @@ name:retrieve_integer
 method info
 ; @end
 
-  // - retrieve device id -
   cl_device_id device_id = (cl_device_id)dst_location->v_data_ptr;
 
   size_t param_value_size;
@@ -1418,7 +1415,7 @@ built_in_class_s cl_command_queue_class =
 {/*{{{*/
   "ClCommandQueue",
   c_modifier_public | c_modifier_final,
-  3, cl_command_queue_methods,
+  5, cl_command_queue_methods,
   0, cl_command_queue_variables,
   bic_cl_command_queue_consts,
   bic_cl_command_queue_init,
@@ -1442,6 +1439,16 @@ built_in_method_s cl_command_queue_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_cl_command_queue_operator_binary_equal
+  },
+  {
+    "enqueue_nd_range_kernel#3",
+    c_modifier_public | c_modifier_final,
+    bic_cl_command_queue_method_enqueue_nd_range_kernel_3
+  },
+  {
+    "finish#0",
+    c_modifier_public | c_modifier_final,
+    bic_cl_command_queue_method_finish_0
   },
   {
     "to_string#0",
@@ -1487,6 +1494,82 @@ bool bic_cl_command_queue_operator_binary_equal(interpreter_thread_s &it,unsigne
 
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_cl_command_queue_method_enqueue_nd_range_kernel_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+kernel:c_bi_class_cl_kernel
+work_dim:retrieve_integer
+global_work_size:c_bi_class_array
+>
+method enqueue_nd_range_kernel
+; @end
+
+  cl_command_queue cqueue = (cl_command_queue)dst_location->v_data_ptr;
+  cl_kernel kernel = (cl_kernel)src_0_location->v_data_ptr;
+  pointer_array_s *gws_array_ptr = (pointer_array_s *)src_2_location->v_data_ptr;
+
+  if (work_dim <= 0 || gws_array_ptr->used != work_dim)
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  size_t global_work_size[work_dim];
+
+  pointer *gws_ptr = gws_array_ptr->data;
+  pointer *gws_ptr_end = gws_ptr + gws_array_ptr->used;
+  size_t *gwsv_ptr = global_work_size;
+  do {
+    location_s *item_loc = it.get_location_value(*gws_ptr);
+
+    long long int value;
+    if (!it.retrieve_integer(item_loc,value) || value <= 0)
+    {
+      // FIXME TODO throw proper exception ...
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+      return false;
+    }
+
+    // - set global work size value -
+    *gwsv_ptr++ = value;
+
+  } while(++gws_ptr < gws_ptr_end);
+
+  // - ERROR -
+  if (clEnqueueNDRangeKernel(cqueue,kernel,work_dim,
+        nullptr,global_work_size,nullptr,0,nullptr,nullptr) != CL_SUCCESS)
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_cl_command_queue_method_finish_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  cl_command_queue cqueue = (cl_command_queue)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (clFinish(cqueue) != CL_SUCCESS)
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -1700,7 +1783,7 @@ built_in_class_s cl_kernel_class =
 {/*{{{*/
   "ClKernel",
   c_modifier_public | c_modifier_final,
-  4, cl_kernel_methods,
+  8, cl_kernel_methods,
   0, cl_kernel_variables,
   bic_cl_kernel_consts,
   bic_cl_kernel_init,
@@ -1726,6 +1809,26 @@ built_in_method_s cl_kernel_methods[] =
     bic_cl_kernel_operator_binary_equal
   },
   {
+    "function_name#0",
+    c_modifier_public | c_modifier_final,
+    bic_cl_kernel_method_function_name_0
+  },
+  {
+    "arg_count#0",
+    c_modifier_public | c_modifier_final,
+    bic_cl_kernel_method_arg_count_0
+  },
+  {
+    "reference_count#0",
+    c_modifier_public | c_modifier_final,
+    bic_cl_kernel_method_reference_count_0
+  },
+  {
+    "attributes#0",
+    c_modifier_public | c_modifier_final,
+    bic_cl_kernel_method_attributes_0
+  },
+  {
     "set_arg#2",
     c_modifier_public | c_modifier_final,
     bic_cl_kernel_method_set_arg_2
@@ -1746,6 +1849,67 @@ built_in_variable_s cl_kernel_variables[] =
 {/*{{{*/
   BIC_CLASS_EMPTY_VARIABLES
 };/*}}}*/
+
+#define CL_KERNEL_GET_INFO_STRING(PARAM_NAME) \
+{/*{{{*/\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+\
+  cl_kernel kernel = (cl_kernel)dst_location->v_data_ptr;\
+\
+  size_t param_value_size;\
+\
+  if (clGetKernelInfo(kernel,PARAM_NAME,\
+        0,nullptr,&param_value_size) != CL_SUCCESS)\
+  {\
+    /* FIXME TODO throw proper exception ... */\
+    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    return false;\
+  }\
+\
+  string_s *string_ptr = it.get_new_string_ptr();\
+\
+  /* - not empty string - */\
+  if (param_value_size > 1)\
+  {\
+    string_ptr->create(param_value_size - 1);\
+\
+    /* - ERROR - */\
+    if (clGetKernelInfo(kernel,PARAM_NAME,\
+          string_ptr->size,string_ptr->data,nullptr) != CL_SUCCESS)\
+    {\
+      string_ptr->clear();\
+      cfree(string_ptr);\
+\
+      /* FIXME TODO throw proper exception ... */\
+      BIC_TODO_ERROR(__FILE__,__LINE__);\
+      return false;\
+    }\
+  }\
+\
+  BIC_SET_RESULT_STRING(string_ptr);\
+\
+  return true;\
+}/*}}}*/
+
+#define CL_KERNEL_GET_INFO_TYPE(PARAM_TYPE,PARAM_NAME,RESULT_CODE) \
+{/*{{{*/\
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);\
+\
+  cl_kernel kernel = (cl_kernel)dst_location->v_data_ptr;\
+\
+  /* - ERROR - */\
+  PARAM_TYPE value;\
+  if (clGetKernelInfo(kernel,PARAM_NAME,sizeof(PARAM_TYPE),&value,nullptr) != CL_SUCCESS)\
+  {\
+    /* FIXME TODO throw proper exception ... */\
+    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    return false;\
+  }\
+\
+  RESULT_CODE;\
+\
+  return true;\
+}/*}}}*/
 
 void bic_cl_kernel_consts(location_array_s &const_locations)
 {/*{{{*/
@@ -1778,6 +1942,34 @@ bool bic_cl_kernel_operator_binary_equal(interpreter_thread_s &it,unsigned stack
   return true;
 }/*}}}*/
 
+bool bic_cl_kernel_method_function_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  CL_KERNEL_GET_INFO_STRING(CL_KERNEL_FUNCTION_NAME);
+}/*}}}*/
+
+bool bic_cl_kernel_method_arg_count_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  CL_KERNEL_GET_INFO_TYPE(cl_uint,CL_KERNEL_NUM_ARGS,
+    long long int result = value;
+
+    BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+  );
+}/*}}}*/
+
+bool bic_cl_kernel_method_reference_count_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  CL_KERNEL_GET_INFO_TYPE(cl_uint,CL_KERNEL_REFERENCE_COUNT,
+    long long int result = value;
+
+    BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+  );
+}/*}}}*/
+
+bool bic_cl_kernel_method_attributes_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  CL_KERNEL_GET_INFO_STRING(CL_KERNEL_ATTRIBUTES);
+}/*}}}*/
+
 bool bic_cl_kernel_method_set_arg_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
@@ -1788,9 +1980,45 @@ value:ignore
 method set_arg
 ; @end
 
-  //cl_kernel kernel = (cl_kernel)dst_location->v_data_ptr;
+  cl_kernel kernel = (cl_kernel)dst_location->v_data_ptr;
 
-  // FIXME TODO continue ...
+  // - ERROR -
+  cl_uint num_args;
+  if (clGetKernelInfo(kernel,CL_KERNEL_NUM_ARGS,sizeof(cl_uint),&num_args,nullptr) != CL_SUCCESS)
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - ERROR -
+  if (index >= num_args)
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  if (src_1_location->v_type == c_bi_class_cl_mem)
+  {
+    cl_mem mem = (cl_mem)src_1_location->v_data_ptr;
+
+    // - ERROR -
+    if (clSetKernelArg(kernel,index,sizeof(mem),&mem) != CL_SUCCESS)
+    {
+      // FIXME TODO throw proper exception ...
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+      return false;
+    }
+  }
+
+  // - ERROR -
+  else
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
 
   BIC_SET_RESULT_DESTINATION();
 
