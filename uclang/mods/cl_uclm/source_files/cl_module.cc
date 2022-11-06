@@ -20,7 +20,7 @@ EXPORT built_in_module_s module =
   cl_classes,          // Classes
 
   0,                   // Error base index
-  1,                   // Error count
+  22,                  // Error count
   cl_error_strings,    // Error strings
 
   cl_initialize,       // Initialize function
@@ -43,7 +43,28 @@ built_in_class_s *cl_classes[] =
 // - CL error strings -
 const char *cl_error_strings[] =
 {/*{{{*/
-  "error_CL_DUMMY_ERROR",
+  "error_CL_GET_PLATFORMS_ERROR",
+  "error_CL_PLATFORM_INFO_ERROR",
+  "error_CL_PLATFORM_GET_DEVICES_ERROR",
+  "error_CL_DEVICE_INFO_ERROR",
+  "error_CL_DEVICE_INFO_LARGE_VALUE_ERROR",
+  "error_CL_INVALID_DEVICE_LIST",
+  "error_CL_CONTEXT_CREATE_ERROR",
+  "error_CL_CONTEXT_CREATE_COMMAND_QUEUE_ERROR",
+  "error_CL_CONTEXT_CREATE_PROGRAM_ERROR",
+  "error_CL_CONTEXT_INVLAID_BUFFER_SIZE",
+  "error_CL_CONTEXT_INVLAID_BUFFER_HOST_DATA_SIZE",
+  "error_CL_CONTEXT_CREATE_BUFFER_ERROR",
+  "error_CL_COMMAND_QUEUE_ENQUEUE_KERNEL_DIMENSION_SIZE_MISMATCH",
+  "error_CL_COMMAND_QUEUE_ENQUEUE_KERNEL_INVALID_WORK_SIZE_VALUE",
+  "error_CL_COMMAND_QUEUE_ENQUEUE_KERNEL_ERROR",
+  "error_CL_COMMAND_QUEUE_FINISH_ERROR",
+  "error_CL_PROGRAM_BUILD_ERROR",
+  "error_CL_PROGRAM_CREATE_KERNEL_ERROR",
+  "error_CL_KERNEL_INFO_ERROR",
+  "error_CL_KERNEL_INVALID_ARGUMENT_INDEX",
+  "error_CL_KERNEL_SET_ARGUMENT_ERROR",
+  "error_CL_KERNEL_INVALID_ARGUMENT_TYPE",
 };/*}}}*/
 
 // - CL initialize -
@@ -86,11 +107,158 @@ bool cl_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_CL_DUMMY_ERROR:
+  case c_error_CL_GET_PLATFORMS_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nOpenCL dummy error\n");
+    fprintf(stderr,"\nOpenCL get platform identifiers error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_PLATFORM_INFO_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL platform, get info error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_PLATFORM_GET_DEVICES_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL platform, get device identifiers error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_DEVICE_INFO_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL device, get info error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_DEVICE_INFO_LARGE_VALUE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL device, get info value is too large\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_INVALID_DEVICE_LIST:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid list of OpenCL devices\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_CONTEXT_CREATE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL context create error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_CONTEXT_CREATE_COMMAND_QUEUE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL context, create command queue error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_CONTEXT_CREATE_PROGRAM_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL context, create program error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_CONTEXT_INVLAID_BUFFER_SIZE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL context, invalid buffer size\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_CONTEXT_INVLAID_BUFFER_HOST_DATA_SIZE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL context, invalid buffer host data size\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_CONTEXT_CREATE_BUFFER_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL context, create buffer error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_COMMAND_QUEUE_ENQUEUE_KERNEL_DIMENSION_SIZE_MISMATCH:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL command queue, enqueue kernel dimension mismatch\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_COMMAND_QUEUE_ENQUEUE_KERNEL_INVALID_WORK_SIZE_VALUE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL command queue, invalid global work size value\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_COMMAND_QUEUE_ENQUEUE_KERNEL_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL command queue, enqueue kernel error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_COMMAND_QUEUE_FINISH_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL command queue, finish error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_PROGRAM_BUILD_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL program, build error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_PROGRAM_CREATE_KERNEL_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL program, create kernel error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_KERNEL_INFO_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL kernel, get info error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_KERNEL_INVALID_ARGUMENT_INDEX:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL kernel, invalid argument index\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_KERNEL_SET_ARGUMENT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL kernel, set argument error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_KERNEL_INVALID_ARGUMENT_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL kernel, invalid argument type\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -168,8 +336,7 @@ bool bic_cl_method_get_platforms_0(interpreter_thread_s &it,unsigned stack_base,
   // - ERROR -
   if (clGetPlatformIDs(0,nullptr,&num_platforms) != CL_SUCCESS)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_GET_PLATFORMS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -178,8 +345,7 @@ bool bic_cl_method_get_platforms_0(interpreter_thread_s &it,unsigned stack_base,
   // - ERROR -
   if (clGetPlatformIDs(num_platforms,platforms,nullptr) != CL_SUCCESS)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_GET_PLATFORMS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -362,8 +528,7 @@ method info
         // - ERROR -
         if (clGetPlatformInfo(platform_id,name,0,nullptr,&param_value_size) != CL_SUCCESS)
         {
-          // FIXME TODO throw proper exception ...
-          BIC_TODO_ERROR(__FILE__,__LINE__);
+          exception_s::throw_exception(it,module.error_base + c_error_CL_PLATFORM_INFO_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
           return false;
         }
 
@@ -380,8 +545,7 @@ method info
             string_ptr->clear();
             cfree(string_ptr);
 
-            // FIXME TODO throw proper exception ...
-            BIC_TODO_ERROR(__FILE__,__LINE__);
+            exception_s::throw_exception(it,module.error_base + c_error_CL_PLATFORM_INFO_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
             return false;
           }
         }
@@ -396,8 +560,7 @@ method info
         // - ERROR -
         if (clGetPlatformInfo(platform_id,name,sizeof(cl_ulong),&value,nullptr) != CL_SUCCESS)
         {
-          // FIXME TODO throw proper exception ...
-          BIC_TODO_ERROR(__FILE__,__LINE__);
+          exception_s::throw_exception(it,module.error_base + c_error_CL_PLATFORM_INFO_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
           return false;
         }
 
@@ -410,8 +573,7 @@ method info
     // - ERROR -
     default:
 
-      // FIXME TODO throw proper exception ...
-      BIC_TODO_ERROR(__FILE__,__LINE__);
+      exception_s::throw_exception(it,module.error_base + c_error_CL_PLATFORM_INFO_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
   }
 
@@ -434,8 +596,7 @@ method get_devices
   // - ERROR -
   if (clGetDeviceIDs(platform_id,device_type,0,nullptr,&num_devices) != CL_SUCCESS)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_PLATFORM_GET_DEVICES_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -444,8 +605,7 @@ method get_devices
   // - ERROR -
   if (clGetDeviceIDs(platform_id,device_type,num_devices,devices,nullptr) != CL_SUCCESS)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_PLATFORM_GET_DEVICES_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -810,8 +970,7 @@ method info
   // - ERROR -
   if (clGetDeviceInfo(device_id,name,0,nullptr,&param_value_size) != CL_SUCCESS)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_DEVICE_INFO_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -840,8 +999,7 @@ method info
             string_ptr->clear();
             cfree(string_ptr);
 
-            // FIXME TODO throw proper exception ...
-            BIC_TODO_ERROR(__FILE__,__LINE__);
+            exception_s::throw_exception(it,module.error_base + c_error_CL_DEVICE_INFO_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
             return false;
           }
         }
@@ -856,8 +1014,7 @@ method info
         // - ERROR -
         if (clGetDeviceInfo(device_id,name,param_value_size,param_data,nullptr) != CL_SUCCESS)
         {
-          // FIXME TODO throw proper exception ...
-          BIC_TODO_ERROR(__FILE__,__LINE__);
+          exception_s::throw_exception(it,module.error_base + c_error_CL_DEVICE_INFO_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
           return false;
         }
 
@@ -883,8 +1040,7 @@ method info
               // -ERROR  -
               if (value > LLONG_MAX)
               {
-                // FIXME TODO throw proper exception ...
-                BIC_TODO_ERROR(__FILE__,__LINE__);
+                exception_s::throw_exception(it,module.error_base + c_error_CL_DEVICE_INFO_LARGE_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
                 return false;
               }
 
@@ -955,8 +1111,7 @@ method info
               // -ERROR  -
               if (value > LLONG_MAX)
               {
-                // FIXME TODO throw proper exception ...
-                BIC_TODO_ERROR(__FILE__,__LINE__);
+                exception_s::throw_exception(it,module.error_base + c_error_CL_DEVICE_INFO_LARGE_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
                 return false;
               }
 
@@ -1057,12 +1212,12 @@ method info
                   size_t value;
                   memcpy(&value,p_ptr,sizeof(size_t));
 
+                  // - ERROR -
                   if (value > LLONG_MAX)
                   {
                     it.release_location_ptr(array_location);
 
-                    // FIXME TODO throw proper exception ...
-                    BIC_TODO_ERROR(__FILE__,__LINE__);
+                    exception_s::throw_exception(it,module.error_base + c_error_CL_DEVICE_INFO_LARGE_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
                     return false;
                   }
 
@@ -1104,10 +1259,11 @@ method info
               BIC_SET_RESULT(array_location);
             }/*}}}*/
             break;
+
+          // - ERROR -
           default:
 
-            // FIXME TODO throw proper exception ...
-            BIC_TODO_ERROR(__FILE__,__LINE__);
+            exception_s::throw_exception(it,module.error_base + c_error_CL_DEVICE_INFO_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
             return false;
         }
       }/*}}}*/
@@ -1246,8 +1402,7 @@ method ClContext
   // - ERROR -
   if (array_ptr->used <= 0)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_INVALID_DEVICE_LIST,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1262,8 +1417,7 @@ method ClContext
     // - ERROR -
     if (item_loc->v_type != c_bi_class_cl_device)
     {
-      // FIXME TODO throw proper exception ...
-      BIC_TODO_ERROR(__FILE__,__LINE__);
+      exception_s::throw_exception(it,module.error_base + c_error_CL_INVALID_DEVICE_LIST,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
 
@@ -1274,8 +1428,7 @@ method ClContext
   cl_context ctx = clCreateContext(nullptr,array_ptr->used,devices,nullptr,nullptr,nullptr);
   if (ctx == nullptr)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_CONTEXT_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1300,8 +1453,7 @@ method command_queue
   cl_command_queue cqueue = clCreateCommandQueueWithProperties(ctx,device_id,nullptr,nullptr);
   if (cqueue == nullptr)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_CONTEXT_CREATE_COMMAND_QUEUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1330,8 +1482,7 @@ method program
   cl_program program = clCreateProgramWithSource(ctx,1,&string,&length,nullptr);
   if (program == nullptr)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_CONTEXT_CREATE_PROGRAM_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1364,16 +1515,14 @@ method buffer
   // - ERROR -
   if (size <= 0)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_CONTEXT_INVLAID_BUFFER_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
   // - ERROR -
   if (data_size != 0 && data_size < size)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_CONTEXT_INVLAID_BUFFER_HOST_DATA_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1381,8 +1530,7 @@ method buffer
   cl_mem mem = clCreateBuffer(ctx,flags,size,(void *)data_ptr,nullptr);
   if (mem == nullptr)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_CONTEXT_CREATE_BUFFER_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1513,10 +1661,10 @@ method enqueue_nd_range_kernel
   cl_kernel kernel = (cl_kernel)src_0_location->v_data_ptr;
   pointer_array_s *gws_array_ptr = (pointer_array_s *)src_2_location->v_data_ptr;
 
+  // - ERROR -
   if (work_dim <= 0 || gws_array_ptr->used != work_dim)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_COMMAND_QUEUE_ENQUEUE_KERNEL_DIMENSION_SIZE_MISMATCH,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1528,11 +1676,11 @@ method enqueue_nd_range_kernel
   do {
     location_s *item_loc = it.get_location_value(*gws_ptr);
 
+    // - ERROR -
     long long int value;
     if (!it.retrieve_integer(item_loc,value) || value <= 0)
     {
-      // FIXME TODO throw proper exception ...
-      BIC_TODO_ERROR(__FILE__,__LINE__);
+      exception_s::throw_exception(it,module.error_base + c_error_CL_COMMAND_QUEUE_ENQUEUE_KERNEL_INVALID_WORK_SIZE_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
 
@@ -1545,8 +1693,7 @@ method enqueue_nd_range_kernel
   if (clEnqueueNDRangeKernel(cqueue,kernel,work_dim,
         nullptr,global_work_size,nullptr,0,nullptr,nullptr) != CL_SUCCESS)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_COMMAND_QUEUE_ENQUEUE_KERNEL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1564,8 +1711,7 @@ bool bic_cl_command_queue_method_finish_0(interpreter_thread_s &it,unsigned stac
   // - ERROR -
   if (clFinish(cqueue) != CL_SUCCESS)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_COMMAND_QUEUE_FINISH_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1695,8 +1841,7 @@ method build
   // - ERROR -
   if (array_ptr->used <= 0)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_INVALID_DEVICE_LIST,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1711,8 +1856,7 @@ method build
     // - ERROR -
     if (item_loc->v_type != c_bi_class_cl_device)
     {
-      // FIXME TODO throw proper exception ...
-      BIC_TODO_ERROR(__FILE__,__LINE__);
+      exception_s::throw_exception(it,module.error_base + c_error_CL_INVALID_DEVICE_LIST,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
 
@@ -1723,8 +1867,7 @@ method build
   // - ERROR -
   if (clBuildProgram(program,array_ptr->used,devices,nullptr,nullptr,nullptr) != CL_SUCCESS)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_PROGRAM_BUILD_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1749,8 +1892,7 @@ method kernel
   cl_kernel kernel = clCreateKernel(program,string_ptr->data,nullptr);
   if (kernel == nullptr)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_PROGRAM_CREATE_KERNEL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1858,11 +2000,11 @@ built_in_variable_s cl_kernel_variables[] =
 \
   size_t param_value_size;\
 \
+  /* - ERROR - */\
   if (clGetKernelInfo(kernel,PARAM_NAME,\
         0,nullptr,&param_value_size) != CL_SUCCESS)\
   {\
-    /* FIXME TODO throw proper exception ... */\
-    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    exception_s::throw_exception(it,module.error_base + c_error_CL_KERNEL_INFO_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
 \
@@ -1880,8 +2022,7 @@ built_in_variable_s cl_kernel_variables[] =
       string_ptr->clear();\
       cfree(string_ptr);\
 \
-      /* FIXME TODO throw proper exception ... */\
-      BIC_TODO_ERROR(__FILE__,__LINE__);\
+      exception_s::throw_exception(it,module.error_base + c_error_CL_KERNEL_INFO_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       return false;\
     }\
   }\
@@ -1901,8 +2042,7 @@ built_in_variable_s cl_kernel_variables[] =
   PARAM_TYPE value;\
   if (clGetKernelInfo(kernel,PARAM_NAME,sizeof(PARAM_TYPE),&value,nullptr) != CL_SUCCESS)\
   {\
-    /* FIXME TODO throw proper exception ... */\
-    BIC_TODO_ERROR(__FILE__,__LINE__);\
+    exception_s::throw_exception(it,module.error_base + c_error_CL_KERNEL_INFO_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
 \
@@ -1986,16 +2126,14 @@ method set_arg
   cl_uint num_args;
   if (clGetKernelInfo(kernel,CL_KERNEL_NUM_ARGS,sizeof(cl_uint),&num_args,nullptr) != CL_SUCCESS)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_KERNEL_INFO_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
   // - ERROR -
   if (index >= num_args)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_KERNEL_INVALID_ARGUMENT_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -2006,8 +2144,7 @@ method set_arg
     // - ERROR -
     if (clSetKernelArg(kernel,index,sizeof(mem),&mem) != CL_SUCCESS)
     {
-      // FIXME TODO throw proper exception ...
-      BIC_TODO_ERROR(__FILE__,__LINE__);
+      exception_s::throw_exception(it,module.error_base + c_error_CL_KERNEL_SET_ARGUMENT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
   }
@@ -2015,8 +2152,7 @@ method set_arg
   // - ERROR -
   else
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CL_KERNEL_INVALID_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
