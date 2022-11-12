@@ -97,7 +97,7 @@ inline void gl_attribute_s::init()
 inline void gl_attribute_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
-  // - release name pointer -
+  // - release program pointer -
   if (program_ptr != nullptr)
   {
     it.release_location_ptr(program_ptr);
@@ -128,7 +128,7 @@ inline void gl_uniform_s::init()
 inline void gl_uniform_s::clear(interpreter_thread_s &it)
 {/*{{{*/
 
-  // - release name pointer -
+  // - release program pointer -
   if (program_ptr != nullptr)
   {
     it.release_location_ptr(program_ptr);

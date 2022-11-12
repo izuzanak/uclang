@@ -15,6 +15,7 @@ extern unsigned c_bi_class_cl_command_queue;
 extern unsigned c_bi_class_cl_program;
 extern unsigned c_bi_class_cl_kernel;
 extern unsigned c_bi_class_cl_mem;
+extern unsigned c_bi_class_cl_memmap;
 
 // - CL module -
 extern "C" EXPORT built_in_module_s module;
@@ -47,6 +48,9 @@ enum
   c_error_CL_KERNEL_INVALID_ARGUMENT_INDEX,
   c_error_CL_KERNEL_SET_ARGUMENT_ERROR,
   c_error_CL_KERNEL_INVALID_ARGUMENT_TYPE,
+  c_error_CL_MEM_MISMATCH_MAP_COMMAND_QUEUE_CONTEXT,
+  c_error_CL_MEM_INVALID_MAP_OFFSET_OR_SIZE,
+  c_error_CL_MEM_MAP_BUFFER_ERROR,
 };
 
 // - CL error strings -
@@ -175,8 +179,23 @@ void bic_cl_mem_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_cl_mem_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_cl_mem_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_mem_method_map_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_cl_mem_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_cl_mem_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class CL_MEMMAP -
+extern built_in_variable_s cl_memmap_variables[];
+extern built_in_method_s cl_memmap_methods[];
+extern built_in_class_s cl_memmap_class;
+
+void bic_cl_memmap_consts(location_array_s &const_locations);
+void bic_cl_memmap_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_cl_memmap_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_cl_memmap_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_memmap_method_buffer_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_memmap_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_cl_memmap_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 

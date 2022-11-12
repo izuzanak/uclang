@@ -12,15 +12,16 @@ unsigned c_bi_class_cl_command_queue = c_idx_not_exist;
 unsigned c_bi_class_cl_program = c_idx_not_exist;
 unsigned c_bi_class_cl_kernel = c_idx_not_exist;
 unsigned c_bi_class_cl_mem = c_idx_not_exist;
+unsigned c_bi_class_cl_memmap = c_idx_not_exist;
 
 // - CL module -
 EXPORT built_in_module_s module =
 {/*{{{*/
-  8,                   // Class count
+  9,                   // Class count
   cl_classes,          // Classes
 
   0,                   // Error base index
-  22,                  // Error count
+  25,                  // Error count
   cl_error_strings,    // Error strings
 
   cl_initialize,       // Initialize function
@@ -38,6 +39,7 @@ built_in_class_s *cl_classes[] =
   &cl_program_class,
   &cl_kernel_class,
   &cl_mem_class,
+  &cl_memmap_class,
 };/*}}}*/
 
 // - CL error strings -
@@ -65,6 +67,9 @@ const char *cl_error_strings[] =
   "error_CL_KERNEL_INVALID_ARGUMENT_INDEX",
   "error_CL_KERNEL_SET_ARGUMENT_ERROR",
   "error_CL_KERNEL_INVALID_ARGUMENT_TYPE",
+  "error_CL_MEM_MISMATCH_MAP_COMMAND_QUEUE_CONTEXT",
+  "error_CL_MEM_INVALID_MAP_OFFSET_OR_SIZE",
+  "error_CL_MEM_MAP_BUFFER_ERROR",
 };/*}}}*/
 
 // - CL initialize -
@@ -95,6 +100,9 @@ bool cl_initialize(script_parser_s &sp)
 
   // - initialize cl_mem class identifier -
   c_bi_class_cl_mem = class_base_idx++;
+
+  // - initialize cl_memmap class identifier -
+  c_bi_class_cl_memmap = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -259,6 +267,27 @@ bool cl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nOpenCL kernel, invalid argument type\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_MEM_MISMATCH_MAP_COMMAND_QUEUE_CONTEXT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL mem, mismatch map command queue context\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_MEM_INVALID_MAP_OFFSET_OR_SIZE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL mem, invalid map offset or size values\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_MEM_MAP_BUFFER_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL mem, map buffer error\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -2184,8 +2213,8 @@ built_in_class_s cl_mem_class =
 {/*{{{*/
   "ClMem",
   c_modifier_public | c_modifier_final,
-  3, cl_mem_methods,
-  9, cl_mem_variables,
+  4, cl_mem_methods,
+  9 + 3, cl_mem_variables,
   bic_cl_mem_consts,
   bic_cl_mem_init,
   bic_cl_mem_clear,
@@ -2208,6 +2237,11 @@ built_in_method_s cl_mem_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_cl_mem_operator_binary_equal
+  },
+  {
+    "map#4",
+    c_modifier_public | c_modifier_final,
+    bic_cl_mem_method_map_4
   },
   {
     "to_string#0",
@@ -2235,6 +2269,11 @@ built_in_variable_s cl_mem_variables[] =
   { "HOST_READ_ONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HOST_NO_ACCESS", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
+  // - cl mem map values -
+  { "MAP_READ", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAP_WRITE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "MAP_WRITE_INVALIDATE_REGION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_cl_mem_consts(location_array_s &const_locations)
@@ -2260,6 +2299,22 @@ void bic_cl_mem_consts(location_array_s &const_locations)
     CREATE_CL_MEM_FLAG_BIC_STATIC(CL_MEM_HOST_WRITE_ONLY);
     CREATE_CL_MEM_FLAG_BIC_STATIC(CL_MEM_HOST_READ_ONLY);
     CREATE_CL_MEM_FLAG_BIC_STATIC(CL_MEM_HOST_NO_ACCESS);
+  }
+
+  // - insert cl mem map values -
+  {
+    const_locations.push_blanks(3);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 3);
+
+#define CREATE_CL_MEM_MAP_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_CL_MEM_MAP_BIC_STATIC(CL_MAP_READ);
+    CREATE_CL_MEM_MAP_BIC_STATIC(CL_MAP_WRITE);
+    CREATE_CL_MEM_MAP_BIC_STATIC(CL_MAP_WRITE_INVALIDATE_REGION);
   }
 
 }/*}}}*/
@@ -2291,6 +2346,75 @@ bool bic_cl_mem_operator_binary_equal(interpreter_thread_s &it,unsigned stack_ba
   return true;
 }/*}}}*/
 
+bool bic_cl_mem_method_map_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+command_queue:c_bi_class_cl_command_queue
+flags:retrieve_integer
+offset:retrieve_integer
+size:retrieve_integer
+>
+method map
+; @end
+
+  cl_mem mem = (cl_mem)dst_location->v_data_ptr;
+  cl_command_queue cqueue = (cl_command_queue)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  cl_context mem_ctx;
+  cl_context cqueue_ctx;
+  if (clGetMemObjectInfo(mem,CL_MEM_CONTEXT,sizeof(cl_context),&mem_ctx,nullptr) != CL_SUCCESS ||
+      clGetCommandQueueInfo(cqueue,CL_QUEUE_CONTEXT,sizeof(cl_context),&cqueue_ctx,nullptr) != CL_SUCCESS ||
+      mem_ctx != cqueue_ctx)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CL_MEM_MISMATCH_MAP_COMMAND_QUEUE_CONTEXT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  size_t mem_size;
+  if (clGetMemObjectInfo(mem,CL_MEM_SIZE,sizeof(size_t),&mem_size,nullptr) != CL_SUCCESS ||
+      offset < 0 || size < 0 ||
+      size ?
+        (((size_t)(offset + size)) > mem_size) :
+        (size = mem_size - offset, (size_t)offset >= mem_size)
+      )
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CL_MEM_INVALID_MAP_OFFSET_OR_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  void *data;
+  if ((data = clEnqueueMapBuffer(cqueue,mem,CL_TRUE,flags,
+          offset,size,0,nullptr,nullptr,nullptr)) == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CL_MEM_MAP_BUFFER_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - create cl_memmap object -
+  cl_memmap_s *mm_ptr = (cl_memmap_s *)cmalloc(sizeof(cl_memmap_s));
+  mm_ptr->init();
+
+  // - create mem reference -
+  dst_location->v_reference_cnt.atomic_inc();
+  mm_ptr->mem_loc = dst_location;
+
+  // - create command queue reference -
+  src_0_location->v_reference_cnt.atomic_inc();
+  mm_ptr->cqueue_loc = src_0_location;
+
+  mm_ptr->data = data;
+  mm_ptr->size = size;
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_cl_memmap,mm_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
 bool bic_cl_mem_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -2303,6 +2427,131 @@ bool bic_cl_mem_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,
 bool bic_cl_mem_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   printf("ClMem");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class CL_MEMMAP -
+built_in_class_s cl_memmap_class =
+{/*{{{*/
+  "ClMemmap",
+  c_modifier_public | c_modifier_final,
+  4, cl_memmap_methods,
+  0, cl_memmap_variables,
+  bic_cl_memmap_consts,
+  bic_cl_memmap_init,
+  bic_cl_memmap_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s cl_memmap_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_cl_memmap_operator_binary_equal
+  },
+  {
+    "buffer#0",
+    c_modifier_public | c_modifier_final,
+    bic_cl_memmap_method_buffer_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_cl_memmap_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_cl_memmap_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s cl_memmap_variables[] =
+{/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
+};/*}}}*/
+
+void bic_cl_memmap_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_cl_memmap_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (cl_memmap_s *)nullptr;
+}/*}}}*/
+
+void bic_cl_memmap_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  cl_memmap_s *mm_ptr = (cl_memmap_s *)location_ptr->v_data_ptr;
+
+  // - if memap exists -
+  if (mm_ptr != nullptr)
+  {
+    mm_ptr->clear(it);
+    cfree(mm_ptr);
+  }
+}/*}}}*/
+
+bool bic_cl_memmap_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_cl_memmap_method_buffer_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  cl_memmap_s *mm_ptr = (cl_memmap_s *)dst_location->v_data_ptr;
+
+  // - create buffer object -
+  buffer_s *buffer_ptr = (buffer_s *)cmalloc(sizeof(buffer_s));
+
+  // - set owner reference -
+  dst_location->v_reference_cnt.atomic_inc();
+  buffer_ptr->owner_ptr = dst_location;
+
+  buffer_ptr->data = mm_ptr->data;
+  buffer_ptr->size = mm_ptr->size;
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_buffer,buffer_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_cl_memmap_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("ClMemmap"),"ClMemmap");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_cl_memmap_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("ClMemmap");
 
   BIC_SET_RESULT_BLANK();
 
