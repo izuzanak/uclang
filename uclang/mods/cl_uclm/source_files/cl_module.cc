@@ -62,6 +62,7 @@ const char *cl_error_strings[] =
   "error_CL_COMMAND_QUEUE_ENQUEUE_KERNEL_ERROR",
   "error_CL_COMMAND_QUEUE_FINISH_ERROR",
   "error_CL_PROGRAM_BUILD_ERROR",
+  "error_CL_PROGRAM_BUILD_ERROR_WITH_LOG",
   "error_CL_PROGRAM_CREATE_KERNEL_ERROR",
   "error_CL_KERNEL_INFO_ERROR",
   "error_CL_KERNEL_INVALID_ARGUMENT_INDEX",
@@ -232,6 +233,14 @@ bool cl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nOpenCL program, build error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CL_PROGRAM_BUILD_ERROR_WITH_LOG:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nOpenCL program, build error:\n");
+    fprintf(stderr,"%s",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_CL_PROGRAM_CREATE_KERNEL_ERROR:
@@ -1896,7 +1905,35 @@ method build
   // - ERROR -
   if (clBuildProgram(program,array_ptr->used,devices,nullptr,nullptr,nullptr) != CL_SUCCESS)
   {
-    exception_s::throw_exception(it,module.error_base + c_error_CL_PROGRAM_BUILD_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    // - ERROR -
+    size_t build_log_size;
+    if (clGetProgramBuildInfo(program,devices[0],CL_PROGRAM_BUILD_LOG,0,nullptr,&build_log_size) != CL_SUCCESS)
+    {
+      exception_s::throw_exception(it,module.error_base + c_error_CL_PROGRAM_BUILD_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
+    string_s *string_ptr = it.get_new_string_ptr();
+
+    // - not empty build log -
+    if (build_log_size > 1)
+    {
+      string_ptr->create(build_log_size - 1);
+
+      // - ERROR -
+      if (clGetProgramBuildInfo(program,devices[0],CL_PROGRAM_BUILD_LOG,string_ptr->size,string_ptr->data,nullptr) != CL_SUCCESS)
+      {
+        string_ptr->clear();
+        cfree(string_ptr);
+
+        exception_s::throw_exception(it,module.error_base + c_error_CL_PROGRAM_BUILD_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+    }
+
+    BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_string,string_ptr,0);
+
+    exception_s::throw_exception(it,module.error_base + c_error_CL_PROGRAM_BUILD_ERROR_WITH_LOG,operands[c_source_pos_idx],new_location);
     return false;
   }
 
