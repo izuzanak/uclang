@@ -70,7 +70,7 @@ built_in_class_s curses_class =
 {/*{{{*/
   "Curses",
   c_modifier_public | c_modifier_final,
-  12, curses_methods,
+  17, curses_methods,
   103 + 13, curses_variables,
   bic_curses_consts,
   bic_curses_init,
@@ -121,6 +121,16 @@ built_in_method_s curses_methods[] =
     bic_curses_method_move_2
   },
   {
+    "curxy#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_curses_method_curxy_0
+  },
+  {
+    "maxxy#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_curses_method_maxxy_0
+  },
+  {
     "addch#1",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_curses_method_addch_1
@@ -131,6 +141,16 @@ built_in_method_s curses_methods[] =
     bic_curses_method_addstr_1
   },
   {
+    "attr#2",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_curses_method_attr_2
+  },
+  {
+    "attrset#1",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_curses_method_attrset_1
+  },
+  {
     "refresh#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_curses_method_refresh_0
@@ -139,6 +159,11 @@ built_in_method_s curses_methods[] =
     "getch#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_curses_method_getch_0
+  },
+  {
+    "getstr#1",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_curses_method_getstr_1
   },
   {
     "to_string#0",
@@ -567,7 +592,15 @@ static_method
 ; @end
 
   // - ERROR -
-  if (move(x,y) == ERR)
+  if (x < 0 || y < 0)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - ERROR -
+  if (move(y,x) == ERR)
   {
     // FIXME TODO throw proper exception
     BIC_TODO_ERROR(__FILE__,__LINE__);
@@ -579,11 +612,57 @@ static_method
   return true;
 }/*}}}*/
 
+bool bic_curses_method_curxy_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  int x;
+  int y;
+
+  getyx(stdscr,y,x);
+
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+  long long int x_value = x;
+  BIC_CREATE_NEW_LOCATION(x_loc,c_bi_class_integer,x_value);
+  array_ptr->push(x_loc);
+
+  long long int y_value = y;
+  BIC_CREATE_NEW_LOCATION(y_loc,c_bi_class_integer,y_value);
+  array_ptr->push(y_loc);
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_curses_method_maxxy_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  int x;
+  int y;
+
+  getmaxyx(stdscr,y,x);
+
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+  long long int x_value = x;
+  BIC_CREATE_NEW_LOCATION(x_loc,c_bi_class_integer,x_value);
+  array_ptr->push(x_loc);
+
+  long long int y_value = y;
+  BIC_CREATE_NEW_LOCATION(y_loc,c_bi_class_integer,y_value);
+  array_ptr->push(y_loc);
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
 bool bic_curses_method_addch_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
-ch:retrieve_integer
+character:retrieve_integer
 >
 class c_bi_class_curses
 method addch
@@ -591,7 +670,7 @@ static_method
 ; @end
 
   // - ERROR -
-  if (addch(ch) == ERR)
+  if (addch(character) == ERR)
   {
     // FIXME TODO throw proper exception
     BIC_TODO_ERROR(__FILE__,__LINE__);
@@ -629,6 +708,55 @@ static_method
   return true;
 }/*}}}*/
 
+bool bic_curses_method_attr_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+offon:retrieve_integer
+attrs:retrieve_integer
+>
+class c_bi_class_curses
+method attr
+static_method
+; @end
+
+  // - ERROR -
+  if ((offon ? attron(attrs) : attroff(attrs)) == ERR)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_curses_method_attrset_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+attrs:retrieve_integer
+>
+class c_bi_class_curses
+method attrset
+static_method
+; @end
+
+  // - ERROR -
+  if (attrset(attrs) == ERR)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
 bool bic_curses_method_refresh_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 
@@ -650,6 +778,43 @@ bool bic_curses_method_getch_0(interpreter_thread_s &it,unsigned stack_base,uli 
   long long int result = getch();
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_curses_method_getstr_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+max_length:retrieve_integer
+>
+class c_bi_class_curses
+method getstr
+static_method
+; @end
+
+  // - ERROR -
+  if (max_length < 1)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->create(max_length);
+
+  // - ERROR -
+  if (getnstr(string_ptr->data,max_length) == ERR)
+  {
+    string_ptr->clear();
+    cfree(string_ptr);
+  }
+
+  // - adjust string size -
+  string_ptr->size = strlen(string_ptr->data) + 1;
+
+  BIC_SET_RESULT_STRING(string_ptr);
 
   return true;
 }/*}}}*/
