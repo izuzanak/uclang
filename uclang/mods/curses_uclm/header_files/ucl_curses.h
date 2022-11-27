@@ -8,5 +8,34 @@ include "script_parser.h"
 
 #include <curses.h>
 
+/*
+ * definition of class curses_c
+ */
+
+class curses_c
+{
+  public:
+  inline curses_c();
+  inline ~curses_c();
+};
+
+/*
+ * inline methods of class curses_c
+ */
+
+inline curses_c::curses_c()
+{/*{{{*/
+  debug_message_2(fprintf(stderr,"libcurses_init()\n"););
+
+  initscr();
+}/*}}}*/
+
+inline curses_c::~curses_c()
+{/*{{{*/
+  debug_message_2(fprintf(stderr,"libcurses_exit()\n"););
+
+  endwin();
+}/*}}}*/
+
 #endif
 

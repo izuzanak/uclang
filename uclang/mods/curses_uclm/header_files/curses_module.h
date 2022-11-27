@@ -39,7 +39,16 @@ void bic_curses_consts(location_array_s &const_locations);
 void bic_curses_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_curses_clear(interpreter_thread_s &it,location_s *location_ptr);
 
-bool bic_curses_method_dummy_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curses_method_cbreak_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curses_method_echo_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curses_method_keypad_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curses_method_nl_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curses_method_raw_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curses_method_move_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curses_method_addch_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curses_method_addstr_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curses_method_refresh_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curses_method_getch_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curses_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curses_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
