@@ -44,7 +44,8 @@ bool bic_curses_method_echo_1(interpreter_thread_s &it,unsigned stack_base,uli *
 bool bic_curses_method_keypad_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curses_method_nl_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curses_method_raw_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_curses_method_move_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curses_method_move_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curses_method_movexy_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curses_method_curxy_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curses_method_maxxy_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curses_method_addch_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);

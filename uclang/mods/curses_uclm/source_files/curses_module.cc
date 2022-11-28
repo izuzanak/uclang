@@ -70,7 +70,7 @@ built_in_class_s curses_class =
 {/*{{{*/
   "Curses",
   c_modifier_public | c_modifier_final,
-  17, curses_methods,
+  18, curses_methods,
   103 + 13, curses_variables,
   bic_curses_consts,
   bic_curses_init,
@@ -116,9 +116,14 @@ built_in_method_s curses_methods[] =
     bic_curses_method_raw_1
   },
   {
-    "move#2",
+    "move#1",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_curses_method_move_2
+    bic_curses_method_move_1
+  },
+  {
+    "movexy#2",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_curses_method_movexy_2
   },
   {
     "curxy#0",
@@ -579,7 +584,56 @@ static_method
   return true;
 }/*}}}*/
 
-bool bic_curses_method_move_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_curses_method_move_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+position:c_bi_class_array
+>
+class c_bi_class_curses
+method move
+static_method
+; @end
+
+  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (array_ptr->used != 2)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  location_s *x_location = (location_s *)it.get_location_value(array_ptr->data[0]);
+  location_s *y_location = (location_s *)it.get_location_value(array_ptr->data[1]);
+
+  long long int x;
+  long long int y;
+
+  // - ERROR -
+  if (!it.retrieve_integer(x_location,x) || x < 0 ||
+      !it.retrieve_integer(y_location,y) || y < 0)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - ERROR -
+  if (move(y,x) == ERR)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_curses_method_movexy_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
@@ -587,7 +641,7 @@ x:retrieve_integer
 y:retrieve_integer
 >
 class c_bi_class_curses
-method move
+method movexy
 static_method
 ; @end
 
