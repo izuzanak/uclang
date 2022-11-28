@@ -156,11 +156,6 @@ built_in_method_s curses_methods[] =
     bic_curses_method_attrset_1
   },
   {
-    "refresh#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_curses_method_refresh_0
-  },
-  {
     "getch#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_curses_method_getch_0
@@ -169,6 +164,11 @@ built_in_method_s curses_methods[] =
     "getstr#1",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_curses_method_getstr_1
+  },
+  {
+    "refresh#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_curses_method_refresh_0
   },
   {
     "to_string#0",
@@ -811,6 +811,62 @@ static_method
   return true;
 }/*}}}*/
 
+bool bic_curses_method_getch_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+
+  // - ERROR -
+  int character;
+  if ((character = getch()) == ERR)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  long long int result = character;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_curses_method_getstr_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+length:retrieve_integer
+>
+class c_bi_class_curses
+method getstr
+static_method
+; @end
+
+  // - ERROR -
+  if (length < 1)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->create(length);
+
+  // - ERROR -
+  if (getnstr(string_ptr->data,length) == ERR)
+  {
+    string_ptr->clear();
+    cfree(string_ptr);
+  }
+
+  // - adjust string size -
+  string_ptr->size = strlen(string_ptr->data) + 1;
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
+}/*}}}*/
+
 bool bic_curses_method_refresh_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 
@@ -823,52 +879,6 @@ bool bic_curses_method_refresh_0(interpreter_thread_s &it,unsigned stack_base,ul
   }
 
   BIC_SET_RESULT_BLANK();
-
-  return true;
-}/*}}}*/
-
-bool bic_curses_method_getch_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  long long int result = getch();
-
-  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
-
-  return true;
-}/*}}}*/
-
-bool bic_curses_method_getstr_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-@begin ucl_params
-<
-max_length:retrieve_integer
->
-class c_bi_class_curses
-method getstr
-static_method
-; @end
-
-  // - ERROR -
-  if (max_length < 1)
-  {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
-    return false;
-  }
-
-  string_s *string_ptr = it.get_new_string_ptr();
-  string_ptr->create(max_length);
-
-  // - ERROR -
-  if (getnstr(string_ptr->data,max_length) == ERR)
-  {
-    string_ptr->clear();
-    cfree(string_ptr);
-  }
-
-  // - adjust string size -
-  string_ptr->size = strlen(string_ptr->data) + 1;
-
-  BIC_SET_RESULT_STRING(string_ptr);
 
   return true;
 }/*}}}*/
