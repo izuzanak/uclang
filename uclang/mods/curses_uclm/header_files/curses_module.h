@@ -18,7 +18,9 @@ extern built_in_class_s *curses_classes[];
 // - CURSES error identifiers -
 enum
 {
-  c_error_CURSES_DUMMY_ERROR = 0,
+  c_error_CURSES_FUNCTION_ERROR = 0,
+  c_error_CURSES_INVALID_XY_POSITION,
+  c_error_CURSES_INVALID_MAX_STRING_LENGTH,
 };
 
 // - CURSES error strings -
@@ -47,13 +49,16 @@ bool bic_curses_method_raw_1(interpreter_thread_s &it,unsigned stack_base,uli *o
 bool bic_curses_method_move_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curses_method_movexy_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curses_method_curxy_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_curses_method_maxxy_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curses_method_sizexy_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curses_method_addch_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curses_method_addstr_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curses_method_attr_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curses_method_attrset_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curses_method_getch_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curses_method_getstr_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curses_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curses_method_clrtoeol_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curses_method_clrtobot_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curses_method_refresh_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curses_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curses_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

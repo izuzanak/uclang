@@ -13,7 +13,7 @@ EXPORT built_in_module_s module =
   curses_classes,         // Classes
 
   0,                      // Error base index
-  1,                      // Error count
+  3,                      // Error count
   curses_error_strings,   // Error strings
 
   curses_initialize,      // Initialize function
@@ -29,7 +29,9 @@ built_in_class_s *curses_classes[] =
 // - CURSES error strings -
 const char *curses_error_strings[] =
 {/*{{{*/
-  "error_CURSES_DUMMY_ERROR",
+  "error_CURSES_FUNCTION_ERROR",
+  "error_CURSES_INVALID_XY_POSITION",
+  "error_CURSES_INVALID_MAX_STRING_LENGTH",
 };/*}}}*/
 
 // - CURSES initialize -
@@ -51,11 +53,25 @@ bool curses_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_CURSES_DUMMY_ERROR:
+  case c_error_CURSES_FUNCTION_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nCurses dummy error\n");
+    fprintf(stderr,"\nCurses, function error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CURSES_INVALID_XY_POSITION:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCurses, invalid x,y position argument/s\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CURSES_INVALID_MAX_STRING_LENGTH:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCurses, invalid maximal string length\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -70,7 +86,7 @@ built_in_class_s curses_class =
 {/*{{{*/
   "Curses",
   c_modifier_public | c_modifier_final,
-  18, curses_methods,
+  21, curses_methods,
   103 + 13, curses_variables,
   bic_curses_consts,
   bic_curses_init,
@@ -131,9 +147,9 @@ built_in_method_s curses_methods[] =
     bic_curses_method_curxy_0
   },
   {
-    "maxxy#0",
+    "sizexy#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_curses_method_maxxy_0
+    bic_curses_method_sizexy_0
   },
   {
     "addch#1",
@@ -164,6 +180,21 @@ built_in_method_s curses_methods[] =
     "getstr#1",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_curses_method_getstr_1
+  },
+  {
+    "clear#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_curses_method_clear_0
+  },
+  {
+    "clrtoeol#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_curses_method_clrtoeol_0
+  },
+  {
+    "clrtobot#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_curses_method_clrtobot_0
   },
   {
     "refresh#0",
@@ -478,8 +509,7 @@ static_method
   // - ERROR -
   if ((value ? cbreak() : nocbreak()) == ERR)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_FUNCTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -502,8 +532,7 @@ static_method
   // - ERROR -
   if ((value ? echo() : noecho()) == ERR)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_FUNCTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -526,8 +555,7 @@ static_method
   // - ERROR -
   if (keypad(stdscr,value != 0) == ERR)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_FUNCTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -550,8 +578,7 @@ static_method
   // - ERROR -
   if ((value ? nl() : nonl()) == ERR)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_FUNCTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -574,8 +601,7 @@ static_method
   // - ERROR -
   if ((value ? raw() : noraw()) == ERR)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_FUNCTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -600,8 +626,7 @@ static_method
   // - ERROR -
   if (array_ptr->used != 2)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_INVALID_XY_POSITION,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -615,16 +640,14 @@ static_method
   if (!it.retrieve_integer(x_location,x) || x < 0 ||
       !it.retrieve_integer(y_location,y) || y < 0)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_INVALID_XY_POSITION,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
   // - ERROR -
   if (move(y,x) == ERR)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_FUNCTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -648,16 +671,14 @@ static_method
   // - ERROR -
   if (x < 0 || y < 0)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_INVALID_XY_POSITION,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
   // - ERROR -
   if (move(y,x) == ERR)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_FUNCTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -689,7 +710,7 @@ bool bic_curses_method_curxy_0(interpreter_thread_s &it,unsigned stack_base,uli 
   return true;
 }/*}}}*/
 
-bool bic_curses_method_maxxy_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_curses_method_sizexy_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   int x;
   int y;
@@ -726,8 +747,7 @@ static_method
   // - ERROR -
   if (addch(character) == ERR)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_FUNCTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -752,8 +772,7 @@ static_method
   // - ERROR -
   if (addnstr(string_ptr->data,string_ptr->size - 1) == ERR)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_FUNCTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -777,8 +796,7 @@ static_method
   // - ERROR -
   if ((offon ? attron(attrs) : attroff(attrs)) == ERR)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_FUNCTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -801,8 +819,7 @@ static_method
   // - ERROR -
   if (attrset(attrs) == ERR)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_FUNCTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -818,8 +835,7 @@ bool bic_curses_method_getch_0(interpreter_thread_s &it,unsigned stack_base,uli 
   int character;
   if ((character = getch()) == ERR)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_FUNCTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -844,8 +860,7 @@ static_method
   // - ERROR -
   if (length < 1)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_INVALID_MAX_STRING_LENGTH,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -867,14 +882,58 @@ static_method
   return true;
 }/*}}}*/
 
+bool bic_curses_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+
+  // - ERROR -
+  if (clear() == ERR)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_FUNCTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_curses_method_clrtoeol_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+
+  // - ERROR -
+  if (clrtoeol() == ERR)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_FUNCTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_curses_method_clrtobot_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+
+  // - ERROR -
+  if (clrtobot() == ERR)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_FUNCTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
 bool bic_curses_method_refresh_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 
   // - ERROR -
   if (refresh() == ERR)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_FUNCTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
