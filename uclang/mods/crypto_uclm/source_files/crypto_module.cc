@@ -1085,7 +1085,7 @@ bool bic_crypto_digest_method_value_0(interpreter_thread_s &it,unsigned stack_ba
   }
 
   // - ERROR -
-  if (EVP_DigestInit_ex(context_copy,EVP_MD_CTX_md(cd_ptr->context),nullptr) != 1)
+  if (EVP_DigestInit_ex(context_copy,EVP_MD_CTX_MD(cd_ptr->context),nullptr) != 1)
   {
     EVP_MD_CTX_destroy(context_copy);
 
@@ -1369,7 +1369,7 @@ bool bic_crypto_digest_sign_method_value_0(interpreter_thread_s &it,unsigned sta
   }
 
   // - ERROR -
-  if (EVP_DigestSignInit(context_copy,nullptr,EVP_MD_CTX_md(cd_ptr->context),nullptr,ck_ptr->pkey) != 1)
+  if (EVP_DigestSignInit(context_copy,nullptr,EVP_MD_CTX_MD(cd_ptr->context),nullptr,ck_ptr->pkey) != 1)
   {
     EVP_MD_CTX_destroy(context_copy);
 
@@ -1563,7 +1563,7 @@ method verify
   }
 
   // - ERROR -
-  if (EVP_DigestVerifyInit(context_copy,nullptr,EVP_MD_CTX_md(cd_ptr->context),nullptr,ck_ptr->pkey) != 1)
+  if (EVP_DigestVerifyInit(context_copy,nullptr,EVP_MD_CTX_MD(cd_ptr->context),nullptr,ck_ptr->pkey) != 1)
   {
     EVP_MD_CTX_destroy(context_copy);
 

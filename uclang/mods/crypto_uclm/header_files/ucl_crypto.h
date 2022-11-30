@@ -11,6 +11,14 @@ include "script_parser.h"
 #include <openssl/pem.h>
 #include <openssl/err.h>
 #include <openssl/rand.h>
+#include <openssl/opensslv.h>
+
+// - replace deprecated function -
+#if OPENSSL_VERSION_MAJOR >= 3
+#define EVP_MD_CTX_MD EVP_MD_CTX_get0_md
+#else
+#define EVP_MD_CTX_MD EVP_MD_CTX_md
+#endif
 
 const char c_base16_map[] = "0123456789abcdef";
 
