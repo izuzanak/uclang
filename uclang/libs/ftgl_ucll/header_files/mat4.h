@@ -44,8 +44,8 @@ extern "C" {
  */
 typedef union
 {
-	float data[16];    /**< All compoments at once     */
-	struct {
+        float data[16];    /**< All compoments at once     */
+        struct {
         float m00, m01, m02, m03;
         float m10, m11, m12, m13;
         float m20, m21, m22, m23;
