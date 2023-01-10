@@ -17,45 +17,17 @@ jobs:
         run: sudo apt-get update
 
       - name: Install libraries
-        run: >
-          sudo apt-get -y install
-          liblua5.2-dev
-          libpq-dev
-          libao-dev
-          libavutil-dev
-          libavformat-dev
-          libavcodec-dev
-          libswscale-dev
-          libdatrie-dev
-          libfann-dev
-          fftw-dev
-          libfftw3-dev
-          libfuse-dev
-          libgmp-dev
-          libmpfr-dev
-          libgstreamer1.0-dev
-          libgsl-dev
-          libgtk-3-dev
-          libmicrohttpd-dev
-          libglm-dev
-          libglib2.0-dev
-          libmono-2.0-dev
-          mono-runtime-sgen
-          libmpg123-dev
-          libnanomsg-dev
-          libopencv-dev
-          libportaudio2
-          libprotobuf-c-dev
-          libraw-dev
-          libsnappy-dev
-          libsqlite3-dev
-          libssh2-1-dev
-          libwebsockets-dev
-          libva-dev
-          libvlc-dev
-          freeglut3-dev
-          libglew-dev
-          libpam0g-dev
+        run: |
+          sudo apt-get -y install libunwind-dev
+          sudo apt-get -y install \
+          liblua5.2-dev libpq-dev libao-dev libavutil-dev libavformat-dev \
+          libavcodec-dev libswscale-dev libdatrie-dev libfann-dev fftw-dev \
+          libfftw3-dev libfuse-dev libgmp-dev libmpfr-dev libgstreamer1.0-dev \
+          libgsl-dev libgtk-3-dev libmicrohttpd-dev libglm-dev libglib2.0-dev \
+          libmono-2.0-dev mono-runtime-sgen libmpg123-dev libnanomsg-dev \
+          libopencv-dev libportaudio2 libprotobuf-c-dev libraw-dev \
+          libsnappy-dev libsqlite3-dev libssh2-1-dev libwebsockets-dev \
+          libva-dev libvlc-dev freeglut3-dev libglew-dev libpam0g-dev
 
       - name: Build and install cont
         run: |
