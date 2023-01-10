@@ -6,17 +6,9 @@
 include "script_parser.h"
 @end
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
 #include <glib.h>
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
-
-#ifdef __cplusplus
-  }
-#endif
 
 /*
  * constants and definitions
