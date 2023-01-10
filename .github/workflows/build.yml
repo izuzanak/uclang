@@ -21,7 +21,6 @@ jobs:
           sudo apt-get -y install
           liblua5.2-dev
           libpq-dev
-          postgresql-server-dev-all
           libao-dev
           libavutil-dev
           libavformat-dev
