@@ -915,7 +915,7 @@ built_in_class_s crypto_digest_class =
   "CryptoDigest",
   c_modifier_public | c_modifier_final,
   6, crypto_digest_methods,
-  6, crypto_digest_variables,
+  5, crypto_digest_variables,
   bic_crypto_digest_consts,
   bic_crypto_digest_init,
   bic_crypto_digest_clear,
@@ -971,7 +971,6 @@ built_in_variable_s crypto_digest_variables[] =
 
   // - crypto digest padding type constants -
   { "PADDING_RSA_PKCS1", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "PADDING_RSA_SSLV23", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "PADDING_RSA_NO", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "PADDING_RSA_PKCS1_OAEP", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "PADDING_RSA_X931", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -984,8 +983,8 @@ void bic_crypto_digest_consts(location_array_s &const_locations)
 
   // - insert crypto digest padding type constants -
   {
-    const_locations.push_blanks(6);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 6);
+    const_locations.push_blanks(5);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 5);
 
 #define CREATE_CRYPTO_DIGEST_PADDING_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -994,7 +993,6 @@ void bic_crypto_digest_consts(location_array_s &const_locations)
   cv_ptr++;
 
     CREATE_CRYPTO_DIGEST_PADDING_TYPE_BIC_STATIC(RSA_PKCS1_PADDING);
-    CREATE_CRYPTO_DIGEST_PADDING_TYPE_BIC_STATIC(RSA_SSLV23_PADDING);
     CREATE_CRYPTO_DIGEST_PADDING_TYPE_BIC_STATIC(RSA_NO_PADDING);
     CREATE_CRYPTO_DIGEST_PADDING_TYPE_BIC_STATIC(RSA_PKCS1_OAEP_PADDING);
     CREATE_CRYPTO_DIGEST_PADDING_TYPE_BIC_STATIC(RSA_X931_PADDING);
