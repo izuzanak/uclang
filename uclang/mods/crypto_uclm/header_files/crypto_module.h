@@ -36,6 +36,9 @@ enum
   c_error_CRYPTO_DIGEST_UPDATE_ERROR,
   c_error_CRYPTO_DIGEST_VALUE_ERROR,
   c_error_CRYPTO_DIGEST_VERIFY_ERROR,
+  c_error_CRYPTO_DIGEST_SET_RSA_PADDING_ERROR,
+  c_error_CRYPTO_DIGEST_SET_RSA_PSS_SALTLEN_ERROR,
+  c_error_CRYPTO_DIGEST_SET_RSA_MGF1_MD_ERROR,
   c_error_CRYPTO_CIPHER_INVALID_ALGORITHM_NAME,
   c_error_CRYPTO_CIPHER_INVALID_KEY_LENGTH,
   c_error_CRYPTO_CIPHER_INVALID_INIT_VECTOR_LENGTH,
@@ -132,6 +135,9 @@ bool bic_crypto_digest_sign_operator_binary_equal(interpreter_thread_s &it,unsig
 bool bic_crypto_digest_sign_method_CryptoDigestSign_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_crypto_digest_sign_method_update_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_crypto_digest_sign_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_digest_sign_method_set_rsa_padding_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_digest_sign_method_set_rsa_pss_saltlen_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_digest_sign_method_set_rsa_mgf1_md_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_crypto_digest_sign_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_crypto_digest_sign_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

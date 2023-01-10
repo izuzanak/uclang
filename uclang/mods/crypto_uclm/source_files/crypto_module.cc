@@ -23,7 +23,7 @@ EXPORT built_in_module_s module =
   crypto_classes,         // Classes
 
   0,                      // Error base index
-  17,                     // Error count
+  20,                     // Error count
   crypto_error_strings,   // Error strings
 
   crypto_initialize,      // Initialize function
@@ -57,6 +57,9 @@ const char *crypto_error_strings[] =
   "error_CRYPTO_DIGEST_UPDATE_ERROR",
   "error_CRYPTO_DIGEST_VALUE_ERROR",
   "error_CRYPTO_DIGEST_VERIFY_ERROR",
+  "error_CRYPTO_DIGEST_SET_RSA_PADDING_ERROR",
+  "error_CRYPTO_DIGEST_SET_RSA_PSS_SALTLEN_ERROR",
+  "error_CRYPTO_DIGEST_SET_RSA_MGF1_MD_ERROR",
   "error_CRYPTO_CIPHER_INVALID_ALGORITHM_NAME",
   "error_CRYPTO_CIPHER_INVALID_KEY_LENGTH",
   "error_CRYPTO_CIPHER_INVALID_INIT_VECTOR_LENGTH",
@@ -171,6 +174,27 @@ bool crypto_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nError while verifying message digest signature\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CRYPTO_DIGEST_SET_RSA_PADDING_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCrypto digest, set RSA padding error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CRYPTO_DIGEST_SET_RSA_PSS_SALTLEN_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCrypto digest, set RSA-PSS salt length error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CRYPTO_DIGEST_SET_RSA_MGF1_MD_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCrypto digest, set MGF1 digest for RSA error\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_CRYPTO_CIPHER_INVALID_ALGORITHM_NAME:
@@ -891,7 +915,7 @@ built_in_class_s crypto_digest_class =
   "CryptoDigest",
   c_modifier_public | c_modifier_final,
   6, crypto_digest_methods,
-  0, crypto_digest_variables,
+  6, crypto_digest_variables,
   bic_crypto_digest_consts,
   bic_crypto_digest_init,
   bic_crypto_digest_clear,
@@ -944,11 +968,39 @@ built_in_method_s crypto_digest_methods[] =
 
 built_in_variable_s crypto_digest_variables[] =
 {/*{{{*/
-  BIC_CLASS_EMPTY_VARIABLES
+
+  // - crypto digest padding type constants -
+  { "PADDING_RSA_PKCS1", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PADDING_RSA_SSLV23", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PADDING_RSA_NO", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PADDING_RSA_PKCS1_OAEP", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PADDING_RSA_X931", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PADDING_RSA_PKCS1_PSS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_crypto_digest_consts(location_array_s &const_locations)
 {/*{{{*/
+
+  // - insert crypto digest padding type constants -
+  {
+    const_locations.push_blanks(6);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 6);
+
+#define CREATE_CRYPTO_DIGEST_PADDING_TYPE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_CRYPTO_DIGEST_PADDING_TYPE_BIC_STATIC(RSA_PKCS1_PADDING);
+    CREATE_CRYPTO_DIGEST_PADDING_TYPE_BIC_STATIC(RSA_SSLV23_PADDING);
+    CREATE_CRYPTO_DIGEST_PADDING_TYPE_BIC_STATIC(RSA_NO_PADDING);
+    CREATE_CRYPTO_DIGEST_PADDING_TYPE_BIC_STATIC(RSA_PKCS1_OAEP_PADDING);
+    CREATE_CRYPTO_DIGEST_PADDING_TYPE_BIC_STATIC(RSA_X931_PADDING);
+    CREATE_CRYPTO_DIGEST_PADDING_TYPE_BIC_STATIC(RSA_PKCS1_PSS_PADDING);
+  }
+
 }/*}}}*/
 
 void bic_crypto_digest_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -1152,7 +1204,7 @@ built_in_class_s crypto_digest_sign_class =
 {/*{{{*/
   "CryptoDigestSign",
   c_modifier_public | c_modifier_final,
-  6, crypto_digest_sign_methods,
+  9, crypto_digest_sign_methods,
   0, crypto_digest_sign_variables,
   bic_crypto_digest_sign_consts,
   bic_crypto_digest_sign_init,
@@ -1191,6 +1243,21 @@ built_in_method_s crypto_digest_sign_methods[] =
     "value#0",
     c_modifier_public | c_modifier_final,
     bic_crypto_digest_sign_method_value_0
+  },
+  {
+    "set_rsa_padding#1",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_digest_sign_method_set_rsa_padding_1
+  },
+  {
+    "set_rsa_pss_saltlen#1",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_digest_sign_method_set_rsa_pss_saltlen_1
+  },
+  {
+    "set_rsa_mgf1_md#1",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_digest_sign_method_set_rsa_mgf1_md_1
   },
   {
     "to_string#0",
@@ -1268,7 +1335,7 @@ macro
   }\
 \
   /* - ERROR - */\
-  if (EVP_Digest ## TYPE ## Init(cd_ptr->context,nullptr,mdt_ptr,nullptr,ck_ptr->pkey) != 1)\
+  if (EVP_Digest ## TYPE ## Init(cd_ptr->context,&cd_ptr->pkey_ctx,mdt_ptr,nullptr,ck_ptr->pkey) != 1)\
   {\
     cd_ptr->clear(it);\
     cfree(cd_ptr);\
@@ -1419,6 +1486,104 @@ bool bic_crypto_digest_sign_method_value_0(interpreter_thread_s &it,unsigned sta
   return true;
 }/*}}}*/
 
+bool bic_crypto_digest_sign_method_set_rsa_padding_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+padding_type:retrieve_integer
+>
+method set_rsa_padding
+; @end
+
+  crypto_digest_key_s *cd_ptr = (crypto_digest_key_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (EVP_PKEY_CTX_set_rsa_padding(cd_ptr->pkey_ctx,padding_type) <= 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_DIGEST_SET_RSA_PADDING_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_digest_sign_method_set_rsa_pss_saltlen_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+saltlen:retrieve_integer
+>
+method set_rsa_pss_saltlen
+; @end
+
+  crypto_digest_key_s *cd_ptr = (crypto_digest_key_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (EVP_PKEY_CTX_set_rsa_pss_saltlen(cd_ptr->pkey_ctx,saltlen) <= 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_DIGEST_SET_RSA_PSS_SALTLEN_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_crypto_digest_sign_method_set_rsa_mgf1_md_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+name_info:ignore
+>
+method set_rsa_mgf1_md
+; @end
+
+  const EVP_MD *mdt_ptr = nullptr;
+
+  if (src_0_location->v_type == c_bi_class_string)
+  {
+    mdt_ptr = EVP_get_digestbyname(((string_s *)src_0_location->v_data_ptr)->data);
+
+    // - ERROR -
+    if (mdt_ptr == nullptr)
+    {
+      exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_DIGEST_INVALID_ALGORITHM_NAME,operands[c_source_pos_idx],src_0_location);
+      return false;
+    }
+  }
+  else if (src_0_location->v_type == c_bi_class_crypto_digest_info)
+  {
+    mdt_ptr = (EVP_MD *)src_0_location->v_data_ptr;
+  }
+
+  // - ERROR -
+  if (mdt_ptr == nullptr)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("set_rsa_mgf1_md#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  crypto_digest_key_s *cd_ptr = (crypto_digest_key_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (EVP_PKEY_CTX_set_rsa_mgf1_md(cd_ptr->pkey_ctx,mdt_ptr) <= 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_DIGEST_SET_RSA_MGF1_MD_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
 bool bic_crypto_digest_sign_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -1442,7 +1607,7 @@ built_in_class_s crypto_digest_verify_class =
 {/*{{{*/
   "CryptoDigestVerify",
   c_modifier_public | c_modifier_final,
-  6, crypto_digest_verify_methods,
+  9, crypto_digest_verify_methods,
   0, crypto_digest_verify_variables,
   bic_crypto_digest_verify_consts,
   bic_crypto_digest_verify_init,
@@ -1481,6 +1646,21 @@ built_in_method_s crypto_digest_verify_methods[] =
     "verify#1",
     c_modifier_public | c_modifier_final,
     bic_crypto_digest_verify_method_verify_1
+  },
+  {
+    "set_rsa_padding#1",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_digest_sign_method_set_rsa_padding_1
+  },
+  {
+    "set_rsa_pss_saltlen#1",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_digest_sign_method_set_rsa_pss_saltlen_1
+  },
+  {
+    "set_rsa_mgf1_md#1",
+    c_modifier_public | c_modifier_final,
+    bic_crypto_digest_sign_method_set_rsa_mgf1_md_1
   },
   {
     "to_string#0",

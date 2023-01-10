@@ -67,6 +67,7 @@ struct crypto_digest_s
 struct crypto_digest_key_s
 {
   EVP_MD_CTX *context;
+  EVP_PKEY_CTX *pkey_ctx;
   location_s *key_location;
 
   inline void init();
