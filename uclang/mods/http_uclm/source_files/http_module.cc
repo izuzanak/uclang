@@ -1647,7 +1647,7 @@ built_in_class_s http_resp_class =
   "HttpResp",
   c_modifier_public | c_modifier_final,
   7, http_resp_methods,
-  2 + 51, http_resp_variables,
+  2 + 50, http_resp_variables,
   bic_http_resp_consts,
   bic_http_resp_init,
   bic_http_resp_clear,
@@ -1745,7 +1745,6 @@ built_in_variable_s http_resp_variables[] =
   { "HTTP_PRECONDITION_FAILED", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HTTP_UNSUPPORTED_MEDIA_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HTTP_EXPECTATION_FAILED", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "HTTP_UNPROCESSABLE_ENTITY", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HTTP_LOCKED", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HTTP_FAILED_DEPENDENCY", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HTTP_UPGRADE_REQUIRED", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -1784,8 +1783,8 @@ void bic_http_resp_consts(location_array_s &const_locations)
 
   // - insert http resp response codes -
   {
-    const_locations.push_blanks(51);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 51);
+    const_locations.push_blanks(50);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 50);
 
 #define CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -1831,7 +1830,6 @@ void bic_http_resp_consts(location_array_s &const_locations)
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_PRECONDITION_FAILED);
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_UNSUPPORTED_MEDIA_TYPE);
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_EXPECTATION_FAILED);
-    CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_UNPROCESSABLE_ENTITY);
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_LOCKED);
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_FAILED_DEPENDENCY);
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_UPGRADE_REQUIRED);

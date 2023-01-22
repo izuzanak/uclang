@@ -221,7 +221,10 @@ gpointer gtk_c::create_g_object(interpreter_thread_s &it,GType g_type,pointer_ar
 
   guint param_cnt = array_ptr->used >> 1;
   const char *names[param_cnt];
-  GValue params[param_cnt];
+  GValue params[param_cnt + 1];
+
+  // - clear parameter values -
+  memset(params,0,sizeof(params));
 
 #define BIC_GTK_CREATE_G_OBJECT_RELEASE_PARAMS() \
 {/*{{{*/\
@@ -239,9 +242,6 @@ gpointer gtk_c::create_g_object(interpreter_thread_s &it,GType g_type,pointer_ar
   // - prepare parameters -
   if (param_cnt > 0)
   {
-    // - clear parameter values -
-    memset(params,0,sizeof(params));
-
     unsigned p_idx = 0;
     pointer *a_ptr = array_ptr->data;
 
