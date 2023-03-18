@@ -1150,8 +1150,7 @@ method ChannelClient
     return false;
   }
 
-
-  // - set server socket options -
+  // - set client socket options -
   int yes = 1;
   setsockopt(fd,SOL_TCP,TCP_NODELAY,&yes,sizeof(int));
 
