@@ -54,7 +54,7 @@ bool bic_mqtt_client_method_get_fd_0(interpreter_thread_s &it,unsigned stack_bas
 bool bic_mqtt_client_method_events_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mqtt_client_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mqtt_client_method_process_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_mqtt_client_method_message_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mqtt_client_method_event_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mqtt_client_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mqtt_client_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mqtt_client_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

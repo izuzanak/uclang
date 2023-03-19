@@ -127,7 +127,7 @@ built_in_class_s mqtt_client_class =
   + 1
 #endif
   , mqtt_client_methods,
-  3, mqtt_client_variables,
+  9, mqtt_client_variables,
   bic_mqtt_client_consts,
   bic_mqtt_client_init,
   bic_mqtt_client_clear,
@@ -184,9 +184,9 @@ built_in_method_s mqtt_client_methods[] =
     bic_mqtt_client_method_process_2
   },
   {
-    "message#1",
+    "event#0",
     c_modifier_public | c_modifier_final,
-    bic_mqtt_client_method_message_1
+    bic_mqtt_client_method_event_0
   },
   {
     "user_data#0",
@@ -211,7 +211,14 @@ built_in_variable_s mqtt_client_variables[] =
   // - mqtt client event type constants -
   { "EVENT_ERROR", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "EVENT_CONNECTED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "EVENT_DISCONNECTED", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "EVENT_DROPPED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  { "EVENT_PUBLISHED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "EVENT_SUBSCRIBED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "EVENT_UNSUBSCRIBED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "EVENT_RECEIVED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "EVENT_PINGRESP", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
 
@@ -220,8 +227,8 @@ void bic_mqtt_client_consts(location_array_s &const_locations)
 
   // - insert mqtt client event type constants -
   {
-    const_locations.push_blanks(3);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 3);
+    const_locations.push_blanks(9);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 9);
 
 #define CREATE_MQTT_CLIENT_EVENT_TYPE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -231,7 +238,13 @@ void bic_mqtt_client_consts(location_array_s &const_locations)
 
     CREATE_MQTT_CLIENT_EVENT_TYPE_BIC_STATIC(c_mqtt_EVENT_ERROR);
     CREATE_MQTT_CLIENT_EVENT_TYPE_BIC_STATIC(c_mqtt_EVENT_CONNECTED);
+    CREATE_MQTT_CLIENT_EVENT_TYPE_BIC_STATIC(c_mqtt_EVENT_DISCONNECTED);
     CREATE_MQTT_CLIENT_EVENT_TYPE_BIC_STATIC(c_mqtt_EVENT_DROPPED);
+    CREATE_MQTT_CLIENT_EVENT_TYPE_BIC_STATIC(c_mqtt_EVENT_PUBLISHED);
+    CREATE_MQTT_CLIENT_EVENT_TYPE_BIC_STATIC(c_mqtt_EVENT_SUBSCRIBED);
+    CREATE_MQTT_CLIENT_EVENT_TYPE_BIC_STATIC(c_mqtt_EVENT_UNSUBSCRIBED);
+    CREATE_MQTT_CLIENT_EVENT_TYPE_BIC_STATIC(c_mqtt_EVENT_RECEIVED);
+    CREATE_MQTT_CLIENT_EVENT_TYPE_BIC_STATIC(c_mqtt_EVENT_PINGRESP);
   }
 
 }/*}}}*/
@@ -270,20 +283,19 @@ bool bic_mqtt_client_method_MqttClient_5(interpreter_thread_s &it,unsigned stack
 <
 ip:c_bi_class_string
 port:retrieve_integer
+client_id:c_bi_class_string
 event_delegate:c_bi_class_delegate
-message_delegate:c_bi_class_delegate
 user_data:ignore
 >
 method MqttClient
 ; @end
 
-  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
-  delegate_s *event_delegate = (delegate_s *)src_2_location->v_data_ptr;
-  delegate_s *message_delegate = (delegate_s *)src_3_location->v_data_ptr;
+  string_s *ip_str_ptr = (string_s *)src_0_location->v_data_ptr;
+  string_s *client_id_str_ptr = (string_s *)src_2_location->v_data_ptr;
+  delegate_s *event_delegate = (delegate_s *)src_3_location->v_data_ptr;
 
   // - ERROR -
-  if (event_delegate->param_cnt != 2 ||
-      message_delegate->param_cnt != 2)
+  if (event_delegate->param_cnt != 1)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_WRONG_DELEGATE_PARAMETER_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -292,10 +304,10 @@ method MqttClient
   sockaddr_in address;
 
   // - retrieve host by name address -
-  struct hostent *host = gethostbyname(string_ptr->data);
+  struct hostent *host = gethostbyname(ip_str_ptr->data);
 
   // - ERROR -
-  if (host == NULL)
+  if (host == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_IP_ADDRESS,operands[c_source_pos_idx],src_0_location);
     return false;
@@ -349,20 +361,21 @@ method MqttClient
   // - set file descriptor -
   cc_ptr->conn_fd = fd;
   cc_ptr->events = POLLIN | POLLOUT | POLLPRI;
-  cc_ptr->connecting = true;
+  cc_ptr->tcp_connecting = true;
 
-  // - retrieve callbacks -
-  src_2_location->v_reference_cnt.atomic_inc();
-  cc_ptr->event_callback = src_2_location;
+  // - set client id -
+  cc_ptr->client_id = *client_id_str_ptr;
 
+  // - retrieve callback -
   src_3_location->v_reference_cnt.atomic_inc();
-  cc_ptr->message_callback = src_3_location;
+  cc_ptr->event_callback = src_3_location;
 
   // - retrieve user data -
   src_4_location->v_reference_cnt.atomic_inc();
   cc_ptr->user_data = src_4_location;
 
-  cc_ptr->conn_index = 0;
+  // - unreferenced conn_location pointer -
+  cc_ptr->conn_location = dst_location;
 
   // - set destination data pointer -
   dst_location->v_data_ptr = (mqtt_conn_s *)cc_ptr;
@@ -508,10 +521,13 @@ method process
     return false;
   }
 
-  if (cc_ptr->connecting)
+  // - set source position for callbacks -
+  cc_ptr->source_pos = operands[c_source_pos_idx];
+
+  if (cc_ptr->tcp_connecting)
   {
-    // - reset connecting flag -
-    cc_ptr->connecting = false;
+    // - reset tcp_connecting flag -
+    cc_ptr->tcp_connecting = false;
 
     int error;
     socklen_t length = sizeof(error);
@@ -542,36 +558,18 @@ method process
       cc_ptr->events = 0;
 
       // - call event error callback -
-      MQTT_CALL_CALLBACK_DELEGATE(cc_ptr->event_callback,operands[c_source_pos_idx],
-        BIC_CREATE_NEW_LOCATION_REFS(event_type_loc,c_bi_class_integer,c_mqtt_EVENT_ERROR,0);
-
-        const unsigned param_cnt = 2;
-        pointer param_data[param_cnt] = {dst_location MP_COMMA event_type_loc};
-      ,
+      cc_ptr->callback_event = c_mqtt_EVENT_ERROR;
+      MQTT_CALL_CALLBACK_DELEGATE(cc_ptr,
         return false;
       );
     }
     else
     {
-      // - set connected flag -
-      cc_ptr->connected = true;
+      // - set tcp_connected flag -
+      cc_ptr->tcp_connected = true;
 
-      // - call event new callback -
-      MQTT_CALL_CALLBACK_DELEGATE(cc_ptr->event_callback,operands[c_source_pos_idx],
-        BIC_CREATE_NEW_LOCATION_REFS(event_type_loc,c_bi_class_integer,c_mqtt_EVENT_CONNECTED,0);
-
-        const unsigned param_cnt = 2;
-        pointer param_data[param_cnt] = {dst_location MP_COMMA event_type_loc};
-      ,
-        cc_ptr->events = 0;
-        return false;
-      );
-
-      // - no messages are queued to send -
-      if (cc_ptr->out_msg_queue.used == 0)
-      {
-        cc_ptr->events = POLLIN | POLLPRI;
-      }
+      // - send connect packet -
+      cc_ptr->send_connect();
     }
   }
   else
@@ -591,14 +589,14 @@ method process
         switch (ssl_action)
         {
         case SSL_ACTION_SEND_MSG:
-          if (!cc_ptr->send_msg(it))
+          if (cc_ptr->send_msg(it))
           {
             // - set drop connection flag -
             drop_connection = true;
           }
           break;
         case SSL_ACTION_RECV_MSG:
-          if (!cc_ptr->recv_msg(it,dst_location,operands[c_source_pos_idx]))
+          if (cc_ptr->recv_msg(it))
           {
             // - set drop connection flag -
             drop_connection = true;
@@ -617,7 +615,7 @@ method process
 
       if (conn_events & POLLOUT)
       {
-        if (!cc_ptr->send_msg(it))
+        if (cc_ptr->send_msg(it))
         {
           // - set drop connection flag -
           drop_connection = true;
@@ -629,7 +627,7 @@ method process
 
       if (conn_events & POLLIN)
       {
-        if (!cc_ptr->recv_msg(it,dst_location,operands[c_source_pos_idx]))
+        if (cc_ptr->recv_msg(it))
         {
           // - set drop connection flag -
           drop_connection = true;
@@ -644,17 +642,15 @@ method process
     {
       cc_ptr->events = 0;
 
-      // - reset connected flag -
-      cc_ptr->connected = false;
+      // - reset tcp_connected flag -
+      cc_ptr->tcp_connected = false;
+
+      // - reset mqtt_connected flag -
+      cc_ptr->mqtt_connected = false;
 
       // - call event drop callback -
-      MQTT_CALL_CALLBACK_DELEGATE(cc_ptr->event_callback,operands[c_source_pos_idx],
-        BIC_CREATE_NEW_LOCATION_REFS(event_type_loc,c_bi_class_integer,c_mqtt_EVENT_DROPPED,0);
-
-        const unsigned param_cnt = 2;
-        pointer param_data[param_cnt] = {dst_location MP_COMMA event_type_loc};
-      ,
-      );
+      cc_ptr->callback_event = c_mqtt_EVENT_DROPPED;
+      MQTT_CALL_CALLBACK_DELEGATE(cc_ptr,);
 
       // - drop due to exception -
       if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
@@ -669,42 +665,23 @@ method process
   return true;
 }/*}}}*/
 
-bool bic_mqtt_client_method_message_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_mqtt_client_method_event_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-@begin ucl_params
-<
-message:c_bi_class_string
->
-method message
-; @end
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
-  string_s *message_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
-  if (!cc_ptr->connected)
+  if (!cc_ptr->callback_event)
   {
-    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_NOT_CONNECTED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
     return false;
   }
 
-  // - create message length string -
-  string_s *length_ptr = it.get_new_string_ptr();
-  length_ptr->setf("0x%8.8x;",message_ptr->size - 1);
+  long long int result = cc_ptr->callback_event;
 
-  BIC_CREATE_NEW_LOCATION(length_location,c_bi_class_string,length_ptr);
-
-  // - insert length of message to queue -
-  cc_ptr->out_msg_queue.insert(length_location);
-
-  // - insert message to queue -
-  src_0_location->v_reference_cnt.atomic_inc();
-  cc_ptr->out_msg_queue.insert(src_0_location);
-
-  // - update connection events -
-  cc_ptr->events = POLLIN | POLLPRI | POLLOUT;
-
-  BIC_SET_RESULT_DESTINATION();
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/

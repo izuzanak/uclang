@@ -393,7 +393,7 @@ method ChannelServer
   struct hostent *host = gethostbyname(string_ptr->data);
 
   // - ERROR -
-  if (host == NULL)
+  if (host == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_INVALID_IP_ADDRESS,operands[c_source_pos_idx],src_0_location);
     return false;
@@ -1120,7 +1120,7 @@ method ChannelClient
   struct hostent *host = gethostbyname(string_ptr->data);
 
   // - ERROR -
-  if (host == NULL)
+  if (host == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_CLIENT_INVALID_IP_ADDRESS,operands[c_source_pos_idx],src_0_location);
     return false;
