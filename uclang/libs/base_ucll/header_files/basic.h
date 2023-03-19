@@ -445,15 +445,16 @@ typedef float bf;
 typedef double bd;
 typedef long double ld;
 
-// - pointer typedef -
+// - pointer typedefs -
 typedef void * pointer;
+typedef char * bc_pointer;
+typedef const char * cbc_pointer;
+typedef void ** pointer_ptr;
+
 @begin
 define pointer basic
-@end
-
-// - pointer_ptr typedef -
-typedef void ** pointer_ptr;
-@begin
+define bc_pointer basic
+define cbc_pointer basic
 define pointer_ptr basic
 @end
 

@@ -10,6 +10,51 @@ mqtt_c g_mqtt;
  * methods of generated structures
  */
 
+// -- usi_queue_s --
+@begin
+methods usi_queue_s
+@end
+
+// -- mqtt_buffer_s --
+@begin
+methods mqtt_buffer_s
+@end
+
+// -- mqtt_prop_s --
+@begin
+methods mqtt_prop_s
+@end
+
+// -- mqtt_prop_array_s --
+@begin
+methods mqtt_prop_array_s
+@end
+
+// -- mqtt_prop_descr_s --
+@begin
+methods mqtt_prop_descr_s
+@end
+
+// -- mqtt_publish_s --
+@begin
+methods mqtt_publish_s
+@end
+
+// -- mqtt_publish_array_s --
+@begin
+methods mqtt_publish_array_s
+@end
+
+// -- mqtt_subscribe_s --
+@begin
+methods mqtt_subscribe_s
+@end
+
+// -- mqtt_subscribe_array_s --
+@begin
+methods mqtt_subscribe_array_s
+@end
+
 // -- mqtt_conn_s --
 @begin
 methods mqtt_conn_s
@@ -231,8 +276,89 @@ bool mqtt_conn_s::recv_msg(interpreter_thread_s &it,location_s *dst_location,uns
   return true;
 }/*}}}*/
 
-// -- mqtt_conn_list_s --
-@begin
-methods mqtt_conn_list_s
-@end
+int mqtt_conn_s::var_byte_enc(uint32_t a_value,bc_array_s *a_trg)
+{/*{{{*/
+  if (a_value < MQTT_VAR_BYTE_INT_MAX_TWO)
+  {
+    if (a_value < MQTT_VAR_BYTE_INT_MAX_ONE)
+    {
+      a_trg->push(a_value);
+    }
+    else
+    {
+      a_trg->push(0x80 | (a_value & 0x7f));
+      a_trg->push(a_value >> 7);
+    }
+  }
+  else
+  {
+    if (a_value < MQTT_VAR_BYTE_INT_MAX_THREE)
+    {
+      a_trg->push(0x80 | (a_value & 0x7f));
+      a_trg->push(0x80 | ((a_value >>= 7) & 0x7f));
+      a_trg->push(a_value >> 7);
+    }
+    else
+    {
+      if (a_value >= MQTT_VAR_BYTE_INT_MAX_FOUR)
+      {
+        return -1;
+      }
+
+      a_trg->push(0x80 | (a_value & 0x7f));
+      a_trg->push(0x80 | ((a_value >>= 7) & 0x7f));
+      a_trg->push(0x80 | ((a_value >>= 7) & 0x7f));
+      a_trg->push(a_value >> 7);
+    }
+  }
+
+  return 0;
+}/*}}}*/
+
+int mqtt_conn_s::var_byte_dec(const char *a_src,const char *a_src_end,
+    const char **a_end,uint32_t *a_trg)
+{/*{{{*/
+
+  // - check buffer size -
+  if (a_src >= a_src_end)
+  {
+    return 1;
+  }
+
+  uint32_t value = 0;
+  uint32_t shift = 0;
+
+  do {
+    value += (*a_src & 0x7f) << shift;
+
+    // - check buffer size and variable byte integer length -
+    if (a_src >= a_src_end || (shift += 7) > 28)
+    {
+      return -1;
+    }
+  } while ((*a_src++ & 0x80) != 0);
+
+  *a_end = a_src;
+  *a_trg = value;
+
+  return 0;
+}/*}}}*/
+
+int mqtt_conn_s::get_next_packet_id(uint16_t *a_packet_id)
+{/*{{{*/
+  if (this->packet_ids.used == 0)
+  {
+    if (this->next_packet_id >= UINT16_MAX)
+    {
+      return -1;
+    }
+
+    *a_packet_id = this->next_packet_id++;
+  }
+  else {
+    *a_packet_id = this->packet_ids.next();
+  }
+
+  return 0;
+}/*}}}*/
 

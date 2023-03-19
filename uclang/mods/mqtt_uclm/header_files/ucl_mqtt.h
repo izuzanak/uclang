@@ -26,16 +26,20 @@ extern unsigned c_bi_class_mqtt_client;
 enum
 {
   c_mqtt_EVENT_ERROR = -1,
-  c_mqtt_EVENT_ACCEPTED,
   c_mqtt_EVENT_CONNECTED,
+  c_mqtt_EVENT_DISCONNECTED,
   c_mqtt_EVENT_DROPPED,
+
+  c_mqtt_EVENT_PUBLISHED,
+  c_mqtt_EVENT_SUBSCRIBED,
+  c_mqtt_EVENT_UNSUBSCRIBED,
+  c_mqtt_EVENT_RECEIVED,
 };
 
-// - special connection indexes -
-enum
-{
-  c_conn_index_CONN_ALL = -1,
-};
+#define MQTT_VAR_BYTE_INT_MAX_ONE   0x80
+#define MQTT_VAR_BYTE_INT_MAX_TWO   0x4000
+#define MQTT_VAR_BYTE_INT_MAX_THREE 0x200000
+#define MQTT_VAR_BYTE_INT_MAX_FOUR  0x10000000
 
 #ifdef UCL_WITH_OPENSSL
 // - ssl repeated actions -
@@ -76,6 +80,85 @@ class mqtt_c
  * definition of generated structures
  */
 
+// -- usi_queue_s --
+@begin
+queue<usi> usi_queue_s;
+@end
+
+// -- mqtt_buffer_s --
+@begin
+struct
+<
+ui:size
+cbc_pointer:data
+>
+mqtt_buffer_s;
+@end
+
+// -- mqtt_prop_s --
+@begin
+struct
+<
+uc:code
+ui:offset
+>
+mqtt_prop_s;
+@end
+
+// -- mqtt_prop_array_s --
+@begin
+array<mqtt_prop_s> mqtt_prop_array_s;
+@end
+
+// -- mqtt_prop_descr_s --
+@begin
+struct
+<
+cbc_pointer:descr
+ui:control_pkt_mask
+uc:code
+uc:type
+>
+mqtt_prop_descr_s;
+@end
+
+// -- mqtt_publish_s --
+@begin
+struct
+<
+usi:packet_id
+bi:released
+string_s:topic
+bc_array_s:payload
+uc:qos
+bi:retain
+bc_array_s:props
+>
+mqtt_publish_s;
+@end
+
+// -- mqtt_publish_array_s --
+@begin
+array<mqtt_publish_s> mqtt_publish_array_s;
+@end
+
+// -- mqtt_subscribe_s --
+@begin
+struct
+<
+usi:packet_id
+string_array_s:filters
+uc:max_qos
+bc_array_s:props
+>
+mqtt_subscribe_s;
+@end
+
+// -- mqtt_subscribe_array_s --
+@begin
+array<mqtt_subscribe_s> mqtt_subscribe_array_s;
+@end
+
 // -- mqtt_conn_s --
 @begin
 struct
@@ -95,6 +178,9 @@ ui:in_msg_length
 
 pointer_queue_s:out_msg_queue
 ui:out_msg_offset
+
+usi:next_packet_id
+usi_queue_s:packet_ids
 >
 
 additions
@@ -109,16 +195,21 @@ additions
   bool send_msg(interpreter_thread_s &it);
   bool recv_msg(interpreter_thread_s &it,location_s *dst_location,unsigned a_source_pos);
 
+  static inline void two_byte_enc(uint16_t a_value,bc_array_s *a_trg);
+  static inline uint16_t two_byte_dec(const char *a_src);
+  static inline void four_byte_enc(uint32_t a_value,bc_array_s *a_trg);
+  static inline uint32_t four_byte_dec(const char *a_src);
+  static inline int var_byte_len(uint32_t a_value,uint32_t *a_trg);
+  static int var_byte_enc(uint32_t a_value,bc_array_s *a_trg);
+  static int var_byte_dec(const char *a_src,const char *a_src_end,const char **a_end,
+      uint32_t *a_trg);
+  int get_next_packet_id(uint16_t *a_packet_id);
+
   inline void init_static();
   inline void clear(interpreter_thread_s &it);
 }
 
 mqtt_conn_s;
-@end
-
-// -- mqtt_conn_list_s --
-@begin
-safe_list<mqtt_conn_s> mqtt_conn_list_s;
 @end
 
 /*
@@ -148,10 +239,95 @@ inline mqtt_c::~mqtt_c()
  * inline methods of generated structures
  */
 
+// -- usi_queue_s --
+@begin
+inlines usi_queue_s
+@end
+
+// -- mqtt_buffer_s --
+@begin
+inlines mqtt_buffer_s
+@end
+
+// -- mqtt_prop_s --
+@begin
+inlines mqtt_prop_s
+@end
+
+// -- mqtt_prop_array_s --
+@begin
+inlines mqtt_prop_array_s
+@end
+
+// -- mqtt_prop_descr_s --
+@begin
+inlines mqtt_prop_descr_s
+@end
+
+// -- mqtt_publish_s --
+@begin
+inlines mqtt_publish_s
+@end
+
+// -- mqtt_publish_array_s --
+@begin
+inlines mqtt_publish_array_s
+@end
+
+// -- mqtt_subscribe_s --
+@begin
+inlines mqtt_subscribe_s
+@end
+
+// -- mqtt_subscribe_array_s --
+@begin
+inlines mqtt_subscribe_array_s
+@end
+
 // -- mqtt_conn_s --
 @begin
 inlines mqtt_conn_s
 @end
+
+inline void mqtt_conn_s::two_byte_enc(uint16_t a_value,bc_array_s *a_trg)
+{/*{{{*/
+  uint16_t net_value = htons(a_value);
+  a_trg->append(2,(char *)&net_value);
+}/*}}}*/
+
+inline uint16_t mqtt_conn_s::two_byte_dec(const char *a_src)
+{/*{{{*/
+  uint16_t net_value;
+  memcpy(&net_value,a_src,2);
+  return ntohs(net_value);
+}/*}}}*/
+
+inline void mqtt_conn_s::four_byte_enc(uint32_t a_value,bc_array_s *a_trg)
+{/*{{{*/
+  uint32_t net_value = htonl(a_value);
+  a_trg->append(4,(char *)&net_value);
+}/*}}}*/
+
+inline uint32_t mqtt_conn_s::four_byte_dec(const char *a_src)
+{/*{{{*/
+  uint32_t net_value;
+  memcpy(&net_value,a_src,4);
+  return ntohl(net_value);
+}/*}}}*/
+
+inline int mqtt_conn_s::var_byte_len(uint32_t a_value,uint32_t *a_trg)
+{/*{{{*/
+  if (a_value >= MQTT_VAR_BYTE_INT_MAX_FOUR)
+  {
+    return -1;
+  }
+
+  *a_trg += a_value < MQTT_VAR_BYTE_INT_MAX_TWO ?
+    (a_value < MQTT_VAR_BYTE_INT_MAX_ONE ? 1 : 2)
+    : (a_value < MQTT_VAR_BYTE_INT_MAX_THREE ? 3 : 4);
+
+  return 0;
+}/*}}}*/
 
 inline void mqtt_conn_s::init_static()
 {/*{{{*/
@@ -173,6 +349,8 @@ inline void mqtt_conn_s::init_static()
 
   in_msg_length = 0;
   out_msg_offset = 0;
+
+  next_packet_id = 1;
 }/*}}}*/
 
 inline void mqtt_conn_s::clear(interpreter_thread_s &it)
@@ -213,11 +391,6 @@ inline void mqtt_conn_s::clear(interpreter_thread_s &it)
   clear();
   init_static();
 }/*}}}*/
-
-// -- mqtt_conn_list_s --
-@begin
-inlines mqtt_conn_list_s
-@end
 
 #endif
 
