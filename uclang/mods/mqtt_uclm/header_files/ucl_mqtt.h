@@ -542,6 +542,8 @@ inline void mqtt_conn_s::init_static()
   will.init_locations();
 
   next_packet_id = 1;
+
+  callback_event = 0;
   packet_id = 0;
 
   mqtt_connected = false;

@@ -12,7 +12,7 @@ EXPORT built_in_module_s module =
   1,                    // Class count
   mqtt_classes,         // Classes
   0,                    // Error base index
-  7,                    // Error count
+  9,                    // Error count
   mqtt_error_strings,   // Error strings
   mqtt_initialize,      // Initialize function
   mqtt_print_exception, // Print exceptions function
@@ -31,9 +31,11 @@ const char *mqtt_error_strings[] =
   "error_MQTT_CLIENT_INVALID_IP_ADDRESS",
   "error_MQTT_CLIENT_CREATE_ERROR",
   "error_MQTT_CLIENT_PROCESS_INVALID_FD",
-  "error_MQTT_CLIENT_NOT_CONNECTED",
   "error_MQTT_CLIENT_SSL_ALREADY_INITIALIZED",
   "error_MQTT_CLIENT_SSL_INIT_ERROR",
+  "error_MQTT_CLIENT_EVENT_PROPERTY_ACCESS_ERROR",
+  "error_MQTT_CLIENT_INVALID_TOPIC_SIZE",
+  "error_MQTT_CLIENT_INVALID_QOS_LEVEL",
 };/*}}}*/
 
 // - MQTT initialize -
@@ -86,13 +88,6 @@ bool mqtt_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nMqttClient, invalid file descriptor to process\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_MQTT_CLIENT_NOT_CONNECTED:
-    fprintf(stderr," ---------------------------------------- \n");
-    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
-    print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nMqttClient is not connected\n");
-    fprintf(stderr," ---------------------------------------- \n");
-    break;
   case c_error_MQTT_CLIENT_SSL_ALREADY_INITIALIZED:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -105,6 +100,27 @@ bool mqtt_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nMqttClient, error while initializing SSL\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_MQTT_CLIENT_EVENT_PROPERTY_ACCESS_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMqttClient, cannot access event property outside of proper event callback\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_MQTT_CLIENT_INVALID_TOPIC_SIZE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMqttClient, invalid topic size\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_MQTT_CLIENT_INVALID_QOS_LEVEL:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMqttClient, invalid QOS level\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -740,8 +756,7 @@ bool bic_mqtt_client_method_event_0(interpreter_thread_s &it,unsigned stack_base
   // - ERROR -
   if (!cc_ptr->callback_event)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_EVENT_PROPERTY_ACCESS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -762,8 +777,7 @@ bool bic_mqtt_client_method_packet_id_0(interpreter_thread_s &it,unsigned stack_
   if (!(cc_ptr->callback_event & (
           c_mqtt_EVENT_PUBLISHED | c_mqtt_EVENT_SUBSCRIBED | c_mqtt_EVENT_UNSUBSCRIBED)))
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_EVENT_PROPERTY_ACCESS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -783,8 +797,7 @@ bool bic_mqtt_client_method_topic_0(interpreter_thread_s &it,unsigned stack_base
   // - ERROR -
   if (!(cc_ptr->callback_event & c_mqtt_EVENT_RECEIVED))
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_EVENT_PROPERTY_ACCESS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -805,8 +818,7 @@ bool bic_mqtt_client_method_payload_0(interpreter_thread_s &it,unsigned stack_ba
   // - ERROR -
   if (!(cc_ptr->callback_event & c_mqtt_EVENT_RECEIVED))
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_EVENT_PROPERTY_ACCESS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -827,8 +839,7 @@ bool bic_mqtt_client_method_retained_0(interpreter_thread_s &it,unsigned stack_b
   // - ERROR -
   if (!(cc_ptr->callback_event & c_mqtt_EVENT_RECEIVED))
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_EVENT_PROPERTY_ACCESS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -868,18 +879,16 @@ method publish
   string_s *topic_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
-  if (topic_ptr->size - 1 > UINT16_MAX)
+  if (topic_ptr->size <= 1 || topic_ptr->size - 1 > UINT16_MAX)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_TOPIC_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
   // - ERROR -
   if (qos < 0 || qos >= 3)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_QOS_LEVEL,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -923,18 +932,16 @@ method publish
   string_s *topic_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
-  if (topic_ptr->size - 1 > UINT16_MAX)
+  if (topic_ptr->size <= 1 || topic_ptr->size - 1 > UINT16_MAX)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_TOPIC_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
   // - ERROR -
   if (qos < 0 || qos >= 3)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_QOS_LEVEL,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
