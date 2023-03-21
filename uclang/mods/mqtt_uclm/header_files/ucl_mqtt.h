@@ -201,12 +201,19 @@ struct
 <
 usi:packet_id
 bi:released
-string_s:topic
-bc_array_s:payload
+pointer:topic_loc
+pointer:payload_loc
 uc:qos
 bi:retain
-bc_array_s:props
+pointer:props_loc
 >
+
+additions
+{
+  inline void init_locations();
+  inline void release_locations(interpreter_thread_s &it);
+}
+
 mqtt_publish_s;
 @end
 
@@ -220,10 +227,17 @@ array<mqtt_publish_s> mqtt_publish_array_s;
 struct
 <
 usi:packet_id
-string_array_s:filters
+pointer:filters_loc
 uc:max_qos
-bc_array_s:props
+pointer:props_loc
 >
+
+additions
+{
+  inline void init_locations();
+  inline void release_locations(interpreter_thread_s &it);
+}
+
 mqtt_subscribe_s;
 @end
 
@@ -313,11 +327,11 @@ additions
   int send_subscribe(mqtt_subscribe_s *a_subscribe);
   int send_unsubscribe(mqtt_subscribe_s *a_subscribe);
 
-  int publish(string_s *a_topic,bc_array_s *a_payload,
-      bc_array_s *a_props,uint8_t a_qos, int a_retain,uint16_t *a_packet_id);
-  int subscribe(string_array_s *a_filters,bc_array_s *a_props,
+  int publish(location_s *a_topic,location_s *a_payload,
+      location_s *a_props,uint8_t a_qos, int a_retain,uint16_t *a_packet_id);
+  int subscribe(location_s *a_filters,location_s *a_props,
       uint8_t a_max_qos,uint16_t *a_packet_id);
-  int unsubscribe( string_array_s *a_filters,bc_array_s *a_props,
+  int unsubscribe(location_s *a_filters,location_s *a_props,
       uint16_t *a_packet_id);
 
   inline void init_static();
@@ -389,6 +403,33 @@ inlines mqtt_prop_descr_s
 inlines mqtt_publish_s
 @end
 
+inline void mqtt_publish_s::init_locations()
+{/*{{{*/
+  topic_loc = nullptr;
+  payload_loc = nullptr;
+  props_loc = nullptr;
+}/*}}}*/
+
+inline void mqtt_publish_s::release_locations(interpreter_thread_s &it)
+{/*{{{*/
+  if (topic_loc != nullptr)
+  {
+    it.release_location_ptr((location_s *)topic_loc);
+  }
+
+  if (payload_loc != nullptr)
+  {
+    it.release_location_ptr((location_s *)payload_loc);
+  }
+
+  if (props_loc != nullptr)
+  {
+    it.release_location_ptr((location_s *)props_loc);
+  }
+
+  init_locations();
+}/*}}}*/
+
 // -- mqtt_publish_array_s --
 @begin
 inlines mqtt_publish_array_s
@@ -398,6 +439,27 @@ inlines mqtt_publish_array_s
 @begin
 inlines mqtt_subscribe_s
 @end
+
+inline void mqtt_subscribe_s::init_locations()
+{/*{{{*/
+  filters_loc = nullptr;
+  props_loc = nullptr;
+}/*}}}*/
+
+inline void mqtt_subscribe_s::release_locations(interpreter_thread_s &it)
+{/*{{{*/
+  if (filters_loc != nullptr)
+  {
+    it.release_location_ptr((location_s *)filters_loc);
+  }
+
+  if (props_loc != nullptr)
+  {
+    it.release_location_ptr((location_s *)props_loc);
+  }
+
+  init_locations();
+}/*}}}*/
 
 // -- mqtt_subscribe_array_s --
 @begin
@@ -413,6 +475,9 @@ inline int mqtt_conn_s::schedule_message(bc_array_s *a_message)
 {/*{{{*/
   out_msg_queue.insert_blank();
   out_msg_queue.last().swap(*a_message);
+
+  // - update connection events -
+  events = POLLIN | POLLPRI | POLLOUT;
 
   return 0;
 }/*}}}*/
@@ -476,6 +541,8 @@ inline void mqtt_conn_s::init_static()
 
   out_msg_offset = 0;
 
+  will.init_locations();
+
   next_packet_id = 1;
   packet_id = 0;
 
@@ -505,6 +572,28 @@ inline void mqtt_conn_s::clear(interpreter_thread_s &it)
   if (user_data != nullptr)
   {
     it.release_location_ptr((location_s *)user_data);
+  }
+
+  will.release_locations(it);
+
+  // - release published locations -
+  if (published.used != 0)
+  {
+    mqtt_publish_s *mp_ptr = published.data;
+    mqtt_publish_s *mp_ptr_end = mp_ptr + published.used;
+    do {
+      mp_ptr->release_locations(it);
+    } while(++mp_ptr < mp_ptr_end);
+  }
+
+  // - release subscribed locations -
+  if (subscribed.used != 0)
+  {
+    mqtt_subscribe_s *ms_ptr = subscribed.data;
+    mqtt_subscribe_s *ms_ptr_end = ms_ptr + subscribed.used;
+    do {
+      ms_ptr->release_locations(it);
+    } while(++ms_ptr < ms_ptr_end);
   }
 
   clear();

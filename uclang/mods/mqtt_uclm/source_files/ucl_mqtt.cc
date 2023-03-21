@@ -115,10 +115,10 @@ methods mqtt_conn_s
 
 int mqtt_conn_s::send_msg(interpreter_thread_s &it)
 {/*{{{*/
-  if (this->out_msg_queue.used != 0)
+  if (out_msg_queue.used != 0)
   {
     bc_array_s *message = out_msg_queue.data + out_msg_queue.begin;
-    size_t write_cnt = message->used - this->out_msg_offset;
+    size_t write_cnt = message->used - out_msg_offset;
 
     // - limit maximal write size -
     if (write_cnt > 4096)
@@ -131,7 +131,7 @@ int mqtt_conn_s::send_msg(interpreter_thread_s &it)
 #ifdef UCL_WITH_OPENSSL
     if (ssl != nullptr)
     {
-      cnt = SSL_write(ssl,message->data + this->out_msg_offset,write_cnt);
+      cnt = SSL_write(ssl,message->data + out_msg_offset,write_cnt);
 
       if (cnt <= 0)
       {
@@ -153,7 +153,7 @@ int mqtt_conn_s::send_msg(interpreter_thread_s &it)
     else
     {
 #endif
-      cnt = write(conn_fd,message->data + this->out_msg_offset,write_cnt);
+      cnt = write(conn_fd,message->data + out_msg_offset,write_cnt);
 
       // - ERROR -
       if (cnt == -1)
@@ -165,13 +165,13 @@ int mqtt_conn_s::send_msg(interpreter_thread_s &it)
 #endif
 
     // - whole message was send -
-    if ((this->out_msg_offset += cnt) >= message->used)
+    if ((out_msg_offset += cnt) >= message->used)
     {
       // - remove message from queue -
       out_msg_queue.next();
 
       // - reset out message offset -
-      this->out_msg_offset = 0;
+      out_msg_offset = 0;
     }
   }
   else
@@ -311,10 +311,10 @@ int mqtt_conn_s::process_properties(uint8_t a_pkt_type,uint32_t a_size,const cha
 {/*{{{*/
 
   // - set properties -
-  this->properties.set(a_size,a_data);
+  properties.set(a_size,a_data);
 
   // - reset property references -
-  this->prop_refs.used = 0;
+  prop_refs.used = 0;
 
   if (a_size > 0)
   {
@@ -332,8 +332,8 @@ int mqtt_conn_s::process_properties(uint8_t a_pkt_type,uint32_t a_size,const cha
       }
 
       // - store property reference -
-      this->prop_refs.push_blank();
-      this->prop_refs.last().set(code,a_data - data_begin);
+      prop_refs.push_blank();
+      prop_refs.last().set(code,a_data - data_begin);
 
       switch (prop_descr->type)
       {
@@ -492,14 +492,14 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
       data += props_length;
 
       // - set mqtt_connected flag -
-      this->mqtt_connected = true;
+      mqtt_connected = true;
 
       // - resend all unacknowledged published packets -
       // - both publish and pubrel packets are resend -
-      if (this->published.used != 0)
+      if (published.used != 0)
       {
-        mqtt_publish_s *p_ptr = this->published.data;
-        mqtt_publish_s *p_ptr_end = p_ptr + this->published.used;
+        mqtt_publish_s *p_ptr = published.data;
+        mqtt_publish_s *p_ptr_end = p_ptr + published.used;
         do {
           if (p_ptr->packet_id != 0)
           {
@@ -534,7 +534,7 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
       uint8_t qos = (pkt_type & 0x06) >> 1;
 
       // - retrieve retained flag -
-      this->retained = pkt_type & 0x01;
+      retained = pkt_type & 0x01;
 
       uint32_t topic_length;
       if (data_end - data < 2
@@ -543,10 +543,10 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
         return MQTT_INVALID_PUBLISH_PACKET;
       }
 
-      this->topic.set(topic_length,data + 2);
+      topic.set(topic_length,data + 2);
       data += 2 + topic_length;
 
-      this->packet_id = 0;
+      packet_id = 0;
       if (qos > 0)
       {
         if (data_end - data < 2)
@@ -554,7 +554,7 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
           return MQTT_INVALID_PUBLISH_PACKET;
         }
 
-        this->packet_id = two_byte_dec(data);
+        packet_id = two_byte_dec(data);
         data += 2;
       }
 
@@ -574,7 +574,7 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
       data += props_length;
 
       uint32_t payload_length = data_end - data;
-      this->payload.set(payload_length,data);
+      payload.set(payload_length,data);
 
       switch (qos)
       {
@@ -603,7 +603,7 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
           buffer.push(0x02); // remaining length
 
           // - packet identifier -
-          two_byte_enc(this->packet_id,&buffer);
+          two_byte_enc(packet_id,&buffer);
 
           cassert(buffer.used == 4);
 
@@ -620,13 +620,13 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
         case 2:
         {
           // - resize pubrec vector -
-          while (this->packet_id >= this->pubrec.used)
+          while (packet_id >= pubrec.used)
           {
-            this->pubrec.push(0);
+            pubrec.push(0);
           }
 
           // - not duplicate or not received yet -
-          if (dup == 0 || !this->pubrec.data[this->packet_id])
+          if (dup == 0 || !pubrec.data[packet_id])
           {
             // - call event received callback -
             callback_event = c_mqtt_EVENT_RECEIVED;
@@ -635,7 +635,7 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
             );
 
             // - mark packet as received -
-            this->pubrec.data[this->packet_id] = 1;
+            pubrec.data[packet_id] = 1;
           }
 
           // - send pubrec packet -
@@ -647,7 +647,7 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
           buffer.push(0x02); // remaining length
 
           // - packet identifier -
-          two_byte_enc(this->packet_id,&buffer);
+          two_byte_enc(packet_id,&buffer);
 
           cassert(buffer.used == 4);
 
@@ -673,7 +673,7 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
       }
 
       // - packet identifier -
-      this->packet_id = two_byte_dec(data);
+      packet_id = two_byte_dec(data);
       data += 2;
 
       // - optional reason code,defaults to 0x00 -
@@ -708,15 +708,15 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
       mqtt_publish_s *publish;
 
       // - unknown packet id or invalid qos -
-      if (this->packet_id >= this->published.used
-          || (publish = &this->published[this->packet_id])->packet_id != this->packet_id
+      if (packet_id >= published.used
+          || (publish = &published[packet_id])->packet_id != packet_id
           || publish->qos != 1)
       {
         return MQTT_INVALID_PUBACK_PACKET;
       }
 
       // - release packet id -
-      this->packet_ids.insert(this->packet_id);
+      packet_ids.insert(packet_id);
 
       // - reset publish data -
       publish->clear();
@@ -738,7 +738,7 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
       }
 
       // - packet identifier -
-      this->packet_id = two_byte_dec(data);
+      packet_id = two_byte_dec(data);
       data += 2;
 
       // - optional reason code,defaults to 0x00 -
@@ -776,8 +776,8 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
       mqtt_publish_s *publish;
 
       // - packet id is ok and qos matches -
-      if (this->packet_id < this->published.used
-          && (publish = &this->published[this->packet_id])->packet_id == this->packet_id
+      if (packet_id < published.used
+          && (publish = &published[packet_id])->packet_id == packet_id
           && publish->qos == 2)
       {
         // - reason code: Success -
@@ -786,13 +786,11 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
         // - mark publish as released -
         publish->released = 1;
 
-        // - release data buffers -
-        publish->topic.clear();
-        publish->payload.clear();
-        publish->props.clear();
+        // - release data locations -
+        publish->release_locations(it);
       }
 
-      if (send_pubrel(this->packet_id,reason_code))
+      if (send_pubrel(packet_id,reason_code))
       {
         return MQTT_SEND_PUBREL_ERROR;
       }
@@ -807,7 +805,7 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
       }
 
       // - packet identifier -
-      this->packet_id = two_byte_dec(data);
+      packet_id = two_byte_dec(data);
       data += 2;
 
       // - optional reason code,defaults to 0x00 -
@@ -843,13 +841,13 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
       uint8_t reason_code = 0x92;
 
       // - packet id is ok -
-      if (this->packet_id < this->pubrec.used && this->pubrec.data[this->packet_id])
+      if (packet_id < pubrec.used && pubrec.data[packet_id])
       {
         // - reason code: Success -
         reason_code = 0x00;
 
         // - reset pubrec flag -
-        this->pubrec.data[this->packet_id] = 0;
+        pubrec.data[packet_id] = 0;
       }
 
       // - send pubcomp packet -
@@ -863,7 +861,7 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
       buffer.push(remaining_length);
 
       // - packet identifier -
-      two_byte_enc(this->packet_id,&buffer);
+      two_byte_enc(packet_id,&buffer);
 
       // - reason code -
       if (reason_code != 0x00)
@@ -892,7 +890,7 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
       }
 
       // - packet identifier -
-      this->packet_id = two_byte_dec(data);
+      packet_id = two_byte_dec(data);
       data += 2;
 
       // - optional reason code,defaults to 0x00 -
@@ -927,15 +925,15 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
       mqtt_publish_s *publish;
 
       // - unknown packet id or invalid qos -
-      if (this->packet_id >= this->published.used
-          || (publish = &this->published[this->packet_id])->packet_id != this->packet_id
+      if (packet_id >= published.used
+          || (publish = &published[packet_id])->packet_id != packet_id
           || publish->qos != 2)
       {
         return MQTT_INVALID_PUBCOMP_PACKET;
       }
 
       // - release packet id -
-      this->packet_ids.insert(this->packet_id);
+      packet_ids.insert(packet_id);
 
       // - reset publish data -
       publish->clear();
@@ -959,14 +957,14 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
       }
 
       // - packet identifier -
-      this->packet_id = two_byte_dec(data);
+      packet_id = two_byte_dec(data);
       data += 2;
 
       mqtt_subscribe_s *subscribe;
 
       // - unknown packet id -
-      if (this->packet_id >= this->subscribed.used
-          || (subscribe = &this->subscribed[this->packet_id])->packet_id != this->packet_id)
+      if (packet_id >= subscribed.used
+          || (subscribe = &subscribed[packet_id])->packet_id != packet_id)
       {
         return MQTT_INVALID_SUBACK_PACKET;
       }
@@ -987,7 +985,8 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
       data += props_length;
 
       // - check reason code count -
-      if ((uint32_t)(data_end - data) != subscribe->filters.used)
+      pointer_array_s *filters_ptr = (pointer_array_s *)((location_s *)subscribe->filters_loc)->v_data_ptr;
+      if ((uint32_t)(data_end - data) != filters_ptr->used)
       {
         return MQTT_INVALID_SUBACK_PACKET;
       }
@@ -1000,7 +999,10 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
         }
       } while (++data < data_end);
 
-      this->packet_ids.insert(this->packet_id);
+      packet_ids.insert(packet_id);
+
+      // - release subscribe locations -
+      subscribe->release_locations(it);
 
       // - reset subscribe data -
       subscribe->clear();
@@ -1024,14 +1026,14 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
       }
 
       // - packet identifier -
-      this->packet_id = two_byte_dec(data);
+      packet_id = two_byte_dec(data);
       data += 2;
 
       mqtt_subscribe_s *unsubscribe;
 
       // - unknown packet id -
-      if (this->packet_id >= this->subscribed.used
-          || (unsubscribe = &this->subscribed[this->packet_id])->packet_id != this->packet_id)
+      if (packet_id >= subscribed.used
+          || (unsubscribe = &subscribed[packet_id])->packet_id != packet_id)
       {
         return MQTT_INVALID_UNSUBACK_PACKET;
       }
@@ -1052,7 +1054,8 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
       data += props_length;
 
       // - check reason code count -
-      if ((uint32_t)(data_end - data) != unsubscribe->filters.used)
+      pointer_array_s *filters_ptr = (pointer_array_s *)((location_s *)unsubscribe->filters_loc)->v_data_ptr;
+      if ((uint32_t)(data_end - data) != filters_ptr->used)
       {
         return MQTT_INVALID_UNSUBACK_PACKET;
       }
@@ -1066,9 +1069,12 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
       } while (++data < data_end);
 
       // - release packet id -
-      this->packet_ids.insert(this->packet_id);
+      packet_ids.insert(packet_id);
 
-      // - reset subscribe data -
+      // - release unsubscribe locations -
+      unsubscribe->release_locations(it);
+
+      // - reset unsubscribe data -
       unsubscribe->clear();
       unsubscribe->packet_id = 0;
 
@@ -1171,17 +1177,17 @@ int mqtt_conn_s::var_byte_dec(const char *a_src,const char *a_src_end,
 
 int mqtt_conn_s::get_next_packet_id(uint16_t *a_packet_id)
 {/*{{{*/
-  if (this->packet_ids.used == 0)
+  if (packet_ids.used == 0)
   {
-    if (this->next_packet_id >= UINT16_MAX)
+    if (next_packet_id >= UINT16_MAX)
     {
       return MQTT_CONN_OUT_OF_PACKET_IDENTIFIERS;
     }
 
-    *a_packet_id = this->next_packet_id++;
+    *a_packet_id = next_packet_id++;
   }
   else {
-    *a_packet_id = this->packet_ids.next();
+    *a_packet_id = packet_ids.next();
   }
 
   return 0;
@@ -1192,37 +1198,45 @@ int mqtt_conn_s::send_connect()
 
   // - send connect packet -
   uint32_t remaining_length = 10 + // variable header
-    this->connect_props.used +     // properties
-    2 + this->client_id.size - 1;  // client id
+    connect_props.used +           // properties
+    2 + client_id.size - 1;        // client id
 
-  if (var_byte_len(this->connect_props.used,&remaining_length))
+  if (var_byte_len(connect_props.used,&remaining_length))
   {
     return MQTT_INVALID_CONNECT_PACKET;
   }
 
-  // - will will be registered by connection -
-  if (this->will.topic.size > 1)
-  {
-    remaining_length += this->will.props.used + // will properties
-      2 + this->will.topic.size - 1 +           // will topic length
-      2 + this->will.payload.used;              // will payload length
+  string_s *will_topic_ptr = nullptr;
+  string_s *will_payload_ptr = nullptr;
+  string_s *will_props_ptr = nullptr;
 
-    if (var_byte_len(this->will.props.used,&remaining_length))
+  // - will will be registered by connection -
+  if (will.topic_loc != nullptr)
+  {
+    will_topic_ptr = (string_s *)((location_s *)will.topic_loc)->v_data_ptr;
+    will_payload_ptr = (string_s *)((location_s *)will.payload_loc)->v_data_ptr;
+    will_props_ptr = (string_s *)((location_s *)will.props_loc)->v_data_ptr;
+
+    remaining_length += will_props_ptr->size - 1 + // will properties
+      2 + will_topic_ptr->size - 1 +               // will topic length
+      2 + will_payload_ptr->size - 1;              // will payload length
+
+    if (var_byte_len(will_props_ptr->size - 1,&remaining_length))
     {
       return MQTT_INVALID_CONNECT_PACKET;
     }
   }
 
   // - user name will be send -
-  if (this->user_name.size > 1)
+  if (user_name.size > 1)
   {
-    remaining_length += 2 + this->user_name.size - 1;
+    remaining_length += 2 + user_name.size - 1;
   }
 
   // - password will be send -
-  if (this->password.size > 1)
+  if (password.size > 1)
   {
-    remaining_length += 2 + this->password.size - 1;
+    remaining_length += 2 + password.size - 1;
   }
 
   uint32_t buffer_size = 1 + remaining_length;
@@ -1249,19 +1263,19 @@ int mqtt_conn_s::send_connect()
 
   // - connect flags -
   buffer.push(
-      (this->user_name.size > 1) << 7 |  // user name flag
-      (this->password.size > 1) << 6 |   // password flag
-      (this->will.topic.size > 1 && this->will.retain) << 5 |    // will retain
-      (this->will.topic.size > 1 ? this->will.qos : 0x00) << 3 | // will qos (2 bits)
-      (this->will.topic.size > 1) << 2 | // will flag
-      1 << 1 |                           // clean start
-      0 << 0);                           // reserved
+      (user_name.size > 1) << 7 |  // user name flag
+      (password.size > 1) << 6 |   // password flag
+      (will.topic_loc != nullptr && will.retain) << 5 |    // will retain
+      (will.topic_loc != nullptr ? will.qos : 0x00) << 3 | // will qos (2 bits)
+      (will.topic_loc != nullptr) << 2 | // will flag
+      1 << 1 |                     // clean start
+      0 << 0);                     // reserved
 
   // - zero keep alive -
   two_byte_enc(0,&buffer);
 
   // - properties length -
-  if (var_byte_enc(this->connect_props.used,&buffer))
+  if (var_byte_enc(connect_props.used,&buffer))
   {
     buffer.clear();
 
@@ -1269,45 +1283,45 @@ int mqtt_conn_s::send_connect()
   }
 
   // - properties -
-  buffer.append(this->connect_props.used,this->connect_props.data);
+  buffer.append(connect_props.used,connect_props.data);
 
   // - client id -
-  two_byte_enc(this->client_id.size - 1,&buffer);
-  buffer.append(this->client_id.size - 1,this->client_id.data);
+  two_byte_enc(client_id.size - 1,&buffer);
+  buffer.append(client_id.size - 1,client_id.data);
 
-  if (this->will.topic.size > 1)
+  if (will.topic_loc != nullptr)
   {
     // - will properties length -
-    if (var_byte_enc(this->will.props.used,&buffer))
+    if (var_byte_enc(will_props_ptr->size - 1,&buffer))
     {
       buffer.clear();
 
       return MQTT_INVALID_CONNECT_PACKET;
     }
 
-    buffer.append(this->will.props.used,this->will.props.data);
+    buffer.append(will_props_ptr->size - 1,will_props_ptr->data);
 
     // - will topic -
-    two_byte_enc(this->will.topic.size - 1,&buffer);
-    buffer.append(this->will.topic.size - 1,this->will.topic.data);
+    two_byte_enc(will_topic_ptr->size - 1,&buffer);
+    buffer.append(will_topic_ptr->size - 1,will_topic_ptr->data);
 
     // - will payload -
-    two_byte_enc(this->will.payload.used,&buffer);
-    buffer.append(this->will.payload.used,this->will.payload.data);
+    two_byte_enc(will_payload_ptr->size - 1,&buffer);
+    buffer.append(will_payload_ptr->size - 1,will_payload_ptr->data);
   }
 
   // - user name -
-  if (this->user_name.size > 1)
+  if (user_name.size > 1)
   {
-    two_byte_enc(this->user_name.size - 1,&buffer);
-    buffer.append(this->user_name.size - 1,this->user_name.data);
+    two_byte_enc(user_name.size - 1,&buffer);
+    buffer.append(user_name.size - 1,user_name.data);
   }
 
   // - password -
-  if (this->password.size > 1)
+  if (password.size > 1)
   {
-    two_byte_enc(this->password.size - 1,&buffer);
-    buffer.append(this->password.size - 1,this->password.data);
+    two_byte_enc(password.size - 1,&buffer);
+    buffer.append(password.size - 1,password.data);
   }
 
   cassert(buffer.used == buffer_size);
@@ -1326,12 +1340,25 @@ int mqtt_conn_s::send_connect()
 
 int mqtt_conn_s::send_publish(mqtt_publish_s *a_publish,int a_dup)
 {/*{{{*/
-  uint32_t remaining_length = 2 + a_publish->topic.size - 1 + // topic length
-    (a_publish->packet_id != 0 ? 2 : 0) +  // packet identifier length
-    a_publish->props.used + // properties length
-    a_publish->payload.used; // payload length
+  string_s *topic_ptr = (string_s *)((location_s *)a_publish->topic_loc)->v_data_ptr;
+  string_s *payload_ptr = (string_s *)((location_s *)a_publish->payload_loc)->v_data_ptr;
 
-  if (var_byte_len(a_publish->props.used,&remaining_length))
+  string_s props;
+  props.init();
+
+  if (a_publish->props_loc != nullptr)
+  {
+    string_s *props_ptr = (string_s *)((location_s *)a_publish->props_loc)->v_data_ptr;
+    props.size = props_ptr->size;
+    props.data = props_ptr->data;
+  }
+
+  uint32_t remaining_length = 2 + topic_ptr->size - 1 + // topic length
+    (a_publish->packet_id != 0 ? 2 : 0) +  // packet identifier length
+    props.size - 1 + // properties length
+    payload_ptr->size - 1; // payload length
+
+  if (var_byte_len(props.size - 1,&remaining_length))
   {
     return MQTT_INVALID_PUBLISH_PACKET;
   }
@@ -1360,8 +1387,8 @@ int mqtt_conn_s::send_publish(mqtt_publish_s *a_publish,int a_dup)
   }
 
   // - topic name -
-  two_byte_enc(a_publish->topic.size - 1,&buffer);
-  buffer.append(a_publish->topic.size - 1,a_publish->topic.data);
+  two_byte_enc(topic_ptr->size - 1,&buffer);
+  buffer.append(topic_ptr->size - 1,topic_ptr->data);
 
   if (a_publish->packet_id != 0) {
     // - packet identifier -
@@ -1369,7 +1396,7 @@ int mqtt_conn_s::send_publish(mqtt_publish_s *a_publish,int a_dup)
   }
 
   // - properties length -
-  if (var_byte_enc(a_publish->props.used,&buffer))
+  if (var_byte_enc(props.size - 1,&buffer))
   {
     buffer.clear();
 
@@ -1377,10 +1404,10 @@ int mqtt_conn_s::send_publish(mqtt_publish_s *a_publish,int a_dup)
   }
 
   // - properties -
-  buffer.append(a_publish->props.used,a_publish->props.data);
+  buffer.append(props.size - 1,props.data);
 
   // - payload -
-  buffer.append(a_publish->payload.used,a_publish->payload.data);
+  buffer.append(payload_ptr->size - 1,payload_ptr->data);
 
   cassert(buffer.used == buffer_size);
 
@@ -1432,21 +1459,36 @@ int mqtt_conn_s::send_pubrel(uint16_t a_packet_id,uint8_t a_reason_code)
 
 int mqtt_conn_s::send_subscribe(mqtt_subscribe_s *a_subscribe)
 {/*{{{*/
-  uint32_t remaining_length = 2 + a_subscribe->props.used;
+  pointer_array_s *filters_ptr = (pointer_array_s *)((location_s *)a_subscribe->filters_loc)->v_data_ptr;
 
-  if (var_byte_len(a_subscribe->props.used,&remaining_length))
+  string_s props;
+  props.init();
+
+  if (a_subscribe->props_loc != nullptr)
+  {
+    string_s *props_ptr = (string_s *)((location_s *)a_subscribe->props_loc)->v_data_ptr;
+    props.size = props_ptr->size;
+    props.data = props_ptr->data;
+  }
+
+  uint32_t remaining_length = 2 + props.size - 1;
+
+  if (var_byte_len(props.size - 1,&remaining_length))
   {
     return MQTT_INVALID_SUBSCRIBE_PACKET;
   }
 
   // - retrieve topic filters length -
-  if (a_subscribe->filters.used != 0)
+  if (filters_ptr->used != 0)
   {
-    string_s *f_ptr = a_subscribe->filters.data;
-    string_s *f_ptr_end = f_ptr + a_subscribe->filters.used;
+    pointer *ptr = filters_ptr->data;
+    pointer *ptr_end = ptr + filters_ptr->used;
     do {
-      remaining_length += 2 + 1 + f_ptr->size - 1;
-    } while(++f_ptr < f_ptr_end);
+      location_s *item_location = interpreter_thread_s::get_location_value(*ptr);
+      string_s *filter_ptr = (string_s *)item_location->v_data_ptr;
+
+      remaining_length += 2 + 1 + filter_ptr->size - 1;
+    } while(++ptr < ptr_end);
   }
 
   uint32_t buffer_size = 1 + remaining_length;
@@ -1470,23 +1512,26 @@ int mqtt_conn_s::send_subscribe(mqtt_subscribe_s *a_subscribe)
   two_byte_enc(a_subscribe->packet_id,&buffer);
 
   // - properties length -
-  if (var_byte_enc(a_subscribe->props.used,&buffer))
+  if (var_byte_enc(props.size - 1,&buffer))
   {
     return MQTT_INVALID_SUBSCRIBE_PACKET;
   }
 
   // - properties -
-  buffer.append(a_subscribe->props.used,a_subscribe->props.data);
+  buffer.append(props.size - 1,props.data);
 
   // - process topic filters -
-  if (a_subscribe->filters.used != 0)
+  if (filters_ptr->used != 0)
   {
-    string_s *f_ptr = a_subscribe->filters.data;
-    string_s *f_ptr_end = f_ptr + a_subscribe->filters.used;
+    pointer *ptr = filters_ptr->data;
+    pointer *ptr_end = ptr + filters_ptr->used;
     do {
+      location_s *item_location = interpreter_thread_s::get_location_value(*ptr);
+      string_s *filter_ptr = (string_s *)item_location->v_data_ptr;
+
       // - topic filter -
-      two_byte_enc(f_ptr->size - 1,&buffer);
-      buffer.append(f_ptr->size - 1,f_ptr->data);
+      two_byte_enc(filter_ptr->size - 1,&buffer);
+      buffer.append(filter_ptr->size - 1,filter_ptr->data);
 
       // - subscription options -
       buffer.push(
@@ -1494,7 +1539,7 @@ int mqtt_conn_s::send_subscribe(mqtt_subscribe_s *a_subscribe)
           1 << 3 |  // retain as published
           0 << 2 |  // no local (off)
           a_subscribe->max_qos);
-    } while(++f_ptr < f_ptr_end);
+    } while(++ptr < ptr_end);
   }
 
   cassert(buffer.used == buffer_size);
@@ -1513,21 +1558,36 @@ int mqtt_conn_s::send_subscribe(mqtt_subscribe_s *a_subscribe)
 
 int mqtt_conn_s::send_unsubscribe(mqtt_subscribe_s *a_subscribe)
 {/*{{{*/
-  uint32_t remaining_length = 2 + a_subscribe->props.used;
+  pointer_array_s *filters_ptr = (pointer_array_s *)((location_s *)a_subscribe->filters_loc)->v_data_ptr;
 
-  if (var_byte_len(a_subscribe->props.used,&remaining_length))
+  string_s props;
+  props.init();
+
+  if (a_subscribe->props_loc != nullptr)
+  {
+    string_s *props_ptr = (string_s *)((location_s *)a_subscribe->props_loc)->v_data_ptr;
+    props.size = props_ptr->size;
+    props.data = props_ptr->data;
+  }
+
+  uint32_t remaining_length = 2 + props.size - 1;
+
+  if (var_byte_len(props.size - 1,&remaining_length))
   {
     return MQTT_INVALID_UNSUBSCRIBE_PACKET;
   }
 
   // Retrieve topic filters length
-  if (a_subscribe->filters.used != 0)
+  if (filters_ptr->used != 0)
   {
-    string_s *f_ptr = a_subscribe->filters.data;
-    string_s *f_ptr_end = f_ptr + a_subscribe->filters.used;
+    pointer *ptr = filters_ptr->data;
+    pointer *ptr_end = ptr + filters_ptr->used;
     do {
-      remaining_length += 2 + f_ptr->size - 1;
-    } while(++f_ptr < f_ptr_end);
+      location_s *item_location = interpreter_thread_s::get_location_value(*ptr);
+      string_s *filter_ptr = (string_s *)item_location->v_data_ptr;
+
+      remaining_length += 2 + filter_ptr->size - 1;
+    } while(++ptr < ptr_end);
   }
 
   uint32_t buffer_size = 1 + remaining_length;
@@ -1554,7 +1614,7 @@ int mqtt_conn_s::send_unsubscribe(mqtt_subscribe_s *a_subscribe)
   two_byte_enc(a_subscribe->packet_id,&buffer);
 
   // Properties length
-  if (var_byte_enc(a_subscribe->props.used,&buffer))
+  if (var_byte_enc(props.size - 1,&buffer))
   {
     buffer.clear();
 
@@ -1562,18 +1622,21 @@ int mqtt_conn_s::send_unsubscribe(mqtt_subscribe_s *a_subscribe)
   }
 
   // Properties
-  buffer.append(a_subscribe->props.used,a_subscribe->props.data);
+  buffer.append(props.size - 1,props.data);
 
   // Process topic filters
-  if (a_subscribe->filters.used != 0)
+  if (filters_ptr->used != 0)
   {
-    string_s *f_ptr = a_subscribe->filters.data;
-    string_s *f_ptr_end = f_ptr + a_subscribe->filters.used;
+    pointer *ptr = filters_ptr->data;
+    pointer *ptr_end = ptr + filters_ptr->used;
     do {
+      location_s *item_location = interpreter_thread_s::get_location_value(*ptr);
+      string_s *filter_ptr = (string_s *)item_location->v_data_ptr;
+
       // Topic filter
-      two_byte_enc(f_ptr->size - 1,&buffer);
-      buffer.append(f_ptr->size - 1,f_ptr->data);
-    } while(++f_ptr < f_ptr_end);
+      two_byte_enc(filter_ptr->size - 1,&buffer);
+      buffer.append(filter_ptr->size - 1,filter_ptr->data);
+    } while(++ptr < ptr_end);
   }
 
   cassert(buffer.used == buffer_size);
@@ -1590,10 +1653,10 @@ int mqtt_conn_s::send_unsubscribe(mqtt_subscribe_s *a_subscribe)
   return 0;
 }/*}}}*/
 
-int mqtt_conn_s::publish(string_s *a_topic,bc_array_s *a_payload,
-    bc_array_s *a_props,uint8_t a_qos, int a_retain,uint16_t *a_packet_id)
+int mqtt_conn_s::publish(location_s *a_topic,location_s *a_payload,
+      location_s *a_props,uint8_t a_qos, int a_retain,uint16_t *a_packet_id)
 {/*{{{*/
-  if (this->mqtt_disconnecting || a_topic->size - 1 > UINT16_MAX || a_qos >= 3)
+  if (mqtt_disconnecting || a_qos >= 3)
   {
     return MQTT_INVALID_PUBLISH_REQUEST;
   }
@@ -1607,25 +1670,38 @@ int mqtt_conn_s::publish(string_s *a_topic,bc_array_s *a_payload,
       return MQTT_CONN_NEXT_PACKET_ID_ERROR;
     }
 
-    while (packet_id >= this->published.used)
+    while (packet_id >= published.used)
     {
-      this->published.push_blank();
-      this->published.last().packet_id = 0;
+      published.push_blank();
+      mqtt_publish_s &publish = published.last();
+      publish.packet_id = 0;
+      publish.init_locations();
     }
 
-    mqtt_publish_s &publish = this->published[packet_id];
+    mqtt_publish_s &publish = published[packet_id];
 
     publish.packet_id = packet_id;
     publish.released = 0;
-    publish.topic.swap(*a_topic);
-    publish.payload.swap(*a_payload);
+
+    a_topic->v_reference_cnt.atomic_inc();
+    publish.topic_loc = a_topic;
+
+    a_payload->v_reference_cnt.atomic_inc();
+    publish.payload_loc = a_payload;
+
     publish.qos = a_qos;
     publish.retain = a_retain;
-    publish.props.swap(*a_props);
 
-    if (this->mqtt_connected)
+    if (a_props != nullptr)
     {
-      if (send_publish(&this->published[packet_id],0))
+      a_props->v_reference_cnt.atomic_inc();
+    }
+
+    publish.props_loc = a_props;
+
+    if (mqtt_connected)
+    {
+      if (send_publish(&published[packet_id],0))
       {
         return MQTT_SEND_PUBLISH_ERROR;
       }
@@ -1633,27 +1709,27 @@ int mqtt_conn_s::publish(string_s *a_topic,bc_array_s *a_payload,
   }
   else
   {
-    if (this->mqtt_connected)
+    if (mqtt_connected)
     {
       mqtt_publish_s publish;
       publish.init();
 
       publish.packet_id = packet_id;
       publish.released = 0;
-      publish.topic.swap(*a_topic);
-      publish.payload.swap(*a_payload);
+      publish.topic_loc = a_topic;
+      publish.payload_loc = a_payload;
       publish.qos = a_qos;
       publish.retain = a_retain;
-      publish.props.swap(*a_props);
+      publish.props_loc = a_props;
 
-      if (send_publish(&publish,0))
-      {
-        publish.clear();
-
-        return MQTT_SEND_PUBLISH_ERROR;
-      }
+      int send_err = send_publish(&publish,0);
 
       publish.clear();
+
+      if (send_err)
+      {
+        return MQTT_SEND_PUBLISH_ERROR;
+      }
     }
   }
 
@@ -1662,10 +1738,10 @@ int mqtt_conn_s::publish(string_s *a_topic,bc_array_s *a_payload,
   return 0;
 }/*}}}*/
 
-int mqtt_conn_s::subscribe(string_array_s *a_filters,bc_array_s *a_props,
+int mqtt_conn_s::subscribe(location_s *a_filters,location_s *a_props,
     uint8_t a_max_qos,uint16_t *a_packet_id)
 {/*{{{*/
-  if (this->mqtt_disconnecting || a_filters->used == 0 || a_max_qos >= 3)
+  if (mqtt_disconnecting || a_max_qos >= 3)
   {
     return MQTT_INVALID_SUBSCRIBE_REQUEST;
   }
@@ -1676,17 +1752,28 @@ int mqtt_conn_s::subscribe(string_array_s *a_filters,bc_array_s *a_props,
     return MQTT_CONN_NEXT_PACKET_ID_ERROR;
   }
 
-  while (packet_id >= this->subscribed.used)
+  while (packet_id >= subscribed.used)
   {
-    this->subscribed.push_blank();
-    this->subscribed.last().packet_id = 0;
+    subscribed.push_blank();
+    mqtt_subscribe_s &subscribe = subscribed.last();
+    subscribe.packet_id = 0;
+    subscribe.init_locations();
   }
 
-  mqtt_subscribe_s &subscribe = this->subscribed[packet_id];
+  mqtt_subscribe_s &subscribe = subscribed[packet_id];
   subscribe.packet_id = packet_id;
-  subscribe.filters.swap(*a_filters);
+
+  a_filters->v_reference_cnt.atomic_inc();
+  subscribe.filters_loc = a_filters;
+
   subscribe.max_qos = a_max_qos;
-  subscribe.props.swap(*a_props);
+
+  if (a_props != nullptr)
+  {
+    a_props->v_reference_cnt.atomic_inc();
+  }
+
+  subscribe.props_loc = a_props;
 
   if (send_subscribe(&subscribe))
   {
@@ -1698,10 +1785,10 @@ int mqtt_conn_s::subscribe(string_array_s *a_filters,bc_array_s *a_props,
   return 0;
 }/*}}}*/
 
-int mqtt_conn_s::unsubscribe( string_array_s *a_filters,bc_array_s *a_props,
+int mqtt_conn_s::unsubscribe(location_s *a_filters,location_s *a_props,
     uint16_t *a_packet_id)
 {/*{{{*/
-  if (this->mqtt_disconnecting || a_filters->used == 0)
+  if (mqtt_disconnecting)
   {
     return MQTT_INVALID_UNSUBSCRIBE_REQUEST;
   }
@@ -1712,17 +1799,28 @@ int mqtt_conn_s::unsubscribe( string_array_s *a_filters,bc_array_s *a_props,
     return MQTT_CONN_NEXT_PACKET_ID_ERROR;
   }
 
-  while (packet_id >= this->subscribed.used)
+  while (packet_id >= subscribed.used)
   {
-    this->subscribed.push_blank();
-    this->subscribed.last().packet_id = 0;
+    subscribed.push_blank();
+    mqtt_subscribe_s &subscribe = subscribed.last();
+    subscribe.packet_id = 0;
+    subscribe.init_locations();
   }
 
-  mqtt_subscribe_s &subscribe = this->subscribed[packet_id];
+  mqtt_subscribe_s &subscribe = subscribed[packet_id];
   subscribe.packet_id = packet_id;
-  subscribe.filters.swap(*a_filters);
+
+  a_filters->v_reference_cnt.atomic_inc();
+  subscribe.filters_loc = a_filters;
+
   subscribe.max_qos = 0;
-  subscribe.props.swap(*a_props);
+
+  if (a_props != nullptr)
+  {
+    a_props->v_reference_cnt.atomic_inc();
+  }
+
+  subscribe.props_loc = a_props;
 
   if (send_unsubscribe(&subscribe))
   {

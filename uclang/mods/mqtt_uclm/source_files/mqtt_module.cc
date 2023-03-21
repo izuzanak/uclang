@@ -122,7 +122,7 @@ built_in_class_s mqtt_client_class =
 {/*{{{*/
   "MqttClient",
   c_modifier_public | c_modifier_final,
-  10
+  17
 #ifdef UCL_WITH_OPENSSL
   + 1
 #endif
@@ -189,9 +189,44 @@ built_in_method_s mqtt_client_methods[] =
     bic_mqtt_client_method_event_0
   },
   {
+    "packet_id#0",
+    c_modifier_public | c_modifier_final,
+    bic_mqtt_client_method_packet_id_0
+  },
+  {
+    "topic#0",
+    c_modifier_public | c_modifier_final,
+    bic_mqtt_client_method_topic_0
+  },
+  {
+    "payload#0",
+    c_modifier_public | c_modifier_final,
+    bic_mqtt_client_method_payload_0
+  },
+  {
+    "retained#0",
+    c_modifier_public | c_modifier_final,
+    bic_mqtt_client_method_retained_0
+  },
+  {
     "user_data#0",
     c_modifier_public | c_modifier_final,
     bic_mqtt_client_method_user_data_0
+  },
+  {
+    "publish#4",
+    c_modifier_public | c_modifier_final,
+    bic_mqtt_client_method_publish_4
+  },
+  {
+    "subscribe#2",
+    c_modifier_public | c_modifier_final,
+    bic_mqtt_client_method_subscribe_2
+  },
+  {
+    "unsubscribe#1",
+    c_modifier_public | c_modifier_final,
+    bic_mqtt_client_method_unsubscribe_1
   },
   {
     "to_string#0",
@@ -686,6 +721,93 @@ bool bic_mqtt_client_method_event_0(interpreter_thread_s &it,unsigned stack_base
   return true;
 }/*}}}*/
 
+bool bic_mqtt_client_method_packet_id_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (!(cc_ptr->callback_event & (
+          c_mqtt_EVENT_PUBLISHED | c_mqtt_EVENT_SUBSCRIBED | c_mqtt_EVENT_UNSUBSCRIBED)))
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  long long int result = cc_ptr->packet_id;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_mqtt_client_method_topic_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (!(cc_ptr->callback_event & c_mqtt_EVENT_RECEIVED))
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->set(cc_ptr->topic.size,cc_ptr->topic.data);
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_mqtt_client_method_payload_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (!(cc_ptr->callback_event & c_mqtt_EVENT_RECEIVED))
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->set(cc_ptr->payload.size,cc_ptr->payload.data);
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_mqtt_client_method_retained_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (!(cc_ptr->callback_event & c_mqtt_EVENT_RECEIVED))
+  {
+    // FIXME TODO throw proper exception ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  long long int result = cc_ptr->retained;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
 bool bic_mqtt_client_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -695,6 +817,162 @@ bool bic_mqtt_client_method_user_data_0(interpreter_thread_s &it,unsigned stack_
   location_s *new_ref_location = it.get_new_reference((location_s **)&cc_ptr->user_data);
 
   BIC_SET_RESULT(new_ref_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_mqtt_client_method_publish_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+topic:c_bi_class_string
+payload:c_bi_class_string
+qos:retrieve_integer
+retain:retrieve_integer
+>
+method publish
+; @end
+
+  mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
+  string_s *topic_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (topic_ptr->size - 1 > UINT16_MAX)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - ERROR -
+  if (qos < 0 || qos >= 3)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - ERROR -
+  uint16_t packet_id;
+  if (cc_ptr->publish(src_0_location,src_1_location,nullptr,qos,!!retain,&packet_id))
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  long long int result = packet_id;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_mqtt_client_method_subscribe_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+filters:c_bi_class_array
+max_qos:retrieve_integer
+>
+method subscribe
+; @end
+
+  mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
+  pointer_array_s *filters_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (filters_ptr->used < 1)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  pointer *ptr = filters_ptr->data;
+  pointer *ptr_end = ptr + filters_ptr->used;
+  do {
+    location_s *item_location = it.get_location_value(*ptr);
+
+    // - ERROR -
+    if (item_location->v_type != c_bi_class_string)
+    {
+      // FIXME TODO throw proper exception
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+      return false;
+    }
+  } while(++ptr < ptr_end);
+
+  // - ERROR -
+  if (max_qos < 0 || max_qos >= 3)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - ERROR -
+  uint16_t packet_id;
+  if (cc_ptr->subscribe(src_0_location,nullptr,max_qos,&packet_id))
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  long long int result = packet_id;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_mqtt_client_method_unsubscribe_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+filters:c_bi_class_array
+>
+method unsubscribe
+; @end
+
+  mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
+  pointer_array_s *filters_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (filters_ptr->used < 1)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  pointer *ptr = filters_ptr->data;
+  pointer *ptr_end = ptr + filters_ptr->used;
+  do {
+    location_s *item_location = it.get_location_value(*ptr);
+
+    // - ERROR -
+    if (item_location->v_type != c_bi_class_string)
+    {
+      // FIXME TODO throw proper exception
+      BIC_TODO_ERROR(__FILE__,__LINE__);
+      return false;
+    }
+  } while(++ptr < ptr_end);
+
+  // - ERROR -
+  uint16_t packet_id;
+  if (cc_ptr->unsubscribe(src_0_location,nullptr,&packet_id))
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  long long int result = packet_id;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
