@@ -116,9 +116,6 @@ enum
   MQTT_PACKET_TYPE_PINGRESP    = 13,
   MQTT_PACKET_TYPE_DISCONNECT  = 14,
   MQTT_PACKET_TYPE_AUTH        = 15,
-
-  // - not mqtt standard -
-  MQTT_PACKET_TYPE_WILLPROPS = 16,
 };/*}}}*/
 
 // - type of control packet data -
@@ -333,6 +330,7 @@ additions
       uint8_t a_max_qos,uint16_t *a_packet_id);
   int unsubscribe(location_s *a_filters,location_s *a_props,
       uint16_t *a_packet_id);
+  int disconnect();
 
   inline void init_static();
   inline void clear(interpreter_thread_s &it);

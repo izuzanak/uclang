@@ -1208,20 +1208,28 @@ int mqtt_conn_s::send_connect()
 
   string_s *will_topic_ptr = nullptr;
   string_s *will_payload_ptr = nullptr;
-  string_s *will_props_ptr = nullptr;
+
+  string_s will_props;
+  will_props.init();
 
   // - will will be registered by connection -
   if (will.topic_loc != nullptr)
   {
     will_topic_ptr = (string_s *)((location_s *)will.topic_loc)->v_data_ptr;
     will_payload_ptr = (string_s *)((location_s *)will.payload_loc)->v_data_ptr;
-    will_props_ptr = (string_s *)((location_s *)will.props_loc)->v_data_ptr;
 
-    remaining_length += will_props_ptr->size - 1 + // will properties
+    if (will.props_loc != nullptr)
+    {
+      string_s *will_props_ptr = (string_s *)((location_s *)will.props_loc)->v_data_ptr;
+      will_props.size = will_props_ptr->size;
+      will_props.data = will_props_ptr->data;
+    }
+
+    remaining_length += will_props.size - 1 + // will properties
       2 + will_topic_ptr->size - 1 +               // will topic length
       2 + will_payload_ptr->size - 1;              // will payload length
 
-    if (var_byte_len(will_props_ptr->size - 1,&remaining_length))
+    if (var_byte_len(will_props.size - 1,&remaining_length))
     {
       return MQTT_INVALID_CONNECT_PACKET;
     }
@@ -1292,14 +1300,14 @@ int mqtt_conn_s::send_connect()
   if (will.topic_loc != nullptr)
   {
     // - will properties length -
-    if (var_byte_enc(will_props_ptr->size - 1,&buffer))
+    if (var_byte_enc(will_props.size - 1,&buffer))
     {
       buffer.clear();
 
       return MQTT_INVALID_CONNECT_PACKET;
     }
 
-    buffer.append(will_props_ptr->size - 1,will_props_ptr->data);
+    buffer.append(will_props.size - 1,will_props.data);
 
     // - will topic -
     two_byte_enc(will_topic_ptr->size - 1,&buffer);
@@ -1828,6 +1836,35 @@ int mqtt_conn_s::unsubscribe(location_s *a_filters,location_s *a_props,
   }
 
   *a_packet_id = packet_id;
+
+  return 0;
+}/*}}}*/
+
+int mqtt_conn_s::disconnect()
+{/*{{{*/
+  if (mqtt_connected)
+  {
+    bc_array_s buffer;
+    buffer.init();
+    buffer.reserve(2);
+
+    buffer.push(0xe0);  // DISCONNECT
+    buffer.push(0x00);  // Remaining length
+
+    cassert(buffer.used == 2);
+
+    if (schedule_message(&buffer))
+    {
+      buffer.clear();
+
+      return MQTT_CONN_SCHEDULE_MESSAGE_ERROR;
+    }
+
+    buffer.clear();
+  }
+
+  mqtt_connected = false;
+  mqtt_disconnecting = true;
 
   return 0;
 }/*}}}*/

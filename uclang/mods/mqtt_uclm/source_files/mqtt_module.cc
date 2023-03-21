@@ -122,7 +122,7 @@ built_in_class_s mqtt_client_class =
 {/*{{{*/
   "MqttClient",
   c_modifier_public | c_modifier_final,
-  17
+  19
 #ifdef UCL_WITH_OPENSSL
   + 1
 #endif
@@ -214,6 +214,11 @@ built_in_method_s mqtt_client_methods[] =
     bic_mqtt_client_method_user_data_0
   },
   {
+    "will#4",
+    c_modifier_public | c_modifier_final,
+    bic_mqtt_client_method_will_4
+  },
+  {
     "publish#4",
     c_modifier_public | c_modifier_final,
     bic_mqtt_client_method_publish_4
@@ -227,6 +232,11 @@ built_in_method_s mqtt_client_methods[] =
     "unsubscribe#1",
     c_modifier_public | c_modifier_final,
     bic_mqtt_client_method_unsubscribe_1
+  },
+  {
+    "disconnect#0",
+    c_modifier_public | c_modifier_final,
+    bic_mqtt_client_method_disconnect_0
   },
   {
     "to_string#0",
@@ -683,14 +693,35 @@ method process
       // - reset mqtt_connected flag -
       cc_ptr->mqtt_connected = false;
 
-      // - call event drop callback -
-      cc_ptr->callback_event = c_mqtt_EVENT_DROPPED;
-      MQTT_CALL_CALLBACK_DELEGATE(cc_ptr,);
-
-      // - drop due to exception -
-      if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+      if (cc_ptr->mqtt_disconnecting)
       {
-        return false;
+        // - reset disconnecting flag -
+        cc_ptr->mqtt_disconnecting = false;
+
+        // - call event drop callback -
+        cc_ptr->callback_event = c_mqtt_EVENT_DISCONNECTED;
+        MQTT_CALL_CALLBACK_DELEGATE(cc_ptr,);
+
+        // - drop due to exception -
+        if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+        {
+          return false;
+        }
+      }
+      else
+      {
+        // - reset disconnecting flag -
+        cc_ptr->mqtt_disconnecting = false;
+
+        // - call event drop callback -
+        cc_ptr->callback_event = c_mqtt_EVENT_DROPPED;
+        MQTT_CALL_CALLBACK_DELEGATE(cc_ptr,);
+
+        // - drop due to exception -
+        if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+        {
+          return false;
+        }
       }
     }
   }
@@ -817,6 +848,61 @@ bool bic_mqtt_client_method_user_data_0(interpreter_thread_s &it,unsigned stack_
   location_s *new_ref_location = it.get_new_reference((location_s **)&cc_ptr->user_data);
 
   BIC_SET_RESULT(new_ref_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_mqtt_client_method_will_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+topic:c_bi_class_string
+payload:c_bi_class_string
+qos:retrieve_integer
+retain:retrieve_integer
+>
+method publish
+; @end
+
+  mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
+  string_s *topic_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (topic_ptr->size - 1 > UINT16_MAX)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - ERROR -
+  if (qos < 0 || qos >= 3)
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  mqtt_publish_s &will = cc_ptr->will;
+
+  // - release last will locations -
+  will.release_locations(it);
+
+  will.packet_id = 1;
+  will.released = 0;
+
+  src_0_location->v_reference_cnt.atomic_inc();
+  will.topic_loc = src_0_location;
+
+  src_1_location->v_reference_cnt.atomic_inc();
+  will.payload_loc = src_1_location;
+
+  will.qos = qos;
+  will.retain = retain;
+
+  will.props_loc = nullptr;
+
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
@@ -973,6 +1059,25 @@ method unsubscribe
   long long int result = packet_id;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_mqtt_client_method_disconnect_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (cc_ptr->disconnect())
+  {
+    // FIXME TODO throw proper exception
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

@@ -60,9 +60,11 @@ bool bic_mqtt_client_method_topic_0(interpreter_thread_s &it,unsigned stack_base
 bool bic_mqtt_client_method_payload_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mqtt_client_method_retained_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mqtt_client_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mqtt_client_method_will_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mqtt_client_method_publish_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mqtt_client_method_subscribe_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mqtt_client_method_unsubscribe_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mqtt_client_method_disconnect_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mqtt_client_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mqtt_client_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
