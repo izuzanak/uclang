@@ -12,7 +12,7 @@ EXPORT built_in_module_s module =
   1,                    // Class count
   mqtt_classes,         // Classes
   0,                    // Error base index
-  9,                    // Error count
+  17,                   // Error count
   mqtt_error_strings,   // Error strings
   mqtt_initialize,      // Initialize function
   mqtt_print_exception, // Print exceptions function
@@ -36,6 +36,14 @@ const char *mqtt_error_strings[] =
   "error_MQTT_CLIENT_EVENT_PROPERTY_ACCESS_ERROR",
   "error_MQTT_CLIENT_INVALID_TOPIC_SIZE",
   "error_MQTT_CLIENT_INVALID_QOS_LEVEL",
+  "error_MQTT_CLIENT_INVALID_FILTER_COUNT",
+  "error_MQTT_CLIENT_INVALID_FILTER_VALUE_TYPE",
+  "error_MQTT_CLIENT_INVALID_FILTER_SIZE",
+  "error_MQTT_CLIENT_INVALID_MAX_QOS_LEVEL",
+  "error_MQTT_CLIENT_PUBLISH_ERROR",
+  "error_MQTT_CLIENT_SUBSCRIBE_ERROR",
+  "error_MQTT_CLIENT_UNSUBSCRIBE_ERROR",
+  "error_MQTT_CLIENT_DISCONNECT_ERROR",
 };/*}}}*/
 
 // - MQTT initialize -
@@ -121,6 +129,62 @@ bool mqtt_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nMqttClient, invalid QOS level\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_MQTT_CLIENT_INVALID_FILTER_COUNT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMqttClient, invalid filter count, expected at least one\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_MQTT_CLIENT_INVALID_FILTER_VALUE_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMqttClient, invalid filter value type\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_MQTT_CLIENT_INVALID_FILTER_SIZE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMqttClient, invalid filter size\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_MQTT_CLIENT_INVALID_MAX_QOS_LEVEL:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMqttClient, invalid maximal QOS level\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_MQTT_CLIENT_PUBLISH_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMqttClient, publish error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_MQTT_CLIENT_SUBSCRIBE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMqttClient, subscribe error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_MQTT_CLIENT_UNSUBSCRIBE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMqttClient, unsubscribe error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_MQTT_CLIENT_DISCONNECT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMqttClient, disconnect error\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -949,8 +1013,7 @@ method publish
   uint16_t packet_id;
   if (cc_ptr->publish(src_0_location,src_1_location,nullptr,qos,!!retain,&packet_id))
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_PUBLISH_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -977,8 +1040,7 @@ method subscribe
   // - ERROR -
   if (filters_ptr->used < 1)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_FILTER_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -990,17 +1052,25 @@ method subscribe
     // - ERROR -
     if (item_location->v_type != c_bi_class_string)
     {
-      // FIXME TODO throw proper exception
-      BIC_TODO_ERROR(__FILE__,__LINE__);
+      exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_FILTER_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
+
+    string_s *filter_ptr = (string_s *)item_location->v_data_ptr;
+
+    // - ERROR -
+    if (filter_ptr->size <= 1 || filter_ptr->size - 1 > UINT16_MAX)
+    {
+      exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_FILTER_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
   } while(++ptr < ptr_end);
 
   // - ERROR -
   if (max_qos < 0 || max_qos >= 3)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_MAX_QOS_LEVEL,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1008,8 +1078,7 @@ method subscribe
   uint16_t packet_id;
   if (cc_ptr->subscribe(src_0_location,nullptr,max_qos,&packet_id))
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_SUBSCRIBE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1035,8 +1104,7 @@ method unsubscribe
   // - ERROR -
   if (filters_ptr->used < 1)
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_FILTER_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1048,18 +1116,26 @@ method unsubscribe
     // - ERROR -
     if (item_location->v_type != c_bi_class_string)
     {
-      // FIXME TODO throw proper exception
-      BIC_TODO_ERROR(__FILE__,__LINE__);
+      exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_FILTER_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
+
+    string_s *filter_ptr = (string_s *)item_location->v_data_ptr;
+
+    // - ERROR -
+    if (filter_ptr->size <= 1 || filter_ptr->size - 1 > UINT16_MAX)
+    {
+      exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_FILTER_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
   } while(++ptr < ptr_end);
 
   // - ERROR -
   uint16_t packet_id;
   if (cc_ptr->unsubscribe(src_0_location,nullptr,&packet_id))
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_UNSUBSCRIBE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -1079,8 +1155,7 @@ bool bic_mqtt_client_method_disconnect_0(interpreter_thread_s &it,unsigned stack
   // - ERROR -
   if (cc_ptr->disconnect())
   {
-    // FIXME TODO throw proper exception
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_DISCONNECT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
