@@ -207,7 +207,7 @@ built_in_class_s mqtt_client_class =
   + 1
 #endif
   , mqtt_client_methods,
-  9, mqtt_client_variables,
+  9 + 27, mqtt_client_variables,
   bic_mqtt_client_consts,
   bic_mqtt_client_init,
   bic_mqtt_client_clear,
@@ -345,6 +345,35 @@ built_in_variable_s mqtt_client_variables[] =
   { "EVENT_RECEIVED", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "EVENT_PINGRESP", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
+  // - mqtt property identifiers -
+  { "PROP_PAYLOAD_FORMAT_INDICATOR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_MESSAGE_EXPIRY_INTERVAL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_CONTENT_TYPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_RESPONSE_TOPIC", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_CORRELATION_DATA", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_SUBSCRIPTION_IDENTIFIER", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_SESSION_EXPIRY_INTERVAL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_ASSIGNED_CLIENT_IDENTIFIER", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_SERVER_KEEP_ALIVE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_AUTHENTICATION_METHOD", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_AUTHENTICATION_DATA", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_REQUEST_PROBLEM_INFORMATION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_WILL_DELAY_INTERVAL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_REQUEST_RESPONSE_INFORMATION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_RESPONSE_INFORMATION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_SERVER_REFERENCE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_REASON_STRING", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_RECEIVE_MAXIMUM", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_TOPIC_ALIAS_MAXIMUM", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_TOPIC_ALIAS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_MAXIMUM_QOS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_RETAIN_AVAILABLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_USER_PROPERTY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_MAXIMUM_PACKET_SIZE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_WILDCARD_SUBSCRIPTION_AVAILABLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_SUBSCRIPTION_IDENTIFIER_AVAILABLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "PROP_SHARED_SUBSCRIPTION_AVAILABLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_mqtt_client_consts(location_array_s &const_locations)
@@ -370,6 +399,46 @@ void bic_mqtt_client_consts(location_array_s &const_locations)
     CREATE_MQTT_CLIENT_EVENT_TYPE_BIC_STATIC(c_mqtt_EVENT_UNSUBSCRIBED);
     CREATE_MQTT_CLIENT_EVENT_TYPE_BIC_STATIC(c_mqtt_EVENT_RECEIVED);
     CREATE_MQTT_CLIENT_EVENT_TYPE_BIC_STATIC(c_mqtt_EVENT_PINGRESP);
+  }
+
+  // - insert mqtt property identifiers -
+  {
+    const_locations.push_blanks(27);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 27);
+
+#define CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_PAYLOAD_FORMAT_INDICATOR);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_MESSAGE_EXPIRY_INTERVAL);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_CONTENT_TYPE);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_RESPONSE_TOPIC);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_CORRELATION_DATA);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_SUBSCRIPTION_IDENTIFIER);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_SESSION_EXPIRY_INTERVAL);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_ASSIGNED_CLIENT_IDENTIFIER);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_SERVER_KEEP_ALIVE);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_AUTHENTICATION_METHOD);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_AUTHENTICATION_DATA);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_REQUEST_PROBLEM_INFORMATION);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_WILL_DELAY_INTERVAL);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_REQUEST_RESPONSE_INFORMATION);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_RESPONSE_INFORMATION);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_SERVER_REFERENCE);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_REASON_STRING);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_RECEIVE_MAXIMUM);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_TOPIC_ALIAS_MAXIMUM);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_TOPIC_ALIAS);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_MAXIMUM_QOS);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_RETAIN_AVAILABLE);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_USER_PROPERTY);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_MAXIMUM_PACKET_SIZE);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_WILDCARD_SUBSCRIPTION_AVAILABLE);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_SUBSCRIPTION_IDENTIFIER_AVAILABLE);
+    CREATE_MQTT_CLIENT_PROP_ID_BIC_STATIC(PROP_SHARED_SUBSCRIPTION_AVAILABLE);
   }
 
 }/*}}}*/
@@ -493,11 +562,11 @@ method MqttClient
 
   // - retrieve callback -
   src_3_location->v_reference_cnt.atomic_inc();
-  cc_ptr->event_callback = src_3_location;
+  cc_ptr->event_callback_loc = src_3_location;
 
   // - retrieve user data -
   src_4_location->v_reference_cnt.atomic_inc();
-  cc_ptr->user_data = src_4_location;
+  cc_ptr->user_data_loc = src_4_location;
 
   // - unreferenced conn_location pointer -
   cc_ptr->conn_location = dst_location;
@@ -920,7 +989,7 @@ bool bic_mqtt_client_method_user_data_0(interpreter_thread_s &it,unsigned stack_
 
   mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
 
-  location_s *new_ref_location = it.get_new_reference((location_s **)&cc_ptr->user_data);
+  location_s *new_ref_location = it.get_new_reference((location_s **)&cc_ptr->user_data_loc);
 
   BIC_SET_RESULT(new_ref_location);
 
@@ -936,7 +1005,7 @@ payload:c_bi_class_string
 qos:retrieve_integer
 retain:retrieve_integer
 >
-method publish
+method will
 ; @end
 
   mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;

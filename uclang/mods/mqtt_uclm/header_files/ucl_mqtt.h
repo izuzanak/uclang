@@ -69,7 +69,7 @@ enum
 
 #define MQTT_CALL_CALLBACK_DELEGATE(NAME,ERROR_CODE) \
 {/*{{{*/\
-  delegate_s *delegate_ptr = (delegate_s *)((location_s *)NAME->event_callback)->v_data_ptr;\
+  delegate_s *delegate_ptr = (delegate_s *)((location_s *)NAME->event_callback_loc)->v_data_ptr;\
 \
   /* - call delegate method - */\
   location_s *trg_location = nullptr;\
@@ -96,6 +96,38 @@ enum
   c_mqtt_EVENT_UNSUBSCRIBED,
   c_mqtt_EVENT_RECEIVED,
   c_mqtt_EVENT_PINGRESP,
+};/*}}}*/
+
+// - property identifiers -
+enum
+{/*{{{*/
+  PROP_PAYLOAD_FORMAT_INDICATOR          = 0x01,
+  PROP_MESSAGE_EXPIRY_INTERVAL           = 0x02,
+  PROP_CONTENT_TYPE                      = 0x03,
+  PROP_RESPONSE_TOPIC                    = 0x08,
+  PROP_CORRELATION_DATA                  = 0x09,
+  PROP_SUBSCRIPTION_IDENTIFIER           = 0x0b,
+  PROP_SESSION_EXPIRY_INTERVAL           = 0x11,
+  PROP_ASSIGNED_CLIENT_IDENTIFIER        = 0x12,
+  PROP_SERVER_KEEP_ALIVE                 = 0x13,
+  PROP_AUTHENTICATION_METHOD             = 0x15,
+  PROP_AUTHENTICATION_DATA               = 0x16,
+  PROP_REQUEST_PROBLEM_INFORMATION       = 0x17,
+  PROP_WILL_DELAY_INTERVAL               = 0x18,
+  PROP_REQUEST_RESPONSE_INFORMATION      = 0x19,
+  PROP_RESPONSE_INFORMATION              = 0x1a,
+  PROP_SERVER_REFERENCE                  = 0x1c,
+  PROP_REASON_STRING                     = 0x1f,
+  PROP_RECEIVE_MAXIMUM                   = 0x21,
+  PROP_TOPIC_ALIAS_MAXIMUM               = 0x22,
+  PROP_TOPIC_ALIAS                       = 0x23,
+  PROP_MAXIMUM_QOS                       = 0x24,
+  PROP_RETAIN_AVAILABLE                  = 0x25,
+  PROP_USER_PROPERTY                     = 0x26,
+  PROP_MAXIMUM_PACKET_SIZE               = 0x27,
+  PROP_WILDCARD_SUBSCRIPTION_AVAILABLE   = 0x28,
+  PROP_SUBSCRIPTION_IDENTIFIER_AVAILABLE = 0x29,
+  PROP_SHARED_SUBSCRIPTION_AVAILABLE     = 0x2a,
 };/*}}}*/
 
 // - type of control packet -
@@ -192,6 +224,9 @@ uc:type
 mqtt_prop_descr_s;
 @end
 
+const unsigned c_packet_prop_cnt = 43;
+extern const mqtt_prop_descr_s g_mqtt_packet_props[c_packet_prop_cnt];
+
 // -- mqtt_publish_s --
 @begin
 struct
@@ -253,8 +288,8 @@ ui:events
 bool:tcp_connecting
 bool:tcp_connected
 
-pointer:event_callback
-pointer:user_data
+pointer:event_callback_loc
+pointer:user_data_loc
 
 pointer:conn_location
 ui:source_pos
@@ -264,7 +299,7 @@ bc_array_s:in_msg
 bc_array_queue_s:out_msg_queue
 ui:out_msg_offset
 
-bc_array_s:connect_props
+pointer:connect_props_loc
 mqtt_publish_s:will
 string_s:user_name
 string_s:password
@@ -534,8 +569,9 @@ inline void mqtt_conn_s::init_static()
   tcp_connecting = false;
   tcp_connected = false;
 
-  event_callback = nullptr;
-  user_data = nullptr;
+  event_callback_loc = nullptr;
+  user_data_loc = nullptr;
+  connect_props_loc = nullptr;
 
   out_msg_offset = 0;
 
@@ -564,14 +600,19 @@ inline void mqtt_conn_s::clear(interpreter_thread_s &it)
     close(conn_fd);
   }
 
-  if (event_callback != nullptr)
+  if (event_callback_loc != nullptr)
   {
-    it.release_location_ptr((location_s *)event_callback);
+    it.release_location_ptr((location_s *)event_callback_loc);
   }
 
-  if (user_data != nullptr)
+  if (user_data_loc != nullptr)
   {
-    it.release_location_ptr((location_s *)user_data);
+    it.release_location_ptr((location_s *)user_data_loc);
+  }
+
+  if (connect_props_loc != nullptr)
+  {
+    it.release_location_ptr((location_s *)connect_props_loc);
   }
 
   will.release_locations(it);

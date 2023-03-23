@@ -6,8 +6,7 @@ include "ucl_mqtt.h"
 // - mqtt global init object -
 mqtt_c g_mqtt;
 
-#define PACKET_PROP_CNT 43
-const mqtt_prop_descr_s g_mqtt_packet_props[PACKET_PROP_CNT] =
+const mqtt_prop_descr_s g_mqtt_packet_props[c_packet_prop_cnt] =
 {/*{{{*/
   {""                                 , 0x000000, 0xff, 0},
   {"Payload Format Indicator"         , 0x010008, 0x01, MQTT_DATA_TYPE_BYTE},
@@ -325,7 +324,7 @@ int mqtt_conn_s::process_properties(uint8_t a_pkt_type,uint32_t a_size,const cha
       uint8_t code = a_data[0];
 
       const mqtt_prop_descr_s *prop_descr;
-      if (code >= PACKET_PROP_CNT || (prop_descr = &g_mqtt_packet_props[code])->code != code
+      if (code >= c_packet_prop_cnt || (prop_descr = &g_mqtt_packet_props[code])->code != code
           || (prop_descr->control_pkt_mask & (1 << (a_pkt_type >> 4))) == 0)
       {
         return MQTT_INVALID_CONTROL_PACKET_PROPERTY;
@@ -1195,13 +1194,22 @@ int mqtt_conn_s::get_next_packet_id(uint16_t *a_packet_id)
 
 int mqtt_conn_s::send_connect()
 {/*{{{*/
+  string_s connect_props;
+  connect_props.init();
+
+  if (connect_props_loc != nullptr)
+  {
+    string_s *connect_props_ptr = (string_s *)((location_s *)connect_props_loc)->v_data_ptr;
+    connect_props.size = connect_props_ptr->size;
+    connect_props.data = connect_props_ptr->data;
+  }
 
   // - send connect packet -
   uint32_t remaining_length = 10 + // variable header
-    connect_props.used +           // properties
+    connect_props.size - 1 +           // properties
     2 + client_id.size - 1;        // client id
 
-  if (var_byte_len(connect_props.used,&remaining_length))
+  if (var_byte_len(connect_props.size - 1,&remaining_length))
   {
     return MQTT_INVALID_CONNECT_PACKET;
   }
@@ -1283,7 +1291,7 @@ int mqtt_conn_s::send_connect()
   two_byte_enc(0,&buffer);
 
   // - properties length -
-  if (var_byte_enc(connect_props.used,&buffer))
+  if (var_byte_enc(connect_props.size - 1,&buffer))
   {
     buffer.clear();
 
@@ -1291,7 +1299,7 @@ int mqtt_conn_s::send_connect()
   }
 
   // - properties -
-  buffer.append(connect_props.used,connect_props.data);
+  buffer.append(connect_props.size - 1,connect_props.data);
 
   // - client id -
   two_byte_enc(client_id.size - 1,&buffer);
