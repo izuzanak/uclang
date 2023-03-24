@@ -1216,28 +1216,20 @@ int mqtt_conn_s::send_connect()
 
   string_s *will_topic_ptr = nullptr;
   string_s *will_payload_ptr = nullptr;
-
-  string_s will_props;
-  will_props.init();
+  string_s *will_props_ptr = nullptr;
 
   // - will will be registered by connection -
   if (will.topic_loc != nullptr)
   {
     will_topic_ptr = (string_s *)((location_s *)will.topic_loc)->v_data_ptr;
     will_payload_ptr = (string_s *)((location_s *)will.payload_loc)->v_data_ptr;
+    will_props_ptr = (string_s *)((location_s *)will.props_loc)->v_data_ptr;
 
-    if (will.props_loc != nullptr)
-    {
-      string_s *will_props_ptr = (string_s *)((location_s *)will.props_loc)->v_data_ptr;
-      will_props.size = will_props_ptr->size;
-      will_props.data = will_props_ptr->data;
-    }
-
-    remaining_length += will_props.size - 1 + // will properties
+    remaining_length += will_props_ptr->size - 1 + // will properties
       2 + will_topic_ptr->size - 1 +               // will topic length
       2 + will_payload_ptr->size - 1;              // will payload length
 
-    if (var_byte_len(will_props.size - 1,&remaining_length))
+    if (var_byte_len(will_props_ptr->size - 1,&remaining_length))
     {
       return MQTT_INVALID_CONNECT_PACKET;
     }
@@ -1308,14 +1300,14 @@ int mqtt_conn_s::send_connect()
   if (will.topic_loc != nullptr)
   {
     // - will properties length -
-    if (var_byte_enc(will_props.size - 1,&buffer))
+    if (var_byte_enc(will_props_ptr->size - 1,&buffer))
     {
       buffer.clear();
 
       return MQTT_INVALID_CONNECT_PACKET;
     }
 
-    buffer.append(will_props.size - 1,will_props.data);
+    buffer.append(will_props_ptr->size - 1,will_props_ptr->data);
 
     // - will topic -
     two_byte_enc(will_topic_ptr->size - 1,&buffer);
@@ -1358,23 +1350,14 @@ int mqtt_conn_s::send_publish(mqtt_publish_s *a_publish,int a_dup)
 {/*{{{*/
   string_s *topic_ptr = (string_s *)((location_s *)a_publish->topic_loc)->v_data_ptr;
   string_s *payload_ptr = (string_s *)((location_s *)a_publish->payload_loc)->v_data_ptr;
-
-  string_s props;
-  props.init();
-
-  if (a_publish->props_loc != nullptr)
-  {
-    string_s *props_ptr = (string_s *)((location_s *)a_publish->props_loc)->v_data_ptr;
-    props.size = props_ptr->size;
-    props.data = props_ptr->data;
-  }
+  string_s *props_ptr = (string_s *)((location_s *)a_publish->props_loc)->v_data_ptr;
 
   uint32_t remaining_length = 2 + topic_ptr->size - 1 + // topic length
     (a_publish->packet_id != 0 ? 2 : 0) +  // packet identifier length
-    props.size - 1 + // properties length
+    props_ptr->size - 1 + // properties length
     payload_ptr->size - 1; // payload length
 
-  if (var_byte_len(props.size - 1,&remaining_length))
+  if (var_byte_len(props_ptr->size - 1,&remaining_length))
   {
     return MQTT_INVALID_PUBLISH_PACKET;
   }
@@ -1412,7 +1395,7 @@ int mqtt_conn_s::send_publish(mqtt_publish_s *a_publish,int a_dup)
   }
 
   // - properties length -
-  if (var_byte_enc(props.size - 1,&buffer))
+  if (var_byte_enc(props_ptr->size - 1,&buffer))
   {
     buffer.clear();
 
@@ -1420,7 +1403,7 @@ int mqtt_conn_s::send_publish(mqtt_publish_s *a_publish,int a_dup)
   }
 
   // - properties -
-  buffer.append(props.size - 1,props.data);
+  buffer.append(props_ptr->size - 1,props_ptr->data);
 
   // - payload -
   buffer.append(payload_ptr->size - 1,payload_ptr->data);
@@ -1476,20 +1459,11 @@ int mqtt_conn_s::send_pubrel(uint16_t a_packet_id,uint8_t a_reason_code)
 int mqtt_conn_s::send_subscribe(mqtt_subscribe_s *a_subscribe)
 {/*{{{*/
   pointer_array_s *filters_ptr = (pointer_array_s *)((location_s *)a_subscribe->filters_loc)->v_data_ptr;
+  string_s *props_ptr = (string_s *)((location_s *)a_subscribe->props_loc)->v_data_ptr;
 
-  string_s props;
-  props.init();
+  uint32_t remaining_length = 2 + props_ptr->size - 1;
 
-  if (a_subscribe->props_loc != nullptr)
-  {
-    string_s *props_ptr = (string_s *)((location_s *)a_subscribe->props_loc)->v_data_ptr;
-    props.size = props_ptr->size;
-    props.data = props_ptr->data;
-  }
-
-  uint32_t remaining_length = 2 + props.size - 1;
-
-  if (var_byte_len(props.size - 1,&remaining_length))
+  if (var_byte_len(props_ptr->size - 1,&remaining_length))
   {
     return MQTT_INVALID_SUBSCRIBE_PACKET;
   }
@@ -1528,13 +1502,13 @@ int mqtt_conn_s::send_subscribe(mqtt_subscribe_s *a_subscribe)
   two_byte_enc(a_subscribe->packet_id,&buffer);
 
   // - properties length -
-  if (var_byte_enc(props.size - 1,&buffer))
+  if (var_byte_enc(props_ptr->size - 1,&buffer))
   {
     return MQTT_INVALID_SUBSCRIBE_PACKET;
   }
 
   // - properties -
-  buffer.append(props.size - 1,props.data);
+  buffer.append(props_ptr->size - 1,props_ptr->data);
 
   // - process topic filters -
   if (filters_ptr->used != 0)
@@ -1575,20 +1549,11 @@ int mqtt_conn_s::send_subscribe(mqtt_subscribe_s *a_subscribe)
 int mqtt_conn_s::send_unsubscribe(mqtt_subscribe_s *a_subscribe)
 {/*{{{*/
   pointer_array_s *filters_ptr = (pointer_array_s *)((location_s *)a_subscribe->filters_loc)->v_data_ptr;
+  string_s *props_ptr = (string_s *)((location_s *)a_subscribe->props_loc)->v_data_ptr;
 
-  string_s props;
-  props.init();
+  uint32_t remaining_length = 2 + props_ptr->size - 1;
 
-  if (a_subscribe->props_loc != nullptr)
-  {
-    string_s *props_ptr = (string_s *)((location_s *)a_subscribe->props_loc)->v_data_ptr;
-    props.size = props_ptr->size;
-    props.data = props_ptr->data;
-  }
-
-  uint32_t remaining_length = 2 + props.size - 1;
-
-  if (var_byte_len(props.size - 1,&remaining_length))
+  if (var_byte_len(props_ptr->size - 1,&remaining_length))
   {
     return MQTT_INVALID_UNSUBSCRIBE_PACKET;
   }
@@ -1630,7 +1595,7 @@ int mqtt_conn_s::send_unsubscribe(mqtt_subscribe_s *a_subscribe)
   two_byte_enc(a_subscribe->packet_id,&buffer);
 
   // Properties length
-  if (var_byte_enc(props.size - 1,&buffer))
+  if (var_byte_enc(props_ptr->size - 1,&buffer))
   {
     buffer.clear();
 
@@ -1638,7 +1603,7 @@ int mqtt_conn_s::send_unsubscribe(mqtt_subscribe_s *a_subscribe)
   }
 
   // Properties
-  buffer.append(props.size - 1,props.data);
+  buffer.append(props_ptr->size - 1,props_ptr->data);
 
   // Process topic filters
   if (filters_ptr->used != 0)
@@ -1708,11 +1673,7 @@ int mqtt_conn_s::publish(location_s *a_topic,location_s *a_payload,
     publish.qos = a_qos;
     publish.retain = a_retain;
 
-    if (a_props != nullptr)
-    {
-      a_props->v_reference_cnt.atomic_inc();
-    }
-
+    a_props->v_reference_cnt.atomic_inc();
     publish.props_loc = a_props;
 
     if (mqtt_connected)
@@ -1784,11 +1745,7 @@ int mqtt_conn_s::subscribe(location_s *a_filters,location_s *a_props,
 
   subscribe.max_qos = a_max_qos;
 
-  if (a_props != nullptr)
-  {
-    a_props->v_reference_cnt.atomic_inc();
-  }
-
+  a_props->v_reference_cnt.atomic_inc();
   subscribe.props_loc = a_props;
 
   if (send_subscribe(&subscribe))
@@ -1831,11 +1788,7 @@ int mqtt_conn_s::unsubscribe(location_s *a_filters,location_s *a_props,
 
   subscribe.max_qos = 0;
 
-  if (a_props != nullptr)
-  {
-    a_props->v_reference_cnt.atomic_inc();
-  }
-
+  a_props->v_reference_cnt.atomic_inc();
   subscribe.props_loc = a_props;
 
   if (send_unsubscribe(&subscribe))

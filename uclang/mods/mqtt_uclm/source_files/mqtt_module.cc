@@ -12,7 +12,7 @@ EXPORT built_in_module_s module =
   1,                    // Class count
   mqtt_classes,         // Classes
   0,                    // Error base index
-  17,                   // Error count
+  21,                   // Error count
   mqtt_error_strings,   // Error strings
   mqtt_initialize,      // Initialize function
   mqtt_print_exception, // Print exceptions function
@@ -33,6 +33,10 @@ const char *mqtt_error_strings[] =
   "error_MQTT_CLIENT_PROCESS_INVALID_FD",
   "error_MQTT_CLIENT_SSL_ALREADY_INITIALIZED",
   "error_MQTT_CLIENT_SSL_INIT_ERROR",
+  "error_MQTT_CLIENT_INVALID_PROPERTIES_ARRAY_SIZE",
+  "error_MQTT_CLIENT_INVALID_PROPERTY_CODE_VALUE",
+  "error_MQTT_CLIENT_INVALID_PROPERTY_VALUE",
+  "error_MQTT_CLIENT_INVALID_PROPERTY_VALUE_SIZE",
   "error_MQTT_CLIENT_EVENT_PROPERTY_ACCESS_ERROR",
   "error_MQTT_CLIENT_INVALID_TOPIC_SIZE",
   "error_MQTT_CLIENT_INVALID_QOS_LEVEL",
@@ -108,6 +112,34 @@ bool mqtt_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nMqttClient, error while initializing SSL\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_MQTT_CLIENT_INVALID_PROPERTIES_ARRAY_SIZE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMqttClient, invalid properties array size\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_MQTT_CLIENT_INVALID_PROPERTY_CODE_VALUE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMqttClient, invalid property code value\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMqttClient, invalid property value, code: 0x%2.2" HOST_LL_FORMAT "x\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE_SIZE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMqttClient, invalid property value size, code: 0x%2.2" HOST_LL_FORMAT "x\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_MQTT_CLIENT_EVENT_PROPERTY_ACCESS_ERROR:
@@ -202,7 +234,7 @@ built_in_class_s mqtt_client_class =
 {/*{{{*/
   "MqttClient",
   c_modifier_public | c_modifier_final,
-  19
+  23
 #ifdef UCL_WITH_OPENSSL
   + 1
 #endif
@@ -259,6 +291,21 @@ built_in_method_s mqtt_client_methods[] =
     bic_mqtt_client_method_get_fds_0
   },
   {
+    "properties#1",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_mqtt_client_method_properties_1
+  },
+  {
+    "connect_properties#1",
+    c_modifier_public | c_modifier_final,
+    bic_mqtt_client_method_connect_properties_1
+  },
+  {
+    "authentication#2",
+    c_modifier_public | c_modifier_final,
+    bic_mqtt_client_method_authentication_2
+  },
+  {
     "process#2",
     c_modifier_public | c_modifier_final,
     bic_mqtt_client_method_process_2
@@ -284,6 +331,11 @@ built_in_method_s mqtt_client_methods[] =
     bic_mqtt_client_method_payload_0
   },
   {
+    "properties#0",
+    c_modifier_public | c_modifier_final,
+    bic_mqtt_client_method_properties_0
+  },
+  {
     "retained#0",
     c_modifier_public | c_modifier_final,
     bic_mqtt_client_method_retained_0
@@ -294,24 +346,24 @@ built_in_method_s mqtt_client_methods[] =
     bic_mqtt_client_method_user_data_0
   },
   {
-    "will#4",
+    "will#5",
     c_modifier_public | c_modifier_final,
-    bic_mqtt_client_method_will_4
+    bic_mqtt_client_method_will_5
   },
   {
-    "publish#4",
+    "publish#5",
     c_modifier_public | c_modifier_final,
-    bic_mqtt_client_method_publish_4
+    bic_mqtt_client_method_publish_5
   },
   {
-    "subscribe#2",
+    "subscribe#3",
     c_modifier_public | c_modifier_final,
-    bic_mqtt_client_method_subscribe_2
+    bic_mqtt_client_method_subscribe_3
   },
   {
-    "unsubscribe#1",
+    "unsubscribe#2",
     c_modifier_public | c_modifier_final,
-    bic_mqtt_client_method_unsubscribe_1
+    bic_mqtt_client_method_unsubscribe_2
   },
   {
     "disconnect#0",
@@ -696,6 +748,296 @@ bool bic_mqtt_client_method_get_fds_0(interpreter_thread_s &it,unsigned stack_ba
   return true;
 }/*}}}*/
 
+bool bic_mqtt_client_method_properties_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+properties:c_bi_class_array
+>
+class c_bi_class_mqtt_client
+method properties
+static_method
+; @end
+
+  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (array_ptr->used & 0x01)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTIES_ARRAY_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  bc_array_s buffer;
+  buffer.init();
+
+  if (array_ptr->used != 0)
+  {
+    pointer *ptr = array_ptr->data;
+    pointer *ptr_end = ptr + array_ptr->used;
+    do {
+      location_s *code_location = it.get_location_value(ptr[0]);
+      location_s *value_location = it.get_location_value(ptr[1]);
+
+      long long int code;
+
+      // - ERROR -
+      if (!it.retrieve_integer(code_location,code))
+      {
+        buffer.clear();
+
+        exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_CODE_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+
+      const mqtt_prop_descr_s *prop_descr;
+
+      // - ERROR -
+      if (code >= c_packet_prop_cnt || (prop_descr = &g_mqtt_packet_props[code])->code != code)
+      {
+        buffer.clear();
+
+        exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_CODE_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+
+      switch (prop_descr->type)
+      {
+      case MQTT_DATA_TYPE_BYTE:
+      case MQTT_DATA_TYPE_TWO_BYTE_INTEGER:
+      case MQTT_DATA_TYPE_FOUR_BYTE_INTEGER:
+      case MQTT_DATA_TYPE_VARIABLE_BYTE_INTEGER:
+        {/*{{{*/
+          long long int value;
+
+          // - ERROR -
+          if (!it.retrieve_integer(value_location,value))
+          {
+            buffer.clear();
+
+            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            new_exception->params.push(code);
+
+            return false;
+          }
+
+          switch (prop_descr->type)
+          {
+          case MQTT_DATA_TYPE_BYTE:
+            buffer.push(code);
+            buffer.push(value);
+            break;
+          case MQTT_DATA_TYPE_TWO_BYTE_INTEGER:
+            buffer.push(code);
+            mqtt_conn_s::two_byte_enc(value,&buffer);
+            break;
+          case MQTT_DATA_TYPE_FOUR_BYTE_INTEGER:
+            buffer.push(code);
+            mqtt_conn_s::four_byte_enc(value,&buffer);
+            break;
+          case MQTT_DATA_TYPE_VARIABLE_BYTE_INTEGER:
+            buffer.push(code);
+            mqtt_conn_s::var_byte_enc(value,&buffer);
+            break;
+          }
+        }/*}}}*/
+        break;
+      case MQTT_DATA_TYPE_UTF_8_ENCODED_STRING:
+        {/*{{{*/
+
+          // - ERROR -
+          if (value_location->v_type != c_bi_class_string)
+          {
+            buffer.clear();
+
+            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            new_exception->params.push(code);
+
+            return false;
+          }
+
+          string_s *string_ptr = (string_s *)value_location->v_data_ptr;
+
+          // - ERROR -
+          if (string_ptr->size - 1 > UINT16_MAX)
+          {
+            buffer.clear();
+
+            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            new_exception->params.push(code);
+
+            return false;
+          }
+
+          buffer.push(code);
+          mqtt_conn_s::two_byte_enc(string_ptr->size - 1,&buffer);
+          buffer.append(string_ptr->size - 1,string_ptr->data);
+        }/*}}}*/
+        break;
+      case MQTT_DATA_TYPE_UTF_8_STRING_PAIR:
+        {/*{{{*/
+
+          // - ERROR -
+          if (value_location->v_type != c_bi_class_array)
+          {
+            buffer.clear();
+
+            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            new_exception->params.push(code);
+
+            return false;
+          }
+
+          pointer_array_s *pair_ptr = (pointer_array_s *)value_location->v_data_ptr;
+
+          // - ERROR -
+          if (pair_ptr->used != 2)
+          {
+            buffer.clear();
+
+            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            new_exception->params.push(code);
+
+            return false;
+          }
+
+          location_s *pair_key_location = it.get_location_value(pair_ptr->data[0]);
+          location_s *pair_value_location = it.get_location_value(pair_ptr->data[1]);
+
+          // - ERROR -
+          if (pair_key_location->v_type != c_bi_class_string ||
+              pair_value_location->v_type != c_bi_class_string)
+          {
+            buffer.clear();
+
+            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            new_exception->params.push(code);
+
+            return false;
+          }
+
+          string_s *pair_key_ptr = (string_s *)pair_key_location->v_data_ptr;
+          string_s *pair_value_ptr = (string_s *)pair_value_location->v_data_ptr;
+
+          // - ERROR -
+          if (pair_key_ptr->size - 1 > UINT16_MAX ||
+              pair_value_ptr->size - 1 > UINT16_MAX)
+          {
+            buffer.clear();
+
+            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            new_exception->params.push(code);
+
+            return false;
+          }
+
+          buffer.push(code);
+          mqtt_conn_s::two_byte_enc(pair_key_ptr->size - 1,&buffer);
+          buffer.append(pair_key_ptr->size - 1,pair_key_ptr->data);
+          mqtt_conn_s::two_byte_enc(pair_value_ptr->size - 1,&buffer);
+          buffer.append(pair_value_ptr->size - 1,pair_value_ptr->data);
+        }/*}}}*/
+        break;
+      case MQTT_DATA_TYPE_BINARY_DATA:
+        {/*{{{*/
+          const void *data_ptr;
+          unsigned data_size;
+
+          // - ERROR -
+          if (!it.retrieve_data_buffer(value_location,data_ptr,data_size))
+          {
+            buffer.clear();
+
+            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            new_exception->params.push(code);
+
+            return false;
+          }
+
+          // - ERROR -
+          if (data_size > UINT16_MAX)
+          {
+            buffer.clear();
+
+            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            new_exception->params.push(code);
+
+            return false;
+          }
+
+          buffer.push(code);
+          mqtt_conn_s::two_byte_enc(data_size,&buffer);
+          buffer.append(data_size,(const char *)data_ptr);
+        }/*}}}*/
+        break;
+
+      default:
+        cassert(false);
+      }
+
+    } while((ptr += 2) < ptr_end);
+  }
+
+  buffer.push('\0');
+
+  // - take buffer data -
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->size = buffer.used;
+  string_ptr->data = buffer.data;
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_mqtt_client_method_connect_properties_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+props:c_bi_class_string
+>
+method connect_properties
+; @end
+
+  mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
+
+  if (cc_ptr->connect_props_loc != nullptr)
+  {
+    // - release connection properties -
+    it.release_location_ptr((location_s *)cc_ptr->connect_props_loc);
+  }
+
+  // - set connection properties -
+  src_0_location->v_reference_cnt.atomic_inc();
+  cc_ptr->connect_props_loc = src_0_location;
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_mqtt_client_method_authentication_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+user_name:c_bi_class_string
+password:c_bi_class_string
+>
+method authentication
+; @end
+
+  mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
+  string_s *user_name_ptr = (string_s *)src_0_location->v_data_ptr;
+  string_s *password_ptr = (string_s *)src_1_location->v_data_ptr;
+
+  cc_ptr->user_name = *user_name_ptr;
+  cc_ptr->password = *password_ptr;
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
 bool bic_mqtt_client_method_process_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
@@ -963,6 +1305,123 @@ bool bic_mqtt_client_method_payload_0(interpreter_thread_s &it,unsigned stack_ba
   return true;
 }/*}}}*/
 
+bool bic_mqtt_client_method_properties_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (!(cc_ptr->callback_event & (
+          c_mqtt_EVENT_CONNECTED | c_mqtt_EVENT_PUBLISHED | c_mqtt_EVENT_SUBSCRIBED |
+          c_mqtt_EVENT_UNSUBSCRIBED | c_mqtt_EVENT_RECEIVED)))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_EVENT_PROPERTY_ACCESS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+  BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);
+
+  if (cc_ptr->prop_refs.used != 0)
+  {
+    const char *prop_data_end = cc_ptr->properties.data + cc_ptr->properties.size;
+
+    mqtt_prop_s *ptr = cc_ptr->prop_refs.data;
+    mqtt_prop_s *ptr_end = ptr + cc_ptr->prop_refs.used;
+    do {
+      const mqtt_prop_descr_s &prop_descr = g_mqtt_packet_props[ptr->code];
+      const char *prop_data = cc_ptr->properties.data + ptr->offset + 1;
+
+      long long int code_value = ptr->code;
+      BIC_CREATE_NEW_LOCATION(code_location,c_bi_class_integer,code_value);
+      array_ptr->push(code_location);
+
+      switch (prop_descr.type)
+      {
+      case MQTT_DATA_TYPE_BYTE:
+      case MQTT_DATA_TYPE_TWO_BYTE_INTEGER:
+      case MQTT_DATA_TYPE_FOUR_BYTE_INTEGER:
+      case MQTT_DATA_TYPE_VARIABLE_BYTE_INTEGER:
+        {/*{{{*/
+          long long int value;
+
+          switch (prop_descr.type)
+          {
+          case MQTT_DATA_TYPE_BYTE:
+            value = prop_data[0];
+            break;
+          case MQTT_DATA_TYPE_TWO_BYTE_INTEGER:
+            value = mqtt_conn_s::two_byte_dec(prop_data);
+            break;
+          case MQTT_DATA_TYPE_FOUR_BYTE_INTEGER:
+            value = mqtt_conn_s::four_byte_dec(prop_data);
+            break;
+          case MQTT_DATA_TYPE_VARIABLE_BYTE_INTEGER:
+            {
+              const char *src_end;
+              uint32_t value_u32;
+              mqtt_conn_s::var_byte_dec(prop_data,prop_data_end,&src_end,&value_u32);
+              value = value_u32;
+            }
+            break;
+          }
+
+          BIC_CREATE_NEW_LOCATION(value_location,c_bi_class_integer,value);
+          array_ptr->push(value_location);
+        }/*}}}*/
+        break;
+      case MQTT_DATA_TYPE_UTF_8_ENCODED_STRING:
+      case MQTT_DATA_TYPE_BINARY_DATA:
+        {/*{{{*/
+          unsigned length = mqtt_conn_s::two_byte_dec(prop_data);
+
+          string_s *string_ptr = it.get_new_string_ptr();
+          string_ptr->set(length,prop_data + 2);
+
+          BIC_CREATE_NEW_LOCATION(value_location,c_bi_class_string,string_ptr);
+          array_ptr->push(value_location);
+        }/*}}}*/
+        break;
+      case MQTT_DATA_TYPE_UTF_8_STRING_PAIR:
+        {/*{{{*/
+          pointer_array_s *pair_ptr = it.get_new_array_ptr();
+          BIC_CREATE_NEW_LOCATION(pair_location,c_bi_class_array,pair_ptr);
+
+          // - retrieve pair key -
+          unsigned pair_key_length = mqtt_conn_s::two_byte_dec(prop_data);
+
+          string_s *pair_key_ptr = it.get_new_string_ptr();
+          pair_key_ptr->set(pair_key_length,prop_data + 2);
+
+          BIC_CREATE_NEW_LOCATION(pair_key_location,c_bi_class_string,pair_key_ptr);
+          pair_ptr->push(pair_key_location);
+
+          // - retrieve pair value -
+          unsigned pair_value_length = mqtt_conn_s::two_byte_dec(prop_data + 2 + pair_key_length);
+
+          string_s *pair_value_ptr = it.get_new_string_ptr();
+          pair_value_ptr->set(pair_value_length,prop_data + 2 + pair_key_length + 2);
+
+          BIC_CREATE_NEW_LOCATION(pair_value_location,c_bi_class_string,pair_value_ptr);
+          pair_ptr->push(pair_value_location);
+
+          array_ptr->push(pair_location);
+        }/*}}}*/
+        break;
+
+      // - ERROR -
+      default:
+        cassert(false);
+      }
+    } while(++ptr < ptr_end);
+  }
+
+  BIC_SET_RESULT(array_location);
+
+  return true;
+}/*}}}*/
+
 bool bic_mqtt_client_method_retained_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -996,12 +1455,13 @@ bool bic_mqtt_client_method_user_data_0(interpreter_thread_s &it,unsigned stack_
   return true;
 }/*}}}*/
 
-bool bic_mqtt_client_method_will_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_mqtt_client_method_will_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
 topic:c_bi_class_string
 payload:c_bi_class_string
+props:c_bi_class_string
 qos:retrieve_integer
 retain:retrieve_integer
 >
@@ -1042,19 +1502,21 @@ method will
   will.qos = qos;
   will.retain = retain;
 
-  will.props_loc = nullptr;
+  src_2_location->v_reference_cnt.atomic_inc();
+  will.props_loc = src_2_location;
 
   BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/
 
-bool bic_mqtt_client_method_publish_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_mqtt_client_method_publish_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
 topic:c_bi_class_string
 payload:c_bi_class_string
+props:c_bi_class_string
 qos:retrieve_integer
 retain:retrieve_integer
 >
@@ -1080,7 +1542,7 @@ method publish
 
   // - ERROR -
   uint16_t packet_id;
-  if (cc_ptr->publish(src_0_location,src_1_location,nullptr,qos,!!retain,&packet_id))
+  if (cc_ptr->publish(src_0_location,src_1_location,src_2_location,qos,!!retain,&packet_id))
   {
     exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_PUBLISH_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1093,11 +1555,12 @@ method publish
   return true;
 }/*}}}*/
 
-bool bic_mqtt_client_method_subscribe_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_mqtt_client_method_subscribe_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
 filters:c_bi_class_array
+props:c_bi_class_string
 max_qos:retrieve_integer
 >
 method subscribe
@@ -1145,7 +1608,7 @@ method subscribe
 
   // - ERROR -
   uint16_t packet_id;
-  if (cc_ptr->subscribe(src_0_location,nullptr,max_qos,&packet_id))
+  if (cc_ptr->subscribe(src_0_location,src_1_location,max_qos,&packet_id))
   {
     exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_SUBSCRIBE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1158,11 +1621,12 @@ method subscribe
   return true;
 }/*}}}*/
 
-bool bic_mqtt_client_method_unsubscribe_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_mqtt_client_method_unsubscribe_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
 filters:c_bi_class_array
+props:c_bi_class_string
 >
 method unsubscribe
 ; @end
@@ -1202,7 +1666,7 @@ method unsubscribe
 
   // - ERROR -
   uint16_t packet_id;
-  if (cc_ptr->unsubscribe(src_0_location,nullptr,&packet_id))
+  if (cc_ptr->unsubscribe(src_0_location,src_1_location,&packet_id))
   {
     exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_UNSUBSCRIBE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
