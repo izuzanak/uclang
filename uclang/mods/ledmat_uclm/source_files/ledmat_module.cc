@@ -284,7 +284,8 @@ method LedMat
     return false;
   }
 
-  uc *data = (uc *)cmalloc(row_cnt*(col_cnt >> 3)*sizeof(uc));
+  // - alloc command byte + data size -
+  uc *data = (uc *)cmalloc(1 + row_cnt*(col_cnt >> 3)*sizeof(uc));
 
   // - ERROR -
   if (data == nullptr)
@@ -293,26 +294,24 @@ method LedMat
     return false;
   }
 
-  int fd = wiringPiSPISetup(channel,speed);
+  // - create ledmat object -
+  ledmat_s *lm_ptr = (ledmat_s *)cmalloc(sizeof(ledmat_s));
+  lm_ptr->init();
 
   // - ERROR -
-  if (fd == -1)
+  if (!lm_ptr->spi_setup(channel,speed))
   {
+    cfree(lm_ptr);
     cfree(data);
 
     exception_s::throw_exception(it,module.error_base + c_error_LEDMAT_SETUP_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
-  // - create ledmat object -
-  ledmat_s *lm_ptr = (ledmat_s *)cmalloc(sizeof(ledmat_s));
-  lm_ptr->init();
-
   lm_ptr->channel = channel;
   lm_ptr->speed = speed;
   lm_ptr->col_cnt = col_cnt;
   lm_ptr->row_cnt = row_cnt;
-  lm_ptr->fd = fd;
   lm_ptr->data = data;
 
   dst_location->v_data_ptr = (ledmat_s *)lm_ptr;
@@ -343,13 +342,12 @@ method write
     return false;
   }
 
+  lm_ptr->data[0] = c_spi_cmd_buffer_load;
+
   unsigned data_size = lm_ptr->row_cnt*(lm_ptr->col_cnt >> 3);
-  memcpy(lm_ptr->data,lmb_ptr->data,data_size);
+  memcpy(lm_ptr->data + 1,lmb_ptr->data,data_size);
 
-  uc command = c_spi_cmd_buffer_load;
-  wiringPiSPIDataRW(lm_ptr->channel,&command,1);
-
-  wiringPiSPIDataRW(lm_ptr->channel,lm_ptr->data,data_size);
+  lm_ptr->spi_write(lm_ptr->data,1 + data_size);
 
   BIC_SET_RESULT_DESTINATION();
 
@@ -363,7 +361,7 @@ bool bic_ledmat_method_buffer_swap_0(interpreter_thread_s &it,unsigned stack_bas
   ledmat_s *lm_ptr = (ledmat_s *)dst_location->v_data_ptr;
 
   uc command = c_spi_cmd_buffer_swap;
-  wiringPiSPIDataRW(lm_ptr->channel,&command,1);
+  lm_ptr->spi_write(&command,1);
 
   BIC_SET_RESULT_DESTINATION();
 
@@ -391,7 +389,7 @@ method brightness
   ledmat_s *lm_ptr = (ledmat_s *)dst_location->v_data_ptr;
 
   uc command[2] = {c_spi_cmd_brightness,(uc)brightness};
-  wiringPiSPIDataRW(lm_ptr->channel,command,2);
+  lm_ptr->spi_write(command,2);
 
   BIC_SET_RESULT_DESTINATION();
 
