@@ -12,7 +12,7 @@ EXPORT built_in_module_s module =
   1,                    // Class count
   mqtt_classes,         // Classes
   0,                    // Error base index
-  21,                   // Error count
+  22,                   // Error count
   mqtt_error_strings,   // Error strings
   mqtt_initialize,      // Initialize function
   mqtt_print_exception, // Print exceptions function
@@ -48,6 +48,7 @@ const char *mqtt_error_strings[] =
   "error_MQTT_CLIENT_SUBSCRIBE_ERROR",
   "error_MQTT_CLIENT_UNSUBSCRIBE_ERROR",
   "error_MQTT_CLIENT_DISCONNECT_ERROR",
+  "error_MQTT_CLIENT_PINGREQ_ERROR",
 };/*}}}*/
 
 // - MQTT initialize -
@@ -219,6 +220,13 @@ bool mqtt_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nMqttClient, disconnect error\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_MQTT_CLIENT_PINGREQ_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nMqttClient, pingreq error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   default:
     class_stack.clear();
     return false;
@@ -234,7 +242,7 @@ built_in_class_s mqtt_client_class =
 {/*{{{*/
   "MqttClient",
   c_modifier_public | c_modifier_final,
-  23
+  24
 #ifdef UCL_WITH_OPENSSL
   + 1
 #endif
@@ -369,6 +377,11 @@ built_in_method_s mqtt_client_methods[] =
     "disconnect#0",
     c_modifier_public | c_modifier_final,
     bic_mqtt_client_method_disconnect_0
+  },
+  {
+    "pingreq#0",
+    c_modifier_public | c_modifier_final,
+    bic_mqtt_client_method_pingreq_0
   },
   {
     "to_string#0",
@@ -1689,6 +1702,24 @@ bool bic_mqtt_client_method_disconnect_0(interpreter_thread_s &it,unsigned stack
   if (cc_ptr->disconnect())
   {
     exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_DISCONNECT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_mqtt_client_method_pingreq_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (cc_ptr->pingreq())
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_PINGREQ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 

@@ -1830,3 +1830,30 @@ int mqtt_conn_s::disconnect()
   return 0;
 }/*}}}*/
 
+int mqtt_conn_s::pingreq()
+{/*{{{*/
+  if (mqtt_connected)
+  {
+    // - send pingreq packet -
+    bc_array_s buffer;
+    buffer.init();
+    buffer.reserve(2);
+
+    buffer.push(0xc0);  // PINGREQ
+    buffer.push(0x00);  // Remaining length
+
+    cassert(buffer.used == 2);
+
+    if (schedule_message(&buffer))
+    {
+      buffer.clear();
+
+      return MQTT_CONN_SCHEDULE_MESSAGE_ERROR;
+    }
+
+    buffer.clear();
+  }
+
+  return 0;
+}/*}}}*/
+

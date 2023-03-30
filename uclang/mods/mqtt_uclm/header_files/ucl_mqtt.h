@@ -366,6 +366,7 @@ additions
   int unsubscribe(location_s *a_filters,location_s *a_props,
       uint16_t *a_packet_id);
   int disconnect();
+  int pingreq();
 
   inline void init_static();
   inline void clear(interpreter_thread_s &it);

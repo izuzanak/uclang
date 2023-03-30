@@ -39,6 +39,7 @@ enum
   c_error_MQTT_CLIENT_SUBSCRIBE_ERROR,
   c_error_MQTT_CLIENT_UNSUBSCRIBE_ERROR,
   c_error_MQTT_CLIENT_DISCONNECT_ERROR,
+  c_error_MQTT_CLIENT_PINGREQ_ERROR,
 };
 
 // - MQTT error strings -
@@ -83,6 +84,7 @@ bool bic_mqtt_client_method_publish_5(interpreter_thread_s &it,unsigned stack_ba
 bool bic_mqtt_client_method_subscribe_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mqtt_client_method_unsubscribe_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mqtt_client_method_disconnect_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mqtt_client_method_pingreq_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mqtt_client_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mqtt_client_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
