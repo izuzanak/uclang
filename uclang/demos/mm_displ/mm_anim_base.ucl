@@ -30,7 +30,7 @@ abstract class AnimationBase
       // - insert both, source and target animation nodes -
       m_steady_node.m_trg_time = time;
       m_node_queue.insert(m_steady_node);
-    
+
       a_node.m_trg_time = time + a_node.m_duration;
       m_node_queue.insert(a_node);
     }

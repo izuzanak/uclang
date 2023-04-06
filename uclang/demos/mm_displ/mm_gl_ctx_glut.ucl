@@ -9,7 +9,7 @@ abstract class GlCtxGlut extends GlCtxBase
 
   private m_glut;
   private m_glew;
- 
+
   private m_base_time = Sys.time();
 
   // - timer callback delegate -

@@ -48,7 +48,7 @@ class Browser extends GlCtxGlut
 
     // - ERROR -
     default:
-      new Exception("Unknown OpenGl context type").throw();  
+      new Exception("Unknown OpenGl context type").throw();
     }
 
     // - create opengl context -

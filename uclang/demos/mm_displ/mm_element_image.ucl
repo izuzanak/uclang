@@ -32,7 +32,7 @@ class ElementImage extends ElementBase
 
   static public json_create(a_descr)
   {/*{{{*/
-    
+
     // - assure parameter types -
     source = new String(a_descr["source"]);
     alpha = new Float(a_descr["alpha"]);

@@ -9,7 +9,7 @@ abstract class GlCtxAndroid extends GlCtxBase
 
   private m_base_time = Sys.time();
   private m_running = 0;
- 
+
   // - timer callback delegate -
   public m_timer_dlg = this.get_dlg("activity_on_timer",1);
 
@@ -103,7 +103,7 @@ abstract class GlCtxAndroid extends GlCtxBase
 
   final public activity_on_idle()
   {/*{{{*/
-   
+
     // - runing flag is set -
     if (m_running)
     {

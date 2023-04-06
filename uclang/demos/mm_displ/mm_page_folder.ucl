@@ -126,7 +126,7 @@ class PageFolder
   public action_animation(a_anim_type,a_duration)
   {/*{{{*/
     AnimationPage.animate(m_src_anim,m_trg_anim,a_anim_type,a_duration);
-    
+
     // - wait on action to be comleted -
     if (m_node_time < (trg_time = Browser.m_time + a_duration))
     {
@@ -160,7 +160,7 @@ class PageFolder
 
   public draw(a_projection,a_view)
   {/*{{{*/
-    
+
     // - draw source page -
     if (Blank != m_src_page)
     {

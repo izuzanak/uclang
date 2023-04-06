@@ -52,7 +52,7 @@ class ElementVideo extends ElementBase
 
   static public json_create(a_descr)
   {/*{{{*/
-    
+
     // - assure parameter types -
     source = new String(a_descr["source"]);
     alpha = new Float(a_descr["alpha"]);
@@ -195,7 +195,7 @@ uniform %s float eu_alpha;
   public draw()
   {/*{{{*/
     fetch_picture(0);
-    
+
     if (Blank != m_texture)
     {
       m_uniforms["eu_texture"].write(0);

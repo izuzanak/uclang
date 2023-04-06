@@ -8,7 +8,7 @@ class ElementText extends ElementBase
 
   private m_color;
   private m_bg_color;
-  
+
   private m_text;
   private m_type;
   private m_speed;
@@ -251,7 +251,7 @@ uniform %s vec4 eu_color;
 
       case TYPE_ROT_BOTTOM_UP:
       {/*{{{*/
-        
+
         // - fixed x position -
         m_x_pos = new Integer(m_rect.x + (m_rect.w - m_text_width)/2.0);
 

@@ -19,7 +19,7 @@ class Page
   static public json_create(a_descr)
   {/*{{{*/
     page = new Page();
-   
+
     for (layout <- a_descr["layouts"])
     {
       page.insert(LayoutBase.json_create(layout));
