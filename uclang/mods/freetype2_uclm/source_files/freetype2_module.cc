@@ -18,7 +18,7 @@ EXPORT built_in_module_s module =
   freetype2_classes,         // Classes
 
   0,                         // Error base index
-  7,                         // Error count
+  8,                         // Error count
   freetype2_error_strings,   // Error strings
 
   freetype2_initialize,      // Initialize function
@@ -39,6 +39,7 @@ const char *freetype2_error_strings[] =
   "error_FREETYPE2_LIBRARY_INIT_ERROR",
   "error_FREETYPE2_LIBRARY_NEW_FACE_ERROR",
   "error_FREETYPE2_FACE_INVALID_TEXT_HEIGHT",
+  "error_FREETYPE2_FACE_INVALID_TEXT_DATA",
   "error_FREETYPE2_FACE_SELECT_CHARMAP_ERROR",
   "error_FREETYPE2_FACE_PIXEL_SIZES_ERROR",
   "error_FREETYPE2_FACE_MEASURE_TEXT_ERROR",
@@ -102,6 +103,13 @@ bool freetype2_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nFreeType2 face, invalid text height: %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FREETYPE2_FACE_INVALID_TEXT_DATA:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFreeType2 face, invalid text data\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_FREETYPE2_FACE_SELECT_CHARMAP_ERROR:
@@ -303,7 +311,7 @@ built_in_class_s ft2_face_class =
 {/*{{{*/
   "Ft2Face",
   c_modifier_public | c_modifier_final,
-  4, ft2_face_methods,
+  5, ft2_face_methods,
   0, ft2_face_variables,
   bic_ft2_face_consts,
   bic_ft2_face_init,
@@ -332,6 +340,11 @@ built_in_method_s ft2_face_methods[] =
     "render_text#2",
     c_modifier_public | c_modifier_final,
     bic_ft2_face_method_render_text_2
+  },
+  {
+    "measure_text#2",
+    c_modifier_public | c_modifier_final,
+    bic_ft2_face_method_measure_text_2
   },
   {
     "to_string#0",
@@ -396,7 +409,7 @@ method render_text
 ; @end
 
   ft2_face_s *ftf_ptr = (ft2_face_s *)dst_location->v_data_ptr;
-  ui_array_s *array_ptr = (ui_array_s *)src_0_location->v_data_ptr;
+  ui_array_s *text_array_ptr = (ui_array_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
   if (height < 1 || height > 1024)
@@ -404,6 +417,13 @@ method render_text
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FREETYPE2_FACE_INVALID_TEXT_HEIGHT,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(height);
 
+    return false;
+  }
+
+  // - ERROR -
+  if (text_array_ptr->used <= 1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_FREETYPE2_FACE_INVALID_TEXT_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -427,7 +447,7 @@ method render_text
   unsigned bitmap_height;
 
   // - ERROR -
-  if (!ftf_ptr->measure_text(*array_ptr,
+  if (!ftf_ptr->measure_text(*text_array_ptr,
         bitmap_left,bitmap_top,bitmap_width,bitmap_height))
   {
     exception_s::throw_exception(it,module.error_base + c_error_FREETYPE2_FACE_MEASURE_TEXT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -449,7 +469,7 @@ method render_text
   BIC_CREATE_NEW_LOCATION(bitmap_location,c_bi_class_ft2_bitmap,ftb_ptr);
 
   // - ERROR -
-  if (!ftf_ptr->render_text(*array_ptr,*ftb_ptr,bitmap_left,bitmap_top))
+  if (!ftf_ptr->render_text(*text_array_ptr,*ftb_ptr,bitmap_left,bitmap_top))
   {
     it.release_location_ptr(bitmap_location);
 
@@ -458,6 +478,98 @@ method render_text
   }
 
   BIC_SET_RESULT(bitmap_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_ft2_face_method_measure_text_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+text:c_rm_class_unicode_string
+height:retrieve_integer
+>
+method measure_text
+; @end
+
+  ft2_face_s *ftf_ptr = (ft2_face_s *)dst_location->v_data_ptr;
+  ui_array_s *text_array_ptr = (ui_array_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (height < 1 || height > 1024)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FREETYPE2_FACE_INVALID_TEXT_HEIGHT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(height);
+
+    return false;
+  }
+
+  // - ERROR -
+  if (text_array_ptr->used <= 1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_FREETYPE2_FACE_INVALID_TEXT_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (FT_Select_Charmap(ftf_ptr->face,FT_ENCODING_UNICODE))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_FREETYPE2_FACE_SELECT_CHARMAP_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (FT_Set_Pixel_Sizes(ftf_ptr->face,0,height))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_FREETYPE2_FACE_PIXEL_SIZES_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  int bitmap_left;
+  int bitmap_top;
+  unsigned bitmap_width;
+  unsigned bitmap_height;
+
+  // - ERROR -
+  if (!ftf_ptr->measure_text(*text_array_ptr,bitmap_left,bitmap_top,bitmap_width,bitmap_height))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_FREETYPE2_FACE_MEASURE_TEXT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+  // - create bitmap_left location -
+  {
+    long long int value = bitmap_left;
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
+    array_ptr->push(new_location);
+  }
+
+  // - create bitmap_top location -
+  {
+    long long int value = bitmap_top;
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
+    array_ptr->push(new_location);
+  }
+
+  // - create bitmap_width location -
+  {
+    long long int value = bitmap_width;
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
+    array_ptr->push(new_location);
+  }
+
+  // - create bitmap_height location -
+  {
+    long long int value = bitmap_height;
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
+    array_ptr->push(new_location);
+  }
+
+  // - create result array location -
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/

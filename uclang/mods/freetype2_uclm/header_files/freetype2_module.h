@@ -23,6 +23,7 @@ enum
   c_error_FREETYPE2_LIBRARY_INIT_ERROR = 0,
   c_error_FREETYPE2_LIBRARY_NEW_FACE_ERROR,
   c_error_FREETYPE2_FACE_INVALID_TEXT_HEIGHT,
+  c_error_FREETYPE2_FACE_INVALID_TEXT_DATA,
   c_error_FREETYPE2_FACE_SELECT_CHARMAP_ERROR,
   c_error_FREETYPE2_FACE_PIXEL_SIZES_ERROR,
   c_error_FREETYPE2_FACE_MEASURE_TEXT_ERROR,
@@ -64,6 +65,7 @@ void bic_ft2_face_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_ft2_face_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ft2_face_method_render_text_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ft2_face_method_measure_text_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ft2_face_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ft2_face_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

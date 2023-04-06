@@ -107,12 +107,12 @@ bool ft2_face_s::measure_text(const ui_array_s &a_text,
       last_rsb_delta = glyph_slot->rsb_delta;
       last_glyph = glyph;
     } while(++c_ptr < c_ptr_end);
+
+    a_width = a_left + ((origin_x - glyph_slot->advance.x) >> 6) +
+      glyph_slot->bitmap_left + glyph_slot->bitmap.width;
+
+    a_height = a_top + max_bottom;
   }
-
-  a_width = a_left + ((origin_x - glyph_slot->advance.x) >> 6) +
-    glyph_slot->bitmap_left + glyph_slot->bitmap.width;
-
-  a_height = a_top + max_bottom;
 
   return true;
 }/*}}}*/
