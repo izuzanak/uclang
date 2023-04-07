@@ -198,7 +198,7 @@ built_in_class_s image_class =
 {/*{{{*/
   "Image",
   c_modifier_public | c_modifier_final,
-  24, image_methods,
+  25, image_methods,
   5, image_variables,
   bic_image_consts,
   bic_image_init,
@@ -232,6 +232,11 @@ built_in_method_s image_methods[] =
     "Image#4",
     c_modifier_public | c_modifier_final,
     bic_image_method_Image_4
+  },
+  {
+    "set#1",
+    c_modifier_public | c_modifier_final,
+    bic_image_method_set_1
   },
   {
     "width#0",
@@ -727,6 +732,57 @@ method Image
   *img_ptr = image;
 
   dst_location->v_data_ptr = (image_s *)img_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_image_method_set_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+data:retrieve_data_buffer
+>
+method set
+; @end
+
+  image_s *img_ptr = (image_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (img_ptr->pixel_format == c_image_pixel_format_blank)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_IMAGE_WRONG_PROPERTIES,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  unsigned line_bytes = data_size / img_ptr->height;
+
+  // - ERROR -
+  if (img_ptr->height*line_bytes != data_size || img_ptr->width*img_ptr->pixel_step > line_bytes)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_IMAGE_INVALID_SOURCE_DATA_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - image data structure -
+  image_data_s image_data;
+  image_data.line_bytes = line_bytes;
+  image_data.data = (unsigned char *)data_ptr;
+
+  // - image structure -
+  image_s image;
+  image.root = true;
+  image.pixel_format = img_ptr->pixel_format;
+  image.width = img_ptr->width;
+  image.height = img_ptr->height;
+  image.x_pos = 0;
+  image.y_pos = 0;
+  image.pixel_step = img_ptr->pixel_step;
+  image.image_data_ptr = &image_data;
+
+  // - copy image data -
+  img_ptr->io_copy(image);
+
+  BIC_SET_RESULT_DESTINATION();
 
   return true;
 }/*}}}*/

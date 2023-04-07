@@ -58,6 +58,7 @@ void bic_image_clear(interpreter_thread_s &it,location_s *location_ptr);
 bool bic_image_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_Image_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_Image_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_image_method_set_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_width_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_height_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_image_method_format_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
