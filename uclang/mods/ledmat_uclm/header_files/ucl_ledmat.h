@@ -25,20 +25,6 @@ enum {
 };
 
 /*
- * definition of structure ledmat_buffer_s
- */
-
-struct ledmat_buffer_s
-{
-  unsigned col_cnt;
-  unsigned row_cnt;
-  uc *data;
-
-  inline void init();
-  inline void clear(interpreter_thread_s &it);
-};
-
-/*
  * definition of structure ledmat_s
  */
 
@@ -58,6 +44,20 @@ struct ledmat_s
 
   bool spi_setup(int a_channel,int a_speed);
   inline int spi_write(uc * a_data,int a_size);
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
+ * definition of structure ledmat_buffer_s
+ */
+
+struct ledmat_buffer_s
+{
+  unsigned col_cnt;
+  unsigned row_cnt;
+  uc *data;
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
