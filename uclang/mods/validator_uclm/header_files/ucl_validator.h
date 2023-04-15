@@ -30,6 +30,7 @@ enum {
   prop_length_lesser_equal,
   prop_length_greater_equal,
   prop_reference,
+  prop_reference_type,
   prop_regex,
   prop_test,
   prop_items,
@@ -46,6 +47,7 @@ enum
   c_error_VALIDATOR_WRONG_PROPERTIES_ARRAY_SIZE,
   c_error_VALIDATOR_INVALID_PROPERTY_ID,
   c_error_VALIDATOR_INVALID_PROPERTY_TYPE,
+  c_error_VALIDATOR_INVALID_PROPERTY_VALUE,
   c_error_VALIDATOR_INVALID_PROPERTY_REGULAR_EXPRESSION,
   c_error_VALIDATOR_INVALID_PROPERTY_DELEGATE,
   c_error_VALIDATOR_INVALID_PROPERTY_DELEGATE_RETURN_VALUE,
@@ -71,7 +73,7 @@ struct validator_s
   string_rb_tree_s regex_map;
   pointer_array_s regex_list;
 
-  static unsigned recognize_property(const char *a_string);
+  static unsigned recognize_property(const char *a_string,unsigned &a_input_idx);
   bool validate_pair(location_s *a_value,location_s *a_props);
 
   inline void init();
