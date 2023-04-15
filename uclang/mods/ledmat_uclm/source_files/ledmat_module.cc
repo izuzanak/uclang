@@ -265,8 +265,7 @@ method LedMat
 ; @end
 
   // - ERROR -
-  if (channel < 0 || channel > 1 ||
-      speed < 1000 || speed > UINT_MAX)
+  if (channel < 0 || speed < 1000 || speed > UINT_MAX)
   {
     exception_s::throw_exception(it,module.error_base + c_error_LEDMAT_INVALID_ARGUMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -325,7 +324,7 @@ bool bic_ledmat_method_buffer_load_1(interpreter_thread_s &it,unsigned stack_bas
 <
 buffer:c_bi_class_ledmat_buffer
 >
-method write
+method buffer_load
 ; @end
 
   ledmat_s *lm_ptr = (ledmat_s *)dst_location->v_data_ptr;
