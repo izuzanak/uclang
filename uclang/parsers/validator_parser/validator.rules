@@ -18,6 +18,8 @@ terminals:
   length_le {"length <="}
   length_ge {"length >="}
   ref {"ref"}
+  ref_if {"ref-if"}
+  ref_type {"ref-type"}
   regex {"regex"}
   test {"test"}
   items {"items"}
@@ -64,6 +66,8 @@ rules:
   <term> -> length_le ->> {print("length_le");}
   <term> -> length_ge ->> {print("length_ge");}
   <term> -> ref ->> {print("ref");}
+  <term> -> ref_if ->> {print("ref-if");}
+  <term> -> ref_type ->> {print("ref-type");}
   <term> -> regex ->> {print("regex");}
   <term> -> test ->> {print("test");}
   <term> -> items ->> {print("items");}

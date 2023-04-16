@@ -30,6 +30,7 @@ enum {
   prop_length_lesser_equal,
   prop_length_greater_equal,
   prop_reference,
+  prop_reference_if,
   prop_reference_type,
   prop_regex,
   prop_test,
