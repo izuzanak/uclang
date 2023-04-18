@@ -18,7 +18,7 @@ EXPORT built_in_module_s module =
   av_classes,          // Classes
 
   0,                   // Error base index
-  11,                  // Error count
+  12,                  // Error count
   av_error_strings,    // Error strings
 
   av_initialize,       // Initialize function
@@ -39,7 +39,8 @@ built_in_class_s *av_classes[] =
 // - AV error strings -
 const char *av_error_strings[] =
 {/*{{{*/
-  "error_AV_FORMAT_OPEN_INPUT_ERROR",
+  "error_AV_FORMAT_INPUT_OPTIONS_ERROR",
+  "error_AV_FORMAT_INPUT_OPEN_ERROR",
   "error_AV_FORMAT_FIND_STREAM_INFO_ERROR",
   "error_AV_FORMAT_STREAM_INDEX_EXCEEDS_RANGE",
   "error_AV_FORMAT_STREAM_ALREADY_IN_DECODED",
@@ -86,11 +87,18 @@ bool av_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_AV_FORMAT_OPEN_INPUT_ERROR:
+  case c_error_AV_FORMAT_INPUT_OPTIONS_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nAV cannot open input format \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr,"\nAV format invalid input options\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_AV_FORMAT_INPUT_OPEN_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nAV cannot open input \"%s\"\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_AV_FORMAT_FIND_STREAM_INFO_ERROR:
@@ -175,7 +183,7 @@ built_in_class_s av_format_class =
 {/*{{{*/
   "AvFormat",
   c_modifier_public | c_modifier_final,
-  8, av_format_methods,
+  9, av_format_methods,
   7, av_format_variables,
   bic_av_format_consts,
   bic_av_format_init,
@@ -204,6 +212,11 @@ built_in_method_s av_format_methods[] =
     "AvFormat#1",
     c_modifier_public | c_modifier_final,
     bic_av_format_method_AvFormat_1
+  },
+  {
+    "AvFormat#2",
+    c_modifier_public | c_modifier_final,
+    bic_av_format_method_AvFormat_2
   },
   {
     "stream_cnt#0",
@@ -322,50 +335,119 @@ bool bic_av_format_operator_binary_equal(interpreter_thread_s &it,unsigned stack
   return true;
 }/*}}}*/
 
+#define BIC_AV_FORMAT_METHOD_AVFORMAT() \
+/*{{{*/\
+  /* - allocate format context - */\
+  AVFormatContext *format_ctx = avformat_alloc_context();\
+\
+  /* - ERROR - */\
+  if (avformat_open_input(&format_ctx,string_ptr->data,nullptr,&options) != 0)\
+  {\
+    avformat_free_context(format_ctx);\
+    av_dict_free(&options);\
+\
+    exception_s::throw_exception(it,module.error_base + c_error_AV_FORMAT_INPUT_OPEN_ERROR,operands[c_source_pos_idx],src_0_location);\
+    return false;\
+  }\
+\
+  av_dict_free(&options);\
+\
+  /* - ERROR - */\
+  if (avformat_find_stream_info(format_ctx,nullptr) < 0)\
+  {\
+    avformat_close_input(&format_ctx);\
+\
+    exception_s::throw_exception(it,module.error_base + c_error_AV_FORMAT_FIND_STREAM_INFO_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+    return false;\
+  }\
+\
+  /* - create new av format object - */\
+  av_format_s *avf_ptr = (av_format_s *)cmalloc(sizeof(av_format_s));\
+  avf_ptr->init();\
+\
+  /* - set format context - */\
+  avf_ptr->format_ctx = format_ctx;\
+\
+  /* - allocate and set memory to zero - */\
+  avf_ptr->codec_ctxs = (AVCodecContext **)cmalloc(format_ctx->nb_streams*sizeof(AVCodecContext *));\
+  memset(avf_ptr->codec_ctxs,0,format_ctx->nb_streams*sizeof(AVCodecContext *));\
+\
+  dst_location->v_data_ptr = (av_format_s *)avf_ptr;\
+/*}}}*/
+
 bool bic_av_format_method_AvFormat_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
-path:c_bi_class_string
+input:c_bi_class_string
 >
 method AvFormat
 ; @end
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
-  // - allocate format context -
-  AVFormatContext *format_ctx = avformat_alloc_context();
+  AVDictionary *options = nullptr;
+
+  BIC_AV_FORMAT_METHOD_AVFORMAT();
+
+  return true;
+}/*}}}*/
+
+bool bic_av_format_method_AvFormat_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+input:c_bi_class_string
+opts:c_bi_class_array
+>
+method AvFormat
+; @end
+
+  string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+  pointer_array_s *array_ptr = (pointer_array_s *)src_1_location->v_data_ptr;
 
   // - ERROR -
-  if (avformat_open_input(&format_ctx,string_ptr->data,nullptr,nullptr) != 0)
+  if (array_ptr->used & 0x01)
   {
-    avformat_free_context(format_ctx);
-
-    exception_s::throw_exception(it,module.error_base + c_error_AV_FORMAT_OPEN_INPUT_ERROR,operands[c_source_pos_idx],src_0_location);
+    exception_s::throw_exception(it,module.error_base + c_error_AV_FORMAT_INPUT_OPTIONS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
-  // - ERROR -
-  if (avformat_find_stream_info(format_ctx,nullptr) < 0)
-  {
-    avformat_close_input(&format_ctx);
+  AVDictionary *options = nullptr;
 
-    exception_s::throw_exception(it,module.error_base + c_error_AV_FORMAT_FIND_STREAM_INFO_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
+  if (array_ptr->used != 0)
+  {
+    pointer *ptr = array_ptr->data;
+    pointer *ptr_end = ptr + array_ptr->used;
+    do {
+      location_s *key_location = it.get_location_value(ptr[0]);
+      location_s *value_location = it.get_location_value(ptr[1]);
+
+      // - ERROR -
+      if (key_location->v_type != c_bi_class_string ||
+          value_location->v_type != c_bi_class_string)
+      {
+        av_dict_free(&options);
+
+        exception_s::throw_exception(it,module.error_base + c_error_AV_FORMAT_INPUT_OPTIONS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+
+      // - ERROR -
+      if (av_dict_set(&options,
+            ((string_s *)key_location->v_data_ptr)->data,
+            ((string_s *)value_location->v_data_ptr)->data,0) < 0)
+      {
+        av_dict_free(&options);
+
+        exception_s::throw_exception(it,module.error_base + c_error_AV_FORMAT_INPUT_OPTIONS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+
+    } while((ptr += 2) < ptr_end);
   }
 
-  // - create new av format object -
-  av_format_s *avf_ptr = (av_format_s *)cmalloc(sizeof(av_format_s));
-  avf_ptr->init();
-
-  // - set format context -
-  avf_ptr->format_ctx = format_ctx;
-
-  // - allocate and set memory to zero -
-  avf_ptr->codec_ctxs = (AVCodecContext **)cmalloc(format_ctx->nb_streams*sizeof(AVCodecContext *));
-  memset(avf_ptr->codec_ctxs,0,format_ctx->nb_streams*sizeof(AVCodecContext *));
-
-  dst_location->v_data_ptr = (av_format_s *)avf_ptr;
+  BIC_AV_FORMAT_METHOD_AVFORMAT();
 
   return true;
 }/*}}}*/

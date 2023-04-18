@@ -23,7 +23,8 @@ extern built_in_class_s *av_classes[];
 // - AV error identifiers -
 enum
 {
-  c_error_AV_FORMAT_OPEN_INPUT_ERROR = 0,
+  c_error_AV_FORMAT_INPUT_OPTIONS_ERROR = 0,
+  c_error_AV_FORMAT_INPUT_OPEN_ERROR,
   c_error_AV_FORMAT_FIND_STREAM_INFO_ERROR,
   c_error_AV_FORMAT_STREAM_INDEX_EXCEEDS_RANGE,
   c_error_AV_FORMAT_STREAM_ALREADY_IN_DECODED,
@@ -56,6 +57,7 @@ void bic_av_format_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_av_format_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_av_format_method_AvFormat_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_av_format_method_AvFormat_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_av_format_method_stream_cnt_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_av_format_method_stream_info_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_av_format_method_stream_decode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
