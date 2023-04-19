@@ -981,6 +981,15 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
           return false;
         }
 
+        // - ERROR -
+        if (a_value->v_type != c_rm_class_dict)
+        {
+          VALIDATE_STACKS_PUSH_PROP_KEY();
+
+          exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_VALUE_TYPE,source_pos,(location_s *)it.blank_location);
+          return false;
+        }
+
         pointer_array_s *array_ptr = (pointer_array_s *)prop_value->v_data_ptr;
 
         // - ERROR -
@@ -1004,79 +1013,68 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
           return false;
         }
 
-        location_s *trg_location;
-        BIC_CALL_OPERATOR_BINARY_LE_BR_RE_BR(it,a_value,key_location,trg_location,source_pos,
+        // - search for item -
+        pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)a_value->v_data_ptr;
+
+        tree_ptr->it_ptr = &it;
+        tree_ptr->source_pos = source_pos;
+
+        pointer_map_s search_map = {(pointer)key_location,nullptr};
+        unsigned ref_index = tree_ptr->get_idx(search_map);
+
+        if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+        {
           VALIDATE_STACKS_PUSH_PROP_KEY();
 
           return false;
-        );
+        }
 
-        switch (prop_id)
+        if (ref_index != c_idx_not_exist)
         {
-        case prop_reference_if:
-          {/*{{{*/
-            int present_not_blank = it.get_location_value(trg_location)->v_type != c_bi_class_blank;
-            it.release_location_ptr(trg_location);
-
-            if (present_not_blank)
-            {
-              VALIDATE_PAIR_REFERENCE(a_value,ref_location,
+          switch (prop_id)
+          {
+          case prop_reference_if:
+            {/*{{{*/
+              VALIDATE_PAIR_REFERENCE(a_value,ref_location,VALIDATE_STACKS_PUSH_PROP_KEY();
                 VALIDATE_STACKS_PUSH_PROP_KEY();
 
                 return false;
               );
-            }
-          }/*}}}*/
-          break;
-        case prop_reference_type:
-          {/*{{{*/
-            location_s *type_location = it.get_location_value(trg_location);
-            string_s *prop_ref_str = nullptr;
-
-            switch (type_location->v_type)
-            {
-              case c_bi_class_blank:
-                prop_ref_str = it.get_new_string_ptr();
-                prop_ref_str->setf("%s-<blank>",
-                    ((string_s *)ref_location->v_data_ptr)->data);
-                break;
-
-              case c_bi_class_string:
-                prop_ref_str = it.get_new_string_ptr();
-                prop_ref_str->setf("%s-%s",
-                    ((string_s *)ref_location->v_data_ptr)->data,
-                    ((string_s *)type_location->v_data_ptr)->data);
-                break;
+            }/*}}}*/
+            break;
+          case prop_reference_type:
+            {/*{{{*/
+              location_s *type_location = it.get_location_value(tree_ptr->data[ref_index].object.value);
 
               // - ERROR -
-              default:
+              if (type_location->v_type != c_bi_class_string)
               {
-                it.release_location_ptr(trg_location);
-
                 VALIDATE_STACKS_PUSH_PROP_KEY();
 
                 exception_s::throw_exception(it,error_base + c_error_VALIDATOR_INVALID_PROPERTY_VALUE,source_pos,(location_s *)it.blank_location);
                 return false;
               }
-            }
 
-            // - create properties reference location -
-            BIC_CREATE_NEW_LOCATION(prop_ref_location,c_bi_class_string,prop_ref_str);
+              string_s *prop_ref_str = it.get_new_string_ptr();
+              prop_ref_str->setf("%s-%s",
+                  ((string_s *)ref_location->v_data_ptr)->data,
+                  ((string_s *)type_location->v_data_ptr)->data);
 
-            // - release no longer needed target -
-            it.release_location_ptr(trg_location);
+              // - create properties reference location -
+              BIC_CREATE_NEW_LOCATION(prop_ref_location,c_bi_class_string,prop_ref_str);
 
-            VALIDATE_PAIR_REFERENCE(a_value,prop_ref_location,
+              VALIDATE_PAIR_REFERENCE(a_value,prop_ref_location,
+                it.release_location_ptr(prop_ref_location);
+
+                VALIDATE_STACKS_PUSH_PROP_KEY();
+
+                return false;
+              );
+
               it.release_location_ptr(prop_ref_location);
-
-              VALIDATE_STACKS_PUSH_PROP_KEY();
-
-              return false;
-            );
-
-            it.release_location_ptr(prop_ref_location);
-          }/*}}}*/
-          break;
+            }/*}}}*/
+            break;
+          }
         }
       }/*}}}*/
       break;
