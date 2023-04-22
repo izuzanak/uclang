@@ -112,7 +112,7 @@ built_in_class_s glut_class =
   c_modifier_public | c_modifier_final,
   25
 #ifndef EMSCRIPTEN
-  + 1
+  + 2
 #endif
   , glut_methods,
   162, glut_variables,
@@ -250,6 +250,11 @@ built_in_method_s glut_methods[] =
     bic_glut_method_MainLoop_0
   },
 #ifndef EMSCRIPTEN
+  {
+    "MainLoopEvent#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_glut_method_MainLoopEvent_0
+  },
   {
     "LeaveMainLoop#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
@@ -1048,7 +1053,10 @@ bool bic_glut_method_MainLoop_0(interpreter_thread_s &it,unsigned stack_base,uli
   glutMainLoop();
 
   unsigned main_ret_code = glut_s::main_ret_code;
-  glut_s::init_static();
+
+  glut_s::main_loop = false;
+  glut_s::main_source_pos = 0;
+  glut_s::main_ret_code = c_run_return_code_OK;
 
   // - if exception occurred in one of events -
   if (main_ret_code == c_run_return_code_EXCEPTION)
@@ -1062,6 +1070,42 @@ bool bic_glut_method_MainLoop_0(interpreter_thread_s &it,unsigned stack_base,uli
 }/*}}}*/
 
 #ifndef EMSCRIPTEN
+bool bic_glut_method_MainLoopEvent_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_GLUT_CONTEXT_CHECK();
+  BIC_GLUT_WINDOW_CHECK();
+
+  // - ERROR -
+  if (glut_s::main_loop)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_GLUT_ALREADY_IN_MAIN_LOOP,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  glut_s::main_loop = true;
+  glut_s::main_source_pos = operands[c_source_pos_idx];
+  glut_s::main_ret_code = c_run_return_code_OK;
+
+  // - glut main loop event -
+  glutMainLoopEvent();
+
+  unsigned main_ret_code = glut_s::main_ret_code;
+
+  glut_s::main_loop = false;
+  glut_s::main_source_pos = 0;
+  glut_s::main_ret_code = c_run_return_code_OK;
+
+  // - if exception occurred in one of events -
+  if (main_ret_code == c_run_return_code_EXCEPTION)
+  {
+    return false;
+  }
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
 bool bic_glut_method_LeaveMainLoop_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_GLUT_CONTEXT_CHECK();
