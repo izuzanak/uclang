@@ -501,7 +501,11 @@ bool bic_py_object_member(interpreter_thread_s &it,uli *code,unsigned stack_base
   string_s &name_ref = ((interpreter_s *)it.interpreter_ptr)->variable_symbol_names[code[ioms_var_name]];
 
   // - create key object -
+#if PY_MAJOR_VERSION >= 3
+  PyObject *pyo_key = PyUnicode_FromStringAndSize(name_ref.data,name_ref.size - 1);
+#else
   PyObject *pyo_key = PyString_FromStringAndSize(name_ref.data,name_ref.size - 1);
+#endif
 
   // - ERROR -
   if (pyo_key == nullptr)
@@ -1226,11 +1230,16 @@ bool bic_py_object_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
     return false;
   }
 
-  char *buffer;
   Py_ssize_t length;
 
   // - retrieve python string properties -
+#if PY_MAJOR_VERSION >= 3
+  const char *buffer;
+  buffer = PyUnicode_AsUTF8AndSize(pyo_str,&length);
+#else
+  char *buffer;
   PyString_AsStringAndSize(pyo_str,&buffer,&length);
+#endif
 
   // - create string object -
   string_s *string_ptr = it.get_new_string_ptr();

@@ -152,18 +152,26 @@ PyObject *python_c::create_py_object(interpreter_thread_s &it,location_s *locati
       }
     case c_bi_class_char:
       {
+#if PY_MAJOR_VERSION >= 3
+        return PyLong_FromLong((char)location_ptr->v_data_ptr);
+#else
         return PyInt_FromLong((char)location_ptr->v_data_ptr);
+#endif
       }
     case c_bi_class_integer:
       {/*{{{*/
         long long int value = (long long int)location_ptr->v_data_ptr;
 
+#if PY_MAJOR_VERSION >= 3
+        return PyLong_FromLongLong(value);
+#else
         if (value > INT_MAX || value < INT_MIN)
         {
           return PyLong_FromLongLong(value);
         }
 
         return PyInt_FromLong(value);
+#endif
       }/*}}}*/
     case c_bi_class_float:
       {
@@ -172,7 +180,11 @@ PyObject *python_c::create_py_object(interpreter_thread_s &it,location_s *locati
     case c_bi_class_string:
       {
         string_s *string_ptr = (string_s *)location_ptr->v_data_ptr;
+#if PY_MAJOR_VERSION >= 3
+        return PyUnicode_FromStringAndSize(string_ptr->data,string_ptr->size - 1);
+#else
         return PyString_FromStringAndSize(string_ptr->data,string_ptr->size - 1);
+#endif
       }
     case c_bi_class_array:
       {/*{{{*/
@@ -299,6 +311,7 @@ location_s *python_c::py_object_value(interpreter_thread_s &it,PyObject *pyo_obj
     ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
     return (location_s *)it.blank_location;
   }
+#if PY_MAJOR_VERSION < 3
   else if (PyInt_Check(pyo_obj))
   {
     long long int value = PyInt_AsLong(pyo_obj);
@@ -306,6 +319,7 @@ location_s *python_c::py_object_value(interpreter_thread_s &it,PyObject *pyo_obj
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,value);
     return new_location;
   }
+#endif
   else if (PyLong_Check(pyo_obj))
   {
     long long int value = PyLong_AsLongLong(pyo_obj);
@@ -320,13 +334,22 @@ location_s *python_c::py_object_value(interpreter_thread_s &it,PyObject *pyo_obj
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,value);
     return new_location;
   }
+#if PY_MAJOR_VERSION >= 3
+  else if (PyUnicode_Check(pyo_obj))
+#else
   else if (PyString_Check(pyo_obj))
+#endif
   {
-    char *buffer;
     Py_ssize_t length;
 
     // - retrieve python string properties -
+#if PY_MAJOR_VERSION >= 3
+    const char *buffer;
+    buffer = PyUnicode_AsUTF8AndSize(pyo_obj,&length);
+#else
+    char *buffer;
     PyString_AsStringAndSize(pyo_obj,&buffer,&length);
+#endif
 
     string_s *string_ptr = it.get_new_string_ptr();
     string_ptr->set(length,buffer);
@@ -379,44 +402,44 @@ location_s *python_c::py_object_value(interpreter_thread_s &it,PyObject *pyo_obj
 
     BIC_CREATE_NEW_LOCATION(set_location,c_rm_class_set,tree_ptr);
 
-    Py_ssize_t size = PySet_Size(pyo_obj);
-    if (size > 0)
+    PyObject *pyo_iter = PyObject_GetIter(pyo_obj);
+
+    // - ERROR -
+    if (pyo_iter == nullptr)
     {
-      Py_ssize_t idx = 0;
-      Py_ssize_t cnt = 0;
-      do {
-        PyObject *pyo_key;
-
-        // - ERROR -
-        if (_PySet_Next(pyo_obj,&idx,&pyo_key) == -1)
-        {
-          it.release_location_ptr(set_location);
-          return nullptr;
-        }
-
-        location_s *key_location = py_object_value(it,pyo_key,source_pos);
-
-        // - ERROR -
-        if (key_location == nullptr)
-        {
-          it.release_location_ptr(set_location);
-          return nullptr;
-        }
-
-        // - insert key to set -
-        if (!tree_ptr->set_unique_insert((pointer)key_location))
-        {
-          it.release_location_ptr(key_location);
-        }
-
-        if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
-        {
-          it.release_location_ptr(set_location);
-          return nullptr;
-        }
-
-      } while(++cnt < size);
+      it.release_location_ptr(set_location);
+      return nullptr;
     }
+
+    PyObject *pyo_value;
+    while ((pyo_value = PyIter_Next(pyo_iter)) != nullptr)
+    {
+      location_s *value_location = py_object_value(it,pyo_value,source_pos);
+      Py_DECREF(pyo_value);
+
+      // - ERROR -
+      if (value_location == nullptr)
+      {
+        Py_DECREF(pyo_iter);
+        it.release_location_ptr(set_location);
+        return nullptr;
+      }
+
+      // - insert key to set -
+      if (!tree_ptr->set_unique_insert((pointer)value_location))
+      {
+        it.release_location_ptr(value_location);
+      }
+
+      if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
+      {
+        Py_DECREF(pyo_iter);
+        it.release_location_ptr(set_location);
+        return nullptr;
+      }
+    }
+
+    Py_DECREF(pyo_iter);
 
     return set_location;
   }/*}}}*/
