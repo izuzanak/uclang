@@ -1924,18 +1924,18 @@ inline bool interpreter_thread_s::run_expression_code(uli *code,unsigned stack_b
 
 inline unsigned interpreter_thread_s::get_iterable_type(location_s *location_ptr)
 {/*{{{*/
-  unsigned *mnri_arr = ((interpreter_s *)interpreter_ptr)->method_snri_map.data + (location_ptr->v_type << ((interpreter_s *)interpreter_ptr)->method_sn_pow);
+  unsigned *snri_arr = ((interpreter_s *)interpreter_ptr)->method_snri_map.data + (location_ptr->v_type << ((interpreter_s *)interpreter_ptr)->method_sn_pow);
 
   // - test first_idx_0, next_idx_1, item_1 iterable -
-  if (mnri_arr[c_built_in_method_idxs[c_built_in_method_first_idx_0]] != c_idx_not_exist &&
-      mnri_arr[c_built_in_method_idxs[c_built_in_method_next_idx_1]] != c_idx_not_exist &&
-      mnri_arr[c_built_in_method_idxs[c_built_in_method_item_1]] != c_idx_not_exist)
+  if (snri_arr[c_built_in_method_idxs[c_built_in_method_first_idx_0]] != c_idx_not_exist &&
+      snri_arr[c_built_in_method_idxs[c_built_in_method_next_idx_1]] != c_idx_not_exist &&
+      snri_arr[c_built_in_method_idxs[c_built_in_method_item_1]] != c_idx_not_exist)
   {
     return c_iter_first_idx_next_idx_item;
   }
 
   // - test next_item_0 iterable -
-  if (mnri_arr[c_built_in_method_idxs[c_built_in_method_next_item_0]] != c_idx_not_exist)
+  if (snri_arr[c_built_in_method_idxs[c_built_in_method_next_item_0]] != c_idx_not_exist)
   {
     return c_iter_next_item;
   }

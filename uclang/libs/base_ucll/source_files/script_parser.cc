@@ -8435,7 +8435,7 @@ void script_parser_s::element_search()
 
       debug_message_6(fprintf(stderr,"script_parser: search elements of class: %s\n",class_symbol_names[class_record.name_idx].data));
 
-      unsigned *mnri_arr = method_snri_map.data + (class_idx << method_sn_pow);
+      unsigned *snri_arr = method_snri_map.data + (class_idx << method_sn_pow);
       pointer *mnbi_arr = method_snbi_map.data + (class_idx << method_sn_pow);
       ri_ep_array_s &vn_ri_ep_map = class_record.vn_ri_ep_map;
 
@@ -8470,7 +8470,7 @@ void script_parser_s::element_search()
             if (method_record.modifiers & c_modifier_abstract)
             {
               // - SEMANTIC ERROR if method is defined as abstract assure that it was defined in some extending class -
-              if (mnri_arr[method_record.name_idx] == c_idx_not_exist)
+              if (snri_arr[method_record.name_idx] == c_idx_not_exist)
               {
                 error_code.push(ei_must_implement_inherited_abstract_method);
                 error_code.push(class_record.name_position.ui_first);
@@ -8481,7 +8481,7 @@ void script_parser_s::element_search()
             else
             {
               // - if method has not been defined so far, save index of its record to mapping function -
-              unsigned &method_record_idx = mnri_arr[method_record.name_idx];
+              unsigned &method_record_idx = snri_arr[method_record.name_idx];
 
               if (method_record.modifiers & c_modifier_final)
               {
