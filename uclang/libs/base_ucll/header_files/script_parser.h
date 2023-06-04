@@ -904,6 +904,7 @@ variable_records_s:variable_records
 $// - method symbol name maps -
 unsigned:method_sn_pow
 ui_array_s:method_snri_map
+pointer_array_s:method_snbi_map
 
 $// - parse variables BEGIN -
 
@@ -1422,6 +1423,7 @@ variable_records_s:variable_records
 $// - method symbol name maps -
 unsigned:method_sn_pow
 ui_array_s:method_snri_map
+pointer_array_s:method_snbi_map
 
 $// - parsed information -
 bc_array_s:const_chars

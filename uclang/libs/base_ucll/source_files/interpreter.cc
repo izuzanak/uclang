@@ -1198,6 +1198,7 @@ void interpreter_s::create_from_script_parser(script_parser_s &sp)
 
   method_sn_pow = sp.method_sn_pow;
   method_snri_map.swap(sp.method_snri_map);
+  method_snbi_map.swap(sp.method_snbi_map);
 
   // - parsed informations -
   const_chars.swap(sp.const_chars);

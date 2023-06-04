@@ -8395,10 +8395,16 @@ void script_parser_s::element_search()
   {
     // - method symbol names maps -
     unsigned method_sn_map_size = class_records.used << method_sn_pow;
+
     method_snri_map.used = 0;
     method_snri_map.copy_resize(method_sn_map_size);
     method_snri_map.used = method_sn_map_size;
     memset(method_snri_map.data,(int)c_idx_not_exist,method_snri_map.used*sizeof(unsigned));
+
+    method_snbi_map.used = 0;
+    method_snbi_map.copy_resize(method_sn_map_size);
+    method_snbi_map.used = method_sn_map_size;
+    memset(method_snbi_map.data,0,method_snbi_map.used*sizeof(pointer));
 
     // - cycle through all classes, initialize vn_ri_ep_map functions -
     {
@@ -8474,25 +8480,25 @@ void script_parser_s::element_search()
             else
             {
               // - if method has not been defined so far, save index of its record to mapping function -
-              unsigned &method_identifier = mnri_arr[method_record.name_idx];
+              unsigned &method_record_idx = mnri_arr[method_record.name_idx];
 
               if (method_record.modifiers & c_modifier_final)
               {
                 // - SEMANTIC ERROR -
-                if (method_identifier != c_idx_not_exist)
+                if (method_record_idx != c_idx_not_exist)
                 {
                   error_code.push(ei_cannot_override_final_method);
-                  error_code.push(method_records[method_identifier].name_position.ui_first);
-                  error_code.push(method_identifier);
+                  error_code.push(method_records[method_record_idx].name_position.ui_first);
+                  error_code.push(method_record_idx);
                   error_code.push(*mri_ptr);
 
                   return;
                 }
               }
 
-              if (method_identifier == c_idx_not_exist)
+              if (method_record_idx == c_idx_not_exist)
               {
-                method_identifier = *mri_ptr;
+                method_record_idx = *mri_ptr;
               }
             }
 
