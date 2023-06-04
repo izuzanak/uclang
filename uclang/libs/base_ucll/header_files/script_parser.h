@@ -682,7 +682,6 @@ ui_array_s:variable_record_idxs
 unsigned:element_cnt
 ui_array_s:extend_array
 
-ui_array_s:mnri_map
 ri_ep_array_s:vn_ri_ep_map
 
 name_pos_s:name_position
@@ -901,6 +900,10 @@ namespace_records_s:namespace_records
 class_records_s:class_records
 method_records_s:method_records
 variable_records_s:variable_records
+
+$// - method symbol name maps -
+unsigned:method_sn_pow
+ui_array_s:method_snri_map
 
 $// - parse variables BEGIN -
 
@@ -1227,6 +1230,12 @@ bool:throw_on_terminate
 additions
 {
   /*!
+   * \brief get method record index by method name index
+   * \return method record index
+   */
+  inline unsigned get_method_ri(unsigned a_class_record_idx,unsigned a_method_name_idx);
+
+  /*!
    * \brief return new location of interpreter_thread
    * \return pointer to new location
    */
@@ -1409,6 +1418,10 @@ namespace_records_s:namespace_records
 class_records_s:class_records
 method_records_s:method_records
 variable_records_s:variable_records
+
+$// - method symbol name maps -
+unsigned:method_sn_pow
+ui_array_s:method_snri_map
 
 $// - parsed information -
 bc_array_s:const_chars
@@ -1789,6 +1802,12 @@ inline int pointer_map_tree_s::__compare_value(pointer_map_s &a_first,pointer_ma
 inlines interpreter_thread_s
 @end
 
+inline unsigned interpreter_thread_s::get_method_ri(unsigned a_class_record_idx,unsigned a_method_name_idx)
+{/*{{{*/
+  return ((interpreter_s *)interpreter_ptr)->method_snri_map[
+    (a_class_record_idx << ((interpreter_s *)interpreter_ptr)->method_sn_pow) + a_method_name_idx];
+}/*}}}*/
+
 inline location_s *interpreter_thread_s::get_new_location_ptr()
 {/*{{{*/
   if (free_location_ptrs.used != 0)
@@ -1891,18 +1910,18 @@ inline bool interpreter_thread_s::run_expression_code(uli *code,unsigned stack_b
 
 inline unsigned interpreter_thread_s::get_iterable_type(location_s *location_ptr)
 {/*{{{*/
-  ui_array_s &mnri_map = ((interpreter_s *)interpreter_ptr)->class_records[location_ptr->v_type].mnri_map;
+  unsigned *mnri_arr = ((interpreter_s *)interpreter_ptr)->method_snri_map.data + (location_ptr->v_type << ((interpreter_s *)interpreter_ptr)->method_sn_pow);
 
   // - test first_idx_0, next_idx_1, item_1 iterable -
-  if (mnri_map[c_built_in_method_idxs[c_built_in_method_first_idx_0]] != c_idx_not_exist &&
-      mnri_map[c_built_in_method_idxs[c_built_in_method_next_idx_1]] != c_idx_not_exist &&
-      mnri_map[c_built_in_method_idxs[c_built_in_method_item_1]] != c_idx_not_exist)
+  if (mnri_arr[c_built_in_method_idxs[c_built_in_method_first_idx_0]] != c_idx_not_exist &&
+      mnri_arr[c_built_in_method_idxs[c_built_in_method_next_idx_1]] != c_idx_not_exist &&
+      mnri_arr[c_built_in_method_idxs[c_built_in_method_item_1]] != c_idx_not_exist)
   {
     return c_iter_first_idx_next_idx_item;
   }
 
   // - test next_item_0 iterable -
-  if (mnri_map[c_built_in_method_idxs[c_built_in_method_next_item_0]] != c_idx_not_exist)
+  if (mnri_arr[c_built_in_method_idxs[c_built_in_method_next_item_0]] != c_idx_not_exist)
   {
     return c_iter_next_item;
   }

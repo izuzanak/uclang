@@ -8383,29 +8383,31 @@ void script_parser_s::element_search()
   static_const_element_cnt = 0;
   static_element_cnt = 0;
 
+  // - method symbol names power -
+  method_sn_pow = 0;
+  while ((1U << method_sn_pow) < method_symbol_names.used)
+  {
+    ++method_sn_pow;
+  }
+
   // - if there are any class records -
   if (class_records.used != 0)
   {
-    // - cycle through all classes, initialize mnri_map and vn_ri_ep_map functions -
+    // - method symbol names maps -
+    unsigned method_sn_map_size = class_records.used << method_sn_pow;
+    method_snri_map.used = 0;
+    method_snri_map.copy_resize(method_sn_map_size);
+    method_snri_map.used = method_sn_map_size;
+    memset(method_snri_map.data,(int)c_idx_not_exist,method_snri_map.used*sizeof(unsigned));
+
+    // - cycle through all classes, initialize vn_ri_ep_map functions -
     {
       unsigned cl_idx = 0;
       do
       {
         class_record_s &class_record = class_records[cl_idx];
 
-        debug_message_6(fprintf(stderr,"script_parser: initialize mnri_map and vn_ri_ep_map of class: %s\n",class_symbol_names[class_record.name_idx].data));
-
-        // - if class is not defined as abstract -
-        if (!(class_record.modifiers & c_modifier_abstract))
-        {
-          // - clear function mapping method names to classes methods -
-          ui_array_s &mnri_map = class_record.mnri_map;
-          mnri_map.used = 0;
-          mnri_map.copy_resize(method_symbol_names.used);
-          mnri_map.used = method_symbol_names.used;
-          memset(mnri_map.data,(int)c_idx_not_exist,mnri_map.used*sizeof(unsigned));
-
-        }
+        debug_message_6(fprintf(stderr,"script_parser: initialize vn_ri_ep_map of class: %s\n",class_symbol_names[class_record.name_idx].data));
 
         // - clear function mapping variable names to class variables -
         ri_ep_array_s &vn_ri_ep_map = class_record.vn_ri_ep_map;
@@ -8427,7 +8429,7 @@ void script_parser_s::element_search()
 
       debug_message_6(fprintf(stderr,"script_parser: search elements of class: %s\n",class_symbol_names[class_record.name_idx].data));
 
-      ui_array_s &mnri_map = class_record.mnri_map;
+      unsigned *mnri_arr = method_snri_map.data + (class_idx << method_sn_pow);
       ri_ep_array_s &vn_ri_ep_map = class_record.vn_ri_ep_map;
 
       unsigned extended_class_idx = class_idx;
@@ -8461,7 +8463,7 @@ void script_parser_s::element_search()
             if (method_record.modifiers & c_modifier_abstract)
             {
               // - SEMANTIC ERROR if method is defined as abstract assure that it was defined in some extending class -
-              if (mnri_map[method_record.name_idx] == c_idx_not_exist)
+              if (mnri_arr[method_record.name_idx] == c_idx_not_exist)
               {
                 error_code.push(ei_must_implement_inherited_abstract_method);
                 error_code.push(class_record.name_position.ui_first);
@@ -8472,7 +8474,7 @@ void script_parser_s::element_search()
             else
             {
               // - if method has not been defined so far, save index of its record to mapping function -
-              unsigned &method_identifier = mnri_map[method_record.name_idx];
+              unsigned &method_identifier = mnri_arr[method_record.name_idx];
 
               if (method_record.modifiers & c_modifier_final)
               {

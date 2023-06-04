@@ -414,7 +414,7 @@ int inst_new_object(inst_params_s *params)
   }
 
   // - call class constructor -
-  unsigned method_ri = class_record.mnri_map.map_name(code[ino_constr_name]);
+  unsigned method_ri = it.get_method_ri(code[ino_class_ri],code[ino_constr_name]);
 
   // - ERROR -
   if (method_ri == c_idx_not_exist)

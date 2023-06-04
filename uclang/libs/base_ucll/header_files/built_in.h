@@ -261,7 +261,7 @@ enum
   {/*{{{*/\
     unsigned name_idx = ((interpreter_s *)it.interpreter_ptr)->method_symbol_names.get_idx_char_ptr(strlen(NAME),NAME);\
     cassert(name_idx != c_idx_not_exist);\
-    unsigned method_ri = ((interpreter_s *)it.interpreter_ptr)->class_records[((location_s *)dst_location)->v_type].mnri_map.map_name(name_idx);\
+    unsigned method_ri = it.get_method_ri(((location_s *)dst_location)->v_type,name_idx);\
     cassert(method_ri != c_idx_not_exist);\
 \
     new_exception->params.push(method_ri);\
@@ -271,7 +271,7 @@ enum
   {/*{{{*/\
     unsigned name_idx = ((interpreter_s *)IT.interpreter_ptr)->method_symbol_names.get_idx_char_ptr(strlen(NAME),NAME);\
     cassert(name_idx != c_idx_not_exist);\
-    unsigned method_ri = ((interpreter_s *)IT.interpreter_ptr)->class_records[CLASS_IDX].mnri_map.map_name(name_idx);\
+    unsigned method_ri = it.get_method_ri(CLASS_IDX,name_idx);\
     cassert(method_ri != c_idx_not_exist);\
 \
     new_exception->params.push(method_ri);\
@@ -567,7 +567,7 @@ enum
       {\
         IT.release_stack_from(new_stack_base);\
 \
-        unsigned method_ri = ((interpreter_s *)IT.interpreter_ptr)->class_records[location->v_type].mnri_map.map_name(c_built_in_method_idxs[c_built_in_method_length_0]);\
+        unsigned method_ri = IT.get_method_ri(location->v_type,c_built_in_method_idxs[c_built_in_method_length_0]);\
         cassert(method_ri != c_idx_not_exist);\
 \
         exception_s *new_exception = exception_s::throw_exception(IT,c_error_METHOD_NOT_RETURN_INTEGER,SOURCE_POS,(location_s *)IT.blank_location);\
@@ -674,7 +674,7 @@ enum
       {\
         IT.release_stack_from(new_stack_base);\
 \
-        unsigned method_ri = ((interpreter_s *)IT.interpreter_ptr)->class_records[location->v_type].mnri_map.map_name(c_built_in_method_idxs[c_built_in_method_first_idx_0]);\
+        unsigned method_ri = IT.get_method_ri(location->v_type,c_built_in_method_idxs[c_built_in_method_first_idx_0]);\
         cassert(method_ri != c_idx_not_exist);\
 \
         exception_s *new_exception = exception_s::throw_exception(IT,c_error_METHOD_NOT_RETURN_INDEX,SOURCE_POS,(location_s *)IT.blank_location);\
@@ -741,7 +741,7 @@ enum
       {\
         IT.release_stack_from(new_stack_base);\
 \
-        unsigned method_ri = ((interpreter_s *)IT.interpreter_ptr)->class_records[location->v_type].mnri_map.map_name(c_built_in_method_idxs[c_built_in_method_next_idx_1]);\
+        unsigned method_ri = IT.get_method_ri(location->v_type,c_built_in_method_idxs[c_built_in_method_next_idx_1]);\
         cassert(method_ri != c_idx_not_exist);\
 \
         exception_s *new_exception = exception_s::throw_exception(IT,c_error_METHOD_NOT_RETURN_INDEX,SOURCE_POS,(location_s *)IT.blank_location);\

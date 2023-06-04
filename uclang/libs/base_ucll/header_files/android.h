@@ -130,7 +130,7 @@ public:
       /* - if delegate is not static - */\
       else\
       {\
-        unsigned method_ri = ((interpreter_s *)it.interpreter_ptr)->class_records[it.get_location_value(delegate_ptr->object_location)->v_type].mnri_map.map_name(delegate_ptr->name_idx_ri);\
+        unsigned method_ri = it.get_method_ri(it.get_location_value(delegate_ptr->object_location)->v_type,delegate_ptr->name_idx_ri);\
         cassert(method_ri != c_idx_not_exist);\
 \
         new_exception->params.push(method_ri);\

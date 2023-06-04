@@ -103,9 +103,7 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
       if (*op_ptr & c_op_modifier_static_class) {\
 \
         /* - process static method call - */\
-        class_record_s &class_record = _this.class_records[op_ptr[1]];\
-\
-        unsigned method_ri = class_record.mnri_map.map_name(OP_NAME);\
+        unsigned method_ri = _this.method_snri_map[(op_ptr[1] << _this.method_sn_pow) + OP_NAME];\
 \
         /* - ERROR - */\
         if (method_ri == c_idx_not_exist) {\
@@ -203,9 +201,7 @@ bool(*script_im_callers[c_script_im_gen_action_cnt])(expression_s &exp,uli_array
       if (*op1_ptr & c_op_modifier_static_class) {\
 \
         /* - process static method call - */\
-        class_record_s &class_record = _this.class_records[op1_ptr[1]];\
-\
-        unsigned method_ri = class_record.mnri_map.map_name(OP_NAME);\
+        unsigned method_ri = _this.method_snri_map[(op1_ptr[1] << _this.method_sn_pow) + OP_NAME];\
 \
         /* - ERROR - */\
         if (method_ri == c_idx_not_exist) {\
@@ -1263,7 +1259,7 @@ bool im_new_object(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,s
     name_string.clear();
 
     // - retrieve constructor record index -
-    unsigned method_ri = class_record.mnri_map.map_name(method_name_idx);
+    unsigned method_ri = _this.method_snri_map[(class_record_idx << _this.method_sn_pow) + method_name_idx];
 
     // - ERROR -
     if (method_ri == c_idx_not_exist)
@@ -1375,7 +1371,7 @@ bool im_new_objects_array(expression_s &exp,uli_array_s &begin_code,uli_array_s 
     name_string.clear();
 
     // - retrieve constructor record index -
-    unsigned method_ri = class_record.mnri_map.map_name(method_name_idx);
+    unsigned method_ri = _this.method_snri_map[(class_record_idx << _this.method_sn_pow) + method_name_idx];
 
     // - ERROR -
     if (method_ri == c_idx_not_exist)
@@ -2290,9 +2286,7 @@ bool im_this_method_call(expression_s &exp,uli_array_s &begin_code,uli_array_s &
   {
     // - get temporary position for store of method return value -
     unsigned tmp_local_idx = im.free_stack_idxs.used != 0?im.free_stack_idxs.pop():im.stack_idx_max++;
-
-    class_record_s &class_record = _this.class_records[im.class_idx];
-    unsigned method_ri = class_record.mnri_map.map_name(exp.nodes[exp_node_idx + 2]);
+    unsigned method_ri = _this.method_snri_map[(im.class_idx << _this.method_sn_pow) + exp.nodes[exp_node_idx + 2]];
 
     // - ERROR -
     if (method_ri == c_idx_not_exist)
@@ -2419,9 +2413,7 @@ bool im_object_method_call(expression_s &exp,uli_array_s &begin_code,uli_array_s
     if (*op_ptr & c_op_modifier_static_class)
     {
       // - call static class method -
-      class_record_s &class_record = _this.class_records[op_ptr[1]];
-
-      unsigned method_ri = class_record.mnri_map.map_name(exp.nodes[exp_node_idx + 2]);
+      unsigned method_ri = _this.method_snri_map[(op_ptr[1] << _this.method_sn_pow) + exp.nodes[exp_node_idx + 2]];
 
       // - ERROR -
       if (method_ri == c_idx_not_exist)

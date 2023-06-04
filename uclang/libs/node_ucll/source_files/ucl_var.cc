@@ -2756,7 +2756,7 @@ void UclVar::Initialize(script_parser_s &a_parser,bool *a_modules)
   /*{{{*/
 
 #define UCLVAR_RETRIEVE_STATIC_METHOD_IDX(CLASS_NAME,CLASS_ID,METHOD_ID,METHOD_NAME_ID) \
-  CLASS_NAME::METHOD_ID = a_parser.class_records[CLASS_ID].mnri_map[METHOD_NAME_ID];\
+  CLASS_NAME::METHOD_ID = a_parser.method_snri_map[(CLASS_ID << a_parser.method_sn_pow) + METHOD_NAME_ID];\
   cassert(CLASS_NAME::METHOD_ID != c_idx_not_exist);
 
   // - module base -
@@ -4109,7 +4109,7 @@ UclVar UclVar::__call(std::string a_method_name,UclVar a_op,UclVar a_op_1,UclVar
 \
   if (method_name_idx != c_idx_not_exist)\
   {\
-    method_record_idx = interpreter.class_records[class_record_idx].mnri_map[method_name_idx];\
+    method_record_idx = interpreter.method_snri_map[(class_record_idx << interpreter.method_sn_pow) + method_name_idx];\
   }\
 \
   /* - ERROR - */\

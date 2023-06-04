@@ -244,7 +244,7 @@ bool interpreter_thread_s::create_new_object_blank_constructor(location_s *new_l
   }
 
   // - call object constructor -
-  unsigned method_ri = class_record.mnri_map.map_name(code[inoa_constr_name]);
+  unsigned method_ri = get_method_ri(code[inoa_class_ri],code[inoa_constr_name]);
 
   // - ERROR -
   if (method_ri == c_idx_not_exist)
@@ -964,7 +964,7 @@ bool interpreter_thread_s::call_method(uli *code,unsigned stack_base)
 {/*{{{*/
   location_s *call_location = (location_s *)get_stack_value(stack_base + code[icl_parm_this]);
 
-  unsigned method_ri = INTERPRETER->class_records[call_location->v_type].mnri_map.map_name(code[icl_name_idx]);
+  unsigned method_ri = get_method_ri(call_location->v_type,code[icl_name_idx]);
 
   // - ERROR -
   if (method_ri == c_idx_not_exist)
@@ -1195,6 +1195,9 @@ void interpreter_s::create_from_script_parser(script_parser_s &sp)
   class_records.swap(sp.class_records);
   method_records.swap(sp.method_records);
   variable_records.swap(sp.variable_records);
+
+  method_sn_pow = sp.method_sn_pow;
+  method_snri_map.swap(sp.method_snri_map);
 
   // - parsed informations -
   const_chars.swap(sp.const_chars);
@@ -1682,7 +1685,7 @@ int interpreter_s::run_main_thread(const char *class_name,const char *method_nam
     class_record_idx = get_global_namespace_class_idx_by_name_idx(class_name_idx);
     if (class_record_idx != c_idx_not_exist && !(class_records[class_record_idx].modifiers & c_modifier_built_in))
     {
-      method_record_idx = class_records[class_record_idx].mnri_map.map_name(method_name_idx);
+      method_record_idx = method_snri_map[(class_record_idx << method_sn_pow) + method_name_idx];
     }
   }
 

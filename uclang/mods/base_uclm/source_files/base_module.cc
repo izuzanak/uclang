@@ -8481,7 +8481,7 @@ bool bic_delegate_method_Delegate_3(interpreter_thread_s &it,unsigned stack_base
     }
 
     // - retrieve method record index -
-    unsigned method_ri = IT_INTERPRETER->class_records[class_idx].mnri_map.map_name(name_idx);
+    unsigned method_ri = it.get_method_ri(class_idx,name_idx);
 
     // - ERROR -
     if (method_ri == c_idx_not_exist)
@@ -8530,7 +8530,7 @@ bool bic_delegate_method_Delegate_3(interpreter_thread_s &it,unsigned stack_base
     }
 
     // - retrieve method record index -
-    unsigned method_ri = IT_INTERPRETER->class_records[src_0_location->v_type].mnri_map.map_name(name_idx);
+    unsigned method_ri = it.get_method_ri(src_0_location->v_type,name_idx);
 
     // - ERROR -
     if (method_ri == c_idx_not_exist)
