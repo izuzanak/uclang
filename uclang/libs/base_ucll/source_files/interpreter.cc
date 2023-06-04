@@ -964,46 +964,47 @@ bool interpreter_thread_s::call_method(uli *code,unsigned stack_base)
 {/*{{{*/
   location_s *call_location = (location_s *)get_stack_value(stack_base + code[icl_parm_this]);
 
-  unsigned method_ri = get_method_ri(call_location->v_type,code[icl_name_idx]);
-
-  // - ERROR -
-  if (method_ri == c_idx_not_exist)
+  pointer bi_method_caller = get_method_bi(call_location->v_type,code[icl_name_idx]);
+  if (bi_method_caller != nullptr)
   {
-    class_record_s &class_record = INTERPRETER->class_records[call_location->v_type];
-
-    if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->invoke_caller != nullptr)
+    // - call built in method -
+    if (!((bi_method_caller_dt)bi_method_caller)(*this,stack_base,code + icl_source_pos))
     {
-      // - call object invoke caller -
-      if (!class_record.bi_class_ptr->invoke_caller(*this,code,stack_base,code + icl_source_pos))
-      {
-        return false;
-      }
-    }
-
-    // - ERROR -
-    else
-    {
-      exception_s *new_exception = exception_s::throw_exception(*this,c_error_CLASS_DOES_NOT_CONTAIN_METHOD,code[icl_source_pos],(location_s *)blank_location);
-      new_exception->params.push(call_location->v_type);
-      new_exception->params.push(code[icl_name_idx]);
-
       return false;
     }
   }
   else
   {
-    method_record_s &method_record = INTERPRETER->method_records[method_ri];
+    unsigned method_ri = get_method_ri(call_location->v_type,code[icl_name_idx]);
 
-    if (method_record.modifiers & c_modifier_built_in)
+    // - ERROR -
+    if (method_ri == c_idx_not_exist)
     {
-      // - call built in method -
-      if (!method_record.bi_method_caller(*this,stack_base,code + icl_source_pos))
+      class_record_s &class_record = INTERPRETER->class_records[call_location->v_type];
+
+      if (class_record.modifiers & c_modifier_built_in && class_record.bi_class_ptr->invoke_caller != nullptr)
       {
+        // - call object invoke caller -
+        if (!class_record.bi_class_ptr->invoke_caller(*this,code,stack_base,code + icl_source_pos))
+        {
+          return false;
+        }
+      }
+
+      // - ERROR -
+      else
+      {
+        exception_s *new_exception = exception_s::throw_exception(*this,c_error_CLASS_DOES_NOT_CONTAIN_METHOD,code[icl_source_pos],(location_s *)blank_location);
+        new_exception->params.push(call_location->v_type);
+        new_exception->params.push(code[icl_name_idx]);
+
         return false;
       }
     }
     else
     {
+      method_record_s &method_record = INTERPRETER->method_records[method_ri];
+
       // - if method is private, then test calling -
       if (method_record.modifiers & c_modifier_private)
       {

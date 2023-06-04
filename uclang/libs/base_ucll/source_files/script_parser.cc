@@ -8436,6 +8436,7 @@ void script_parser_s::element_search()
       debug_message_6(fprintf(stderr,"script_parser: search elements of class: %s\n",class_symbol_names[class_record.name_idx].data));
 
       unsigned *mnri_arr = method_snri_map.data + (class_idx << method_sn_pow);
+      pointer *mnbi_arr = method_snbi_map.data + (class_idx << method_sn_pow);
       ri_ep_array_s &vn_ri_ep_map = class_record.vn_ri_ep_map;
 
       unsigned extended_class_idx = class_idx;
@@ -8499,6 +8500,12 @@ void script_parser_s::element_search()
               if (method_record_idx == c_idx_not_exist)
               {
                 method_record_idx = *mri_ptr;
+
+                if (method_record.modifiers & c_modifier_built_in)
+                {
+                  // - set method name built in caller -
+                  mnbi_arr[method_record.name_idx] = (pointer)method_record.bi_method_caller;
+                }
               }
             }
 

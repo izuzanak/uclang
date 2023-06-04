@@ -1237,6 +1237,12 @@ additions
   inline unsigned get_method_ri(unsigned a_class_record_idx,unsigned a_method_name_idx);
 
   /*!
+   * \brief get method built in caller by method name index
+   * \return built in caller
+   */
+  inline pointer get_method_bi(unsigned a_class_record_idx,unsigned a_method_name_idx);
+
+  /*!
    * \brief return new location of interpreter_thread
    * \return pointer to new location
    */
@@ -1807,6 +1813,12 @@ inlines interpreter_thread_s
 inline unsigned interpreter_thread_s::get_method_ri(unsigned a_class_record_idx,unsigned a_method_name_idx)
 {/*{{{*/
   return ((interpreter_s *)interpreter_ptr)->method_snri_map[
+    (a_class_record_idx << ((interpreter_s *)interpreter_ptr)->method_sn_pow) + a_method_name_idx];
+}/*}}}*/
+
+inline pointer interpreter_thread_s::get_method_bi(unsigned a_class_record_idx,unsigned a_method_name_idx)
+{/*{{{*/
+  return ((interpreter_s *)interpreter_ptr)->method_snbi_map[
     (a_class_record_idx << ((interpreter_s *)interpreter_ptr)->method_sn_pow) + a_method_name_idx];
 }/*}}}*/
 
