@@ -1,7 +1,5 @@
 
-if(OS_LINUX)
-  find_package(PerlLibs)
-endif()
+find_package(PerlLibs)
 
 if(PERLLIBS_FOUND)
   set(CONF_DO_BUILD TRUE)

@@ -1,7 +1,7 @@
 
 find_package(OpenSSL 1.0.2)
 
-if(OS_LINUX)
+if(OS_LINUX OR OS_MSYS2)
   set(CONF_DO_BUILD TRUE)
   set(CONF_HEADER_DIRS
     "${LIB_BASE}/header_files")

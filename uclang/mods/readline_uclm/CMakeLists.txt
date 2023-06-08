@@ -1,5 +1,5 @@
 
-if (OS_LINUX)
+if (OS_LINUX OR OS_MSYS2)
   if(EXISTS "/usr/include/readline/readline.h")
     set(LIBREADLINE_FOUND TRUE)
   endif()

@@ -1,5 +1,5 @@
 
-if(OS_LINUX)
+if(OS_LINUX OR OS_MSYS2)
   set(LIBFGETTOOLS_FOUND TRUE)
 endif()
 
