@@ -66,13 +66,13 @@ void cipher_s::process(unsigned a_length,char *a_data)
   do {
     j += state[++i];
 
-    register unsigned char state_j = state[j];
-    register unsigned char state_i = state[i];
+    unsigned char state_j = state[j];
+    unsigned char state_i = state[i];
 
     state[j] = state_i;
     state[i] = state_j;
 
-    register unsigned char xor_idx = state_i + state_j;
+    unsigned char xor_idx = state_i + state_j;
 
     *ptr ^= state[xor_idx];
 

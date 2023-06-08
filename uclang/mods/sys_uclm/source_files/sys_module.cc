@@ -4381,7 +4381,10 @@ built_in_class_s signal_class =
   2
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
-  + 33
+  + 32
+#ifndef MSYS2
+  + 1
+#endif
 #endif
 
   , signal_variables,
@@ -4450,7 +4453,9 @@ built_in_variable_s signal_variables[] =
   { "SIGUSR2", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SIGPIPE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SIGALRM", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#ifndef MSYS2
   { "SIGSTKFLT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#endif
   { "SIGCHLD", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SIGCONT", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SIGSTOP", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -4505,7 +4510,9 @@ void bic_signal_consts(location_array_s &const_locations)
     CREATE_SIGNAL_NUMERAL_IDENTIFIER(SIGUSR2);
     CREATE_SIGNAL_NUMERAL_IDENTIFIER(SIGPIPE);
     CREATE_SIGNAL_NUMERAL_IDENTIFIER(SIGALRM);
+#ifndef MSYS2
     CREATE_SIGNAL_NUMERAL_IDENTIFIER(SIGSTKFLT);
+#endif
     CREATE_SIGNAL_NUMERAL_IDENTIFIER(SIGCHLD);
     CREATE_SIGNAL_NUMERAL_IDENTIFIER(SIGCONT);
     CREATE_SIGNAL_NUMERAL_IDENTIFIER(SIGSTOP);

@@ -399,7 +399,7 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
   do
   {
     // - retrieve description of next state from queue -
-    fa_state_descr_s q_state_descr;
+    fa_state_descr_s q_state_descr = {};
     q_state_descr.init();
     q_state_descr.swap(queue.next());
 
@@ -2851,7 +2851,7 @@ bool reg_parser_s::NKA_to_DKA()
     mul_state_move.mul_state = eps_closures[nka_fas_idx];
   }
 
-  reg_mul_state_move_s mul_state_move;
+  reg_mul_state_move_s mul_state_move = {};
   mul_state_move.init();
 
   reg_mul_state_move_array_s new_mul_state_moves;

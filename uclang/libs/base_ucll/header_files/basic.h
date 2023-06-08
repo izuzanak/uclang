@@ -95,6 +95,20 @@
 #define libnode_ucll_EXPORT
 #endif
 
+#ifdef MSYS2
+#define SYSTEM_TYPE SYSTEM_TYPE_UNIX
+#define     SYSTEM_TYPE_UNIX_SIGACTION ENABLED
+#define     SYSTEM_TYPE_UNIX_SOCKET    ENABLED
+#define ATOMIC_TYPE ATOMIC_TYPE_GCC
+#define THREAD_LIB THREAD_LIB_PTHREAD
+#define MUTEX_TYPE MUTEX_TYPE_PTHREAD
+#define DYNAMIC_TYPE DYNAMIC_TYPE_POSIX
+#define _printf_p printf
+#define EXPORT
+#define libbase_ucll_EXPORT
+#define libnode_ucll_EXPORT
+#endif
+
 #ifdef WINDOWS
 #define SYSTEM_TYPE SYSTEM_TYPE_WINDOWS
 #define ATOMIC_TYPE ATOMIC_TYPE_WINDOWS

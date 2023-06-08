@@ -75,7 +75,7 @@ inline unsigned mutex_s::init()
   pthread_mutexattr_t attr;
   pthread_mutexattr_init(&attr);
 
-#ifndef EMSCRIPTEN
+#if !defined(EMSCRIPTEN) && !defined(MSYS2)
   pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE_NP);
 #endif
 
