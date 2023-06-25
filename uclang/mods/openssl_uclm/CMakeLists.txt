@@ -1,5 +1,5 @@
 
-find_package(OpenSSL 1.0.2)
+find_package(OpenSSL 1.0.1)
 
 if(OPENSSL_FOUND)
   set(CONF_DO_BUILD TRUE)
