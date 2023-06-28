@@ -75,7 +75,7 @@ built_in_class_s avahi_poll_class =
 {/*{{{*/
   "AvahiPoll",
   c_modifier_public | c_modifier_final,
-  6, avahi_poll_methods,
+  7, avahi_poll_methods,
   0, avahi_poll_variables,
   bic_avahi_poll_consts,
   bic_avahi_poll_init,
@@ -109,6 +109,11 @@ built_in_method_s avahi_poll_methods[] =
     "get_fds#0",
     c_modifier_public | c_modifier_final,
     bic_avahi_poll_method_get_fds_0
+  },
+  {
+    "timeout#0",
+    c_modifier_public | c_modifier_final,
+    bic_avahi_poll_method_timeout_0
   },
   {
     "process#1",
@@ -179,6 +184,14 @@ bool bic_avahi_poll_method_AvahiPoll_0(interpreter_thread_s &it,unsigned stack_b
 }/*}}}*/
 
 bool bic_avahi_poll_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+
+  // FIXME TODO continue ...
+  BIC_TODO_ERROR(__FILE__,__LINE__);
+  return false;
+}/*}}}*/
+
+bool bic_avahi_poll_method_timeout_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 
   // FIXME TODO continue ...
@@ -298,10 +311,55 @@ bool bic_avahi_client_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
 bool bic_avahi_client_method_AvahiClient_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
+@begin ucl_params
+<
+poll:c_bi_class_avahi_poll
+flags:retrieve_integer
+delegate:c_bi_class_delegate
+user_data:ignore
+>
+method AvahiClient
+; @end
 
-  // FIXME TODO throw proper exception ...
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
+  avahi_poll_s *ap_ptr = (avahi_poll_s *)src_0_location->v_data_ptr;
+
+  // - retrieve delegate pointer -
+  delegate_s *delegate_ptr = (delegate_s *)src_2_location->v_data_ptr;
+
+  // - ERROR -
+  if (delegate_ptr->param_cnt != 1)
+  {
+    // FIXME TODO throw proper execption ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  int error;
+  AvahiClient *avahi_client = avahi_client_new(&ap_ptr->avahi_poll,
+      (AvahiClientFlags)flags,avahi_client_s::callback,dst_location,&error);
+
+  // - ERROR -
+  if (avahi_client == nullptr)
+  {
+    // FIXME TODO throw proper execption ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - create avahi_client object -
+  avahi_client_s *ac_ptr = (avahi_client_s *)cmalloc(sizeof(avahi_client_s));
+  ac_ptr->init();
+
+  ac_ptr->avahi_client = avahi_client;
+
+  // - set user data pointer -
+  src_3_location->v_reference_cnt.atomic_inc();
+  ac_ptr->user_data_ptr = src_3_location;
+
+  // - set avahi_client destination location -
+  dst_location->v_data_ptr = (avahi_client_s *)ac_ptr;
+
+  return true;
 }/*}}}*/
 
 bool bic_avahi_client_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
