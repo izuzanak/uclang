@@ -192,35 +192,42 @@ void avahi_client_s::callback(AvahiClient *a_client,AvahiClientState state,void 
   // - call delegate method -
   location_s *trg_location = nullptr;
   BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,avahi_poll->source_pos,
+
+    // - reset avahi client state -
+    avahi_client->state = (AvahiClientState)-1;
+
     avahi_poll->ret_code = c_run_return_code_EXCEPTION;
     return;
   );
   it.release_location_ptr(trg_location);
+
+  // - reset avahi client state -
+  avahi_client->state = (AvahiClientState)-1;
 }/*}}}*/
 
 /*
- * methods of structure avahi_browser_s
+ * methods of structure avahi_service_browser_s
  */
 
-void avahi_browser_s::callback(AvahiServiceBrowser *a_browser,AvahiIfIndex interface,AvahiProtocol protocol,
+void avahi_service_browser_s::callback(AvahiServiceBrowser *a_browser,AvahiIfIndex interface,AvahiProtocol protocol,
     AvahiBrowserEvent event,const char *name,const char *type,const char *domain,AvahiLookupResultFlags flags,
     void *userdata)
 {/*{{{*/
-  fprintf(stderr,"avahi_browser_s::callback\n");
+  fprintf(stderr,"avahi_service_browser_s::callback\n");
 
   location_s *browser_location = (location_s *)userdata;
-  avahi_browser_s *avahi_browser = (avahi_browser_s *)browser_location->v_data_ptr;
-  avahi_client_s *avahi_client = (avahi_client_s *)avahi_browser->avahi_client_loc->v_data_ptr;
+  avahi_service_browser_s *avahi_service_browser = (avahi_service_browser_s *)browser_location->v_data_ptr;
+  avahi_client_s *avahi_client = (avahi_client_s *)avahi_service_browser->avahi_client_loc->v_data_ptr;
   avahi_poll_s *avahi_poll = (avahi_poll_s *)avahi_client->avahi_poll_loc->v_data_ptr;
 
   interpreter_thread_s &it = *avahi_poll->it_ptr;
-  delegate_s *delegate_ptr = (delegate_s *)avahi_browser->callback_dlg->v_data_ptr;
+  delegate_s *delegate_ptr = (delegate_s *)avahi_service_browser->callback_dlg->v_data_ptr;
 
-  // - update browser data -
-  avahi_browser->event = event;
-  avahi_browser->name = name;
-  avahi_browser->type = type;
-  avahi_browser->domain = domain;
+  // - update service browser data -
+  avahi_service_browser->browse_event = event;
+  avahi_service_browser->browse_name = name;
+  avahi_service_browser->browse_type = type;
+  avahi_service_browser->browse_domain = domain;
 
   // - callback parameters -
   const unsigned param_cnt = 1;
@@ -229,9 +236,16 @@ void avahi_browser_s::callback(AvahiServiceBrowser *a_browser,AvahiIfIndex inter
   // - call delegate method -
   location_s *trg_location = nullptr;
   BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,avahi_poll->source_pos,
+    
+    // - reset avahi service browser event -
+    avahi_service_browser->browse_event = (AvahiBrowserEvent)-1;
+
     avahi_poll->ret_code = c_run_return_code_EXCEPTION;
     return;
   );
   it.release_location_ptr(trg_location);
+
+  // - reset avahi service browser event -
+  avahi_service_browser->browse_event = (AvahiBrowserEvent)-1;
 }/*}}}*/
 

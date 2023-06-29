@@ -109,20 +109,20 @@ struct avahi_client_s
 };
 
 /*
- * definition of structure avahi_browser_s
+ * definition of structure avahi_service_browser_s
  */
 
-struct avahi_browser_s
+struct avahi_service_browser_s
 {
-  AvahiServiceBrowser *avahi_browser;
+  AvahiServiceBrowser *avahi_service_browser;
   location_s *avahi_client_loc;
   location_s *callback_dlg;
   location_s *user_data_loc;
 
-  AvahiBrowserEvent event;
-  const char *name;
-  const char *type;
-  const char *domain;
+  AvahiBrowserEvent browse_event;
+  const char *browse_name;
+  const char *browse_type;
+  const char *browse_domain;
 
   static void callback(AvahiServiceBrowser *a_browser,AvahiIfIndex interface,AvahiProtocol protocol,AvahiBrowserEvent event,const char *name,const char *type,const char *domain,AvahiLookupResultFlags flags,void *userdata);
 
@@ -210,7 +210,7 @@ inline void avahi_client_s::init()
   avahi_poll_loc = nullptr;
   callback_dlg = nullptr;
   user_data_loc = nullptr;
-  state = AVAHI_CLIENT_FAILURE;
+  state = (AvahiClientState)-1;
 }/*}}}*/
 
 inline void avahi_client_s::clear(interpreter_thread_s &it)
@@ -239,22 +239,27 @@ inline void avahi_client_s::clear(interpreter_thread_s &it)
 }/*}}}*/
 
 /*
- * inline methods of structure avahi_browser_s
+ * inline methods of structure avahi_service_browser_s
  */
 
-inline void avahi_browser_s::init()
+inline void avahi_service_browser_s::init()
 {/*{{{*/
-  avahi_browser = nullptr;
+  avahi_service_browser = nullptr;
   avahi_client_loc = nullptr;
   callback_dlg = nullptr;
   user_data_loc = nullptr;
+
+  browse_event = (AvahiBrowserEvent)-1;
+  browse_name = nullptr;
+  browse_type = nullptr;
+  browse_domain = nullptr;
 }/*}}}*/
 
-inline void avahi_browser_s::clear(interpreter_thread_s &it)
+inline void avahi_service_browser_s::clear(interpreter_thread_s &it)
 {/*{{{*/
-  if (avahi_browser != nullptr)
+  if (avahi_service_browser != nullptr)
   {
-    avahi_service_browser_free(avahi_browser);
+    avahi_service_browser_free(avahi_service_browser);
   }
 
   if (avahi_client_loc != nullptr)
