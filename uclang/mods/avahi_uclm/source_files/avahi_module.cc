@@ -612,7 +612,7 @@ built_in_class_s avahi_browser_class =
 {/*{{{*/
   "AvahiBrowser",
   c_modifier_public | c_modifier_final,
-  6, avahi_browser_methods,
+  7, avahi_browser_methods,
   5, avahi_browser_variables,
   bic_avahi_browser_consts,
   bic_avahi_browser_init,
@@ -646,6 +646,11 @@ built_in_method_s avahi_browser_methods[] =
     "event#0",
     c_modifier_public | c_modifier_final,
     bic_avahi_browser_method_event_0
+  },
+  {
+    "service#0",
+    c_modifier_public | c_modifier_final,
+    bic_avahi_browser_method_service_0
   },
   {
     "user_data#0",
@@ -813,6 +818,42 @@ bool bic_avahi_browser_method_event_0(interpreter_thread_s &it,unsigned stack_ba
   long long int result = ((avahi_browser_s *)dst_location->v_data_ptr)->event;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_avahi_browser_method_service_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  avahi_browser_s *ab_ptr = (avahi_browser_s *)dst_location->v_data_ptr;
+
+  // - create result array -
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+#define BIC_AVAHI_BROWSER_SERVICE_VALUE(NAME) \
+/*{{{*/\
+  if (ab_ptr->NAME != nullptr)\
+  {\
+    string_s *value_str = it.get_new_string_ptr();\
+    value_str->set(strlen(ab_ptr->NAME),ab_ptr->NAME);\
+\
+    BIC_CREATE_NEW_LOCATION(name_location,c_bi_class_string,value_str);\
+    array_ptr->push(name_location);\
+  }\
+  else\
+  {\
+    ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();\
+    array_ptr->push(it.blank_location);\
+  }
+/*}}}*/
+
+  BIC_AVAHI_BROWSER_SERVICE_VALUE(name);
+  BIC_AVAHI_BROWSER_SERVICE_VALUE(type);
+  BIC_AVAHI_BROWSER_SERVICE_VALUE(domain);
+
+  BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(array_location);
 
   return true;
 }/*}}}*/

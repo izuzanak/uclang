@@ -216,8 +216,11 @@ void avahi_browser_s::callback(AvahiServiceBrowser *a_browser,AvahiIfIndex inter
   interpreter_thread_s &it = *avahi_poll->it_ptr;
   delegate_s *delegate_ptr = (delegate_s *)avahi_browser->callback_dlg->v_data_ptr;
 
-  // - update browser event -
+  // - update browser data -
   avahi_browser->event = event;
+  avahi_browser->name = name;
+  avahi_browser->type = type;
+  avahi_browser->domain = domain;
 
   // - callback parameters -
   const unsigned param_cnt = 1;

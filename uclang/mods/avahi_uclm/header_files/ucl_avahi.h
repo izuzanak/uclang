@@ -118,7 +118,11 @@ struct avahi_browser_s
   location_s *avahi_client_loc;
   location_s *callback_dlg;
   location_s *user_data_loc;
+
   AvahiBrowserEvent event;
+  const char *name;
+  const char *type;
+  const char *domain;
 
   static void callback(AvahiServiceBrowser *a_browser,AvahiIfIndex interface,AvahiProtocol protocol,AvahiBrowserEvent event,const char *name,const char *type,const char *domain,AvahiLookupResultFlags flags,void *userdata);
 
