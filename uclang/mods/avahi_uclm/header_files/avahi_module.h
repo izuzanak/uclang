@@ -44,7 +44,7 @@ bool bic_avahi_poll_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 bool bic_avahi_poll_method_AvahiPoll_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_avahi_poll_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_avahi_poll_method_timeout_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_avahi_poll_method_process_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_avahi_poll_method_process_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_avahi_poll_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_avahi_poll_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -59,6 +59,8 @@ void bic_avahi_client_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_avahi_client_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_avahi_client_method_AvahiClient_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_avahi_client_method_state_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_avahi_client_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_avahi_client_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_avahi_client_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

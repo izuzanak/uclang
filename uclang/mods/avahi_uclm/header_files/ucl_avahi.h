@@ -11,6 +11,7 @@ include "script_parser.h"
 #include <avahi-client/publish.h>
 
 #include <avahi-common/simple-watch.h>
+#include <avahi-common/timeval.h>
 
 typedef struct avahi_poll_s avahi_poll_s;
 
@@ -69,12 +70,16 @@ struct avahi_poll_s
 {
   static const AvahiPoll g_avahi_poll;
 
+  interpreter_thread_s *it_ptr;
+  unsigned source_pos;
+  unsigned ret_code;
+
   AvahiPoll avahi_poll;
   watch_array_s watch_array;
   timeout_tree_s timeout_tree;
 
   static AvahiWatch *watch_new(const AvahiPoll *api,int fd,AvahiWatchEvent event,AvahiWatchCallback callback,void *userdata);
-  static void watch_update(AvahiWatch *w,AvahiWatchEvent event);
+  static void watch_update(AvahiWatch *a_watch,AvahiWatchEvent event);
   static AvahiWatchEvent watch_get_events(AvahiWatch *a_watch);
   static void watch_free(AvahiWatch *a_watch);
   static AvahiTimeout *timeout_new(const AvahiPoll *api,const struct timeval *tv,AvahiTimeoutCallback callback,void *userdata);
@@ -92,9 +97,12 @@ struct avahi_poll_s
 struct avahi_client_s
 {
   AvahiClient *avahi_client;
-  location_s *user_data_ptr;
+  location_s *avahi_poll_loc;
+  location_s *callback_dlg;
+  location_s *user_data_loc;
+  AvahiClientState state;
 
-  static void callback(AvahiClient *client,AvahiClientState state,void *userdata);
+  static void callback(AvahiClient *a_client,AvahiClientState state,void *userdata);
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
@@ -126,6 +134,10 @@ inline int timeout_tree_s::__compare_value(timeout_pointer &a_first,timeout_poin
 
 inline void avahi_poll_s::init()
 {/*{{{*/
+  it_ptr = nullptr;
+  source_pos = 0;
+  ret_code = c_run_return_code_OK;
+
   avahi_poll = g_avahi_poll;
   watch_array.init();
   timeout_tree.init();
@@ -173,7 +185,10 @@ inline void avahi_poll_s::clear(interpreter_thread_s &it)
 inline void avahi_client_s::init()
 {/*{{{*/
   avahi_client = nullptr;
-  user_data_ptr = nullptr;
+  avahi_poll_loc = nullptr;
+  callback_dlg = nullptr;
+  user_data_loc = nullptr;
+  state = AVAHI_CLIENT_FAILURE;
 }/*}}}*/
 
 inline void avahi_client_s::clear(interpreter_thread_s &it)
@@ -183,9 +198,19 @@ inline void avahi_client_s::clear(interpreter_thread_s &it)
     avahi_client_free(avahi_client);
   }
 
-  if (user_data_ptr != nullptr)
+  if (avahi_poll_loc != nullptr)
   {
-    it.release_location_ptr(user_data_ptr);
+    it.release_location_ptr(avahi_poll_loc);
+  }
+
+  if (callback_dlg != nullptr)
+  {
+    it.release_location_ptr(callback_dlg);
+  }
+
+  if (user_data_loc != nullptr)
+  {
+    it.release_location_ptr(user_data_loc);
   }
 
   init();
