@@ -115,9 +115,10 @@ struct avahi_client_s
 struct avahi_browser_s
 {
   AvahiServiceBrowser *avahi_browser;
-  location_s *avahi_poll_loc;
+  location_s *avahi_client_loc;
   location_s *callback_dlg;
   location_s *user_data_loc;
+  AvahiBrowserEvent event;
 
   static void callback(AvahiServiceBrowser *a_browser,AvahiIfIndex interface,AvahiProtocol protocol,AvahiBrowserEvent event,const char *name,const char *type,const char *domain,AvahiLookupResultFlags flags,void *userdata);
 
@@ -240,7 +241,7 @@ inline void avahi_client_s::clear(interpreter_thread_s &it)
 inline void avahi_browser_s::init()
 {/*{{{*/
   avahi_browser = nullptr;
-  avahi_poll_loc = nullptr;
+  avahi_client_loc = nullptr;
   callback_dlg = nullptr;
   user_data_loc = nullptr;
 }/*}}}*/
@@ -252,9 +253,9 @@ inline void avahi_browser_s::clear(interpreter_thread_s &it)
     avahi_service_browser_free(avahi_browser);
   }
 
-  if (avahi_poll_loc != nullptr)
+  if (avahi_client_loc != nullptr)
   {
-    it.release_location_ptr(avahi_poll_loc);
+    it.release_location_ptr(avahi_client_loc);
   }
 
   if (callback_dlg != nullptr)

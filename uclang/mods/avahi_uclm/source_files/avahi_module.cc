@@ -612,7 +612,7 @@ built_in_class_s avahi_browser_class =
 {/*{{{*/
   "AvahiBrowser",
   c_modifier_public | c_modifier_final,
-  5, avahi_browser_methods,
+  6, avahi_browser_methods,
   5, avahi_browser_variables,
   bic_avahi_browser_consts,
   bic_avahi_browser_init,
@@ -638,9 +638,14 @@ built_in_method_s avahi_browser_methods[] =
     bic_avahi_browser_operator_binary_equal
   },
   {
-    "AvahiBrowser#5",
+    "AvahiBrowser#6",
     c_modifier_public | c_modifier_final,
-    bic_avahi_browser_method_AvahiBrowser_5
+    bic_avahi_browser_method_AvahiBrowser_6
+  },
+  {
+    "event#0",
+    c_modifier_public | c_modifier_final,
+    bic_avahi_browser_method_event_0
   },
   {
     "user_data#0",
@@ -722,12 +727,94 @@ bool bic_avahi_browser_operator_binary_equal(interpreter_thread_s &it,unsigned s
   return true;
 }/*}}}*/
 
-bool bic_avahi_browser_method_AvahiBrowser_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_avahi_browser_method_AvahiBrowser_6(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
+@begin ucl_params
+<
+client:c_bi_class_avahi_client
+type:c_bi_class_string
+domain:c_bi_class_string
+flags:retrieve_integer
+delegate:c_bi_class_delegate
+user_data:ignore
+>
+method AvahiBrowser
+; @end
 
-  // FIXME TODO continue ...
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
+  avahi_client_s *ac_ptr = (avahi_client_s *)src_0_location->v_data_ptr;
+  avahi_poll_s *ap_ptr = (avahi_poll_s *)ac_ptr->avahi_poll_loc->v_data_ptr;
+
+  // - retrieve delegate pointer -
+  delegate_s *delegate_ptr = (delegate_s *)src_4_location->v_data_ptr;
+
+  // - ERROR -
+  if (delegate_ptr->param_cnt != 1)
+  {
+    // FIXME TODO throw proper execption ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  // - create avahi_client object -
+  avahi_browser_s *ab_ptr = (avahi_browser_s *)cmalloc(sizeof(avahi_browser_s));
+  ab_ptr->init();
+
+  // - set avahi_client location -
+  src_0_location->v_reference_cnt.atomic_inc();
+  ab_ptr->avahi_client_loc = src_0_location;
+
+  // - set callback delegate -
+  src_4_location->v_reference_cnt.atomic_inc();
+  ab_ptr->callback_dlg = src_4_location;
+
+  // - set user_data location -
+  src_5_location->v_reference_cnt.atomic_inc();
+  ab_ptr->user_data_loc = src_5_location;
+
+  // - set avahi_client destination location -
+  dst_location->v_data_ptr = (avahi_browser_s *)ab_ptr;
+
+  ap_ptr->it_ptr = &it;
+  ap_ptr->source_pos = operands[c_source_pos_idx];
+  ap_ptr->ret_code = c_run_return_code_OK;
+
+  string_s *type_str = (string_s *)src_1_location->v_data_ptr;
+  string_s *domain_str = (string_s *)src_2_location->v_data_ptr;
+
+  ab_ptr->avahi_browser = avahi_service_browser_new(ac_ptr->avahi_client,
+      AVAHI_IF_UNSPEC,AVAHI_PROTO_UNSPEC,type_str->data,domain_str->data,
+      (AvahiLookupFlags)flags,avahi_browser_s::callback,dst_location);
+
+  // - if exception occurred -
+  if (ap_ptr->ret_code == c_run_return_code_EXCEPTION)
+  {
+    it.release_location_ptr(dst_location);
+
+    return false;
+  }
+
+  // - ERROR -
+  if (ab_ptr->avahi_browser == nullptr)
+  {
+    it.release_location_ptr(dst_location);
+
+    // FIXME TODO throw proper execption ...
+    BIC_TODO_ERROR(__FILE__,__LINE__);
+    return false;
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_avahi_browser_method_event_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = ((avahi_browser_s *)dst_location->v_data_ptr)->event;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
 }/*}}}*/
 
 bool bic_avahi_browser_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
