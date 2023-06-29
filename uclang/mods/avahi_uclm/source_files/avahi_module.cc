@@ -6,11 +6,12 @@ include "avahi_module.h"
 // - AVAHI indexes of built in classes -
 unsigned c_bi_class_avahi_poll = c_idx_not_exist;
 unsigned c_bi_class_avahi_client = c_idx_not_exist;
+unsigned c_bi_class_avahi_browser = c_idx_not_exist;
 
 // - AVAHI module -
 EXPORT built_in_module_s module =
 {/*{{{*/
-  2,                     // Class count
+  3,                     // Class count
   avahi_classes,         // Classes
 
   0,                     // Error base index
@@ -26,6 +27,7 @@ built_in_class_s *avahi_classes[] =
 {/*{{{*/
   &avahi_poll_class,
   &avahi_client_class,
+  &avahi_browser_class,
 };/*}}}*/
 
 // - AVAHI error strings -
@@ -44,6 +46,9 @@ bool avahi_initialize(script_parser_s &sp)
 
   // - initialize avahi_client class identifier -
   c_bi_class_avahi_client = class_base_idx++;
+
+  // - initialize avahi_browser class identifier -
+  c_bi_class_avahi_browser = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -428,11 +433,11 @@ built_in_variable_s avahi_client_variables[] =
 {/*{{{*/
 
   // - avahi client state constants -
-  { "S_REGISTERING", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "S_RUNNING", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "S_COLLISION", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "FAILURE", c_modifier_public | c_modifier_static | c_modifier_static_const },
-  { "CONNECTING", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "STATE_REGISTERING", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "STATE_RUNNING", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "STATE_COLLISION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "STATE_FAILURE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "STATE_CONNECTING", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
 
@@ -596,6 +601,160 @@ bool bic_avahi_client_method_to_string_0(interpreter_thread_s &it,unsigned stack
 bool bic_avahi_client_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   printf("AvahiClient");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class AVAHI_BROWSER -
+built_in_class_s avahi_browser_class =
+{/*{{{*/
+  "AvahiBrowser",
+  c_modifier_public | c_modifier_final,
+  5, avahi_browser_methods,
+  5, avahi_browser_variables,
+  bic_avahi_browser_consts,
+  bic_avahi_browser_init,
+  bic_avahi_browser_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s avahi_browser_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_avahi_browser_operator_binary_equal
+  },
+  {
+    "AvahiBrowser#5",
+    c_modifier_public | c_modifier_final,
+    bic_avahi_browser_method_AvahiBrowser_5
+  },
+  {
+    "user_data#0",
+    c_modifier_public | c_modifier_final,
+    bic_avahi_browser_method_user_data_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_avahi_browser_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_avahi_browser_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s avahi_browser_variables[] =
+{/*{{{*/
+
+  // - avahi browser event constants -
+  { "EVENT_NEW", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "EVENT_REMOVE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "EVENT_CACHE_EXHAUSTED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "EVENT_ALL_FOR_NOW", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "EVENT_FAILURE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+};/*}}}*/
+
+void bic_avahi_browser_consts(location_array_s &const_locations)
+{/*{{{*/
+
+  // - insert avahi browser event constants -
+  {
+    const_locations.push_blanks(5);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 5);
+
+#define CREATE_AVAHI_BROWSER_EVENT_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_AVAHI_BROWSER_EVENT_BIC_STATIC(AVAHI_BROWSER_NEW);
+    CREATE_AVAHI_BROWSER_EVENT_BIC_STATIC(AVAHI_BROWSER_REMOVE);
+    CREATE_AVAHI_BROWSER_EVENT_BIC_STATIC(AVAHI_BROWSER_CACHE_EXHAUSTED);
+    CREATE_AVAHI_BROWSER_EVENT_BIC_STATIC(AVAHI_BROWSER_ALL_FOR_NOW);
+    CREATE_AVAHI_BROWSER_EVENT_BIC_STATIC(AVAHI_BROWSER_FAILURE);
+  }
+
+}/*}}}*/
+
+void bic_avahi_browser_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (avahi_browser_s *)nullptr;
+}/*}}}*/
+
+void bic_avahi_browser_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  avahi_browser_s *ab_ptr = (avahi_browser_s *)location_ptr->v_data_ptr;
+
+  if (ab_ptr != nullptr)
+  {
+    ab_ptr->clear(it);
+    cfree(ab_ptr);
+  }
+}/*}}}*/
+
+bool bic_avahi_browser_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_avahi_browser_method_AvahiBrowser_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+
+  // FIXME TODO continue ...
+  BIC_TODO_ERROR(__FILE__,__LINE__);
+  return false;
+}/*}}}*/
+
+bool bic_avahi_browser_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  avahi_browser_s *ab_ptr = (avahi_browser_s *)dst_location->v_data_ptr;
+
+  location_s *new_ref_location = it.get_new_reference(&ab_ptr->user_data_loc);
+
+  BIC_SET_RESULT(new_ref_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_avahi_browser_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("AvahiBrowser"),"AvahiBrowser");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_avahi_browser_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("AvahiBrowser");
 
   BIC_SET_RESULT_BLANK();
 

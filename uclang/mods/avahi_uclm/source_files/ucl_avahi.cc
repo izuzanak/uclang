@@ -173,7 +173,7 @@ void avahi_poll_s::timeout_free(AvahiTimeout *a_timeout)
 
 void avahi_client_s::callback(AvahiClient *a_client,AvahiClientState state,void *userdata)
 {/*{{{*/
-  fprintf(stderr,"TODO - avahi_client_s::callback\n");
+  fprintf(stderr,"avahi_client_s::callback\n");
 
   // FIXME TODO set client state
   switch (state)
@@ -216,5 +216,14 @@ void avahi_client_s::callback(AvahiClient *a_client,AvahiClientState state,void 
     return;
   );
   it.release_location_ptr(trg_location);
+}/*}}}*/
+
+/*
+ * methods of structure avahi_browser_s
+ */
+
+void avahi_browser_s::callback(AvahiServiceBrowser *a_browser,AvahiIfIndex interface,AvahiProtocol protocol,AvahiBrowserEvent event,const char *name,const char *type,const char *domain,AvahiLookupResultFlags flags,void *userdata)
+{/*{{{*/
+  fprintf(stderr,"TODO - avahi_browser_s::callback\n");
 }/*}}}*/
 

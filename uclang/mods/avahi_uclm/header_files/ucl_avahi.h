@@ -109,6 +109,23 @@ struct avahi_client_s
 };
 
 /*
+ * definition of structure avahi_browser_s
+ */
+
+struct avahi_browser_s
+{
+  AvahiServiceBrowser *avahi_browser;
+  location_s *avahi_poll_loc;
+  location_s *callback_dlg;
+  location_s *user_data_loc;
+
+  static void callback(AvahiServiceBrowser *a_browser,AvahiIfIndex interface,AvahiProtocol protocol,AvahiBrowserEvent event,const char *name,const char *type,const char *domain,AvahiLookupResultFlags flags,void *userdata);
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
  * inline methods of generated structures
  */
 
@@ -196,6 +213,43 @@ inline void avahi_client_s::clear(interpreter_thread_s &it)
   if (avahi_client != nullptr)
   {
     avahi_client_free(avahi_client);
+  }
+
+  if (avahi_poll_loc != nullptr)
+  {
+    it.release_location_ptr(avahi_poll_loc);
+  }
+
+  if (callback_dlg != nullptr)
+  {
+    it.release_location_ptr(callback_dlg);
+  }
+
+  if (user_data_loc != nullptr)
+  {
+    it.release_location_ptr(user_data_loc);
+  }
+
+  init();
+}/*}}}*/
+
+/*
+ * inline methods of structure avahi_browser_s
+ */
+
+inline void avahi_browser_s::init()
+{/*{{{*/
+  avahi_browser = nullptr;
+  avahi_poll_loc = nullptr;
+  callback_dlg = nullptr;
+  user_data_loc = nullptr;
+}/*}}}*/
+
+inline void avahi_browser_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+  if (avahi_browser != nullptr)
+  {
+    avahi_service_browser_free(avahi_browser);
   }
 
   if (avahi_poll_loc != nullptr)

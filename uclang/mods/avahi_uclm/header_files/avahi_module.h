@@ -9,6 +9,7 @@ include "ucl_avahi.h"
 // - AVAHI indexes of built in classes -
 extern unsigned c_bi_class_avahi_poll;
 extern unsigned c_bi_class_avahi_client;
+extern unsigned c_bi_class_avahi_browser;
 
 // - AVAHI module -
 extern "C" EXPORT built_in_module_s module;
@@ -63,6 +64,21 @@ bool bic_avahi_client_method_state_0(interpreter_thread_s &it,unsigned stack_bas
 bool bic_avahi_client_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_avahi_client_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_avahi_client_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class AVAHI_BROWSER -
+extern built_in_variable_s avahi_browser_variables[];
+extern built_in_method_s avahi_browser_methods[];
+extern built_in_class_s avahi_browser_class;
+
+void bic_avahi_browser_consts(location_array_s &const_locations);
+void bic_avahi_browser_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_avahi_browser_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_avahi_browser_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_avahi_browser_method_AvahiBrowser_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_avahi_browser_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_avahi_browser_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_avahi_browser_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 
