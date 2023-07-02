@@ -75,9 +75,11 @@ void bic_avahi_service_browser_init(interpreter_thread_s &it,location_s *locatio
 void bic_avahi_service_browser_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_avahi_service_browser_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_avahi_service_browser_method_AvahiServiceBrowser_6(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_avahi_service_browser_method_AvahiServiceBrowser_7(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_avahi_service_browser_method_event_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_avahi_service_browser_method_service_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_avahi_service_browser_method_txt_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_avahi_service_browser_method_resolve_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_avahi_service_browser_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_avahi_service_browser_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_avahi_service_browser_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

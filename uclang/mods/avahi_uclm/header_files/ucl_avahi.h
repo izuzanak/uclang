@@ -116,15 +116,31 @@ struct avahi_service_browser_s
 {
   AvahiServiceBrowser *avahi_service_browser;
   location_s *avahi_client_loc;
-  location_s *callback_dlg;
+  location_s *browse_cb_dlg;
+  location_s *resolve_cb_dlg;
   location_s *user_data_loc;
 
   AvahiBrowserEvent browse_event;
+  AvahiIfIndex browse_interface;
+  AvahiProtocol browse_protocol;
   const char *browse_name;
   const char *browse_type;
   const char *browse_domain;
 
-  static void callback(AvahiServiceBrowser *a_browser,AvahiIfIndex interface,AvahiProtocol protocol,AvahiBrowserEvent event,const char *name,const char *type,const char *domain,AvahiLookupResultFlags flags,void *userdata);
+  AvahiResolverEvent resolve_event;
+  const char *resolve_name;
+  const char *resolve_type;
+  const char *resolve_domain;
+  const char *resolve_host;
+  uint16_t resolve_port;
+  AvahiStringList *resolve_txt;
+
+  static void browse_callback(AvahiServiceBrowser *a_browser,AvahiIfIndex interface,AvahiProtocol protocol,
+      AvahiBrowserEvent event,const char *name,const char *type,const char *domain,
+      AvahiLookupResultFlags flags,void *userdata);
+  static void resolve_callback(AvahiServiceResolver *a_resolver,AvahiIfIndex interface,AvahiProtocol protocol,
+      AvahiResolverEvent event,const char *name,const char *type,const char *domain,const char *host_name,
+      const AvahiAddress *a,uint16_t port,AvahiStringList *txt,AvahiLookupResultFlags flags,void *userdata);
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
@@ -246,13 +262,24 @@ inline void avahi_service_browser_s::init()
 {/*{{{*/
   avahi_service_browser = nullptr;
   avahi_client_loc = nullptr;
-  callback_dlg = nullptr;
+  browse_cb_dlg = nullptr;
+  resolve_cb_dlg = nullptr;
   user_data_loc = nullptr;
 
   browse_event = (AvahiBrowserEvent)-1;
+  browse_interface = AVAHI_IF_UNSPEC;
+  browse_protocol = AVAHI_PROTO_UNSPEC;
   browse_name = nullptr;
   browse_type = nullptr;
   browse_domain = nullptr;
+
+  resolve_event = (AvahiResolverEvent)-1;
+  resolve_name = nullptr;
+  resolve_type = nullptr;
+  resolve_domain = nullptr;
+  resolve_host = nullptr;
+  resolve_port = 0;
+  resolve_txt = nullptr;
 }/*}}}*/
 
 inline void avahi_service_browser_s::clear(interpreter_thread_s &it)
@@ -267,9 +294,14 @@ inline void avahi_service_browser_s::clear(interpreter_thread_s &it)
     it.release_location_ptr(avahi_client_loc);
   }
 
-  if (callback_dlg != nullptr)
+  if (browse_cb_dlg != nullptr)
   {
-    it.release_location_ptr(callback_dlg);
+    it.release_location_ptr(browse_cb_dlg);
+  }
+
+  if (resolve_cb_dlg != nullptr)
+  {
+    it.release_location_ptr(resolve_cb_dlg);
   }
 
   if (user_data_loc != nullptr)

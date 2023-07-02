@@ -434,6 +434,7 @@ enum
   c_src_3_op_idx,
   c_src_4_op_idx,
   c_src_5_op_idx,
+  c_src_6_op_idx,
 };
 
 // - modifiers of classes, methods and variables -
