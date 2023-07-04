@@ -136,7 +136,7 @@ built_in_class_s avahi_poll_class =
 {/*{{{*/
   "AvahiPoll",
   c_modifier_public | c_modifier_final,
-  7, avahi_poll_methods,
+  8, avahi_poll_methods,
   0, avahi_poll_variables,
   bic_avahi_poll_consts,
   bic_avahi_poll_init,
@@ -180,6 +180,11 @@ built_in_method_s avahi_poll_methods[] =
     "process#2",
     c_modifier_public | c_modifier_final,
     bic_avahi_poll_method_process_2
+  },
+  {
+    "client#3",
+    c_modifier_public | c_modifier_final,
+    bic_avahi_poll_method_client_3
   },
   {
     "to_string#0",
@@ -410,6 +415,73 @@ method process
   return true;
 }/*}}}*/
 
+bool bic_avahi_poll_method_client_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+flags:retrieve_integer
+delegate:c_bi_class_delegate
+user_data:ignore
+>
+method client
+; @end
+
+  avahi_poll_s *ap_ptr = (avahi_poll_s *)dst_location->v_data_ptr;
+
+  // - retrieve delegate pointer -
+  delegate_s *delegate_ptr = (delegate_s *)src_1_location->v_data_ptr;
+
+  // - ERROR -
+  if (delegate_ptr->param_cnt != 1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_AVAHI_CLIENT_WRONG_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - create avahi_client object -
+  avahi_client_s *ac_ptr = (avahi_client_s *)cmalloc(sizeof(avahi_client_s));
+  ac_ptr->init();
+
+  // - set avahi_poll location -
+  dst_location->v_reference_cnt.atomic_inc();
+  ac_ptr->avahi_poll_loc = dst_location;
+
+  // - set callback delegate -
+  src_1_location->v_reference_cnt.atomic_inc();
+  ac_ptr->callback_dlg = src_1_location;
+
+  // - set user_data location -
+  src_2_location->v_reference_cnt.atomic_inc();
+  ac_ptr->user_data_loc = src_2_location;
+
+  // - set avahi_client result -
+  BIC_CREATE_NEW_LOCATION(client_location,c_bi_class_avahi_client,ac_ptr);
+  BIC_SET_RESULT(client_location);
+
+  ap_ptr->it_ptr = &it;
+  ap_ptr->source_pos = operands[c_source_pos_idx];
+  ap_ptr->ret_code = c_run_return_code_OK;
+
+  int error;
+  ac_ptr->avahi_client = avahi_client_new(&ap_ptr->avahi_poll,
+      (AvahiClientFlags)flags,avahi_client_s::callback,client_location,&error);
+
+  // - if exception occurred -
+  if (ap_ptr->ret_code == c_run_return_code_EXCEPTION)
+  {
+    return false;
+  }
+
+  // - ERROR -
+  if (ac_ptr->avahi_client == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_AVAHI_CLIENT_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  return true;
+}/*}}}*/
+
 bool bic_avahi_poll_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -433,7 +505,7 @@ built_in_class_s avahi_client_class =
 {/*{{{*/
   "AvahiClient",
   c_modifier_public | c_modifier_final,
-  7, avahi_client_methods,
+  6, avahi_client_methods,
   5, avahi_client_variables,
   bic_avahi_client_consts,
   bic_avahi_client_init,
@@ -457,11 +529,6 @@ built_in_method_s avahi_client_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_avahi_client_operator_binary_equal
-  },
-  {
-    "AvahiClient#4",
-    c_modifier_public | c_modifier_final,
-    bic_avahi_client_method_AvahiClient_4
   },
   {
     "state#0",
@@ -549,73 +616,6 @@ bool bic_avahi_client_operator_binary_equal(interpreter_thread_s &it,unsigned st
 
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
-
-  return true;
-}/*}}}*/
-
-bool bic_avahi_client_method_AvahiClient_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-@begin ucl_params
-<
-poll:c_bi_class_avahi_poll
-flags:retrieve_integer
-delegate:c_bi_class_delegate
-user_data:ignore
->
-method AvahiClient
-; @end
-
-  avahi_poll_s *ap_ptr = (avahi_poll_s *)src_0_location->v_data_ptr;
-
-  // - retrieve delegate pointer -
-  delegate_s *delegate_ptr = (delegate_s *)src_2_location->v_data_ptr;
-
-  // - ERROR -
-  if (delegate_ptr->param_cnt != 1)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_AVAHI_CLIENT_WRONG_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - create avahi_client object -
-  avahi_client_s *ac_ptr = (avahi_client_s *)cmalloc(sizeof(avahi_client_s));
-  ac_ptr->init();
-
-  // - set avahi_poll location -
-  src_0_location->v_reference_cnt.atomic_inc();
-  ac_ptr->avahi_poll_loc = src_0_location;
-
-  // - set callback delegate -
-  src_2_location->v_reference_cnt.atomic_inc();
-  ac_ptr->callback_dlg = src_2_location;
-
-  // - set user_data location -
-  src_3_location->v_reference_cnt.atomic_inc();
-  ac_ptr->user_data_loc = src_3_location;
-
-  // - set avahi_client data pointer -
-  dst_location->v_data_ptr = (avahi_client_s *)ac_ptr;
-
-  ap_ptr->it_ptr = &it;
-  ap_ptr->source_pos = operands[c_source_pos_idx];
-  ap_ptr->ret_code = c_run_return_code_OK;
-
-  int error;
-  ac_ptr->avahi_client = avahi_client_new(&ap_ptr->avahi_poll,
-      (AvahiClientFlags)flags,avahi_client_s::callback,dst_location,&error);
-
-  // - if exception occurred -
-  if (ap_ptr->ret_code == c_run_return_code_EXCEPTION)
-  {
-    return false;
-  }
-
-  // - ERROR -
-  if (ac_ptr->avahi_client == nullptr)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_AVAHI_CLIENT_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
 
   return true;
 }/*}}}*/
@@ -764,7 +764,7 @@ built_in_class_s avahi_service_browser_class =
 {/*{{{*/
   "AvahiServiceBrowser",
   c_modifier_public | c_modifier_final,
-  9, avahi_service_browser_methods,
+  8, avahi_service_browser_methods,
   7, avahi_service_browser_variables,
   bic_avahi_service_browser_consts,
   bic_avahi_service_browser_init,
@@ -788,11 +788,6 @@ built_in_method_s avahi_service_browser_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_avahi_service_browser_operator_binary_equal
-  },
-  {
-    "AvahiServiceBrowser#7",
-    c_modifier_public | c_modifier_final,
-    bic_avahi_service_browser_method_AvahiServiceBrowser_7
   },
   {
     "event#0",
@@ -909,94 +904,6 @@ bool bic_avahi_service_browser_operator_binary_equal(interpreter_thread_s &it,un
 
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
-
-  return true;
-}/*}}}*/
-
-bool bic_avahi_service_browser_method_AvahiServiceBrowser_7(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-@begin ucl_params
-<
-client:c_bi_class_avahi_client
-type:c_bi_class_string
-domain:c_bi_class_string
-flags:retrieve_integer
-browse_callback:c_bi_class_delegate
-resolve_callback:c_bi_class_delegate
-user_data:ignore
->
-method AvahiServiceBrowser
-; @end
-
-  avahi_client_s *ac_ptr = (avahi_client_s *)src_0_location->v_data_ptr;
-  avahi_poll_s *ap_ptr = (avahi_poll_s *)ac_ptr->avahi_poll_loc->v_data_ptr;
-
-  // - retrieve browse delegate pointer -
-  delegate_s *browse_delegate_ptr = (delegate_s *)src_4_location->v_data_ptr;
-
-  // - ERROR -
-  if (browse_delegate_ptr->param_cnt != 1)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_AVAHI_SERVICE_BROWSER_WRONG_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - retrieve resolve delegate pointer -
-  delegate_s *resolve_delegate_ptr = (delegate_s *)src_5_location->v_data_ptr;
-
-  // - ERROR -
-  if (resolve_delegate_ptr->param_cnt != 1)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_AVAHI_SERVICE_BROWSER_WRONG_CALLBACK_DELEGATE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - create avahi_service_browser object -
-  avahi_service_browser_s *asb_ptr = (avahi_service_browser_s *)cmalloc(sizeof(avahi_service_browser_s));
-  asb_ptr->init();
-
-  // - set avahi_client location -
-  src_0_location->v_reference_cnt.atomic_inc();
-  asb_ptr->avahi_client_loc = src_0_location;
-
-  // - set browse callback delegate -
-  src_4_location->v_reference_cnt.atomic_inc();
-  asb_ptr->browse_cb_dlg = src_4_location;
-
-  // - set resolve callback delegate -
-  src_5_location->v_reference_cnt.atomic_inc();
-  asb_ptr->resolve_cb_dlg = src_5_location;
-
-  // - set user_data location -
-  src_6_location->v_reference_cnt.atomic_inc();
-  asb_ptr->user_data_loc = src_6_location;
-
-  // - set avahi_service_browser data pointer -
-  dst_location->v_data_ptr = (avahi_service_browser_s *)asb_ptr;
-
-  ap_ptr->it_ptr = &it;
-  ap_ptr->source_pos = operands[c_source_pos_idx];
-  ap_ptr->ret_code = c_run_return_code_OK;
-
-  string_s *type_str = (string_s *)src_1_location->v_data_ptr;
-  string_s *domain_str = (string_s *)src_2_location->v_data_ptr;
-
-  asb_ptr->avahi_service_browser = avahi_service_browser_new(ac_ptr->avahi_client,
-      AVAHI_IF_UNSPEC,AVAHI_PROTO_UNSPEC,type_str->data,domain_str->data,
-      (AvahiLookupFlags)flags,avahi_service_browser_s::browse_callback,dst_location);
-
-  // - if exception occurred -
-  if (ap_ptr->ret_code == c_run_return_code_EXCEPTION)
-  {
-    return false;
-  }
-
-  // - ERROR -
-  if (asb_ptr->avahi_service_browser == nullptr)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_AVAHI_SERVICE_BROWSER_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
 
   return true;
 }/*}}}*/
