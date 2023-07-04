@@ -20,7 +20,14 @@ extern built_in_class_s *avahi_classes[];
 // - AVAHI error identifiers -
 enum
 {
-  c_error_AVAHI_DUMMY_ERROR = 0,
+  c_error_AVAHI_CLIENT_WRONG_CALLBACK_DELEGATE = 0,
+  c_error_AVAHI_CLIENT_CREATE_ERROR,
+  c_error_AVAHI_CLIENT_ACCESS_OUTSIDE_OF_CALLBACK,
+  c_error_AVAHI_SERVICE_BROWSER_WRONG_CALLBACK_DELEGATE,
+  c_error_AVAHI_SERVICE_BROWSER_CREATE_ERROR,
+  c_error_AVAHI_SERVICE_BROWSER_ACCESS_OUTSIDE_OF_BROWSE_CALLBACK,
+  c_error_AVAHI_SERVICE_BROWSER_ACCESS_OUTSIDE_OF_RESOLVE_CALLBACK,
+  c_error_AVAHI_SERVICE_BROWSER_CREATE_RESOLVER_ERROR,
 };
 
 // - AVAHI error strings -
@@ -62,6 +69,7 @@ bool bic_avahi_client_operator_binary_equal(interpreter_thread_s &it,unsigned st
 bool bic_avahi_client_method_AvahiClient_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_avahi_client_method_state_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_avahi_client_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_avahi_client_method_service_browser_6(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_avahi_client_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_avahi_client_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
