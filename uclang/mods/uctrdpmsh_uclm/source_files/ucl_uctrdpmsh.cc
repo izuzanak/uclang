@@ -427,7 +427,7 @@ bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass)
   }\
 }/*}}}*/
 
-#define TRDP_PACK_PAGE_DATA_INTEGER_REORDER_VALUE(TYPE) \
+#define TRDP_PACK_PAGE_DATA_INTEGER_REORDER_VALUE(TYPE,REORDER) \
 {/*{{{*/\
   unsigned count = var_descr.count;\
   while (count-- > 0)\
@@ -445,12 +445,13 @@ bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass)
     }\
 \
     TYPE value = (long long int)item_location->v_data_ptr;\
-    memcpy_bo(pass.data_ptr + pass.address,(unsigned char *)&value,var_descr.length,c_little_endian);\
+    value = REORDER(value);\
+    memcpy(pass.data_ptr + pass.address,(unsigned char *)&value,var_descr.length);\
     pass.address += var_descr.length;\
   }\
 }/*}}}*/
 
-#define TRDP_PACK_PAGE_DATA_FLOAT_REORDER_VALUE(TYPE) \
+#define TRDP_PACK_PAGE_DATA_FLOAT_REORDER_VALUE(TYPE,INT_TYPE,REORDER) \
 {/*{{{*/\
   unsigned count = var_descr.count;\
   while (count-- > 0)\
@@ -468,7 +469,10 @@ bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass)
     }\
 \
     TYPE value = (double)item_location->v_data_ptr;\
-    memcpy_bo(pass.data_ptr + pass.address,(unsigned char *)&value,var_descr.length,c_little_endian);\
+    INT_TYPE int_value;\
+    memcpy(&int_value,&value,var_descr.length);\
+    int_value = REORDER(int_value);\
+    memcpy(pass.data_ptr + pass.address,(unsigned char *)&int_value,var_descr.length);\
     pass.address += var_descr.length;\
   }\
 }/*}}}*/
@@ -517,31 +521,34 @@ bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass)
       case TUSINT:
         TRDP_PACK_PAGE_DATA_INTEGER_VALUE(unsigned char);
         break;
+      case TSINT:
+        TRDP_PACK_PAGE_DATA_INTEGER_VALUE(signed char);
+        break;
       case TWORD:
-        TRDP_PACK_PAGE_DATA_INTEGER_VALUE(unsigned short);
+        TRDP_PACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned short,htole16);
         break;
       case TDWORD:
-        TRDP_PACK_PAGE_DATA_INTEGER_VALUE(unsigned);
+        TRDP_PACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned,htole32);
         break;
       case TLWORD:
-        TRDP_PACK_PAGE_DATA_INTEGER_VALUE(unsigned long long);
+        TRDP_PACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned long long,htole64);
         break;
       case TINT:
-        TRDP_PACK_PAGE_DATA_INTEGER_REORDER_VALUE(short);
+        TRDP_PACK_PAGE_DATA_INTEGER_REORDER_VALUE(short,htobe16);
         break;
       case TUINT:
       case TTDticks:
-        TRDP_PACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned short);
+        TRDP_PACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned short,htobe16);
         break;
       case TUDINT:
       case TTDsecs:
-        TRDP_PACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned);
+        TRDP_PACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned,htobe32);
         break;
       case TREAL:
-        TRDP_PACK_PAGE_DATA_FLOAT_REORDER_VALUE(float);
+        TRDP_PACK_PAGE_DATA_FLOAT_REORDER_VALUE(float,int32_t,htobe32);
         break;
       case TLREAL:
-        TRDP_PACK_PAGE_DATA_FLOAT_REORDER_VALUE(double);
+        TRDP_PACK_PAGE_DATA_FLOAT_REORDER_VALUE(double,int64_t,htobe64);
         break;
       case TSTRINGB:
       case TSTRING:
@@ -660,28 +667,32 @@ bool trdp_page_s::unpack_page_data(interpreter_thread_s &it,pass_s &pass)
   }\
 }/*}}}*/
 
-#define TRDP_UNPACK_PAGE_DATA_INTEGER_REORDER_VALUE(TYPE) \
+#define TRDP_UNPACK_PAGE_DATA_INTEGER_REORDER_VALUE(TYPE,REORDER) \
 {/*{{{*/\
   unsigned count = var_descr.count;\
   while (count-- > 0)\
   {\
     TYPE value;\
-    memcpy_bo((unsigned char *)&value,pass.data_ptr + pass.address,var_descr.length,c_little_endian);\
+    memcpy((unsigned char *)&value,pass.data_ptr + pass.address,var_descr.length);\
     pass.address += var_descr.length;\
+    value = REORDER(value);\
 \
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_integer,(long long int)value);\
     pass.vars_ptr->push(new_location);\
   }\
 }/*}}}*/
 
-#define TRDP_UNPACK_PAGE_DATA_FLOAT_VALUE(TYPE) \
+#define TRDP_UNPACK_PAGE_DATA_FLOAT_REORDER_VALUE(TYPE,INT_TYPE,REORDER) \
 {/*{{{*/\
   unsigned count = var_descr.count;\
   while (count-- > 0)\
   {\
-    TYPE value;\
-    memcpy_bo((unsigned char *)&value,pass.data_ptr + pass.address,var_descr.length,c_little_endian);\
+    INT_TYPE int_value;\
+    memcpy((unsigned char *)&int_value,pass.data_ptr + pass.address,var_descr.length);\
     pass.address += var_descr.length;\
+    int_value = REORDER(int_value);\
+    TYPE value;\
+    memcpy(&value,&int_value,var_descr.length);\
 \
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_float,(double)value);\
     pass.vars_ptr->push(new_location);\
@@ -710,36 +721,37 @@ bool trdp_page_s::unpack_page_data(interpreter_thread_s &it,pass_s &pass)
         }/*}}}*/
         break;
       case TBYTE:
-        TRDP_UNPACK_PAGE_DATA_INTEGER_VALUE(unsigned char);
-        break;
-      case TWORD:
-        TRDP_UNPACK_PAGE_DATA_INTEGER_VALUE(unsigned short);
-        break;
-      case TDWORD:
-        TRDP_UNPACK_PAGE_DATA_INTEGER_VALUE(unsigned);
-        break;
-      case TLWORD:
-        TRDP_UNPACK_PAGE_DATA_INTEGER_VALUE(unsigned long long);
-        break;
       case TUSINT:
         TRDP_UNPACK_PAGE_DATA_INTEGER_VALUE(unsigned char);
         break;
+      case TSINT:
+        TRDP_UNPACK_PAGE_DATA_INTEGER_VALUE(signed char);
+        break;
+      case TWORD:
+        TRDP_UNPACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned short,le16toh);
+        break;
+      case TDWORD:
+        TRDP_UNPACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned,le32toh);
+        break;
+      case TLWORD:
+        TRDP_UNPACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned long long,le64toh);
+        break;
       case TINT:
-        TRDP_UNPACK_PAGE_DATA_INTEGER_REORDER_VALUE(short);
+        TRDP_UNPACK_PAGE_DATA_INTEGER_REORDER_VALUE(short,be16toh);
         break;
       case TUINT:
       case TTDticks:
-        TRDP_UNPACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned short);
+        TRDP_UNPACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned short,be16toh);
         break;
       case TUDINT:
       case TTDsecs:
-        TRDP_UNPACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned);
+        TRDP_UNPACK_PAGE_DATA_INTEGER_REORDER_VALUE(unsigned,be32toh);
         break;
       case TREAL:
-        TRDP_UNPACK_PAGE_DATA_FLOAT_VALUE(float);
+        TRDP_UNPACK_PAGE_DATA_FLOAT_REORDER_VALUE(float,int32_t,be32toh);
         break;
       case TLREAL:
-        TRDP_UNPACK_PAGE_DATA_FLOAT_VALUE(double);
+        TRDP_UNPACK_PAGE_DATA_FLOAT_REORDER_VALUE(double,int64_t,be64toh);
         break;
       case TSTRINGB:
       case TSTRING:

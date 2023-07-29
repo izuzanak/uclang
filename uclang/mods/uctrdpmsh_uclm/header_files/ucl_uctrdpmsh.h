@@ -11,6 +11,7 @@ include "script_parser.h"
  */
 
 #define TBOOL          7   // boolean 1 bit
+#define TSINT          8   // signed short integer 8 bitu
 #define TINT           9   // signed integer 16 bitu
 #define TUSINT         12  // unsigned short integer, 8 bits
 #define TUINT          13  // unsigned integer 16 bits
