@@ -724,7 +724,7 @@ inline unsigned short reg_parser_s::process_char(char *&c_ptr)
     }
   }
 
-  return *c_ptr++;
+  return (unsigned char)*c_ptr++;
 }/*}}}*/
 
 inline bool reg_parser_s::process_reg_exp(string_s &source_string)
