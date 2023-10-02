@@ -137,6 +137,13 @@ MHD_RESULT conn_key_value_func(void *cls,enum MHD_ValueKind kind,
     key_value_arr_ptr->push(new_location);
   }
 
+  if (value == nullptr)
+  {
+    // - blank value location -
+    ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
+    key_value_arr_ptr->push(it.blank_location);
+  }
+  else
   {
     // - create value location -
     string_s *value_str_ptr = it.get_new_string_ptr();
