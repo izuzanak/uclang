@@ -206,7 +206,7 @@ built_in_class_s curl_class =
   "Curl",
   c_modifier_public | c_modifier_final,
   7, curl_methods,
-  12 + 10 + 3, curl_variables,
+  13 + 10 + 3, curl_variables,
   bic_curl_consts,
   bic_curl_init,
   bic_curl_clear,
@@ -273,6 +273,7 @@ built_in_variable_s curl_variables[] =
   { "OPT_PASSWORD", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPT_DIRLISTONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPT_FTP_CREATE_MISSING_DIRS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_FTPPORT", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPT_SSL_VERIFYPEER", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPT_SSL_VERIFYHOST", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPT_QUOTE", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -451,8 +452,8 @@ void bic_curl_consts(location_array_s &const_locations)
 
   // - curl option constants -
   {
-    const_locations.push_blanks(12);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 12);
+    const_locations.push_blanks(13);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 13);
 
 #define CREATE_CURL_OPTION_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -467,6 +468,7 @@ void bic_curl_consts(location_array_s &const_locations)
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_PASSWORD);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_DIRLISTONLY);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_FTP_CREATE_MISSING_DIRS);
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_FTPPORT);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_SSL_VERIFYPEER);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_SSL_VERIFYHOST);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_QUOTE);
@@ -1440,6 +1442,7 @@ method setopt
     break;
   case CURLOPT_USERNAME:
   case CURLOPT_PASSWORD:
+  case CURLOPT_FTPPORT:
     {/*{{{*/
 
       // - ERROR -
