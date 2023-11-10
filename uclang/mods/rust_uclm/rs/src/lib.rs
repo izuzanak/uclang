@@ -5,7 +5,7 @@
     non_upper_case_globals)]
 
 // - c types -
-type c_uli     = u32;
+type c_uli     = usize;
 type c_lli     = i64;
 type c_ulli    = u64;
 type c_bool    = bool;
@@ -49,6 +49,7 @@ const c_src_2_op_idx  :isize = 5;
 const c_src_3_op_idx  :isize = 6;
 const c_src_4_op_idx  :isize = 7;
 const c_src_5_op_idx  :isize = 8;
+const c_src_6_op_idx  :isize = 9;
 
 // - indexes of built in classes -
 const c_bi_class_blank     :u32 = 0;
@@ -358,14 +359,14 @@ macro_rules! bic_simple_set_res
 macro_rules! bic_stack_location_value
 {//{{{
     ($it:expr,$stack_base:expr,$operands:expr,$idx:expr) => {
-        *(*$it).get_stack_value(($stack_base + *$operands.offset($idx)) as isize)
+        *(*$it).get_stack_value(($stack_base as usize + *$operands.offset($idx)) as isize)
     };
 }//}}}
 
 macro_rules! bic_stack_location
 {//{{{
     ($it:expr,$stack_base:expr,$operands:expr,$idx:expr) => {
-        *((*$it).data_stack.data.offset(($stack_base + *$operands.offset($idx)) as isize))
+        *((*$it).data_stack.data.offset(($stack_base as usize + *$operands.offset($idx)) as isize))
     };
 }//}}}
 
@@ -461,7 +462,7 @@ pub extern "C" fn bic_rust_string_method_RustString_1(it:*mut UclIThread,stack_b
 
         // - ERROR -
         if (*src_0_location).v_type != c_bi_class_string {
-            let new_exception = exception_s_throw_exception(it,UclError::METHOD_NOT_DEFINED_WITH_PARAMETERS as u32,*operands.offset(c_source_pos_idx),(*it).blank_location);
+            let new_exception = exception_s_throw_exception(it,UclError::METHOD_NOT_DEFINED_WITH_PARAMETERS as u32,*operands.offset(c_source_pos_idx) as u32,(*it).blank_location);
             exception_s_push_method_ri_class_idx(it,new_exception,(*dst_location).v_type,"RustString#1\0".as_ptr());
             exception_s_push_parameter(new_exception,1);
             exception_s_push_parameter(new_exception,(*src_0_location).v_type as i64);
@@ -479,7 +480,7 @@ pub extern "C" fn bic_rust_string_method_RustString_1(it:*mut UclIThread,stack_b
 
             // - ERROR -
             Err(_) => {
-                exception_s_throw_exception(it,module.error_base + ModuleError::RUST_STRING_UTF8_ENCODING_ERROR as u32,*operands.offset(c_source_pos_idx),(*it).blank_location);
+                exception_s_throw_exception(it,module.error_base + ModuleError::RUST_STRING_UTF8_ENCODING_ERROR as u32,*operands.offset(c_source_pos_idx) as u32,(*it).blank_location);
                 return false;
             }
         }
