@@ -21,6 +21,7 @@ extern built_in_class_s *utf8proc_classes[];
 enum
 {
   c_error_UTF8PROC_UTF8_SEQUENCE_INVALID_CODE_POINT = 0,
+  c_error_UTF8PROC_UTF8_SEQUENCE_MAP_ERROR,
   c_error_UNICODE_CHAR_INVALID_CODE_POINT,
   c_error_UNICODE_STRING_UTF8_DECOMPOSE_ERROR,
   c_error_UNICODE_STRING_UTF8_CREATE_ERROR,
@@ -48,6 +49,7 @@ void bic_utf8proc_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_utf8proc_method_to_lower_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_utf8proc_method_to_upper_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_utf8proc_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_utf8proc_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_utf8proc_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_utf8proc_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

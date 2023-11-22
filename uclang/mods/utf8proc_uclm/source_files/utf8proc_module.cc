@@ -15,7 +15,7 @@ EXPORT built_in_module_s module =
   utf8proc_classes,         // Classes
 
   0,                        // Error base index
-  6,                        // Error count
+  7,                        // Error count
   utf8proc_error_strings,   // Error strings
 
   utf8proc_initialize,      // Initialize function
@@ -34,6 +34,7 @@ built_in_class_s *utf8proc_classes[] =
 const char *utf8proc_error_strings[] =
 {/*{{{*/
   "error_UTF8PROC_UTF8_SEQUENCE_INVALID_CODE_POINT",
+  "error_UTF8PROC_UTF8_SEQUENCE_MAP_ERROR",
   "error_UNICODE_CHAR_INVALID_CODE_POINT",
   "error_UNICODE_STRING_UTF8_DECOMPOSE_ERROR",
   "error_UNICODE_STRING_UTF8_CREATE_ERROR",
@@ -71,6 +72,13 @@ bool utf8proc_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nCannot read valid code point from UTF-8 sequence\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_UTF8PROC_UTF8_SEQUENCE_MAP_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while mapping UTF-8 sequence\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_UNICODE_CHAR_INVALID_CODE_POINT:
@@ -120,8 +128,8 @@ built_in_class_s utf8proc_class =
 {/*{{{*/
   "Utf8Proc",
   c_modifier_public | c_modifier_final,
-  5, utf8proc_methods,
-  0, utf8proc_variables,
+  6, utf8proc_methods,
+  16, utf8proc_variables,
   bic_utf8proc_consts,
   bic_utf8proc_init,
   bic_utf8proc_clear,
@@ -151,6 +159,11 @@ built_in_method_s utf8proc_methods[] =
     bic_utf8proc_method_to_upper_1
   },
   {
+    "map#2",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_utf8proc_method_map_2
+  },
+  {
     "version#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_utf8proc_method_version_0
@@ -169,7 +182,25 @@ built_in_method_s utf8proc_methods[] =
 
 built_in_variable_s utf8proc_variables[] =
 {/*{{{*/
-  BIC_CLASS_EMPTY_VARIABLES
+
+  // - utf8proc map option constants -
+  { "OPT_NULLTERM", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_STABLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_COMPAT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_COMPOSE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_DECOMPOSE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_IGNORE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_REJECTNA", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_NLF2LS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_NLF2PS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_NLF2LF", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_STRIPCC", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_CASEFOLD", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_CHARBOUND", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_LUMP", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_STRIPMARK", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_STRIPNA", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 #define BIC_UTF8PROC_TRANSFORM_STRING(CODE_POINT_CODE) \
@@ -219,6 +250,36 @@ built_in_variable_s utf8proc_variables[] =
 
 void bic_utf8proc_consts(location_array_s &const_locations)
 {/*{{{*/
+
+  // - insert utf8proc map option constants -
+  {
+    const_locations.push_blanks(16);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 16);
+
+#define CREATE_UTF8PROC_MAP_OPTION_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_UTF8PROC_MAP_OPTION_BIC_STATIC(UTF8PROC_NULLTERM);
+    CREATE_UTF8PROC_MAP_OPTION_BIC_STATIC(UTF8PROC_STABLE);
+    CREATE_UTF8PROC_MAP_OPTION_BIC_STATIC(UTF8PROC_COMPAT);
+    CREATE_UTF8PROC_MAP_OPTION_BIC_STATIC(UTF8PROC_COMPOSE);
+    CREATE_UTF8PROC_MAP_OPTION_BIC_STATIC(UTF8PROC_DECOMPOSE);
+    CREATE_UTF8PROC_MAP_OPTION_BIC_STATIC(UTF8PROC_IGNORE);
+    CREATE_UTF8PROC_MAP_OPTION_BIC_STATIC(UTF8PROC_REJECTNA);
+    CREATE_UTF8PROC_MAP_OPTION_BIC_STATIC(UTF8PROC_NLF2LS);
+    CREATE_UTF8PROC_MAP_OPTION_BIC_STATIC(UTF8PROC_NLF2PS);
+    CREATE_UTF8PROC_MAP_OPTION_BIC_STATIC(UTF8PROC_NLF2LF);
+    CREATE_UTF8PROC_MAP_OPTION_BIC_STATIC(UTF8PROC_STRIPCC);
+    CREATE_UTF8PROC_MAP_OPTION_BIC_STATIC(UTF8PROC_CASEFOLD);
+    CREATE_UTF8PROC_MAP_OPTION_BIC_STATIC(UTF8PROC_CHARBOUND);
+    CREATE_UTF8PROC_MAP_OPTION_BIC_STATIC(UTF8PROC_LUMP);
+    CREATE_UTF8PROC_MAP_OPTION_BIC_STATIC(UTF8PROC_STRIPMARK);
+    CREATE_UTF8PROC_MAP_OPTION_BIC_STATIC(UTF8PROC_STRIPNA);
+  }
+
 }/*}}}*/
 
 void bic_utf8proc_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -273,6 +334,41 @@ static_method
     // - code point to upper -
     code_point = utf8proc_toupper(code_point);
   );
+
+  BIC_SET_RESULT_STRING(target_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_utf8proc_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+string:c_bi_class_string
+map_options:retrieve_integer
+>
+class c_bi_class_utf8proc
+method decompose
+static_method
+; @end
+
+  string_s *source_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  utf8proc_uint8_t *output = NULL;
+  utf8proc_ssize_t length = utf8proc_map(
+      (const utf8proc_uint8_t *)source_ptr->data,source_ptr->size - 1,&output,(utf8proc_option_t)map_options);
+
+  // - ERROR -
+  if (length < 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_UTF8PROC_UTF8_SEQUENCE_MAP_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - create target string -
+  string_s *target_ptr = it.get_new_string_ptr();
+  target_ptr->data = (char *)output;
+  target_ptr->size = length + 1;
 
   BIC_SET_RESULT_STRING(target_ptr);
 
