@@ -1156,16 +1156,56 @@ bool bic_xml_node_method_text_0(interpreter_thread_s &it,unsigned stack_base,uli
   pointer_array_s *conts_array_ptr = (pointer_array_s *)conts_location->v_data_ptr;
 
   // - ERROR -
-  if (texts_array_ptr->used != 1 || texts_array_ptr->used != conts_array_ptr->used)
+  if (texts_array_ptr->used != conts_array_ptr->used)
   {
     exception_s::throw_exception(it,module.error_base + c_error_XML_NODE_TEXT_VALUE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
-  location_s *item_location = it.get_location_value(texts_array_ptr->data[0]);
-  item_location->v_reference_cnt.atomic_inc();
+  if (texts_array_ptr->used == 1)
+  {
+    location_s *item_location = it.get_location_value(texts_array_ptr->data[0]);
+    item_location->v_reference_cnt.atomic_inc();
 
-  BIC_SET_RESULT(item_location);
+    BIC_SET_RESULT(item_location);
+
+    return true;
+  }
+
+  // - empty result string -
+  string_s *result_ptr = it.get_new_string_ptr();
+
+  if (texts_array_ptr->used != 0)
+  {
+    // - retrieve result length -
+    unsigned result_length = 0;
+
+    pointer *ptr = texts_array_ptr->data;
+    pointer *ptr_end = ptr + texts_array_ptr->used;
+    do {
+      location_s *item_location = it.get_location_value(*ptr);
+      result_length += ((string_s *)item_location->v_data_ptr)->size - 1;
+    } while(++ptr < ptr_end);
+
+    // - result has non zero length -
+    if (result_length != 0)
+    {
+      // - create result string -
+      result_ptr->create(result_length);
+
+      ptr = texts_array_ptr->data;
+      char *s_ptr = result_ptr->data;
+      do {
+        location_s *item_location = it.get_location_value(*ptr);
+        string_s *string_ptr = (string_s *)item_location->v_data_ptr;
+
+        memcpy(s_ptr,string_ptr->data,string_ptr->size - 1);
+        s_ptr += string_ptr->size - 1;
+      } while(++ptr < ptr_end);
+    }
+  }
+
+  BIC_SET_RESULT_STRING(result_ptr);
 
   return true;
 }/*}}}*/
