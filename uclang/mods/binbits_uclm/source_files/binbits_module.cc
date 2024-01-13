@@ -177,7 +177,7 @@ built_in_class_s bin_array_class =
 {/*{{{*/
   "BinArray",
   c_modifier_public | c_modifier_final,
-  31, bin_array_methods,
+  32, bin_array_methods,
   4, bin_array_variables,
   bic_bin_array_consts,
   bic_bin_array_init,
@@ -236,6 +236,11 @@ built_in_method_s bin_array_methods[] =
     "BinArray#2",
     c_modifier_public | c_modifier_final,
     bic_bin_array_method_BinArray_2
+  },
+  {
+    "buffer#0",
+    c_modifier_public | c_modifier_final,
+    bic_bin_array_method_buffer_0
   },
   {
     "clear#0",
@@ -1216,6 +1221,51 @@ method BinArray
       cassert(0);
     }
   }
+
+  return true;
+}/*}}}*/
+
+#define BIC_BIN_ARRAY_METHOD_BUFFER(ARRAY_TYPE,TYPE) \
+{/*{{{*/\
+  ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)ba_ptr->cont;\
+\
+  buffer_ptr->data = array_ptr->data;\
+  buffer_ptr->size = array_ptr->used*sizeof(TYPE);\
+}/*}}}*/
+
+bool bic_bin_array_method_buffer_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
+
+  // - create buffer object -
+  buffer_s *buffer_ptr = (buffer_s *)cmalloc(sizeof(buffer_s));
+
+  // - set owner reference -
+  dst_location->v_reference_cnt.atomic_inc();
+  buffer_ptr->owner_ptr = dst_location;
+
+  switch (ba_ptr->type)
+  {
+  case c_bin_array_type_int32:
+    BIC_BIN_ARRAY_METHOD_BUFFER(bi_array_s,int);
+    break;
+  case c_bin_array_type_uint32:
+    BIC_BIN_ARRAY_METHOD_BUFFER(ui_array_s,unsigned);
+    break;
+  case c_bin_array_type_float:
+    BIC_BIN_ARRAY_METHOD_BUFFER(bf_array_s,float);
+    break;
+  case c_bin_array_type_double:
+    BIC_BIN_ARRAY_METHOD_BUFFER(bd_array_s,double);
+    break;
+  default:
+    cassert(0);
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_buffer,buffer_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
