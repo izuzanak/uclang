@@ -492,7 +492,7 @@ built_in_variable_s gz_file_variables[] =
   }\
   while(read_cnt >= c_buffer_add);\
 \
-  if (read_cnt < 0)\
+  if (read_cnt < 0 || (read_cnt == 0 && !gzeof(gzf_ptr)))\
   {\
     data_buffer.clear();\
 \
