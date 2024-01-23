@@ -4100,7 +4100,7 @@ built_in_class_s string_class =
 {/*{{{*/
   "String",
   c_modifier_public | c_modifier_final,
-  28, string_methods,
+  29, string_methods,
   0, string_variables,
   bic_string_consts,
   bic_string_init,
@@ -4164,6 +4164,11 @@ built_in_method_s string_methods[] =
     "operator_binary_le_br_re_br#1",
     c_modifier_public | c_modifier_final,
     bic_string_operator_binary_le_br_re_br
+  },
+  {
+    "operator_unary_pre_exclamation#0",
+    c_modifier_public | c_modifier_final,
+    bic_string_operator_unary_pre_exclamation
   },
   {
     "String#0",
@@ -5015,6 +5020,17 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
 bool bic_string_operator_binary_le_br_re_br(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_STRING_ITEM("operator_binary_le_br_re_br#1");
+
+  return true;
+}/*}}}*/
+
+bool bic_string_operator_unary_pre_exclamation(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  long long int result = ((string_s *)dst_location->v_data_ptr)->size <= 1;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
