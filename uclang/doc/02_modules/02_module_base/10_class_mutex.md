@@ -38,7 +38,7 @@ Class representing system wide mutual exclusion objects.
 
 <a name="Mutex#0" />
 
-### Constructor [`Mutex#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7963)
+### Constructor [`Mutex#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7979)
 
 Creates default object of class `Mutex`.
 
@@ -58,7 +58,7 @@ obj: Mutex
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7951)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7967)
 
 Assignment operator `=`. Object of class `Mutex` is replaced by method parameter.
 
@@ -89,7 +89,7 @@ obj: New value
 
 <a name="lock#0" />
 
-### Method [`lock#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7968)
+### Method [`lock#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7984)
 
 Try to lock object of class `Mutex` by calling thread. If mutex is already
 locked, calling thread blocks until the mutex becomes available.
@@ -112,7 +112,7 @@ obj.lock(): <blank>
 
 <a name="try_lock#0" />
 
-### Method [`try_lock#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7987)
+### Method [`try_lock#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8003)
 
 Try to lock object of class `Mutex` by calling thread. If mutex is already
 locked, method do not blocks and returns object of class `Error` immediately.
@@ -135,7 +135,7 @@ obj.try_lock(): <blank>
 
 <a name="unlock#0" />
 
-### Method [`unlock#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8006)
+### Method [`unlock#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8022)
 
 Unlock object of class `Mutex` owned by calling thread.
 
@@ -157,7 +157,7 @@ obj.unlock(): <blank>
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8025)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8041)
 
 Convert object of class `Mutex` to object of class `String`.
 This method returns name of class `Mutex`.
@@ -177,7 +177,7 @@ Mutex.to_string(): Mutex
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8034)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8050)
 
 Print string representation of object of class `Mutex` to standard output.
 This method prints name of class `Mutex`.

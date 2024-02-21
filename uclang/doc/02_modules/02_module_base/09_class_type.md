@@ -29,7 +29,7 @@ Class describing one particular data type, by identification of its class.
 
 <a name="Type#0" />
 
-### Constructor [`Type#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7766)
+### Constructor [`Type#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7782)
 
 Creates default object of class `Type`.
 
@@ -45,7 +45,7 @@ obj: Blank
 
 <a name="Type#1" />
 
-### Constructor [`Type#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7771)
+### Constructor [`Type#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7787)
 
 Creates object of class `Type` identifying type of method parameter.
 
@@ -69,7 +69,7 @@ obj: String
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7712)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7728)
 
 Assignment operator `=`. Object of class `Type` is replaced by method parameter.
 
@@ -96,7 +96,7 @@ obj: New value
 
 <a name="operator_binary_double_equal#1" />
 
-### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7724)
+### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7740)
 
 Comparison operator `==`. Compares object of class `Type` with method parameter and return `1` if objects has same value or `0` otherwise.
 
@@ -126,7 +126,7 @@ obj_0 == obj_2: 1
 
 <a name="operator_binary_exclamation_equal#1" />
 
-### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7745)
+### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7761)
 
 Comparison operator `!=`. Compares object of class `Type` with method parameter and return `0` if objects has same value or `1` otherwise.
 
@@ -160,7 +160,7 @@ obj_0 != obj_2: 0
 
 <a name="compare#1" />
 
-### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7781)
+### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7797)
 
 Compare object of class `Type` with method parameter.
 
@@ -191,7 +191,7 @@ obj_0.compare(obj_0): 0
 
 <a name="to_string#0" />
 
-### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7805)
+### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7821)
 
 Convert object of class `Type` to object of class `String`.
 
@@ -211,7 +211,7 @@ obj.to_string(): Integer
 
 <a name="print#0" />
 
-### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7816)
+### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L7832)
 
 Print string representation of object of class `Type` to standard output.
 
