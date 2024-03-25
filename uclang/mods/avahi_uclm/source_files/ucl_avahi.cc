@@ -96,7 +96,7 @@ void avahi_poll_s::watch_free(AvahiWatch *a_watch)
 AvahiTimeout *avahi_poll_s::timeout_new(const AvahiPoll *api,const struct timeval *tv,AvahiTimeoutCallback callback,void *userdata)
 {/*{{{*/
   fprintf(stderr,"avahi_poll_s::timeout_new\n");
-  
+
   avahi_poll_s *avahi_poll = (avahi_poll_s *)api->userdata;
 
   timeout_s *timeout = (timeout_s *)cmalloc(sizeof(timeout_s));
@@ -238,7 +238,7 @@ void avahi_service_browser_s::browse_callback(AvahiServiceBrowser *a_browser,Ava
   // - call delegate method -
   location_s *trg_location = nullptr;
   BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,avahi_poll->source_pos,
-    
+
     // - reset avahi service browser event -
     avahi_service_browser->browse_event = (AvahiBrowserEvent)-1;
 
@@ -284,7 +284,7 @@ void avahi_service_browser_s::resolve_callback(AvahiServiceResolver *a_resolver,
   // - call delegate method -
   location_s *trg_location = nullptr;
   BIC_CALL_DELEGATE(it,delegate_ptr,param_data,param_cnt,trg_location,avahi_poll->source_pos,
-    
+
     // - reset avahi service browser event -
     avahi_service_browser->resolve_event = (AvahiResolverEvent)-1;
 
