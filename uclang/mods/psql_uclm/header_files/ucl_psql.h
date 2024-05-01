@@ -22,10 +22,10 @@ include "script_parser.h"
 #define FLOAT8OID 701
 
 /*
- * definition of structure psql_stmt_s
+ * definition of structure psql_result_s
  */
 
-struct psql_stmt_s
+struct psql_result_s
 {
   PGresult *res_ptr;
   location_s *conn_ptr;
@@ -36,17 +36,17 @@ struct psql_stmt_s
 };
 
 /*
- * inline methods of structure psql_stmt_s
+ * inline methods of structure psql_result_s
  */
 
-inline void psql_stmt_s::init()
+inline void psql_result_s::init()
 {/*{{{*/
   res_ptr = nullptr;
   conn_ptr = nullptr;
   tuple_idx = 0;
 }/*}}}*/
 
-inline void psql_stmt_s::clear(interpreter_thread_s &it)
+inline void psql_result_s::clear(interpreter_thread_s &it)
 {/*{{{*/
   if (res_ptr != nullptr)
   {

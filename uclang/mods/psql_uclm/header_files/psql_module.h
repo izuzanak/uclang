@@ -9,7 +9,7 @@ include "ucl_psql.h"
 // - PSQL indexes of built in classes -
 extern unsigned c_bi_class_psql;
 extern unsigned c_bi_class_psql_conn;
-extern unsigned c_bi_class_psql_statement;
+extern unsigned c_bi_class_psql_result;
 
 // - PSQL module -
 extern "C" EXPORT built_in_module_s module;
@@ -20,10 +20,8 @@ extern built_in_class_s *psql_classes[];
 // - PSQL error identifiers -
 enum
 {
-  c_error_PSQL_CONN_WRONG_PARAMETER_ARRAY,
-  c_error_PSQL_CONN_CANNOT_CONNECT_TO_DATABASE,
-  c_error_PSQL_CONN_NOT_OPENED,
-  c_error_PSQL_CONN_EXEC_FAILED
+  c_error_PSQL_CONN_CANNOT_CONNECT_TO_DATABASE = 0,
+  c_error_PSQL_CONN_EXEC_FAILED,
 };
 
 // - PSQL error strings -
@@ -59,23 +57,27 @@ void bic_psql_conn_clear(interpreter_thread_s &it,location_s *location_ptr);
 bool bic_psql_conn_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_PSqlConn_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_execute_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_psql_conn_method_prepare_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_conn_method_result_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_conn_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_conn_method_nonblocking_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_conn_method_pipeline_mode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_conn_method_pipeline_sync_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
-// - class PSQL_STATEMENT -
-extern built_in_variable_s psql_statement_variables[];
-extern built_in_method_s psql_statement_methods[];
-extern built_in_class_s psql_statement_class;
+// - class PSQL_RESULT -
+extern built_in_variable_s psql_result_variables[];
+extern built_in_method_s psql_result_methods[];
+extern built_in_class_s psql_result_class;
 
-void bic_psql_statement_consts(location_array_s &const_locations);
-void bic_psql_statement_init(interpreter_thread_s &it,location_s *location_ptr);
-void bic_psql_statement_clear(interpreter_thread_s &it,location_s *location_ptr);
+void bic_psql_result_consts(location_array_s &const_locations);
+void bic_psql_result_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_psql_result_clear(interpreter_thread_s &it,location_s *location_ptr);
 
-bool bic_psql_statement_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_psql_statement_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_psql_statement_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_psql_statement_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_result_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_result_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_result_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_result_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 
