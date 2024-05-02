@@ -14,7 +14,7 @@ EXPORT built_in_module_s module =
   3,                     // Class count
   psql_classes,          // Classes
   0,                     // Error base index
-  2,                     // Error count
+  11,                    // Error count
   psql_error_strings,    // Error strings
   psql_initialize,       // Initialize function
   psql_print_exception,  // Print exceptions function
@@ -31,8 +31,17 @@ built_in_class_s *psql_classes[] =
 // - PSQL error strings -
 const char *psql_error_strings[] =
 {/*{{{*/
-  "error_PSQL_CONN_CANNOT_CONNECT_TO_DATABASE",
-  "error_PSQL_CONN_EXEC_FAILED",
+  "error_PSQL_CONN_DB_CONNECT_ERROR",
+  "error_PSQL_CONN_DB_NOT_CONNECTED",
+  "error_PSQL_CONN_PROCESS_INVALID_FD",
+  "error_PSQL_CONN_EXEC_QUERY_ERROR",
+  "error_PSQL_CONN_SEND_QUERY_ERROR",
+  "error_PSQL_CONN_SEND_FLUSH_ERROR",
+  "error_PSQL_CONN_FLUSH_ERROR",
+  "error_PSQL_CONN_CONSUME_INPUT_ERROR",
+  "error_PSQL_CONN_GET_RESULT_WHILE_BUSY",
+  "error_PSQL_CONN_SET_NONBLOCK_ERROR",
+  "error_PSQL_CONN_PIPELINE_MODE_ERROR",
 };/*}}}*/
 
 // - PSQL initialize -
@@ -60,7 +69,7 @@ bool psql_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_PSQL_CONN_CANNOT_CONNECT_TO_DATABASE:
+  case c_error_PSQL_CONN_DB_CONNECT_ERROR:
     {
       string_s &psql_error = *((string_s *)((location_s *)exception.obj_location)->v_data_ptr);
 
@@ -72,17 +81,90 @@ bool psql_print_exception(interpreter_s &it,exception_s &exception)
       fprintf(stderr," ---------------------------------------- \n");
     }
     break;
-  case c_error_PSQL_CONN_EXEC_FAILED:
+  case c_error_PSQL_CONN_DB_NOT_CONNECTED:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nPSqlConn, not connected to database\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PSQL_CONN_PROCESS_INVALID_FD:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nPSqlConn, invalid file descriptor to process\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PSQL_CONN_EXEC_QUERY_ERROR:
     {
       string_s &psql_error = *((string_s *)((location_s *)exception.obj_location)->v_data_ptr);
 
       fprintf(stderr," ---------------------------------------- \n");
       fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
       print_error_line(source.source_string,source_pos);
-      fprintf(stderr,"\nError while executing database command:\n");
+      fprintf(stderr,"\nPSqlConn, execute query error:\n");
       fprintf(stderr,"\n%s",psql_error.data);
       fprintf(stderr," ---------------------------------------- \n");
     }
+    break;
+  case c_error_PSQL_CONN_SEND_QUERY_ERROR:
+    {
+      string_s &psql_error = *((string_s *)((location_s *)exception.obj_location)->v_data_ptr);
+
+      fprintf(stderr," ---------------------------------------- \n");
+      fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+      print_error_line(source.source_string,source_pos);
+      fprintf(stderr,"\nPSqlConn, send query error:\n");
+      fprintf(stderr,"\n%s",psql_error.data);
+      fprintf(stderr," ---------------------------------------- \n");
+    }
+    break;
+  case c_error_PSQL_CONN_SEND_FLUSH_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nPSqlConn, send flush error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PSQL_CONN_FLUSH_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nPSqlConn, flush queries error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PSQL_CONN_CONSUME_INPUT_ERROR:
+    {
+      string_s &psql_error = *((string_s *)((location_s *)exception.obj_location)->v_data_ptr);
+
+      fprintf(stderr," ---------------------------------------- \n");
+      fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+      print_error_line(source.source_string,source_pos);
+      fprintf(stderr,"\nPSqlConn, consume input error:\n");
+      fprintf(stderr,"\n%s",psql_error.data);
+      fprintf(stderr," ---------------------------------------- \n");
+    }
+    break;
+  case c_error_PSQL_CONN_GET_RESULT_WHILE_BUSY:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nPSqlConn, attempt to get result while busy\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PSQL_CONN_SET_NONBLOCK_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nPSqlConn, set nonblocking error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PSQL_CONN_PIPELINE_MODE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nPSqlConn, adjust pipeline mode error\n");
+    fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
     return false;
@@ -170,7 +252,7 @@ built_in_class_s psql_conn_class =
 {/*{{{*/
   "PSqlConn",
   c_modifier_public | c_modifier_final,
-  10, psql_conn_methods,
+  14, psql_conn_methods,
   0, psql_conn_variables,
   bic_psql_conn_consts,
   bic_psql_conn_init,
@@ -211,9 +293,14 @@ built_in_method_s psql_conn_methods[] =
     bic_psql_conn_method_result_1
   },
   {
-    "get_fd#0",
+    "get_fds#0",
     c_modifier_public | c_modifier_final,
-    bic_psql_conn_method_get_fd_0
+    bic_psql_conn_method_get_fds_0
+  },
+  {
+    "process#2",
+    c_modifier_public | c_modifier_final,
+    bic_psql_conn_method_process_2
   },
   {
     "nonblocking#1",
@@ -226,9 +313,24 @@ built_in_method_s psql_conn_methods[] =
     bic_psql_conn_method_pipeline_mode_1
   },
   {
-    "pipeline_sync#0",
+    "send_query#1",
     c_modifier_public | c_modifier_final,
-    bic_psql_conn_method_pipeline_sync_0
+    bic_psql_conn_method_send_query_1
+  },
+  {
+    "send_flush#0",
+    c_modifier_public | c_modifier_final,
+    bic_psql_conn_method_send_flush_0
+  },
+  {
+    "is_busy#0",
+    c_modifier_public | c_modifier_final,
+    bic_psql_conn_method_is_busy_0
+  },
+  {
+    "get_result#0",
+    c_modifier_public | c_modifier_final,
+    bic_psql_conn_method_get_result_0
   },
   {
     "to_string#0",
@@ -309,7 +411,7 @@ method PSqlConn
 
     PQfinish(conn_ptr);
 
-    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_CANNOT_CONNECT_TO_DATABASE,operands[c_source_pos_idx],err_location);
+    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_DB_CONNECT_ERROR,operands[c_source_pos_idx],err_location);
     return false;
   }
 
@@ -341,7 +443,7 @@ method execute
 
     BIC_PSQL_CONN_ERROR_STRING(conn_ptr);
 
-    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_EXEC_FAILED,operands[c_source_pos_idx],err_location);
+    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_EXEC_QUERY_ERROR,operands[c_source_pos_idx],err_location);
     return false;
   }
 
@@ -453,7 +555,7 @@ method result
 
     BIC_PSQL_CONN_ERROR_STRING(conn_ptr);
 
-    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_EXEC_FAILED,operands[c_source_pos_idx],err_location);
+    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_EXEC_QUERY_ERROR,operands[c_source_pos_idx],err_location);
     return false;
   }
 
@@ -472,21 +574,88 @@ method result
   return true;
 }/*}}}*/
 
-bool bic_psql_conn_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_psql_conn_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PGconn *conn_ptr = (PGconn *)dst_location->v_data_ptr;
 
-  long long int result = PQsocket(conn_ptr);
+  long long int fd = PQsocket(conn_ptr);
+  long long int events = POLLIN;
 
   // - ERROR -
-  if (result < 0)
+  if (fd == -1)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_DB_NOT_CONNECTED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
+
+  int res = PQflush(conn_ptr);
+
+  // - ERROR -
+  if (res == -1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_FLUSH_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - not everything flushed, wait for writable fd -
+  if (res == 1)
+  {
+    events |= POLLOUT;
+  }
+
+  // - create result array -
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+  BIC_CREATE_NEW_LOCATION(fd_location,c_bi_class_integer,fd);
+  array_ptr->push(fd_location);
+
+  BIC_CREATE_NEW_LOCATION(events_location,c_bi_class_integer,events);
+  array_ptr->push(events_location);
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_psql_conn_method_process_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+fd:retrieve_integer
+events:retrieve_integer
+>
+method process
+; @end
+
+  PGconn *conn_ptr = (PGconn *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (fd != PQsocket(conn_ptr))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_PROCESS_INVALID_FD,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (PQconsumeInput(conn_ptr) != 1)
+  {
+    BIC_PSQL_CONN_ERROR_STRING(conn_ptr);
+
+    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_CONSUME_INPUT_ERROR,operands[c_source_pos_idx],err_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (PQflush(conn_ptr) == -1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_FLUSH_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  long long int result = PQisBusy(conn_ptr) == 0;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
@@ -507,8 +676,7 @@ method nonblocking
   // - ERROR -
   if (PQsetnonblocking(conn_ptr,enable) != 0)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_SET_NONBLOCK_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -528,25 +696,11 @@ method pipeline_mode
 
   PGconn *conn_ptr = (PGconn *)dst_location->v_data_ptr;
 
-  if (enable)
+  // - ERROR -
+  if ((enable ? PQenterPipelineMode(conn_ptr) : PQexitPipelineMode(conn_ptr)) != 1)
   {
-    // - ERROR -
-    if (PQenterPipelineMode(conn_ptr) != 1)
-    {
-      // FIXME TODO throw proper exception ...
-      BIC_TODO_ERROR(__FILE__,__LINE__);
-      return false;
-    }
-  }
-  else
-  {
-    // - ERROR -
-    if (PQexitPipelineMode(conn_ptr) != 1)
-    {
-      // FIXME TODO throw proper exception ...
-      BIC_TODO_ERROR(__FILE__,__LINE__);
-      return false;
-    }
+    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_PIPELINE_MODE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
   }
 
   BIC_SET_RESULT_DESTINATION();
@@ -554,21 +708,97 @@ method pipeline_mode
   return true;
 }/*}}}*/
 
-bool bic_psql_conn_method_pipeline_sync_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_psql_conn_method_send_query_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+query:c_bi_class_string
+>
+method send_query
+; @end
+
+  PGconn *conn_ptr = (PGconn *)dst_location->v_data_ptr;
+  string_s *query_ptr = (string_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (PQsendQueryParams(conn_ptr,query_ptr->data,0,nullptr,nullptr,nullptr,nullptr,0) != 1)
+  {
+    BIC_PSQL_CONN_ERROR_STRING(conn_ptr);
+
+    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_SEND_QUERY_ERROR,operands[c_source_pos_idx],err_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_psql_conn_method_send_flush_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PGconn *conn_ptr = (PGconn *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (PQpipelineSync(conn_ptr) != 1)
+  if (PQsendFlushRequest(conn_ptr) != 1)
   {
-    // FIXME TODO throw proper exception ...
-    BIC_TODO_ERROR(__FILE__,__LINE__);
+    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_SEND_FLUSH_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
   BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_psql_conn_method_is_busy_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  PGconn *conn_ptr = (PGconn *)dst_location->v_data_ptr;
+
+  long long int result = PQisBusy(conn_ptr) == 1;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_psql_conn_method_get_result_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  PGconn *conn_ptr = (PGconn *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (PQisBusy(conn_ptr) == 1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_GET_RESULT_WHILE_BUSY,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - retrieve result -
+  PGresult *res_ptr = PQgetResult(conn_ptr);
+
+  if (res_ptr == nullptr)
+  {
+    BIC_SET_RESULT_BLANK();
+  }
+  else
+  {
+    // - create psql result object -
+    psql_result_s *result_ptr = (psql_result_s *)cmalloc(sizeof(psql_result_s));
+    result_ptr->init();
+
+    result_ptr->res_ptr = res_ptr;
+
+    dst_location->v_reference_cnt.atomic_inc();
+    result_ptr->conn_ptr = dst_location;
+
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_psql_result,result_ptr);
+    BIC_SET_RESULT(new_location);
+  }
 
   return true;
 }/*}}}*/
@@ -596,8 +826,8 @@ built_in_class_s psql_result_class =
 {/*{{{*/
   "PSqlResult",
   c_modifier_public | c_modifier_final,
-  4, psql_result_methods,
-  0, psql_result_variables,
+  5, psql_result_methods,
+  12, psql_result_variables,
   bic_psql_result_consts,
   bic_psql_result_init,
   bic_psql_result_clear,
@@ -622,6 +852,11 @@ built_in_method_s psql_result_methods[] =
     bic_psql_result_operator_binary_equal
   },
   {
+    "status#0",
+    c_modifier_public | c_modifier_final,
+    bic_psql_result_method_status_0
+  },
+  {
     "next_item#0",
     c_modifier_public | c_modifier_final,
     bic_psql_result_method_next_item_0
@@ -640,11 +875,51 @@ built_in_method_s psql_result_methods[] =
 
 built_in_variable_s psql_result_variables[] =
 {/*{{{*/
-  BIC_CLASS_EMPTY_VARIABLES
+
+  // - psql result status constants -
+  { "RES_EMPTY_QUERY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "RES_COMMAND_OK", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "RES_TUPLES_OK", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "RES_COPY_OUT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "RES_COPY_IN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "RES_BAD_RESPONSE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "RES_NONFATAL_ERROR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "RES_FATAL_ERROR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "RES_COPY_BOTH", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "RES_SINGLE_TUPLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "RES_PIPELINE_SYNC", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "RES_PIPELINE_ABORTED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_psql_result_consts(location_array_s &const_locations)
 {/*{{{*/
+
+  // - insert psql result status constants -
+  {
+    const_locations.push_blanks(12);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 12);
+
+#define CREATE_PSQL_RESULT_STATUS_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_EMPTY_QUERY);
+    CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_COMMAND_OK);
+    CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_TUPLES_OK);
+    CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_COPY_OUT);
+    CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_COPY_IN);
+    CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_BAD_RESPONSE);
+    CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_NONFATAL_ERROR);
+    CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_FATAL_ERROR);
+    CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_COPY_BOTH);
+    CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_SINGLE_TUPLE);
+    CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_PIPELINE_SYNC);
+    CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_PIPELINE_ABORTED);
+  }
+
 }/*}}}*/
 
 void bic_psql_result_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -671,6 +946,20 @@ bool bic_psql_result_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_psql_result_method_status_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  psql_result_s *result_ptr = (psql_result_s *)dst_location->v_data_ptr;
+  PGresult *res_ptr = result_ptr->res_ptr;
+
+  long long int result = PQresultStatus(res_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
