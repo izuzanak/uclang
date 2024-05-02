@@ -252,7 +252,11 @@ built_in_class_s psql_conn_class =
 {/*{{{*/
   "PSqlConn",
   c_modifier_public | c_modifier_final,
-  14, psql_conn_methods,
+  12
+#ifdef LIBPQ_HAS_PIPELINING
+  + 2
+#endif
+  , psql_conn_methods,
   0, psql_conn_variables,
   bic_psql_conn_consts,
   bic_psql_conn_init,
@@ -307,20 +311,22 @@ built_in_method_s psql_conn_methods[] =
     c_modifier_public | c_modifier_final,
     bic_psql_conn_method_nonblocking_1
   },
+#ifdef LIBPQ_HAS_PIPELINING
   {
     "pipeline_mode#1",
     c_modifier_public | c_modifier_final,
     bic_psql_conn_method_pipeline_mode_1
   },
   {
-    "send_query#1",
-    c_modifier_public | c_modifier_final,
-    bic_psql_conn_method_send_query_1
-  },
-  {
     "send_flush#0",
     c_modifier_public | c_modifier_final,
     bic_psql_conn_method_send_flush_0
+  },
+#endif
+  {
+    "send_query#1",
+    c_modifier_public | c_modifier_final,
+    bic_psql_conn_method_send_query_1
   },
   {
     "is_busy#0",
@@ -685,6 +691,7 @@ method nonblocking
   return true;
 }/*}}}*/
 
+#ifdef LIBPQ_HAS_PIPELINING
 bool bic_psql_conn_method_pipeline_mode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
@@ -708,6 +715,25 @@ method pipeline_mode
   return true;
 }/*}}}*/
 
+bool bic_psql_conn_method_send_flush_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  PGconn *conn_ptr = (PGconn *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (PQsendFlushRequest(conn_ptr) != 1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_SEND_FLUSH_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+#endif
+
 bool bic_psql_conn_method_send_query_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
@@ -726,24 +752,6 @@ method send_query
     BIC_PSQL_CONN_ERROR_STRING(conn_ptr);
 
     exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_SEND_QUERY_ERROR,operands[c_source_pos_idx],err_location);
-    return false;
-  }
-
-  BIC_SET_RESULT_DESTINATION();
-
-  return true;
-}/*}}}*/
-
-bool bic_psql_conn_method_send_flush_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
-
-  PGconn *conn_ptr = (PGconn *)dst_location->v_data_ptr;
-
-  // - ERROR -
-  if (PQsendFlushRequest(conn_ptr) != 1)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_SEND_FLUSH_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -827,7 +835,11 @@ built_in_class_s psql_result_class =
   "PSqlResult",
   c_modifier_public | c_modifier_final,
   5, psql_result_methods,
-  12, psql_result_variables,
+  10
+#ifdef LIBPQ_HAS_PIPELINING
+  + 2
+#endif
+  , psql_result_variables,
   bic_psql_result_consts,
   bic_psql_result_init,
   bic_psql_result_clear,
@@ -887,8 +899,10 @@ built_in_variable_s psql_result_variables[] =
   { "RES_FATAL_ERROR", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "RES_COPY_BOTH", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "RES_SINGLE_TUPLE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#ifdef LIBPQ_HAS_PIPELINING
   { "RES_PIPELINE_SYNC", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "RES_PIPELINE_ABORTED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#endif
 
 };/*}}}*/
 
@@ -897,8 +911,8 @@ void bic_psql_result_consts(location_array_s &const_locations)
 
   // - insert psql result status constants -
   {
-    const_locations.push_blanks(12);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 12);
+    const_locations.push_blanks(10);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 10);
 
 #define CREATE_PSQL_RESULT_STATUS_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -916,9 +930,17 @@ void bic_psql_result_consts(location_array_s &const_locations)
     CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_FATAL_ERROR);
     CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_COPY_BOTH);
     CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_SINGLE_TUPLE);
+  }
+
+#ifdef LIBPQ_HAS_PIPELINING
+  {
+    const_locations.push_blanks(2);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 2);
+
     CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_PIPELINE_SYNC);
     CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_PIPELINE_ABORTED);
   }
+#endif
 
 }/*}}}*/
 

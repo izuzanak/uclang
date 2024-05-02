@@ -70,9 +70,11 @@ bool bic_psql_conn_method_result_1(interpreter_thread_s &it,unsigned stack_base,
 bool bic_psql_conn_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_process_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_nonblocking_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#ifdef LIBPQ_HAS_PIPELINING
 bool bic_psql_conn_method_pipeline_mode_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_psql_conn_method_send_query_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_send_flush_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#endif
+bool bic_psql_conn_method_send_query_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_is_busy_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_get_result_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

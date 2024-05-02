@@ -10,6 +10,7 @@
 include "script_parser.h"
 @end
 
+#include <poll.h>
 #include <postgresql/libpq-fe.h>
 
 #define BOOLOID 16
