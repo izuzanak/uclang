@@ -37,6 +37,19 @@ struct psql_result_s
 };
 
 /*
+ * definition of structure psql_notify_s
+ */
+
+struct psql_notify_s
+{
+  PGnotify *ntf_ptr;
+  location_s *conn_ptr;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
  * inline methods of structure psql_result_s
  */
 
@@ -52,6 +65,31 @@ inline void psql_result_s::clear(interpreter_thread_s &it)
   if (res_ptr != nullptr)
   {
     PQclear(res_ptr);
+  }
+
+  if (conn_ptr != nullptr)
+  {
+    it.release_location_ptr(conn_ptr);
+  }
+
+  init();
+}/*}}}*/
+
+/*
+ * inline methods of structure psql_notify_s
+ */
+
+inline void psql_notify_s::init()
+{/*{{{*/
+  ntf_ptr = nullptr;
+  conn_ptr = nullptr;
+}/*}}}*/
+
+inline void psql_notify_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+  if (ntf_ptr != nullptr)
+  {
+    PQfreemem(ntf_ptr);
   }
 
   if (conn_ptr != nullptr)

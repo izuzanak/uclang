@@ -7,14 +7,15 @@ include "psql_module.h"
 unsigned c_bi_class_psql = c_idx_not_exist;
 unsigned c_bi_class_psql_conn = c_idx_not_exist;
 unsigned c_bi_class_psql_result = c_idx_not_exist;
+unsigned c_bi_class_psql_notify = c_idx_not_exist;
 
 // - PSQL module -
 EXPORT built_in_module_s module =
 {/*{{{*/
-  3,                     // Class count
+  4,                     // Class count
   psql_classes,          // Classes
   0,                     // Error base index
-  11,                    // Error count
+  12,                    // Error count
   psql_error_strings,    // Error strings
   psql_initialize,       // Initialize function
   psql_print_exception,  // Print exceptions function
@@ -26,6 +27,7 @@ built_in_class_s *psql_classes[] =
   &psql_class,
   &psql_conn_class,
   &psql_result_class,
+  &psql_notify_class,
 };/*}}}*/
 
 // - PSQL error strings -
@@ -40,6 +42,7 @@ const char *psql_error_strings[] =
   "error_PSQL_CONN_FLUSH_ERROR",
   "error_PSQL_CONN_CONSUME_INPUT_ERROR",
   "error_PSQL_CONN_GET_RESULT_WHILE_BUSY",
+  "error_PSQL_CONN_GET_NOTIFY_WHILE_BUSY",
   "error_PSQL_CONN_SET_NONBLOCK_ERROR",
   "error_PSQL_CONN_PIPELINE_MODE_ERROR",
 };/*}}}*/
@@ -57,6 +60,9 @@ bool psql_initialize(script_parser_s &sp)
 
   // - initialize psql_result class identifier -
   c_bi_class_psql_result = class_base_idx++;
+
+  // - initialize psql_notify class identifier -
+  c_bi_class_psql_notify = class_base_idx++;
 
   return true;
 }/*}}}*/
@@ -150,6 +156,13 @@ bool psql_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nPSqlConn, attempt to get result while busy\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PSQL_CONN_GET_NOTIFY_WHILE_BUSY:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nPSqlConn, attempt to get notify while busy\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_PSQL_CONN_SET_NONBLOCK_ERROR:
@@ -252,7 +265,7 @@ built_in_class_s psql_conn_class =
 {/*{{{*/
   "PSqlConn",
   c_modifier_public | c_modifier_final,
-  12
+  13
 #ifdef LIBPQ_HAS_PIPELINING
   + 2
 #endif
@@ -337,6 +350,11 @@ built_in_method_s psql_conn_methods[] =
     "get_result#0",
     c_modifier_public | c_modifier_final,
     bic_psql_conn_method_get_result_0
+  },
+  {
+    "get_notify#0",
+    c_modifier_public | c_modifier_final,
+    bic_psql_conn_method_get_notify_0
   },
   {
     "to_string#0",
@@ -811,6 +829,44 @@ bool bic_psql_conn_method_get_result_0(interpreter_thread_s &it,unsigned stack_b
   return true;
 }/*}}}*/
 
+bool bic_psql_conn_method_get_notify_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  PGconn *conn_ptr = (PGconn *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (PQisBusy(conn_ptr) == 1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_PSQL_CONN_GET_NOTIFY_WHILE_BUSY,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - retrieve notify -
+  PGnotify *ntf_ptr = PQnotifies(conn_ptr);
+
+  if (ntf_ptr == nullptr)
+  {
+    BIC_SET_RESULT_BLANK();
+  }
+  else
+  {
+    // - create psql notify object -
+    psql_notify_s *notify_ptr = (psql_notify_s *)cmalloc(sizeof(psql_notify_s));
+    notify_ptr->init();
+
+    notify_ptr->ntf_ptr = ntf_ptr;
+
+    dst_location->v_reference_cnt.atomic_inc();
+    notify_ptr->conn_ptr = dst_location;
+
+    BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_psql_notify,notify_ptr);
+    BIC_SET_RESULT(new_location);
+  }
+
+  return true;
+}/*}}}*/
+
 bool bic_psql_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -1084,6 +1140,103 @@ bool bic_psql_result_method_to_string_0(interpreter_thread_s &it,unsigned stack_
 bool bic_psql_result_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   printf("PSqlResult");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class PSQL_NOTIFY -
+built_in_class_s psql_notify_class =
+{/*{{{*/
+  "PSqlNotify",
+  c_modifier_public | c_modifier_final,
+  3, psql_notify_methods,
+  0, psql_notify_variables,
+  bic_psql_notify_consts,
+  bic_psql_notify_init,
+  bic_psql_notify_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s psql_notify_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_psql_notify_operator_binary_equal
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_psql_notify_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_psql_notify_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s psql_notify_variables[] =
+{/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
+};/*}}}*/
+
+void bic_psql_notify_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_psql_notify_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (psql_notify_s *)nullptr;
+}/*}}}*/
+
+void bic_psql_notify_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  psql_notify_s *notify_ptr = (psql_notify_s *)location_ptr->v_data_ptr;
+
+  if (notify_ptr != nullptr)
+  {
+    notify_ptr->clear(it);
+    cfree(notify_ptr);
+  }
+}/*}}}*/
+
+bool bic_psql_notify_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_psql_notify_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("PSqlNotify"),"PSqlNotify");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_psql_notify_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("PSqlNotify");
 
   BIC_SET_RESULT_BLANK();
 

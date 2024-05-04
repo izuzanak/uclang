@@ -10,6 +10,7 @@ include "ucl_psql.h"
 extern unsigned c_bi_class_psql;
 extern unsigned c_bi_class_psql_conn;
 extern unsigned c_bi_class_psql_result;
+extern unsigned c_bi_class_psql_notify;
 
 // - PSQL module -
 extern "C" EXPORT built_in_module_s module;
@@ -29,6 +30,7 @@ enum
   c_error_PSQL_CONN_FLUSH_ERROR,
   c_error_PSQL_CONN_CONSUME_INPUT_ERROR,
   c_error_PSQL_CONN_GET_RESULT_WHILE_BUSY,
+  c_error_PSQL_CONN_GET_NOTIFY_WHILE_BUSY,
   c_error_PSQL_CONN_SET_NONBLOCK_ERROR,
   c_error_PSQL_CONN_PIPELINE_MODE_ERROR,
 };
@@ -77,6 +79,7 @@ bool bic_psql_conn_method_send_flush_0(interpreter_thread_s &it,unsigned stack_b
 bool bic_psql_conn_method_send_query_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_is_busy_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_get_result_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_conn_method_get_notify_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -94,6 +97,19 @@ bool bic_psql_result_method_status_0(interpreter_thread_s &it,unsigned stack_bas
 bool bic_psql_result_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_result_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_result_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class PSQL_NOTIFY -
+extern built_in_variable_s psql_notify_variables[];
+extern built_in_method_s psql_notify_methods[];
+extern built_in_class_s psql_notify_class;
+
+void bic_psql_notify_consts(location_array_s &const_locations);
+void bic_psql_notify_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_psql_notify_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_psql_notify_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_notify_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_notify_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 
