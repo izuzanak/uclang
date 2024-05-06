@@ -783,7 +783,6 @@ bool bic_psql_conn_method_is_busy_0(interpreter_thread_s &it,unsigned stack_base
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
   PGconn *conn_ptr = (PGconn *)dst_location->v_data_ptr;
-
   long long int result = PQisBusy(conn_ptr) == 1;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
@@ -1151,7 +1150,7 @@ built_in_class_s psql_notify_class =
 {/*{{{*/
   "PSqlNotify",
   c_modifier_public | c_modifier_final,
-  3, psql_notify_methods,
+  6, psql_notify_methods,
   0, psql_notify_variables,
   bic_psql_notify_consts,
   bic_psql_notify_init,
@@ -1175,6 +1174,21 @@ built_in_method_s psql_notify_methods[] =
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
     bic_psql_notify_operator_binary_equal
+  },
+  {
+    "channel#0",
+    c_modifier_public | c_modifier_final,
+    bic_psql_notify_method_channel_0
+  },
+  {
+    "pid#0",
+    c_modifier_public | c_modifier_final,
+    bic_psql_notify_method_pid_0
+  },
+  {
+    "payload#0",
+    c_modifier_public | c_modifier_final,
+    bic_psql_notify_method_payload_0
   },
   {
     "to_string#0",
@@ -1221,6 +1235,48 @@ bool bic_psql_notify_operator_binary_equal(interpreter_thread_s &it,unsigned sta
 
   BIC_SET_DESTINATION(src_0_location);
   BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_psql_notify_method_channel_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  psql_notify_s *notify_ptr = (psql_notify_s *)dst_location->v_data_ptr;
+  const char *relname = notify_ptr->ntf_ptr->relname;
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->set(strlen(relname),relname);
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_psql_notify_method_pid_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  psql_notify_s *notify_ptr = (psql_notify_s *)dst_location->v_data_ptr;
+  long long int result = notify_ptr->ntf_ptr->be_pid;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_psql_notify_method_payload_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  psql_notify_s *notify_ptr = (psql_notify_s *)dst_location->v_data_ptr;
+  const char *extra = notify_ptr->ntf_ptr->extra;
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->set(strlen(extra),extra);
+
+  BIC_SET_RESULT_STRING(string_ptr);
 
   return true;
 }/*}}}*/

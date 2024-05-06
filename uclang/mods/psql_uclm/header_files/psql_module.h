@@ -108,6 +108,9 @@ void bic_psql_notify_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_psql_notify_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_psql_notify_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_notify_method_channel_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_notify_method_pid_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_notify_method_payload_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_notify_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_notify_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
