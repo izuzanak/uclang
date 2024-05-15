@@ -265,7 +265,7 @@ built_in_class_s psql_conn_class =
 {/*{{{*/
   "PSqlConn",
   c_modifier_public | c_modifier_final,
-  13
+  14
 #ifdef LIBPQ_HAS_PIPELINING
   + 2
 #endif
@@ -308,6 +308,11 @@ built_in_method_s psql_conn_methods[] =
     "result#1",
     c_modifier_public | c_modifier_final,
     bic_psql_conn_method_result_1
+  },
+  {
+    "get_fd#0",
+    c_modifier_public | c_modifier_final,
+    bic_psql_conn_method_get_fd_0
   },
   {
     "get_fds#0",
@@ -594,6 +599,18 @@ method result
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_psql_result,result_ptr);
   BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_psql_conn_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  PGconn *conn_ptr = (PGconn *)dst_location->v_data_ptr;
+  long long int result = PQsocket(conn_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/

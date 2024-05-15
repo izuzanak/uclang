@@ -69,6 +69,7 @@ bool bic_psql_conn_operator_binary_equal(interpreter_thread_s &it,unsigned stack
 bool bic_psql_conn_method_PSqlConn_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_execute_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_result_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_conn_method_get_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_process_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_nonblocking_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
